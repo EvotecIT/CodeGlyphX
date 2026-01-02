@@ -1,9 +1,12 @@
 using System;
+using System.IO;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
+using CodeMatrix.Qr;
 using Screen = System.Windows.Forms.Screen;
 using WpfClipboard = System.Windows.Clipboard;
 using WpfMessageBox = System.Windows.MessageBox;
@@ -13,6 +16,13 @@ namespace CodeMatrix.ScreenScan.Wpf;
 public partial class MainWindow : Window {
     private CancellationTokenSource? _cts;
     private WriteableBitmap? _previewBitmap;
+
+    private byte[]? _lastPixels;
+    private int _lastWidth;
+    private int _lastHeight;
+    private int _lastStride;
+    private string _lastDebugSummary = string.Empty;
+    private long _lastDebugSummaryTickMs = -1;
 
     public MainWindow() {
         InitializeComponent();
@@ -43,38 +53,49 @@ public partial class MainWindow : Window {
         StatusText.Text = "Running (2–5 fps)";
         DecodedText.Text = string.Empty;
 
+        var decoded = false;
         try {
-            await ScanLoopAsync(gx, gy, w, h, _cts.Token);
+            decoded = await ScanLoopAsync(gx, gy, w, h, _cts.Token);
         } finally {
             _cts?.Dispose();
             _cts = null;
             StartStopButton.Content = "Start scanning";
-            StatusText.Text = "Idle";
+            if (!decoded) StatusText.Text = "Idle";
         }
     }
 
-    private async Task ScanLoopAsync(int x, int y, int w, int h, CancellationToken ct) {
+    private async Task<bool> ScanLoopAsync(int x, int y, int w, int h, CancellationToken ct) {
         while (!ct.IsCancellationRequested) {
             try {
                 var pixels = ScreenCapture.CaptureBgra32(x, y, w, h, out var stride);
                 UpdatePreview(pixels, w, h, stride);
-                if (QrDecoder.TryDecode(pixels, w, h, stride, PixelFormat.Bgra32, out var decoded)) {
+                if (QrDecoder.TryDecode(pixels, w, h, stride, PixelFormat.Bgra32, out var decoded, out var diag)) {
                     DecodedText.Text = decoded.Text;
                     StatusText.Text = $"Decoded (v{decoded.Version}, {decoded.ErrorCorrectionLevel}, mask {decoded.Mask})";
+                    return true;
+                } else {
+                    StatusText.Text = $"Running (2–5 fps) • {diag}";
                 }
             } catch (Exception ex) {
                 StatusText.Text = ex.Message;
             }
 
             try {
-                await Task.Delay(250, ct);
+                await Task.Delay(200, ct);
             } catch (TaskCanceledException) {
-                return;
+                return false;
             }
         }
+
+        return false;
     }
 
     private void UpdatePreview(byte[] pixels, int width, int height, int stride) {
+        _lastPixels = pixels;
+        _lastWidth = width;
+        _lastHeight = height;
+        _lastStride = stride;
+
         if (_previewBitmap is null || _previewBitmap.PixelWidth != width || _previewBitmap.PixelHeight != height) {
             _previewBitmap = new WriteableBitmap(width, height, 96, 96, System.Windows.Media.PixelFormats.Bgra32, null);
             PreviewImage.Source = _previewBitmap;
@@ -83,7 +104,8 @@ public partial class MainWindow : Window {
         _previewBitmap.WritePixels(new Int32Rect(0, 0, width, height), pixels, stride, 0);
 
         ComputeLumaRangeSample(pixels, width, height, stride, out var min, out var max);
-        PreviewInfoText.Text = $"Captured {width}×{height} • Luma {min}–{max}";
+        _lastDebugSummary = GetDebugSummary(pixels, width, height, stride);
+        PreviewInfoText.Text = $"Captured {width}×{height} • Luma {min}–{max} • {_lastDebugSummary}";
     }
 
     private static void ComputeLumaRangeSample(ReadOnlySpan<byte> pixels, int width, int height, int stride, out byte min, out byte max) {
@@ -113,6 +135,71 @@ public partial class MainWindow : Window {
         var text = DecodedText.Text ?? string.Empty;
         if (text.Length == 0) return;
         WpfClipboard.SetText(text);
+    }
+
+    private void SaveCapture_Click(object sender, RoutedEventArgs e) {
+        if (_lastPixels is null || _lastWidth <= 0 || _lastHeight <= 0 || _lastStride <= 0) {
+            WpfMessageBox.Show(this, "Nothing captured yet. Start scanning first.", "Screen scan", MessageBoxButton.OK, MessageBoxImage.Information);
+            return;
+        }
+
+        var dialog = new Microsoft.Win32.SaveFileDialog {
+            Filter = "PNG image (*.png)|*.png",
+            FileName = $"capture-{DateTime.Now:yyyyMMdd-HHmmss}.png",
+        };
+
+        if (dialog.ShowDialog(this) != true) return;
+
+        SavePng(dialog.FileName, _lastPixels, _lastWidth, _lastHeight, _lastStride);
+        StatusText.Text = $"Saved capture: {Path.GetFileName(dialog.FileName)}";
+    }
+
+    private void SaveBinarized_Click(object sender, RoutedEventArgs e) {
+        if (_lastPixels is null || _lastWidth <= 0 || _lastHeight <= 0 || _lastStride <= 0) {
+            WpfMessageBox.Show(this, "Nothing captured yet. Start scanning first.", "Screen scan", MessageBoxButton.OK, MessageBoxImage.Information);
+            return;
+        }
+
+        if (!QrGrayImage.TryCreate(_lastPixels, _lastWidth, _lastHeight, _lastStride, PixelFormat.Bgra32, scale: 1, out var gray)) {
+            WpfMessageBox.Show(this, "Failed to build grayscale image (insufficient contrast?).", "Screen scan", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
+
+        var bw = new byte[_lastStride * _lastHeight];
+        for (var y = 0; y < _lastHeight; y++) {
+            var srcRow = y * gray.Width;
+            var dstRow = y * _lastStride;
+            for (var x = 0; x < _lastWidth; x++) {
+                var lum = gray.Gray[srcRow + x];
+                var v = lum < gray.Threshold ? (byte)0 : (byte)255;
+                var p = dstRow + x * 4;
+                bw[p + 0] = v;
+                bw[p + 1] = v;
+                bw[p + 2] = v;
+                bw[p + 3] = 255;
+            }
+        }
+
+        var dialog = new Microsoft.Win32.SaveFileDialog {
+            Filter = "PNG image (*.png)|*.png",
+            FileName = $"binarized-{DateTime.Now:yyyyMMdd-HHmmss}.png",
+        };
+
+        if (dialog.ShowDialog(this) != true) return;
+
+        SavePng(dialog.FileName, bw, _lastWidth, _lastHeight, _lastStride);
+        StatusText.Text = $"Saved BW: {Path.GetFileName(dialog.FileName)}";
+    }
+
+    private static void SavePng(string filePath, byte[] bgra, int width, int height, int stride) {
+        var wb = new WriteableBitmap(width, height, 96, 96, System.Windows.Media.PixelFormats.Bgra32, null);
+        wb.WritePixels(new Int32Rect(0, 0, width, height), bgra, stride, 0);
+
+        var encoder = new PngBitmapEncoder();
+        encoder.Frames.Add(BitmapFrame.Create(wb));
+
+        using var fs = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None);
+        encoder.Save(fs);
     }
 
     private void PickRegion_Click(object sender, RoutedEventArgs e) {
@@ -197,6 +284,33 @@ public partial class MainWindow : Window {
     private static bool TryReadInt(string? text, out int value) {
         value = 0;
         return int.TryParse(text, out value);
+    }
+
+    private string GetDebugSummary(byte[] pixels, int width, int height, int stride) {
+        var nowMs = Environment.TickCount64;
+        if (_lastDebugSummaryTickMs >= 0 && nowMs - _lastDebugSummaryTickMs < 1000) return _lastDebugSummary;
+        _lastDebugSummaryTickMs = nowMs;
+
+        var sb = new StringBuilder(64);
+
+        AppendScale(sb, pixels, width, height, stride, scale: 1);
+
+        var minDim = Math.Min(width, height);
+        if (minDim >= 160) AppendScale(sb, pixels, width, height, stride, scale: 2);
+        if (minDim >= 800) AppendScale(sb, pixels, width, height, stride, scale: 3);
+
+        return sb.ToString().TrimEnd();
+    }
+
+    private static void AppendScale(StringBuilder sb, byte[] pixels, int width, int height, int stride, int scale) {
+        if (!QrGrayImage.TryCreate(pixels, width, height, stride, PixelFormat.Bgra32, scale, out var gray)) {
+            sb.Append($"s{scale}:grayfail ");
+            return;
+        }
+
+        var candN = QrFinderPatternDetector.FindCandidates(gray, invert: false).Count;
+        var candI = QrFinderPatternDetector.FindCandidates(gray, invert: true).Count;
+        sb.Append($"s{scale}:t{gray.Threshold} cand{candN}/{candI} ");
     }
 
     private sealed class MonitorItem {

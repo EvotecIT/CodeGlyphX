@@ -47,6 +47,11 @@
 
             <Button x:Name="StartStopButton" Content="Start scanning" Click="StartStop_Click" Margin="0,0,0,12" />
 
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                <Button x:Name="SaveCaptureButton" Content="Save capture…" Click="SaveCapture_Click" Width="170" Margin="0,0,8,0" />
+                <Button x:Name="SaveBinarizedButton" Content="Save BW…" Click="SaveBinarized_Click" Width="170" />
+            </StackPanel>
+
             <TextBlock Text="Status" FontWeight="Bold" />
             <TextBlock x:Name="StatusText" Text="Idle" Margin="0,0,0,12" />
 

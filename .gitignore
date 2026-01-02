@@ -373,3 +373,7 @@ build/*
 /Module/Lib/*dotnet-install.sh
 packages-microsoft-prod.deb
 dotnet-install.sh
+
+# CodeMatrix.ScreenScan.Wpf debug captures (may contain OTP secrets)
+capture-*.png
+binarized-*.png

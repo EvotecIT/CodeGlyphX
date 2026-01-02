@@ -5,7 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Deterministic>true</Deterministic>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <!-- Avoid Windows-only fallback folder paths when building on non-Windows runtimes. -->
-    <RestoreFallbackFolders Condition="'$(MSBuildRuntimeOS)' != 'Windows'"></RestoreFallbackFolders>
+    <!-- Avoid build failures caused by stale/Windows-only fallback folder paths from user/global NuGet configs. -->
+    <RestoreFallbackFolders></RestoreFallbackFolders>
   </PropertyGroup>
 </Project>
