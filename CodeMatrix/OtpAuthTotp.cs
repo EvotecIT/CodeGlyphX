@@ -4,8 +4,17 @@ using CodeMatrix.Internal;
 
 namespace CodeMatrix;
 
+/// <summary>
+/// Builder for deterministic <c>otpauth://totp/</c> URIs.
+/// </summary>
+/// <remarks>
+/// Output is stable (parameter ordering is fixed) and uses percent-encoding for label/query parts.
+/// </remarks>
 public static class OtpAuthTotp {
 #if NET8_0_OR_GREATER
+    /// <summary>
+    /// Builds an <c>otpauth://totp/</c> URI for a TOTP token.
+    /// </summary>
     public static string Create(
         string issuer,
         string account,
@@ -17,6 +26,9 @@ public static class OtpAuthTotp {
     }
 #endif
 
+    /// <summary>
+    /// Builds an <c>otpauth://totp/</c> URI for a TOTP token.
+    /// </summary>
     public static string Create(
         string issuer,
         string account,

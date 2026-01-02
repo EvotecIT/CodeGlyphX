@@ -4,9 +4,22 @@ using System.Text;
 
 namespace CodeMatrix;
 
+/// <summary>
+/// Base32 helpers for <c>otpauth://</c> secrets.
+/// </summary>
 public static class OtpAuthSecret {
     private const string Alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
 
+    /// <summary>
+    /// Decodes a Base32-encoded secret into raw bytes.
+    /// </summary>
+    /// <remarks>
+    /// Normalization rules:
+    /// <list type="bullet">
+    /// <item><description>Ignores ASCII whitespace, <c>-</c> separators and <c>=</c> padding.</description></item>
+    /// <item><description>Accepts upper and lower case.</description></item>
+    /// </list>
+    /// </remarks>
     public static byte[] FromBase32(string base32) {
         if (base32 is null) throw new ArgumentNullException(nameof(base32));
 
@@ -44,12 +57,18 @@ public static class OtpAuthSecret {
         return result.ToArray();
     }
 
+    /// <summary>
+    /// Encodes bytes as Base32 without padding (uppercase).
+    /// </summary>
     public static string ToBase32(byte[] bytes) {
         if (bytes is null) throw new ArgumentNullException(nameof(bytes));
         return ToBase32Core(bytes, 0, bytes.Length);
     }
 
 #if NET8_0_OR_GREATER
+    /// <summary>
+    /// Encodes bytes as Base32 without padding (uppercase).
+    /// </summary>
     public static string ToBase32(ReadOnlySpan<byte> bytes) => ToBase32Core(bytes);
 #endif
 
@@ -114,4 +133,3 @@ public static class OtpAuthSecret {
         return -1;
     }
 }
-
