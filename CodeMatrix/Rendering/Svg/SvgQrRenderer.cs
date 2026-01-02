@@ -3,7 +3,13 @@ using System.Text;
 
 namespace CodeMatrix.Rendering.Svg;
 
+/// <summary>
+/// Renders QR modules to SVG.
+/// </summary>
 public static class SvgQrRenderer {
+    /// <summary>
+    /// Renders the QR module matrix to an SVG string.
+    /// </summary>
     public static string Render(BitMatrix modules, QrSvgRenderOptions opts) {
         if (modules is null) throw new ArgumentNullException(nameof(modules));
         if (opts is null) throw new ArgumentNullException(nameof(opts));
@@ -44,4 +50,3 @@ public static class SvgQrRenderer {
         return sb.ToString();
     }
 }
-

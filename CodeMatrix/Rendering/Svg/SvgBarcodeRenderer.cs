@@ -3,7 +3,13 @@ using System.Text;
 
 namespace CodeMatrix.Rendering.Svg;
 
+/// <summary>
+/// Renders 1D barcodes to SVG.
+/// </summary>
 public static class SvgBarcodeRenderer {
+    /// <summary>
+    /// Renders the barcode to an SVG string.
+    /// </summary>
     public static string Render(Barcode1D barcode, BarcodeSvgRenderOptions opts) {
         if (barcode is null) throw new ArgumentNullException(nameof(barcode));
         if (opts is null) throw new ArgumentNullException(nameof(opts));
@@ -38,4 +44,3 @@ public static class SvgBarcodeRenderer {
         return sb.ToString();
     }
 }
-
