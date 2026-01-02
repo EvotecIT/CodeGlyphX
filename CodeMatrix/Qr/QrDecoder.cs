@@ -65,9 +65,14 @@ public static class QrDecoder {
         }
 
         if (!TryCorrectAndExtractData(codewords, version, ecc, out var dataCodewords)) return false;
-        if (!TryParseByteMode(dataCodewords, version, out var payload)) return false;
+        if (!QrPayloadParser.TryParse(dataCodewords, version, out var payload, out var encodingKind)) return false;
 
-        var text = Encoding.UTF8.GetString(payload);
+        var text = encodingKind switch {
+            QrTextEncoding.Ascii => Encoding.ASCII.GetString(payload),
+            QrTextEncoding.Latin1 => DecodeLatin1(payload),
+            _ => Encoding.UTF8.GetString(payload),
+        };
+
         result = new QrDecoded(version, ecc, mask, payload, text);
         return true;
     }
@@ -276,45 +281,14 @@ public static class QrDecoder {
         return true;
     }
 
-    private static bool TryParseByteMode(byte[] dataCodewords, int version, out byte[] payload) {
-        payload = null!;
+    private static string DecodeLatin1(ReadOnlySpan<byte> bytes) {
+        if (bytes.Length == 0) return string.Empty;
 
-        var bitLen = dataCodewords.Length * 8;
-        var bitPos = 0;
-
-        int ReadBits(int n) {
-            if (n == 0) return 0;
-            if (n < 0 || n > 31) throw new ArgumentOutOfRangeException(nameof(n));
-            if (bitPos + n > bitLen) return -1;
-            var val = 0;
-            for (var i = 0; i < n; i++) {
-                var b = (dataCodewords[(bitPos + i) >> 3] >> (7 - ((bitPos + i) & 7))) & 1;
-                val = (val << 1) | b;
-            }
-            bitPos += n;
-            return val;
-        }
-
-        var mode = ReadBits(4);
-        if (mode < 0) return false;
-        if (mode == 0) {
-            payload = Array.Empty<byte>();
-            return true;
-        }
-        if (mode != 0b0100) return false;
-
-        var countBits = QrTables.GetByteModeCharCountBits(version);
-        var count = ReadBits(countBits);
-        if (count < 0) return false;
-
-        var bytes = new byte[count];
+        var chars = new char[bytes.Length];
         for (var i = 0; i < bytes.Length; i++) {
-            var b = ReadBits(8);
-            if (b < 0) return false;
-            bytes[i] = (byte)b;
+            chars[i] = (char)bytes[i];
         }
 
-        payload = bytes;
-        return true;
+        return new string(chars);
     }
 }

@@ -194,14 +194,15 @@ internal static class QrFinderPatternDetector {
         if (centerX < 0 || centerX >= image.Width) return false;
 
         var maxCount = stateCount[2];
-        if (!CrossCheckVertical(image, invert, (int)Math.Round(centerX), y, maxCount, stateCountTotal, out var centerY, out var estModuleSize)) {
+        if (!CrossCheckVertical(image, invert, (int)Math.Round(centerX), y, maxCount, stateCountTotal, out var centerY, out var moduleSizeV)) {
             return false;
         }
-        if (!CrossCheckHorizontal(image, invert, (int)Math.Round(centerX), (int)Math.Round(centerY), maxCount, stateCountTotal, out centerX, out estModuleSize)) {
+        if (!CrossCheckHorizontal(image, invert, (int)Math.Round(centerX), (int)Math.Round(centerY), maxCount, stateCountTotal, out centerX, out var moduleSizeH)) {
             return false;
         }
 
-        AddOrMerge(possibleCenters, new FinderPattern(centerX, centerY, estModuleSize, 1));
+        var moduleSize = (moduleSizeV + moduleSizeH) / 2.0;
+        AddOrMerge(possibleCenters, new FinderPattern(centerX, centerY, moduleSize, 1));
         return true;
     }
 

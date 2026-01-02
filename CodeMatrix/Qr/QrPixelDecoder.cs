@@ -14,8 +14,10 @@ internal static class QrPixelDecoder {
         // Prefer a full finder-pattern based decode (robust to extra background/noise).
         if (TryDecodeAtScale(pixels, width, height, stride, fmt, 1, out result)) return true;
 
-        // Optional downscale pass for very large captures.
-        if (Math.Min(width, height) >= 400 && TryDecodeAtScale(pixels, width, height, stride, fmt, 2, out result)) return true;
+        // Optional downscale passes (often helps with UI-scaled / anti-aliased QR).
+        var minDim = Math.Min(width, height);
+        if (minDim >= 160 && TryDecodeAtScale(pixels, width, height, stride, fmt, 2, out result)) return true;
+        if (minDim >= 800 && TryDecodeAtScale(pixels, width, height, stride, fmt, 3, out result)) return true;
 
         return false;
     }
@@ -58,8 +60,38 @@ internal static class QrPixelDecoder {
 
         var dimH = (int)Math.Round(distX / moduleSize) + 7;
         var dimV = (int)Math.Round(distY / moduleSize) + 7;
-        var dimension = NearestValidDimension((dimH + dimV) / 2);
-        if (dimension is < 21 or > 177) return false;
+
+        // Try a few nearby dimensions (estimation can be off on UI-scaled QR).
+        var baseDim = NearestValidDimension((dimH + dimV) / 2);
+        Span<int> candidates = stackalloc int[6];
+        var candidatesCount = 0;
+        AddDimensionCandidate(ref candidates, ref candidatesCount, baseDim);
+        AddDimensionCandidate(ref candidates, ref candidatesCount, NearestValidDimension(dimH));
+        AddDimensionCandidate(ref candidates, ref candidatesCount, NearestValidDimension(dimV));
+        AddDimensionCandidate(ref candidates, ref candidatesCount, baseDim - 4);
+        AddDimensionCandidate(ref candidates, ref candidatesCount, baseDim + 4);
+        AddDimensionCandidate(ref candidates, ref candidatesCount, baseDim + 8);
+
+        for (var i = 0; i < candidatesCount; i++) {
+            var dimension = candidates[i];
+            if (dimension is < 21 or > 177) continue;
+            if (TrySampleAndDecodeDimension(image, invert, tl, tr, bl, dimension, out result)) return true;
+        }
+
+        return false;
+    }
+
+    private static void AddDimensionCandidate(ref Span<int> list, ref int count, int dimension) {
+        if (dimension is < 21 or > 177) return;
+        if ((dimension & 3) != 1) return;
+        for (var i = 0; i < count; i++) {
+            if (list[i] == dimension) return;
+        }
+        list[count++] = dimension;
+    }
+
+    private static bool TrySampleAndDecodeDimension(QrGrayImage image, bool invert, QrFinderPatternDetector.FinderPattern tl, QrFinderPatternDetector.FinderPattern tr, QrFinderPatternDetector.FinderPattern bl, int dimension, out QrDecoded result) {
+        result = null!;
 
         var modulesBetweenCenters = dimension - 7;
         if (modulesBetweenCenters <= 0) return false;
@@ -72,6 +104,8 @@ internal static class QrPixelDecoder {
 
         var bm = new global::CodeMatrix.BitMatrix(dimension, dimension);
 
+        var clamped = 0;
+
         for (var my = 0; my < dimension; my++) {
             var dy = my - 3;
             for (var mx = 0; mx < dimension; mx++) {
@@ -82,11 +116,19 @@ internal static class QrPixelDecoder {
 
                 var px = (int)Math.Round(sx);
                 var py = (int)Math.Round(sy);
-                if ((uint)px >= (uint)image.Width || (uint)py >= (uint)image.Height) return false;
 
-                bm[mx, my] = image.IsBlack(px, py, invert);
+                if (px < 0) { px = 0; clamped++; }
+                else if (px >= image.Width) { px = image.Width - 1; clamped++; }
+
+                if (py < 0) { py = 0; clamped++; }
+                else if (py >= image.Height) { py = image.Height - 1; clamped++; }
+
+                bm[mx, my] = SampleMajority3x3(image, px, py, invert);
             }
         }
+
+        // If we had to clamp too many samples, the region is likely cropped too tight or the estimate is wrong.
+        if (clamped > dimension * 2) return false;
 
         if (global::CodeMatrix.QrDecoder.TryDecode(bm, out result)) return true;
 
@@ -116,23 +158,45 @@ internal static class QrPixelDecoder {
         }
 
         if (maxX < 0) return false;
+
+        // Expand a touch to counter anti-aliasing that can shrink the detected black bbox.
+        if (minX > 0) minX--;
+        if (minY > 0) minY--;
+        if (maxX < image.Width - 1) maxX++;
+        if (maxY < image.Height - 1) maxY++;
+
         var boxW = maxX - minX + 1;
         var boxH = maxY - minY + 1;
         if (boxW <= 0 || boxH <= 0) return false;
 
-        for (var version = 1; version <= 40; version++) {
+        var maxModules = Math.Min(boxW, boxH);
+        var maxVersion = Math.Min(40, (maxModules - 17) / 4);
+        if (maxVersion < 1) return false;
+
+        // Try smaller versions first (more likely for OTP QR), but accept non-integer module sizes.
+        for (var version = 1; version <= maxVersion; version++) {
             var modulesCount = version * 4 + 17;
-            if (boxW % modulesCount != 0 || boxH % modulesCount != 0) continue;
-            var moduleSize = boxW / modulesCount;
-            if (moduleSize <= 0) continue;
-            if (boxH / modulesCount != moduleSize) continue;
+            var moduleSizeX = boxW / (double)modulesCount;
+            var moduleSizeY = boxH / (double)modulesCount;
+            if (moduleSizeX < 1.0 || moduleSizeY < 1.0) continue;
+
+            var relDiff = Math.Abs(moduleSizeX - moduleSizeY) / Math.Max(moduleSizeX, moduleSizeY);
+            if (relDiff > 0.20) continue;
 
             var bm = new global::CodeMatrix.BitMatrix(modulesCount, modulesCount);
             for (var my = 0; my < modulesCount; my++) {
-                var py = minY + my * moduleSize + moduleSize / 2;
+                var sy = minY + (my + 0.5) * moduleSizeY;
+                var py = (int)Math.Round(sy);
+                if (py < 0) py = 0;
+                else if (py >= image.Height) py = image.Height - 1;
+
                 for (var mx = 0; mx < modulesCount; mx++) {
-                    var px = minX + mx * moduleSize + moduleSize / 2;
-                    bm[mx, my] = image.IsBlack(px, py, invert);
+                    var sx = minX + (mx + 0.5) * moduleSizeX;
+                    var px = (int)Math.Round(sx);
+                    if (px < 0) px = 0;
+                    else if (px >= image.Width) px = image.Width - 1;
+
+                    bm[mx, my] = SampleMajority3x3(image, px, py, invert);
                 }
             }
 
@@ -170,6 +234,26 @@ internal static class QrPixelDecoder {
         var dx = x1 - x2;
         var dy = y1 - y2;
         return Math.Sqrt(dx * dx + dy * dy);
+    }
+
+    private static bool SampleMajority3x3(QrGrayImage image, int px, int py, bool invert) {
+        var black = 0;
+
+        for (var dy = -1; dy <= 1; dy++) {
+            var y = py + dy;
+            if (y < 0) y = 0;
+            else if (y >= image.Height) y = image.Height - 1;
+
+            for (var dx = -1; dx <= 1; dx++) {
+                var x = px + dx;
+                if (x < 0) x = 0;
+                else if (x >= image.Width) x = image.Width - 1;
+
+                if (image.IsBlack(x, y, invert)) black++;
+            }
+        }
+
+        return black >= 5;
     }
 
     private static void Invert(global::CodeMatrix.BitMatrix matrix) {
