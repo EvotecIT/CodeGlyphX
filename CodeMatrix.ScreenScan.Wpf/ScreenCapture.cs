@@ -4,6 +4,9 @@ using System.Runtime.InteropServices;
 namespace CodeMatrix.ScreenScan.Wpf;
 
 internal static class ScreenCapture {
+    private const int SRCCOPY = 0x00CC0020;
+    private const int CAPTUREBLT = 0x40000000;
+
     public static byte[] CaptureBgra32(int x, int y, int width, int height, out int stride) {
         if (width <= 0) throw new ArgumentOutOfRangeException(nameof(width));
         if (height <= 0) throw new ArgumentOutOfRangeException(nameof(height));
@@ -35,7 +38,7 @@ internal static class ScreenCapture {
 
             var oldObj = SelectObject(hdcMem, hBmp);
             try {
-                if (!BitBlt(hdcMem, 0, 0, width, height, hdcScreen, x, y, 0x00CC0020)) // SRCCOPY
+                if (!BitBlt(hdcMem, 0, 0, width, height, hdcScreen, x, y, SRCCOPY | CAPTUREBLT))
                     throw new InvalidOperationException("BitBlt failed.");
 
                 var bytes = new byte[stride * height];
@@ -96,4 +99,3 @@ internal static class ScreenCapture {
     [DllImport("gdi32.dll")]
     private static extern IntPtr CreateDIBSection(IntPtr hdc, ref BITMAPINFO pbmi, uint iUsage, out IntPtr ppvBits, IntPtr hSection, uint dwOffset);
 }
-

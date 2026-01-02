@@ -43,6 +43,8 @@
                 <TextBox Grid.Row="3" Grid.Column="1" x:Name="HeightBox" Text="600" />
             </Grid>
 
+            <Button x:Name="PickRegionButton" Content="Pick region…" Click="PickRegion_Click" Margin="0,0,0,12" />
+
             <Button x:Name="StartStopButton" Content="Start scanning" Click="StartStop_Click" Margin="0,0,0,12" />
 
             <TextBlock Text="Status" FontWeight="Bold" />
@@ -55,8 +57,28 @@
         </StackPanel>
 
         <Border Grid.Column="1" BorderBrush="#DDD" BorderThickness="1" Padding="12" Background="White">
-            <TextBlock Text="Note: this prototype expects a clean, high-contrast QR in the selected region (no rotation/perspective yet)."
-                       TextWrapping="Wrap" />
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0"
+                           Text="Note: this prototype expects a clean, high-contrast QR in the selected region (no rotation/perspective yet)."
+                           TextWrapping="Wrap" />
+
+                <TextBlock Grid.Row="1" Text="Live capture preview (verify region selection):" FontWeight="Bold" Margin="0,12,0,6" />
+
+                <Border Grid.Row="2" BorderBrush="#EEE" BorderThickness="1" Background="White">
+                    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                        <Image x:Name="PreviewImage" Stretch="Uniform" RenderOptions.BitmapScalingMode="NearestNeighbor" />
+                    </ScrollViewer>
+                </Border>
+
+                <TextBlock Grid.Row="3" x:Name="PreviewInfoText" Margin="0,8,0,0" Foreground="#666" TextWrapping="Wrap" />
+            </Grid>
         </Border>
     </Grid>
 </Window>
