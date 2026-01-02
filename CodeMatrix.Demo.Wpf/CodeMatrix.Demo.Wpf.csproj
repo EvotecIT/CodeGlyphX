@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFrameworks>net472;net8.0-windows</TargetFrameworks>
+    <UseWPF>true</UseWPF>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\\CodeMatrix\\CodeMatrix.csproj" />
+    <ProjectReference Include="..\\CodeMatrix.Wpf\\CodeMatrix.Wpf.csproj" />
+  </ItemGroup>
+</Project>

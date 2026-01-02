@@ -1,0 +1,104 @@
+<Window x:Class="CodeMatrix.Demo.Wpf.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:wpf="clr-namespace:CodeMatrix.Wpf;assembly=CodeMatrix.Wpf"
+        mc:Ignorable="d"
+        Title="CodeMatrix Demo" Height="720" Width="1100">
+    <Grid Margin="12">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="360" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto">
+            <StackPanel Margin="0,0,12,0">
+                <TextBlock Text="QR" FontWeight="Bold" FontSize="16" Margin="0,0,0,6" />
+
+                <TextBlock Text="Text" />
+                <TextBox x:Name="QrTextBox"
+                         Text="Hello from CodeMatrix"
+                         AcceptsReturn="True"
+                         TextWrapping="Wrap"
+                         Height="90"
+                         Margin="0,0,0,8" />
+
+                <TextBlock Text="ECC" />
+                <ComboBox x:Name="QrEccCombo" Margin="0,0,0,8" />
+
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                    <Button Content="Save SVG..." Click="SaveQrSvg_Click" Margin="0,0,8,0" />
+                    <Button Content="Save HTML..." Click="SaveQrHtml_Click" Margin="0,0,8,0" />
+                    <Button Content="Save PNG..." Click="SaveQrPng_Click" />
+                </StackPanel>
+
+                <Separator Margin="0,0,0,12" />
+
+                <TextBlock Text="Code 128" FontWeight="Bold" FontSize="16" Margin="0,0,0,6" />
+
+                <TextBlock Text="Value" />
+                <TextBox x:Name="BarcodeValueBox"
+                         Text="CODE128-12345"
+                         Margin="0,0,0,12" />
+
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                    <Button Content="Save SVG..." Click="SaveBarcodeSvg_Click" Margin="0,0,8,0" />
+                    <Button Content="Save HTML..." Click="SaveBarcodeHtml_Click" Margin="0,0,8,0" />
+                    <Button Content="Save PNG..." Click="SaveBarcodePng_Click" />
+                </StackPanel>
+
+                <Separator Margin="0,0,0,12" />
+
+                <TextBlock Text="OTP (TOTP)" FontWeight="Bold" FontSize="16" Margin="0,0,0,6" />
+
+                <TextBlock Text="Issuer" />
+                <TextBox x:Name="OtpIssuerBox" Text="AuthIMO" Margin="0,0,0,8" />
+
+                <TextBlock Text="Account" />
+                <TextBox x:Name="OtpAccountBox" Text="user@example.com" Margin="0,0,0,8" />
+
+                <TextBlock Text="Secret (Base32)" />
+                <TextBox x:Name="OtpSecretBox" Text="JBSWY3DPEHPK3PXP" Margin="0,0,0,8" />
+
+                <Button Content="Build otpauth URI" Click="BuildOtp_Click" Margin="0,0,0,8" />
+
+                <TextBlock Text="otpauth URI" />
+                <TextBox x:Name="OtpUriBox" IsReadOnly="True" TextWrapping="Wrap" Height="90" Margin="0,0,0,12" />
+
+                <Button Content="Save OTP QR PNG..." Click="SaveOtpQrPng_Click" />
+            </StackPanel>
+        </ScrollViewer>
+
+        <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <TextBlock Text="Preview" FontWeight="Bold" FontSize="16" Margin="0,0,0,12" />
+
+                <TextBlock Text="QR" FontWeight="Bold" Margin="0,0,0,6" />
+                <Border BorderBrush="#DDD" BorderThickness="1" Padding="8" Background="White">
+                    <wpf:QrCodeControl x:Name="QrControl"
+                                       Text="{Binding ElementName=QrTextBox, Path=Text, UpdateSourceTrigger=PropertyChanged}"
+                                       Ecc="{Binding ElementName=QrEccCombo, Path=SelectedItem}"
+                                       ModuleSize="6"
+                                       QuietZone="4" />
+                </Border>
+
+                <TextBlock Text="Code 128" FontWeight="Bold" Margin="0,16,0,6" />
+                <Border BorderBrush="#DDD" BorderThickness="1" Padding="8" Background="White">
+                    <wpf:Barcode128Control x:Name="BarcodeControl"
+                                           Value="{Binding ElementName=BarcodeValueBox, Path=Text, UpdateSourceTrigger=PropertyChanged}"
+                                           ModuleSize="2"
+                                           QuietZone="10" />
+                </Border>
+
+                <TextBlock Text="OTP QR" FontWeight="Bold" Margin="0,16,0,6" />
+                <Border BorderBrush="#DDD" BorderThickness="1" Padding="8" Background="White">
+                    <wpf:QrCodeControl x:Name="OtpQrControl"
+                                       Text="{Binding ElementName=OtpUriBox, Path=Text, UpdateSourceTrigger=PropertyChanged}"
+                                       ModuleSize="6"
+                                       QuietZone="4" />
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Window>
