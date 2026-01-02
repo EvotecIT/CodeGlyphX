@@ -1,0 +1,62 @@
+<Window x:Class="CodeMatrix.ScreenScan.Wpf.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="CodeMatrix Screen Scan (prototype)" Height="520" Width="980">
+    <Grid Margin="12">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="360" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Grid.Column="0" Margin="0,0,12,0">
+            <TextBlock Text="Capture region (screen coordinates)" FontWeight="Bold" FontSize="16" Margin="0,0,0,12" />
+
+            <TextBlock Text="Monitor" FontWeight="Bold" />
+            <ComboBox x:Name="MonitorBox" Margin="0,0,0,6" SelectionChanged="MonitorBox_SelectionChanged" />
+            <TextBlock x:Name="MonitorInfoText" Text="(loading...)" Margin="0,0,0,12" />
+
+            <Grid Margin="0,0,0,12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="X (relative)" Margin="0,0,8,6" VerticalAlignment="Center" />
+                <TextBox Grid.Row="0" Grid.Column="1" x:Name="XBox" Text="0" Margin="0,0,0,6" />
+
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="Y (relative)" Margin="0,0,8,6" VerticalAlignment="Center" />
+                <TextBox Grid.Row="1" Grid.Column="1" x:Name="YBox" Text="0" Margin="0,0,0,6" />
+
+                <TextBlock Grid.Row="2" Grid.Column="0" Text="Width" Margin="0,0,8,6" VerticalAlignment="Center" />
+                <TextBox Grid.Row="2" Grid.Column="1" x:Name="WidthBox" Text="600" Margin="0,0,0,6" />
+
+                <TextBlock Grid.Row="3" Grid.Column="0" Text="Height" Margin="0,0,8,0" VerticalAlignment="Center" />
+                <TextBox Grid.Row="3" Grid.Column="1" x:Name="HeightBox" Text="600" />
+            </Grid>
+
+            <Button x:Name="StartStopButton" Content="Start scanning" Click="StartStop_Click" Margin="0,0,0,12" />
+
+            <TextBlock Text="Status" FontWeight="Bold" />
+            <TextBlock x:Name="StatusText" Text="Idle" Margin="0,0,0,12" />
+
+            <TextBlock Text="Decoded payload" FontWeight="Bold" />
+            <TextBox x:Name="DecodedText" IsReadOnly="True" TextWrapping="Wrap" AcceptsReturn="True" Height="220" Margin="0,0,0,12" />
+
+            <Button Content="Copy" Click="Copy_Click" />
+        </StackPanel>
+
+        <Border Grid.Column="1" BorderBrush="#DDD" BorderThickness="1" Padding="12" Background="White">
+            <TextBlock Text="Note: this prototype expects a clean, high-contrast QR in the selected region (no rotation/perspective yet)."
+                       TextWrapping="Wrap" />
+        </Border>
+    </Grid>
+</Window>
