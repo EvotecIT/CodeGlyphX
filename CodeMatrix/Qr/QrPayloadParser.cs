@@ -10,6 +10,8 @@ internal enum QrTextEncoding {
 }
 
 internal static class QrPayloadParser {
+    private const string AlphanumericTable = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ $%*+-./:";
+
     public static bool TryParse(byte[] dataCodewords, int version, out byte[] payload, out QrTextEncoding encoding) {
         payload = null!;
         encoding = QrTextEncoding.Utf8;
@@ -60,6 +62,62 @@ internal static class QrPayloadParser {
                     var b = ReadBits(8);
                     if (b < 0) return false;
                     bytes.Add((byte)b);
+                }
+
+                continue;
+            }
+
+            if (mode == 0b0001) {
+                // Numeric mode
+                var countBits = QrTables.GetNumericModeCharCountBits(version);
+                var count = ReadBits(countBits);
+                if (count < 0) return false;
+
+                var remaining = count;
+                while (remaining >= 3) {
+                    var v = ReadBits(10);
+                    if (v < 0 || v > 999) return false;
+                    bytes.Add((byte)('0' + (v / 100)));
+                    bytes.Add((byte)('0' + ((v / 10) % 10)));
+                    bytes.Add((byte)('0' + (v % 10)));
+                    remaining -= 3;
+                }
+
+                if (remaining == 2) {
+                    var v = ReadBits(7);
+                    if (v < 0 || v > 99) return false;
+                    bytes.Add((byte)('0' + (v / 10)));
+                    bytes.Add((byte)('0' + (v % 10)));
+                } else if (remaining == 1) {
+                    var v = ReadBits(4);
+                    if (v < 0 || v > 9) return false;
+                    bytes.Add((byte)('0' + v));
+                }
+
+                continue;
+            }
+
+            if (mode == 0b0010) {
+                // Alphanumeric mode
+                var countBits = QrTables.GetAlphanumericModeCharCountBits(version);
+                var count = ReadBits(countBits);
+                if (count < 0) return false;
+
+                var remaining = count;
+                while (remaining >= 2) {
+                    var v = ReadBits(11);
+                    if (v < 0 || v >= 45 * 45) return false;
+                    var a = v / 45;
+                    var b = v % 45;
+                    bytes.Add((byte)AlphanumericTable[a]);
+                    bytes.Add((byte)AlphanumericTable[b]);
+                    remaining -= 2;
+                }
+
+                if (remaining == 1) {
+                    var v = ReadBits(6);
+                    if (v < 0 || v >= 45) return false;
+                    bytes.Add((byte)AlphanumericTable[v]);
                 }
 
                 continue;

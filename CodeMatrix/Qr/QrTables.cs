@@ -57,6 +57,20 @@ internal static class QrTables {
         return rawCodewords - (numBlocks * eccPerBlock);
     }
 
+    public static int GetNumericModeCharCountBits(int version) {
+        if (version is < 1 or > 40) throw new ArgumentOutOfRangeException(nameof(version));
+        if (version <= 9) return 10;
+        if (version <= 26) return 12;
+        return 14;
+    }
+
+    public static int GetAlphanumericModeCharCountBits(int version) {
+        if (version is < 1 or > 40) throw new ArgumentOutOfRangeException(nameof(version));
+        if (version <= 9) return 9;
+        if (version <= 26) return 11;
+        return 13;
+    }
+
     public static int GetByteModeCharCountBits(int version) => version < 10 ? 8 : 16;
 
     public static int GetEccFormatBits(QrErrorCorrectionLevel ecc) {
@@ -88,4 +102,3 @@ internal static class QrTables {
 
     public static bool GetBit(int value, int bitIndex) => ((value >> bitIndex) & 1) != 0;
 }
-

@@ -24,6 +24,12 @@ internal static class QrFinderPatternDetector {
         topRight = default;
         bottomLeft = default;
 
+        var possibleCenters = FindCandidates(image, invert);
+        if (possibleCenters.Count < 3) return false;
+        return TrySelectBestThree(possibleCenters, out topLeft, out topRight, out bottomLeft);
+    }
+
+    public static List<FinderPattern> FindCandidates(QrGrayImage image, bool invert) {
         // Scan rows for 1:1:3:1:1 run-length patterns and cross-check vertically/horizontally.
         var possibleCenters = new List<FinderPattern>(8);
         var stateCount = new int[5];
@@ -74,8 +80,7 @@ internal static class QrFinderPatternDetector {
             }
         }
 
-        if (possibleCenters.Count < 3) return false;
-        return TrySelectBestThree(possibleCenters, out topLeft, out topRight, out bottomLeft);
+        return possibleCenters;
     }
 
     private static bool TrySelectBestThree(List<FinderPattern> candidates, out FinderPattern topLeft, out FinderPattern topRight, out FinderPattern bottomLeft) {
@@ -194,10 +199,10 @@ internal static class QrFinderPatternDetector {
         if (centerX < 0 || centerX >= image.Width) return false;
 
         var maxCount = stateCount[2];
-        if (!CrossCheckVertical(image, invert, (int)Math.Round(centerX), y, maxCount, stateCountTotal, out var centerY, out var moduleSizeV)) {
+        if (!CrossCheckVertical(image, invert, QrMath.RoundToInt(centerX), y, maxCount, stateCountTotal, out var centerY, out var moduleSizeV)) {
             return false;
         }
-        if (!CrossCheckHorizontal(image, invert, (int)Math.Round(centerX), (int)Math.Round(centerY), maxCount, stateCountTotal, out centerX, out var moduleSizeH)) {
+        if (!CrossCheckHorizontal(image, invert, QrMath.RoundToInt(centerX), QrMath.RoundToInt(centerY), maxCount, stateCountTotal, out centerX, out var moduleSizeH)) {
             return false;
         }
 

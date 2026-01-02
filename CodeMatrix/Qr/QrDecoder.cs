@@ -18,16 +18,29 @@ public static class QrDecoder {
     /// <param name="result">Decoded payload.</param>
     /// <returns><c>true</c> when decoding succeeded; otherwise <c>false</c>.</returns>
     public static bool TryDecode(BitMatrix modules, out QrDecoded result) {
+        return TryDecode(modules, out result, out _);
+    }
+
+    internal static bool TryDecode(BitMatrix modules, out QrDecoded result, out QrDecodeDiagnostics diagnostics) {
         result = null!;
-        if (modules is null) return false;
-        if (modules.Width != modules.Height) return false;
+        diagnostics = default;
+
+        if (modules is null || modules.Width != modules.Height) {
+            diagnostics = new QrDecodeDiagnostics(QrDecodeFailure.InvalidInput);
+            return false;
+        }
 
         var size = modules.Width;
         var version = (size - 17) / 4;
-        if (version is < 1 or > 40) return false;
-        if (size != version * 4 + 17) return false;
+        if (version is < 1 or > 40 || size != version * 4 + 17) {
+            diagnostics = new QrDecodeDiagnostics(QrDecodeFailure.InvalidSize, version);
+            return false;
+        }
 
-        if (!TryDecodeFormat(modules, out var ecc, out var mask)) return false;
+        if (!TryDecodeFormat(modules, out var ecc, out var mask, out var formatBestDistance)) {
+            diagnostics = new QrDecodeDiagnostics(QrDecodeFailure.FormatInfo, version, formatBestDistance: formatBestDistance);
+            return false;
+        }
 
         var functionMask = BuildFunctionMask(version, size);
 
@@ -64,8 +77,14 @@ public static class QrDecoder {
             upward = !upward;
         }
 
-        if (!TryCorrectAndExtractData(codewords, version, ecc, out var dataCodewords)) return false;
-        if (!QrPayloadParser.TryParse(dataCodewords, version, out var payload, out var encodingKind)) return false;
+        if (!TryCorrectAndExtractData(codewords, version, ecc, out var dataCodewords)) {
+            diagnostics = new QrDecodeDiagnostics(QrDecodeFailure.ReedSolomon, version, ecc, mask, formatBestDistance);
+            return false;
+        }
+        if (!QrPayloadParser.TryParse(dataCodewords, version, out var payload, out var encodingKind)) {
+            diagnostics = new QrDecodeDiagnostics(QrDecodeFailure.Payload, version, ecc, mask, formatBestDistance);
+            return false;
+        }
 
         var text = encodingKind switch {
             QrTextEncoding.Ascii => Encoding.ASCII.GetString(payload),
@@ -74,6 +93,7 @@ public static class QrDecoder {
         };
 
         result = new QrDecoded(version, ecc, mask, payload, text);
+        diagnostics = new QrDecodeDiagnostics(QrDecodeFailure.None, version, ecc, mask, formatBestDistance);
         return true;
     }
 
@@ -91,9 +111,49 @@ public static class QrDecoder {
     public static bool TryDecode(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat fmt, out QrDecoded result) {
         return QrPixelDecoder.TryDecode(pixels, width, height, stride, fmt, out result);
     }
+
+    internal static bool TryDecode(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat fmt, out QrDecoded result, out QrPixelDecodeDiagnostics diagnostics) {
+        return QrPixelDecoder.TryDecode(pixels, width, height, stride, fmt, out result, out diagnostics);
+    }
 #endif
 
-    private static bool TryDecodeFormat(BitMatrix modules, out QrErrorCorrectionLevel ecc, out int mask) {
+    /// <summary>
+    /// Attempts to decode a QR code from raw pixel data (best-effort, clean inputs).
+    /// </summary>
+    /// <param name="pixels">Pixel buffer.</param>
+    /// <param name="width">Image width in pixels.</param>
+    /// <param name="height">Image height in pixels.</param>
+    /// <param name="stride">Bytes per row.</param>
+    /// <param name="fmt">Pixel format (4 bytes per pixel).</param>
+    /// <param name="result">Decoded payload.</param>
+    /// <returns><c>true</c> when decoding succeeded; otherwise <c>false</c>.</returns>
+    public static bool TryDecode(byte[] pixels, int width, int height, int stride, PixelFormat fmt, out QrDecoded result) {
+        if (pixels is null) {
+            result = null!;
+            return false;
+        }
+
+#if NET8_0_OR_GREATER
+        return TryDecode((ReadOnlySpan<byte>)pixels, width, height, stride, fmt, out result);
+#else
+        result = null!;
+        return false;
+#endif
+    }
+
+#if NET8_0_OR_GREATER
+    internal static bool TryDecode(byte[] pixels, int width, int height, int stride, PixelFormat fmt, out QrDecoded result, out QrPixelDecodeDiagnostics diagnostics) {
+        if (pixels is null) {
+            result = null!;
+            diagnostics = default;
+            return false;
+        }
+
+        return TryDecode((ReadOnlySpan<byte>)pixels, width, height, stride, fmt, out result, out diagnostics);
+    }
+#endif
+
+    private static bool TryDecodeFormat(BitMatrix modules, out QrErrorCorrectionLevel ecc, out int mask, out int bestDistance) {
         var size = modules.Width;
 
         var bitsA = 0;
@@ -107,7 +167,7 @@ public static class QrDecoder {
         for (var i = 0; i < 8; i++) if (modules[size - 1 - i, 8]) bitsB |= 1 << i;
         for (var i = 8; i < 15; i++) if (modules[8, size - 15 + i]) bitsB |= 1 << i;
 
-        return TryDecodeFormatBits(bitsA, bitsB, out ecc, out mask);
+        return TryDecodeFormatBits(bitsA, bitsB, out ecc, out mask, out bestDistance);
     }
 
     private static readonly int[] FormatPatterns = BuildFormatPatterns();
@@ -127,7 +187,7 @@ public static class QrDecoder {
         return patterns;
     }
 
-    private static bool TryDecodeFormatBits(int bitsA, int bitsB, out QrErrorCorrectionLevel ecc, out int mask) {
+    private static bool TryDecodeFormatBits(int bitsA, int bitsB, out QrErrorCorrectionLevel ecc, out int mask, out int bestDistance) {
         var bestDist = int.MaxValue;
         var best = -1;
 
@@ -143,6 +203,7 @@ public static class QrDecoder {
         if (bestDist > 3 || best < 0) {
             ecc = default;
             mask = default;
+            bestDistance = bestDist;
             return false;
         }
 
@@ -155,7 +216,18 @@ public static class QrDecoder {
             2 => QrErrorCorrectionLevel.Q,
             _ => QrErrorCorrectionLevel.H,
         };
+        bestDistance = bestDist;
         return true;
+    }
+
+    internal static int GetBestFormatDistance(int bitsA, int bitsB) {
+        var bestDist = int.MaxValue;
+        for (var i = 0; i < FormatPatterns.Length; i++) {
+            var candidate = FormatPatterns[i];
+            var dist = Math.Min(CountBits(bitsA ^ candidate), CountBits(bitsB ^ candidate));
+            if (dist < bestDist) bestDist = dist;
+        }
+        return bestDist;
     }
 
     private static int CountBits(int x) {
@@ -247,19 +319,28 @@ public static class QrDecoder {
         var longDataLen = shortDataLen + 1;
 
         var blocks = new byte[numBlocks][];
+        var dataLens = new int[numBlocks];
         for (var i = 0; i < numBlocks; i++) {
-            var len = shortBlockLen + (i < numShortBlocks ? 0 : 1);
-            blocks[i] = new byte[len];
+            var dataWords = i < numShortBlocks ? shortDataLen : longDataLen;
+            dataLens[i] = dataWords;
+            blocks[i] = new byte[dataWords + blockEccLen];
         }
 
-        // Deinterleave
-        var maxLen = blocks[numBlocks - 1].Length;
+        // Deinterleave:
+        // 1) data codewords across all blocks
+        // 2) error-correction codewords across all blocks
         var k = 0;
-        for (var i = 0; i < maxLen; i++) {
+
+        var maxDataLen = dataLens[numBlocks - 1];
+        for (var i = 0; i < maxDataLen; i++) {
             for (var j = 0; j < blocks.Length; j++) {
-                if (i < blocks[j].Length) {
-                    blocks[j][i] = codewords[k++];
-                }
+                if (i < dataLens[j]) blocks[j][i] = codewords[k++];
+            }
+        }
+
+        for (var i = 0; i < blockEccLen; i++) {
+            for (var j = 0; j < blocks.Length; j++) {
+                blocks[j][dataLens[j] + i] = codewords[k++];
             }
         }
         if (k != codewords.Length) return false;
@@ -271,7 +352,7 @@ public static class QrDecoder {
             var block = blocks[i];
             if (!QrReedSolomonDecoder.TryCorrectInPlace(block, blockEccLen)) return false;
 
-            var partLen = i < numShortBlocks ? shortDataLen : longDataLen;
+            var partLen = dataLens[i];
             Array.Copy(block, 0, data, di, partLen);
             di += partLen;
         }

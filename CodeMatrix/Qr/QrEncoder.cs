@@ -104,9 +104,11 @@ internal static class QrEncoder {
         var rsDiv = QrReedSolomon.ComputeDivisor(blockEccLen);
 
         var blocks = new byte[numBlocks][];
+        var dataLens = new int[numBlocks];
         var k = 0;
         for (var i = 0; i < numBlocks; i++) {
             var dataLen = i < numShortBlocks ? shortDataLen : longDataLen;
+            dataLens[i] = dataLen;
             var dat = new byte[dataLen];
             Array.Copy(data, k, dat, 0, dat.Length);
             k += dat.Length;
@@ -120,13 +122,21 @@ internal static class QrEncoder {
 
         var result = new byte[rawCodewords];
         var pos = 0;
-        var maxLen = blocks[numBlocks - 1].Length;
-        for (var i = 0; i < maxLen; i++) {
+
+        // QR interleaving is done in two phases:
+        // 1) data codewords across all blocks
+        // 2) error-correction codewords across all blocks
+        // This matters when blocks have different data lengths (short/long blocks).
+        var maxDataLen = dataLens[numBlocks - 1];
+        for (var i = 0; i < maxDataLen; i++) {
             for (var j = 0; j < blocks.Length; j++) {
-                if (i < blocks[j].Length) {
-                    result[pos] = blocks[j][i];
-                    pos++;
-                }
+                if (i < dataLens[j]) result[pos++] = blocks[j][i];
+            }
+        }
+
+        for (var i = 0; i < blockEccLen; i++) {
+            for (var j = 0; j < blocks.Length; j++) {
+                result[pos++] = blocks[j][dataLens[j] + i];
             }
         }
 
