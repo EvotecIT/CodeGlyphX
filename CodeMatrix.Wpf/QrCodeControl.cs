@@ -6,7 +6,13 @@ using CodeMatrix.Wpf.Rendering;
 
 namespace CodeMatrix.Wpf;
 
+/// <summary>
+/// WPF control that renders a QR code for the provided <see cref="Text"/>.
+/// </summary>
 public sealed class QrCodeControl : Image {
+    /// <summary>
+    /// Identifies the <see cref="Text"/> dependency property.
+    /// </summary>
     public static readonly DependencyProperty TextProperty =
         DependencyProperty.Register(
             nameof(Text),
@@ -14,6 +20,9 @@ public sealed class QrCodeControl : Image {
             typeof(QrCodeControl),
             new FrameworkPropertyMetadata(string.Empty, OnAnyChanged));
 
+    /// <summary>
+    /// Identifies the <see cref="Ecc"/> dependency property.
+    /// </summary>
     public static readonly DependencyProperty EccProperty =
         DependencyProperty.Register(
             nameof(Ecc),
@@ -21,6 +30,9 @@ public sealed class QrCodeControl : Image {
             typeof(QrCodeControl),
             new FrameworkPropertyMetadata(QrErrorCorrectionLevel.M, OnAnyChanged));
 
+    /// <summary>
+    /// Identifies the <see cref="ModuleSize"/> dependency property.
+    /// </summary>
     public static readonly DependencyProperty ModuleSizeProperty =
         DependencyProperty.Register(
             nameof(ModuleSize),
@@ -28,6 +40,9 @@ public sealed class QrCodeControl : Image {
             typeof(QrCodeControl),
             new FrameworkPropertyMetadata(4, OnAnyChanged));
 
+    /// <summary>
+    /// Identifies the <see cref="QuietZone"/> dependency property.
+    /// </summary>
     public static readonly DependencyProperty QuietZoneProperty =
         DependencyProperty.Register(
             nameof(QuietZone),
@@ -35,6 +50,9 @@ public sealed class QrCodeControl : Image {
             typeof(QrCodeControl),
             new FrameworkPropertyMetadata(4, OnAnyChanged));
 
+    /// <summary>
+    /// Identifies the <see cref="Foreground"/> dependency property.
+    /// </summary>
     public static readonly DependencyProperty ForegroundProperty =
         DependencyProperty.Register(
             nameof(Foreground),
@@ -42,6 +60,9 @@ public sealed class QrCodeControl : Image {
             typeof(QrCodeControl),
             new FrameworkPropertyMetadata(Brushes.Black, OnAnyChanged));
 
+    /// <summary>
+    /// Identifies the <see cref="Background"/> dependency property.
+    /// </summary>
     public static readonly DependencyProperty BackgroundProperty =
         DependencyProperty.Register(
             nameof(Background),
@@ -51,6 +72,9 @@ public sealed class QrCodeControl : Image {
 
     private bool _queued;
 
+    /// <summary>
+    /// Creates a new <see cref="QrCodeControl"/>.
+    /// </summary>
     public QrCodeControl() {
         Stretch = Stretch.None;
         SnapsToDevicePixels = true;
@@ -59,31 +83,49 @@ public sealed class QrCodeControl : Image {
         UseLayoutRounding = true;
     }
 
+    /// <summary>
+    /// Gets or sets the text payload to encode.
+    /// </summary>
     public string Text {
         get => (string)GetValue(TextProperty);
         set => SetValue(TextProperty, value);
     }
 
+    /// <summary>
+    /// Gets or sets the QR error correction level.
+    /// </summary>
     public QrErrorCorrectionLevel Ecc {
         get => (QrErrorCorrectionLevel)GetValue(EccProperty);
         set => SetValue(EccProperty, value);
     }
 
+    /// <summary>
+    /// Gets or sets the module size in pixels.
+    /// </summary>
     public int ModuleSize {
         get => (int)GetValue(ModuleSizeProperty);
         set => SetValue(ModuleSizeProperty, value);
     }
 
+    /// <summary>
+    /// Gets or sets the quiet zone size in modules.
+    /// </summary>
     public int QuietZone {
         get => (int)GetValue(QuietZoneProperty);
         set => SetValue(QuietZoneProperty, value);
     }
 
+    /// <summary>
+    /// Gets or sets the foreground (dark modules) brush.
+    /// </summary>
     public Brush Foreground {
         get => (Brush)GetValue(ForegroundProperty);
         set => SetValue(ForegroundProperty, value);
     }
 
+    /// <summary>
+    /// Gets or sets the background (light modules) brush.
+    /// </summary>
     public Brush Background {
         get => (Brush)GetValue(BackgroundProperty);
         set => SetValue(BackgroundProperty, value);
@@ -127,4 +169,3 @@ public sealed class QrCodeControl : Image {
         return fallback;
     }
 }
-

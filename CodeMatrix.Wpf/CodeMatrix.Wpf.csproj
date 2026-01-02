@@ -3,6 +3,7 @@
     <TargetFrameworks>net472;net8.0-windows</TargetFrameworks>
     <UseWPF>true</UseWPF>
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

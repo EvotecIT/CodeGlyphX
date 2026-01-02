@@ -6,7 +6,13 @@ using CodeMatrix.Wpf.Rendering;
 
 namespace CodeMatrix.Wpf;
 
+/// <summary>
+/// WPF control that renders a Code 128 barcode for the provided <see cref="Value"/>.
+/// </summary>
 public sealed class Barcode128Control : Image {
+    /// <summary>
+    /// Identifies the <see cref="Value"/> dependency property.
+    /// </summary>
     public static readonly DependencyProperty ValueProperty =
         DependencyProperty.Register(
             nameof(Value),
@@ -14,6 +20,9 @@ public sealed class Barcode128Control : Image {
             typeof(Barcode128Control),
             new FrameworkPropertyMetadata(string.Empty, OnAnyChanged));
 
+    /// <summary>
+    /// Identifies the <see cref="ModuleSize"/> dependency property.
+    /// </summary>
     public static readonly DependencyProperty ModuleSizeProperty =
         DependencyProperty.Register(
             nameof(ModuleSize),
@@ -21,6 +30,9 @@ public sealed class Barcode128Control : Image {
             typeof(Barcode128Control),
             new FrameworkPropertyMetadata(2, OnAnyChanged));
 
+    /// <summary>
+    /// Identifies the <see cref="QuietZone"/> dependency property.
+    /// </summary>
     public static readonly DependencyProperty QuietZoneProperty =
         DependencyProperty.Register(
             nameof(QuietZone),
@@ -28,6 +40,9 @@ public sealed class Barcode128Control : Image {
             typeof(Barcode128Control),
             new FrameworkPropertyMetadata(10, OnAnyChanged));
 
+    /// <summary>
+    /// Identifies the <see cref="Foreground"/> dependency property.
+    /// </summary>
     public static readonly DependencyProperty ForegroundProperty =
         DependencyProperty.Register(
             nameof(Foreground),
@@ -35,6 +50,9 @@ public sealed class Barcode128Control : Image {
             typeof(Barcode128Control),
             new FrameworkPropertyMetadata(Brushes.Black, OnAnyChanged));
 
+    /// <summary>
+    /// Identifies the <see cref="Background"/> dependency property.
+    /// </summary>
     public static readonly DependencyProperty BackgroundProperty =
         DependencyProperty.Register(
             nameof(Background),
@@ -44,6 +62,9 @@ public sealed class Barcode128Control : Image {
 
     private bool _queued;
 
+    /// <summary>
+    /// Creates a new <see cref="Barcode128Control"/>.
+    /// </summary>
     public Barcode128Control() {
         Stretch = Stretch.None;
         SnapsToDevicePixels = true;
@@ -52,26 +73,41 @@ public sealed class Barcode128Control : Image {
         UseLayoutRounding = true;
     }
 
+    /// <summary>
+    /// Gets or sets the barcode value to encode.
+    /// </summary>
     public string Value {
         get => (string)GetValue(ValueProperty);
         set => SetValue(ValueProperty, value);
     }
 
+    /// <summary>
+    /// Gets or sets the module size in pixels.
+    /// </summary>
     public int ModuleSize {
         get => (int)GetValue(ModuleSizeProperty);
         set => SetValue(ModuleSizeProperty, value);
     }
 
+    /// <summary>
+    /// Gets or sets the quiet zone size in modules.
+    /// </summary>
     public int QuietZone {
         get => (int)GetValue(QuietZoneProperty);
         set => SetValue(QuietZoneProperty, value);
     }
 
+    /// <summary>
+    /// Gets or sets the foreground (bars) brush.
+    /// </summary>
     public Brush Foreground {
         get => (Brush)GetValue(ForegroundProperty);
         set => SetValue(ForegroundProperty, value);
     }
 
+    /// <summary>
+    /// Gets or sets the background (spaces) brush.
+    /// </summary>
     public Brush Background {
         get => (Brush)GetValue(BackgroundProperty);
         set => SetValue(BackgroundProperty, value);
@@ -116,4 +152,3 @@ public sealed class Barcode128Control : Image {
         return fallback;
     }
 }
-
