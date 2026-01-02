@@ -3,7 +3,13 @@ using System.Text;
 
 namespace CodeMatrix.Rendering.Html;
 
+/// <summary>
+/// Renders QR modules to HTML (table-based).
+/// </summary>
 public static class HtmlQrRenderer {
+    /// <summary>
+    /// Renders the QR module matrix to an HTML table.
+    /// </summary>
     public static string Render(BitMatrix modules, QrHtmlRenderOptions opts) {
         if (modules is null) throw new ArgumentNullException(nameof(modules));
         if (opts is null) throw new ArgumentNullException(nameof(opts));
@@ -60,4 +66,3 @@ public static class HtmlQrRenderer {
         return modules[x, y];
     }
 }
-

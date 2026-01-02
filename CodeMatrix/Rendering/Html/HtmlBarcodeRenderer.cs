@@ -3,7 +3,13 @@ using System.Text;
 
 namespace CodeMatrix.Rendering.Html;
 
+/// <summary>
+/// Renders 1D barcodes to HTML (table-based).
+/// </summary>
 public static class HtmlBarcodeRenderer {
+    /// <summary>
+    /// Renders the barcode to an HTML table.
+    /// </summary>
     public static string Render(Barcode1D barcode, BarcodeHtmlRenderOptions opts) {
         if (barcode is null) throw new ArgumentNullException(nameof(barcode));
         if (opts is null) throw new ArgumentNullException(nameof(opts));
@@ -42,4 +48,3 @@ public static class HtmlBarcodeRenderer {
         }
     }
 }
-
