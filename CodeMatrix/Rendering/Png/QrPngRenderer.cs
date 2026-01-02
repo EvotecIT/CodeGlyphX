@@ -2,7 +2,13 @@ using System;
 
 namespace CodeMatrix.Rendering.Png;
 
+/// <summary>
+/// Renders QR modules to a PNG image (RGBA8).
+/// </summary>
 public static class QrPngRenderer {
+    /// <summary>
+    /// Renders the QR module matrix to a PNG byte array.
+    /// </summary>
     public static byte[] Render(BitMatrix modules, QrPngRenderOptions opts) {
         if (modules is null) throw new ArgumentNullException(nameof(modules));
         if (opts is null) throw new ArgumentNullException(nameof(opts));
@@ -41,4 +47,3 @@ public static class QrPngRenderer {
         return PngWriter.WriteRgba8(widthPx, heightPx, scanlines);
     }
 }
-

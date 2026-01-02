@@ -2,7 +2,13 @@ using System;
 
 namespace CodeMatrix.Rendering.Png;
 
+/// <summary>
+/// Renders 1D barcodes to a PNG image (RGBA8).
+/// </summary>
 public static class BarcodePngRenderer {
+    /// <summary>
+    /// Renders the barcode to a PNG byte array.
+    /// </summary>
     public static byte[] Render(Barcode1D barcode, BarcodePngRenderOptions opts) {
         if (barcode is null) throw new ArgumentNullException(nameof(barcode));
         if (opts is null) throw new ArgumentNullException(nameof(opts));
@@ -53,4 +59,3 @@ public static class BarcodePngRenderer {
         return PngWriter.WriteRgba8(widthPx, heightPx, scanlines);
     }
 }
-
