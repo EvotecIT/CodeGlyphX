@@ -4,7 +4,19 @@ using CodeMatrix.Qr;
 
 namespace CodeMatrix;
 
+/// <summary>
+/// Decodes QR codes from a module grid or from raw pixels (clean images).
+/// </summary>
+/// <remarks>
+/// Current scope: byte-mode payloads on clean/generated images and clean on-screen QR codes.
+/// </remarks>
 public static class QrDecoder {
+    /// <summary>
+    /// Attempts to decode a QR code from an exact module grid (no quiet zone).
+    /// </summary>
+    /// <param name="modules">Square matrix of QR modules (dark = <c>true</c>).</param>
+    /// <param name="result">Decoded payload.</param>
+    /// <returns><c>true</c> when decoding succeeded; otherwise <c>false</c>.</returns>
     public static bool TryDecode(BitMatrix modules, out QrDecoded result) {
         result = null!;
         if (modules is null) return false;
@@ -61,6 +73,16 @@ public static class QrDecoder {
     }
 
 #if NET8_0_OR_GREATER
+    /// <summary>
+    /// Attempts to decode a QR code from raw pixel data (best-effort, clean inputs).
+    /// </summary>
+    /// <param name="pixels">Pixel buffer.</param>
+    /// <param name="width">Image width in pixels.</param>
+    /// <param name="height">Image height in pixels.</param>
+    /// <param name="stride">Bytes per row.</param>
+    /// <param name="fmt">Pixel format (4 bytes per pixel).</param>
+    /// <param name="result">Decoded payload.</param>
+    /// <returns><c>true</c> when decoding succeeded; otherwise <c>false</c>.</returns>
     public static bool TryDecode(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat fmt, out QrDecoded result) {
         return QrPixelDecoder.TryDecode(pixels, width, height, stride, fmt, out result);
     }
