@@ -281,7 +281,7 @@ public static class QrDecoder {
         return true;
     }
 
-    private static string DecodeLatin1(ReadOnlySpan<byte> bytes) {
+    private static string DecodeLatin1(byte[] bytes) {
         if (bytes.Length == 0) return string.Empty;
 
         var chars = new char[bytes.Length];
