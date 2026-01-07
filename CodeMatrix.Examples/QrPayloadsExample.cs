@@ -30,18 +30,25 @@ internal static class QrPayloadsExample {
 
         var sb = new StringBuilder();
         foreach (var item in payloads) {
-            var qr = QrCodeEncoder.EncodeText(item.Value, QrErrorCorrectionLevel.M, 1, 10, null);
-            var png = QrPngRenderer.Render(qr.Modules, new QrPngRenderOptions {
-                ModuleSize = 6,
-                QuietZone = 4,
-                Foreground = new Rgba32(24, 28, 38),
-                Background = new Rgba32(255, 255, 255),
-            });
+            try {
+                var qr = QrCodeEncoder.EncodeText(item.Value, QrErrorCorrectionLevel.M, 1, 40, null);
+                var png = QrPngRenderer.Render(qr.Modules, new QrPngRenderOptions {
+                    ModuleSize = 6,
+                    QuietZone = 4,
+                    Foreground = new Rgba32(24, 28, 38),
+                    Background = new Rgba32(255, 255, 255),
+                });
 
-            ExampleHelpers.WriteBinary(outputDir, $"qr-payload-{item.Name}.png", png);
-            sb.AppendLine($"[{item.Name}]");
-            sb.AppendLine(item.Value);
-            sb.AppendLine();
+                ExampleHelpers.WriteBinary(outputDir, $"qr-payload-{item.Name}.png", png);
+                sb.AppendLine($"[{item.Name}]");
+                sb.AppendLine(item.Value);
+                sb.AppendLine();
+            } catch (Exception ex) {
+                sb.AppendLine($"[{item.Name}]");
+                sb.AppendLine("FAILED: " + ex.Message);
+                sb.AppendLine(item.Value);
+                sb.AppendLine();
+            }
         }
 
         ExampleHelpers.WriteText(outputDir, "qr-payloads.txt", sb.ToString());

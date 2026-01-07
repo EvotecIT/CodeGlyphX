@@ -152,4 +152,103 @@ public sealed class QrPngRendererTests {
         Assert.Equal(0, rgba[inner + 1]);
         Assert.Equal(255, rgba[inner + 2]);
     }
+
+    [Fact]
+    public void Render_With_Eye_Frame_Draws_Ring_And_Dot() {
+        var qr = QrCodeEncoder.EncodeText("HELLO", QrErrorCorrectionLevel.H);
+
+        var opts = new QrPngRenderOptions {
+            ModuleSize = 4,
+            QuietZone = 4,
+            Foreground = Rgba32.Black,
+            Background = Rgba32.White,
+            Eyes = new QrPngEyeOptions {
+                UseFrame = true,
+                OuterColor = new Rgba32(255, 0, 0),
+                InnerColor = new Rgba32(0, 0, 255),
+            },
+        };
+
+        var png = QrPngRenderer.Render(qr.Modules, opts);
+        var (rgba, _, _, stride) = PngTestDecoder.DecodeRgba32(png);
+
+        var baseX = opts.QuietZone * opts.ModuleSize;
+        var baseY = opts.QuietZone * opts.ModuleSize;
+
+        var ring = (baseY + 2) * stride + (baseX + 2) * 4;
+        Assert.Equal(255, rgba[ring + 0]);
+        Assert.Equal(0, rgba[ring + 1]);
+        Assert.Equal(0, rgba[ring + 2]);
+
+        var clear = (baseY + 6) * stride + (baseX + 6) * 4;
+        Assert.Equal(255, rgba[clear + 0]);
+        Assert.Equal(255, rgba[clear + 1]);
+        Assert.Equal(255, rgba[clear + 2]);
+
+        var dot = (baseY + 10) * stride + (baseX + 10) * 4;
+        Assert.Equal(0, rgba[dot + 0]);
+        Assert.Equal(0, rgba[dot + 1]);
+        Assert.Equal(255, rgba[dot + 2]);
+    }
+
+    [Fact]
+    public void Render_With_Eye_Frame_Gradient_Varies_Color() {
+        var qr = QrCodeEncoder.EncodeText("HELLO", QrErrorCorrectionLevel.H);
+
+        var opts = new QrPngRenderOptions {
+            ModuleSize = 4,
+            QuietZone = 4,
+            Foreground = Rgba32.Black,
+            Background = Rgba32.White,
+            Eyes = new QrPngEyeOptions {
+                UseFrame = true,
+                OuterGradient = new QrPngGradientOptions {
+                    Type = QrPngGradientType.Horizontal,
+                    StartColor = new Rgba32(255, 0, 0),
+                    EndColor = new Rgba32(0, 255, 0),
+                },
+            },
+        };
+
+        var png = QrPngRenderer.Render(qr.Modules, opts);
+        var (rgba, _, _, stride) = PngTestDecoder.DecodeRgba32(png);
+
+        var baseX = opts.QuietZone * opts.ModuleSize;
+        var baseY = opts.QuietZone * opts.ModuleSize;
+        var left = (baseY + 2) * stride + (baseX + 2) * 4;
+        var right = (baseY + 2) * stride + (baseX + 26) * 4;
+
+        Assert.True(rgba[left + 0] > rgba[left + 1]);
+        Assert.True(rgba[right + 1] > rgba[right + 0]);
+    }
+
+    [Fact]
+    public void Render_With_Eye_Module_Gradient_Varies_Color() {
+        var qr = QrCodeEncoder.EncodeText("HELLO", QrErrorCorrectionLevel.H);
+
+        var opts = new QrPngRenderOptions {
+            ModuleSize = 4,
+            QuietZone = 4,
+            Foreground = Rgba32.Black,
+            Background = Rgba32.White,
+            Eyes = new QrPngEyeOptions {
+                OuterGradient = new QrPngGradientOptions {
+                    Type = QrPngGradientType.Horizontal,
+                    StartColor = new Rgba32(255, 0, 0),
+                    EndColor = new Rgba32(0, 255, 0),
+                },
+            },
+        };
+
+        var png = QrPngRenderer.Render(qr.Modules, opts);
+        var (rgba, _, _, stride) = PngTestDecoder.DecodeRgba32(png);
+
+        var baseX = opts.QuietZone * opts.ModuleSize;
+        var baseY = opts.QuietZone * opts.ModuleSize;
+        var left = (baseY + 2) * stride + (baseX + 2) * 4;
+        var right = (baseY + 2) * stride + (baseX + 26) * 4;
+
+        Assert.True(rgba[left + 0] > rgba[left + 1]);
+        Assert.True(rgba[right + 1] > rgba[right + 0]);
+    }
 }
