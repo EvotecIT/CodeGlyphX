@@ -10,23 +10,82 @@ internal readonly struct QrGrayImage {
     public readonly byte Min;
     public readonly byte Max;
     public readonly byte Threshold;
+    public readonly byte[]? ThresholdMap;
 
-    private QrGrayImage(int width, int height, byte[] gray, byte min, byte max, byte threshold) {
+    private QrGrayImage(int width, int height, byte[] gray, byte min, byte max, byte threshold, byte[]? thresholdMap) {
         Width = width;
         Height = height;
         Gray = gray;
         Min = min;
         Max = max;
         Threshold = threshold;
+        ThresholdMap = thresholdMap;
     }
 
     public bool IsBlack(int x, int y, bool invert) {
-        var lum = Gray[y * Width + x];
-        var black = lum <= Threshold;
+        var idx = y * Width + x;
+        var lum = Gray[idx];
+        var t = ThresholdMap is null ? Threshold : ThresholdMap[idx];
+        var black = lum <= t;
         return invert ? !black : black;
     }
 
-    public QrGrayImage WithThreshold(byte threshold) => new(Width, Height, Gray, Min, Max, threshold);
+    public QrGrayImage WithThreshold(byte threshold) => new(Width, Height, Gray, Min, Max, threshold, null);
+
+    public QrGrayImage WithAdaptiveThreshold(int windowSize, int offset) {
+        if (windowSize < 3) windowSize = 3;
+        if ((windowSize & 1) == 0) windowSize++;
+        if (offset < 0) offset = 0;
+        if (offset > 255) offset = 255;
+
+        var w = Width;
+        var h = Height;
+        var stride = w + 1;
+        var integral = new int[(w + 1) * (h + 1)];
+
+        for (var y = 1; y <= h; y++) {
+            var rowSum = 0;
+            var row = (y - 1) * w;
+            var baseIdx = y * stride;
+            var prevIdx = (y - 1) * stride;
+            for (var x = 1; x <= w; x++) {
+                rowSum += Gray[row + (x - 1)];
+                integral[baseIdx + x] = integral[prevIdx + x] + rowSum;
+            }
+        }
+
+        var thresholds = new byte[w * h];
+        var radius = windowSize / 2;
+
+        for (var y = 0; y < h; y++) {
+            var y0 = y - radius;
+            var y1 = y + radius;
+            if (y0 < 0) y0 = 0;
+            if (y1 >= h) y1 = h - 1;
+
+            var y0i = y0 * stride;
+            var y1i = (y1 + 1) * stride;
+            for (var x = 0; x < w; x++) {
+                var x0 = x - radius;
+                var x1 = x + radius;
+                if (x0 < 0) x0 = 0;
+                if (x1 >= w) x1 = w - 1;
+
+                var x0i = x0;
+                var x1i = x1 + 1;
+
+                var sum = integral[y1i + x1i] - integral[y0i + x1i] - integral[y1i + x0i] + integral[y0i + x0i];
+                var area = (x1 - x0 + 1) * (y1 - y0 + 1);
+                var mean = sum / area;
+                var t = mean - offset;
+                if (t < 0) t = 0;
+                else if (t > 255) t = 255;
+                thresholds[y * w + x] = (byte)t;
+            }
+        }
+
+        return new QrGrayImage(w, h, Gray, Min, Max, Threshold, thresholds);
+    }
 
     public static bool TryCreate(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat fmt, int scale, out QrGrayImage image) {
         image = default;
@@ -127,7 +186,7 @@ internal readonly struct QrGrayImage {
         if (max - min < 24) return false;
 
         var threshold = ComputeOtsuThreshold(histogram, gray.Length);
-        image = new QrGrayImage(outW, outH, gray, min, max, threshold);
+        image = new QrGrayImage(outW, outH, gray, min, max, threshold, null);
         return true;
     }
 

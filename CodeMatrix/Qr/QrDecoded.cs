@@ -27,7 +27,7 @@ public sealed class QrDecoded {
     public byte[] Bytes { get; }
 
     /// <summary>
-    /// Gets the decoded payload interpreted as text (UTF-8 by default; respects ECI where present).
+    /// Gets the decoded payload interpreted as text (ISO-8859-1 by default; respects ECI per segment).
     /// </summary>
     public string Text { get; }
 

@@ -37,64 +37,38 @@ public static class QrDecoder {
             return false;
         }
 
-        if (!TryDecodeFormat(modules, out var ecc, out var mask, out var formatBestDistance)) {
+        if (!TryDecodeFormat(modules, out var formatCandidates, out var formatBestDistance)) {
             diagnostics = new QrDecodeDiagnostics(QrDecodeFailure.FormatInfo, version, formatBestDistance: formatBestDistance);
             return false;
         }
 
         var functionMask = BuildFunctionMask(version, size);
+        var failureEcc = formatCandidates[0].ErrorCorrectionLevel;
+        var failureMask = formatCandidates[0].Mask;
+        var sawPayloadFailure = false;
 
-        var unmasked = modules.Clone();
-        for (var y = 0; y < size; y++) {
-            for (var x = 0; x < size; x++) {
-                if (functionMask[x, y]) continue;
-                if (QrMask.ShouldInvert(mask, x, y)) unmasked[x, y] = !unmasked[x, y];
+        foreach (var candidate in formatCandidates) {
+            if (!TryExtractDataCodewords(modules, functionMask, version, candidate.ErrorCorrectionLevel, candidate.Mask, out var dataCodewords)) {
+                failureEcc = candidate.ErrorCorrectionLevel;
+                failureMask = candidate.Mask;
+                continue;
             }
-        }
-
-        var rawCodewords = QrTables.GetNumRawDataModules(version) / 8;
-        var codewords = new byte[rawCodewords];
-
-        var bitIndex = 0;
-        var upward = true;
-        for (var right = size - 1; right >= 1; right -= 2) {
-            if (right == 6) right = 5;
-
-            for (var vert = 0; vert < size; vert++) {
-                var y = upward ? size - 1 - vert : vert;
-                for (var j = 0; j < 2; j++) {
-                    var x = right - j;
-                    if (functionMask[x, y]) continue;
-
-                    if (bitIndex < rawCodewords * 8 && unmasked[x, y]) {
-                        codewords[bitIndex >> 3] |= (byte)(1 << (7 - (bitIndex & 7)));
-                    }
-
-                    bitIndex++;
-                }
+            if (!QrPayloadParser.TryParse(dataCodewords, version, out var payload, out var segments)) {
+                sawPayloadFailure = true;
+                failureEcc = candidate.ErrorCorrectionLevel;
+                failureMask = candidate.Mask;
+                continue;
             }
 
-            upward = !upward;
+            var text = DecodeSegments(segments);
+            result = new QrDecoded(version, candidate.ErrorCorrectionLevel, candidate.Mask, payload, text);
+            diagnostics = new QrDecodeDiagnostics(QrDecodeFailure.None, version, candidate.ErrorCorrectionLevel, candidate.Mask, formatBestDistance);
+            return true;
         }
 
-        if (!TryCorrectAndExtractData(codewords, version, ecc, out var dataCodewords)) {
-            diagnostics = new QrDecodeDiagnostics(QrDecodeFailure.ReedSolomon, version, ecc, mask, formatBestDistance);
-            return false;
-        }
-        if (!QrPayloadParser.TryParse(dataCodewords, version, out var payload, out var encodingKind)) {
-            diagnostics = new QrDecodeDiagnostics(QrDecodeFailure.Payload, version, ecc, mask, formatBestDistance);
-            return false;
-        }
-
-        var text = encodingKind switch {
-            QrTextEncoding.Ascii => Encoding.ASCII.GetString(payload),
-            QrTextEncoding.Latin1 => DecodeLatin1(payload),
-            _ => Encoding.UTF8.GetString(payload),
-        };
-
-        result = new QrDecoded(version, ecc, mask, payload, text);
-        diagnostics = new QrDecodeDiagnostics(QrDecodeFailure.None, version, ecc, mask, formatBestDistance);
-        return true;
+        var failure = sawPayloadFailure ? QrDecodeFailure.Payload : QrDecodeFailure.ReedSolomon;
+        diagnostics = new QrDecodeDiagnostics(failure, version, failureEcc, failureMask, formatBestDistance);
+        return false;
     }
 
 #if NET8_0_OR_GREATER
@@ -153,7 +127,7 @@ public static class QrDecoder {
     }
 #endif
 
-    private static bool TryDecodeFormat(BitMatrix modules, out QrErrorCorrectionLevel ecc, out int mask, out int bestDistance) {
+    private static bool TryDecodeFormat(BitMatrix modules, out QrFormatCandidate[] candidates, out int bestDistance) {
         var size = modules.Width;
 
         var bitsA = 0;
@@ -167,10 +141,24 @@ public static class QrDecoder {
         for (var i = 0; i < 8; i++) if (modules[size - 1 - i, 8]) bitsB |= 1 << i;
         for (var i = 8; i < 15; i++) if (modules[8, size - 15 + i]) bitsB |= 1 << i;
 
-        return TryDecodeFormatBits(bitsA, bitsB, out ecc, out mask, out bestDistance);
+        return TryDecodeFormatBits(bitsA, bitsB, out candidates, out bestDistance);
     }
 
     private static readonly int[] FormatPatterns = BuildFormatPatterns();
+
+    private readonly struct QrFormatCandidate {
+        public int Index { get; }
+        public QrErrorCorrectionLevel ErrorCorrectionLevel { get; }
+        public int Mask { get; }
+        public int Distance { get; }
+
+        public QrFormatCandidate(int index, QrErrorCorrectionLevel ecc, int mask, int distance) {
+            Index = index;
+            ErrorCorrectionLevel = ecc;
+            Mask = mask;
+            Distance = distance;
+        }
+    }
 
     private static int[] BuildFormatPatterns() {
         var patterns = new int[32];
@@ -187,47 +175,59 @@ public static class QrDecoder {
         return patterns;
     }
 
-    private static bool TryDecodeFormatBits(int bitsA, int bitsB, out QrErrorCorrectionLevel ecc, out int mask, out int bestDistance) {
+    private static bool TryDecodeFormatBits(int bitsA, int bitsB, out QrFormatCandidate[] candidates, out int bestDistance) {
+        var candA = FindBestFormatCandidate(bitsA);
+        var candB = FindBestFormatCandidate(bitsB);
+        bestDistance = Math.Min(candA.Distance, candB.Distance);
+
+        var list = new System.Collections.Generic.List<QrFormatCandidate>(2);
+        if (candA.Distance <= 3) list.Add(candA);
+        if (candB.Distance <= 3 && candB.Index != candA.Index) list.Add(candB);
+
+        if (list.Count == 0) {
+            candidates = Array.Empty<QrFormatCandidate>();
+            return false;
+        }
+
+        if (list.Count > 1) {
+            list.Sort(static (a, b) => a.Distance.CompareTo(b.Distance));
+        }
+
+        candidates = list.ToArray();
+        return true;
+    }
+
+    internal static int GetBestFormatDistance(int bitsA, int bitsB) {
+        var candA = FindBestFormatCandidate(bitsA);
+        var candB = FindBestFormatCandidate(bitsB);
+        return Math.Min(candA.Distance, candB.Distance);
+    }
+
+    private static QrFormatCandidate FindBestFormatCandidate(int bits) {
         var bestDist = int.MaxValue;
         var best = -1;
 
         for (var i = 0; i < FormatPatterns.Length; i++) {
             var candidate = FormatPatterns[i];
-            var dist = Math.Min(CountBits(bitsA ^ candidate), CountBits(bitsB ^ candidate));
+            var dist = CountBits(bits ^ candidate);
             if (dist < bestDist) {
                 bestDist = dist;
                 best = i;
             }
         }
 
-        if (bestDist > 3 || best < 0) {
-            ecc = default;
-            mask = default;
-            bestDistance = bestDist;
-            return false;
-        }
+        if (best < 0) return new QrFormatCandidate(-1, default, 0, bestDist);
 
-        // best index layout: ecc in {L,M,Q,H} each with 8 masks
         var eccIndex = best / 8;
-        mask = best % 8;
-        ecc = eccIndex switch {
+        var mask = best % 8;
+        var ecc = eccIndex switch {
             0 => QrErrorCorrectionLevel.L,
             1 => QrErrorCorrectionLevel.M,
             2 => QrErrorCorrectionLevel.Q,
             _ => QrErrorCorrectionLevel.H,
         };
-        bestDistance = bestDist;
-        return true;
-    }
 
-    internal static int GetBestFormatDistance(int bitsA, int bitsB) {
-        var bestDist = int.MaxValue;
-        for (var i = 0; i < FormatPatterns.Length; i++) {
-            var candidate = FormatPatterns[i];
-            var dist = Math.Min(CountBits(bitsA ^ candidate), CountBits(bitsB ^ candidate));
-            if (dist < bestDist) bestDist = dist;
-        }
-        return bestDist;
+        return new QrFormatCandidate(best, ecc, mask, bestDist);
     }
 
     private static int CountBits(int x) {
@@ -236,6 +236,46 @@ public static class QrDecoder {
             x = (x & 0x33333333) + ((x >> 2) & 0x33333333);
             return (((x + (x >> 4)) & 0x0F0F0F0F) * 0x01010101) >> 24;
         }
+    }
+
+    private static bool TryExtractDataCodewords(BitMatrix modules, BitMatrix functionMask, int version, QrErrorCorrectionLevel ecc, int mask, out byte[] dataCodewords) {
+        dataCodewords = null!;
+
+        var size = modules.Width;
+        var unmasked = modules.Clone();
+        for (var y = 0; y < size; y++) {
+            for (var x = 0; x < size; x++) {
+                if (functionMask[x, y]) continue;
+                if (QrMask.ShouldInvert(mask, x, y)) unmasked[x, y] = !unmasked[x, y];
+            }
+        }
+
+        var rawCodewords = QrTables.GetNumRawDataModules(version) / 8;
+        var codewords = new byte[rawCodewords];
+
+        var bitIndex = 0;
+        var upward = true;
+        for (var right = size - 1; right >= 1; right -= 2) {
+            if (right == 6) right = 5;
+
+            for (var vert = 0; vert < size; vert++) {
+                var y = upward ? size - 1 - vert : vert;
+                for (var j = 0; j < 2; j++) {
+                    var x = right - j;
+                    if (functionMask[x, y]) continue;
+
+                    if (bitIndex < rawCodewords * 8 && unmasked[x, y]) {
+                        codewords[bitIndex >> 3] |= (byte)(1 << (7 - (bitIndex & 7)));
+                    }
+
+                    bitIndex++;
+                }
+            }
+
+            upward = !upward;
+        }
+
+        return TryCorrectAndExtractData(codewords, version, ecc, out dataCodewords);
     }
 
     private static BitMatrix BuildFunctionMask(int version, int size) {
@@ -371,5 +411,25 @@ public static class QrDecoder {
         }
 
         return new string(chars);
+    }
+
+    internal static string DecodeSegments(QrPayloadSegment[] segments) {
+        if (segments is null || segments.Length == 0) return string.Empty;
+        if (segments.Length == 1) return DecodeSegment(segments[0]);
+
+        var sb = new StringBuilder();
+        for (var i = 0; i < segments.Length; i++) {
+            sb.Append(DecodeSegment(segments[i]));
+        }
+
+        return sb.ToString();
+    }
+
+    private static string DecodeSegment(QrPayloadSegment segment) {
+        return segment.Encoding switch {
+            QrTextEncoding.Ascii => Encoding.ASCII.GetString(segment.Bytes),
+            QrTextEncoding.Latin1 => DecodeLatin1(segment.Bytes),
+            _ => Encoding.UTF8.GetString(segment.Bytes),
+        };
     }
 }

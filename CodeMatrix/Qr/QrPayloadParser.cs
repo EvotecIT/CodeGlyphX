@@ -9,12 +9,22 @@ internal enum QrTextEncoding {
     Ascii = 2,
 }
 
+internal readonly struct QrPayloadSegment {
+    public QrTextEncoding Encoding { get; }
+    public byte[] Bytes { get; }
+
+    public QrPayloadSegment(QrTextEncoding encoding, byte[] bytes) {
+        Encoding = encoding;
+        Bytes = bytes ?? throw new ArgumentNullException(nameof(bytes));
+    }
+}
+
 internal static class QrPayloadParser {
     private const string AlphanumericTable = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ $%*+-./:";
 
-    public static bool TryParse(byte[] dataCodewords, int version, out byte[] payload, out QrTextEncoding encoding) {
+    public static bool TryParse(byte[] dataCodewords, int version, out byte[] payload, out QrPayloadSegment[] segments) {
         payload = null!;
-        encoding = QrTextEncoding.Utf8;
+        segments = null!;
 
         if (dataCodewords is null) return false;
         if (version is < 1 or > 40) return false;
@@ -36,6 +46,20 @@ internal static class QrPayloadParser {
         }
 
         var bytes = new List<byte>(64);
+        var segmentBytes = new List<byte>(64);
+        var segmentList = new List<QrPayloadSegment>(4);
+        var encoding = QrTextEncoding.Latin1;
+
+        void AddByte(byte b) {
+            bytes.Add(b);
+            segmentBytes.Add(b);
+        }
+
+        void FlushSegment() {
+            if (segmentBytes.Count == 0) return;
+            segmentList.Add(new QrPayloadSegment(encoding, segmentBytes.ToArray()));
+            segmentBytes.Clear();
+        }
 
         while (true) {
             var mode = ReadBits(4);
@@ -49,7 +73,9 @@ internal static class QrPayloadParser {
             }
 
             if (mode == 0) {
+                FlushSegment();
                 payload = bytes.Count == 0 ? Array.Empty<byte>() : bytes.ToArray();
+                segments = segmentList.Count == 0 ? Array.Empty<QrPayloadSegment>() : segmentList.ToArray();
                 return true;
             }
 
@@ -61,7 +87,7 @@ internal static class QrPayloadParser {
                 for (var i = 0; i < count; i++) {
                     var b = ReadBits(8);
                     if (b < 0) return false;
-                    bytes.Add((byte)b);
+                    AddByte((byte)b);
                 }
 
                 continue;
@@ -77,21 +103,21 @@ internal static class QrPayloadParser {
                 while (remaining >= 3) {
                     var v = ReadBits(10);
                     if (v < 0 || v > 999) return false;
-                    bytes.Add((byte)('0' + (v / 100)));
-                    bytes.Add((byte)('0' + ((v / 10) % 10)));
-                    bytes.Add((byte)('0' + (v % 10)));
+                    AddByte((byte)('0' + (v / 100)));
+                    AddByte((byte)('0' + ((v / 10) % 10)));
+                    AddByte((byte)('0' + (v % 10)));
                     remaining -= 3;
                 }
 
                 if (remaining == 2) {
                     var v = ReadBits(7);
                     if (v < 0 || v > 99) return false;
-                    bytes.Add((byte)('0' + (v / 10)));
-                    bytes.Add((byte)('0' + (v % 10)));
+                    AddByte((byte)('0' + (v / 10)));
+                    AddByte((byte)('0' + (v % 10)));
                 } else if (remaining == 1) {
                     var v = ReadBits(4);
                     if (v < 0 || v > 9) return false;
-                    bytes.Add((byte)('0' + v));
+                    AddByte((byte)('0' + v));
                 }
 
                 continue;
@@ -109,15 +135,15 @@ internal static class QrPayloadParser {
                     if (v < 0 || v >= 45 * 45) return false;
                     var a = v / 45;
                     var b = v % 45;
-                    bytes.Add((byte)AlphanumericTable[a]);
-                    bytes.Add((byte)AlphanumericTable[b]);
+                    AddByte((byte)AlphanumericTable[a]);
+                    AddByte((byte)AlphanumericTable[b]);
                     remaining -= 2;
                 }
 
                 if (remaining == 1) {
                     var v = ReadBits(6);
                     if (v < 0 || v >= 45) return false;
-                    bytes.Add((byte)AlphanumericTable[v]);
+                    AddByte((byte)AlphanumericTable[v]);
                 }
 
                 continue;
@@ -127,12 +153,17 @@ internal static class QrPayloadParser {
                 if (!TryReadEciAssignmentNumber(ReadBits, out var assignmentNumber)) return false;
 
                 // Minimal set for OTP / URL QR use cases.
-                encoding = assignmentNumber switch {
+                var newEncoding = assignmentNumber switch {
                     3 => QrTextEncoding.Latin1,  // ISO-8859-1
                     26 => QrTextEncoding.Utf8,   // UTF-8
                     27 => QrTextEncoding.Ascii,  // US-ASCII
                     _ => encoding,
                 };
+
+                if (newEncoding != encoding) {
+                    FlushSegment();
+                    encoding = newEncoding;
+                }
 
                 // Unknown ECI: accept but keep current encoding (best-effort).
                 continue;
@@ -141,7 +172,9 @@ internal static class QrPayloadParser {
             return false;
         }
 
+        FlushSegment();
         payload = bytes.Count == 0 ? Array.Empty<byte>() : bytes.ToArray();
+        segments = segmentList.Count == 0 ? Array.Empty<QrPayloadSegment>() : segmentList.ToArray();
         return true;
     }
 
