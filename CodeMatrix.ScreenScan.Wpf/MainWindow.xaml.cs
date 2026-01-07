@@ -3,6 +3,7 @@ using System.IO;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
@@ -14,6 +15,7 @@ using WpfMessageBox = System.Windows.MessageBox;
 namespace CodeMatrix.ScreenScan.Wpf;
 
 public partial class MainWindow : Window {
+    private readonly object _captureLock = new();
     private CancellationTokenSource? _cts;
     private WriteableBitmap? _previewBitmap;
 
@@ -65,26 +67,40 @@ public partial class MainWindow : Window {
     }
 
     private async Task<bool> ScanLoopAsync(int x, int y, int w, int h, CancellationToken ct) {
+        return await Task.Run(() => ScanLoopWorker(x, y, w, h, ct), ct);
+    }
+
+    private bool ScanLoopWorker(int x, int y, int w, int h, CancellationToken ct) {
+        using var capture = new ScreenCapture.Session(w, h);
+        var stride = capture.Stride;
+
         while (!ct.IsCancellationRequested) {
             try {
-                var pixels = ScreenCapture.CaptureBgra32(x, y, w, h, out var stride);
-                UpdatePreview(pixels, w, h, stride);
-                if (QrDecoder.TryDecode(pixels, w, h, stride, PixelFormat.Bgra32, out var decoded, out var diag)) {
-                    DecodedText.Text = decoded.Text;
-                    StatusText.Text = $"Decoded (v{decoded.Version}, {decoded.ErrorCorrectionLevel}, mask {decoded.Mask})";
-                    return true;
-                } else {
-                    StatusText.Text = $"Running (2–5 fps) • {diag}";
+                lock (_captureLock) {
+                    capture.Capture(x, y);
                 }
+
+                var pixels = capture.Buffer;
+
+                var sw = Stopwatch.StartNew();
+                var ok = QrDecoder.TryDecode(pixels, w, h, stride, PixelFormat.Bgra32, out var decoded, out var diag);
+                var decodeMs = sw.ElapsedMilliseconds;
+                var status = ok
+                    ? $"Decoded (v{decoded.Version}, {decoded.ErrorCorrectionLevel}, mask {decoded.Mask}) • {decodeMs}ms"
+                    : $"Running (2–5 fps) • {diag} • {decodeMs}ms";
+
+                Dispatcher.Invoke(() => {
+                    UpdatePreview(pixels, w, h, stride);
+                    StatusText.Text = status;
+                    if (ok) DecodedText.Text = decoded.Text;
+                });
+
+                if (ok) return true;
             } catch (Exception ex) {
-                StatusText.Text = ex.Message;
+                Dispatcher.Invoke(() => StatusText.Text = ex.Message);
             }
 
-            try {
-                await Task.Delay(200, ct);
-            } catch (TaskCanceledException) {
-                return false;
-            }
+            if (ct.WaitHandle.WaitOne(200)) return false;
         }
 
         return false;
@@ -143,6 +159,16 @@ public partial class MainWindow : Window {
             return;
         }
 
+        var width = _lastWidth;
+        var height = _lastHeight;
+        var stride = _lastStride;
+
+        byte[] pixels;
+        lock (_captureLock) {
+            pixels = new byte[stride * height];
+            Buffer.BlockCopy(_lastPixels, 0, pixels, 0, pixels.Length);
+        }
+
         var dialog = new Microsoft.Win32.SaveFileDialog {
             Filter = "PNG image (*.png)|*.png",
             FileName = $"capture-{DateTime.Now:yyyyMMdd-HHmmss}.png",
@@ -150,7 +176,7 @@ public partial class MainWindow : Window {
 
         if (dialog.ShowDialog(this) != true) return;
 
-        SavePng(dialog.FileName, _lastPixels, _lastWidth, _lastHeight, _lastStride);
+        SavePng(dialog.FileName, pixels, width, height, stride);
         StatusText.Text = $"Saved capture: {Path.GetFileName(dialog.FileName)}";
     }
 
@@ -160,16 +186,26 @@ public partial class MainWindow : Window {
             return;
         }
 
-        if (!QrGrayImage.TryCreate(_lastPixels, _lastWidth, _lastHeight, _lastStride, PixelFormat.Bgra32, scale: 1, out var gray)) {
+        var width = _lastWidth;
+        var height = _lastHeight;
+        var stride = _lastStride;
+
+        byte[] pixels;
+        lock (_captureLock) {
+            pixels = new byte[stride * height];
+            Buffer.BlockCopy(_lastPixels, 0, pixels, 0, pixels.Length);
+        }
+
+        if (!QrGrayImage.TryCreate(pixels, width, height, stride, PixelFormat.Bgra32, scale: 1, out var gray)) {
             WpfMessageBox.Show(this, "Failed to build grayscale image (insufficient contrast?).", "Screen scan", MessageBoxButton.OK, MessageBoxImage.Warning);
             return;
         }
 
-        var bw = new byte[_lastStride * _lastHeight];
-        for (var y = 0; y < _lastHeight; y++) {
+        var bw = new byte[stride * height];
+        for (var y = 0; y < height; y++) {
             var srcRow = y * gray.Width;
-            var dstRow = y * _lastStride;
-            for (var x = 0; x < _lastWidth; x++) {
+            var dstRow = y * stride;
+            for (var x = 0; x < width; x++) {
                 var lum = gray.Gray[srcRow + x];
                 var v = lum < gray.Threshold ? (byte)0 : (byte)255;
                 var p = dstRow + x * 4;
@@ -187,7 +223,7 @@ public partial class MainWindow : Window {
 
         if (dialog.ShowDialog(this) != true) return;
 
-        SavePng(dialog.FileName, bw, _lastWidth, _lastHeight, _lastStride);
+        SavePng(dialog.FileName, bw, width, height, stride);
         StatusText.Text = $"Saved BW: {Path.GetFileName(dialog.FileName)}";
     }
 

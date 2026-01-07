@@ -7,50 +7,92 @@ internal static class ScreenCapture {
     private const int SRCCOPY = 0x00CC0020;
     private const int CAPTUREBLT = 0x40000000;
 
-    public static byte[] CaptureBgra32(int x, int y, int width, int height, out int stride) {
-        if (width <= 0) throw new ArgumentOutOfRangeException(nameof(width));
-        if (height <= 0) throw new ArgumentOutOfRangeException(nameof(height));
+    public sealed class Session : IDisposable {
+        private readonly int _width;
+        private readonly int _height;
+        private readonly int _stride;
+        private readonly byte[] _buffer;
 
-        stride = checked(width * 4);
+        private IntPtr _hdcScreen;
+        private IntPtr _hdcMem;
+        private IntPtr _hBmp;
+        private IntPtr _bitsPtr;
+        private IntPtr _oldObj;
 
-        var hdcScreen = GetDC(IntPtr.Zero);
-        if (hdcScreen == IntPtr.Zero) throw new InvalidOperationException("GetDC failed.");
+        public int Width => _width;
+        public int Height => _height;
+        public int Stride => _stride;
+        public byte[] Buffer => _buffer;
 
-        var hdcMem = CreateCompatibleDC(hdcScreen);
-        if (hdcMem == IntPtr.Zero) {
-            ReleaseDC(IntPtr.Zero, hdcScreen);
-            throw new InvalidOperationException("CreateCompatibleDC failed.");
+        public Session(int width, int height) {
+            if (width <= 0) throw new ArgumentOutOfRangeException(nameof(width));
+            if (height <= 0) throw new ArgumentOutOfRangeException(nameof(height));
+
+            _width = width;
+            _height = height;
+            _stride = checked(width * 4);
+            _buffer = new byte[_stride * _height];
+
+            try {
+                _hdcScreen = GetDC(IntPtr.Zero);
+                if (_hdcScreen == IntPtr.Zero) throw new InvalidOperationException("GetDC failed.");
+
+                _hdcMem = CreateCompatibleDC(_hdcScreen);
+                if (_hdcMem == IntPtr.Zero) throw new InvalidOperationException("CreateCompatibleDC failed.");
+
+                var bmi = new BITMAPINFO();
+                bmi.bmiHeader.biSize = (uint)Marshal.SizeOf<BITMAPINFOHEADER>();
+                bmi.bmiHeader.biWidth = width;
+                bmi.bmiHeader.biHeight = -height; // top-down
+                bmi.bmiHeader.biPlanes = 1;
+                bmi.bmiHeader.biBitCount = 32;
+                bmi.bmiHeader.biCompression = 0; // BI_RGB
+                bmi.bmiHeader.biSizeImage = (uint)(_stride * height);
+
+                _hBmp = CreateDIBSection(_hdcScreen, ref bmi, 0, out _bitsPtr, IntPtr.Zero, 0);
+                if (_hBmp == IntPtr.Zero || _bitsPtr == IntPtr.Zero) throw new InvalidOperationException("CreateDIBSection failed.");
+
+                _oldObj = SelectObject(_hdcMem, _hBmp);
+                if (_oldObj == IntPtr.Zero) throw new InvalidOperationException("SelectObject failed.");
+            } catch {
+                Dispose();
+                throw;
+            }
         }
 
-        try {
-            var bmi = new BITMAPINFO();
-            bmi.bmiHeader.biSize = (uint)Marshal.SizeOf<BITMAPINFOHEADER>();
-            bmi.bmiHeader.biWidth = width;
-            bmi.bmiHeader.biHeight = -height; // top-down
-            bmi.bmiHeader.biPlanes = 1;
-            bmi.bmiHeader.biBitCount = 32;
-            bmi.bmiHeader.biCompression = 0; // BI_RGB
-            bmi.bmiHeader.biSizeImage = (uint)(stride * height);
+        public void Capture(int x, int y) {
+            if (_hdcMem == IntPtr.Zero || _hdcScreen == IntPtr.Zero || _bitsPtr == IntPtr.Zero) throw new ObjectDisposedException(nameof(Session));
 
-            var bitsPtr = IntPtr.Zero;
-            var hBmp = CreateDIBSection(hdcScreen, ref bmi, 0, out bitsPtr, IntPtr.Zero, 0);
-            if (hBmp == IntPtr.Zero || bitsPtr == IntPtr.Zero) throw new InvalidOperationException("CreateDIBSection failed.");
-
-            var oldObj = SelectObject(hdcMem, hBmp);
-            try {
-                if (!BitBlt(hdcMem, 0, 0, width, height, hdcScreen, x, y, SRCCOPY | CAPTUREBLT))
-                    throw new InvalidOperationException("BitBlt failed.");
-
-                var bytes = new byte[stride * height];
-                Marshal.Copy(bitsPtr, bytes, 0, bytes.Length);
-                return bytes;
-            } finally {
-                SelectObject(hdcMem, oldObj);
-                DeleteObject(hBmp);
+            if (!BitBlt(_hdcMem, 0, 0, _width, _height, _hdcScreen, x, y, SRCCOPY | CAPTUREBLT)) {
+                throw new InvalidOperationException("BitBlt failed.");
             }
-        } finally {
-            DeleteDC(hdcMem);
-            ReleaseDC(IntPtr.Zero, hdcScreen);
+
+            Marshal.Copy(_bitsPtr, _buffer, 0, _buffer.Length);
+        }
+
+        public void Dispose() {
+            // Safe to call multiple times.
+            if (_hdcMem != IntPtr.Zero) {
+                if (_oldObj != IntPtr.Zero) {
+                    SelectObject(_hdcMem, _oldObj);
+                    _oldObj = IntPtr.Zero;
+                }
+
+                DeleteDC(_hdcMem);
+                _hdcMem = IntPtr.Zero;
+            }
+
+            if (_hBmp != IntPtr.Zero) {
+                DeleteObject(_hBmp);
+                _hBmp = IntPtr.Zero;
+            }
+
+            if (_hdcScreen != IntPtr.Zero) {
+                ReleaseDC(IntPtr.Zero, _hdcScreen);
+                _hdcScreen = IntPtr.Zero;
+            }
+
+            _bitsPtr = IntPtr.Zero;
         }
     }
 
