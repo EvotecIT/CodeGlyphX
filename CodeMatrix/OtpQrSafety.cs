@@ -44,6 +44,13 @@ public static class OtpQrSafety {
         if (opts is null) throw new ArgumentNullException(nameof(opts));
 
         var contrast = GetContrastRatio(opts.Foreground, opts.Background);
+        var hasGradient = opts.ForegroundGradient is not null;
+        if (hasGradient) {
+            var grad = opts.ForegroundGradient!;
+            var c1 = GetContrastRatio(grad.StartColor, opts.Background);
+            var c2 = GetContrastRatio(grad.EndColor, opts.Background);
+            contrast = Math.Min(c1, c2);
+        }
         var hasContrast = contrast >= MinimumContrastRatio;
         var hasQuietZone = opts.QuietZone >= RecommendedQuietZone;
         var hasModuleSize = opts.ModuleSize >= 4;
@@ -79,6 +86,11 @@ public static class OtpQrSafety {
         if (!hasEcc) {
             score -= 20;
             issues.Add("Use error correction level H for OTP.");
+        }
+
+        if (hasGradient) {
+            score -= 10;
+            issues.Add("Avoid gradient foreground for OTP (reliability risk).");
         }
 
         if (score < 0) score = 0;
