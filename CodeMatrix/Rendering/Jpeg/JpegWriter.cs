@@ -293,7 +293,7 @@ internal static class JpegWriter {
 
     private static void WriteDqt(Stream s, int tableId, int[] table) {
         WriteMarker(s, 0xFFDB);
-        WriteUInt16(s, 65);
+        WriteUInt16(s, 67);
         s.WriteByte((byte)tableId);
         for (var i = 0; i < 64; i++) {
             s.WriteByte((byte)table[ZigZag[i]]);
@@ -320,7 +320,7 @@ internal static class JpegWriter {
 
     private static void WriteDht(Stream s, int tableClass, int tableId, byte[] bits, byte[] values) {
         WriteMarker(s, 0xFFC4);
-        WriteUInt16(s, (ushort)(1 + 16 + values.Length));
+        WriteUInt16(s, (ushort)(2 + 1 + 16 + values.Length));
         s.WriteByte((byte)((tableClass << 4) | tableId));
         for (var i = 0; i < 16; i++) s.WriteByte(bits[i]);
         s.Write(values, 0, values.Length);
