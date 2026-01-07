@@ -174,54 +174,57 @@ public static class QrPayload {
         string? description = null,
         string? organizer = null,
         string? uid = null,
-        bool allDay = false) {
+        bool allDay = false,
+        string? timeZoneId = null,
+        int? alarmMinutesBefore = null,
+        string? alarmDescription = null) {
         if (summary is null) throw new ArgumentNullException(nameof(summary));
+        if (alarmMinutesBefore is < 0) throw new ArgumentOutOfRangeException(nameof(alarmMinutesBefore));
 
+        var useTimeZone = !allDay && timeZoneId is not null && HasNonWhitespace(timeZoneId);
         var sb = new StringBuilder();
-        sb.Append("BEGIN:VCALENDAR\r\n");
-        sb.Append("VERSION:2.0\r\n");
-        sb.Append("BEGIN:VEVENT\r\n");
+        AppendICalLine(sb, "BEGIN:VCALENDAR");
+        AppendICalLine(sb, "VERSION:2.0");
+        AppendICalLine(sb, "BEGIN:VEVENT");
 
         if (uid is not null && HasNonWhitespace(uid)) {
-            sb.Append("UID:");
-            sb.Append(EscapeICalText(uid));
-            sb.Append("\r\n");
+            AppendICalLine(sb, "UID:" + EscapeICalText(uid));
         }
 
-        sb.Append("SUMMARY:");
-        sb.Append(EscapeICalText(summary));
-        sb.Append("\r\n");
-
-        sb.Append("DTSTART:");
-        sb.Append(FormatICalDate(start, allDay));
-        sb.Append("\r\n");
+        AppendICalLine(sb, "SUMMARY:" + EscapeICalText(summary));
+        AppendICalLine(sb, BuildICalDateLine("DTSTART", start, allDay, useTimeZone, timeZoneId));
 
         if (end.HasValue) {
-            sb.Append("DTEND:");
-            sb.Append(FormatICalDate(end.Value, allDay));
-            sb.Append("\r\n");
+            AppendICalLine(sb, BuildICalDateLine("DTEND", end.Value, allDay, useTimeZone, timeZoneId));
         }
 
         if (location is not null && HasNonWhitespace(location)) {
-            sb.Append("LOCATION:");
-            sb.Append(EscapeICalText(location));
-            sb.Append("\r\n");
+            AppendICalLine(sb, "LOCATION:" + EscapeICalText(location));
         }
 
         if (description is not null && HasNonWhitespace(description)) {
-            sb.Append("DESCRIPTION:");
-            sb.Append(EscapeICalText(description));
-            sb.Append("\r\n");
+            AppendICalLine(sb, "DESCRIPTION:" + EscapeICalText(description));
         }
 
         if (organizer is not null && HasNonWhitespace(organizer)) {
-            sb.Append("ORGANIZER:");
-            sb.Append(EscapeICalText(organizer));
-            sb.Append("\r\n");
+            AppendICalLine(sb, "ORGANIZER:" + EscapeICalText(organizer));
         }
 
-        sb.Append("END:VEVENT\r\n");
-        sb.Append("END:VCALENDAR");
+        if (alarmMinutesBefore.HasValue) {
+            AppendICalLine(sb, "BEGIN:VALARM");
+            AppendICalLine(sb, "TRIGGER:-PT" + alarmMinutesBefore.Value + "M");
+            AppendICalLine(sb, "ACTION:DISPLAY");
+            var alarmText = alarmDescription is null || !HasNonWhitespace(alarmDescription)
+                ? "Reminder"
+                : alarmDescription;
+            AppendICalLine(sb, "DESCRIPTION:" + EscapeICalText(alarmText));
+            AppendICalLine(sb, "END:VALARM");
+        }
+
+        AppendICalLine(sb, "END:VEVENT");
+        AppendICalLine(sb, "END:VCALENDAR");
+
+        if (sb.Length >= 2) sb.Length -= 2;
 
         return sb.ToString();
     }
@@ -420,12 +423,12 @@ public static class QrPayload {
         return sb.ToString();
     }
 
-    private static string FormatICalDate(DateTime value, bool allDay) {
+    private static string FormatICalDate(DateTime value, bool allDay, bool allowUtcSuffix) {
         if (allDay) {
             return value.ToString("yyyyMMdd", CultureInfo.InvariantCulture);
         }
 
-        var suffix = value.Kind == DateTimeKind.Utc ? "Z" : string.Empty;
+        var suffix = allowUtcSuffix && value.Kind == DateTimeKind.Utc ? "Z" : string.Empty;
         return value.ToString("yyyyMMdd'T'HHmmss", CultureInfo.InvariantCulture) + suffix;
     }
 
@@ -454,6 +457,49 @@ public static class QrPayload {
             }
         }
         return sb.ToString();
+    }
+
+    private static string BuildICalDateLine(
+        string key,
+        DateTime value,
+        bool allDay,
+        bool useTimeZone,
+        string? timeZoneId) {
+        if (useTimeZone) {
+            return key + ";TZID=" + EscapeICalParamValue(timeZoneId!) + ":" + FormatICalDate(value, allDay: false, allowUtcSuffix: false);
+        }
+        return key + ":" + FormatICalDate(value, allDay, allowUtcSuffix: true);
+    }
+
+    private static string EscapeICalParamValue(string value) {
+        var sb = new StringBuilder(value.Length);
+        for (var i = 0; i < value.Length; i++) {
+            var c = value[i];
+            if (c is '\\' or ';' or ',') sb.Append('\\');
+            sb.Append(c);
+        }
+        return sb.ToString();
+    }
+
+    private static void AppendICalLine(StringBuilder sb, string line) {
+        const int maxLen = 75;
+        if (line.Length <= maxLen) {
+            sb.Append(line);
+            sb.Append("\r\n");
+            return;
+        }
+
+        var index = 0;
+        while (index < line.Length) {
+            var take = Math.Min(maxLen, line.Length - index);
+            sb.Append(line, index, take);
+            index += take;
+            if (index < line.Length) {
+                sb.Append("\r\n ");
+            } else {
+                sb.Append("\r\n");
+            }
+        }
     }
 
     private static string EscapeVCardText(string value) {
