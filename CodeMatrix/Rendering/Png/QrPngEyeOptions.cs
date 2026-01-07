@@ -51,8 +51,20 @@ public sealed class QrPngEyeOptions {
     /// </summary>
     public Rgba32? InnerColor { get; set; }
 
+    /// <summary>
+    /// Optional gradient for the outer frame.
+    /// </summary>
+    public QrPngGradientOptions? OuterGradient { get; set; }
+
+    /// <summary>
+    /// Optional gradient for the inner dot.
+    /// </summary>
+    public QrPngGradientOptions? InnerGradient { get; set; }
+
     internal void Validate() {
         if (OuterScale is <= 0 or > 1.0) throw new ArgumentOutOfRangeException(nameof(OuterScale));
         if (InnerScale is <= 0 or > 1.0) throw new ArgumentOutOfRangeException(nameof(InnerScale));
+        OuterGradient?.Validate();
+        InnerGradient?.Validate();
     }
 }

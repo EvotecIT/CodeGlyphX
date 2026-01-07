@@ -47,15 +47,46 @@ public static class QrPngRenderer {
         for (var my = 0; my < size; my++) {
             for (var mx = 0; mx < size; mx++) {
                 if (!modules[mx, my]) continue;
-                var eye = opts.Eyes is not null ? GetEyeKind(mx, my, size) : EyeKind.None;
-                if (useFrame && eye != EyeKind.None) continue;
-                var useMask = eye == EyeKind.Outer ? eyeOuterMask : eye == EyeKind.Inner ? eyeInnerMask : mask;
-                var useColor = eye switch {
+                var eyeKind = EyeKind.None;
+                var eyeX = 0;
+                var eyeY = 0;
+                if (opts.Eyes is not null && TryGetEye(mx, my, size, out eyeX, out eyeY, out var kind)) {
+                    eyeKind = kind;
+                }
+
+                if (useFrame && eyeKind != EyeKind.None) continue;
+
+                var useMask = eyeKind == EyeKind.Outer ? eyeOuterMask : eyeKind == EyeKind.Inner ? eyeInnerMask : mask;
+                var useColor = eyeKind switch {
                     EyeKind.Outer => opts.Eyes!.OuterColor ?? opts.Foreground,
                     EyeKind.Inner => opts.Eyes!.InnerColor ?? opts.Foreground,
                     _ => opts.Foreground,
                 };
-                var useGradient = eye == EyeKind.None ? opts.ForegroundGradient : null;
+
+                if (!useFrame && eyeKind != EyeKind.None) {
+                    var eyeGrad = eyeKind == EyeKind.Outer ? opts.Eyes!.OuterGradient : opts.Eyes!.InnerGradient;
+                    if (eyeGrad is not null) {
+                        var eyeSizeModules = eyeKind == EyeKind.Outer ? 7 : 3;
+                        var boxX = (eyeX + opts.QuietZone) * opts.ModuleSize;
+                        var boxY = (eyeY + opts.QuietZone) * opts.ModuleSize;
+                        var boxSize = eyeSizeModules * opts.ModuleSize;
+                        DrawModuleInBox(
+                            scanlines,
+                            stride,
+                            opts.ModuleSize,
+                            mx,
+                            my,
+                            opts.QuietZone,
+                            eyeGrad,
+                            useMask,
+                            boxX,
+                            boxY,
+                            boxSize);
+                        continue;
+                    }
+                }
+
+                var useGradient = eyeKind == EyeKind.None ? opts.ForegroundGradient : null;
 
                 DrawModule(
                     scanlines,
@@ -147,6 +178,38 @@ public static class QrPngRenderer {
         }
     }
 
+    private static void DrawModuleInBox(
+        byte[] scanlines,
+        int stride,
+        int moduleSize,
+        int mx,
+        int my,
+        int quietZone,
+        QrPngGradientOptions gradient,
+        bool[] mask,
+        int boxX,
+        int boxY,
+        int boxSizePx) {
+        var x0 = (mx + quietZone) * moduleSize;
+        var y0 = (my + quietZone) * moduleSize;
+        for (var sy = 0; sy < moduleSize; sy++) {
+            var rowStart = (y0 + sy) * (stride + 1) + 1 + x0 * 4;
+            var maskRow = sy * moduleSize;
+            for (var sx = 0; sx < moduleSize; sx++) {
+                if (!mask[maskRow + sx]) {
+                    rowStart += 4;
+                    continue;
+                }
+                var color = GetGradientColorInBox(gradient, x0 + sx, y0 + sy, boxX, boxY, boxSizePx, boxSizePx);
+                scanlines[rowStart + 0] = color.R;
+                scanlines[rowStart + 1] = color.G;
+                scanlines[rowStart + 2] = color.B;
+                scanlines[rowStart + 3] = color.A;
+                rowStart += 4;
+            }
+        }
+    }
+
     private static bool[] BuildModuleMask(
         int moduleSize,
         QrPngModuleShape shape,
@@ -232,6 +295,28 @@ public static class QrPngRenderer {
         return Lerp(gradient.StartColor, gradient.EndColor, t);
     }
 
+    private static Rgba32 GetGradientColorInBox(QrPngGradientOptions gradient, int px, int py, int x, int y, int w, int h) {
+        var sizeX = Math.Max(1, w - 1);
+        var sizeY = Math.Max(1, h - 1);
+        var u = (px - x) / (double)sizeX;
+        var v = (py - y) / (double)sizeY;
+        if (u < 0) u = 0;
+        if (u > 1) u = 1;
+        if (v < 0) v = 0;
+        if (v > 1) v = 1;
+
+        double t = gradient.Type switch {
+            QrPngGradientType.Horizontal => u,
+            QrPngGradientType.Vertical => v,
+            QrPngGradientType.DiagonalDown => (u + v) * 0.5,
+            QrPngGradientType.DiagonalUp => (u + (1 - v)) * 0.5,
+            QrPngGradientType.Radial => GetRadialT(u, v, gradient.CenterX, gradient.CenterY),
+            _ => u,
+        };
+
+        return Lerp(gradient.StartColor, gradient.EndColor, t);
+    }
+
     private static double GetRadialT(double u, double v, double cx, double cy) {
         var dx = u - cx;
         var dy = v - cy;
@@ -277,6 +362,31 @@ public static class QrPngRenderer {
         return EyeKind.None;
     }
 
+    private static bool TryGetEye(int x, int y, int size, out int ex, out int ey, out EyeKind kind) {
+        if (IsInEye(x, y, 0, 0)) {
+            ex = 0;
+            ey = 0;
+            kind = GetEyeModuleKind(x, y, 0, 0);
+            return true;
+        }
+        if (IsInEye(x, y, size - 7, 0)) {
+            ex = size - 7;
+            ey = 0;
+            kind = GetEyeModuleKind(x, y, size - 7, 0);
+            return true;
+        }
+        if (IsInEye(x, y, 0, size - 7)) {
+            ex = 0;
+            ey = size - 7;
+            kind = GetEyeModuleKind(x, y, 0, size - 7);
+            return true;
+        }
+        ex = 0;
+        ey = 0;
+        kind = EyeKind.None;
+        return false;
+    }
+
     private static bool IsInEye(int x, int y, int ex, int ey) {
         return x >= ex && x < ex + 7 && y >= ey && y < ey + 7;
     }
@@ -286,6 +396,146 @@ public static class QrPngRenderer {
         var ly = y - ey;
         if (lx >= 2 && lx <= 4 && ly >= 2 && ly <= 4) return EyeKind.Inner;
         return EyeKind.Outer;
+    }
+
+    private static void DrawEyeFrame(
+        byte[] scanlines,
+        int widthPx,
+        int heightPx,
+        int stride,
+        QrPngRenderOptions opts,
+        int ex,
+        int ey) {
+        var moduleSize = opts.ModuleSize;
+        var x0 = (ex + opts.QuietZone) * moduleSize;
+        var y0 = (ey + opts.QuietZone) * moduleSize;
+
+        var outerSize = 7 * moduleSize;
+        var innerSize = 5 * moduleSize;
+        var dotSize = 3 * moduleSize;
+
+        var eye = opts.Eyes!;
+        var outerScaled = ScaleSize(outerSize, eye.OuterScale);
+        var innerScaled = ScaleSize(innerSize, eye.OuterScale);
+        var dotScaled = ScaleSize(dotSize, eye.InnerScale);
+
+        var outerX = x0 + (outerSize - outerScaled) / 2;
+        var outerY = y0 + (outerSize - outerScaled) / 2;
+        var innerX = x0 + (outerSize - innerScaled) / 2;
+        var innerY = y0 + (outerSize - innerScaled) / 2;
+        var dotX = x0 + (outerSize - dotScaled) / 2;
+        var dotY = y0 + (outerSize - dotScaled) / 2;
+
+        var outerColor = eye.OuterColor ?? opts.Foreground;
+        var innerColor = eye.InnerColor ?? opts.Foreground;
+        var outerGradient = eye.OuterGradient;
+        var innerGradient = eye.InnerGradient;
+
+        if (outerGradient is null) {
+            FillRoundedRect(scanlines, widthPx, heightPx, stride, outerX, outerY, outerScaled, outerScaled, outerColor, eye.OuterCornerRadiusPx);
+        } else {
+            FillRoundedRectGradient(scanlines, widthPx, heightPx, stride, outerX, outerY, outerScaled, outerScaled, outerGradient, eye.OuterCornerRadiusPx);
+        }
+        FillRoundedRect(scanlines, widthPx, heightPx, stride, innerX, innerY, innerScaled, innerScaled, opts.Background, eye.InnerCornerRadiusPx);
+
+        if (dotScaled > 0) {
+            if (eye.InnerShape == QrPngModuleShape.Circle) {
+                if (innerGradient is null) {
+                    FillEllipse(scanlines, widthPx, heightPx, stride, dotX, dotY, dotScaled, dotScaled, innerColor);
+                } else {
+                    FillEllipseGradient(scanlines, widthPx, heightPx, stride, dotX, dotY, dotScaled, dotScaled, innerGradient);
+                }
+            } else {
+                var radius = eye.InnerShape == QrPngModuleShape.Rounded ? eye.InnerCornerRadiusPx : 0;
+                if (innerGradient is null) {
+                    FillRoundedRect(scanlines, widthPx, heightPx, stride, dotX, dotY, dotScaled, dotScaled, innerColor, radius);
+                } else {
+                    FillRoundedRectGradient(scanlines, widthPx, heightPx, stride, dotX, dotY, dotScaled, dotScaled, innerGradient, radius);
+                }
+            }
+        }
+    }
+
+    private static void FillEllipse(
+        byte[] scanlines,
+        int widthPx,
+        int heightPx,
+        int stride,
+        int x,
+        int y,
+        int w,
+        int h,
+        Rgba32 color) {
+        if (w <= 0 || h <= 0) return;
+        var x0 = Math.Max(0, x);
+        var y0 = Math.Max(0, y);
+        var x1 = Math.Min(widthPx, x + w);
+        var y1 = Math.Min(heightPx, y + h);
+        if (x1 <= x0 || y1 <= y0) return;
+
+        var rx = w / 2.0;
+        var ry = h / 2.0;
+        if (rx <= 0 || ry <= 0) return;
+        var cx = x + rx;
+        var cy = y + ry;
+
+        for (var py = y0; py < y1; py++) {
+            var dy = (py + 0.5 - cy) / ry;
+            for (var px = x0; px < x1; px++) {
+                var dx = (px + 0.5 - cx) / rx;
+                if (dx * dx + dy * dy > 1.0) continue;
+                var p = py * (stride + 1) + 1 + px * 4;
+                scanlines[p + 0] = color.R;
+                scanlines[p + 1] = color.G;
+                scanlines[p + 2] = color.B;
+                scanlines[p + 3] = color.A;
+            }
+        }
+    }
+
+    private static void FillEllipseGradient(
+        byte[] scanlines,
+        int widthPx,
+        int heightPx,
+        int stride,
+        int x,
+        int y,
+        int w,
+        int h,
+        QrPngGradientOptions gradient) {
+        if (w <= 0 || h <= 0) return;
+        var x0 = Math.Max(0, x);
+        var y0 = Math.Max(0, y);
+        var x1 = Math.Min(widthPx, x + w);
+        var y1 = Math.Min(heightPx, y + h);
+        if (x1 <= x0 || y1 <= y0) return;
+
+        var rx = w / 2.0;
+        var ry = h / 2.0;
+        if (rx <= 0 || ry <= 0) return;
+        var cx = x + rx;
+        var cy = y + ry;
+
+        for (var py = y0; py < y1; py++) {
+            var dy = (py + 0.5 - cy) / ry;
+            for (var px = x0; px < x1; px++) {
+                var dx = (px + 0.5 - cx) / rx;
+                if (dx * dx + dy * dy > 1.0) continue;
+                var color = GetGradientColorInBox(gradient, px, py, x0, y0, x1 - x0, y1 - y0);
+                var p = py * (stride + 1) + 1 + px * 4;
+                scanlines[p + 0] = color.R;
+                scanlines[p + 1] = color.G;
+                scanlines[p + 2] = color.B;
+                scanlines[p + 3] = color.A;
+            }
+        }
+    }
+
+    private static int ScaleSize(int size, double scale) {
+        if (scale <= 0) return 0;
+        var scaled = (int)Math.Round(size * scale);
+        if (scaled < 1) scaled = 1;
+        return scaled;
     }
 
     private static void ApplyLogo(
@@ -352,6 +602,44 @@ public static class QrPngRenderer {
                 if (r > 0 && !InsideRounded(px, py, x0, y0, x1 - 1, y1 - 1, r, r2)) {
                     continue;
                 }
+                var p = py * (stride + 1) + 1 + px * 4;
+                scanlines[p + 0] = color.R;
+                scanlines[p + 1] = color.G;
+                scanlines[p + 2] = color.B;
+                scanlines[p + 3] = color.A;
+            }
+        }
+    }
+
+    private static void FillRoundedRectGradient(
+        byte[] scanlines,
+        int widthPx,
+        int heightPx,
+        int stride,
+        int x,
+        int y,
+        int w,
+        int h,
+        QrPngGradientOptions gradient,
+        int radius) {
+        if (w <= 0 || h <= 0) return;
+        var x0 = Math.Max(0, x);
+        var y0 = Math.Max(0, y);
+        var x1 = Math.Min(widthPx, x + w);
+        var y1 = Math.Min(heightPx, y + h);
+        if (x1 <= x0 || y1 <= y0) return;
+
+        var r = Math.Max(0, radius);
+        var maxR = Math.Min((x1 - x0) / 2, (y1 - y0) / 2);
+        if (r > maxR) r = maxR;
+        var r2 = r * r;
+
+        for (var py = y0; py < y1; py++) {
+            for (var px = x0; px < x1; px++) {
+                if (r > 0 && !InsideRounded(px, py, x0, y0, x1 - 1, y1 - 1, r, r2)) {
+                    continue;
+                }
+                var color = GetGradientColorInBox(gradient, px, py, x0, y0, x1 - x0, y1 - y0);
                 var p = py * (stride + 1) + 1 + px * 4;
                 scanlines[p + 0] = color.R;
                 scanlines[p + 1] = color.G;
