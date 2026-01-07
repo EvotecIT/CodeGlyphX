@@ -144,4 +144,32 @@ public sealed class QrPayloadTests {
 
         Assert.Equal(expected, payload);
     }
+
+    [Fact]
+    public void Upi_Builds_Pay_Uri() {
+        var payload = QrPayload.Upi(
+            "alice@upi",
+            name: "Alice Doe",
+            merchantCode: "1234",
+            transactionRef: "INV-1",
+            transactionNote: "Lunch",
+            amount: 199.5m,
+            currency: "INR");
+
+        Assert.Equal("upi://pay?pa=alice%40upi&pn=Alice%20Doe&mc=1234&tr=INV-1&tn=Lunch&am=199.5&cu=INR", payload);
+    }
+
+    [Fact]
+    public void AppStore_And_Social_Links() {
+        Assert.Equal("https://apps.apple.com/app/id123456789", QrPayload.AppStore("123456789"));
+        Assert.Equal("https://apps.apple.com/us/app/id123456789", QrPayload.AppStoreApple("id123456789", "us"));
+        Assert.Equal("https://play.google.com/store/apps/details?id=com.example.app", QrPayload.AppStoreGooglePlay("com.example.app"));
+
+        Assert.Equal("https://www.facebook.com/evotec", QrPayload.FacebookProfile("evotec"));
+        Assert.Equal("https://twitter.com/evotec", QrPayload.TwitterProfile("@evotec"));
+        Assert.Equal("https://x.com/evotec", QrPayload.XProfile("evotec"));
+        Assert.Equal("https://www.tiktok.com/@evotec", QrPayload.TikTokProfile("evotec"));
+        Assert.Equal("https://www.linkedin.com/in/evotec", QrPayload.LinkedInProfile("evotec"));
+        Assert.Equal("https://www.linkedin.com/company/evotec", QrPayload.LinkedInCompany("evotec"));
+    }
 }
