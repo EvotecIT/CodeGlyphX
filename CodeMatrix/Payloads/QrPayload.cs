@@ -79,6 +79,44 @@ public static class QrPayload {
     }
 
     /// <summary>
+    /// Builds a UPI payment URI payload (<c>upi://pay</c>).
+    /// </summary>
+    public static string Upi(
+        string vpa,
+        string? name = null,
+        string? merchantCode = null,
+        string? transactionRef = null,
+        string? transactionNote = null,
+        decimal? amount = null,
+        string? currency = "INR") {
+        if (vpa is null) throw new ArgumentNullException(nameof(vpa));
+        vpa = vpa.Trim();
+        if (vpa.Length == 0) throw new ArgumentException("VPA cannot be empty.", nameof(vpa));
+        if (amount is < 0) throw new ArgumentOutOfRangeException(nameof(amount));
+
+        var sb = new StringBuilder();
+        sb.Append("upi://pay?pa=");
+        PercentEncoding.AppendEscaped(sb, vpa);
+
+        AppendQuery(sb, "pn", name);
+        AppendQuery(sb, "mc", merchantCode);
+        AppendQuery(sb, "tr", transactionRef);
+        AppendQuery(sb, "tn", transactionNote);
+
+        if (amount.HasValue) {
+            sb.Append("&am=");
+            sb.Append(amount.Value.ToString("0.##", CultureInfo.InvariantCulture));
+        }
+
+        if (currency is not null && HasNonWhitespace(currency)) {
+            sb.Append("&cu=");
+            PercentEncoding.AppendEscaped(sb, currency.Trim().ToUpperInvariant());
+        }
+
+        return sb.ToString();
+    }
+
+    /// <summary>
     /// Builds a Wi‑Fi QR payload (common <c>WIFI:...</c> format).
     /// </summary>
     public static string Wifi(string ssid, string password, string authType = "WPA", bool hidden = false) {
@@ -102,6 +140,86 @@ public static class QrPayload {
         }
         sb.Append(';');
         return sb.ToString();
+    }
+
+    /// <summary>
+    /// Builds an Apple App Store URL payload.
+    /// </summary>
+    public static string AppStore(string appId, string? countryCode = null) {
+        return AppStoreApple(appId, countryCode);
+    }
+
+    /// <summary>
+    /// Builds an Apple App Store URL payload.
+    /// </summary>
+    public static string AppStoreApple(string appId, string? countryCode = null) {
+        if (appId is null) throw new ArgumentNullException(nameof(appId));
+        appId = appId.Trim();
+        if (appId.Length == 0) throw new ArgumentException("App ID cannot be empty.", nameof(appId));
+
+        if (appId.StartsWith("id", StringComparison.OrdinalIgnoreCase)) {
+            appId = appId.Substring(2);
+        }
+
+        var cc = countryCode is null || !HasNonWhitespace(countryCode) ? null : countryCode.Trim().ToLowerInvariant();
+        return cc is null
+            ? $"https://apps.apple.com/app/id{appId}"
+            : $"https://apps.apple.com/{cc}/app/id{appId}";
+    }
+
+    /// <summary>
+    /// Builds a Google Play Store URL payload.
+    /// </summary>
+    public static string AppStoreGooglePlay(string packageId) {
+        if (packageId is null) throw new ArgumentNullException(nameof(packageId));
+        packageId = packageId.Trim();
+        if (packageId.Length == 0) throw new ArgumentException("Package ID cannot be empty.", nameof(packageId));
+
+        var sb = new StringBuilder("https://play.google.com/store/apps/details?id=");
+        PercentEncoding.AppendEscaped(sb, packageId);
+        return sb.ToString();
+    }
+
+    /// <summary>
+    /// Builds a Facebook profile URL payload.
+    /// </summary>
+    public static string FacebookProfile(string handleOrUrl) {
+        return BuildProfileUrl(handleOrUrl, "https://www.facebook.com/");
+    }
+
+    /// <summary>
+    /// Builds a Twitter profile URL payload.
+    /// </summary>
+    public static string TwitterProfile(string handleOrUrl) {
+        return BuildProfileUrl(handleOrUrl, "https://twitter.com/");
+    }
+
+    /// <summary>
+    /// Builds an X (Twitter) profile URL payload.
+    /// </summary>
+    public static string XProfile(string handleOrUrl) {
+        return BuildProfileUrl(handleOrUrl, "https://x.com/");
+    }
+
+    /// <summary>
+    /// Builds a TikTok profile URL payload.
+    /// </summary>
+    public static string TikTokProfile(string handleOrUrl) {
+        return BuildProfileUrl(handleOrUrl, "https://www.tiktok.com/", "@");
+    }
+
+    /// <summary>
+    /// Builds a LinkedIn profile URL payload.
+    /// </summary>
+    public static string LinkedInProfile(string handleOrUrl) {
+        return BuildProfileUrl(handleOrUrl, "https://www.linkedin.com/in/");
+    }
+
+    /// <summary>
+    /// Builds a LinkedIn company URL payload.
+    /// </summary>
+    public static string LinkedInCompany(string handleOrUrl) {
+        return BuildProfileUrl(handleOrUrl, "https://www.linkedin.com/company/");
     }
 
     /// <summary>
@@ -500,6 +618,34 @@ public static class QrPayload {
                 sb.Append("\r\n");
             }
         }
+    }
+
+    private static void AppendQuery(StringBuilder sb, string key, string? value) {
+        if (value is null || !HasNonWhitespace(value)) return;
+        sb.Append('&');
+        sb.Append(key);
+        sb.Append('=');
+        PercentEncoding.AppendEscaped(sb, value);
+    }
+
+    private static string BuildProfileUrl(string handleOrUrl, string baseUrl, string? prefix = null) {
+        if (handleOrUrl is null) throw new ArgumentNullException(nameof(handleOrUrl));
+        var value = handleOrUrl.Trim();
+        if (value.Length == 0) throw new ArgumentException("Value cannot be empty.", nameof(handleOrUrl));
+
+        if (value.IndexOf("://", StringComparison.OrdinalIgnoreCase) >= 0) {
+            return value;
+        }
+
+        if (value.StartsWith("@", StringComparison.Ordinal)) {
+            value = value.Substring(1);
+        }
+
+        var sb = new StringBuilder(baseUrl.Length + value.Length + 4);
+        sb.Append(baseUrl);
+        if (prefix is not null) sb.Append(prefix);
+        PercentEncoding.AppendEscaped(sb, value);
+        return sb.ToString();
     }
 
     private static string EscapeVCardText(string value) {

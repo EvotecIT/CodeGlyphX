@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using CodeMatrix.Internal;
 using CodeMatrix.Qr;
 
 namespace CodeMatrix;
@@ -23,11 +24,38 @@ public static class QrCodeEncoder {
         string text,
         QrErrorCorrectionLevel ecc = QrErrorCorrectionLevel.M,
         int minVersion = 1,
-        int maxVersion = 10,
+        int maxVersion = 40,
         int? forceMask = null) {
         if (text is null) throw new ArgumentNullException(nameof(text));
         var data = Encoding.UTF8.GetBytes(text);
         return EncodeBytes(data, ecc, minVersion, maxVersion, forceMask);
+    }
+
+    /// <summary>
+    /// Encodes a text payload using a specific QR text encoding (optionally with ECI).
+    /// </summary>
+    /// <param name="text">Text payload to encode.</param>
+    /// <param name="encoding">Encoding to use for QR byte mode.</param>
+    /// <param name="ecc">Error correction level.</param>
+    /// <param name="minVersion">Minimum allowed QR version (1..40).</param>
+    /// <param name="maxVersion">Maximum allowed QR version (1..40).</param>
+    /// <param name="forceMask">Optional forced mask (0..7). When null, the best mask is chosen.</param>
+    /// <param name="includeEci">When true, emits an ECI header for non-default encodings.</param>
+    public static QrCode EncodeText(
+        string text,
+        QrTextEncoding encoding,
+        QrErrorCorrectionLevel ecc = QrErrorCorrectionLevel.M,
+        int minVersion = 1,
+        int maxVersion = 40,
+        int? forceMask = null,
+        bool includeEci = true) {
+        if (text is null) throw new ArgumentNullException(nameof(text));
+        var data = QrEncoding.Encode(text, encoding);
+        int? eci = null;
+        if (includeEci && encoding != QrTextEncoding.Latin1 && QrEncoding.TryGetEciAssignment(encoding, out var assignment)) {
+            eci = assignment;
+        }
+        return QrEncoder.EncodeByteMode(data, ecc, minVersion, maxVersion, forceMask, eci);
     }
 
     /// <summary>
@@ -38,14 +66,16 @@ public static class QrCodeEncoder {
     /// <param name="minVersion">Minimum allowed QR version (1..40).</param>
     /// <param name="maxVersion">Maximum allowed QR version (1..40).</param>
     /// <param name="forceMask">Optional forced mask (0..7). When null, the best mask is chosen.</param>
+    /// <param name="eciAssignmentNumber">Optional ECI assignment number to emit before the payload.</param>
     public static QrCode EncodeBytes(
         byte[] data,
         QrErrorCorrectionLevel ecc = QrErrorCorrectionLevel.M,
         int minVersion = 1,
-        int maxVersion = 10,
-        int? forceMask = null) {
+        int maxVersion = 40,
+        int? forceMask = null,
+        int? eciAssignmentNumber = null) {
         if (data is null) throw new ArgumentNullException(nameof(data));
-        return QrEncoder.EncodeByteMode(data, ecc, minVersion, maxVersion, forceMask);
+        return QrEncoder.EncodeByteMode(data, ecc, minVersion, maxVersion, forceMask, eciAssignmentNumber);
     }
 
 #if NET8_0_OR_GREATER
@@ -57,13 +87,15 @@ public static class QrCodeEncoder {
     /// <param name="minVersion">Minimum allowed QR version (1..40).</param>
     /// <param name="maxVersion">Maximum allowed QR version (1..40).</param>
     /// <param name="forceMask">Optional forced mask (0..7). When null, the best mask is chosen.</param>
+    /// <param name="eciAssignmentNumber">Optional ECI assignment number to emit before the payload.</param>
     public static QrCode EncodeBytes(
         ReadOnlySpan<byte> data,
         QrErrorCorrectionLevel ecc = QrErrorCorrectionLevel.M,
         int minVersion = 1,
-        int maxVersion = 10,
-        int? forceMask = null) {
-        return QrEncoder.EncodeByteMode(data.ToArray(), ecc, minVersion, maxVersion, forceMask);
+        int maxVersion = 40,
+        int? forceMask = null,
+        int? eciAssignmentNumber = null) {
+        return QrEncoder.EncodeByteMode(data.ToArray(), ecc, minVersion, maxVersion, forceMask, eciAssignmentNumber);
     }
 #endif
 }

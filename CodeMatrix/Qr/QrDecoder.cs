@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using CodeMatrix.Internal;
 using CodeMatrix.Qr;
 
 namespace CodeMatrix;
@@ -426,10 +427,6 @@ public static class QrDecoder {
     }
 
     private static string DecodeSegment(QrPayloadSegment segment) {
-        return segment.Encoding switch {
-            QrTextEncoding.Ascii => Encoding.ASCII.GetString(segment.Bytes),
-            QrTextEncoding.Latin1 => DecodeLatin1(segment.Bytes),
-            _ => Encoding.UTF8.GetString(segment.Bytes),
-        };
+        return QrEncoding.Decode(segment.Encoding, segment.Bytes);
     }
 }

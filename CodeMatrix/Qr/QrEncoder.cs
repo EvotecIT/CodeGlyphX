@@ -3,17 +3,19 @@ using System;
 namespace CodeMatrix.Qr;
 
 internal static class QrEncoder {
-    public static CodeMatrix.QrCode EncodeByteMode(byte[] data, QrErrorCorrectionLevel ecc, int minVersion, int maxVersion, int? forceMask) {
+    public static CodeMatrix.QrCode EncodeByteMode(byte[] data, QrErrorCorrectionLevel ecc, int minVersion, int maxVersion, int? forceMask, int? eciAssignmentNumber = null) {
         if (data is null) throw new ArgumentNullException(nameof(data));
         if (minVersion is < 1 or > 40) throw new ArgumentOutOfRangeException(nameof(minVersion));
         if (maxVersion is < 1 or > 40) throw new ArgumentOutOfRangeException(nameof(maxVersion));
         if (minVersion > maxVersion) throw new ArgumentOutOfRangeException(nameof(minVersion));
         if (forceMask is not null && forceMask.Value is < 0 or > 7) throw new ArgumentOutOfRangeException(nameof(forceMask));
+        if (eciAssignmentNumber is < 0 or > 999999) throw new ArgumentOutOfRangeException(nameof(eciAssignmentNumber));
 
         var version = 0;
         for (var v = minVersion; v <= maxVersion; v++) {
             var capacityBits = QrTables.GetNumDataCodewords(v, ecc) * 8;
             var requiredBits = 4 + QrTables.GetByteModeCharCountBits(v) + data.Length * 8;
+            if (eciAssignmentNumber is not null) requiredBits += 4 + GetEciAssignmentBitCount(eciAssignmentNumber.Value);
             if (requiredBits <= capacityBits) {
                 version = v;
                 break;
@@ -23,7 +25,7 @@ internal static class QrEncoder {
         if (version == 0)
             throw new ArgumentException($"Data too long for QR version range {minVersion}..{maxVersion} at ECC {ecc}.");
 
-        var dataCodewords = EncodeByteModeData(data, version, ecc);
+        var dataCodewords = EncodeByteModeData(data, version, ecc, eciAssignmentNumber);
         var allCodewords = AddEccAndInterleave(dataCodewords, version, ecc);
 
         var size = version * 4 + 17;
@@ -54,9 +56,15 @@ internal static class QrEncoder {
         return new CodeMatrix.QrCode(version, ecc, bestMask, bestModules);
     }
 
-    private static byte[] EncodeByteModeData(byte[] data, int version, QrErrorCorrectionLevel ecc) {
+    private static byte[] EncodeByteModeData(byte[] data, int version, QrErrorCorrectionLevel ecc, int? eciAssignmentNumber) {
         var dataCapacityBits = QrTables.GetNumDataCodewords(version, ecc) * 8;
         var bb = new QrBitBuffer();
+
+        if (eciAssignmentNumber is not null) {
+            // ECI mode indicator (0111)
+            bb.AppendBits(0b0111, 4);
+            AppendEciAssignmentNumber(bb, eciAssignmentNumber.Value);
+        }
 
         // Mode indicator: Byte (0100)
         bb.AppendBits(0b0100, 4);
@@ -89,6 +97,31 @@ internal static class QrEncoder {
             pad = pad == 0xEC ? 0x11 : 0xEC;
         }
         return result;
+    }
+
+    private static int GetEciAssignmentBitCount(int assignmentNumber) {
+        if (assignmentNumber <= 0x7F) return 8;
+        if (assignmentNumber <= 0x3FFF) return 16;
+        return 24;
+    }
+
+    private static void AppendEciAssignmentNumber(QrBitBuffer bb, int assignmentNumber) {
+        if (assignmentNumber <= 0x7F) {
+            bb.AppendBits(assignmentNumber, 8);
+            return;
+        }
+
+        if (assignmentNumber <= 0x3FFF) {
+            var first = 0b1000_0000 | ((assignmentNumber >> 8) & 0b0011_1111);
+            bb.AppendBits(first, 8);
+            bb.AppendBits(assignmentNumber & 0xFF, 8);
+            return;
+        }
+
+        var head = 0b1100_0000 | ((assignmentNumber >> 16) & 0b0001_1111);
+        bb.AppendBits(head, 8);
+        bb.AppendBits((assignmentNumber >> 8) & 0xFF, 8);
+        bb.AppendBits(assignmentNumber & 0xFF, 8);
     }
 
     private static byte[] AddEccAndInterleave(byte[] data, int version, QrErrorCorrectionLevel ecc) {

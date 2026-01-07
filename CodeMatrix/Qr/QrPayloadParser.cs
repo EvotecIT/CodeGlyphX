@@ -1,13 +1,8 @@
 using System;
 using System.Collections.Generic;
+using CodeMatrix;
 
 namespace CodeMatrix.Qr;
-
-internal enum QrTextEncoding {
-    Utf8 = 0,
-    Latin1 = 1,
-    Ascii = 2,
-}
 
 internal readonly struct QrPayloadSegment {
     public QrTextEncoding Encoding { get; }
@@ -154,9 +149,15 @@ internal static class QrPayloadParser {
 
                 // Minimal set for OTP / URL QR use cases.
                 var newEncoding = assignmentNumber switch {
-                    3 => QrTextEncoding.Latin1,  // ISO-8859-1
-                    26 => QrTextEncoding.Utf8,   // UTF-8
-                    27 => QrTextEncoding.Ascii,  // US-ASCII
+                    3 => QrTextEncoding.Latin1,      // ISO-8859-1
+                    4 => QrTextEncoding.Iso8859_2,   // ISO-8859-2
+                    6 => QrTextEncoding.Iso8859_4,   // ISO-8859-4
+                    7 => QrTextEncoding.Iso8859_5,   // ISO-8859-5
+                    9 => QrTextEncoding.Iso8859_7,   // ISO-8859-7
+                    12 => QrTextEncoding.Iso8859_10, // ISO-8859-10
+                    15 => QrTextEncoding.Iso8859_15, // ISO-8859-15
+                    26 => QrTextEncoding.Utf8,       // UTF-8
+                    27 => QrTextEncoding.Ascii,      // US-ASCII
                     _ => encoding,
                 };
 

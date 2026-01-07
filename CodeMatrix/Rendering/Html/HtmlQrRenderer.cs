@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using CodeMatrix.Rendering.Png;
 
 namespace CodeMatrix.Rendering.Html;
 
@@ -56,7 +57,29 @@ public static class HtmlQrRenderer {
         }
 
         sb.Append("</table>");
-        return sb.ToString();
+
+        if (opts.Logo is null &&
+            opts.ModuleShape == QrPngModuleShape.Square &&
+            Math.Abs(opts.ModuleScale - 1.0) < 0.0001 &&
+            opts.ModuleCornerRadiusPx == 0 &&
+            opts.ForegroundGradient is null &&
+            opts.Eyes is null) {
+            return sb.ToString();
+        }
+
+        var svg = new CodeMatrix.Rendering.Svg.QrSvgRenderOptions {
+            ModuleSize = opts.ModuleSize,
+            QuietZone = opts.QuietZone,
+            DarkColor = opts.DarkColor,
+            LightColor = opts.LightColor,
+            Logo = opts.Logo,
+            ModuleShape = opts.ModuleShape,
+            ModuleScale = opts.ModuleScale,
+            ModuleCornerRadiusPx = opts.ModuleCornerRadiusPx,
+            ForegroundGradient = opts.ForegroundGradient,
+            Eyes = opts.Eyes,
+        };
+        return CodeMatrix.Rendering.Svg.SvgQrRenderer.Render(modules, svg);
     }
 
     private static bool IsDark(BitMatrix modules, int quietZone, int xOut, int yOut) {

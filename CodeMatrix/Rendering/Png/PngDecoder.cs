@@ -30,26 +30,25 @@ internal static class PngDecoder {
             var len = ReadUInt32BE(png, offset);
             offset += 4;
             if (offset + 4 > png.Length) throw new FormatException("Invalid PNG chunk.");
-            var type = new ReadOnlySpan<byte>(png, offset, 4);
+            var typeOffset = offset;
             offset += 4;
             if (offset + len + 4 > png.Length) throw new FormatException("Invalid PNG chunk length.");
-
-            var data = new ReadOnlySpan<byte>(png, offset, (int)len);
+            var dataOffset = offset;
             offset += (int)len;
             offset += 4; // CRC
 
-            if (type.SequenceEqual("IHDR"u8)) {
+            if (MatchType(png, typeOffset, "IHDR")) {
                 if (len < 13) throw new FormatException("Invalid IHDR chunk.");
-                width = (int)ReadUInt32BE(data, 0);
-                height = (int)ReadUInt32BE(data, 4);
-                bitDepth = data[8];
-                colorType = data[9];
-                compression = data[10];
-                filter = data[11];
-                interlace = data[12];
-            } else if (type.SequenceEqual("IDAT"u8)) {
-                idat.Write(data);
-            } else if (type.SequenceEqual("IEND"u8)) {
+                width = (int)ReadUInt32BE(png, dataOffset);
+                height = (int)ReadUInt32BE(png, dataOffset + 4);
+                bitDepth = png[dataOffset + 8];
+                colorType = png[dataOffset + 9];
+                compression = png[dataOffset + 10];
+                filter = png[dataOffset + 11];
+                interlace = png[dataOffset + 12];
+            } else if (MatchType(png, typeOffset, "IDAT")) {
+                idat.Write(png, dataOffset, (int)len);
+            } else if (MatchType(png, typeOffset, "IEND")) {
                 break;
             }
         }
@@ -72,7 +71,7 @@ internal static class PngDecoder {
         if (idat.Length == 0) throw new FormatException("Missing IDAT.");
 
         idat.Position = 0;
-        using (var z = new ZLibStream(idat, CompressionMode.Decompress, leaveOpen: true)) {
+        using (var z = CreateZLibStream(idat)) {
             ReadExact(z, scanlines);
         }
 
@@ -145,10 +144,19 @@ internal static class PngDecoder {
                buffer[offset + 3];
     }
 
-    private static uint ReadUInt32BE(ReadOnlySpan<byte> buffer, int offset) {
-        return ((uint)buffer[offset] << 24) |
-               ((uint)buffer[offset + 1] << 16) |
-               ((uint)buffer[offset + 2] << 8) |
-               buffer[offset + 3];
+    private static bool MatchType(byte[] buffer, int offset, string type) {
+        return offset + 4 <= buffer.Length
+               && buffer[offset] == (byte)type[0]
+               && buffer[offset + 1] == (byte)type[1]
+               && buffer[offset + 2] == (byte)type[2]
+               && buffer[offset + 3] == (byte)type[3];
+    }
+
+    private static Stream CreateZLibStream(Stream source) {
+#if NET8_0_OR_GREATER
+        return new ZLibStream(source, CompressionMode.Decompress, leaveOpen: true);
+#else
+        return new DeflateStream(source, CompressionMode.Decompress, leaveOpen: true);
+#endif
     }
 }
