@@ -10,6 +10,11 @@ public static class BarcodePngRenderer {
     /// Renders the barcode to a PNG byte array.
     /// </summary>
     public static byte[] Render(Barcode1D barcode, BarcodePngRenderOptions opts) {
+        var scanlines = RenderScanlines(barcode, opts, out var widthPx, out var heightPx, out _);
+        return PngWriter.WriteRgba8(widthPx, heightPx, scanlines);
+    }
+
+    internal static byte[] RenderScanlines(Barcode1D barcode, BarcodePngRenderOptions opts, out int widthPx, out int heightPx, out int stride) {
         if (barcode is null) throw new ArgumentNullException(nameof(barcode));
         if (opts is null) throw new ArgumentNullException(nameof(opts));
         if (opts.ModuleSize <= 0) throw new ArgumentOutOfRangeException(nameof(opts.ModuleSize));
@@ -17,9 +22,9 @@ public static class BarcodePngRenderer {
         if (opts.HeightModules <= 0) throw new ArgumentOutOfRangeException(nameof(opts.HeightModules));
 
         var outModules = barcode.TotalModules + opts.QuietZone * 2;
-        var widthPx = outModules * opts.ModuleSize;
-        var heightPx = opts.HeightModules * opts.ModuleSize;
-        var stride = widthPx * 4;
+        widthPx = outModules * opts.ModuleSize;
+        heightPx = opts.HeightModules * opts.ModuleSize;
+        stride = widthPx * 4;
 
         var scanlines = new byte[heightPx * (stride + 1)];
 
@@ -56,6 +61,6 @@ public static class BarcodePngRenderer {
             xModules += seg.Modules;
         }
 
-        return PngWriter.WriteRgba8(widthPx, heightPx, scanlines);
+        return scanlines;
     }
 }
