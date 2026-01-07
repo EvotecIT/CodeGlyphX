@@ -69,6 +69,46 @@ public sealed class QrPayloadTests {
     }
 
     [Fact]
+    public void CalendarEvent_Uses_Tzid_When_Provided() {
+        var start = new DateTime(2026, 1, 2, 10, 30, 0, DateTimeKind.Unspecified);
+        var end = new DateTime(2026, 1, 2, 11, 0, 0, DateTimeKind.Unspecified);
+
+        var payload = QrPayload.CalendarEvent(
+            "Meet",
+            start,
+            end,
+            timeZoneId: "America/Los_Angeles");
+
+        Assert.Contains("DTSTART;TZID=America/Los_Angeles:20260102T103000", payload, StringComparison.Ordinal);
+        Assert.Contains("DTEND;TZID=America/Los_Angeles:20260102T110000", payload, StringComparison.Ordinal);
+        Assert.DoesNotContain("DTSTART;TZID=America/Los_Angeles:20260102T103000Z", payload, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void CalendarEvent_Folds_Long_Lines() {
+        var summary = new string('A', 100);
+        var payload = QrPayload.CalendarEvent("X" + summary, DateTime.UtcNow);
+
+        Assert.Contains("\r\n ", payload, StringComparison.Ordinal);
+        Assert.Contains("SUMMARY:", payload, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void CalendarEvent_Adds_Alarm() {
+        var start = new DateTime(2026, 1, 2, 10, 30, 0, DateTimeKind.Utc);
+        var payload = QrPayload.CalendarEvent(
+            "Meet",
+            start,
+            alarmMinutesBefore: 15,
+            alarmDescription: "Ping");
+
+        Assert.Contains("BEGIN:VALARM", payload, StringComparison.Ordinal);
+        Assert.Contains("TRIGGER:-PT15M", payload, StringComparison.Ordinal);
+        Assert.Contains("DESCRIPTION:Ping", payload, StringComparison.Ordinal);
+        Assert.Contains("END:VALARM", payload, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void VCard4_Emits_Multiple_Fields_And_Escapes() {
         var payload = QrPayload.VCard4(
             "John",
