@@ -108,4 +108,111 @@ internal static class ExampleHelpers {
 
         return false;
     }
+
+    public static (int Width, int Height) GetPngSize(byte[] png) {
+        var logo = QrPngLogoOptions.FromPng(png);
+        return (logo.Width, logo.Height);
+    }
+
+    public static string ToDataUriPng(byte[] png) {
+        return "data:image/png;base64," + Convert.ToBase64String(png);
+    }
+
+    public static string ComposeSvgWithLogo(
+        string svg,
+        byte[] logoPng,
+        int qrModules,
+        int moduleSize,
+        int quietZone,
+        double logoScale,
+        int paddingPx,
+        int cornerRadiusPx,
+        string backgroundColor) {
+        if (string.IsNullOrWhiteSpace(svg)) return svg;
+        if (logoPng.Length == 0) return svg;
+        if (qrModules <= 0 || moduleSize <= 0) return svg;
+        if (logoScale <= 0) return svg;
+
+        var (logoW, logoH) = GetPngSize(logoPng);
+        if (logoW <= 0 || logoH <= 0) return svg;
+
+        var maxLogoPx = (int)Math.Round(qrModules * moduleSize * logoScale);
+        if (maxLogoPx <= 0) return svg;
+        var scale = Math.Min(maxLogoPx / (double)logoW, maxLogoPx / (double)logoH);
+        if (scale <= 0) return svg;
+
+        var targetWpx = Math.Max(1, (int)Math.Round(logoW * scale));
+        var targetHpx = Math.Max(1, (int)Math.Round(logoH * scale));
+
+        var targetW = targetWpx / (double)moduleSize;
+        var targetH = targetHpx / (double)moduleSize;
+
+        var outModules = qrModules + quietZone * 2;
+        var cx = outModules / 2.0;
+        var cy = outModules / 2.0;
+        var x = cx - targetW / 2.0;
+        var y = cy - targetH / 2.0;
+
+        var pad = Math.Max(0, paddingPx) / (double)moduleSize;
+        var rectX = x - pad;
+        var rectY = y - pad;
+        var rectW = targetW + pad * 2;
+        var rectH = targetH + pad * 2;
+        var radius = Math.Max(0, cornerRadiusPx) / (double)moduleSize;
+
+        var dataUri = ToDataUriPng(logoPng);
+        var layer = "<g>" +
+                    $"<rect x=\"{rectX:0.###}\" y=\"{rectY:0.###}\" width=\"{rectW:0.###}\" height=\"{rectH:0.###}\" fill=\"{backgroundColor}\"" +
+                    (radius > 0 ? $" rx=\"{radius:0.###}\" ry=\"{radius:0.###}\"" : string.Empty) +
+                    "/>" +
+                    $"<image x=\"{x:0.###}\" y=\"{y:0.###}\" width=\"{targetW:0.###}\" height=\"{targetH:0.###}\" href=\"{dataUri}\"/>" +
+                    "</g>";
+
+        var insertAt = svg.LastIndexOf("</svg>", StringComparison.OrdinalIgnoreCase);
+        if (insertAt <= 0) return svg;
+        return svg.Insert(insertAt, layer);
+    }
+
+    public static string ComposeHtmlWithLogo(
+        string htmlTable,
+        byte[] logoPng,
+        int qrModules,
+        int moduleSize,
+        int quietZone,
+        double logoScale,
+        int paddingPx,
+        int cornerRadiusPx,
+        string backgroundColor) {
+        if (string.IsNullOrWhiteSpace(htmlTable)) return htmlTable;
+        if (logoPng.Length == 0) return htmlTable;
+        if (qrModules <= 0 || moduleSize <= 0) return htmlTable;
+        if (logoScale <= 0) return htmlTable;
+
+        var (logoW, logoH) = GetPngSize(logoPng);
+        if (logoW <= 0 || logoH <= 0) return htmlTable;
+
+        var maxLogoPx = (int)Math.Round(qrModules * moduleSize * logoScale);
+        if (maxLogoPx <= 0) return htmlTable;
+        var scale = Math.Min(maxLogoPx / (double)logoW, maxLogoPx / (double)logoH);
+        if (scale <= 0) return htmlTable;
+
+        var targetW = Math.Max(1, (int)Math.Round(logoW * scale));
+        var targetH = Math.Max(1, (int)Math.Round(logoH * scale));
+
+        var outPx = (qrModules + quietZone * 2) * moduleSize;
+        var pad = Math.Max(0, paddingPx);
+        var radius = Math.Max(0, cornerRadiusPx);
+        var dataUri = ToDataUriPng(logoPng);
+
+        var logoHtml = "<div style=\"position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);" +
+                       $"width:{targetW}px;height:{targetH}px;padding:{pad}px;background:{backgroundColor};" +
+                       $"border-radius:{radius}px;display:flex;align-items:center;justify-content:center;" +
+                       "box-sizing:content-box;\">" +
+                       $"<img src=\"{dataUri}\" style=\"max-width:100%;max-height:100%;display:block;\"/>" +
+                       "</div>";
+
+        return "<div style=\"position:relative;display:inline-block;" +
+               $"width:{outPx}px;height:{outPx}px;\">" +
+               htmlTable + logoHtml + "</div>";
+    }
 }
