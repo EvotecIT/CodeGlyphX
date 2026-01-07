@@ -42,11 +42,13 @@ public static class QrPngRenderer {
             : BuildModuleMask(opts.ModuleSize, opts.Eyes.InnerShape, opts.Eyes.InnerScale, opts.Eyes.InnerCornerRadiusPx);
         var qrOrigin = opts.QuietZone * opts.ModuleSize;
         var qrSizePx = size * opts.ModuleSize;
+        var useFrame = opts.Eyes is not null && opts.Eyes.UseFrame;
 
         for (var my = 0; my < size; my++) {
             for (var mx = 0; mx < size; mx++) {
                 if (!modules[mx, my]) continue;
                 var eye = opts.Eyes is not null ? GetEyeKind(mx, my, size) : EyeKind.None;
+                if (useFrame && eye != EyeKind.None) continue;
                 var useMask = eye == EyeKind.Outer ? eyeOuterMask : eye == EyeKind.Inner ? eyeInnerMask : mask;
                 var useColor = eye switch {
                     EyeKind.Outer => opts.Eyes!.OuterColor ?? opts.Foreground,
@@ -68,6 +70,12 @@ public static class QrPngRenderer {
                     qrOrigin,
                     qrSizePx);
             }
+        }
+
+        if (useFrame && opts.Eyes is not null) {
+            DrawEyeFrame(scanlines, widthPx, heightPx, stride, opts, 0, 0);
+            DrawEyeFrame(scanlines, widthPx, heightPx, stride, opts, size - 7, 0);
+            DrawEyeFrame(scanlines, widthPx, heightPx, stride, opts, 0, size - 7);
         }
 
         if (opts.Logo is not null) {
