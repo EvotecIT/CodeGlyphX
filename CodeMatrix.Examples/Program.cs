@@ -14,6 +14,7 @@ internal static class Program {
         QrGenerationExample.Run(outputDir);
         QrPayloadsExample.Run(outputDir);
         QrFancyExample.Run(outputDir);
+        EvotecExamples.Run(outputDir);
         QrDecodeExample.Run(outputDir);
         OtpExample.Run(outputDir);
         BarcodeExample.Run(outputDir);

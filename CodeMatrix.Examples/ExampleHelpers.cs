@@ -88,4 +88,24 @@ internal static class ExampleHelpers {
 
         return rgba;
     }
+
+    public static bool TryReadRepoFile(string relativePath, out byte[] data, out string? fullPath) {
+        data = Array.Empty<byte>();
+        fullPath = null;
+
+        if (string.IsNullOrWhiteSpace(relativePath)) return false;
+
+        var dir = new DirectoryInfo(AppContext.BaseDirectory);
+        for (var i = 0; i < 10 && dir is not null; i++) {
+            var candidate = Path.Combine(dir.FullName, relativePath);
+            if (File.Exists(candidate)) {
+                data = File.ReadAllBytes(candidate);
+                fullPath = candidate;
+                return true;
+            }
+            dir = dir.Parent;
+        }
+
+        return false;
+    }
 }
