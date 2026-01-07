@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 using CodeMatrix.Internal;
 
@@ -103,6 +105,128 @@ public static class QrPayload {
     }
 
     /// <summary>
+    /// Builds a Geo URI payload (<c>geo:lat,lon</c> or <c>geo:lat,lon,alt</c>).
+    /// </summary>
+    public static string Geo(double latitude, double longitude, double? altitude = null) {
+        var sb = new StringBuilder();
+        sb.Append("geo:");
+        sb.Append(FormatGeo(latitude));
+        sb.Append(',');
+        sb.Append(FormatGeo(longitude));
+        if (altitude.HasValue) {
+            sb.Append(',');
+            sb.Append(FormatGeo(altitude.Value));
+        }
+        return sb.ToString();
+    }
+
+    /// <summary>
+    /// Alias for <see cref="Geo"/>.
+    /// </summary>
+    public static string Location(double latitude, double longitude, double? altitude = null) {
+        return Geo(latitude, longitude, altitude);
+    }
+
+    /// <summary>
+    /// Builds a MECARD payload (compact contact format).
+    /// </summary>
+    public static string MeCard(
+        string firstName,
+        string lastName,
+        string? phone = null,
+        string? email = null,
+        string? url = null,
+        string? address = null,
+        string? note = null,
+        string? organization = null) {
+        if (firstName is null) throw new ArgumentNullException(nameof(firstName));
+        if (lastName is null) throw new ArgumentNullException(nameof(lastName));
+
+        var sb = new StringBuilder();
+        sb.Append("MECARD:");
+        sb.Append("N:");
+        sb.Append(EscapeMecardValue(lastName));
+        if (HasNonWhitespace(firstName)) {
+            sb.Append(',');
+            sb.Append(EscapeMecardValue(firstName));
+        }
+        sb.Append(';');
+
+        AppendMecardField(sb, "TEL", phone);
+        AppendMecardField(sb, "EMAIL", email);
+        AppendMecardField(sb, "URL", url);
+        AppendMecardField(sb, "ADR", address);
+        AppendMecardField(sb, "NOTE", note);
+        AppendMecardField(sb, "ORG", organization);
+
+        sb.Append(';');
+        return sb.ToString();
+    }
+
+    /// <summary>
+    /// Builds a minimal iCalendar event payload (VEVENT).
+    /// </summary>
+    public static string CalendarEvent(
+        string summary,
+        DateTime start,
+        DateTime? end = null,
+        string? location = null,
+        string? description = null,
+        string? organizer = null,
+        string? uid = null,
+        bool allDay = false) {
+        if (summary is null) throw new ArgumentNullException(nameof(summary));
+
+        var sb = new StringBuilder();
+        sb.Append("BEGIN:VCALENDAR\r\n");
+        sb.Append("VERSION:2.0\r\n");
+        sb.Append("BEGIN:VEVENT\r\n");
+
+        if (uid is not null && HasNonWhitespace(uid)) {
+            sb.Append("UID:");
+            sb.Append(EscapeICalText(uid));
+            sb.Append("\r\n");
+        }
+
+        sb.Append("SUMMARY:");
+        sb.Append(EscapeICalText(summary));
+        sb.Append("\r\n");
+
+        sb.Append("DTSTART:");
+        sb.Append(FormatICalDate(start, allDay));
+        sb.Append("\r\n");
+
+        if (end.HasValue) {
+            sb.Append("DTEND:");
+            sb.Append(FormatICalDate(end.Value, allDay));
+            sb.Append("\r\n");
+        }
+
+        if (location is not null && HasNonWhitespace(location)) {
+            sb.Append("LOCATION:");
+            sb.Append(EscapeICalText(location));
+            sb.Append("\r\n");
+        }
+
+        if (description is not null && HasNonWhitespace(description)) {
+            sb.Append("DESCRIPTION:");
+            sb.Append(EscapeICalText(description));
+            sb.Append("\r\n");
+        }
+
+        if (organizer is not null && HasNonWhitespace(organizer)) {
+            sb.Append("ORGANIZER:");
+            sb.Append(EscapeICalText(organizer));
+            sb.Append("\r\n");
+        }
+
+        sb.Append("END:VEVENT\r\n");
+        sb.Append("END:VCALENDAR");
+
+        return sb.ToString();
+    }
+
+    /// <summary>
     /// Builds a minimal vCard 3.0 payload (name + optional fields).
     /// </summary>
     public static string VCard(string firstName, string lastName, string? phone = null, string? email = null, string? organization = null) {
@@ -142,6 +266,86 @@ public static class QrPayload {
         return sb.ToString();
     }
 
+    /// <summary>
+    /// Builds a vCard 4.0 payload with optional multi-value fields.
+    /// </summary>
+    public static string VCard4(
+        string firstName,
+        string lastName,
+        IEnumerable<string>? phones = null,
+        IEnumerable<string>? emails = null,
+        string? organization = null,
+        string? title = null,
+        string? url = null,
+        string? address = null,
+        string? note = null,
+        string? birthday = null,
+        string? photoUri = null,
+        string? logoUri = null) {
+        if (firstName is null) throw new ArgumentNullException(nameof(firstName));
+        if (lastName is null) throw new ArgumentNullException(nameof(lastName));
+
+        var fn = (firstName + " " + lastName).Trim();
+        var sb = new StringBuilder();
+        sb.Append("BEGIN:VCARD\r\n");
+        sb.Append("VERSION:4.0\r\n");
+        sb.Append("N:");
+        sb.Append(EscapeVCardText(lastName));
+        sb.Append(';');
+        sb.Append(EscapeVCardText(firstName));
+        sb.Append(";;;\r\n");
+        sb.Append("FN:");
+        sb.Append(EscapeVCardText(fn));
+        sb.Append("\r\n");
+
+        AppendVCardFields(sb, "TEL", phones);
+        AppendVCardFields(sb, "EMAIL", emails);
+
+        if (organization is not null && HasNonWhitespace(organization)) {
+            sb.Append("ORG:");
+            sb.Append(EscapeVCardText(organization));
+            sb.Append("\r\n");
+        }
+        if (title is not null && HasNonWhitespace(title)) {
+            sb.Append("TITLE:");
+            sb.Append(EscapeVCardText(title));
+            sb.Append("\r\n");
+        }
+        if (url is not null && HasNonWhitespace(url)) {
+            sb.Append("URL:");
+            sb.Append(EscapeVCardText(url));
+            sb.Append("\r\n");
+        }
+        if (address is not null && HasNonWhitespace(address)) {
+            sb.Append("ADR:");
+            sb.Append(EscapeVCardAdrValue(address));
+            sb.Append("\r\n");
+        }
+        if (note is not null && HasNonWhitespace(note)) {
+            sb.Append("NOTE:");
+            sb.Append(EscapeVCardText(note));
+            sb.Append("\r\n");
+        }
+        if (birthday is not null && HasNonWhitespace(birthday)) {
+            sb.Append("BDAY:");
+            sb.Append(EscapeVCardText(birthday));
+            sb.Append("\r\n");
+        }
+        if (photoUri is not null && HasNonWhitespace(photoUri)) {
+            sb.Append("PHOTO:");
+            sb.Append(EscapeVCardText(photoUri));
+            sb.Append("\r\n");
+        }
+        if (logoUri is not null && HasNonWhitespace(logoUri)) {
+            sb.Append("LOGO:");
+            sb.Append(EscapeVCardText(logoUri));
+            sb.Append("\r\n");
+        }
+
+        sb.Append("END:VCARD");
+        return sb.ToString();
+    }
+
     private static string EscapeWifiValue(string value) {
         var sb = new StringBuilder(value.Length);
         for (var i = 0; i < value.Length; i++) {
@@ -157,6 +361,99 @@ public static class QrPayload {
             if (!char.IsWhiteSpace(value[i])) return true;
         }
         return false;
+    }
+
+    private static string FormatGeo(double value) {
+        return value.ToString("0.##########", CultureInfo.InvariantCulture);
+    }
+
+    private static void AppendMecardField(StringBuilder sb, string key, string? value) {
+        if (value is null || !HasNonWhitespace(value)) return;
+        sb.Append(key);
+        sb.Append(':');
+        sb.Append(EscapeMecardValue(value));
+        sb.Append(';');
+    }
+
+    private static string EscapeMecardValue(string value) {
+        var sb = new StringBuilder(value.Length);
+        for (var i = 0; i < value.Length; i++) {
+            var c = value[i];
+            if (c is '\\' or ';' or ',' or ':') sb.Append('\\');
+            sb.Append(c);
+        }
+        return sb.ToString();
+    }
+
+    private static void AppendVCardFields(StringBuilder sb, string key, IEnumerable<string>? values) {
+        if (values is null) return;
+        foreach (var value in values) {
+            if (value is null || !HasNonWhitespace(value)) continue;
+            sb.Append(key);
+            sb.Append(':');
+            sb.Append(EscapeVCardText(value));
+            sb.Append("\r\n");
+        }
+    }
+
+    private static string EscapeVCardAdrValue(string value) {
+        var sb = new StringBuilder(value.Length);
+        for (var i = 0; i < value.Length; i++) {
+            var c = value[i];
+            switch (c) {
+                case '\\':
+                    sb.Append(@"\\");
+                    break;
+                case ',':
+                    sb.Append(@"\,");
+                    break;
+                case '\r':
+                    break;
+                case '\n':
+                    sb.Append(@"\n");
+                    break;
+                default:
+                    sb.Append(c);
+                    break;
+            }
+        }
+        return sb.ToString();
+    }
+
+    private static string FormatICalDate(DateTime value, bool allDay) {
+        if (allDay) {
+            return value.ToString("yyyyMMdd", CultureInfo.InvariantCulture);
+        }
+
+        var suffix = value.Kind == DateTimeKind.Utc ? "Z" : string.Empty;
+        return value.ToString("yyyyMMdd'T'HHmmss", CultureInfo.InvariantCulture) + suffix;
+    }
+
+    private static string EscapeICalText(string value) {
+        var sb = new StringBuilder(value.Length);
+        for (var i = 0; i < value.Length; i++) {
+            var c = value[i];
+            switch (c) {
+                case '\\':
+                    sb.Append("\\\\");
+                    break;
+                case ';':
+                    sb.Append("\\;");
+                    break;
+                case ',':
+                    sb.Append("\\,");
+                    break;
+                case '\r':
+                    break;
+                case '\n':
+                    sb.Append("\\n");
+                    break;
+                default:
+                    sb.Append(c);
+                    break;
+            }
+        }
+        return sb.ToString();
     }
 
     private static string EscapeVCardText(string value) {

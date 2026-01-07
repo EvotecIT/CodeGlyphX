@@ -4,6 +4,8 @@ using System.Text;
 namespace CodeMatrix.Internal;
 
 internal static class PercentEncoding {
+    private static readonly UTF8Encoding Utf8Strict = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false, throwOnInvalidBytes: true);
+
     public static string Escape(string value) {
         if (value is null) throw new ArgumentNullException(nameof(value));
         if (value.Length == 0) return string.Empty;
@@ -41,5 +43,59 @@ internal static class PercentEncoding {
             or (byte)'-' or (byte)'.' or (byte)'_' or (byte)'~';
 
     private static char ToHexUpper(int value) => (char)(value < 10 ? '0' + value : 'A' + (value - 10));
-}
 
+    public static string Decode(string value) {
+        if (value is null) throw new ArgumentNullException(nameof(value));
+        if (value.Length == 0) return string.Empty;
+        if (!TryDecode(value, out var decoded)) throw new FormatException("Invalid percent-encoding.");
+        return decoded;
+    }
+
+    public static bool TryDecode(string value, out string decoded) {
+        decoded = string.Empty;
+        if (value is null) return false;
+        if (value.Length == 0) return true;
+
+        if (value.IndexOf('%') < 0) {
+            for (var i = 0; i < value.Length; i++) {
+                if (value[i] > 0x7F) return false;
+            }
+            decoded = value;
+            return true;
+        }
+
+        var bytes = new byte[value.Length];
+        var count = 0;
+
+        for (var i = 0; i < value.Length; i++) {
+            var c = value[i];
+            if (c == '%') {
+                if (i + 2 >= value.Length) return false;
+                var hi = FromHex(value[i + 1]);
+                var lo = FromHex(value[i + 2]);
+                if (hi < 0 || lo < 0) return false;
+                bytes[count++] = (byte)((hi << 4) | lo);
+                i += 2;
+                continue;
+            }
+
+            if (c > 0x7F) return false;
+            bytes[count++] = (byte)c;
+        }
+
+        try {
+            decoded = Utf8Strict.GetString(bytes, 0, count);
+        } catch (DecoderFallbackException) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private static int FromHex(char c) {
+        if (c is >= '0' and <= '9') return c - '0';
+        if (c is >= 'A' and <= 'F') return 10 + (c - 'A');
+        if (c is >= 'a' and <= 'f') return 10 + (c - 'a');
+        return -1;
+    }
+}
