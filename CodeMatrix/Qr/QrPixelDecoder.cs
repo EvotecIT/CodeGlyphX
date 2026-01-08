@@ -163,6 +163,12 @@ internal static class QrPixelDecoder {
                 return true;
             }
             diagnostics = Better(diagnostics, diagF);
+
+            if (TryDecodeByCandidateBounds(scale, threshold, image, invert, candidates, accept, out result, out var diagC)) {
+                diagnostics = diagC;
+                return true;
+            }
+            diagnostics = Better(diagnostics, diagC);
         }
 
         // Fallback: bounding box exact-fit (works for perfectly cropped/generated images).
@@ -173,6 +179,51 @@ internal static class QrPixelDecoder {
         diagnostics = Better(diagnostics, diagB);
 
         return false;
+    }
+
+    private static bool TryDecodeByCandidateBounds(
+        int scale,
+        byte threshold,
+        QrGrayImage image,
+        bool invert,
+        List<QrFinderPatternDetector.FinderPattern> candidates,
+        Func<QrDecoded, bool>? accept,
+        out QrDecoded result,
+        out QrPixelDecodeDiagnostics diagnostics) {
+        result = null!;
+        diagnostics = default;
+
+        if (candidates.Count == 0) return false;
+
+        var minX = double.PositiveInfinity;
+        var minY = double.PositiveInfinity;
+        var maxX = double.NegativeInfinity;
+        var maxY = double.NegativeInfinity;
+        var maxModule = 0.0;
+
+        for (var i = 0; i < candidates.Count; i++) {
+            var c = candidates[i];
+            if (c.ModuleSize > maxModule) maxModule = c.ModuleSize;
+            if (c.X < minX) minX = c.X;
+            if (c.Y < minY) minY = c.Y;
+            if (c.X > maxX) maxX = c.X;
+            if (c.Y > maxY) maxY = c.Y;
+        }
+
+        if (double.IsInfinity(minX) || double.IsInfinity(minY)) return false;
+
+        var pad = maxModule > 0 ? maxModule * 6.0 : 12.0;
+
+        static int Clamp(int value, int min, int max) => value < min ? min : value > max ? max : value;
+
+        var bminX = Clamp(QrMath.RoundToInt(minX - pad), 0, image.Width - 1);
+        var bminY = Clamp(QrMath.RoundToInt(minY - pad), 0, image.Height - 1);
+        var bmaxX = Clamp(QrMath.RoundToInt(maxX + pad), 0, image.Width - 1);
+        var bmaxY = Clamp(QrMath.RoundToInt(maxY + pad), 0, image.Height - 1);
+
+        if (bmaxX <= bminX || bmaxY <= bminY) return false;
+
+        return TryDecodeByBoundingBox(scale, threshold, image, invert, accept, out result, out diagnostics, candidates.Count, candidateTriplesTried: 0, bminX, bminY, bmaxX, bmaxY);
     }
 
     private static bool TryDecodeFromFinderCandidates(int scale, byte threshold, QrGrayImage image, bool invert, List<QrFinderPatternDetector.FinderPattern> candidates, Func<QrDecoded, bool>? accept, out QrDecoded result, out QrPixelDecodeDiagnostics diagnostics) {

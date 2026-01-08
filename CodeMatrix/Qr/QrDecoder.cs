@@ -153,13 +153,17 @@ public static class QrDecoder {
         public int Mask { get; }
         public int Distance { get; }
         public int MaxDistance { get; }
+        public int SumDistance { get; }
+        public bool BothWithin { get; }
 
-        public QrFormatCandidate(int index, QrErrorCorrectionLevel ecc, int mask, int distance, int maxDistance) {
+        public QrFormatCandidate(int index, QrErrorCorrectionLevel ecc, int mask, int distance, int maxDistance, int sumDistance) {
             Index = index;
             ErrorCorrectionLevel = ecc;
             Mask = mask;
             Distance = distance;
             MaxDistance = maxDistance;
+            SumDistance = sumDistance;
+            BothWithin = maxDistance <= 3;
         }
     }
 
@@ -200,7 +204,7 @@ public static class QrDecoder {
                 var ecc = FormatEccOrder[i / 8];
                 var mask = i % 8;
                 var maxDist = Math.Max(distA, distB);
-                list.Add(new QrFormatCandidate(i, ecc, mask, minDist, maxDist));
+                list.Add(new QrFormatCandidate(i, ecc, mask, minDist, maxDist, distA + distB));
             }
         }
 
@@ -210,12 +214,12 @@ public static class QrDecoder {
         }
 
         list.Sort(static (a, b) => {
-            var aBoth = a.MaxDistance <= 3;
-            var bBoth = b.MaxDistance <= 3;
-            if (aBoth != bBoth) return aBoth ? -1 : 1;
-            var cmp = a.Distance.CompareTo(b.Distance);
+            if (a.BothWithin != b.BothWithin) return a.BothWithin ? -1 : 1;
+            var cmp = a.SumDistance.CompareTo(b.SumDistance);
             if (cmp != 0) return cmp;
-            return a.MaxDistance.CompareTo(b.MaxDistance);
+            cmp = a.MaxDistance.CompareTo(b.MaxDistance);
+            if (cmp != 0) return cmp;
+            return a.Distance.CompareTo(b.Distance);
         });
 
         candidates = list.ToArray();
