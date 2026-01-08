@@ -9,7 +9,7 @@ namespace CodeGlyphX.Examples;
 internal static class EvotecExamples {
     public static void Run(string outputDir) {
         var url = QrPayload.Url("https://evotec.xyz");
-        QR.SavePng(url, Path.Combine(outputDir, "qr-evotec.png"));
+        QR.Save(url, Path.Combine(outputDir, "qr-evotec.png"));
 
         var logoPath = Path.Combine(AppContext.BaseDirectory, "Assets", "Logo", "Logo-evotec.png");
         if (!logoPath.TryReadBinary(out var logoBytes)) {
@@ -26,10 +26,8 @@ internal static class EvotecExamples {
             LogoCornerRadiusPx = 8,
         };
 
-        QR.SavePng(url, Path.Combine(outputDir, "qr-evotec-logo.png"), withLogo);
-
-        QR.SaveSvg(url, Path.Combine(outputDir, "qr-evotec-logo.svg"), withLogo);
-
-        QR.SaveHtml(url, Path.Combine(outputDir, "qr-evotec-logo.html"), withLogo, title: "Evotec QR");
+        QR.Save(url, Path.Combine(outputDir, "qr-evotec-logo.png"), withLogo);
+        QR.Save(url, Path.Combine(outputDir, "qr-evotec-logo.svg"), withLogo);
+        QR.Save(url, Path.Combine(outputDir, "qr-evotec-logo.html"), withLogo, title: "Evotec QR");
     }
 }

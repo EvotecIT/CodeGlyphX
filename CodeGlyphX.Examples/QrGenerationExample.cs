@@ -5,10 +5,10 @@ namespace CodeGlyphX.Examples;
 
 internal static class QrGenerationExample {
     public static void Run(string outputDir) {
-        var payload = "https://example.com/codematrix?from=examples";
-        QR.SavePng(payload, Path.Combine(outputDir, "qr-basic.png"));
-        QR.SaveSvg(payload, Path.Combine(outputDir, "qr-basic.svg"));
-        QR.SaveHtml(payload, Path.Combine(outputDir, "qr-basic.html"), title: "CodeGlyphX QR");
-        QR.SaveJpeg(payload, Path.Combine(outputDir, "qr-basic.jpg"));
+        var payload = "https://example.com/codeglyphx?from=examples";
+        QR.Save(payload, Path.Combine(outputDir, "qr-basic.png"));
+        QR.Save(payload, Path.Combine(outputDir, "qr-basic.svg"));
+        QR.Save(payload, Path.Combine(outputDir, "qr-basic.html"), title: "CodeGlyphX QR");
+        QR.Save(payload, Path.Combine(outputDir, "qr-basic.jpg"));
     }
 }

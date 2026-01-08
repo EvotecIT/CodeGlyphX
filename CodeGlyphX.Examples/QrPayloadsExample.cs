@@ -35,14 +35,14 @@ internal static class QrPayloadsExample {
                 location: "Online",
                 description: "Example calendar payload",
                 organizer: "mailto:demo@example.com",
-                uid: "codematrix-20260120",
+                uid: "codeglyphx-20260120",
                 alarmMinutesBefore: 15)),
         };
 
         var sb = new StringBuilder();
         foreach (var item in payloads) {
             try {
-                QR.SavePng(item.Value, Path.Combine(outputDir, $"qr-payload-{item.Name}.png"));
+                QR.Save(item.Value, Path.Combine(outputDir, $"qr-payload-{item.Name}.png"));
                 sb.AppendLine($"[{item.Name}]");
                 sb.AppendLine(item.Value);
                 sb.AppendLine();

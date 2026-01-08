@@ -14,9 +14,9 @@ internal static class BarcodeExample {
             Background = new Rgba32(255, 255, 255),
         };
 
-        Barcode.SavePng(BarcodeType.Code128, "CODEMATRIX-123456", Path.Combine(outputDir, "barcode-code128.png"), options);
-        Barcode.SaveSvg(BarcodeType.Code128, "CODEMATRIX-123456", Path.Combine(outputDir, "barcode-code128.svg"), options);
-        Barcode.SaveHtml(BarcodeType.Code128, "CODEMATRIX-123456", Path.Combine(outputDir, "barcode-code128.html"), options, title: "Code128");
-        Barcode.SaveJpeg(BarcodeType.Code128, "CODEMATRIX-123456", Path.Combine(outputDir, "barcode-code128.jpg"), options);
+        Barcode.Save(BarcodeType.Code128, "CODEGLYPHX-123456", Path.Combine(outputDir, "barcode-code128.png"), options);
+        Barcode.Save(BarcodeType.Code128, "CODEGLYPHX-123456", Path.Combine(outputDir, "barcode-code128.svg"), options);
+        Barcode.Save(BarcodeType.Code128, "CODEGLYPHX-123456", Path.Combine(outputDir, "barcode-code128.html"), options, title: "Code128");
+        Barcode.Save(BarcodeType.Code128, "CODEGLYPHX-123456", Path.Combine(outputDir, "barcode-code128.jpg"), options);
     }
 }

@@ -10,13 +10,13 @@ internal static class Program {
         var outputDir = ExampleRunner.PrepareOutputDirectory();
         var runner = new ExampleRunner(outputDir);
 
-        runner.Run("QR generation (PNG/SVG/HTML/JPEG)", QrGenerationExample.Run);
-        runner.Run("QR payloads (URL, contact, wifi, etc.)", QrPayloadsExample.Run);
-        runner.Run("QR styling (gradients/logo)", QrFancyExample.Run);
-        runner.Run("QR logo (Evotec)", EvotecExamples.Run);
-        runner.Run("QR decoding (modules/pixels)", QrDecodeExample.Run);
-        runner.Run("OTP QR (TOTP/HOTP + safety)", OtpExample.Run);
-        runner.Run("Barcode (Code 128)", BarcodeExample.Run);
+        runner.Run("QR (basic)", QrGenerationExample.Run);
+        runner.Run("QR (payloads)", QrPayloadsExample.Run);
+        runner.Run("QR (styling)", QrFancyExample.Run);
+        runner.Run("QR (logo)", EvotecExamples.Run);
+        runner.Run("QR (decode)", QrDecodeExample.Run);
+        runner.Run("OTP", OtpExample.Run);
+        runner.Run("Barcode", BarcodeExample.Run);
 
         runner.PrintSummary();
     }
