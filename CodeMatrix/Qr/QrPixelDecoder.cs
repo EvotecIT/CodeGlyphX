@@ -182,6 +182,7 @@ internal static class QrPixelDecoder {
         candidates.Sort(static (a, b) => b.Count.CompareTo(a.Count));
         var n = Math.Min(candidates.Count, 12);
         var triedTriples = 0;
+        var bboxAttempts = 0;
 
         for (var i = 0; i < n - 2; i++) {
             for (var j = i + 1; j < n - 1; j++) {
@@ -202,6 +203,17 @@ internal static class QrPixelDecoder {
                         return true;
                     }
                     diagnostics = Better(diagnostics, diag);
+
+                    // If the finder triple looks reasonable but decoding fails (false positives are common in UI),
+                    // try a bounded bbox decode around the candidate region before moving on.
+                    if (bboxAttempts < 4 && TryGetCandidateBounds(tl, tr, bl, image.Width, image.Height, out var bminX, out var bminY, out var bmaxX, out var bmaxY)) {
+                        bboxAttempts++;
+                        if (TryDecodeByBoundingBox(scale, threshold, image, invert, accept, out result, out var diagB, candidates.Count, triedTriples, bminX, bminY, bmaxX, bmaxY)) {
+                            diagnostics = diagB;
+                            return true;
+                        }
+                        diagnostics = Better(diagnostics, diagB);
+                    }
                 }
             }
         }
@@ -495,17 +507,38 @@ internal static class QrPixelDecoder {
         return false;
     }
 
-    private static bool TryDecodeByBoundingBox(int scale, byte threshold, QrGrayImage image, bool invert, Func<QrDecoded, bool>? accept, out QrDecoded result, out QrPixelDecodeDiagnostics diagnostics) {
+    private static bool TryDecodeByBoundingBox(
+        int scale,
+        byte threshold,
+        QrGrayImage image,
+        bool invert,
+        Func<QrDecoded, bool>? accept,
+        out QrDecoded result,
+        out QrPixelDecodeDiagnostics diagnostics,
+        int candidateCount = 0,
+        int candidateTriplesTried = 0,
+        int scanMinX = 0,
+        int scanMinY = 0,
+        int scanMaxX = -1,
+        int scanMaxY = -1) {
         result = null!;
         diagnostics = default;
 
-        var minX = image.Width;
-        var minY = image.Height;
+        if (scanMaxX < 0) scanMaxX = image.Width - 1;
+        if (scanMaxY < 0) scanMaxY = image.Height - 1;
+        if (scanMinX < 0) scanMinX = 0;
+        if (scanMinY < 0) scanMinY = 0;
+        if (scanMaxX >= image.Width) scanMaxX = image.Width - 1;
+        if (scanMaxY >= image.Height) scanMaxY = image.Height - 1;
+        if (scanMinX > scanMaxX || scanMinY > scanMaxY) return false;
+
+        var minX = scanMaxX;
+        var minY = scanMaxY;
         var maxX = -1;
         var maxY = -1;
 
-        for (var y = 0; y < image.Height; y++) {
-            for (var x = 0; x < image.Width; x++) {
+        for (var y = scanMinY; y <= scanMaxY; y++) {
+            for (var x = scanMinX; x <= scanMaxX; x++) {
                 if (!image.IsBlack(x, y, invert)) continue;
                 if (x < minX) minX = x;
                 if (y < minY) minY = y;
@@ -515,6 +548,9 @@ internal static class QrPixelDecoder {
         }
 
         if (maxX < 0) return false;
+
+        TrimBoundingBox(image, invert, ref minX, ref minY, ref maxX, ref maxY);
+        if (maxX < minX || maxY < minY) return false;
 
         // Expand a touch to counter anti-aliasing that can shrink the detected black bbox.
         if (minX > 0) minX--;
@@ -559,22 +595,82 @@ internal static class QrPixelDecoder {
             }
 
             if (global::CodeMatrix.QrDecoder.TryDecode(bm, out result, out var moduleDiag)) {
-                diagnostics = new QrPixelDecodeDiagnostics(scale, threshold, invert, candidateCount: 0, candidateTriplesTried: 0, modulesCount, moduleDiag);
+                diagnostics = new QrPixelDecodeDiagnostics(scale, threshold, invert, candidateCount, candidateTriplesTried, modulesCount, moduleDiag);
                 if (accept == null || accept(result)) return true;
             }
-            best = Better(best, new QrPixelDecodeDiagnostics(scale, threshold, invert, candidateCount: 0, candidateTriplesTried: 0, modulesCount, moduleDiag));
+            best = Better(best, new QrPixelDecodeDiagnostics(scale, threshold, invert, candidateCount, candidateTriplesTried, modulesCount, moduleDiag));
 
             var inv = bm.Clone();
             Invert(inv);
             if (global::CodeMatrix.QrDecoder.TryDecode(inv, out result, out var moduleDiagInv)) {
-                diagnostics = new QrPixelDecodeDiagnostics(scale, threshold, invert, candidateCount: 0, candidateTriplesTried: 0, modulesCount, moduleDiagInv);
+                diagnostics = new QrPixelDecodeDiagnostics(scale, threshold, invert, candidateCount, candidateTriplesTried, modulesCount, moduleDiagInv);
                 if (accept == null || accept(result)) return true;
             }
-            best = Better(best, new QrPixelDecodeDiagnostics(scale, threshold, invert, candidateCount: 0, candidateTriplesTried: 0, modulesCount, moduleDiagInv));
+            best = Better(best, new QrPixelDecodeDiagnostics(scale, threshold, invert, candidateCount, candidateTriplesTried, modulesCount, moduleDiagInv));
         }
 
         diagnostics = best;
         return false;
+    }
+
+    private static bool TryGetCandidateBounds(
+        QrFinderPatternDetector.FinderPattern tl,
+        QrFinderPatternDetector.FinderPattern tr,
+        QrFinderPatternDetector.FinderPattern bl,
+        int width,
+        int height,
+        out int minX,
+        out int minY,
+        out int maxX,
+        out int maxY) {
+        var moduleSize = (tl.ModuleSize + tr.ModuleSize + bl.ModuleSize) / 3.0;
+        if (moduleSize <= 0) {
+            minX = minY = maxX = maxY = 0;
+            return false;
+        }
+
+        var pad = moduleSize * 8.0;
+        var minXF = Math.Min(tl.X, Math.Min(tr.X, bl.X)) - pad;
+        var maxXF = Math.Max(tl.X, Math.Max(tr.X, bl.X)) + pad;
+        var minYF = Math.Min(tl.Y, Math.Min(tr.Y, bl.Y)) - pad;
+        var maxYF = Math.Max(tl.Y, Math.Max(tr.Y, bl.Y)) + pad;
+
+        minX = Math.Clamp(QrMath.RoundToInt(minXF), 0, width - 1);
+        maxX = Math.Clamp(QrMath.RoundToInt(maxXF), 0, width - 1);
+        minY = Math.Clamp(QrMath.RoundToInt(minYF), 0, height - 1);
+        maxY = Math.Clamp(QrMath.RoundToInt(maxYF), 0, height - 1);
+
+        return minX < maxX && minY < maxY;
+    }
+
+    private static void TrimBoundingBox(QrGrayImage image, bool invert, ref int minX, ref int minY, ref int maxX, ref int maxY) {
+        var width = maxX - minX + 1;
+        var height = maxY - minY + 1;
+        if (width <= 0 || height <= 0) return;
+
+        var rowThreshold = Math.Max(2, width / 40);
+        var colThreshold = Math.Max(2, height / 40);
+
+        while (minY <= maxY && CountDarkRow(image, invert, minX, maxX, minY) <= rowThreshold) minY++;
+        while (minY <= maxY && CountDarkRow(image, invert, minX, maxX, maxY) <= rowThreshold) maxY--;
+        while (minX <= maxX && CountDarkCol(image, invert, minX, minY, maxY) <= colThreshold) minX++;
+        while (minX <= maxX && CountDarkCol(image, invert, maxX, minY, maxY) <= colThreshold) maxX--;
+    }
+
+    private static int CountDarkRow(QrGrayImage image, bool invert, int minX, int maxX, int y) {
+        var count = 0;
+        for (var x = minX; x <= maxX; x++) {
+            if (image.IsBlack(x, y, invert)) count++;
+        }
+        return count;
+    }
+
+    private static int CountDarkCol(QrGrayImage image, bool invert, int x, int minY, int maxY) {
+        var count = 0;
+        for (var y = minY; y <= maxY; y++) {
+            if (image.IsBlack(x, y, invert)) count++;
+        }
+        return count;
     }
 
     private static int NearestValidDimension(int dimension) {

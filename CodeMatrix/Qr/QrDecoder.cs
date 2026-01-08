@@ -152,12 +152,14 @@ public static class QrDecoder {
         public QrErrorCorrectionLevel ErrorCorrectionLevel { get; }
         public int Mask { get; }
         public int Distance { get; }
+        public int MaxDistance { get; }
 
-        public QrFormatCandidate(int index, QrErrorCorrectionLevel ecc, int mask, int distance) {
+        public QrFormatCandidate(int index, QrErrorCorrectionLevel ecc, int mask, int distance, int maxDistance) {
             Index = index;
             ErrorCorrectionLevel = ecc;
             Mask = mask;
             Distance = distance;
+            MaxDistance = maxDistance;
         }
     }
 
@@ -176,59 +178,60 @@ public static class QrDecoder {
         return patterns;
     }
 
-    private static bool TryDecodeFormatBits(int bitsA, int bitsB, out QrFormatCandidate[] candidates, out int bestDistance) {
-        var candA = FindBestFormatCandidate(bitsA);
-        var candB = FindBestFormatCandidate(bitsB);
-        bestDistance = Math.Min(candA.Distance, candB.Distance);
+    private static readonly QrErrorCorrectionLevel[] FormatEccOrder = {
+        QrErrorCorrectionLevel.L,
+        QrErrorCorrectionLevel.M,
+        QrErrorCorrectionLevel.Q,
+        QrErrorCorrectionLevel.H
+    };
 
-        var list = new System.Collections.Generic.List<QrFormatCandidate>(2);
-        if (candA.Distance <= 3) list.Add(candA);
-        if (candB.Distance <= 3 && candB.Index != candA.Index) list.Add(candB);
+    private static bool TryDecodeFormatBits(int bitsA, int bitsB, out QrFormatCandidate[] candidates, out int bestDistance) {
+        bestDistance = int.MaxValue;
+        var list = new System.Collections.Generic.List<QrFormatCandidate>(4);
+
+        for (var i = 0; i < FormatPatterns.Length; i++) {
+            var pattern = FormatPatterns[i];
+            var distA = CountBits(bitsA ^ pattern);
+            var distB = CountBits(bitsB ^ pattern);
+            var minDist = Math.Min(distA, distB);
+            if (minDist < bestDistance) bestDistance = minDist;
+
+            if (minDist <= 3) {
+                var ecc = FormatEccOrder[i / 8];
+                var mask = i % 8;
+                var maxDist = Math.Max(distA, distB);
+                list.Add(new QrFormatCandidate(i, ecc, mask, minDist, maxDist));
+            }
+        }
 
         if (list.Count == 0) {
             candidates = Array.Empty<QrFormatCandidate>();
             return false;
         }
 
-        if (list.Count > 1) {
-            list.Sort(static (a, b) => a.Distance.CompareTo(b.Distance));
-        }
+        list.Sort(static (a, b) => {
+            var aBoth = a.MaxDistance <= 3;
+            var bBoth = b.MaxDistance <= 3;
+            if (aBoth != bBoth) return aBoth ? -1 : 1;
+            var cmp = a.Distance.CompareTo(b.Distance);
+            if (cmp != 0) return cmp;
+            return a.MaxDistance.CompareTo(b.MaxDistance);
+        });
 
         candidates = list.ToArray();
         return true;
     }
 
     internal static int GetBestFormatDistance(int bitsA, int bitsB) {
-        var candA = FindBestFormatCandidate(bitsA);
-        var candB = FindBestFormatCandidate(bitsB);
-        return Math.Min(candA.Distance, candB.Distance);
-    }
-
-    private static QrFormatCandidate FindBestFormatCandidate(int bits) {
-        var bestDist = int.MaxValue;
-        var best = -1;
-
+        var best = int.MaxValue;
         for (var i = 0; i < FormatPatterns.Length; i++) {
-            var candidate = FormatPatterns[i];
-            var dist = CountBits(bits ^ candidate);
-            if (dist < bestDist) {
-                bestDist = dist;
-                best = i;
-            }
+            var pattern = FormatPatterns[i];
+            var distA = CountBits(bitsA ^ pattern);
+            var distB = CountBits(bitsB ^ pattern);
+            var minDist = Math.Min(distA, distB);
+            if (minDist < best) best = minDist;
         }
-
-        if (best < 0) return new QrFormatCandidate(-1, default, 0, bestDist);
-
-        var eccIndex = best / 8;
-        var mask = best % 8;
-        var ecc = eccIndex switch {
-            0 => QrErrorCorrectionLevel.L,
-            1 => QrErrorCorrectionLevel.M,
-            2 => QrErrorCorrectionLevel.Q,
-            _ => QrErrorCorrectionLevel.H,
-        };
-
-        return new QrFormatCandidate(best, ecc, mask, bestDist);
+        return best;
     }
 
     private static int CountBits(int x) {
