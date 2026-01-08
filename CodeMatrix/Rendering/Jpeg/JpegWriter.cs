@@ -75,12 +75,19 @@ internal static class JpegWriter {
     private static readonly double[,] CosTable = BuildCosTable();
 
     public static byte[] WriteRgba(int width, int height, byte[] rgba, int stride, int quality) {
+        using var ms = new MemoryStream();
+        WriteRgba(ms, width, height, rgba, stride, quality);
+        return ms.ToArray();
+    }
+
+    public static void WriteRgba(Stream stream, int width, int height, byte[] rgba, int stride, int quality) {
         if (width <= 0) throw new ArgumentOutOfRangeException(nameof(width));
         if (height <= 0) throw new ArgumentOutOfRangeException(nameof(height));
         if (rgba is null) throw new ArgumentNullException(nameof(rgba));
         if (stride < width * 4) throw new ArgumentOutOfRangeException(nameof(stride));
         if (rgba.Length < height * stride) throw new ArgumentException("RGBA buffer too small.", nameof(rgba));
         if (quality is < 1 or > 100) throw new ArgumentOutOfRangeException(nameof(quality));
+        if (stream is null) throw new ArgumentNullException(nameof(stream));
 
         var qY = ScaleQuantTable(StdLumaQuant, quality);
         var qC = ScaleQuantTable(StdChromaQuant, quality);
@@ -90,24 +97,22 @@ internal static class JpegWriter {
         var dcChroma = BuildHuffmanTable(DcChromaBits, DcValues);
         var acChroma = BuildHuffmanTable(AcChromaBits, AcChromaValues);
 
-        using var ms = new MemoryStream();
-        WriteMarker(ms, 0xFFD8);
-        WriteApp0(ms);
-        WriteDqt(ms, 0, qY);
-        WriteDqt(ms, 1, qC);
-        WriteSof0(ms, width, height);
-        WriteDht(ms, 0, 0, DcLumaBits, DcValues);
-        WriteDht(ms, 1, 0, AcLumaBits, AcLumaValues);
-        WriteDht(ms, 0, 1, DcChromaBits, DcValues);
-        WriteDht(ms, 1, 1, AcChromaBits, AcChromaValues);
-        WriteSos(ms);
+        WriteMarker(stream, 0xFFD8);
+        WriteApp0(stream);
+        WriteDqt(stream, 0, qY);
+        WriteDqt(stream, 1, qC);
+        WriteSof0(stream, width, height);
+        WriteDht(stream, 0, 0, DcLumaBits, DcValues);
+        WriteDht(stream, 1, 0, AcLumaBits, AcLumaValues);
+        WriteDht(stream, 0, 1, DcChromaBits, DcValues);
+        WriteDht(stream, 1, 1, AcChromaBits, AcChromaValues);
+        WriteSos(stream);
 
-        var bw = new BitWriter(ms);
+        var bw = new BitWriter(stream);
         EncodeImage(bw, width, height, rgba, stride, qY, qC, dcLuma, acLuma, dcChroma, acChroma);
         bw.Flush();
 
-        WriteMarker(ms, 0xFFD9);
-        return ms.ToArray();
+        WriteMarker(stream, 0xFFD9);
     }
 
     private static void EncodeImage(

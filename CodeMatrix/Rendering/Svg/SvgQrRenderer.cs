@@ -134,6 +134,31 @@ public static class SvgQrRenderer {
         return sb.ToString();
     }
 
+    /// <summary>
+    /// Renders the QR module matrix to an SVG file.
+    /// </summary>
+    /// <param name="modules">QR modules.</param>
+    /// <param name="opts">Rendering options.</param>
+    /// <param name="path">Output file path.</param>
+    /// <returns>The output file path.</returns>
+    public static string RenderToFile(BitMatrix modules, QrSvgRenderOptions opts, string path) {
+        var svg = Render(modules, opts);
+        return RenderIO.WriteText(path, svg);
+    }
+
+    /// <summary>
+    /// Renders the QR module matrix to an SVG file under the specified directory.
+    /// </summary>
+    /// <param name="modules">QR modules.</param>
+    /// <param name="opts">Rendering options.</param>
+    /// <param name="directory">Output directory.</param>
+    /// <param name="fileName">Output file name.</param>
+    /// <returns>The output file path.</returns>
+    public static string RenderToFile(BitMatrix modules, QrSvgRenderOptions opts, string directory, string fileName) {
+        var svg = Render(modules, opts);
+        return RenderIO.WriteText(directory, fileName, svg);
+    }
+
     private enum EyeKind {
         None,
         Outer,

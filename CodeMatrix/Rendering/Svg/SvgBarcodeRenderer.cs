@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using CodeMatrix.Rendering;
 
 namespace CodeMatrix.Rendering.Svg;
 
@@ -42,5 +43,30 @@ public static class SvgBarcodeRenderer {
 
         sb.Append("</svg>");
         return sb.ToString();
+    }
+
+    /// <summary>
+    /// Renders the barcode to an SVG file.
+    /// </summary>
+    /// <param name="barcode">Barcode to render.</param>
+    /// <param name="opts">Rendering options.</param>
+    /// <param name="path">Output file path.</param>
+    /// <returns>The output file path.</returns>
+    public static string RenderToFile(Barcode1D barcode, BarcodeSvgRenderOptions opts, string path) {
+        var svg = Render(barcode, opts);
+        return RenderIO.WriteText(path, svg);
+    }
+
+    /// <summary>
+    /// Renders the barcode to an SVG file under the specified directory.
+    /// </summary>
+    /// <param name="barcode">Barcode to render.</param>
+    /// <param name="opts">Rendering options.</param>
+    /// <param name="directory">Output directory.</param>
+    /// <param name="fileName">Output file name.</param>
+    /// <returns>The output file path.</returns>
+    public static string RenderToFile(Barcode1D barcode, BarcodeSvgRenderOptions opts, string directory, string fileName) {
+        var svg = Render(barcode, opts);
+        return RenderIO.WriteText(directory, fileName, svg);
     }
 }

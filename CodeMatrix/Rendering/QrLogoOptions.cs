@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using CodeMatrix.Rendering.Png;
 
 namespace CodeMatrix.Rendering;
@@ -44,6 +45,17 @@ public sealed class QrLogoOptions {
         if (png is null) throw new ArgumentNullException(nameof(png));
         if (png.Length == 0) throw new ArgumentException("PNG data is empty.", nameof(png));
         Png = png;
+    }
+
+    /// <summary>
+    /// Creates a logo option from a PNG file.
+    /// </summary>
+    /// <param name="path">PNG file path.</param>
+    /// <returns>Logo options.</returns>
+    public static QrLogoOptions FromPngFile(string path) {
+        if (path is null) throw new ArgumentNullException(nameof(path));
+        var png = File.ReadAllBytes(path);
+        return new QrLogoOptions(png);
     }
 
     internal void Validate() {

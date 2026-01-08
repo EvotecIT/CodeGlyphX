@@ -7,6 +7,12 @@ internal static class PngWriter {
     private static readonly uint[] CrcTable = BuildCrcTable();
 
     public static byte[] WriteRgba8(int width, int height, byte[] scanlinesWithFilter) {
+        using var ms = new MemoryStream();
+        WriteRgba8(ms, width, height, scanlinesWithFilter);
+        return ms.ToArray();
+    }
+
+    public static void WriteRgba8(Stream stream, int width, int height, byte[] scanlinesWithFilter) {
         if (width <= 0) throw new ArgumentOutOfRangeException(nameof(width));
         if (height <= 0) throw new ArgumentOutOfRangeException(nameof(height));
         if (scanlinesWithFilter is null) throw new ArgumentNullException(nameof(scanlinesWithFilter));
@@ -14,14 +20,14 @@ internal static class PngWriter {
         if (scanlinesWithFilter.Length != height * (stride + 1))
             throw new ArgumentException("Invalid scanline buffer length.", nameof(scanlinesWithFilter));
 
-        var idat = BuildZlibStored(scanlinesWithFilter);
+        if (stream is null) throw new ArgumentNullException(nameof(stream));
 
-        using var ms = new MemoryStream();
-        ms.Write(Signature, 0, Signature.Length);
-        WriteChunk(ms, "IHDR", BuildIHDR(width, height));
-        WriteChunk(ms, "IDAT", idat);
-        WriteChunk(ms, "IEND", Array.Empty<byte>());
-        return ms.ToArray();
+        stream.Write(Signature, 0, Signature.Length);
+        WriteChunk(stream, "IHDR", BuildIHDR(width, height));
+
+        var idatLength = GetZlibStoredLength(scanlinesWithFilter.Length);
+        WriteChunk(stream, "IDAT", idatLength, (Stream s, ref uint crc) => WriteZlibStored(s, scanlinesWithFilter, ref crc));
+        WriteChunk(stream, "IEND", Array.Empty<byte>());
     }
 
     private static readonly byte[] Signature = { 137, 80, 78, 71, 13, 10, 26, 10 };
@@ -39,23 +45,37 @@ internal static class PngWriter {
     }
 
     private static void WriteChunk(Stream s, string type, byte[] data) {
-        if (type.Length != 4) throw new ArgumentOutOfRangeException(nameof(type));
         data ??= Array.Empty<byte>();
+        WriteChunk(s, type, data.Length, (Stream stream, ref uint crc) => {
+            if (data.Length == 0) return;
+            stream.Write(data, 0, data.Length);
+            crc = UpdateCrc(crc, data, 0, data.Length);
+        });
+    }
 
-        WriteUInt32BE(s, (uint)data.Length);
+    private delegate void ChunkWriter(Stream stream, ref uint crc);
+
+    private static void WriteChunk(Stream s, string type, int dataLength, ChunkWriter writeData) {
+        if (type.Length != 4) throw new ArgumentOutOfRangeException(nameof(type));
+
+        WriteUInt32BE(s, (uint)dataLength);
         var typeBytes = new byte[] { (byte)type[0], (byte)type[1], (byte)type[2], (byte)type[3] };
         s.Write(typeBytes, 0, typeBytes.Length);
-        if (data.Length != 0) s.Write(data, 0, data.Length);
 
-        var crc = ComputeCrc(typeBytes, data);
+        var crc = 0xFFFFFFFFu;
+        crc = UpdateCrc(crc, typeBytes, 0, typeBytes.Length);
+        if (dataLength != 0) {
+            writeData(s, ref crc);
+        }
+        crc = ~crc;
         WriteUInt32BE(s, crc);
     }
 
-    private static uint ComputeCrc(byte[] type, byte[] data) {
-        var crc = 0xFFFFFFFFu;
-        for (var i = 0; i < type.Length; i++) crc = (crc >> 8) ^ CrcTable[(crc ^ type[i]) & 0xFF];
-        for (var i = 0; i < data.Length; i++) crc = (crc >> 8) ^ CrcTable[(crc ^ data[i]) & 0xFF];
-        return ~crc;
+    private static uint UpdateCrc(uint crc, byte[] data, int offset, int count) {
+        for (var i = 0; i < count; i++) {
+            crc = (crc >> 8) ^ CrcTable[(crc ^ data[offset + i]) & 0xFF];
+        }
+        return crc;
     }
 
     private static uint[] BuildCrcTable() {
@@ -68,12 +88,19 @@ internal static class PngWriter {
         return table;
     }
 
-    private static byte[] BuildZlibStored(byte[] uncompressed) {
-        var adler = Adler32(uncompressed);
+    private static int GetZlibStoredLength(int dataLength) {
+        if (dataLength < 0) throw new ArgumentOutOfRangeException(nameof(dataLength));
+        var blocks = (dataLength + 65534) / 65535;
+        return 2 + 4 + dataLength + blocks * 5;
+    }
 
-        using var ms = new MemoryStream();
-        ms.WriteByte(0x78);
-        ms.WriteByte(0x01);
+    private static void WriteZlibStored(Stream stream, byte[] uncompressed, ref uint crc) {
+        const uint mod = 65521;
+        uint a = 1;
+        uint b = 0;
+
+        WriteByteWithCrc(stream, 0x78, ref crc);
+        WriteByteWithCrc(stream, 0x01, ref crc);
 
         var offset = 0;
         while (offset < uncompressed.Length) {
@@ -81,34 +108,29 @@ internal static class PngWriter {
             var len = Math.Min(65535, remaining);
             var final = offset + len >= uncompressed.Length;
 
-            ms.WriteByte(final ? (byte)0x01 : (byte)0x00); // BFINAL + BTYPE=00
+            WriteByteWithCrc(stream, final ? (byte)0x01 : (byte)0x00, ref crc);
 
-            // LEN + NLEN (little endian)
-            ms.WriteByte((byte)(len & 0xFF));
-            ms.WriteByte((byte)((len >> 8) & 0xFF));
+            WriteByteWithCrc(stream, (byte)(len & 0xFF), ref crc);
+            WriteByteWithCrc(stream, (byte)((len >> 8) & 0xFF), ref crc);
             var nlen = (~len) & 0xFFFF;
-            ms.WriteByte((byte)(nlen & 0xFF));
-            ms.WriteByte((byte)((nlen >> 8) & 0xFF));
+            WriteByteWithCrc(stream, (byte)(nlen & 0xFF), ref crc);
+            WriteByteWithCrc(stream, (byte)((nlen >> 8) & 0xFF), ref crc);
 
-            ms.Write(uncompressed, offset, len);
+            stream.Write(uncompressed, offset, len);
+            for (var i = 0; i < len; i++) {
+                var value = uncompressed[offset + i];
+                crc = (crc >> 8) ^ CrcTable[(crc ^ value) & 0xFF];
+                a += value;
+                if (a >= mod) a -= mod;
+                b += a;
+                b %= mod;
+            }
+
             offset += len;
         }
 
-        WriteUInt32BE(ms, adler);
-        return ms.ToArray();
-    }
-
-    private static uint Adler32(byte[] data) {
-        const uint mod = 65521;
-        uint a = 1;
-        uint b = 0;
-        for (var i = 0; i < data.Length; i++) {
-            a += data[i];
-            if (a >= mod) a -= mod;
-            b += a;
-            b %= mod;
-        }
-        return (b << 16) | a;
+        var adler = (b << 16) | a;
+        WriteUInt32BEWithCrc(stream, adler, ref crc);
     }
 
     private static void WriteUInt32BE(Stream s, uint value) {
@@ -118,6 +140,18 @@ internal static class PngWriter {
         s.WriteByte((byte)(value & 0xFF));
     }
 
+    private static void WriteUInt32BEWithCrc(Stream s, uint value, ref uint crc) {
+        WriteByteWithCrc(s, (byte)((value >> 24) & 0xFF), ref crc);
+        WriteByteWithCrc(s, (byte)((value >> 16) & 0xFF), ref crc);
+        WriteByteWithCrc(s, (byte)((value >> 8) & 0xFF), ref crc);
+        WriteByteWithCrc(s, (byte)(value & 0xFF), ref crc);
+    }
+
+    private static void WriteByteWithCrc(Stream s, byte value, ref uint crc) {
+        s.WriteByte(value);
+        crc = (crc >> 8) ^ CrcTable[(crc ^ value) & 0xFF];
+    }
+
     private static void WriteUInt32BE(byte[] buffer, int offset, uint value) {
         buffer[offset + 0] = (byte)((value >> 24) & 0xFF);
         buffer[offset + 1] = (byte)((value >> 16) & 0xFF);
@@ -125,4 +159,3 @@ internal static class PngWriter {
         buffer[offset + 3] = (byte)(value & 0xFF);
     }
 }
-

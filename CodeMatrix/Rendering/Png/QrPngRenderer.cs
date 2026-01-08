@@ -1,4 +1,6 @@
 using System;
+using System.IO;
+using CodeMatrix.Rendering;
 
 namespace CodeMatrix.Rendering.Png;
 
@@ -12,6 +14,42 @@ public static class QrPngRenderer {
     public static byte[] Render(BitMatrix modules, QrPngRenderOptions opts) {
         var scanlines = RenderScanlines(modules, opts, out var widthPx, out var heightPx, out _);
         return PngWriter.WriteRgba8(widthPx, heightPx, scanlines);
+    }
+
+    /// <summary>
+    /// Renders the QR module matrix to a PNG stream.
+    /// </summary>
+    /// <param name="modules">QR modules.</param>
+    /// <param name="opts">Rendering options.</param>
+    /// <param name="stream">Target stream.</param>
+    public static void RenderToStream(BitMatrix modules, QrPngRenderOptions opts, Stream stream) {
+        var scanlines = RenderScanlines(modules, opts, out var widthPx, out var heightPx, out _);
+        PngWriter.WriteRgba8(stream, widthPx, heightPx, scanlines);
+    }
+
+    /// <summary>
+    /// Renders the QR module matrix to a PNG file.
+    /// </summary>
+    /// <param name="modules">QR modules.</param>
+    /// <param name="opts">Rendering options.</param>
+    /// <param name="path">Output file path.</param>
+    /// <returns>The output file path.</returns>
+    public static string RenderToFile(BitMatrix modules, QrPngRenderOptions opts, string path) {
+        var png = Render(modules, opts);
+        return RenderIO.WriteBinary(path, png);
+    }
+
+    /// <summary>
+    /// Renders the QR module matrix to a PNG file under the specified directory.
+    /// </summary>
+    /// <param name="modules">QR modules.</param>
+    /// <param name="opts">Rendering options.</param>
+    /// <param name="directory">Output directory.</param>
+    /// <param name="fileName">Output file name.</param>
+    /// <returns>The output file path.</returns>
+    public static string RenderToFile(BitMatrix modules, QrPngRenderOptions opts, string directory, string fileName) {
+        var png = Render(modules, opts);
+        return RenderIO.WriteBinary(directory, fileName, png);
     }
 
     /// <summary>

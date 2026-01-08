@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using CodeMatrix;
 
 namespace CodeMatrix.Rendering.Png;
@@ -102,5 +103,16 @@ public sealed class QrPngLogoOptions {
         if (png is null) throw new ArgumentNullException(nameof(png));
         var rgba = PngDecoder.DecodeRgba32(png, out var width, out var height);
         return new QrPngLogoOptions(rgba, width, height);
+    }
+
+    /// <summary>
+    /// Creates a logo option from a PNG file.
+    /// </summary>
+    /// <param name="path">PNG file path.</param>
+    /// <returns>Logo options.</returns>
+    public static QrPngLogoOptions FromPngFile(string path) {
+        if (path is null) throw new ArgumentNullException(nameof(path));
+        var png = File.ReadAllBytes(path);
+        return FromPng(png);
     }
 }

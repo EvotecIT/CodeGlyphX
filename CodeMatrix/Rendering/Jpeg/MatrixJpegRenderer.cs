@@ -1,4 +1,6 @@
 using System;
+using System.IO;
+using CodeMatrix.Rendering;
 using CodeMatrix.Rendering.Png;
 
 namespace CodeMatrix.Rendering.Jpeg;
@@ -14,6 +16,46 @@ public static class MatrixJpegRenderer {
         var scanlines = MatrixPngRenderer.RenderScanlines(modules, opts, out var width, out var height, out var stride);
         var rgba = ExtractRgba(scanlines, height, stride);
         return JpegWriter.WriteRgba(width, height, rgba, stride, quality);
+    }
+
+    /// <summary>
+    /// Renders the matrix to a JPEG stream.
+    /// </summary>
+    /// <param name="modules">Matrix modules.</param>
+    /// <param name="opts">Rendering options.</param>
+    /// <param name="stream">Target stream.</param>
+    /// <param name="quality">JPEG quality (1-100).</param>
+    public static void RenderToStream(BitMatrix modules, MatrixPngRenderOptions opts, Stream stream, int quality = 85) {
+        var scanlines = MatrixPngRenderer.RenderScanlines(modules, opts, out var width, out var height, out var stride);
+        var rgba = ExtractRgba(scanlines, height, stride);
+        JpegWriter.WriteRgba(stream, width, height, rgba, stride, quality);
+    }
+
+    /// <summary>
+    /// Renders the matrix to a JPEG file.
+    /// </summary>
+    /// <param name="modules">Matrix modules.</param>
+    /// <param name="opts">Rendering options.</param>
+    /// <param name="path">Output file path.</param>
+    /// <param name="quality">JPEG quality (1-100).</param>
+    /// <returns>The output file path.</returns>
+    public static string RenderToFile(BitMatrix modules, MatrixPngRenderOptions opts, string path, int quality = 85) {
+        var jpeg = Render(modules, opts, quality);
+        return RenderIO.WriteBinary(path, jpeg);
+    }
+
+    /// <summary>
+    /// Renders the matrix to a JPEG file under the specified directory.
+    /// </summary>
+    /// <param name="modules">Matrix modules.</param>
+    /// <param name="opts">Rendering options.</param>
+    /// <param name="directory">Output directory.</param>
+    /// <param name="fileName">Output file name.</param>
+    /// <param name="quality">JPEG quality (1-100).</param>
+    /// <returns>The output file path.</returns>
+    public static string RenderToFile(BitMatrix modules, MatrixPngRenderOptions opts, string directory, string fileName, int quality = 85) {
+        var jpeg = Render(modules, opts, quality);
+        return RenderIO.WriteBinary(directory, fileName, jpeg);
     }
 
     private static byte[] ExtractRgba(byte[] scanlines, int height, int stride) {
