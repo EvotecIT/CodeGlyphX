@@ -31,11 +31,20 @@ public sealed class QrDecoded {
     /// </summary>
     public string Text { get; }
 
+    /// <summary>
+    /// Gets the parsed payload when recognized (URL, WiFi, contact, etc.).
+    /// </summary>
+    public Payloads.QrParsedPayload Parsed { get; }
+
     internal QrDecoded(int version, QrErrorCorrectionLevel ecc, int mask, byte[] bytes, string text) {
         Version = version;
         ErrorCorrectionLevel = ecc;
         Mask = mask;
         Bytes = bytes ?? throw new ArgumentNullException(nameof(bytes));
         Text = text ?? throw new ArgumentNullException(nameof(text));
+        if (!Payloads.QrPayloadParser.TryParse(text, out var parsed)) {
+            parsed = new Payloads.QrParsedPayload(Payloads.QrPayloadType.Text, text, text);
+        }
+        Parsed = parsed;
     }
 }

@@ -205,6 +205,9 @@ internal static class QrFinderPatternDetector {
         if (!CrossCheckHorizontal(image, invert, QrMath.RoundToInt(centerX), QrMath.RoundToInt(centerY), maxCount, stateCountTotal, out centerX, out var moduleSizeH)) {
             return false;
         }
+        if (!CrossCheckDiagonal(image, invert, QrMath.RoundToInt(centerX), QrMath.RoundToInt(centerY), maxCount, stateCountTotal)) {
+            return false;
+        }
 
         var moduleSize = (moduleSizeV + moduleSizeH) / 2.0;
         AddOrMerge(possibleCenters, new FinderPattern(centerX, centerY, moduleSize, 1));
@@ -356,6 +359,64 @@ internal static class QrFinderPatternDetector {
 
         centerX = CenterFromEnd(stateCount, x);
         moduleSize = total / 7.0;
+        return true;
+    }
+
+    private static bool CrossCheckDiagonal(QrGrayImage image, bool invert, int centerX, int centerY, int maxCount, int originalTotal) {
+        Span<int> stateCount = stackalloc int[5];
+        stateCount.Clear();
+
+        var x = centerX;
+        var y = centerY;
+
+        while (x >= 0 && y >= 0 && image.IsBlack(x, y, invert)) {
+            stateCount[2]++;
+            x--;
+            y--;
+        }
+        if (x < 0 || y < 0) return false;
+
+        while (x >= 0 && y >= 0 && !image.IsBlack(x, y, invert) && stateCount[1] <= maxCount) {
+            stateCount[1]++;
+            x--;
+            y--;
+        }
+        if (x < 0 || y < 0 || stateCount[1] > maxCount) return false;
+
+        while (x >= 0 && y >= 0 && image.IsBlack(x, y, invert) && stateCount[0] <= maxCount) {
+            stateCount[0]++;
+            x--;
+            y--;
+        }
+        if (stateCount[0] > maxCount) return false;
+
+        x = centerX + 1;
+        y = centerY + 1;
+        while (x < image.Width && y < image.Height && image.IsBlack(x, y, invert)) {
+            stateCount[2]++;
+            x++;
+            y++;
+        }
+        if (x >= image.Width || y >= image.Height) return false;
+
+        while (x < image.Width && y < image.Height && !image.IsBlack(x, y, invert) && stateCount[3] < maxCount) {
+            stateCount[3]++;
+            x++;
+            y++;
+        }
+        if (x >= image.Width || y >= image.Height || stateCount[3] >= maxCount) return false;
+
+        while (x < image.Width && y < image.Height && image.IsBlack(x, y, invert) && stateCount[4] < maxCount) {
+            stateCount[4]++;
+            x++;
+            y++;
+        }
+        if (stateCount[4] >= maxCount) return false;
+
+        var total = stateCount[0] + stateCount[1] + stateCount[2] + stateCount[3] + stateCount[4];
+        if (Math.Abs(total - originalTotal) * 5 >= originalTotal * 2) return false;
+        if (!FoundPatternCross(stateCount)) return false;
+
         return true;
     }
 }

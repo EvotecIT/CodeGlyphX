@@ -46,9 +46,70 @@ internal static class QrPixelDecoder {
             }
             best = Better(best, diag3);
         }
+        if (minDim >= 640) {
+            if (TryDecodeAtScale(pixels, width, height, stride, fmt, 4, accept, out result, out var diag4)) {
+                diagnostics = diag4;
+                return true;
+            }
+            best = Better(best, diag4);
+        }
+        if (minDim >= 960) {
+            if (TryDecodeAtScale(pixels, width, height, stride, fmt, 5, accept, out result, out var diag5)) {
+                diagnostics = diag5;
+                return true;
+            }
+            best = Better(best, diag5);
+        }
 
         diagnostics = best;
         return false;
+    }
+
+    public static bool TryDecodeAll(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat fmt, out QrDecoded[] results) {
+        return TryDecodeAll(pixels, width, height, stride, fmt, accept: null, out results);
+    }
+
+    internal static bool TryDecodeAll(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat fmt, Func<QrDecoded, bool>? accept, out QrDecoded[] results) {
+        results = Array.Empty<QrDecoded>();
+
+        if (width <= 0 || height <= 0) return false;
+        if (stride < width * 4) return false;
+        if (pixels.Length < (height - 1) * stride + width * 4) return false;
+
+        if (!QrGrayImage.TryCreate(pixels, width, height, stride, fmt, scale: 1, out var baseImage)) {
+            return false;
+        }
+
+        var list = new List<QrDecoded>(4);
+        var seen = new HashSet<string>(StringComparer.Ordinal);
+
+        Span<byte> thresholds = stackalloc byte[6];
+        var thresholdCount = 0;
+        var mid = (baseImage.Min + baseImage.Max) / 2;
+        var range = baseImage.Max - baseImage.Min;
+
+        AddThresholdCandidate(ref thresholds, ref thresholdCount, mid);
+        AddThresholdCandidate(ref thresholds, ref thresholdCount, baseImage.Threshold);
+        AddThresholdCandidate(ref thresholds, ref thresholdCount, mid - 16);
+        AddThresholdCandidate(ref thresholds, ref thresholdCount, mid + 16);
+        if (range > 0) {
+            AddThresholdCandidate(ref thresholds, ref thresholdCount, baseImage.Min + range / 3);
+            AddThresholdCandidate(ref thresholds, ref thresholdCount, baseImage.Min + (range * 2) / 3);
+        }
+
+        for (var i = 0; i < thresholdCount; i++) {
+            var image = baseImage.WithThreshold(thresholds[i]);
+            CollectFromImage(image, invert: false, list, seen, accept);
+            CollectFromImage(image, invert: true, list, seen, accept);
+        }
+
+        var adaptive = baseImage.WithAdaptiveThreshold(windowSize: 15, offset: 8);
+        CollectFromImage(adaptive, invert: false, list, seen, accept);
+        CollectFromImage(adaptive, invert: true, list, seen, accept);
+
+        if (list.Count == 0) return false;
+        results = list.ToArray();
+        return true;
     }
 
     private static bool TryDecodeAtScale(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat fmt, int scale, Func<QrDecoded, bool>? accept, out QrDecoded result, out QrPixelDecodeDiagnostics diagnostics) {
@@ -136,6 +197,33 @@ internal static class QrPixelDecoder {
         }
         best = Better(best, diagASI);
 
+        // Soft blur pass (helps when UI text/anti-aliasing breaks the histogram).
+        var blurred = baseImage.WithBoxBlur(radius: 1);
+        if (TryDecodeFromGray(scale, blurred.Threshold, blurred, invert: false, accept, out result, out var diagB0)) {
+            diagnostics = diagB0;
+            return true;
+        }
+        best = Better(best, diagB0);
+
+        if (TryDecodeFromGray(scale, blurred.Threshold, blurred, invert: true, accept, out result, out var diagB1)) {
+            diagnostics = diagB1;
+            return true;
+        }
+        best = Better(best, diagB1);
+
+        var adaptiveBlur = blurred.WithAdaptiveThreshold(windowSize: 17, offset: 6);
+        if (TryDecodeFromGray(scale, blurred.Threshold, adaptiveBlur, invert: false, accept, out result, out var diagB2)) {
+            diagnostics = diagB2;
+            return true;
+        }
+        best = Better(best, diagB2);
+
+        if (TryDecodeFromGray(scale, blurred.Threshold, adaptiveBlur, invert: true, accept, out result, out var diagB3)) {
+            diagnostics = diagB3;
+            return true;
+        }
+        best = Better(best, diagB3);
+
         diagnostics = best;
         return false;
     }
@@ -149,6 +237,106 @@ internal static class QrPixelDecoder {
             if (list[i] == t) return;
         }
         list[count++] = t;
+    }
+
+    private static void CollectFromImage(
+        QrGrayImage image,
+        bool invert,
+        List<QrDecoded> results,
+        HashSet<string> seen,
+        Func<QrDecoded, bool>? accept) {
+        var candidates = QrFinderPatternDetector.FindCandidates(image, invert);
+        if (candidates.Count >= 3) {
+            CollectFromFinderCandidates(image, invert, candidates, results, seen, accept);
+        }
+
+        CollectFromComponents(image, invert, results, seen, accept);
+    }
+
+    private static void CollectFromFinderCandidates(
+        QrGrayImage image,
+        bool invert,
+        List<QrFinderPatternDetector.FinderPattern> candidates,
+        List<QrDecoded> results,
+        HashSet<string> seen,
+        Func<QrDecoded, bool>? accept) {
+        candidates.Sort(static (a, b) => b.Count.CompareTo(a.Count));
+        var n = Math.Min(candidates.Count, 10);
+        var triedTriples = 0;
+        const int maxTriples = 48;
+
+        var stop = false;
+        for (var i = 0; i < n - 2 && !stop; i++) {
+            for (var j = i + 1; j < n - 1 && !stop; j++) {
+                for (var k = j + 1; k < n; k++) {
+                    if (triedTriples++ >= maxTriples) { stop = true; break; }
+
+                    var a = candidates[i];
+                    var b = candidates[j];
+                    var c = candidates[k];
+
+                    var msMin = Math.Min(a.ModuleSize, Math.Min(b.ModuleSize, c.ModuleSize));
+                    var msMax = Math.Max(a.ModuleSize, Math.Max(b.ModuleSize, c.ModuleSize));
+                    if (msMin <= 0) continue;
+                    if (msMax > msMin * 1.75) continue;
+
+                    if (!TryOrderAsTlTrBl(a, b, c, out var tl, out var tr, out var bl)) continue;
+                    if (TrySampleAndDecode(
+                            scale: 1,
+                            threshold: image.Threshold,
+                            image,
+                            invert,
+                            tl,
+                            tr,
+                            bl,
+                            candidates.Count,
+                            triedTriples,
+                            accept,
+                            out var decoded,
+                            out _)) {
+                        AddResult(results, seen, decoded, accept);
+                    }
+                }
+            }
+        }
+    }
+
+    private static void CollectFromComponents(
+        QrGrayImage image,
+        bool invert,
+        List<QrDecoded> results,
+        HashSet<string> seen,
+        Func<QrDecoded, bool>? accept) {
+        var comps = FindComponents(image, invert);
+        if (comps.Count == 0) return;
+
+        comps.Sort(static (a, b) => b.Area.CompareTo(a.Area));
+        var maxTry = Math.Min(comps.Count, 12);
+
+        for (var i = 0; i < maxTry; i++) {
+            var c = comps[i];
+            var pad = Math.Max(2, (int)Math.Round(Math.Min(c.Width, c.Height) * 0.05));
+            var bminX = c.MinX - pad;
+            var bminY = c.MinY - pad;
+            var bmaxX = c.MaxX + pad;
+            var bmaxY = c.MaxY + pad;
+
+            if (bminX < 0) bminX = 0;
+            if (bminY < 0) bminY = 0;
+            if (bmaxX >= image.Width) bmaxX = image.Width - 1;
+            if (bmaxY >= image.Height) bmaxY = image.Height - 1;
+
+            if (TryDecodeByBoundingBox(scale: 1, threshold: image.Threshold, image, invert, accept, out var decoded, out _, candidateCount: 0, candidateTriplesTried: 0, bminX, bminY, bmaxX, bmaxY)) {
+                AddResult(results, seen, decoded, accept);
+            }
+        }
+    }
+
+    private static void AddResult(List<QrDecoded> results, HashSet<string> seen, QrDecoded decoded, Func<QrDecoded, bool>? accept) {
+        if (accept is not null && !accept(decoded)) return;
+        var key = Convert.ToBase64String(decoded.Bytes);
+        if (!seen.Add(key)) return;
+        results.Add(decoded);
     }
 
     private static bool TryDecodeFromGray(int scale, byte threshold, QrGrayImage image, bool invert, Func<QrDecoded, bool>? accept, out QrDecoded result, out QrPixelDecodeDiagnostics diagnostics) {
@@ -170,6 +358,21 @@ internal static class QrPixelDecoder {
             }
             diagnostics = Better(diagnostics, diagC);
         }
+
+        if (candidates.Count > 0) {
+            if (TryDecodeBySingleFinder(scale, threshold, image, invert, candidates, accept, out result, out var diagS)) {
+                diagnostics = diagS;
+                return true;
+            }
+            diagnostics = Better(diagnostics, diagS);
+        }
+
+        // Connected-components fallback (helps when finder detection fails but a clean symbol exists).
+        if (TryDecodeByConnectedComponents(scale, threshold, image, invert, accept, out result, out var diagCC)) {
+            diagnostics = diagCC;
+            return true;
+        }
+        diagnostics = Better(diagnostics, diagCC);
 
         // Fallback: bounding box exact-fit (works for perfectly cropped/generated images).
         if (TryDecodeByBoundingBox(scale, threshold, image, invert, accept, out result, out var diagB)) {
@@ -226,6 +429,296 @@ internal static class QrPixelDecoder {
         return TryDecodeByBoundingBox(scale, threshold, image, invert, accept, out result, out diagnostics, candidates.Count, candidateTriplesTried: 0, bminX, bminY, bmaxX, bmaxY);
     }
 
+    private static bool TryDecodeBySingleFinder(
+        int scale,
+        byte threshold,
+        QrGrayImage image,
+        bool invert,
+        List<QrFinderPatternDetector.FinderPattern> candidates,
+        Func<QrDecoded, bool>? accept,
+        out QrDecoded result,
+        out QrPixelDecodeDiagnostics diagnostics) {
+        result = null!;
+        diagnostics = default;
+
+        if (candidates.Count == 0) return false;
+
+        candidates.Sort(static (a, b) => b.Count.CompareTo(a.Count));
+        var n = Math.Min(candidates.Count, 4);
+
+        var orientationsBuf = new SingleFinderOrientation[3];
+        var dimsBuf = new int[8];
+
+        for (var i = 0; i < n; i++) {
+            var c = candidates[i];
+            var moduleSize = c.ModuleSize;
+            if (moduleSize <= 0) continue;
+
+            var orientations = orientationsBuf.AsSpan();
+            var oCount = 0;
+            var fx = c.X / image.Width;
+            var fy = c.Y / image.Height;
+
+            if (fx <= 0.55 && fy <= 0.55) orientations[oCount++] = SingleFinderOrientation.TopLeft;
+            if (fx >= 0.45 && fy <= 0.55) orientations[oCount++] = SingleFinderOrientation.TopRight;
+            if (fx <= 0.55 && fy >= 0.45) orientations[oCount++] = SingleFinderOrientation.BottomLeft;
+            if (oCount == 0) {
+                orientations[oCount++] = SingleFinderOrientation.TopLeft;
+                orientations[oCount++] = SingleFinderOrientation.TopRight;
+                orientations[oCount++] = SingleFinderOrientation.BottomLeft;
+            }
+
+            for (var oi = 0; oi < oCount; oi++) {
+                var orientation = orientations[oi];
+                if (!TryGetMaxDimension(image, c, moduleSize, orientation, out var maxDim)) continue;
+
+                var dims = dimsBuf.AsSpan();
+                var dimsCount = 0;
+                var baseDim = NearestValidDimension(maxDim);
+                AddDimensionCandidate(ref dims, ref dimsCount, baseDim);
+                AddDimensionCandidate(ref dims, ref dimsCount, baseDim - 4);
+                AddDimensionCandidate(ref dims, ref dimsCount, baseDim - 8);
+                AddDimensionCandidate(ref dims, ref dimsCount, baseDim - 12);
+                AddDimensionCandidate(ref dims, ref dimsCount, baseDim - 16);
+                AddDimensionCandidate(ref dims, ref dimsCount, baseDim - 20);
+
+                for (var di = 0; di < dimsCount; di++) {
+                    var dim = dims[di];
+                    if (!TryGetBoundingBoxFromSingleFinder(image, c, moduleSize, orientation, dim, out var minX, out var minY, out var maxX, out var maxY)) {
+                        continue;
+                    }
+
+                    if (TryDecodeByBoundingBox(scale, threshold, image, invert, accept, out result, out diagnostics, candidates.Count, candidateTriplesTried: 0, minX, minY, maxX, maxY)) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    private enum SingleFinderOrientation {
+        TopLeft,
+        TopRight,
+        BottomLeft
+    }
+
+    private static bool TryGetMaxDimension(
+        QrGrayImage image,
+        QrFinderPatternDetector.FinderPattern candidate,
+        double moduleSize,
+        SingleFinderOrientation orientation,
+        out int maxDim) {
+        maxDim = 0;
+        if (moduleSize <= 0) return false;
+
+        var halfFinder = moduleSize * 3.5;
+        var left = candidate.X - halfFinder;
+        var right = candidate.X + halfFinder;
+        var top = candidate.Y - halfFinder;
+        var bottom = candidate.Y + halfFinder;
+
+        double availX;
+        double availY;
+        switch (orientation) {
+            case SingleFinderOrientation.TopRight:
+                availX = right;
+                availY = image.Height - top;
+                break;
+            case SingleFinderOrientation.BottomLeft:
+                availX = image.Width - left;
+                availY = bottom;
+                break;
+            default:
+                availX = image.Width - left;
+                availY = image.Height - top;
+                break;
+        }
+
+        var dim = (int)Math.Floor(Math.Min(availX, availY) / moduleSize);
+        if (dim < 21) return false;
+        if (dim > 177) dim = 177;
+        maxDim = dim;
+        return true;
+    }
+
+    private static bool TryGetBoundingBoxFromSingleFinder(
+        QrGrayImage image,
+        QrFinderPatternDetector.FinderPattern candidate,
+        double moduleSize,
+        SingleFinderOrientation orientation,
+        int dimension,
+        out int minX,
+        out int minY,
+        out int maxX,
+        out int maxY) {
+        minX = minY = maxX = maxY = 0;
+        if (dimension is < 21 or > 177) return false;
+        if ((dimension & 3) != 1) return false;
+
+        var halfFinder = moduleSize * 3.5;
+        var dimPx = dimension * moduleSize;
+
+        double minXf;
+        double minYf;
+        double maxXf;
+        double maxYf;
+
+        switch (orientation) {
+            case SingleFinderOrientation.TopRight:
+                maxXf = candidate.X + halfFinder;
+                minXf = maxXf - dimPx;
+                minYf = candidate.Y - halfFinder;
+                maxYf = minYf + dimPx;
+                break;
+            case SingleFinderOrientation.BottomLeft:
+                minXf = candidate.X - halfFinder;
+                maxXf = minXf + dimPx;
+                maxYf = candidate.Y + halfFinder;
+                minYf = maxYf - dimPx;
+                break;
+            default:
+                minXf = candidate.X - halfFinder;
+                maxXf = minXf + dimPx;
+                minYf = candidate.Y - halfFinder;
+                maxYf = minYf + dimPx;
+                break;
+        }
+
+        var slack = moduleSize * 4.0;
+        if (minXf < -slack || minYf < -slack || maxXf > image.Width - 1 + slack || maxYf > image.Height - 1 + slack) return false;
+
+        minX = Math.Clamp(QrMath.RoundToInt(minXf), 0, image.Width - 1);
+        maxX = Math.Clamp(QrMath.RoundToInt(maxXf), 0, image.Width - 1);
+        minY = Math.Clamp(QrMath.RoundToInt(minYf), 0, image.Height - 1);
+        maxY = Math.Clamp(QrMath.RoundToInt(maxYf), 0, image.Height - 1);
+
+        return minX < maxX && minY < maxY;
+    }
+
+    private static bool TryDecodeByConnectedComponents(
+        int scale,
+        byte threshold,
+        QrGrayImage image,
+        bool invert,
+        Func<QrDecoded, bool>? accept,
+        out QrDecoded result,
+        out QrPixelDecodeDiagnostics diagnostics) {
+        result = null!;
+        diagnostics = default;
+
+        var w = image.Width;
+        var h = image.Height;
+
+        var comps = FindComponents(image, invert);
+        if (comps.Count == 0) return false;
+
+        comps.Sort(static (a, b) => b.Area.CompareTo(a.Area));
+        var maxTry = Math.Min(comps.Count, 6);
+
+        for (var i = 0; i < maxTry; i++) {
+            var c = comps[i];
+            var pad = Math.Max(2, (int)Math.Round(Math.Min(c.Width, c.Height) * 0.05));
+            var bminX = c.MinX - pad;
+            var bminY = c.MinY - pad;
+            var bmaxX = c.MaxX + pad;
+            var bmaxY = c.MaxY + pad;
+
+            if (bminX < 0) bminX = 0;
+            if (bminY < 0) bminY = 0;
+            if (bmaxX >= w) bmaxX = w - 1;
+            if (bmaxY >= h) bmaxY = h - 1;
+
+            if (TryDecodeByBoundingBox(scale, threshold, image, invert, accept, out result, out diagnostics, candidateCount: 0, candidateTriplesTried: 0, bminX, bminY, bmaxX, bmaxY)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static List<Component> FindComponents(QrGrayImage image, bool invert) {
+        var w = image.Width;
+        var h = image.Height;
+        var comps = new List<Component>(8);
+        if (w <= 0 || h <= 0) return comps;
+
+        var minArea = Math.Max(16, (w * h) / 400); // ~0.25% of image area
+        var visited = new bool[w * h];
+        var stack = new int[Math.Max(64, w * h / 16)];
+
+        for (var y = 0; y < h; y++) {
+            var row = y * w;
+            for (var x = 0; x < w; x++) {
+                var idx = row + x;
+                if (visited[idx]) continue;
+                if (!image.IsBlack(x, y, invert)) {
+                    visited[idx] = true;
+                    continue;
+                }
+
+                var minX = x;
+                var maxX = x;
+                var minY = y;
+                var maxY = y;
+                var area = 0;
+
+                var sp = 0;
+                stack[sp++] = idx;
+
+                while (sp > 0) {
+                    var cur = stack[--sp];
+                    if (visited[cur]) continue;
+                    visited[cur] = true;
+
+                    var cy = cur / w;
+                    var cx = cur - cy * w;
+                    if (!image.IsBlack(cx, cy, invert)) continue;
+
+                    area++;
+                    if (cx < minX) minX = cx;
+                    if (cx > maxX) maxX = cx;
+                    if (cy < minY) minY = cy;
+                    if (cy > maxY) maxY = cy;
+
+                    if (cx > 0) {
+                        var ni = cur - 1;
+                        if (!visited[ni]) stack[sp++] = ni;
+                    }
+                    if (cx + 1 < w) {
+                        var ni = cur + 1;
+                        if (!visited[ni]) stack[sp++] = ni;
+                    }
+                    if (cy > 0) {
+                        var ni = cur - w;
+                        if (!visited[ni]) stack[sp++] = ni;
+                    }
+                    if (cy + 1 < h) {
+                        var ni = cur + w;
+                        if (!visited[ni]) stack[sp++] = ni;
+                    }
+
+                    if (sp >= stack.Length - 4) {
+                        Array.Resize(ref stack, stack.Length * 2);
+                    }
+                }
+
+                if (area < minArea) continue;
+                var cw = maxX - minX + 1;
+                var ch = maxY - minY + 1;
+                if (cw < 21 || ch < 21) continue;
+
+                var ratio = cw > ch ? (double)cw / ch : (double)ch / cw;
+                if (ratio > 2.2) continue;
+
+                comps.Add(new Component(minX, minY, maxX, maxY, area));
+            }
+        }
+
+        return comps;
+    }
+
     private static bool TryDecodeFromFinderCandidates(int scale, byte threshold, QrGrayImage image, bool invert, List<QrFinderPatternDetector.FinderPattern> candidates, Func<QrDecoded, bool>? accept, out QrDecoded result, out QrPixelDecodeDiagnostics diagnostics) {
         result = null!;
         diagnostics = default;
@@ -270,6 +763,24 @@ internal static class QrPixelDecoder {
         }
 
         return false;
+    }
+
+    private readonly struct Component {
+        public int MinX { get; }
+        public int MinY { get; }
+        public int MaxX { get; }
+        public int MaxY { get; }
+        public int Area { get; }
+        public int Width => MaxX - MinX + 1;
+        public int Height => MaxY - MinY + 1;
+
+        public Component(int minX, int minY, int maxX, int maxY, int area) {
+            MinX = minX;
+            MinY = minY;
+            MaxX = maxX;
+            MaxY = maxY;
+            Area = area;
+        }
     }
 
     private static bool TryOrderAsTlTrBl(
@@ -645,19 +1156,17 @@ internal static class QrPixelDecoder {
                 }
             }
 
-            if (global::CodeGlyphX.QrDecoder.TryDecode(bm, out result, out var moduleDiag)) {
+            if (TryDecodeWithInversion(bm, accept, out result, out var moduleDiag)) {
                 diagnostics = new QrPixelDecodeDiagnostics(scale, threshold, invert, candidateCount, candidateTriplesTried, modulesCount, moduleDiag);
-                if (accept == null || accept(result)) return true;
+                return true;
             }
             best = Better(best, new QrPixelDecodeDiagnostics(scale, threshold, invert, candidateCount, candidateTriplesTried, modulesCount, moduleDiag));
 
-            var inv = bm.Clone();
-            Invert(inv);
-            if (global::CodeGlyphX.QrDecoder.TryDecode(inv, out result, out var moduleDiagInv)) {
-                diagnostics = new QrPixelDecodeDiagnostics(scale, threshold, invert, candidateCount, candidateTriplesTried, modulesCount, moduleDiagInv);
-                if (accept == null || accept(result)) return true;
+            if (TryDecodeByRotations(bm, accept, out result, out var moduleDiagRot)) {
+                diagnostics = new QrPixelDecodeDiagnostics(scale, threshold, invert, candidateCount, candidateTriplesTried, modulesCount, moduleDiagRot);
+                return true;
             }
-            best = Better(best, new QrPixelDecodeDiagnostics(scale, threshold, invert, candidateCount, candidateTriplesTried, modulesCount, moduleDiagInv));
+            best = Better(best, new QrPixelDecodeDiagnostics(scale, threshold, invert, candidateCount, candidateTriplesTried, modulesCount, moduleDiagRot));
         }
 
         diagnostics = best;
@@ -776,6 +1285,92 @@ internal static class QrPixelDecoder {
                 matrix[x, y] = !matrix[x, y];
             }
         }
+    }
+
+    private static bool TryDecodeWithInversion(global::CodeGlyphX.BitMatrix matrix, Func<QrDecoded, bool>? accept, out QrDecoded result, out global::CodeGlyphX.QrDecodeDiagnostics diagnostics) {
+        result = null!;
+        diagnostics = default;
+
+        var ok = global::CodeGlyphX.QrDecoder.TryDecode(matrix, out result, out var moduleDiag);
+        var best = moduleDiag;
+        if (ok && (accept == null || accept(result))) {
+            diagnostics = moduleDiag;
+            return true;
+        }
+
+        var inv = matrix.Clone();
+        Invert(inv);
+        ok = global::CodeGlyphX.QrDecoder.TryDecode(inv, out result, out var moduleDiagInv);
+        best = Better(best, moduleDiagInv);
+
+        if (ok && (accept == null || accept(result))) {
+            diagnostics = moduleDiagInv;
+            return true;
+        }
+
+        diagnostics = best;
+        return false;
+    }
+
+    private static bool TryDecodeByRotations(global::CodeGlyphX.BitMatrix matrix, Func<QrDecoded, bool>? accept, out QrDecoded result, out global::CodeGlyphX.QrDecodeDiagnostics diagnostics) {
+        result = null!;
+        diagnostics = default;
+
+        var best = default(global::CodeGlyphX.QrDecodeDiagnostics);
+
+        var rot90 = Rotate90(matrix);
+        if (TryDecodeWithInversion(rot90, accept, out result, out var d90)) {
+            diagnostics = d90;
+            return true;
+        }
+        best = Better(best, d90);
+
+        var rot180 = Rotate180(matrix);
+        if (TryDecodeWithInversion(rot180, accept, out result, out var d180)) {
+            diagnostics = d180;
+            return true;
+        }
+        best = Better(best, d180);
+
+        var rot270 = Rotate270(matrix);
+        if (TryDecodeWithInversion(rot270, accept, out result, out var d270)) {
+            diagnostics = d270;
+            return true;
+        }
+        best = Better(best, d270);
+
+        diagnostics = best;
+        return false;
+    }
+
+    private static global::CodeGlyphX.BitMatrix Rotate90(global::CodeGlyphX.BitMatrix matrix) {
+        var result = new global::CodeGlyphX.BitMatrix(matrix.Height, matrix.Width);
+        for (var y = 0; y < matrix.Height; y++) {
+            for (var x = 0; x < matrix.Width; x++) {
+                result[matrix.Height - 1 - y, x] = matrix[x, y];
+            }
+        }
+        return result;
+    }
+
+    private static global::CodeGlyphX.BitMatrix Rotate180(global::CodeGlyphX.BitMatrix matrix) {
+        var result = new global::CodeGlyphX.BitMatrix(matrix.Width, matrix.Height);
+        for (var y = 0; y < matrix.Height; y++) {
+            for (var x = 0; x < matrix.Width; x++) {
+                result[matrix.Width - 1 - x, matrix.Height - 1 - y] = matrix[x, y];
+            }
+        }
+        return result;
+    }
+
+    private static global::CodeGlyphX.BitMatrix Rotate270(global::CodeGlyphX.BitMatrix matrix) {
+        var result = new global::CodeGlyphX.BitMatrix(matrix.Height, matrix.Width);
+        for (var y = 0; y < matrix.Height; y++) {
+            for (var x = 0; x < matrix.Width; x++) {
+                result[y, matrix.Width - 1 - x] = matrix[x, y];
+            }
+        }
+        return result;
     }
 
     private static QrPixelDecodeDiagnostics Better(QrPixelDecodeDiagnostics a, QrPixelDecodeDiagnostics b) {

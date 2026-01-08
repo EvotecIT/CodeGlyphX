@@ -87,6 +87,13 @@ public static class QrDecoder {
         return QrPixelDecoder.TryDecode(pixels, width, height, stride, fmt, out result);
     }
 
+    /// <summary>
+    /// Attempts to decode all QR codes from raw pixel data (best-effort, clean inputs).
+    /// </summary>
+    public static bool TryDecodeAll(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat fmt, out QrDecoded[] results) {
+        return QrPixelDecoder.TryDecodeAll(pixels, width, height, stride, fmt, out results);
+    }
+
     internal static bool TryDecode(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat fmt, out QrDecoded result, out QrPixelDecodeDiagnostics diagnostics) {
         return QrPixelDecoder.TryDecode(pixels, width, height, stride, fmt, out result, out diagnostics);
     }
@@ -112,6 +119,23 @@ public static class QrDecoder {
         return TryDecode((ReadOnlySpan<byte>)pixels, width, height, stride, fmt, out result);
 #else
         result = null!;
+        return false;
+#endif
+    }
+
+    /// <summary>
+    /// Attempts to decode all QR codes from raw pixel data (best-effort, clean inputs).
+    /// </summary>
+    public static bool TryDecodeAll(byte[] pixels, int width, int height, int stride, PixelFormat fmt, out QrDecoded[] results) {
+        if (pixels is null) {
+            results = Array.Empty<QrDecoded>();
+            return false;
+        }
+
+#if NET8_0_OR_GREATER
+        return TryDecodeAll((ReadOnlySpan<byte>)pixels, width, height, stride, fmt, out results);
+#else
+        results = Array.Empty<QrDecoded>();
         return false;
 #endif
     }

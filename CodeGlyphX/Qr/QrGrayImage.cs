@@ -32,6 +32,66 @@ internal readonly struct QrGrayImage {
 
     public QrGrayImage WithThreshold(byte threshold) => new(Width, Height, Gray, Min, Max, threshold, null);
 
+    public QrGrayImage WithBoxBlur(int radius) {
+        if (radius <= 0) return this;
+
+        var w = Width;
+        var h = Height;
+        var stride = w + 1;
+        var integral = new int[(w + 1) * (h + 1)];
+
+        for (var y = 1; y <= h; y++) {
+            var rowSum = 0;
+            var row = (y - 1) * w;
+            var baseIdx = y * stride;
+            var prevIdx = (y - 1) * stride;
+            for (var x = 1; x <= w; x++) {
+                rowSum += Gray[row + (x - 1)];
+                integral[baseIdx + x] = integral[prevIdx + x] + rowSum;
+            }
+        }
+
+        var blurred = new byte[w * h];
+        var histogram = new int[256];
+        byte min = 255;
+        byte max = 0;
+
+        for (var y = 0; y < h; y++) {
+            var y0 = y - radius;
+            var y1 = y + radius;
+            if (y0 < 0) y0 = 0;
+            if (y1 >= h) y1 = h - 1;
+
+            var y0i = y0 * stride;
+            var y1i = (y1 + 1) * stride;
+
+            for (var x = 0; x < w; x++) {
+                var x0 = x - radius;
+                var x1 = x + radius;
+                if (x0 < 0) x0 = 0;
+                if (x1 >= w) x1 = w - 1;
+
+                var x0i = x0;
+                var x1i = x1 + 1;
+
+                var sum = integral[y1i + x1i] - integral[y0i + x1i] - integral[y1i + x0i] + integral[y0i + x0i];
+                var area = (x1 - x0 + 1) * (y1 - y0 + 1);
+                var mean = sum / area;
+                var l = (byte)mean;
+
+                var idx = y * w + x;
+                blurred[idx] = l;
+                histogram[l]++;
+
+                if (l < min) min = l;
+                if (l > max) max = l;
+            }
+        }
+
+        var threshold = ComputeOtsuThreshold(histogram, blurred.Length);
+        return new QrGrayImage(w, h, blurred, min, max, threshold, null);
+    }
+
     public QrGrayImage WithAdaptiveThreshold(int windowSize, int offset) {
         if (windowSize < 3) windowSize = 3;
         if ((windowSize & 1) == 0) windowSize++;
