@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using CodeMatrix.Rendering;
 using CodeMatrix.Rendering.Png;
 
 namespace CodeMatrix.Rendering.Html;
@@ -80,6 +81,31 @@ public static class HtmlQrRenderer {
             Eyes = opts.Eyes,
         };
         return CodeMatrix.Rendering.Svg.SvgQrRenderer.Render(modules, svg);
+    }
+
+    /// <summary>
+    /// Renders the QR module matrix to an HTML file.
+    /// </summary>
+    /// <param name="modules">QR modules.</param>
+    /// <param name="opts">Rendering options.</param>
+    /// <param name="path">Output file path.</param>
+    /// <returns>The output file path.</returns>
+    public static string RenderToFile(BitMatrix modules, QrHtmlRenderOptions opts, string path) {
+        var html = Render(modules, opts);
+        return RenderIO.WriteText(path, html);
+    }
+
+    /// <summary>
+    /// Renders the QR module matrix to an HTML file under the specified directory.
+    /// </summary>
+    /// <param name="modules">QR modules.</param>
+    /// <param name="opts">Rendering options.</param>
+    /// <param name="directory">Output directory.</param>
+    /// <param name="fileName">Output file name.</param>
+    /// <returns>The output file path.</returns>
+    public static string RenderToFile(BitMatrix modules, QrHtmlRenderOptions opts, string directory, string fileName) {
+        var html = Render(modules, opts);
+        return RenderIO.WriteText(directory, fileName, html);
     }
 
     private static bool IsDark(BitMatrix modules, int quietZone, int xOut, int yOut) {
