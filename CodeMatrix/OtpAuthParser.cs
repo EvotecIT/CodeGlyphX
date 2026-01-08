@@ -1,8 +1,8 @@
 using System;
 using System.Globalization;
-using CodeMatrix.Internal;
+using CodeGlyphX.Internal;
 
-namespace CodeMatrix;
+namespace CodeGlyphX;
 
 /// <summary>
 /// Parser for <c>otpauth://</c> URIs.

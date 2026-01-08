@@ -1,6 +1,6 @@
 using System.Text.RegularExpressions;
 
-namespace CodeMatrix.Internal;
+namespace CodeGlyphX.Internal;
 
 internal static partial class RegexCache {
 #if NET7_0_OR_GREATER

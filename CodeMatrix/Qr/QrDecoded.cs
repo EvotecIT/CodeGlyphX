@@ -1,6 +1,6 @@
 using System;
 
-namespace CodeMatrix;
+namespace CodeGlyphX;
 
 /// <summary>
 /// Result of decoding a QR code payload.

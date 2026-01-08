@@ -1,4 +1,4 @@
-namespace CodeMatrix;
+namespace CodeGlyphX;
 
 internal enum QrDecodeFailure {
     None = 0,

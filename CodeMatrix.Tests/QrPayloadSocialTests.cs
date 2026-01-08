@@ -1,7 +1,7 @@
-using CodeMatrix.Payloads;
+using CodeGlyphX.Payloads;
 using Xunit;
 
-namespace CodeMatrix.Tests;
+namespace CodeGlyphX.Tests;
 
 public sealed class QrPayloadSocialTests {
     [Fact]

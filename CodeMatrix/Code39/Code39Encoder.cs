@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using CodeMatrix.Internal;
+using CodeGlyphX.Internal;
 
-namespace CodeMatrix.Code39;
+namespace CodeGlyphX.Code39;
 
 /// <summary>
 /// Encodes Code 39 barcodes.

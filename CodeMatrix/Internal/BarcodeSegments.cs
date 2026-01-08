@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace CodeMatrix.Internal;
+namespace CodeGlyphX.Internal;
 
 internal static class BarcodeSegments {
     public static void AppendBit(List<BarSegment> segments, bool isBar) {

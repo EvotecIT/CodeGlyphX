@@ -1,5 +1,5 @@
 #if NET8_0_OR_GREATER
-namespace CodeMatrix.Qr;
+namespace CodeGlyphX.Qr;
 
 internal readonly struct QrPixelDecodeDiagnostics {
     public int Scale { get; }

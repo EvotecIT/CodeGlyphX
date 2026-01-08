@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 
-namespace CodeMatrix.Rendering.Png;
+namespace CodeGlyphX.Rendering.Png;
 
 internal static class PngWriter {
     private static readonly uint[] CrcTable = BuildCrcTable();

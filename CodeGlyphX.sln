@@ -1,19 +1,19 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.0.31903.59
+# Visual Studio Version 18
+VisualStudioVersion = 18.3.11312.210 d18.3
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeMatrix", "CodeMatrix\CodeMatrix.csproj", "{74B024D9-9640-4D3B-AA68-1BCC260AB8DC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeGlyphX", "CodeMatrix\CodeGlyphX.csproj", "{74B024D9-9640-4D3B-AA68-1BCC260AB8DC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeMatrix.Wpf", "CodeMatrix.Wpf\CodeMatrix.Wpf.csproj", "{EDB04A20-3A15-492D-AAD9-D5CD5AB77EE4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeGlyphX.Wpf", "CodeMatrix.Wpf\CodeGlyphX.Wpf.csproj", "{EDB04A20-3A15-492D-AAD9-D5CD5AB77EE4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeMatrix.Demo.Wpf", "CodeMatrix.Demo.Wpf\CodeMatrix.Demo.Wpf.csproj", "{491DF256-0CCE-4B4A-A280-C6925AF2DC21}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeGlyphX.Demo.Wpf", "CodeMatrix.Demo.Wpf\CodeGlyphX.Demo.Wpf.csproj", "{491DF256-0CCE-4B4A-A280-C6925AF2DC21}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeMatrix.ScreenScan.Wpf", "CodeMatrix.ScreenScan.Wpf\CodeMatrix.ScreenScan.Wpf.csproj", "{C6BA3F23-BBFC-4FDB-A996-666E5CCF5191}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeGlyphX.ScreenScan.Wpf", "CodeMatrix.ScreenScan.Wpf\CodeGlyphX.ScreenScan.Wpf.csproj", "{C6BA3F23-BBFC-4FDB-A996-666E5CCF5191}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeMatrix.Tests", "CodeMatrix.Tests\CodeMatrix.Tests.csproj", "{4778D193-67E1-48BE-B005-72C86DAC60FB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeGlyphX.Tests", "CodeMatrix.Tests\CodeGlyphX.Tests.csproj", "{4778D193-67E1-48BE-B005-72C86DAC60FB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeMatrix.Examples", "CodeMatrix.Examples\CodeMatrix.Examples.csproj", "{B545BD87-9474-41A8-AF44-19F9C976A989}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeGlyphX.Examples", "CodeMatrix.Examples\CodeGlyphX.Examples.csproj", "{B545BD87-9474-41A8-AF44-19F9C976A989}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -100,5 +100,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E1B2C0A4-E827-47CD-B647-2F5D5AF0C03B}
 	EndGlobalSection
 EndGlobal

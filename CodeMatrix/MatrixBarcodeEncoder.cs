@@ -1,7 +1,7 @@
 using System;
-using CodeMatrix.Kix;
+using CodeGlyphX.Kix;
 
-namespace CodeMatrix;
+namespace CodeGlyphX;
 
 /// <summary>
 /// Encodes 2D barcode symbologies into a <see cref="BitMatrix"/>.

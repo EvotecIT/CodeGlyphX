@@ -1,9 +1,9 @@
 using System;
 using System.Text;
-using CodeMatrix.Rendering;
-using CodeMatrix.Rendering.Png;
+using CodeGlyphX.Rendering;
+using CodeGlyphX.Rendering.Png;
 
-namespace CodeMatrix.Rendering.Html;
+namespace CodeGlyphX.Rendering.Html;
 
 /// <summary>
 /// Renders QR modules to HTML (table-based).
@@ -68,7 +68,7 @@ public static class HtmlQrRenderer {
             return sb.ToString();
         }
 
-        var svg = new CodeMatrix.Rendering.Svg.QrSvgRenderOptions {
+        var svg = new CodeGlyphX.Rendering.Svg.QrSvgRenderOptions {
             ModuleSize = opts.ModuleSize,
             QuietZone = opts.QuietZone,
             DarkColor = opts.DarkColor,
@@ -80,7 +80,7 @@ public static class HtmlQrRenderer {
             ForegroundGradient = opts.ForegroundGradient,
             Eyes = opts.Eyes,
         };
-        return CodeMatrix.Rendering.Svg.SvgQrRenderer.Render(modules, svg);
+        return CodeGlyphX.Rendering.Svg.SvgQrRenderer.Render(modules, svg);
     }
 
     /// <summary>

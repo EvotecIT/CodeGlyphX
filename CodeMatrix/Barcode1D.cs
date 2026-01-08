@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace CodeMatrix;
+namespace CodeGlyphX;
 
 /// <summary>
 /// A simple 1D barcode represented as an alternating sequence of bar/space segments.

@@ -1,7 +1,7 @@
-using CodeMatrix.Tests.TestHelpers;
+using CodeGlyphX.Tests.TestHelpers;
 using Xunit;
 
-namespace CodeMatrix.Tests;
+namespace CodeGlyphX.Tests;
 
 public sealed class QrGoldenVectorsTests {
     [Theory]

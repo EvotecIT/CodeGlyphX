@@ -1,7 +1,7 @@
-using CodeMatrix.Rendering.Png;
+using CodeGlyphX.Rendering.Png;
 using Xunit;
 
-namespace CodeMatrix.Tests;
+namespace CodeGlyphX.Tests;
 
 public sealed class BarcodeDecoderTests {
     [Fact]

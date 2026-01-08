@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace CodeMatrix.Code128;
+namespace CodeGlyphX.Code128;
 
 internal static class Code128Encoder {
     public static Barcode1D Encode(string value) {

@@ -1,7 +1,7 @@
 using System;
 using System.Text;
 
-namespace CodeMatrix.Rendering.Html;
+namespace CodeGlyphX.Rendering.Html;
 
 /// <summary>
 /// Renders 1D barcodes to HTML (table-based).

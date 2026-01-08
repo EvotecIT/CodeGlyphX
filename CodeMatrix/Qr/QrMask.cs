@@ -1,6 +1,6 @@
 using System;
 
-namespace CodeMatrix.Qr;
+namespace CodeGlyphX.Qr;
 
 internal static class QrMask {
     public static bool ShouldInvert(int mask, int x, int y) {

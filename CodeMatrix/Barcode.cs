@@ -1,12 +1,12 @@
 using System;
 using System.IO;
-using CodeMatrix.Rendering;
-using CodeMatrix.Rendering.Html;
-using CodeMatrix.Rendering.Jpeg;
-using CodeMatrix.Rendering.Png;
-using CodeMatrix.Rendering.Svg;
+using CodeGlyphX.Rendering;
+using CodeGlyphX.Rendering.Html;
+using CodeGlyphX.Rendering.Jpeg;
+using CodeGlyphX.Rendering.Png;
+using CodeGlyphX.Rendering.Svg;
 
-namespace CodeMatrix;
+namespace CodeGlyphX;
 
 /// <summary>
 /// Simple barcode helpers with fluent and static APIs.

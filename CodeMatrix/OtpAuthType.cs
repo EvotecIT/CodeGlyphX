@@ -1,4 +1,4 @@
-namespace CodeMatrix;
+namespace CodeGlyphX;
 
 /// <summary>
 /// OTP token type for <c>otpauth://</c> URIs.

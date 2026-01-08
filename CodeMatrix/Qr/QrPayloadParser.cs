@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using CodeMatrix;
+using CodeGlyphX;
 
-namespace CodeMatrix.Qr;
+namespace CodeGlyphX.Qr;
 
 internal readonly struct QrPayloadSegment {
     public QrTextEncoding Encoding { get; }

@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\\CodeMatrix\\CodeMatrix.csproj" />
+    <ProjectReference Include="..\CodeMatrix\CodeGlyphX.csproj" />
   </ItemGroup>
 
   <ItemGroup>

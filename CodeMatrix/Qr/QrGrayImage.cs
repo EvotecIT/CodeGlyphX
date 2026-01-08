@@ -1,7 +1,7 @@
 #if NET8_0_OR_GREATER
 using System;
 
-namespace CodeMatrix.Qr;
+namespace CodeGlyphX.Qr;
 
 internal readonly struct QrGrayImage {
     public readonly int Width;

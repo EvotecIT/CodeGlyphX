@@ -1,7 +1,7 @@
-using CodeMatrix.Rendering;
-using CodeMatrix.Rendering.Png;
+using CodeGlyphX.Rendering;
+using CodeGlyphX.Rendering.Png;
 
-namespace CodeMatrix.Rendering.Svg;
+namespace CodeGlyphX.Rendering.Svg;
 
 /// <summary>
 /// Options for <see cref="SvgQrRenderer"/>.

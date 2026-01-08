@@ -1,4 +1,4 @@
-namespace CodeMatrix.Rendering.Html;
+namespace CodeGlyphX.Rendering.Html;
 
 /// <summary>
 /// Options for <see cref="HtmlBarcodeRenderer"/>.

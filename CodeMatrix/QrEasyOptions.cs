@@ -1,6 +1,6 @@
-using CodeMatrix.Rendering.Png;
+using CodeGlyphX.Rendering.Png;
 
-namespace CodeMatrix;
+namespace CodeGlyphX;
 
 /// <summary>
 /// Simple options for QR rendering.

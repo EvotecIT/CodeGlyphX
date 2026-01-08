@@ -1,4 +1,4 @@
-namespace CodeMatrix.Pdf417;
+namespace CodeGlyphX.Pdf417;
 
 internal sealed class Pdf417BarcodeRow {
     private readonly sbyte[] _row;

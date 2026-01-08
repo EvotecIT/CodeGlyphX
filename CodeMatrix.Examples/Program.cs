@@ -1,6 +1,6 @@
 using System.Text;
 
-namespace CodeMatrix.Examples;
+namespace CodeGlyphX.Examples;
 
 internal static class Program {
     private static void Main() {

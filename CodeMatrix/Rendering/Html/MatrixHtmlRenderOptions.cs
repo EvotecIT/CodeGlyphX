@@ -1,4 +1,4 @@
-namespace CodeMatrix.Rendering.Html;
+namespace CodeGlyphX.Rendering.Html;
 
 /// <summary>
 /// Options for rendering generic 2D matrices to HTML.

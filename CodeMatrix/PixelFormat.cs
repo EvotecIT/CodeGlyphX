@@ -1,4 +1,4 @@
-namespace CodeMatrix;
+namespace CodeGlyphX;
 
 /// <summary>
 /// Supported raw pixel formats for QR decoding.

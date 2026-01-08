@@ -1,8 +1,8 @@
-using CodeMatrix;
-using CodeMatrix.Qr;
+using CodeGlyphX;
+using CodeGlyphX.Qr;
 using Xunit;
 
-namespace CodeMatrix.Tests;
+namespace CodeGlyphX.Tests;
 
 public sealed class QrPayloadParserTests {
     [Fact]

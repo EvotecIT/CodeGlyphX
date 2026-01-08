@@ -1,4 +1,4 @@
-namespace CodeMatrix;
+namespace CodeGlyphX;
 
 /// <summary>
 /// QR Code error correction level.

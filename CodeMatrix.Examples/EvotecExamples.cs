@@ -1,10 +1,10 @@
 using System;
 using System.IO;
-using CodeMatrix;
-using CodeMatrix.Payloads;
-using CodeMatrix.Rendering;
+using CodeGlyphX;
+using CodeGlyphX.Payloads;
+using CodeGlyphX.Rendering;
 
-namespace CodeMatrix.Examples;
+namespace CodeGlyphX.Examples;
 
 internal static class EvotecExamples {
     public static void Run(string outputDir) {

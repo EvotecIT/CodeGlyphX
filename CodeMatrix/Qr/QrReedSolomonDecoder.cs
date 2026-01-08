@@ -1,6 +1,6 @@
 using System;
 
-namespace CodeMatrix.Qr;
+namespace CodeGlyphX.Qr;
 
 internal static class QrReedSolomonDecoder {
     public static bool TryCorrectInPlace(byte[] codewords, int eccLen) {

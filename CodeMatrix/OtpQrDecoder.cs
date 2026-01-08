@@ -1,7 +1,7 @@
 using System;
-using CodeMatrix.Qr;
+using CodeGlyphX.Qr;
 
-namespace CodeMatrix;
+namespace CodeGlyphX;
 
 /// <summary>
 /// Convenience decoder for OTP QR payloads.

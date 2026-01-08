@@ -1,6 +1,6 @@
 using System;
 
-namespace CodeMatrix;
+namespace CodeGlyphX;
 
 /// <summary>
 /// A compact, bit-packed 2D boolean grid.

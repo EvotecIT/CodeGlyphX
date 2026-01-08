@@ -1,10 +1,10 @@
 using System;
 using System.Globalization;
 using System.Text;
-using CodeMatrix.Rendering;
-using CodeMatrix.Rendering.Png;
+using CodeGlyphX.Rendering;
+using CodeGlyphX.Rendering.Png;
 
-namespace CodeMatrix.Rendering.Svg;
+namespace CodeGlyphX.Rendering.Svg;
 
 /// <summary>
 /// Renders QR modules to SVG.
@@ -384,7 +384,7 @@ public static class SvgQrRenderer {
         sb.Append("</g>");
     }
 
-    private static string ToCssColor(CodeMatrix.Rendering.Png.Rgba32 color) {
+    private static string ToCssColor(CodeGlyphX.Rendering.Png.Rgba32 color) {
         if (color.A == 255) {
             return $"#{color.R:X2}{color.G:X2}{color.B:X2}";
         }

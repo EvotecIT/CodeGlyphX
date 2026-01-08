@@ -1,8 +1,8 @@
 using System;
 using System.Text;
-using CodeMatrix.Rendering;
+using CodeGlyphX.Rendering;
 
-namespace CodeMatrix.Rendering.Svg;
+namespace CodeGlyphX.Rendering.Svg;
 
 /// <summary>
 /// Renders 1D barcodes to SVG.

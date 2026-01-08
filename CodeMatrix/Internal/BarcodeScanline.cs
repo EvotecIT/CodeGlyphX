@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace CodeMatrix.Internal;
+namespace CodeGlyphX.Internal;
 
 internal static class BarcodeScanline {
     public static bool TryGetModules(byte[] pixels, int width, int height, int stride, PixelFormat format, out bool[] modules) {

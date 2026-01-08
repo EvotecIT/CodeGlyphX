@@ -1,6 +1,6 @@
 using System;
 
-namespace CodeMatrix;
+namespace CodeGlyphX;
 
 /// <summary>
 /// Opinionated QR presets for OTP URIs.

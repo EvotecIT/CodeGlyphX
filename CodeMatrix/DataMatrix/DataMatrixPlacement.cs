@@ -1,9 +1,15 @@
 using System;
 
-namespace CodeMatrix.DataMatrix;
+#if NET8_0_OR_GREATER
+using CodewordSpan = System.ReadOnlySpan<byte>;
+#else
+using CodewordSpan = byte[];
+#endif
+
+namespace CodeGlyphX.DataMatrix;
 
 internal static class DataMatrixPlacement {
-    public static BitMatrix PlaceCodewords(ReadOnlySpan<byte> codewords, int rows, int cols) {
+    public static BitMatrix PlaceCodewords(CodewordSpan codewords, int rows, int cols) {
         if (rows <= 0) throw new ArgumentOutOfRangeException(nameof(rows));
         if (cols <= 0) throw new ArgumentOutOfRangeException(nameof(cols));
 
@@ -145,7 +151,7 @@ internal static class DataMatrixPlacement {
         }
     }
 
-    private static void Utah(ReadOnlySpan<byte> codewords, ref int codewordIndex, int rows, int cols, BitMatrix matrix, bool[] assigned, int row, int col) {
+    private static void Utah(CodewordSpan codewords, ref int codewordIndex, int rows, int cols, BitMatrix matrix, bool[] assigned, int row, int col) {
         if (codewordIndex >= codewords.Length) return;
         var cw = codewords[codewordIndex++];
         SetModule(rows, cols, matrix, assigned, row - 2, col - 2, GetBit(cw, 0));
@@ -172,7 +178,7 @@ internal static class DataMatrixPlacement {
         codewords[codewordIndex++] = cw;
     }
 
-    private static void Corner1(ReadOnlySpan<byte> codewords, ref int codewordIndex, int rows, int cols, BitMatrix matrix, bool[] assigned) {
+    private static void Corner1(CodewordSpan codewords, ref int codewordIndex, int rows, int cols, BitMatrix matrix, bool[] assigned) {
         if (codewordIndex >= codewords.Length) return;
         var cw = codewords[codewordIndex++];
         SetModule(rows, cols, matrix, assigned, rows - 1, 0, GetBit(cw, 0));
@@ -199,7 +205,7 @@ internal static class DataMatrixPlacement {
         codewords[codewordIndex++] = cw;
     }
 
-    private static void Corner2(ReadOnlySpan<byte> codewords, ref int codewordIndex, int rows, int cols, BitMatrix matrix, bool[] assigned) {
+    private static void Corner2(CodewordSpan codewords, ref int codewordIndex, int rows, int cols, BitMatrix matrix, bool[] assigned) {
         if (codewordIndex >= codewords.Length) return;
         var cw = codewords[codewordIndex++];
         SetModule(rows, cols, matrix, assigned, rows - 3, 0, GetBit(cw, 0));
@@ -226,7 +232,7 @@ internal static class DataMatrixPlacement {
         codewords[codewordIndex++] = cw;
     }
 
-    private static void Corner3(ReadOnlySpan<byte> codewords, ref int codewordIndex, int rows, int cols, BitMatrix matrix, bool[] assigned) {
+    private static void Corner3(CodewordSpan codewords, ref int codewordIndex, int rows, int cols, BitMatrix matrix, bool[] assigned) {
         if (codewordIndex >= codewords.Length) return;
         var cw = codewords[codewordIndex++];
         SetModule(rows, cols, matrix, assigned, rows - 3, 0, GetBit(cw, 0));
@@ -253,7 +259,7 @@ internal static class DataMatrixPlacement {
         codewords[codewordIndex++] = cw;
     }
 
-    private static void Corner4(ReadOnlySpan<byte> codewords, ref int codewordIndex, int rows, int cols, BitMatrix matrix, bool[] assigned) {
+    private static void Corner4(CodewordSpan codewords, ref int codewordIndex, int rows, int cols, BitMatrix matrix, bool[] assigned) {
         if (codewordIndex >= codewords.Length) return;
         var cw = codewords[codewordIndex++];
         SetModule(rows, cols, matrix, assigned, rows - 1, 0, GetBit(cw, 0));

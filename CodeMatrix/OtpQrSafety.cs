@@ -1,7 +1,7 @@
 using System;
-using CodeMatrix.Rendering.Png;
+using CodeGlyphX.Rendering.Png;
 
-namespace CodeMatrix;
+namespace CodeGlyphX;
 
 /// <summary>
 /// Safety checks for OTP QR rendering parameters.

@@ -1,6 +1,6 @@
 using System;
 
-namespace CodeMatrix.Pdf417.Ec;
+namespace CodeGlyphX.Pdf417.Ec;
 
 internal sealed class ModulusGF {
     public static ModulusGF Pdf417 = new ModulusGF(929, 3);

@@ -1,4 +1,4 @@
-namespace CodeMatrix.Rendering.Png;
+namespace CodeGlyphX.Rendering.Png;
 
 /// <summary>
 /// Options for rendering generic 2D matrices to PNG.

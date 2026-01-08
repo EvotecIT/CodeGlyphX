@@ -1,4 +1,4 @@
-namespace CodeMatrix.Rendering.Png;
+namespace CodeGlyphX.Rendering.Png;
 
 /// <summary>
 /// A simple RGBA color value.

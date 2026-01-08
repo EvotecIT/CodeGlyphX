@@ -1,8 +1,8 @@
 using System;
 using System.IO;
-using CodeMatrix.Rendering;
+using CodeGlyphX.Rendering;
 
-namespace CodeMatrix;
+namespace CodeGlyphX;
 
 /// <summary>
 /// Simple OTP helpers with fluent and static APIs.

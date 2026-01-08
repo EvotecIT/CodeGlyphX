@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using CodeMatrix.Internal;
+using CodeGlyphX.Internal;
 
-namespace CodeMatrix.Ean;
+namespace CodeGlyphX.Ean;
 
 /// <summary>
 /// Encodes EAN-8 and EAN-13 barcodes.
@@ -22,7 +22,7 @@ public static class EanEncoder {
             checksum = c - '0';
         } else if (content.Length == 8 || content.Length == 13) {
             var c = CalcChecksum(content.Substring(0, content.Length - 1));
-            if (content[^1] != c) throw new InvalidOperationException("Checksum mismatch");
+            if (content[content.Length - 1] != c) throw new InvalidOperationException("Checksum mismatch");
             checksum = c - '0';
         }
 

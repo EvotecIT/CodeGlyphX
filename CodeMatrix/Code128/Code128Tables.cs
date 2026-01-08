@@ -1,6 +1,6 @@
 using System;
 
-namespace CodeMatrix.Code128;
+namespace CodeGlyphX.Code128;
 
 internal static class Code128Tables {
     public const int StartB = 104;

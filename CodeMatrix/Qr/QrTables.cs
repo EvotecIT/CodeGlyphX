@@ -1,6 +1,6 @@
 using System;
 
-namespace CodeMatrix.Qr;
+namespace CodeGlyphX.Qr;
 
 internal static class QrTables {
     private const int TableStride = 41; // [eccIndex, version] with version 0 as padding

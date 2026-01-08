@@ -1,8 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net472;net8.0;net10.0</TargetFrameworks>
-    <Title>CodeMatrix</Title>
-    <PackageId>CodeMatrix</PackageId>
+    <Title>CodeGlyphX</Title>
+    <PackageId>CodeGlyphX</PackageId>
     <Description>No-deps QR (encode/decode), Code 128 encoder, and renderers (SVG/HTML/PNG), plus OTP (otpauth) helpers.</Description>
     <RepositoryUrl>https://github.com/</RepositoryUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>

@@ -1,6 +1,6 @@
 using System;
 
-namespace CodeMatrix;
+namespace CodeGlyphX;
 
 /// <summary>
 /// Validation helpers for <c>otpauth://</c> payloads.

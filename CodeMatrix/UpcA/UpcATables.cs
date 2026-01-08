@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace CodeMatrix.UpcA;
+namespace CodeGlyphX.UpcA;
 
 internal static class UpcATables {
     public readonly struct EncodedNumber {

@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 
-namespace CodeMatrix.ScreenScan.Wpf;
+namespace CodeGlyphX.ScreenScan.Wpf;
 
 internal static class ScreenRegionPicker {
     public static bool TryPick(out Rectangle region) {

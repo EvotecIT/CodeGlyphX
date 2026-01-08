@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
-using CodeMatrix.Internal;
+using CodeGlyphX.Internal;
 
-namespace CodeMatrix.Payloads;
+namespace CodeGlyphX.Payloads;
 
 /// <summary>
 /// Helpers for building common QR payload strings (URLs, Wi‑Fi, vCard, and basic URI schemes).

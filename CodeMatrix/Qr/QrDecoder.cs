@@ -1,9 +1,9 @@
 using System;
 using System.Text;
-using CodeMatrix.Internal;
-using CodeMatrix.Qr;
+using CodeGlyphX.Internal;
+using CodeGlyphX.Qr;
 
-namespace CodeMatrix;
+namespace CodeGlyphX;
 
 /// <summary>
 /// Decodes QR codes from a module grid or from raw pixels (clean images).

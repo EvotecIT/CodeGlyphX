@@ -1,12 +1,12 @@
 using System;
 using System.IO;
 using System.Windows;
-using CodeMatrix.Rendering.Html;
-using CodeMatrix.Rendering.Png;
-using CodeMatrix.Rendering.Svg;
+using CodeGlyphX.Rendering.Html;
+using CodeGlyphX.Rendering.Png;
+using CodeGlyphX.Rendering.Svg;
 using Microsoft.Win32;
 
-namespace CodeMatrix.Demo.Wpf;
+namespace CodeGlyphX.Demo.Wpf;
 
 public partial class MainWindow : Window {
     public MainWindow() {

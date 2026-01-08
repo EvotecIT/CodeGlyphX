@@ -1,7 +1,7 @@
-﻿<Application x:Class="CodeMatrix.Demo.Wpf.App"
+﻿<Application x:Class="CodeGlyphX.Demo.Wpf.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:CodeMatrix.Demo.Wpf"
+             xmlns:local="clr-namespace:CodeGlyphX.Demo.Wpf"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
          

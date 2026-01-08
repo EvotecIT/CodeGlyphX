@@ -1,8 +1,8 @@
 using System;
 using System.IO;
-using CodeMatrix.Rendering.Png;
+using CodeGlyphX.Rendering.Png;
 
-namespace CodeMatrix.Rendering;
+namespace CodeGlyphX.Rendering;
 
 /// <summary>
 /// Options for embedding a PNG logo inside a QR render (SVG/HTML).

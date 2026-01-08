@@ -7,12 +7,12 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
-using CodeMatrix.Qr;
+using CodeGlyphX.Qr;
 using Screen = System.Windows.Forms.Screen;
 using WpfClipboard = System.Windows.Clipboard;
 using WpfMessageBox = System.Windows.MessageBox;
 
-namespace CodeMatrix.ScreenScan.Wpf;
+namespace CodeGlyphX.ScreenScan.Wpf;
 
 public partial class MainWindow : Window {
     private readonly object _captureLock = new();

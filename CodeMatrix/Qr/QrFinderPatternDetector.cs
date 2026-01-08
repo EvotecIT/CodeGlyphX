@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace CodeMatrix.Qr;
+namespace CodeGlyphX.Qr;
 
 internal static class QrFinderPatternDetector {
     internal readonly struct FinderPattern {

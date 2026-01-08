@@ -1,4 +1,4 @@
-namespace CodeMatrix.Pdf417.Ec;
+namespace CodeGlyphX.Pdf417.Ec;
 
 internal sealed class ErrorCorrection {
     private readonly ModulusGF _field;

@@ -1,5 +1,5 @@
 using System;
-namespace CodeMatrix.Payloads;
+namespace CodeGlyphX.Payloads;
 
 /// <summary>
 /// QR payload with optional encoding/version defaults.

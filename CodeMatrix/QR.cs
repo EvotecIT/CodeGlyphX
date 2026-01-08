@@ -1,10 +1,10 @@
 using System;
 using System.IO;
-using CodeMatrix.Payloads;
-using CodeMatrix.Rendering;
-using CodeMatrix.Rendering.Png;
+using CodeGlyphX.Payloads;
+using CodeGlyphX.Rendering;
+using CodeGlyphX.Rendering.Png;
 
-namespace CodeMatrix;
+namespace CodeGlyphX;
 
 /// <summary>
 /// Simple QR helpers with fluent and static APIs.

@@ -1,10 +1,10 @@
 using System.IO;
-using CodeMatrix;
-using CodeMatrix.Payloads;
-using CodeMatrix.Rendering;
-using CodeMatrix.Rendering.Png;
+using CodeGlyphX;
+using CodeGlyphX.Payloads;
+using CodeGlyphX.Rendering;
+using CodeGlyphX.Rendering.Png;
 
-namespace CodeMatrix.Examples;
+namespace CodeGlyphX.Examples;
 
 internal static class QrFancyExample {
     public static void Run(string outputDir) {

@@ -1,6 +1,6 @@
 using System;
 
-namespace CodeMatrix;
+namespace CodeGlyphX;
 
 /// <summary>
 /// Result of decoding a 1D barcode payload.

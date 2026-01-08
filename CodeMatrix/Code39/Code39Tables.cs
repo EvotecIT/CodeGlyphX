@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace CodeMatrix.Code39;
+namespace CodeGlyphX.Code39;
 
 internal static class Code39Tables {
     public static readonly IReadOnlyDictionary<char, (int value, bool[] data)> EncodingTable = new Dictionary<char, (int, bool[])> {

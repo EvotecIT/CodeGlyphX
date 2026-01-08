@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using CodeGlyphX.Internal;
 
-namespace CodeMatrix.DataMatrix;
+namespace CodeGlyphX.DataMatrix;
 
 /// <summary>
 /// Encodes Data Matrix (ECC200) symbols.
@@ -20,7 +21,7 @@ public static class DataMatrixEncoder {
 
         if (mode == DataMatrixEncodingMode.Ascii) {
             if (!CanEncodeLatin1(text)) throw new ArgumentException("Text contains characters outside Latin-1.", nameof(text));
-            var bytes = Encoding.Latin1.GetBytes(text);
+            var bytes = EncodingUtils.Latin1.GetBytes(text);
             return EncodeBytes(bytes, DataMatrixEncodingMode.Ascii);
         }
 
@@ -33,7 +34,7 @@ public static class DataMatrixEncoder {
     /// </summary>
     public static BitMatrix EncodeBytes(byte[] data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto) {
         if (data is null) throw new ArgumentNullException(nameof(data));
-        return EncodeBytes((ReadOnlySpan<byte>)data, mode);
+        return EncodeBytesCore(data, mode);
     }
 
 #if NET8_0_OR_GREATER
@@ -41,6 +42,12 @@ public static class DataMatrixEncoder {
     /// Encodes raw bytes into a Data Matrix symbol.
     /// </summary>
     public static BitMatrix EncodeBytes(ReadOnlySpan<byte> data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto) {
+        return EncodeBytesCore(data, mode);
+    }
+#endif
+
+#if NET8_0_OR_GREATER
+    private static BitMatrix EncodeBytesCore(ReadOnlySpan<byte> data, DataMatrixEncodingMode mode) {
         if (mode == DataMatrixEncodingMode.Auto) {
             mode = DataMatrixEncodingMode.Base256;
         }
@@ -62,14 +69,30 @@ public static class DataMatrixEncoder {
         return BuildSymbol(dataRegion, symbol);
     }
 #else
-    /// <summary>
-    /// Encodes raw bytes into a Data Matrix symbol.
-    /// </summary>
-    public static BitMatrix EncodeBytes(ReadOnlySpan<byte> data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto) {
-        return EncodeBytes(data.ToArray(), mode);
+    private static BitMatrix EncodeBytesCore(byte[] data, DataMatrixEncodingMode mode) {
+        if (mode == DataMatrixEncodingMode.Auto) {
+            mode = DataMatrixEncodingMode.Base256;
+        }
+
+        var codewords = mode switch {
+            DataMatrixEncodingMode.Ascii => EncodeAscii(data),
+            DataMatrixEncodingMode.Base256 => EncodeBase256(data),
+            _ => throw new ArgumentOutOfRangeException(nameof(mode), mode, "Unsupported Data Matrix encoding mode.")
+        };
+
+        if (!DataMatrixSymbolInfo.TryGetForData(codewords.Count, out var symbol)) {
+            throw new ArgumentException("Data too long for supported Data Matrix symbols.", nameof(data));
+        }
+
+        PadCodewords(codewords, symbol.DataCodewords);
+        var fullCodewords = AddErrorCorrection(codewords, symbol);
+
+        var dataRegion = DataMatrixPlacement.PlaceCodewords(fullCodewords, symbol.DataRegionRows, symbol.DataRegionCols);
+        return BuildSymbol(dataRegion, symbol);
     }
 #endif
 
+#if NET8_0_OR_GREATER
     private static List<byte> EncodeAscii(ReadOnlySpan<byte> data) {
         var codewords = new List<byte>(data.Length + 8);
         for (var i = 0; i < data.Length; i++) {
@@ -112,6 +135,50 @@ public static class DataMatrixEncoder {
 
         return codewords;
     }
+#else
+    private static List<byte> EncodeAscii(byte[] data) {
+        var codewords = new List<byte>(data.Length + 8);
+        for (var i = 0; i < data.Length; i++) {
+            var b = data[i];
+            if (i + 1 < data.Length && IsDigit(b) && IsDigit(data[i + 1])) {
+                var val = (b - (byte)'0') * 10 + (data[i + 1] - (byte)'0');
+                codewords.Add((byte)(130 + val));
+                i++;
+            } else if (b <= 127) {
+                codewords.Add((byte)(b + 1));
+            } else {
+                codewords.Add(235);
+                codewords.Add((byte)(b - 127));
+            }
+        }
+        return codewords;
+    }
+
+    private static List<byte> EncodeBase256(byte[] data) {
+        var codewords = new List<byte>(data.Length + 4) { 231 };
+        if (data.Length <= 249) {
+            codewords.Add((byte)data.Length);
+        } else {
+            var full = data.Length;
+            var high = (full / 250) + 249;
+            var low = full % 250;
+            codewords.Add((byte)high);
+            codewords.Add((byte)low);
+        }
+
+        for (var i = 0; i < data.Length; i++) {
+            codewords.Add(data[i]);
+        }
+
+        // Randomize length + data codewords (skip 231 switch).
+        for (var i = 1; i < codewords.Count; i++) {
+            var position = i + 1; // 1-based position in codeword stream
+            codewords[i] = Randomize255(codewords[i], position);
+        }
+
+        return codewords;
+    }
+#endif
 
     private static void PadCodewords(List<byte> codewords, int capacity) {
         if (codewords.Count >= capacity) return;

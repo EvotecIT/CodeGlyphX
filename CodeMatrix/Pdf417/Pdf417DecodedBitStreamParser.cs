@@ -2,8 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
+using CodeGlyphX.Internal;
 
-namespace CodeMatrix.Pdf417;
+namespace CodeGlyphX.Pdf417;
 
 internal static class Pdf417DecodedBitStreamParser {
     private enum Mode {
@@ -357,7 +358,7 @@ internal static class Pdf417DecodedBitStreamParser {
             var utf8 = new UTF8Encoding(false, true);
             return utf8.GetString(bytes);
         } catch (DecoderFallbackException) {
-            return Encoding.Latin1.GetString(bytes);
+            return EncodingUtils.Latin1.GetString(bytes);
         }
     }
 

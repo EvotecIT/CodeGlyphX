@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 
-namespace CodeMatrix.Rendering.Jpeg;
+namespace CodeGlyphX.Rendering.Jpeg;
 
 internal static class JpegWriter {
     private static readonly byte[] ZigZag = {

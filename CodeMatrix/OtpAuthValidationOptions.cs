@@ -1,4 +1,4 @@
-namespace CodeMatrix;
+namespace CodeGlyphX;
 
 /// <summary>
 /// Validation options for <c>otpauth://</c> payloads.

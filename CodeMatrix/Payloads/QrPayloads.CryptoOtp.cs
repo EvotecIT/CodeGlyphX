@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 
-namespace CodeMatrix.Payloads;
+namespace CodeGlyphX.Payloads;
 
 public static partial class QrPayloads {
     /// <summary>

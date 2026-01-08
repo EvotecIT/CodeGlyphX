@@ -1,4 +1,4 @@
-namespace CodeMatrix;
+namespace CodeGlyphX;
 
 /// <summary>
 /// Style presets for easy QR rendering.

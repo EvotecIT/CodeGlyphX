@@ -1,9 +1,9 @@
-using CodeMatrix;
-using CodeMatrix.Rendering.Png;
-using CodeMatrix.Tests.TestHelpers;
+using CodeGlyphX;
+using CodeGlyphX.Rendering.Png;
+using CodeGlyphX.Tests.TestHelpers;
 using Xunit;
 
-namespace CodeMatrix.Tests;
+namespace CodeGlyphX.Tests;
 
 public sealed class QrPngRendererTests {
     [Fact]

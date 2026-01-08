@@ -1,4 +1,4 @@
-namespace CodeMatrix.Pdf417;
+namespace CodeGlyphX.Pdf417;
 
 internal sealed class Pdf417BarcodeMatrix {
     internal const int ColumnWidth = 17;

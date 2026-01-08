@@ -1,4 +1,4 @@
-namespace CodeMatrix;
+namespace CodeGlyphX;
 
 /// <summary>
 /// Hash algorithm identifiers used in <c>otpauth://</c> URIs.

@@ -1,4 +1,4 @@
-namespace CodeMatrix.Pdf417;
+namespace CodeGlyphX.Pdf417;
 
 /// <summary>
 /// High-level compaction mode selection for PDF417.

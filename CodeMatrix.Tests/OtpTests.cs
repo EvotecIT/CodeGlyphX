@@ -1,10 +1,10 @@
 using System;
 using System.Text;
-using CodeMatrix.Rendering.Png;
-using CodeMatrix.Tests.TestHelpers;
+using CodeGlyphX.Rendering.Png;
+using CodeGlyphX.Tests.TestHelpers;
 using Xunit;
 
-namespace CodeMatrix.Tests;
+namespace CodeGlyphX.Tests;
 
 public sealed class OtpTests {
     [Fact]
@@ -79,8 +79,8 @@ public sealed class OtpTests {
         var opts = OtpQrPreset.CreatePngRenderOptions(
             moduleSize: 2,
             quietZone: 2,
-            foreground: new CodeMatrix.Rendering.Png.Rgba32(200, 200, 200),
-            background: new CodeMatrix.Rendering.Png.Rgba32(255, 255, 255));
+            foreground: new CodeGlyphX.Rendering.Png.Rgba32(200, 200, 200),
+            background: new CodeGlyphX.Rendering.Png.Rgba32(255, 255, 255));
 
         var report = OtpQrSafety.Evaluate(qr, opts);
         Assert.False(report.IsOtpSafe);

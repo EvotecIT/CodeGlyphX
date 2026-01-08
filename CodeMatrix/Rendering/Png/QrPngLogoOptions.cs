@@ -1,8 +1,8 @@
 using System;
 using System.IO;
-using CodeMatrix;
+using CodeGlyphX;
 
-namespace CodeMatrix.Rendering.Png;
+namespace CodeGlyphX.Rendering.Png;
 
 /// <summary>
 /// Options and pixel data for a centered logo overlay in a QR PNG.

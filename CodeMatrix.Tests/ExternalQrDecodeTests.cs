@@ -1,11 +1,11 @@
 using Xunit;
 
-namespace CodeMatrix.Tests;
+namespace CodeGlyphX.Tests;
 
 public sealed class ExternalQrDecodeTests {
     private const string Payload = "otpauth://totp/Example:alice@foo.com?secret=JBSWY3DPEHPK3PXP&issuer=Example&algorithm=SHA1&digits=6&period=30";
 
-    // Generated with an external QR generator (Segno), not CodeMatrix.
+    // Generated with an external QR generator (Segno), not CodeGlyphX.
     private static readonly string[] Modules45 = {
         "111111100101111011111010011000101000101111111",
         "100000100010010111000110001111100101001000001",

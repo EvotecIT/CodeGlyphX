@@ -1,8 +1,8 @@
 using System;
 using System.IO;
-using CodeMatrix.Rendering;
+using CodeGlyphX.Rendering;
 
-namespace CodeMatrix.Rendering.Png;
+namespace CodeGlyphX.Rendering.Png;
 
 /// <summary>
 /// Renders generic 2D matrices to PNG images (RGBA8).

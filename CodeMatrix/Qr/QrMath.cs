@@ -1,5 +1,5 @@
 #if NET8_0_OR_GREATER
-namespace CodeMatrix.Qr;
+namespace CodeGlyphX.Qr;
 
 internal static class QrMath {
     public static int RoundToInt(double value) {

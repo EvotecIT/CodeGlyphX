@@ -1,9 +1,9 @@
-using CodeMatrix;
-using CodeMatrix.Qr;
-using CodeMatrix.Rendering.Png;
+using CodeGlyphX;
+using CodeGlyphX.Qr;
+using CodeGlyphX.Rendering.Png;
 using Xunit;
 
-namespace CodeMatrix.Tests;
+namespace CodeGlyphX.Tests;
 
 public sealed class QrPixelRobustnessTests {
     [Fact]

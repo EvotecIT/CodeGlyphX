@@ -1,7 +1,7 @@
 using System;
 using System.Text;
 
-namespace CodeMatrix.Pdf417.Ec;
+namespace CodeGlyphX.Pdf417.Ec;
 
 internal sealed class ModulusPoly {
     private readonly ModulusGF _field;

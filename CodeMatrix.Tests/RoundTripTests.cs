@@ -1,9 +1,9 @@
-using CodeMatrix.Rendering.Png;
-using CodeMatrix.Qr;
-using CodeMatrix.Tests.TestHelpers;
+using CodeGlyphX.Rendering.Png;
+using CodeGlyphX.Qr;
+using CodeGlyphX.Tests.TestHelpers;
 using Xunit;
 
-namespace CodeMatrix.Tests;
+namespace CodeGlyphX.Tests;
 
 public sealed class RoundTripTests {
     [Fact]

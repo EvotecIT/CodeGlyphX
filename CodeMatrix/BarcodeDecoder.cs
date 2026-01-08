@@ -1,15 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using CodeMatrix.Code128;
-using CodeMatrix.Code39;
-using CodeMatrix.Code93;
-using CodeMatrix.Ean;
-using CodeMatrix.Internal;
-using CodeMatrix.UpcA;
-using CodeMatrix.UpcE;
+using CodeGlyphX.Code128;
+using CodeGlyphX.Code39;
+using CodeGlyphX.Code93;
+using CodeGlyphX.Ean;
+using CodeGlyphX.Internal;
+using CodeGlyphX.UpcA;
+using CodeGlyphX.UpcE;
 
-namespace CodeMatrix;
+namespace CodeGlyphX;
 
 /// <summary>
 /// Best-effort 1D barcode decoder (scanline-based).
@@ -176,14 +176,14 @@ public static class BarcodeDecoder {
         }
 
         if (chars.Count < 2) return false;
-        if (chars[0] != '*' || chars[^1] != '*') return false;
+        if (chars[0] != '*' || chars[chars.Count - 1] != '*') return false;
         chars.RemoveAt(0);
         chars.RemoveAt(chars.Count - 1);
 
         var raw = new string(chars.ToArray());
         if (raw.Length >= 2) {
             var expected = GetCode39ChecksumChar(raw.Substring(0, raw.Length - 1));
-            if (raw[^1] == expected) {
+            if (raw[raw.Length - 1] == expected) {
                 raw = raw.Substring(0, raw.Length - 1);
             }
         }
@@ -195,7 +195,7 @@ public static class BarcodeDecoder {
     private static bool TryDecodeCode93(bool[] modules, out string text) {
         text = string.Empty;
         if (modules.Length < 10) return false;
-        if (!modules[^1]) return false;
+        if (!modules[modules.Length - 1]) return false;
 
         var dataLen = modules.Length - 1;
         if (dataLen % 9 != 0) return false;
@@ -209,12 +209,12 @@ public static class BarcodeDecoder {
             chars[i] = ch;
         }
 
-        if (chars[0] != '*' || chars[^1] != '*') return false;
+        if (chars[0] != '*' || chars[chars.Length - 1] != '*') return false;
         var raw = new string(chars, 1, chars.Length - 2);
         if (raw.Length >= 2) {
             var c = GetCode93Checksum(raw.Substring(0, raw.Length - 2), 20);
             var k = GetCode93Checksum(raw.Substring(0, raw.Length - 1), 15);
-            if (raw[^2] == c && raw[^1] == k) {
+            if (raw[raw.Length - 2] == c && raw[raw.Length - 1] == k) {
                 raw = raw.Substring(0, raw.Length - 2);
             }
         }
@@ -250,7 +250,7 @@ public static class BarcodeDecoder {
 
         if (codes.Count < 3) return false;
 
-        var checksum = codes[^1];
+        var checksum = codes[codes.Count - 1];
         var sum = codes[0];
         for (var i = 1; i < codes.Count - 1; i++) sum = (sum + codes[i] * i) % 103;
         if (sum != checksum) return false;
@@ -471,7 +471,7 @@ public static class BarcodeDecoder {
 
     private static bool IsValidEanChecksum(string value) {
         if (value.Length != 8 && value.Length != 13) return false;
-        var expected = value[^1];
+        var expected = value[value.Length - 1];
         var actual = CalcEanChecksum(value.Substring(0, value.Length - 1));
         return expected == actual;
     }
@@ -490,7 +490,7 @@ public static class BarcodeDecoder {
 
     private static bool IsValidUpcAChecksum(string value) {
         if (value.Length != 12) return false;
-        var expected = value[^1];
+        var expected = value[value.Length - 1];
         var actual = CalcUpcAChecksum(value.Substring(0, 11));
         return expected == actual;
     }

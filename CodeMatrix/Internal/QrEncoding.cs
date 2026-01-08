@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace CodeMatrix.Internal;
+namespace CodeGlyphX.Internal;
 
 internal static class QrEncoding {
     public static bool TryGetEciAssignment(QrTextEncoding encoding, out int assignmentNumber) {

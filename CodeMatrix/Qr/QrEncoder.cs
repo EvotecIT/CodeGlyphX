@@ -1,9 +1,9 @@
 using System;
 
-namespace CodeMatrix.Qr;
+namespace CodeGlyphX.Qr;
 
 internal static class QrEncoder {
-    public static CodeMatrix.QrCode EncodeByteMode(byte[] data, QrErrorCorrectionLevel ecc, int minVersion, int maxVersion, int? forceMask, int? eciAssignmentNumber = null) {
+    public static CodeGlyphX.QrCode EncodeByteMode(byte[] data, QrErrorCorrectionLevel ecc, int minVersion, int maxVersion, int? forceMask, int? eciAssignmentNumber = null) {
         if (data is null) throw new ArgumentNullException(nameof(data));
         if (minVersion is < 1 or > 40) throw new ArgumentOutOfRangeException(nameof(minVersion));
         if (maxVersion is < 1 or > 40) throw new ArgumentOutOfRangeException(nameof(maxVersion));
@@ -53,7 +53,7 @@ internal static class QrEncoder {
         }
 
         if (bestModules is null) throw new InvalidOperationException("Failed to choose mask.");
-        return new CodeMatrix.QrCode(version, ecc, bestMask, bestModules);
+        return new CodeGlyphX.QrCode(version, ecc, bestMask, bestModules);
     }
 
     private static byte[] EncodeByteModeData(byte[] data, int version, QrErrorCorrectionLevel ecc, int? eciAssignmentNumber) {

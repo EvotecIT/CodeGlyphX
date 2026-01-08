@@ -1,4 +1,4 @@
-namespace CodeMatrix.Pdf417;
+namespace CodeGlyphX.Pdf417;
 
 /// <summary>
 /// Options for PDF417 encoding.

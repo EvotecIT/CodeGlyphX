@@ -1,8 +1,8 @@
 using System;
 using System.Globalization;
-using CodeMatrix.Internal;
+using CodeGlyphX.Internal;
 
-namespace CodeMatrix.Payloads;
+namespace CodeGlyphX.Payloads;
 
 internal static class QrPayloadValidation {
     public static bool IsValidIban(string iban) {

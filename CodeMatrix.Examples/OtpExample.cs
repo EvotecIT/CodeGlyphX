@@ -1,15 +1,15 @@
 using System.IO;
 using System.Text;
-using CodeMatrix;
-using CodeMatrix.Rendering;
-using CodeMatrix.Rendering.Png;
+using CodeGlyphX;
+using CodeGlyphX.Rendering;
+using CodeGlyphX.Rendering.Png;
 
-namespace CodeMatrix.Examples;
+namespace CodeGlyphX.Examples;
 
 internal static class OtpExample {
     public static void Run(string outputDir) {
-        var totp = Otp.Totp("CodeMatrix", "alice@example.com", "JBSWY3DPEHPK3PXP");
-        var hotp = Otp.Hotp("CodeMatrix", "alice@example.com", "JBSWY3DPEHPK3PXP", counter: 42);
+        var totp = Otp.Totp("CodeGlyphX", "alice@example.com", "JBSWY3DPEHPK3PXP");
+        var hotp = Otp.Hotp("CodeGlyphX", "alice@example.com", "JBSWY3DPEHPK3PXP", counter: 42);
 
         totp.SavePng(Path.Combine(outputDir, "otp-totp.png"));
         hotp.SavePng(Path.Combine(outputDir, "otp-hotp.png"));

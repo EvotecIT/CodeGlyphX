@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace CodeMatrix.Pdf417;
+namespace CodeGlyphX.Pdf417;
 
 internal static class Pdf417ErrorCorrection {
     private static readonly int[][] EcCoefficients = {

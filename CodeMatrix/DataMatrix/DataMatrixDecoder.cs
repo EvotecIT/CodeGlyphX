@@ -1,8 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using CodeGlyphX.Internal;
 
-namespace CodeMatrix.DataMatrix;
+#if NET8_0_OR_GREATER
+using PixelSpan = System.ReadOnlySpan<byte>;
+#else
+using PixelSpan = byte[];
+#endif
+
+namespace CodeGlyphX.DataMatrix;
 
 /// <summary>
 /// Decodes Data Matrix (ECC200) symbols.
@@ -29,10 +36,24 @@ public static class DataMatrixDecoder {
         return true;
     }
 
+#if NET8_0_OR_GREATER
     /// <summary>
     /// Attempts to decode a Data Matrix symbol from pixels.
     /// </summary>
     public static bool TryDecode(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat format, out string value) {
+        return TryDecodePixels(pixels, width, height, stride, format, out value);
+    }
+#endif
+
+    /// <summary>
+    /// Attempts to decode a Data Matrix symbol from pixels.
+    /// </summary>
+    public static bool TryDecode(byte[] pixels, int width, int height, int stride, PixelFormat format, out string value) {
+        if (pixels is null) throw new ArgumentNullException(nameof(pixels));
+        return TryDecodePixels(pixels, width, height, stride, format, out value);
+    }
+
+    private static bool TryDecodePixels(PixelSpan pixels, int width, int height, int stride, PixelFormat format, out string value) {
         if (TryExtractModules(pixels, width, height, stride, format, out var modules)) {
             if (TryDecode(modules, out value)) return true;
             if (TryDecode(Rotate90(modules), out value)) return true;
@@ -41,14 +62,6 @@ public static class DataMatrixDecoder {
         }
         value = string.Empty;
         return false;
-    }
-
-    /// <summary>
-    /// Attempts to decode a Data Matrix symbol from pixels.
-    /// </summary>
-    public static bool TryDecode(byte[] pixels, int width, int height, int stride, PixelFormat format, out string value) {
-        if (pixels is null) throw new ArgumentNullException(nameof(pixels));
-        return TryDecode((ReadOnlySpan<byte>)pixels, width, height, stride, format, out value);
     }
 
     private static BitMatrix ExtractDataRegion(BitMatrix modules, DataMatrixSymbolInfo symbol) {
@@ -127,7 +140,7 @@ public static class DataMatrixDecoder {
         return false;
     }
 
-    private static string DecodeAscii(ReadOnlySpan<byte> data) {
+    private static string DecodeAscii(PixelSpan data) {
         var sb = new StringBuilder(data.Length);
         var base256Bytes = new List<byte>();
 
@@ -186,7 +199,7 @@ public static class DataMatrixDecoder {
             var utf8 = new UTF8Encoding(false, true);
             return utf8.GetString(bytes.ToArray());
         } catch (DecoderFallbackException) {
-            return Encoding.Latin1.GetString(bytes.ToArray());
+            return EncodingUtils.Latin1.GetString(bytes.ToArray());
         }
     }
 
@@ -197,7 +210,13 @@ public static class DataMatrixDecoder {
         return temp;
     }
 
-    private static bool TryExtractModules(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat format, out BitMatrix modules) {
+    private static int Clamp(int value, int min, int max) {
+        if (value < min) return min;
+        if (value > max) return max;
+        return value;
+    }
+
+    private static bool TryExtractModules(PixelSpan pixels, int width, int height, int stride, PixelFormat format, out BitMatrix modules) {
         modules = null!;
         if (width <= 0 || height <= 0 || stride <= 0) return false;
 
@@ -221,10 +240,10 @@ public static class DataMatrixDecoder {
         var half = moduleSize / 2.0;
         for (var y = 0; y < rows; y++) {
             var sy = (int)Math.Round(box.Top + (y * moduleSize) + half);
-            sy = Math.Clamp(sy, 0, height - 1);
+            sy = Clamp(sy, 0, height - 1);
             for (var x = 0; x < cols; x++) {
                 var sx = (int)Math.Round(box.Left + (x * moduleSize) + half);
-                sx = Math.Clamp(sx, 0, width - 1);
+                sx = Clamp(sx, 0, width - 1);
                 var dark = IsDark(pixels, width, height, stride, format, sx, sy);
                 modules[x, y] = invert ? !dark : dark;
             }
@@ -233,7 +252,7 @@ public static class DataMatrixDecoder {
         return true;
     }
 
-    private static bool TryEstimateModuleSize(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat format, BoundingBox box, bool invert, out int moduleSize) {
+    private static bool TryEstimateModuleSize(PixelSpan pixels, int width, int height, int stride, PixelFormat format, BoundingBox box, bool invert, out int moduleSize) {
         moduleSize = 0;
 
         var midY = box.Top + box.Height / 2;
@@ -250,7 +269,7 @@ public static class DataMatrixDecoder {
         return moduleSize > 0;
     }
 
-    private static bool TryFindMinRun(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat format, int start, int end, int fixedPos, bool horizontal, bool invert, out int minRun) {
+    private static bool TryFindMinRun(PixelSpan pixels, int width, int height, int stride, PixelFormat format, int start, int end, int fixedPos, bool horizontal, bool invert, out int minRun) {
         minRun = int.MaxValue;
 
         var prev = false;
@@ -285,7 +304,7 @@ public static class DataMatrixDecoder {
         return true;
     }
 
-    private static bool TryFindBoundingBox(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat format, bool invert, out BoundingBox box) {
+    private static bool TryFindBoundingBox(PixelSpan pixels, int width, int height, int stride, PixelFormat format, bool invert, out BoundingBox box) {
         var left = width;
         var right = -1;
         var top = height;
@@ -314,13 +333,13 @@ public static class DataMatrixDecoder {
         return true;
     }
 
-    private static bool IsDark(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat format, int x, int y) {
+    private static bool IsDark(PixelSpan pixels, int width, int height, int stride, PixelFormat format, int x, int y) {
         if ((uint)x >= (uint)width || (uint)y >= (uint)height) return false;
         var row = y * stride;
         return IsDarkAt(pixels, row, x, format);
     }
 
-    private static bool IsDarkAt(ReadOnlySpan<byte> pixels, int row, int x, PixelFormat format) {
+    private static bool IsDarkAt(PixelSpan pixels, int row, int x, PixelFormat format) {
         var p = row + x * 4;
         byte r;
         byte g;

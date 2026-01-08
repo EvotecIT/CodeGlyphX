@@ -1,7 +1,7 @@
 using System;
-using CodeMatrix.Rendering.Png;
+using CodeGlyphX.Rendering.Png;
 
-namespace CodeMatrix.Rendering;
+namespace CodeGlyphX.Rendering;
 
 /// <summary>
 /// Helpers for building simple logo pixels.

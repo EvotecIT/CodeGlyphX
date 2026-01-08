@@ -1,6 +1,6 @@
 using Xunit;
 
-namespace CodeMatrix.Tests;
+namespace CodeGlyphX.Tests;
 
 public sealed class Barcode2DTests {
     [Fact]

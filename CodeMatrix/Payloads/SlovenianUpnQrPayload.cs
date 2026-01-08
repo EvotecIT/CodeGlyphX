@@ -2,7 +2,7 @@ using System;
 using System.Globalization;
 using System.Text;
 
-namespace CodeMatrix.Payloads;
+namespace CodeGlyphX.Payloads;
 
 /// <summary>
 /// Slovenian UPN QR payment payload.

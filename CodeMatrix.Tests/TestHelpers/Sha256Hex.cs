@@ -1,6 +1,6 @@
 using System.Security.Cryptography;
 
-namespace CodeMatrix.Tests.TestHelpers;
+namespace CodeGlyphX.Tests.TestHelpers;
 
 internal static class Sha256Hex {
     public static string HashHex(byte[] bytes) {

@@ -1,4 +1,4 @@
-namespace CodeMatrix.Rendering.Svg;
+namespace CodeGlyphX.Rendering.Svg;
 
 /// <summary>
 /// Options for <see cref="SvgBarcodeRenderer"/>.

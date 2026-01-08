@@ -2,7 +2,7 @@ using System;
 using System.Windows;
 using System.Windows.Media.Imaging;
 
-namespace CodeMatrix.Wpf.Rendering;
+namespace CodeGlyphX.Wpf.Rendering;
 
 internal static class WpfBitmapRenderer {
     public static WriteableBitmap RenderQr(BitMatrix modules, int moduleSize, int quietZone, uint fgBgra, uint bgBgra) {

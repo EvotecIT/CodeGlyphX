@@ -1,8 +1,8 @@
-using CodeMatrix.Pdf417;
-using CodeMatrix.Rendering.Png;
+using CodeGlyphX.Pdf417;
+using CodeGlyphX.Rendering.Png;
 using Xunit;
 
-namespace CodeMatrix.Tests;
+namespace CodeGlyphX.Tests;
 
 public sealed class Pdf417PixelRobustnessTests {
     [Fact]

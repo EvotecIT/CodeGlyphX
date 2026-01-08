@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace CodeMatrix.ScreenScan.Wpf;
+namespace CodeGlyphX.ScreenScan.Wpf;
 
 internal static class ScreenCapture {
     private const int SRCCOPY = 0x00CC0020;

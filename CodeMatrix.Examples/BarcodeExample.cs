@@ -1,8 +1,8 @@
 using System.IO;
-using CodeMatrix;
-using CodeMatrix.Rendering.Png;
+using CodeGlyphX;
+using CodeGlyphX.Rendering.Png;
 
-namespace CodeMatrix.Examples;
+namespace CodeGlyphX.Examples;
 
 internal static class BarcodeExample {
     public static void Run(string outputDir) {

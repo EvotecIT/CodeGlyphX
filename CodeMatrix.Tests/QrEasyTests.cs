@@ -1,7 +1,7 @@
-using CodeMatrix;
+using CodeGlyphX;
 using Xunit;
 
-namespace CodeMatrix.Tests;
+namespace CodeGlyphX.Tests;
 
 public sealed class QrEasyTests {
     [Fact]

@@ -1,7 +1,7 @@
 #if NET8_0_OR_GREATER
 using System;
 
-namespace CodeMatrix.Qr;
+namespace CodeGlyphX.Qr;
 
 /// <summary>
 /// Minimal perspective transform (ported from common QR grid-sampling approaches).

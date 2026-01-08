@@ -1,9 +1,9 @@
 using System;
 using System.IO;
-using CodeMatrix.Rendering;
-using CodeMatrix.Rendering.Png;
+using CodeGlyphX.Rendering;
+using CodeGlyphX.Rendering.Png;
 
-namespace CodeMatrix.Rendering.Jpeg;
+namespace CodeGlyphX.Rendering.Jpeg;
 
 /// <summary>
 /// Renders 1D barcodes to a JPEG image (baseline, 4:4:4).

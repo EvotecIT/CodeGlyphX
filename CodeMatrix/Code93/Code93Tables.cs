@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace CodeMatrix.Code93;
+namespace CodeGlyphX.Code93;
 
 internal static class Code93Tables {
     public const char Fnc1 = '\u00F1';

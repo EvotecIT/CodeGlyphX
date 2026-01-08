@@ -1,11 +1,11 @@
-<Window x:Class="CodeMatrix.Demo.Wpf.MainWindow"
+<Window x:Class="CodeGlyphX.Demo.Wpf.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:wpf="clr-namespace:CodeMatrix.Wpf;assembly=CodeMatrix.Wpf"
+        xmlns:wpf="clr-namespace:CodeGlyphX.Wpf;assembly=CodeGlyphX.Wpf"
         mc:Ignorable="d"
-        Title="CodeMatrix Demo" Height="720" Width="1100">
+        Title="CodeGlyphX Demo" Height="720" Width="1100">
     <Grid Margin="12">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="360" />
@@ -18,7 +18,7 @@
 
                 <TextBlock Text="Text" />
                 <TextBox x:Name="QrTextBox"
-                         Text="Hello from CodeMatrix"
+                         Text="Hello from CodeGlyphX"
                          AcceptsReturn="True"
                          TextWrapping="Wrap"
                          Height="90"

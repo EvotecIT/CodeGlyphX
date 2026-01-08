@@ -1,8 +1,8 @@
 using System;
 using System.Text;
-using CodeMatrix.Internal;
+using CodeGlyphX.Internal;
 
-namespace CodeMatrix;
+namespace CodeGlyphX;
 
 /// <summary>
 /// Builder for deterministic <c>otpauth://hotp/</c> URIs.

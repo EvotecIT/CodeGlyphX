@@ -1,6 +1,6 @@
 using System;
 
-namespace CodeMatrix.DataMatrix;
+namespace CodeGlyphX.DataMatrix;
 
 internal static class DataMatrixReedSolomonDecoder {
     public static bool TryCorrectInPlace(byte[] codewords, int eccLen) {

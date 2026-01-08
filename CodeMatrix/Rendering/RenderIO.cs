@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using System.Text;
 
-namespace CodeMatrix.Rendering;
+namespace CodeGlyphX.Rendering;
 
 /// <summary>
 /// Simple file and stream helpers for rendered assets.

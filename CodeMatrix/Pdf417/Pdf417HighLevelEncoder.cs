@@ -3,7 +3,13 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
 
-namespace CodeMatrix.Pdf417;
+#if NET8_0_OR_GREATER
+using ByteSpan = System.ReadOnlySpan<byte>;
+#else
+using ByteSpan = byte[];
+#endif
+
+namespace CodeGlyphX.Pdf417;
 
 internal static class Pdf417HighLevelEncoder {
     private const int TextCompactionLatch = 900;
@@ -197,7 +203,7 @@ internal static class Pdf417HighLevelEncoder {
         }
     }
 
-    private static void EncodeBytes(ReadOnlySpan<byte> data, List<int> result) {
+    private static void EncodeBytes(ByteSpan data, List<int> result) {
         var idx = 0;
         while (idx + 6 <= data.Length) {
             long t = 0;

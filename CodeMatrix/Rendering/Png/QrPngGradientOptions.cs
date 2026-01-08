@@ -1,6 +1,6 @@
 using System;
 
-namespace CodeMatrix.Rendering.Png;
+namespace CodeGlyphX.Rendering.Png;
 
 /// <summary>
 /// Options for a foreground gradient fill.

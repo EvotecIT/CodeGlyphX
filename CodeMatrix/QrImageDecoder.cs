@@ -1,6 +1,6 @@
 using System;
 
-namespace CodeMatrix;
+namespace CodeGlyphX;
 
 /// <summary>
 /// Decodes QR codes from raw pixel buffers.
@@ -11,7 +11,7 @@ public static class QrImageDecoder {
     /// </summary>
     public static bool TryDecode(byte[] pixels, int width, int height, int stride, PixelFormat format, out QrDecoded decoded) {
 #if NET8_0_OR_GREATER
-        return global::CodeMatrix.Qr.QrPixelDecoder.TryDecode(pixels, width, height, stride, format, out decoded);
+        return global::CodeGlyphX.Qr.QrPixelDecoder.TryDecode(pixels, width, height, stride, format, out decoded);
 #else
         decoded = null!;
         return false;
@@ -23,7 +23,7 @@ public static class QrImageDecoder {
     /// Attempts to decode a QR code from a raw pixel buffer.
     /// </summary>
     public static bool TryDecode(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat format, out QrDecoded decoded) {
-        return global::CodeMatrix.Qr.QrPixelDecoder.TryDecode(pixels, width, height, stride, format, out decoded);
+        return global::CodeGlyphX.Qr.QrPixelDecoder.TryDecode(pixels, width, height, stride, format, out decoded);
     }
 #endif
 }

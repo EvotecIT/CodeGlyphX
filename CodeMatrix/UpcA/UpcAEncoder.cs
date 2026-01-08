@@ -1,8 +1,8 @@
 using System;
 using System.Linq;
-using CodeMatrix.Internal;
+using CodeGlyphX.Internal;
 
-namespace CodeMatrix.UpcA;
+namespace CodeGlyphX.UpcA;
 
 /// <summary>
 /// Encodes UPC-A barcodes.
@@ -20,7 +20,7 @@ public static class UpcAEncoder {
             content += c;
         } else if (content.Length == 12) {
             var c = CalcChecksum(content.Substring(0, content.Length - 1));
-            if (content[^1] != c) throw new InvalidOperationException("Checksum mismatch");
+            if (content[content.Length - 1] != c) throw new InvalidOperationException("Checksum mismatch");
         }
 
         if (content.Length != 12) {

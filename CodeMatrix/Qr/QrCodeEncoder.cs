@@ -1,9 +1,9 @@
 using System;
 using System.Text;
-using CodeMatrix.Internal;
-using CodeMatrix.Qr;
+using CodeGlyphX.Internal;
+using CodeGlyphX.Qr;
 
-namespace CodeMatrix;
+namespace CodeGlyphX;
 
 /// <summary>
 /// Encodes QR codes (UTF-8 byte mode).

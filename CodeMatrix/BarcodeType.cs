@@ -1,4 +1,4 @@
-namespace CodeMatrix;
+namespace CodeGlyphX;
 
 /// <summary>
 /// Barcode symbologies supported (or planned) by <see cref="BarcodeEncoder"/>.

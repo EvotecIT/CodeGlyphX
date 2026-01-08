@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using System.IO.Compression;
 
-namespace CodeMatrix.Rendering.Png;
+namespace CodeGlyphX.Rendering.Png;
 
 internal static class PngDecoder {
     private static readonly byte[] Signature = { 137, 80, 78, 71, 13, 10, 26, 10 };

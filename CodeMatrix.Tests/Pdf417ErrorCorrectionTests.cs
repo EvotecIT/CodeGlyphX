@@ -1,9 +1,9 @@
 using System.Collections.Generic;
-using CodeMatrix.Pdf417;
-using CodeMatrix.Pdf417.Ec;
+using CodeGlyphX.Pdf417;
+using CodeGlyphX.Pdf417.Ec;
 using Xunit;
 
-namespace CodeMatrix.Tests;
+namespace CodeGlyphX.Tests;
 
 public sealed class Pdf417ErrorCorrectionTests {
     [Fact]

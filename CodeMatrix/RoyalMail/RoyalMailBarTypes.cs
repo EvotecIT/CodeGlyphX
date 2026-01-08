@@ -1,6 +1,6 @@
 using System;
 
-namespace CodeMatrix.RoyalMail;
+namespace CodeGlyphX.RoyalMail;
 
 [Flags]
 internal enum RoyalMailBarTypes {

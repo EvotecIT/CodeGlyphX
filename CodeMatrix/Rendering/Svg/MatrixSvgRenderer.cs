@@ -1,7 +1,7 @@
 using System;
 using System.Text;
 
-namespace CodeMatrix.Rendering.Svg;
+namespace CodeGlyphX.Rendering.Svg;
 
 /// <summary>
 /// Renders generic 2D matrices to SVG.

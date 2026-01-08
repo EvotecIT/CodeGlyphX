@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace CodeMatrix.ScreenScan.Wpf;
+namespace CodeGlyphX.ScreenScan.Wpf;
 
 /// <summary>
 /// Interaction logic for App.xaml

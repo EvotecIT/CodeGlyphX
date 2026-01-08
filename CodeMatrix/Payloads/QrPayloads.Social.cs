@@ -1,5 +1,5 @@
 using System;
-namespace CodeMatrix.Payloads;
+namespace CodeGlyphX.Payloads;
 
 public static partial class QrPayloads {
     /// <summary>
@@ -47,9 +47,9 @@ public static partial class QrPayloads {
         var value = appIdOrUrl.Trim();
         if (value.Length == 0) return string.Empty;
 
-        if (value.Contains("://", StringComparison.OrdinalIgnoreCase) ||
-            value.Contains("apps.apple.com", StringComparison.OrdinalIgnoreCase) ||
-            value.Contains("play.google.com", StringComparison.OrdinalIgnoreCase)) {
+        if (value.IndexOf("://", StringComparison.OrdinalIgnoreCase) >= 0 ||
+            value.IndexOf("apps.apple.com", StringComparison.OrdinalIgnoreCase) >= 0 ||
+            value.IndexOf("play.google.com", StringComparison.OrdinalIgnoreCase) >= 0) {
             return NormalizeUrl(value);
         }
 
@@ -62,10 +62,10 @@ public static partial class QrPayloads {
         if (handleOrUrl is null) return string.Empty;
         var value = handleOrUrl.Trim();
         if (value.Length == 0) return string.Empty;
-        if (value.Contains("://", StringComparison.OrdinalIgnoreCase)) return value;
-        if (value.Contains(baseUrl, StringComparison.OrdinalIgnoreCase)) return NormalizeUrl(value);
+        if (value.IndexOf("://", StringComparison.OrdinalIgnoreCase) >= 0) return value;
+        if (value.IndexOf(baseUrl, StringComparison.OrdinalIgnoreCase) >= 0) return NormalizeUrl(value);
 
-        var handle = value.StartsWith("@", StringComparison.Ordinal) ? value[1..] : value;
+        var handle = value.StartsWith("@", StringComparison.Ordinal) ? value.Substring(1) : value;
         if (ensureAtPrefix) handle = "@" + handle;
         return baseUrl + handle;
     }

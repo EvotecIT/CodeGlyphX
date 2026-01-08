@@ -1,12 +1,12 @@
 using System.Text;
-using CodeMatrix;
-using CodeMatrix.Rendering;
+using CodeGlyphX;
+using CodeGlyphX.Rendering;
 
-namespace CodeMatrix.Examples;
+namespace CodeGlyphX.Examples;
 
 internal static class QrDecodeExample {
     public static void Run(string outputDir) {
-        var payload = "Decode me with CodeMatrix 1234";
+        var payload = "Decode me with CodeGlyphX 1234";
         var sb = new StringBuilder();
         var png = QR.Png(payload);
         var decodedPng = QR.DecodePng(png);

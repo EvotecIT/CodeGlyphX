@@ -2,9 +2,9 @@ using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using CodeMatrix.Wpf.Rendering;
+using CodeGlyphX.Wpf.Rendering;
 
-namespace CodeMatrix.Wpf;
+namespace CodeGlyphX.Wpf;
 
 /// <summary>
 /// WPF control that renders a Code 128 barcode for the provided <see cref="Value"/>.

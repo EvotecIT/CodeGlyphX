@@ -1,7 +1,7 @@
-using CodeMatrix.Pdf417;
+using CodeGlyphX.Pdf417;
 using Xunit;
 
-namespace CodeMatrix.Tests;
+namespace CodeGlyphX.Tests;
 
 public sealed class Pdf417ParserTests {
     [Fact]

@@ -1,4 +1,4 @@
-namespace CodeMatrix.Rendering.Svg;
+namespace CodeGlyphX.Rendering.Svg;
 
 /// <summary>
 /// Options for rendering generic 2D matrices to SVG.

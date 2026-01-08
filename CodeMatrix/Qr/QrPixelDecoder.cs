@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace CodeMatrix.Qr;
+namespace CodeGlyphX.Qr;
 
 internal static class QrPixelDecoder {
     public static bool TryDecode(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat fmt, out QrDecoded result) {
@@ -63,7 +63,7 @@ internal static class QrPixelDecoder {
                 candidateCount: 0,
                 candidateTriplesTried: 0,
                 dimension: 0,
-                moduleDiagnostics: new global::CodeMatrix.QrDecodeDiagnostics(global::CodeMatrix.QrDecodeFailure.InvalidInput));
+                moduleDiagnostics: new global::CodeGlyphX.QrDecodeDiagnostics(global::CodeGlyphX.QrDecodeFailure.InvalidInput));
             return false;
         }
 
@@ -492,7 +492,7 @@ internal static class QrPixelDecoder {
         double moduleSizePx,
         Func<QrDecoded, bool>? accept,
         out QrDecoded result,
-        out global::CodeMatrix.QrDecodeDiagnostics moduleDiagnostics) {
+        out global::CodeGlyphX.QrDecodeDiagnostics moduleDiagnostics) {
         result = null!;
         moduleDiagnostics = default;
 
@@ -507,7 +507,7 @@ internal static class QrPixelDecoder {
             cornerBrX, cornerBrY,
             cornerBlX, cornerBlY);
 
-        var bm = new global::CodeMatrix.BitMatrix(dimension, dimension);
+        var bm = new global::CodeGlyphX.BitMatrix(dimension, dimension);
 
         var clamped = 0;
 
@@ -540,7 +540,7 @@ internal static class QrPixelDecoder {
         // If we had to clamp too many samples, the region is likely cropped too tight or the estimate is wrong.
         if (clamped > dimension * 2) return false;
 
-        if (global::CodeMatrix.QrDecoder.TryDecode(bm, out result, out var moduleDiag)) {
+        if (global::CodeGlyphX.QrDecoder.TryDecode(bm, out result, out var moduleDiag)) {
             moduleDiagnostics = moduleDiag;
             if (accept == null || accept(result)) return true;
             return false;
@@ -548,7 +548,7 @@ internal static class QrPixelDecoder {
 
         var inv = bm.Clone();
         Invert(inv);
-        if (global::CodeMatrix.QrDecoder.TryDecode(inv, out result, out var moduleDiagInv)) {
+        if (global::CodeGlyphX.QrDecoder.TryDecode(inv, out result, out var moduleDiagInv)) {
             moduleDiagnostics = moduleDiagInv;
             if (accept == null || accept(result)) return true;
             return false;
@@ -628,7 +628,7 @@ internal static class QrPixelDecoder {
             var relDiff = Math.Abs(moduleSizeX - moduleSizeY) / Math.Max(moduleSizeX, moduleSizeY);
             if (relDiff > 0.20) continue;
 
-            var bm = new global::CodeMatrix.BitMatrix(modulesCount, modulesCount);
+            var bm = new global::CodeGlyphX.BitMatrix(modulesCount, modulesCount);
             for (var my = 0; my < modulesCount; my++) {
                 var sy = minY + (my + 0.5) * moduleSizeY;
                 var py = QrMath.RoundToInt(sy);
@@ -645,7 +645,7 @@ internal static class QrPixelDecoder {
                 }
             }
 
-            if (global::CodeMatrix.QrDecoder.TryDecode(bm, out result, out var moduleDiag)) {
+            if (global::CodeGlyphX.QrDecoder.TryDecode(bm, out result, out var moduleDiag)) {
                 diagnostics = new QrPixelDecodeDiagnostics(scale, threshold, invert, candidateCount, candidateTriplesTried, modulesCount, moduleDiag);
                 if (accept == null || accept(result)) return true;
             }
@@ -653,7 +653,7 @@ internal static class QrPixelDecoder {
 
             var inv = bm.Clone();
             Invert(inv);
-            if (global::CodeMatrix.QrDecoder.TryDecode(inv, out result, out var moduleDiagInv)) {
+            if (global::CodeGlyphX.QrDecoder.TryDecode(inv, out result, out var moduleDiagInv)) {
                 diagnostics = new QrPixelDecodeDiagnostics(scale, threshold, invert, candidateCount, candidateTriplesTried, modulesCount, moduleDiagInv);
                 if (accept == null || accept(result)) return true;
             }
@@ -770,7 +770,7 @@ internal static class QrPixelDecoder {
         return black >= 5;
     }
 
-    private static void Invert(global::CodeMatrix.BitMatrix matrix) {
+    private static void Invert(global::CodeGlyphX.BitMatrix matrix) {
         for (var y = 0; y < matrix.Height; y++) {
             for (var x = 0; x < matrix.Width; x++) {
                 matrix[x, y] = !matrix[x, y];
@@ -794,7 +794,7 @@ internal static class QrPixelDecoder {
         return a;
     }
 
-    private static global::CodeMatrix.QrDecodeDiagnostics Better(global::CodeMatrix.QrDecodeDiagnostics a, global::CodeMatrix.QrDecodeDiagnostics b) {
+    private static global::CodeGlyphX.QrDecodeDiagnostics Better(global::CodeGlyphX.QrDecodeDiagnostics a, global::CodeGlyphX.QrDecodeDiagnostics b) {
         if (IsEmpty(a)) return b;
         if (IsEmpty(b)) return a;
 
@@ -811,20 +811,20 @@ internal static class QrPixelDecoder {
 
     private static bool IsEmpty(QrPixelDecodeDiagnostics d) {
         return d.Scale == 0 && d.Dimension == 0 && d.CandidateCount == 0 && d.CandidateTriplesTried == 0 &&
-               d.ModuleDiagnostics.Version == 0 && d.ModuleDiagnostics.Failure == global::CodeMatrix.QrDecodeFailure.None;
+               d.ModuleDiagnostics.Version == 0 && d.ModuleDiagnostics.Failure == global::CodeGlyphX.QrDecodeFailure.None;
     }
 
-    private static bool IsEmpty(global::CodeMatrix.QrDecodeDiagnostics d) {
-        return d.Version == 0 && d.Failure == global::CodeMatrix.QrDecodeFailure.None;
+    private static bool IsEmpty(global::CodeGlyphX.QrDecodeDiagnostics d) {
+        return d.Version == 0 && d.Failure == global::CodeGlyphX.QrDecodeFailure.None;
     }
 
-    private static int Score(global::CodeMatrix.QrDecodeDiagnostics d) {
+    private static int Score(global::CodeGlyphX.QrDecodeDiagnostics d) {
         return d.Failure switch {
-            global::CodeMatrix.QrDecodeFailure.None => 5,
-            global::CodeMatrix.QrDecodeFailure.Payload => 4,
-            global::CodeMatrix.QrDecodeFailure.ReedSolomon => 3,
-            global::CodeMatrix.QrDecodeFailure.FormatInfo => 2,
-            global::CodeMatrix.QrDecodeFailure.InvalidSize => 1,
+            global::CodeGlyphX.QrDecodeFailure.None => 5,
+            global::CodeGlyphX.QrDecodeFailure.Payload => 4,
+            global::CodeGlyphX.QrDecodeFailure.ReedSolomon => 3,
+            global::CodeGlyphX.QrDecodeFailure.FormatInfo => 2,
+            global::CodeGlyphX.QrDecodeFailure.InvalidSize => 1,
             _ => 0,
         };
     }

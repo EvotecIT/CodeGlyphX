@@ -1,11 +1,11 @@
-using CodeMatrix.Code39;
-using CodeMatrix.Code93;
-using CodeMatrix.Ean;
-using CodeMatrix.UpcA;
-using CodeMatrix.UpcE;
+using CodeGlyphX.Code39;
+using CodeGlyphX.Code93;
+using CodeGlyphX.Ean;
+using CodeGlyphX.UpcA;
+using CodeGlyphX.UpcE;
 using Xunit;
 
-namespace CodeMatrix.Tests;
+namespace CodeGlyphX.Tests;
 
 public sealed class Barcode1DTests {
     [Fact]

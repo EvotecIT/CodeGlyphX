@@ -1,7 +1,7 @@
 using System.Buffers.Binary;
 using System.Runtime.InteropServices;
 
-namespace CodeMatrix.Tests.TestHelpers;
+namespace CodeGlyphX.Tests.TestHelpers;
 
 internal static class PngTestDecoder {
     public static (byte[] rgba, int width, int height, int stride) DecodeRgba32(byte[] png) {

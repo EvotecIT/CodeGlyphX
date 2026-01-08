@@ -1,7 +1,7 @@
 using System;
-using CodeMatrix.RoyalMail;
+using CodeGlyphX.RoyalMail;
 
-namespace CodeMatrix.Kix;
+namespace CodeGlyphX.Kix;
 
 /// <summary>
 /// Encodes KIX (Royal Mail 4-state, without headers) barcodes.

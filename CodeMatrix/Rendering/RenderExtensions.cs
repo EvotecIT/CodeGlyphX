@@ -2,7 +2,7 @@ using System;
 using System.Text;
 using System.IO;
 
-namespace CodeMatrix.Rendering;
+namespace CodeGlyphX.Rendering;
 
 /// <summary>
 /// Convenience extension methods for rendered outputs.
@@ -98,7 +98,8 @@ public static class RenderExtensions {
     /// <summary>
     /// Wraps HTML content in a minimal document shell.
     /// </summary>
-    public static string WrapHtml(this string innerHtml, string title) {
+    public static string WrapHtml(this string innerHtml, string? title) {
+        title ??= string.Empty;
         return "<!doctype html>" +
                "<html lang=\"en\">" +
                "<head><meta charset=\"utf-8\"/>" +

@@ -1,9 +1,9 @@
 using System;
 using System.Globalization;
 using System.Text;
-using CodeMatrix.Internal;
+using CodeGlyphX.Internal;
 
-namespace CodeMatrix.Payloads;
+namespace CodeGlyphX.Payloads;
 
 /// <summary>
 /// Swiss QR bill payload.

@@ -1,4 +1,4 @@
-namespace CodeMatrix.Payloads;
+namespace CodeGlyphX.Payloads;
 
 /// <summary>
 /// Calendar payload output formats.

@@ -1,12 +1,12 @@
 using System;
-using CodeMatrix.Code128;
-using CodeMatrix.Code39;
-using CodeMatrix.Code93;
-using CodeMatrix.Ean;
-using CodeMatrix.UpcA;
-using CodeMatrix.UpcE;
+using CodeGlyphX.Code128;
+using CodeGlyphX.Code39;
+using CodeGlyphX.Code93;
+using CodeGlyphX.Ean;
+using CodeGlyphX.UpcA;
+using CodeGlyphX.UpcE;
 
-namespace CodeMatrix;
+namespace CodeGlyphX;
 
 /// <summary>
 /// Encodes supported barcode symbologies into a <see cref="Barcode1D"/> model.

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace CodeMatrix.RoyalMail;
+namespace CodeGlyphX.RoyalMail;
 
 internal static class RoyalMailFourStateEncoder {
     public static BitMatrix Encode(string content, bool includeHeaders) {

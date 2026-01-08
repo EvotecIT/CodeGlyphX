@@ -1,7 +1,7 @@
 using System.Reflection;
-using CodeMatrix.Rendering;
+using CodeGlyphX.Rendering;
 
-namespace CodeMatrix.Examples;
+namespace CodeGlyphX.Examples;
 
 internal sealed class ExampleRunner {
     private readonly string _outputDir;

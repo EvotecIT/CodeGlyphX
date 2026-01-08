@@ -1,8 +1,8 @@
 using System;
 using System.Linq;
-using CodeMatrix.Internal;
+using CodeGlyphX.Internal;
 
-namespace CodeMatrix.UpcE;
+namespace CodeGlyphX.UpcE;
 
 /// <summary>
 /// Encodes UPC-E barcodes.
@@ -21,7 +21,7 @@ public static class UpcEEncoder {
 
         var segments = new List<BarSegment>(51);
         var upcA = GetUpcAFromUpcE(content, numberSystem);
-        var checkDigit = upcA[^1];
+        var checkDigit = upcA[upcA.Length - 1];
         var parityPatterns = UpcETables.ParityPatternTable[checkDigit];
         var parity = numberSystem == UpcENumberSystem.Zero ? parityPatterns.NumberSystemZero : parityPatterns.NumberSystemOne;
 
@@ -36,11 +36,11 @@ public static class UpcEEncoder {
 
     private static string GetUpcAFromUpcE(string content, UpcENumberSystem numberSystem) {
         var text = (numberSystem == UpcENumberSystem.Zero ? "0" : "1");
-        switch (content[^1]) {
+        switch (content[content.Length - 1]) {
             case '0':
             case '1':
             case '2':
-                text += $"{content.Substring(0, 2)}{content[^1]}0000{content.Substring(2, 3)}";
+                text += $"{content.Substring(0, 2)}{content[content.Length - 1]}0000{content.Substring(2, 3)}";
                 break;
             case '3':
                 text = text + content.Substring(0, 3) + "00000" + content.Substring(3, 2);
@@ -49,7 +49,7 @@ public static class UpcEEncoder {
                 text = text + content.Substring(0, 4) + "00000" + content.Substring(4, 1);
                 break;
             default:
-                text += $"{content.Substring(0, 5)}0000{content[^1]}";
+                text += $"{content.Substring(0, 5)}0000{content[content.Length - 1]}";
                 break;
         }
         return text + CalculateUpcAChecksum(text);

@@ -1,7 +1,7 @@
-using CodeMatrix.Code128;
+using CodeGlyphX.Code128;
 using Xunit;
 
-namespace CodeMatrix.Tests;
+namespace CodeGlyphX.Tests;
 
 public sealed class Code128Tests {
     [Theory]

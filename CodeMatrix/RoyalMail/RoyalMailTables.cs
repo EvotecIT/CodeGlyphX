@@ -1,4 +1,4 @@
-namespace CodeMatrix.RoyalMail;
+namespace CodeGlyphX.RoyalMail;
 
 internal static class RoyalMailTables {
     public const int BarcodeHeight = 8;

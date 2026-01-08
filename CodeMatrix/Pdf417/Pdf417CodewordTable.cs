@@ -1,6 +1,6 @@
 using System;
 
-namespace CodeMatrix.Pdf417;
+namespace CodeGlyphX.Pdf417;
 
 internal static class Pdf417CodewordTable {
     public static readonly int[][] Table = {

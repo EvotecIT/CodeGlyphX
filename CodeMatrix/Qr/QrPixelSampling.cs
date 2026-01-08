@@ -1,7 +1,7 @@
 #if NET8_0_OR_GREATER
 using System;
 
-namespace CodeMatrix.Qr;
+namespace CodeGlyphX.Qr;
 
 internal static class QrPixelSampling {
     private static readonly double[] PhaseOffsetsCoarse = { -0.35, -0.15, 0.0, 0.15, 0.35 };
@@ -190,7 +190,7 @@ internal static class QrPixelSampling {
         for (var i = 0; i < 8; i++) if (SampleAt(image, invert, tlX, tlY, vxX, vxY, vyX, vyY, phaseX, phaseY, size - 1 - i, 8)) bitsB |= 1 << i;
         for (var i = 8; i < 15; i++) if (SampleAt(image, invert, tlX, tlY, vxX, vxY, vyX, vyY, phaseX, phaseY, 8, size - 15 + i)) bitsB |= 1 << i;
 
-        return global::CodeMatrix.QrDecoder.GetBestFormatDistance(bitsA, bitsB);
+        return global::CodeGlyphX.QrDecoder.GetBestFormatDistance(bitsA, bitsB);
     }
 
     private static int ComputeTimingAlternations(

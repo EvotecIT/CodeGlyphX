@@ -2,7 +2,7 @@
 using System.Data;
 using System.Windows;
 
-namespace CodeMatrix.Demo.Wpf;
+namespace CodeGlyphX.Demo.Wpf;
 
 /// <summary>
 /// Interaction logic for App.xaml

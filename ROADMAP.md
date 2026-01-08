@@ -9,7 +9,7 @@
 ## Phase 0 — Repo scaffolding & conventions
 
 - [x] Flat folder structure created (no src/tests)
-- [x] `CodeMatrix.sln` in root, projects added
+- [x] `CodeGlyphX.sln` in root, projects added
 - [x] Coding conventions applied (nullable, analyzers if desired but no extra deps)
 - [x] Public API namespaces chosen and consistent
 - [x] README skeleton created
@@ -33,7 +33,7 @@ Done definition:
 - [x] Implement PNG writer + QR/Barcode PNG renderers (zlib stored blocks)
 
 Done definition:
-- Can encode QR/Code128 and render SVG/HTML/PNG from `CodeMatrix` only.
+- Can encode QR/Code128 and render SVG/HTML/PNG from `CodeGlyphX` only.
 - OTP builder produces valid otpauth URL and can be encoded into a QR.
 
 ---
@@ -53,7 +53,7 @@ Done definition:
 
 ## Phase 3 — WPF display (AuthIMO integration gate)
 
-- [x] `CodeMatrix.Wpf` project created and builds
+- [x] `CodeGlyphX.Wpf` project created and builds
 - [x] `QrCodeControl` implemented (bindable, crisp rendering)
 - [x] `Barcode128Control` implemented
 - [x] Demo app shows both controls + exports
@@ -62,13 +62,13 @@ Done definition:
 Handoff gate (MUST):
 - [x] **WPF display controls ready for AuthIMO agent**
   - Namespaces:
-    - `CodeMatrix.Wpf` (`QrCodeControl`, `Barcode128Control`)
+    - `CodeGlyphX.Wpf` (`QrCodeControl`, `Barcode128Control`)
   - XAML usage:
-    - `xmlns:wpf="clr-namespace:CodeMatrix.Wpf;assembly=CodeMatrix.Wpf"`
+    - `xmlns:wpf="clr-namespace:CodeGlyphX.Wpf;assembly=CodeGlyphX.Wpf"`
     - `<wpf:QrCodeControl Text="{Binding ...}" Ecc="M" ModuleSize="6" QuietZone="4" />`
     - `<wpf:Barcode128Control Value="{Binding ...}" ModuleSize="2" QuietZone="10" />`
   - References:
-    - Add a project or NuGet reference to `CodeMatrix.Wpf` (which references `CodeMatrix`)
+    - Add a project or NuGet reference to `CodeGlyphX.Wpf` (which references `CodeGlyphX`)
 
 Done definition:
 - WPF controls render correctly and are ready to be used in AuthIMO.

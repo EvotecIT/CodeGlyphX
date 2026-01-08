@@ -1,6 +1,6 @@
-using CodeMatrix.Rendering.Png;
+using CodeGlyphX.Rendering.Png;
 
-namespace CodeMatrix;
+namespace CodeGlyphX;
 
 /// <summary>
 /// Simplified rendering options for 1D barcodes.

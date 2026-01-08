@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 
-namespace CodeMatrix.Rendering.Png;
+namespace CodeGlyphX.Rendering.Png;
 
 /// <summary>
 /// Decodes PNG images to RGBA buffers.

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace CodeMatrix.Qr;
+namespace CodeGlyphX.Qr;
 
 internal sealed class QrBitBuffer {
     private readonly List<byte> _bytes = new();

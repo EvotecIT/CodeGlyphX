@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace CodeMatrix.Ean;
+namespace CodeGlyphX.Ean;
 
 internal static class EanTables {
     public readonly struct EncodedNumber {

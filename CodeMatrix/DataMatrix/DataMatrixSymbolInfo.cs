@@ -1,6 +1,6 @@
 using System;
 
-namespace CodeMatrix.DataMatrix;
+namespace CodeGlyphX.DataMatrix;
 
 internal readonly struct DataMatrixSymbolInfo {
     public int SymbolRows { get; }

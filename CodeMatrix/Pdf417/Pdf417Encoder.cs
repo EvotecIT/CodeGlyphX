@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace CodeMatrix.Pdf417;
+namespace CodeGlyphX.Pdf417;
 
 /// <summary>
 /// Encodes PDF417 barcodes.
@@ -26,7 +26,7 @@ public static class Pdf417Encoder {
     /// </summary>
     public static BitMatrix EncodeBytes(byte[] data, Pdf417EncodeOptions? options = null) {
         if (data is null) throw new ArgumentNullException(nameof(data));
-        return EncodeBytes((ReadOnlySpan<byte>)data, options);
+        return EncodeBytesCore(data, options);
     }
 
 #if NET8_0_OR_GREATER
@@ -34,21 +34,23 @@ public static class Pdf417Encoder {
     /// Encodes a byte payload as PDF417 (byte compaction).
     /// </summary>
     public static BitMatrix EncodeBytes(ReadOnlySpan<byte> data, Pdf417EncodeOptions? options = null) {
+        return EncodeBytesCore(data, options);
+    }
+#endif
+
+#if NET8_0_OR_GREATER
+    private static BitMatrix EncodeBytesCore(ReadOnlySpan<byte> data, Pdf417EncodeOptions? options) {
         options ??= new Pdf417EncodeOptions();
         var dataCodewords = EncodeByteCompaction(data);
         return EncodeCodewords(dataCodewords, options);
     }
-#else
-    public static BitMatrix EncodeBytes(ReadOnlySpan<byte> data, Pdf417EncodeOptions? options = null) {
-        return EncodeBytes(data.ToArray(), options);
-    }
 #endif
 
     private static (int cols, int rows) ChooseDimensions(int dataCodewords, int eccCodewords, Pdf417EncodeOptions options) {
-        var minCols = Math.Clamp(options.MinColumns, 1, 30);
-        var maxCols = Math.Clamp(options.MaxColumns, minCols, 30);
-        var minRows = Math.Clamp(options.MinRows, 3, 90);
-        var maxRows = Math.Clamp(options.MaxRows, minRows, 90);
+        var minCols = Clamp(options.MinColumns, 1, 30);
+        var maxCols = Clamp(options.MaxColumns, minCols, 30);
+        var minRows = Clamp(options.MinRows, 3, 90);
+        var maxRows = Clamp(options.MaxRows, minRows, 90);
 
         var bestCols = 0;
         var bestRows = 0;
@@ -76,6 +78,13 @@ public static class Pdf417Encoder {
         return (bestCols, bestRows);
     }
 
+    private static int Clamp(int value, int min, int max) {
+        if (value < min) return min;
+        if (value > max) return max;
+        return value;
+    }
+
+#if NET8_0_OR_GREATER
     private static List<int> EncodeByteCompaction(ReadOnlySpan<byte> data) {
         var codewords = new List<int>(data.Length + 3) { 901 };
 
@@ -101,6 +110,39 @@ public static class Pdf417Encoder {
 
         return codewords;
     }
+#else
+    private static BitMatrix EncodeBytesCore(byte[] data, Pdf417EncodeOptions? options) {
+        options ??= new Pdf417EncodeOptions();
+        var dataCodewords = EncodeByteCompaction(data);
+        return EncodeCodewords(dataCodewords, options);
+    }
+
+    private static List<int> EncodeByteCompaction(byte[] data) {
+        var codewords = new List<int>(data.Length + 3) { 901 };
+
+        var idx = 0;
+        while (idx + 6 <= data.Length) {
+            long t = 0;
+            for (var i = 0; i < 6; i++) {
+                t = (t << 8) + data[idx + i];
+            }
+            idx += 6;
+
+            var tmp = new int[5];
+            for (var i = 4; i >= 0; i--) {
+                tmp[i] = (int)(t % 900);
+                t /= 900;
+            }
+            codewords.AddRange(tmp);
+        }
+
+        for (; idx < data.Length; idx++) {
+            codewords.Add(data[idx]);
+        }
+
+        return codewords;
+    }
+#endif
 
     private static Pdf417BarcodeMatrix EncodeLowLevel(int[] fullCodewords, int columns, int rows, int errorCorrectionLevel, bool compact) {
         var matrix = new Pdf417BarcodeMatrix(rows, columns, compact);

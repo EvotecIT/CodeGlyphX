@@ -1,7 +1,7 @@
 using System;
 using System.Text;
 
-namespace CodeMatrix.Internal;
+namespace CodeGlyphX.Internal;
 
 internal static class PercentEncoding {
     private static readonly UTF8Encoding Utf8Strict = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false, throwOnInvalidBytes: true);

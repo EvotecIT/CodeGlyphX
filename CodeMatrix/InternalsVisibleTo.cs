@@ -1,4 +1,4 @@
 using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo("CodeMatrix.ScreenScan.Wpf")]
-[assembly: InternalsVisibleTo("CodeMatrix.Tests")]
+[assembly: InternalsVisibleTo("CodeGlyphX.ScreenScan.Wpf")]
+[assembly: InternalsVisibleTo("CodeGlyphX.Tests")]

@@ -1,4 +1,4 @@
-namespace CodeMatrix.DataMatrix;
+namespace CodeGlyphX.DataMatrix;
 
 /// <summary>
 /// High-level data encoding modes for Data Matrix.

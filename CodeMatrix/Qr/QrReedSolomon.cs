@@ -1,6 +1,6 @@
 using System;
 
-namespace CodeMatrix.Qr;
+namespace CodeGlyphX.Qr;
 
 internal static class QrReedSolomon {
     private const int Primitive = 0x11D;

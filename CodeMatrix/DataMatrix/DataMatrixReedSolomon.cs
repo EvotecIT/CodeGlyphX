@@ -1,6 +1,6 @@
 using System;
 
-namespace CodeMatrix.DataMatrix;
+namespace CodeGlyphX.DataMatrix;
 
 internal static class DataMatrixReedSolomon {
     private const int Primitive = 0x12D;

@@ -1,8 +1,8 @@
-using CodeMatrix.Rendering.Jpeg;
-using CodeMatrix.Rendering.Png;
+using CodeGlyphX.Rendering.Jpeg;
+using CodeGlyphX.Rendering.Png;
 using Xunit;
 
-namespace CodeMatrix.Tests;
+namespace CodeGlyphX.Tests;
 
 public sealed class JpegRendererTests {
     [Fact]
