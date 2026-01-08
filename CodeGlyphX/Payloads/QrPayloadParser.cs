@@ -161,7 +161,7 @@ public static class QrPayloadParser {
         string? subject = null;
         string? body = null;
         if (!string.IsNullOrEmpty(query)) {
-            ParseQuery(query, out subject, out body);
+            ParseQuery(query!, out subject, out body);
         }
         email = new QrParsedData.Email(address, subject, body);
         return true;
@@ -196,7 +196,7 @@ public static class QrPayloadParser {
         SplitOnce(smsRest, '?', out var number, out var smsQuery);
         string? body = null;
         if (!string.IsNullOrEmpty(smsQuery)) {
-            ParseQuery(smsQuery, out _, out body);
+            ParseQuery(smsQuery!, out _, out body);
         }
         sms = new QrParsedData.Sms(number, body);
         return true;
