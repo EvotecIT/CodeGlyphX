@@ -1,24 +1,29 @@
+using System.IO;
 using System.Text;
 using CodeMatrix;
+using CodeMatrix.Rendering;
 using CodeMatrix.Rendering.Png;
 
 namespace CodeMatrix.Examples;
 
 internal static class OtpExample {
     public static void Run(string outputDir) {
-        var secret = OtpAuthSecret.FromBase32("JBSWY3DPEHPK3PXP");
-        var totpUri = OtpAuthTotp.Create("CodeMatrix", "alice@example.com", secret, OtpAlgorithm.Sha1, digits: 6, period: 30);
-        var hotpUri = OtpAuthHotp.Create("CodeMatrix", "alice@example.com", secret, counter: 42, OtpAlgorithm.Sha1, digits: 6);
+        var totp = Otp.Totp("CodeMatrix", "alice@example.com", "JBSWY3DPEHPK3PXP");
+        var hotp = Otp.Hotp("CodeMatrix", "alice@example.com", "JBSWY3DPEHPK3PXP", counter: 42);
 
-        var totpQr = OtpQrPreset.EncodeUri(totpUri, QrErrorCorrectionLevel.H, 1, 10, null);
-        var hotpQr = OtpQrPreset.EncodeUri(hotpUri, QrErrorCorrectionLevel.H, 1, 10, null);
+        totp.SavePng(Path.Combine(outputDir, "otp-totp.png"));
+        hotp.SavePng(Path.Combine(outputDir, "otp-hotp.png"));
 
-        var renderOpts = OtpQrPreset.CreatePngRenderOptions(moduleSize: 6, quietZone: 4);
+        var totpUri = totp.Uri();
+        var hotpUri = hotp.Uri();
 
-        var totpPng = QrPngRenderer.Render(totpQr.Modules, renderOpts);
-        var hotpPng = QrPngRenderer.Render(hotpQr.Modules, renderOpts);
-        ExampleHelpers.WriteBinary(outputDir, "otp-totp.png", totpPng);
-        ExampleHelpers.WriteBinary(outputDir, "otp-hotp.png", hotpPng);
+        var totpQr = totp.Encode();
+        var renderOpts = new QrPngRenderOptions {
+            ModuleSize = totp.Options.ModuleSize,
+            QuietZone = totp.Options.QuietZone,
+            Foreground = totp.Options.Foreground,
+            Background = totp.Options.Background,
+        };
 
         var report = OtpQrSafety.Evaluate(totpQr, renderOpts, requireHighEcc: true);
 
@@ -56,6 +61,6 @@ internal static class OtpExample {
             sb.AppendLine("Decode pixels: failed");
         }
 
-        ExampleHelpers.WriteText(outputDir, "otp-report.txt", sb.ToString());
+        sb.ToString().WriteText(outputDir, "otp-report.txt");
     }
 }

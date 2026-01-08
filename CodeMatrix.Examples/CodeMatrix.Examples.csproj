@@ -7,4 +7,11 @@
   <ItemGroup>
     <ProjectReference Include="..\CodeMatrix\CodeMatrix.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="..\Assets\Logo\Logo-evotec.png">
+      <Link>Assets\Logo\Logo-evotec.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
 </Project>

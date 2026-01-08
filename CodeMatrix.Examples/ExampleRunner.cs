@@ -1,4 +1,5 @@
 using System.Reflection;
+using CodeMatrix.Rendering;
 
 namespace CodeMatrix.Examples;
 
@@ -36,7 +37,7 @@ internal sealed class ExampleRunner {
             _results.Add(new ExampleResult(name, ex));
             Console.WriteLine($"Failed:  {name} ({ex.GetType().Name})");
             var slug = Slugify(name);
-            ExampleHelpers.WriteText(_outputDir, $"_failed-{slug}.txt", ex.ToString());
+            ex.ToString().WriteText(_outputDir, $"_failed-{slug}.txt");
         }
     }
 

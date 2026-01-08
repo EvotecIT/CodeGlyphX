@@ -1,3 +1,4 @@
+using System.IO;
 using CodeMatrix;
 
 namespace CodeMatrix.Examples;
@@ -5,16 +6,9 @@ namespace CodeMatrix.Examples;
 internal static class QrGenerationExample {
     public static void Run(string outputDir) {
         var payload = "https://example.com/codematrix?from=examples";
-        var png = QrEasy.RenderPng(payload);
-        ExampleHelpers.WriteBinary(outputDir, "qr-basic.png", png);
-
-        var svg = QrEasy.RenderSvg(payload);
-        ExampleHelpers.WriteText(outputDir, "qr-basic.svg", svg);
-
-        var html = QrEasy.RenderHtml(payload);
-        ExampleHelpers.WriteText(outputDir, "qr-basic.html", ExampleHelpers.WrapHtml("CodeMatrix QR", html));
-
-        var jpeg = QrEasy.RenderJpeg(payload);
-        ExampleHelpers.WriteBinary(outputDir, "qr-basic.jpg", jpeg);
+        QR.SavePng(payload, Path.Combine(outputDir, "qr-basic.png"));
+        QR.SaveSvg(payload, Path.Combine(outputDir, "qr-basic.svg"));
+        QR.SaveHtml(payload, Path.Combine(outputDir, "qr-basic.html"), title: "CodeMatrix QR");
+        QR.SaveJpeg(payload, Path.Combine(outputDir, "qr-basic.jpg"));
     }
 }

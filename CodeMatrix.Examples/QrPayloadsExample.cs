@@ -1,6 +1,8 @@
+using System.IO;
 using System.Text;
 using CodeMatrix;
 using CodeMatrix.Payloads;
+using CodeMatrix.Rendering;
 
 namespace CodeMatrix.Examples;
 
@@ -40,8 +42,7 @@ internal static class QrPayloadsExample {
         var sb = new StringBuilder();
         foreach (var item in payloads) {
             try {
-                var png = QrEasy.RenderPng(item.Value);
-                ExampleHelpers.WriteBinary(outputDir, $"qr-payload-{item.Name}.png", png);
+                QR.SavePng(item.Value, Path.Combine(outputDir, $"qr-payload-{item.Name}.png"));
                 sb.AppendLine($"[{item.Name}]");
                 sb.AppendLine(item.Value);
                 sb.AppendLine();
@@ -53,6 +54,6 @@ internal static class QrPayloadsExample {
             }
         }
 
-        ExampleHelpers.WriteText(outputDir, "qr-payloads.txt", sb.ToString());
+        sb.ToString().WriteText(outputDir, "qr-payloads.txt");
     }
 }

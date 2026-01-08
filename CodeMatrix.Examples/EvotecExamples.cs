@@ -1,17 +1,19 @@
+using System;
+using System.IO;
 using CodeMatrix;
 using CodeMatrix.Payloads;
+using CodeMatrix.Rendering;
 
 namespace CodeMatrix.Examples;
 
 internal static class EvotecExamples {
     public static void Run(string outputDir) {
         var url = QrPayload.Url("https://evotec.xyz");
-        var plain = QrEasy.RenderPng(url);
-        ExampleHelpers.WriteBinary(outputDir, "qr-evotec.png", plain);
+        QR.SavePng(url, Path.Combine(outputDir, "qr-evotec.png"));
 
-        var logoPath = "Assets/Logo/Logo-evotec.png";
-        if (!ExampleHelpers.TryReadRepoFile(logoPath, out var logoBytes, out _)) {
-            ExampleHelpers.WriteText(outputDir, "qr-evotec-logo-missing.txt", "Missing Assets/Logo/Logo-evotec.png");
+        var logoPath = Path.Combine(AppContext.BaseDirectory, "Assets", "Logo", "Logo-evotec.png");
+        if (!logoPath.TryReadBinary(out var logoBytes)) {
+            "Missing Assets/Logo/Logo-evotec.png".WriteText(outputDir, "qr-evotec-logo-missing.txt");
             return;
         }
 
@@ -24,13 +26,10 @@ internal static class EvotecExamples {
             LogoCornerRadiusPx = 8,
         };
 
-        var pngLogo = QrEasy.RenderPng(url, withLogo);
-        ExampleHelpers.WriteBinary(outputDir, "qr-evotec-logo.png", pngLogo);
+        QR.SavePng(url, Path.Combine(outputDir, "qr-evotec-logo.png"), withLogo);
 
-        var svg = QrEasy.RenderSvg(url, withLogo);
-        ExampleHelpers.WriteText(outputDir, "qr-evotec-logo.svg", svg);
+        QR.SaveSvg(url, Path.Combine(outputDir, "qr-evotec-logo.svg"), withLogo);
 
-        var html = QrEasy.RenderHtml(url, withLogo);
-        ExampleHelpers.WriteText(outputDir, "qr-evotec-logo.html", ExampleHelpers.WrapHtml("Evotec QR", html));
+        QR.SaveHtml(url, Path.Combine(outputDir, "qr-evotec-logo.html"), withLogo, title: "Evotec QR");
     }
 }
