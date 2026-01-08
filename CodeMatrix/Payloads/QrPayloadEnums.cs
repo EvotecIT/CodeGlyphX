@@ -130,4 +130,9 @@ public enum QrShadowSocksMethod {
     Table
 }
 
+public enum QrAppStorePlatform {
+    Apple,
+    GooglePlay
+}
+
 #pragma warning restore CS1591
