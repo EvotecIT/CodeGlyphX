@@ -239,7 +239,7 @@ public static class QrEasy {
     }
 
     private static QrCode EncodePayload(string payload, QrEasyOptions opts) {
-        var ecc = opts.ErrorCorrectionLevel ?? GuessEcc(payload);
+        var ecc = opts.ErrorCorrectionLevel ?? GuessEcc(payload, opts.LogoPng is { Length: > 0 });
         if (opts.TextEncoding.HasValue) {
             return QrCodeEncoder.EncodeText(payload, opts.TextEncoding.Value, ecc, opts.MinVersion, opts.MaxVersion, opts.ForceMask, opts.IncludeEci);
         }
@@ -320,7 +320,8 @@ public static class QrEasy {
         };
     }
 
-    private static QrErrorCorrectionLevel GuessEcc(string payload) {
+    private static QrErrorCorrectionLevel GuessEcc(string payload, bool hasLogo) {
+        if (hasLogo) return QrErrorCorrectionLevel.H;
         return payload.StartsWith("otpauth://", StringComparison.OrdinalIgnoreCase)
             ? QrErrorCorrectionLevel.H
             : QrErrorCorrectionLevel.M;
