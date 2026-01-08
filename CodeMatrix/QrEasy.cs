@@ -1,5 +1,6 @@
 using System;
 using System.Globalization;
+using System.IO;
 using CodeMatrix.Payloads;
 using CodeMatrix.Rendering;
 using CodeMatrix.Rendering.Html;
@@ -42,6 +43,40 @@ public static class QrEasy {
     }
 
     /// <summary>
+    /// Renders a QR code as PNG to a stream.
+    /// </summary>
+    public static void RenderPngToStream(string payload, Stream stream, QrEasyOptions? options = null) {
+        var opts = options ?? new QrEasyOptions();
+        var qr = Encode(payload, opts);
+        var render = BuildPngOptions(opts, payload);
+        QrPngRenderer.RenderToStream(qr.Modules, render, stream);
+    }
+
+    /// <summary>
+    /// Renders a QR code as PNG and writes it to a file.
+    /// </summary>
+    /// <param name="payload">Payload text.</param>
+    /// <param name="path">Output file path.</param>
+    /// <param name="options">Optional rendering options.</param>
+    /// <returns>The output file path.</returns>
+    public static string RenderPngToFile(string payload, string path, QrEasyOptions? options = null) {
+        var png = RenderPng(payload, options);
+        return RenderIO.WriteBinary(path, png);
+    }
+
+    /// <summary>
+    /// Renders a QR code as PNG and writes it to a file for a payload with embedded defaults.
+    /// </summary>
+    /// <param name="payload">Payload with embedded defaults.</param>
+    /// <param name="path">Output file path.</param>
+    /// <param name="options">Optional rendering options.</param>
+    /// <returns>The output file path.</returns>
+    public static string RenderPngToFile(QrPayloadData payload, string path, QrEasyOptions? options = null) {
+        var png = RenderPng(payload, options);
+        return RenderIO.WriteBinary(path, png);
+    }
+
+    /// <summary>
     /// Renders a QR code as PNG for a payload with embedded defaults.
     /// </summary>
     public static byte[] RenderPng(QrPayloadData payload, QrEasyOptions? options = null) {
@@ -50,6 +85,17 @@ public static class QrEasy {
         var qr = Encode(payload.Text, opts);
         var render = BuildPngOptions(opts, payload.Text);
         return QrPngRenderer.Render(qr.Modules, render);
+    }
+
+    /// <summary>
+    /// Renders a QR code as PNG to a stream for a payload with embedded defaults.
+    /// </summary>
+    public static void RenderPngToStream(QrPayloadData payload, Stream stream, QrEasyOptions? options = null) {
+        if (payload is null) throw new ArgumentNullException(nameof(payload));
+        var opts = MergeOptions(payload, options);
+        var qr = Encode(payload.Text, opts);
+        var render = BuildPngOptions(opts, payload.Text);
+        QrPngRenderer.RenderToStream(qr.Modules, render, stream);
     }
 
     /// <summary>
@@ -72,6 +118,30 @@ public static class QrEasy {
             Eyes = baseRender.Eyes,
         };
         return SvgQrRenderer.Render(qr.Modules, render);
+    }
+
+    /// <summary>
+    /// Renders a QR code as SVG and writes it to a file.
+    /// </summary>
+    /// <param name="payload">Payload text.</param>
+    /// <param name="path">Output file path.</param>
+    /// <param name="options">Optional rendering options.</param>
+    /// <returns>The output file path.</returns>
+    public static string RenderSvgToFile(string payload, string path, QrEasyOptions? options = null) {
+        var svg = RenderSvg(payload, options);
+        return RenderIO.WriteText(path, svg);
+    }
+
+    /// <summary>
+    /// Renders a QR code as SVG and writes it to a file for a payload with embedded defaults.
+    /// </summary>
+    /// <param name="payload">Payload with embedded defaults.</param>
+    /// <param name="path">Output file path.</param>
+    /// <param name="options">Optional rendering options.</param>
+    /// <returns>The output file path.</returns>
+    public static string RenderSvgToFile(QrPayloadData payload, string path, QrEasyOptions? options = null) {
+        var svg = RenderSvg(payload, options);
+        return RenderIO.WriteText(path, svg);
     }
 
     /// <summary>
@@ -121,6 +191,30 @@ public static class QrEasy {
     }
 
     /// <summary>
+    /// Renders a QR code as HTML and writes it to a file.
+    /// </summary>
+    /// <param name="payload">Payload text.</param>
+    /// <param name="path">Output file path.</param>
+    /// <param name="options">Optional rendering options.</param>
+    /// <returns>The output file path.</returns>
+    public static string RenderHtmlToFile(string payload, string path, QrEasyOptions? options = null) {
+        var html = RenderHtml(payload, options);
+        return RenderIO.WriteText(path, html);
+    }
+
+    /// <summary>
+    /// Renders a QR code as HTML and writes it to a file for a payload with embedded defaults.
+    /// </summary>
+    /// <param name="payload">Payload with embedded defaults.</param>
+    /// <param name="path">Output file path.</param>
+    /// <param name="options">Optional rendering options.</param>
+    /// <returns>The output file path.</returns>
+    public static string RenderHtmlToFile(QrPayloadData payload, string path, QrEasyOptions? options = null) {
+        var html = RenderHtml(payload, options);
+        return RenderIO.WriteText(path, html);
+    }
+
+    /// <summary>
     /// Renders a QR code as HTML for a payload with embedded defaults.
     /// </summary>
     public static string RenderHtml(QrPayloadData payload, QrEasyOptions? options = null) {
@@ -155,6 +249,40 @@ public static class QrEasy {
     }
 
     /// <summary>
+    /// Renders a QR code as JPEG to a stream.
+    /// </summary>
+    public static void RenderJpegToStream(string payload, Stream stream, QrEasyOptions? options = null) {
+        var opts = options ?? new QrEasyOptions();
+        var qr = Encode(payload, opts);
+        var render = BuildPngOptions(opts, payload);
+        QrJpegRenderer.RenderToStream(qr.Modules, render, stream, opts.JpegQuality);
+    }
+
+    /// <summary>
+    /// Renders a QR code as JPEG and writes it to a file.
+    /// </summary>
+    /// <param name="payload">Payload text.</param>
+    /// <param name="path">Output file path.</param>
+    /// <param name="options">Optional rendering options.</param>
+    /// <returns>The output file path.</returns>
+    public static string RenderJpegToFile(string payload, string path, QrEasyOptions? options = null) {
+        var jpeg = RenderJpeg(payload, options);
+        return RenderIO.WriteBinary(path, jpeg);
+    }
+
+    /// <summary>
+    /// Renders a QR code as JPEG and writes it to a file for a payload with embedded defaults.
+    /// </summary>
+    /// <param name="payload">Payload with embedded defaults.</param>
+    /// <param name="path">Output file path.</param>
+    /// <param name="options">Optional rendering options.</param>
+    /// <returns>The output file path.</returns>
+    public static string RenderJpegToFile(QrPayloadData payload, string path, QrEasyOptions? options = null) {
+        var jpeg = RenderJpeg(payload, options);
+        return RenderIO.WriteBinary(path, jpeg);
+    }
+
+    /// <summary>
     /// Renders a QR code as JPEG for a payload with embedded defaults.
     /// </summary>
     public static byte[] RenderJpeg(QrPayloadData payload, QrEasyOptions? options = null) {
@@ -163,6 +291,17 @@ public static class QrEasy {
         var qr = Encode(payload.Text, opts);
         var render = BuildPngOptions(opts, payload.Text);
         return QrJpegRenderer.Render(qr.Modules, render, opts.JpegQuality);
+    }
+
+    /// <summary>
+    /// Renders a QR code as JPEG to a stream for a payload with embedded defaults.
+    /// </summary>
+    public static void RenderJpegToStream(QrPayloadData payload, Stream stream, QrEasyOptions? options = null) {
+        if (payload is null) throw new ArgumentNullException(nameof(payload));
+        var opts = MergeOptions(payload, options);
+        var qr = Encode(payload.Text, opts);
+        var render = BuildPngOptions(opts, payload.Text);
+        QrJpegRenderer.RenderToStream(qr.Modules, render, stream, opts.JpegQuality);
     }
 
     /// <summary>

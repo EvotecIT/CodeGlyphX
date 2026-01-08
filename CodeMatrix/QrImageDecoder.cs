@@ -1,5 +1,4 @@
 using System;
-#pragma warning disable CS1591
 
 namespace CodeMatrix;
 
@@ -28,5 +27,3 @@ public static class QrImageDecoder {
     }
 #endif
 }
-
-#pragma warning restore CS1591

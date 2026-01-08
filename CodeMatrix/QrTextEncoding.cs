@@ -1,4 +1,3 @@
-#pragma warning disable CS1591
 namespace CodeMatrix;
 
 /// <summary>
@@ -42,5 +41,3 @@ public enum QrTextEncoding {
     /// </summary>
     Iso8859_15
 }
-
-#pragma warning restore CS1591
