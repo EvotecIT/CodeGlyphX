@@ -165,6 +165,27 @@ public static class QrEasy {
         return QrJpegRenderer.Render(qr.Modules, render, opts.JpegQuality);
     }
 
+    /// <summary>
+    /// Renders a QR code to a raw RGBA pixel buffer (no PNG encoding).
+    /// </summary>
+    public static byte[] RenderPixels(string payload, out int widthPx, out int heightPx, out int stride, QrEasyOptions? options = null) {
+        var opts = options ?? new QrEasyOptions();
+        var qr = Encode(payload, opts);
+        var render = BuildPngOptions(opts, payload);
+        return QrPngRenderer.RenderPixels(qr.Modules, render, out widthPx, out heightPx, out stride);
+    }
+
+    /// <summary>
+    /// Renders a QR code to a raw RGBA pixel buffer (no PNG encoding) for a payload with embedded defaults.
+    /// </summary>
+    public static byte[] RenderPixels(QrPayloadData payload, out int widthPx, out int heightPx, out int stride, QrEasyOptions? options = null) {
+        if (payload is null) throw new ArgumentNullException(nameof(payload));
+        var opts = MergeOptions(payload, options);
+        var qr = Encode(payload.Text, opts);
+        var render = BuildPngOptions(opts, payload.Text);
+        return QrPngRenderer.RenderPixels(qr.Modules, render, out widthPx, out heightPx, out stride);
+    }
+
     private static QrPngRenderOptions BuildPngOptions(QrEasyOptions opts, string payload) {
         var render = new QrPngRenderOptions {
             ModuleSize = opts.ModuleSize,
