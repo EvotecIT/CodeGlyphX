@@ -1,7 +1,7 @@
 using System;
 using System.Globalization;
 using System.Text;
-using System.Text.RegularExpressions;
+using CodeMatrix.Internal;
 
 namespace CodeMatrix.Payloads;
 
@@ -210,7 +210,7 @@ public sealed class SwissQrCodePayload {
             }
             if (referenceTextType == ReferenceTextType.QrReference && reference != null) {
                 if (reference.Length > 27) throw new ArgumentException("QR-references have to be shorter than 28 chars.");
-                if (!Regex.IsMatch(reference, "^[0-9]+$")) throw new ArgumentException("QR-reference must exist out of digits only.");
+                if (!RegexCache.DigitsRequired().IsMatch(reference)) throw new ArgumentException("QR-reference must exist out of digits only.");
                 if (!QrPayloadValidation.ChecksumMod10(reference)) throw new ArgumentException("QR-reference is invalid. Checksum error.");
             }
             if (referenceTextType == ReferenceTextType.CreditorReferenceIso11649 && reference != null && reference.Length > 25) {
@@ -352,7 +352,7 @@ public sealed class SwissQrCodePayload {
         }
 
         private static bool IsTwoLetterCode(string code) {
-            return Regex.IsMatch(code ?? string.Empty, "^[A-Za-z]{2}$");
+            return RegexCache.CountryCode().IsMatch(code ?? string.Empty);
         }
     }
 }

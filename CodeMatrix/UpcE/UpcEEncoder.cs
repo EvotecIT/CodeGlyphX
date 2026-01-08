@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using System.Text.RegularExpressions;
 using CodeMatrix.Internal;
 
 namespace CodeMatrix.UpcE;
@@ -14,7 +13,7 @@ public static class UpcEEncoder {
     /// </summary>
     public static Barcode1D Encode(string content, UpcENumberSystem numberSystem = UpcENumberSystem.Zero) {
         if (content is null) throw new ArgumentNullException(nameof(content));
-        if (!Regex.IsMatch(content, "^[0-9]*$")) throw new InvalidOperationException("Can only encode numerical digits (0-9)");
+        if (!RegexCache.DigitsOptional().IsMatch(content)) throw new InvalidOperationException("Can only encode numerical digits (0-9)");
         if (numberSystem != UpcENumberSystem.Zero && numberSystem != UpcENumberSystem.One) {
             throw new InvalidOperationException("Only number systems 0 and 1 are supported by UPC E");
         }

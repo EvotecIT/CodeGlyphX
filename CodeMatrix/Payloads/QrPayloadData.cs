@@ -30,6 +30,15 @@ public sealed class QrPayloadData {
     /// </summary>
     public QrTextEncoding? TextEncoding { get; }
 
+    /// <summary>
+    /// Creates a payload with optional encoding/version defaults.
+    /// </summary>
+    /// <param name="text">Payload text.</param>
+    /// <param name="errorCorrectionLevel">Optional error correction level recommendation.</param>
+    /// <param name="minVersion">Optional minimum QR version.</param>
+    /// <param name="maxVersion">Optional maximum QR version.</param>
+    /// <param name="textEncoding">Optional text encoding recommendation.</param>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="text"/> is null.</exception>
     public QrPayloadData(
         string text,
         QrErrorCorrectionLevel? errorCorrectionLevel = null,
@@ -43,5 +52,9 @@ public sealed class QrPayloadData {
         TextEncoding = textEncoding;
     }
 
+    /// <summary>
+    /// Returns the payload text.
+    /// </summary>
+    /// <returns>Payload text.</returns>
     public override string ToString() => Text;
 }

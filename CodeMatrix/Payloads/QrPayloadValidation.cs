@@ -1,6 +1,6 @@
 using System;
 using System.Globalization;
-using System.Text.RegularExpressions;
+using CodeMatrix.Internal;
 
 namespace CodeMatrix.Payloads;
 
@@ -8,7 +8,7 @@ internal static class QrPayloadValidation {
     public static bool IsValidIban(string iban) {
         if (string.IsNullOrEmpty(iban)) return false;
         var text = iban.ToUpperInvariant().Replace(" ", "").Replace("-", "");
-        var basic = Regex.IsMatch(text, "^[a-zA-Z]{2}[0-9]{2}([a-zA-Z0-9]?){16,30}$");
+        var basic = RegexCache.IbanBasic().IsMatch(text);
         if (!basic) return false;
 
         var rearranged = text.Substring(4) + text.Substring(0, 4);
@@ -47,7 +47,7 @@ internal static class QrPayloadValidation {
     public static bool IsValidBic(string? bic, bool required = false) {
         if (string.IsNullOrEmpty(bic)) return !required;
         var value = bic ?? string.Empty;
-        return Regex.IsMatch(value.Replace(" ", ""), "^([a-zA-Z]{4}[a-zA-Z]{2}[a-zA-Z0-9]{2}([a-zA-Z0-9]{3})?)$");
+        return RegexCache.Bic().IsMatch(value.Replace(" ", ""));
     }
 
     public static bool ChecksumMod10(string digits) {

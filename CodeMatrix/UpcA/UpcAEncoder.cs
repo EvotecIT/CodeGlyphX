@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using System.Text.RegularExpressions;
 using CodeMatrix.Internal;
 
 namespace CodeMatrix.UpcA;
@@ -14,7 +13,7 @@ public static class UpcAEncoder {
     /// </summary>
     public static Barcode1D Encode(string content) {
         if (content is null) throw new ArgumentNullException(nameof(content));
-        if (!Regex.IsMatch(content, "^[0-9]*$")) throw new InvalidOperationException("Can only encode numerical digits (0-9)");
+        if (!RegexCache.DigitsOptional().IsMatch(content)) throw new InvalidOperationException("Can only encode numerical digits (0-9)");
 
         if (content.Length == 11) {
             var c = CalcChecksum(content);

@@ -1,7 +1,7 @@
 using System;
 using System.Globalization;
 using System.Text;
-using System.Text.RegularExpressions;
+using CodeMatrix.Internal;
 
 namespace CodeMatrix.Payloads;
 
@@ -33,7 +33,7 @@ public static partial class QrPayloads {
     public static QrPayloadData WhatsAppMessage(string message, string? number = null) {
         var sanitized = string.IsNullOrEmpty(number)
             ? string.Empty
-            : Regex.Replace(number, "^[0+]+|[ ()-]", string.Empty);
+            : RegexCache.WhatsappSanitize().Replace(number, string.Empty);
         var payload = "https://wa.me/" + sanitized + "?text=" + Uri.EscapeDataString(message ?? string.Empty);
         return new QrPayloadData(payload);
     }
@@ -139,6 +139,9 @@ public static partial class QrPayloads {
         return new QrPayloadData(sb.ToString());
     }
 
+    /// <summary>
+    /// Builds a contact payload (MeCard or vCard).
+    /// </summary>
     public static QrPayloadData Contact(
         QrContactOutputType outputType,
         string firstname,
@@ -389,8 +392,8 @@ public static partial class QrPayloads {
 
     private static bool IsHexStyle(string inp) {
         if (string.IsNullOrEmpty(inp)) return false;
-        if (!Regex.IsMatch(inp, "\\A\\b[0-9a-fA-F]+\\b\\Z")) {
-            return Regex.IsMatch(inp, "\\A\\b(0[xX])?[0-9a-fA-F]+\\b\\Z");
+        if (!RegexCache.HexPlain().IsMatch(inp)) {
+            return RegexCache.HexWithPrefix().IsMatch(inp);
         }
         return true;
     }
