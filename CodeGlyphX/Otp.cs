@@ -223,6 +223,24 @@ public static class Otp {
     }
 
     /// <summary>
+    /// Saves a TOTP QR based on file extension (.png/.svg/.html/.jpg).
+    /// Defaults to PNG when no extension is provided.
+    /// </summary>
+    public static string SaveTotp(string issuer, string account, string secretBase32, string path, QrEasyOptions? options = null, OtpAlgorithm alg = OtpAlgorithm.Sha1, int digits = 6, int period = 30, string? title = null) {
+        var uri = TotpUri(issuer, account, secretBase32, alg, digits, period);
+        return QR.Save(uri, path, options, title);
+    }
+
+    /// <summary>
+    /// Saves a HOTP QR based on file extension (.png/.svg/.html/.jpg).
+    /// Defaults to PNG when no extension is provided.
+    /// </summary>
+    public static string SaveHotp(string issuer, string account, string secretBase32, long counter, string path, QrEasyOptions? options = null, OtpAlgorithm alg = OtpAlgorithm.Sha1, int digits = 6, string? title = null) {
+        var uri = HotpUri(issuer, account, secretBase32, counter, alg, digits);
+        return QR.Save(uri, path, options, title);
+    }
+
+    /// <summary>
     /// Starts a fluent TOTP builder.
     /// </summary>
     public static TotpBuilder Totp(string issuer, string account, string secretBase32, QrEasyOptions? options = null) {
@@ -367,6 +385,11 @@ public static class Otp {
         /// Saves JPEG to a stream.
         /// </summary>
         public void SaveJpeg(Stream stream) => QR.SaveJpeg(Uri(), stream, Options);
+
+        /// <summary>
+        /// Saves based on file extension (.png/.svg/.html/.jpg). Defaults to PNG when no extension is provided.
+        /// </summary>
+        public string Save(string path, string? title = null) => QR.Save(Uri(), path, Options, title);
     }
 
     /// <summary>
@@ -500,5 +523,10 @@ public static class Otp {
         /// Saves JPEG to a stream.
         /// </summary>
         public void SaveJpeg(Stream stream) => QR.SaveJpeg(Uri(), stream, Options);
+
+        /// <summary>
+        /// Saves based on file extension (.png/.svg/.html/.jpg). Defaults to PNG when no extension is provided.
+        /// </summary>
+        public string Save(string path, string? title = null) => QR.Save(Uri(), path, Options, title);
     }
 }

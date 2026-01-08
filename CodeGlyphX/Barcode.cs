@@ -136,6 +136,95 @@ public static class Barcode {
         BarcodeJpegRenderer.RenderToStream(barcode, opts, stream, quality);
     }
 
+    /// <summary>
+    /// Saves a barcode to a file based on the file extension (.png/.svg/.html/.jpg).
+    /// Defaults to PNG when no extension is provided.
+    /// </summary>
+    public static string Save(BarcodeType type, string content, string path, BarcodeOptions? options = null, string? title = null) {
+        var ext = Path.GetExtension(path);
+        if (string.IsNullOrWhiteSpace(ext)) return SavePng(type, content, path, options);
+
+        switch (ext.ToLowerInvariant()) {
+            case ".png":
+                return SavePng(type, content, path, options);
+            case ".svg":
+                return SaveSvg(type, content, path, options);
+            case ".html":
+            case ".htm":
+                return SaveHtml(type, content, path, options, title);
+            case ".jpg":
+            case ".jpeg":
+                return SaveJpeg(type, content, path, options);
+            default:
+                // Fallback to PNG for unknown extensions to keep the API forgiving.
+                return SavePng(type, content, path, options);
+        }
+    }
+
+    /// <summary>
+    /// Attempts to decode a barcode from PNG bytes.
+    /// </summary>
+    public static bool TryDecodePng(byte[] png, out BarcodeDecoded decoded) {
+        return TryDecodePng(png, null, out decoded);
+    }
+
+    /// <summary>
+    /// Attempts to decode a barcode from PNG bytes with an optional expected type hint.
+    /// </summary>
+    public static bool TryDecodePng(byte[] png, BarcodeType? expectedType, out BarcodeDecoded decoded) {
+        if (png is null) throw new ArgumentNullException(nameof(png));
+        var rgba = PngReader.DecodeRgba32(png, out var width, out var height);
+        return BarcodeDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, expectedType, out decoded);
+    }
+
+    /// <summary>
+    /// Attempts to decode a barcode from a PNG file.
+    /// </summary>
+    public static bool TryDecodePngFile(string path, out BarcodeDecoded decoded) {
+        if (path is null) throw new ArgumentNullException(nameof(path));
+        var png = RenderIO.ReadBinary(path);
+        return TryDecodePng(png, out decoded);
+    }
+
+    /// <summary>
+    /// Attempts to decode a barcode from a PNG stream.
+    /// </summary>
+    public static bool TryDecodePng(Stream stream, out BarcodeDecoded decoded) {
+        if (stream is null) throw new ArgumentNullException(nameof(stream));
+        var png = RenderIO.ReadBinary(stream);
+        return TryDecodePng(png, out decoded);
+    }
+
+    /// <summary>
+    /// Decodes a barcode from PNG bytes.
+    /// </summary>
+    public static BarcodeDecoded DecodePng(byte[] png) {
+        if (!TryDecodePng(png, out var decoded)) {
+            throw new FormatException("PNG does not contain a decodable barcode.");
+        }
+        return decoded;
+    }
+
+    /// <summary>
+    /// Decodes a barcode from a PNG file.
+    /// </summary>
+    public static BarcodeDecoded DecodePngFile(string path) {
+        if (!TryDecodePngFile(path, out var decoded)) {
+            throw new FormatException("PNG file does not contain a decodable barcode.");
+        }
+        return decoded;
+    }
+
+    /// <summary>
+    /// Decodes a barcode from a PNG stream.
+    /// </summary>
+    public static BarcodeDecoded DecodePng(Stream stream) {
+        if (!TryDecodePng(stream, out var decoded)) {
+            throw new FormatException("PNG stream does not contain a decodable barcode.");
+        }
+        return decoded;
+    }
+
     private static BarcodePngRenderOptions BuildPngOptions(BarcodeOptions? options) {
         var opts = options ?? new BarcodeOptions();
         return new BarcodePngRenderOptions {
@@ -302,5 +391,10 @@ public static class Barcode {
         /// Saves JPEG to a stream.
         /// </summary>
         public void SaveJpeg(Stream stream) => Barcode.SaveJpeg(_type, _content, stream, Options);
+
+        /// <summary>
+        /// Saves based on file extension (.png/.svg/.html/.jpg). Defaults to PNG when no extension is provided.
+        /// </summary>
+        public string Save(string path, string? title = null) => Barcode.Save(_type, _content, path, Options, title);
     }
 }

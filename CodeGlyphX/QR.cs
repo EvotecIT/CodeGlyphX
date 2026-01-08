@@ -195,6 +195,23 @@ public static class QR {
     }
 
     /// <summary>
+    /// Saves a QR code to a file based on the file extension (.png/.svg/.html/.jpg).
+    /// Defaults to PNG when no extension is provided.
+    /// </summary>
+    public static string Save(string payload, string path, QrEasyOptions? options = null, string? title = null) {
+        return SaveByExtension(path, payload, null, options, title);
+    }
+
+    /// <summary>
+    /// Saves a QR code to a file based on the file extension (.png/.svg/.html/.jpg).
+    /// Defaults to PNG when no extension is provided.
+    /// </summary>
+    public static string Save(QrPayloadData payload, string path, QrEasyOptions? options = null, string? title = null) {
+        if (payload is null) throw new ArgumentNullException(nameof(payload));
+        return SaveByExtension(path, payload.Text, payload, options, title);
+    }
+
+    /// <summary>
     /// Attempts to decode a QR code from a PNG byte array.
     /// </summary>
     public static bool TryDecodePng(byte[] png, out QrDecoded decoded) {
@@ -202,6 +219,16 @@ public static class QR {
         if (png is null) return false;
         var rgba = PngReader.DecodeRgba32(png, out var width, out var height);
         return QrDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded);
+    }
+
+    /// <summary>
+    /// Attempts to decode all QR codes from a PNG byte array.
+    /// </summary>
+    public static bool TryDecodeAllPng(byte[] png, out QrDecoded[] decoded) {
+        decoded = Array.Empty<QrDecoded>();
+        if (png is null) return false;
+        var rgba = PngReader.DecodeRgba32(png, out var width, out var height);
+        return QrDecoder.TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded);
     }
 
     /// <summary>
@@ -215,6 +242,16 @@ public static class QR {
     }
 
     /// <summary>
+    /// Attempts to decode all QR codes from a PNG file.
+    /// </summary>
+    public static bool TryDecodeAllPngFile(string path, out QrDecoded[] decoded) {
+        decoded = Array.Empty<QrDecoded>();
+        if (string.IsNullOrWhiteSpace(path)) return false;
+        if (!path.TryReadBinary(out var data)) return false;
+        return TryDecodeAllPng(data, out decoded);
+    }
+
+    /// <summary>
     /// Attempts to decode a QR code from a PNG stream.
     /// </summary>
     public static bool TryDecodePng(Stream stream, out QrDecoded decoded) {
@@ -222,6 +259,16 @@ public static class QR {
         if (stream is null) return false;
         var data = stream.ReadBinary();
         return TryDecodePng(data, out decoded);
+    }
+
+    /// <summary>
+    /// Attempts to decode all QR codes from a PNG stream.
+    /// </summary>
+    public static bool TryDecodeAllPng(Stream stream, out QrDecoded[] decoded) {
+        decoded = Array.Empty<QrDecoded>();
+        if (stream is null) return false;
+        var data = stream.ReadBinary();
+        return TryDecodeAllPng(data, out decoded);
     }
 
     /// <summary>
@@ -430,6 +477,36 @@ public static class QR {
             } else {
                 QR.SaveJpeg(_payloadData, stream, Options);
             }
+        }
+
+        /// <summary>
+        /// Saves based on file extension (.png/.svg/.html/.jpg). Defaults to PNG when no extension is provided.
+        /// </summary>
+        public string Save(string path, string? title = null) => _payloadData is null
+            ? QR.Save(_payload, path, Options, title)
+            : QR.Save(_payloadData, path, Options, title);
+    }
+
+    private static string SaveByExtension(string path, string payload, QrPayloadData? payloadData, QrEasyOptions? options, string? title) {
+        var ext = Path.GetExtension(path);
+        if (string.IsNullOrWhiteSpace(ext)) {
+            return payloadData is null ? SavePng(payload, path, options) : SavePng(payloadData, path, options);
+        }
+
+        switch (ext.ToLowerInvariant()) {
+            case ".png":
+                return payloadData is null ? SavePng(payload, path, options) : SavePng(payloadData, path, options);
+            case ".svg":
+                return payloadData is null ? SaveSvg(payload, path, options) : SaveSvg(payloadData, path, options);
+            case ".html":
+            case ".htm":
+                return payloadData is null ? SaveHtml(payload, path, options, title) : SaveHtml(payloadData, path, options, title);
+            case ".jpg":
+            case ".jpeg":
+                return payloadData is null ? SaveJpeg(payload, path, options) : SaveJpeg(payloadData, path, options);
+            default:
+                // Fallback to PNG for unknown extensions to keep the API forgiving.
+                return payloadData is null ? SavePng(payload, path, options) : SavePng(payloadData, path, options);
         }
     }
 }
