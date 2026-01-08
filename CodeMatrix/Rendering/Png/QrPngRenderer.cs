@@ -14,6 +14,18 @@ public static class QrPngRenderer {
         return PngWriter.WriteRgba8(widthPx, heightPx, scanlines);
     }
 
+    /// <summary>
+    /// Renders the QR module matrix to a raw RGBA pixel buffer (no PNG encoding).
+    /// </summary>
+    public static byte[] RenderPixels(BitMatrix modules, QrPngRenderOptions opts, out int widthPx, out int heightPx, out int stride) {
+        var scanlines = RenderScanlines(modules, opts, out widthPx, out heightPx, out stride);
+        var pixels = new byte[heightPx * stride];
+        for (var y = 0; y < heightPx; y++) {
+            Buffer.BlockCopy(scanlines, y * (stride + 1) + 1, pixels, y * stride, stride);
+        }
+        return pixels;
+    }
+
     internal static byte[] RenderScanlines(BitMatrix modules, QrPngRenderOptions opts, out int widthPx, out int heightPx, out int stride) {
         if (modules is null) throw new ArgumentNullException(nameof(modules));
         if (opts is null) throw new ArgumentNullException(nameof(opts));

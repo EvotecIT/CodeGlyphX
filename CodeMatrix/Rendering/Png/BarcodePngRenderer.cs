@@ -14,6 +14,18 @@ public static class BarcodePngRenderer {
         return PngWriter.WriteRgba8(widthPx, heightPx, scanlines);
     }
 
+    /// <summary>
+    /// Renders the barcode to a raw RGBA pixel buffer (no PNG encoding).
+    /// </summary>
+    public static byte[] RenderPixels(Barcode1D barcode, BarcodePngRenderOptions opts, out int widthPx, out int heightPx, out int stride) {
+        var scanlines = RenderScanlines(barcode, opts, out widthPx, out heightPx, out stride);
+        var pixels = new byte[heightPx * stride];
+        for (var y = 0; y < heightPx; y++) {
+            Buffer.BlockCopy(scanlines, y * (stride + 1) + 1, pixels, y * stride, stride);
+        }
+        return pixels;
+    }
+
     internal static byte[] RenderScanlines(Barcode1D barcode, BarcodePngRenderOptions opts, out int widthPx, out int heightPx, out int stride) {
         if (barcode is null) throw new ArgumentNullException(nameof(barcode));
         if (opts is null) throw new ArgumentNullException(nameof(opts));
