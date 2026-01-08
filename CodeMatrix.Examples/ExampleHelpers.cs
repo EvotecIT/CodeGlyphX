@@ -26,39 +26,6 @@ internal static class ExampleHelpers {
                "<div style=\"padding:24px;\">" + innerHtml + "</div></body></html>";
     }
 
-    public static byte[] RenderQrPixels(BitMatrix modules, QrPngRenderOptions opts, out int width, out int height, out int stride) {
-        return RenderQrPixels(modules, opts.ModuleSize, opts.QuietZone, opts.Foreground, opts.Background, out width, out height, out stride);
-    }
-
-    public static byte[] RenderQrPixels(BitMatrix modules, int moduleSize, int quietZone, Rgba32 dark, Rgba32 light, out int width, out int height, out int stride) {
-        if (modules is null) throw new ArgumentNullException(nameof(modules));
-        if (moduleSize <= 0) throw new ArgumentOutOfRangeException(nameof(moduleSize));
-        if (quietZone < 0) throw new ArgumentOutOfRangeException(nameof(quietZone));
-
-        var outModules = modules.Width + quietZone * 2;
-        width = outModules * moduleSize;
-        height = width;
-        stride = width * 4;
-
-        var pixels = new byte[height * stride];
-        for (var y = 0; y < height; y++) {
-            var row = y * stride;
-            var my = y / moduleSize - quietZone;
-            for (var x = 0; x < width; x++) {
-                var mx = x / moduleSize - quietZone;
-                var darkModule = (uint)mx < (uint)modules.Width && (uint)my < (uint)modules.Height && modules[mx, my];
-                var color = darkModule ? dark : light;
-                var p = row + x * 4;
-                pixels[p + 0] = color.R;
-                pixels[p + 1] = color.G;
-                pixels[p + 2] = color.B;
-                pixels[p + 3] = color.A;
-            }
-        }
-
-        return pixels;
-    }
-
     public static byte[] CreateLogoRgba(int size, Rgba32 color, Rgba32 accent, out int width, out int height) {
         if (size <= 0) throw new ArgumentOutOfRangeException(nameof(size));
         width = size;

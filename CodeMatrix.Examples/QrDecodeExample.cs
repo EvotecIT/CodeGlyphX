@@ -19,7 +19,7 @@ internal static class QrDecodeExample {
         sb.AppendLine();
 
         var opts = new QrPngRenderOptions { ModuleSize = 6, QuietZone = 4 };
-        var pixels = ExampleHelpers.RenderQrPixels(qr.Modules, opts, out var width, out var height, out var stride);
+        var pixels = QrPngRenderer.RenderPixels(qr.Modules, opts, out var width, out var height, out var stride);
         if (QrDecoder.TryDecode(pixels, width, height, stride, PixelFormat.Rgba32, out var decodedPixels)) {
             sb.AppendLine("Pixels: ok");
             sb.AppendLine(decodedPixels.Text);

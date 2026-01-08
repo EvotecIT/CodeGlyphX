@@ -48,7 +48,7 @@ internal static class OtpExample {
         }
         sb.AppendLine();
 
-        var pixels = ExampleHelpers.RenderQrPixels(totpQr.Modules, renderOpts, out var width, out var height, out var stride);
+        var pixels = QrPngRenderer.RenderPixels(totpQr.Modules, renderOpts, out var width, out var height, out var stride);
         if (OtpQrDecoder.TryDecode(pixels, width, height, stride, PixelFormat.Rgba32, out var parsedPixels)) {
             sb.AppendLine("Decode pixels: ok");
             sb.AppendLine($"Issuer={parsedPixels.Issuer} Account={parsedPixels.Account} Type={parsedPixels.Type}");
