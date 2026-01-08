@@ -19,6 +19,19 @@ public sealed class BarcodeDecoderTests {
     }
 
     [Fact]
+    public void Decode_Code128_FromPng() {
+        var png = Barcode.Png(BarcodeType.Code128, "CODEMATRIX-123", new BarcodeOptions {
+            ModuleSize = 3,
+            QuietZone = 10,
+            HeightModules = 40
+        });
+
+        Assert.True(Barcode.TryDecodePng(png, out var decoded));
+        Assert.Equal(BarcodeType.Code128, decoded.Type);
+        Assert.Equal("CODEMATRIX-123", decoded.Text);
+    }
+
+    [Fact]
     public void Decode_Code39_FromPixels() {
         var barcode = BarcodeEncoder.EncodeCode39("ABC123", includeChecksum: true, fullAsciiMode: false);
         var pixels = BarcodePngRenderer.RenderPixels(barcode, new BarcodePngRenderOptions {

@@ -2,7 +2,7 @@
 
 ## Current focus
 
-- Validate Phase 4 on Windows (real monitor capture) and decide whether Phase 5 robustness (rotation/thresholding) is needed.
+- API ergonomics polish (1‑line save, streaming, minimal examples) + reader robustness for real screen captures.
 
 ---
 
@@ -99,9 +99,10 @@ Done definition:
   - [ ] DataMatrix encoder (bigger effort)
   - [ ] PDF417 encoder (bigger effort)
 - [ ] Improve pixel decode robustness (still “clean images” scope):
-  - [ ] rotation handling
-  - [ ] better thresholding
+  - [x] rotation handling
+  - [x] better thresholding (adaptive + blur passes)
   - [ ] faster finder search
+  - [x] multi‑QR decode (best‑effort)
 
 Done definition:
 - Additional encoders added without breaking public API; tests updated.

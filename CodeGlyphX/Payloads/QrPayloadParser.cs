@@ -157,12 +157,11 @@ public static class QrPayloadParser {
         email = null!;
         if (!raw.StartsWith("mailto:", StringComparison.OrdinalIgnoreCase)) return false;
         var rest = raw.Substring(7);
-        var parts = rest.Split('?', 2);
-        var address = parts[0];
+        SplitOnce(rest, '?', out var address, out var query);
         string? subject = null;
         string? body = null;
-        if (parts.Length > 1) {
-            ParseQuery(parts[1], out subject, out body);
+        if (!string.IsNullOrEmpty(query)) {
+            ParseQuery(query, out subject, out body);
         }
         email = new QrParsedData.Email(address, subject, body);
         return true;
@@ -188,19 +187,16 @@ public static class QrPayloadParser {
         sms = null!;
         if (raw.StartsWith("SMSTO:", StringComparison.OrdinalIgnoreCase)) {
             var smstoRest = raw.Substring(6);
-            var smstoParts = smstoRest.Split(':', 2);
-            var smstoNumber = smstoParts.Length > 0 ? smstoParts[0] : string.Empty;
-            var smstoBody = smstoParts.Length > 1 ? smstoParts[1] : null;
+            SplitOnce(smstoRest, ':', out var smstoNumber, out var smstoBody);
             sms = new QrParsedData.Sms(smstoNumber, smstoBody);
             return true;
         }
         if (!raw.StartsWith("sms:", StringComparison.OrdinalIgnoreCase)) return false;
         var smsRest = raw.Substring(4);
-        var smsParts = smsRest.Split('?', 2);
-        var number = smsParts[0];
+        SplitOnce(smsRest, '?', out var number, out var smsQuery);
         string? body = null;
-        if (smsParts.Length > 1) {
-            ParseQuery(smsParts[1], out _, out body);
+        if (!string.IsNullOrEmpty(smsQuery)) {
+            ParseQuery(smsQuery, out _, out body);
         }
         sms = new QrParsedData.Sms(number, body);
         return true;
@@ -246,7 +242,8 @@ public static class QrPayloadParser {
         }
 
         if (string.IsNullOrEmpty(vpa)) return false;
-        upi = new QrParsedData.Upi(vpa, name, mc, tr, tn, amount, currency);
+        var vpaValue = vpa ?? string.Empty;
+        upi = new QrParsedData.Upi(vpaValue, name, mc, tr, tn, amount, currency);
         return true;
     }
 
@@ -345,7 +342,7 @@ public static class QrPayloadParser {
 
     private static bool TryParseCalendar(string raw, out QrParsedData.Calendar calendar) {
         calendar = null!;
-        if (!raw.Contains("BEGIN:VEVENT", StringComparison.OrdinalIgnoreCase)) return false;
+        if (raw.IndexOf("BEGIN:VEVENT", StringComparison.OrdinalIgnoreCase) < 0) return false;
         string? summary = null;
         DateTime? start = null;
         DateTime? end = null;
@@ -392,6 +389,17 @@ public static class QrPayloadParser {
             return true;
         }
         return false;
+    }
+
+    private static void SplitOnce(string value, char separator, out string left, out string? right) {
+        var idx = value.IndexOf(separator);
+        if (idx < 0) {
+            left = value;
+            right = null;
+            return;
+        }
+        left = idx == 0 ? string.Empty : value.Substring(0, idx);
+        right = idx + 1 >= value.Length ? string.Empty : value.Substring(idx + 1);
     }
 
     private static bool TryParseAppStore(string raw, out QrParsedData.AppStore app) {
