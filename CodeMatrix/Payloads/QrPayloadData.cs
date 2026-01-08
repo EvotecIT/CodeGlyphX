@@ -1,6 +1,4 @@
 using System;
-#pragma warning disable CS1591
-
 namespace CodeMatrix.Payloads;
 
 /// <summary>
@@ -47,5 +45,3 @@ public sealed class QrPayloadData {
 
     public override string ToString() => Text;
 }
-
-#pragma warning restore CS1591

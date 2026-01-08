@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
-#pragma warning disable CS1591
 
 namespace CodeMatrix.Payloads;
 
 public static partial class QrPayloads {
+    /// <summary>
+    /// Builds a Bitcoin-like URI payload.
+    /// </summary>
     public static QrPayloadData BitcoinLike(QrBitcoinLikeType type, string address, double? amount = null, string? label = null, string? message = null) {
         if (string.IsNullOrEmpty(address)) throw new ArgumentException("Address must not be empty.", nameof(address));
         string? encLabel = string.IsNullOrEmpty(label) ? null : Uri.EscapeDataString(label);
@@ -24,6 +26,9 @@ public static partial class QrPayloads {
         return new QrPayloadData(payload);
     }
 
+    /// <summary>
+    /// Builds a Monero URI payload.
+    /// </summary>
     public static QrPayloadData Monero(string address, float? amount = null, string? paymentId = null, string? recipientName = null, string? description = null) {
         if (string.IsNullOrEmpty(address)) throw new ArgumentException("Address must not be empty.", nameof(address));
         if (amount.HasValue && amount <= 0f) throw new ArgumentOutOfRangeException(nameof(amount), "Amount must be greater than 0.");
@@ -40,10 +45,16 @@ public static partial class QrPayloads {
         return new QrPayloadData(payload);
     }
 
+    /// <summary>
+    /// Builds a Shadowsocks URI payload.
+    /// </summary>
     public static QrPayloadData ShadowSocks(string hostname, int port, string password, QrShadowSocksMethod method, string? tag = null) {
         return ShadowSocks(hostname, port, password, method, null, tag);
     }
 
+    /// <summary>
+    /// Builds a Shadowsocks URI payload with parameters.
+    /// </summary>
     public static QrPayloadData ShadowSocks(string hostname, int port, string password, QrShadowSocksMethod method, Dictionary<string, string>? parameters, string? tag = null) {
         if (port < 1 || port > 65535) throw new ArgumentOutOfRangeException(nameof(port), "Port must be between 1 and 65535.");
         var host = Uri.CheckHostName(hostname) == UriHostNameType.IPv6 ? "[" + hostname + "]" : hostname;
@@ -64,6 +75,9 @@ public static partial class QrPayloads {
         return new QrPayloadData(payload);
     }
 
+    /// <summary>
+    /// Builds an otpauth URI payload for HOTP/TOTP.
+    /// </summary>
     public static QrPayloadData OneTimePassword(
         OtpAuthType type,
         string secretBase32,
@@ -188,5 +202,3 @@ public static partial class QrPayloads {
         return sb.ToString();
     }
 }
-
-#pragma warning restore CS1591

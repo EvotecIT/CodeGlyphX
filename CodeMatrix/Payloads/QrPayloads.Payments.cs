@@ -1,10 +1,12 @@
 using System;
 using System.Globalization;
-#pragma warning disable CS1591
 
 namespace CodeMatrix.Payloads;
 
 public static partial class QrPayloads {
+    /// <summary>
+    /// Builds a SEPA Girocode payload.
+    /// </summary>
     public static QrPayloadData Girocode(
         string iban,
         string? bic,
@@ -65,6 +67,9 @@ public static partial class QrPayloads {
         return new QrPayloadData(payload, QrErrorCorrectionLevel.M, textEncoding: MapGirocodeEncoding(encoding));
     }
 
+    /// <summary>
+    /// Builds a BezahlCode contact payload.
+    /// </summary>
     public static QrPayloadData BezahlCodeContact(
         QrBezahlAuthorityType authority,
         string name,
@@ -130,5 +135,3 @@ public static partial class QrPayloads {
         };
     }
 }
-
-#pragma warning restore CS1591

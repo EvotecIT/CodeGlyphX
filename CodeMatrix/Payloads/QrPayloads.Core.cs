@@ -2,7 +2,6 @@ using System;
 using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
-#pragma warning disable CS1591
 
 namespace CodeMatrix.Payloads;
 
@@ -10,15 +9,27 @@ namespace CodeMatrix.Payloads;
 /// Helpers for building common QR payloads with recommended defaults.
 /// </summary>
 public static partial class QrPayloads {
+    /// <summary>
+    /// Builds a plain text payload.
+    /// </summary>
     public static QrPayloadData Text(string text) => new(QrPayload.Text(text));
 
+    /// <summary>
+    /// Builds a URL payload.
+    /// </summary>
     public static QrPayloadData Url(string url) => new(NormalizeUrl(url));
 
+    /// <summary>
+    /// Builds a bookmark payload (MEBKM).
+    /// </summary>
     public static QrPayloadData Bookmark(string url, string title) {
         var payload = "MEBKM:TITLE:" + EscapeInput(title ?? string.Empty) + ";URL:" + EscapeInput(url ?? string.Empty) + ";;";
         return new QrPayloadData(payload);
     }
 
+    /// <summary>
+    /// Builds a WhatsApp message payload.
+    /// </summary>
     public static QrPayloadData WhatsAppMessage(string message, string? number = null) {
         var sanitized = string.IsNullOrEmpty(number)
             ? string.Empty
@@ -27,6 +38,9 @@ public static partial class QrPayloads {
         return new QrPayloadData(payload);
     }
 
+    /// <summary>
+    /// Builds a Wi-Fi payload.
+    /// </summary>
     public static QrPayloadData Wifi(string ssid, string password, string authType = "WPA", bool hidden = false, bool escapeHexStrings = true) {
         var safeSsid = EscapeInput(ssid ?? string.Empty);
         var safePassword = EscapeInput(password ?? string.Empty);
@@ -36,6 +50,9 @@ public static partial class QrPayloads {
         return new QrPayloadData(payload);
     }
 
+    /// <summary>
+    /// Builds an email payload.
+    /// </summary>
     public static QrPayloadData Email(string address, string? subject = null, string? message = null, QrMailEncoding encoding = QrMailEncoding.Mailto) {
         var payload = encoding switch {
             QrMailEncoding.Mailto => BuildMailto(address, subject, message),
@@ -46,6 +63,9 @@ public static partial class QrPayloads {
         return new QrPayloadData(payload);
     }
 
+    /// <summary>
+    /// Builds an MMS payload.
+    /// </summary>
     public static QrPayloadData Mms(string number, string? subject = null, QrMmsEncoding encoding = QrMmsEncoding.Mms) {
         var payload = encoding switch {
             QrMmsEncoding.Mmsto => "mmsto:" + number + (string.IsNullOrEmpty(subject) ? string.Empty : ("?subject=" + Uri.EscapeDataString(subject))),
@@ -55,6 +75,9 @@ public static partial class QrPayloads {
         return new QrPayloadData(payload);
     }
 
+    /// <summary>
+    /// Builds an SMS payload.
+    /// </summary>
     public static QrPayloadData Sms(string number, string? message = null, QrSmsEncoding encoding = QrSmsEncoding.Sms) {
         var payload = encoding switch {
             QrSmsEncoding.Sms => "sms:" + number + (string.IsNullOrEmpty(message) ? string.Empty : ("?body=" + Uri.EscapeDataString(message))),
@@ -65,10 +88,16 @@ public static partial class QrPayloads {
         return new QrPayloadData(payload);
     }
 
+    /// <summary>
+    /// Builds a phone payload (tel:).
+    /// </summary>
     public static QrPayloadData Phone(string number) {
         return new QrPayloadData("tel:" + (number ?? string.Empty));
     }
 
+    /// <summary>
+    /// Builds a geolocation payload.
+    /// </summary>
     public static QrPayloadData Geo(string latitude, string longitude, QrGeolocationEncoding encoding = QrGeolocationEncoding.Geo) {
         var lat = (latitude ?? string.Empty).Replace(",", ".");
         var lon = (longitude ?? string.Empty).Replace(",", ".");
@@ -78,6 +107,9 @@ public static partial class QrPayloads {
         return new QrPayloadData(payload);
     }
 
+    /// <summary>
+    /// Builds a calendar event payload.
+    /// </summary>
     public static QrPayloadData CalendarEvent(
         string subject,
         string? description,
@@ -201,42 +233,72 @@ public static partial class QrPayloads {
         return new QrPayloadData(vcard.ToString());
     }
 
+    /// <summary>
+    /// Builds a Skype call payload.
+    /// </summary>
     public static QrPayloadData SkypeCall(string username) {
         return new QrPayloadData("skype:" + (username ?? string.Empty) + "?call");
     }
 
+    /// <summary>
+    /// Builds an Apple App Store payload.
+    /// </summary>
     public static QrPayloadData AppStoreApple(string appId, string? countryCode = null) {
         return new QrPayloadData(QrPayload.AppStoreApple(appId, countryCode));
     }
 
+    /// <summary>
+    /// Builds a Google Play payload.
+    /// </summary>
     public static QrPayloadData AppStoreGooglePlay(string packageId) {
         return new QrPayloadData(QrPayload.AppStoreGooglePlay(packageId));
     }
 
+    /// <summary>
+    /// Builds a Facebook profile payload.
+    /// </summary>
     public static QrPayloadData FacebookProfile(string handleOrUrl) {
         return new QrPayloadData(QrPayload.FacebookProfile(handleOrUrl));
     }
 
+    /// <summary>
+    /// Builds a Twitter profile payload.
+    /// </summary>
     public static QrPayloadData TwitterProfile(string handleOrUrl) {
         return new QrPayloadData(QrPayload.TwitterProfile(handleOrUrl));
     }
 
+    /// <summary>
+    /// Builds an X profile payload.
+    /// </summary>
     public static QrPayloadData XProfile(string handleOrUrl) {
         return new QrPayloadData(QrPayload.XProfile(handleOrUrl));
     }
 
+    /// <summary>
+    /// Builds a TikTok profile payload.
+    /// </summary>
     public static QrPayloadData TikTokProfile(string handleOrUrl) {
         return new QrPayloadData(QrPayload.TikTokProfile(handleOrUrl));
     }
 
+    /// <summary>
+    /// Builds a LinkedIn profile payload.
+    /// </summary>
     public static QrPayloadData LinkedInProfile(string handleOrUrl) {
         return new QrPayloadData(QrPayload.LinkedInProfile(handleOrUrl));
     }
 
+    /// <summary>
+    /// Builds a LinkedIn company payload.
+    /// </summary>
     public static QrPayloadData LinkedInCompany(string handleOrUrl) {
         return new QrPayloadData(QrPayload.LinkedInCompany(handleOrUrl));
     }
 
+    /// <summary>
+    /// Builds a UPI payment payload.
+    /// </summary>
     public static QrPayloadData Upi(
         string vpa,
         string? name = null,
@@ -333,5 +395,3 @@ public static partial class QrPayloads {
         return true;
     }
 }
-
-#pragma warning restore CS1591

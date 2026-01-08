@@ -1,29 +1,42 @@
 using System;
-#pragma warning disable CS1591
-
 namespace CodeMatrix.Payloads;
 
 public static partial class QrPayloads {
+    /// <summary>
+    /// Builds an App Store payload for the given platform.
+    /// </summary>
     public static QrPayloadData AppStore(string appIdOrUrl, QrAppStorePlatform platform = QrAppStorePlatform.Apple) {
         var payload = BuildAppStoreUrl(appIdOrUrl, platform);
         return new QrPayloadData(payload);
     }
 
+    /// <summary>
+    /// Builds a Facebook profile payload.
+    /// </summary>
     public static QrPayloadData Facebook(string profileOrUrl) {
         var payload = BuildProfileUrl(profileOrUrl, "https://www.facebook.com/", ensureAtPrefix: false);
         return new QrPayloadData(payload);
     }
 
+    /// <summary>
+    /// Builds a Twitter/X profile payload.
+    /// </summary>
     public static QrPayloadData Twitter(string handleOrUrl) {
         var payload = BuildProfileUrl(handleOrUrl, "https://x.com/", ensureAtPrefix: false);
         return new QrPayloadData(payload);
     }
 
+    /// <summary>
+    /// Builds a TikTok profile payload.
+    /// </summary>
     public static QrPayloadData TikTok(string handleOrUrl) {
         var payload = BuildProfileUrl(handleOrUrl, "https://www.tiktok.com/", ensureAtPrefix: true);
         return new QrPayloadData(payload);
     }
 
+    /// <summary>
+    /// Builds a LinkedIn profile payload.
+    /// </summary>
     public static QrPayloadData LinkedIn(string handleOrUrl) {
         var payload = BuildProfileUrl(handleOrUrl, "https://www.linkedin.com/in/", ensureAtPrefix: false);
         return new QrPayloadData(payload);
@@ -64,5 +77,3 @@ public static partial class QrPayloads {
         return value;
     }
 }
-
-#pragma warning restore CS1591

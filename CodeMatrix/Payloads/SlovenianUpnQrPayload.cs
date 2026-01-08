@@ -1,7 +1,6 @@
 using System;
 using System.Globalization;
 using System.Text;
-#pragma warning disable CS1591
 
 namespace CodeMatrix.Payloads;
 
@@ -23,6 +22,9 @@ public sealed class SlovenianUpnQrPayload {
     private readonly string _recipientSiModel;
     private readonly string _recipientSiReference;
 
+    /// <summary>
+    /// Creates a Slovenian UPN QR payment payload.
+    /// </summary>
     public SlovenianUpnQrPayload(
         string payerName,
         string payerAddress,
@@ -52,10 +54,16 @@ public sealed class SlovenianUpnQrPayload {
         _recipientSiReference = LimitLength((recipientSiReference ?? string.Empty).Trim(), 22);
     }
 
+    /// <summary>
+    /// Converts this payload to a QR payload with recommended settings.
+    /// </summary>
     public QrPayloadData ToPayloadData() {
         return new QrPayloadData(ToString(), QrErrorCorrectionLevel.M, minVersion: 15, maxVersion: 15, textEncoding: QrTextEncoding.Iso8859_2);
     }
 
+    /// <summary>
+    /// Returns the Slovenian UPN QR payload string.
+    /// </summary>
     public override string ToString() {
         var sb = new StringBuilder();
         sb.Append("UPNQR");
@@ -92,5 +100,3 @@ public sealed class SlovenianUpnQrPayload {
                _recipientPlace.Length + _recipientSiModel.Length + _recipientSiReference.Length + 19;
     }
 }
-
-#pragma warning restore CS1591

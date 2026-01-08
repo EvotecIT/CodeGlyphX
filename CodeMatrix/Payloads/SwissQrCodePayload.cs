@@ -2,7 +2,6 @@ using System;
 using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
-#pragma warning disable CS1591
 
 namespace CodeMatrix.Payloads;
 
@@ -22,6 +21,9 @@ public sealed class SwissQrCodePayload {
     private readonly string? _alternativeProcedure1;
     private readonly string? _alternativeProcedure2;
 
+    /// <summary>
+    /// Creates a Swiss QR bill payload.
+    /// </summary>
     public SwissQrCodePayload(
         Iban iban,
         QrSwissCurrency currency,
@@ -60,10 +62,16 @@ public sealed class SwissQrCodePayload {
         _alternativeProcedure2 = alternativeProcedure2;
     }
 
+    /// <summary>
+    /// Converts this payload to a QR payload with recommended settings.
+    /// </summary>
     public QrPayloadData ToPayloadData() {
         return new QrPayloadData(ToString(), QrErrorCorrectionLevel.M, textEncoding: QrTextEncoding.Utf8);
     }
 
+    /// <summary>
+    /// Returns the Swiss QR bill payload string.
+    /// </summary>
     public override string ToString() {
         var sb = new StringBuilder();
         sb.Append("SPC").Append(Br);
@@ -105,14 +113,31 @@ public sealed class SwissQrCodePayload {
         return new string('\n', count);
     }
 
+    /// <summary>
+    /// Additional information section.
+    /// </summary>
     public sealed class AdditionalInformation {
         private readonly string? _unstructuredMessage;
         private readonly string? _billInformation;
 
+        /// <summary>
+        /// Unstructured message (single line).
+        /// </summary>
         public string? UnstructuredMessage => string.IsNullOrEmpty(_unstructuredMessage) ? null : _unstructuredMessage!.Replace("\n", "");
+
+        /// <summary>
+        /// Bill information (single line).
+        /// </summary>
         public string? BillInformation => string.IsNullOrEmpty(_billInformation) ? null : _billInformation!.Replace("\n", "");
+
+        /// <summary>
+        /// Trailer marker.
+        /// </summary>
         public string Trailer { get; } = "EPD";
 
+        /// <summary>
+        /// Creates an additional information block.
+        /// </summary>
         public AdditionalInformation(string? unstructuredMessage = null, string? billInformation = null) {
             if ((unstructuredMessage?.Length ?? 0) + (billInformation?.Length ?? 0) > 140) {
                 throw new ArgumentException("Unstructured message and bill information must be shorter than 141 chars in total.");
@@ -122,25 +147,58 @@ public sealed class SwissQrCodePayload {
         }
     }
 
+    /// <summary>
+    /// Reference section.
+    /// </summary>
     public sealed class Reference {
+        /// <summary>
+        /// Reference type.
+        /// </summary>
         public enum ReferenceType {
+            /// <summary>
+            /// QR reference (QRR).
+            /// </summary>
             QRR,
+            /// <summary>
+            /// Creditor reference (SCOR).
+            /// </summary>
             SCOR,
+            /// <summary>
+            /// No reference (NON).
+            /// </summary>
             NON
         }
 
+        /// <summary>
+        /// Reference text type.
+        /// </summary>
         public enum ReferenceTextType {
+            /// <summary>
+            /// QR reference text.
+            /// </summary>
             QrReference,
+            /// <summary>
+            /// Creditor reference ISO 11649.
+            /// </summary>
             CreditorReferenceIso11649
         }
 
         private readonly string? _reference;
         private readonly ReferenceTextType? _referenceTextType;
 
+        /// <summary>
+        /// Reference type.
+        /// </summary>
         public ReferenceType RefType { get; }
 
+        /// <summary>
+        /// Reference text (single line).
+        /// </summary>
         public string? ReferenceText => string.IsNullOrEmpty(_reference) ? null : _reference!.Replace("\n", "");
 
+        /// <summary>
+        /// Creates a reference section.
+        /// </summary>
         public Reference(ReferenceType referenceType, string? reference = null, ReferenceTextType? referenceTextType = null) {
             RefType = referenceType;
             _referenceTextType = referenceTextType;
@@ -162,17 +220,35 @@ public sealed class SwissQrCodePayload {
         }
     }
 
+    /// <summary>
+    /// IBAN section.
+    /// </summary>
     public sealed class Iban {
+        /// <summary>
+        /// IBAN type.
+        /// </summary>
         public enum IbanType {
+            /// <summary>
+            /// Standard IBAN.
+            /// </summary>
             Iban,
+            /// <summary>
+            /// QR-IBAN.
+            /// </summary>
             QrIban
         }
 
         private readonly string _iban;
         private readonly IbanType _ibanType;
 
+        /// <summary>
+        /// True when the IBAN is a QR-IBAN.
+        /// </summary>
         public bool IsQrIban => _ibanType == IbanType.QrIban;
 
+        /// <summary>
+        /// Creates an IBAN instance.
+        /// </summary>
         public Iban(string iban, IbanType ibanType) {
             if (ibanType == IbanType.Iban && !QrPayloadValidation.IsValidIban(iban)) {
                 throw new ArgumentException("The IBAN entered isn't valid.", nameof(iban));
@@ -187,14 +263,29 @@ public sealed class SwissQrCodePayload {
             _ibanType = ibanType;
         }
 
+        /// <summary>
+        /// Returns the normalized IBAN.
+        /// </summary>
         public override string ToString() {
             return _iban.Replace("-", "").Replace("\n", "").Replace(" ", "");
         }
     }
 
+    /// <summary>
+    /// Contact section.
+    /// </summary>
     public sealed class Contact {
+        /// <summary>
+        /// Contact address type.
+        /// </summary>
         public enum AddressType {
+            /// <summary>
+            /// Structured address.
+            /// </summary>
             StructuredAddress,
+            /// <summary>
+            /// Combined address.
+            /// </summary>
             CombinedAddress
         }
 
@@ -206,10 +297,16 @@ public sealed class SwissQrCodePayload {
         private readonly string? _houseNumberOrAddressLine2;
         private readonly AddressType _addressType;
 
+        /// <summary>
+        /// Creates a contact with a structured address.
+        /// </summary>
         public static Contact CreateStructured(string name, string street, string houseNumber, string zipCode, string city, string country) {
             return new Contact(name, zipCode, city, country, street, houseNumber, AddressType.StructuredAddress);
         }
 
+        /// <summary>
+        /// Creates a contact with a combined address.
+        /// </summary>
         public static Contact CreateCombined(string name, string addressLine1, string addressLine2, string country) {
             return new Contact(name, null, null, country, addressLine1, addressLine2, AddressType.CombinedAddress);
         }
@@ -237,6 +334,9 @@ public sealed class SwissQrCodePayload {
             }
         }
 
+        /// <summary>
+        /// Returns the contact block string.
+        /// </summary>
         public override string ToString() {
             var sb = new StringBuilder();
             sb.Append(_addressType == AddressType.StructuredAddress ? "S" : "K").Append(Br);
@@ -256,5 +356,3 @@ public sealed class SwissQrCodePayload {
         }
     }
 }
-
-#pragma warning restore CS1591
