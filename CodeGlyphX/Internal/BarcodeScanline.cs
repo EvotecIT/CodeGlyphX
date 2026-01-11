@@ -1,6 +1,12 @@
 using System;
 using System.Collections.Generic;
 
+#if NET8_0_OR_GREATER
+using PixelSpan = System.ReadOnlySpan<byte>;
+#else
+using PixelSpan = byte[];
+#endif
+
 namespace CodeGlyphX.Internal;
 
 internal static class BarcodeScanline {
