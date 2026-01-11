@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using CodeGlyphX.Internal;
+using CodeGlyphX;
 
 #if NET8_0_OR_GREATER
 using PixelSpan = System.ReadOnlySpan<byte>;
@@ -15,6 +16,25 @@ namespace CodeGlyphX.DataMatrix;
 /// Decodes Data Matrix (ECC200) symbols.
 /// </summary>
 public static class DataMatrixDecoder {
+    private enum DataMatrixEncodation {
+        Ascii,
+        C40,
+        Text,
+        X12,
+        Edifact,
+        Base256
+    }
+
+    private static readonly char[] C40_SHIFT2_SET_CHARS = {
+        '!', '"', '#', '$', '%', '&', '\'', '(', ')', '*', '+', ',', '-', '.', '/', ':',
+        ';', '<', '=', '>', '?', '@', '[', '\\', ']', '^', '_'
+    };
+
+    private static readonly char[] TEXT_SHIFT2_SET_CHARS = C40_SHIFT2_SET_CHARS;
+
+    private static readonly char[] C40_SHIFT3_SET_CHARS = "`abcdefghijklmnopqrstuvwxyz{|}~\u007f".ToCharArray();
+
+    private static readonly char[] TEXT_SHIFT3_SET_CHARS = "`ABCDEFGHIJKLMNOPQRSTUVWXYZ{|}~\u007f".ToCharArray();
     /// <summary>
     /// Attempts to decode a Data Matrix symbol from a module matrix.
     /// </summary>
@@ -131,7 +151,7 @@ public static class DataMatrixDecoder {
             dataOffset += dataBlocks[b].Length;
         }
 
-        value = DecodeAscii(data);
+        value = DecodeData(data);
         return true;
     }
 
@@ -140,67 +160,332 @@ public static class DataMatrixDecoder {
         return false;
     }
 
-    private static string DecodeAscii(PixelSpan data) {
+    internal static string DecodeDataCodewords(byte[] dataCodewords) {
+        if (dataCodewords is null) throw new ArgumentNullException(nameof(dataCodewords));
+        return DecodeData(dataCodewords);
+    }
+
+    private static string DecodeData(PixelSpan data) {
         var sb = new StringBuilder(data.Length);
-        var base256Bytes = new List<byte>();
+        var mode = DataMatrixEncodation.Ascii;
+        var index = 0;
+        var upperShift = false;
+        string? macroTrailer = null;
+        Encoding? base256Encoding = null;
 
-        for (var i = 0; i < data.Length; i++) {
-            var cw = data[i];
-            var pos = i + 1; // 1-based position
-
-            if (cw == 129) break; // Padding
-
-            if (cw <= 128) {
-                sb.Append((char)(cw - 1));
-                continue;
+        while (index < data.Length) {
+            switch (mode) {
+                case DataMatrixEncodation.Ascii:
+                    mode = DecodeAsciiSegment(data, ref index, sb, ref upperShift, ref macroTrailer, ref base256Encoding);
+                    break;
+                case DataMatrixEncodation.C40:
+                    mode = DecodeC40TextSegment(data, ref index, sb, isText: false, ref upperShift);
+                    break;
+                case DataMatrixEncodation.Text:
+                    mode = DecodeC40TextSegment(data, ref index, sb, isText: true, ref upperShift);
+                    break;
+                case DataMatrixEncodation.X12:
+                    mode = DecodeX12Segment(data, ref index, sb, ref upperShift);
+                    break;
+                case DataMatrixEncodation.Edifact:
+                    mode = DecodeEdifactSegment(data, ref index, sb, ref upperShift);
+                    break;
+                case DataMatrixEncodation.Base256:
+                    DecodeBase256Segment(data, ref index, sb, base256Encoding);
+                    mode = DataMatrixEncodation.Ascii;
+                    break;
+                default:
+                    index = data.Length;
+                    break;
             }
-
-            if (cw <= 229) {
-                var val = cw - 130;
-                sb.Append((char)('0' + (val / 10)));
-                sb.Append((char)('0' + (val % 10)));
-                continue;
-            }
-
-            if (cw == 231) {
-                base256Bytes.Clear();
-                if (i + 1 >= data.Length) break;
-
-                var lenCodeword = Unrandomize255(data[++i], pos + 1);
-                var length = lenCodeword;
-                if (lenCodeword >= 250) {
-                    if (i + 1 >= data.Length) break;
-                    var len2 = Unrandomize255(data[++i], pos + 2);
-                    length = (lenCodeword - 249) * 250 + len2;
-                }
-
-                for (var j = 0; j < length && i + 1 < data.Length; j++) {
-                    var idx = ++i;
-                    var b = Unrandomize255(data[idx], idx + 1);
-                    base256Bytes.Add((byte)b);
-                }
-
-                if (base256Bytes.Count > 0) {
-                    sb.Append(DecodeBase256Bytes(base256Bytes));
-                }
-                continue;
-            }
-
-            // Unsupported encodation modes (C40/Text/X12/EDIFACT).
-            break;
         }
 
+        if (!string.IsNullOrEmpty(macroTrailer)) sb.Append(macroTrailer);
         return sb.ToString();
     }
 
-    private static string DecodeBase256Bytes(List<byte> bytes) {
+    private static DataMatrixEncodation DecodeAsciiSegment(
+        PixelSpan data,
+        ref int index,
+        StringBuilder sb,
+        ref bool upperShift,
+        ref string? macroTrailer,
+        ref Encoding? base256Encoding) {
+        if (index >= data.Length) return DataMatrixEncodation.Ascii;
+
+        var cw = data[index++];
+
+        if (cw == 129) {
+            index = data.Length;
+            return DataMatrixEncodation.Ascii;
+        }
+
+        if (cw <= 128) {
+            AppendChar(sb, (char)(cw - 1), ref upperShift);
+            return DataMatrixEncodation.Ascii;
+        }
+
+        if (cw <= 229) {
+            var val = cw - 130;
+            AppendChar(sb, (char)('0' + (val / 10)), ref upperShift);
+            AppendChar(sb, (char)('0' + (val % 10)), ref upperShift);
+            return DataMatrixEncodation.Ascii;
+        }
+
+        switch (cw) {
+            case 230:
+                return DataMatrixEncodation.C40;
+            case 231:
+                return DataMatrixEncodation.Base256;
+            case 232:
+                sb.Append(Gs1.GroupSeparator);
+                return DataMatrixEncodation.Ascii;
+            case 233:
+                if (index + 1 < data.Length) index += 2;
+                return DataMatrixEncodation.Ascii;
+            case 234:
+                return DataMatrixEncodation.Ascii;
+            case 235:
+                upperShift = true;
+                return DataMatrixEncodation.Ascii;
+            case 236:
+                sb.Append("[)>\u001E05\u001D");
+                macroTrailer ??= "\u001E\u0004";
+                return DataMatrixEncodation.Ascii;
+            case 237:
+                sb.Append("[)>\u001E06\u001D");
+                macroTrailer ??= "\u001E\u0004";
+                return DataMatrixEncodation.Ascii;
+            case 238:
+                return DataMatrixEncodation.X12;
+            case 239:
+                return DataMatrixEncodation.Text;
+            case 240:
+                return DataMatrixEncodation.Edifact;
+            case 241:
+                if (index < data.Length) {
+                    // Best-effort ECI: skip one codeword for now.
+                    index++;
+                }
+                return DataMatrixEncodation.Ascii;
+            default:
+                return DataMatrixEncodation.Ascii;
+        }
+    }
+
+    private static DataMatrixEncodation DecodeC40TextSegment(
+        PixelSpan data,
+        ref int index,
+        StringBuilder sb,
+        bool isText,
+        ref bool upperShift) {
+        var shift = 0;
+
+        while (index < data.Length) {
+            var cw1 = data[index];
+            if (cw1 == 254) {
+                index++;
+                return DataMatrixEncodation.Ascii;
+            }
+
+            if (index + 1 >= data.Length) {
+                index = data.Length;
+                return DataMatrixEncodation.Ascii;
+            }
+
+            var cw2 = data[index + 1];
+            index += 2;
+
+            ParseTwoBytes(cw1, cw2, out var c1, out var c2, out var c3);
+            DecodeC40TextValue(c1, sb, isText, ref shift, ref upperShift);
+            DecodeC40TextValue(c2, sb, isText, ref shift, ref upperShift);
+            DecodeC40TextValue(c3, sb, isText, ref shift, ref upperShift);
+        }
+
+        return DataMatrixEncodation.Ascii;
+    }
+
+    private static void DecodeC40TextValue(int value, StringBuilder sb, bool isText, ref int shift, ref bool upperShift) {
+        if (shift == 0) {
+            if (value <= 2) {
+                shift = value + 1;
+                return;
+            }
+            if (value == 3) {
+                AppendChar(sb, ' ', ref upperShift);
+                return;
+            }
+            if (value <= 13) {
+                AppendChar(sb, (char)('0' + (value - 4)), ref upperShift);
+                return;
+            }
+            if (value <= 39) {
+                var baseChar = isText ? 'a' : 'A';
+                AppendChar(sb, (char)(baseChar + (value - 14)), ref upperShift);
+            }
+            return;
+        }
+
+        if (shift == 1) {
+            AppendChar(sb, (char)value, ref upperShift);
+            shift = 0;
+            return;
+        }
+
+        if (shift == 2) {
+            if (value < C40_SHIFT2_SET_CHARS.Length) {
+                AppendChar(sb, C40_SHIFT2_SET_CHARS[value], ref upperShift);
+            } else if (value == 27) {
+                sb.Append(Gs1.GroupSeparator);
+            } else if (value == 30) {
+                upperShift = true;
+            }
+            shift = 0;
+            return;
+        }
+
+        if (shift == 3) {
+            var set = isText ? TEXT_SHIFT3_SET_CHARS : C40_SHIFT3_SET_CHARS;
+            if (value < set.Length) {
+                AppendChar(sb, set[value], ref upperShift);
+            }
+            shift = 0;
+        }
+    }
+
+    private static DataMatrixEncodation DecodeX12Segment(
+        PixelSpan data,
+        ref int index,
+        StringBuilder sb,
+        ref bool upperShift) {
+        while (index < data.Length) {
+            var cw1 = data[index];
+            if (cw1 == 254) {
+                index++;
+                return DataMatrixEncodation.Ascii;
+            }
+
+            if (index + 1 >= data.Length) {
+                index = data.Length;
+                return DataMatrixEncodation.Ascii;
+            }
+
+            var cw2 = data[index + 1];
+            index += 2;
+
+            ParseTwoBytes(cw1, cw2, out var c1, out var c2, out var c3);
+            DecodeX12Value(c1, sb, ref upperShift);
+            DecodeX12Value(c2, sb, ref upperShift);
+            DecodeX12Value(c3, sb, ref upperShift);
+        }
+
+        return DataMatrixEncodation.Ascii;
+    }
+
+    private static void DecodeX12Value(int value, StringBuilder sb, ref bool upperShift) {
+        if (value == 0) {
+            AppendChar(sb, '\r', ref upperShift);
+            return;
+        }
+        if (value == 1) {
+            AppendChar(sb, '*', ref upperShift);
+            return;
+        }
+        if (value == 2) {
+            AppendChar(sb, '>', ref upperShift);
+            return;
+        }
+        if (value == 3) {
+            AppendChar(sb, ' ', ref upperShift);
+            return;
+        }
+        if (value <= 13) {
+            AppendChar(sb, (char)('0' + (value - 4)), ref upperShift);
+            return;
+        }
+        if (value <= 39) {
+            AppendChar(sb, (char)('A' + (value - 14)), ref upperShift);
+        }
+    }
+
+    private static DataMatrixEncodation DecodeEdifactSegment(
+        PixelSpan data,
+        ref int index,
+        StringBuilder sb,
+        ref bool upperShift) {
+        while (index + 2 < data.Length) {
+            var cw1 = data[index++];
+            var cw2 = data[index++];
+            var cw3 = data[index++];
+
+            var bits = (cw1 << 16) | (cw2 << 8) | cw3;
+            for (var i = 0; i < 4; i++) {
+                var value = (bits >> (18 - (6 * i))) & 0x3F;
+                if (value == 0x1F) {
+                    return DataMatrixEncodation.Ascii;
+                }
+                AppendChar(sb, (char)(value + 32), ref upperShift);
+            }
+        }
+
+        index = data.Length;
+        return DataMatrixEncodation.Ascii;
+    }
+
+    private static void DecodeBase256Segment(
+        PixelSpan data,
+        ref int index,
+        StringBuilder sb,
+        Encoding? encoding) {
+        if (index >= data.Length) return;
+
+        var base256Bytes = new List<byte>();
+        var lenCodeword = Unrandomize255(data[index], index + 1);
+        index++;
+        var length = lenCodeword;
+        if (lenCodeword >= 250) {
+            if (index >= data.Length) return;
+            var len2 = Unrandomize255(data[index], index + 1);
+            index++;
+            length = (lenCodeword - 249) * 250 + len2;
+        }
+
+        for (var j = 0; j < length && index < data.Length; j++) {
+            var b = Unrandomize255(data[index], index + 1);
+            base256Bytes.Add((byte)b);
+            index++;
+        }
+
+        if (base256Bytes.Count == 0) return;
+
+        sb.Append(DecodeBase256Bytes(base256Bytes, encoding));
+    }
+
+    private static string DecodeBase256Bytes(List<byte> bytes, Encoding? encoding) {
         if (bytes.Count == 0) return string.Empty;
         try {
+            if (encoding is not null) return encoding.GetString(bytes.ToArray());
             var utf8 = new UTF8Encoding(false, true);
             return utf8.GetString(bytes.ToArray());
         } catch (DecoderFallbackException) {
             return EncodingUtils.Latin1.GetString(bytes.ToArray());
         }
+    }
+
+    private static void AppendChar(StringBuilder sb, char value, ref bool upperShift) {
+        if (upperShift) {
+            value = (char)(value + 128);
+            upperShift = false;
+        }
+        sb.Append(value);
+    }
+
+    private static void ParseTwoBytes(byte cw1, byte cw2, out int c1, out int c2, out int c3) {
+        var full = (cw1 << 8) + cw2 - 1;
+        c1 = full / 1600;
+        var rem = full % 1600;
+        c2 = rem / 40;
+        c3 = rem % 40;
     }
 
     private static int Unrandomize255(byte value, int position) {
