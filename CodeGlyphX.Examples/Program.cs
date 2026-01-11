@@ -18,6 +18,8 @@ internal static class Program {
         runner.Run("Decode (auto)", CodeGlyphDecodeExample.Run);
         runner.Run("OTP", OtpExample.Run);
         runner.Run("Barcode", BarcodeExample.Run);
+        runner.Run("Data Matrix", DataMatrixExample.Run);
+        runner.Run("PDF417", Pdf417Example.Run);
 
         runner.PrintSummary();
     }

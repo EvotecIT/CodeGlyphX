@@ -2,11 +2,27 @@
 
 No-deps QR + barcode toolkit with a super-simple API.
 
-- QR (encode + basic decode)
-- Code 128 (Set B/C) encoder
-- Renderers: SVG / HTML (incl. email-safe table) / PNG (minimal writer)
+- QR (encode + robust decode, incl. Micro QR, ECI, FNC1, Kanji)
+- 1D barcodes (encode + decode): Code128/GS1-128, Code39, Code93, EAN-8/13, UPC-A/UPC-E, ITF-14
+- Renderers: SVG / HTML (incl. email-safe table) / PNG / JPEG + optional labels
 - Payload helpers incl. `otpauth://totp` builder + Base32
 - WPF controls + demos
+
+## Support matrix
+
+| Symbology | Encode | Decode | Notes |
+| --- | --- | --- | --- |
+| QR | ✅ | ✅ | ECI, FNC1/GS1, Kanji, structured append |
+| Micro QR | ✅ | ✅ | Versions M1–M4 |
+| Code128 | ✅ | ✅ | Set B/C |
+| GS1-128 | ✅ | ✅ | FNC1 + AI helpers |
+| Code39 | ✅ | ✅ | Optional checksum |
+| Code93 | ✅ | ✅ | Optional checksum |
+| EAN-8 / EAN-13 | ✅ | ✅ | Checksum validation |
+| UPC-A / UPC-E | ✅ | ✅ | Checksum validation |
+| ITF-14 | ✅ | ✅ | Checksum validation |
+| Data Matrix | ✅ | ✅ | Encode: ASCII/C40/Text/X12/EDIFACT/Base256 |
+| PDF417 | ✅ | ✅ | Full encode/decode |
 
 ## Quick usage (3 lines)
 
@@ -21,8 +37,85 @@ QR.Save("https://example.com", "qr.jpg");
 ```csharp
 using CodeGlyphX;
 
+// Auto-detect payloads (email, phone, URL, Wi-Fi, OTP, etc.)
+QR.SaveAuto("user@example.com", "auto-email.png");
+QR.SaveAuto("+1 202 555 0144", "auto-phone.png");
+QR.SaveAuto("example.com", "auto-url.png");
+```
+
+```csharp
+using CodeGlyphX;
+
 Barcode.Save(BarcodeType.Code128, "CODE128-12345", "code128.png");
 Barcode.Save(BarcodeType.Code128, "CODE128-12345", "code128.svg");
+```
+
+```csharp
+using CodeGlyphX;
+
+// GS1-128 (AI string)
+Barcode.Save(BarcodeType.GS1_128, "(01)09506000134352(10)ABC123", "gs1-128.png");
+```
+
+```csharp
+using CodeGlyphX;
+
+// GS1 helper (element string)
+var elementString = Gs1.ElementString("(01)09506000134352(10)ABC123(17)240101");
+Barcode.Save(BarcodeType.GS1_128, elementString, "gs1-128.png");
+```
+
+```csharp
+using CodeGlyphX;
+
+DataMatrixCode.Save("DataMatrix-12345", "datamatrix.png");
+Pdf417Code.Save("PDF417-12345", "pdf417.png");
+```
+
+## Payloads (3 lines each)
+
+```csharp
+using CodeGlyphX;
+using CodeGlyphX.Payloads;
+
+QR.Save(QrPayloads.Url("https://example.com"), "url.png");
+QR.Save(QrPayloads.Text("Hello world"), "text.png");
+QR.Save(QrPayloads.Wifi("MyWiFi", "p@ssw0rd"), "wifi.png");
+QR.Save(QrPayloads.Email("hello@example.com", "Hi", "How are you?"), "email.png");
+QR.Save(QrPayloads.Phone("+1-202-555-0144"), "phone.png");
+QR.Save(QrPayloads.Sms("+1-202-555-0144", "Ping"), "sms.png");
+QR.Save(QrPayloads.Geo("52.2297", "21.0122"), "location.png");
+QR.Save(QrPayloads.Contact(QrContactOutputType.MeCard, "Ada", "Lovelace", email: "ada@example.com"), "contact.png");
+QR.Save(QrPayloads.CalendarEvent("Meeting", "Sync", "Office", System.DateTime.UtcNow, System.DateTime.UtcNow.AddHours(1), allDayEvent: false), "calendar.png");
+QR.Save(QrPayloads.OneTimePassword(OtpAuthType.Totp, "JBSWY3DPEHPK3PXP", label: "user@example.com", issuer: "AuthIMO"), "otp.png");
+QR.Save(QrPayloads.AppStore("1234567890"), "appstore.png");
+QR.Save(QrPayloads.Facebook("evotec"), "facebook.png");
+QR.Save(QrPayloads.Twitter("evotecit"), "twitter.png");
+QR.Save(QrPayloads.TikTok("evotec"), "tiktok.png");
+QR.Save(QrPayloads.LinkedIn("evotec"), "linkedin.png");
+QR.Save(QrPayloads.Upi("merchant@upi", "Evotec", amount: 12.34m), "upi.png");
+```
+
+## Presets (safe defaults)
+
+```csharp
+using CodeGlyphX;
+using CodeGlyphX.Payloads;
+
+QR.Save(QrPayloads.OneTimePassword(OtpAuthType.Totp, "JBSWY3DPEHPK3PXP", label: "user@example.com", issuer: "AuthIMO"),
+        "otp.png",
+        QrPresets.Otp());
+
+QR.Save(QrPayloads.Wifi("MyWiFi", "p@ssw0rd"), "wifi.png", QrPresets.Wifi());
+QR.Save(QrPayloads.Contact(QrContactOutputType.MeCard, "Ada", "Lovelace", email: "ada@example.com"), "contact.png", QrPresets.Contact());
+```
+
+```csharp
+using CodeGlyphX;
+using CodeGlyphX.Rendering;
+
+var logo = RenderIO.ReadBinary("logo.png");
+QR.Save("https://example.com", "qr-logo.png", QrPresets.Logo(logo));
 ```
 
 ## Fluent (still simple)
@@ -43,7 +136,17 @@ using CodeGlyphX;
 Barcode.Create(BarcodeType.Code128, "CODE128-12345")
   .WithModuleSize(2)
   .WithQuietZone(10)
+  .WithLabel("CODE128-12345")
   .Save("code128.png");
+```
+
+```csharp
+using CodeGlyphX;
+
+DataMatrixCode.Create("DataMatrix-12345")
+  .WithModuleSize(6)
+  .WithQuietZone(4)
+  .Save("datamatrix.png");
 ```
 
 ## OTP (AuthIMO)
@@ -88,6 +191,51 @@ using CodeGlyphX;
 
 if (Barcode.TryDecodePng(File.ReadAllBytes("code128.png"), out var decoded)) {
     Console.WriteLine($"{decoded.Type}: {decoded.Text}");
+}
+```
+
+## Decode (auto-detect)
+
+```csharp
+using CodeGlyphX;
+
+var decoded = CodeGlyph.DecodePng(File.ReadAllBytes("unknown.png"));
+Console.WriteLine($"{decoded.Kind}: {decoded.Text}");
+```
+
+```csharp
+using CodeGlyphX;
+
+// Prefer barcode when you know the symbol kind, and optionally hint the type.
+if (CodeGlyph.TryDecodePng(File.ReadAllBytes("code128.png"), out var decoded, expectedBarcode: BarcodeType.Code128, preferBarcode: true)) {
+    Console.WriteLine(decoded.Text);
+}
+```
+
+```csharp
+using CodeGlyphX;
+
+// Raw pixels (e.g. screen capture).
+if (CodeGlyph.TryDecode(pixels, width, height, stride, PixelFormat.Rgba32, out var decoded)) {
+    Console.WriteLine(decoded.Text);
+}
+```
+
+```csharp
+using CodeGlyphX;
+
+// Decode all (multi-QR + optional barcode).
+if (CodeGlyph.TryDecodeAllPng(File.ReadAllBytes("unknown.png"), out var results)) {
+    foreach (var item in results) Console.WriteLine($"{item.Kind}: {item.Text}");
+}
+```
+
+```csharp
+using CodeGlyphX;
+
+// Decode all from raw pixels.
+if (CodeGlyph.TryDecodeAll(pixels, width, height, stride, PixelFormat.Rgba32, out var results)) {
+    foreach (var item in results) Console.WriteLine($"{item.Kind}: {item.Text}");
 }
 ```
 
