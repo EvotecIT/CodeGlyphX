@@ -6,11 +6,8 @@ using CodeGlyphX.Qr;
 namespace CodeGlyphX;
 
 /// <summary>
-/// Encodes QR codes (UTF-8 byte mode).
+/// Encodes QR codes (byte mode + optional Kanji mode).
 /// </summary>
-/// <remarks>
-/// This encoder currently supports byte mode only (sufficient for URLs and <c>otpauth://</c> payloads).
-/// </remarks>
 public static class QrCodeEncoder {
     /// <summary>
     /// Encodes a UTF-8 text payload as a QR code.
@@ -56,6 +53,23 @@ public static class QrCodeEncoder {
             eci = assignment;
         }
         return QrEncoder.EncodeByteMode(data, ecc, minVersion, maxVersion, forceMask, eci);
+    }
+
+    /// <summary>
+    /// Encodes a QR Kanji-mode payload (Shift-JIS JIS X 0208).
+    /// </summary>
+    /// <param name="text">Kanji text payload to encode.</param>
+    /// <param name="ecc">Error correction level.</param>
+    /// <param name="minVersion">Minimum allowed QR version (1..40).</param>
+    /// <param name="maxVersion">Maximum allowed QR version (1..40).</param>
+    /// <param name="forceMask">Optional forced mask (0..7). When null, the best mask is chosen.</param>
+    public static QrCode EncodeKanji(
+        string text,
+        QrErrorCorrectionLevel ecc = QrErrorCorrectionLevel.M,
+        int minVersion = 1,
+        int maxVersion = 40,
+        int? forceMask = null) {
+        return QrEncoder.EncodeKanjiMode(text, ecc, minVersion, maxVersion, forceMask);
     }
 
     /// <summary>

@@ -256,7 +256,8 @@ internal static class QrPixelSampling {
 
     public static bool IsBlackBilinear(QrGrayImage image, double x, double y, bool invert) {
         var lum = SampleLumaBilinear(image, x, y);
-        var black = lum <= image.Threshold;
+        var threshold = image.ThresholdMap is null ? image.Threshold : SampleThresholdBilinear(image, x, y);
+        var black = lum <= threshold;
         return invert ? !black : black;
     }
 
@@ -419,6 +420,40 @@ internal static class QrPixelSampling {
         var lum = l0 + (l1 - l0) * fy;
 
         return (byte)Math.Clamp((int)Math.Round(lum), 0, 255);
+    }
+
+    private static byte SampleThresholdBilinear(QrGrayImage image, double x, double y) {
+        if (image.ThresholdMap is null) return image.Threshold;
+
+        if (x < 0) x = 0;
+        else if (x > image.Width - 1) x = image.Width - 1;
+
+        if (y < 0) y = 0;
+        else if (y > image.Height - 1) y = image.Height - 1;
+
+        var x0 = (int)Math.Floor(x);
+        var y0 = (int)Math.Floor(y);
+        var x1 = x0 + 1;
+        var y1 = y0 + 1;
+
+        if (x1 >= image.Width) x1 = image.Width - 1;
+        if (y1 >= image.Height) y1 = image.Height - 1;
+
+        var fx = x - x0;
+        var fy = y - y0;
+
+        var w = image.Width;
+        var t = image.ThresholdMap;
+        var t00 = t[y0 * w + x0];
+        var t10 = t[y0 * w + x1];
+        var t01 = t[y1 * w + x0];
+        var t11 = t[y1 * w + x1];
+
+        var t0 = t00 + (t10 - t00) * fx;
+        var t1 = t01 + (t11 - t01) * fx;
+        var thr = t0 + (t1 - t0) * fy;
+
+        return (byte)Math.Clamp((int)Math.Round(thr), 0, 255);
     }
 }
 #endif

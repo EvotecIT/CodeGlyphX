@@ -73,6 +73,13 @@ internal static class QrTables {
 
     public static int GetByteModeCharCountBits(int version) => version < 10 ? 8 : 16;
 
+    public static int GetKanjiModeCharCountBits(int version) {
+        if (version is < 1 or > 40) throw new ArgumentOutOfRangeException(nameof(version));
+        if (version <= 9) return 8;
+        if (version <= 26) return 10;
+        return 12;
+    }
+
     public static int GetEccFormatBits(QrErrorCorrectionLevel ecc) {
         return ecc switch {
             QrErrorCorrectionLevel.L => 1,

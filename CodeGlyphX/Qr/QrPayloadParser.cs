@@ -17,9 +17,11 @@ internal readonly struct QrPayloadSegment {
 internal static class QrPayloadParser {
     private const string AlphanumericTable = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ $%*+-./:";
 
-    public static bool TryParse(byte[] dataCodewords, int version, out byte[] payload, out QrPayloadSegment[] segments) {
+    public static bool TryParse(byte[] dataCodewords, int version, out byte[] payload, out QrPayloadSegment[] segments, out QrStructuredAppend? structuredAppend, out QrFnc1Mode fnc1Mode) {
         payload = null!;
         segments = null!;
+        structuredAppend = null;
+        fnc1Mode = QrFnc1Mode.None;
 
         if (dataCodewords is null) return false;
         if (version is < 1 or > 40) return false;
@@ -74,6 +76,18 @@ internal static class QrPayloadParser {
                 return true;
             }
 
+            if (mode == 0b0101) {
+                // FNC1 (first position)
+                fnc1Mode = QrFnc1Mode.FirstPosition;
+                continue;
+            }
+
+            if (mode == 0b1001) {
+                // FNC1 (second position)
+                fnc1Mode = QrFnc1Mode.SecondPosition;
+                continue;
+            }
+
             if (mode == 0b0100) {
                 var countBits = QrTables.GetByteModeCharCountBits(version);
                 var count = ReadBits(countBits);
@@ -85,6 +99,42 @@ internal static class QrPayloadParser {
                     AddByte((byte)b);
                 }
 
+                continue;
+            }
+
+            if (mode == 0b1000) {
+                // Kanji mode (Shift-JIS JIS X 0208)
+                var countBits = QrTables.GetKanjiModeCharCountBits(version);
+                var count = ReadBits(countBits);
+                if (count < 0) return false;
+
+                FlushSegment();
+                var previousEncoding = encoding;
+                encoding = QrTextEncoding.ShiftJis;
+
+                for (var i = 0; i < count; i++) {
+                    var v = ReadBits(13);
+                    if (v < 0) return false;
+                    var assembled = ((v / 0xC0) << 8) | (v % 0xC0);
+                    var sjis = assembled < 0x1F00 ? assembled + 0x8140 : assembled + 0xC140;
+                    AddByte((byte)(sjis >> 8));
+                    AddByte((byte)sjis);
+                }
+
+                FlushSegment();
+                encoding = previousEncoding;
+                continue;
+            }
+
+            if (mode == 0b0011) {
+                // Structured append: 8-bit sequence indicator + 8-bit parity.
+                var sequence = ReadBits(8);
+                var parity = ReadBits(8);
+                if (sequence < 0 || parity < 0) return false;
+
+                var index = (sequence >> 4) & 0x0F;
+                var total = sequence & 0x0F;
+                structuredAppend = new QrStructuredAppend(index, total, parity);
                 continue;
             }
 
@@ -125,20 +175,42 @@ internal static class QrPayloadParser {
                 if (count < 0) return false;
 
                 var remaining = count;
+                var raw = new byte[count];
+                var rawLen = 0;
                 while (remaining >= 2) {
                     var v = ReadBits(11);
                     if (v < 0 || v >= 45 * 45) return false;
                     var a = v / 45;
                     var b = v % 45;
-                    AddByte((byte)AlphanumericTable[a]);
-                    AddByte((byte)AlphanumericTable[b]);
+                    raw[rawLen++] = (byte)AlphanumericTable[a];
+                    raw[rawLen++] = (byte)AlphanumericTable[b];
                     remaining -= 2;
                 }
 
                 if (remaining == 1) {
                     var v = ReadBits(6);
                     if (v < 0 || v >= 45) return false;
-                    AddByte((byte)AlphanumericTable[v]);
+                    raw[rawLen++] = (byte)AlphanumericTable[v];
+                }
+
+                if (fnc1Mode != QrFnc1Mode.None) {
+                    for (var i = 0; i < rawLen; i++) {
+                        var b = raw[i];
+                        if (b == (byte)'%') {
+                            if (i + 1 < rawLen && raw[i + 1] == (byte)'%') {
+                                AddByte((byte)'%');
+                                i++;
+                                continue;
+                            }
+                            AddByte(0x1D); // GS separator
+                            continue;
+                        }
+                        AddByte(b);
+                    }
+                } else {
+                    for (var i = 0; i < rawLen; i++) {
+                        AddByte(raw[i]);
+                    }
                 }
 
                 continue;
@@ -156,6 +228,7 @@ internal static class QrPayloadParser {
                     9 => QrTextEncoding.Iso8859_7,   // ISO-8859-7
                     12 => QrTextEncoding.Iso8859_10, // ISO-8859-10
                     15 => QrTextEncoding.Iso8859_15, // ISO-8859-15
+                    20 => QrTextEncoding.ShiftJis,   // Shift-JIS
                     26 => QrTextEncoding.Utf8,       // UTF-8
                     27 => QrTextEncoding.Ascii,      // US-ASCII
                     _ => encoding,

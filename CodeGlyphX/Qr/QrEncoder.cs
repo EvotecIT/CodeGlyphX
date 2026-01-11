@@ -1,4 +1,5 @@
 using System;
+using CodeGlyphX.Internal;
 
 namespace CodeGlyphX.Qr;
 
@@ -56,6 +57,68 @@ internal static class QrEncoder {
         return new CodeGlyphX.QrCode(version, ecc, bestMask, bestModules);
     }
 
+    public static CodeGlyphX.QrCode EncodeKanjiMode(string text, QrErrorCorrectionLevel ecc, int minVersion, int maxVersion, int? forceMask) {
+        if (text is null) throw new ArgumentNullException(nameof(text));
+        if (minVersion is < 1 or > 40) throw new ArgumentOutOfRangeException(nameof(minVersion));
+        if (maxVersion is < 1 or > 40) throw new ArgumentOutOfRangeException(nameof(maxVersion));
+        if (minVersion > maxVersion) throw new ArgumentOutOfRangeException(nameof(minVersion));
+        if (forceMask is not null && forceMask.Value is < 0 or > 7) throw new ArgumentOutOfRangeException(nameof(forceMask));
+
+        if (text.Length == 0)
+            throw new ArgumentException("QR Kanji mode requires at least one character.", nameof(text));
+
+        var values = new ushort[text.Length];
+        for (var i = 0; i < text.Length; i++) {
+            if (!QrKanjiTable.TryGetValue(text[i], out var v)) {
+                throw new ArgumentException("Text contains characters not encodable in QR Kanji mode.", nameof(text));
+            }
+            values[i] = v;
+        }
+
+        var version = 0;
+        for (var v = minVersion; v <= maxVersion; v++) {
+            var capacityBits = QrTables.GetNumDataCodewords(v, ecc) * 8;
+            var requiredBits = 4 + QrTables.GetKanjiModeCharCountBits(v) + values.Length * 13;
+            if (requiredBits <= capacityBits) {
+                version = v;
+                break;
+            }
+        }
+
+        if (version == 0)
+            throw new ArgumentException($"Data too long for QR version range {minVersion}..{maxVersion} at ECC {ecc}.");
+
+        var dataCodewords = EncodeKanjiModeData(values, version, ecc);
+        var allCodewords = AddEccAndInterleave(dataCodewords, version, ecc);
+
+        var size = version * 4 + 17;
+        var modules = new BitMatrix(size, size);
+        var isFunction = new BitMatrix(size, size);
+        DrawFunctionPatterns(version, ecc, modules, isFunction);
+        DrawCodewords(allCodewords, modules, isFunction);
+
+        var bestMask = 0;
+        BitMatrix? bestModules = null;
+        var bestPenalty = int.MaxValue;
+
+        var startMask = forceMask ?? 0;
+        var endMask = forceMask ?? 7;
+        for (var mask = startMask; mask <= endMask; mask++) {
+            var temp = modules.Clone();
+            ApplyMask(mask, temp, isFunction);
+            DrawFormatBits(ecc, mask, temp, isFunction);
+            var penalty = QrMask.ComputePenalty(temp);
+            if (penalty < bestPenalty) {
+                bestPenalty = penalty;
+                bestMask = mask;
+                bestModules = temp;
+            }
+        }
+
+        if (bestModules is null) throw new InvalidOperationException("Failed to choose mask.");
+        return new CodeGlyphX.QrCode(version, ecc, bestMask, bestModules);
+    }
+
     private static byte[] EncodeByteModeData(byte[] data, int version, QrErrorCorrectionLevel ecc, int? eciAssignmentNumber) {
         var dataCapacityBits = QrTables.GetNumDataCodewords(version, ecc) * 8;
         var bb = new QrBitBuffer();
@@ -74,6 +137,42 @@ internal static class QrEncoder {
 
         // Data bytes
         for (var i = 0; i < data.Length; i++) bb.AppendBits(data[i], 8);
+
+        // Terminator
+        var remaining = dataCapacityBits - bb.LengthBits;
+        bb.AppendBits(0, Math.Min(4, Math.Max(0, remaining)));
+
+        // Pad to byte boundary
+        while ((bb.LengthBits & 7) != 0) bb.AppendBit(false);
+
+        var codewords = bb.ToByteArray();
+        var dataCodewords = QrTables.GetNumDataCodewords(version, ecc);
+        if (codewords.Length > dataCodewords) throw new InvalidOperationException("Encoded data exceeds capacity.");
+
+        if (codewords.Length == dataCodewords) return codewords;
+
+        // Pad bytes: 0xEC, 0x11 alternating
+        var result = new byte[dataCodewords];
+        Array.Copy(codewords, result, codewords.Length);
+        var pad = 0xEC;
+        for (var i = codewords.Length; i < result.Length; i++) {
+            result[i] = (byte)pad;
+            pad = pad == 0xEC ? 0x11 : 0xEC;
+        }
+        return result;
+    }
+
+    private static byte[] EncodeKanjiModeData(ushort[] values, int version, QrErrorCorrectionLevel ecc) {
+        var dataCapacityBits = QrTables.GetNumDataCodewords(version, ecc) * 8;
+        var bb = new QrBitBuffer();
+
+        // Mode indicator: Kanji (1000)
+        bb.AppendBits(0b1000, 4);
+        bb.AppendBits(values.Length, QrTables.GetKanjiModeCharCountBits(version));
+
+        for (var i = 0; i < values.Length; i++) {
+            bb.AppendBits(values[i], 13);
+        }
 
         // Terminator
         var remaining = dataCapacityBits - bb.LengthBits;
