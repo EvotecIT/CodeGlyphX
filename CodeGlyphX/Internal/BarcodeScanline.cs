@@ -89,7 +89,7 @@ internal static class BarcodeScanline {
         best = candidate;
     }
 
-    private static bool TryGetModulesFromHorizontal(byte[] pixels, int width, int height, int stride, PixelFormat format, int y, out bool[] modules) {
+    private static bool TryGetModulesFromHorizontal(PixelSpan pixels, int width, int height, int stride, PixelFormat format, int y, out bool[] modules) {
         modules = Array.Empty<bool>();
         if ((uint)y >= (uint)height) return false;
         var luminance = new byte[width];
@@ -120,7 +120,7 @@ internal static class BarcodeScanline {
         return TryDecodeRuns(luminance, min, max, out modules);
     }
 
-    private static bool TryGetModulesFromVertical(byte[] pixels, int width, int height, int stride, PixelFormat format, int x, out bool[] modules) {
+    private static bool TryGetModulesFromVertical(PixelSpan pixels, int width, int height, int stride, PixelFormat format, int x, out bool[] modules) {
         modules = Array.Empty<bool>();
         if ((uint)x >= (uint)width) return false;
         var luminance = new byte[height];
@@ -203,7 +203,7 @@ internal static class BarcodeScanline {
         return true;
     }
 
-    private static void TryCollectCandidatesFromHorizontal(byte[] pixels, int width, int height, int stride, PixelFormat format, int y, List<bool[]> candidates) {
+    private static void TryCollectCandidatesFromHorizontal(PixelSpan pixels, int width, int height, int stride, PixelFormat format, int y, List<bool[]> candidates) {
         if ((uint)y >= (uint)height) return;
         var luminance = new byte[width];
         var offset = y * stride;
@@ -233,7 +233,7 @@ internal static class BarcodeScanline {
         TryCollectCandidates(luminance, min, max, candidates);
     }
 
-    private static void TryCollectCandidatesFromVertical(byte[] pixels, int width, int height, int stride, PixelFormat format, int x, List<bool[]> candidates) {
+    private static void TryCollectCandidatesFromVertical(PixelSpan pixels, int width, int height, int stride, PixelFormat format, int x, List<bool[]> candidates) {
         if ((uint)x >= (uint)width) return;
         var luminance = new byte[height];
         var min = 255;
