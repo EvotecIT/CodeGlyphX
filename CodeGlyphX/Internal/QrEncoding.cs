@@ -14,6 +14,7 @@ internal static class QrEncoding {
             QrTextEncoding.Iso8859_7 => 9,
             QrTextEncoding.Iso8859_10 => 12,
             QrTextEncoding.Iso8859_15 => 15,
+            QrTextEncoding.ShiftJis => 20,
             QrTextEncoding.Utf8 => 26,
             QrTextEncoding.Ascii => 27,
             _ => -1
@@ -35,6 +36,7 @@ internal static class QrEncoding {
             QrTextEncoding.Iso8859_7 => EncodeSingleByte(text, ISO8859_7_MAP),
             QrTextEncoding.Iso8859_10 => EncodeSingleByte(text, ISO8859_10_MAP),
             QrTextEncoding.Iso8859_15 => EncodeSingleByte(text, ISO8859_15_MAP),
+            QrTextEncoding.ShiftJis => QrShiftJis.Encode(text),
             _ => Encoding.UTF8.GetBytes(text)
         };
     }
@@ -67,6 +69,8 @@ internal static class QrEncoding {
                 return CanEncodeWithMap(text, ISO8859_10_MAP);
             case QrTextEncoding.Iso8859_15:
                 return CanEncodeWithMap(text, ISO8859_15_MAP);
+            case QrTextEncoding.ShiftJis:
+                return QrShiftJis.CanEncode(text);
             default:
                 return false;
         }
@@ -86,6 +90,7 @@ internal static class QrEncoding {
             QrTextEncoding.Iso8859_7 => DecodeSingleByte(bytes, ISO8859_7),
             QrTextEncoding.Iso8859_10 => DecodeSingleByte(bytes, ISO8859_10),
             QrTextEncoding.Iso8859_15 => DecodeSingleByte(bytes, ISO8859_15),
+            QrTextEncoding.ShiftJis => QrShiftJis.Decode(bytes),
             _ => Encoding.UTF8.GetString(bytes)
         };
     }
