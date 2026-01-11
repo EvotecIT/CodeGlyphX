@@ -1,11 +1,21 @@
 using System;
 using System.Collections.Generic;
+using CodeGlyphX;
 
 namespace CodeGlyphX.Code128;
 
 internal static class Code128Encoder {
     public static Barcode1D Encode(string value) {
-        var codes = EncodeCodeValues(value);
+        var codes = EncodeCodeValues(value, gs1: false);
+        return EncodeFromCodes(codes);
+    }
+
+    public static Barcode1D EncodeGs1(string elementString) {
+        var codes = EncodeCodeValues(elementString, gs1: true);
+        return EncodeFromCodes(codes);
+    }
+
+    private static Barcode1D EncodeFromCodes(int[] codes) {
 
         var segments = new List<BarSegment>(codes.Length * 6);
         for (var ci = 0; ci < codes.Length; ci++) {
@@ -23,18 +33,26 @@ internal static class Code128Encoder {
         return new Barcode1D(segments);
     }
 
-    internal static int[] EncodeCodeValues(string value) {
+    internal static int[] EncodeCodeValues(string value, bool gs1 = false) {
         if (value is null) throw new ArgumentNullException(nameof(value));
         if (value.Length == 0) throw new ArgumentException("Value cannot be empty.", nameof(value));
+        if (gs1 && value[0] == Gs1.GroupSeparator) throw new ArgumentException("GS1 element string cannot start with a group separator.");
 
         var codes = new List<int>(value.Length + 4);
 
         var digitRun0 = CountConsecutiveDigits(value, 0);
         var inCodeC = digitRun0 >= 4 && (digitRun0 % 2 == 0);
         codes.Add(inCodeC ? Code128Tables.StartC : Code128Tables.StartB);
+        if (gs1) codes.Add(Code128Tables.Fnc1);
 
         var i = 0;
         while (i < value.Length) {
+            if (gs1 && value[i] == Gs1.GroupSeparator) {
+                codes.Add(Code128Tables.Fnc1);
+                i++;
+                continue;
+            }
+
             if (inCodeC) {
                 var run = CountConsecutiveDigits(value, i);
                 if (run >= 2) {
@@ -85,6 +103,10 @@ internal static class Code128Encoder {
     }
 
     private static void EmitCodeBChar(char ch, List<int> codes) {
+        if (ch == Gs1.GroupSeparator) {
+            codes.Add(Code128Tables.Fnc1);
+            return;
+        }
         if (ch is < (char)32 or > (char)126)
             throw new ArgumentException($"Code 128 (Set B/C) supports ASCII 32..126 for now. Bad char: U+{(int)ch:X4}");
         codes.Add(ch - 32);

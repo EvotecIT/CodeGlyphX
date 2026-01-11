@@ -1,4 +1,4 @@
-#if NET472 || NETFRAMEWORK
+#if NET472 || NETFRAMEWORK || NETSTANDARD2_0
 namespace System.Runtime.CompilerServices;
 
 // Polyfill for record/init support on .NET Framework targets.

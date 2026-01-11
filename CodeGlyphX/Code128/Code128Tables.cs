@@ -7,6 +7,7 @@ internal static class Code128Tables {
     public const int StartC = 105;
     public const int CodeC = 99;
     public const int CodeB = 100;
+    public const int Fnc1 = 102;
     public const int Stop = 106;
 
     private static readonly uint[] Patterns = {
@@ -31,4 +32,3 @@ internal static class Code128Tables {
         return Patterns[code];
     }
 }
-
