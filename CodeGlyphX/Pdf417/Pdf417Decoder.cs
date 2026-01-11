@@ -16,6 +16,9 @@ namespace CodeGlyphX.Pdf417;
 public static class Pdf417Decoder {
     private const int StartPatternWidth = 17;
     private const int StopPatternWidth = 18;
+    private const int StartPattern = 0x1fea8; // 17 bits
+    private const int StopPattern = 0x3fa29;  // 18 bits
+    private const int DefaultThreshold = 128;
 
     private static readonly Dictionary<int, int>[] PatternToCodeword = BuildPatternMaps();
 
@@ -25,6 +28,14 @@ public static class Pdf417Decoder {
     public static bool TryDecode(BitMatrix modules, out string value) {
         if (modules is null) throw new ArgumentNullException(nameof(modules));
 
+        if (TryDecodeCore(modules, out value)) return true;
+        if (TryDecodeWithStartPattern(modules, out value)) return true;
+
+        value = string.Empty;
+        return false;
+    }
+
+    private static bool TryDecodeCore(BitMatrix modules, out string value) {
         var width = modules.Width;
         var height = modules.Height;
 
@@ -148,27 +159,29 @@ public static class Pdf417Decoder {
     }
 
     private static bool TryDecodePixels(PixelSpan pixels, int width, int height, int stride, PixelFormat format, out string value) {
-        if (TryDecodeFromPixels(pixels, width, height, stride, format, out value)) return true;
+        foreach (var threshold in BuildThresholds(pixels, width, height, stride, format)) {
+            if (TryDecodeFromPixels(pixels, width, height, stride, format, threshold, out value)) return true;
+        }
         value = string.Empty;
         return false;
     }
 
-    private static bool TryDecodeFromPixels(PixelSpan pixels, int width, int height, int stride, PixelFormat format, out string value) {
+    private static bool TryDecodeFromPixels(PixelSpan pixels, int width, int height, int stride, PixelFormat format, int threshold, out string value) {
         if (width <= 0 || height <= 0 || stride <= 0) {
             value = string.Empty;
             return false;
         }
 
-        if (TryFindBoundingBox(pixels, width, height, stride, format, invert: false, out var box)) {
-            if (TryDecodeFromBox(pixels, width, height, stride, format, box, invert: false, out value)) return true;
+        if (TryFindBoundingBox(pixels, width, height, stride, format, threshold, invert: false, out var box)) {
+            if (TryDecodeFromBox(pixels, width, height, stride, format, box, threshold, invert: false, out value)) return true;
         }
 
-        if (TryFindBoundingBox(pixels, width, height, stride, format, invert: true, out box)) {
-            if (TryDecodeFromBox(pixels, width, height, stride, format, box, invert: true, out value)) return true;
+        if (TryFindBoundingBox(pixels, width, height, stride, format, threshold, invert: true, out box)) {
+            if (TryDecodeFromBox(pixels, width, height, stride, format, box, threshold, invert: true, out value)) return true;
         }
 
         // Fallback to legacy extractor.
-        if (TryExtractModules(pixels, width, height, stride, format, out var modules)) {
+        if (TryExtractModules(pixels, width, height, stride, format, threshold, out var modules)) {
             if (TryDecodeWithRotations(modules, out value)) return true;
             var trimmed = TrimModuleBorder(modules);
             if (!ReferenceEquals(trimmed, modules) && TryDecodeWithRotations(trimmed, out value)) return true;
@@ -178,24 +191,34 @@ public static class Pdf417Decoder {
         return false;
     }
 
-    private static bool TryDecodeFromBox(PixelSpan pixels, int width, int height, int stride, PixelFormat format, BoundingBox box, bool invert, out string value) {
-        foreach (var candidate in BuildCandidates(pixels, width, height, stride, format, box, invert)) {
-            var modules = SampleModules(pixels, width, height, stride, format, box, candidate.WidthModules, candidate.HeightModules, candidate.ModuleSize, invert);
+    private static bool TryDecodeFromBox(PixelSpan pixels, int width, int height, int stride, PixelFormat format, BoundingBox box, int threshold, bool invert, out string value) {
+        foreach (var candidate in BuildCandidates(pixels, width, height, stride, format, threshold, box, invert)) {
+            var modules = SampleModules(pixels, width, height, stride, format, box, candidate.WidthModules, candidate.HeightModules, candidate.ModuleSize, threshold, invert);
             if (TryDecodeWithRotations(modules, out value)) return true;
 
             var trimmed = TrimModuleBorder(modules);
             if (!ReferenceEquals(trimmed, modules) && TryDecodeWithRotations(trimmed, out value)) return true;
+
+            if (TryDecodeWithShear(pixels, width, height, stride, format, box, candidate, threshold, invert, out value)) return true;
+
+#if NET8_0_OR_GREATER
+            if (TryDecodeWithPerspective(pixels, width, height, stride, format, box, candidate, threshold, invert, out value)) return true;
+#endif
         }
 
         value = string.Empty;
         return false;
     }
 
-    private static List<Candidate> BuildCandidates(PixelSpan pixels, int width, int height, int stride, PixelFormat format, BoundingBox box, bool invert) {
+    private static List<Candidate> BuildCandidates(PixelSpan pixels, int width, int height, int stride, PixelFormat format, int threshold, BoundingBox box, bool invert) {
         var seen = new HashSet<(int module, int width, int height)>();
 
-        if (TryEstimateModuleSize(pixels, width, height, stride, format, box, invert, out var estimated)) {
-            AddCandidateFromModuleSize(box, estimated, seen);
+        if (TryEstimateModuleSize(pixels, width, height, stride, format, threshold, box, invert, out var estimated)) {
+            for (var delta = -2; delta <= 2; delta++) {
+                var candidate = estimated + delta;
+                if (candidate <= 0) continue;
+                AddCandidateFromModuleSize(box, candidate, seen);
+            }
         }
 
         for (var compact = 0; compact <= 1; compact++) {
@@ -229,8 +252,8 @@ public static class Pdf417Decoder {
 
         var widthPx = widthModules * moduleSize;
         var heightPx = heightModules * moduleSize;
-        if (Math.Abs(widthPx - box.Width) > moduleSize * 2) return;
-        if (Math.Abs(heightPx - box.Height) > moduleSize * 2) return;
+        if (Math.Abs(widthPx - box.Width) > moduleSize * 4) return;
+        if (Math.Abs(heightPx - box.Height) > moduleSize * 4) return;
 
         if (!TryGetDimensions(widthModules, out var cols, out _)) return;
         if (cols < 1 || cols > 30) return;
@@ -238,7 +261,7 @@ public static class Pdf417Decoder {
         seen.Add((moduleSize, widthModules, heightModules));
     }
 
-    private static BitMatrix SampleModules(PixelSpan pixels, int width, int height, int stride, PixelFormat format, BoundingBox box, int widthModules, int heightModules, int moduleSize, bool invert) {
+    private static BitMatrix SampleModules(PixelSpan pixels, int width, int height, int stride, PixelFormat format, BoundingBox box, int widthModules, int heightModules, int moduleSize, int threshold, bool invert) {
         var modules = new BitMatrix(widthModules, heightModules);
         var totalWidth = widthModules * moduleSize;
         var totalHeight = heightModules * moduleSize;
@@ -252,7 +275,423 @@ public static class Pdf417Decoder {
             for (var x = 0; x < widthModules; x++) {
                 var sx = (int)Math.Round(offsetX + (x * moduleSize) + half);
                 sx = Clamp(sx, 0, width - 1);
-                var dark = IsDark(pixels, width, height, stride, format, sx, sy);
+                var dark = IsDark(pixels, width, height, stride, format, sx, sy, threshold);
+                modules[x, y] = invert ? !dark : dark;
+            }
+        }
+
+        return modules;
+    }
+
+    private static bool TryDecodeWithShear(PixelSpan pixels, int width, int height, int stride, PixelFormat format, BoundingBox box, Candidate candidate, int threshold, bool invert, out string value) {
+        if (TryDecodeWithRowAligned(pixels, width, height, stride, format, box, candidate, threshold, invert, out value)) return true;
+
+        var shearList = new List<double>(12);
+        int? leftEdgeMid = null;
+        var midRow = box.Top + box.Height / 2;
+        if (TryFindLeftEdge(pixels, width, height, stride, format, box.Left, box.Right, midRow, threshold, invert, out var leftEdge)) {
+            leftEdgeMid = leftEdge;
+        }
+        if (TryEstimateShear(pixels, width, height, stride, format, box, candidate, threshold, invert, out var estimated)) {
+            shearList.Add(estimated);
+            shearList.Add(estimated - 0.12);
+            shearList.Add(estimated + 0.12);
+            shearList.Add(estimated - 0.24);
+            shearList.Add(estimated + 0.24);
+        }
+
+        var defaults = new[] { -0.6, -0.4, -0.25, -0.15, -0.08, 0.08, 0.15, 0.25, 0.4, 0.6 };
+        for (var i = 0; i < defaults.Length; i++) shearList.Add(defaults[i]);
+
+        for (var i = 0; i < shearList.Count; i++) {
+            var modules = SampleModulesSheared(pixels, width, height, stride, format, box, candidate.WidthModules, candidate.HeightModules, candidate.ModuleSize, threshold, invert, shearList[i], leftEdgeMid);
+            if (TryDecodeWithRotations(modules, out value)) return true;
+            var trimmed = TrimModuleBorder(modules);
+            if (!ReferenceEquals(trimmed, modules) && TryDecodeWithRotations(trimmed, out value)) return true;
+        }
+
+        value = string.Empty;
+        return false;
+    }
+
+    private static bool TryDecodeWithRowAligned(PixelSpan pixels, int width, int height, int stride, PixelFormat format, BoundingBox box, Candidate candidate, int threshold, bool invert, out string value) {
+        var modules = SampleModulesRowAligned(pixels, width, height, stride, format, box, candidate.WidthModules, candidate.HeightModules, candidate.ModuleSize, threshold, invert);
+        if (TryDecodeWithRotations(modules, out value)) return true;
+        var trimmed = TrimModuleBorder(modules);
+        if (!ReferenceEquals(trimmed, modules) && TryDecodeWithRotations(trimmed, out value)) return true;
+        value = string.Empty;
+        return false;
+    }
+
+    private static BitMatrix SampleModulesRowAligned(PixelSpan pixels, int width, int height, int stride, PixelFormat format, BoundingBox box, int widthModules, int heightModules, int moduleSize, int threshold, bool invert) {
+        var modules = new BitMatrix(widthModules, heightModules);
+        var totalWidth = widthModules * moduleSize;
+        var totalHeight = heightModules * moduleSize;
+        var half = moduleSize / 2.0;
+        var baseOffsetX = box.Left + (box.Width - totalWidth) / 2.0;
+        var offsetY = box.Top + (box.Height - totalHeight) / 2.0;
+        var maxShift = moduleSize * 4;
+        var minRun = Math.Max(2, moduleSize / 2);
+
+        for (var y = 0; y < heightModules; y++) {
+            var sy = (int)Math.Round(offsetY + (y * moduleSize) + half);
+            sy = Clamp(sy, 0, height - 1);
+
+            var rowOffsetX = baseOffsetX;
+            if (TryFindLeftEdgeRun(pixels, width, height, stride, format, box.Left, box.Right, sy, threshold, invert, minRun, out var leftEdge)) {
+                rowOffsetX = leftEdge - half;
+                var delta = rowOffsetX - baseOffsetX;
+                if (delta > maxShift) rowOffsetX = baseOffsetX + maxShift;
+                else if (delta < -maxShift) rowOffsetX = baseOffsetX - maxShift;
+            }
+
+            for (var x = 0; x < widthModules; x++) {
+                var sx = (int)Math.Round(rowOffsetX + (x * moduleSize) + half);
+                sx = Clamp(sx, 0, width - 1);
+                var dark = IsDark(pixels, width, height, stride, format, sx, sy, threshold);
+                modules[x, y] = invert ? !dark : dark;
+            }
+        }
+
+        return modules;
+    }
+
+    private static bool TryEstimateShear(PixelSpan pixels, int width, int height, int stride, PixelFormat format, BoundingBox box, Candidate candidate, int threshold, bool invert, out double shearModulesPerRow) {
+        shearModulesPerRow = 0;
+        var sampleTop = box.Top + (int)(box.Height * 0.2);
+        var sampleBottom = box.Bottom - (int)(box.Height * 0.2);
+
+        if (sampleTop < box.Top) sampleTop = box.Top;
+        if (sampleBottom > box.Bottom) sampleBottom = box.Bottom;
+        if (sampleTop >= sampleBottom) return false;
+
+        if (!TryFindLeftEdge(pixels, width, height, stride, format, box.Left, box.Right, sampleTop, threshold, invert, out var leftTop)) return false;
+        if (!TryFindLeftEdge(pixels, width, height, stride, format, box.Left, box.Right, sampleBottom, threshold, invert, out var leftBottom)) return false;
+
+        var delta = leftBottom - leftTop;
+        if (candidate.HeightModules <= 1 || candidate.ModuleSize <= 0) return false;
+
+        shearModulesPerRow = delta / ((candidate.HeightModules - 1) * (double)candidate.ModuleSize);
+        return Math.Abs(shearModulesPerRow) > 0.02;
+    }
+
+    private static bool TryFindLeftEdge(PixelSpan pixels, int width, int height, int stride, PixelFormat format, int left, int right, int y, int threshold, bool invert, out int xFound) {
+        xFound = 0;
+        if ((uint)y >= (uint)height) return false;
+        var row = y * stride;
+        for (var x = left; x <= right; x++) {
+            if ((uint)x >= (uint)width) break;
+            var dark = IsDarkAt(pixels, row, x, format, threshold);
+            if (invert) dark = !dark;
+            if (dark) {
+                xFound = x;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static bool TryFindLeftEdgeRun(PixelSpan pixels, int width, int height, int stride, PixelFormat format, int left, int right, int y, int threshold, bool invert, int minRun, out int xFound) {
+        xFound = 0;
+        if ((uint)y >= (uint)height) return false;
+        var row = y * stride;
+        var run = 0;
+        for (var x = left; x <= right; x++) {
+            if ((uint)x >= (uint)width) break;
+            var dark = IsDarkAt(pixels, row, x, format, threshold);
+            if (invert) dark = !dark;
+            if (dark) {
+                run++;
+                if (run >= minRun) {
+                    xFound = x - run + 1;
+                    return true;
+                }
+            } else {
+                run = 0;
+            }
+        }
+        return false;
+    }
+
+#if NET8_0_OR_GREATER
+    private static bool TryDecodeWithPerspective(PixelSpan pixels, int width, int height, int stride, PixelFormat format, BoundingBox box, Candidate candidate, int threshold, bool invert, out string value) {
+        value = string.Empty;
+
+        if (!TryFindRowEdges(pixels, width, height, stride, format, threshold, invert, box, candidate, out var topLeft, out var topRight, out var bottomRight, out var bottomLeft)) {
+            return false;
+        }
+
+        var transform = Qr.QrPerspectiveTransform.QuadrilateralToQuadrilateral(
+            0, 0,
+            candidate.WidthModules - 1, 0,
+            candidate.WidthModules - 1, candidate.HeightModules - 1,
+            0, candidate.HeightModules - 1,
+            topLeft.x, topLeft.y,
+            topRight.x, topRight.y,
+            bottomRight.x, bottomRight.y,
+            bottomLeft.x, bottomLeft.y);
+
+        var offsets = new (double x, double y)[] {
+            (0, 0),
+            (0.25, 0),
+            (-0.25, 0),
+            (0, 0.25),
+            (0, -0.25),
+            (0.25, 0.25),
+            (-0.25, 0.25),
+            (0.25, -0.25),
+            (-0.25, -0.25),
+        };
+
+        for (var i = 0; i < offsets.Length; i++) {
+            var modules = SampleModulesPerspective(pixels, width, height, stride, format, candidate.WidthModules, candidate.HeightModules, threshold, invert, transform, offsets[i].x, offsets[i].y);
+            if (TryDecodeWithRotations(modules, out value)) return true;
+
+            var trimmed = TrimModuleBorder(modules);
+            if (!ReferenceEquals(trimmed, modules) && TryDecodeWithRotations(trimmed, out value)) return true;
+        }
+
+        value = string.Empty;
+        return false;
+    }
+
+    private static BitMatrix SampleModulesPerspective(PixelSpan pixels, int width, int height, int stride, PixelFormat format, int widthModules, int heightModules, int threshold, bool invert, Qr.QrPerspectiveTransform transform, double offsetX, double offsetY) {
+        var modules = new BitMatrix(widthModules, heightModules);
+        for (var y = 0; y < heightModules; y++) {
+            for (var x = 0; x < widthModules; x++) {
+                transform.Transform(x + 0.5 + offsetX, y + 0.5 + offsetY, out var sx, out var sy);
+                if (double.IsNaN(sx) || double.IsNaN(sy)) continue;
+                var dark = IsDarkAverage(pixels, width, height, stride, format, sx, sy, threshold);
+                modules[x, y] = invert ? !dark : dark;
+            }
+        }
+        return modules;
+    }
+
+    private static bool IsDarkAverage(PixelSpan pixels, int width, int height, int stride, PixelFormat format, double x, double y, int threshold) {
+        var cx = (int)Math.Round(x);
+        var cy = (int)Math.Round(y);
+        var sum = 0;
+        var count = 0;
+        for (var dy = -1; dy <= 1; dy++) {
+            var yy = cy + dy;
+            if ((uint)yy >= (uint)height) continue;
+            var row = yy * stride;
+            for (var dx = -1; dx <= 1; dx++) {
+                var xx = cx + dx;
+                if ((uint)xx >= (uint)width) continue;
+                var p = row + xx * 4;
+                byte r;
+                byte g;
+                byte b;
+                if (format == PixelFormat.Bgra32) {
+                    b = pixels[p + 0];
+                    g = pixels[p + 1];
+                    r = pixels[p + 2];
+                } else {
+                    r = pixels[p + 0];
+                    g = pixels[p + 1];
+                    b = pixels[p + 2];
+                }
+                var lum = (r * 77 + g * 150 + b * 29) >> 8;
+                sum += lum;
+                count++;
+            }
+        }
+
+        if (count == 0) return false;
+        var avg = sum / count;
+        return avg < threshold;
+    }
+
+    private static bool TryFindRowEdges(
+        PixelSpan pixels,
+        int width,
+        int height,
+        int stride,
+        PixelFormat format,
+        int threshold,
+        bool invert,
+        BoundingBox box,
+        Candidate candidate,
+        out (double x, double y) topLeft,
+        out (double x, double y) topRight,
+        out (double x, double y) bottomRight,
+        out (double x, double y) bottomLeft) {
+        topLeft = topRight = bottomRight = bottomLeft = default;
+
+        var minRun = Math.Max(1, candidate.ModuleSize / 3);
+        var topY = box.Top + Math.Max(1, box.Height / 8);
+        var bottomY = box.Bottom - Math.Max(1, box.Height / 8);
+        var slack = Math.Max(candidate.ModuleSize * 2, box.Height / 6);
+
+        if (!TryFindEdgeAtRowWithSlack(pixels, width, height, stride, format, threshold, invert, box.Left, box.Right, topY, minRun, slack, out var leftTop, out var rightTop, out topY)) {
+            if (!TryFindEdgeAtRowWithSlack(pixels, width, height, stride, format, threshold, invert, box.Left, box.Right, topY, minRun, box.Height / 3, out leftTop, out rightTop, out topY)) return false;
+        }
+        if (!TryFindEdgeAtRowWithSlack(pixels, width, height, stride, format, threshold, invert, box.Left, box.Right, bottomY, minRun, slack, out var leftBottom, out var rightBottom, out bottomY)) {
+            if (!TryFindEdgeAtRowWithSlack(pixels, width, height, stride, format, threshold, invert, box.Left, box.Right, bottomY, minRun, box.Height / 3, out leftBottom, out rightBottom, out bottomY)) return false;
+        }
+
+        // Fall back to nearby rows if edges are noisy.
+        if (Math.Abs(leftTop - leftBottom) > candidate.ModuleSize * 8 || Math.Abs(rightTop - rightBottom) > candidate.ModuleSize * 8) {
+            var midY = box.Top + box.Height / 2;
+            if (!TryFindEdgeAtRow(pixels, width, height, stride, format, threshold, invert, box.Left, box.Right, midY, minRun, out var leftMid, out var rightMid)) return false;
+            leftTop = (leftTop + leftMid) / 2.0;
+            rightTop = (rightTop + rightMid) / 2.0;
+            leftBottom = (leftBottom + leftMid) / 2.0;
+            rightBottom = (rightBottom + rightMid) / 2.0;
+        }
+
+        topLeft = (leftTop, topY);
+        topRight = (rightTop, topY);
+        bottomLeft = (leftBottom, bottomY);
+        bottomRight = (rightBottom, bottomY);
+        return true;
+    }
+
+    private static bool TryFindEdgeAtRowWithSlack(
+        PixelSpan pixels,
+        int width,
+        int height,
+        int stride,
+        PixelFormat format,
+        int threshold,
+        bool invert,
+        int left,
+        int right,
+        int y,
+        int minRun,
+        int slack,
+        out double leftEdge,
+        out double rightEdge,
+        out int yUsed) {
+        leftEdge = 0;
+        rightEdge = 0;
+        yUsed = y;
+        var start = Math.Max(0, y - slack);
+        var end = Math.Min(height - 1, y + slack);
+        for (var yy = start; yy <= end; yy++) {
+            if (TryFindEdgeAtRow(pixels, width, height, stride, format, threshold, invert, left, right, yy, minRun, out leftEdge, out rightEdge)) {
+                yUsed = yy;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static bool TryFindEdgeAtRow(
+        PixelSpan pixels,
+        int width,
+        int height,
+        int stride,
+        PixelFormat format,
+        int threshold,
+        bool invert,
+        int left,
+        int right,
+        int y,
+        int minRun,
+        out double leftEdge,
+        out double rightEdge) {
+        leftEdge = 0;
+        rightEdge = 0;
+        if ((uint)y >= (uint)height) return false;
+
+        if (!TryFindLeftEdgeRun(pixels, width, height, stride, format, left, right, y, threshold, invert, minRun, out var leftX) ||
+            !TryFindRightEdgeRun(pixels, width, height, stride, format, left, right, y, threshold, invert, minRun, out var rightX)) {
+            return TryFindEdgeAtRowLoose(pixels, width, height, stride, format, threshold, invert, left, right, y, out leftEdge, out rightEdge);
+        }
+
+        leftEdge = leftX;
+        rightEdge = rightX;
+        return rightEdge > leftEdge;
+    }
+
+    private static bool TryFindEdgeAtRowLoose(
+        PixelSpan pixels,
+        int width,
+        int height,
+        int stride,
+        PixelFormat format,
+        int threshold,
+        bool invert,
+        int left,
+        int right,
+        int y,
+        out double leftEdge,
+        out double rightEdge) {
+        leftEdge = 0;
+        rightEdge = 0;
+        if ((uint)y >= (uint)height) return false;
+        var row = y * stride;
+        var foundLeft = false;
+        for (var x = left; x <= right; x++) {
+            if ((uint)x >= (uint)width) continue;
+            var dark = IsDarkAt(pixels, row, x, format, threshold);
+            if (invert) dark = !dark;
+            if (dark) {
+                leftEdge = x;
+                foundLeft = true;
+                break;
+            }
+        }
+        if (!foundLeft) return false;
+        for (var x = right; x >= left; x--) {
+            if ((uint)x >= (uint)width) continue;
+            var dark = IsDarkAt(pixels, row, x, format, threshold);
+            if (invert) dark = !dark;
+            if (dark) {
+                rightEdge = x;
+                break;
+            }
+        }
+
+        return rightEdge > leftEdge;
+    }
+
+    private static bool TryFindRightEdgeRun(PixelSpan pixels, int width, int height, int stride, PixelFormat format, int left, int right, int y, int threshold, bool invert, int minRun, out int xFound) {
+        xFound = 0;
+        if ((uint)y >= (uint)height) return false;
+        var row = y * stride;
+        var run = 0;
+        for (var x = right; x >= left; x--) {
+            if ((uint)x >= (uint)width) continue;
+            var dark = IsDarkAt(pixels, row, x, format, threshold);
+            if (invert) dark = !dark;
+            if (dark) {
+                run++;
+                if (run >= minRun) {
+                    xFound = x + run - 1;
+                    return true;
+                }
+            } else {
+                run = 0;
+            }
+        }
+        return false;
+    }
+#endif
+
+    private static BitMatrix SampleModulesSheared(PixelSpan pixels, int width, int height, int stride, PixelFormat format, BoundingBox box, int widthModules, int heightModules, int moduleSize, int threshold, bool invert, double shearModulesPerRow, int? leftEdgeMid) {
+        var modules = new BitMatrix(widthModules, heightModules);
+        var totalWidth = widthModules * moduleSize;
+        var totalHeight = heightModules * moduleSize;
+        var half = moduleSize / 2.0;
+        var offsetX = leftEdgeMid.HasValue
+            ? leftEdgeMid.Value - half
+            : box.Left + (box.Width - totalWidth) / 2.0;
+        var offsetY = box.Top + (box.Height - totalHeight) / 2.0;
+
+        var midRow = (heightModules - 1) / 2.0;
+
+        for (var y = 0; y < heightModules; y++) {
+            var rowShift = (y - midRow) * shearModulesPerRow * moduleSize;
+            var sy = (int)Math.Round(offsetY + (y * moduleSize) + half);
+            sy = Clamp(sy, 0, height - 1);
+            for (var x = 0; x < widthModules; x++) {
+                var sx = (int)Math.Round(offsetX + rowShift + (x * moduleSize) + half);
+                sx = Clamp(sx, 0, width - 1);
+                var dark = IsDark(pixels, width, height, stride, format, sx, sy, threshold);
                 modules[x, y] = invert ? !dark : dark;
             }
         }
@@ -283,6 +722,93 @@ public static class Pdf417Decoder {
         if (TryDecode(Rotate270(modules), out value)) return true;
         value = string.Empty;
         return false;
+    }
+
+    private static bool TryDecodeWithStartPattern(BitMatrix modules, out string value) {
+        var height = modules.Height;
+        if (height == 0) {
+            value = string.Empty;
+            return false;
+        }
+
+        var offsets = new List<int>(6);
+        var rows = new[] { height / 2, height / 3, (height * 2) / 3 };
+        for (var i = 0; i < rows.Length; i++) {
+            var row = rows[i];
+            if ((uint)row >= (uint)height) continue;
+            foreach (var offset in FindPatternOffsets(modules, row, StartPattern, StartPatternWidth, maxErrors: 2)) {
+                if (!offsets.Contains(offset)) offsets.Add(offset);
+            }
+        }
+
+        if (offsets.Count == 0) {
+            value = string.Empty;
+            return false;
+        }
+
+        offsets.Sort();
+        for (var i = 0; i < offsets.Count; i++) {
+            if (TryDecodeWithOffset(modules, offsets[i], out value)) return true;
+        }
+
+        value = string.Empty;
+        return false;
+    }
+
+    private static bool TryDecodeWithOffset(BitMatrix modules, int startOffset, out string value) {
+        var maxWidth = modules.Width - startOffset;
+        if (maxWidth < StartPatternWidth + 17 + 17 + 1) {
+            value = string.Empty;
+            return false;
+        }
+
+        for (var compact = 0; compact <= 1; compact++) {
+            var baseOffset = compact == 1 ? 35 : 69;
+            for (var cols = 1; cols <= 30; cols++) {
+                var widthModules = cols * 17 + baseOffset;
+                if (widthModules > maxWidth) break;
+
+                var cropped = CropColumns(modules, startOffset, widthModules);
+                if (TryDecodeCore(cropped, out value)) return true;
+            }
+        }
+
+        value = string.Empty;
+        return false;
+    }
+
+    private static IEnumerable<int> FindPatternOffsets(BitMatrix modules, int row, int pattern, int length, int maxErrors) {
+        var width = modules.Width;
+        if (length <= 0 || width < length) yield break;
+
+        for (var x = 0; x <= width - length; x++) {
+            var bits = 0;
+            for (var i = 0; i < length; i++) {
+                bits = (bits << 1) | (modules[x + i, row] ? 1 : 0);
+            }
+            var diff = bits ^ pattern;
+            if (PopCount(diff) <= maxErrors) yield return x;
+        }
+    }
+
+    private static int PopCount(int value) {
+        var count = 0;
+        while (value != 0) {
+            count += value & 1;
+            value >>= 1;
+        }
+        return count;
+    }
+
+    private static BitMatrix CropColumns(BitMatrix modules, int left, int width) {
+        var height = modules.Height;
+        var cropped = new BitMatrix(width, height);
+        for (var y = 0; y < height; y++) {
+            for (var x = 0; x < width; x++) {
+                cropped[x, y] = modules[left + x, y];
+            }
+        }
+        return cropped;
     }
 
     private static BitMatrix TrimModuleBorder(BitMatrix modules) {
@@ -358,18 +884,18 @@ public static class Pdf417Decoder {
         return maps;
     }
 
-    private static bool TryExtractModules(PixelSpan pixels, int width, int height, int stride, PixelFormat format, out BitMatrix modules) {
+    private static bool TryExtractModules(PixelSpan pixels, int width, int height, int stride, PixelFormat format, int threshold, out BitMatrix modules) {
         modules = null!;
         if (width <= 0 || height <= 0 || stride <= 0) return false;
 
         var invert = false;
-        if (!TryFindBoundingBox(pixels, width, height, stride, format, invert: false, out var box)) {
-            if (!TryFindBoundingBox(pixels, width, height, stride, format, invert: true, out box)) return false;
+        if (!TryFindBoundingBox(pixels, width, height, stride, format, threshold, invert: false, out var box)) {
+            if (!TryFindBoundingBox(pixels, width, height, stride, format, threshold, invert: true, out box)) return false;
             invert = true;
         }
 
         if (box.Width <= 1 || box.Height <= 1) return false;
-        if (!TryEstimateModuleSize(pixels, width, height, stride, format, box, invert, out var moduleSize)) return false;
+        if (!TryEstimateModuleSize(pixels, width, height, stride, format, threshold, box, invert, out var moduleSize)) return false;
 
         var cols = (int)Math.Round((double)box.Width / moduleSize);
         var rows = (int)Math.Round((double)box.Height / moduleSize);
@@ -383,7 +909,7 @@ public static class Pdf417Decoder {
             for (var x = 0; x < cols; x++) {
                 var sx = (int)Math.Round(box.Left + (x * moduleSize) + half);
                 sx = Clamp(sx, 0, width - 1);
-                var dark = IsDark(pixels, width, height, stride, format, sx, sy);
+                var dark = IsDark(pixels, width, height, stride, format, sx, sy, threshold);
                 modules[x, y] = invert ? !dark : dark;
             }
         }
@@ -391,19 +917,19 @@ public static class Pdf417Decoder {
         return true;
     }
 
-    private static bool TryEstimateModuleSize(PixelSpan pixels, int width, int height, int stride, PixelFormat format, BoundingBox box, bool invert, out int moduleSize) {
+    private static bool TryEstimateModuleSize(PixelSpan pixels, int width, int height, int stride, PixelFormat format, int threshold, BoundingBox box, bool invert, out int moduleSize) {
         moduleSize = 0;
         var midY = box.Top + box.Height / 2;
         var midX = box.Left + box.Width / 2;
 
-        if (!TryFindMinRun(pixels, width, height, stride, format, box.Left, box.Right, midY, horizontal: true, invert, out var hMin)) return false;
-        if (!TryFindMinRun(pixels, width, height, stride, format, box.Top, box.Bottom, midX, horizontal: false, invert, out var vMin)) return false;
+        if (!TryFindMinRun(pixels, width, height, stride, format, threshold, box.Left, box.Right, midY, horizontal: true, invert, out var hMin)) return false;
+        if (!TryFindMinRun(pixels, width, height, stride, format, threshold, box.Top, box.Bottom, midX, horizontal: false, invert, out var vMin)) return false;
 
         moduleSize = Math.Min(hMin, vMin);
         return moduleSize > 0;
     }
 
-    private static bool TryFindMinRun(PixelSpan pixels, int width, int height, int stride, PixelFormat format, int start, int end, int fixedPos, bool horizontal, bool invert, out int minRun) {
+    private static bool TryFindMinRun(PixelSpan pixels, int width, int height, int stride, PixelFormat format, int threshold, int start, int end, int fixedPos, bool horizontal, bool invert, out int minRun) {
         minRun = int.MaxValue;
         var prev = false;
         var run = 0;
@@ -412,7 +938,7 @@ public static class Pdf417Decoder {
         for (var i = start; i <= end; i++) {
             var x = horizontal ? i : fixedPos;
             var y = horizontal ? fixedPos : i;
-            var dark = IsDark(pixels, width, height, stride, format, x, y);
+            var dark = IsDark(pixels, width, height, stride, format, x, y, threshold);
             var bit = invert ? !dark : dark;
 
             if (!sawAny) {
@@ -435,7 +961,7 @@ public static class Pdf417Decoder {
         return minRun != int.MaxValue;
     }
 
-    private static bool TryFindBoundingBox(PixelSpan pixels, int width, int height, int stride, PixelFormat format, bool invert, out BoundingBox box) {
+    private static bool TryFindBoundingBox(PixelSpan pixels, int width, int height, int stride, PixelFormat format, int threshold, bool invert, out BoundingBox box) {
         var left = width;
         var right = -1;
         var top = height;
@@ -444,7 +970,7 @@ public static class Pdf417Decoder {
         for (var y = 0; y < height; y++) {
             var row = y * stride;
             for (var x = 0; x < width; x++) {
-                var dark = IsDarkAt(pixels, row, x, format);
+                var dark = IsDarkAt(pixels, row, x, format, threshold);
                 if (invert) dark = !dark;
                 if (!dark) continue;
 
@@ -461,12 +987,12 @@ public static class Pdf417Decoder {
         }
 
         var found = new BoundingBox(left, top, right, bottom);
-        var trimmed = TrimBoundingBox(pixels, width, height, stride, format, found, invert);
+        var trimmed = TrimBoundingBox(pixels, width, height, stride, format, threshold, found, invert);
         box = trimmed.Width >= 3 && trimmed.Height >= 3 ? trimmed : found;
         return true;
     }
 
-    private static BoundingBox TrimBoundingBox(PixelSpan pixels, int width, int height, int stride, PixelFormat format, BoundingBox box, bool invert) {
+    private static BoundingBox TrimBoundingBox(PixelSpan pixels, int width, int height, int stride, PixelFormat format, int threshold, BoundingBox box, bool invert) {
         var left = box.Left;
         var right = box.Right;
         var top = box.Top;
@@ -475,22 +1001,22 @@ public static class Pdf417Decoder {
         var rowThreshold = Math.Max(2, (right - left + 1) / 40);
         var colThreshold = Math.Max(2, (bottom - top + 1) / 40);
 
-        while (top <= bottom && CountDarkRow(pixels, width, height, stride, format, left, right, top, invert) <= rowThreshold) top++;
-        while (top <= bottom && CountDarkRow(pixels, width, height, stride, format, left, right, bottom, invert) <= rowThreshold) bottom--;
-        while (left <= right && CountDarkCol(pixels, width, height, stride, format, left, top, bottom, invert) <= colThreshold) left++;
-        while (left <= right && CountDarkCol(pixels, width, height, stride, format, right, top, bottom, invert) <= colThreshold) right--;
+        while (top <= bottom && CountDarkRow(pixels, width, height, stride, format, threshold, left, right, top, invert) <= rowThreshold) top++;
+        while (top <= bottom && CountDarkRow(pixels, width, height, stride, format, threshold, left, right, bottom, invert) <= rowThreshold) bottom--;
+        while (left <= right && CountDarkCol(pixels, width, height, stride, format, threshold, left, top, bottom, invert) <= colThreshold) left++;
+        while (left <= right && CountDarkCol(pixels, width, height, stride, format, threshold, right, top, bottom, invert) <= colThreshold) right--;
 
         if (right < left || bottom < top) return box;
         return new BoundingBox(left, top, right, bottom);
     }
 
-    private static int CountDarkRow(PixelSpan pixels, int width, int height, int stride, PixelFormat format, int left, int right, int y, bool invert) {
+    private static int CountDarkRow(PixelSpan pixels, int width, int height, int stride, PixelFormat format, int threshold, int left, int right, int y, bool invert) {
         if ((uint)y >= (uint)height) return 0;
         var row = y * stride;
         var count = 0;
         for (var x = left; x <= right; x++) {
             if ((uint)x >= (uint)width) continue;
-            var dark = IsDarkAt(pixels, row, x, format);
+            var dark = IsDarkAt(pixels, row, x, format, threshold);
             if (invert) dark = !dark;
             if (dark) count++;
         }
@@ -498,13 +1024,13 @@ public static class Pdf417Decoder {
         return count;
     }
 
-    private static int CountDarkCol(PixelSpan pixels, int width, int height, int stride, PixelFormat format, int x, int top, int bottom, bool invert) {
+    private static int CountDarkCol(PixelSpan pixels, int width, int height, int stride, PixelFormat format, int threshold, int x, int top, int bottom, bool invert) {
         if ((uint)x >= (uint)width) return 0;
         var count = 0;
         for (var y = top; y <= bottom; y++) {
             if ((uint)y >= (uint)height) continue;
             var row = y * stride;
-            var dark = IsDarkAt(pixels, row, x, format);
+            var dark = IsDarkAt(pixels, row, x, format, threshold);
             if (invert) dark = !dark;
             if (dark) count++;
         }
@@ -512,13 +1038,13 @@ public static class Pdf417Decoder {
         return count;
     }
 
-    private static bool IsDark(PixelSpan pixels, int width, int height, int stride, PixelFormat format, int x, int y) {
+    private static bool IsDark(PixelSpan pixels, int width, int height, int stride, PixelFormat format, int x, int y, int threshold) {
         if ((uint)x >= (uint)width || (uint)y >= (uint)height) return false;
         var row = y * stride;
-        return IsDarkAt(pixels, row, x, format);
+        return IsDarkAt(pixels, row, x, format, threshold);
     }
 
-    private static bool IsDarkAt(PixelSpan pixels, int row, int x, PixelFormat format) {
+    private static bool IsDarkAt(PixelSpan pixels, int row, int x, PixelFormat format, int threshold) {
         var p = row + x * 4;
         byte r;
         byte g;
@@ -534,7 +1060,66 @@ public static class Pdf417Decoder {
         }
 
         var lum = (r * 77 + g * 150 + b * 29) >> 8;
-        return lum < 128;
+        return lum < threshold;
+    }
+
+    private static IEnumerable<int> BuildThresholds(PixelSpan pixels, int width, int height, int stride, PixelFormat format) {
+        var list = new List<int>(4) { DefaultThreshold };
+        if (TryGetLuminanceRange(pixels, width, height, stride, format, out var min, out var max)) {
+            var range = max - min;
+            if (range > 8) {
+                list.Add(min + range / 2);
+                list.Add(min + range / 3);
+                list.Add(min + (range * 2) / 3);
+            }
+        }
+
+        for (var i = 0; i < list.Count; i++) {
+            var t = list[i];
+            if (t < 0) t = 0;
+            if (t > 255) t = 255;
+            list[i] = t;
+        }
+
+        list.Sort();
+        for (var i = list.Count - 1; i > 0; i--) {
+            if (list[i] == list[i - 1]) list.RemoveAt(i);
+        }
+
+        return list;
+    }
+
+    private static bool TryGetLuminanceRange(PixelSpan pixels, int width, int height, int stride, PixelFormat format, out int min, out int max) {
+        min = 255;
+        max = 0;
+
+        if (width <= 0 || height <= 0 || stride <= 0) return false;
+        var stepX = Math.Max(1, width / 160);
+        var stepY = Math.Max(1, height / 160);
+
+        for (var y = 0; y < height; y += stepY) {
+            var row = y * stride;
+            for (var x = 0; x < width; x += stepX) {
+                var p = row + x * 4;
+                byte r;
+                byte g;
+                byte b;
+                if (format == PixelFormat.Bgra32) {
+                    b = pixels[p + 0];
+                    g = pixels[p + 1];
+                    r = pixels[p + 2];
+                } else {
+                    r = pixels[p + 0];
+                    g = pixels[p + 1];
+                    b = pixels[p + 2];
+                }
+                var lum = (r * 77 + g * 150 + b * 29) >> 8;
+                if (lum < min) min = lum;
+                if (lum > max) max = lum;
+            }
+        }
+
+        return max >= min;
     }
 
     private static BitMatrix Rotate90(BitMatrix matrix) {

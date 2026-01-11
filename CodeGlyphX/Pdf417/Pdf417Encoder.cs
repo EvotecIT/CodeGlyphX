@@ -46,7 +46,7 @@ public static class Pdf417Encoder {
     }
 #endif
 
-    private static (int cols, int rows) ChooseDimensions(int dataCodewords, int eccCodewords, Pdf417EncodeOptions options) {
+    private static bool TryChooseDimensions(int dataCodewords, int eccCodewords, Pdf417EncodeOptions options, out int cols, out int rows) {
         var minCols = Clamp(options.MinColumns, 1, 30);
         var maxCols = Clamp(options.MaxColumns, minCols, 30);
         var minRows = Clamp(options.MinRows, 3, 90);
@@ -56,26 +56,31 @@ public static class Pdf417Encoder {
         var bestRows = 0;
         var bestScore = float.MaxValue;
 
-        for (var cols = minCols; cols <= maxCols; cols++) {
-            var rows = (int)Math.Ceiling((dataCodewords + 1 + eccCodewords) / (double)cols);
-            if (rows < minRows || rows > maxRows) continue;
+        for (var c = minCols; c <= maxCols; c++) {
+            var r = (int)Math.Ceiling((dataCodewords + 1 + eccCodewords) / (double)c);
+            if (r < minRows || r > maxRows) continue;
 
-            var widthModules = cols * Pdf417BarcodeMatrix.ColumnWidth + (options.Compact ? 35 : 69);
-            var ratio = widthModules / (float)rows;
+            var widthModules = c * Pdf417BarcodeMatrix.ColumnWidth + (options.Compact ? 35 : 69);
+            var ratio = widthModules / (float)r;
             var score = Math.Abs(ratio - options.TargetAspectRatio);
 
             if (score < bestScore) {
                 bestScore = score;
-                bestCols = cols;
-                bestRows = rows;
+                bestCols = c;
+                bestRows = r;
             }
         }
 
-        if (bestCols == 0) {
+        cols = bestCols;
+        rows = bestRows;
+        return bestCols != 0;
+    }
+
+    private static (int cols, int rows) ChooseDimensions(int dataCodewords, int eccCodewords, Pdf417EncodeOptions options) {
+        if (!TryChooseDimensions(dataCodewords, eccCodewords, options, out var cols, out var rows)) {
             throw new ArgumentException("Unable to fit PDF417 data within row/column constraints.");
         }
-
-        return (bestCols, bestRows);
+        return (cols, rows);
     }
 
     private static int Clamp(int value, int min, int max) {
@@ -218,10 +223,42 @@ public static class Pdf417Encoder {
     private static BitMatrix EncodeCodewords(List<int> dataCodewords, Pdf417EncodeOptions options) {
         var dataCount = dataCodewords.Count;
 
-        var eccLevel = Pdf417ErrorCorrection.GetErrorCorrectionLevel(options.ErrorCorrectionLevel, dataCount + 1);
+        var requested = options.ErrorCorrectionLevel;
+        var auto = requested < 0 || requested > 8;
+        var eccLevel = auto
+            ? Pdf417ErrorCorrection.GetErrorCorrectionLevel(requested, dataCount + 1)
+            : requested;
         var eccCount = Pdf417ErrorCorrection.GetErrorCorrectionCodewordCount(eccLevel);
 
-        var (cols, rows) = ChooseDimensions(dataCount, eccCount, options);
+        int cols;
+        int rows;
+        if (auto) {
+            if (!TryChooseDimensions(dataCount, eccCount, options, out cols, out rows)) {
+                var found = false;
+                for (var level = Math.Min(8, eccLevel - 1); level >= 0; level--) {
+                    var count = Pdf417ErrorCorrection.GetErrorCorrectionCodewordCount(level);
+                    if (!TryChooseDimensions(dataCount, count, options, out cols, out rows)) continue;
+                    eccLevel = level;
+                    eccCount = count;
+                    found = true;
+                    break;
+                }
+                if (!found) throw new ArgumentException("Unable to fit PDF417 data within row/column constraints.");
+            }
+
+            var capacity = rows * cols - (dataCount + 1);
+            for (var level = 8; level > eccLevel; level--) {
+                var count = Pdf417ErrorCorrection.GetErrorCorrectionCodewordCount(level);
+                if (count <= capacity) {
+                    eccLevel = level;
+                    eccCount = count;
+                    break;
+                }
+            }
+        } else {
+            (cols, rows) = ChooseDimensions(dataCount, eccCount, options);
+        }
+
         var pad = rows * cols - (dataCount + 1 + eccCount);
         if (pad < 0) throw new ArgumentException("Data too long for PDF417 constraints.");
 
