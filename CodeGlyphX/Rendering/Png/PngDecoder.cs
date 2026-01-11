@@ -1,4 +1,5 @@
 using System;
+using System.Buffers;
 using System.IO;
 using System.IO.Compression;
 
@@ -9,10 +10,16 @@ internal static class PngDecoder {
 
     public static byte[] DecodeRgba32(byte[] png, out int width, out int height) {
         if (png is null) throw new ArgumentNullException(nameof(png));
-        if (png.Length < Signature.Length) throw new FormatException("Invalid PNG signature.");
+        return DecodeRgba32(png, 0, png.Length, out width, out height);
+    }
+
+    public static byte[] DecodeRgba32(byte[] png, int offset, int length, out int width, out int height) {
+        if (png is null) throw new ArgumentNullException(nameof(png));
+        if (offset < 0 || length < 0 || offset + length > png.Length) throw new ArgumentOutOfRangeException(nameof(length));
+        if (length < Signature.Length) throw new FormatException("Invalid PNG signature.");
 
         for (var i = 0; i < Signature.Length; i++) {
-            if (png[i] != Signature[i]) throw new FormatException("Invalid PNG signature.");
+            if (png[offset + i] != Signature[i]) throw new FormatException("Invalid PNG signature.");
         }
 
         width = 0;
@@ -24,18 +31,19 @@ internal static class PngDecoder {
         var interlace = 0;
 
         var idat = new MemoryStream();
-        var offset = Signature.Length;
+        var localOffset = Signature.Length;
+        var end = length;
 
-        while (offset + 8 <= png.Length) {
-            var len = ReadUInt32BE(png, offset);
-            offset += 4;
-            if (offset + 4 > png.Length) throw new FormatException("Invalid PNG chunk.");
-            var typeOffset = offset;
-            offset += 4;
-            if (offset + len + 4 > png.Length) throw new FormatException("Invalid PNG chunk length.");
-            var dataOffset = offset;
-            offset += (int)len;
-            offset += 4; // CRC
+        while (localOffset + 8 <= end) {
+            var len = ReadUInt32BE(png, offset + localOffset);
+            localOffset += 4;
+            if (localOffset + 4 > end) throw new FormatException("Invalid PNG chunk.");
+            var typeOffset = offset + localOffset;
+            localOffset += 4;
+            if (localOffset + len + 4 > end) throw new FormatException("Invalid PNG chunk length.");
+            var dataOffset = offset + localOffset;
+            localOffset += (int)len;
+            localOffset += 4; // CRC
 
             if (MatchType(png, typeOffset, "IHDR")) {
                 if (len < 13) throw new FormatException("Invalid IHDR chunk.");
@@ -66,43 +74,47 @@ internal static class PngDecoder {
 
         var rowBytes = checked(width * channels);
         var expected = checked(height * (rowBytes + 1));
-        var scanlines = new byte[expected];
+        var scanlines = ArrayPool<byte>.Shared.Rent(expected);
 
         if (idat.Length == 0) throw new FormatException("Missing IDAT.");
 
-        idat.Position = 0;
-        using (var z = CreateZLibStream(idat)) {
-            ReadExact(z, scanlines);
+        try {
+            idat.Position = 0;
+            using (var z = CreateZLibStream(idat)) {
+                ReadExact(z, scanlines, expected);
+            }
+
+            var raw = new byte[checked(height * rowBytes)];
+            Unfilter(scanlines.AsSpan(0, expected), raw, width, height, channels);
+
+            if (channels == 4) return raw;
+
+            var rgba = new byte[checked(width * height * 4)];
+            for (var i = 0; i < width * height; i++) {
+                var src = i * 3;
+                var dst = i * 4;
+                rgba[dst + 0] = raw[src + 0];
+                rgba[dst + 1] = raw[src + 1];
+                rgba[dst + 2] = raw[src + 2];
+                rgba[dst + 3] = 255;
+            }
+
+            return rgba;
+        } finally {
+            ArrayPool<byte>.Shared.Return(scanlines);
         }
-
-        var raw = new byte[checked(height * rowBytes)];
-        Unfilter(scanlines, raw, width, height, channels);
-
-        if (channels == 4) return raw;
-
-        var rgba = new byte[checked(width * height * 4)];
-        for (var i = 0; i < width * height; i++) {
-            var src = i * 3;
-            var dst = i * 4;
-            rgba[dst + 0] = raw[src + 0];
-            rgba[dst + 1] = raw[src + 1];
-            rgba[dst + 2] = raw[src + 2];
-            rgba[dst + 3] = 255;
-        }
-
-        return rgba;
     }
 
-    private static void ReadExact(Stream s, byte[] buffer) {
+    private static void ReadExact(Stream s, byte[] buffer, int length) {
         var offset = 0;
-        while (offset < buffer.Length) {
-            var read = s.Read(buffer, offset, buffer.Length - offset);
+        while (offset < length) {
+            var read = s.Read(buffer, offset, length - offset);
             if (read <= 0) throw new FormatException("Truncated PNG data.");
             offset += read;
         }
     }
 
-    private static void Unfilter(byte[] scanlines, byte[] raw, int width, int height, int bpp) {
+    private static void Unfilter(ReadOnlySpan<byte> scanlines, byte[] raw, int width, int height, int bpp) {
         var rowBytes = width * bpp;
         var src = 0;
         var dst = 0;

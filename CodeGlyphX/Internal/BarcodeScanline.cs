@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Buffers;
 
 #if NET8_0_OR_GREATER
 using PixelSpan = System.ReadOnlySpan<byte>;
@@ -92,72 +93,82 @@ internal static class BarcodeScanline {
     private static bool TryGetModulesFromHorizontal(PixelSpan pixels, int width, int height, int stride, PixelFormat format, int y, out bool[] modules) {
         modules = Array.Empty<bool>();
         if ((uint)y >= (uint)height) return false;
-        var luminance = new byte[width];
+        var rented = ArrayPool<byte>.Shared.Rent(width);
+        var luminance = rented.AsSpan(0, width);
         var offset = y * stride;
         var min = 255;
         var max = 0;
 
-        for (var x = 0; x < width; x++) {
-            var p = offset + x * 4;
-            byte r;
-            byte g;
-            byte b;
-            if (format == PixelFormat.Rgba32) {
-                r = pixels[p + 0];
-                g = pixels[p + 1];
-                b = pixels[p + 2];
-            } else {
-                b = pixels[p + 0];
-                g = pixels[p + 1];
-                r = pixels[p + 2];
+        try {
+            for (var x = 0; x < width; x++) {
+                var p = offset + x * 4;
+                byte r;
+                byte g;
+                byte b;
+                if (format == PixelFormat.Rgba32) {
+                    r = pixels[p + 0];
+                    g = pixels[p + 1];
+                    b = pixels[p + 2];
+                } else {
+                    b = pixels[p + 0];
+                    g = pixels[p + 1];
+                    r = pixels[p + 2];
+                }
+                var lum = (byte)((r * 54 + g * 183 + b * 19) >> 8);
+                luminance[x] = lum;
+                if (lum < min) min = lum;
+                if (lum > max) max = lum;
             }
-            var lum = (byte)((r * 54 + g * 183 + b * 19) >> 8);
-            luminance[x] = lum;
-            if (lum < min) min = lum;
-            if (lum > max) max = lum;
-        }
 
-        return TryDecodeRuns(luminance, min, max, out modules);
+            return TryDecodeRuns(luminance, min, max, out modules);
+        } finally {
+            ArrayPool<byte>.Shared.Return(rented);
+        }
     }
 
     private static bool TryGetModulesFromVertical(PixelSpan pixels, int width, int height, int stride, PixelFormat format, int x, out bool[] modules) {
         modules = Array.Empty<bool>();
         if ((uint)x >= (uint)width) return false;
-        var luminance = new byte[height];
+        var rented = ArrayPool<byte>.Shared.Rent(height);
+        var luminance = rented.AsSpan(0, height);
         var min = 255;
         var max = 0;
 
-        for (var y = 0; y < height; y++) {
-            var p = y * stride + x * 4;
-            byte r;
-            byte g;
-            byte b;
-            if (format == PixelFormat.Rgba32) {
-                r = pixels[p + 0];
-                g = pixels[p + 1];
-                b = pixels[p + 2];
-            } else {
-                b = pixels[p + 0];
-                g = pixels[p + 1];
-                r = pixels[p + 2];
+        try {
+            for (var y = 0; y < height; y++) {
+                var p = y * stride + x * 4;
+                byte r;
+                byte g;
+                byte b;
+                if (format == PixelFormat.Rgba32) {
+                    r = pixels[p + 0];
+                    g = pixels[p + 1];
+                    b = pixels[p + 2];
+                } else {
+                    b = pixels[p + 0];
+                    g = pixels[p + 1];
+                    r = pixels[p + 2];
+                }
+                var lum = (byte)((r * 54 + g * 183 + b * 19) >> 8);
+                luminance[y] = lum;
+                if (lum < min) min = lum;
+                if (lum > max) max = lum;
             }
-            var lum = (byte)((r * 54 + g * 183 + b * 19) >> 8);
-            luminance[y] = lum;
-            if (lum < min) min = lum;
-            if (lum > max) max = lum;
-        }
 
-        return TryDecodeRuns(luminance, min, max, out modules);
+            return TryDecodeRuns(luminance, min, max, out modules);
+        } finally {
+            ArrayPool<byte>.Shared.Return(rented);
+        }
     }
 
-    private static bool TryDecodeRuns(byte[] luminance, int min, int max, out bool[] modules) {
+    private static bool TryDecodeRuns(ReadOnlySpan<byte> luminance, int min, int max, out bool[] modules) {
         modules = Array.Empty<bool>();
         if (max - min < 8) return false;
         var threshold = (min + max) / 2;
         return TryDecodeRuns(luminance, threshold, out modules);
     }
 
-    private static bool TryDecodeRuns(byte[] luminance, int threshold, out bool[] modules) {
+    private static bool TryDecodeRuns(ReadOnlySpan<byte> luminance, int threshold, out bool[] modules) {
         modules = Array.Empty<bool>();
         if (luminance.Length == 0) return false;
 
@@ -205,64 +216,74 @@ internal static class BarcodeScanline {
 
     private static void TryCollectCandidatesFromHorizontal(PixelSpan pixels, int width, int height, int stride, PixelFormat format, int y, List<bool[]> candidates) {
         if ((uint)y >= (uint)height) return;
-        var luminance = new byte[width];
+        var rented = ArrayPool<byte>.Shared.Rent(width);
+        var luminance = rented.AsSpan(0, width);
         var offset = y * stride;
         var min = 255;
         var max = 0;
 
-        for (var x = 0; x < width; x++) {
-            var p = offset + x * 4;
-            byte r;
-            byte g;
-            byte b;
-            if (format == PixelFormat.Rgba32) {
-                r = pixels[p + 0];
-                g = pixels[p + 1];
-                b = pixels[p + 2];
-            } else {
-                b = pixels[p + 0];
-                g = pixels[p + 1];
-                r = pixels[p + 2];
+        try {
+            for (var x = 0; x < width; x++) {
+                var p = offset + x * 4;
+                byte r;
+                byte g;
+                byte b;
+                if (format == PixelFormat.Rgba32) {
+                    r = pixels[p + 0];
+                    g = pixels[p + 1];
+                    b = pixels[p + 2];
+                } else {
+                    b = pixels[p + 0];
+                    g = pixels[p + 1];
+                    r = pixels[p + 2];
+                }
+                var lum = (byte)((r * 54 + g * 183 + b * 19) >> 8);
+                luminance[x] = lum;
+                if (lum < min) min = lum;
+                if (lum > max) max = lum;
             }
-            var lum = (byte)((r * 54 + g * 183 + b * 19) >> 8);
-            luminance[x] = lum;
-            if (lum < min) min = lum;
-            if (lum > max) max = lum;
-        }
 
-        TryCollectCandidates(luminance, min, max, candidates);
+            TryCollectCandidates(luminance, min, max, candidates);
+        } finally {
+            ArrayPool<byte>.Shared.Return(rented);
+        }
     }
 
     private static void TryCollectCandidatesFromVertical(PixelSpan pixels, int width, int height, int stride, PixelFormat format, int x, List<bool[]> candidates) {
         if ((uint)x >= (uint)width) return;
-        var luminance = new byte[height];
+        var rented = ArrayPool<byte>.Shared.Rent(height);
+        var luminance = rented.AsSpan(0, height);
         var min = 255;
         var max = 0;
 
-        for (var y = 0; y < height; y++) {
-            var p = y * stride + x * 4;
-            byte r;
-            byte g;
-            byte b;
-            if (format == PixelFormat.Rgba32) {
-                r = pixels[p + 0];
-                g = pixels[p + 1];
-                b = pixels[p + 2];
-            } else {
-                b = pixels[p + 0];
-                g = pixels[p + 1];
-                r = pixels[p + 2];
+        try {
+            for (var y = 0; y < height; y++) {
+                var p = y * stride + x * 4;
+                byte r;
+                byte g;
+                byte b;
+                if (format == PixelFormat.Rgba32) {
+                    r = pixels[p + 0];
+                    g = pixels[p + 1];
+                    b = pixels[p + 2];
+                } else {
+                    b = pixels[p + 0];
+                    g = pixels[p + 1];
+                    r = pixels[p + 2];
+                }
+                var lum = (byte)((r * 54 + g * 183 + b * 19) >> 8);
+                luminance[y] = lum;
+                if (lum < min) min = lum;
+                if (lum > max) max = lum;
             }
-            var lum = (byte)((r * 54 + g * 183 + b * 19) >> 8);
-            luminance[y] = lum;
-            if (lum < min) min = lum;
-            if (lum > max) max = lum;
-        }
 
-        TryCollectCandidates(luminance, min, max, candidates);
+            TryCollectCandidates(luminance, min, max, candidates);
+        } finally {
+            ArrayPool<byte>.Shared.Return(rented);
+        }
     }
 
-    private static void TryCollectCandidates(byte[] luminance, int min, int max, List<bool[]> candidates) {
+    private static void TryCollectCandidates(ReadOnlySpan<byte> luminance, int min, int max, List<bool[]> candidates) {
         if (max - min < 8) return;
         var range = max - min;
         var thresholds = new[] { (min + max) / 2, min + range / 3, min + (range * 2) / 3 };

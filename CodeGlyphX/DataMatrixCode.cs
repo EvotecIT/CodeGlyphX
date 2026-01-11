@@ -48,6 +48,136 @@ public static class DataMatrixCode {
     public static BitMatrix EncodeBytes(ReadOnlySpan<byte> data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto) {
         return DataMatrixEncoder.EncodeBytes(data, mode);
     }
+
+    /// <summary>
+    /// Renders Data Matrix as PNG from bytes.
+    /// </summary>
+    public static byte[] Png(ReadOnlySpan<byte> data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = EncodeBytes(data, mode);
+        return MatrixPngRenderer.Render(modules, BuildPngOptions(options));
+    }
+
+    /// <summary>
+    /// Renders Data Matrix as SVG from bytes.
+    /// </summary>
+    public static string Svg(ReadOnlySpan<byte> data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = EncodeBytes(data, mode);
+        return MatrixSvgRenderer.Render(modules, BuildSvgOptions(options));
+    }
+
+    /// <summary>
+    /// Renders Data Matrix as HTML from bytes.
+    /// </summary>
+    public static string Html(ReadOnlySpan<byte> data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = EncodeBytes(data, mode);
+        return MatrixHtmlRenderer.Render(modules, BuildHtmlOptions(options));
+    }
+
+    /// <summary>
+    /// Renders Data Matrix as JPEG from bytes.
+    /// </summary>
+    public static byte[] Jpeg(ReadOnlySpan<byte> data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = EncodeBytes(data, mode);
+        var opts = BuildPngOptions(options);
+        var quality = options?.JpegQuality ?? 85;
+        return MatrixJpegRenderer.Render(modules, opts, quality);
+    }
+
+    /// <summary>
+    /// Saves Data Matrix PNG to a file for byte payloads.
+    /// </summary>
+    public static string SavePng(ReadOnlySpan<byte> data, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var png = Png(data, mode, options);
+        return png.WriteBinary(path);
+    }
+
+    /// <summary>
+    /// Saves Data Matrix PNG to a stream for byte payloads.
+    /// </summary>
+    public static void SavePng(ReadOnlySpan<byte> data, Stream stream, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = EncodeBytes(data, mode);
+        MatrixPngRenderer.RenderToStream(modules, BuildPngOptions(options), stream);
+    }
+
+    /// <summary>
+    /// Saves Data Matrix SVG to a file for byte payloads.
+    /// </summary>
+    public static string SaveSvg(ReadOnlySpan<byte> data, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var svg = Svg(data, mode, options);
+        return svg.WriteText(path);
+    }
+
+    /// <summary>
+    /// Saves Data Matrix SVG to a stream for byte payloads.
+    /// </summary>
+    public static void SaveSvg(ReadOnlySpan<byte> data, Stream stream, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var svg = Svg(data, mode, options);
+        svg.WriteText(stream);
+    }
+
+    /// <summary>
+    /// Saves Data Matrix HTML to a file for byte payloads.
+    /// </summary>
+    public static string SaveHtml(ReadOnlySpan<byte> data, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null, string? title = null) {
+        var html = Html(data, mode, options);
+        if (!string.IsNullOrEmpty(title)) {
+            html = html.WrapHtml(title);
+        }
+        return html.WriteText(path);
+    }
+
+    /// <summary>
+    /// Saves Data Matrix HTML to a stream for byte payloads.
+    /// </summary>
+    public static void SaveHtml(ReadOnlySpan<byte> data, Stream stream, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null, string? title = null) {
+        var html = Html(data, mode, options);
+        if (!string.IsNullOrEmpty(title)) {
+            html = html.WrapHtml(title);
+        }
+        html.WriteText(stream);
+    }
+
+    /// <summary>
+    /// Saves Data Matrix JPEG to a file for byte payloads.
+    /// </summary>
+    public static string SaveJpeg(ReadOnlySpan<byte> data, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var jpeg = Jpeg(data, mode, options);
+        return jpeg.WriteBinary(path);
+    }
+
+    /// <summary>
+    /// Saves Data Matrix JPEG to a stream for byte payloads.
+    /// </summary>
+    public static void SaveJpeg(ReadOnlySpan<byte> data, Stream stream, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = EncodeBytes(data, mode);
+        var opts = BuildPngOptions(options);
+        var quality = options?.JpegQuality ?? 85;
+        MatrixJpegRenderer.RenderToStream(modules, opts, stream, quality);
+    }
+
+    /// <summary>
+    /// Saves Data Matrix to a file for byte payloads based on extension (.png/.svg/.html/.jpg).
+    /// Defaults to PNG when no extension is provided.
+    /// </summary>
+    public static string Save(ReadOnlySpan<byte> data, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null, string? title = null) {
+        var ext = Path.GetExtension(path);
+        if (string.IsNullOrWhiteSpace(ext)) return SavePng(data, path, mode, options);
+
+        switch (ext.ToLowerInvariant()) {
+            case ".png":
+                return SavePng(data, path, mode, options);
+            case ".svg":
+                return SaveSvg(data, path, mode, options);
+            case ".html":
+            case ".htm":
+                return SaveHtml(data, path, mode, options, title);
+            case ".jpg":
+            case ".jpeg":
+                return SaveJpeg(data, path, mode, options);
+            default:
+                return SavePng(data, path, mode, options);
+        }
+    }
 #endif
 
     /// <summary>

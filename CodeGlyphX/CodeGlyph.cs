@@ -193,12 +193,52 @@ public static class CodeGlyph {
     }
 
     /// <summary>
+    /// Attempts to decode a QR or barcode from common image formats (PNG/BMP/PPM/TGA).
+    /// </summary>
+    public static bool TryDecodeImage(byte[] image, out CodeGlyphDecoded decoded, BarcodeType? expectedBarcode = null, bool preferBarcode = false) {
+        decoded = null!;
+        if (image is null) throw new ArgumentNullException(nameof(image));
+        if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) return false;
+        return TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, expectedBarcode, preferBarcode);
+    }
+
+    /// <summary>
     /// Attempts to decode all QR codes and (optionally) a 1D barcode from PNG bytes.
     /// </summary>
     public static bool TryDecodeAllPng(byte[] png, out CodeGlyphDecoded[] decoded, BarcodeType? expectedBarcode = null, bool includeBarcode = true, bool preferBarcode = false) {
         decoded = Array.Empty<CodeGlyphDecoded>();
         if (png is null) throw new ArgumentNullException(nameof(png));
         var rgba = PngReader.DecodeRgba32(png, out var width, out var height);
+        return TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, expectedBarcode, includeBarcode, preferBarcode);
+    }
+
+    /// <summary>
+    /// Attempts to decode all QR codes and (optionally) a 1D barcode from common image formats (PNG/BMP/PPM/TGA).
+    /// </summary>
+    public static bool TryDecodeAllImage(byte[] image, out CodeGlyphDecoded[] decoded, BarcodeType? expectedBarcode = null, bool includeBarcode = true, bool preferBarcode = false) {
+        decoded = Array.Empty<CodeGlyphDecoded>();
+        if (image is null) throw new ArgumentNullException(nameof(image));
+        if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) return false;
+        return TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, expectedBarcode, includeBarcode, preferBarcode);
+    }
+
+    /// <summary>
+    /// Attempts to decode a QR or barcode from an image stream (PNG/BMP/PPM/TGA).
+    /// </summary>
+    public static bool TryDecodeImage(Stream stream, out CodeGlyphDecoded decoded, BarcodeType? expectedBarcode = null, bool preferBarcode = false) {
+        decoded = null!;
+        if (stream is null) throw new ArgumentNullException(nameof(stream));
+        var rgba = ImageReader.DecodeRgba32(stream, out var width, out var height);
+        return TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, expectedBarcode, preferBarcode);
+    }
+
+    /// <summary>
+    /// Attempts to decode all QR codes and (optionally) a 1D barcode from an image stream (PNG/BMP/PPM/TGA).
+    /// </summary>
+    public static bool TryDecodeAllImage(Stream stream, out CodeGlyphDecoded[] decoded, BarcodeType? expectedBarcode = null, bool includeBarcode = true, bool preferBarcode = false) {
+        decoded = Array.Empty<CodeGlyphDecoded>();
+        if (stream is null) throw new ArgumentNullException(nameof(stream));
+        var rgba = ImageReader.DecodeRgba32(stream, out var width, out var height);
         return TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, expectedBarcode, includeBarcode, preferBarcode);
     }
 

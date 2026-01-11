@@ -1,5 +1,6 @@
 #if NET8_0_OR_GREATER
 using System;
+using System.Buffers;
 using System.Collections.Generic;
 using CodeGlyphX;
 
@@ -1086,79 +1087,111 @@ internal static class QrPixelDecoder {
         var comps = new List<Component>(8);
         if (w <= 0 || h <= 0) return comps;
 
-        var minArea = Math.Max(16, (w * h) / 400); // ~0.25% of image area
-        var visited = new bool[w * h];
-        var stack = new int[Math.Max(64, w * h / 16)];
+        var total = w * h;
+        var minArea = Math.Max(16, total / 400); // ~0.25% of image area
+        var visited = ArrayPool<bool>.Shared.Rent(total);
+        Array.Clear(visited, 0, total);
+        var stack = ArrayPool<int>.Shared.Rent(Math.Max(64, total / 16));
 
-        for (var y = 0; y < h; y++) {
-            var row = y * w;
-            for (var x = 0; x < w; x++) {
-                var idx = row + x;
-                if (visited[idx]) continue;
-                if (!image.IsBlack(x, y, invert)) {
-                    visited[idx] = true;
-                    continue;
+        try {
+            for (var y = 0; y < h; y++) {
+                var row = y * w;
+                for (var x = 0; x < w; x++) {
+                    var idx = row + x;
+                    if (visited[idx]) continue;
+                    if (!image.IsBlack(x, y, invert)) {
+                        visited[idx] = true;
+                        continue;
+                    }
+
+                    var minX = x;
+                    var maxX = x;
+                    var minY = y;
+                    var maxY = y;
+                    var area = 0;
+
+                    var sp = 0;
+                    stack[sp++] = idx;
+
+                    while (sp > 0) {
+                        var cur = stack[--sp];
+                        if (visited[cur]) continue;
+                        visited[cur] = true;
+
+                        var cy = cur / w;
+                        var cx = cur - cy * w;
+                        if (!image.IsBlack(cx, cy, invert)) continue;
+
+                        area++;
+                        if (cx < minX) minX = cx;
+                        if (cx > maxX) maxX = cx;
+                        if (cy < minY) minY = cy;
+                        if (cy > maxY) maxY = cy;
+
+                        if (cx > 0) {
+                            var ni = cur - 1;
+                            if (!visited[ni]) {
+                                if (sp >= stack.Length) {
+                                    GrowStack(ref stack, sp);
+                                }
+                                stack[sp++] = ni;
+                            }
+                        }
+                        if (cx + 1 < w) {
+                            var ni = cur + 1;
+                            if (!visited[ni]) {
+                                if (sp >= stack.Length) {
+                                    GrowStack(ref stack, sp);
+                                }
+                                stack[sp++] = ni;
+                            }
+                        }
+                        if (cy > 0) {
+                            var ni = cur - w;
+                            if (!visited[ni]) {
+                                if (sp >= stack.Length) {
+                                    GrowStack(ref stack, sp);
+                                }
+                                stack[sp++] = ni;
+                            }
+                        }
+                        if (cy + 1 < h) {
+                            var ni = cur + w;
+                            if (!visited[ni]) {
+                                if (sp >= stack.Length) {
+                                    GrowStack(ref stack, sp);
+                                }
+                                stack[sp++] = ni;
+                            }
+                        }
+                    }
+
+                    if (area < minArea) continue;
+                    var cw = maxX - minX + 1;
+                    var ch = maxY - minY + 1;
+                    if (cw < 21 || ch < 21) continue;
+
+                    var ratio = cw > ch ? (double)cw / ch : (double)ch / cw;
+                    if (ratio > 2.2) continue;
+
+                    comps.Add(new Component(minX, minY, maxX, maxY, area));
                 }
-
-                var minX = x;
-                var maxX = x;
-                var minY = y;
-                var maxY = y;
-                var area = 0;
-
-                var sp = 0;
-                stack[sp++] = idx;
-
-                while (sp > 0) {
-                    var cur = stack[--sp];
-                    if (visited[cur]) continue;
-                    visited[cur] = true;
-
-                    var cy = cur / w;
-                    var cx = cur - cy * w;
-                    if (!image.IsBlack(cx, cy, invert)) continue;
-
-                    area++;
-                    if (cx < minX) minX = cx;
-                    if (cx > maxX) maxX = cx;
-                    if (cy < minY) minY = cy;
-                    if (cy > maxY) maxY = cy;
-
-                    if (cx > 0) {
-                        var ni = cur - 1;
-                        if (!visited[ni]) stack[sp++] = ni;
-                    }
-                    if (cx + 1 < w) {
-                        var ni = cur + 1;
-                        if (!visited[ni]) stack[sp++] = ni;
-                    }
-                    if (cy > 0) {
-                        var ni = cur - w;
-                        if (!visited[ni]) stack[sp++] = ni;
-                    }
-                    if (cy + 1 < h) {
-                        var ni = cur + w;
-                        if (!visited[ni]) stack[sp++] = ni;
-                    }
-
-                    if (sp >= stack.Length - 4) {
-                        Array.Resize(ref stack, stack.Length * 2);
-                    }
-                }
-
-                if (area < minArea) continue;
-                var cw = maxX - minX + 1;
-                var ch = maxY - minY + 1;
-                if (cw < 21 || ch < 21) continue;
-
-                var ratio = cw > ch ? (double)cw / ch : (double)ch / cw;
-                if (ratio > 2.2) continue;
-
-                comps.Add(new Component(minX, minY, maxX, maxY, area));
             }
+        } finally {
+            ArrayPool<bool>.Shared.Return(visited);
+            ArrayPool<int>.Shared.Return(stack);
         }
 
         return comps;
+    }
+
+    private static void GrowStack(ref int[] stack, int size) {
+        var newSize = stack.Length * 2;
+        if (newSize < size + 8) newSize = size + 8;
+        var next = ArrayPool<int>.Shared.Rent(newSize);
+        Array.Copy(stack, next, stack.Length);
+        ArrayPool<int>.Shared.Return(stack);
+        stack = next;
     }
 
     private static bool TryDecodeFromFinderCandidates(int scale, byte threshold, QrGrayImage image, bool invert, List<QrFinderPatternDetector.FinderPattern> candidates, Func<QrDecoded, bool>? accept, out QrDecoded result, out QrPixelDecodeDiagnostics diagnostics) {

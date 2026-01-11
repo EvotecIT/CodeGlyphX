@@ -49,6 +49,136 @@ public static class Pdf417Code {
     public static BitMatrix EncodeBytes(ReadOnlySpan<byte> data, Pdf417EncodeOptions? options = null) {
         return Pdf417Encoder.EncodeBytes(data, options);
     }
+
+    /// <summary>
+    /// Renders PDF417 as PNG from bytes.
+    /// </summary>
+    public static byte[] Png(ReadOnlySpan<byte> data, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = EncodeBytes(data, encodeOptions);
+        return MatrixPngRenderer.Render(modules, BuildPngOptions(renderOptions));
+    }
+
+    /// <summary>
+    /// Renders PDF417 as SVG from bytes.
+    /// </summary>
+    public static string Svg(ReadOnlySpan<byte> data, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = EncodeBytes(data, encodeOptions);
+        return MatrixSvgRenderer.Render(modules, BuildSvgOptions(renderOptions));
+    }
+
+    /// <summary>
+    /// Renders PDF417 as HTML from bytes.
+    /// </summary>
+    public static string Html(ReadOnlySpan<byte> data, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = EncodeBytes(data, encodeOptions);
+        return MatrixHtmlRenderer.Render(modules, BuildHtmlOptions(renderOptions));
+    }
+
+    /// <summary>
+    /// Renders PDF417 as JPEG from bytes.
+    /// </summary>
+    public static byte[] Jpeg(ReadOnlySpan<byte> data, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = EncodeBytes(data, encodeOptions);
+        var opts = BuildPngOptions(renderOptions);
+        var quality = renderOptions?.JpegQuality ?? 85;
+        return MatrixJpegRenderer.Render(modules, opts, quality);
+    }
+
+    /// <summary>
+    /// Saves PDF417 PNG to a file for byte payloads.
+    /// </summary>
+    public static string SavePng(ReadOnlySpan<byte> data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var png = Png(data, encodeOptions, renderOptions);
+        return png.WriteBinary(path);
+    }
+
+    /// <summary>
+    /// Saves PDF417 PNG to a stream for byte payloads.
+    /// </summary>
+    public static void SavePng(ReadOnlySpan<byte> data, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = EncodeBytes(data, encodeOptions);
+        MatrixPngRenderer.RenderToStream(modules, BuildPngOptions(renderOptions), stream);
+    }
+
+    /// <summary>
+    /// Saves PDF417 SVG to a file for byte payloads.
+    /// </summary>
+    public static string SaveSvg(ReadOnlySpan<byte> data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var svg = Svg(data, encodeOptions, renderOptions);
+        return svg.WriteText(path);
+    }
+
+    /// <summary>
+    /// Saves PDF417 SVG to a stream for byte payloads.
+    /// </summary>
+    public static void SaveSvg(ReadOnlySpan<byte> data, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var svg = Svg(data, encodeOptions, renderOptions);
+        svg.WriteText(stream);
+    }
+
+    /// <summary>
+    /// Saves PDF417 HTML to a file for byte payloads.
+    /// </summary>
+    public static string SaveHtml(ReadOnlySpan<byte> data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, string? title = null) {
+        var html = Html(data, encodeOptions, renderOptions);
+        if (!string.IsNullOrEmpty(title)) {
+            html = html.WrapHtml(title);
+        }
+        return html.WriteText(path);
+    }
+
+    /// <summary>
+    /// Saves PDF417 HTML to a stream for byte payloads.
+    /// </summary>
+    public static void SaveHtml(ReadOnlySpan<byte> data, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, string? title = null) {
+        var html = Html(data, encodeOptions, renderOptions);
+        if (!string.IsNullOrEmpty(title)) {
+            html = html.WrapHtml(title);
+        }
+        html.WriteText(stream);
+    }
+
+    /// <summary>
+    /// Saves PDF417 JPEG to a file for byte payloads.
+    /// </summary>
+    public static string SaveJpeg(ReadOnlySpan<byte> data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var jpeg = Jpeg(data, encodeOptions, renderOptions);
+        return jpeg.WriteBinary(path);
+    }
+
+    /// <summary>
+    /// Saves PDF417 JPEG to a stream for byte payloads.
+    /// </summary>
+    public static void SaveJpeg(ReadOnlySpan<byte> data, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = EncodeBytes(data, encodeOptions);
+        var opts = BuildPngOptions(renderOptions);
+        var quality = renderOptions?.JpegQuality ?? 85;
+        MatrixJpegRenderer.RenderToStream(modules, opts, stream, quality);
+    }
+
+    /// <summary>
+    /// Saves PDF417 to a file for byte payloads based on extension (.png/.svg/.html/.jpg).
+    /// Defaults to PNG when no extension is provided.
+    /// </summary>
+    public static string Save(ReadOnlySpan<byte> data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, string? title = null) {
+        var ext = Path.GetExtension(path);
+        if (string.IsNullOrWhiteSpace(ext)) return SavePng(data, path, encodeOptions, renderOptions);
+
+        switch (ext.ToLowerInvariant()) {
+            case ".png":
+                return SavePng(data, path, encodeOptions, renderOptions);
+            case ".svg":
+                return SaveSvg(data, path, encodeOptions, renderOptions);
+            case ".html":
+            case ".htm":
+                return SaveHtml(data, path, encodeOptions, renderOptions, title);
+            case ".jpg":
+            case ".jpeg":
+                return SaveJpeg(data, path, encodeOptions, renderOptions);
+            default:
+                return SavePng(data, path, encodeOptions, renderOptions);
+        }
+    }
 #endif
 
     /// <summary>

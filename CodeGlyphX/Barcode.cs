@@ -178,6 +178,40 @@ public static class Barcode {
     }
 
     /// <summary>
+    /// Attempts to decode a barcode from common image formats (PNG/BMP/PPM/TGA).
+    /// </summary>
+    public static bool TryDecodeImage(byte[] image, out BarcodeDecoded decoded) {
+        return TryDecodeImage(image, null, out decoded);
+    }
+
+    /// <summary>
+    /// Attempts to decode a barcode from common image formats (PNG/BMP/PPM/TGA) with an optional expected type hint.
+    /// </summary>
+    public static bool TryDecodeImage(byte[] image, BarcodeType? expectedType, out BarcodeDecoded decoded) {
+        decoded = null!;
+        if (image is null) throw new ArgumentNullException(nameof(image));
+        if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) return false;
+        return BarcodeDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, expectedType, out decoded);
+    }
+
+    /// <summary>
+    /// Attempts to decode a barcode from an image stream (PNG/BMP/PPM/TGA).
+    /// </summary>
+    public static bool TryDecodeImage(Stream stream, out BarcodeDecoded decoded) {
+        return TryDecodeImage(stream, null, out decoded);
+    }
+
+    /// <summary>
+    /// Attempts to decode a barcode from an image stream (PNG/BMP/PPM/TGA) with an optional expected type hint.
+    /// </summary>
+    public static bool TryDecodeImage(Stream stream, BarcodeType? expectedType, out BarcodeDecoded decoded) {
+        decoded = null!;
+        if (stream is null) throw new ArgumentNullException(nameof(stream));
+        var rgba = ImageReader.DecodeRgba32(stream, out var width, out var height);
+        return BarcodeDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, expectedType, out decoded);
+    }
+
+    /// <summary>
     /// Attempts to decode a barcode from a PNG file.
     /// </summary>
     public static bool TryDecodePngFile(string path, out BarcodeDecoded decoded) {
