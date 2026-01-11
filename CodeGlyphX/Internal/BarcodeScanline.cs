@@ -10,9 +10,13 @@ using PixelSpan = byte[];
 namespace CodeGlyphX.Internal;
 
 internal static class BarcodeScanline {
-    public static bool TryGetModules(byte[] pixels, int width, int height, int stride, PixelFormat format, out bool[] modules) {
+    public static bool TryGetModules(PixelSpan pixels, int width, int height, int stride, PixelFormat format, out bool[] modules) {
         modules = Array.Empty<bool>();
+#if !NET8_0_OR_GREATER
         if (pixels is null) throw new ArgumentNullException(nameof(pixels));
+#else
+        if (pixels.IsEmpty) return false;
+#endif
         if (width <= 0 || height <= 0) return false;
         if (stride < width * 4) return false;
 
@@ -45,9 +49,13 @@ internal static class BarcodeScanline {
         return true;
     }
 
-    public static bool TryGetModuleCandidates(byte[] pixels, int width, int height, int stride, PixelFormat format, out bool[][] candidates) {
+    public static bool TryGetModuleCandidates(PixelSpan pixels, int width, int height, int stride, PixelFormat format, out bool[][] candidates) {
         candidates = Array.Empty<bool[]>();
+#if !NET8_0_OR_GREATER
         if (pixels is null) throw new ArgumentNullException(nameof(pixels));
+#else
+        if (pixels.IsEmpty) return false;
+#endif
         if (width <= 0 || height <= 0) return false;
         if (stride < width * 4) return false;
 
