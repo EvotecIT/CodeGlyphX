@@ -1,3 +1,5 @@
+using CodeGlyphX.Rendering;
+
 namespace CodeGlyphX.Rendering.Svg;
 
 /// <summary>
@@ -7,20 +9,20 @@ public sealed class MatrixSvgRenderOptions {
     /// <summary>
     /// Module size in pixels.
     /// </summary>
-    public int ModuleSize { get; set; } = 6;
+    public int ModuleSize { get; set; } = RenderDefaults.QrModuleSize;
 
     /// <summary>
     /// Quiet zone size in modules.
     /// </summary>
-    public int QuietZone { get; set; } = 4;
+    public int QuietZone { get; set; } = RenderDefaults.QrQuietZone;
 
     /// <summary>
     /// Foreground color (CSS).
     /// </summary>
-    public string DarkColor { get; set; } = "#000";
+    public string DarkColor { get; set; } = RenderDefaults.QrForegroundCss;
 
     /// <summary>
     /// Background color (CSS).
     /// </summary>
-    public string LightColor { get; set; } = "#fff";
+    public string LightColor { get; set; } = RenderDefaults.QrBackgroundCss;
 }

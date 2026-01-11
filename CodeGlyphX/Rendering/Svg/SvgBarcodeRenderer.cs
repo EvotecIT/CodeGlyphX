@@ -22,10 +22,18 @@ public static class SvgBarcodeRenderer {
         var widthPx = outWidthModules * opts.ModuleSize;
         var heightPx = opts.HeightModules * opts.ModuleSize;
 
+        var labelText = BarcodeLabelText.Normalize(opts.LabelText);
+        var hasLabel = !string.IsNullOrEmpty(labelText);
+        var labelFontPx = opts.LabelFontSize;
+        var labelMarginPx = opts.LabelMargin;
+        var totalHeightPx = heightPx + (hasLabel ? labelMarginPx + labelFontPx : 0);
+        var totalHeightModules = totalHeightPx / (double)opts.ModuleSize;
+
         var sb = new StringBuilder(outWidthModules * 8);
         sb.Append("<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"").Append(widthPx).Append("\" height=\"")
-            .Append(heightPx).Append("\" viewBox=\"0 0 ").Append(outWidthModules).Append(' ')
-            .Append(opts.HeightModules).Append("\" shape-rendering=\"crispEdges\">");
+            .Append(totalHeightPx).Append("\" viewBox=\"0 0 ").Append(outWidthModules).Append(' ')
+            .Append(totalHeightModules.ToString("0.###", System.Globalization.CultureInfo.InvariantCulture))
+            .Append("\" shape-rendering=\"crispEdges\">");
 
         sb.Append("<rect width=\"100%\" height=\"100%\" fill=\"").Append(opts.BackgroundColor).Append("\"/>");
 
@@ -40,6 +48,20 @@ public static class SvgBarcodeRenderer {
             x += seg.Modules;
         }
         sb.Append("</g>");
+
+        if (hasLabel) {
+            var labelFontModules = labelFontPx / (double)opts.ModuleSize;
+            var labelMarginModules = labelMarginPx / (double)opts.ModuleSize;
+            var labelY = opts.HeightModules + labelMarginModules;
+            sb.Append("<text x=\"").Append(outWidthModules / 2.0)
+                .Append("\" y=\"").Append(labelY.ToString("0.###", System.Globalization.CultureInfo.InvariantCulture))
+                .Append("\" text-anchor=\"middle\" dominant-baseline=\"hanging\" fill=\"")
+                .Append(opts.LabelColor).Append("\" font-size=\"")
+                .Append(labelFontModules.ToString("0.###", System.Globalization.CultureInfo.InvariantCulture))
+                .Append("\" font-family=\"").Append(opts.LabelFontFamily).Append("\">")
+                .Append(System.Security.SecurityElement.Escape(labelText))
+                .Append("</text>");
+        }
 
         sb.Append("</svg>");
         return sb.ToString();

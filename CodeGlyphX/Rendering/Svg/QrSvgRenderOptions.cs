@@ -10,22 +10,22 @@ public sealed class QrSvgRenderOptions {
     /// <summary>
     /// Gets or sets the size of a single QR module in pixels.
     /// </summary>
-    public int ModuleSize { get; set; } = 4;
+    public int ModuleSize { get; set; } = RenderDefaults.QrModuleSize;
 
     /// <summary>
     /// Gets or sets the quiet zone size in modules.
     /// </summary>
-    public int QuietZone { get; set; } = 4;
+    public int QuietZone { get; set; } = RenderDefaults.QrQuietZone;
 
     /// <summary>
     /// Gets or sets the dark color (CSS value).
     /// </summary>
-    public string DarkColor { get; set; } = "#000";
+    public string DarkColor { get; set; } = RenderDefaults.QrForegroundCss;
 
     /// <summary>
     /// Gets or sets the light color (CSS value).
     /// </summary>
-    public string LightColor { get; set; } = "#fff";
+    public string LightColor { get; set; } = RenderDefaults.QrBackgroundCss;
 
     /// <summary>
     /// Optional logo overlay (PNG).
