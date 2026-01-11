@@ -156,7 +156,15 @@ internal static class PngDecoder {
 #if NET8_0_OR_GREATER
         return new ZLibStream(source, CompressionMode.Decompress, leaveOpen: true);
 #else
-        return new DeflateStream(source, CompressionMode.Decompress, leaveOpen: true);
+        var data = source is MemoryStream ms ? ms.ToArray() : ReadAllBytes(source);
+        if (data.Length < 6) throw new FormatException("Invalid zlib stream.");
+        return new DeflateStream(new MemoryStream(data, 2, data.Length - 6, writable: false), CompressionMode.Decompress, leaveOpen: true);
 #endif
+    }
+
+    private static byte[] ReadAllBytes(Stream source) {
+        using var ms = new MemoryStream();
+        source.CopyTo(ms);
+        return ms.ToArray();
     }
 }

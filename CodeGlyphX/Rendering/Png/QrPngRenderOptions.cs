@@ -1,3 +1,5 @@
+using CodeGlyphX.Rendering;
+
 namespace CodeGlyphX.Rendering.Png;
 
 /// <summary>
@@ -7,22 +9,22 @@ public sealed class QrPngRenderOptions {
     /// <summary>
     /// Gets or sets the size of a single QR module in pixels.
     /// </summary>
-    public int ModuleSize { get; set; } = 4;
+    public int ModuleSize { get; set; } = RenderDefaults.QrModuleSize;
 
     /// <summary>
     /// Gets or sets the quiet zone size in modules.
     /// </summary>
-    public int QuietZone { get; set; } = 4;
+    public int QuietZone { get; set; } = RenderDefaults.QrQuietZone;
 
     /// <summary>
     /// Gets or sets the foreground (dark) color.
     /// </summary>
-    public Rgba32 Foreground { get; set; } = Rgba32.Black;
+    public Rgba32 Foreground { get; set; } = RenderDefaults.QrForeground;
 
     /// <summary>
     /// Gets or sets the background (light) color.
     /// </summary>
-    public Rgba32 Background { get; set; } = Rgba32.White;
+    public Rgba32 Background { get; set; } = RenderDefaults.QrBackground;
 
     /// <summary>
     /// Optional gradient for the foreground (dark) modules.

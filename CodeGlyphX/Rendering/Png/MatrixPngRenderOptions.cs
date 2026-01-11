@@ -1,3 +1,5 @@
+using CodeGlyphX.Rendering;
+
 namespace CodeGlyphX.Rendering.Png;
 
 /// <summary>
@@ -7,20 +9,20 @@ public sealed class MatrixPngRenderOptions {
     /// <summary>
     /// Module size in pixels.
     /// </summary>
-    public int ModuleSize { get; set; } = 6;
+    public int ModuleSize { get; set; } = RenderDefaults.QrModuleSize;
 
     /// <summary>
     /// Quiet zone size in modules.
     /// </summary>
-    public int QuietZone { get; set; } = 4;
+    public int QuietZone { get; set; } = RenderDefaults.QrQuietZone;
 
     /// <summary>
     /// Foreground color.
     /// </summary>
-    public Rgba32 Foreground { get; set; } = Rgba32.Black;
+    public Rgba32 Foreground { get; set; } = RenderDefaults.QrForeground;
 
     /// <summary>
     /// Background color.
     /// </summary>
-    public Rgba32 Background { get; set; } = Rgba32.White;
+    public Rgba32 Background { get; set; } = RenderDefaults.QrBackground;
 }

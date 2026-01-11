@@ -73,7 +73,16 @@ public static class BarcodePngRenderer {
 
         var outModules = barcode.TotalModules + opts.QuietZone * 2;
         widthPx = outModules * opts.ModuleSize;
-        heightPx = opts.HeightModules * opts.ModuleSize;
+        var barHeightPx = opts.HeightModules * opts.ModuleSize;
+
+        var labelText = BarcodeLabelText.Normalize(opts.LabelText);
+        var hasLabel = !string.IsNullOrEmpty(labelText);
+        var labelFontPx = Math.Max(1, opts.LabelFontSize);
+        var labelMarginPx = Math.Max(0, opts.LabelMargin);
+        var labelScale = Math.Max(1, (int)Math.Round(labelFontPx / (double)BarcodeLabelFont.GlyphHeight));
+        var labelHeightPx = hasLabel ? labelMarginPx + BarcodeLabelFont.GlyphHeight * labelScale : 0;
+
+        heightPx = barHeightPx + labelHeightPx;
         stride = widthPx * 4;
 
         var scanlines = new byte[heightPx * (stride + 1)];
@@ -98,7 +107,7 @@ public static class BarcodePngRenderer {
                 var x0 = xModules * opts.ModuleSize;
                 var x1 = (xModules + seg.Modules) * opts.ModuleSize;
 
-                for (var y = 0; y < heightPx; y++) {
+                for (var y = 0; y < barHeightPx; y++) {
                     var p = y * (stride + 1) + 1 + x0 * 4;
                     for (var x = x0; x < x1; x++) {
                         scanlines[p++] = opts.Foreground.R;
@@ -111,6 +120,45 @@ public static class BarcodePngRenderer {
             xModules += seg.Modules;
         }
 
+        if (hasLabel) {
+            var spacing = labelScale;
+            var textWidth = BarcodeLabelFont.MeasureTextWidth(labelText, labelScale, spacing);
+            var xStart = (widthPx - textWidth) / 2;
+            if (xStart < 0) xStart = 0;
+            var yStart = barHeightPx + labelMarginPx;
+            DrawLabel(scanlines, widthPx, heightPx, stride, xStart, yStart, labelText, labelScale, spacing, opts.LabelColor);
+        }
+
         return scanlines;
+    }
+
+    private static void DrawLabel(byte[] scanlines, int widthPx, int heightPx, int stride, int xStart, int yStart, string text, int scale, int spacing, Rgba32 color) {
+        var x = xStart;
+        for (var i = 0; i < text.Length; i++) {
+            var glyph = BarcodeLabelFont.GetGlyph(text[i]);
+            for (var row = 0; row < BarcodeLabelFont.GlyphHeight; row++) {
+                var bits = glyph[row];
+                for (var col = 0; col < BarcodeLabelFont.GlyphWidth; col++) {
+                    if ((bits & (1 << (BarcodeLabelFont.GlyphWidth - 1 - col))) == 0) continue;
+                    var px = x + col * scale;
+                    var py = yStart + row * scale;
+                    for (var sy = 0; sy < scale; sy++) {
+                        var y = py + sy;
+                        if ((uint)y >= (uint)heightPx) continue;
+                        var rowStart = y * (stride + 1) + 1;
+                        for (var sx = 0; sx < scale; sx++) {
+                            var px2 = px + sx;
+                            if ((uint)px2 >= (uint)widthPx) continue;
+                            var p = rowStart + px2 * 4;
+                            scanlines[p + 0] = color.R;
+                            scanlines[p + 1] = color.G;
+                            scanlines[p + 2] = color.B;
+                            scanlines[p + 3] = color.A;
+                        }
+                    }
+                }
+            }
+            x += BarcodeLabelFont.GlyphWidth * scale + spacing;
+        }
     }
 }
