@@ -24,12 +24,43 @@ public static class QrEasy {
     }
 
     /// <summary>
+    /// Detects a payload type and encodes it into a <see cref="QrCode"/>.
+    /// </summary>
+    public static QrCode EncodeAuto(string payload, QrPayloadDetectOptions? detectOptions = null, QrEasyOptions? options = null) {
+        if (payload is null) throw new ArgumentNullException(nameof(payload));
+        var detected = QrPayloads.Detect(payload, detectOptions);
+        return Encode(detected, options);
+    }
+
+    /// <summary>
     /// Encodes a payload with embedded defaults.
     /// </summary>
     public static QrCode Encode(QrPayloadData payload, QrEasyOptions? options = null) {
         if (payload is null) throw new ArgumentNullException(nameof(payload));
         var opts = MergeOptions(payload, options);
         return EncodePayload(payload.Text, opts);
+    }
+
+    /// <summary>
+    /// Evaluates QR art safety for a payload and options.
+    /// </summary>
+    public static QrArtSafetyReport EvaluateSafety(string payload, QrEasyOptions? options = null) {
+        if (payload is null) throw new ArgumentNullException(nameof(payload));
+        var opts = options ?? new QrEasyOptions();
+        var qr = Encode(payload, opts);
+        var render = BuildPngOptions(opts, payload);
+        return QrArtSafety.Evaluate(qr, render);
+    }
+
+    /// <summary>
+    /// Evaluates QR art safety for a payload with embedded defaults.
+    /// </summary>
+    public static QrArtSafetyReport EvaluateSafety(QrPayloadData payload, QrEasyOptions? options = null) {
+        if (payload is null) throw new ArgumentNullException(nameof(payload));
+        var opts = MergeOptions(payload, options);
+        var qr = Encode(payload.Text, opts);
+        var render = BuildPngOptions(opts, payload.Text);
+        return QrArtSafety.Evaluate(qr, render);
     }
 
     /// <summary>
@@ -40,6 +71,15 @@ public static class QrEasy {
         var qr = Encode(payload, opts);
         var render = BuildPngOptions(opts, payload);
         return QrPngRenderer.Render(qr.Modules, render);
+    }
+
+    /// <summary>
+    /// Detects a payload type and renders a QR code as PNG.
+    /// </summary>
+    public static byte[] RenderPngAuto(string payload, QrPayloadDetectOptions? detectOptions = null, QrEasyOptions? options = null) {
+        if (payload is null) throw new ArgumentNullException(nameof(payload));
+        var detected = QrPayloads.Detect(payload, detectOptions);
+        return RenderPng(detected, options);
     }
 
     /// <summary>
@@ -121,6 +161,15 @@ public static class QrEasy {
     }
 
     /// <summary>
+    /// Detects a payload type and renders a QR code as SVG.
+    /// </summary>
+    public static string RenderSvgAuto(string payload, QrPayloadDetectOptions? detectOptions = null, QrEasyOptions? options = null) {
+        if (payload is null) throw new ArgumentNullException(nameof(payload));
+        var detected = QrPayloads.Detect(payload, detectOptions);
+        return RenderSvg(detected, options);
+    }
+
+    /// <summary>
     /// Renders a QR code as SVG and writes it to a file.
     /// </summary>
     /// <param name="payload">Payload text.</param>
@@ -191,6 +240,15 @@ public static class QrEasy {
     }
 
     /// <summary>
+    /// Detects a payload type and renders a QR code as HTML.
+    /// </summary>
+    public static string RenderHtmlAuto(string payload, QrPayloadDetectOptions? detectOptions = null, QrEasyOptions? options = null) {
+        if (payload is null) throw new ArgumentNullException(nameof(payload));
+        var detected = QrPayloads.Detect(payload, detectOptions);
+        return RenderHtml(detected, options);
+    }
+
+    /// <summary>
     /// Renders a QR code as HTML and writes it to a file.
     /// </summary>
     /// <param name="payload">Payload text.</param>
@@ -246,6 +304,15 @@ public static class QrEasy {
         var qr = Encode(payload, opts);
         var render = BuildPngOptions(opts, payload);
         return QrJpegRenderer.Render(qr.Modules, render, opts.JpegQuality);
+    }
+
+    /// <summary>
+    /// Detects a payload type and renders a QR code as JPEG.
+    /// </summary>
+    public static byte[] RenderJpegAuto(string payload, QrPayloadDetectOptions? detectOptions = null, QrEasyOptions? options = null) {
+        if (payload is null) throw new ArgumentNullException(nameof(payload));
+        var detected = QrPayloads.Detect(payload, detectOptions);
+        return RenderJpeg(detected, options);
     }
 
     /// <summary>

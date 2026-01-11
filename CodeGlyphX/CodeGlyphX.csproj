@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net472;net8.0;net10.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net472;net8.0;net10.0</TargetFrameworks>
     <Title>CodeGlyphX</Title>
     <PackageId>CodeGlyphX</PackageId>
     <Description>No-deps QR (encode/decode), Code 128 encoder, and renderers (SVG/HTML/PNG), plus OTP (otpauth) helpers.</Description>
@@ -13,5 +13,8 @@
 
   <ItemGroup>
     <None Include="..\\README.md" Pack="true" PackagePath="\\" />
+  </ItemGroup>
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net472' Or '$(TargetFramework)' == 'netstandard2.0' ">
+    <PackageReference Include="System.Memory" Version="4.5.5" />
   </ItemGroup>
 </Project>

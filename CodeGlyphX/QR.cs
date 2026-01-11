@@ -30,6 +30,13 @@ public static class QR {
     public static QrCode Encode(string payload, QrEasyOptions? options = null) => QrEasy.Encode(payload, options);
 
     /// <summary>
+    /// Detects a payload type and encodes it into a QR code.
+    /// </summary>
+    public static QrCode EncodeAuto(string payload, QrPayloadDetectOptions? detectOptions = null, QrEasyOptions? options = null) {
+        return QrEasy.EncodeAuto(payload, detectOptions, options);
+    }
+
+    /// <summary>
     /// Encodes a payload with embedded defaults into a QR code.
     /// </summary>
     public static QrCode Encode(QrPayloadData payload, QrEasyOptions? options = null) => QrEasy.Encode(payload, options);
@@ -38,6 +45,13 @@ public static class QR {
     /// Renders a QR code as PNG.
     /// </summary>
     public static byte[] Png(string payload, QrEasyOptions? options = null) => QrEasy.RenderPng(payload, options);
+
+    /// <summary>
+    /// Detects a payload type and renders a QR code as PNG.
+    /// </summary>
+    public static byte[] PngAuto(string payload, QrPayloadDetectOptions? detectOptions = null, QrEasyOptions? options = null) {
+        return QrEasy.RenderPngAuto(payload, detectOptions, options);
+    }
 
     /// <summary>
     /// Renders a QR code as PNG for a payload with embedded defaults.
@@ -50,6 +64,13 @@ public static class QR {
     public static string Svg(string payload, QrEasyOptions? options = null) => QrEasy.RenderSvg(payload, options);
 
     /// <summary>
+    /// Detects a payload type and renders a QR code as SVG.
+    /// </summary>
+    public static string SvgAuto(string payload, QrPayloadDetectOptions? detectOptions = null, QrEasyOptions? options = null) {
+        return QrEasy.RenderSvgAuto(payload, detectOptions, options);
+    }
+
+    /// <summary>
     /// Renders a QR code as SVG for a payload with embedded defaults.
     /// </summary>
     public static string Svg(QrPayloadData payload, QrEasyOptions? options = null) => QrEasy.RenderSvg(payload, options);
@@ -60,6 +81,13 @@ public static class QR {
     public static string Html(string payload, QrEasyOptions? options = null) => QrEasy.RenderHtml(payload, options);
 
     /// <summary>
+    /// Detects a payload type and renders a QR code as HTML.
+    /// </summary>
+    public static string HtmlAuto(string payload, QrPayloadDetectOptions? detectOptions = null, QrEasyOptions? options = null) {
+        return QrEasy.RenderHtmlAuto(payload, detectOptions, options);
+    }
+
+    /// <summary>
     /// Renders a QR code as HTML for a payload with embedded defaults.
     /// </summary>
     public static string Html(QrPayloadData payload, QrEasyOptions? options = null) => QrEasy.RenderHtml(payload, options);
@@ -68,6 +96,13 @@ public static class QR {
     /// Renders a QR code as JPEG.
     /// </summary>
     public static byte[] Jpeg(string payload, QrEasyOptions? options = null) => QrEasy.RenderJpeg(payload, options);
+
+    /// <summary>
+    /// Detects a payload type and renders a QR code as JPEG.
+    /// </summary>
+    public static byte[] JpegAuto(string payload, QrPayloadDetectOptions? detectOptions = null, QrEasyOptions? options = null) {
+        return QrEasy.RenderJpegAuto(payload, detectOptions, options);
+    }
 
     /// <summary>
     /// Renders a QR code as JPEG for a payload with embedded defaults.
@@ -203,6 +238,15 @@ public static class QR {
     }
 
     /// <summary>
+    /// Detects a payload type and saves a QR code to a file based on the file extension (.png/.svg/.html/.jpg).
+    /// Defaults to PNG when no extension is provided.
+    /// </summary>
+    public static string SaveAuto(string payload, string path, QrPayloadDetectOptions? detectOptions = null, QrEasyOptions? options = null, string? title = null) {
+        var detected = QrPayloads.Detect(payload, detectOptions);
+        return SaveByExtension(path, detected.Text, detected, options, title);
+    }
+
+    /// <summary>
     /// Saves a QR code to a file based on the file extension (.png/.svg/.html/.jpg).
     /// Defaults to PNG when no extension is provided.
     /// </summary>
@@ -259,6 +303,20 @@ public static class QR {
         if (stream is null) return false;
         var data = stream.ReadBinary();
         return TryDecodePng(data, out decoded);
+    }
+
+    /// <summary>
+    /// Attempts to parse a raw QR payload into a structured representation.
+    /// </summary>
+    public static bool TryParsePayload(string payload, out QrParsedPayload parsed) {
+        return QrPayloadParser.TryParse(payload, out parsed);
+    }
+
+    /// <summary>
+    /// Parses a raw QR payload into a structured representation.
+    /// </summary>
+    public static QrParsedPayload ParsePayload(string payload) {
+        return QrPayloadParser.Parse(payload);
     }
 
     /// <summary>

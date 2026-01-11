@@ -233,6 +233,10 @@ public static class Barcode {
             HeightModules = opts.HeightModules,
             Foreground = opts.Foreground,
             Background = opts.Background,
+            LabelText = opts.LabelText,
+            LabelFontSize = opts.LabelFontSize,
+            LabelMargin = opts.LabelMargin,
+            LabelColor = opts.LabelColor,
         };
     }
 
@@ -244,6 +248,11 @@ public static class Barcode {
             HeightModules = opts.HeightModules,
             BarColor = ColorUtils.ToCss(opts.Foreground),
             BackgroundColor = ColorUtils.ToCss(opts.Background),
+            LabelText = opts.LabelText,
+            LabelFontSize = opts.LabelFontSize,
+            LabelMargin = opts.LabelMargin,
+            LabelColor = ColorUtils.ToCss(opts.LabelColor),
+            LabelFontFamily = opts.LabelFontFamily,
         };
     }
 
@@ -256,6 +265,11 @@ public static class Barcode {
             BarColor = ColorUtils.ToCss(opts.Foreground),
             BackgroundColor = ColorUtils.ToCss(opts.Background),
             EmailSafeTable = opts.HtmlEmailSafeTable,
+            LabelText = opts.LabelText,
+            LabelFontSize = opts.LabelFontSize,
+            LabelMargin = opts.LabelMargin,
+            LabelColor = ColorUtils.ToCss(opts.LabelColor),
+            LabelFontFamily = opts.LabelFontFamily,
         };
     }
 
@@ -324,6 +338,46 @@ public static class Barcode {
         /// </summary>
         public BarcodeBuilder WithJpegQuality(int quality) {
             Options.JpegQuality = quality;
+            return this;
+        }
+
+        /// <summary>
+        /// Sets label text rendered under bars.
+        /// </summary>
+        public BarcodeBuilder WithLabel(string? text) {
+            Options.LabelText = text;
+            return this;
+        }
+
+        /// <summary>
+        /// Sets label font size in pixels.
+        /// </summary>
+        public BarcodeBuilder WithLabelFontSize(int fontSizePx) {
+            Options.LabelFontSize = fontSizePx;
+            return this;
+        }
+
+        /// <summary>
+        /// Sets label margin in pixels.
+        /// </summary>
+        public BarcodeBuilder WithLabelMargin(int marginPx) {
+            Options.LabelMargin = marginPx;
+            return this;
+        }
+
+        /// <summary>
+        /// Sets label color.
+        /// </summary>
+        public BarcodeBuilder WithLabelColor(Rgba32 color) {
+            Options.LabelColor = color;
+            return this;
+        }
+
+        /// <summary>
+        /// Sets label font family (SVG/HTML).
+        /// </summary>
+        public BarcodeBuilder WithLabelFontFamily(string fontFamily) {
+            Options.LabelFontFamily = fontFamily;
             return this;
         }
 

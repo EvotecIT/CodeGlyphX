@@ -39,5 +39,9 @@ public enum QrTextEncoding {
     /// <summary>
     /// ISO-8859-15.
     /// </summary>
-    Iso8859_15
+    Iso8859_15,
+    /// <summary>
+    /// Shift-JIS (JIS X 0208 + halfwidth katakana).
+    /// </summary>
+    ShiftJis
 }
