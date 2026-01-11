@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using CodeGlyphX.Rendering.Png;
 using Xunit;
 
@@ -16,6 +18,21 @@ public sealed class BarcodeDecoderTests {
         Assert.True(BarcodeDecoder.TryDecode(pixels, width, height, stride, PixelFormat.Rgba32, out var decoded));
         Assert.Equal(BarcodeType.Code128, decoded.Type);
         Assert.Equal("CODEMATRIX-123", decoded.Text);
+    }
+
+    [Fact]
+    public void Decode_Gs1_128_FromPixels() {
+        var aiText = "(01)09506000134352(10)ABC123";
+        var barcode = BarcodeEncoder.Encode(BarcodeType.GS1_128, aiText);
+        var pixels = BarcodePngRenderer.RenderPixels(barcode, new BarcodePngRenderOptions {
+            ModuleSize = 3,
+            QuietZone = 10,
+            HeightModules = 40
+        }, out var width, out var height, out var stride);
+
+        Assert.True(BarcodeDecoder.TryDecode(pixels, width, height, stride, PixelFormat.Rgba32, out var decoded));
+        Assert.Equal(BarcodeType.GS1_128, decoded.Type);
+        Assert.Equal(Gs1.ElementString(aiText), decoded.Text);
     }
 
     [Fact]
@@ -57,5 +74,146 @@ public sealed class BarcodeDecoderTests {
         Assert.True(BarcodeDecoder.TryDecode(pixels, width, height, stride, PixelFormat.Rgba32, out var decoded));
         Assert.Equal(BarcodeType.EAN, decoded.Type);
         Assert.Equal("5901234123457", decoded.Text);
+    }
+
+    [Fact]
+    public void Decode_Ean13_FromModules_Stretched() {
+        var barcode = BarcodeEncoder.Encode(BarcodeType.EAN, "590123412345");
+        var modules = ExpandModules(barcode);
+        var stretched = RepeatModules(modules, 2);
+
+        Assert.True(BarcodeDecoder.TryDecode(stretched, out var decoded));
+        Assert.Equal(BarcodeType.EAN, decoded.Type);
+        Assert.Equal("5901234123457", decoded.Text);
+    }
+
+    [Fact]
+    public void Decode_UpcE_FromModules_Stretched() {
+        const string digits = "042100";
+        var barcode = BarcodeEncoder.Encode(BarcodeType.UPCE, digits);
+        var modules = ExpandModules(barcode);
+        var stretched = RepeatModules(modules, 2);
+
+        Assert.True(BarcodeDecoder.TryDecode(stretched, out var decoded));
+        Assert.Equal(BarcodeType.UPCE, decoded.Type);
+        Assert.Equal(BuildUpcEWithChecksum('0', digits), decoded.Text);
+    }
+
+    [Fact]
+    public void Decode_Itf14_FromPixels() {
+        var barcode = BarcodeEncoder.Encode(BarcodeType.ITF14, "1234567890123");
+        var pixels = BarcodePngRenderer.RenderPixels(barcode, new BarcodePngRenderOptions {
+            ModuleSize = 3,
+            QuietZone = 10,
+            HeightModules = 40
+        }, out var width, out var height, out var stride);
+
+        Assert.True(BarcodeDecoder.TryDecode(pixels, width, height, stride, PixelFormat.Rgba32, out var decoded));
+        Assert.Equal(BarcodeType.ITF14, decoded.Type);
+        Assert.Equal("12345678901231", decoded.Text);
+    }
+
+    [Fact]
+    public void Decode_Code128_FromPixels_Rotated() {
+        var barcode = BarcodeEncoder.Encode(BarcodeType.Code128, "ROTATE-128");
+        var pixels = BarcodePngRenderer.RenderPixels(barcode, new BarcodePngRenderOptions {
+            ModuleSize = 3,
+            QuietZone = 10,
+            HeightModules = 40
+        }, out var width, out var height, out var stride);
+
+        var rotated = RotateClockwise(pixels, width, height, out var rotWidth, out var rotHeight);
+
+        Assert.True(BarcodeDecoder.TryDecode(rotated, rotWidth, rotHeight, rotWidth * 4, PixelFormat.Rgba32, out var decoded));
+        Assert.Equal(BarcodeType.Code128, decoded.Type);
+        Assert.Equal("ROTATE-128", decoded.Text);
+    }
+
+    [Fact]
+    public void Decode_Code128_FromPixels_Inverted() {
+        var barcode = BarcodeEncoder.Encode(BarcodeType.Code128, "INVERT-128");
+        var pixels = BarcodePngRenderer.RenderPixels(barcode, new BarcodePngRenderOptions {
+            ModuleSize = 3,
+            QuietZone = 10,
+            HeightModules = 40
+        }, out var width, out var height, out var stride);
+
+        InvertPixels(pixels);
+
+        Assert.True(BarcodeDecoder.TryDecode(pixels, width, height, stride, PixelFormat.Rgba32, out var decoded));
+        Assert.Equal(BarcodeType.Code128, decoded.Type);
+        Assert.Equal("INVERT-128", decoded.Text);
+    }
+
+    private static byte[] RotateClockwise(byte[] pixels, int width, int height, out int outWidth, out int outHeight) {
+        outWidth = height;
+        outHeight = width;
+        var output = new byte[outWidth * outHeight * 4];
+
+        for (var y = 0; y < height; y++) {
+            var row = y * width * 4;
+            for (var x = 0; x < width; x++) {
+                var src = row + x * 4;
+                var nx = outWidth - 1 - y;
+                var ny = x;
+                var dst = (ny * outWidth + nx) * 4;
+                output[dst + 0] = pixels[src + 0];
+                output[dst + 1] = pixels[src + 1];
+                output[dst + 2] = pixels[src + 2];
+                output[dst + 3] = pixels[src + 3];
+            }
+        }
+
+        return output;
+    }
+
+    private static void InvertPixels(byte[] pixels) {
+        for (var i = 0; i < pixels.Length; i += 4) {
+            pixels[i + 0] = (byte)(255 - pixels[i + 0]);
+            pixels[i + 1] = (byte)(255 - pixels[i + 1]);
+            pixels[i + 2] = (byte)(255 - pixels[i + 2]);
+        }
+    }
+
+    private static bool[] ExpandModules(Barcode1D barcode) {
+        var list = new List<bool>(barcode.TotalModules);
+        foreach (var seg in barcode.Segments) {
+            for (var i = 0; i < seg.Modules; i++) list.Add(seg.IsBar);
+        }
+        return list.ToArray();
+    }
+
+    private static bool[] RepeatModules(bool[] modules, int factor) {
+        var output = new bool[modules.Length * factor];
+        var offset = 0;
+        for (var i = 0; i < modules.Length; i++) {
+            var bit = modules[i];
+            for (var f = 0; f < factor; f++) output[offset++] = bit;
+        }
+        return output;
+    }
+
+    private static string BuildUpcEWithChecksum(char numberSystem, string digits) {
+        var upcA = ExpandUpcEToUpcA(numberSystem, digits);
+        var check = CalcUpcAChecksum(upcA);
+        return numberSystem + digits + check;
+    }
+
+    private static string ExpandUpcEToUpcA(char numberSystem, string digits) {
+        return digits[5] switch {
+            '0' or '1' or '2' => $"{numberSystem}{digits.Substring(0, 2)}{digits[5]}0000{digits.Substring(2, 3)}",
+            '3' => $"{numberSystem}{digits.Substring(0, 3)}00000{digits.Substring(3, 2)}",
+            '4' => $"{numberSystem}{digits.Substring(0, 4)}00000{digits[4]}",
+            _ => $"{numberSystem}{digits.Substring(0, 5)}0000{digits[5]}"
+        };
+    }
+
+    private static char CalcUpcAChecksum(string content) {
+        var digits = content.Select(c => c - '0').ToArray();
+        var sum = 3 * (digits[0] + digits[2] + digits[4] + digits[6] + digits[8] + digits[10]);
+        sum += digits[1] + digits[3] + digits[5] + digits[7] + digits[9];
+        sum %= 10;
+        sum = sum != 0 ? 10 - sum : 0;
+        return (char)(sum + '0');
     }
 }

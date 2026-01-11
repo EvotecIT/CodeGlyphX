@@ -31,11 +31,13 @@ public sealed class QrPayloadParserTests {
         WriteBits('c', 8);
         WriteBits(0, 4);            // terminator
 
-        Assert.True(QrPayloadParser.TryParse(data, version: 1, out var payload, out var segments));
+        Assert.True(QrPayloadParser.TryParse(data, version: 1, out var payload, out var segments, out var structuredAppend, out var fnc1Mode));
         Assert.Equal(new byte[] { (byte)'a', (byte)'b', (byte)'c' }, payload);
         Assert.Single(segments);
         Assert.Equal(QrTextEncoding.Utf8, segments[0].Encoding);
         Assert.Equal(new byte[] { (byte)'a', (byte)'b', (byte)'c' }, segments[0].Bytes);
+        Assert.False(structuredAppend.HasValue);
+        Assert.Equal(QrFnc1Mode.None, fnc1Mode);
     }
 
     [Fact]
@@ -65,11 +67,58 @@ public sealed class QrPayloadParserTests {
         // terminator
         WriteBits(0, 4);
 
-        Assert.True(QrPayloadParser.TryParse(data, version: 1, out var payload, out var segments));
+        Assert.True(QrPayloadParser.TryParse(data, version: 1, out var payload, out var segments, out var structuredAppend, out var fnc1Mode));
         Assert.Equal(new byte[] { (byte)'A', (byte)'1', (byte)'-' }, payload);
         Assert.Single(segments);
         Assert.Equal(QrTextEncoding.Latin1, segments[0].Encoding);
         Assert.Equal(new byte[] { (byte)'A', (byte)'1', (byte)'-' }, segments[0].Bytes);
+        Assert.False(structuredAppend.HasValue);
+        Assert.Equal(QrFnc1Mode.None, fnc1Mode);
+    }
+
+    [Fact]
+    public void Parse_Fnc1_Alphanumeric_Gs1Escapes() {
+        // FNC1 (0101) + ALPHANUMERIC (0010) + count (8) + "AB%CD%%E" + terminator
+        var data = new byte[10];
+        var bitPos = 0;
+
+        void WriteBits(int value, int count) {
+            for (var i = count - 1; i >= 0; i--) {
+                var bit = (value >> i) & 1;
+                var byteIndex = bitPos >> 3;
+                var bitIndex = 7 - (bitPos & 7);
+                if (bit != 0) data[byteIndex] |= (byte)(1 << bitIndex);
+                bitPos++;
+            }
+        }
+
+        int AlnumIndex(char c) {
+            const string table = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ $%*+-./:";
+            return table.IndexOf(c);
+        }
+
+        WriteBits(0b0101, 4); // FNC1 first position
+        WriteBits(0b0010, 4); // ALPHANUMERIC
+        WriteBits(8, 9);      // count
+
+        var text = "AB%CD%%E";
+        var iChar = 0;
+        while (iChar + 1 < text.Length) {
+            var v = AlnumIndex(text[iChar]) * 45 + AlnumIndex(text[iChar + 1]);
+            WriteBits(v, 11);
+            iChar += 2;
+        }
+        if (iChar < text.Length) {
+            WriteBits(AlnumIndex(text[iChar]), 6);
+        }
+
+        WriteBits(0, 4); // terminator
+
+        Assert.True(QrPayloadParser.TryParse(data, version: 1, out var payload, out var segments, out var structuredAppend, out var fnc1Mode));
+        Assert.Equal(QrFnc1Mode.FirstPosition, fnc1Mode);
+        Assert.Single(segments);
+        Assert.False(structuredAppend.HasValue);
+        Assert.Equal(new byte[] { (byte)'A', (byte)'B', 0x1D, (byte)'C', (byte)'D', (byte)'%', (byte)'E' }, payload);
     }
 
     [Fact]
@@ -94,11 +143,13 @@ public sealed class QrPayloadParserTests {
         WriteBits(0xFF, 8);
         WriteBits(0, 4);            // terminator
 
-        Assert.True(QrPayloadParser.TryParse(data, version: 1, out var payload, out var segments));
+        Assert.True(QrPayloadParser.TryParse(data, version: 1, out var payload, out var segments, out var structuredAppend, out var fnc1Mode));
         Assert.Equal(new byte[] { 0x80, 0xFF }, payload);
         Assert.Single(segments);
         Assert.Equal(QrTextEncoding.Latin1, segments[0].Encoding);
         Assert.Equal(new byte[] { 0x80, 0xFF }, segments[0].Bytes);
+        Assert.False(structuredAppend.HasValue);
+        Assert.Equal(QrFnc1Mode.None, fnc1Mode);
     }
 
     [Fact]
@@ -130,15 +181,53 @@ public sealed class QrPayloadParserTests {
         WriteBits(0xA3, 8);
         WriteBits(0, 4);            // terminator
 
-        Assert.True(QrPayloadParser.TryParse(data, version: 1, out var payload, out var segments));
+        Assert.True(QrPayloadParser.TryParse(data, version: 1, out var payload, out var segments, out var structuredAppend, out var fnc1Mode));
         Assert.Equal(new byte[] { 0xC2, 0xA2, 0xA3 }, payload);
         Assert.Equal(2, segments.Length);
         Assert.Equal(QrTextEncoding.Utf8, segments[0].Encoding);
         Assert.Equal(new byte[] { 0xC2, 0xA2 }, segments[0].Bytes);
         Assert.Equal(QrTextEncoding.Latin1, segments[1].Encoding);
         Assert.Equal(new byte[] { 0xA3 }, segments[1].Bytes);
+        Assert.False(structuredAppend.HasValue);
+        Assert.Equal(QrFnc1Mode.None, fnc1Mode);
 
         var text = QrDecoder.DecodeSegments(segments);
         Assert.Equal("\u00A2\u00A3", text);
+    }
+
+    [Fact]
+    public void Parse_StructuredAppend_Metadata() {
+        // STRUCTURED APPEND (0011) + seq(0x24 = index 2, total 4) + parity(0xAA)
+        // + BYTE mode ("ok") + terminator
+        var data = new byte[6];
+        var bitPos = 0;
+
+        void WriteBits(int value, int count) {
+            for (var i = count - 1; i >= 0; i--) {
+                var bit = (value >> i) & 1;
+                var byteIndex = bitPos >> 3;
+                var bitIndex = 7 - (bitPos & 7);
+                if (bit != 0) data[byteIndex] |= (byte)(1 << bitIndex);
+                bitPos++;
+            }
+        }
+
+        WriteBits(0b0011, 4); // structured append
+        WriteBits(0x24, 8);   // index 2, total 4
+        WriteBits(0xAA, 8);   // parity
+        WriteBits(0b0100, 4); // BYTE mode
+        WriteBits(2, 8);      // count
+        WriteBits('o', 8);
+        WriteBits('k', 8);
+        WriteBits(0, 4);      // terminator
+
+        Assert.True(QrPayloadParser.TryParse(data, version: 1, out var payload, out var segments, out var structuredAppend, out var fnc1Mode));
+        Assert.Equal(new byte[] { (byte)'o', (byte)'k' }, payload);
+        Assert.Single(segments);
+        Assert.True(structuredAppend.HasValue);
+        Assert.Equal(2, structuredAppend!.Value.Index);
+        Assert.Equal(4, structuredAppend.Value.Total);
+        Assert.Equal(0xAA, structuredAppend.Value.Parity);
+        Assert.Equal(QrFnc1Mode.None, fnc1Mode);
     }
 }

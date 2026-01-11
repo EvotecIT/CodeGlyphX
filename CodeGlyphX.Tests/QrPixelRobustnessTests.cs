@@ -154,6 +154,38 @@ public sealed class QrPixelRobustnessTests {
     }
 
     [Fact]
+    public void QrDecode_WithLowContrastGradient() {
+        var code = QrCodeEncoder.EncodeText("LowContrast");
+        var pixels = QrPngRenderer.RenderPixels(
+            code.Modules,
+            new QrPngRenderOptions { ModuleSize = 4, QuietZone = 3 },
+            out var width,
+            out var height,
+            out var stride);
+
+        var lowContrast = new byte[pixels.Length];
+        for (var y = 0; y < height; y++) {
+            var row = y * stride;
+            for (var x = 0; x < width; x++) {
+                var p = row + x * 4;
+                var isDark = pixels[p] < 128;
+                var baseVal = isDark ? 120 : 135;
+                var grad = (int)(6 * (x / (double)Math.Max(1, width - 1)));
+                var v = baseVal + grad;
+                if (v > 255) v = 255;
+                var b = (byte)v;
+                lowContrast[p] = b;
+                lowContrast[p + 1] = b;
+                lowContrast[p + 2] = b;
+                lowContrast[p + 3] = 255;
+            }
+        }
+
+        Assert.True(QrDecoder.TryDecode(lowContrast, width, height, stride, PixelFormat.Rgba32, out var decoded));
+        Assert.Equal("LowContrast", decoded.Text);
+    }
+
+    [Fact]
     public void QrDecode_WithFalseFinderNoise() {
         var code = QrCodeEncoder.EncodeText("FinderNoiseTest");
         var pixels = QrPngRenderer.RenderPixels(

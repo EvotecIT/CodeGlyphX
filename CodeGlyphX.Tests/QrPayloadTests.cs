@@ -34,12 +34,14 @@ public sealed class QrPayloadTests {
         while ((bb.LengthBits & 7) != 0) bb.AppendBit(false);
 
         var data = bb.ToByteArray();
-        Assert.True(QrPayloadParser.TryParse(data, 1, out var payload, out var segments));
+        Assert.True(QrPayloadParser.TryParse(data, 1, out var payload, out var segments, out var structuredAppend, out var fnc1Mode));
         Assert.Equal(new byte[] { 0xC5, 0x81, 0xE9 }, payload);
         Assert.Equal(2, segments.Length);
         Assert.Equal(QrTextEncoding.Utf8, segments[0].Encoding);
         Assert.Equal(QrTextEncoding.Latin1, segments[1].Encoding);
         Assert.Equal("Łé", QrDecoder.DecodeSegments(segments));
+        Assert.False(structuredAppend.HasValue);
+        Assert.Equal(QrFnc1Mode.None, fnc1Mode);
     }
 
     private static void AppendEci(QrBitBuffer bb, int assignmentNumber) {
