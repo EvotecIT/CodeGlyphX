@@ -279,10 +279,9 @@ public static class BarcodeDecoder {
         var policy = options?.Code39Checksum ?? Code39ChecksumPolicy.None;
         if (policy != Code39ChecksumPolicy.None && raw.Length >= 2) {
             // Minimum length is one data symbol plus optional checksum.
-            var prefix = raw.Substring(0, raw.Length - 1);
-            var expected = GetCode39ChecksumChar(prefix);
+            var expected = GetCode39ChecksumChar(raw.AsSpan(0, raw.Length - 1));
             if (expected != '#' && raw[raw.Length - 1] == expected) {
-                raw = prefix;
+                raw = raw.Substring(0, raw.Length - 1);
             } else if (policy == Code39ChecksumPolicy.RequireValid) {
                 return false;
             }
@@ -842,7 +841,7 @@ public static class BarcodeDecoder {
         return Convert.ToString(key, 2).PadLeft(parity.Length, '0');
     }
 
-    private static char GetCode39ChecksumChar(string content) {
+    private static char GetCode39ChecksumChar(ReadOnlySpan<char> content) {
         var sum = 0;
         foreach (var ch in content) {
             if (!Code39Tables.EncodingTable.TryGetValue(ch, out var entry) || entry.value < 0) return '#';
