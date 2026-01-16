@@ -37,10 +37,16 @@ jobs:
       - name: Build Core (net10.0)
         run: dotnet build CodeGlyphX/CodeGlyphX.csproj -c Release -f net10.0 --no-restore
 
+      - name: Test (net8.0)
+        if: runner.os != 'Linux'
+        run: dotnet test CodeGlyphX.Tests/CodeGlyphX.Tests.csproj -c Release -f net8.0 --no-build
+
       - name: Test (net8.0 + coverage)
+        if: runner.os == 'Linux'
         run: dotnet test CodeGlyphX.Tests/CodeGlyphX.Tests.csproj -c Release -f net8.0 --no-build --collect:"XPlat Code Coverage"
 
       - name: Upload coverage to Codecov
+        if: runner.os == 'Linux'
         uses: codecov/codecov-action@v5
         with:
           files: ./CodeGlyphX.Tests/TestResults/**/coverage.cobertura.xml
