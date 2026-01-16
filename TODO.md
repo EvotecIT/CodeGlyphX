@@ -38,6 +38,11 @@
 - [x] PDF417: validate perspective warp sampling on skewed screenshots (test + tuning).
 - [ ] Aztec + MaxiCode (advanced, optional).
 
+## Phase 5b — Payload completeness (parallel)
+- [ ] Payments: RussiaPaymentOrder payload (GOST R 56042-2014).
+- [ ] Payments: additional BezahlCode authorities (single payment/direct debit).
+- [ ] Extras: QR "bookmark" title normalization + extended schema validation.
+
 ## Phase 6 — Screen reader robustness (hard)
 - [x] Multi-QR detection per frame.
 - [x] Low-contrast + glare handling (adaptive binarization).
