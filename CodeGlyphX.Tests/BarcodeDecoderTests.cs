@@ -57,7 +57,10 @@ public sealed class BarcodeDecoderTests {
             HeightModules = 40
         }, out var width, out var height, out var stride);
 
-        Assert.True(BarcodeDecoder.TryDecode(pixels, width, height, stride, PixelFormat.Rgba32, out var decoded));
+        var options = new BarcodeDecodeOptions {
+            Code39Checksum = Code39ChecksumPolicy.StripIfValid
+        };
+        Assert.True(BarcodeDecoder.TryDecode(pixels, width, height, stride, PixelFormat.Rgba32, options, out var decoded));
         Assert.Equal(BarcodeType.Code39, decoded.Type);
         Assert.Equal("ABC123", decoded.Text);
     }

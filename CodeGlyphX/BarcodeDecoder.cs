@@ -20,17 +20,31 @@ public static class BarcodeDecoder {
     /// Attempts to decode a 1D barcode from a raw pixel buffer.
     /// </summary>
     public static bool TryDecode(byte[] pixels, int width, int height, int stride, PixelFormat format, out BarcodeDecoded decoded) {
-        return TryDecode(pixels, width, height, stride, format, null, out decoded);
+        return TryDecode(pixels, width, height, stride, format, null, null, out decoded);
     }
 
     /// <summary>
     /// Attempts to decode a 1D barcode from a raw pixel buffer.
     /// </summary>
     public static bool TryDecode(byte[] pixels, int width, int height, int stride, PixelFormat format, BarcodeType? expectedType, out BarcodeDecoded decoded) {
+        return TryDecode(pixels, width, height, stride, format, expectedType, null, out decoded);
+    }
+
+    /// <summary>
+    /// Attempts to decode a 1D barcode from a raw pixel buffer with custom decoding options.
+    /// </summary>
+    public static bool TryDecode(byte[] pixels, int width, int height, int stride, PixelFormat format, BarcodeDecodeOptions? options, out BarcodeDecoded decoded) {
+        return TryDecode(pixels, width, height, stride, format, null, options, out decoded);
+    }
+
+    /// <summary>
+    /// Attempts to decode a 1D barcode from a raw pixel buffer with an optional type hint and custom decoding options.
+    /// </summary>
+    public static bool TryDecode(byte[] pixels, int width, int height, int stride, PixelFormat format, BarcodeType? expectedType, BarcodeDecodeOptions? options, out BarcodeDecoded decoded) {
         decoded = null!;
         if (!BarcodeScanline.TryGetModuleCandidates(pixels, width, height, stride, format, out var candidates)) return false;
         for (var i = 0; i < candidates.Length; i++) {
-            if (TryDecodeWithInversion(candidates[i], expectedType, out decoded)) return true;
+            if (TryDecodeWithInversion(candidates[i], expectedType, options, out decoded)) return true;
         }
         return false;
     }
@@ -40,17 +54,31 @@ public static class BarcodeDecoder {
     /// Attempts to decode a 1D barcode from a raw pixel buffer.
     /// </summary>
     public static bool TryDecode(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat format, out BarcodeDecoded decoded) {
-        return TryDecode(pixels, width, height, stride, format, null, out decoded);
+        return TryDecode(pixels, width, height, stride, format, null, null, out decoded);
     }
 
     /// <summary>
     /// Attempts to decode a 1D barcode from a raw pixel buffer.
     /// </summary>
     public static bool TryDecode(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat format, BarcodeType? expectedType, out BarcodeDecoded decoded) {
+        return TryDecode(pixels, width, height, stride, format, expectedType, null, out decoded);
+    }
+
+    /// <summary>
+    /// Attempts to decode a 1D barcode from a raw pixel buffer with custom decoding options.
+    /// </summary>
+    public static bool TryDecode(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat format, BarcodeDecodeOptions? options, out BarcodeDecoded decoded) {
+        return TryDecode(pixels, width, height, stride, format, null, options, out decoded);
+    }
+
+    /// <summary>
+    /// Attempts to decode a 1D barcode from a raw pixel buffer with an optional type hint and custom decoding options.
+    /// </summary>
+    public static bool TryDecode(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat format, BarcodeType? expectedType, BarcodeDecodeOptions? options, out BarcodeDecoded decoded) {
         decoded = null!;
         if (!BarcodeScanline.TryGetModuleCandidates(pixels, width, height, stride, format, out var candidates)) return false;
         for (var i = 0; i < candidates.Length; i++) {
-            if (TryDecodeWithInversion(candidates[i], expectedType, out decoded)) return true;
+            if (TryDecodeWithInversion(candidates[i], expectedType, options, out decoded)) return true;
         }
         return false;
     }
@@ -60,20 +88,34 @@ public static class BarcodeDecoder {
     /// Attempts to decode a 1D barcode from a module sequence.
     /// </summary>
     public static bool TryDecode(bool[] modules, out BarcodeDecoded decoded) {
-        return TryDecode(modules, null, out decoded);
+        return TryDecode(modules, null, null, out decoded);
     }
 
     /// <summary>
     /// Attempts to decode a 1D barcode from a module sequence.
     /// </summary>
     public static bool TryDecode(bool[] modules, BarcodeType? expectedType, out BarcodeDecoded decoded) {
+        return TryDecode(modules, expectedType, null, out decoded);
+    }
+
+    /// <summary>
+    /// Attempts to decode a 1D barcode from a module sequence with custom decoding options.
+    /// </summary>
+    public static bool TryDecode(bool[] modules, BarcodeDecodeOptions? options, out BarcodeDecoded decoded) {
+        return TryDecode(modules, null, options, out decoded);
+    }
+
+    /// <summary>
+    /// Attempts to decode a 1D barcode from a module sequence with an optional type hint and custom decoding options.
+    /// </summary>
+    public static bool TryDecode(bool[] modules, BarcodeType? expectedType, BarcodeDecodeOptions? options, out BarcodeDecoded decoded) {
         decoded = null!;
         if (modules is null || modules.Length == 0) return false;
         var trimmed = TrimModules(modules);
         if (trimmed.Length == 0) return false;
 
         if (expectedType.HasValue) {
-            return TryDecodeType(expectedType.Value, trimmed, out decoded);
+            return TryDecodeType(expectedType.Value, trimmed, options, out decoded);
         }
 
         // Fixed-length symbologies first.
@@ -102,7 +144,7 @@ public static class BarcodeDecoder {
             decoded = new BarcodeDecoded(isGs1 ? BarcodeType.GS1_128 : BarcodeType.Code128, code128);
             return true;
         }
-        if (TryDecodeCode39(trimmed, out var code39)) {
+        if (TryDecodeCode39(trimmed, options, out var code39)) {
             decoded = new BarcodeDecoded(BarcodeType.Code39, code39);
             return true;
         }
@@ -114,13 +156,13 @@ public static class BarcodeDecoder {
         return false;
     }
 
-    private static bool TryDecodeWithInversion(bool[] modules, BarcodeType? expectedType, out BarcodeDecoded decoded) {
-        if (TryDecode(modules, expectedType, out decoded)) return true;
+    private static bool TryDecodeWithInversion(bool[] modules, BarcodeType? expectedType, BarcodeDecodeOptions? options, out BarcodeDecoded decoded) {
+        if (TryDecode(modules, expectedType, options, out decoded)) return true;
         var inverted = InvertModules(modules);
-        return TryDecode(inverted, expectedType, out decoded);
+        return TryDecode(inverted, expectedType, options, out decoded);
     }
 
-    private static bool TryDecodeType(BarcodeType type, bool[] modules, out BarcodeDecoded decoded) {
+    private static bool TryDecodeType(BarcodeType type, bool[] modules, BarcodeDecodeOptions? options, out BarcodeDecoded decoded) {
         decoded = null!;
         switch (type) {
             case BarcodeType.EAN:
@@ -164,7 +206,7 @@ public static class BarcodeDecoder {
                 }
                 return false;
             case BarcodeType.Code39:
-                if (TryDecodeCode39(modules, out var code39)) {
+                if (TryDecodeCode39(modules, options, out var code39)) {
                     decoded = new BarcodeDecoded(BarcodeType.Code39, code39);
                     return true;
                 }
@@ -214,7 +256,7 @@ public static class BarcodeDecoder {
         return runs.ToArray();
     }
 
-    private static bool TryDecodeCode39(bool[] modules, out string text) {
+    private static bool TryDecodeCode39(bool[] modules, BarcodeDecodeOptions? options, out string text) {
         text = string.Empty;
         var patternToChar = Code39PatternMap.Value;
         var chars = new List<char>();
@@ -234,10 +276,13 @@ public static class BarcodeDecoder {
         chars.RemoveAt(chars.Count - 1);
 
         var raw = new string(chars.ToArray());
-        if (raw.Length >= 2) {
+        var policy = options?.Code39Checksum ?? Code39ChecksumPolicy.None;
+        if (policy != Code39ChecksumPolicy.None && raw.Length >= 2) {
             var expected = GetCode39ChecksumChar(raw.Substring(0, raw.Length - 1));
             if (expected != '#' && raw[raw.Length - 1] == expected) {
                 raw = raw.Substring(0, raw.Length - 1);
+            } else if (policy == Code39ChecksumPolicy.RequireValid) {
+                return false;
             }
         }
         text = DecodeCode39Extended(raw);
