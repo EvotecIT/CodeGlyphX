@@ -57,3 +57,5 @@
 - [ ] Span-friendly paths where possible.
 - [ ] AOT + trimming hints (no reflection).
 - [ ] Optional SIMD for thresholding if worthwhile.
+- [x] Image decode: JPEG baseline (SOF0).
+- [x] Image decode: JPEG progressive (SOF2) + EXIF orientation.

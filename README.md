@@ -5,6 +5,7 @@ No-deps QR + barcode toolkit with a super-simple API.
 - QR (encode + robust decode, incl. Micro QR, ECI, FNC1, Kanji)
 - 1D barcodes (encode + decode): Code128/GS1-128, Code39, Code93, EAN-8/13, UPC-A/UPC-E, ITF-14
 - Renderers: SVG / HTML (incl. email-safe table) / PNG / JPEG + optional labels
+- Image decode: PNG / JPEG / GIF / BMP / PPM / TGA (no deps, JPEG baseline + progressive, EXIF orientation)
 - Payload helpers incl. `otpauth://totp` builder + Base32
 - WPF controls + demos
 
@@ -172,6 +173,16 @@ if (QrImageDecoder.TryDecodeAll(pixels, width, height, stride, PixelFormat.Rgba3
 }
 ```
 
+## Decode (images)
+
+```csharp
+using CodeGlyphX;
+
+if (QrImageDecoder.TryDecodeImage(File.ReadAllBytes("code.bmp"), out var decoded)) {
+    Console.WriteLine(decoded.Text);
+}
+```
+
 ## Decode (typed payloads)
 
 ```csharp
@@ -300,3 +311,9 @@ xmlns:wpf="clr-namespace:CodeGlyphX.Wpf;assembly=CodeGlyphX.Wpf"
 
 - `CodeGlyphX.Demo.Wpf`: generate QR + Code 128, export SVG/HTML/PNG, and build + render an OTP `otpauth://` URI
 - `CodeGlyphX.ScreenScan.Wpf`: prototype that captures a screen region and tries to decode a clean, high-contrast QR
+
+## License
+
+Apache-2.0.
+
+Commercial support and custom licensing are available. Contact: contact@evotec.pl.
