@@ -1,8 +1,8 @@
 # CodeGlyphX TODO (Easiest → Hardest)
 
 ## Phase 0 — Platform clarity
-- [ ] Docs: add a platform/renderer support matrix (Windows/Linux/macOS + WPF).
-- [ ] APIs: clearly mark platform-specific features (WPF/Windows-only).
+- [x] Docs: add a platform/renderer support matrix (Windows/Linux/macOS + WPF).
+- [x] APIs: clearly mark platform-specific features (WPF/Windows-only).
 
 ## Phase 1 — Easy wins (days)
 - [x] Reader: polish diagnostics (step-by-step failure reasons surfaced).
