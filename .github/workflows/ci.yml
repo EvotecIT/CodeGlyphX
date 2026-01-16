@@ -28,8 +28,8 @@ jobs:
         with:
           dotnet-version: '10.0.x'
 
-      - name: Restore (Core)
-        run: dotnet restore CodeGlyphX/CodeGlyphX.csproj
+      - name: Restore Solution
+        run: dotnet restore CodeGlyphX.sln
 
       - name: Build Core (net8.0)
         run: dotnet build CodeGlyphX/CodeGlyphX.csproj -c Release -f net8.0 --no-restore
