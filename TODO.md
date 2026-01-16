@@ -1,6 +1,6 @@
 # CodeGlyphX TODO (Easiest → Hardest)
 
-## Phase 0 — Platform clarity & packaging (from QRCoder 2.0 learnings)
+## Phase 0 — Platform clarity & packaging
 - [ ] Docs: add a platform/renderer support matrix (Windows/Linux/macOS + WPF).
 - [ ] Packages: split into clear, optional NuGets (Core, Renderers, Payloads, WPF).
 - [ ] APIs: clearly mark platform-specific features (WPF/Windows-only).
