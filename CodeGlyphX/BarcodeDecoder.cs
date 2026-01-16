@@ -234,6 +234,12 @@ public static class BarcodeDecoder {
         chars.RemoveAt(chars.Count - 1);
 
         var raw = new string(chars.ToArray());
+        if (raw.Length >= 2) {
+            var expected = GetCode39ChecksumChar(raw.Substring(0, raw.Length - 1));
+            if (expected != '#' && raw[raw.Length - 1] == expected) {
+                raw = raw.Substring(0, raw.Length - 1);
+            }
+        }
         text = DecodeCode39Extended(raw);
         return true;
     }
