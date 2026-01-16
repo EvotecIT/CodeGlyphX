@@ -32,6 +32,20 @@ CodeGlyphX is a fast, dependency-free toolkit for QR codes and barcodes, with ro
 - OTP helpers (otpauth://totp + Base32)
 - WPF controls + demo apps
 
+## Highlights
+
+- Zero external dependencies (no System.Drawing, no SkiaSharp, no ImageSharp)
+- Encode + decode for QR/Micro QR + common 1D/2D symbologies
+- Robust pixel decoder for screenshots, gradients, low-contrast, rotation/mirroring
+- Payload helpers for QR (WiFi, payments, contacts, OTP, social, etc.)
+- Friendly APIs: one-liners + options + fluent presets
+
+## Installation
+
+```powershell
+dotnet add package CodeGlyphX
+```
+
 ## Supported .NET Versions and Dependencies
 
 ### Core Library (CodeGlyphX)
@@ -47,6 +61,15 @@ CodeGlyphX is a fast, dependency-free toolkit for QR codes and barcodes, with ro
 
 ### WPF Projects
 - **.NET 8.0 (windows)** only
+
+## Platform support (at a glance)
+
+| Feature | Windows | Linux | macOS |
+| --- | --- | --- | --- |
+| Core encode/decode (QR/1D/2D) | ✅ | ✅ | ✅ |
+| Renderers (PNG/SVG/HTML/JPEG) | ✅ | ✅ | ✅ |
+| Image decoding (PNG/JPEG/GIF/BMP/PPM/TGA) | ✅ | ✅ | ✅ |
+| WPF controls | ✅ | ❌ | ❌ |
 
 ## Build Status
 
@@ -78,6 +101,33 @@ CodeGlyphX is a fast, dependency-free toolkit for QR codes and barcodes, with ro
 - [x] Image decode: PNG / JPEG / GIF / BMP / PPM / TGA
 - [x] Payload helpers (URL, WiFi, Email, Phone, SMS, Contact, Calendar, OTP, Social)
 - [x] WPF controls and demo apps
+
+## Payload helpers
+
+QR payload helpers generate well-known structured strings so scanners can trigger the right action.
+
+| Category | Payloads |
+| --- | --- |
+| Core | Text, URL, Bookmark, WiFi |
+| Communication | Email (Mailto/MATMSG/SMTP), Phone, SMS, MMS, Skype |
+| Location & Calendar | Geo, Calendar (iCal/vEvent) |
+| Contacts | vCard / MeCard |
+| OTP | TOTP / HOTP (otpauth://) |
+| Social & Stores | App Store (Apple/Google), Facebook, X/Twitter, TikTok, LinkedIn, WhatsApp |
+| Payments | UPI, SEPA Girocode (EPC), BezahlCode, Swiss QR Bill, Slovenian UPN |
+| Crypto & Network | Bitcoin / Bitcoin Cash / Litecoin, Monero, ShadowSocks |
+
+## Renderers and output formats
+
+- PNG / JPEG byte arrays and stream writers
+- SVG and HTML strings
+- Raw RGBA pixels
+- WPF controls
+
+## Image decoding (for readers)
+
+- PNG, JPEG (baseline + progressive, EXIF orientation), GIF, BMP, PPM, TGA
+- Pure C# decoders (no native image libraries)
 
 ## Quick usage
 

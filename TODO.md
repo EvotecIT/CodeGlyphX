@@ -1,5 +1,9 @@
 # CodeGlyphX TODO (Easiest → Hardest)
 
+## Phase 0 — Platform clarity
+- [x] Docs: add a platform/renderer support matrix (Windows/Linux/macOS + WPF).
+- [x] APIs: clearly mark platform-specific features (WPF/Windows-only).
+
 ## Phase 1 — Easy wins (days)
 - [x] Reader: polish diagnostics (step-by-step failure reasons surfaced).
 - [x] Reader: more tolerant format-info handling (soft fallback when distance > 3).
@@ -38,6 +42,11 @@
 - [x] PDF417: validate perspective warp sampling on skewed screenshots (test + tuning).
 - [ ] Aztec + MaxiCode (advanced, optional).
 
+## Phase 5b — Payload completeness (parallel)
+- [ ] Payments: RussiaPaymentOrder payload (GOST R 56042-2014).
+- [ ] Payments: additional BezahlCode authorities (single payment/direct debit).
+- [ ] Extras: QR "bookmark" title normalization + extended schema validation.
+
 ## Phase 6 — Screen reader robustness (hard)
 - [x] Multi-QR detection per frame.
 - [x] Low-contrast + glare handling (adaptive binarization).
@@ -51,6 +60,11 @@
 - [x] Unified “CodeGlyph” detect for QR/1D/DataMatrix/PDF417.
 - [x] Presets: OTP/Logo/WiFi/Contact with safe defaults.
 - [x] Fluent API + static API + options objects (with easy defaults).
+- [ ] Output formats: ASCII renderer (text/lines).
+- [ ] Output formats: Base64 (raw + data URI) for PNG/JPEG/BMP.
+- [ ] Output formats: BMP writer (24-bit/32-bit).
+- [ ] Output formats: PDF byte writer (single-page, vector or image).
+- [ ] Output formats: PostScript/EPS writer (vector).
 
 ## Phase 8 — Performance + AOT polish
 - [ ] Reduce allocations in hot decode loops.
