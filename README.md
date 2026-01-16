@@ -62,6 +62,15 @@ dotnet add package CodeGlyphX
 ### WPF Projects
 - **.NET 8.0 (windows)** only
 
+## Platform support (at a glance)
+
+| Feature | Windows | Linux | macOS |
+| --- | --- | --- | --- |
+| Core encode/decode (QR/1D/2D) | ✅ | ✅ | ✅ |
+| Renderers (PNG/SVG/HTML/JPEG) | ✅ | ✅ | ✅ |
+| Image decoding (PNG/JPEG/GIF/BMP/PPM/TGA) | ✅ | ✅ | ✅ |
+| WPF controls | ✅ | ❌ | ❌ |
+
 ## Build Status
 
 **Cross-Platform Testing:** Builds and tests run on Windows, Linux, and macOS. Windows additionally builds WPF and .NET Framework targets.
