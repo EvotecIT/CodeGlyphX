@@ -24,6 +24,12 @@ public sealed class RendererFormatTests {
         var bmp = QrEasy.RenderBmp(payload);
         Assert.True(IsBmp(bmp));
 
+        var pdf = QrEasy.RenderPdf(payload);
+        Assert.True(IsPdf(pdf));
+
+        var eps = QrEasy.RenderEps(payload);
+        Assert.True(IsEps(eps));
+
         var ascii = QrEasy.RenderAscii(payload, new MatrixAsciiRenderOptions { QuietZone = 1 });
         Assert.Contains("#", ascii, StringComparison.Ordinal);
     }
@@ -42,6 +48,12 @@ public sealed class RendererFormatTests {
 
         var bmp = BarcodeBmpRenderer.Render(barcode, new BarcodePngRenderOptions());
         Assert.True(IsBmp(bmp));
+
+        var pdf = Barcode.Pdf(BarcodeType.Code128, "CODEGLYPH-123");
+        Assert.True(IsPdf(pdf));
+
+        var eps = Barcode.Eps(BarcodeType.Code128, "CODEGLYPH-123");
+        Assert.True(IsEps(eps));
 
         var ascii = BarcodeAsciiRenderer.Render(barcode, new BarcodeAsciiRenderOptions { QuietZone = 1, Height = 2 });
         Assert.Contains("#", ascii, StringComparison.Ordinal);
@@ -62,5 +74,19 @@ public sealed class RendererFormatTests {
     private static bool IsBmp(byte[] data) {
         if (data is null || data.Length < 2) return false;
         return data[0] == (byte)'B' && data[1] == (byte)'M';
+    }
+
+    private static bool IsPdf(byte[] data) {
+        if (data is null || data.Length < 5) return false;
+        return data[0] == (byte)'%' &&
+               data[1] == (byte)'P' &&
+               data[2] == (byte)'D' &&
+               data[3] == (byte)'F' &&
+               data[4] == (byte)'-';
+    }
+
+    private static bool IsEps(string text) {
+        if (string.IsNullOrEmpty(text)) return false;
+        return text.StartsWith("%!PS-Adobe", StringComparison.Ordinal);
     }
 }

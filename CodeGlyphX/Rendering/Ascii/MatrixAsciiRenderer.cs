@@ -30,9 +30,10 @@ public static class MatrixAsciiRenderer {
 
         var lineCapacity = widthModules * darkCell.Length;
         var sb = new StringBuilder((lineCapacity + newline.Length) * heightModules * moduleHeight);
+        var row = new StringBuilder(lineCapacity);
 
         for (var y = 0; y < heightModules; y++) {
-            var row = new StringBuilder(lineCapacity);
+            row.Clear();
             var my = y - quiet;
             for (var x = 0; x < widthModules; x++) {
                 var mx = x - quiet;
@@ -43,7 +44,7 @@ public static class MatrixAsciiRenderer {
             var rowText = row.ToString();
             for (var rep = 0; rep < moduleHeight; rep++) {
                 sb.Append(rowText);
-                if (!(y == heightModules - 1 && rep == moduleHeight - 1)) {
+                if (y != heightModules - 1 || rep != moduleHeight - 1) {
                     sb.Append(newline);
                 }
             }

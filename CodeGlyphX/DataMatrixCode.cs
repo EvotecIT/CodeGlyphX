@@ -4,8 +4,10 @@ using CodeGlyphX.DataMatrix;
 using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Ascii;
 using CodeGlyphX.Rendering.Bmp;
+using CodeGlyphX.Rendering.Eps;
 using CodeGlyphX.Rendering.Html;
 using CodeGlyphX.Rendering.Jpeg;
+using CodeGlyphX.Rendering.Pdf;
 using CodeGlyphX.Rendering.Png;
 using CodeGlyphX.Rendering.Svg;
 
@@ -94,6 +96,22 @@ public static class DataMatrixCode {
     }
 
     /// <summary>
+    /// Renders Data Matrix as PDF from bytes.
+    /// </summary>
+    public static byte[] Pdf(ReadOnlySpan<byte> data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = EncodeBytes(data, mode);
+        return MatrixPdfRenderer.Render(modules, BuildPngOptions(options));
+    }
+
+    /// <summary>
+    /// Renders Data Matrix as EPS from bytes.
+    /// </summary>
+    public static string Eps(ReadOnlySpan<byte> data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = EncodeBytes(data, mode);
+        return MatrixEpsRenderer.Render(modules, BuildPngOptions(options));
+    }
+
+    /// <summary>
     /// Renders Data Matrix as ASCII from bytes.
     /// </summary>
     public static string Ascii(ReadOnlySpan<byte> data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixAsciiRenderOptions? options = null) {
@@ -172,6 +190,22 @@ public static class DataMatrixCode {
     }
 
     /// <summary>
+    /// Saves Data Matrix PDF to a file for byte payloads.
+    /// </summary>
+    public static string SavePdf(ReadOnlySpan<byte> data, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var pdf = Pdf(data, mode, options);
+        return pdf.WriteBinary(path);
+    }
+
+    /// <summary>
+    /// Saves Data Matrix EPS to a file for byte payloads.
+    /// </summary>
+    public static string SaveEps(ReadOnlySpan<byte> data, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var eps = Eps(data, mode, options);
+        return eps.WriteText(path);
+    }
+
+    /// <summary>
     /// Saves Data Matrix JPEG to a stream for byte payloads.
     /// </summary>
     public static void SaveJpeg(ReadOnlySpan<byte> data, Stream stream, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
@@ -190,7 +224,23 @@ public static class DataMatrixCode {
     }
 
     /// <summary>
-    /// Saves Data Matrix to a file for byte payloads based on extension (.png/.svg/.html/.jpg/.bmp).
+    /// Saves Data Matrix PDF to a stream for byte payloads.
+    /// </summary>
+    public static void SavePdf(ReadOnlySpan<byte> data, Stream stream, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = EncodeBytes(data, mode);
+        MatrixPdfRenderer.RenderToStream(modules, BuildPngOptions(options), stream);
+    }
+
+    /// <summary>
+    /// Saves Data Matrix EPS to a stream for byte payloads.
+    /// </summary>
+    public static void SaveEps(ReadOnlySpan<byte> data, Stream stream, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = EncodeBytes(data, mode);
+        MatrixEpsRenderer.RenderToStream(modules, BuildPngOptions(options), stream);
+    }
+
+    /// <summary>
+    /// Saves Data Matrix to a file for byte payloads based on extension (.png/.svg/.html/.jpg/.bmp/.pdf/.eps).
     /// Defaults to PNG when no extension is provided.
     /// </summary>
     public static string Save(ReadOnlySpan<byte> data, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null, string? title = null) {
@@ -210,6 +260,11 @@ public static class DataMatrixCode {
                 return SaveJpeg(data, path, mode, options);
             case ".bmp":
                 return SaveBmp(data, path, mode, options);
+            case ".pdf":
+                return SavePdf(data, path, mode, options);
+            case ".eps":
+            case ".ps":
+                return SaveEps(data, path, mode, options);
             default:
                 return SavePng(data, path, mode, options);
         }
@@ -283,6 +338,22 @@ public static class DataMatrixCode {
     }
 
     /// <summary>
+    /// Renders Data Matrix as PDF.
+    /// </summary>
+    public static byte[] Pdf(string text, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = Encode(text, mode);
+        return MatrixPdfRenderer.Render(modules, BuildPngOptions(options));
+    }
+
+    /// <summary>
+    /// Renders Data Matrix as EPS.
+    /// </summary>
+    public static string Eps(string text, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = Encode(text, mode);
+        return MatrixEpsRenderer.Render(modules, BuildPngOptions(options));
+    }
+
+    /// <summary>
     /// Renders Data Matrix as ASCII.
     /// </summary>
     public static string Ascii(string text, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixAsciiRenderOptions? options = null) {
@@ -306,6 +377,22 @@ public static class DataMatrixCode {
     public static byte[] Bmp(byte[] data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
         var modules = EncodeBytes(data, mode);
         return MatrixBmpRenderer.Render(modules, BuildPngOptions(options));
+    }
+
+    /// <summary>
+    /// Renders Data Matrix as PDF from bytes.
+    /// </summary>
+    public static byte[] Pdf(byte[] data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = EncodeBytes(data, mode);
+        return MatrixPdfRenderer.Render(modules, BuildPngOptions(options));
+    }
+
+    /// <summary>
+    /// Renders Data Matrix as EPS from bytes.
+    /// </summary>
+    public static string Eps(byte[] data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = EncodeBytes(data, mode);
+        return MatrixEpsRenderer.Render(modules, BuildPngOptions(options));
     }
 
     /// <summary>
@@ -441,6 +528,22 @@ public static class DataMatrixCode {
     }
 
     /// <summary>
+    /// Saves Data Matrix PDF to a file.
+    /// </summary>
+    public static string SavePdf(string text, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var pdf = Pdf(text, mode, options);
+        return pdf.WriteBinary(path);
+    }
+
+    /// <summary>
+    /// Saves Data Matrix EPS to a file.
+    /// </summary>
+    public static string SaveEps(string text, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var eps = Eps(text, mode, options);
+        return eps.WriteText(path);
+    }
+
+    /// <summary>
     /// Saves Data Matrix JPEG to a file for byte payloads.
     /// </summary>
     public static string SaveJpeg(byte[] data, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
@@ -454,6 +557,22 @@ public static class DataMatrixCode {
     public static string SaveBmp(byte[] data, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
         var bmp = Bmp(data, mode, options);
         return bmp.WriteBinary(path);
+    }
+
+    /// <summary>
+    /// Saves Data Matrix PDF to a file for byte payloads.
+    /// </summary>
+    public static string SavePdf(byte[] data, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var pdf = Pdf(data, mode, options);
+        return pdf.WriteBinary(path);
+    }
+
+    /// <summary>
+    /// Saves Data Matrix EPS to a file for byte payloads.
+    /// </summary>
+    public static string SaveEps(byte[] data, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var eps = Eps(data, mode, options);
+        return eps.WriteText(path);
     }
 
     /// <summary>
@@ -475,6 +594,22 @@ public static class DataMatrixCode {
     }
 
     /// <summary>
+    /// Saves Data Matrix PDF to a stream.
+    /// </summary>
+    public static void SavePdf(string text, Stream stream, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = Encode(text, mode);
+        MatrixPdfRenderer.RenderToStream(modules, BuildPngOptions(options), stream);
+    }
+
+    /// <summary>
+    /// Saves Data Matrix EPS to a stream.
+    /// </summary>
+    public static void SaveEps(string text, Stream stream, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = Encode(text, mode);
+        MatrixEpsRenderer.RenderToStream(modules, BuildPngOptions(options), stream);
+    }
+
+    /// <summary>
     /// Saves Data Matrix JPEG to a stream for byte payloads.
     /// </summary>
     public static void SaveJpeg(byte[] data, Stream stream, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
@@ -493,7 +628,23 @@ public static class DataMatrixCode {
     }
 
     /// <summary>
-    /// Saves Data Matrix to a file based on extension (.png/.svg/.html/.jpg/.bmp).
+    /// Saves Data Matrix PDF to a stream for byte payloads.
+    /// </summary>
+    public static void SavePdf(byte[] data, Stream stream, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = EncodeBytes(data, mode);
+        MatrixPdfRenderer.RenderToStream(modules, BuildPngOptions(options), stream);
+    }
+
+    /// <summary>
+    /// Saves Data Matrix EPS to a stream for byte payloads.
+    /// </summary>
+    public static void SaveEps(byte[] data, Stream stream, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = EncodeBytes(data, mode);
+        MatrixEpsRenderer.RenderToStream(modules, BuildPngOptions(options), stream);
+    }
+
+    /// <summary>
+    /// Saves Data Matrix to a file based on extension (.png/.svg/.html/.jpg/.bmp/.pdf/.eps).
     /// Defaults to PNG when no extension is provided.
     /// </summary>
     public static string Save(string text, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null, string? title = null) {
@@ -513,13 +664,18 @@ public static class DataMatrixCode {
                 return SaveJpeg(text, path, mode, options);
             case ".bmp":
                 return SaveBmp(text, path, mode, options);
+            case ".pdf":
+                return SavePdf(text, path, mode, options);
+            case ".eps":
+            case ".ps":
+                return SaveEps(text, path, mode, options);
             default:
                 return SavePng(text, path, mode, options);
         }
     }
 
     /// <summary>
-    /// Saves Data Matrix to a file for byte payloads based on extension (.png/.svg/.html/.jpg/.bmp).
+    /// Saves Data Matrix to a file for byte payloads based on extension (.png/.svg/.html/.jpg/.bmp/.pdf/.eps).
     /// Defaults to PNG when no extension is provided.
     /// </summary>
     public static string Save(byte[] data, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null, string? title = null) {
@@ -539,6 +695,11 @@ public static class DataMatrixCode {
                 return SaveJpeg(data, path, mode, options);
             case ".bmp":
                 return SaveBmp(data, path, mode, options);
+            case ".pdf":
+                return SavePdf(data, path, mode, options);
+            case ".eps":
+            case ".ps":
+                return SaveEps(data, path, mode, options);
             default:
                 return SavePng(data, path, mode, options);
         }
@@ -754,6 +915,20 @@ public static class DataMatrixCode {
         }
 
         /// <summary>
+        /// Renders PDF bytes.
+        /// </summary>
+        public byte[] Pdf() {
+            return _text is not null ? DataMatrixCode.Pdf(_text, _mode, _options) : DataMatrixCode.Pdf(_bytes!, _mode, _options);
+        }
+
+        /// <summary>
+        /// Renders EPS text.
+        /// </summary>
+        public string Eps() {
+            return _text is not null ? DataMatrixCode.Eps(_text, _mode, _options) : DataMatrixCode.Eps(_bytes!, _mode, _options);
+        }
+
+        /// <summary>
         /// Renders ASCII text.
         /// </summary>
         public string Ascii(MatrixAsciiRenderOptions? options = null) {
@@ -801,6 +976,20 @@ public static class DataMatrixCode {
         /// </summary>
         public string SaveBmp(string path) {
             return _text is not null ? DataMatrixCode.SaveBmp(_text, path, _mode, _options) : DataMatrixCode.SaveBmp(_bytes!, path, _mode, _options);
+        }
+
+        /// <summary>
+        /// Saves PDF to a file.
+        /// </summary>
+        public string SavePdf(string path) {
+            return _text is not null ? DataMatrixCode.SavePdf(_text, path, _mode, _options) : DataMatrixCode.SavePdf(_bytes!, path, _mode, _options);
+        }
+
+        /// <summary>
+        /// Saves EPS to a file.
+        /// </summary>
+        public string SaveEps(string path) {
+            return _text is not null ? DataMatrixCode.SaveEps(_text, path, _mode, _options) : DataMatrixCode.SaveEps(_bytes!, path, _mode, _options);
         }
     }
 }

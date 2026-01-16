@@ -27,7 +27,7 @@ public static class BmpWriter {
         if (rgba.Length < (height - 1) * stride + width * 4) throw new ArgumentException("RGBA buffer is too small.", nameof(rgba));
 
         const int fileHeaderSize = 14;
-        const int infoHeaderSize = 40;
+        const int infoHeaderSize = 108;
         var dataOffset = fileHeaderSize + infoHeaderSize;
         var rowSize = width * 4;
         var imageSize = rowSize * height;
@@ -44,12 +44,17 @@ public static class BmpWriter {
         WriteInt32(header, 22, height);
         WriteInt16(header, 26, 1);
         WriteInt16(header, 28, 32);
-        WriteInt32(header, 30, 0);
+        WriteInt32(header, 30, 3);
         WriteInt32(header, 34, imageSize);
         WriteInt32(header, 38, 0);
         WriteInt32(header, 42, 0);
         WriteInt32(header, 46, 0);
         WriteInt32(header, 50, 0);
+        WriteInt32(header, 54, 0x00FF0000);
+        WriteInt32(header, 58, 0x0000FF00);
+        WriteInt32(header, 62, 0x000000FF);
+        WriteInt32(header, 66, unchecked((int)0xFF000000));
+        WriteInt32(header, 70, 0x73524742);
 
         stream.Write(header, 0, header.Length);
 

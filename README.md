@@ -28,7 +28,7 @@ CodeGlyphX is a fast, dependency-free toolkit for QR codes and barcodes, with ro
 - Reliable QR decoding (ECI, FNC1/GS1, Kanji, structured append, Micro QR)
 - 1D barcode encoding/decoding (Code128/GS1-128, Code39, Code93, EAN/UPC, ITF-14)
 - 2D encoding/decoding (Data Matrix, PDF417)
-- Renderers (SVG / HTML / PNG / JPEG / BMP / ASCII) and image decoding (PNG/JPEG/GIF/BMP/PPM/TGA)
+- Renderers (SVG / HTML / PNG / JPEG / BMP / PDF / EPS / ASCII) and image decoding (PNG/JPEG/GIF/BMP/PPM/TGA)
 - OTP helpers (otpauth://totp + Base32)
 - WPF controls + demo apps
 
@@ -74,7 +74,7 @@ CodeGlyphX is a fast, dependency-free toolkit for QR codes and barcodes, with ro
 - [x] Micro QR support
 - [x] 1D barcode encode + decode
 - [x] Data Matrix + PDF417 encode + decode
-- [x] SVG / HTML / PNG / JPEG / BMP / ASCII renderers
+- [x] SVG / HTML / PNG / JPEG / BMP / PDF / EPS / ASCII renderers
 - [x] Image decode: PNG / JPEG / GIF / BMP / PPM / TGA
 - [x] Base64 helpers for rendered outputs
 - [x] Payload helpers (URL, WiFi, Email, Phone, SMS, Contact, Calendar, OTP, Social)
@@ -88,6 +88,7 @@ using CodeGlyphX;
 QR.Save("https://example.com", "qr.png");
 QR.Save("https://example.com", "qr.svg");
 QR.Save("https://example.com", "qr.jpg");
+QR.Save("https://example.com", "qr.pdf");
 ```
 
 ```csharp

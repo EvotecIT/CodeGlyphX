@@ -131,7 +131,7 @@ public static class RenderExtensions {
     /// </summary>
     public static string ToDataUri(this byte[] data, string mimeType) {
         if (data is null) throw new ArgumentNullException(nameof(data));
-        if (string.IsNullOrWhiteSpace(mimeType)) throw new ArgumentNullException(nameof(mimeType));
+        if (string.IsNullOrWhiteSpace(mimeType)) throw new ArgumentException("Mime type cannot be null, empty, or whitespace.", nameof(mimeType));
         return "data:" + mimeType + ";base64," + Convert.ToBase64String(data);
     }
 }

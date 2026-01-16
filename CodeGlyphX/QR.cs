@@ -129,6 +129,40 @@ public static class QR {
     public static byte[] Bmp(QrPayloadData payload, QrEasyOptions? options = null) => QrEasy.RenderBmp(payload, options);
 
     /// <summary>
+    /// Renders a QR code as PDF.
+    /// </summary>
+    public static byte[] Pdf(string payload, QrEasyOptions? options = null) => QrEasy.RenderPdf(payload, options);
+
+    /// <summary>
+    /// Detects a payload type and renders a QR code as PDF.
+    /// </summary>
+    public static byte[] PdfAuto(string payload, QrPayloadDetectOptions? detectOptions = null, QrEasyOptions? options = null) {
+        return QrEasy.RenderPdfAuto(payload, detectOptions, options);
+    }
+
+    /// <summary>
+    /// Renders a QR code as PDF for a payload with embedded defaults.
+    /// </summary>
+    public static byte[] Pdf(QrPayloadData payload, QrEasyOptions? options = null) => QrEasy.RenderPdf(payload, options);
+
+    /// <summary>
+    /// Renders a QR code as EPS.
+    /// </summary>
+    public static string Eps(string payload, QrEasyOptions? options = null) => QrEasy.RenderEps(payload, options);
+
+    /// <summary>
+    /// Detects a payload type and renders a QR code as EPS.
+    /// </summary>
+    public static string EpsAuto(string payload, QrPayloadDetectOptions? detectOptions = null, QrEasyOptions? options = null) {
+        return QrEasy.RenderEpsAuto(payload, detectOptions, options);
+    }
+
+    /// <summary>
+    /// Renders a QR code as EPS for a payload with embedded defaults.
+    /// </summary>
+    public static string Eps(QrPayloadData payload, QrEasyOptions? options = null) => QrEasy.RenderEps(payload, options);
+
+    /// <summary>
     /// Renders a QR code as ASCII text.
     /// </summary>
     public static string Ascii(string payload, MatrixAsciiRenderOptions? asciiOptions = null, QrEasyOptions? options = null) {
@@ -298,7 +332,63 @@ public static class QR {
     }
 
     /// <summary>
-    /// Saves a QR code to a file based on the file extension (.png/.svg/.html/.jpg/.bmp).
+    /// Saves a PDF QR to a file.
+    /// </summary>
+    public static string SavePdf(string payload, string path, QrEasyOptions? options = null) {
+        return Pdf(payload, options).WriteBinary(path);
+    }
+
+    /// <summary>
+    /// Saves a PDF QR to a file for a payload with embedded defaults.
+    /// </summary>
+    public static string SavePdf(QrPayloadData payload, string path, QrEasyOptions? options = null) {
+        return Pdf(payload, options).WriteBinary(path);
+    }
+
+    /// <summary>
+    /// Saves a PDF QR to a stream.
+    /// </summary>
+    public static void SavePdf(string payload, Stream stream, QrEasyOptions? options = null) {
+        QrEasy.RenderPdfToStream(payload, stream, options);
+    }
+
+    /// <summary>
+    /// Saves a PDF QR to a stream for a payload with embedded defaults.
+    /// </summary>
+    public static void SavePdf(QrPayloadData payload, Stream stream, QrEasyOptions? options = null) {
+        QrEasy.RenderPdfToStream(payload, stream, options);
+    }
+
+    /// <summary>
+    /// Saves an EPS QR to a file.
+    /// </summary>
+    public static string SaveEps(string payload, string path, QrEasyOptions? options = null) {
+        return Eps(payload, options).WriteText(path);
+    }
+
+    /// <summary>
+    /// Saves an EPS QR to a file for a payload with embedded defaults.
+    /// </summary>
+    public static string SaveEps(QrPayloadData payload, string path, QrEasyOptions? options = null) {
+        return Eps(payload, options).WriteText(path);
+    }
+
+    /// <summary>
+    /// Saves an EPS QR to a stream.
+    /// </summary>
+    public static void SaveEps(string payload, Stream stream, QrEasyOptions? options = null) {
+        QrEasy.RenderEpsToStream(payload, stream, options);
+    }
+
+    /// <summary>
+    /// Saves an EPS QR to a stream for a payload with embedded defaults.
+    /// </summary>
+    public static void SaveEps(QrPayloadData payload, Stream stream, QrEasyOptions? options = null) {
+        QrEasy.RenderEpsToStream(payload, stream, options);
+    }
+
+    /// <summary>
+    /// Saves a QR code to a file based on the file extension (.png/.svg/.html/.jpg/.bmp/.pdf/.eps).
     /// Defaults to PNG when no extension is provided.
     /// </summary>
     public static string Save(string payload, string path, QrEasyOptions? options = null, string? title = null) {
@@ -306,7 +396,7 @@ public static class QR {
     }
 
     /// <summary>
-    /// Detects a payload type and saves a QR code to a file based on the file extension (.png/.svg/.html/.jpg/.bmp).
+    /// Detects a payload type and saves a QR code to a file based on the file extension (.png/.svg/.html/.jpg/.bmp/.pdf/.eps).
     /// Defaults to PNG when no extension is provided.
     /// </summary>
     public static string SaveAuto(string payload, string path, QrPayloadDetectOptions? detectOptions = null, QrEasyOptions? options = null, string? title = null) {
@@ -315,7 +405,7 @@ public static class QR {
     }
 
     /// <summary>
-    /// Saves a QR code to a file based on the file extension (.png/.svg/.html/.jpg/.bmp).
+    /// Saves a QR code to a file based on the file extension (.png/.svg/.html/.jpg/.bmp/.pdf/.eps).
     /// Defaults to PNG when no extension is provided.
     /// </summary>
     public static string Save(QrPayloadData payload, string path, QrEasyOptions? options = null, string? title = null) {
@@ -542,6 +632,16 @@ public static class QR {
         public byte[] Jpeg() => _payloadData is null ? QrEasy.RenderJpeg(_payload, Options) : QrEasy.RenderJpeg(_payloadData, Options);
 
         /// <summary>
+        /// Renders PDF bytes.
+        /// </summary>
+        public byte[] Pdf() => _payloadData is null ? QrEasy.RenderPdf(_payload, Options) : QrEasy.RenderPdf(_payloadData, Options);
+
+        /// <summary>
+        /// Renders EPS text.
+        /// </summary>
+        public string Eps() => _payloadData is null ? QrEasy.RenderEps(_payload, Options) : QrEasy.RenderEps(_payloadData, Options);
+
+        /// <summary>
         /// Saves PNG to a file.
         /// </summary>
         public string SavePng(string path) => _payloadData is null ? QR.SavePng(_payload, path, Options) : QR.SavePng(_payloadData, path, Options);
@@ -622,6 +722,38 @@ public static class QR {
         }
 
         /// <summary>
+        /// Saves PDF to a file.
+        /// </summary>
+        public string SavePdf(string path) => _payloadData is null ? QR.SavePdf(_payload, path, Options) : QR.SavePdf(_payloadData, path, Options);
+
+        /// <summary>
+        /// Saves PDF to a stream.
+        /// </summary>
+        public void SavePdf(Stream stream) {
+            if (_payloadData is null) {
+                QR.SavePdf(_payload, stream, Options);
+            } else {
+                QR.SavePdf(_payloadData, stream, Options);
+            }
+        }
+
+        /// <summary>
+        /// Saves EPS to a file.
+        /// </summary>
+        public string SaveEps(string path) => _payloadData is null ? QR.SaveEps(_payload, path, Options) : QR.SaveEps(_payloadData, path, Options);
+
+        /// <summary>
+        /// Saves EPS to a stream.
+        /// </summary>
+        public void SaveEps(Stream stream) {
+            if (_payloadData is null) {
+                QR.SaveEps(_payload, stream, Options);
+            } else {
+                QR.SaveEps(_payloadData, stream, Options);
+            }
+        }
+
+        /// <summary>
         /// Renders ASCII text.
         /// </summary>
         public string Ascii(MatrixAsciiRenderOptions? asciiOptions = null) => _payloadData is null
@@ -634,7 +766,7 @@ public static class QR {
         public string SaveAscii(string path, MatrixAsciiRenderOptions? asciiOptions = null) => Ascii(asciiOptions).WriteText(path);
 
         /// <summary>
-        /// Saves based on file extension (.png/.svg/.html/.jpg/.bmp). Defaults to PNG when no extension is provided.
+        /// Saves based on file extension (.png/.svg/.html/.jpg/.bmp/.pdf/.eps). Defaults to PNG when no extension is provided.
         /// </summary>
         public string Save(string path, string? title = null) => _payloadData is null
             ? QR.Save(_payload, path, Options, title)
@@ -660,6 +792,11 @@ public static class QR {
                 return payloadData is null ? SaveJpeg(payload, path, options) : SaveJpeg(payloadData, path, options);
             case ".bmp":
                 return payloadData is null ? SaveBmp(payload, path, options) : SaveBmp(payloadData, path, options);
+            case ".pdf":
+                return payloadData is null ? SavePdf(payload, path, options) : SavePdf(payloadData, path, options);
+            case ".eps":
+            case ".ps":
+                return payloadData is null ? SaveEps(payload, path, options) : SaveEps(payloadData, path, options);
             default:
                 // Fallback to PNG for unknown extensions to keep the API forgiving.
                 return payloadData is null ? SavePng(payload, path, options) : SavePng(payloadData, path, options);

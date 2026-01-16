@@ -223,7 +223,7 @@ public static class Otp {
     }
 
     /// <summary>
-    /// Saves a TOTP QR based on file extension (.png/.svg/.html/.jpg).
+    /// Saves a TOTP QR based on file extension (.png/.svg/.html/.jpg/.bmp/.pdf/.eps).
     /// Defaults to PNG when no extension is provided.
     /// </summary>
     public static string SaveTotp(string issuer, string account, string secretBase32, string path, QrEasyOptions? options = null, OtpAlgorithm alg = OtpAlgorithm.Sha1, int digits = 6, int period = 30, string? title = null) {
@@ -232,7 +232,7 @@ public static class Otp {
     }
 
     /// <summary>
-    /// Saves a HOTP QR based on file extension (.png/.svg/.html/.jpg).
+    /// Saves a HOTP QR based on file extension (.png/.svg/.html/.jpg/.bmp/.pdf/.eps).
     /// Defaults to PNG when no extension is provided.
     /// </summary>
     public static string SaveHotp(string issuer, string account, string secretBase32, long counter, string path, QrEasyOptions? options = null, OtpAlgorithm alg = OtpAlgorithm.Sha1, int digits = 6, string? title = null) {
