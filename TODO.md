@@ -1,5 +1,12 @@
 # CodeGlyphX TODO (Easiest → Hardest)
 
+## Phase 0 — Platform clarity & packaging (from QRCoder 2.0 learnings)
+- [ ] Docs: add a platform/renderer support matrix (Windows/Linux/macOS + WPF).
+- [ ] Packages: split into clear, optional NuGets (Core, Renderers, Payloads, WPF).
+- [ ] APIs: clearly mark platform-specific features (WPF/Windows-only).
+- [ ] Versioning: document compatibility/migration strategy for breaking changes.
+- [ ] Governance: contribution flow + change coordination for large refactors.
+
 ## Phase 1 — Easy wins (days)
 - [x] Reader: polish diagnostics (step-by-step failure reasons surfaced).
 - [x] Reader: more tolerant format-info handling (soft fallback when distance > 3).
