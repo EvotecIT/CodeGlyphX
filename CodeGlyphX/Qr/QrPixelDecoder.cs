@@ -333,6 +333,7 @@ internal static class QrPixelDecoder {
             return true;
         }
 
+        // Track the closest unsuccessful attempt for diagnostics.
         var best = diagFast;
 
         if (scale == 1 && settings.AllowTransforms) {

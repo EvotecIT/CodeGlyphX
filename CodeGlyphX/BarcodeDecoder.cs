@@ -278,9 +278,11 @@ public static class BarcodeDecoder {
         var raw = new string(chars.ToArray());
         var policy = options?.Code39Checksum ?? Code39ChecksumPolicy.None;
         if (policy != Code39ChecksumPolicy.None && raw.Length >= 2) {
-            var expected = GetCode39ChecksumChar(raw.Substring(0, raw.Length - 1));
+            // Minimum length is one data symbol plus optional checksum.
+            var prefix = raw.Substring(0, raw.Length - 1);
+            var expected = GetCode39ChecksumChar(prefix);
             if (expected != '#' && raw[raw.Length - 1] == expected) {
-                raw = raw.Substring(0, raw.Length - 1);
+                raw = prefix;
             } else if (policy == Code39ChecksumPolicy.RequireValid) {
                 return false;
             }
