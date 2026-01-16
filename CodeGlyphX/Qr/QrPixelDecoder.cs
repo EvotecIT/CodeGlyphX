@@ -317,12 +317,39 @@ internal static class QrPixelDecoder {
             return false;
         }
 
+        var fastSettings = new QrProfileSettings(
+            settings.MaxScale,
+            settings.CollectMaxScale,
+            settings.AllowTransforms,
+            allowContrastStretch: false,
+            allowNormalize: false,
+            allowAdaptiveThreshold: false,
+            allowBlur: false,
+            allowExtraThresholds: false,
+            settings.MinContrast);
+
+        if (TryDecodeWithImage(scale, baseImage, fastSettings, accept, out result, out var diagFast)) {
+            diagnostics = diagFast;
+            return true;
+        }
+
+        // Track the closest unsuccessful attempt for diagnostics.
+        var best = diagFast;
+
+        if (scale == 1 && settings.AllowTransforms) {
+            if (TryDecodeWithTransformsFast(scale, baseImage, fastSettings, accept, out result, out var diagFastTransform)) {
+                diagnostics = diagFastTransform;
+                return true;
+            }
+            best = Better(best, diagFastTransform);
+        }
+
         if (TryDecodeImageAndStretch(scale, baseImage, settings, accept, out result, out var diagBase)) {
             diagnostics = diagBase;
             return true;
         }
 
-        var best = diagBase;
+        best = Better(best, diagBase);
 
         if (scale == 1 && settings.AllowTransforms) {
             if (TryDecodeWithTransforms(scale, baseImage, settings, accept, out result, out var diagTransform)) {
@@ -566,6 +593,71 @@ internal static class QrPixelDecoder {
 
         var mirror270 = mirror.Rotate270();
         if (TryDecodeImageAndStretch(scale, mirror270, settings, accept, out result, out var dm270)) {
+            diagnostics = dm270;
+            return true;
+        }
+        best = Better(best, dm270);
+
+        diagnostics = best;
+        return false;
+    }
+
+    private static bool TryDecodeWithTransformsFast(
+        int scale,
+        QrGrayImage baseImage,
+        QrProfileSettings settings,
+        Func<QrDecoded, bool>? accept,
+        out QrDecoded result,
+        out QrPixelDecodeDiagnostics diagnostics) {
+        result = null!;
+        diagnostics = default;
+
+        var best = default(QrPixelDecodeDiagnostics);
+
+        var rot90 = baseImage.Rotate90();
+        if (TryDecodeWithImage(scale, rot90, settings, accept, out result, out var d90)) {
+            diagnostics = d90;
+            return true;
+        }
+        best = Better(best, d90);
+
+        var rot180 = baseImage.Rotate180();
+        if (TryDecodeWithImage(scale, rot180, settings, accept, out result, out var d180)) {
+            diagnostics = d180;
+            return true;
+        }
+        best = Better(best, d180);
+
+        var rot270 = baseImage.Rotate270();
+        if (TryDecodeWithImage(scale, rot270, settings, accept, out result, out var d270)) {
+            diagnostics = d270;
+            return true;
+        }
+        best = Better(best, d270);
+
+        var mirror = baseImage.MirrorX();
+        if (TryDecodeWithImage(scale, mirror, settings, accept, out result, out var dm0)) {
+            diagnostics = dm0;
+            return true;
+        }
+        best = Better(best, dm0);
+
+        var mirror90 = mirror.Rotate90();
+        if (TryDecodeWithImage(scale, mirror90, settings, accept, out result, out var dm90)) {
+            diagnostics = dm90;
+            return true;
+        }
+        best = Better(best, dm90);
+
+        var mirror180 = mirror.Rotate180();
+        if (TryDecodeWithImage(scale, mirror180, settings, accept, out result, out var dm180)) {
+            diagnostics = dm180;
+            return true;
+        }
+        best = Better(best, dm180);
+
+        var mirror270 = mirror.Rotate270();
+        if (TryDecodeWithImage(scale, mirror270, settings, accept, out result, out var dm270)) {
             diagnostics = dm270;
             return true;
         }
