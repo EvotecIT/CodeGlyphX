@@ -3,6 +3,8 @@ using System.IO;
 using System.Text;
 using CodeGlyphX.Pdf417;
 using CodeGlyphX.Rendering;
+using CodeGlyphX.Rendering.Ascii;
+using CodeGlyphX.Rendering.Bmp;
 using CodeGlyphX.Rendering.Html;
 using CodeGlyphX.Rendering.Jpeg;
 using CodeGlyphX.Rendering.Png;
@@ -85,6 +87,22 @@ public static class Pdf417Code {
     }
 
     /// <summary>
+    /// Renders PDF417 as BMP from bytes.
+    /// </summary>
+    public static byte[] Bmp(ReadOnlySpan<byte> data, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = EncodeBytes(data, encodeOptions);
+        return MatrixBmpRenderer.Render(modules, BuildPngOptions(renderOptions));
+    }
+
+    /// <summary>
+    /// Renders PDF417 as ASCII from bytes.
+    /// </summary>
+    public static string Ascii(ReadOnlySpan<byte> data, Pdf417EncodeOptions? encodeOptions = null, MatrixAsciiRenderOptions? options = null) {
+        var modules = EncodeBytes(data, encodeOptions);
+        return MatrixAsciiRenderer.Render(modules, options);
+    }
+
+    /// <summary>
     /// Saves PDF417 PNG to a file for byte payloads.
     /// </summary>
     public static string SavePng(ReadOnlySpan<byte> data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
@@ -147,6 +165,14 @@ public static class Pdf417Code {
     }
 
     /// <summary>
+    /// Saves PDF417 BMP to a file for byte payloads.
+    /// </summary>
+    public static string SaveBmp(ReadOnlySpan<byte> data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var bmp = Bmp(data, encodeOptions, renderOptions);
+        return bmp.WriteBinary(path);
+    }
+
+    /// <summary>
     /// Saves PDF417 JPEG to a stream for byte payloads.
     /// </summary>
     public static void SaveJpeg(ReadOnlySpan<byte> data, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
@@ -157,7 +183,15 @@ public static class Pdf417Code {
     }
 
     /// <summary>
-    /// Saves PDF417 to a file for byte payloads based on extension (.png/.svg/.html/.jpg).
+    /// Saves PDF417 BMP to a stream for byte payloads.
+    /// </summary>
+    public static void SaveBmp(ReadOnlySpan<byte> data, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = EncodeBytes(data, encodeOptions);
+        MatrixBmpRenderer.RenderToStream(modules, BuildPngOptions(renderOptions), stream);
+    }
+
+    /// <summary>
+    /// Saves PDF417 to a file for byte payloads based on extension (.png/.svg/.html/.jpg/.bmp).
     /// Defaults to PNG when no extension is provided.
     /// </summary>
     public static string Save(ReadOnlySpan<byte> data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, string? title = null) {
@@ -175,6 +209,8 @@ public static class Pdf417Code {
             case ".jpg":
             case ".jpeg":
                 return SaveJpeg(data, path, encodeOptions, renderOptions);
+            case ".bmp":
+                return SaveBmp(data, path, encodeOptions, renderOptions);
             default:
                 return SavePng(data, path, encodeOptions, renderOptions);
         }
@@ -240,6 +276,22 @@ public static class Pdf417Code {
     }
 
     /// <summary>
+    /// Renders PDF417 as BMP.
+    /// </summary>
+    public static byte[] Bmp(string text, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = Encode(text, encodeOptions);
+        return MatrixBmpRenderer.Render(modules, BuildPngOptions(renderOptions));
+    }
+
+    /// <summary>
+    /// Renders PDF417 as ASCII.
+    /// </summary>
+    public static string Ascii(string text, Pdf417EncodeOptions? encodeOptions = null, MatrixAsciiRenderOptions? options = null) {
+        var modules = Encode(text, encodeOptions);
+        return MatrixAsciiRenderer.Render(modules, options);
+    }
+
+    /// <summary>
     /// Renders PDF417 as JPEG from bytes.
     /// </summary>
     public static byte[] Jpeg(byte[] data, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
@@ -247,6 +299,22 @@ public static class Pdf417Code {
         var opts = BuildPngOptions(renderOptions);
         var quality = renderOptions?.JpegQuality ?? 85;
         return MatrixJpegRenderer.Render(modules, opts, quality);
+    }
+
+    /// <summary>
+    /// Renders PDF417 as BMP from bytes.
+    /// </summary>
+    public static byte[] Bmp(byte[] data, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = EncodeBytes(data, encodeOptions);
+        return MatrixBmpRenderer.Render(modules, BuildPngOptions(renderOptions));
+    }
+
+    /// <summary>
+    /// Renders PDF417 as ASCII from bytes.
+    /// </summary>
+    public static string Ascii(byte[] data, Pdf417EncodeOptions? encodeOptions = null, MatrixAsciiRenderOptions? options = null) {
+        var modules = EncodeBytes(data, encodeOptions);
+        return MatrixAsciiRenderer.Render(modules, options);
     }
 
     /// <summary>
@@ -366,11 +434,27 @@ public static class Pdf417Code {
     }
 
     /// <summary>
+    /// Saves PDF417 BMP to a file.
+    /// </summary>
+    public static string SaveBmp(string text, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var bmp = Bmp(text, encodeOptions, renderOptions);
+        return bmp.WriteBinary(path);
+    }
+
+    /// <summary>
     /// Saves PDF417 JPEG to a file for byte payloads.
     /// </summary>
     public static string SaveJpeg(byte[] data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         var jpeg = Jpeg(data, encodeOptions, renderOptions);
         return jpeg.WriteBinary(path);
+    }
+
+    /// <summary>
+    /// Saves PDF417 BMP to a file for byte payloads.
+    /// </summary>
+    public static string SaveBmp(byte[] data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var bmp = Bmp(data, encodeOptions, renderOptions);
+        return bmp.WriteBinary(path);
     }
 
     /// <summary>
@@ -384,6 +468,14 @@ public static class Pdf417Code {
     }
 
     /// <summary>
+    /// Saves PDF417 BMP to a stream.
+    /// </summary>
+    public static void SaveBmp(string text, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = Encode(text, encodeOptions);
+        MatrixBmpRenderer.RenderToStream(modules, BuildPngOptions(renderOptions), stream);
+    }
+
+    /// <summary>
     /// Saves PDF417 JPEG to a stream for byte payloads.
     /// </summary>
     public static void SaveJpeg(byte[] data, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
@@ -394,7 +486,15 @@ public static class Pdf417Code {
     }
 
     /// <summary>
-    /// Saves PDF417 to a file based on extension (.png/.svg/.html/.jpg).
+    /// Saves PDF417 BMP to a stream for byte payloads.
+    /// </summary>
+    public static void SaveBmp(byte[] data, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = EncodeBytes(data, encodeOptions);
+        MatrixBmpRenderer.RenderToStream(modules, BuildPngOptions(renderOptions), stream);
+    }
+
+    /// <summary>
+    /// Saves PDF417 to a file based on extension (.png/.svg/.html/.jpg/.bmp).
     /// Defaults to PNG when no extension is provided.
     /// </summary>
     public static string Save(string text, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, string? title = null) {
@@ -412,13 +512,15 @@ public static class Pdf417Code {
             case ".jpg":
             case ".jpeg":
                 return SaveJpeg(text, path, encodeOptions, renderOptions);
+            case ".bmp":
+                return SaveBmp(text, path, encodeOptions, renderOptions);
             default:
                 return SavePng(text, path, encodeOptions, renderOptions);
         }
     }
 
     /// <summary>
-    /// Saves PDF417 to a file for byte payloads based on extension (.png/.svg/.html/.jpg).
+    /// Saves PDF417 to a file for byte payloads based on extension (.png/.svg/.html/.jpg/.bmp).
     /// Defaults to PNG when no extension is provided.
     /// </summary>
     public static string Save(byte[] data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, string? title = null) {
@@ -436,6 +538,8 @@ public static class Pdf417Code {
             case ".jpg":
             case ".jpeg":
                 return SaveJpeg(data, path, encodeOptions, renderOptions);
+            case ".bmp":
+                return SaveBmp(data, path, encodeOptions, renderOptions);
             default:
                 return SavePng(data, path, encodeOptions, renderOptions);
         }
@@ -703,6 +807,20 @@ public static class Pdf417Code {
         }
 
         /// <summary>
+        /// Renders BMP bytes.
+        /// </summary>
+        public byte[] Bmp() {
+            return _text is not null ? Pdf417Code.Bmp(_text, _encodeOptions, _renderOptions) : Pdf417Code.Bmp(_bytes!, _encodeOptions, _renderOptions);
+        }
+
+        /// <summary>
+        /// Renders ASCII text.
+        /// </summary>
+        public string Ascii(MatrixAsciiRenderOptions? options = null) {
+            return _text is not null ? Pdf417Code.Ascii(_text, _encodeOptions, options) : Pdf417Code.Ascii(_bytes!, _encodeOptions, options);
+        }
+
+        /// <summary>
         /// Saves output based on file extension.
         /// </summary>
         public string Save(string path, string? title = null) {
@@ -736,6 +854,13 @@ public static class Pdf417Code {
         /// </summary>
         public string SaveJpeg(string path) {
             return _text is not null ? Pdf417Code.SaveJpeg(_text, path, _encodeOptions, _renderOptions) : Pdf417Code.SaveJpeg(_bytes!, path, _encodeOptions, _renderOptions);
+        }
+
+        /// <summary>
+        /// Saves BMP to a file.
+        /// </summary>
+        public string SaveBmp(string path) {
+            return _text is not null ? Pdf417Code.SaveBmp(_text, path, _encodeOptions, _renderOptions) : Pdf417Code.SaveBmp(_bytes!, path, _encodeOptions, _renderOptions);
         }
     }
 }

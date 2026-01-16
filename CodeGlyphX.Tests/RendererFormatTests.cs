@@ -1,4 +1,6 @@
 using System;
+using CodeGlyphX.Rendering.Ascii;
+using CodeGlyphX.Rendering.Bmp;
 using CodeGlyphX.Rendering.Html;
 using CodeGlyphX.Rendering.Png;
 using CodeGlyphX.Rendering.Svg;
@@ -18,6 +20,12 @@ public sealed class RendererFormatTests {
 
         var html = QrEasy.RenderHtml(payload);
         Assert.Contains("<table", html, StringComparison.OrdinalIgnoreCase);
+
+        var bmp = QrEasy.RenderBmp(payload);
+        Assert.True(IsBmp(bmp));
+
+        var ascii = QrEasy.RenderAscii(payload, new MatrixAsciiRenderOptions { QuietZone = 1 });
+        Assert.Contains("#", ascii, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -31,6 +39,12 @@ public sealed class RendererFormatTests {
 
         var html = HtmlBarcodeRenderer.Render(barcode, new BarcodeHtmlRenderOptions());
         Assert.Contains("<table", html, StringComparison.OrdinalIgnoreCase);
+
+        var bmp = BarcodeBmpRenderer.Render(barcode, new BarcodePngRenderOptions());
+        Assert.True(IsBmp(bmp));
+
+        var ascii = BarcodeAsciiRenderer.Render(barcode, new BarcodeAsciiRenderOptions { QuietZone = 1, Height = 2 });
+        Assert.Contains("#", ascii, StringComparison.Ordinal);
     }
 
     private static bool IsPng(byte[] data) {
@@ -43,5 +57,10 @@ public sealed class RendererFormatTests {
                data[5] == 0x0A &&
                data[6] == 0x1A &&
                data[7] == 0x0A;
+    }
+
+    private static bool IsBmp(byte[] data) {
+        if (data is null || data.Length < 2) return false;
+        return data[0] == (byte)'B' && data[1] == (byte)'M';
     }
 }
