@@ -60,6 +60,11 @@
 - [x] Unified “CodeGlyph” detect for QR/1D/DataMatrix/PDF417.
 - [x] Presets: OTP/Logo/WiFi/Contact with safe defaults.
 - [x] Fluent API + static API + options objects (with easy defaults).
+- [ ] Output formats: ASCII renderer (text/lines).
+- [ ] Output formats: Base64 (raw + data URI) for PNG/JPEG/BMP.
+- [ ] Output formats: BMP writer (24-bit/32-bit).
+- [ ] Output formats: PDF byte writer (single-page, vector or image).
+- [ ] Output formats: PostScript/EPS writer (vector).
 
 ## Phase 8 — Performance + AOT polish
 - [ ] Reduce allocations in hot decode loops.
