@@ -57,14 +57,12 @@ internal sealed class AztecDetector {
 
         var compact = false;
         var layers = 0;
-        var baseMatrixSize = 0;
 
         for (var l = 1; l <= MaxCompactLayers; l++) {
             var candidate = 11 + l * 4;
             if (candidate == size) {
                 compact = true;
                 layers = l;
-                baseMatrixSize = candidate;
                 break;
             }
         }
@@ -76,7 +74,6 @@ internal sealed class AztecDetector {
                 if (matrixSize == size) {
                     compact = false;
                     layers = l;
-                    baseMatrixSize = baseSize;
                     break;
                 }
             }
@@ -148,11 +145,9 @@ internal sealed class AztecDetector {
         long parameterData = 0;
         for (var i = 0; i < 4; i++) {
             var side = sides[(_shift + i) % 4];
-            if (_compact) {
-                parameterData = (parameterData << 7) + ((side >> 1) & 0x7F);
-            } else {
-                parameterData = (parameterData << 10) + ((side >> 2) & 0x3FF);
-            }
+            parameterData = _compact
+                ? (parameterData << 7) + ((side >> 1) & 0x7F)
+                : (parameterData << 10) + ((side >> 2) & 0x3FF);
         }
 
         var nbBits = _compact ? 7 : 10;
