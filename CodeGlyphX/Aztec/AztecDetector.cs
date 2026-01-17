@@ -81,6 +81,8 @@ internal sealed class AztecDetector {
 
         if (layers == 0) return false;
 
+        if (!HasBullseye(compact)) return false;
+
         if (!TryReadModeMessage(size, compact, out var modeBits)) return false;
         if (!TryDecodeParameters(modeBits, compact, out var nbLayers, out var nbDataBlocks)) return false;
 
@@ -233,6 +235,28 @@ internal sealed class AztecDetector {
         } else {
             layers = (parameterWords[0] << 1) + (parameterWords[1] >> 3) + 1;
             dataBlocks = ((parameterWords[1] & 0x7) << 8) + (parameterWords[2] << 4) + parameterWords[3] + 1;
+        }
+
+        return true;
+    }
+
+    private bool HasBullseye(bool compact) {
+        var size = compact ? 5 : 7;
+        var center = _matrix.Width / 2;
+        if (!IsValid(center - (size - 1), center - (size - 1)) || !IsValid(center + (size - 1), center + (size - 1))) {
+            return false;
+        }
+
+        for (var ring = 0; ring < size; ring++) {
+            var expected = (ring & 1) == 0;
+            var min = center - ring;
+            var max = center + ring;
+            for (var i = min; i <= max; i++) {
+                if (_matrix.Get(i, min) != expected) return false;
+                if (_matrix.Get(i, max) != expected) return false;
+                if (_matrix.Get(min, i) != expected) return false;
+                if (_matrix.Get(max, i) != expected) return false;
+            }
         }
 
         return true;
