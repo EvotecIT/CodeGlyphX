@@ -55,6 +55,19 @@ public sealed class CodeGlyphDecodeTests {
     }
 
     [Fact]
+    public void Decode_Aztec_FromPng() {
+        var matrix = AztecCode.Encode("AZTEC-OK");
+        var png = MatrixPngRenderer.Render(matrix, new MatrixPngRenderOptions {
+            ModuleSize = 3,
+            QuietZone = 2
+        });
+
+        Assert.True(CodeGlyph.TryDecodePng(png, out var decoded));
+        Assert.Equal(CodeGlyphKind.Aztec, decoded.Kind);
+        Assert.Equal("AZTEC-OK", decoded.Text);
+    }
+
+    [Fact]
     public void DecodeAll_Qr_FromPng() {
         var png = QR.Png("HELLO-ALL");
 
