@@ -1,8 +1,12 @@
 using System;
 using System.IO;
 using CodeGlyphX.Rendering;
+using CodeGlyphX.Rendering.Ascii;
+using CodeGlyphX.Rendering.Bmp;
+using CodeGlyphX.Rendering.Eps;
 using CodeGlyphX.Rendering.Html;
 using CodeGlyphX.Rendering.Jpeg;
+using CodeGlyphX.Rendering.Pdf;
 using CodeGlyphX.Rendering.Png;
 using CodeGlyphX.Rendering.Svg;
 
@@ -61,6 +65,41 @@ public static class Barcode {
         var opts = BuildPngOptions(options);
         var quality = options?.JpegQuality ?? 90;
         return BarcodeJpegRenderer.Render(barcode, opts, quality);
+    }
+
+    /// <summary>
+    /// Renders a barcode as BMP.
+    /// </summary>
+    public static byte[] Bmp(BarcodeType type, string content, BarcodeOptions? options = null) {
+        var barcode = Encode(type, content);
+        var opts = BuildPngOptions(options);
+        return BarcodeBmpRenderer.Render(barcode, opts);
+    }
+
+    /// <summary>
+    /// Renders a barcode as PDF.
+    /// </summary>
+    public static byte[] Pdf(BarcodeType type, string content, BarcodeOptions? options = null, RenderMode mode = RenderMode.Vector) {
+        var barcode = Encode(type, content);
+        var opts = BuildPngOptions(options);
+        return BarcodePdfRenderer.Render(barcode, opts, mode);
+    }
+
+    /// <summary>
+    /// Renders a barcode as EPS.
+    /// </summary>
+    public static string Eps(BarcodeType type, string content, BarcodeOptions? options = null, RenderMode mode = RenderMode.Vector) {
+        var barcode = Encode(type, content);
+        var opts = BuildPngOptions(options);
+        return BarcodeEpsRenderer.Render(barcode, opts, mode);
+    }
+
+    /// <summary>
+    /// Renders a barcode as ASCII text.
+    /// </summary>
+    public static string Ascii(BarcodeType type, string content, BarcodeAsciiRenderOptions? options = null) {
+        var barcode = Encode(type, content);
+        return BarcodeAsciiRenderer.Render(barcode, options);
     }
 
     /// <summary>
@@ -137,7 +176,65 @@ public static class Barcode {
     }
 
     /// <summary>
-    /// Saves a barcode to a file based on the file extension (.png/.svg/.html/.jpg).
+    /// Renders a barcode as BMP and writes it to a file.
+    /// </summary>
+    public static string SaveBmp(BarcodeType type, string content, string path, BarcodeOptions? options = null) {
+        var bmp = Bmp(type, content, options);
+        return bmp.WriteBinary(path);
+    }
+
+    /// <summary>
+    /// Renders a barcode as BMP and writes it to a stream.
+    /// </summary>
+    public static void SaveBmp(BarcodeType type, string content, Stream stream, BarcodeOptions? options = null) {
+        var barcode = Encode(type, content);
+        var opts = BuildPngOptions(options);
+        BarcodeBmpRenderer.RenderToStream(barcode, opts, stream);
+    }
+
+    /// <summary>
+    /// Renders a barcode as PDF and writes it to a file.
+    /// </summary>
+    public static string SavePdf(BarcodeType type, string content, string path, BarcodeOptions? options = null, RenderMode mode = RenderMode.Vector) {
+        var pdf = Pdf(type, content, options, mode);
+        return pdf.WriteBinary(path);
+    }
+
+    /// <summary>
+    /// Renders a barcode as PDF and writes it to a stream.
+    /// </summary>
+    public static void SavePdf(BarcodeType type, string content, Stream stream, BarcodeOptions? options = null, RenderMode mode = RenderMode.Vector) {
+        var barcode = Encode(type, content);
+        var opts = BuildPngOptions(options);
+        BarcodePdfRenderer.RenderToStream(barcode, opts, stream, mode);
+    }
+
+    /// <summary>
+    /// Renders a barcode as EPS and writes it to a file.
+    /// </summary>
+    public static string SaveEps(BarcodeType type, string content, string path, BarcodeOptions? options = null, RenderMode mode = RenderMode.Vector) {
+        var eps = Eps(type, content, options, mode);
+        return eps.WriteText(path);
+    }
+
+    /// <summary>
+    /// Renders a barcode as EPS and writes it to a stream.
+    /// </summary>
+    public static void SaveEps(BarcodeType type, string content, Stream stream, BarcodeOptions? options = null, RenderMode mode = RenderMode.Vector) {
+        var eps = Eps(type, content, options, mode);
+        eps.WriteText(stream);
+    }
+
+    /// <summary>
+    /// Renders a barcode as ASCII text and writes it to a file.
+    /// </summary>
+    public static string SaveAscii(BarcodeType type, string content, string path, BarcodeAsciiRenderOptions? options = null) {
+        var ascii = Ascii(type, content, options);
+        return ascii.WriteText(path);
+    }
+
+    /// <summary>
+    /// Saves a barcode to a file based on the file extension (.png/.svg/.html/.jpg/.bmp/.pdf/.eps).
     /// Defaults to PNG when no extension is provided.
     /// </summary>
     public static string Save(BarcodeType type, string content, string path, BarcodeOptions? options = null, string? title = null) {
@@ -155,6 +252,13 @@ public static class Barcode {
             case ".jpg":
             case ".jpeg":
                 return SaveJpeg(type, content, path, options);
+            case ".bmp":
+                return SaveBmp(type, content, path, options);
+            case ".pdf":
+                return SavePdf(type, content, path, options);
+            case ".eps":
+            case ".ps":
+                return SaveEps(type, content, path, options);
             default:
                 // Fallback to PNG for unknown extensions to keep the API forgiving.
                 return SavePng(type, content, path, options);
@@ -441,6 +545,26 @@ public static class Barcode {
         public byte[] Jpeg() => Barcode.Jpeg(_type, _content, Options);
 
         /// <summary>
+        /// Renders BMP bytes.
+        /// </summary>
+        public byte[] Bmp() => Barcode.Bmp(_type, _content, Options);
+
+        /// <summary>
+        /// Renders PDF bytes.
+        /// </summary>
+        public byte[] Pdf(RenderMode mode = RenderMode.Vector) => Barcode.Pdf(_type, _content, Options, mode);
+
+        /// <summary>
+        /// Renders EPS text.
+        /// </summary>
+        public string Eps(RenderMode mode = RenderMode.Vector) => Barcode.Eps(_type, _content, Options, mode);
+
+        /// <summary>
+        /// Renders ASCII text.
+        /// </summary>
+        public string Ascii(BarcodeAsciiRenderOptions? options = null) => Barcode.Ascii(_type, _content, options);
+
+        /// <summary>
         /// Saves PNG to a file.
         /// </summary>
         public string SavePng(string path) => Barcode.SavePng(_type, _content, path, Options);
@@ -481,7 +605,42 @@ public static class Barcode {
         public void SaveJpeg(Stream stream) => Barcode.SaveJpeg(_type, _content, stream, Options);
 
         /// <summary>
-        /// Saves based on file extension (.png/.svg/.html/.jpg). Defaults to PNG when no extension is provided.
+        /// Saves BMP to a file.
+        /// </summary>
+        public string SaveBmp(string path) => Barcode.SaveBmp(_type, _content, path, Options);
+
+        /// <summary>
+        /// Saves BMP to a stream.
+        /// </summary>
+        public void SaveBmp(Stream stream) => Barcode.SaveBmp(_type, _content, stream, Options);
+
+        /// <summary>
+        /// Saves PDF to a file.
+        /// </summary>
+        public string SavePdf(string path, RenderMode mode = RenderMode.Vector) => Barcode.SavePdf(_type, _content, path, Options, mode);
+
+        /// <summary>
+        /// Saves PDF to a stream.
+        /// </summary>
+        public void SavePdf(Stream stream, RenderMode mode = RenderMode.Vector) => Barcode.SavePdf(_type, _content, stream, Options, mode);
+
+        /// <summary>
+        /// Saves EPS to a file.
+        /// </summary>
+        public string SaveEps(string path, RenderMode mode = RenderMode.Vector) => Barcode.SaveEps(_type, _content, path, Options, mode);
+
+        /// <summary>
+        /// Saves EPS to a stream.
+        /// </summary>
+        public void SaveEps(Stream stream, RenderMode mode = RenderMode.Vector) => Barcode.SaveEps(_type, _content, stream, Options, mode);
+
+        /// <summary>
+        /// Saves ASCII to a file.
+        /// </summary>
+        public string SaveAscii(string path, BarcodeAsciiRenderOptions? options = null) => Barcode.SaveAscii(_type, _content, path, options);
+
+        /// <summary>
+        /// Saves based on file extension (.png/.svg/.html/.jpg/.bmp/.pdf/.eps). Defaults to PNG when no extension is provided.
         /// </summary>
         public string Save(string path, string? title = null) => Barcode.Save(_type, _content, path, Options, title);
     }

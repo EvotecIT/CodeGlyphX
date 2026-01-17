@@ -108,4 +108,30 @@ public static class RenderExtensions {
                "<body style=\"background:#f5f7fb;font-family:Segoe UI,Arial,sans-serif;\">" +
                "<div style=\"padding:24px;\">" + innerHtml + "</div></body></html>";
     }
+
+    /// <summary>
+    /// Encodes binary data as Base64.
+    /// </summary>
+    public static string ToBase64(this byte[] data) {
+        if (data is null) throw new ArgumentNullException(nameof(data));
+        return Convert.ToBase64String(data);
+    }
+
+    /// <summary>
+    /// Encodes text as Base64 (UTF-8 by default).
+    /// </summary>
+    public static string ToBase64(this string text, Encoding? encoding = null) {
+        if (text is null) throw new ArgumentNullException(nameof(text));
+        var enc = encoding ?? Encoding.UTF8;
+        return Convert.ToBase64String(enc.GetBytes(text));
+    }
+
+    /// <summary>
+    /// Encodes binary data as a Base64 data URI.
+    /// </summary>
+    public static string ToDataUri(this byte[] data, string mimeType) {
+        if (data is null) throw new ArgumentNullException(nameof(data));
+        if (string.IsNullOrWhiteSpace(mimeType)) throw new ArgumentException("Mime type cannot be null, empty, or whitespace.", nameof(mimeType));
+        return "data:" + mimeType + ";base64," + Convert.ToBase64String(data);
+    }
 }

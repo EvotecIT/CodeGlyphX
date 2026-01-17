@@ -3,8 +3,12 @@ using System.Globalization;
 using System.IO;
 using CodeGlyphX.Payloads;
 using CodeGlyphX.Rendering;
+using CodeGlyphX.Rendering.Ascii;
+using CodeGlyphX.Rendering.Bmp;
+using CodeGlyphX.Rendering.Eps;
 using CodeGlyphX.Rendering.Html;
 using CodeGlyphX.Rendering.Jpeg;
+using CodeGlyphX.Rendering.Pdf;
 using CodeGlyphX.Rendering.Png;
 using CodeGlyphX.Rendering.Svg;
 
@@ -372,6 +376,237 @@ public static class QrEasy {
     }
 
     /// <summary>
+    /// Renders a QR code as BMP.
+    /// </summary>
+    public static byte[] RenderBmp(string payload, QrEasyOptions? options = null) {
+        var opts = options ?? new QrEasyOptions();
+        var qr = Encode(payload, opts);
+        var render = BuildPngOptions(opts, payload);
+        return QrBmpRenderer.Render(qr.Modules, render);
+    }
+
+    /// <summary>
+    /// Detects a payload type and renders a QR code as BMP.
+    /// </summary>
+    public static byte[] RenderBmpAuto(string payload, QrPayloadDetectOptions? detectOptions = null, QrEasyOptions? options = null) {
+        if (payload is null) throw new ArgumentNullException(nameof(payload));
+        var detected = QrPayloads.Detect(payload, detectOptions);
+        return RenderBmp(detected, options);
+    }
+
+    /// <summary>
+    /// Renders a QR code as BMP to a stream.
+    /// </summary>
+    public static void RenderBmpToStream(string payload, Stream stream, QrEasyOptions? options = null) {
+        var opts = options ?? new QrEasyOptions();
+        var qr = Encode(payload, opts);
+        var render = BuildPngOptions(opts, payload);
+        QrBmpRenderer.RenderToStream(qr.Modules, render, stream);
+    }
+
+    /// <summary>
+    /// Renders a QR code as BMP and writes it to a file.
+    /// </summary>
+    public static string RenderBmpToFile(string payload, string path, QrEasyOptions? options = null) {
+        var bmp = RenderBmp(payload, options);
+        return RenderIO.WriteBinary(path, bmp);
+    }
+
+    /// <summary>
+    /// Renders a QR code as BMP and writes it to a file for a payload with embedded defaults.
+    /// </summary>
+    public static string RenderBmpToFile(QrPayloadData payload, string path, QrEasyOptions? options = null) {
+        var bmp = RenderBmp(payload, options);
+        return RenderIO.WriteBinary(path, bmp);
+    }
+
+    /// <summary>
+    /// Renders a QR code as BMP for a payload with embedded defaults.
+    /// </summary>
+    public static byte[] RenderBmp(QrPayloadData payload, QrEasyOptions? options = null) {
+        if (payload is null) throw new ArgumentNullException(nameof(payload));
+        var opts = MergeOptions(payload, options);
+        var qr = Encode(payload.Text, opts);
+        var render = BuildPngOptions(opts, payload.Text);
+        return QrBmpRenderer.Render(qr.Modules, render);
+    }
+
+    /// <summary>
+    /// Renders a QR code as BMP to a stream for a payload with embedded defaults.
+    /// </summary>
+    public static void RenderBmpToStream(QrPayloadData payload, Stream stream, QrEasyOptions? options = null) {
+        if (payload is null) throw new ArgumentNullException(nameof(payload));
+        var opts = MergeOptions(payload, options);
+        var qr = Encode(payload.Text, opts);
+        var render = BuildPngOptions(opts, payload.Text);
+        QrBmpRenderer.RenderToStream(qr.Modules, render, stream);
+    }
+
+    /// <summary>
+    /// Renders a QR code as PDF.
+    /// </summary>
+    public static byte[] RenderPdf(string payload, QrEasyOptions? options = null, RenderMode mode = RenderMode.Vector) {
+        var opts = options ?? new QrEasyOptions();
+        var qr = Encode(payload, opts);
+        var render = BuildPngOptions(opts, payload);
+        return QrPdfRenderer.Render(qr.Modules, render, mode);
+    }
+
+    /// <summary>
+    /// Detects a payload type and renders a QR code as PDF.
+    /// </summary>
+    public static byte[] RenderPdfAuto(string payload, QrPayloadDetectOptions? detectOptions = null, QrEasyOptions? options = null, RenderMode mode = RenderMode.Vector) {
+        if (payload is null) throw new ArgumentNullException(nameof(payload));
+        var detected = QrPayloads.Detect(payload, detectOptions);
+        return RenderPdf(detected, options, mode);
+    }
+
+    /// <summary>
+    /// Renders a QR code as PDF to a stream.
+    /// </summary>
+    public static void RenderPdfToStream(string payload, Stream stream, QrEasyOptions? options = null, RenderMode mode = RenderMode.Vector) {
+        var opts = options ?? new QrEasyOptions();
+        var qr = Encode(payload, opts);
+        var render = BuildPngOptions(opts, payload);
+        QrPdfRenderer.RenderToStream(qr.Modules, render, stream, mode);
+    }
+
+    /// <summary>
+    /// Renders a QR code as PDF and writes it to a file.
+    /// </summary>
+    public static string RenderPdfToFile(string payload, string path, QrEasyOptions? options = null, RenderMode mode = RenderMode.Vector) {
+        var pdf = RenderPdf(payload, options, mode);
+        return RenderIO.WriteBinary(path, pdf);
+    }
+
+    /// <summary>
+    /// Renders a QR code as PDF and writes it to a file for a payload with embedded defaults.
+    /// </summary>
+    public static string RenderPdfToFile(QrPayloadData payload, string path, QrEasyOptions? options = null, RenderMode mode = RenderMode.Vector) {
+        var pdf = RenderPdf(payload, options, mode);
+        return RenderIO.WriteBinary(path, pdf);
+    }
+
+    /// <summary>
+    /// Renders a QR code as PDF for a payload with embedded defaults.
+    /// </summary>
+    public static byte[] RenderPdf(QrPayloadData payload, QrEasyOptions? options = null, RenderMode mode = RenderMode.Vector) {
+        if (payload is null) throw new ArgumentNullException(nameof(payload));
+        var opts = MergeOptions(payload, options);
+        var qr = Encode(payload.Text, opts);
+        var render = BuildPngOptions(opts, payload.Text);
+        return QrPdfRenderer.Render(qr.Modules, render, mode);
+    }
+
+    /// <summary>
+    /// Renders a QR code as PDF to a stream for a payload with embedded defaults.
+    /// </summary>
+    public static void RenderPdfToStream(QrPayloadData payload, Stream stream, QrEasyOptions? options = null, RenderMode mode = RenderMode.Vector) {
+        if (payload is null) throw new ArgumentNullException(nameof(payload));
+        var opts = MergeOptions(payload, options);
+        var qr = Encode(payload.Text, opts);
+        var render = BuildPngOptions(opts, payload.Text);
+        QrPdfRenderer.RenderToStream(qr.Modules, render, stream, mode);
+    }
+
+    /// <summary>
+    /// Renders a QR code as EPS.
+    /// </summary>
+    public static string RenderEps(string payload, QrEasyOptions? options = null, RenderMode mode = RenderMode.Vector) {
+        var opts = options ?? new QrEasyOptions();
+        var qr = Encode(payload, opts);
+        var render = BuildPngOptions(opts, payload);
+        return QrEpsRenderer.Render(qr.Modules, render, mode);
+    }
+
+    /// <summary>
+    /// Detects a payload type and renders a QR code as EPS.
+    /// </summary>
+    public static string RenderEpsAuto(string payload, QrPayloadDetectOptions? detectOptions = null, QrEasyOptions? options = null, RenderMode mode = RenderMode.Vector) {
+        if (payload is null) throw new ArgumentNullException(nameof(payload));
+        var detected = QrPayloads.Detect(payload, detectOptions);
+        return RenderEps(detected, options, mode);
+    }
+
+    /// <summary>
+    /// Renders a QR code as EPS to a stream.
+    /// </summary>
+    public static void RenderEpsToStream(string payload, Stream stream, QrEasyOptions? options = null, RenderMode mode = RenderMode.Vector) {
+        var opts = options ?? new QrEasyOptions();
+        var qr = Encode(payload, opts);
+        var render = BuildPngOptions(opts, payload);
+        QrEpsRenderer.RenderToStream(qr.Modules, render, stream, mode);
+    }
+
+    /// <summary>
+    /// Renders a QR code as EPS and writes it to a file.
+    /// </summary>
+    public static string RenderEpsToFile(string payload, string path, QrEasyOptions? options = null, RenderMode mode = RenderMode.Vector) {
+        var eps = RenderEps(payload, options, mode);
+        return RenderIO.WriteText(path, eps);
+    }
+
+    /// <summary>
+    /// Renders a QR code as EPS and writes it to a file for a payload with embedded defaults.
+    /// </summary>
+    public static string RenderEpsToFile(QrPayloadData payload, string path, QrEasyOptions? options = null, RenderMode mode = RenderMode.Vector) {
+        var eps = RenderEps(payload, options, mode);
+        return RenderIO.WriteText(path, eps);
+    }
+
+    /// <summary>
+    /// Renders a QR code as EPS for a payload with embedded defaults.
+    /// </summary>
+    public static string RenderEps(QrPayloadData payload, QrEasyOptions? options = null, RenderMode mode = RenderMode.Vector) {
+        if (payload is null) throw new ArgumentNullException(nameof(payload));
+        var opts = MergeOptions(payload, options);
+        var qr = Encode(payload.Text, opts);
+        var render = BuildPngOptions(opts, payload.Text);
+        return QrEpsRenderer.Render(qr.Modules, render, mode);
+    }
+
+    /// <summary>
+    /// Renders a QR code as EPS to a stream for a payload with embedded defaults.
+    /// </summary>
+    public static void RenderEpsToStream(QrPayloadData payload, Stream stream, QrEasyOptions? options = null, RenderMode mode = RenderMode.Vector) {
+        if (payload is null) throw new ArgumentNullException(nameof(payload));
+        var opts = MergeOptions(payload, options);
+        var qr = Encode(payload.Text, opts);
+        var render = BuildPngOptions(opts, payload.Text);
+        QrEpsRenderer.RenderToStream(qr.Modules, render, stream, mode);
+    }
+
+    /// <summary>
+    /// Renders a QR code as ASCII text.
+    /// </summary>
+    public static string RenderAscii(string payload, MatrixAsciiRenderOptions? asciiOptions = null, QrEasyOptions? options = null) {
+        var opts = options ?? new QrEasyOptions();
+        var qr = Encode(payload, opts);
+        var resolved = BuildAsciiOptions(asciiOptions, opts);
+        return MatrixAsciiRenderer.Render(qr.Modules, resolved);
+    }
+
+    /// <summary>
+    /// Detects a payload type and renders a QR code as ASCII text.
+    /// </summary>
+    public static string RenderAsciiAuto(string payload, QrPayloadDetectOptions? detectOptions = null, MatrixAsciiRenderOptions? asciiOptions = null, QrEasyOptions? options = null) {
+        if (payload is null) throw new ArgumentNullException(nameof(payload));
+        var detected = QrPayloads.Detect(payload, detectOptions);
+        return RenderAscii(detected, asciiOptions, options);
+    }
+
+    /// <summary>
+    /// Renders a QR code as ASCII text for a payload with embedded defaults.
+    /// </summary>
+    public static string RenderAscii(QrPayloadData payload, MatrixAsciiRenderOptions? asciiOptions = null, QrEasyOptions? options = null) {
+        if (payload is null) throw new ArgumentNullException(nameof(payload));
+        var opts = MergeOptions(payload, options);
+        var qr = Encode(payload.Text, opts);
+        var resolved = BuildAsciiOptions(asciiOptions, opts);
+        return MatrixAsciiRenderer.Render(qr.Modules, resolved);
+    }
+
+    /// <summary>
     /// Renders a QR code to a raw RGBA pixel buffer (no PNG encoding).
     /// </summary>
     public static byte[] RenderPixels(string payload, out int widthPx, out int heightPx, out int stride, QrEasyOptions? options = null) {
@@ -442,6 +677,14 @@ public static class QrEasy {
         if (logo is not null) render.Logo = logo;
 
         return render;
+    }
+
+    private static MatrixAsciiRenderOptions BuildAsciiOptions(MatrixAsciiRenderOptions? asciiOptions, QrEasyOptions opts) {
+        var resolved = asciiOptions ?? new MatrixAsciiRenderOptions();
+        if (asciiOptions is null || asciiOptions.QuietZone == RenderDefaults.QrQuietZone) {
+            resolved.QuietZone = opts.QuietZone;
+        }
+        return resolved;
     }
 
     private static QrCode EncodePayload(string payload, QrEasyOptions opts) {
