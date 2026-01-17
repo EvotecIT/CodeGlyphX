@@ -72,6 +72,6 @@
 - [x] Reduce allocations in hot decode loops.
 - [x] Span-friendly paths where possible.
 - [x] AOT + trimming hints (no reflection).
-- [ ] Optional SIMD for thresholding if worthwhile.
+- [x] Optional SIMD for thresholding if worthwhile.
 - [x] Image decode: JPEG baseline (SOF0).
 - [x] Image decode: JPEG progressive (SOF2) + EXIF orientation.
