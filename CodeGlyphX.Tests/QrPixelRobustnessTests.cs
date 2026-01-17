@@ -288,6 +288,110 @@ public sealed class QrPixelRobustnessTests {
     }
 
     [Fact]
+    public void QrDecode_WithSoftBlur() {
+        var code = QrCodeEncoder.EncodeText("SoftBlur");
+        var pixels = QrPngRenderer.RenderPixels(
+            code.Modules,
+            new QrPngRenderOptions { ModuleSize = 4, QuietZone = 2 },
+            out var width,
+            out var height,
+            out var stride);
+
+        var blurred = Blur3x3(pixels, width, height, stride);
+        Assert.True(QrDecoder.TryDecode(blurred, width, height, stride, PixelFormat.Rgba32, out var decoded));
+        Assert.Equal("SoftBlur", decoded.Text);
+    }
+
+    [Fact]
+    public void QrDecode_WithMotionBlurHorizontal() {
+        var code = QrCodeEncoder.EncodeText("MotionBlur");
+        var pixels = QrPngRenderer.RenderPixels(
+            code.Modules,
+            new QrPngRenderOptions { ModuleSize = 4, QuietZone = 2 },
+            out var width,
+            out var height,
+            out var stride);
+
+        var blurred = MotionBlurHorizontal(pixels, width, height, stride, radius: 2);
+        Assert.True(QrDecoder.TryDecode(blurred, width, height, stride, PixelFormat.Rgba32, out var decoded));
+        Assert.Equal("MotionBlur", decoded.Text);
+    }
+
+    [Fact]
+    public void QrDecode_WithSaltPepperNoise() {
+        var code = QrCodeEncoder.EncodeText("SaltPepper");
+        var pixels = QrPngRenderer.RenderPixels(
+            code.Modules,
+            new QrPngRenderOptions { ModuleSize = 4, QuietZone = 2 },
+            out var width,
+            out var height,
+            out var stride);
+
+        var noisy = AddSaltPepperNoise(pixels, width, height, stride, probability: 0.02, seed: 12345);
+        Assert.True(QrDecoder.TryDecode(noisy, width, height, stride, PixelFormat.Rgba32, out var decoded));
+        Assert.Equal("SaltPepper", decoded.Text);
+    }
+
+    [Fact]
+    public void QrDecode_WithNoiseAndPerspective() {
+        var code = QrCodeEncoder.EncodeText("NoiseSkew");
+        var pixels = QrPngRenderer.RenderPixels(
+            code.Modules,
+            new QrPngRenderOptions { ModuleSize = 5, QuietZone = 2 },
+            out var width,
+            out var height,
+            out var stride);
+
+        var pad = 18;
+        var dstWidth = width + pad * 2;
+        var dstHeight = height + pad * 2;
+        var dstStride = dstWidth * 4;
+        var warped = new byte[dstHeight * dstStride];
+        FillWhite(warped);
+
+        var x0 = pad + 6;
+        var y0 = pad + 4;
+        var x1 = dstWidth - pad - 10;
+        var y1 = pad + 2;
+        var x2 = dstWidth - pad - 4;
+        var y2 = dstHeight - pad - 12;
+        var x3 = pad + 8;
+        var y3 = dstHeight - pad - 6;
+
+        var transform = QrPerspectiveTransform.QuadrilateralToQuadrilateral(
+            x0, y0,
+            x1, y1,
+            x2, y2,
+            x3, y3,
+            0, 0,
+            width - 1, 0,
+            width - 1, height - 1,
+            0, height - 1);
+
+        for (var y = 0; y < dstHeight; y++) {
+            var row = y * dstStride;
+            for (var x = 0; x < dstWidth; x++) {
+                transform.Transform(x, y, out var sx, out var sy);
+                if (double.IsNaN(sx) || double.IsNaN(sy)) continue;
+                var px = (int)Math.Round(sx);
+                var py = (int)Math.Round(sy);
+                if ((uint)px >= (uint)width || (uint)py >= (uint)height) continue;
+
+                var src = py * stride + px * 4;
+                var dst = row + x * 4;
+                warped[dst] = pixels[src];
+                warped[dst + 1] = pixels[src + 1];
+                warped[dst + 2] = pixels[src + 2];
+                warped[dst + 3] = pixels[src + 3];
+            }
+        }
+
+        var noisy = AddSaltPepperNoise(warped, dstWidth, dstHeight, dstStride, probability: 0.01, seed: 2222);
+        Assert.True(QrDecoder.TryDecode(noisy, dstWidth, dstHeight, dstStride, PixelFormat.Rgba32, out var decoded));
+        Assert.Equal("NoiseSkew", decoded.Text);
+    }
+
+    [Fact]
     public void QrDecode_WithFalseFinderNoise() {
         var code = QrCodeEncoder.EncodeText("FinderNoiseTest");
         var pixels = QrPngRenderer.RenderPixels(
@@ -490,5 +594,108 @@ public sealed class QrPixelRobustnessTests {
         }
 
         return cropped;
+    }
+
+    private static byte[] Blur3x3(byte[] pixels, int width, int height, int stride) {
+        var blurred = new byte[pixels.Length];
+        for (var y = 0; y < height; y++) {
+            var row = y * stride;
+            for (var x = 0; x < width; x++) {
+                var r = 0;
+                var g = 0;
+                var b = 0;
+                var a = 0;
+                var count = 0;
+
+                for (var ky = -1; ky <= 1; ky++) {
+                    var yy = y + ky;
+                    if ((uint)yy >= (uint)height) continue;
+                    var srcRow = yy * stride;
+                    for (var kx = -1; kx <= 1; kx++) {
+                        var xx = x + kx;
+                        if ((uint)xx >= (uint)width) continue;
+                        var p = srcRow + xx * 4;
+                        b += pixels[p + 0];
+                        g += pixels[p + 1];
+                        r += pixels[p + 2];
+                        a += pixels[p + 3];
+                        count++;
+                    }
+                }
+
+                var dst = row + x * 4;
+                blurred[dst + 0] = (byte)(b / count);
+                blurred[dst + 1] = (byte)(g / count);
+                blurred[dst + 2] = (byte)(r / count);
+                blurred[dst + 3] = (byte)(a / count);
+            }
+        }
+
+        return blurred;
+    }
+
+    private static byte[] MotionBlurHorizontal(byte[] pixels, int width, int height, int stride, int radius) {
+        var blurred = new byte[pixels.Length];
+        if (radius <= 0) {
+            Buffer.BlockCopy(pixels, 0, blurred, 0, pixels.Length);
+            return blurred;
+        }
+
+        for (var y = 0; y < height; y++) {
+            var row = y * stride;
+            for (var x = 0; x < width; x++) {
+                var r = 0;
+                var g = 0;
+                var b = 0;
+                var a = 0;
+                var count = 0;
+
+                for (var kx = -radius; kx <= radius; kx++) {
+                    var xx = x + kx;
+                    if ((uint)xx >= (uint)width) continue;
+                    var p = row + xx * 4;
+                    b += pixels[p + 0];
+                    g += pixels[p + 1];
+                    r += pixels[p + 2];
+                    a += pixels[p + 3];
+                    count++;
+                }
+
+                var dst = row + x * 4;
+                blurred[dst + 0] = (byte)(b / count);
+                blurred[dst + 1] = (byte)(g / count);
+                blurred[dst + 2] = (byte)(r / count);
+                blurred[dst + 3] = (byte)(a / count);
+            }
+        }
+
+        return blurred;
+    }
+
+    private static byte[] AddSaltPepperNoise(byte[] pixels, int width, int height, int stride, double probability, uint seed) {
+        var noisy = new byte[pixels.Length];
+        Buffer.BlockCopy(pixels, 0, noisy, 0, pixels.Length);
+        if (probability <= 0) return noisy;
+
+        var threshold = (uint)Math.Max(1, Math.Min(uint.MaxValue, probability * uint.MaxValue));
+        var state = seed == 0 ? 1u : seed;
+
+        for (var y = 0; y < height; y++) {
+            var row = y * stride;
+            for (var x = 0; x < width; x++) {
+                state = 1664525u * state + 1013904223u;
+                if (state > threshold) continue;
+
+                var p = row + x * 4;
+                var salt = (state & 0x80000000u) != 0;
+                var v = salt ? (byte)255 : (byte)0;
+                noisy[p + 0] = v;
+                noisy[p + 1] = v;
+                noisy[p + 2] = v;
+                noisy[p + 3] = 255;
+            }
+        }
+
+        return noisy;
     }
 }

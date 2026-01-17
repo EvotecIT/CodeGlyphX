@@ -26,6 +26,8 @@ public partial class MainWindow : Window {
     private int _lastStride;
     private string _lastDebugSummary = string.Empty;
     private long _lastDebugSummaryTickMs = -1;
+    private QrPixelDecodeInfo _lastDecodeInfo;
+    private long _lastDecodeTickMs = -1;
     private volatile QrDecodeProfile _decodeProfile = QrDecodeProfile.Robust;
 
     public MainWindow() {
@@ -95,6 +97,8 @@ public partial class MainWindow : Window {
                     : $"Running (2–5 fps) • {diag} • {decodeMs}ms • {profileLabel}";
 
                 Dispatcher.Invoke(() => {
+                    _lastDecodeInfo = diag;
+                    _lastDecodeTickMs = Environment.TickCount64;
                     UpdatePreview(pixels, w, h, stride);
                     StatusText.Text = status;
                     if (ok) DecodedText.Text = decoded.Text;
@@ -193,6 +197,76 @@ public partial class MainWindow : Window {
         StatusText.Text = $"Saved capture: {Path.GetFileName(dialog.FileName)}";
     }
 
+    private void SaveDiagnostics_Click(object sender, RoutedEventArgs e) {
+        if (_lastDecodeTickMs < 0) {
+            WpfMessageBox.Show(this, "No diagnostics captured yet. Start scanning first.", "Screen scan", MessageBoxButton.OK, MessageBoxImage.Information);
+            return;
+        }
+
+        var dialog = new Microsoft.Win32.SaveFileDialog {
+            Filter = "Text file (*.txt)|*.txt",
+            FileName = $"diagnostics-{DateTime.Now:yyyyMMdd-HHmmss}.txt",
+        };
+
+        if (dialog.ShowDialog(this) is not true) return;
+
+        var decodeInfo = _lastDecodeInfo;
+        var label = $"ScreenScan ({_decodeProfile})";
+        var source = $"Captured region {_lastWidth}×{_lastHeight}";
+        QrDiagnosticsDump.WriteText(dialog.FileName, decodeInfo, label, source);
+        StatusText.Text = $"Saved diagnostics: {Path.GetFileName(dialog.FileName)}";
+    }
+
+    private void SaveCaptureBundle_Click(object sender, RoutedEventArgs e) {
+        if (_lastPixels is null || _lastWidth <= 0 || _lastHeight <= 0 || _lastStride <= 0) {
+            WpfMessageBox.Show(this, "Nothing captured yet. Start scanning first.", "Screen scan", MessageBoxButton.OK, MessageBoxImage.Information);
+            return;
+        }
+
+        var dialog = new Microsoft.Win32.SaveFileDialog {
+            Filter = "Folder bundle (*.zip)|*.zip",
+            FileName = $"capture-bundle-{DateTime.Now:yyyyMMdd-HHmmss}.zip",
+        };
+
+        if (dialog.ShowDialog(this) is not true) return;
+
+        var width = _lastWidth;
+        var height = _lastHeight;
+        var stride = _lastStride;
+        byte[] pixels;
+        lock (_captureLock) {
+            pixels = new byte[stride * height];
+            Buffer.BlockCopy(_lastPixels!, 0, pixels, 0, pixels.Length);
+        }
+
+        try {
+            var tempDir = Path.Combine(Path.GetTempPath(), $"codeglyphx-bundle-{Guid.NewGuid():N}");
+            Directory.CreateDirectory(tempDir);
+            var capturePath = Path.Combine(tempDir, "capture.png");
+            SavePng(capturePath, pixels, width, height, stride);
+
+            if (QrGrayImage.TryCreate(pixels, width, height, stride, PixelFormat.Bgra32, scale: 1, out var gray)) {
+                var bw = BuildBinarized(gray, width, height, stride);
+                var bwPath = Path.Combine(tempDir, "binarized.png");
+                SavePng(bwPath, bw, width, height, stride);
+            }
+
+            var diagPath = Path.Combine(tempDir, "diagnostics.txt");
+            var decodeInfo = _lastDecodeInfo;
+            var label = $"ScreenScan ({_decodeProfile})";
+            var source = $"Captured region {width}×{height}";
+            QrDiagnosticsDump.WriteText(diagPath, decodeInfo, label, source);
+
+            if (File.Exists(dialog.FileName)) File.Delete(dialog.FileName);
+            System.IO.Compression.ZipFile.CreateFromDirectory(tempDir, dialog.FileName);
+            Directory.Delete(tempDir, recursive: true);
+
+            StatusText.Text = $"Saved bundle: {Path.GetFileName(dialog.FileName)}";
+        } catch (Exception ex) {
+            WpfMessageBox.Show(this, ex.Message, "Screen scan", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
+
     private void SaveBinarized_Click(object sender, RoutedEventArgs e) {
         if (_lastPixels is null || _lastWidth <= 0 || _lastHeight <= 0 || _lastStride <= 0) {
             WpfMessageBox.Show(this, "Nothing captured yet. Start scanning first.", "Screen scan", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -214,6 +288,20 @@ public partial class MainWindow : Window {
             return;
         }
 
+        var bw = BuildBinarized(gray, width, height, stride);
+
+        var dialog = new Microsoft.Win32.SaveFileDialog {
+            Filter = "PNG image (*.png)|*.png",
+            FileName = $"binarized-{DateTime.Now:yyyyMMdd-HHmmss}.png",
+        };
+
+        if (dialog.ShowDialog(this) != true) return;
+
+        SavePng(dialog.FileName, bw, width, height, stride);
+        StatusText.Text = $"Saved BW: {Path.GetFileName(dialog.FileName)}";
+    }
+
+    private static byte[] BuildBinarized(QrGrayImage gray, int width, int height, int stride) {
         var bw = new byte[stride * height];
         for (var y = 0; y < height; y++) {
             var srcRow = y * gray.Width;
@@ -228,16 +316,7 @@ public partial class MainWindow : Window {
                 bw[p + 3] = 255;
             }
         }
-
-        var dialog = new Microsoft.Win32.SaveFileDialog {
-            Filter = "PNG image (*.png)|*.png",
-            FileName = $"binarized-{DateTime.Now:yyyyMMdd-HHmmss}.png",
-        };
-
-        if (dialog.ShowDialog(this) != true) return;
-
-        SavePng(dialog.FileName, bw, width, height, stride);
-        StatusText.Text = $"Saved BW: {Path.GetFileName(dialog.FileName)}";
+        return bw;
     }
 
     private static void SavePng(string filePath, byte[] bgra, int width, int height, int stride) {
