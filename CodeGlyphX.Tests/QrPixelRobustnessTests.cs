@@ -186,6 +186,49 @@ public sealed class QrPixelRobustnessTests {
     }
 
     [Fact]
+    public void QrDecode_WithLowContrastAndFinderClusters() {
+        var code = QrCodeEncoder.EncodeText("LowContrastFinder");
+        var pixels = QrPngRenderer.RenderPixels(
+            code.Modules,
+            new QrPngRenderOptions { ModuleSize = 4, QuietZone = 2 },
+            out var width,
+            out var height,
+            out var stride);
+
+        var lowContrast = new byte[pixels.Length];
+        for (var y = 0; y < height; y++) {
+            var row = y * stride;
+            for (var x = 0; x < width; x++) {
+                var p = row + x * 4;
+                var isDark = pixels[p] < 128;
+                var v = isDark ? (byte)118 : (byte)138;
+                lowContrast[p] = v;
+                lowContrast[p + 1] = v;
+                lowContrast[p + 2] = v;
+                lowContrast[p + 3] = 255;
+            }
+        }
+
+        var pad = 28;
+        var newWidth = width + pad * 2;
+        var newHeight = height + pad * 2;
+        var newStride = newWidth * 4;
+        var canvas = new byte[newHeight * newStride];
+        FillRect(canvas, newStride, 0, 0, newWidth, newHeight, r: 146, g: 146, b: 146);
+
+        for (var y = 0; y < height; y++) {
+            Buffer.BlockCopy(lowContrast, y * stride, canvas, (y + pad) * newStride + pad * 4, stride);
+        }
+
+        // Add two finder-like clusters away from the real QR.
+        DrawFinder(canvas, newStride, 4, 4, moduleSize: 3);
+        DrawFinder(canvas, newStride, newWidth - 7 * 3 - 4, 4, moduleSize: 3);
+
+        Assert.True(QrDecoder.TryDecode(canvas, newWidth, newHeight, newStride, PixelFormat.Rgba32, out var decoded));
+        Assert.Equal("LowContrastFinder", decoded.Text);
+    }
+
+    [Fact]
     public void QrDecode_WithFalseFinderNoise() {
         var code = QrCodeEncoder.EncodeText("FinderNoiseTest");
         var pixels = QrPngRenderer.RenderPixels(

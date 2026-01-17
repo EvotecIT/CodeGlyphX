@@ -1,3 +1,4 @@
+using System.IO;
 using System.Text;
 using CodeGlyphX;
 using CodeGlyphX.Rendering;
@@ -10,6 +11,12 @@ internal static class QrDecodeExample {
         var png = QR.Png(payload);
         if (QR.TryDecodePng(png, out var decoded)) {
             decoded.Text.WriteText(outputDir, "qr-decode.txt");
+        }
+
+        var screenPath = Path.Combine(outputDir, "qr-screen.png");
+        png.WriteBinary(screenPath);
+        if (QrImageDecoder.TryDecodeImage(File.ReadAllBytes(screenPath), new QrPixelDecodeOptions { Profile = QrDecodeProfile.Robust }, out var screenDecoded)) {
+            screenDecoded.Text.WriteText(outputDir, "qr-decode-screen.txt");
         }
 
         var fast = new QrPixelDecodeOptions { Profile = QrDecodeProfile.Fast };
