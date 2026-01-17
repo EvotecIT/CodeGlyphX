@@ -288,6 +288,21 @@ public sealed class QrPixelRobustnessTests {
     }
 
     [Fact]
+    public void QrDecode_WithSoftBlur() {
+        var code = QrCodeEncoder.EncodeText("SoftBlur");
+        var pixels = QrPngRenderer.RenderPixels(
+            code.Modules,
+            new QrPngRenderOptions { ModuleSize = 4, QuietZone = 2 },
+            out var width,
+            out var height,
+            out var stride);
+
+        var blurred = Blur3x3(pixels, width, height, stride);
+        Assert.True(QrDecoder.TryDecode(blurred, width, height, stride, PixelFormat.Rgba32, out var decoded));
+        Assert.Equal("SoftBlur", decoded.Text);
+    }
+
+    [Fact]
     public void QrDecode_WithFalseFinderNoise() {
         var code = QrCodeEncoder.EncodeText("FinderNoiseTest");
         var pixels = QrPngRenderer.RenderPixels(
@@ -490,5 +505,43 @@ public sealed class QrPixelRobustnessTests {
         }
 
         return cropped;
+    }
+
+    private static byte[] Blur3x3(byte[] pixels, int width, int height, int stride) {
+        var blurred = new byte[pixels.Length];
+        for (var y = 0; y < height; y++) {
+            var row = y * stride;
+            for (var x = 0; x < width; x++) {
+                var r = 0;
+                var g = 0;
+                var b = 0;
+                var a = 0;
+                var count = 0;
+
+                for (var ky = -1; ky <= 1; ky++) {
+                    var yy = y + ky;
+                    if ((uint)yy >= (uint)height) continue;
+                    var srcRow = yy * stride;
+                    for (var kx = -1; kx <= 1; kx++) {
+                        var xx = x + kx;
+                        if ((uint)xx >= (uint)width) continue;
+                        var p = srcRow + xx * 4;
+                        b += pixels[p + 0];
+                        g += pixels[p + 1];
+                        r += pixels[p + 2];
+                        a += pixels[p + 3];
+                        count++;
+                    }
+                }
+
+                var dst = row + x * 4;
+                blurred[dst + 0] = (byte)(b / count);
+                blurred[dst + 1] = (byte)(g / count);
+                blurred[dst + 2] = (byte)(r / count);
+                blurred[dst + 3] = (byte)(a / count);
+            }
+        }
+
+        return blurred;
     }
 }

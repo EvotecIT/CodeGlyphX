@@ -26,6 +26,8 @@ public partial class MainWindow : Window {
     private int _lastStride;
     private string _lastDebugSummary = string.Empty;
     private long _lastDebugSummaryTickMs = -1;
+    private QrPixelDecodeInfo _lastDecodeInfo;
+    private long _lastDecodeTickMs = -1;
     private volatile QrDecodeProfile _decodeProfile = QrDecodeProfile.Robust;
 
     public MainWindow() {
@@ -95,6 +97,8 @@ public partial class MainWindow : Window {
                     : $"Running (2–5 fps) • {diag} • {decodeMs}ms • {profileLabel}";
 
                 Dispatcher.Invoke(() => {
+                    _lastDecodeInfo = diag;
+                    _lastDecodeTickMs = Environment.TickCount64;
                     UpdatePreview(pixels, w, h, stride);
                     StatusText.Text = status;
                     if (ok) DecodedText.Text = decoded.Text;
@@ -191,6 +195,25 @@ public partial class MainWindow : Window {
 
         SavePng(dialog.FileName, pixels, width, height, stride);
         StatusText.Text = $"Saved capture: {Path.GetFileName(dialog.FileName)}";
+    }
+
+    private void SaveDiagnostics_Click(object sender, RoutedEventArgs e) {
+        if (_lastDecodeTickMs < 0) {
+            WpfMessageBox.Show(this, "No diagnostics captured yet. Start scanning first.", "Screen scan", MessageBoxButton.OK, MessageBoxImage.Information);
+            return;
+        }
+
+        var dialog = new Microsoft.Win32.SaveFileDialog {
+            Filter = "Text file (*.txt)|*.txt",
+            FileName = $"diagnostics-{DateTime.Now:yyyyMMdd-HHmmss}.txt",
+        };
+
+        if (dialog.ShowDialog(this) != true) return;
+
+        var label = $"ScreenScan ({_decodeProfile})";
+        var source = $"Captured region {_lastWidth}×{_lastHeight}";
+        QrDiagnosticsDump.WriteText(dialog.FileName, _lastDecodeInfo, label, source);
+        StatusText.Text = $"Saved diagnostics: {Path.GetFileName(dialog.FileName)}";
     }
 
     private void SaveBinarized_Click(object sender, RoutedEventArgs e) {

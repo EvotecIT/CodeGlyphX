@@ -59,6 +59,8 @@
                 <Button x:Name="SaveBinarizedButton" Content="Save BW…" Click="SaveBinarized_Click" Width="170" />
             </StackPanel>
 
+            <Button x:Name="SaveDiagnosticsButton" Content="Save diagnostics…" Click="SaveDiagnostics_Click" Margin="0,0,0,12" />
+
             <TextBlock Text="Status" FontWeight="Bold" />
             <TextBlock x:Name="StatusText" Text="Idle" Margin="0,0,0,12" />
 
