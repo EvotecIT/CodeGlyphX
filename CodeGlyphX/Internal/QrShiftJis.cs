@@ -23,39 +23,52 @@ internal static class QrShiftJis {
         if (text is null) throw new ArgumentNullException(nameof(text));
         if (text.Length == 0) return Array.Empty<byte>();
 
-        var bytes = new List<byte>(text.Length * 2);
+        var buffer = new byte[text.Length * 2];
+        var count = 0;
         for (var i = 0; i < text.Length; i++) {
             var c = text[i];
             if (c <= 0x7F) {
-                bytes.Add((byte)c);
+                buffer[count++] = (byte)c;
                 continue;
             }
 
             if (c is >= '\uFF61' and <= '\uFF9F') {
-                bytes.Add((byte)(0xA1 + (c - '\uFF61')));
+                buffer[count++] = (byte)(0xA1 + (c - '\uFF61'));
                 continue;
             }
 
             if (QrKanjiTable.TryGetValue(c, out var value)) {
                 var assembled = ((value / 0xC0) << 8) | (value % 0xC0);
                 var sjis = assembled < 0x1F00 ? assembled + 0x8140 : assembled + 0xC140;
-                bytes.Add((byte)(sjis >> 8));
-                bytes.Add((byte)sjis);
+                buffer[count++] = (byte)(sjis >> 8);
+                buffer[count++] = (byte)sjis;
                 continue;
             }
 
-            bytes.Add((byte)'?');
+            buffer[count++] = (byte)'?';
         }
 
-        return bytes.ToArray();
+        if (count == buffer.Length) return buffer;
+        var result = new byte[count];
+        Array.Copy(buffer, 0, result, 0, count);
+        return result;
     }
 
     public static string Decode(byte[] bytes) {
         if (bytes is null) throw new ArgumentNullException(nameof(bytes));
-        if (bytes.Length == 0) return string.Empty;
+        return Decode(bytes, 0, bytes.Length);
+    }
 
-        var sb = new StringBuilder(bytes.Length);
-        for (var i = 0; i < bytes.Length; i++) {
+    public static string Decode(byte[] bytes, int offset, int length) {
+        if (bytes is null) throw new ArgumentNullException(nameof(bytes));
+        if (offset < 0) throw new ArgumentOutOfRangeException(nameof(offset));
+        if (length < 0) throw new ArgumentOutOfRangeException(nameof(length));
+        if (offset + length > bytes.Length) throw new ArgumentOutOfRangeException(nameof(length));
+        if (length == 0) return string.Empty;
+
+        var sb = new StringBuilder(length);
+        var end = offset + length;
+        for (var i = offset; i < end; i++) {
             var b = bytes[i];
             if (b <= 0x7F) {
                 sb.Append((char)b);
@@ -67,7 +80,7 @@ internal static class QrShiftJis {
                 continue;
             }
 
-            if (IsLeadByte(b) && i + 1 < bytes.Length) {
+            if (IsLeadByte(b) && i + 1 < end) {
                 var b2 = bytes[++i];
                 if (!IsTrailByte(b2)) {
                     sb.Append('?');

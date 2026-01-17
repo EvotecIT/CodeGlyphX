@@ -1,5 +1,5 @@
 using System;
-using System.Collections.Generic;
+using System.Buffers;
 using System.Text;
 using CodeGlyphX.Internal;
 using CodeGlyphX;
@@ -41,19 +41,9 @@ public static class DataMatrixDecoder {
     public static bool TryDecode(BitMatrix modules, out string value) {
         if (modules is null) throw new ArgumentNullException(nameof(modules));
 
-        if (!DataMatrixSymbolInfo.TryGetForSize(modules.Height, modules.Width, out var symbol)) {
-            value = string.Empty;
-            return false;
-        }
-
-        var dataRegion = ExtractDataRegion(modules, symbol);
-        var codewords = DataMatrixPlacement.ReadCodewords(dataRegion, symbol.CodewordCount);
-        if (!TryDecodeCodewords(codewords, symbol, out value)) {
-            value = string.Empty;
-            return false;
-        }
-
-        return true;
+        if (TryDecodeCore(modules, out value)) return true;
+        var mirror = MirrorX(modules);
+        return TryDecodeCore(mirror, out value);
     }
 
 #if NET8_0_OR_GREATER
@@ -75,13 +65,36 @@ public static class DataMatrixDecoder {
 
     private static bool TryDecodePixels(PixelSpan pixels, int width, int height, int stride, PixelFormat format, out string value) {
         if (TryExtractModules(pixels, width, height, stride, format, out var modules)) {
-            if (TryDecode(modules, out value)) return true;
-            if (TryDecode(Rotate90(modules), out value)) return true;
-            if (TryDecode(Rotate180(modules), out value)) return true;
-            if (TryDecode(Rotate270(modules), out value)) return true;
+            if (TryDecodeWithRotations(modules, out value)) return true;
+            var mirror = MirrorX(modules);
+            if (TryDecodeWithRotations(mirror, out value)) return true;
         }
         value = string.Empty;
         return false;
+    }
+
+    private static bool TryDecodeWithRotations(BitMatrix modules, out string value) {
+        if (TryDecodeCore(modules, out value)) return true;
+        if (TryDecodeCore(Rotate90(modules), out value)) return true;
+        if (TryDecodeCore(Rotate180(modules), out value)) return true;
+        if (TryDecodeCore(Rotate270(modules), out value)) return true;
+        return false;
+    }
+
+    private static bool TryDecodeCore(BitMatrix modules, out string value) {
+        if (!DataMatrixSymbolInfo.TryGetForSize(modules.Height, modules.Width, out var symbol)) {
+            value = string.Empty;
+            return false;
+        }
+
+        var dataRegion = ExtractDataRegion(modules, symbol);
+        var codewords = DataMatrixPlacement.ReadCodewords(dataRegion, symbol.CodewordCount);
+        if (!TryDecodeCodewords(codewords, symbol, out value)) {
+            value = string.Empty;
+            return false;
+        }
+
+        return true;
     }
 
     private static BitMatrix ExtractDataRegion(BitMatrix modules, DataMatrixSymbolInfo symbol) {
@@ -439,7 +452,6 @@ public static class DataMatrixDecoder {
         Encoding? encoding) {
         if (index >= data.Length) return;
 
-        var base256Bytes = new List<byte>();
         var lenCodeword = Unrandomize255(data[index], index + 1);
         index++;
         var length = lenCodeword;
@@ -450,25 +462,32 @@ public static class DataMatrixDecoder {
             length = (lenCodeword - 249) * 250 + len2;
         }
 
-        for (var j = 0; j < length && index < data.Length; j++) {
-            var b = Unrandomize255(data[index], index + 1);
-            base256Bytes.Add((byte)b);
-            index++;
+        if (length <= 0) return;
+
+        var rented = ArrayPool<byte>.Shared.Rent(length);
+        var count = 0;
+        try {
+            for (var j = 0; j < length && index < data.Length; j++) {
+                var b = Unrandomize255(data[index], index + 1);
+                rented[count++] = (byte)b;
+                index++;
+            }
+
+            if (count == 0) return;
+
+            sb.Append(DecodeBase256Bytes(rented, count, encoding));
+        } finally {
+            ArrayPool<byte>.Shared.Return(rented);
         }
-
-        if (base256Bytes.Count == 0) return;
-
-        sb.Append(DecodeBase256Bytes(base256Bytes, encoding));
     }
 
-    private static string DecodeBase256Bytes(List<byte> bytes, Encoding? encoding) {
-        if (bytes.Count == 0) return string.Empty;
+    private static string DecodeBase256Bytes(byte[] bytes, int count, Encoding? encoding) {
+        if (count == 0) return string.Empty;
         try {
-            if (encoding is not null) return encoding.GetString(bytes.ToArray());
-            var utf8 = new UTF8Encoding(false, true);
-            return utf8.GetString(bytes.ToArray());
+            if (encoding is not null) return encoding.GetString(bytes, 0, count);
+            return EncodingUtils.Utf8Strict.GetString(bytes, 0, count);
         } catch (DecoderFallbackException) {
-            return EncodingUtils.Latin1.GetString(bytes.ToArray());
+            return EncodingUtils.Latin1.GetString(bytes, 0, count);
         }
     }
 
@@ -668,6 +687,16 @@ public static class DataMatrixDecoder {
         for (var y = 0; y < matrix.Height; y++) {
             for (var x = 0; x < matrix.Width; x++) {
                 result[y, matrix.Width - 1 - x] = matrix[x, y];
+            }
+        }
+        return result;
+    }
+
+    private static BitMatrix MirrorX(BitMatrix matrix) {
+        var result = new BitMatrix(matrix.Width, matrix.Height);
+        for (var y = 0; y < matrix.Height; y++) {
+            for (var x = 0; x < matrix.Width; x++) {
+                result[matrix.Width - 1 - x, y] = matrix[x, y];
             }
         }
         return result;

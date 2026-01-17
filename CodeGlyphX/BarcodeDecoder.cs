@@ -1,12 +1,17 @@
 using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.Linq;
+using CodeGlyphX.Code11;
 using CodeGlyphX.Code128;
 using CodeGlyphX.Code39;
 using CodeGlyphX.Code93;
+using CodeGlyphX.Codabar;
 using CodeGlyphX.Ean;
 using CodeGlyphX.Itf;
 using CodeGlyphX.Internal;
+using CodeGlyphX.Msi;
+using CodeGlyphX.Plessey;
 using CodeGlyphX.UpcA;
 using CodeGlyphX.UpcE;
 
@@ -44,7 +49,7 @@ public static class BarcodeDecoder {
         decoded = null!;
         if (!BarcodeScanline.TryGetModuleCandidates(pixels, width, height, stride, format, out var candidates)) return false;
         for (var i = 0; i < candidates.Length; i++) {
-            if (TryDecodeWithInversion(candidates[i], expectedType, options, out decoded)) return true;
+            if (TryDecodeWithTransforms(candidates[i], expectedType, options, out decoded)) return true;
         }
         return false;
     }
@@ -78,7 +83,7 @@ public static class BarcodeDecoder {
         decoded = null!;
         if (!BarcodeScanline.TryGetModuleCandidates(pixels, width, height, stride, format, out var candidates)) return false;
         for (var i = 0; i < candidates.Length; i++) {
-            if (TryDecodeWithInversion(candidates[i], expectedType, options, out decoded)) return true;
+            if (TryDecodeWithTransforms(candidates[i], expectedType, options, out decoded)) return true;
         }
         return false;
     }
@@ -111,55 +116,84 @@ public static class BarcodeDecoder {
     public static bool TryDecode(bool[] modules, BarcodeType? expectedType, BarcodeDecodeOptions? options, out BarcodeDecoded decoded) {
         decoded = null!;
         if (modules is null || modules.Length == 0) return false;
+        return TryDecodeWithTransforms(modules, expectedType, options, out decoded);
+    }
+
+    private static bool TryDecodeWithTransforms(bool[] modules, BarcodeType? expectedType, BarcodeDecodeOptions? options, out BarcodeDecoded decoded) {
+        if (TryDecodeCoreTrimmed(modules, expectedType, options, out decoded)) return true;
+        var inverted = InvertModules(modules);
+        if (TryDecodeCoreTrimmed(inverted, expectedType, options, out decoded)) return true;
+        var reversed = ReverseModules(modules);
+        if (TryDecodeCoreTrimmed(reversed, expectedType, options, out decoded)) return true;
+        var invertedReversed = InvertModules(reversed);
+        return TryDecodeCoreTrimmed(invertedReversed, expectedType, options, out decoded);
+    }
+
+    private static bool TryDecodeCoreTrimmed(bool[] modules, BarcodeType? expectedType, BarcodeDecodeOptions? options, out BarcodeDecoded decoded) {
+        decoded = null!;
         var trimmed = TrimModules(modules);
         if (trimmed.Length == 0) return false;
+        return TryDecodeCore(trimmed, expectedType, options, out decoded);
+    }
 
+    private static bool TryDecodeCore(bool[] modules, BarcodeType? expectedType, BarcodeDecodeOptions? options, out BarcodeDecoded decoded) {
+        decoded = null!;
         if (expectedType.HasValue) {
-            return TryDecodeType(expectedType.Value, trimmed, options, out decoded);
+            return TryDecodeType(expectedType.Value, modules, options, out decoded);
         }
 
         // Fixed-length symbologies first.
-        if (TryDecodeEan8(trimmed, out var ean8)) {
+        if (TryDecodeEan8(modules, out var ean8)) {
             decoded = new BarcodeDecoded(BarcodeType.EAN, ean8);
             return true;
         }
-        if (TryDecodeUpcA(trimmed, out var upca)) {
+        if (TryDecodeUpcA(modules, out var upca)) {
             decoded = new BarcodeDecoded(BarcodeType.UPCA, upca);
             return true;
         }
-        if (TryDecodeEan13(trimmed, out var ean13)) {
+        if (TryDecodeEan13(modules, out var ean13)) {
             decoded = new BarcodeDecoded(BarcodeType.EAN, ean13);
             return true;
         }
-        if (TryDecodeUpcE(trimmed, out var upce)) {
+        if (TryDecodeUpcE(modules, out var upce)) {
             decoded = new BarcodeDecoded(BarcodeType.UPCE, upce);
             return true;
         }
-        if (TryDecodeItf14(trimmed, out var itf14)) {
+        if (TryDecodeItf14(modules, out var itf14)) {
             decoded = new BarcodeDecoded(BarcodeType.ITF14, itf14);
             return true;
         }
 
-        if (TryDecodeCode128(trimmed, out var code128, out var isGs1)) {
+        if (TryDecodeCode128(modules, out var code128, out var isGs1)) {
             decoded = new BarcodeDecoded(isGs1 ? BarcodeType.GS1_128 : BarcodeType.Code128, code128);
             return true;
         }
-        if (TryDecodeCode39(trimmed, options, out var code39)) {
+        if (TryDecodeCode39(modules, options, out var code39)) {
             decoded = new BarcodeDecoded(BarcodeType.Code39, code39);
             return true;
         }
-        if (TryDecodeCode93(trimmed, out var code93)) {
+        if (TryDecodeCode93(modules, out var code93)) {
             decoded = new BarcodeDecoded(BarcodeType.Code93, code93);
+            return true;
+        }
+        if (TryDecodeCodabar(modules, out var codabar)) {
+            decoded = new BarcodeDecoded(BarcodeType.Codabar, codabar);
+            return true;
+        }
+        if (TryDecodeMsi(modules, options, out var msi)) {
+            decoded = new BarcodeDecoded(BarcodeType.MSI, msi);
+            return true;
+        }
+        if (TryDecodeCode11(modules, options, out var code11)) {
+            decoded = new BarcodeDecoded(BarcodeType.Code11, code11);
+            return true;
+        }
+        if (TryDecodePlessey(modules, options, out var plessey)) {
+            decoded = new BarcodeDecoded(BarcodeType.Plessey, plessey);
             return true;
         }
 
         return false;
-    }
-
-    private static bool TryDecodeWithInversion(bool[] modules, BarcodeType? expectedType, BarcodeDecodeOptions? options, out BarcodeDecoded decoded) {
-        if (TryDecode(modules, expectedType, options, out decoded)) return true;
-        var inverted = InvertModules(modules);
-        return TryDecode(inverted, expectedType, options, out decoded);
     }
 
     private static bool TryDecodeType(BarcodeType type, bool[] modules, BarcodeDecodeOptions? options, out BarcodeDecoded decoded) {
@@ -217,6 +251,30 @@ public static class BarcodeDecoder {
                     return true;
                 }
                 return false;
+            case BarcodeType.Codabar:
+                if (TryDecodeCodabar(modules, out var codabar)) {
+                    decoded = new BarcodeDecoded(BarcodeType.Codabar, codabar);
+                    return true;
+                }
+                return false;
+            case BarcodeType.MSI:
+                if (TryDecodeMsi(modules, options, out var msi)) {
+                    decoded = new BarcodeDecoded(BarcodeType.MSI, msi);
+                    return true;
+                }
+                return false;
+            case BarcodeType.Code11:
+                if (TryDecodeCode11(modules, options, out var code11)) {
+                    decoded = new BarcodeDecoded(BarcodeType.Code11, code11);
+                    return true;
+                }
+                return false;
+            case BarcodeType.Plessey:
+                if (TryDecodePlessey(modules, options, out var plessey)) {
+                    decoded = new BarcodeDecoded(BarcodeType.Plessey, plessey);
+                    return true;
+                }
+                return false;
             default:
                 return false;
         }
@@ -236,6 +294,12 @@ public static class BarcodeDecoder {
     private static bool[] InvertModules(bool[] modules) {
         var output = new bool[modules.Length];
         for (var i = 0; i < modules.Length; i++) output[i] = !modules[i];
+        return output;
+    }
+
+    private static bool[] ReverseModules(bool[] modules) {
+        var output = new bool[modules.Length];
+        for (var i = 0; i < modules.Length; i++) output[i] = modules[modules.Length - 1 - i];
         return output;
     }
 
@@ -259,35 +323,43 @@ public static class BarcodeDecoder {
     private static bool TryDecodeCode39(bool[] modules, BarcodeDecodeOptions? options, out string text) {
         text = string.Empty;
         var patternToChar = Code39PatternMap.Value;
-        var chars = new List<char>();
+        var maxSymbols = (modules.Length + 1) / 13;
+        if (maxSymbols <= 0) return false;
 
-        var index = 0;
-        while (index + 12 <= modules.Length) {
-            var key = PatternKey(modules, index, 12);
-            if (!patternToChar.TryGetValue(key, out var ch)) return false;
-            chars.Add(ch);
-            index += 12;
-            if (index < modules.Length && !modules[index]) index++; // inter-character space
-        }
+        var rented = ArrayPool<char>.Shared.Rent(maxSymbols);
+        var count = 0;
 
-        if (chars.Count < 2) return false;
-        if (chars[0] != '*' || chars[chars.Count - 1] != '*') return false;
-        chars.RemoveAt(0);
-        chars.RemoveAt(chars.Count - 1);
-
-        var raw = new string(chars.ToArray());
-        var policy = options?.Code39Checksum ?? Code39ChecksumPolicy.None;
-        if (policy != Code39ChecksumPolicy.None && raw.Length >= 2) {
-            // Minimum length is one data symbol plus optional checksum.
-            var expected = GetCode39ChecksumChar(raw.AsSpan(0, raw.Length - 1));
-            if (expected != '#' && raw[raw.Length - 1] == expected) {
-                raw = raw.Substring(0, raw.Length - 1);
-            } else if (policy == Code39ChecksumPolicy.RequireValid) {
-                return false;
+        try {
+            var index = 0;
+            while (index + 12 <= modules.Length) {
+                var key = PatternBits(modules, index, 12);
+                if (!patternToChar.TryGetValue(key, out var ch)) return false;
+                if (count >= rented.Length) return false;
+                rented[count++] = ch;
+                index += 12;
+                if (index < modules.Length && !modules[index]) index++; // inter-character space
             }
+
+            if (count < 2) return false;
+            if (rented[0] != '*' || rented[count - 1] != '*') return false;
+
+            var rawLen = count - 2;
+            var raw = rawLen > 0 ? new string(rented, 1, rawLen) : string.Empty;
+            var policy = options?.Code39Checksum ?? Code39ChecksumPolicy.None;
+            if (policy != Code39ChecksumPolicy.None && raw.Length >= 2) {
+                // Minimum length is one data symbol plus optional checksum.
+                var expected = GetCode39ChecksumChar(raw.AsSpan(0, raw.Length - 1));
+                if (expected != '#' && raw[raw.Length - 1] == expected) {
+                    raw = raw.Substring(0, raw.Length - 1);
+                } else if (policy == Code39ChecksumPolicy.RequireValid) {
+                    return false;
+                }
+            }
+            text = DecodeCode39Extended(raw);
+            return true;
+        } finally {
+            ArrayPool<char>.Shared.Return(rented);
         }
-        text = DecodeCode39Extended(raw);
-        return true;
     }
 
     private static bool TryDecodeCode93(bool[] modules, out string text) {
@@ -318,6 +390,232 @@ public static class BarcodeDecoder {
         }
 
         text = DecodeCode93Extended(raw);
+        return true;
+    }
+
+    private static bool TryDecodeCodabar(bool[] modules, out string text) {
+        text = string.Empty;
+        if (modules.Length < 7) return false;
+        if (!modules[0]) return false;
+
+        var runs = GetRuns(modules);
+        if (runs.Length < 7) return false;
+
+        var maxSymbols = (runs.Length + 1) / 8;
+        if (maxSymbols <= 0) return false;
+        var rented = ArrayPool<char>.Shared.Rent(maxSymbols);
+        var count = 0;
+        var pos = 0;
+        try {
+            while (pos + 7 <= runs.Length) {
+                var min = int.MaxValue;
+                var max = 0;
+                for (var i = 0; i < 7; i++) {
+                    var len = runs[pos + i];
+                    if (len < min) min = len;
+                    if (len > max) max = len;
+                }
+                if (min <= 0) return false;
+                var threshold = (min + max) / 2.0;
+
+                var key = 0;
+                for (var i = 0; i < 7; i++) {
+                    key = (key << 1) | (runs[pos + i] > threshold ? 1 : 0);
+                }
+                if (!CodabarPatternMap.Value.TryGetValue(key, out var ch)) return false;
+                if (count >= rented.Length) return false;
+                rented[count++] = ch;
+                pos += 7;
+
+                if (pos < runs.Length) {
+                    if ((pos & 1) == 0) return false;
+                    pos++;
+                }
+            }
+
+            if (pos != runs.Length) return false;
+            if (count < 2) return false;
+            if (!CodabarTables.StartStopChars.Contains(rented[0]) || !CodabarTables.StartStopChars.Contains(rented[count - 1])) return false;
+
+            var rawLen = count - 2;
+            text = rawLen > 0 ? new string(rented, 1, rawLen) : string.Empty;
+            return true;
+        } finally {
+            ArrayPool<char>.Shared.Return(rented);
+        }
+    }
+
+    private static bool TryDecodeMsi(bool[] modules, BarcodeDecodeOptions? options, out string text) {
+        text = string.Empty;
+        if (modules.Length < MsiStartPattern.Length + MsiStopPattern.Length + 12) return false;
+        if (!MatchPattern(modules, 0, MsiStartPattern)) return false;
+        if (!MatchPattern(modules, modules.Length - MsiStopPattern.Length, MsiStopPattern)) return false;
+
+        var dataLen = modules.Length - MsiStartPattern.Length - MsiStopPattern.Length;
+        if (dataLen <= 0 || dataLen % 12 != 0) return false;
+        var count = dataLen / 12;
+
+        var digits = new char[count];
+        var offset = MsiStartPattern.Length;
+        for (var i = 0; i < count; i++) {
+            var key = PatternBits(modules, offset, 12);
+            if (!MsiPatternMap.Value.TryGetValue(key, out var digit)) return false;
+            digits[i] = digit;
+            offset += 12;
+        }
+
+        var raw = new string(digits);
+        var policy = options?.MsiChecksum ?? MsiChecksumPolicy.None;
+        if (policy != MsiChecksumPolicy.None) {
+            if (TryStripMsiChecksum(raw, out var stripped)) {
+                text = stripped;
+                return true;
+            }
+            if (policy == MsiChecksumPolicy.RequireValid) return false;
+        }
+
+        text = raw;
+        return true;
+    }
+
+    private static bool TryDecodeCode11(bool[] modules, BarcodeDecodeOptions? options, out string text) {
+        text = string.Empty;
+        if (modules.Length < 7) return false;
+        if (!modules[0]) return false;
+
+        var runs = GetRuns(modules);
+        if (runs.Length < 5) return false;
+
+        var maxSymbols = (runs.Length + 1) / 6;
+        if (maxSymbols <= 0) return false;
+        var rented = ArrayPool<char>.Shared.Rent(maxSymbols);
+        var count = 0;
+        var pos = 0;
+        try {
+            while (pos + 5 <= runs.Length) {
+                var min = int.MaxValue;
+                var max = 0;
+                for (var i = 0; i < 5; i++) {
+                    var len = runs[pos + i];
+                    if (len < min) min = len;
+                    if (len > max) max = len;
+                }
+                if (min <= 0) return false;
+                var threshold = (min + max) / 2.0;
+
+                var key = 0;
+                for (var i = 0; i < 5; i++) {
+                    key = (key << 1) | (runs[pos + i] > threshold ? 1 : 0);
+                }
+                if (!Code11PatternMap.Value.TryGetValue(key, out var ch)) return false;
+                if (count >= rented.Length) return false;
+                rented[count++] = ch;
+                pos += 5;
+
+                if (pos < runs.Length) {
+                    if ((pos & 1) == 0) return false;
+                    pos++;
+                }
+            }
+
+            if (pos != runs.Length) return false;
+            if (count < 2) return false;
+            if (rented[0] != '*' || rented[count - 1] != '*') return false;
+
+            var rawLen = count - 2;
+            var raw = rawLen > 0 ? new string(rented, 1, rawLen) : string.Empty;
+            var policy = options?.Code11Checksum ?? Code11ChecksumPolicy.None;
+            if (policy != Code11ChecksumPolicy.None) {
+                if (TryStripCode11Checksum(raw, out var stripped)) {
+                    text = stripped;
+                    return true;
+                }
+                if (policy == Code11ChecksumPolicy.RequireValid) return false;
+            }
+
+            text = raw;
+            return true;
+        } finally {
+            ArrayPool<char>.Shared.Return(rented);
+        }
+    }
+
+    private static bool TryDecodePlessey(bool[] modules, BarcodeDecodeOptions? options, out string text) {
+        if (TryDecodePlesseyInternal(modules, options, out text)) return true;
+        var reversed = new bool[modules.Length];
+        for (var i = 0; i < modules.Length; i++) reversed[i] = modules[modules.Length - 1 - i];
+        return TryDecodePlesseyInternal(reversed, options, out text);
+    }
+
+    private static bool TryDecodePlesseyInternal(bool[] modules, BarcodeDecodeOptions? options, out string text) {
+        text = string.Empty;
+        if (modules.Length < 24) return false;
+        if (!modules[0]) return false;
+
+        var runs = GetRuns(modules);
+        if (runs.Length < 13) return false;
+        if ((runs.Length & 1) == 0) return false;
+
+        var startRuns = PlesseyTables.StartBits.Length * 2;
+        if (runs.Length < startRuns + 9) return false;
+
+        var pos = 0;
+        for (var i = 0; i < PlesseyTables.StartBits.Length; i++) {
+            if (pos + 1 >= runs.Length) return false;
+            if (!TryDecodePlesseyPair(runs[pos], runs[pos + 1], out var bit)) return false;
+            if (bit != (PlesseyTables.StartBits[i] == '1')) return false;
+            pos += 2;
+        }
+
+        var stopStart = runs.Length - PlesseyTables.StopBits.Length * 2;
+        if ((stopStart & 1) == 0) return false;
+        var terminationIndex = stopStart - 1;
+        if (terminationIndex < pos) return false;
+
+        for (var i = 0; i < PlesseyTables.StopBits.Length; i++) {
+            var spaceIndex = stopStart + i * 2;
+            if (spaceIndex + 1 >= runs.Length) return false;
+            if (!TryDecodePlesseyPair(runs[spaceIndex + 1], runs[spaceIndex], out var bit)) return false;
+            if (bit != (PlesseyTables.StopBits[i] == '1')) return false;
+        }
+
+        var bitCount = terminationIndex - pos;
+        if ((bitCount & 1) != 0) return false;
+        var dataBits = bitCount / 2;
+        if (dataBits <= 8) return false;
+        if ((dataBits - 8) % 4 != 0) return false;
+
+        var bits = new bool[dataBits];
+        var bitPos = 0;
+        for (var i = pos; i < terminationIndex; i += 2) {
+            if (!TryDecodePlesseyPair(runs[i], runs[i + 1], out var bit)) return false;
+            bits[bitPos++] = bit;
+        }
+
+        var payloadBits = dataBits - 8;
+        var crcBits = new bool[8];
+        Array.Copy(bits, payloadBits, crcBits, 0, 8);
+
+        var payload = new bool[payloadBits];
+        Array.Copy(bits, 0, payload, 0, payloadBits);
+
+        var policy = options?.PlesseyChecksum ?? PlesseyChecksumPolicy.RequireValid;
+        if (policy != PlesseyChecksumPolicy.None) {
+            var expected = CalcPlesseyCrc(payload);
+            var actual = BitsToByte(crcBits);
+            if (expected != actual && policy == PlesseyChecksumPolicy.RequireValid) return false;
+        }
+
+        var chars = new char[payloadBits / 4];
+        for (var i = 0; i < chars.Length; i++) {
+            var value = 0;
+            for (var b = 0; b < 4; b++) {
+                if (payload[i * 4 + b]) value |= 1 << b;
+            }
+            chars[i] = value < 10 ? (char)('0' + value) : (char)('A' + (value - 10));
+        }
+
+        text = new string(chars);
         return true;
     }
 
@@ -355,7 +653,7 @@ public static class BarcodeDecoder {
         if (sum != checksum) return false;
 
         var start = codes[0];
-        var set = start == Code128Tables.StartC ? 'C' : start == Code128Tables.StartB ? 'B' : '?';
+        var set = start == Code128Tables.StartC ? 'C' : start == Code128Tables.StartB ? 'B' : start == Code128Tables.StartA ? 'A' : '?';
         if (set == '?') return false;
 
         var sb = new System.Text.StringBuilder();
@@ -371,9 +669,30 @@ public static class BarcodeDecoder {
                 sb.Append(Gs1.GroupSeparator);
                 continue;
             }
+            if (set == 'A') {
+                if (code == Code128Tables.CodeC) {
+                    set = 'C';
+                    continue;
+                }
+                if (code == Code128Tables.CodeB) {
+                    set = 'B';
+                    continue;
+                }
+                if (code == Code128Tables.CodeA) continue;
+                if (code >= 0 && code <= 95) {
+                    sb.Append((char)code);
+                    continue;
+                }
+                return false;
+            }
+
             if (set == 'B') {
                 if (code == Code128Tables.CodeC) {
                     set = 'C';
+                    continue;
+                }
+                if (code == Code128Tables.CodeA) {
+                    set = 'A';
                     continue;
                 }
                 if (code == Code128Tables.CodeB) continue;
@@ -387,6 +706,10 @@ public static class BarcodeDecoder {
             if (set == 'C') {
                 if (code == Code128Tables.CodeB) {
                     set = 'B';
+                    continue;
+                }
+                if (code == Code128Tables.CodeA) {
+                    set = 'A';
                     continue;
                 }
                 if (code == Code128Tables.CodeC) continue;
@@ -801,18 +1124,18 @@ public static class BarcodeDecoder {
         return sb.ToString();
     }
 
-    private static string PatternKey(bool[] modules, int offset, int length) {
-        var key = 0;
-        for (var i = 0; i < length; i++) {
-            key = (key << 1) | (modules[offset + i] ? 1 : 0);
-        }
-        return Convert.ToString(key, 2).PadLeft(length, '0');
-    }
-
     private static uint PatternBits(bool[] modules, int offset, int length) {
         uint key = 0;
         for (var i = 0; i < length; i++) {
             key = (key << 1) | (modules[offset + i] ? 1u : 0u);
+        }
+        return key;
+    }
+
+    private static int PatternBitsFromString(string pattern) {
+        var key = 0;
+        for (var i = 0; i < pattern.Length; i++) {
+            key = (key << 1) | (pattern[i] == '1' ? 1 : 0);
         }
         return key;
     }
@@ -870,15 +1193,151 @@ public static class BarcodeDecoder {
         return ' ';
     }
 
+    private static bool TryStripMsiChecksum(string raw, out string stripped) {
+        stripped = raw;
+        if (raw.Length >= 2) {
+            var data = raw.Substring(0, raw.Length - 2);
+            var check1 = raw[raw.Length - 2];
+            var check2 = raw[raw.Length - 1];
+            if (CalcMsiMod10(data) == check1 && CalcMsiMod10(data + check1) == check2) {
+                stripped = data;
+                return true;
+            }
+        }
+        if (raw.Length >= 1) {
+            var data = raw.Substring(0, raw.Length - 1);
+            var check = raw[raw.Length - 1];
+            if (CalcMsiMod10(data) == check) {
+                stripped = data;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static char CalcMsiMod10(string content) {
+        var sum = 0;
+        var doubleIt = true;
+        for (var i = content.Length - 1; i >= 0; i--) {
+            var digit = content[i] - '0';
+            if (doubleIt) {
+                digit *= 2;
+                if (digit > 9) digit = (digit / 10) + (digit % 10);
+            }
+            sum += digit;
+            doubleIt = !doubleIt;
+        }
+        var mod = sum % 10;
+        var check = mod == 0 ? 0 : 10 - mod;
+        return (char)('0' + check);
+    }
+
+    private static bool TryStripCode11Checksum(string raw, out string stripped) {
+        stripped = raw;
+        if (raw.Length >= 2) {
+            var data = raw.Substring(0, raw.Length - 2);
+            var c = raw[raw.Length - 2];
+            var k = raw[raw.Length - 1];
+            if (CalcCode11Checksum(data, 10) == c && CalcCode11Checksum(data + c, 9) == k) {
+                stripped = data;
+                return true;
+            }
+        }
+        if (raw.Length >= 1) {
+            var data = raw.Substring(0, raw.Length - 1);
+            var c = raw[raw.Length - 1];
+            if (CalcCode11Checksum(data, 10) == c) {
+                stripped = data;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static char CalcCode11Checksum(string content, int maxWeight) {
+        var sum = 0;
+        var weight = 1;
+        for (var i = content.Length - 1; i >= 0; i--) {
+            var ch = content[i];
+            if (!Code11Tables.ValueTable.TryGetValue(ch, out var value)) return '-';
+            sum += value * weight;
+            weight++;
+            if (weight > maxWeight) weight = 1;
+        }
+        var check = sum % 11;
+        return check == 10 ? '-' : (char)('0' + check);
+    }
+
+    private static bool TryDecodePlesseyPair(int barRun, int spaceRun, out bool bit) {
+        bit = false;
+        if (barRun == spaceRun) return false;
+        bit = barRun > spaceRun;
+        return true;
+    }
+
+    private static byte CalcPlesseyCrc(bool[] bits) {
+        const int poly = 0x1E9;
+        var crc = 0;
+        for (var i = 0; i < bits.Length; i++) {
+            crc = (crc << 1) | (bits[i] ? 1 : 0);
+            if ((crc & 0x100) != 0) crc ^= poly;
+        }
+        for (var i = 0; i < 8; i++) {
+            crc <<= 1;
+            if ((crc & 0x100) != 0) crc ^= poly;
+        }
+        return (byte)(crc & 0xFF);
+    }
+
+    private static byte BitsToByte(bool[] bits) {
+        var value = 0;
+        for (var i = 0; i < bits.Length; i++) {
+            if (bits[i]) value |= 1 << i;
+        }
+        return (byte)value;
+    }
+
     private static readonly bool[] GuardStart = { true, false, true };
     private static readonly bool[] GuardCenter = { false, true, false, true, false };
     private static readonly bool[] GuardUpcEEnd = { false, true, false, true, false, true };
+    private static readonly bool[] MsiStartPattern = { true, true, false };
+    private static readonly bool[] MsiStopPattern = { true, false, false, true };
 
-    private static readonly Lazy<Dictionary<string, char>> Code39PatternMap = new(() => {
-        var dict = new Dictionary<string, char>();
+    private static readonly Lazy<Dictionary<uint, char>> Code39PatternMap = new(() => {
+        var dict = new Dictionary<uint, char>();
         foreach (var kvp in Code39Tables.EncodingTable) {
-            var key = string.Concat(kvp.Value.data.Select(b => b ? '1' : '0'));
+            uint key = 0;
+            var data = kvp.Value.data;
+            for (var i = 0; i < data.Length; i++) {
+                key = (key << 1) | (data[i] ? 1u : 0u);
+            }
             dict[key] = kvp.Key;
+        }
+        return dict;
+    });
+
+    private static readonly Lazy<Dictionary<int, char>> CodabarPatternMap = new(() => {
+        var dict = new Dictionary<int, char>();
+        foreach (var kvp in CodabarTables.EncodingTable) {
+            dict[PatternBitsFromString(kvp.Value)] = kvp.Key;
+        }
+        return dict;
+    });
+
+    private static readonly Lazy<Dictionary<int, char>> Code11PatternMap = new(() => {
+        var dict = new Dictionary<int, char> {
+            { PatternBitsFromString(Code11Tables.StartStopPattern), '*' }
+        };
+        foreach (var kvp in Code11Tables.EncodingTable) {
+            dict[PatternBitsFromString(kvp.Value)] = kvp.Key;
+        }
+        return dict;
+    });
+
+    private static readonly Lazy<Dictionary<uint, char>> MsiPatternMap = new(() => {
+        var dict = new Dictionary<uint, char>();
+        foreach (var kvp in MsiTables.DigitPatterns) {
+            dict[(uint)PatternBitsFromString(kvp.Value)] = kvp.Key;
         }
         return dict;
     });

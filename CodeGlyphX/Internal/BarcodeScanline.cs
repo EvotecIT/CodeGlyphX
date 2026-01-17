@@ -172,46 +172,63 @@ internal static class BarcodeScanline {
         modules = Array.Empty<bool>();
         if (luminance.Length == 0) return false;
 
-        var runs = new List<(bool isBar, int len)>(luminance.Length / 2);
+        var runs = ArrayPool<int>.Shared.Rent(luminance.Length);
+        var runBars = ArrayPool<bool>.Shared.Rent(luminance.Length);
+        var runCount = 0;
         var current = luminance[0] < threshold;
         var runLen = 1;
-        for (var i = 1; i < luminance.Length; i++) {
-            var isBar = luminance[i] < threshold;
-            if (isBar == current) {
-                runLen++;
-            } else {
-                runs.Add((current, runLen));
-                current = isBar;
-                runLen = 1;
+
+        try {
+            for (var i = 1; i < luminance.Length; i++) {
+                var isBar = luminance[i] < threshold;
+                if (isBar == current) {
+                    runLen++;
+                } else {
+                    runBars[runCount] = current;
+                    runs[runCount++] = runLen;
+                    current = isBar;
+                    runLen = 1;
+                }
             }
+            runBars[runCount] = current;
+            runs[runCount++] = runLen;
+
+            var start = 0;
+            while (start < runCount && !runBars[start]) start++;
+            var end = runCount - 1;
+            while (end >= start && !runBars[end]) end--;
+            if (start > end) return false;
+
+            var minRun = int.MaxValue;
+            for (var i = start; i <= end; i++) {
+                if (runs[i] < minRun) minRun = runs[i];
+            }
+            if (minRun <= 0) return false;
+
+            var totalModules = 0;
+            for (var i = start; i <= end; i++) {
+                var modulesCount = (int)Math.Round(runs[i] / (double)minRun);
+                if (modulesCount < 1) modulesCount = 1;
+                totalModules += modulesCount;
+            }
+            if (totalModules <= 0) return false;
+
+            modules = new bool[totalModules];
+            var offset = 0;
+            for (var i = start; i <= end; i++) {
+                var modulesCount = (int)Math.Round(runs[i] / (double)minRun);
+                if (modulesCount < 1) modulesCount = 1;
+                var isBar = runBars[i];
+                for (var m = 0; m < modulesCount; m++) {
+                    modules[offset++] = isBar;
+                }
+            }
+
+            return true;
+        } finally {
+            ArrayPool<int>.Shared.Return(runs);
+            ArrayPool<bool>.Shared.Return(runBars);
         }
-        runs.Add((current, runLen));
-
-        var start = 0;
-        while (start < runs.Count && !runs[start].isBar) start++;
-        var end = runs.Count - 1;
-        while (end >= start && !runs[end].isBar) end--;
-        if (start > end) return false;
-
-        var trimmed = runs.GetRange(start, end - start + 1);
-
-        var minRun = int.MaxValue;
-        for (var i = 0; i < trimmed.Count; i++) {
-            if (trimmed[i].len < minRun) minRun = trimmed[i].len;
-        }
-        if (minRun <= 0) return false;
-
-        var moduleBits = new List<bool>(luminance.Length);
-        for (var i = 0; i < trimmed.Count; i++) {
-            var run = trimmed[i];
-            var modulesCount = (int)Math.Round(run.len / (double)minRun);
-            if (modulesCount < 1) modulesCount = 1;
-            for (var m = 0; m < modulesCount; m++) moduleBits.Add(run.isBar);
-        }
-
-        if (moduleBits.Count == 0) return false;
-        modules = moduleBits.ToArray();
-        return true;
     }
 
     private static void TryCollectCandidatesFromHorizontal(PixelSpan pixels, int width, int height, int stride, PixelFormat format, int y, List<bool[]> candidates) {

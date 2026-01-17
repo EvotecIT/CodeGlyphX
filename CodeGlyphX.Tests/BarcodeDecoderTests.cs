@@ -66,6 +66,68 @@ public sealed class BarcodeDecoderTests {
     }
 
     [Fact]
+    public void Decode_Codabar_FromPixels() {
+        var barcode = BarcodeEncoder.EncodeCodabar("40156", start: 'A', stop: 'B');
+        var pixels = BarcodePngRenderer.RenderPixels(barcode, new BarcodePngRenderOptions {
+            ModuleSize = 3,
+            QuietZone = 10,
+            HeightModules = 40
+        }, out var width, out var height, out var stride);
+
+        Assert.True(BarcodeDecoder.TryDecode(pixels, width, height, stride, PixelFormat.Rgba32, out var decoded));
+        Assert.Equal(BarcodeType.Codabar, decoded.Type);
+        Assert.Equal("40156", decoded.Text);
+    }
+
+    [Fact]
+    public void Decode_Msi_FromPixels() {
+        var barcode = BarcodeEncoder.EncodeMsi("123456");
+        var pixels = BarcodePngRenderer.RenderPixels(barcode, new BarcodePngRenderOptions {
+            ModuleSize = 3,
+            QuietZone = 10,
+            HeightModules = 40
+        }, out var width, out var height, out var stride);
+
+        var options = new BarcodeDecodeOptions {
+            MsiChecksum = MsiChecksumPolicy.StripIfValid
+        };
+        Assert.True(BarcodeDecoder.TryDecode(pixels, width, height, stride, PixelFormat.Rgba32, options, out var decoded));
+        Assert.Equal(BarcodeType.MSI, decoded.Type);
+        Assert.Equal("123456", decoded.Text);
+    }
+
+    [Fact]
+    public void Decode_Code11_FromPixels() {
+        var barcode = BarcodeEncoder.EncodeCode11("123-45", includeChecksum: true);
+        var pixels = BarcodePngRenderer.RenderPixels(barcode, new BarcodePngRenderOptions {
+            ModuleSize = 3,
+            QuietZone = 10,
+            HeightModules = 40
+        }, out var width, out var height, out var stride);
+
+        var options = new BarcodeDecodeOptions {
+            Code11Checksum = Code11ChecksumPolicy.StripIfValid
+        };
+        Assert.True(BarcodeDecoder.TryDecode(pixels, width, height, stride, PixelFormat.Rgba32, options, out var decoded));
+        Assert.Equal(BarcodeType.Code11, decoded.Type);
+        Assert.Equal("123-45", decoded.Text);
+    }
+
+    [Fact]
+    public void Decode_Plessey_FromPixels() {
+        var barcode = BarcodeEncoder.EncodePlessey("1A2B");
+        var pixels = BarcodePngRenderer.RenderPixels(barcode, new BarcodePngRenderOptions {
+            ModuleSize = 3,
+            QuietZone = 10,
+            HeightModules = 40
+        }, out var width, out var height, out var stride);
+
+        Assert.True(BarcodeDecoder.TryDecode(pixels, width, height, stride, PixelFormat.Rgba32, out var decoded));
+        Assert.Equal(BarcodeType.Plessey, decoded.Type);
+        Assert.Equal("1A2B", decoded.Text);
+    }
+
+    [Fact]
     public void Decode_Ean13_FromPixels() {
         var barcode = BarcodeEncoder.Encode(BarcodeType.EAN, "590123412345");
         var pixels = BarcodePngRenderer.RenderPixels(barcode, new BarcodePngRenderOptions {
@@ -88,6 +150,17 @@ public sealed class BarcodeDecoderTests {
         Assert.True(BarcodeDecoder.TryDecode(stretched, out var decoded));
         Assert.Equal(BarcodeType.EAN, decoded.Type);
         Assert.Equal("5901234123457", decoded.Text);
+    }
+
+    [Fact]
+    public void Decode_Code128_FromModules_Reversed() {
+        var barcode = BarcodeEncoder.Encode(BarcodeType.Code128, "REVERSED-128");
+        var modules = ExpandModules(barcode);
+        var reversed = ReverseModules(modules);
+
+        Assert.True(BarcodeDecoder.TryDecode(reversed, out var decoded));
+        Assert.Equal(BarcodeType.Code128, decoded.Type);
+        Assert.Equal("REVERSED-128", decoded.Text);
     }
 
     [Fact]
@@ -148,6 +221,17 @@ public sealed class BarcodeDecoderTests {
         Assert.Equal("INVERT-128", decoded.Text);
     }
 
+    [Fact]
+    public void Decode_Code128_SetA_FromModules() {
+        var input = "\u0001AB\u001F";
+        var barcode = BarcodeEncoder.Encode(BarcodeType.Code128, input);
+        var modules = ExpandModules(barcode);
+
+        Assert.True(BarcodeDecoder.TryDecode(modules, out var decoded));
+        Assert.Equal(BarcodeType.Code128, decoded.Type);
+        Assert.Equal(input, decoded.Text);
+    }
+
     private static byte[] RotateClockwise(byte[] pixels, int width, int height, out int outWidth, out int outHeight) {
         outWidth = height;
         outHeight = width;
@@ -195,6 +279,15 @@ public sealed class BarcodeDecoderTests {
         }
         return output;
     }
+
+    private static bool[] ReverseModules(bool[] modules) {
+        var output = new bool[modules.Length];
+        for (var i = 0; i < modules.Length; i++) {
+            output[i] = modules[modules.Length - 1 - i];
+        }
+        return output;
+    }
+
 
     private static string BuildUpcEWithChecksum(char numberSystem, string digits) {
         var upcA = ExpandUpcEToUpcA(numberSystem, digits);

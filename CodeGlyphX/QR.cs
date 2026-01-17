@@ -523,6 +523,13 @@ public static class QR {
     }
 
     /// <summary>
+    /// Attempts to parse a raw QR payload into a structured representation with optional validation.
+    /// </summary>
+    public static bool TryParsePayload(string payload, QrPayloadParseOptions? options, out QrParsedPayload parsed, out QrPayloadValidationResult validation) {
+        return QrPayloadParser.TryParse(payload, options, out parsed, out validation);
+    }
+
+    /// <summary>
     /// Parses a raw QR payload into a structured representation.
     /// </summary>
     public static QrParsedPayload ParsePayload(string payload) {

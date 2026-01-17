@@ -8,6 +8,18 @@ public sealed class BarcodeDecodeOptions {
     /// Controls how Code39 checksum characters are handled during decode.
     /// </summary>
     public Code39ChecksumPolicy Code39Checksum { get; set; } = Code39ChecksumPolicy.None;
+    /// <summary>
+    /// Controls how MSI checksum digits are handled during decode.
+    /// </summary>
+    public MsiChecksumPolicy MsiChecksum { get; set; } = MsiChecksumPolicy.None;
+    /// <summary>
+    /// Controls how Code 11 checksum characters are handled during decode.
+    /// </summary>
+    public Code11ChecksumPolicy Code11Checksum { get; set; } = Code11ChecksumPolicy.None;
+    /// <summary>
+    /// Controls whether Plessey CRC validation is required during decode.
+    /// </summary>
+    public PlesseyChecksumPolicy PlesseyChecksum { get; set; } = PlesseyChecksumPolicy.RequireValid;
 }
 
 /// <summary>
@@ -24,6 +36,60 @@ public enum Code39ChecksumPolicy {
     StripIfValid,
     /// <summary>
     /// Require a valid checksum and strip it; otherwise decoding fails.
+    /// </summary>
+    RequireValid
+}
+
+/// <summary>
+/// Policy for handling optional MSI checksum digits.
+/// </summary>
+public enum MsiChecksumPolicy {
+    /// <summary>
+    /// Do not strip checksum digits (default, avoids accidental data loss).
+    /// </summary>
+    None,
+    /// <summary>
+    /// Strip trailing checksum digit(s) when valid.
+    /// </summary>
+    StripIfValid,
+    /// <summary>
+    /// Require valid checksum digit(s); otherwise decoding fails.
+    /// </summary>
+    RequireValid
+}
+
+/// <summary>
+/// Policy for handling optional Code 11 checksum characters.
+/// </summary>
+public enum Code11ChecksumPolicy {
+    /// <summary>
+    /// Do not strip checksum characters (default, avoids accidental data loss).
+    /// </summary>
+    None,
+    /// <summary>
+    /// Strip trailing checksum character(s) when valid.
+    /// </summary>
+    StripIfValid,
+    /// <summary>
+    /// Require valid checksum character(s); otherwise decoding fails.
+    /// </summary>
+    RequireValid
+}
+
+/// <summary>
+/// Policy for handling Plessey CRC validation.
+/// </summary>
+public enum PlesseyChecksumPolicy {
+    /// <summary>
+    /// Do not validate CRC.
+    /// </summary>
+    None,
+    /// <summary>
+    /// Validate CRC and ignore mismatches.
+    /// </summary>
+    StripIfValid,
+    /// <summary>
+    /// Require valid CRC; otherwise decoding fails.
     /// </summary>
     RequireValid
 }

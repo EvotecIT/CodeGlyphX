@@ -26,7 +26,7 @@ CodeGlyphX is a fast, dependency-free toolkit for QR codes and barcodes, with ro
 
 **CodeGlyphX** is a no-deps QR + barcode toolkit for .NET with:
 - Reliable QR decoding (ECI, FNC1/GS1, Kanji, structured append, Micro QR)
-- 1D barcode encoding/decoding (Code128/GS1-128, Code39, Code93, EAN/UPC, ITF-14)
+- 1D barcode encoding/decoding (Code128/GS1-128, Code39, Code93, Code11, Codabar, MSI, Plessey, EAN/UPC, ITF-14)
 - 2D encoding/decoding (Data Matrix, PDF417)
 - Renderers (SVG / HTML / PNG / JPEG / BMP / PDF / EPS / ASCII) and image decoding (PNG/JPEG/GIF/BMP/PPM/TGA)
 - OTP helpers (otpauth://totp + Base32)
@@ -81,15 +81,20 @@ dotnet add package CodeGlyphX
 | --- | --- | --- | --- | --- |
 | QR | ✅ | ✅ | All (see Output formats) | ECI, FNC1/GS1, Kanji, structured append |
 | Micro QR | ✅ | ✅ | All (see Output formats) | Versions M1–M4 |
-| Code128 | ✅ | ✅ | All (see Output formats) | Set B/C |
+| Code128 | ✅ | ✅ | All (see Output formats) | Set A/B/C |
 | GS1-128 | ✅ | ✅ | All (see Output formats) | FNC1 + AI helpers |
 | Code39 | ✅ | ✅ | All (see Output formats) | Optional checksum |
 | Code93 | ✅ | ✅ | All (see Output formats) | Optional checksum |
+| Code11 | ✅ | ✅ | All (see Output formats) | Optional checksum |
+| Codabar | ✅ | ✅ | All (see Output formats) | A/B/C/D start/stop |
+| MSI | ✅ | ✅ | All (see Output formats) | Mod10 / Mod10Mod10 |
+| Plessey | ✅ | ✅ | All (see Output formats) | CRC |
 | EAN-8 / EAN-13 | ✅ | ✅ | All (see Output formats) | Checksum validation |
 | UPC-A / UPC-E | ✅ | ✅ | All (see Output formats) | Checksum validation |
 | ITF-14 | ✅ | ✅ | All (see Output formats) | Checksum validation |
 | Data Matrix | ✅ | ✅ | All (see Output formats) | ASCII/C40/Text/X12/EDIFACT/Base256 |
 | PDF417 | ✅ | ✅ | All (see Output formats) | Full encode/decode |
+| Aztec | 🚧 | 🚧 | All (see Output formats) | Scaffolded (planned) |
 
 ## Features
 
@@ -99,9 +104,15 @@ dotnet add package CodeGlyphX
 - [x] Data Matrix + PDF417 encode + decode
 - [x] SVG / HTML / PNG / JPEG / BMP / PDF / EPS / ASCII renderers
 - [x] Image decode: PNG / JPEG / GIF / BMP / PPM / TGA
-- [x] Base64 helpers for rendered outputs
+- [x] Base64 + data URI helpers for rendered outputs
 - [x] Payload helpers (URL, WiFi, Email, Phone, SMS, Contact, Calendar, OTP, Social)
 - [x] WPF controls and demo apps
+- [ ] Aztec (planned)
+
+## AOT & trimming
+
+CodeGlyphX is AOT-friendly (no reflection, no runtime codegen) and ships with trimming/AOT analyzers enabled for .NET 8+ targets.  
+Recommended publish flags: `PublishAot=true` (native), or `PublishTrimmed=true` (size) for app projects.
 
 ## Output formats (Save by extension)
 
@@ -131,7 +142,7 @@ QR payload helpers generate well-known structured strings so scanners can trigge
 | Contacts | vCard / MeCard |
 | OTP | TOTP / HOTP (otpauth://) |
 | Social & Stores | App Store (Apple/Google), Facebook, X/Twitter, TikTok, LinkedIn, WhatsApp |
-| Payments | UPI, SEPA Girocode (EPC), BezahlCode, Swiss QR Bill, Slovenian UPN |
+| Payments | UPI, SEPA Girocode (EPC), BezahlCode (contact/payment/debit/periodic), Swiss QR Bill, Slovenian UPN, Russia Payment Order (ST00012) |
 | Crypto & Network | Bitcoin / Bitcoin Cash / Litecoin, Monero, ShadowSocks |
 
 ## Image decoding (for readers)
@@ -169,6 +180,13 @@ using CodeGlyphX;
 Barcode.Save(BarcodeType.Code128, "CODE128-12345", "code128.png");
 Barcode.Save(BarcodeType.Code128, "CODE128-12345", "code128.pdf");
 Barcode.Save(BarcodeType.Code128, "CODE128-12345", "code128.eps");
+```
+
+```csharp
+using CodeGlyphX;
+
+// One-liners with defaults
+var png = BarcodeEasy.RenderPng(BarcodeType.Code128, "CODE128-12345");
 ```
 
 ```csharp

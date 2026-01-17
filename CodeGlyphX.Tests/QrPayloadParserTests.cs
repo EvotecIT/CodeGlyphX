@@ -35,7 +35,7 @@ public sealed class QrPayloadParserTests {
         Assert.Equal(new byte[] { (byte)'a', (byte)'b', (byte)'c' }, payload);
         Assert.Single(segments);
         Assert.Equal(QrTextEncoding.Utf8, segments[0].Encoding);
-        Assert.Equal(new byte[] { (byte)'a', (byte)'b', (byte)'c' }, segments[0].Bytes);
+        Assert.True(segments[0].Span.SequenceEqual(new byte[] { (byte)'a', (byte)'b', (byte)'c' }));
         Assert.False(structuredAppend.HasValue);
         Assert.Equal(QrFnc1Mode.None, fnc1Mode);
     }
@@ -71,7 +71,7 @@ public sealed class QrPayloadParserTests {
         Assert.Equal(new byte[] { (byte)'A', (byte)'1', (byte)'-' }, payload);
         Assert.Single(segments);
         Assert.Equal(QrTextEncoding.Latin1, segments[0].Encoding);
-        Assert.Equal(new byte[] { (byte)'A', (byte)'1', (byte)'-' }, segments[0].Bytes);
+        Assert.True(segments[0].Span.SequenceEqual(new byte[] { (byte)'A', (byte)'1', (byte)'-' }));
         Assert.False(structuredAppend.HasValue);
         Assert.Equal(QrFnc1Mode.None, fnc1Mode);
     }
@@ -147,7 +147,7 @@ public sealed class QrPayloadParserTests {
         Assert.Equal(new byte[] { 0x80, 0xFF }, payload);
         Assert.Single(segments);
         Assert.Equal(QrTextEncoding.Latin1, segments[0].Encoding);
-        Assert.Equal(new byte[] { 0x80, 0xFF }, segments[0].Bytes);
+        Assert.True(segments[0].Span.SequenceEqual(new byte[] { 0x80, 0xFF }));
         Assert.False(structuredAppend.HasValue);
         Assert.Equal(QrFnc1Mode.None, fnc1Mode);
     }
@@ -185,9 +185,9 @@ public sealed class QrPayloadParserTests {
         Assert.Equal(new byte[] { 0xC2, 0xA2, 0xA3 }, payload);
         Assert.Equal(2, segments.Length);
         Assert.Equal(QrTextEncoding.Utf8, segments[0].Encoding);
-        Assert.Equal(new byte[] { 0xC2, 0xA2 }, segments[0].Bytes);
+        Assert.True(segments[0].Span.SequenceEqual(new byte[] { 0xC2, 0xA2 }));
         Assert.Equal(QrTextEncoding.Latin1, segments[1].Encoding);
-        Assert.Equal(new byte[] { 0xA3 }, segments[1].Bytes);
+        Assert.True(segments[1].Span.SequenceEqual(new byte[] { 0xA3 }));
         Assert.False(structuredAppend.HasValue);
         Assert.Equal(QrFnc1Mode.None, fnc1Mode);
 

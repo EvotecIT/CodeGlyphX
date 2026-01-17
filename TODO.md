@@ -31,6 +31,7 @@
 ## Phase 4 — 1D barcode completeness (weeks)
 - [x] Encode: Code39, Code93, EAN-8/13, UPC-A, UPC-E, ITF-14.
 - [x] Encode: GS1-128 (FNC1 + AI helpers).
+- [x] Encode/Decode: Codabar, MSI, Code11, Plessey.
 - [x] Decode: ITF-14 scanline.
 - [x] Decode: 1D scanline decode + checksum validation (EAN/UPC first).
 - [x] Render: optional label text beneath bars.
@@ -40,12 +41,13 @@
 - [x] DataMatrix: encode C40/Text/X12/EDIFACT (ECC200).
 - [x] PDF417: full encode/decode + ECC tuning.
 - [x] PDF417: validate perspective warp sampling on skewed screenshots (test + tuning).
-- [ ] Aztec + MaxiCode (advanced, optional).
+- [ ] Aztec + MaxiCode (advanced, optional) — Aztec scaffolded.
 
 ## Phase 5b — Payload completeness (parallel)
-- [ ] Payments: RussiaPaymentOrder payload (GOST R 56042-2014).
-- [ ] Payments: additional BezahlCode authorities (single payment/direct debit).
-- [ ] Extras: QR "bookmark" title normalization + extended schema validation.
+- [x] Payments: RussiaPaymentOrder payload (ST00012).
+- [x] Payments: additional BezahlCode authorities (single payment/direct debit/periodic).
+- [x] Extras: QR "bookmark" title normalization.
+- [x] Extras: extended schema validation.
 
 ## Phase 6 — Screen reader robustness (hard)
 - [x] Multi-QR detection per frame.
@@ -60,16 +62,16 @@
 - [x] Unified “CodeGlyph” detect for QR/1D/DataMatrix/PDF417.
 - [x] Presets: OTP/Logo/WiFi/Contact with safe defaults.
 - [x] Fluent API + static API + options objects (with easy defaults).
-- [ ] Output formats: ASCII renderer (text/lines).
-- [ ] Output formats: Base64 (raw + data URI) for PNG/JPEG/BMP.
-- [ ] Output formats: BMP writer (24-bit/32-bit).
-- [ ] Output formats: PDF byte writer (single-page, vector or image).
-- [ ] Output formats: PostScript/EPS writer (vector).
+- [x] Output formats: ASCII renderer (text/lines).
+- [x] Output formats: Base64 (raw + data URI) for PNG/JPEG/BMP.
+- [x] Output formats: BMP writer (24-bit/32-bit).
+- [x] Output formats: PDF byte writer (single-page, vector or image).
+- [x] Output formats: PostScript/EPS writer (vector).
 
 ## Phase 8 — Performance + AOT polish
-- [ ] Reduce allocations in hot decode loops.
-- [ ] Span-friendly paths where possible.
-- [ ] AOT + trimming hints (no reflection).
+- [x] Reduce allocations in hot decode loops.
+- [x] Span-friendly paths where possible.
+- [x] AOT + trimming hints (no reflection).
 - [ ] Optional SIMD for thresholding if worthwhile.
 - [x] Image decode: JPEG baseline (SOF0).
 - [x] Image decode: JPEG progressive (SOF2) + EXIF orientation.

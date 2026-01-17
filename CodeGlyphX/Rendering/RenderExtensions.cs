@@ -134,4 +134,28 @@ public static class RenderExtensions {
         if (string.IsNullOrWhiteSpace(mimeType)) throw new ArgumentException("Mime type cannot be null, empty, or whitespace.", nameof(mimeType));
         return "data:" + mimeType + ";base64," + Convert.ToBase64String(data);
     }
+
+    /// <summary>
+    /// Encodes PNG bytes as a Base64 data URI.
+    /// </summary>
+    public static string ToPngDataUri(this byte[] data) => data.ToDataUri("image/png");
+
+    /// <summary>
+    /// Encodes JPEG bytes as a Base64 data URI.
+    /// </summary>
+    public static string ToJpegDataUri(this byte[] data) => data.ToDataUri("image/jpeg");
+
+    /// <summary>
+    /// Encodes BMP bytes as a Base64 data URI.
+    /// </summary>
+    public static string ToBmpDataUri(this byte[] data) => data.ToDataUri("image/bmp");
+
+    /// <summary>
+    /// Encodes SVG content as a Base64 data URI.
+    /// </summary>
+    public static string ToSvgDataUri(this string svg, Encoding? encoding = null) {
+        if (svg is null) throw new ArgumentNullException(nameof(svg));
+        var enc = encoding ?? Encoding.UTF8;
+        return "data:image/svg+xml;base64," + Convert.ToBase64String(enc.GetBytes(svg));
+    }
 }

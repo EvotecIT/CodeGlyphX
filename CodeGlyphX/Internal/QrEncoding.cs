@@ -78,20 +78,28 @@ internal static class QrEncoding {
 
     public static string Decode(QrTextEncoding encoding, byte[] bytes) {
         if (bytes is null) throw new ArgumentNullException(nameof(bytes));
-        if (bytes.Length == 0) return string.Empty;
+        return Decode(encoding, bytes, 0, bytes.Length);
+    }
+
+    public static string Decode(QrTextEncoding encoding, byte[] bytes, int offset, int length) {
+        if (bytes is null) throw new ArgumentNullException(nameof(bytes));
+        if (offset < 0) throw new ArgumentOutOfRangeException(nameof(offset));
+        if (length < 0) throw new ArgumentOutOfRangeException(nameof(length));
+        if (offset + length > bytes.Length) throw new ArgumentOutOfRangeException(nameof(length));
+        if (length == 0) return string.Empty;
 
         return encoding switch {
-            QrTextEncoding.Utf8 => Encoding.UTF8.GetString(bytes),
-            QrTextEncoding.Ascii => Encoding.ASCII.GetString(bytes),
-            QrTextEncoding.Latin1 => DecodeSingleByte(bytes, LATIN1),
-            QrTextEncoding.Iso8859_2 => DecodeSingleByte(bytes, ISO8859_2),
-            QrTextEncoding.Iso8859_4 => DecodeSingleByte(bytes, ISO8859_4),
-            QrTextEncoding.Iso8859_5 => DecodeSingleByte(bytes, ISO8859_5),
-            QrTextEncoding.Iso8859_7 => DecodeSingleByte(bytes, ISO8859_7),
-            QrTextEncoding.Iso8859_10 => DecodeSingleByte(bytes, ISO8859_10),
-            QrTextEncoding.Iso8859_15 => DecodeSingleByte(bytes, ISO8859_15),
-            QrTextEncoding.ShiftJis => QrShiftJis.Decode(bytes),
-            _ => Encoding.UTF8.GetString(bytes)
+            QrTextEncoding.Utf8 => Encoding.UTF8.GetString(bytes, offset, length),
+            QrTextEncoding.Ascii => Encoding.ASCII.GetString(bytes, offset, length),
+            QrTextEncoding.Latin1 => DecodeSingleByte(bytes, offset, length, LATIN1),
+            QrTextEncoding.Iso8859_2 => DecodeSingleByte(bytes, offset, length, ISO8859_2),
+            QrTextEncoding.Iso8859_4 => DecodeSingleByte(bytes, offset, length, ISO8859_4),
+            QrTextEncoding.Iso8859_5 => DecodeSingleByte(bytes, offset, length, ISO8859_5),
+            QrTextEncoding.Iso8859_7 => DecodeSingleByte(bytes, offset, length, ISO8859_7),
+            QrTextEncoding.Iso8859_10 => DecodeSingleByte(bytes, offset, length, ISO8859_10),
+            QrTextEncoding.Iso8859_15 => DecodeSingleByte(bytes, offset, length, ISO8859_15),
+            QrTextEncoding.ShiftJis => QrShiftJis.Decode(bytes, offset, length),
+            _ => Encoding.UTF8.GetString(bytes, offset, length)
         };
     }
 
@@ -120,10 +128,10 @@ internal static class QrEncoding {
         return true;
     }
 
-    private static string DecodeSingleByte(byte[] bytes, char[] table) {
-        var chars = new char[bytes.Length];
-        for (var i = 0; i < bytes.Length; i++) {
-            chars[i] = table[bytes[i]];
+    private static string DecodeSingleByte(byte[] bytes, int offset, int length, char[] table) {
+        var chars = new char[length];
+        for (var i = 0; i < length; i++) {
+            chars[i] = table[bytes[offset + i]];
         }
         return new string(chars);
     }
