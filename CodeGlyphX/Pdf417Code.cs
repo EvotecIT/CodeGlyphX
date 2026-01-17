@@ -99,17 +99,17 @@ public static class Pdf417Code {
     /// <summary>
     /// Renders PDF417 as PDF from bytes.
     /// </summary>
-    public static byte[] Pdf(ReadOnlySpan<byte> data, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+    public static byte[] Pdf(ReadOnlySpan<byte> data, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, RenderMode renderMode = RenderMode.Vector) {
         var modules = EncodeBytes(data, encodeOptions);
-        return MatrixPdfRenderer.Render(modules, BuildPngOptions(renderOptions));
+        return MatrixPdfRenderer.Render(modules, BuildPngOptions(renderOptions), renderMode);
     }
 
     /// <summary>
     /// Renders PDF417 as EPS from bytes.
     /// </summary>
-    public static string Eps(ReadOnlySpan<byte> data, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+    public static string Eps(ReadOnlySpan<byte> data, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, RenderMode renderMode = RenderMode.Vector) {
         var modules = EncodeBytes(data, encodeOptions);
-        return MatrixEpsRenderer.Render(modules, BuildPngOptions(renderOptions));
+        return MatrixEpsRenderer.Render(modules, BuildPngOptions(renderOptions), renderMode);
     }
 
     /// <summary>
@@ -193,16 +193,16 @@ public static class Pdf417Code {
     /// <summary>
     /// Saves PDF417 PDF to a file for byte payloads.
     /// </summary>
-    public static string SavePdf(ReadOnlySpan<byte> data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
-        var pdf = Pdf(data, encodeOptions, renderOptions);
+    public static string SavePdf(ReadOnlySpan<byte> data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, RenderMode renderMode = RenderMode.Vector) {
+        var pdf = Pdf(data, encodeOptions, renderOptions, renderMode);
         return pdf.WriteBinary(path);
     }
 
     /// <summary>
     /// Saves PDF417 EPS to a file for byte payloads.
     /// </summary>
-    public static string SaveEps(ReadOnlySpan<byte> data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
-        var eps = Eps(data, encodeOptions, renderOptions);
+    public static string SaveEps(ReadOnlySpan<byte> data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, RenderMode renderMode = RenderMode.Vector) {
+        var eps = Eps(data, encodeOptions, renderOptions, renderMode);
         return eps.WriteText(path);
     }
 
@@ -227,17 +227,17 @@ public static class Pdf417Code {
     /// <summary>
     /// Saves PDF417 PDF to a stream for byte payloads.
     /// </summary>
-    public static void SavePdf(ReadOnlySpan<byte> data, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+    public static void SavePdf(ReadOnlySpan<byte> data, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, RenderMode renderMode = RenderMode.Vector) {
         var modules = EncodeBytes(data, encodeOptions);
-        MatrixPdfRenderer.RenderToStream(modules, BuildPngOptions(renderOptions), stream);
+        MatrixPdfRenderer.RenderToStream(modules, BuildPngOptions(renderOptions), stream, renderMode);
     }
 
     /// <summary>
     /// Saves PDF417 EPS to a stream for byte payloads.
     /// </summary>
-    public static void SaveEps(ReadOnlySpan<byte> data, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+    public static void SaveEps(ReadOnlySpan<byte> data, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, RenderMode renderMode = RenderMode.Vector) {
         var modules = EncodeBytes(data, encodeOptions);
-        MatrixEpsRenderer.RenderToStream(modules, BuildPngOptions(renderOptions), stream);
+        MatrixEpsRenderer.RenderToStream(modules, BuildPngOptions(renderOptions), stream, renderMode);
     }
 
     /// <summary>
@@ -341,17 +341,17 @@ public static class Pdf417Code {
     /// <summary>
     /// Renders PDF417 as PDF.
     /// </summary>
-    public static byte[] Pdf(string text, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+    public static byte[] Pdf(string text, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, RenderMode renderMode = RenderMode.Vector) {
         var modules = Encode(text, encodeOptions);
-        return MatrixPdfRenderer.Render(modules, BuildPngOptions(renderOptions));
+        return MatrixPdfRenderer.Render(modules, BuildPngOptions(renderOptions), renderMode);
     }
 
     /// <summary>
     /// Renders PDF417 as EPS.
     /// </summary>
-    public static string Eps(string text, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+    public static string Eps(string text, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, RenderMode renderMode = RenderMode.Vector) {
         var modules = Encode(text, encodeOptions);
-        return MatrixEpsRenderer.Render(modules, BuildPngOptions(renderOptions));
+        return MatrixEpsRenderer.Render(modules, BuildPngOptions(renderOptions), renderMode);
     }
 
     /// <summary>
@@ -383,17 +383,17 @@ public static class Pdf417Code {
     /// <summary>
     /// Renders PDF417 as PDF from bytes.
     /// </summary>
-    public static byte[] Pdf(byte[] data, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+    public static byte[] Pdf(byte[] data, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, RenderMode renderMode = RenderMode.Vector) {
         var modules = EncodeBytes(data, encodeOptions);
-        return MatrixPdfRenderer.Render(modules, BuildPngOptions(renderOptions));
+        return MatrixPdfRenderer.Render(modules, BuildPngOptions(renderOptions), renderMode);
     }
 
     /// <summary>
     /// Renders PDF417 as EPS from bytes.
     /// </summary>
-    public static string Eps(byte[] data, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+    public static string Eps(byte[] data, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, RenderMode renderMode = RenderMode.Vector) {
         var modules = EncodeBytes(data, encodeOptions);
-        return MatrixEpsRenderer.Render(modules, BuildPngOptions(renderOptions));
+        return MatrixEpsRenderer.Render(modules, BuildPngOptions(renderOptions), renderMode);
     }
 
     /// <summary>
@@ -531,16 +531,16 @@ public static class Pdf417Code {
     /// <summary>
     /// Saves PDF417 PDF to a file.
     /// </summary>
-    public static string SavePdf(string text, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
-        var pdf = Pdf(text, encodeOptions, renderOptions);
+    public static string SavePdf(string text, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, RenderMode renderMode = RenderMode.Vector) {
+        var pdf = Pdf(text, encodeOptions, renderOptions, renderMode);
         return pdf.WriteBinary(path);
     }
 
     /// <summary>
     /// Saves PDF417 EPS to a file.
     /// </summary>
-    public static string SaveEps(string text, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
-        var eps = Eps(text, encodeOptions, renderOptions);
+    public static string SaveEps(string text, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, RenderMode renderMode = RenderMode.Vector) {
+        var eps = Eps(text, encodeOptions, renderOptions, renderMode);
         return eps.WriteText(path);
     }
 
@@ -563,16 +563,16 @@ public static class Pdf417Code {
     /// <summary>
     /// Saves PDF417 PDF to a file for byte payloads.
     /// </summary>
-    public static string SavePdf(byte[] data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
-        var pdf = Pdf(data, encodeOptions, renderOptions);
+    public static string SavePdf(byte[] data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, RenderMode renderMode = RenderMode.Vector) {
+        var pdf = Pdf(data, encodeOptions, renderOptions, renderMode);
         return pdf.WriteBinary(path);
     }
 
     /// <summary>
     /// Saves PDF417 EPS to a file for byte payloads.
     /// </summary>
-    public static string SaveEps(byte[] data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
-        var eps = Eps(data, encodeOptions, renderOptions);
+    public static string SaveEps(byte[] data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, RenderMode renderMode = RenderMode.Vector) {
+        var eps = Eps(data, encodeOptions, renderOptions, renderMode);
         return eps.WriteText(path);
     }
 
@@ -597,17 +597,17 @@ public static class Pdf417Code {
     /// <summary>
     /// Saves PDF417 PDF to a stream.
     /// </summary>
-    public static void SavePdf(string text, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+    public static void SavePdf(string text, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, RenderMode renderMode = RenderMode.Vector) {
         var modules = Encode(text, encodeOptions);
-        MatrixPdfRenderer.RenderToStream(modules, BuildPngOptions(renderOptions), stream);
+        MatrixPdfRenderer.RenderToStream(modules, BuildPngOptions(renderOptions), stream, renderMode);
     }
 
     /// <summary>
     /// Saves PDF417 EPS to a stream.
     /// </summary>
-    public static void SaveEps(string text, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+    public static void SaveEps(string text, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, RenderMode renderMode = RenderMode.Vector) {
         var modules = Encode(text, encodeOptions);
-        MatrixEpsRenderer.RenderToStream(modules, BuildPngOptions(renderOptions), stream);
+        MatrixEpsRenderer.RenderToStream(modules, BuildPngOptions(renderOptions), stream, renderMode);
     }
 
     /// <summary>
@@ -631,17 +631,17 @@ public static class Pdf417Code {
     /// <summary>
     /// Saves PDF417 PDF to a stream for byte payloads.
     /// </summary>
-    public static void SavePdf(byte[] data, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+    public static void SavePdf(byte[] data, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, RenderMode renderMode = RenderMode.Vector) {
         var modules = EncodeBytes(data, encodeOptions);
-        MatrixPdfRenderer.RenderToStream(modules, BuildPngOptions(renderOptions), stream);
+        MatrixPdfRenderer.RenderToStream(modules, BuildPngOptions(renderOptions), stream, renderMode);
     }
 
     /// <summary>
     /// Saves PDF417 EPS to a stream for byte payloads.
     /// </summary>
-    public static void SaveEps(byte[] data, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+    public static void SaveEps(byte[] data, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, RenderMode renderMode = RenderMode.Vector) {
         var modules = EncodeBytes(data, encodeOptions);
-        MatrixEpsRenderer.RenderToStream(modules, BuildPngOptions(renderOptions), stream);
+        MatrixEpsRenderer.RenderToStream(modules, BuildPngOptions(renderOptions), stream, renderMode);
     }
 
     /// <summary>
@@ -977,15 +977,15 @@ public static class Pdf417Code {
         /// <summary>
         /// Renders PDF bytes.
         /// </summary>
-        public byte[] Pdf() {
-            return _text is not null ? Pdf417Code.Pdf(_text, _encodeOptions, _renderOptions) : Pdf417Code.Pdf(_bytes!, _encodeOptions, _renderOptions);
+        public byte[] Pdf(RenderMode renderMode = RenderMode.Vector) {
+            return _text is not null ? Pdf417Code.Pdf(_text, _encodeOptions, _renderOptions, renderMode) : Pdf417Code.Pdf(_bytes!, _encodeOptions, _renderOptions, renderMode);
         }
 
         /// <summary>
         /// Renders EPS text.
         /// </summary>
-        public string Eps() {
-            return _text is not null ? Pdf417Code.Eps(_text, _encodeOptions, _renderOptions) : Pdf417Code.Eps(_bytes!, _encodeOptions, _renderOptions);
+        public string Eps(RenderMode renderMode = RenderMode.Vector) {
+            return _text is not null ? Pdf417Code.Eps(_text, _encodeOptions, _renderOptions, renderMode) : Pdf417Code.Eps(_bytes!, _encodeOptions, _renderOptions, renderMode);
         }
 
         /// <summary>
@@ -1041,15 +1041,15 @@ public static class Pdf417Code {
         /// <summary>
         /// Saves PDF to a file.
         /// </summary>
-        public string SavePdf(string path) {
-            return _text is not null ? Pdf417Code.SavePdf(_text, path, _encodeOptions, _renderOptions) : Pdf417Code.SavePdf(_bytes!, path, _encodeOptions, _renderOptions);
+        public string SavePdf(string path, RenderMode renderMode = RenderMode.Vector) {
+            return _text is not null ? Pdf417Code.SavePdf(_text, path, _encodeOptions, _renderOptions, renderMode) : Pdf417Code.SavePdf(_bytes!, path, _encodeOptions, _renderOptions, renderMode);
         }
 
         /// <summary>
         /// Saves EPS to a file.
         /// </summary>
-        public string SaveEps(string path) {
-            return _text is not null ? Pdf417Code.SaveEps(_text, path, _encodeOptions, _renderOptions) : Pdf417Code.SaveEps(_bytes!, path, _encodeOptions, _renderOptions);
+        public string SaveEps(string path, RenderMode renderMode = RenderMode.Vector) {
+            return _text is not null ? Pdf417Code.SaveEps(_text, path, _encodeOptions, _renderOptions, renderMode) : Pdf417Code.SaveEps(_bytes!, path, _encodeOptions, _renderOptions, renderMode);
         }
     }
 }

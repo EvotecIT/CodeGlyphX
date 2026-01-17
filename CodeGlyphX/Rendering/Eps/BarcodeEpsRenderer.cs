@@ -14,14 +14,23 @@ public static class BarcodeEpsRenderer {
     /// <summary>
     /// Renders the barcode to an EPS string.
     /// </summary>
-    public static string Render(Barcode1D barcode, BarcodePngRenderOptions opts) {
+    public static string Render(Barcode1D barcode, BarcodePngRenderOptions opts, RenderMode mode = RenderMode.Vector) {
+        if (mode == RenderMode.Raster) {
+            var pixels = BarcodePngRenderer.RenderPixels(barcode, opts, out var widthPx, out var heightPx, out var stride);
+            return Encoding.ASCII.GetString(EpsWriter.WriteRgba32(widthPx, heightPx, pixels, stride, opts.Background));
+        }
         return BuildEps(barcode, opts);
     }
 
     /// <summary>
     /// Renders the barcode to an EPS stream.
     /// </summary>
-    public static void RenderToStream(Barcode1D barcode, BarcodePngRenderOptions opts, Stream stream) {
+    public static void RenderToStream(Barcode1D barcode, BarcodePngRenderOptions opts, Stream stream, RenderMode mode = RenderMode.Vector) {
+        if (mode == RenderMode.Raster) {
+            var pixels = BarcodePngRenderer.RenderPixels(barcode, opts, out var widthPx, out var heightPx, out var stride);
+            EpsWriter.WriteRgba32(stream, widthPx, heightPx, pixels, stride, opts.Background);
+            return;
+        }
         var eps = BuildEps(barcode, opts);
         RenderIO.WriteText(stream, eps, Encoding.ASCII);
     }
@@ -29,16 +38,16 @@ public static class BarcodeEpsRenderer {
     /// <summary>
     /// Renders the barcode to an EPS file.
     /// </summary>
-    public static string RenderToFile(Barcode1D barcode, BarcodePngRenderOptions opts, string path) {
-        var eps = Render(barcode, opts);
+    public static string RenderToFile(Barcode1D barcode, BarcodePngRenderOptions opts, string path, RenderMode mode = RenderMode.Vector) {
+        var eps = Render(barcode, opts, mode);
         return RenderIO.WriteText(path, eps, Encoding.ASCII);
     }
 
     /// <summary>
     /// Renders the barcode to an EPS file under the specified directory.
     /// </summary>
-    public static string RenderToFile(Barcode1D barcode, BarcodePngRenderOptions opts, string directory, string fileName) {
-        var eps = Render(barcode, opts);
+    public static string RenderToFile(Barcode1D barcode, BarcodePngRenderOptions opts, string directory, string fileName, RenderMode mode = RenderMode.Vector) {
+        var eps = Render(barcode, opts, mode);
         return RenderIO.WriteText(directory, fileName, eps, Encoding.ASCII);
     }
 

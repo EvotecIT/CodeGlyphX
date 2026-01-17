@@ -14,32 +14,41 @@ public static class BarcodePdfRenderer {
     /// <summary>
     /// Renders the barcode to a PDF byte array.
     /// </summary>
-    public static byte[] Render(Barcode1D barcode, BarcodePngRenderOptions opts) {
-        var content = BuildContent(barcode, opts, out var widthPx, out var heightPx);
-        return PdfVectorWriter.Write(widthPx, heightPx, content);
+    public static byte[] Render(Barcode1D barcode, BarcodePngRenderOptions opts, RenderMode mode = RenderMode.Vector) {
+        if (mode == RenderMode.Raster) {
+            var pixels = BarcodePngRenderer.RenderPixels(barcode, opts, out var widthPx, out var heightPx, out var stride);
+            return PdfWriter.WriteRgba32(widthPx, heightPx, pixels, stride, opts.Background);
+        }
+        var content = BuildContent(barcode, opts, out var widthPx2, out var heightPx2);
+        return PdfVectorWriter.Write(widthPx2, heightPx2, content);
     }
 
     /// <summary>
     /// Renders the barcode to a PDF stream.
     /// </summary>
-    public static void RenderToStream(Barcode1D barcode, BarcodePngRenderOptions opts, Stream stream) {
-        var content = BuildContent(barcode, opts, out var widthPx, out var heightPx);
-        PdfVectorWriter.Write(stream, widthPx, heightPx, content);
+    public static void RenderToStream(Barcode1D barcode, BarcodePngRenderOptions opts, Stream stream, RenderMode mode = RenderMode.Vector) {
+        if (mode == RenderMode.Raster) {
+            var pixels = BarcodePngRenderer.RenderPixels(barcode, opts, out var widthPx, out var heightPx, out var stride);
+            PdfWriter.WriteRgba32(stream, widthPx, heightPx, pixels, stride, opts.Background);
+            return;
+        }
+        var content = BuildContent(barcode, opts, out var widthPx2, out var heightPx2);
+        PdfVectorWriter.Write(stream, widthPx2, heightPx2, content);
     }
 
     /// <summary>
     /// Renders the barcode to a PDF file.
     /// </summary>
-    public static string RenderToFile(Barcode1D barcode, BarcodePngRenderOptions opts, string path) {
-        var pdf = Render(barcode, opts);
+    public static string RenderToFile(Barcode1D barcode, BarcodePngRenderOptions opts, string path, RenderMode mode = RenderMode.Vector) {
+        var pdf = Render(barcode, opts, mode);
         return RenderIO.WriteBinary(path, pdf);
     }
 
     /// <summary>
     /// Renders the barcode to a PDF file under the specified directory.
     /// </summary>
-    public static string RenderToFile(Barcode1D barcode, BarcodePngRenderOptions opts, string directory, string fileName) {
-        var pdf = Render(barcode, opts);
+    public static string RenderToFile(Barcode1D barcode, BarcodePngRenderOptions opts, string directory, string fileName, RenderMode mode = RenderMode.Vector) {
+        var pdf = Render(barcode, opts, mode);
         return RenderIO.WriteBinary(directory, fileName, pdf);
     }
 

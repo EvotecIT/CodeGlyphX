@@ -14,14 +14,23 @@ public static class MatrixEpsRenderer {
     /// <summary>
     /// Renders the matrix to an EPS string.
     /// </summary>
-    public static string Render(BitMatrix modules, MatrixPngRenderOptions opts) {
+    public static string Render(BitMatrix modules, MatrixPngRenderOptions opts, RenderMode mode = RenderMode.Vector) {
+        if (mode == RenderMode.Raster) {
+            var pixels = MatrixPngRenderer.RenderPixels(modules, opts, out var widthPx, out var heightPx, out var stride);
+            return Encoding.ASCII.GetString(EpsWriter.WriteRgba32(widthPx, heightPx, pixels, stride, opts.Background));
+        }
         return BuildEps(modules, opts);
     }
 
     /// <summary>
     /// Renders the matrix to an EPS stream.
     /// </summary>
-    public static void RenderToStream(BitMatrix modules, MatrixPngRenderOptions opts, Stream stream) {
+    public static void RenderToStream(BitMatrix modules, MatrixPngRenderOptions opts, Stream stream, RenderMode mode = RenderMode.Vector) {
+        if (mode == RenderMode.Raster) {
+            var pixels = MatrixPngRenderer.RenderPixels(modules, opts, out var widthPx, out var heightPx, out var stride);
+            EpsWriter.WriteRgba32(stream, widthPx, heightPx, pixels, stride, opts.Background);
+            return;
+        }
         var eps = BuildEps(modules, opts);
         RenderIO.WriteText(stream, eps, Encoding.ASCII);
     }
@@ -29,16 +38,16 @@ public static class MatrixEpsRenderer {
     /// <summary>
     /// Renders the matrix to an EPS file.
     /// </summary>
-    public static string RenderToFile(BitMatrix modules, MatrixPngRenderOptions opts, string path) {
-        var eps = Render(modules, opts);
+    public static string RenderToFile(BitMatrix modules, MatrixPngRenderOptions opts, string path, RenderMode mode = RenderMode.Vector) {
+        var eps = Render(modules, opts, mode);
         return RenderIO.WriteText(path, eps, Encoding.ASCII);
     }
 
     /// <summary>
     /// Renders the matrix to an EPS file under the specified directory.
     /// </summary>
-    public static string RenderToFile(BitMatrix modules, MatrixPngRenderOptions opts, string directory, string fileName) {
-        var eps = Render(modules, opts);
+    public static string RenderToFile(BitMatrix modules, MatrixPngRenderOptions opts, string directory, string fileName, RenderMode mode = RenderMode.Vector) {
+        var eps = Render(modules, opts, mode);
         return RenderIO.WriteText(directory, fileName, eps, Encoding.ASCII);
     }
 

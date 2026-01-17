@@ -93,6 +93,14 @@ QR.Save("https://example.com", "qr.pdf");
 
 ```csharp
 using CodeGlyphX;
+using CodeGlyphX.Rendering;
+
+// PDF/EPS are vector by default. Use Raster when you need pixels.
+QR.SavePdf("https://example.com", "qr-raster.pdf", renderMode: RenderMode.Raster);
+```
+
+```csharp
+using CodeGlyphX;
 
 Barcode.Save(BarcodeType.Code128, "CODE128-12345", "code128.png");
 ```

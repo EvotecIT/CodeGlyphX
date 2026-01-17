@@ -1,4 +1,5 @@
 using System;
+using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Ascii;
 using CodeGlyphX.Rendering.Bmp;
 using CodeGlyphX.Rendering.Html;
@@ -30,6 +31,12 @@ public sealed class RendererFormatTests {
         var eps = QrEasy.RenderEps(payload);
         Assert.True(IsEps(eps));
 
+        var pdfRaster = QrEasy.RenderPdf(payload, mode: RenderMode.Raster);
+        Assert.True(IsPdf(pdfRaster));
+
+        var epsRaster = QrEasy.RenderEps(payload, mode: RenderMode.Raster);
+        Assert.True(IsEps(epsRaster));
+
         var ascii = QrEasy.RenderAscii(payload, new MatrixAsciiRenderOptions { QuietZone = 1 });
         Assert.Contains("#", ascii, StringComparison.Ordinal);
     }
@@ -54,6 +61,12 @@ public sealed class RendererFormatTests {
 
         var eps = Barcode.Eps(BarcodeType.Code128, "CODEGLYPH-123");
         Assert.True(IsEps(eps));
+
+        var pdfRaster = Barcode.Pdf(BarcodeType.Code128, "CODEGLYPH-123", mode: RenderMode.Raster);
+        Assert.True(IsPdf(pdfRaster));
+
+        var epsRaster = Barcode.Eps(BarcodeType.Code128, "CODEGLYPH-123", mode: RenderMode.Raster);
+        Assert.True(IsEps(epsRaster));
 
         var ascii = BarcodeAsciiRenderer.Render(barcode, new BarcodeAsciiRenderOptions { QuietZone = 1, Height = 2 });
         Assert.Contains("#", ascii, StringComparison.Ordinal);

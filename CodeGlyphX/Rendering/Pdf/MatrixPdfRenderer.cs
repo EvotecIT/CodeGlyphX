@@ -14,32 +14,41 @@ public static class MatrixPdfRenderer {
     /// <summary>
     /// Renders the matrix to a PDF byte array.
     /// </summary>
-    public static byte[] Render(BitMatrix modules, MatrixPngRenderOptions opts) {
-        var content = BuildContent(modules, opts, out var widthPx, out var heightPx);
-        return PdfVectorWriter.Write(widthPx, heightPx, content);
+    public static byte[] Render(BitMatrix modules, MatrixPngRenderOptions opts, RenderMode mode = RenderMode.Vector) {
+        if (mode == RenderMode.Raster) {
+            var pixels = MatrixPngRenderer.RenderPixels(modules, opts, out var widthPx, out var heightPx, out var stride);
+            return PdfWriter.WriteRgba32(widthPx, heightPx, pixels, stride, opts.Background);
+        }
+        var content = BuildContent(modules, opts, out var widthPx2, out var heightPx2);
+        return PdfVectorWriter.Write(widthPx2, heightPx2, content);
     }
 
     /// <summary>
     /// Renders the matrix to a PDF stream.
     /// </summary>
-    public static void RenderToStream(BitMatrix modules, MatrixPngRenderOptions opts, Stream stream) {
-        var content = BuildContent(modules, opts, out var widthPx, out var heightPx);
-        PdfVectorWriter.Write(stream, widthPx, heightPx, content);
+    public static void RenderToStream(BitMatrix modules, MatrixPngRenderOptions opts, Stream stream, RenderMode mode = RenderMode.Vector) {
+        if (mode == RenderMode.Raster) {
+            var pixels = MatrixPngRenderer.RenderPixels(modules, opts, out var widthPx, out var heightPx, out var stride);
+            PdfWriter.WriteRgba32(stream, widthPx, heightPx, pixels, stride, opts.Background);
+            return;
+        }
+        var content = BuildContent(modules, opts, out var widthPx2, out var heightPx2);
+        PdfVectorWriter.Write(stream, widthPx2, heightPx2, content);
     }
 
     /// <summary>
     /// Renders the matrix to a PDF file.
     /// </summary>
-    public static string RenderToFile(BitMatrix modules, MatrixPngRenderOptions opts, string path) {
-        var pdf = Render(modules, opts);
+    public static string RenderToFile(BitMatrix modules, MatrixPngRenderOptions opts, string path, RenderMode mode = RenderMode.Vector) {
+        var pdf = Render(modules, opts, mode);
         return RenderIO.WriteBinary(path, pdf);
     }
 
     /// <summary>
     /// Renders the matrix to a PDF file under the specified directory.
     /// </summary>
-    public static string RenderToFile(BitMatrix modules, MatrixPngRenderOptions opts, string directory, string fileName) {
-        var pdf = Render(modules, opts);
+    public static string RenderToFile(BitMatrix modules, MatrixPngRenderOptions opts, string directory, string fileName, RenderMode mode = RenderMode.Vector) {
+        var pdf = Render(modules, opts, mode);
         return RenderIO.WriteBinary(directory, fileName, pdf);
     }
 
