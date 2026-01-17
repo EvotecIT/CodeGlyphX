@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Png;
+using CodeGlyphX.Rendering.Vector;
 
 namespace CodeGlyphX.Rendering.Eps;
 
@@ -15,7 +16,7 @@ public static class QrEpsRenderer {
     /// Renders the QR module matrix to an EPS string.
     /// </summary>
     public static string Render(BitMatrix modules, QrPngRenderOptions opts, RenderMode mode = RenderMode.Vector) {
-        if (mode == RenderMode.Raster) {
+        if (mode == RenderMode.Raster || QrVectorLayout.ShouldRaster(opts)) {
             var pixels = QrPngRenderer.RenderPixels(modules, opts, out var widthPx, out var heightPx, out var stride);
             return Encoding.ASCII.GetString(EpsWriter.WriteRgba32(widthPx, heightPx, pixels, stride, opts.Background));
         }
@@ -26,7 +27,7 @@ public static class QrEpsRenderer {
     /// Renders the QR module matrix to an EPS stream.
     /// </summary>
     public static void RenderToStream(BitMatrix modules, QrPngRenderOptions opts, Stream stream, RenderMode mode = RenderMode.Vector) {
-        if (mode == RenderMode.Raster) {
+        if (mode == RenderMode.Raster || QrVectorLayout.ShouldRaster(opts)) {
             var pixels = QrPngRenderer.RenderPixels(modules, opts, out var widthPx, out var heightPx, out var stride);
             EpsWriter.WriteRgba32(stream, widthPx, heightPx, pixels, stride, opts.Background);
             return;
@@ -52,20 +53,8 @@ public static class QrEpsRenderer {
     }
 
     private static string BuildEps(BitMatrix modules, QrPngRenderOptions opts) {
-        if (modules is null) throw new ArgumentNullException(nameof(modules));
-        if (opts is null) throw new ArgumentNullException(nameof(opts));
-        if (modules.Width != modules.Height) throw new ArgumentException("Matrix must be square.", nameof(modules));
-        if (opts.ModuleSize <= 0) throw new ArgumentOutOfRangeException(nameof(opts.ModuleSize));
-        if (opts.QuietZone < 0) throw new ArgumentOutOfRangeException(nameof(opts.QuietZone));
-
-        var size = modules.Width;
-        var outModules = size + opts.QuietZone * 2;
-        var widthPx = outModules * opts.ModuleSize;
-        var heightPx = widthPx;
-
-        var bg = Flatten(opts.Background, Rgba32.White);
-        var fg = Flatten(opts.Foreground, bg);
-
+        QrVectorLayout.GetSize(modules, opts, out var widthPx, out var heightPx);
+        var outModules = modules.Width + opts.QuietZone * 2;
         var sb = new StringBuilder(outModules * outModules * 3);
         sb.AppendLine("%!PS-Adobe-3.0 EPSF-3.0");
         sb.AppendLine($"%%BoundingBox: 0 0 {widthPx} {heightPx}");
@@ -73,18 +62,8 @@ public static class QrEpsRenderer {
         sb.AppendLine("%%Pages: 1");
         sb.AppendLine("%%EndComments");
         sb.AppendLine("gsave");
-        AppendColor(sb, bg);
-        AppendRectTopLeft(sb, 0, 0, widthPx, heightPx, heightPx);
-        AppendColor(sb, fg);
-
-        for (var my = 0; my < size; my++) {
-            for (var mx = 0; mx < size; mx++) {
-                if (!modules[mx, my]) continue;
-                var x = (mx + opts.QuietZone) * opts.ModuleSize;
-                var y = (my + opts.QuietZone) * opts.ModuleSize;
-                AppendRectTopLeft(sb, x, y, opts.ModuleSize, opts.ModuleSize, heightPx);
-            }
-        }
+        var sink = new EpsSink(sb, heightPx);
+        QrVectorLayout.Render(modules, opts, sink, out _, out _);
 
         sb.AppendLine("grestore");
         sb.AppendLine("showpage");
@@ -92,32 +71,79 @@ public static class QrEpsRenderer {
         return sb.ToString();
     }
 
-    private static void AppendColor(StringBuilder sb, Rgba32 color) {
-        sb.Append(ToComponent(color.R)).Append(' ')
-            .Append(ToComponent(color.G)).Append(' ')
-            .Append(ToComponent(color.B)).AppendLine(" setrgbcolor");
-    }
+    private sealed class EpsSink : IQrVectorSink {
+        private readonly StringBuilder _sb;
+        private readonly int _height;
+        private Rgba32 _current;
+        private bool _hasCurrent;
 
-    private static string ToComponent(byte value) {
-        var scaled = value / 255.0;
-        return scaled.ToString("0.###", CultureInfo.InvariantCulture);
-    }
+        public EpsSink(StringBuilder sb, int height) {
+            _sb = sb ?? throw new ArgumentNullException(nameof(sb));
+            _height = height;
+        }
 
-    private static void AppendRectTopLeft(StringBuilder sb, int x, int yTop, int width, int height, int totalHeight) {
-        var y = totalHeight - yTop - height;
-        sb.Append(x).Append(' ')
-            .Append(y).Append(' ')
-            .Append(width).Append(' ')
-            .Append(height).AppendLine(" rectfill");
-    }
+        public void SetFillColor(Rgba32 color) {
+            if (_hasCurrent && _current.R == color.R && _current.G == color.G && _current.B == color.B) return;
+            _current = color;
+            _hasCurrent = true;
+            _sb.Append(ToComponent(color.R)).Append(' ')
+                .Append(ToComponent(color.G)).Append(' ')
+                .Append(ToComponent(color.B)).AppendLine(" setrgbcolor");
+        }
 
-    private static Rgba32 Flatten(Rgba32 color, Rgba32 background) {
-        if (color.A == 255) return color;
-        var inv = 255 - color.A;
-        return new Rgba32(
-            (byte)((color.R * color.A + background.R * inv + 127) / 255),
-            (byte)((color.G * color.A + background.G * inv + 127) / 255),
-            (byte)((color.B * color.A + background.B * inv + 127) / 255),
-            255);
+        public void FillRect(int x, int yTop, int width, int height) {
+            var y = _height - yTop - height;
+            _sb.Append(x).Append(' ')
+                .Append(y).Append(' ')
+                .Append(width).Append(' ')
+                .Append(height).AppendLine(" rectfill");
+        }
+
+        public void FillRoundedRect(int x, int yTop, int width, int height, int radius) {
+            if (radius <= 0) {
+                FillRect(x, yTop, width, height);
+                return;
+            }
+            var r = Math.Min(radius, Math.Min(width, height) / 2);
+            if (r <= 0) {
+                FillRect(x, yTop, width, height);
+                return;
+            }
+
+            var y = _height - yTop - height;
+            var x0 = x;
+            var y0 = y;
+            var x1 = x + width;
+            var y1 = y + height;
+            var c = r * 0.5522847498307936;
+
+            _sb.Append(FormatNumber(x0 + r)).Append(' ').Append(FormatNumber(y0)).AppendLine(" moveto");
+            _sb.Append(FormatNumber(x1 - r)).Append(' ').Append(FormatNumber(y0)).AppendLine(" lineto");
+            _sb.Append(FormatNumber(x1 - r + c)).Append(' ').Append(FormatNumber(y0)).Append(' ')
+                .Append(FormatNumber(x1)).Append(' ').Append(FormatNumber(y0 + r - c)).Append(' ')
+                .Append(FormatNumber(x1)).Append(' ').Append(FormatNumber(y0 + r)).AppendLine(" curveto");
+            _sb.Append(FormatNumber(x1)).Append(' ').Append(FormatNumber(y1 - r)).AppendLine(" lineto");
+            _sb.Append(FormatNumber(x1)).Append(' ').Append(FormatNumber(y1 - r + c)).Append(' ')
+                .Append(FormatNumber(x1 - r + c)).Append(' ').Append(FormatNumber(y1)).Append(' ')
+                .Append(FormatNumber(x1 - r)).Append(' ').Append(FormatNumber(y1)).AppendLine(" curveto");
+            _sb.Append(FormatNumber(x0 + r)).Append(' ').Append(FormatNumber(y1)).AppendLine(" lineto");
+            _sb.Append(FormatNumber(x0 + r - c)).Append(' ').Append(FormatNumber(y1)).Append(' ')
+                .Append(FormatNumber(x0)).Append(' ').Append(FormatNumber(y1 - r + c)).Append(' ')
+                .Append(FormatNumber(x0)).Append(' ').Append(FormatNumber(y1 - r)).AppendLine(" curveto");
+            _sb.Append(FormatNumber(x0)).Append(' ').Append(FormatNumber(y0 + r)).AppendLine(" lineto");
+            _sb.Append(FormatNumber(x0)).Append(' ').Append(FormatNumber(y0 + r - c)).Append(' ')
+                .Append(FormatNumber(x0 + r - c)).Append(' ').Append(FormatNumber(y0)).Append(' ')
+                .Append(FormatNumber(x0 + r)).Append(' ').Append(FormatNumber(y0)).AppendLine(" curveto");
+            _sb.AppendLine("closepath fill");
+        }
+
+        private static string ToComponent(byte value) {
+            var scaled = value / 255.0;
+            return scaled.ToString("0.###", CultureInfo.InvariantCulture);
+        }
+
+        private static string FormatNumber(double value) {
+            return value.ToString("0.###", CultureInfo.InvariantCulture);
+        }
     }
 }

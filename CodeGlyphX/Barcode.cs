@@ -79,6 +79,10 @@ public static class Barcode {
     /// <summary>
     /// Renders a barcode as PDF.
     /// </summary>
+    /// <param name="type">The barcode type.</param>
+    /// <param name="content">The barcode content.</param>
+    /// <param name="options">Optional rendering options.</param>
+    /// <param name="mode">Vector or raster output.</param>
     public static byte[] Pdf(BarcodeType type, string content, BarcodeOptions? options = null, RenderMode mode = RenderMode.Vector) {
         var barcode = Encode(type, content);
         var opts = BuildPngOptions(options);
@@ -88,6 +92,10 @@ public static class Barcode {
     /// <summary>
     /// Renders a barcode as EPS.
     /// </summary>
+    /// <param name="type">The barcode type.</param>
+    /// <param name="content">The barcode content.</param>
+    /// <param name="options">Optional rendering options.</param>
+    /// <param name="mode">Vector or raster output.</param>
     public static string Eps(BarcodeType type, string content, BarcodeOptions? options = null, RenderMode mode = RenderMode.Vector) {
         var barcode = Encode(type, content);
         var opts = BuildPngOptions(options);
@@ -195,6 +203,11 @@ public static class Barcode {
     /// <summary>
     /// Renders a barcode as PDF and writes it to a file.
     /// </summary>
+    /// <param name="type">The barcode type.</param>
+    /// <param name="content">The barcode content.</param>
+    /// <param name="path">Output file path.</param>
+    /// <param name="options">Optional rendering options.</param>
+    /// <param name="mode">Vector or raster output.</param>
     public static string SavePdf(BarcodeType type, string content, string path, BarcodeOptions? options = null, RenderMode mode = RenderMode.Vector) {
         var pdf = Pdf(type, content, options, mode);
         return pdf.WriteBinary(path);
@@ -203,6 +216,11 @@ public static class Barcode {
     /// <summary>
     /// Renders a barcode as PDF and writes it to a stream.
     /// </summary>
+    /// <param name="type">The barcode type.</param>
+    /// <param name="content">The barcode content.</param>
+    /// <param name="stream">Destination stream.</param>
+    /// <param name="options">Optional rendering options.</param>
+    /// <param name="mode">Vector or raster output.</param>
     public static void SavePdf(BarcodeType type, string content, Stream stream, BarcodeOptions? options = null, RenderMode mode = RenderMode.Vector) {
         var barcode = Encode(type, content);
         var opts = BuildPngOptions(options);
@@ -212,6 +230,11 @@ public static class Barcode {
     /// <summary>
     /// Renders a barcode as EPS and writes it to a file.
     /// </summary>
+    /// <param name="type">The barcode type.</param>
+    /// <param name="content">The barcode content.</param>
+    /// <param name="path">Output file path.</param>
+    /// <param name="options">Optional rendering options.</param>
+    /// <param name="mode">Vector or raster output.</param>
     public static string SaveEps(BarcodeType type, string content, string path, BarcodeOptions? options = null, RenderMode mode = RenderMode.Vector) {
         var eps = Eps(type, content, options, mode);
         return eps.WriteText(path);
@@ -220,6 +243,11 @@ public static class Barcode {
     /// <summary>
     /// Renders a barcode as EPS and writes it to a stream.
     /// </summary>
+    /// <param name="type">The barcode type.</param>
+    /// <param name="content">The barcode content.</param>
+    /// <param name="stream">Destination stream.</param>
+    /// <param name="options">Optional rendering options.</param>
+    /// <param name="mode">Vector or raster output.</param>
     public static void SaveEps(BarcodeType type, string content, Stream stream, BarcodeOptions? options = null, RenderMode mode = RenderMode.Vector) {
         var eps = Eps(type, content, options, mode);
         eps.WriteText(stream);
@@ -552,11 +580,13 @@ public static class Barcode {
         /// <summary>
         /// Renders PDF bytes.
         /// </summary>
+        /// <param name="mode">Vector or raster output.</param>
         public byte[] Pdf(RenderMode mode = RenderMode.Vector) => Barcode.Pdf(_type, _content, Options, mode);
 
         /// <summary>
         /// Renders EPS text.
         /// </summary>
+        /// <param name="mode">Vector or raster output.</param>
         public string Eps(RenderMode mode = RenderMode.Vector) => Barcode.Eps(_type, _content, Options, mode);
 
         /// <summary>
@@ -617,21 +647,29 @@ public static class Barcode {
         /// <summary>
         /// Saves PDF to a file.
         /// </summary>
+    /// <param name="path">Output file path.</param>
+        /// <param name="mode">Vector or raster output.</param>
         public string SavePdf(string path, RenderMode mode = RenderMode.Vector) => Barcode.SavePdf(_type, _content, path, Options, mode);
 
         /// <summary>
         /// Saves PDF to a stream.
         /// </summary>
+    /// <param name="stream">Destination stream.</param>
+        /// <param name="mode">Vector or raster output.</param>
         public void SavePdf(Stream stream, RenderMode mode = RenderMode.Vector) => Barcode.SavePdf(_type, _content, stream, Options, mode);
 
         /// <summary>
         /// Saves EPS to a file.
         /// </summary>
+    /// <param name="path">Output file path.</param>
+        /// <param name="mode">Vector or raster output.</param>
         public string SaveEps(string path, RenderMode mode = RenderMode.Vector) => Barcode.SaveEps(_type, _content, path, Options, mode);
 
         /// <summary>
         /// Saves EPS to a stream.
         /// </summary>
+    /// <param name="stream">Destination stream.</param>
+        /// <param name="mode">Vector or raster output.</param>
         public void SaveEps(Stream stream, RenderMode mode = RenderMode.Vector) => Barcode.SaveEps(_type, _content, stream, Options, mode);
 
         /// <summary>

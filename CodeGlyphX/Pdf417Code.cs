@@ -99,6 +99,10 @@ public static class Pdf417Code {
     /// <summary>
     /// Renders PDF417 as PDF from bytes.
     /// </summary>
+    /// <param name="data">Payload bytes.</param>
+    /// <param name="encodeOptions">Encoding options.</param>
+    /// <param name="renderOptions">Rendering options.</param>
+    /// <param name="renderMode">Vector or raster output.</param>
     public static byte[] Pdf(ReadOnlySpan<byte> data, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, RenderMode renderMode = RenderMode.Vector) {
         var modules = EncodeBytes(data, encodeOptions);
         return MatrixPdfRenderer.Render(modules, BuildPngOptions(renderOptions), renderMode);
@@ -107,6 +111,10 @@ public static class Pdf417Code {
     /// <summary>
     /// Renders PDF417 as EPS from bytes.
     /// </summary>
+    /// <param name="data">Payload bytes.</param>
+    /// <param name="encodeOptions">Encoding options.</param>
+    /// <param name="renderOptions">Rendering options.</param>
+    /// <param name="renderMode">Vector or raster output.</param>
     public static string Eps(ReadOnlySpan<byte> data, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, RenderMode renderMode = RenderMode.Vector) {
         var modules = EncodeBytes(data, encodeOptions);
         return MatrixEpsRenderer.Render(modules, BuildPngOptions(renderOptions), renderMode);
@@ -193,6 +201,11 @@ public static class Pdf417Code {
     /// <summary>
     /// Saves PDF417 PDF to a file for byte payloads.
     /// </summary>
+    /// <param name="data">Payload bytes.</param>
+    /// <param name="path">Output file path.</param>
+    /// <param name="encodeOptions">Encoding options.</param>
+    /// <param name="renderOptions">Rendering options.</param>
+    /// <param name="renderMode">Vector or raster output.</param>
     public static string SavePdf(ReadOnlySpan<byte> data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, RenderMode renderMode = RenderMode.Vector) {
         var pdf = Pdf(data, encodeOptions, renderOptions, renderMode);
         return pdf.WriteBinary(path);
@@ -201,6 +214,11 @@ public static class Pdf417Code {
     /// <summary>
     /// Saves PDF417 EPS to a file for byte payloads.
     /// </summary>
+    /// <param name="data">Payload bytes.</param>
+    /// <param name="path">Output file path.</param>
+    /// <param name="encodeOptions">Encoding options.</param>
+    /// <param name="renderOptions">Rendering options.</param>
+    /// <param name="renderMode">Vector or raster output.</param>
     public static string SaveEps(ReadOnlySpan<byte> data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, RenderMode renderMode = RenderMode.Vector) {
         var eps = Eps(data, encodeOptions, renderOptions, renderMode);
         return eps.WriteText(path);
@@ -227,6 +245,11 @@ public static class Pdf417Code {
     /// <summary>
     /// Saves PDF417 PDF to a stream for byte payloads.
     /// </summary>
+    /// <param name="data">Payload bytes.</param>
+    /// <param name="stream">Destination stream.</param>
+    /// <param name="encodeOptions">Encoding options.</param>
+    /// <param name="renderOptions">Rendering options.</param>
+    /// <param name="renderMode">Vector or raster output.</param>
     public static void SavePdf(ReadOnlySpan<byte> data, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, RenderMode renderMode = RenderMode.Vector) {
         var modules = EncodeBytes(data, encodeOptions);
         MatrixPdfRenderer.RenderToStream(modules, BuildPngOptions(renderOptions), stream, renderMode);
@@ -235,6 +258,11 @@ public static class Pdf417Code {
     /// <summary>
     /// Saves PDF417 EPS to a stream for byte payloads.
     /// </summary>
+    /// <param name="data">Payload bytes.</param>
+    /// <param name="stream">Destination stream.</param>
+    /// <param name="encodeOptions">Encoding options.</param>
+    /// <param name="renderOptions">Rendering options.</param>
+    /// <param name="renderMode">Vector or raster output.</param>
     public static void SaveEps(ReadOnlySpan<byte> data, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, RenderMode renderMode = RenderMode.Vector) {
         var modules = EncodeBytes(data, encodeOptions);
         MatrixEpsRenderer.RenderToStream(modules, BuildPngOptions(renderOptions), stream, renderMode);
@@ -341,6 +369,10 @@ public static class Pdf417Code {
     /// <summary>
     /// Renders PDF417 as PDF.
     /// </summary>
+    /// <param name="text">Input text.</param>
+    /// <param name="encodeOptions">Encoding options.</param>
+    /// <param name="renderOptions">Rendering options.</param>
+    /// <param name="renderMode">Vector or raster output.</param>
     public static byte[] Pdf(string text, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, RenderMode renderMode = RenderMode.Vector) {
         var modules = Encode(text, encodeOptions);
         return MatrixPdfRenderer.Render(modules, BuildPngOptions(renderOptions), renderMode);
@@ -349,6 +381,10 @@ public static class Pdf417Code {
     /// <summary>
     /// Renders PDF417 as EPS.
     /// </summary>
+    /// <param name="text">Input text.</param>
+    /// <param name="encodeOptions">Encoding options.</param>
+    /// <param name="renderOptions">Rendering options.</param>
+    /// <param name="renderMode">Vector or raster output.</param>
     public static string Eps(string text, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, RenderMode renderMode = RenderMode.Vector) {
         var modules = Encode(text, encodeOptions);
         return MatrixEpsRenderer.Render(modules, BuildPngOptions(renderOptions), renderMode);
@@ -383,6 +419,10 @@ public static class Pdf417Code {
     /// <summary>
     /// Renders PDF417 as PDF from bytes.
     /// </summary>
+    /// <param name="data">Payload bytes.</param>
+    /// <param name="encodeOptions">Encoding options.</param>
+    /// <param name="renderOptions">Rendering options.</param>
+    /// <param name="renderMode">Vector or raster output.</param>
     public static byte[] Pdf(byte[] data, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, RenderMode renderMode = RenderMode.Vector) {
         var modules = EncodeBytes(data, encodeOptions);
         return MatrixPdfRenderer.Render(modules, BuildPngOptions(renderOptions), renderMode);
@@ -391,6 +431,10 @@ public static class Pdf417Code {
     /// <summary>
     /// Renders PDF417 as EPS from bytes.
     /// </summary>
+    /// <param name="data">Payload bytes.</param>
+    /// <param name="encodeOptions">Encoding options.</param>
+    /// <param name="renderOptions">Rendering options.</param>
+    /// <param name="renderMode">Vector or raster output.</param>
     public static string Eps(byte[] data, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, RenderMode renderMode = RenderMode.Vector) {
         var modules = EncodeBytes(data, encodeOptions);
         return MatrixEpsRenderer.Render(modules, BuildPngOptions(renderOptions), renderMode);
@@ -531,6 +575,11 @@ public static class Pdf417Code {
     /// <summary>
     /// Saves PDF417 PDF to a file.
     /// </summary>
+    /// <param name="text">Input text.</param>
+    /// <param name="path">Output file path.</param>
+    /// <param name="encodeOptions">Encoding options.</param>
+    /// <param name="renderOptions">Rendering options.</param>
+    /// <param name="renderMode">Vector or raster output.</param>
     public static string SavePdf(string text, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, RenderMode renderMode = RenderMode.Vector) {
         var pdf = Pdf(text, encodeOptions, renderOptions, renderMode);
         return pdf.WriteBinary(path);
@@ -539,6 +588,11 @@ public static class Pdf417Code {
     /// <summary>
     /// Saves PDF417 EPS to a file.
     /// </summary>
+    /// <param name="text">Input text.</param>
+    /// <param name="path">Output file path.</param>
+    /// <param name="encodeOptions">Encoding options.</param>
+    /// <param name="renderOptions">Rendering options.</param>
+    /// <param name="renderMode">Vector or raster output.</param>
     public static string SaveEps(string text, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, RenderMode renderMode = RenderMode.Vector) {
         var eps = Eps(text, encodeOptions, renderOptions, renderMode);
         return eps.WriteText(path);
@@ -563,6 +617,11 @@ public static class Pdf417Code {
     /// <summary>
     /// Saves PDF417 PDF to a file for byte payloads.
     /// </summary>
+    /// <param name="data">Payload bytes.</param>
+    /// <param name="path">Output file path.</param>
+    /// <param name="encodeOptions">Encoding options.</param>
+    /// <param name="renderOptions">Rendering options.</param>
+    /// <param name="renderMode">Vector or raster output.</param>
     public static string SavePdf(byte[] data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, RenderMode renderMode = RenderMode.Vector) {
         var pdf = Pdf(data, encodeOptions, renderOptions, renderMode);
         return pdf.WriteBinary(path);
@@ -571,6 +630,11 @@ public static class Pdf417Code {
     /// <summary>
     /// Saves PDF417 EPS to a file for byte payloads.
     /// </summary>
+    /// <param name="data">Payload bytes.</param>
+    /// <param name="path">Output file path.</param>
+    /// <param name="encodeOptions">Encoding options.</param>
+    /// <param name="renderOptions">Rendering options.</param>
+    /// <param name="renderMode">Vector or raster output.</param>
     public static string SaveEps(byte[] data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, RenderMode renderMode = RenderMode.Vector) {
         var eps = Eps(data, encodeOptions, renderOptions, renderMode);
         return eps.WriteText(path);
@@ -597,6 +661,11 @@ public static class Pdf417Code {
     /// <summary>
     /// Saves PDF417 PDF to a stream.
     /// </summary>
+    /// <param name="text">Input text.</param>
+    /// <param name="stream">Destination stream.</param>
+    /// <param name="encodeOptions">Encoding options.</param>
+    /// <param name="renderOptions">Rendering options.</param>
+    /// <param name="renderMode">Vector or raster output.</param>
     public static void SavePdf(string text, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, RenderMode renderMode = RenderMode.Vector) {
         var modules = Encode(text, encodeOptions);
         MatrixPdfRenderer.RenderToStream(modules, BuildPngOptions(renderOptions), stream, renderMode);
@@ -605,6 +674,11 @@ public static class Pdf417Code {
     /// <summary>
     /// Saves PDF417 EPS to a stream.
     /// </summary>
+    /// <param name="text">Input text.</param>
+    /// <param name="stream">Destination stream.</param>
+    /// <param name="encodeOptions">Encoding options.</param>
+    /// <param name="renderOptions">Rendering options.</param>
+    /// <param name="renderMode">Vector or raster output.</param>
     public static void SaveEps(string text, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, RenderMode renderMode = RenderMode.Vector) {
         var modules = Encode(text, encodeOptions);
         MatrixEpsRenderer.RenderToStream(modules, BuildPngOptions(renderOptions), stream, renderMode);
@@ -631,6 +705,11 @@ public static class Pdf417Code {
     /// <summary>
     /// Saves PDF417 PDF to a stream for byte payloads.
     /// </summary>
+    /// <param name="data">Payload bytes.</param>
+    /// <param name="stream">Destination stream.</param>
+    /// <param name="encodeOptions">Encoding options.</param>
+    /// <param name="renderOptions">Rendering options.</param>
+    /// <param name="renderMode">Vector or raster output.</param>
     public static void SavePdf(byte[] data, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, RenderMode renderMode = RenderMode.Vector) {
         var modules = EncodeBytes(data, encodeOptions);
         MatrixPdfRenderer.RenderToStream(modules, BuildPngOptions(renderOptions), stream, renderMode);
@@ -639,6 +718,11 @@ public static class Pdf417Code {
     /// <summary>
     /// Saves PDF417 EPS to a stream for byte payloads.
     /// </summary>
+    /// <param name="data">Payload bytes.</param>
+    /// <param name="stream">Destination stream.</param>
+    /// <param name="encodeOptions">Encoding options.</param>
+    /// <param name="renderOptions">Rendering options.</param>
+    /// <param name="renderMode">Vector or raster output.</param>
     public static void SaveEps(byte[] data, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, RenderMode renderMode = RenderMode.Vector) {
         var modules = EncodeBytes(data, encodeOptions);
         MatrixEpsRenderer.RenderToStream(modules, BuildPngOptions(renderOptions), stream, renderMode);
@@ -977,6 +1061,7 @@ public static class Pdf417Code {
         /// <summary>
         /// Renders PDF bytes.
         /// </summary>
+        /// <param name="renderMode">Vector or raster output.</param>
         public byte[] Pdf(RenderMode renderMode = RenderMode.Vector) {
             return _text is not null ? Pdf417Code.Pdf(_text, _encodeOptions, _renderOptions, renderMode) : Pdf417Code.Pdf(_bytes!, _encodeOptions, _renderOptions, renderMode);
         }
@@ -984,6 +1069,7 @@ public static class Pdf417Code {
         /// <summary>
         /// Renders EPS text.
         /// </summary>
+        /// <param name="renderMode">Vector or raster output.</param>
         public string Eps(RenderMode renderMode = RenderMode.Vector) {
             return _text is not null ? Pdf417Code.Eps(_text, _encodeOptions, _renderOptions, renderMode) : Pdf417Code.Eps(_bytes!, _encodeOptions, _renderOptions, renderMode);
         }
@@ -1041,6 +1127,8 @@ public static class Pdf417Code {
         /// <summary>
         /// Saves PDF to a file.
         /// </summary>
+    /// <param name="path">Output file path.</param>
+        /// <param name="renderMode">Vector or raster output.</param>
         public string SavePdf(string path, RenderMode renderMode = RenderMode.Vector) {
             return _text is not null ? Pdf417Code.SavePdf(_text, path, _encodeOptions, _renderOptions, renderMode) : Pdf417Code.SavePdf(_bytes!, path, _encodeOptions, _renderOptions, renderMode);
         }
@@ -1048,6 +1136,8 @@ public static class Pdf417Code {
         /// <summary>
         /// Saves EPS to a file.
         /// </summary>
+    /// <param name="path">Output file path.</param>
+        /// <param name="renderMode">Vector or raster output.</param>
         public string SaveEps(string path, RenderMode renderMode = RenderMode.Vector) {
             return _text is not null ? Pdf417Code.SaveEps(_text, path, _encodeOptions, _renderOptions, renderMode) : Pdf417Code.SaveEps(_bytes!, path, _encodeOptions, _renderOptions, renderMode);
         }

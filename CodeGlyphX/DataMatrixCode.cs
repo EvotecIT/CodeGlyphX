@@ -98,6 +98,10 @@ public static class DataMatrixCode {
     /// <summary>
     /// Renders Data Matrix as PDF from bytes.
     /// </summary>
+    /// <param name="data">Payload bytes.</param>
+    /// <param name="mode">Vector or raster output.</param>
+    /// <param name="options">Optional rendering options.</param>
+    /// <param name="renderMode">Vector or raster output.</param>
     public static byte[] Pdf(ReadOnlySpan<byte> data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null, RenderMode renderMode = RenderMode.Vector) {
         var modules = EncodeBytes(data, mode);
         return MatrixPdfRenderer.Render(modules, BuildPngOptions(options), renderMode);
@@ -106,6 +110,10 @@ public static class DataMatrixCode {
     /// <summary>
     /// Renders Data Matrix as EPS from bytes.
     /// </summary>
+    /// <param name="data">Payload bytes.</param>
+    /// <param name="mode">Vector or raster output.</param>
+    /// <param name="options">Optional rendering options.</param>
+    /// <param name="renderMode">Vector or raster output.</param>
     public static string Eps(ReadOnlySpan<byte> data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null, RenderMode renderMode = RenderMode.Vector) {
         var modules = EncodeBytes(data, mode);
         return MatrixEpsRenderer.Render(modules, BuildPngOptions(options), renderMode);
@@ -192,6 +200,11 @@ public static class DataMatrixCode {
     /// <summary>
     /// Saves Data Matrix PDF to a file for byte payloads.
     /// </summary>
+    /// <param name="data">Payload bytes.</param>
+    /// <param name="path">Output file path.</param>
+    /// <param name="mode">Vector or raster output.</param>
+    /// <param name="options">Optional rendering options.</param>
+    /// <param name="renderMode">Vector or raster output.</param>
     public static string SavePdf(ReadOnlySpan<byte> data, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null, RenderMode renderMode = RenderMode.Vector) {
         var pdf = Pdf(data, mode, options, renderMode);
         return pdf.WriteBinary(path);
@@ -200,6 +213,11 @@ public static class DataMatrixCode {
     /// <summary>
     /// Saves Data Matrix EPS to a file for byte payloads.
     /// </summary>
+    /// <param name="data">Payload bytes.</param>
+    /// <param name="path">Output file path.</param>
+    /// <param name="mode">Vector or raster output.</param>
+    /// <param name="options">Optional rendering options.</param>
+    /// <param name="renderMode">Vector or raster output.</param>
     public static string SaveEps(ReadOnlySpan<byte> data, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null, RenderMode renderMode = RenderMode.Vector) {
         var eps = Eps(data, mode, options, renderMode);
         return eps.WriteText(path);
@@ -226,6 +244,11 @@ public static class DataMatrixCode {
     /// <summary>
     /// Saves Data Matrix PDF to a stream for byte payloads.
     /// </summary>
+    /// <param name="data">Payload bytes.</param>
+    /// <param name="stream">Destination stream.</param>
+    /// <param name="mode">Vector or raster output.</param>
+    /// <param name="options">Optional rendering options.</param>
+    /// <param name="renderMode">Vector or raster output.</param>
     public static void SavePdf(ReadOnlySpan<byte> data, Stream stream, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null, RenderMode renderMode = RenderMode.Vector) {
         var modules = EncodeBytes(data, mode);
         MatrixPdfRenderer.RenderToStream(modules, BuildPngOptions(options), stream, renderMode);
@@ -234,6 +257,11 @@ public static class DataMatrixCode {
     /// <summary>
     /// Saves Data Matrix EPS to a stream for byte payloads.
     /// </summary>
+    /// <param name="data">Payload bytes.</param>
+    /// <param name="stream">Destination stream.</param>
+    /// <param name="mode">Vector or raster output.</param>
+    /// <param name="options">Optional rendering options.</param>
+    /// <param name="renderMode">Vector or raster output.</param>
     public static void SaveEps(ReadOnlySpan<byte> data, Stream stream, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null, RenderMode renderMode = RenderMode.Vector) {
         var modules = EncodeBytes(data, mode);
         MatrixEpsRenderer.RenderToStream(modules, BuildPngOptions(options), stream, renderMode);
@@ -340,6 +368,10 @@ public static class DataMatrixCode {
     /// <summary>
     /// Renders Data Matrix as PDF.
     /// </summary>
+    /// <param name="text">Input text.</param>
+    /// <param name="mode">Vector or raster output.</param>
+    /// <param name="options">Optional rendering options.</param>
+    /// <param name="renderMode">Vector or raster output.</param>
     public static byte[] Pdf(string text, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null, RenderMode renderMode = RenderMode.Vector) {
         var modules = Encode(text, mode);
         return MatrixPdfRenderer.Render(modules, BuildPngOptions(options), renderMode);
@@ -348,6 +380,10 @@ public static class DataMatrixCode {
     /// <summary>
     /// Renders Data Matrix as EPS.
     /// </summary>
+    /// <param name="text">Input text.</param>
+    /// <param name="mode">Vector or raster output.</param>
+    /// <param name="options">Optional rendering options.</param>
+    /// <param name="renderMode">Vector or raster output.</param>
     public static string Eps(string text, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null, RenderMode renderMode = RenderMode.Vector) {
         var modules = Encode(text, mode);
         return MatrixEpsRenderer.Render(modules, BuildPngOptions(options), renderMode);
@@ -382,6 +418,10 @@ public static class DataMatrixCode {
     /// <summary>
     /// Renders Data Matrix as PDF from bytes.
     /// </summary>
+    /// <param name="data">Payload bytes.</param>
+    /// <param name="mode">Vector or raster output.</param>
+    /// <param name="options">Optional rendering options.</param>
+    /// <param name="renderMode">Vector or raster output.</param>
     public static byte[] Pdf(byte[] data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null, RenderMode renderMode = RenderMode.Vector) {
         var modules = EncodeBytes(data, mode);
         return MatrixPdfRenderer.Render(modules, BuildPngOptions(options), renderMode);
@@ -390,6 +430,10 @@ public static class DataMatrixCode {
     /// <summary>
     /// Renders Data Matrix as EPS from bytes.
     /// </summary>
+    /// <param name="data">Payload bytes.</param>
+    /// <param name="mode">Vector or raster output.</param>
+    /// <param name="options">Optional rendering options.</param>
+    /// <param name="renderMode">Vector or raster output.</param>
     public static string Eps(byte[] data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null, RenderMode renderMode = RenderMode.Vector) {
         var modules = EncodeBytes(data, mode);
         return MatrixEpsRenderer.Render(modules, BuildPngOptions(options), renderMode);
@@ -530,6 +574,11 @@ public static class DataMatrixCode {
     /// <summary>
     /// Saves Data Matrix PDF to a file.
     /// </summary>
+    /// <param name="text">Input text.</param>
+    /// <param name="path">Output file path.</param>
+    /// <param name="mode">Vector or raster output.</param>
+    /// <param name="options">Optional rendering options.</param>
+    /// <param name="renderMode">Vector or raster output.</param>
     public static string SavePdf(string text, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null, RenderMode renderMode = RenderMode.Vector) {
         var pdf = Pdf(text, mode, options, renderMode);
         return pdf.WriteBinary(path);
@@ -538,6 +587,11 @@ public static class DataMatrixCode {
     /// <summary>
     /// Saves Data Matrix EPS to a file.
     /// </summary>
+    /// <param name="text">Input text.</param>
+    /// <param name="path">Output file path.</param>
+    /// <param name="mode">Vector or raster output.</param>
+    /// <param name="options">Optional rendering options.</param>
+    /// <param name="renderMode">Vector or raster output.</param>
     public static string SaveEps(string text, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null, RenderMode renderMode = RenderMode.Vector) {
         var eps = Eps(text, mode, options, renderMode);
         return eps.WriteText(path);
@@ -562,6 +616,11 @@ public static class DataMatrixCode {
     /// <summary>
     /// Saves Data Matrix PDF to a file for byte payloads.
     /// </summary>
+    /// <param name="data">Payload bytes.</param>
+    /// <param name="path">Output file path.</param>
+    /// <param name="mode">Vector or raster output.</param>
+    /// <param name="options">Optional rendering options.</param>
+    /// <param name="renderMode">Vector or raster output.</param>
     public static string SavePdf(byte[] data, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null, RenderMode renderMode = RenderMode.Vector) {
         var pdf = Pdf(data, mode, options, renderMode);
         return pdf.WriteBinary(path);
@@ -570,6 +629,11 @@ public static class DataMatrixCode {
     /// <summary>
     /// Saves Data Matrix EPS to a file for byte payloads.
     /// </summary>
+    /// <param name="data">Payload bytes.</param>
+    /// <param name="path">Output file path.</param>
+    /// <param name="mode">Vector or raster output.</param>
+    /// <param name="options">Optional rendering options.</param>
+    /// <param name="renderMode">Vector or raster output.</param>
     public static string SaveEps(byte[] data, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null, RenderMode renderMode = RenderMode.Vector) {
         var eps = Eps(data, mode, options, renderMode);
         return eps.WriteText(path);
@@ -596,6 +660,11 @@ public static class DataMatrixCode {
     /// <summary>
     /// Saves Data Matrix PDF to a stream.
     /// </summary>
+    /// <param name="text">Input text.</param>
+    /// <param name="stream">Destination stream.</param>
+    /// <param name="mode">Vector or raster output.</param>
+    /// <param name="options">Optional rendering options.</param>
+    /// <param name="renderMode">Vector or raster output.</param>
     public static void SavePdf(string text, Stream stream, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null, RenderMode renderMode = RenderMode.Vector) {
         var modules = Encode(text, mode);
         MatrixPdfRenderer.RenderToStream(modules, BuildPngOptions(options), stream, renderMode);
@@ -604,6 +673,11 @@ public static class DataMatrixCode {
     /// <summary>
     /// Saves Data Matrix EPS to a stream.
     /// </summary>
+    /// <param name="text">Input text.</param>
+    /// <param name="stream">Destination stream.</param>
+    /// <param name="mode">Vector or raster output.</param>
+    /// <param name="options">Optional rendering options.</param>
+    /// <param name="renderMode">Vector or raster output.</param>
     public static void SaveEps(string text, Stream stream, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null, RenderMode renderMode = RenderMode.Vector) {
         var modules = Encode(text, mode);
         MatrixEpsRenderer.RenderToStream(modules, BuildPngOptions(options), stream, renderMode);
@@ -630,6 +704,11 @@ public static class DataMatrixCode {
     /// <summary>
     /// Saves Data Matrix PDF to a stream for byte payloads.
     /// </summary>
+    /// <param name="data">Payload bytes.</param>
+    /// <param name="stream">Destination stream.</param>
+    /// <param name="mode">Vector or raster output.</param>
+    /// <param name="options">Optional rendering options.</param>
+    /// <param name="renderMode">Vector or raster output.</param>
     public static void SavePdf(byte[] data, Stream stream, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null, RenderMode renderMode = RenderMode.Vector) {
         var modules = EncodeBytes(data, mode);
         MatrixPdfRenderer.RenderToStream(modules, BuildPngOptions(options), stream, renderMode);
@@ -638,6 +717,11 @@ public static class DataMatrixCode {
     /// <summary>
     /// Saves Data Matrix EPS to a stream for byte payloads.
     /// </summary>
+    /// <param name="data">Payload bytes.</param>
+    /// <param name="stream">Destination stream.</param>
+    /// <param name="mode">Vector or raster output.</param>
+    /// <param name="options">Optional rendering options.</param>
+    /// <param name="renderMode">Vector or raster output.</param>
     public static void SaveEps(byte[] data, Stream stream, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null, RenderMode renderMode = RenderMode.Vector) {
         var modules = EncodeBytes(data, mode);
         MatrixEpsRenderer.RenderToStream(modules, BuildPngOptions(options), stream, renderMode);
@@ -917,6 +1001,7 @@ public static class DataMatrixCode {
         /// <summary>
         /// Renders PDF bytes.
         /// </summary>
+        /// <param name="renderMode">Vector or raster output.</param>
         public byte[] Pdf(RenderMode renderMode = RenderMode.Vector) {
             return _text is not null ? DataMatrixCode.Pdf(_text, _mode, _options, renderMode) : DataMatrixCode.Pdf(_bytes!, _mode, _options, renderMode);
         }
@@ -924,6 +1009,7 @@ public static class DataMatrixCode {
         /// <summary>
         /// Renders EPS text.
         /// </summary>
+        /// <param name="renderMode">Vector or raster output.</param>
         public string Eps(RenderMode renderMode = RenderMode.Vector) {
             return _text is not null ? DataMatrixCode.Eps(_text, _mode, _options, renderMode) : DataMatrixCode.Eps(_bytes!, _mode, _options, renderMode);
         }
@@ -981,6 +1067,8 @@ public static class DataMatrixCode {
         /// <summary>
         /// Saves PDF to a file.
         /// </summary>
+    /// <param name="path">Output file path.</param>
+        /// <param name="renderMode">Vector or raster output.</param>
         public string SavePdf(string path, RenderMode renderMode = RenderMode.Vector) {
             return _text is not null ? DataMatrixCode.SavePdf(_text, path, _mode, _options, renderMode) : DataMatrixCode.SavePdf(_bytes!, path, _mode, _options, renderMode);
         }
@@ -988,6 +1076,8 @@ public static class DataMatrixCode {
         /// <summary>
         /// Saves EPS to a file.
         /// </summary>
+    /// <param name="path">Output file path.</param>
+        /// <param name="renderMode">Vector or raster output.</param>
         public string SaveEps(string path, RenderMode renderMode = RenderMode.Vector) {
             return _text is not null ? DataMatrixCode.SaveEps(_text, path, _mode, _options, renderMode) : DataMatrixCode.SaveEps(_bytes!, path, _mode, _options, renderMode);
         }

@@ -445,6 +445,9 @@ public static class QrEasy {
     /// <summary>
     /// Renders a QR code as PDF.
     /// </summary>
+    /// <param name="payload">The payload text.</param>
+    /// <param name="options">Optional rendering options.</param>
+    /// <param name="mode">Vector or raster output.</param>
     public static byte[] RenderPdf(string payload, QrEasyOptions? options = null, RenderMode mode = RenderMode.Vector) {
         var opts = options ?? new QrEasyOptions();
         var qr = Encode(payload, opts);
@@ -455,6 +458,10 @@ public static class QrEasy {
     /// <summary>
     /// Detects a payload type and renders a QR code as PDF.
     /// </summary>
+    /// <param name="payload">The payload text.</param>
+    /// <param name="detectOptions">Payload detection options.</param>
+    /// <param name="options">Optional rendering options.</param>
+    /// <param name="mode">Vector or raster output.</param>
     public static byte[] RenderPdfAuto(string payload, QrPayloadDetectOptions? detectOptions = null, QrEasyOptions? options = null, RenderMode mode = RenderMode.Vector) {
         if (payload is null) throw new ArgumentNullException(nameof(payload));
         var detected = QrPayloads.Detect(payload, detectOptions);
@@ -464,6 +471,10 @@ public static class QrEasy {
     /// <summary>
     /// Renders a QR code as PDF to a stream.
     /// </summary>
+    /// <param name="payload">The payload text.</param>
+    /// <param name="stream">Destination stream.</param>
+    /// <param name="options">Optional rendering options.</param>
+    /// <param name="mode">Vector or raster output.</param>
     public static void RenderPdfToStream(string payload, Stream stream, QrEasyOptions? options = null, RenderMode mode = RenderMode.Vector) {
         var opts = options ?? new QrEasyOptions();
         var qr = Encode(payload, opts);
@@ -474,6 +485,10 @@ public static class QrEasy {
     /// <summary>
     /// Renders a QR code as PDF and writes it to a file.
     /// </summary>
+    /// <param name="payload">The payload text.</param>
+    /// <param name="path">Output file path.</param>
+    /// <param name="options">Optional rendering options.</param>
+    /// <param name="mode">Vector or raster output.</param>
     public static string RenderPdfToFile(string payload, string path, QrEasyOptions? options = null, RenderMode mode = RenderMode.Vector) {
         var pdf = RenderPdf(payload, options, mode);
         return RenderIO.WriteBinary(path, pdf);
@@ -482,6 +497,10 @@ public static class QrEasy {
     /// <summary>
     /// Renders a QR code as PDF and writes it to a file for a payload with embedded defaults.
     /// </summary>
+    /// <param name="payload">The payload text.</param>
+    /// <param name="path">Output file path.</param>
+    /// <param name="options">Optional rendering options.</param>
+    /// <param name="mode">Vector or raster output.</param>
     public static string RenderPdfToFile(QrPayloadData payload, string path, QrEasyOptions? options = null, RenderMode mode = RenderMode.Vector) {
         var pdf = RenderPdf(payload, options, mode);
         return RenderIO.WriteBinary(path, pdf);
@@ -490,6 +509,9 @@ public static class QrEasy {
     /// <summary>
     /// Renders a QR code as PDF for a payload with embedded defaults.
     /// </summary>
+    /// <param name="payload">The payload text.</param>
+    /// <param name="options">Optional rendering options.</param>
+    /// <param name="mode">Vector or raster output.</param>
     public static byte[] RenderPdf(QrPayloadData payload, QrEasyOptions? options = null, RenderMode mode = RenderMode.Vector) {
         if (payload is null) throw new ArgumentNullException(nameof(payload));
         var opts = MergeOptions(payload, options);
@@ -501,6 +523,10 @@ public static class QrEasy {
     /// <summary>
     /// Renders a QR code as PDF to a stream for a payload with embedded defaults.
     /// </summary>
+    /// <param name="payload">The payload text.</param>
+    /// <param name="stream">Destination stream.</param>
+    /// <param name="options">Optional rendering options.</param>
+    /// <param name="mode">Vector or raster output.</param>
     public static void RenderPdfToStream(QrPayloadData payload, Stream stream, QrEasyOptions? options = null, RenderMode mode = RenderMode.Vector) {
         if (payload is null) throw new ArgumentNullException(nameof(payload));
         var opts = MergeOptions(payload, options);
@@ -512,6 +538,9 @@ public static class QrEasy {
     /// <summary>
     /// Renders a QR code as EPS.
     /// </summary>
+    /// <param name="payload">The payload text.</param>
+    /// <param name="options">Optional rendering options.</param>
+    /// <param name="mode">Vector or raster output.</param>
     public static string RenderEps(string payload, QrEasyOptions? options = null, RenderMode mode = RenderMode.Vector) {
         var opts = options ?? new QrEasyOptions();
         var qr = Encode(payload, opts);
@@ -522,6 +551,10 @@ public static class QrEasy {
     /// <summary>
     /// Detects a payload type and renders a QR code as EPS.
     /// </summary>
+    /// <param name="payload">The payload text.</param>
+    /// <param name="detectOptions">Payload detection options.</param>
+    /// <param name="options">Optional rendering options.</param>
+    /// <param name="mode">Vector or raster output.</param>
     public static string RenderEpsAuto(string payload, QrPayloadDetectOptions? detectOptions = null, QrEasyOptions? options = null, RenderMode mode = RenderMode.Vector) {
         if (payload is null) throw new ArgumentNullException(nameof(payload));
         var detected = QrPayloads.Detect(payload, detectOptions);
@@ -531,6 +564,10 @@ public static class QrEasy {
     /// <summary>
     /// Renders a QR code as EPS to a stream.
     /// </summary>
+    /// <param name="payload">The payload text.</param>
+    /// <param name="stream">Destination stream.</param>
+    /// <param name="options">Optional rendering options.</param>
+    /// <param name="mode">Vector or raster output.</param>
     public static void RenderEpsToStream(string payload, Stream stream, QrEasyOptions? options = null, RenderMode mode = RenderMode.Vector) {
         var opts = options ?? new QrEasyOptions();
         var qr = Encode(payload, opts);
@@ -541,6 +578,10 @@ public static class QrEasy {
     /// <summary>
     /// Renders a QR code as EPS and writes it to a file.
     /// </summary>
+    /// <param name="payload">The payload text.</param>
+    /// <param name="path">Output file path.</param>
+    /// <param name="options">Optional rendering options.</param>
+    /// <param name="mode">Vector or raster output.</param>
     public static string RenderEpsToFile(string payload, string path, QrEasyOptions? options = null, RenderMode mode = RenderMode.Vector) {
         var eps = RenderEps(payload, options, mode);
         return RenderIO.WriteText(path, eps);
@@ -549,6 +590,10 @@ public static class QrEasy {
     /// <summary>
     /// Renders a QR code as EPS and writes it to a file for a payload with embedded defaults.
     /// </summary>
+    /// <param name="payload">The payload text.</param>
+    /// <param name="path">Output file path.</param>
+    /// <param name="options">Optional rendering options.</param>
+    /// <param name="mode">Vector or raster output.</param>
     public static string RenderEpsToFile(QrPayloadData payload, string path, QrEasyOptions? options = null, RenderMode mode = RenderMode.Vector) {
         var eps = RenderEps(payload, options, mode);
         return RenderIO.WriteText(path, eps);
@@ -557,6 +602,9 @@ public static class QrEasy {
     /// <summary>
     /// Renders a QR code as EPS for a payload with embedded defaults.
     /// </summary>
+    /// <param name="payload">The payload text.</param>
+    /// <param name="options">Optional rendering options.</param>
+    /// <param name="mode">Vector or raster output.</param>
     public static string RenderEps(QrPayloadData payload, QrEasyOptions? options = null, RenderMode mode = RenderMode.Vector) {
         if (payload is null) throw new ArgumentNullException(nameof(payload));
         var opts = MergeOptions(payload, options);
@@ -568,6 +616,10 @@ public static class QrEasy {
     /// <summary>
     /// Renders a QR code as EPS to a stream for a payload with embedded defaults.
     /// </summary>
+    /// <param name="payload">The payload text.</param>
+    /// <param name="stream">Destination stream.</param>
+    /// <param name="options">Optional rendering options.</param>
+    /// <param name="mode">Vector or raster output.</param>
     public static void RenderEpsToStream(QrPayloadData payload, Stream stream, QrEasyOptions? options = null, RenderMode mode = RenderMode.Vector) {
         if (payload is null) throw new ArgumentNullException(nameof(payload));
         var opts = MergeOptions(payload, options);

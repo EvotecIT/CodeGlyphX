@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Ascii;
 using CodeGlyphX.Rendering.Bmp;
@@ -70,6 +71,65 @@ public sealed class RendererFormatTests {
 
         var ascii = BarcodeAsciiRenderer.Render(barcode, new BarcodeAsciiRenderOptions { QuietZone = 1, Height = 2 });
         Assert.Contains("#", ascii, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Qr_Vector_Pdf_Eps_Use_Curves_For_Rounded_Modules() {
+        var opts = new QrEasyOptions {
+            ModuleShape = QrPngModuleShape.Rounded,
+            ModuleCornerRadiusPx = 2,
+        };
+
+        var pdf = QrEasy.RenderPdf("https://example.com", opts, RenderMode.Vector);
+        var pdfText = Encoding.ASCII.GetString(pdf);
+        Assert.Contains(" c\n", pdfText, StringComparison.Ordinal);
+        Assert.DoesNotContain("/Subtype /Image", pdfText, StringComparison.Ordinal);
+
+        var eps = QrEasy.RenderEps("https://example.com", opts, RenderMode.Vector);
+        Assert.Contains("curveto", eps, StringComparison.Ordinal);
+        Assert.DoesNotContain("colorimage", eps, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public void Qr_Vector_Mode_Falls_Back_To_Raster_When_Gradient() {
+        var opts = new QrEasyOptions {
+            ForegroundGradient = new QrPngGradientOptions {
+                Type = QrPngGradientType.Horizontal,
+                StartColor = new Rgba32(0, 0, 0),
+                EndColor = new Rgba32(255, 0, 0),
+            },
+        };
+
+        var pdf = QrEasy.RenderPdf("https://example.com", opts, RenderMode.Vector);
+        var pdfText = Encoding.ASCII.GetString(pdf);
+        Assert.Contains("/Subtype /Image", pdfText, StringComparison.Ordinal);
+
+        var eps = QrEasy.RenderEps("https://example.com", opts, RenderMode.Vector);
+        Assert.Contains("colorimage", eps, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Qr_Vector_Mode_Falls_Back_To_Raster_When_Logo() {
+        var logoMatrix = new BitMatrix(1, 1);
+        logoMatrix[0, 0] = true;
+
+        var logoPng = QrPngRenderer.Render(logoMatrix, new QrPngRenderOptions {
+            ModuleSize = 2,
+            QuietZone = 0,
+            Foreground = Rgba32.Black,
+            Background = Rgba32.White,
+        });
+
+        var opts = new QrEasyOptions {
+            LogoPng = logoPng,
+        };
+
+        var pdf = QrEasy.RenderPdf("https://example.com", opts, RenderMode.Vector);
+        var pdfText = Encoding.ASCII.GetString(pdf);
+        Assert.Contains("/Subtype /Image", pdfText, StringComparison.Ordinal);
+
+        var eps = QrEasy.RenderEps("https://example.com", opts, RenderMode.Vector);
+        Assert.Contains("colorimage", eps, StringComparison.Ordinal);
     }
 
     private static bool IsPng(byte[] data) {
