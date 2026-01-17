@@ -158,13 +158,19 @@ Notes:
 using CodeGlyphX;
 
 Barcode.Save(BarcodeType.Code128, "CODE128-12345", "code128.png");
+Barcode.Save(BarcodeType.Code128, "CODE128-12345", "code128.pdf");
+Barcode.Save(BarcodeType.Code128, "CODE128-12345", "code128.eps");
 ```
 
 ```csharp
 using CodeGlyphX;
 
 DataMatrixCode.Save("DataMatrix-12345", "datamatrix.png");
+DataMatrixCode.Save("DataMatrix-12345", "datamatrix.pdf");
+DataMatrixCode.Save("DataMatrix-12345", "datamatrix.eps");
 Pdf417Code.Save("PDF417-12345", "pdf417.png");
+Pdf417Code.Save("PDF417-12345", "pdf417.pdf");
+Pdf417Code.Save("PDF417-12345", "pdf417.eps");
 ```
 
 ## Payload helpers (3 lines each)
