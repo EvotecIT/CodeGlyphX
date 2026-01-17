@@ -208,11 +208,12 @@ public partial class MainWindow : Window {
             FileName = $"diagnostics-{DateTime.Now:yyyyMMdd-HHmmss}.txt",
         };
 
-        if (dialog.ShowDialog(this) != true) return;
+        if (dialog.ShowDialog(this) is not true) return;
 
+        var decodeInfo = _lastDecodeInfo;
         var label = $"ScreenScan ({_decodeProfile})";
         var source = $"Captured region {_lastWidth}×{_lastHeight}";
-        QrDiagnosticsDump.WriteText(dialog.FileName, _lastDecodeInfo, label, source);
+        QrDiagnosticsDump.WriteText(dialog.FileName, decodeInfo, label, source);
         StatusText.Text = $"Saved diagnostics: {Path.GetFileName(dialog.FileName)}";
     }
 
@@ -227,7 +228,7 @@ public partial class MainWindow : Window {
             FileName = $"capture-bundle-{DateTime.Now:yyyyMMdd-HHmmss}.zip",
         };
 
-        if (dialog.ShowDialog(this) != true) return;
+        if (dialog.ShowDialog(this) is not true) return;
 
         var width = _lastWidth;
         var height = _lastHeight;
@@ -251,9 +252,10 @@ public partial class MainWindow : Window {
             }
 
             var diagPath = Path.Combine(tempDir, "diagnostics.txt");
+            var decodeInfo = _lastDecodeInfo;
             var label = $"ScreenScan ({_decodeProfile})";
             var source = $"Captured region {width}×{height}";
-            QrDiagnosticsDump.WriteText(diagPath, _lastDecodeInfo, label, source);
+            QrDiagnosticsDump.WriteText(diagPath, decodeInfo, label, source);
 
             if (File.Exists(dialog.FileName)) File.Delete(dialog.FileName);
             System.IO.Compression.ZipFile.CreateFromDirectory(tempDir, dialog.FileName);
