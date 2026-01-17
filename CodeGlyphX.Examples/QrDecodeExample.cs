@@ -15,8 +15,10 @@ internal static class QrDecodeExample {
 
         var screenPath = Path.Combine(outputDir, "qr-screen.png");
         png.WriteBinary(screenPath);
-        if (QrImageDecoder.TryDecodeImage(File.ReadAllBytes(screenPath), new QrPixelDecodeOptions { Profile = QrDecodeProfile.Robust }, out var screenDecoded)) {
+        if (QrImageDecoder.TryDecodeImage(File.ReadAllBytes(screenPath), out var screenDecoded, out var screenInfo, new QrPixelDecodeOptions { Profile = QrDecodeProfile.Robust })) {
             screenDecoded.Text.WriteText(outputDir, "qr-decode-screen.txt");
+        } else {
+            QrDiagnosticsDump.WriteText(outputDir, "qr-decode-screen.txt", screenInfo, label: "Decode failed", source: screenPath);
         }
 
         var fast = new QrPixelDecodeOptions { Profile = QrDecodeProfile.Fast };

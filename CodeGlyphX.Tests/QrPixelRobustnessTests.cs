@@ -229,6 +229,65 @@ public sealed class QrPixelRobustnessTests {
     }
 
     [Fact]
+    public void QrDecode_WithPerspectiveAndCroppedQuietZone() {
+        var code = QrCodeEncoder.EncodeText("CropSkew");
+        var pixels = QrPngRenderer.RenderPixels(
+            code.Modules,
+            new QrPngRenderOptions { ModuleSize = 5, QuietZone = 2 },
+            out var width,
+            out var height,
+            out var stride);
+
+        var pad = 18;
+        var dstWidth = width + pad * 2;
+        var dstHeight = height + pad * 2;
+        var dstStride = dstWidth * 4;
+        var warped = new byte[dstHeight * dstStride];
+        FillWhite(warped);
+
+        var x0 = pad + 6;
+        var y0 = pad + 4;
+        var x1 = dstWidth - pad - 10;
+        var y1 = pad + 2;
+        var x2 = dstWidth - pad - 4;
+        var y2 = dstHeight - pad - 12;
+        var x3 = pad + 8;
+        var y3 = dstHeight - pad - 6;
+
+        var transform = QrPerspectiveTransform.QuadrilateralToQuadrilateral(
+            x0, y0,
+            x1, y1,
+            x2, y2,
+            x3, y3,
+            0, 0,
+            width - 1, 0,
+            width - 1, height - 1,
+            0, height - 1);
+
+        for (var y = 0; y < dstHeight; y++) {
+            var row = y * dstStride;
+            for (var x = 0; x < dstWidth; x++) {
+                transform.Transform(x, y, out var sx, out var sy);
+                if (double.IsNaN(sx) || double.IsNaN(sy)) continue;
+                var px = (int)Math.Round(sx);
+                var py = (int)Math.Round(sy);
+                if ((uint)px >= (uint)width || (uint)py >= (uint)height) continue;
+
+                var src = py * stride + px * 4;
+                var dst = row + x * 4;
+                warped[dst] = pixels[src];
+                warped[dst + 1] = pixels[src + 1];
+                warped[dst + 2] = pixels[src + 2];
+                warped[dst + 3] = pixels[src + 3];
+            }
+        }
+
+        var crop = Crop(warped, dstWidth, dstHeight, dstStride, left: 4, top: 4, right: 4, bottom: 4, out var cw, out var ch, out var cstride);
+        Assert.True(QrDecoder.TryDecode(crop, cw, ch, cstride, PixelFormat.Rgba32, out var decoded));
+        Assert.Equal("CropSkew", decoded.Text);
+    }
+
+    [Fact]
     public void QrDecode_WithFalseFinderNoise() {
         var code = QrCodeEncoder.EncodeText("FinderNoiseTest");
         var pixels = QrPngRenderer.RenderPixels(
@@ -416,5 +475,20 @@ public sealed class QrPixelRobustnessTests {
         }
 
         return rotated;
+    }
+
+    private static byte[] Crop(byte[] pixels, int width, int height, int stride, int left, int top, int right, int bottom, out int outWidth, out int outHeight, out int outStride) {
+        outWidth = Math.Max(1, width - left - right);
+        outHeight = Math.Max(1, height - top - bottom);
+        outStride = outWidth * 4;
+        var cropped = new byte[outHeight * outStride];
+
+        for (var y = 0; y < outHeight; y++) {
+            var src = (y + top) * stride + left * 4;
+            var dst = y * outStride;
+            Buffer.BlockCopy(pixels, src, cropped, dst, outStride);
+        }
+
+        return cropped;
     }
 }

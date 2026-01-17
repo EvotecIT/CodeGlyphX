@@ -74,6 +74,25 @@ public static class QrImageDecoder {
     }
 
     /// <summary>
+    /// Attempts to decode a QR code from common image formats (PNG/BMP/PPM/TGA), with diagnostics and profile options.
+    /// </summary>
+    public static bool TryDecodeImage(byte[] image, out QrDecoded decoded, out QrPixelDecodeInfo info, QrPixelDecodeOptions? options = null) {
+#if NET8_0_OR_GREATER
+        if (image is null) throw new ArgumentNullException(nameof(image));
+        if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) {
+            decoded = null!;
+            info = default;
+            return false;
+        }
+        return QrDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, out info, options);
+#else
+        decoded = null!;
+        info = default;
+        return false;
+#endif
+    }
+
+    /// <summary>
     /// Attempts to decode a QR code from common image formats (PNG/BMP/PPM/TGA).
     /// </summary>
     public static bool TryDecodeImage(byte[] image, QrPixelDecodeOptions? options, out QrDecoded decoded) {
@@ -134,6 +153,21 @@ public static class QrImageDecoder {
         return global::CodeGlyphX.Qr.QrPixelDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded);
 #else
         decoded = null!;
+        return false;
+#endif
+    }
+
+    /// <summary>
+    /// Attempts to decode a QR code from an image stream (PNG/BMP/PPM/TGA), with diagnostics and profile options.
+    /// </summary>
+    public static bool TryDecodeImage(Stream stream, out QrDecoded decoded, out QrPixelDecodeInfo info, QrPixelDecodeOptions? options = null) {
+#if NET8_0_OR_GREATER
+        if (stream is null) throw new ArgumentNullException(nameof(stream));
+        var rgba = ImageReader.DecodeRgba32(stream, out var width, out var height);
+        return QrDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, out info, options);
+#else
+        decoded = null!;
+        info = default;
         return false;
 #endif
     }

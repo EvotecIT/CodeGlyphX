@@ -215,6 +215,14 @@ if (QrImageDecoder.TryDecodeImage(File.ReadAllBytes("screen.png"), options, out 
 ```csharp
 using CodeGlyphX;
 
+if (!QrImageDecoder.TryDecodeImage(File.ReadAllBytes("screen.png"), out var decoded, out var info)) {
+    QrDiagnosticsDump.WriteText("decode-diagnostics.txt", info, source: "screen.png");
+}
+```
+
+```csharp
+using CodeGlyphX;
+
 if (CodeGlyph.TryDecodeAllPng(File.ReadAllBytes("unknown.png"), out var results)) {
     foreach (var item in results) Console.WriteLine($"{item.Kind}: {item.Text}");
 }
