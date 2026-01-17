@@ -149,6 +149,10 @@ using CodeGlyphX.Rendering;
 QR.SavePdf("https://example.com", "qr-raster.pdf", renderMode: RenderMode.Raster);
 ```
 
+Notes:
+- Vector PDF/EPS support square/rounded/circle modules and eye shapes.
+- Gradients and logos automatically fall back to raster to preserve appearance.
+
 ```csharp
 using CodeGlyphX;
 
