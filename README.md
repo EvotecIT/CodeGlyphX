@@ -146,12 +146,13 @@ using CodeGlyphX;
 using CodeGlyphX.Rendering;
 
 // PDF/EPS are vector by default. Use Raster when you need pixels.
-QR.SavePdf("https://example.com", "qr-raster.pdf", renderMode: RenderMode.Raster);
+QR.SavePdf("https://example.com", "qr-raster.pdf", mode: RenderMode.Raster);
 ```
 
 Notes:
 - Vector PDF/EPS support square/rounded/circle modules and eye shapes.
 - Gradients and logos automatically fall back to raster to preserve appearance.
+- PDF/EPS are output-only. For decoding, rasterize to PNG/BMP/PPM/TGA and use the image decoders.
 
 ```csharp
 using CodeGlyphX;

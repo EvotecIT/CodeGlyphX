@@ -13,6 +13,6 @@ internal static class QrGenerationExample {
         QR.Save(payload, Path.Combine(outputDir, "qr-basic.jpg"));
         QR.SavePdf(payload, Path.Combine(outputDir, "qr-basic.pdf"));
         QR.SaveEps(payload, Path.Combine(outputDir, "qr-basic.eps"));
-        QR.SavePdf(payload, Path.Combine(outputDir, "qr-basic-raster.pdf"), renderMode: RenderMode.Raster);
+        QR.SavePdf(payload, Path.Combine(outputDir, "qr-basic-raster.pdf"), mode: RenderMode.Raster);
     }
 }
