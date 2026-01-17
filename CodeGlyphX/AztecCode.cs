@@ -264,7 +264,11 @@ public static class AztecCode {
                 return RenderIO.WriteText(path, Svg(text, encodeOptions, renderOptions));
             case ".html":
             case ".htm":
-                return RenderIO.WriteText(path, Html(text, encodeOptions, renderOptions));
+            {
+                var html = Html(text, encodeOptions, renderOptions);
+                if (!string.IsNullOrEmpty(title)) html = html.WrapHtml(title);
+                return RenderIO.WriteText(path, html);
+            }
             case ".jpg":
             case ".jpeg":
                 return RenderIO.WriteBinary(path, Jpeg(text, encodeOptions, renderOptions));
@@ -314,14 +318,18 @@ public static class AztecCode {
     /// Saves Aztec HTML to a file.
     /// </summary>
     public static string SaveHtml(string text, string path, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, string? title = null) {
-        return RenderIO.WriteText(path, Html(text, encodeOptions, renderOptions));
+        var html = Html(text, encodeOptions, renderOptions);
+        if (!string.IsNullOrEmpty(title)) html = html.WrapHtml(title);
+        return RenderIO.WriteText(path, html);
     }
 
     /// <summary>
     /// Saves Aztec HTML to a stream.
     /// </summary>
     public static void SaveHtml(string text, Stream stream, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, string? title = null) {
-        RenderIO.WriteText(stream, Html(text, encodeOptions, renderOptions));
+        var html = Html(text, encodeOptions, renderOptions);
+        if (!string.IsNullOrEmpty(title)) html = html.WrapHtml(title);
+        RenderIO.WriteText(stream, html);
     }
 
     /// <summary>
@@ -412,14 +420,18 @@ public static class AztecCode {
     /// Saves Aztec HTML to a file.
     /// </summary>
     public static string SaveHtml(ReadOnlySpan<byte> data, string path, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, string? title = null) {
-        return RenderIO.WriteText(path, Html(data, encodeOptions, renderOptions));
+        var html = Html(data, encodeOptions, renderOptions);
+        if (!string.IsNullOrEmpty(title)) html = html.WrapHtml(title);
+        return RenderIO.WriteText(path, html);
     }
 
     /// <summary>
     /// Saves Aztec HTML to a stream.
     /// </summary>
     public static void SaveHtml(ReadOnlySpan<byte> data, Stream stream, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, string? title = null) {
-        RenderIO.WriteText(stream, Html(data, encodeOptions, renderOptions));
+        var html = Html(data, encodeOptions, renderOptions);
+        if (!string.IsNullOrEmpty(title)) html = html.WrapHtml(title);
+        RenderIO.WriteText(stream, html);
     }
 
     /// <summary>

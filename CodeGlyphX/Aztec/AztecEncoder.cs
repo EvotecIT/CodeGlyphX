@@ -39,8 +39,12 @@ internal static class AztecEncoder {
             compact = userSpecifiedLayers < 0;
             layers = Math.Abs(userSpecifiedLayers);
 
-            if (compact && layers > MaxCompactLayers) throw new ArgumentException("Invalid compact layer count.");
-            if (!compact && layers > MaxLayers) throw new ArgumentException("Invalid layer count.");
+            if (compact && layers > MaxCompactLayers) {
+                throw new ArgumentException($"Invalid compact layer count: {layers}. Maximum allowed is {MaxCompactLayers}.");
+            }
+            if (!compact && layers > MaxLayers) {
+                throw new ArgumentException($"Invalid layer count: {layers}. Maximum allowed is {MaxLayers}.");
+            }
 
             totalBits = TotalBitsInLayer(layers, compact);
             wordSize = AztecCommon.WordSize[layers];

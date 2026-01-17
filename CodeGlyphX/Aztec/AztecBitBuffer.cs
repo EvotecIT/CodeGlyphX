@@ -29,6 +29,7 @@ internal sealed class AztecBitBuffer {
 
     public void AppendBits(int value, int bitCount) {
         if (bitCount is < 0 or > 31) throw new ArgumentOutOfRangeException(nameof(bitCount));
+        if (value < 0) throw new ArgumentOutOfRangeException(nameof(value));
         if ((value >> bitCount) != 0) throw new ArgumentOutOfRangeException(nameof(value));
 
         for (var i = bitCount - 1; i >= 0; i--) {
