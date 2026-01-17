@@ -131,7 +131,7 @@ internal static class QrVectorLayout {
         sink.SetFillColor(outerColor);
         DrawShape(sink, outerX, outerY, outerScaled, outerScaled, eye.OuterShape, eye.OuterCornerRadiusPx);
         sink.SetFillColor(background);
-        DrawShape(sink, innerX, innerY, innerScaled, innerScaled, QrPngModuleShape.Square, eye.InnerCornerRadiusPx);
+        DrawShape(sink, innerX, innerY, innerScaled, innerScaled, QrPngModuleShape.Rounded, eye.InnerCornerRadiusPx);
 
         if (dotScaled > 0) {
             sink.SetFillColor(innerColor);
