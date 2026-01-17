@@ -19,7 +19,7 @@ public static class MatrixAsciiRenderer {
         var moduleHeight = Math.Max(1, opts.ModuleHeight);
         var dark = string.IsNullOrEmpty(opts.Dark) ? "#" : opts.Dark;
         var light = string.IsNullOrEmpty(opts.Light) ? " " : opts.Light;
-        var newline = opts.NewLine ?? Environment.NewLine;
+        var newline = NormalizeNewLine(opts.NewLine) ?? Environment.NewLine;
 
         var widthModules = modules.Width + quiet * 2;
         var heightModules = modules.Height + quiet * 2;
@@ -58,5 +58,14 @@ public static class MatrixAsciiRenderer {
         var sb = new StringBuilder(text.Length * count);
         for (var i = 0; i < count; i++) sb.Append(text);
         return sb.ToString();
+    }
+
+    private static string? NormalizeNewLine(string? value) {
+        if (value is null) return null;
+        if (value.IndexOf('\\') < 0) return value;
+        return value
+            .Replace("\\r\\n", "\r\n")
+            .Replace("\\n", "\n")
+            .Replace("\\r", "\r");
     }
 }
