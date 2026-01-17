@@ -11,5 +11,10 @@ internal static class QrDecodeExample {
         if (QR.TryDecodePng(png, out var decoded)) {
             decoded.Text.WriteText(outputDir, "qr-decode.txt");
         }
+
+        var fast = new QrPixelDecodeOptions { Profile = QrDecodeProfile.Fast };
+        if (QrImageDecoder.TryDecodeImage(png, fast, out var decodedFast)) {
+            decodedFast.Text.WriteText(outputDir, "qr-decode-fast.txt");
+        }
     }
 }

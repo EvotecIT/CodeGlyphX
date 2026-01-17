@@ -206,6 +206,15 @@ if (QrImageDecoder.TryDecodeImage(File.ReadAllBytes("code.bmp"), out var decoded
 ```csharp
 using CodeGlyphX;
 
+var options = new QrPixelDecodeOptions { Profile = QrDecodeProfile.Fast };
+if (QrImageDecoder.TryDecodeImage(File.ReadAllBytes("screen.png"), options, out var decoded)) {
+    Console.WriteLine(decoded.Text);
+}
+```
+
+```csharp
+using CodeGlyphX;
+
 if (CodeGlyph.TryDecodeAllPng(File.ReadAllBytes("unknown.png"), out var results)) {
     foreach (var item in results) Console.WriteLine($"{item.Kind}: {item.Text}");
 }
