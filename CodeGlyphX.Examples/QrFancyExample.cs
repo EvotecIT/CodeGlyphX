@@ -24,5 +24,7 @@ internal static class QrFancyExample {
         };
 
         QR.Save(payload, Path.Combine(outputDir, "qr-fancy.png"), options);
+        QR.SavePdf(payload, Path.Combine(outputDir, "qr-fancy.pdf"), options, RenderMode.Raster);
+        QR.SaveEps(payload, Path.Combine(outputDir, "qr-fancy.eps"), options, RenderMode.Raster);
     }
 }
