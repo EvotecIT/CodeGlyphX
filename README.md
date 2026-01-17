@@ -77,19 +77,19 @@ dotnet add package CodeGlyphX
 
 ## Supported Symbologies
 
-| Symbology | Encode | Decode | Notes |
-| --- | --- | --- | --- |
-| QR | ✅ | ✅ | ECI, FNC1/GS1, Kanji, structured append |
-| Micro QR | ✅ | ✅ | Versions M1–M4 |
-| Code128 | ✅ | ✅ | Set B/C |
-| GS1-128 | ✅ | ✅ | FNC1 + AI helpers |
-| Code39 | ✅ | ✅ | Optional checksum |
-| Code93 | ✅ | ✅ | Optional checksum |
-| EAN-8 / EAN-13 | ✅ | ✅ | Checksum validation |
-| UPC-A / UPC-E | ✅ | ✅ | Checksum validation |
-| ITF-14 | ✅ | ✅ | Checksum validation |
-| Data Matrix | ✅ | ✅ | ASCII/C40/Text/X12/EDIFACT/Base256 |
-| PDF417 | ✅ | ✅ | Full encode/decode |
+| Symbology | Encode | Decode | Outputs | Notes |
+| --- | --- | --- | --- | --- |
+| QR | ✅ | ✅ | All (see Output formats) | ECI, FNC1/GS1, Kanji, structured append |
+| Micro QR | ✅ | ✅ | All (see Output formats) | Versions M1–M4 |
+| Code128 | ✅ | ✅ | All (see Output formats) | Set B/C |
+| GS1-128 | ✅ | ✅ | All (see Output formats) | FNC1 + AI helpers |
+| Code39 | ✅ | ✅ | All (see Output formats) | Optional checksum |
+| Code93 | ✅ | ✅ | All (see Output formats) | Optional checksum |
+| EAN-8 / EAN-13 | ✅ | ✅ | All (see Output formats) | Checksum validation |
+| UPC-A / UPC-E | ✅ | ✅ | All (see Output formats) | Checksum validation |
+| ITF-14 | ✅ | ✅ | All (see Output formats) | Checksum validation |
+| Data Matrix | ✅ | ✅ | All (see Output formats) | ASCII/C40/Text/X12/EDIFACT/Base256 |
+| PDF417 | ✅ | ✅ | All (see Output formats) | Full encode/decode |
 
 ## Features
 
@@ -102,6 +102,22 @@ dotnet add package CodeGlyphX
 - [x] Base64 helpers for rendered outputs
 - [x] Payload helpers (URL, WiFi, Email, Phone, SMS, Contact, Calendar, OTP, Social)
 - [x] WPF controls and demo apps
+
+## Output formats (Save by extension)
+
+Save(...) chooses the output based on file extension for QR/Barcode/DataMatrix/PDF417.
+
+| Format | Extensions | Notes |
+| --- | --- | --- |
+| PNG | `.png` | Raster |
+| JPEG | `.jpg`, `.jpeg` | Raster, quality via options |
+| BMP | `.bmp` | Raster |
+| SVG | `.svg` | Vector |
+| HTML | `.html`, `.htm` | Table-based output |
+| PDF | `.pdf` | Vector by default, raster via RenderMode |
+| EPS | `.eps`, `.ps` | Vector by default, raster via RenderMode |
+| ASCII | API only | Use `RenderAscii` methods |
+| Raw RGBA | API only | Use `RenderPixels` methods |
 
 ## Payload helpers
 
@@ -117,13 +133,6 @@ QR payload helpers generate well-known structured strings so scanners can trigge
 | Social & Stores | App Store (Apple/Google), Facebook, X/Twitter, TikTok, LinkedIn, WhatsApp |
 | Payments | UPI, SEPA Girocode (EPC), BezahlCode, Swiss QR Bill, Slovenian UPN |
 | Crypto & Network | Bitcoin / Bitcoin Cash / Litecoin, Monero, ShadowSocks |
-
-## Renderers and output formats
-
-- PNG / JPEG byte arrays and stream writers
-- SVG and HTML strings
-- Raw RGBA pixels
-- WPF controls
 
 ## Image decoding (for readers)
 
