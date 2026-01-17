@@ -60,6 +60,21 @@ public sealed class Barcode2DTests {
     }
 
     [Fact]
+    public void DataMatrix_RoundTrip_Pixels_Mirrored() {
+        var matrix = DataMatrix.DataMatrixEncoder.Encode("MatrixMirror");
+        var pixels = Rendering.Png.MatrixPngRenderer.RenderPixels(
+            matrix,
+            new Rendering.Png.MatrixPngRenderOptions { ModuleSize = 4, QuietZone = 2 },
+            out var width,
+            out var height,
+            out var stride);
+
+        var mirrored = MirrorPixels(pixels, width, height);
+        Assert.True(DataMatrix.DataMatrixDecoder.TryDecode(mirrored, width, height, stride, PixelFormat.Rgba32, out var text));
+        Assert.Equal("MatrixMirror", text);
+    }
+
+    [Fact]
     public void Pdf417_RoundTrip_Modules() {
         var matrix = Pdf417.Pdf417Encoder.Encode("Pdf417Example");
         Assert.True(Pdf417.Pdf417Decoder.TryDecode(matrix, out var text));
@@ -88,6 +103,22 @@ public sealed class Barcode2DTests {
         Assert.Equal("Pdf417Example", text);
     }
 
+    [Fact]
+    public void Pdf417_RoundTrip_Pixels_Mirrored() {
+        var matrix = Pdf417.Pdf417Encoder.Encode("Pdf417Mirror");
+        var pixels = Rendering.Png.MatrixPngRenderer.RenderPixels(
+            matrix,
+            new Rendering.Png.MatrixPngRenderOptions { ModuleSize = 3, QuietZone = 2 },
+            out var width,
+            out var height,
+            out var stride);
+
+        var mirrored = MirrorPixels(pixels, width, height);
+        Assert.True(Pdf417.Pdf417Decoder.TryDecode(mirrored, width, height, stride, PixelFormat.Rgba32, out var text));
+        Assert.Equal("Pdf417Mirror", text);
+    }
+
+
     private static BitMatrix PadColumns(BitMatrix matrix, int left, int right) {
         var width = matrix.Width + left + right;
         var height = matrix.Height;
@@ -98,5 +129,22 @@ public sealed class Barcode2DTests {
             }
         }
         return padded;
+    }
+
+    private static byte[] MirrorPixels(byte[] pixels, int width, int height) {
+        var output = new byte[pixels.Length];
+        for (var y = 0; y < height; y++) {
+            var row = y * width * 4;
+            for (var x = 0; x < width; x++) {
+                var src = row + x * 4;
+                var nx = width - 1 - x;
+                var dst = row + nx * 4;
+                output[dst + 0] = pixels[src + 0];
+                output[dst + 1] = pixels[src + 1];
+                output[dst + 2] = pixels[src + 2];
+                output[dst + 3] = pixels[src + 3];
+            }
+        }
+        return output;
     }
 }

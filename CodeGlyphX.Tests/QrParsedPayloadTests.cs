@@ -55,4 +55,23 @@ public sealed class QrParsedPayloadTests {
         Assert.Equal("+14155550198", sms.Number);
         Assert.Equal("Hello", sms.Body);
     }
+
+    [Fact]
+    public void Parse_Bookmark() {
+        var raw = QrPayloads.Bookmark("example.com", "Example").Text;
+        Assert.True(QrPayloadParser.TryParse(raw, out var parsed));
+        Assert.Equal(QrPayloadType.Bookmark, parsed.Type);
+        Assert.True(parsed.TryGet<QrParsedData.Bookmark>(out var bookmark));
+        Assert.Equal("http://example.com", bookmark.Url);
+        Assert.Equal("Example", bookmark.Title);
+    }
+
+    [Fact]
+    public void Parse_Strict_InvalidEmail_FailsValidation() {
+        var raw = "mailto:invalid";
+        var ok = QrPayloadParser.TryParse(raw, new QrPayloadParseOptions { Strict = true }, out _, out var validation);
+        Assert.False(ok);
+        Assert.False(validation.IsValid);
+        Assert.NotEmpty(validation.Errors);
+    }
 }

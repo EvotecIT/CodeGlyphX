@@ -3,8 +3,10 @@ using System;
 namespace CodeGlyphX.Code128;
 
 internal static class Code128Tables {
+    public const int StartA = 103;
     public const int StartB = 104;
     public const int StartC = 105;
+    public const int CodeA = 101;
     public const int CodeC = 99;
     public const int CodeB = 100;
     public const int Fnc1 = 102;

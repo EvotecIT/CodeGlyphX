@@ -1,9 +1,13 @@
 using System;
+using CodeGlyphX.Code11;
 using CodeGlyphX.Code128;
 using CodeGlyphX.Code39;
 using CodeGlyphX.Code93;
+using CodeGlyphX.Codabar;
 using CodeGlyphX.Ean;
 using CodeGlyphX.Itf;
+using CodeGlyphX.Msi;
+using CodeGlyphX.Plessey;
 using CodeGlyphX.UpcA;
 using CodeGlyphX.UpcE;
 
@@ -27,6 +31,10 @@ public static class BarcodeEncoder {
             BarcodeType.UPCA => UpcAEncoder.Encode(value),
             BarcodeType.UPCE => UpcEEncoder.Encode(value, UpcENumberSystem.Zero),
             BarcodeType.ITF14 => Itf14Encoder.Encode(value),
+            BarcodeType.Codabar => CodabarEncoder.Encode(value),
+            BarcodeType.MSI => MsiEncoder.Encode(value, MsiChecksumType.Mod10),
+            BarcodeType.Code11 => Code11Encoder.Encode(value, includeChecksum: true),
+            BarcodeType.Plessey => PlesseyEncoder.Encode(value),
             BarcodeType.KixCode => throw new NotSupportedException("BarcodeType.KixCode is a 2D barcode. Use MatrixBarcodeEncoder."),
             BarcodeType.DataMatrix => throw new NotSupportedException("BarcodeType.DataMatrix is a 2D barcode. Use MatrixBarcodeEncoder."),
             BarcodeType.PDF417 => throw new NotSupportedException("BarcodeType.PDF417 is a 2D barcode. Use MatrixBarcodeEncoder."),
@@ -67,4 +75,27 @@ public static class BarcodeEncoder {
     /// Encodes an ITF-14 barcode.
     /// </summary>
     public static Barcode1D EncodeItf14(string value) => Itf14Encoder.Encode(value);
+
+    /// <summary>
+    /// Encodes a Codabar barcode.
+    /// </summary>
+    public static Barcode1D EncodeCodabar(string value, char start = 'A', char stop = 'B') =>
+        CodabarEncoder.Encode(value, start, stop);
+
+    /// <summary>
+    /// Encodes an MSI barcode.
+    /// </summary>
+    public static Barcode1D EncodeMsi(string value, MsiChecksumType checksum = MsiChecksumType.Mod10) =>
+        MsiEncoder.Encode(value, checksum);
+
+    /// <summary>
+    /// Encodes a Code 11 barcode.
+    /// </summary>
+    public static Barcode1D EncodeCode11(string value, bool includeChecksum = true) =>
+        Code11Encoder.Encode(value, includeChecksum);
+
+    /// <summary>
+    /// Encodes a Plessey barcode.
+    /// </summary>
+    public static Barcode1D EncodePlessey(string value) => PlesseyEncoder.Encode(value);
 }

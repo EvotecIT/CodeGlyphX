@@ -715,6 +715,6 @@ public static class QrDecoder {
     }
 
     private static string DecodeSegment(QrPayloadSegment segment) {
-        return QrEncoding.Decode(segment.Encoding, segment.Bytes);
+        return QrEncoding.Decode(segment.Encoding, segment.Buffer, segment.Offset, segment.Length);
     }
 }

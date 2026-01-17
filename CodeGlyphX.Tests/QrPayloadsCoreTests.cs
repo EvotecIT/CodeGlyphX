@@ -17,6 +17,18 @@ public sealed class QrPayloadsCoreTests {
     }
 
     [Fact]
+    public void QrPayloads_Bookmark_NormalizesUrl_And_Title() {
+        var payload = QrPayloads.Bookmark("example.com", "Example").Text;
+        Assert.Equal("MEBKM:TITLE:Example;URL:http\\://example.com;;", payload);
+    }
+
+    [Fact]
+    public void QrPayloads_Bookmark_OmitsEmptyTitle() {
+        var payload = QrPayloads.Bookmark("example.com", string.Empty).Text;
+        Assert.Equal("MEBKM:URL:http\\://example.com;;", payload);
+    }
+
+    [Fact]
     public void QrPayloads_Contact_Calendar_And_Otp_AreNonEmpty() {
         var contact = QrPayloads.Contact(
             QrContactOutputType.VCard3,

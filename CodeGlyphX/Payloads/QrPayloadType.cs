@@ -31,5 +31,7 @@ public enum QrPayloadType {
     /// <summary>App Store payload.</summary>
     AppStore,
     /// <summary>Social profile payload.</summary>
-    Social
+    Social,
+    /// <summary>Bookmark payload.</summary>
+    Bookmark
 }

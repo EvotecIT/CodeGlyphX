@@ -279,8 +279,8 @@ internal static class QrPixelDecoder {
         if (!QrGrayImage.TryCreate(pixels, width, height, stride, fmt, scale: 1, settings.MinContrast, out var baseImage)) {
             return false;
         }
-        var list = new List<QrDecoded>(4);
         var seen = new HashSet<string>(StringComparer.Ordinal);
+        using var list = new PooledList<QrDecoded>(4);
 
         CollectAllFromImage(baseImage, settings, list, seen, accept);
 
@@ -409,16 +409,17 @@ internal static class QrPixelDecoder {
         }
 
         var best = default(QrPixelDecodeDiagnostics);
+        var candidates = new List<QrFinderPatternDetector.FinderPattern>(8);
 
         for (var i = 0; i < thresholdCount; i++) {
             var image = baseImage.WithThreshold(thresholds[i]);
-            if (TryDecodeFromGray(scale, thresholds[i], image, invert: false, accept, out result, out var diagN)) {
+            if (TryDecodeFromGray(scale, thresholds[i], image, invert: false, candidates, accept, out result, out var diagN)) {
                 diagnostics = diagN;
                 return true;
             }
             best = Better(best, diagN);
 
-            if (TryDecodeFromGray(scale, thresholds[i], image, invert: true, accept, out result, out var diagI)) {
+            if (TryDecodeFromGray(scale, thresholds[i], image, invert: true, candidates, accept, out result, out var diagI)) {
                 diagnostics = diagI;
                 return true;
             }
@@ -427,26 +428,26 @@ internal static class QrPixelDecoder {
 
         if (settings.AllowAdaptiveThreshold) {
             var adaptive = baseImage.WithAdaptiveThreshold(windowSize: 15, offset: 8);
-            if (TryDecodeFromGray(scale, baseImage.Threshold, adaptive, invert: false, accept, out result, out var diagA)) {
+            if (TryDecodeFromGray(scale, baseImage.Threshold, adaptive, invert: false, candidates, accept, out result, out var diagA)) {
                 diagnostics = diagA;
                 return true;
             }
             best = Better(best, diagA);
 
-            if (TryDecodeFromGray(scale, baseImage.Threshold, adaptive, invert: true, accept, out result, out var diagAI)) {
+            if (TryDecodeFromGray(scale, baseImage.Threshold, adaptive, invert: true, candidates, accept, out result, out var diagAI)) {
                 diagnostics = diagAI;
                 return true;
             }
             best = Better(best, diagAI);
 
             var adaptiveSoft = baseImage.WithAdaptiveThreshold(windowSize: 25, offset: 4);
-            if (TryDecodeFromGray(scale, baseImage.Threshold, adaptiveSoft, invert: false, accept, out result, out var diagAS)) {
+            if (TryDecodeFromGray(scale, baseImage.Threshold, adaptiveSoft, invert: false, candidates, accept, out result, out var diagAS)) {
                 diagnostics = diagAS;
                 return true;
             }
             best = Better(best, diagAS);
 
-            if (TryDecodeFromGray(scale, baseImage.Threshold, adaptiveSoft, invert: true, accept, out result, out var diagASI)) {
+            if (TryDecodeFromGray(scale, baseImage.Threshold, adaptiveSoft, invert: true, candidates, accept, out result, out var diagASI)) {
                 diagnostics = diagASI;
                 return true;
             }
@@ -455,26 +456,26 @@ internal static class QrPixelDecoder {
 
         if (settings.AllowBlur) {
             var blurred = baseImage.WithBoxBlur(radius: 1);
-            if (TryDecodeFromGray(scale, blurred.Threshold, blurred, invert: false, accept, out result, out var diagB0)) {
+            if (TryDecodeFromGray(scale, blurred.Threshold, blurred, invert: false, candidates, accept, out result, out var diagB0)) {
                 diagnostics = diagB0;
                 return true;
             }
             best = Better(best, diagB0);
 
-            if (TryDecodeFromGray(scale, blurred.Threshold, blurred, invert: true, accept, out result, out var diagB1)) {
+            if (TryDecodeFromGray(scale, blurred.Threshold, blurred, invert: true, candidates, accept, out result, out var diagB1)) {
                 diagnostics = diagB1;
                 return true;
             }
             best = Better(best, diagB1);
 
             var adaptiveBlur = blurred.WithAdaptiveThreshold(windowSize: 17, offset: 6);
-            if (TryDecodeFromGray(scale, blurred.Threshold, adaptiveBlur, invert: false, accept, out result, out var diagB2)) {
+            if (TryDecodeFromGray(scale, blurred.Threshold, adaptiveBlur, invert: false, candidates, accept, out result, out var diagB2)) {
                 diagnostics = diagB2;
                 return true;
             }
             best = Better(best, diagB2);
 
-            if (TryDecodeFromGray(scale, blurred.Threshold, adaptiveBlur, invert: true, accept, out result, out var diagB3)) {
+            if (TryDecodeFromGray(scale, blurred.Threshold, adaptiveBlur, invert: true, candidates, accept, out result, out var diagB3)) {
                 diagnostics = diagB3;
                 return true;
             }
@@ -667,7 +668,7 @@ internal static class QrPixelDecoder {
         return false;
     }
 
-    private static void CollectAllFromImage(QrGrayImage baseImage, QrProfileSettings settings, List<QrDecoded> list, HashSet<string> seen, Func<QrDecoded, bool>? accept) {
+    private static void CollectAllFromImage(QrGrayImage baseImage, QrProfileSettings settings, PooledList<QrDecoded> list, HashSet<string> seen, Func<QrDecoded, bool>? accept) {
         CollectAllFromImageCore(baseImage, settings, list, seen, accept);
         if (settings.AllowNormalize) {
             var normalized = baseImage.WithLocalNormalize(GetNormalizeWindow(baseImage));
@@ -675,7 +676,7 @@ internal static class QrPixelDecoder {
         }
     }
 
-    private static void CollectAllFromImageCore(QrGrayImage baseImage, QrProfileSettings settings, List<QrDecoded> list, HashSet<string> seen, Func<QrDecoded, bool>? accept) {
+    private static void CollectAllFromImageCore(QrGrayImage baseImage, QrProfileSettings settings, PooledList<QrDecoded> list, HashSet<string> seen, Func<QrDecoded, bool>? accept) {
         Span<byte> thresholds = stackalloc byte[10];
         var thresholdCount = 0;
         if (settings.AllowExtraThresholds) {
@@ -695,16 +696,17 @@ internal static class QrPixelDecoder {
             AddThresholdCandidate(ref thresholds, ref thresholdCount, baseImage.Threshold);
         }
 
+        var candidates = new List<QrFinderPatternDetector.FinderPattern>(8);
         for (var i = 0; i < thresholdCount; i++) {
             var image = baseImage.WithThreshold(thresholds[i]);
-            CollectFromImage(image, invert: false, list, seen, accept);
-            CollectFromImage(image, invert: true, list, seen, accept);
+            CollectFromImage(image, invert: false, list, seen, accept, candidates);
+            CollectFromImage(image, invert: true, list, seen, accept, candidates);
         }
 
         if (settings.AllowAdaptiveThreshold) {
             var adaptive = baseImage.WithAdaptiveThreshold(windowSize: 15, offset: 8);
-            CollectFromImage(adaptive, invert: false, list, seen, accept);
-            CollectFromImage(adaptive, invert: true, list, seen, accept);
+            CollectFromImage(adaptive, invert: false, list, seen, accept, candidates);
+            CollectFromImage(adaptive, invert: true, list, seen, accept, candidates);
         }
     }
 
@@ -725,7 +727,7 @@ internal static class QrPixelDecoder {
         PixelFormat fmt,
         int scale,
         QrProfileSettings settings,
-        List<QrDecoded> list,
+        PooledList<QrDecoded> list,
         HashSet<string> seen,
         Func<QrDecoded, bool>? accept) {
         if (!QrGrayImage.TryCreate(pixels, width, height, stride, fmt, scale, settings.MinContrast, out var image)) {
@@ -777,10 +779,11 @@ internal static class QrPixelDecoder {
     private static void CollectFromImage(
         QrGrayImage image,
         bool invert,
-        List<QrDecoded> results,
+        PooledList<QrDecoded> results,
         HashSet<string> seen,
-        Func<QrDecoded, bool>? accept) {
-        var candidates = QrFinderPatternDetector.FindCandidates(image, invert);
+        Func<QrDecoded, bool>? accept,
+        List<QrFinderPatternDetector.FinderPattern> candidates) {
+        QrFinderPatternDetector.FindCandidates(image, invert, candidates);
         if (candidates.Count >= 3) {
             CollectFromFinderCandidates(image, invert, candidates, results, seen, accept);
         }
@@ -792,7 +795,7 @@ internal static class QrPixelDecoder {
         QrGrayImage image,
         bool invert,
         List<QrFinderPatternDetector.FinderPattern> candidates,
-        List<QrDecoded> results,
+        PooledList<QrDecoded> results,
         HashSet<string> seen,
         Func<QrDecoded, bool>? accept) {
         candidates.Sort(static (a, b) => b.Count.CompareTo(a.Count));
@@ -839,10 +842,10 @@ internal static class QrPixelDecoder {
     private static void CollectFromComponents(
         QrGrayImage image,
         bool invert,
-        List<QrDecoded> results,
+        PooledList<QrDecoded> results,
         HashSet<string> seen,
         Func<QrDecoded, bool>? accept) {
-        var comps = FindComponents(image, invert);
+        using var comps = FindComponents(image, invert);
         if (comps.Count == 0) return;
 
         comps.Sort(static (a, b) => b.Area.CompareTo(a.Area));
@@ -867,19 +870,63 @@ internal static class QrPixelDecoder {
         }
     }
 
-    private static void AddResult(List<QrDecoded> results, HashSet<string> seen, QrDecoded decoded, Func<QrDecoded, bool>? accept) {
+    private static void AddResult(PooledList<QrDecoded> results, HashSet<string> seen, QrDecoded decoded, Func<QrDecoded, bool>? accept) {
         if (accept is not null && !accept(decoded)) return;
         var key = Convert.ToBase64String(decoded.Bytes);
         if (!seen.Add(key)) return;
         results.Add(decoded);
     }
 
-    private static bool TryDecodeFromGray(int scale, byte threshold, QrGrayImage image, bool invert, Func<QrDecoded, bool>? accept, out QrDecoded result, out QrPixelDecodeDiagnostics diagnostics) {
+    private sealed class PooledList<T> : IDisposable {
+        private T[] _buffer;
+        public int Count { get; private set; }
+
+        public PooledList(int capacity) {
+            if (capacity < 1) capacity = 1;
+            _buffer = ArrayPool<T>.Shared.Rent(capacity);
+        }
+
+        public void Add(T item) {
+            if (Count == _buffer.Length) Grow();
+            _buffer[Count++] = item;
+        }
+
+        public T this[int index] {
+            get => _buffer[index];
+            set => _buffer[index] = value;
+        }
+
+        public void Sort(Comparison<T> comparison) {
+            Array.Sort(_buffer, 0, Count, Comparer<T>.Create(comparison));
+        }
+
+        public T[] ToArray() {
+            if (Count == 0) return Array.Empty<T>();
+            var result = new T[Count];
+            Array.Copy(_buffer, 0, result, 0, Count);
+            return result;
+        }
+
+        public void Dispose() {
+            ArrayPool<T>.Shared.Return(_buffer, clearArray: true);
+            _buffer = Array.Empty<T>();
+            Count = 0;
+        }
+
+        private void Grow() {
+            var next = ArrayPool<T>.Shared.Rent(_buffer.Length * 2);
+            Array.Copy(_buffer, 0, next, 0, _buffer.Length);
+            ArrayPool<T>.Shared.Return(_buffer, clearArray: true);
+            _buffer = next;
+        }
+    }
+
+    private static bool TryDecodeFromGray(int scale, byte threshold, QrGrayImage image, bool invert, List<QrFinderPatternDetector.FinderPattern> candidates, Func<QrDecoded, bool>? accept, out QrDecoded result, out QrPixelDecodeDiagnostics diagnostics) {
         result = null!;
         diagnostics = default;
 
         // Finder-based sampling (robust to extra background/noise). Try multiple triples when the region contains UI/text.
-        var candidates = QrFinderPatternDetector.FindCandidates(image, invert);
+        QrFinderPatternDetector.FindCandidates(image, invert, candidates);
         if (candidates.Count >= 3) {
             if (TryDecodeFromFinderCandidates(scale, threshold, image, invert, candidates, accept, out result, out var diagF)) {
                 diagnostics = diagF;
@@ -1146,7 +1193,7 @@ internal static class QrPixelDecoder {
         var w = image.Width;
         var h = image.Height;
 
-        var comps = FindComponents(image, invert);
+        using var comps = FindComponents(image, invert);
         if (comps.Count == 0) return false;
 
         comps.Sort(static (a, b) => b.Area.CompareTo(a.Area));
@@ -1173,10 +1220,10 @@ internal static class QrPixelDecoder {
         return false;
     }
 
-    private static List<Component> FindComponents(QrGrayImage image, bool invert) {
+    private static PooledList<Component> FindComponents(QrGrayImage image, bool invert) {
         var w = image.Width;
         var h = image.Height;
-        var comps = new List<Component>(8);
+        var comps = new PooledList<Component>(8);
         if (w <= 0 || h <= 0) return comps;
 
         var total = w * h;

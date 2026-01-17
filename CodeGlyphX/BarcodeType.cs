@@ -37,6 +37,22 @@ public enum BarcodeType {
     /// </summary>
     ITF14,
     /// <summary>
+    /// Codabar (implemented).
+    /// </summary>
+    Codabar,
+    /// <summary>
+    /// MSI (implemented).
+    /// </summary>
+    MSI,
+    /// <summary>
+    /// Code 11 (implemented).
+    /// </summary>
+    Code11,
+    /// <summary>
+    /// Plessey (implemented).
+    /// </summary>
+    Plessey,
+    /// <summary>
     /// KIX Code (planned).
     /// </summary>
     KixCode,

@@ -1,4 +1,5 @@
 using System;
+using System.Buffers;
 using System.Collections.Generic;
 using CodeGlyphX.Pdf417.Ec;
 
@@ -30,6 +31,9 @@ public static class Pdf417Decoder {
 
         if (TryDecodeCore(modules, out value)) return true;
         if (TryDecodeWithStartPattern(modules, out value)) return true;
+        var mirror = MirrorX(modules);
+        if (TryDecodeCore(mirror, out value)) return true;
+        if (TryDecodeWithStartPattern(mirror, out value)) return true;
 
         value = string.Empty;
         return false;
@@ -44,99 +48,107 @@ public static class Pdf417Decoder {
             return false;
         }
 
-        var codewords = new List<int>(cols * height);
+        var capacity = cols * height;
+        var rented = ArrayPool<int>.Shared.Rent(capacity);
+        var count = 0;
         var rowWidth = width;
 
-        for (var rowIndex = 0; rowIndex < height; rowIndex++) {
-            var y = height - 1 - rowIndex;
-            var cluster = rowIndex % 3;
-            var offset = 0;
-            offset += StartPatternWidth;
+        try {
+            for (var rowIndex = 0; rowIndex < height; rowIndex++) {
+                var y = height - 1 - rowIndex;
+                var cluster = rowIndex % 3;
+                var offset = 0;
+                offset += StartPatternWidth;
 
-            if (!TryReadCodeword(modules, y, offset, 17, cluster, out _)) {
-                value = string.Empty;
-                return false;
-            }
-            offset += 17;
-
-            for (var x = 0; x < cols; x++) {
-                if (!TryReadCodeword(modules, y, offset, 17, cluster, out var cw)) {
-                    value = string.Empty;
-                    return false;
-                }
-                codewords.Add(cw);
-                offset += 17;
-            }
-
-            if (!compact) {
                 if (!TryReadCodeword(modules, y, offset, 17, cluster, out _)) {
-                    value = string.Empty;
-                    return false;
+                    return FailDecode(out value);
                 }
                 offset += 17;
-            }
 
-            offset += compact ? 1 : StopPatternWidth;
-            if (offset != rowWidth) {
-                value = string.Empty;
-                return false;
-            }
-        }
+                for (var x = 0; x < cols; x++) {
+                    if (!TryReadCodeword(modules, y, offset, 17, cluster, out var cw)) {
+                        return FailDecode(out value);
+                    }
+                    if (count >= rented.Length) {
+                        return FailDecode(out value);
+                    }
+                    rented[count++] = cw;
+                    offset += 17;
+                }
 
-        if (codewords.Count == 0) {
-            value = string.Empty;
-            return false;
-        }
+                if (!compact) {
+                    if (!TryReadCodeword(modules, y, offset, 17, cluster, out _)) {
+                        return FailDecode(out value);
+                    }
+                    offset += 17;
+                }
 
-        var received = codewords.ToArray();
-        var total = received.Length;
-        var eccCount = 0;
-        var corrected = false;
-
-        var ec = new ErrorCorrection();
-        for (var level = 0; level <= 8; level++) {
-            var k = 1 << (level + 1);
-            if (total <= k) continue;
-            var expectedLength = total - k;
-            var candidate = (int[])received.Clone();
-            if (!ec.Decode(candidate, k)) continue;
-            if (candidate[0] != expectedLength) continue;
-            received = candidate;
-            eccCount = k;
-            corrected = true;
-            break;
-        }
-
-        var lengthDescriptor = received[0];
-        if (lengthDescriptor <= 0 || lengthDescriptor > total) {
-            value = string.Empty;
-            return false;
-        }
-        if (!corrected) {
-            eccCount = total - lengthDescriptor;
-            if (IsPowerOfTwo(eccCount) && eccCount is >= 2 and <= 512) {
-                var candidate = (int[])received.Clone();
-                if (ec.Decode(candidate, eccCount)) {
-                    received = candidate;
-                    lengthDescriptor = received[0];
+                offset += compact ? 1 : StopPatternWidth;
+                if (offset != rowWidth) {
+                    return FailDecode(out value);
                 }
             }
-        }
 
-        if (eccCount > 0 && lengthDescriptor > total - eccCount) {
-            value = string.Empty;
-            return false;
-        }
+            if (count == 0) {
+                return FailDecode(out value);
+            }
 
-        var dataCodewords = new int[lengthDescriptor - 1];
-        Array.Copy(received, 1, dataCodewords, 0, dataCodewords.Length);
-        var decoded = Pdf417DecodedBitStreamParser.Decode(dataCodewords);
-        if (decoded is null) {
-            value = string.Empty;
-            return false;
+            var received = new int[count];
+            Array.Copy(rented, 0, received, 0, count);
+
+            var total = received.Length;
+            var eccCount = 0;
+            var corrected = false;
+
+            var ec = new ErrorCorrection();
+            for (var level = 0; level <= 8; level++) {
+                var k = 1 << (level + 1);
+                if (total <= k) continue;
+                var expectedLength = total - k;
+                var candidate = (int[])received.Clone();
+                if (!ec.Decode(candidate, k)) continue;
+                if (candidate[0] != expectedLength) continue;
+                received = candidate;
+                eccCount = k;
+                corrected = true;
+                break;
+            }
+
+            var lengthDescriptor = received[0];
+            if (lengthDescriptor <= 0 || lengthDescriptor > total) {
+                return FailDecode(out value);
+            }
+            if (!corrected) {
+                eccCount = total - lengthDescriptor;
+                if (IsPowerOfTwo(eccCount) && eccCount is >= 2 and <= 512) {
+                    var candidate = (int[])received.Clone();
+                    if (ec.Decode(candidate, eccCount)) {
+                        received = candidate;
+                        lengthDescriptor = received[0];
+                    }
+                }
+            }
+
+            if (eccCount > 0 && lengthDescriptor > total - eccCount) {
+                return FailDecode(out value);
+            }
+
+            var dataCodewords = new int[lengthDescriptor - 1];
+            Array.Copy(received, 1, dataCodewords, 0, dataCodewords.Length);
+            var decoded = Pdf417DecodedBitStreamParser.Decode(dataCodewords);
+            if (decoded is null) {
+                return FailDecode(out value);
+            }
+            value = decoded;
+            return true;
+        } finally {
+            ArrayPool<int>.Shared.Return(rented);
         }
-        value = decoded;
-        return true;
+    }
+
+    private static bool FailDecode(out string value) {
+        value = string.Empty;
+        return false;
     }
 
     private static bool IsPowerOfTwo(int value) => value > 0 && (value & (value - 1)) == 0;
@@ -1147,6 +1159,16 @@ public static class Pdf417Decoder {
         for (var y = 0; y < matrix.Height; y++) {
             for (var x = 0; x < matrix.Width; x++) {
                 result[y, matrix.Width - 1 - x] = matrix[x, y];
+            }
+        }
+        return result;
+    }
+
+    private static BitMatrix MirrorX(BitMatrix matrix) {
+        var result = new BitMatrix(matrix.Width, matrix.Height);
+        for (var y = 0; y < matrix.Height; y++) {
+            for (var x = 0; x < matrix.Width; x++) {
+                result[matrix.Width - 1 - x, y] = matrix[x, y];
             }
         }
         return result;

@@ -79,6 +79,11 @@ public static class QrPayloadParser {
             return true;
         }
 
+        if (TryParseBookmark(raw, out var bookmark)) {
+            parsed = new QrParsedPayload(QrPayloadType.Bookmark, raw, bookmark);
+            return true;
+        }
+
         if (LooksLikeUrl(raw)) {
             parsed = new QrParsedPayload(QrPayloadType.Url, raw, raw);
             return true;
@@ -86,6 +91,28 @@ public static class QrPayloadParser {
 
         parsed = new QrParsedPayload(QrPayloadType.Text, raw, raw);
         return true;
+    }
+
+    /// <summary>
+    /// Attempts to parse the payload with optional strict validation.
+    /// </summary>
+    public static bool TryParse(string payload, QrPayloadParseOptions? options, out QrParsedPayload parsed, out QrPayloadValidationResult validation) {
+        validation = new QrPayloadValidationResult();
+        if (!TryParse(payload, out parsed)) return false;
+        if (options?.Strict == true) {
+            ValidateParsed(parsed, options, validation);
+            return validation.IsValid;
+        }
+        return true;
+    }
+
+    /// <summary>
+    /// Validates a parsed payload against strict schema rules.
+    /// </summary>
+    public static QrPayloadValidationResult Validate(QrParsedPayload parsed, QrPayloadParseOptions? options = null) {
+        var result = new QrPayloadValidationResult();
+        ValidateParsed(parsed, options ?? new QrPayloadParseOptions { Strict = true }, result);
+        return result;
     }
 
     /// <summary>
@@ -102,26 +129,101 @@ public static class QrPayloadParser {
         wifi = null!;
         if (!raw.StartsWith("WIFI:", StringComparison.OrdinalIgnoreCase)) return false;
 
-        var body = raw.Substring(5);
-        var fields = SplitWifiFields(body);
-        if (!fields.TryGetValue("S", out var ssid) || string.IsNullOrEmpty(ssid)) return false;
-        fields.TryGetValue("P", out var password);
-        fields.TryGetValue("T", out var auth);
-        fields.TryGetValue("H", out var hiddenText);
+        return TryParseWifi(raw.AsSpan(5), out wifi);
+    }
 
-        var hidden = hiddenText is not null && hiddenText.Equals("true", StringComparison.OrdinalIgnoreCase);
-        wifi = new QrParsedData.Wifi(ssid, password, auth ?? string.Empty, hidden);
+    private static bool TryParseBookmark(string raw, out QrParsedData.Bookmark bookmark) {
+        bookmark = null!;
+        if (!raw.StartsWith("MEBKM:", StringComparison.OrdinalIgnoreCase)) return false;
+        return TryParseBookmark(raw.AsSpan(6), out bookmark);
+    }
+
+    private static bool TryParseWifi(ReadOnlySpan<char> body, out QrParsedData.Wifi wifi) {
+        wifi = null!;
+        if (!TryReadFieldValue(body, "S", out var ssid) || ssid.Length == 0) return false;
+        TryReadFieldValue(body, "P", out var password);
+        TryReadFieldValue(body, "T", out var auth);
+        TryReadFieldValue(body, "H", out var hiddenText);
+
+        var hidden = hiddenText.Length > 0 && hiddenText.Equals("true".AsSpan(), StringComparison.OrdinalIgnoreCase);
+        wifi = new QrParsedData.Wifi(
+            UnescapeField(ssid),
+            password.Length == 0 ? null : UnescapeField(password),
+            auth.Length == 0 ? string.Empty : UnescapeField(auth),
+            hidden);
         return true;
     }
 
-    private static Dictionary<string, string> SplitWifiFields(string body) {
-        var dict = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-        var sb = new StringBuilder();
-        string? key = null;
-        var escape = false;
+    private static bool TryParseBookmark(ReadOnlySpan<char> body, out QrParsedData.Bookmark bookmark) {
+        bookmark = null!;
+        if (!TryReadFieldValue(body, "URL", out var url) || url.Length == 0) return false;
+        TryReadFieldValue(body, "TITLE", out var title);
+        var urlText = UnescapeField(url);
+        var titleText = title.Length == 0 ? null : UnescapeField(title);
+        bookmark = new QrParsedData.Bookmark(urlText, titleText);
+        return true;
+    }
 
-        for (var i = 0; i < body.Length; i++) {
-            var ch = body[i];
+    private static bool TryReadFieldValue(ReadOnlySpan<char> body, string key, out ReadOnlySpan<char> value) {
+        value = default;
+        var search = key.AsSpan();
+        var i = 0;
+        while (i < body.Length) {
+            var fieldStart = i;
+            var escape = false;
+            var sepIndex = -1;
+            while (i < body.Length) {
+                var ch = body[i];
+                if (escape) {
+                    escape = false;
+                    i++;
+                    continue;
+                }
+                if (ch == '\\') {
+                    escape = true;
+                    i++;
+                    continue;
+                }
+                if (ch == ':') { sepIndex = i; i++; break; }
+                if (ch == ';') { break; }
+                i++;
+            }
+
+            if (sepIndex >= 0) {
+                var fieldKey = body.Slice(fieldStart, sepIndex - fieldStart);
+                if (fieldKey.Equals(search, StringComparison.OrdinalIgnoreCase)) {
+                    var valueStart = i;
+                    escape = false;
+                    while (i < body.Length) {
+                        var ch = body[i];
+                        if (escape) { escape = false; i++; continue; }
+                        if (ch == '\\') { escape = true; i++; continue; }
+                        if (ch == ';') break;
+                        i++;
+                    }
+                    value = body.Slice(valueStart, i - valueStart);
+                    return true;
+                }
+            }
+
+            while (i < body.Length && body[i] != ';') i++;
+            if (i < body.Length && body[i] == ';') i++;
+        }
+        return false;
+    }
+
+    private static string UnescapeField(ReadOnlySpan<char> value) {
+        if (value.Length == 0) return string.Empty;
+        var hasEscape = false;
+        for (var i = 0; i < value.Length; i++) {
+            if (value[i] == '\\') { hasEscape = true; break; }
+        }
+        if (!hasEscape) return value.ToString();
+
+        var sb = new StringBuilder(value.Length);
+        var escape = false;
+        for (var i = 0; i < value.Length; i++) {
+            var ch = value[i];
             if (escape) {
                 sb.Append(ch);
                 escape = false;
@@ -131,26 +233,9 @@ public static class QrPayloadParser {
                 escape = true;
                 continue;
             }
-            if (key is null) {
-                if (ch == ':') {
-                    key = sb.ToString();
-                    sb.Clear();
-                    continue;
-                }
-            } else if (ch == ';') {
-                dict[key] = sb.ToString();
-                key = null;
-                sb.Clear();
-                continue;
-            }
             sb.Append(ch);
         }
-
-        if (key is not null) {
-            dict[key] = sb.ToString();
-        }
-
-        return dict;
+        return sb.ToString();
     }
 
     private static bool TryParseMailto(string raw, out QrParsedData.Email email) {
@@ -486,5 +571,78 @@ public static class QrPayloadParser {
         if (raw.StartsWith("http://", StringComparison.OrdinalIgnoreCase)) return true;
         if (raw.StartsWith("https://", StringComparison.OrdinalIgnoreCase)) return true;
         return false;
+    }
+
+    private static void ValidateParsed(QrParsedPayload parsed, QrPayloadParseOptions? options, QrPayloadValidationResult validation) {
+        switch (parsed.Type) {
+            case QrPayloadType.Wifi:
+                if (!parsed.TryGet<QrParsedData.Wifi>(out var wifi)) break;
+                if (string.IsNullOrWhiteSpace(wifi.Ssid)) validation.Add("WiFi SSID is empty.");
+                if (!QrPayloadValidation.IsValidWifiAuth(wifi.AuthType) && options?.AllowUnknownWifiAuth != true) {
+                    validation.Add("WiFi auth type is not recognized.");
+                }
+                break;
+            case QrPayloadType.Email:
+                if (!parsed.TryGet<QrParsedData.Email>(out var email)) break;
+                if (!QrPayloadValidation.IsValidEmail(email.Address)) validation.Add("Email address is invalid.");
+                break;
+            case QrPayloadType.Phone:
+                if (!parsed.TryGet<QrParsedData.Phone>(out var phone)) break;
+                if (!QrPayloadValidation.IsValidPhone(phone.Number)) validation.Add("Phone number is invalid.");
+                break;
+            case QrPayloadType.Sms:
+                if (!parsed.TryGet<QrParsedData.Sms>(out var sms)) break;
+                if (!QrPayloadValidation.IsValidPhone(sms.Number)) validation.Add("SMS number is invalid.");
+                break;
+            case QrPayloadType.Upi:
+                if (!parsed.TryGet<QrParsedData.Upi>(out var upi)) break;
+                if (!QrPayloadValidation.IsValidUpiVpa(upi.Vpa)) validation.Add("UPI VPA is invalid.");
+                if (!string.IsNullOrEmpty(upi.Currency) && !QrPayloadValidation.IsValidCurrency(upi.Currency)) {
+                    validation.Add("UPI currency is invalid.");
+                }
+                if (upi.Amount.HasValue && upi.Amount.Value <= 0m) validation.Add("UPI amount must be positive.");
+                break;
+            case QrPayloadType.Geo:
+                if (!parsed.TryGet<QrParsedData.Geo>(out var geo)) break;
+                if (geo.Latitude < -90 || geo.Latitude > 90) validation.Add("Geo latitude is out of range.");
+                if (geo.Longitude < -180 || geo.Longitude > 180) validation.Add("Geo longitude is out of range.");
+                break;
+            case QrPayloadType.MeCard:
+                if (!parsed.TryGet<QrParsedData.MeCard>(out var mecard)) break;
+                if (string.IsNullOrWhiteSpace(mecard.FirstName) && string.IsNullOrWhiteSpace(mecard.LastName)) {
+                    validation.Add("MeCard name is missing.");
+                }
+                break;
+            case QrPayloadType.VCard:
+                if (!parsed.TryGet<QrParsedData.VCard>(out var vcard)) break;
+                if (string.IsNullOrWhiteSpace(vcard.FullName)
+                    && string.IsNullOrWhiteSpace(vcard.Organization)
+                    && string.IsNullOrWhiteSpace(vcard.Email)
+                    && string.IsNullOrWhiteSpace(vcard.Phone)) {
+                    validation.Add("vCard lacks identifying fields.");
+                }
+                break;
+            case QrPayloadType.Calendar:
+                if (!parsed.TryGet<QrParsedData.Calendar>(out var cal)) break;
+                if (cal.Summary is null && cal.Start is null && cal.End is null) {
+                    validation.Add("Calendar event is missing summary/date fields.");
+                }
+                break;
+            case QrPayloadType.AppStore:
+                if (!parsed.TryGet<QrParsedData.AppStore>(out var app)) break;
+                if (string.IsNullOrEmpty(app.Platform)) validation.Add("App Store platform is unknown.");
+                break;
+            case QrPayloadType.Social:
+                if (!parsed.TryGet<QrParsedData.Social>(out var social)) break;
+                if (string.IsNullOrEmpty(social.Network)) validation.Add("Social network is unknown.");
+                break;
+            case QrPayloadType.Bookmark:
+                if (!parsed.TryGet<QrParsedData.Bookmark>(out var bm)) break;
+                if (!QrPayloadValidation.IsValidUrl(bm.Url)) validation.Add("Bookmark URL is invalid.");
+                break;
+            case QrPayloadType.Url:
+                if (!QrPayloadValidation.IsValidUrl(parsed.Raw)) validation.Add("URL is invalid.");
+                break;
+        }
     }
 }

@@ -18,6 +18,14 @@ public static partial class QrPayloads {
     }
 
     /// <summary>
+    /// Builds a Russia payment order payload.
+    /// </summary>
+    public static QrPayloadData RussiaPaymentOrder(RussiaPaymentOrderPayload payload) {
+        if (payload is null) throw new System.ArgumentNullException(nameof(payload));
+        return payload.ToPayloadData();
+    }
+
+    /// <summary>
     /// Builds a BezahlCode payload (contact).
     /// </summary>
     public static QrPayloadData BezahlCode(

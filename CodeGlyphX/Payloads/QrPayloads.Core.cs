@@ -23,7 +23,12 @@ public static partial class QrPayloads {
     /// Builds a bookmark payload (MEBKM).
     /// </summary>
     public static QrPayloadData Bookmark(string url, string title) {
-        var payload = "MEBKM:TITLE:" + EscapeInput(title ?? string.Empty) + ";URL:" + EscapeInput(url ?? string.Empty) + ";;";
+        if (string.IsNullOrWhiteSpace(url)) throw new ArgumentException("URL must not be empty.", nameof(url));
+        var safeUrl = EscapeInput(NormalizeUrl(url));
+        var safeTitle = EscapeInput(title ?? string.Empty);
+        var payload = string.IsNullOrEmpty(safeTitle)
+            ? "MEBKM:URL:" + safeUrl + ";;"
+            : "MEBKM:TITLE:" + safeTitle + ";URL:" + safeUrl + ";;";
         return new QrPayloadData(payload);
     }
 

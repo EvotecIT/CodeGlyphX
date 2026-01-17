@@ -41,8 +41,10 @@ internal static class Code128Encoder {
         var codes = new List<int>(value.Length + 4);
 
         var digitRun0 = CountConsecutiveDigits(value, 0);
-        var inCodeC = digitRun0 >= 4 && (digitRun0 % 2 == 0);
-        codes.Add(inCodeC ? Code128Tables.StartC : Code128Tables.StartB);
+        var startSet = value[0] < 32 ? 'A' : (digitRun0 >= 4 && (digitRun0 % 2 == 0)) ? 'C' : 'B';
+        var inCodeC = startSet == 'C';
+        var set = startSet;
+        codes.Add(startSet == 'A' ? Code128Tables.StartA : startSet == 'C' ? Code128Tables.StartC : Code128Tables.StartB);
         if (gs1) codes.Add(Code128Tables.Fnc1);
 
         var i = 0;
@@ -53,13 +55,13 @@ internal static class Code128Encoder {
                 continue;
             }
 
-            if (inCodeC) {
+            if (set == 'C') {
                 var run = CountConsecutiveDigits(value, i);
                 if (run >= 2) {
                     if ((run % 2) == 1) {
-                        // Switch to Code B to emit a single digit, then we can re-evaluate switching back to C.
-                        codes.Add(Code128Tables.CodeB);
-                        inCodeC = false;
+                        var nextSet = value[i] < 32 ? 'A' : 'B';
+                        codes.Add(nextSet == 'A' ? Code128Tables.CodeA : Code128Tables.CodeB);
+                        set = nextSet;
                         continue;
                     }
 
@@ -69,25 +71,57 @@ internal static class Code128Encoder {
                     continue;
                 }
 
-                codes.Add(Code128Tables.CodeB);
-                inCodeC = false;
+                var fallback = value[i] < 32 ? 'A' : 'B';
+                codes.Add(fallback == 'A' ? Code128Tables.CodeA : Code128Tables.CodeB);
+                set = fallback;
+                continue;
+            }
+
+            if (set == 'A') {
+                var digitRun = CountConsecutiveDigits(value, i);
+                if (digitRun >= 4 && (digitRun % 2) == 0) {
+                    codes.Add(Code128Tables.CodeC);
+                    set = 'C';
+                    continue;
+                }
+
+                var ch = value[i];
+                if (ch > 95) {
+                    codes.Add(Code128Tables.CodeB);
+                    set = 'B';
+                    continue;
+                }
+
+                EmitCodeAChar(ch, codes);
+                i++;
                 continue;
             }
 
             // Code B
-            var digits = CountConsecutiveDigits(value, i);
-            if (digits >= 4) {
-                if ((digits % 2) == 1) {
-                    EmitCodeBChar(value[i], codes);
+            var digitRunB = CountConsecutiveDigits(value, i);
+            if (digitRunB >= 4) {
+                if ((digitRunB % 2) == 1) {
+                    var ch = value[i];
+                    if (ch < 32) {
+                        codes.Add(Code128Tables.CodeA);
+                        set = 'A';
+                        continue;
+                    }
+                    EmitCodeBChar(ch, codes);
                     i++;
                     continue;
                 }
 
                 codes.Add(Code128Tables.CodeC);
-                inCodeC = true;
+                set = 'C';
                 continue;
             }
 
+            if (value[i] < 32) {
+                codes.Add(Code128Tables.CodeA);
+                set = 'A';
+                continue;
+            }
             EmitCodeBChar(value[i], codes);
             i++;
         }
@@ -110,6 +144,16 @@ internal static class Code128Encoder {
         if (ch is < (char)32 or > (char)126)
             throw new ArgumentException($"Code 128 (Set B/C) supports ASCII 32..126 for now. Bad char: U+{(int)ch:X4}");
         codes.Add(ch - 32);
+    }
+
+    private static void EmitCodeAChar(char ch, List<int> codes) {
+        if (ch == Gs1.GroupSeparator) {
+            codes.Add(Code128Tables.Fnc1);
+            return;
+        }
+        if (ch > 95)
+            throw new ArgumentException($"Code 128 (Set A) supports ASCII 0..95 for now. Bad char: U+{(int)ch:X4}");
+        codes.Add(ch);
     }
 
     private static int CountConsecutiveDigits(string value, int startIndex) {

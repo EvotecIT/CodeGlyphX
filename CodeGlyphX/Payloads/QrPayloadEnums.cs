@@ -259,6 +259,30 @@ public enum QrBezahlAuthorityType {
 }
 
 /// <summary>
+/// BezahlCode periodic time unit.
+/// </summary>
+public enum QrBezahlPeriodicUnit {
+    /// <summary>
+    /// Weekly interval.
+    /// </summary>
+    Weekly,
+    /// <summary>
+    /// Monthly interval.
+    /// </summary>
+    Monthly
+}
+
+/// <summary>
+/// Encoding marker for Russia payment order payloads.
+/// </summary>
+public enum QrRussiaPaymentEncoding {
+    /// <summary>
+    /// UTF-8 (ST00012).
+    /// </summary>
+    Utf8
+}
+
+/// <summary>
 /// Swiss QR currency codes.
 /// </summary>
 public enum QrSwissCurrency {

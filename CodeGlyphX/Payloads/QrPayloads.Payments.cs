@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 
 namespace CodeGlyphX.Payloads;
@@ -107,6 +108,180 @@ public static partial class QrPayloads {
         return new QrPayloadData(payload);
     }
 
+    /// <summary>
+    /// Builds a BezahlCode single payment payload (non-SEPA).
+    /// </summary>
+    public static QrPayloadData BezahlCodeSinglePayment(
+        string name,
+        string account,
+        string bnc,
+        decimal amount,
+        string reason = "",
+        string currency = "EUR",
+        string postingKey = "",
+        DateTime? executionDate = null) {
+        ValidateBezahlName(name);
+        if (string.IsNullOrWhiteSpace(account)) throw new ArgumentException("Account must not be empty.", nameof(account));
+        if (string.IsNullOrWhiteSpace(bnc)) throw new ArgumentException("BNC must not be empty.", nameof(bnc));
+        var parameters = BuildBezahlCommon(name, amount, reason, currency, postingKey, executionDate);
+        parameters.Add(("account", account, true));
+        parameters.Add(("bnc", bnc, true));
+        return BuildBezahlPayload(QrBezahlAuthorityType.SinglePayment, parameters);
+    }
+
+    /// <summary>
+    /// Builds a BezahlCode single payment payload (SEPA).
+    /// </summary>
+    public static QrPayloadData BezahlCodeSinglePaymentSepa(
+        string name,
+        string iban,
+        string bic,
+        decimal amount,
+        string reason = "",
+        string currency = "EUR",
+        string sepaReference = "",
+        DateTime? executionDate = null) {
+        ValidateBezahlName(name);
+        ValidateBezahlIbanBic(iban, bic);
+        var parameters = BuildBezahlCommon(name, amount, reason, currency, string.Empty, executionDate);
+        parameters.Add(("iban", iban, true));
+        parameters.Add(("bic", bic, true));
+        if (!string.IsNullOrEmpty(sepaReference)) parameters.Add(("separeference", sepaReference, true));
+        return BuildBezahlPayload(QrBezahlAuthorityType.SinglePaymentSepa, parameters);
+    }
+
+    /// <summary>
+    /// Builds a BezahlCode single direct debit payload (non-SEPA).
+    /// </summary>
+    public static QrPayloadData BezahlCodeSingleDirectDebit(
+        string name,
+        string account,
+        string bnc,
+        decimal amount,
+        string creditorId,
+        string mandateId,
+        DateTime dateOfSignature,
+        string reason = "",
+        string currency = "EUR",
+        string postingKey = "",
+        DateTime? executionDate = null) {
+        ValidateBezahlName(name);
+        if (string.IsNullOrWhiteSpace(account)) throw new ArgumentException("Account must not be empty.", nameof(account));
+        if (string.IsNullOrWhiteSpace(bnc)) throw new ArgumentException("BNC must not be empty.", nameof(bnc));
+        ValidateBezahlDirectDebit(creditorId, mandateId);
+        var parameters = BuildBezahlCommon(name, amount, reason, currency, postingKey, executionDate);
+        parameters.Add(("account", account, true));
+        parameters.Add(("bnc", bnc, true));
+        parameters.Add(("creditorid", creditorId, true));
+        parameters.Add(("mandateid", mandateId, true));
+        parameters.Add(("dateofsignature", FormatBezahlDate(dateOfSignature), false));
+        return BuildBezahlPayload(QrBezahlAuthorityType.SingleDirectDebit, parameters);
+    }
+
+    /// <summary>
+    /// Builds a BezahlCode single direct debit payload (SEPA).
+    /// </summary>
+    public static QrPayloadData BezahlCodeSingleDirectDebitSepa(
+        string name,
+        string iban,
+        string bic,
+        decimal amount,
+        string creditorId,
+        string mandateId,
+        DateTime dateOfSignature,
+        string reason = "",
+        string currency = "EUR",
+        string sepaReference = "",
+        DateTime? executionDate = null) {
+        ValidateBezahlName(name);
+        ValidateBezahlIbanBic(iban, bic);
+        ValidateBezahlDirectDebit(creditorId, mandateId);
+        var parameters = BuildBezahlCommon(name, amount, reason, currency, string.Empty, executionDate);
+        parameters.Add(("iban", iban, true));
+        parameters.Add(("bic", bic, true));
+        if (!string.IsNullOrEmpty(sepaReference)) parameters.Add(("separeference", sepaReference, true));
+        parameters.Add(("creditorid", creditorId, true));
+        parameters.Add(("mandateid", mandateId, true));
+        parameters.Add(("dateofsignature", FormatBezahlDate(dateOfSignature), false));
+        return BuildBezahlPayload(QrBezahlAuthorityType.SingleDirectDebitSepa, parameters);
+    }
+
+    /// <summary>
+    /// Builds a BezahlCode periodic single payment payload (non-SEPA).
+    /// </summary>
+    public static QrPayloadData BezahlCodePeriodicSinglePayment(
+        string name,
+        string account,
+        string bnc,
+        decimal amount,
+        QrBezahlPeriodicUnit periodicUnit,
+        int periodicUnitRotation,
+        DateTime periodicFirstExecutionDate,
+        DateTime periodicLastExecutionDate,
+        string reason = "",
+        string currency = "EUR",
+        string postingKey = "") {
+        ValidateBezahlName(name);
+        if (string.IsNullOrWhiteSpace(account)) throw new ArgumentException("Account must not be empty.", nameof(account));
+        if (string.IsNullOrWhiteSpace(bnc)) throw new ArgumentException("BNC must not be empty.", nameof(bnc));
+        var parameters = BuildBezahlCommon(name, amount, reason, currency, postingKey, null);
+        parameters.Add(("account", account, true));
+        parameters.Add(("bnc", bnc, true));
+        AppendBezahlPeriodic(parameters, periodicUnit, periodicUnitRotation, periodicFirstExecutionDate, periodicLastExecutionDate);
+        return BuildBezahlPayload(QrBezahlAuthorityType.PeriodicSinglePayment, parameters);
+    }
+
+    /// <summary>
+    /// Builds a BezahlCode periodic single payment payload (SEPA).
+    /// </summary>
+    public static QrPayloadData BezahlCodePeriodicSinglePaymentSepa(
+        string name,
+        string iban,
+        string bic,
+        decimal amount,
+        QrBezahlPeriodicUnit periodicUnit,
+        int periodicUnitRotation,
+        DateTime periodicFirstExecutionDate,
+        DateTime periodicLastExecutionDate,
+        string reason = "",
+        string currency = "EUR",
+        string sepaReference = "") {
+        ValidateBezahlName(name);
+        ValidateBezahlIbanBic(iban, bic);
+        var parameters = BuildBezahlCommon(name, amount, reason, currency, string.Empty, null);
+        parameters.Add(("iban", iban, true));
+        parameters.Add(("bic", bic, true));
+        if (!string.IsNullOrEmpty(sepaReference)) parameters.Add(("separeference", sepaReference, true));
+        AppendBezahlPeriodic(parameters, periodicUnit, periodicUnitRotation, periodicFirstExecutionDate, periodicLastExecutionDate);
+        return BuildBezahlPayload(QrBezahlAuthorityType.PeriodicSinglePaymentSepa, parameters);
+    }
+
+    /// <summary>
+    /// Builds a Russia payment order payload (ST00012).
+    /// </summary>
+    public static QrPayloadData RussiaPaymentOrder(
+        string name,
+        string personalAcc,
+        string bankName,
+        string bic,
+        string correspAcc,
+        string payeeInn,
+        string kpp,
+        decimal sum,
+        string purpose) {
+        var payload = new RussiaPaymentOrderPayload(
+            name,
+            personalAcc,
+            bankName,
+            bic,
+            correspAcc,
+            payeeInn,
+            kpp,
+            sum,
+            purpose);
+        return payload.ToPayloadData();
+    }
+
     private static string MapBezahlAuthority(QrBezahlAuthorityType authority) {
         return authority switch {
             QrBezahlAuthorityType.SinglePayment => "singlepayment",
@@ -119,6 +294,77 @@ public static partial class QrPayloads {
             QrBezahlAuthorityType.ContactV2 => "contact_v2",
             _ => "contact"
         };
+    }
+
+    private static List<(string key, string value, bool escape)> BuildBezahlCommon(
+        string name,
+        decimal amount,
+        string reason,
+        string currency,
+        string postingKey,
+        DateTime? executionDate) {
+        if (amount <= 0) throw new ArgumentOutOfRangeException(nameof(amount), "Amount must be greater than zero.");
+        var parameters = new List<(string key, string value, bool escape)> {
+            ("name", name, true),
+            ("amount", FormatBezahlAmount(amount), false)
+        };
+        if (!string.IsNullOrEmpty(reason)) parameters.Add(("reason", reason, true));
+        if (!string.IsNullOrEmpty(currency)) parameters.Add(("currency", currency, false));
+        if (!string.IsNullOrEmpty(postingKey)) parameters.Add(("postingkey", postingKey, true));
+        if (executionDate.HasValue) parameters.Add(("executiondate", FormatBezahlDate(executionDate.Value), false));
+        return parameters;
+    }
+
+    private static void AppendBezahlPeriodic(
+        List<(string key, string value, bool escape)> parameters,
+        QrBezahlPeriodicUnit periodicUnit,
+        int periodicUnitRotation,
+        DateTime periodicFirstExecutionDate,
+        DateTime periodicLastExecutionDate) {
+        if (periodicUnitRotation <= 0) throw new ArgumentOutOfRangeException(nameof(periodicUnitRotation));
+        parameters.Add(("periodictimeunit", periodicUnit == QrBezahlPeriodicUnit.Monthly ? "M" : "W", false));
+        parameters.Add(("periodictimeunitrotation", periodicUnitRotation.ToString(CultureInfo.InvariantCulture), false));
+        parameters.Add(("periodicfirstexecutiondate", FormatBezahlDate(periodicFirstExecutionDate), false));
+        parameters.Add(("periodiclastexecutiondate", FormatBezahlDate(periodicLastExecutionDate), false));
+    }
+
+    private static QrPayloadData BuildBezahlPayload(QrBezahlAuthorityType authority, List<(string key, string value, bool escape)> parameters) {
+        var authorityText = MapBezahlAuthority(authority);
+        var payload = "bank://" + authorityText + "?";
+        for (var i = 0; i < parameters.Count; i++) {
+            var entry = parameters[i];
+            if (string.IsNullOrEmpty(entry.value)) continue;
+            payload += entry.key + "=" + (entry.escape ? Uri.EscapeDataString(entry.value) : entry.value) + "&";
+        }
+        payload = payload.TrimEnd('&');
+        return new QrPayloadData(payload);
+    }
+
+    private static string FormatBezahlAmount(decimal amount) {
+        var text = amount.ToString("0.00", CultureInfo.InvariantCulture);
+        return text.Replace('.', ',');
+    }
+
+    private static string FormatBezahlDate(DateTime date) {
+        return date.ToString("yyyyMMdd", CultureInfo.InvariantCulture);
+    }
+
+    private static void ValidateBezahlName(string name) {
+        if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException("Name must not be empty.", nameof(name));
+    }
+
+    private static void ValidateBezahlIbanBic(string iban, string bic) {
+        if (!QrPayloadValidation.IsValidIban(iban)) {
+            throw new ArgumentException("The IBAN entered isn't valid.", nameof(iban));
+        }
+        if (!QrPayloadValidation.IsValidBic(bic)) {
+            throw new ArgumentException("The BIC entered isn't valid.", nameof(bic));
+        }
+    }
+
+    private static void ValidateBezahlDirectDebit(string creditorId, string mandateId) {
+        if (string.IsNullOrWhiteSpace(creditorId)) throw new ArgumentException("CreditorId must not be empty.", nameof(creditorId));
+        if (string.IsNullOrWhiteSpace(mandateId)) throw new ArgumentException("MandateId must not be empty.", nameof(mandateId));
     }
 
     private static QrTextEncoding MapGirocodeEncoding(QrGirocodeEncoding encoding) {

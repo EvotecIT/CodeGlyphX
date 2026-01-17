@@ -41,4 +41,7 @@ public static class QrParsedData {
 
     /// <summary>Social profile payload.</summary>
     public sealed record Social(string Raw, string? Network, string? HandleOrUrl);
+
+    /// <summary>Bookmark payload.</summary>
+    public sealed record Bookmark(string Url, string? Title);
 }

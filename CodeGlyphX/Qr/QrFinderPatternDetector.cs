@@ -1,5 +1,6 @@
 #if NET8_0_OR_GREATER
 using System;
+using System.Buffers;
 using System.Collections.Generic;
 
 namespace CodeGlyphX.Qr;
@@ -30,15 +31,36 @@ internal static class QrFinderPatternDetector {
     }
 
     public static List<FinderPattern> FindCandidates(QrGrayImage image, bool invert) {
+        using var pooled = new PooledList<FinderPattern>(8);
         var step = GetRowStep(image);
-        var possibleCenters = FindCandidatesWithStep(image, invert, step);
-        if (step > 1 && possibleCenters.Count < 3) {
-            var full = FindCandidatesWithStep(image, invert, rowStep: 1);
-            if (full.Count > possibleCenters.Count) {
-                possibleCenters = full;
+        FindCandidatesWithStep(image, invert, step, pooled);
+        if (step > 1 && pooled.Count < 3) {
+            using var full = new PooledList<FinderPattern>(8);
+            FindCandidatesWithStep(image, invert, rowStep: 1, full);
+            if (full.Count > pooled.Count) {
+                return full.ToList();
             }
         }
-        return possibleCenters;
+        return pooled.ToList();
+    }
+
+    internal static void FindCandidates(QrGrayImage image, bool invert, List<FinderPattern> output) {
+        if (output is null) throw new ArgumentNullException(nameof(output));
+        output.Clear();
+
+        using var pooled = new PooledList<FinderPattern>(8);
+        var step = GetRowStep(image);
+        FindCandidatesWithStep(image, invert, step, pooled);
+        if (step > 1 && pooled.Count < 3) {
+            using var full = new PooledList<FinderPattern>(8);
+            FindCandidatesWithStep(image, invert, rowStep: 1, full);
+            if (full.Count > pooled.Count) {
+                full.CopyTo(output);
+                return;
+            }
+        }
+
+        pooled.CopyTo(output);
     }
 
     private static int GetRowStep(QrGrayImage image) {
@@ -48,19 +70,14 @@ internal static class QrFinderPatternDetector {
         return 1;
     }
 
-    private static List<FinderPattern> FindCandidatesWithStep(QrGrayImage image, bool invert, int rowStep) {
+    private static void FindCandidatesWithStep(QrGrayImage image, bool invert, int rowStep, PooledList<FinderPattern> possibleCenters) {
         // Scan rows for 1:1:3:1:1 run-length patterns and cross-check vertically/horizontally.
-        var possibleCenters = new List<FinderPattern>(8);
-        var stateCount = new int[5];
+        Span<int> stateCount = stackalloc int[5];
 
         if (rowStep < 1) rowStep = 1;
 
         for (var y = 0; y < image.Height; y += rowStep) {
-            stateCount[0] = 0;
-            stateCount[1] = 0;
-            stateCount[2] = 0;
-            stateCount[3] = 0;
-            stateCount[4] = 0;
+            stateCount.Clear();
             var currentState = 0;
 
             for (var x = 0; x < image.Width; x++) {
@@ -76,11 +93,7 @@ internal static class QrFinderPatternDetector {
                         if (currentState == 4) {
                             if (FoundPatternCross(stateCount) && HandlePossibleCenter(image, invert, possibleCenters, stateCount, x, y)) {
                                 currentState = 0;
-                                stateCount[0] = 0;
-                                stateCount[1] = 0;
-                                stateCount[2] = 0;
-                                stateCount[3] = 0;
-                                stateCount[4] = 0;
+                                stateCount.Clear();
                             } else {
                                 ShiftCounts(stateCount);
                                 currentState = 3;
@@ -100,8 +113,6 @@ internal static class QrFinderPatternDetector {
                 HandlePossibleCenter(image, invert, possibleCenters, stateCount, image.Width, y);
             }
         }
-
-        return possibleCenters;
     }
 
     private static bool TrySelectBestThree(List<FinderPattern> candidates, out FinderPattern topLeft, out FinderPattern topRight, out FinderPattern bottomLeft) {
@@ -206,7 +217,7 @@ internal static class QrFinderPatternDetector {
 
     private static double Cross(double ax, double ay, double bx, double by) => ax * by - ay * bx;
 
-    private static void ShiftCounts(int[] stateCount) {
+    private static void ShiftCounts(Span<int> stateCount) {
         stateCount[0] = stateCount[2];
         stateCount[1] = stateCount[3];
         stateCount[2] = stateCount[4];
@@ -214,7 +225,7 @@ internal static class QrFinderPatternDetector {
         stateCount[4] = 0;
     }
 
-    private static bool HandlePossibleCenter(QrGrayImage image, bool invert, List<FinderPattern> possibleCenters, int[] stateCount, int endX, int y) {
+    private static bool HandlePossibleCenter(QrGrayImage image, bool invert, PooledList<FinderPattern> possibleCenters, ReadOnlySpan<int> stateCount, int endX, int y) {
         var stateCountTotal = stateCount[0] + stateCount[1] + stateCount[2] + stateCount[3] + stateCount[4];
         var centerX = CenterFromEnd(stateCount, endX);
         if (centerX < 0 || centerX >= image.Width) return false;
@@ -235,7 +246,7 @@ internal static class QrFinderPatternDetector {
         return true;
     }
 
-    private static void AddOrMerge(List<FinderPattern> centers, FinderPattern candidate) {
+    private static void AddOrMerge(PooledList<FinderPattern> centers, FinderPattern candidate) {
         for (var i = 0; i < centers.Count; i++) {
             var existing = centers[i];
             var dx = Math.Abs(existing.X - candidate.X);
@@ -256,7 +267,53 @@ internal static class QrFinderPatternDetector {
         centers.Add(candidate);
     }
 
-    private static bool FoundPatternCross(int[] stateCount) {
+    private sealed class PooledList<T> : IDisposable {
+        private T[] _buffer;
+        public int Count { get; private set; }
+
+        public PooledList(int capacity) {
+            if (capacity < 1) capacity = 1;
+            _buffer = ArrayPool<T>.Shared.Rent(capacity);
+        }
+
+        public T this[int index] {
+            get => _buffer[index];
+            set => _buffer[index] = value;
+        }
+
+        public void Add(T item) {
+            if (Count == _buffer.Length) Grow();
+            _buffer[Count++] = item;
+        }
+
+        public List<T> ToList() {
+            if (Count == 0) return new List<T>();
+            var list = new List<T>(Count);
+            for (var i = 0; i < Count; i++) list.Add(_buffer[i]);
+            return list;
+        }
+
+        public void CopyTo(List<T> output) {
+            if (output is null) throw new ArgumentNullException(nameof(output));
+            output.EnsureCapacity(output.Count + Count);
+            for (var i = 0; i < Count; i++) output.Add(_buffer[i]);
+        }
+
+        public void Dispose() {
+            ArrayPool<T>.Shared.Return(_buffer, clearArray: true);
+            _buffer = Array.Empty<T>();
+            Count = 0;
+        }
+
+        private void Grow() {
+            var next = ArrayPool<T>.Shared.Rent(_buffer.Length * 2);
+            Array.Copy(_buffer, 0, next, 0, _buffer.Length);
+            ArrayPool<T>.Shared.Return(_buffer, clearArray: true);
+            _buffer = next;
+        }
+    }
+
+    private static bool FoundPatternCross(ReadOnlySpan<int> stateCount) {
         var total = stateCount[0] + stateCount[1] + stateCount[2] + stateCount[3] + stateCount[4];
         if (total < 7) return false;
         if (stateCount[0] == 0 || stateCount[1] == 0 || stateCount[2] == 0 || stateCount[3] == 0 || stateCount[4] == 0) return false;
@@ -271,7 +328,7 @@ internal static class QrFinderPatternDetector {
                Math.Abs(moduleSize - stateCount[4]) <= maxVariance;
     }
 
-    private static double CenterFromEnd(int[] stateCount, int end) {
+    private static double CenterFromEnd(ReadOnlySpan<int> stateCount, int end) {
         return end - stateCount[4] - stateCount[3] - stateCount[2] / 2.0;
     }
 
@@ -279,7 +336,7 @@ internal static class QrFinderPatternDetector {
         centerY = 0;
         moduleSize = 0;
 
-        int[] stateCount = new int[5];
+        Span<int> stateCount = stackalloc int[5];
 
         var y = startY;
         while (y >= 0 && image.IsBlack(centerX, y, invert)) {
@@ -332,7 +389,7 @@ internal static class QrFinderPatternDetector {
         centerX = 0;
         moduleSize = 0;
 
-        int[] stateCount = new int[5];
+        Span<int> stateCount = stackalloc int[5];
 
         var x = startX;
         while (x >= 0 && image.IsBlack(x, centerY, invert)) {
@@ -382,7 +439,7 @@ internal static class QrFinderPatternDetector {
     }
 
     private static bool CrossCheckDiagonal(QrGrayImage image, bool invert, int centerX, int centerY, int maxCount, int originalTotal) {
-        int[] stateCount = new int[5];
+        Span<int> stateCount = stackalloc int[5];
 
         var x = centerX;
         var y = centerY;
