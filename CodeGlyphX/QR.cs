@@ -131,11 +131,18 @@ public static class QR {
     /// <summary>
     /// Renders a QR code as PDF.
     /// </summary>
+    /// <param name="payload">The payload text.</param>
+    /// <param name="options">Optional rendering options.</param>
+    /// <param name="mode">Vector or raster output.</param>
     public static byte[] Pdf(string payload, QrEasyOptions? options = null, RenderMode mode = RenderMode.Vector) => QrEasy.RenderPdf(payload, options, mode);
 
     /// <summary>
     /// Detects a payload type and renders a QR code as PDF.
     /// </summary>
+    /// <param name="payload">The payload text.</param>
+    /// <param name="detectOptions">Payload detection options.</param>
+    /// <param name="options">Optional rendering options.</param>
+    /// <param name="mode">Vector or raster output.</param>
     public static byte[] PdfAuto(string payload, QrPayloadDetectOptions? detectOptions = null, QrEasyOptions? options = null, RenderMode mode = RenderMode.Vector) {
         return QrEasy.RenderPdfAuto(payload, detectOptions, options, mode);
     }
@@ -143,16 +150,26 @@ public static class QR {
     /// <summary>
     /// Renders a QR code as PDF for a payload with embedded defaults.
     /// </summary>
+    /// <param name="payload">The payload text.</param>
+    /// <param name="options">Optional rendering options.</param>
+    /// <param name="mode">Vector or raster output.</param>
     public static byte[] Pdf(QrPayloadData payload, QrEasyOptions? options = null, RenderMode mode = RenderMode.Vector) => QrEasy.RenderPdf(payload, options, mode);
 
     /// <summary>
     /// Renders a QR code as EPS.
     /// </summary>
+    /// <param name="payload">The payload text.</param>
+    /// <param name="options">Optional rendering options.</param>
+    /// <param name="mode">Vector or raster output.</param>
     public static string Eps(string payload, QrEasyOptions? options = null, RenderMode mode = RenderMode.Vector) => QrEasy.RenderEps(payload, options, mode);
 
     /// <summary>
     /// Detects a payload type and renders a QR code as EPS.
     /// </summary>
+    /// <param name="payload">The payload text.</param>
+    /// <param name="detectOptions">Payload detection options.</param>
+    /// <param name="options">Optional rendering options.</param>
+    /// <param name="mode">Vector or raster output.</param>
     public static string EpsAuto(string payload, QrPayloadDetectOptions? detectOptions = null, QrEasyOptions? options = null, RenderMode mode = RenderMode.Vector) {
         return QrEasy.RenderEpsAuto(payload, detectOptions, options, mode);
     }
@@ -160,6 +177,9 @@ public static class QR {
     /// <summary>
     /// Renders a QR code as EPS for a payload with embedded defaults.
     /// </summary>
+    /// <param name="payload">The payload text.</param>
+    /// <param name="options">Optional rendering options.</param>
+    /// <param name="mode">Vector or raster output.</param>
     public static string Eps(QrPayloadData payload, QrEasyOptions? options = null, RenderMode mode = RenderMode.Vector) => QrEasy.RenderEps(payload, options, mode);
 
     /// <summary>
@@ -334,6 +354,10 @@ public static class QR {
     /// <summary>
     /// Saves a PDF QR to a file.
     /// </summary>
+    /// <param name="payload">The payload text.</param>
+    /// <param name="path">Output file path.</param>
+    /// <param name="options">Optional rendering options.</param>
+    /// <param name="mode">Vector or raster output.</param>
     public static string SavePdf(string payload, string path, QrEasyOptions? options = null, RenderMode mode = RenderMode.Vector) {
         return Pdf(payload, options, mode).WriteBinary(path);
     }
@@ -341,6 +365,10 @@ public static class QR {
     /// <summary>
     /// Saves a PDF QR to a file for a payload with embedded defaults.
     /// </summary>
+    /// <param name="payload">The payload text.</param>
+    /// <param name="path">Output file path.</param>
+    /// <param name="options">Optional rendering options.</param>
+    /// <param name="mode">Vector or raster output.</param>
     public static string SavePdf(QrPayloadData payload, string path, QrEasyOptions? options = null, RenderMode mode = RenderMode.Vector) {
         return Pdf(payload, options, mode).WriteBinary(path);
     }
@@ -348,6 +376,10 @@ public static class QR {
     /// <summary>
     /// Saves a PDF QR to a stream.
     /// </summary>
+    /// <param name="payload">The payload text.</param>
+    /// <param name="stream">Destination stream.</param>
+    /// <param name="options">Optional rendering options.</param>
+    /// <param name="mode">Vector or raster output.</param>
     public static void SavePdf(string payload, Stream stream, QrEasyOptions? options = null, RenderMode mode = RenderMode.Vector) {
         QrEasy.RenderPdfToStream(payload, stream, options, mode);
     }
@@ -355,6 +387,10 @@ public static class QR {
     /// <summary>
     /// Saves a PDF QR to a stream for a payload with embedded defaults.
     /// </summary>
+    /// <param name="payload">The payload text.</param>
+    /// <param name="stream">Destination stream.</param>
+    /// <param name="options">Optional rendering options.</param>
+    /// <param name="mode">Vector or raster output.</param>
     public static void SavePdf(QrPayloadData payload, Stream stream, QrEasyOptions? options = null, RenderMode mode = RenderMode.Vector) {
         QrEasy.RenderPdfToStream(payload, stream, options, mode);
     }
@@ -362,6 +398,10 @@ public static class QR {
     /// <summary>
     /// Saves an EPS QR to a file.
     /// </summary>
+    /// <param name="payload">The payload text.</param>
+    /// <param name="path">Output file path.</param>
+    /// <param name="options">Optional rendering options.</param>
+    /// <param name="mode">Vector or raster output.</param>
     public static string SaveEps(string payload, string path, QrEasyOptions? options = null, RenderMode mode = RenderMode.Vector) {
         return Eps(payload, options, mode).WriteText(path);
     }
@@ -369,6 +409,10 @@ public static class QR {
     /// <summary>
     /// Saves an EPS QR to a file for a payload with embedded defaults.
     /// </summary>
+    /// <param name="payload">The payload text.</param>
+    /// <param name="path">Output file path.</param>
+    /// <param name="options">Optional rendering options.</param>
+    /// <param name="mode">Vector or raster output.</param>
     public static string SaveEps(QrPayloadData payload, string path, QrEasyOptions? options = null, RenderMode mode = RenderMode.Vector) {
         return Eps(payload, options, mode).WriteText(path);
     }
@@ -376,6 +420,10 @@ public static class QR {
     /// <summary>
     /// Saves an EPS QR to a stream.
     /// </summary>
+    /// <param name="payload">The payload text.</param>
+    /// <param name="stream">Destination stream.</param>
+    /// <param name="options">Optional rendering options.</param>
+    /// <param name="mode">Vector or raster output.</param>
     public static void SaveEps(string payload, Stream stream, QrEasyOptions? options = null, RenderMode mode = RenderMode.Vector) {
         QrEasy.RenderEpsToStream(payload, stream, options, mode);
     }
@@ -383,6 +431,10 @@ public static class QR {
     /// <summary>
     /// Saves an EPS QR to a stream for a payload with embedded defaults.
     /// </summary>
+    /// <param name="payload">The payload text.</param>
+    /// <param name="stream">Destination stream.</param>
+    /// <param name="options">Optional rendering options.</param>
+    /// <param name="mode">Vector or raster output.</param>
     public static void SaveEps(QrPayloadData payload, Stream stream, QrEasyOptions? options = null, RenderMode mode = RenderMode.Vector) {
         QrEasy.RenderEpsToStream(payload, stream, options, mode);
     }
@@ -634,11 +686,13 @@ public static class QR {
         /// <summary>
         /// Renders PDF bytes.
         /// </summary>
+        /// <param name="mode">Vector or raster output.</param>
         public byte[] Pdf(RenderMode mode = RenderMode.Vector) => _payloadData is null ? QrEasy.RenderPdf(_payload, Options, mode) : QrEasy.RenderPdf(_payloadData, Options, mode);
 
         /// <summary>
         /// Renders EPS text.
         /// </summary>
+        /// <param name="mode">Vector or raster output.</param>
         public string Eps(RenderMode mode = RenderMode.Vector) => _payloadData is null ? QrEasy.RenderEps(_payload, Options, mode) : QrEasy.RenderEps(_payloadData, Options, mode);
 
         /// <summary>
@@ -724,11 +778,15 @@ public static class QR {
         /// <summary>
         /// Saves PDF to a file.
         /// </summary>
+    /// <param name="path">Output file path.</param>
+        /// <param name="mode">Vector or raster output.</param>
         public string SavePdf(string path, RenderMode mode = RenderMode.Vector) => _payloadData is null ? QR.SavePdf(_payload, path, Options, mode) : QR.SavePdf(_payloadData, path, Options, mode);
 
         /// <summary>
         /// Saves PDF to a stream.
         /// </summary>
+    /// <param name="stream">Destination stream.</param>
+        /// <param name="mode">Vector or raster output.</param>
         public void SavePdf(Stream stream, RenderMode mode = RenderMode.Vector) {
             if (_payloadData is null) {
                 QR.SavePdf(_payload, stream, Options, mode);
@@ -740,11 +798,15 @@ public static class QR {
         /// <summary>
         /// Saves EPS to a file.
         /// </summary>
+    /// <param name="path">Output file path.</param>
+        /// <param name="mode">Vector or raster output.</param>
         public string SaveEps(string path, RenderMode mode = RenderMode.Vector) => _payloadData is null ? QR.SaveEps(_payload, path, Options, mode) : QR.SaveEps(_payloadData, path, Options, mode);
 
         /// <summary>
         /// Saves EPS to a stream.
         /// </summary>
+    /// <param name="stream">Destination stream.</param>
+        /// <param name="mode">Vector or raster output.</param>
         public void SaveEps(Stream stream, RenderMode mode = RenderMode.Vector) {
             if (_payloadData is null) {
                 QR.SaveEps(_payload, stream, Options, mode);
