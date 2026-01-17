@@ -45,6 +45,13 @@
 
             <Button x:Name="PickRegionButton" Content="Pick region…" Click="PickRegion_Click" Margin="0,0,0,12" />
 
+            <TextBlock Text="Decode profile" FontWeight="Bold" />
+            <ComboBox x:Name="ProfileBox" Margin="0,0,0,12" SelectionChanged="ProfileBox_SelectionChanged">
+                <ComboBoxItem Content="Fast" />
+                <ComboBoxItem Content="Balanced" />
+                <ComboBoxItem Content="Robust" />
+            </ComboBox>
+
             <Button x:Name="StartStopButton" Content="Start scanning" Click="StartStop_Click" Margin="0,0,0,12" />
 
             <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
@@ -71,7 +78,7 @@
                 </Grid.RowDefinitions>
 
                 <TextBlock Grid.Row="0"
-                           Text="Note: this prototype expects a clean, high-contrast QR in the selected region (no rotation/perspective yet)."
+                           Text="Note: rotation/mirroring are supported. Perspective/skew works best with clean finder patterns and good contrast."
                            TextWrapping="Wrap" />
 
                 <TextBlock Grid.Row="1" Text="Live capture preview (verify region selection):" FontWeight="Bold" Margin="0,12,0,6" />

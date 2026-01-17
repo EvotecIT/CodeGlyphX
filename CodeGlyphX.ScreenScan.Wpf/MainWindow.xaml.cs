@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
+using CodeGlyphX;
 using CodeGlyphX.Qr;
 using Screen = System.Windows.Forms.Screen;
 using WpfClipboard = System.Windows.Clipboard;
@@ -25,10 +26,12 @@ public partial class MainWindow : Window {
     private int _lastStride;
     private string _lastDebugSummary = string.Empty;
     private long _lastDebugSummaryTickMs = -1;
+    private volatile QrDecodeProfile _decodeProfile = QrDecodeProfile.Robust;
 
     public MainWindow() {
         InitializeComponent();
         LoadMonitors();
+        ProfileBox.SelectedIndex = 2;
     }
 
     private async void StartStop_Click(object sender, RoutedEventArgs e) {
@@ -81,13 +84,15 @@ public partial class MainWindow : Window {
                 }
 
                 var pixels = capture.Buffer;
+                var options = new QrPixelDecodeOptions { Profile = _decodeProfile };
 
                 var sw = Stopwatch.StartNew();
-                var ok = QrDecoder.TryDecode(pixels, w, h, stride, PixelFormat.Bgra32, out var decoded, out var diag);
+                var ok = QrDecoder.TryDecode(pixels, w, h, stride, PixelFormat.Bgra32, out var decoded, out var diag, options);
                 var decodeMs = sw.ElapsedMilliseconds;
+                var profileLabel = _decodeProfile.ToString();
                 var status = ok
-                    ? $"Decoded (v{decoded.Version}, {decoded.ErrorCorrectionLevel}, mask {decoded.Mask}) • {decodeMs}ms"
-                    : $"Running (2–5 fps) • {diag} • {decodeMs}ms";
+                    ? $"Decoded (v{decoded.Version}, {decoded.ErrorCorrectionLevel}, mask {decoded.Mask}) • {decodeMs}ms • {profileLabel}"
+                    : $"Running (2–5 fps) • {diag} • {decodeMs}ms • {profileLabel}";
 
                 Dispatcher.Invoke(() => {
                     UpdatePreview(pixels, w, h, stride);
@@ -122,6 +127,14 @@ public partial class MainWindow : Window {
         ComputeLumaRangeSample(pixels, width, height, stride, out var min, out var max);
         _lastDebugSummary = GetDebugSummary(pixels, width, height, stride);
         PreviewInfoText.Text = $"Captured {width}×{height} • Luma {min}–{max} • {_lastDebugSummary}";
+    }
+
+    private void ProfileBox_SelectionChanged(object sender, SelectionChangedEventArgs e) {
+        _decodeProfile = ProfileBox.SelectedIndex switch {
+            0 => QrDecodeProfile.Fast,
+            1 => QrDecodeProfile.Balanced,
+            _ => QrDecodeProfile.Robust
+        };
     }
 
     private static void ComputeLumaRangeSample(ReadOnlySpan<byte> pixels, int width, int height, int stride, out byte min, out byte max) {
