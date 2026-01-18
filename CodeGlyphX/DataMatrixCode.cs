@@ -6,10 +6,19 @@ using CodeGlyphX.Rendering.Ascii;
 using CodeGlyphX.Rendering.Bmp;
 using CodeGlyphX.Rendering.Eps;
 using CodeGlyphX.Rendering.Html;
+using CodeGlyphX.Rendering.Ico;
 using CodeGlyphX.Rendering.Jpeg;
+using CodeGlyphX.Rendering.Pam;
+using CodeGlyphX.Rendering.Pbm;
+using CodeGlyphX.Rendering.Pgm;
 using CodeGlyphX.Rendering.Pdf;
+using CodeGlyphX.Rendering.Ppm;
 using CodeGlyphX.Rendering.Png;
 using CodeGlyphX.Rendering.Svg;
+using CodeGlyphX.Rendering.Svgz;
+using CodeGlyphX.Rendering.Tga;
+using CodeGlyphX.Rendering.Xbm;
+using CodeGlyphX.Rendering.Xpm;
 
 namespace CodeGlyphX;
 
@@ -70,6 +79,14 @@ public static class DataMatrixCode {
     }
 
     /// <summary>
+    /// Renders Data Matrix as SVGZ from bytes.
+    /// </summary>
+    public static byte[] Svgz(ReadOnlySpan<byte> data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = EncodeBytes(data, mode);
+        return MatrixSvgzRenderer.Render(modules, BuildSvgOptions(options));
+    }
+
+    /// <summary>
     /// Renders Data Matrix as HTML from bytes.
     /// </summary>
     public static string Html(ReadOnlySpan<byte> data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
@@ -93,6 +110,70 @@ public static class DataMatrixCode {
     public static byte[] Bmp(ReadOnlySpan<byte> data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
         var modules = EncodeBytes(data, mode);
         return MatrixBmpRenderer.Render(modules, BuildPngOptions(options));
+    }
+
+    /// <summary>
+    /// Renders Data Matrix as PPM from bytes.
+    /// </summary>
+    public static byte[] Ppm(ReadOnlySpan<byte> data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = EncodeBytes(data, mode);
+        return MatrixPpmRenderer.Render(modules, BuildPngOptions(options));
+    }
+
+    /// <summary>
+    /// Renders Data Matrix as PBM from bytes.
+    /// </summary>
+    public static byte[] Pbm(ReadOnlySpan<byte> data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = EncodeBytes(data, mode);
+        return MatrixPbmRenderer.Render(modules, BuildPngOptions(options));
+    }
+
+    /// <summary>
+    /// Renders Data Matrix as PGM from bytes.
+    /// </summary>
+    public static byte[] Pgm(ReadOnlySpan<byte> data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = EncodeBytes(data, mode);
+        return MatrixPgmRenderer.Render(modules, BuildPngOptions(options));
+    }
+
+    /// <summary>
+    /// Renders Data Matrix as PAM from bytes.
+    /// </summary>
+    public static byte[] Pam(ReadOnlySpan<byte> data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = EncodeBytes(data, mode);
+        return MatrixPamRenderer.Render(modules, BuildPngOptions(options));
+    }
+
+    /// <summary>
+    /// Renders Data Matrix as XBM from bytes.
+    /// </summary>
+    public static string Xbm(ReadOnlySpan<byte> data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = EncodeBytes(data, mode);
+        return MatrixXbmRenderer.Render(modules, BuildPngOptions(options));
+    }
+
+    /// <summary>
+    /// Renders Data Matrix as XPM from bytes.
+    /// </summary>
+    public static string Xpm(ReadOnlySpan<byte> data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = EncodeBytes(data, mode);
+        return MatrixXpmRenderer.Render(modules, BuildPngOptions(options));
+    }
+
+    /// <summary>
+    /// Renders Data Matrix as TGA from bytes.
+    /// </summary>
+    public static byte[] Tga(ReadOnlySpan<byte> data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = EncodeBytes(data, mode);
+        return MatrixTgaRenderer.Render(modules, BuildPngOptions(options));
+    }
+
+    /// <summary>
+    /// Renders Data Matrix as ICO from bytes.
+    /// </summary>
+    public static byte[] Ico(ReadOnlySpan<byte> data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = EncodeBytes(data, mode);
+        return MatrixIcoRenderer.Render(modules, BuildPngOptions(options), BuildIcoOptions(options));
     }
 
     /// <summary>
@@ -198,6 +279,78 @@ public static class DataMatrixCode {
     }
 
     /// <summary>
+    /// Saves Data Matrix PPM to a file for byte payloads.
+    /// </summary>
+    public static string SavePpm(ReadOnlySpan<byte> data, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var ppm = Ppm(data, mode, options);
+        return ppm.WriteBinary(path);
+    }
+
+    /// <summary>
+    /// Saves Data Matrix PBM to a file for byte payloads.
+    /// </summary>
+    public static string SavePbm(ReadOnlySpan<byte> data, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var pbm = Pbm(data, mode, options);
+        return pbm.WriteBinary(path);
+    }
+
+    /// <summary>
+    /// Saves Data Matrix PGM to a file for byte payloads.
+    /// </summary>
+    public static string SavePgm(ReadOnlySpan<byte> data, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var pgm = Pgm(data, mode, options);
+        return pgm.WriteBinary(path);
+    }
+
+    /// <summary>
+    /// Saves Data Matrix PAM to a file for byte payloads.
+    /// </summary>
+    public static string SavePam(ReadOnlySpan<byte> data, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var pam = Pam(data, mode, options);
+        return pam.WriteBinary(path);
+    }
+
+    /// <summary>
+    /// Saves Data Matrix XBM to a file for byte payloads.
+    /// </summary>
+    public static string SaveXbm(ReadOnlySpan<byte> data, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var xbm = Xbm(data, mode, options);
+        return xbm.WriteText(path);
+    }
+
+    /// <summary>
+    /// Saves Data Matrix XPM to a file for byte payloads.
+    /// </summary>
+    public static string SaveXpm(ReadOnlySpan<byte> data, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var xpm = Xpm(data, mode, options);
+        return xpm.WriteText(path);
+    }
+
+    /// <summary>
+    /// Saves Data Matrix TGA to a file for byte payloads.
+    /// </summary>
+    public static string SaveTga(ReadOnlySpan<byte> data, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var tga = Tga(data, mode, options);
+        return tga.WriteBinary(path);
+    }
+
+    /// <summary>
+    /// Saves Data Matrix ICO to a file for byte payloads.
+    /// </summary>
+    public static string SaveIco(ReadOnlySpan<byte> data, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var ico = Ico(data, mode, options);
+        return ico.WriteBinary(path);
+    }
+
+    /// <summary>
+    /// Saves Data Matrix SVGZ to a file for byte payloads.
+    /// </summary>
+    public static string SaveSvgz(ReadOnlySpan<byte> data, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var svgz = Svgz(data, mode, options);
+        return svgz.WriteBinary(path);
+    }
+
+    /// <summary>
     /// Saves Data Matrix PDF to a file for byte payloads.
     /// </summary>
     /// <param name="data">Payload bytes.</param>
@@ -242,6 +395,78 @@ public static class DataMatrixCode {
     }
 
     /// <summary>
+    /// Saves Data Matrix PPM to a stream for byte payloads.
+    /// </summary>
+    public static void SavePpm(ReadOnlySpan<byte> data, Stream stream, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = EncodeBytes(data, mode);
+        MatrixPpmRenderer.RenderToStream(modules, BuildPngOptions(options), stream);
+    }
+
+    /// <summary>
+    /// Saves Data Matrix PBM to a stream for byte payloads.
+    /// </summary>
+    public static void SavePbm(ReadOnlySpan<byte> data, Stream stream, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = EncodeBytes(data, mode);
+        MatrixPbmRenderer.RenderToStream(modules, BuildPngOptions(options), stream);
+    }
+
+    /// <summary>
+    /// Saves Data Matrix PGM to a stream for byte payloads.
+    /// </summary>
+    public static void SavePgm(ReadOnlySpan<byte> data, Stream stream, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = EncodeBytes(data, mode);
+        MatrixPgmRenderer.RenderToStream(modules, BuildPngOptions(options), stream);
+    }
+
+    /// <summary>
+    /// Saves Data Matrix PAM to a stream for byte payloads.
+    /// </summary>
+    public static void SavePam(ReadOnlySpan<byte> data, Stream stream, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = EncodeBytes(data, mode);
+        MatrixPamRenderer.RenderToStream(modules, BuildPngOptions(options), stream);
+    }
+
+    /// <summary>
+    /// Saves Data Matrix XBM to a stream for byte payloads.
+    /// </summary>
+    public static void SaveXbm(ReadOnlySpan<byte> data, Stream stream, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = EncodeBytes(data, mode);
+        MatrixXbmRenderer.RenderToStream(modules, BuildPngOptions(options), stream);
+    }
+
+    /// <summary>
+    /// Saves Data Matrix XPM to a stream for byte payloads.
+    /// </summary>
+    public static void SaveXpm(ReadOnlySpan<byte> data, Stream stream, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = EncodeBytes(data, mode);
+        MatrixXpmRenderer.RenderToStream(modules, BuildPngOptions(options), stream);
+    }
+
+    /// <summary>
+    /// Saves Data Matrix TGA to a stream for byte payloads.
+    /// </summary>
+    public static void SaveTga(ReadOnlySpan<byte> data, Stream stream, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = EncodeBytes(data, mode);
+        MatrixTgaRenderer.RenderToStream(modules, BuildPngOptions(options), stream);
+    }
+
+    /// <summary>
+    /// Saves Data Matrix ICO to a stream for byte payloads.
+    /// </summary>
+    public static void SaveIco(ReadOnlySpan<byte> data, Stream stream, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = EncodeBytes(data, mode);
+        MatrixIcoRenderer.RenderToStream(modules, BuildPngOptions(options), stream, BuildIcoOptions(options));
+    }
+
+    /// <summary>
+    /// Saves Data Matrix SVGZ to a stream for byte payloads.
+    /// </summary>
+    public static void SaveSvgz(ReadOnlySpan<byte> data, Stream stream, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = EncodeBytes(data, mode);
+        MatrixSvgzRenderer.RenderToStream(modules, BuildSvgOptions(options), stream);
+    }
+
+    /// <summary>
     /// Saves Data Matrix PDF to a stream for byte payloads.
     /// </summary>
     /// <param name="data">Payload bytes.</param>
@@ -268,10 +493,15 @@ public static class DataMatrixCode {
     }
 
     /// <summary>
-    /// Saves Data Matrix to a file for byte payloads based on extension (.png/.svg/.html/.jpg/.bmp/.pdf/.eps).
+    /// Saves Data Matrix to a file for byte payloads based on extension (.png/.svg/.svgz/.html/.jpg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps).
     /// Defaults to PNG when no extension is provided.
     /// </summary>
     public static string Save(ReadOnlySpan<byte> data, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null, string? title = null) {
+        if (path.EndsWith(".svgz", StringComparison.OrdinalIgnoreCase) ||
+            path.EndsWith(".svg.gz", StringComparison.OrdinalIgnoreCase)) {
+            return SaveSvgz(data, path, mode, options);
+        }
+
         var ext = Path.GetExtension(path);
         if (string.IsNullOrWhiteSpace(ext)) return SavePng(data, path, mode, options);
 
@@ -288,6 +518,24 @@ public static class DataMatrixCode {
                 return SaveJpeg(data, path, mode, options);
             case ".bmp":
                 return SaveBmp(data, path, mode, options);
+            case ".ppm":
+                return SavePpm(data, path, mode, options);
+            case ".pbm":
+                return SavePbm(data, path, mode, options);
+            case ".pgm":
+                return SavePgm(data, path, mode, options);
+            case ".pam":
+                return SavePam(data, path, mode, options);
+            case ".xbm":
+                return SaveXbm(data, path, mode, options);
+            case ".xpm":
+                return SaveXpm(data, path, mode, options);
+            case ".tga":
+                return SaveTga(data, path, mode, options);
+            case ".ico":
+                return SaveIco(data, path, mode, options);
+            case ".svgz":
+                return SaveSvgz(data, path, mode, options);
             case ".pdf":
                 return SavePdf(data, path, mode, options);
             case ".eps":
@@ -324,11 +572,27 @@ public static class DataMatrixCode {
     }
 
     /// <summary>
+    /// Renders Data Matrix as SVGZ.
+    /// </summary>
+    public static byte[] Svgz(string text, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = Encode(text, mode);
+        return MatrixSvgzRenderer.Render(modules, BuildSvgOptions(options));
+    }
+
+    /// <summary>
     /// Renders Data Matrix as SVG from bytes.
     /// </summary>
     public static string Svg(byte[] data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
         var modules = EncodeBytes(data, mode);
         return MatrixSvgRenderer.Render(modules, BuildSvgOptions(options));
+    }
+
+    /// <summary>
+    /// Renders Data Matrix as SVGZ from bytes.
+    /// </summary>
+    public static byte[] Svgz(byte[] data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = EncodeBytes(data, mode);
+        return MatrixSvgzRenderer.Render(modules, BuildSvgOptions(options));
     }
 
     /// <summary>
@@ -363,6 +627,70 @@ public static class DataMatrixCode {
     public static byte[] Bmp(string text, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
         var modules = Encode(text, mode);
         return MatrixBmpRenderer.Render(modules, BuildPngOptions(options));
+    }
+
+    /// <summary>
+    /// Renders Data Matrix as PPM.
+    /// </summary>
+    public static byte[] Ppm(string text, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = Encode(text, mode);
+        return MatrixPpmRenderer.Render(modules, BuildPngOptions(options));
+    }
+
+    /// <summary>
+    /// Renders Data Matrix as PBM.
+    /// </summary>
+    public static byte[] Pbm(string text, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = Encode(text, mode);
+        return MatrixPbmRenderer.Render(modules, BuildPngOptions(options));
+    }
+
+    /// <summary>
+    /// Renders Data Matrix as PGM.
+    /// </summary>
+    public static byte[] Pgm(string text, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = Encode(text, mode);
+        return MatrixPgmRenderer.Render(modules, BuildPngOptions(options));
+    }
+
+    /// <summary>
+    /// Renders Data Matrix as PAM.
+    /// </summary>
+    public static byte[] Pam(string text, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = Encode(text, mode);
+        return MatrixPamRenderer.Render(modules, BuildPngOptions(options));
+    }
+
+    /// <summary>
+    /// Renders Data Matrix as XBM.
+    /// </summary>
+    public static string Xbm(string text, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = Encode(text, mode);
+        return MatrixXbmRenderer.Render(modules, BuildPngOptions(options));
+    }
+
+    /// <summary>
+    /// Renders Data Matrix as XPM.
+    /// </summary>
+    public static string Xpm(string text, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = Encode(text, mode);
+        return MatrixXpmRenderer.Render(modules, BuildPngOptions(options));
+    }
+
+    /// <summary>
+    /// Renders Data Matrix as TGA.
+    /// </summary>
+    public static byte[] Tga(string text, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = Encode(text, mode);
+        return MatrixTgaRenderer.Render(modules, BuildPngOptions(options));
+    }
+
+    /// <summary>
+    /// Renders Data Matrix as ICO.
+    /// </summary>
+    public static byte[] Ico(string text, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = Encode(text, mode);
+        return MatrixIcoRenderer.Render(modules, BuildPngOptions(options), BuildIcoOptions(options));
     }
 
     /// <summary>
@@ -413,6 +741,70 @@ public static class DataMatrixCode {
     public static byte[] Bmp(byte[] data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
         var modules = EncodeBytes(data, mode);
         return MatrixBmpRenderer.Render(modules, BuildPngOptions(options));
+    }
+
+    /// <summary>
+    /// Renders Data Matrix as PPM.
+    /// </summary>
+    public static byte[] Ppm(byte[] data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = EncodeBytes(data, mode);
+        return MatrixPpmRenderer.Render(modules, BuildPngOptions(options));
+    }
+
+    /// <summary>
+    /// Renders Data Matrix as PBM.
+    /// </summary>
+    public static byte[] Pbm(byte[] data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = EncodeBytes(data, mode);
+        return MatrixPbmRenderer.Render(modules, BuildPngOptions(options));
+    }
+
+    /// <summary>
+    /// Renders Data Matrix as PGM.
+    /// </summary>
+    public static byte[] Pgm(byte[] data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = EncodeBytes(data, mode);
+        return MatrixPgmRenderer.Render(modules, BuildPngOptions(options));
+    }
+
+    /// <summary>
+    /// Renders Data Matrix as PAM.
+    /// </summary>
+    public static byte[] Pam(byte[] data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = EncodeBytes(data, mode);
+        return MatrixPamRenderer.Render(modules, BuildPngOptions(options));
+    }
+
+    /// <summary>
+    /// Renders Data Matrix as XBM.
+    /// </summary>
+    public static string Xbm(byte[] data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = EncodeBytes(data, mode);
+        return MatrixXbmRenderer.Render(modules, BuildPngOptions(options));
+    }
+
+    /// <summary>
+    /// Renders Data Matrix as XPM.
+    /// </summary>
+    public static string Xpm(byte[] data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = EncodeBytes(data, mode);
+        return MatrixXpmRenderer.Render(modules, BuildPngOptions(options));
+    }
+
+    /// <summary>
+    /// Renders Data Matrix as TGA.
+    /// </summary>
+    public static byte[] Tga(byte[] data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = EncodeBytes(data, mode);
+        return MatrixTgaRenderer.Render(modules, BuildPngOptions(options));
+    }
+
+    /// <summary>
+    /// Renders Data Matrix as ICO.
+    /// </summary>
+    public static byte[] Ico(byte[] data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = EncodeBytes(data, mode);
+        return MatrixIcoRenderer.Render(modules, BuildPngOptions(options), BuildIcoOptions(options));
     }
 
     /// <summary>
@@ -488,11 +880,27 @@ public static class DataMatrixCode {
     }
 
     /// <summary>
+    /// Saves Data Matrix SVGZ to a file.
+    /// </summary>
+    public static string SaveSvgz(string text, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var svgz = Svgz(text, mode, options);
+        return svgz.WriteBinary(path);
+    }
+
+    /// <summary>
     /// Saves Data Matrix SVG to a file for byte payloads.
     /// </summary>
     public static string SaveSvg(byte[] data, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
         var svg = Svg(data, mode, options);
         return svg.WriteText(path);
+    }
+
+    /// <summary>
+    /// Saves Data Matrix SVGZ to a file for byte payloads.
+    /// </summary>
+    public static string SaveSvgz(byte[] data, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var svgz = Svgz(data, mode, options);
+        return svgz.WriteBinary(path);
     }
 
     /// <summary>
@@ -504,11 +912,27 @@ public static class DataMatrixCode {
     }
 
     /// <summary>
+    /// Saves Data Matrix SVGZ to a stream.
+    /// </summary>
+    public static void SaveSvgz(string text, Stream stream, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = Encode(text, mode);
+        MatrixSvgzRenderer.RenderToStream(modules, BuildSvgOptions(options), stream);
+    }
+
+    /// <summary>
     /// Saves Data Matrix SVG to a stream for byte payloads.
     /// </summary>
     public static void SaveSvg(byte[] data, Stream stream, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
         var svg = Svg(data, mode, options);
         svg.WriteText(stream);
+    }
+
+    /// <summary>
+    /// Saves Data Matrix SVGZ to a stream for byte payloads.
+    /// </summary>
+    public static void SaveSvgz(byte[] data, Stream stream, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = EncodeBytes(data, mode);
+        MatrixSvgzRenderer.RenderToStream(modules, BuildSvgOptions(options), stream);
     }
 
     /// <summary>
@@ -572,6 +996,70 @@ public static class DataMatrixCode {
     }
 
     /// <summary>
+    /// Saves Data Matrix PPM to a file for text payloads.
+    /// </summary>
+    public static string SavePpm(string text, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var ppm = Ppm(text, mode, options);
+        return ppm.WriteBinary(path);
+    }
+
+    /// <summary>
+    /// Saves Data Matrix PBM to a file for text payloads.
+    /// </summary>
+    public static string SavePbm(string text, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var pbm = Pbm(text, mode, options);
+        return pbm.WriteBinary(path);
+    }
+
+    /// <summary>
+    /// Saves Data Matrix PGM to a file for text payloads.
+    /// </summary>
+    public static string SavePgm(string text, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var pgm = Pgm(text, mode, options);
+        return pgm.WriteBinary(path);
+    }
+
+    /// <summary>
+    /// Saves Data Matrix PAM to a file for text payloads.
+    /// </summary>
+    public static string SavePam(string text, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var pam = Pam(text, mode, options);
+        return pam.WriteBinary(path);
+    }
+
+    /// <summary>
+    /// Saves Data Matrix XBM to a file for text payloads.
+    /// </summary>
+    public static string SaveXbm(string text, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var xbm = Xbm(text, mode, options);
+        return xbm.WriteText(path);
+    }
+
+    /// <summary>
+    /// Saves Data Matrix XPM to a file for text payloads.
+    /// </summary>
+    public static string SaveXpm(string text, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var xpm = Xpm(text, mode, options);
+        return xpm.WriteText(path);
+    }
+
+    /// <summary>
+    /// Saves Data Matrix TGA to a file for text payloads.
+    /// </summary>
+    public static string SaveTga(string text, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var tga = Tga(text, mode, options);
+        return tga.WriteBinary(path);
+    }
+
+    /// <summary>
+    /// Saves Data Matrix ICO to a file for text payloads.
+    /// </summary>
+    public static string SaveIco(string text, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var ico = Ico(text, mode, options);
+        return ico.WriteBinary(path);
+    }
+
+    /// <summary>
     /// Saves Data Matrix PDF to a file.
     /// </summary>
     /// <param name="text">Input text.</param>
@@ -611,6 +1099,70 @@ public static class DataMatrixCode {
     public static string SaveBmp(byte[] data, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
         var bmp = Bmp(data, mode, options);
         return bmp.WriteBinary(path);
+    }
+
+    /// <summary>
+    /// Saves Data Matrix PPM to a file for byte payloads.
+    /// </summary>
+    public static string SavePpm(byte[] data, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var ppm = Ppm(data, mode, options);
+        return ppm.WriteBinary(path);
+    }
+
+    /// <summary>
+    /// Saves Data Matrix PBM to a file for byte payloads.
+    /// </summary>
+    public static string SavePbm(byte[] data, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var pbm = Pbm(data, mode, options);
+        return pbm.WriteBinary(path);
+    }
+
+    /// <summary>
+    /// Saves Data Matrix PGM to a file for byte payloads.
+    /// </summary>
+    public static string SavePgm(byte[] data, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var pgm = Pgm(data, mode, options);
+        return pgm.WriteBinary(path);
+    }
+
+    /// <summary>
+    /// Saves Data Matrix PAM to a file for byte payloads.
+    /// </summary>
+    public static string SavePam(byte[] data, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var pam = Pam(data, mode, options);
+        return pam.WriteBinary(path);
+    }
+
+    /// <summary>
+    /// Saves Data Matrix XBM to a file for byte payloads.
+    /// </summary>
+    public static string SaveXbm(byte[] data, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var xbm = Xbm(data, mode, options);
+        return xbm.WriteText(path);
+    }
+
+    /// <summary>
+    /// Saves Data Matrix XPM to a file for byte payloads.
+    /// </summary>
+    public static string SaveXpm(byte[] data, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var xpm = Xpm(data, mode, options);
+        return xpm.WriteText(path);
+    }
+
+    /// <summary>
+    /// Saves Data Matrix TGA to a file for byte payloads.
+    /// </summary>
+    public static string SaveTga(byte[] data, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var tga = Tga(data, mode, options);
+        return tga.WriteBinary(path);
+    }
+
+    /// <summary>
+    /// Saves Data Matrix ICO to a file for byte payloads.
+    /// </summary>
+    public static string SaveIco(byte[] data, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var ico = Ico(data, mode, options);
+        return ico.WriteBinary(path);
     }
 
     /// <summary>
@@ -658,6 +1210,70 @@ public static class DataMatrixCode {
     }
 
     /// <summary>
+    /// Saves Data Matrix PPM to a stream.
+    /// </summary>
+    public static void SavePpm(string text, Stream stream, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = Encode(text, mode);
+        MatrixPpmRenderer.RenderToStream(modules, BuildPngOptions(options), stream);
+    }
+
+    /// <summary>
+    /// Saves Data Matrix PBM to a stream.
+    /// </summary>
+    public static void SavePbm(string text, Stream stream, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = Encode(text, mode);
+        MatrixPbmRenderer.RenderToStream(modules, BuildPngOptions(options), stream);
+    }
+
+    /// <summary>
+    /// Saves Data Matrix PGM to a stream.
+    /// </summary>
+    public static void SavePgm(string text, Stream stream, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = Encode(text, mode);
+        MatrixPgmRenderer.RenderToStream(modules, BuildPngOptions(options), stream);
+    }
+
+    /// <summary>
+    /// Saves Data Matrix PAM to a stream.
+    /// </summary>
+    public static void SavePam(string text, Stream stream, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = Encode(text, mode);
+        MatrixPamRenderer.RenderToStream(modules, BuildPngOptions(options), stream);
+    }
+
+    /// <summary>
+    /// Saves Data Matrix XBM to a stream.
+    /// </summary>
+    public static void SaveXbm(string text, Stream stream, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = Encode(text, mode);
+        MatrixXbmRenderer.RenderToStream(modules, BuildPngOptions(options), stream);
+    }
+
+    /// <summary>
+    /// Saves Data Matrix XPM to a stream.
+    /// </summary>
+    public static void SaveXpm(string text, Stream stream, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = Encode(text, mode);
+        MatrixXpmRenderer.RenderToStream(modules, BuildPngOptions(options), stream);
+    }
+
+    /// <summary>
+    /// Saves Data Matrix TGA to a stream.
+    /// </summary>
+    public static void SaveTga(string text, Stream stream, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = Encode(text, mode);
+        MatrixTgaRenderer.RenderToStream(modules, BuildPngOptions(options), stream);
+    }
+
+    /// <summary>
+    /// Saves Data Matrix ICO to a stream.
+    /// </summary>
+    public static void SaveIco(string text, Stream stream, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = Encode(text, mode);
+        MatrixIcoRenderer.RenderToStream(modules, BuildPngOptions(options), stream, BuildIcoOptions(options));
+    }
+
+    /// <summary>
     /// Saves Data Matrix PDF to a stream.
     /// </summary>
     /// <param name="text">Input text.</param>
@@ -702,6 +1318,70 @@ public static class DataMatrixCode {
     }
 
     /// <summary>
+    /// Saves Data Matrix PPM to a stream for byte payloads.
+    /// </summary>
+    public static void SavePpm(byte[] data, Stream stream, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = EncodeBytes(data, mode);
+        MatrixPpmRenderer.RenderToStream(modules, BuildPngOptions(options), stream);
+    }
+
+    /// <summary>
+    /// Saves Data Matrix PBM to a stream for byte payloads.
+    /// </summary>
+    public static void SavePbm(byte[] data, Stream stream, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = EncodeBytes(data, mode);
+        MatrixPbmRenderer.RenderToStream(modules, BuildPngOptions(options), stream);
+    }
+
+    /// <summary>
+    /// Saves Data Matrix PGM to a stream for byte payloads.
+    /// </summary>
+    public static void SavePgm(byte[] data, Stream stream, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = EncodeBytes(data, mode);
+        MatrixPgmRenderer.RenderToStream(modules, BuildPngOptions(options), stream);
+    }
+
+    /// <summary>
+    /// Saves Data Matrix PAM to a stream for byte payloads.
+    /// </summary>
+    public static void SavePam(byte[] data, Stream stream, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = EncodeBytes(data, mode);
+        MatrixPamRenderer.RenderToStream(modules, BuildPngOptions(options), stream);
+    }
+
+    /// <summary>
+    /// Saves Data Matrix XBM to a stream for byte payloads.
+    /// </summary>
+    public static void SaveXbm(byte[] data, Stream stream, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = EncodeBytes(data, mode);
+        MatrixXbmRenderer.RenderToStream(modules, BuildPngOptions(options), stream);
+    }
+
+    /// <summary>
+    /// Saves Data Matrix XPM to a stream for byte payloads.
+    /// </summary>
+    public static void SaveXpm(byte[] data, Stream stream, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = EncodeBytes(data, mode);
+        MatrixXpmRenderer.RenderToStream(modules, BuildPngOptions(options), stream);
+    }
+
+    /// <summary>
+    /// Saves Data Matrix TGA to a stream for byte payloads.
+    /// </summary>
+    public static void SaveTga(byte[] data, Stream stream, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = EncodeBytes(data, mode);
+        MatrixTgaRenderer.RenderToStream(modules, BuildPngOptions(options), stream);
+    }
+
+    /// <summary>
+    /// Saves Data Matrix ICO to a stream for byte payloads.
+    /// </summary>
+    public static void SaveIco(byte[] data, Stream stream, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = EncodeBytes(data, mode);
+        MatrixIcoRenderer.RenderToStream(modules, BuildPngOptions(options), stream, BuildIcoOptions(options));
+    }
+
+    /// <summary>
     /// Saves Data Matrix PDF to a stream for byte payloads.
     /// </summary>
     /// <param name="data">Payload bytes.</param>
@@ -728,10 +1408,15 @@ public static class DataMatrixCode {
     }
 
     /// <summary>
-    /// Saves Data Matrix to a file based on extension (.png/.svg/.html/.jpg/.bmp/.pdf/.eps).
+    /// Saves Data Matrix to a file based on extension (.png/.svg/.svgz/.html/.jpg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps).
     /// Defaults to PNG when no extension is provided.
     /// </summary>
     public static string Save(string text, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null, string? title = null) {
+        if (path.EndsWith(".svgz", StringComparison.OrdinalIgnoreCase) ||
+            path.EndsWith(".svg.gz", StringComparison.OrdinalIgnoreCase)) {
+            return SaveSvgz(text, path, mode, options);
+        }
+
         var ext = Path.GetExtension(path);
         if (string.IsNullOrWhiteSpace(ext)) return SavePng(text, path, mode, options);
 
@@ -748,6 +1433,24 @@ public static class DataMatrixCode {
                 return SaveJpeg(text, path, mode, options);
             case ".bmp":
                 return SaveBmp(text, path, mode, options);
+            case ".ppm":
+                return SavePpm(text, path, mode, options);
+            case ".pbm":
+                return SavePbm(text, path, mode, options);
+            case ".pgm":
+                return SavePgm(text, path, mode, options);
+            case ".pam":
+                return SavePam(text, path, mode, options);
+            case ".xbm":
+                return SaveXbm(text, path, mode, options);
+            case ".xpm":
+                return SaveXpm(text, path, mode, options);
+            case ".tga":
+                return SaveTga(text, path, mode, options);
+            case ".ico":
+                return SaveIco(text, path, mode, options);
+            case ".svgz":
+                return SaveSvgz(text, path, mode, options);
             case ".pdf":
                 return SavePdf(text, path, mode, options);
             case ".eps":
@@ -759,10 +1462,15 @@ public static class DataMatrixCode {
     }
 
     /// <summary>
-    /// Saves Data Matrix to a file for byte payloads based on extension (.png/.svg/.html/.jpg/.bmp/.pdf/.eps).
+    /// Saves Data Matrix to a file for byte payloads based on extension (.png/.svg/.svgz/.html/.jpg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps).
     /// Defaults to PNG when no extension is provided.
     /// </summary>
     public static string Save(byte[] data, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null, string? title = null) {
+        if (path.EndsWith(".svgz", StringComparison.OrdinalIgnoreCase) ||
+            path.EndsWith(".svg.gz", StringComparison.OrdinalIgnoreCase)) {
+            return SaveSvgz(data, path, mode, options);
+        }
+
         var ext = Path.GetExtension(path);
         if (string.IsNullOrWhiteSpace(ext)) return SavePng(data, path, mode, options);
 
@@ -779,6 +1487,24 @@ public static class DataMatrixCode {
                 return SaveJpeg(data, path, mode, options);
             case ".bmp":
                 return SaveBmp(data, path, mode, options);
+            case ".ppm":
+                return SavePpm(data, path, mode, options);
+            case ".pbm":
+                return SavePbm(data, path, mode, options);
+            case ".pgm":
+                return SavePgm(data, path, mode, options);
+            case ".pam":
+                return SavePam(data, path, mode, options);
+            case ".xbm":
+                return SaveXbm(data, path, mode, options);
+            case ".xpm":
+                return SaveXpm(data, path, mode, options);
+            case ".tga":
+                return SaveTga(data, path, mode, options);
+            case ".ico":
+                return SaveIco(data, path, mode, options);
+            case ".svgz":
+                return SaveSvgz(data, path, mode, options);
             case ".pdf":
                 return SavePdf(data, path, mode, options);
             case ".eps":
@@ -853,6 +1579,14 @@ public static class DataMatrixCode {
             QuietZone = opts.QuietZone,
             Foreground = opts.Foreground,
             Background = opts.Background
+        };
+    }
+
+    private static IcoRenderOptions BuildIcoOptions(MatrixOptions? options) {
+        var opts = options ?? new MatrixOptions();
+        return new IcoRenderOptions {
+            Sizes = opts.IcoSizes ?? new[] { 16, 32, 48, 64, 128, 256 },
+            PreserveAspectRatio = opts.IcoPreserveAspectRatio
         };
     }
 
@@ -953,6 +1687,22 @@ public static class DataMatrixCode {
         /// </summary>
         public DataMatrixBuilder WithHtmlEmailSafeTable(bool enabled = true) {
             _options.HtmlEmailSafeTable = enabled;
+            return this;
+        }
+
+        /// <summary>
+        /// Sets ICO output sizes (in pixels).
+        /// </summary>
+        public DataMatrixBuilder WithIcoSizes(params int[] sizes) {
+            _options.IcoSizes = sizes;
+            return this;
+        }
+
+        /// <summary>
+        /// Sets ICO aspect ratio preservation behavior.
+        /// </summary>
+        public DataMatrixBuilder WithIcoPreserveAspectRatio(bool enabled = true) {
+            _options.IcoPreserveAspectRatio = enabled;
             return this;
         }
 

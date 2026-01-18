@@ -218,7 +218,7 @@ public static class CodeGlyph {
     }
 
     /// <summary>
-    /// Attempts to decode a QR or barcode from common image formats (PNG/BMP/PPM/TGA).
+    /// Attempts to decode a QR or barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).
     /// </summary>
     public static bool TryDecodeImage(byte[] image, out CodeGlyphDecoded decoded, BarcodeType? expectedBarcode = null, bool preferBarcode = false) {
         decoded = null!;
@@ -238,7 +238,7 @@ public static class CodeGlyph {
     }
 
     /// <summary>
-    /// Attempts to decode all QR codes and (optionally) a 1D barcode from common image formats (PNG/BMP/PPM/TGA).
+    /// Attempts to decode all QR codes and (optionally) a 1D barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).
     /// </summary>
     public static bool TryDecodeAllImage(byte[] image, out CodeGlyphDecoded[] decoded, BarcodeType? expectedBarcode = null, bool includeBarcode = true, bool preferBarcode = false) {
         decoded = Array.Empty<CodeGlyphDecoded>();
@@ -248,7 +248,7 @@ public static class CodeGlyph {
     }
 
     /// <summary>
-    /// Attempts to decode a QR or barcode from an image stream (PNG/BMP/PPM/TGA).
+    /// Attempts to decode a QR or barcode from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).
     /// </summary>
     public static bool TryDecodeImage(Stream stream, out CodeGlyphDecoded decoded, BarcodeType? expectedBarcode = null, bool preferBarcode = false) {
         decoded = null!;
@@ -258,7 +258,7 @@ public static class CodeGlyph {
     }
 
     /// <summary>
-    /// Attempts to decode all QR codes and (optionally) a 1D barcode from an image stream (PNG/BMP/PPM/TGA).
+    /// Attempts to decode all QR codes and (optionally) a 1D barcode from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).
     /// </summary>
     public static bool TryDecodeAllImage(Stream stream, out CodeGlyphDecoded[] decoded, BarcodeType? expectedBarcode = null, bool includeBarcode = true, bool preferBarcode = false) {
         decoded = Array.Empty<CodeGlyphDecoded>();

@@ -33,6 +33,16 @@ public sealed class MatrixOptions {
     public int JpegQuality { get; set; } = 85;
 
     /// <summary>
+    /// ICO output sizes in pixels (1..256). Defaults to common icon sizes.
+    /// </summary>
+    public int[]? IcoSizes { get; set; }
+
+    /// <summary>
+    /// When true, preserves aspect ratio and pads to square for ICO.
+    /// </summary>
+    public bool IcoPreserveAspectRatio { get; set; } = true;
+
+    /// <summary>
     /// When true, renders HTML using email-safe tables.
     /// </summary>
     public bool HtmlEmailSafeTable { get; set; }

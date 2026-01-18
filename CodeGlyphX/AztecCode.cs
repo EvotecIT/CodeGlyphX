@@ -6,10 +6,19 @@ using CodeGlyphX.Rendering.Ascii;
 using CodeGlyphX.Rendering.Bmp;
 using CodeGlyphX.Rendering.Eps;
 using CodeGlyphX.Rendering.Html;
+using CodeGlyphX.Rendering.Ico;
 using CodeGlyphX.Rendering.Jpeg;
+using CodeGlyphX.Rendering.Pam;
+using CodeGlyphX.Rendering.Pbm;
+using CodeGlyphX.Rendering.Pgm;
 using CodeGlyphX.Rendering.Png;
 using CodeGlyphX.Rendering.Pdf;
+using CodeGlyphX.Rendering.Ppm;
 using CodeGlyphX.Rendering.Svg;
+using CodeGlyphX.Rendering.Svgz;
+using CodeGlyphX.Rendering.Tga;
+using CodeGlyphX.Rendering.Xbm;
+using CodeGlyphX.Rendering.Xpm;
 
 namespace CodeGlyphX;
 
@@ -144,11 +153,27 @@ public static class AztecCode {
     }
 
     /// <summary>
+    /// Renders Aztec to SVGZ.
+    /// </summary>
+    public static byte[] Svgz(string text, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = Encode(text, encodeOptions);
+        return MatrixSvgzRenderer.Render(modules, ToSvgOptions(renderOptions));
+    }
+
+    /// <summary>
     /// Renders Aztec to SVG markup.
     /// </summary>
     public static string Svg(ReadOnlySpan<byte> data, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         var modules = Encode(data, encodeOptions);
         return MatrixSvgRenderer.Render(modules, ToSvgOptions(renderOptions));
+    }
+
+    /// <summary>
+    /// Renders Aztec to SVGZ.
+    /// </summary>
+    public static byte[] Svgz(ReadOnlySpan<byte> data, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = Encode(data, encodeOptions);
+        return MatrixSvgzRenderer.Render(modules, ToSvgOptions(renderOptions));
     }
 
     /// <summary>
@@ -202,6 +227,134 @@ public static class AztecCode {
     }
 
     /// <summary>
+    /// Renders Aztec to PPM bytes.
+    /// </summary>
+    public static byte[] Ppm(string text, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = Encode(text, encodeOptions);
+        return MatrixPpmRenderer.Render(modules, ToPngOptions(renderOptions));
+    }
+
+    /// <summary>
+    /// Renders Aztec to PPM bytes.
+    /// </summary>
+    public static byte[] Ppm(ReadOnlySpan<byte> data, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = Encode(data, encodeOptions);
+        return MatrixPpmRenderer.Render(modules, ToPngOptions(renderOptions));
+    }
+
+    /// <summary>
+    /// Renders Aztec to PBM bytes.
+    /// </summary>
+    public static byte[] Pbm(string text, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = Encode(text, encodeOptions);
+        return MatrixPbmRenderer.Render(modules, ToPngOptions(renderOptions));
+    }
+
+    /// <summary>
+    /// Renders Aztec to PGM bytes.
+    /// </summary>
+    public static byte[] Pgm(string text, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = Encode(text, encodeOptions);
+        return MatrixPgmRenderer.Render(modules, ToPngOptions(renderOptions));
+    }
+
+    /// <summary>
+    /// Renders Aztec to PAM bytes.
+    /// </summary>
+    public static byte[] Pam(string text, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = Encode(text, encodeOptions);
+        return MatrixPamRenderer.Render(modules, ToPngOptions(renderOptions));
+    }
+
+    /// <summary>
+    /// Renders Aztec to XBM.
+    /// </summary>
+    public static string Xbm(string text, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = Encode(text, encodeOptions);
+        return MatrixXbmRenderer.Render(modules, ToPngOptions(renderOptions));
+    }
+
+    /// <summary>
+    /// Renders Aztec to XPM.
+    /// </summary>
+    public static string Xpm(string text, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = Encode(text, encodeOptions);
+        return MatrixXpmRenderer.Render(modules, ToPngOptions(renderOptions));
+    }
+
+    /// <summary>
+    /// Renders Aztec to PBM bytes.
+    /// </summary>
+    public static byte[] Pbm(ReadOnlySpan<byte> data, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = Encode(data, encodeOptions);
+        return MatrixPbmRenderer.Render(modules, ToPngOptions(renderOptions));
+    }
+
+    /// <summary>
+    /// Renders Aztec to PGM bytes.
+    /// </summary>
+    public static byte[] Pgm(ReadOnlySpan<byte> data, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = Encode(data, encodeOptions);
+        return MatrixPgmRenderer.Render(modules, ToPngOptions(renderOptions));
+    }
+
+    /// <summary>
+    /// Renders Aztec to PAM bytes.
+    /// </summary>
+    public static byte[] Pam(ReadOnlySpan<byte> data, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = Encode(data, encodeOptions);
+        return MatrixPamRenderer.Render(modules, ToPngOptions(renderOptions));
+    }
+
+    /// <summary>
+    /// Renders Aztec to XBM.
+    /// </summary>
+    public static string Xbm(ReadOnlySpan<byte> data, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = Encode(data, encodeOptions);
+        return MatrixXbmRenderer.Render(modules, ToPngOptions(renderOptions));
+    }
+
+    /// <summary>
+    /// Renders Aztec to XPM.
+    /// </summary>
+    public static string Xpm(ReadOnlySpan<byte> data, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = Encode(data, encodeOptions);
+        return MatrixXpmRenderer.Render(modules, ToPngOptions(renderOptions));
+    }
+
+    /// <summary>
+    /// Renders Aztec to TGA bytes.
+    /// </summary>
+    public static byte[] Tga(string text, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = Encode(text, encodeOptions);
+        return MatrixTgaRenderer.Render(modules, ToPngOptions(renderOptions));
+    }
+
+    /// <summary>
+    /// Renders Aztec to TGA bytes.
+    /// </summary>
+    public static byte[] Tga(ReadOnlySpan<byte> data, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = Encode(data, encodeOptions);
+        return MatrixTgaRenderer.Render(modules, ToPngOptions(renderOptions));
+    }
+
+    /// <summary>
+    /// Renders Aztec to ICO bytes.
+    /// </summary>
+    public static byte[] Ico(string text, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = Encode(text, encodeOptions);
+        return MatrixIcoRenderer.Render(modules, ToPngOptions(renderOptions), ToIcoOptions(renderOptions));
+    }
+
+    /// <summary>
+    /// Renders Aztec to ICO bytes.
+    /// </summary>
+    public static byte[] Ico(ReadOnlySpan<byte> data, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = Encode(data, encodeOptions);
+        return MatrixIcoRenderer.Render(modules, ToPngOptions(renderOptions), ToIcoOptions(renderOptions));
+    }
+
+    /// <summary>
     /// Renders Aztec to PDF bytes.
     /// </summary>
     public static byte[] Pdf(string text, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, RenderMode renderMode = RenderMode.Vector) {
@@ -250,10 +403,15 @@ public static class AztecCode {
     }
 
     /// <summary>
-    /// Saves Aztec to a file based on extension (.png/.svg/.html/.jpg/.bmp/.pdf/.eps).
+    /// Saves Aztec to a file based on extension (.png/.svg/.svgz/.html/.jpg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps).
     /// Defaults to PNG when no extension is provided.
     /// </summary>
     public static string Save(string text, string path, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, string? title = null) {
+        if (path.EndsWith(".svgz", StringComparison.OrdinalIgnoreCase) ||
+            path.EndsWith(".svg.gz", StringComparison.OrdinalIgnoreCase)) {
+            return RenderIO.WriteBinary(path, Svgz(text, encodeOptions, renderOptions));
+        }
+
         var ext = Path.GetExtension(path);
         if (string.IsNullOrWhiteSpace(ext)) return RenderIO.WriteBinary(path, Png(text, encodeOptions, renderOptions));
 
@@ -274,6 +432,24 @@ public static class AztecCode {
                 return RenderIO.WriteBinary(path, Jpeg(text, encodeOptions, renderOptions));
             case ".bmp":
                 return RenderIO.WriteBinary(path, Bmp(text, encodeOptions, renderOptions));
+            case ".ppm":
+                return RenderIO.WriteBinary(path, Ppm(text, encodeOptions, renderOptions));
+            case ".pbm":
+                return RenderIO.WriteBinary(path, Pbm(text, encodeOptions, renderOptions));
+            case ".pgm":
+                return RenderIO.WriteBinary(path, Pgm(text, encodeOptions, renderOptions));
+            case ".pam":
+                return RenderIO.WriteBinary(path, Pam(text, encodeOptions, renderOptions));
+            case ".xbm":
+                return RenderIO.WriteText(path, Xbm(text, encodeOptions, renderOptions));
+            case ".xpm":
+                return RenderIO.WriteText(path, Xpm(text, encodeOptions, renderOptions));
+            case ".tga":
+                return RenderIO.WriteBinary(path, Tga(text, encodeOptions, renderOptions));
+            case ".ico":
+                return RenderIO.WriteBinary(path, Ico(text, encodeOptions, renderOptions));
+            case ".svgz":
+                return RenderIO.WriteBinary(path, Svgz(text, encodeOptions, renderOptions));
             case ".pdf":
                 return RenderIO.WriteBinary(path, Pdf(text, encodeOptions, renderOptions));
             case ".eps":
@@ -308,10 +484,24 @@ public static class AztecCode {
     }
 
     /// <summary>
+    /// Saves Aztec SVGZ to a file.
+    /// </summary>
+    public static string SaveSvgz(string text, string path, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        return RenderIO.WriteBinary(path, Svgz(text, encodeOptions, renderOptions));
+    }
+
+    /// <summary>
     /// Saves Aztec SVG to a stream.
     /// </summary>
     public static void SaveSvg(string text, Stream stream, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         RenderIO.WriteText(stream, Svg(text, encodeOptions, renderOptions));
+    }
+
+    /// <summary>
+    /// Saves Aztec SVGZ to a stream.
+    /// </summary>
+    public static void SaveSvgz(string text, Stream stream, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        RenderIO.WriteBinary(stream, Svgz(text, encodeOptions, renderOptions));
     }
 
     /// <summary>
@@ -358,6 +548,118 @@ public static class AztecCode {
     /// </summary>
     public static void SaveBmp(string text, Stream stream, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         RenderIO.WriteBinary(stream, Bmp(text, encodeOptions, renderOptions));
+    }
+
+    /// <summary>
+    /// Saves Aztec PPM to a file.
+    /// </summary>
+    public static string SavePpm(string text, string path, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        return RenderIO.WriteBinary(path, Ppm(text, encodeOptions, renderOptions));
+    }
+
+    /// <summary>
+    /// Saves Aztec PPM to a stream.
+    /// </summary>
+    public static void SavePpm(string text, Stream stream, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        RenderIO.WriteBinary(stream, Ppm(text, encodeOptions, renderOptions));
+    }
+
+    /// <summary>
+    /// Saves Aztec PBM to a file.
+    /// </summary>
+    public static string SavePbm(string text, string path, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        return RenderIO.WriteBinary(path, Pbm(text, encodeOptions, renderOptions));
+    }
+
+    /// <summary>
+    /// Saves Aztec PBM to a stream.
+    /// </summary>
+    public static void SavePbm(string text, Stream stream, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        RenderIO.WriteBinary(stream, Pbm(text, encodeOptions, renderOptions));
+    }
+
+    /// <summary>
+    /// Saves Aztec PGM to a file.
+    /// </summary>
+    public static string SavePgm(string text, string path, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        return RenderIO.WriteBinary(path, Pgm(text, encodeOptions, renderOptions));
+    }
+
+    /// <summary>
+    /// Saves Aztec PGM to a stream.
+    /// </summary>
+    public static void SavePgm(string text, Stream stream, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        RenderIO.WriteBinary(stream, Pgm(text, encodeOptions, renderOptions));
+    }
+
+    /// <summary>
+    /// Saves Aztec PAM to a file.
+    /// </summary>
+    public static string SavePam(string text, string path, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        return RenderIO.WriteBinary(path, Pam(text, encodeOptions, renderOptions));
+    }
+
+    /// <summary>
+    /// Saves Aztec PAM to a stream.
+    /// </summary>
+    public static void SavePam(string text, Stream stream, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        RenderIO.WriteBinary(stream, Pam(text, encodeOptions, renderOptions));
+    }
+
+    /// <summary>
+    /// Saves Aztec XBM to a file.
+    /// </summary>
+    public static string SaveXbm(string text, string path, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        return RenderIO.WriteText(path, Xbm(text, encodeOptions, renderOptions));
+    }
+
+    /// <summary>
+    /// Saves Aztec XBM to a stream.
+    /// </summary>
+    public static void SaveXbm(string text, Stream stream, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        RenderIO.WriteText(stream, Xbm(text, encodeOptions, renderOptions));
+    }
+
+    /// <summary>
+    /// Saves Aztec XPM to a file.
+    /// </summary>
+    public static string SaveXpm(string text, string path, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        return RenderIO.WriteText(path, Xpm(text, encodeOptions, renderOptions));
+    }
+
+    /// <summary>
+    /// Saves Aztec XPM to a stream.
+    /// </summary>
+    public static void SaveXpm(string text, Stream stream, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        RenderIO.WriteText(stream, Xpm(text, encodeOptions, renderOptions));
+    }
+
+    /// <summary>
+    /// Saves Aztec TGA to a file.
+    /// </summary>
+    public static string SaveTga(string text, string path, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        return RenderIO.WriteBinary(path, Tga(text, encodeOptions, renderOptions));
+    }
+
+    /// <summary>
+    /// Saves Aztec TGA to a stream.
+    /// </summary>
+    public static void SaveTga(string text, Stream stream, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        RenderIO.WriteBinary(stream, Tga(text, encodeOptions, renderOptions));
+    }
+
+    /// <summary>
+    /// Saves Aztec ICO to a file.
+    /// </summary>
+    public static string SaveIco(string text, string path, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        return RenderIO.WriteBinary(path, Ico(text, encodeOptions, renderOptions));
+    }
+
+    /// <summary>
+    /// Saves Aztec ICO to a stream.
+    /// </summary>
+    public static void SaveIco(string text, Stream stream, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        RenderIO.WriteBinary(stream, Ico(text, encodeOptions, renderOptions));
     }
 
     /// <summary>
@@ -463,6 +765,132 @@ public static class AztecCode {
     }
 
     /// <summary>
+    /// Saves Aztec PPM to a file.
+    /// </summary>
+    public static string SavePpm(ReadOnlySpan<byte> data, string path, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        return RenderIO.WriteBinary(path, Ppm(data, encodeOptions, renderOptions));
+    }
+
+    /// <summary>
+    /// Saves Aztec PPM to a stream.
+    /// </summary>
+    public static void SavePpm(ReadOnlySpan<byte> data, Stream stream, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        RenderIO.WriteBinary(stream, Ppm(data, encodeOptions, renderOptions));
+    }
+
+    /// <summary>
+    /// Saves Aztec PBM to a file.
+    /// </summary>
+    public static string SavePbm(ReadOnlySpan<byte> data, string path, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        return RenderIO.WriteBinary(path, Pbm(data, encodeOptions, renderOptions));
+    }
+
+    /// <summary>
+    /// Saves Aztec PBM to a stream.
+    /// </summary>
+    public static void SavePbm(ReadOnlySpan<byte> data, Stream stream, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        RenderIO.WriteBinary(stream, Pbm(data, encodeOptions, renderOptions));
+    }
+
+    /// <summary>
+    /// Saves Aztec PGM to a file.
+    /// </summary>
+    public static string SavePgm(ReadOnlySpan<byte> data, string path, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        return RenderIO.WriteBinary(path, Pgm(data, encodeOptions, renderOptions));
+    }
+
+    /// <summary>
+    /// Saves Aztec PGM to a stream.
+    /// </summary>
+    public static void SavePgm(ReadOnlySpan<byte> data, Stream stream, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        RenderIO.WriteBinary(stream, Pgm(data, encodeOptions, renderOptions));
+    }
+
+    /// <summary>
+    /// Saves Aztec PAM to a file.
+    /// </summary>
+    public static string SavePam(ReadOnlySpan<byte> data, string path, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        return RenderIO.WriteBinary(path, Pam(data, encodeOptions, renderOptions));
+    }
+
+    /// <summary>
+    /// Saves Aztec PAM to a stream.
+    /// </summary>
+    public static void SavePam(ReadOnlySpan<byte> data, Stream stream, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        RenderIO.WriteBinary(stream, Pam(data, encodeOptions, renderOptions));
+    }
+
+    /// <summary>
+    /// Saves Aztec XBM to a file.
+    /// </summary>
+    public static string SaveXbm(ReadOnlySpan<byte> data, string path, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        return RenderIO.WriteText(path, Xbm(data, encodeOptions, renderOptions));
+    }
+
+    /// <summary>
+    /// Saves Aztec XBM to a stream.
+    /// </summary>
+    public static void SaveXbm(ReadOnlySpan<byte> data, Stream stream, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        RenderIO.WriteText(stream, Xbm(data, encodeOptions, renderOptions));
+    }
+
+    /// <summary>
+    /// Saves Aztec XPM to a file.
+    /// </summary>
+    public static string SaveXpm(ReadOnlySpan<byte> data, string path, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        return RenderIO.WriteText(path, Xpm(data, encodeOptions, renderOptions));
+    }
+
+    /// <summary>
+    /// Saves Aztec XPM to a stream.
+    /// </summary>
+    public static void SaveXpm(ReadOnlySpan<byte> data, Stream stream, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        RenderIO.WriteText(stream, Xpm(data, encodeOptions, renderOptions));
+    }
+
+    /// <summary>
+    /// Saves Aztec TGA to a file.
+    /// </summary>
+    public static string SaveTga(ReadOnlySpan<byte> data, string path, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        return RenderIO.WriteBinary(path, Tga(data, encodeOptions, renderOptions));
+    }
+
+    /// <summary>
+    /// Saves Aztec TGA to a stream.
+    /// </summary>
+    public static void SaveTga(ReadOnlySpan<byte> data, Stream stream, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        RenderIO.WriteBinary(stream, Tga(data, encodeOptions, renderOptions));
+    }
+
+    /// <summary>
+    /// Saves Aztec ICO to a file.
+    /// </summary>
+    public static string SaveIco(ReadOnlySpan<byte> data, string path, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        return RenderIO.WriteBinary(path, Ico(data, encodeOptions, renderOptions));
+    }
+
+    /// <summary>
+    /// Saves Aztec ICO to a stream.
+    /// </summary>
+    public static void SaveIco(ReadOnlySpan<byte> data, Stream stream, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        RenderIO.WriteBinary(stream, Ico(data, encodeOptions, renderOptions));
+    }
+
+    /// <summary>
+    /// Saves Aztec SVGZ to a file.
+    /// </summary>
+    public static string SaveSvgz(ReadOnlySpan<byte> data, string path, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        return RenderIO.WriteBinary(path, Svgz(data, encodeOptions, renderOptions));
+    }
+
+    /// <summary>
+    /// Saves Aztec SVGZ to a stream.
+    /// </summary>
+    public static void SaveSvgz(ReadOnlySpan<byte> data, Stream stream, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        RenderIO.WriteBinary(stream, Svgz(data, encodeOptions, renderOptions));
+    }
+
+    /// <summary>
     /// Saves Aztec PDF to a file.
     /// </summary>
     public static string SavePdf(ReadOnlySpan<byte> data, string path, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, RenderMode renderMode = RenderMode.Vector) {
@@ -497,6 +925,14 @@ public static class AztecCode {
             QuietZone = opts.QuietZone,
             Foreground = opts.Foreground,
             Background = opts.Background
+        };
+    }
+
+    private static IcoRenderOptions ToIcoOptions(MatrixOptions? options) {
+        var opts = options ?? new MatrixOptions();
+        return new IcoRenderOptions {
+            Sizes = opts.IcoSizes ?? new[] { 16, 32, 48, 64, 128, 256 },
+            PreserveAspectRatio = opts.IcoPreserveAspectRatio
         };
     }
 

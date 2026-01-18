@@ -7,10 +7,19 @@ using CodeGlyphX.Rendering.Ascii;
 using CodeGlyphX.Rendering.Bmp;
 using CodeGlyphX.Rendering.Eps;
 using CodeGlyphX.Rendering.Html;
+using CodeGlyphX.Rendering.Ico;
 using CodeGlyphX.Rendering.Jpeg;
+using CodeGlyphX.Rendering.Pam;
+using CodeGlyphX.Rendering.Pbm;
+using CodeGlyphX.Rendering.Pgm;
 using CodeGlyphX.Rendering.Pdf;
+using CodeGlyphX.Rendering.Ppm;
 using CodeGlyphX.Rendering.Png;
 using CodeGlyphX.Rendering.Svg;
+using CodeGlyphX.Rendering.Svgz;
+using CodeGlyphX.Rendering.Tga;
+using CodeGlyphX.Rendering.Xbm;
+using CodeGlyphX.Rendering.Xpm;
 
 namespace CodeGlyphX;
 
@@ -71,6 +80,14 @@ public static class Pdf417Code {
     }
 
     /// <summary>
+    /// Renders PDF417 as SVGZ from bytes.
+    /// </summary>
+    public static byte[] Svgz(ReadOnlySpan<byte> data, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = EncodeBytes(data, encodeOptions);
+        return MatrixSvgzRenderer.Render(modules, BuildSvgOptions(renderOptions));
+    }
+
+    /// <summary>
     /// Renders PDF417 as HTML from bytes.
     /// </summary>
     public static string Html(ReadOnlySpan<byte> data, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
@@ -94,6 +111,70 @@ public static class Pdf417Code {
     public static byte[] Bmp(ReadOnlySpan<byte> data, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         var modules = EncodeBytes(data, encodeOptions);
         return MatrixBmpRenderer.Render(modules, BuildPngOptions(renderOptions));
+    }
+
+    /// <summary>
+    /// Renders PDF417 as PPM from bytes.
+    /// </summary>
+    public static byte[] Ppm(ReadOnlySpan<byte> data, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = EncodeBytes(data, encodeOptions);
+        return MatrixPpmRenderer.Render(modules, BuildPngOptions(renderOptions));
+    }
+
+    /// <summary>
+    /// Renders PDF417 as PBM from bytes.
+    /// </summary>
+    public static byte[] Pbm(ReadOnlySpan<byte> data, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = EncodeBytes(data, encodeOptions);
+        return MatrixPbmRenderer.Render(modules, BuildPngOptions(renderOptions));
+    }
+
+    /// <summary>
+    /// Renders PDF417 as PGM from bytes.
+    /// </summary>
+    public static byte[] Pgm(ReadOnlySpan<byte> data, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = EncodeBytes(data, encodeOptions);
+        return MatrixPgmRenderer.Render(modules, BuildPngOptions(renderOptions));
+    }
+
+    /// <summary>
+    /// Renders PDF417 as PAM from bytes.
+    /// </summary>
+    public static byte[] Pam(ReadOnlySpan<byte> data, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = EncodeBytes(data, encodeOptions);
+        return MatrixPamRenderer.Render(modules, BuildPngOptions(renderOptions));
+    }
+
+    /// <summary>
+    /// Renders PDF417 as XBM from bytes.
+    /// </summary>
+    public static string Xbm(ReadOnlySpan<byte> data, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = EncodeBytes(data, encodeOptions);
+        return MatrixXbmRenderer.Render(modules, BuildPngOptions(renderOptions));
+    }
+
+    /// <summary>
+    /// Renders PDF417 as XPM from bytes.
+    /// </summary>
+    public static string Xpm(ReadOnlySpan<byte> data, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = EncodeBytes(data, encodeOptions);
+        return MatrixXpmRenderer.Render(modules, BuildPngOptions(renderOptions));
+    }
+
+    /// <summary>
+    /// Renders PDF417 as TGA from bytes.
+    /// </summary>
+    public static byte[] Tga(ReadOnlySpan<byte> data, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = EncodeBytes(data, encodeOptions);
+        return MatrixTgaRenderer.Render(modules, BuildPngOptions(renderOptions));
+    }
+
+    /// <summary>
+    /// Renders PDF417 as ICO from bytes.
+    /// </summary>
+    public static byte[] Ico(ReadOnlySpan<byte> data, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = EncodeBytes(data, encodeOptions);
+        return MatrixIcoRenderer.Render(modules, BuildPngOptions(renderOptions), BuildIcoOptions(renderOptions));
     }
 
     /// <summary>
@@ -153,11 +234,27 @@ public static class Pdf417Code {
     }
 
     /// <summary>
+    /// Saves PDF417 SVGZ to a file for byte payloads.
+    /// </summary>
+    public static string SaveSvgz(ReadOnlySpan<byte> data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var svgz = Svgz(data, encodeOptions, renderOptions);
+        return svgz.WriteBinary(path);
+    }
+
+    /// <summary>
     /// Saves PDF417 SVG to a stream for byte payloads.
     /// </summary>
     public static void SaveSvg(ReadOnlySpan<byte> data, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         var svg = Svg(data, encodeOptions, renderOptions);
         svg.WriteText(stream);
+    }
+
+    /// <summary>
+    /// Saves PDF417 SVGZ to a stream for byte payloads.
+    /// </summary>
+    public static void SaveSvgz(ReadOnlySpan<byte> data, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = EncodeBytes(data, encodeOptions);
+        MatrixSvgzRenderer.RenderToStream(modules, BuildSvgOptions(renderOptions), stream);
     }
 
     /// <summary>
@@ -196,6 +293,70 @@ public static class Pdf417Code {
     public static string SaveBmp(ReadOnlySpan<byte> data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         var bmp = Bmp(data, encodeOptions, renderOptions);
         return bmp.WriteBinary(path);
+    }
+
+    /// <summary>
+    /// Saves PDF417 PPM to a file for byte payloads.
+    /// </summary>
+    public static string SavePpm(ReadOnlySpan<byte> data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var ppm = Ppm(data, encodeOptions, renderOptions);
+        return ppm.WriteBinary(path);
+    }
+
+    /// <summary>
+    /// Saves PDF417 PBM to a file for byte payloads.
+    /// </summary>
+    public static string SavePbm(ReadOnlySpan<byte> data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var pbm = Pbm(data, encodeOptions, renderOptions);
+        return pbm.WriteBinary(path);
+    }
+
+    /// <summary>
+    /// Saves PDF417 PGM to a file for byte payloads.
+    /// </summary>
+    public static string SavePgm(ReadOnlySpan<byte> data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var pgm = Pgm(data, encodeOptions, renderOptions);
+        return pgm.WriteBinary(path);
+    }
+
+    /// <summary>
+    /// Saves PDF417 PAM to a file for byte payloads.
+    /// </summary>
+    public static string SavePam(ReadOnlySpan<byte> data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var pam = Pam(data, encodeOptions, renderOptions);
+        return pam.WriteBinary(path);
+    }
+
+    /// <summary>
+    /// Saves PDF417 XBM to a file for byte payloads.
+    /// </summary>
+    public static string SaveXbm(ReadOnlySpan<byte> data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var xbm = Xbm(data, encodeOptions, renderOptions);
+        return xbm.WriteText(path);
+    }
+
+    /// <summary>
+    /// Saves PDF417 XPM to a file for byte payloads.
+    /// </summary>
+    public static string SaveXpm(ReadOnlySpan<byte> data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var xpm = Xpm(data, encodeOptions, renderOptions);
+        return xpm.WriteText(path);
+    }
+
+    /// <summary>
+    /// Saves PDF417 TGA to a file for byte payloads.
+    /// </summary>
+    public static string SaveTga(ReadOnlySpan<byte> data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var tga = Tga(data, encodeOptions, renderOptions);
+        return tga.WriteBinary(path);
+    }
+
+    /// <summary>
+    /// Saves PDF417 ICO to a file for byte payloads.
+    /// </summary>
+    public static string SaveIco(ReadOnlySpan<byte> data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var ico = Ico(data, encodeOptions, renderOptions);
+        return ico.WriteBinary(path);
     }
 
     /// <summary>
@@ -243,6 +404,70 @@ public static class Pdf417Code {
     }
 
     /// <summary>
+    /// Saves PDF417 PPM to a stream for byte payloads.
+    /// </summary>
+    public static void SavePpm(ReadOnlySpan<byte> data, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = EncodeBytes(data, encodeOptions);
+        MatrixPpmRenderer.RenderToStream(modules, BuildPngOptions(renderOptions), stream);
+    }
+
+    /// <summary>
+    /// Saves PDF417 PBM to a stream for byte payloads.
+    /// </summary>
+    public static void SavePbm(ReadOnlySpan<byte> data, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = EncodeBytes(data, encodeOptions);
+        MatrixPbmRenderer.RenderToStream(modules, BuildPngOptions(renderOptions), stream);
+    }
+
+    /// <summary>
+    /// Saves PDF417 PGM to a stream for byte payloads.
+    /// </summary>
+    public static void SavePgm(ReadOnlySpan<byte> data, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = EncodeBytes(data, encodeOptions);
+        MatrixPgmRenderer.RenderToStream(modules, BuildPngOptions(renderOptions), stream);
+    }
+
+    /// <summary>
+    /// Saves PDF417 PAM to a stream for byte payloads.
+    /// </summary>
+    public static void SavePam(ReadOnlySpan<byte> data, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = EncodeBytes(data, encodeOptions);
+        MatrixPamRenderer.RenderToStream(modules, BuildPngOptions(renderOptions), stream);
+    }
+
+    /// <summary>
+    /// Saves PDF417 XBM to a stream for byte payloads.
+    /// </summary>
+    public static void SaveXbm(ReadOnlySpan<byte> data, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = EncodeBytes(data, encodeOptions);
+        MatrixXbmRenderer.RenderToStream(modules, BuildPngOptions(renderOptions), stream);
+    }
+
+    /// <summary>
+    /// Saves PDF417 XPM to a stream for byte payloads.
+    /// </summary>
+    public static void SaveXpm(ReadOnlySpan<byte> data, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = EncodeBytes(data, encodeOptions);
+        MatrixXpmRenderer.RenderToStream(modules, BuildPngOptions(renderOptions), stream);
+    }
+
+    /// <summary>
+    /// Saves PDF417 TGA to a stream for byte payloads.
+    /// </summary>
+    public static void SaveTga(ReadOnlySpan<byte> data, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = EncodeBytes(data, encodeOptions);
+        MatrixTgaRenderer.RenderToStream(modules, BuildPngOptions(renderOptions), stream);
+    }
+
+    /// <summary>
+    /// Saves PDF417 ICO to a stream for byte payloads.
+    /// </summary>
+    public static void SaveIco(ReadOnlySpan<byte> data, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = EncodeBytes(data, encodeOptions);
+        MatrixIcoRenderer.RenderToStream(modules, BuildPngOptions(renderOptions), stream, BuildIcoOptions(renderOptions));
+    }
+
+    /// <summary>
     /// Saves PDF417 PDF to a stream for byte payloads.
     /// </summary>
     /// <param name="data">Payload bytes.</param>
@@ -269,10 +494,15 @@ public static class Pdf417Code {
     }
 
     /// <summary>
-    /// Saves PDF417 to a file for byte payloads based on extension (.png/.svg/.html/.jpg/.bmp/.pdf/.eps).
+    /// Saves PDF417 to a file for byte payloads based on extension (.png/.svg/.svgz/.html/.jpg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps).
     /// Defaults to PNG when no extension is provided.
     /// </summary>
     public static string Save(ReadOnlySpan<byte> data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, string? title = null) {
+        if (path.EndsWith(".svgz", StringComparison.OrdinalIgnoreCase) ||
+            path.EndsWith(".svg.gz", StringComparison.OrdinalIgnoreCase)) {
+            return SaveSvgz(data, path, encodeOptions, renderOptions);
+        }
+
         var ext = Path.GetExtension(path);
         if (string.IsNullOrWhiteSpace(ext)) return SavePng(data, path, encodeOptions, renderOptions);
 
@@ -289,6 +519,24 @@ public static class Pdf417Code {
                 return SaveJpeg(data, path, encodeOptions, renderOptions);
             case ".bmp":
                 return SaveBmp(data, path, encodeOptions, renderOptions);
+            case ".ppm":
+                return SavePpm(data, path, encodeOptions, renderOptions);
+            case ".pbm":
+                return SavePbm(data, path, encodeOptions, renderOptions);
+            case ".pgm":
+                return SavePgm(data, path, encodeOptions, renderOptions);
+            case ".pam":
+                return SavePam(data, path, encodeOptions, renderOptions);
+            case ".xbm":
+                return SaveXbm(data, path, encodeOptions, renderOptions);
+            case ".xpm":
+                return SaveXpm(data, path, encodeOptions, renderOptions);
+            case ".tga":
+                return SaveTga(data, path, encodeOptions, renderOptions);
+            case ".ico":
+                return SaveIco(data, path, encodeOptions, renderOptions);
+            case ".svgz":
+                return SaveSvgz(data, path, encodeOptions, renderOptions);
             case ".pdf":
                 return SavePdf(data, path, encodeOptions, renderOptions);
             case ".eps":
@@ -325,11 +573,27 @@ public static class Pdf417Code {
     }
 
     /// <summary>
+    /// Renders PDF417 as SVGZ.
+    /// </summary>
+    public static byte[] Svgz(string text, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = Encode(text, encodeOptions);
+        return MatrixSvgzRenderer.Render(modules, BuildSvgOptions(renderOptions));
+    }
+
+    /// <summary>
     /// Renders PDF417 as SVG from bytes.
     /// </summary>
     public static string Svg(byte[] data, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         var modules = EncodeBytes(data, encodeOptions);
         return MatrixSvgRenderer.Render(modules, BuildSvgOptions(renderOptions));
+    }
+
+    /// <summary>
+    /// Renders PDF417 as SVGZ from bytes.
+    /// </summary>
+    public static byte[] Svgz(byte[] data, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = EncodeBytes(data, encodeOptions);
+        return MatrixSvgzRenderer.Render(modules, BuildSvgOptions(renderOptions));
     }
 
     /// <summary>
@@ -364,6 +628,70 @@ public static class Pdf417Code {
     public static byte[] Bmp(string text, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         var modules = Encode(text, encodeOptions);
         return MatrixBmpRenderer.Render(modules, BuildPngOptions(renderOptions));
+    }
+
+    /// <summary>
+    /// Renders PDF417 as PPM.
+    /// </summary>
+    public static byte[] Ppm(string text, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = Encode(text, encodeOptions);
+        return MatrixPpmRenderer.Render(modules, BuildPngOptions(renderOptions));
+    }
+
+    /// <summary>
+    /// Renders PDF417 as PBM.
+    /// </summary>
+    public static byte[] Pbm(string text, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = Encode(text, encodeOptions);
+        return MatrixPbmRenderer.Render(modules, BuildPngOptions(renderOptions));
+    }
+
+    /// <summary>
+    /// Renders PDF417 as PGM.
+    /// </summary>
+    public static byte[] Pgm(string text, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = Encode(text, encodeOptions);
+        return MatrixPgmRenderer.Render(modules, BuildPngOptions(renderOptions));
+    }
+
+    /// <summary>
+    /// Renders PDF417 as PAM.
+    /// </summary>
+    public static byte[] Pam(string text, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = Encode(text, encodeOptions);
+        return MatrixPamRenderer.Render(modules, BuildPngOptions(renderOptions));
+    }
+
+    /// <summary>
+    /// Renders PDF417 as XBM.
+    /// </summary>
+    public static string Xbm(string text, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = Encode(text, encodeOptions);
+        return MatrixXbmRenderer.Render(modules, BuildPngOptions(renderOptions));
+    }
+
+    /// <summary>
+    /// Renders PDF417 as XPM.
+    /// </summary>
+    public static string Xpm(string text, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = Encode(text, encodeOptions);
+        return MatrixXpmRenderer.Render(modules, BuildPngOptions(renderOptions));
+    }
+
+    /// <summary>
+    /// Renders PDF417 as TGA.
+    /// </summary>
+    public static byte[] Tga(string text, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = Encode(text, encodeOptions);
+        return MatrixTgaRenderer.Render(modules, BuildPngOptions(renderOptions));
+    }
+
+    /// <summary>
+    /// Renders PDF417 as ICO.
+    /// </summary>
+    public static byte[] Ico(string text, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = Encode(text, encodeOptions);
+        return MatrixIcoRenderer.Render(modules, BuildPngOptions(renderOptions), BuildIcoOptions(renderOptions));
     }
 
     /// <summary>
@@ -414,6 +742,70 @@ public static class Pdf417Code {
     public static byte[] Bmp(byte[] data, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         var modules = EncodeBytes(data, encodeOptions);
         return MatrixBmpRenderer.Render(modules, BuildPngOptions(renderOptions));
+    }
+
+    /// <summary>
+    /// Renders PDF417 as PPM.
+    /// </summary>
+    public static byte[] Ppm(byte[] data, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = EncodeBytes(data, encodeOptions);
+        return MatrixPpmRenderer.Render(modules, BuildPngOptions(renderOptions));
+    }
+
+    /// <summary>
+    /// Renders PDF417 as PBM.
+    /// </summary>
+    public static byte[] Pbm(byte[] data, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = EncodeBytes(data, encodeOptions);
+        return MatrixPbmRenderer.Render(modules, BuildPngOptions(renderOptions));
+    }
+
+    /// <summary>
+    /// Renders PDF417 as PGM.
+    /// </summary>
+    public static byte[] Pgm(byte[] data, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = EncodeBytes(data, encodeOptions);
+        return MatrixPgmRenderer.Render(modules, BuildPngOptions(renderOptions));
+    }
+
+    /// <summary>
+    /// Renders PDF417 as PAM.
+    /// </summary>
+    public static byte[] Pam(byte[] data, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = EncodeBytes(data, encodeOptions);
+        return MatrixPamRenderer.Render(modules, BuildPngOptions(renderOptions));
+    }
+
+    /// <summary>
+    /// Renders PDF417 as XBM.
+    /// </summary>
+    public static string Xbm(byte[] data, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = EncodeBytes(data, encodeOptions);
+        return MatrixXbmRenderer.Render(modules, BuildPngOptions(renderOptions));
+    }
+
+    /// <summary>
+    /// Renders PDF417 as XPM.
+    /// </summary>
+    public static string Xpm(byte[] data, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = EncodeBytes(data, encodeOptions);
+        return MatrixXpmRenderer.Render(modules, BuildPngOptions(renderOptions));
+    }
+
+    /// <summary>
+    /// Renders PDF417 as TGA.
+    /// </summary>
+    public static byte[] Tga(byte[] data, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = EncodeBytes(data, encodeOptions);
+        return MatrixTgaRenderer.Render(modules, BuildPngOptions(renderOptions));
+    }
+
+    /// <summary>
+    /// Renders PDF417 as ICO.
+    /// </summary>
+    public static byte[] Ico(byte[] data, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = EncodeBytes(data, encodeOptions);
+        return MatrixIcoRenderer.Render(modules, BuildPngOptions(renderOptions), BuildIcoOptions(renderOptions));
     }
 
     /// <summary>
@@ -489,11 +881,27 @@ public static class Pdf417Code {
     }
 
     /// <summary>
+    /// Saves PDF417 SVGZ to a file for text payloads.
+    /// </summary>
+    public static string SaveSvgz(string text, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var svgz = Svgz(text, encodeOptions, renderOptions);
+        return svgz.WriteBinary(path);
+    }
+
+    /// <summary>
     /// Saves PDF417 SVG to a file for byte payloads.
     /// </summary>
     public static string SaveSvg(byte[] data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         var svg = Svg(data, encodeOptions, renderOptions);
         return svg.WriteText(path);
+    }
+
+    /// <summary>
+    /// Saves PDF417 SVGZ to a file for byte payloads.
+    /// </summary>
+    public static string SaveSvgz(byte[] data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var svgz = Svgz(data, encodeOptions, renderOptions);
+        return svgz.WriteBinary(path);
     }
 
     /// <summary>
@@ -505,11 +913,27 @@ public static class Pdf417Code {
     }
 
     /// <summary>
+    /// Saves PDF417 SVGZ to a stream for text payloads.
+    /// </summary>
+    public static void SaveSvgz(string text, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = Encode(text, encodeOptions);
+        MatrixSvgzRenderer.RenderToStream(modules, BuildSvgOptions(renderOptions), stream);
+    }
+
+    /// <summary>
     /// Saves PDF417 SVG to a stream for byte payloads.
     /// </summary>
     public static void SaveSvg(byte[] data, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         var svg = Svg(data, encodeOptions, renderOptions);
         svg.WriteText(stream);
+    }
+
+    /// <summary>
+    /// Saves PDF417 SVGZ to a stream for byte payloads.
+    /// </summary>
+    public static void SaveSvgz(byte[] data, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = EncodeBytes(data, encodeOptions);
+        MatrixSvgzRenderer.RenderToStream(modules, BuildSvgOptions(renderOptions), stream);
     }
 
     /// <summary>
@@ -573,6 +997,70 @@ public static class Pdf417Code {
     }
 
     /// <summary>
+    /// Saves PDF417 PPM to a file.
+    /// </summary>
+    public static string SavePpm(string text, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var ppm = Ppm(text, encodeOptions, renderOptions);
+        return ppm.WriteBinary(path);
+    }
+
+    /// <summary>
+    /// Saves PDF417 PBM to a file.
+    /// </summary>
+    public static string SavePbm(string text, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var pbm = Pbm(text, encodeOptions, renderOptions);
+        return pbm.WriteBinary(path);
+    }
+
+    /// <summary>
+    /// Saves PDF417 PGM to a file for text payloads.
+    /// </summary>
+    public static string SavePgm(string text, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var pgm = Pgm(text, encodeOptions, renderOptions);
+        return pgm.WriteBinary(path);
+    }
+
+    /// <summary>
+    /// Saves PDF417 PAM to a file for text payloads.
+    /// </summary>
+    public static string SavePam(string text, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var pam = Pam(text, encodeOptions, renderOptions);
+        return pam.WriteBinary(path);
+    }
+
+    /// <summary>
+    /// Saves PDF417 XBM to a file for text payloads.
+    /// </summary>
+    public static string SaveXbm(string text, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var xbm = Xbm(text, encodeOptions, renderOptions);
+        return xbm.WriteText(path);
+    }
+
+    /// <summary>
+    /// Saves PDF417 XPM to a file for text payloads.
+    /// </summary>
+    public static string SaveXpm(string text, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var xpm = Xpm(text, encodeOptions, renderOptions);
+        return xpm.WriteText(path);
+    }
+
+    /// <summary>
+    /// Saves PDF417 TGA to a file.
+    /// </summary>
+    public static string SaveTga(string text, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var tga = Tga(text, encodeOptions, renderOptions);
+        return tga.WriteBinary(path);
+    }
+
+    /// <summary>
+    /// Saves PDF417 ICO to a file.
+    /// </summary>
+    public static string SaveIco(string text, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var ico = Ico(text, encodeOptions, renderOptions);
+        return ico.WriteBinary(path);
+    }
+
+    /// <summary>
     /// Saves PDF417 PDF to a file.
     /// </summary>
     /// <param name="text">Input text.</param>
@@ -612,6 +1100,70 @@ public static class Pdf417Code {
     public static string SaveBmp(byte[] data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         var bmp = Bmp(data, encodeOptions, renderOptions);
         return bmp.WriteBinary(path);
+    }
+
+    /// <summary>
+    /// Saves PDF417 PPM to a file for byte payloads.
+    /// </summary>
+    public static string SavePpm(byte[] data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var ppm = Ppm(data, encodeOptions, renderOptions);
+        return ppm.WriteBinary(path);
+    }
+
+    /// <summary>
+    /// Saves PDF417 PBM to a file for byte payloads.
+    /// </summary>
+    public static string SavePbm(byte[] data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var pbm = Pbm(data, encodeOptions, renderOptions);
+        return pbm.WriteBinary(path);
+    }
+
+    /// <summary>
+    /// Saves PDF417 PGM to a file for byte payloads.
+    /// </summary>
+    public static string SavePgm(byte[] data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var pgm = Pgm(data, encodeOptions, renderOptions);
+        return pgm.WriteBinary(path);
+    }
+
+    /// <summary>
+    /// Saves PDF417 PAM to a file for byte payloads.
+    /// </summary>
+    public static string SavePam(byte[] data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var pam = Pam(data, encodeOptions, renderOptions);
+        return pam.WriteBinary(path);
+    }
+
+    /// <summary>
+    /// Saves PDF417 XBM to a file for byte payloads.
+    /// </summary>
+    public static string SaveXbm(byte[] data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var xbm = Xbm(data, encodeOptions, renderOptions);
+        return xbm.WriteText(path);
+    }
+
+    /// <summary>
+    /// Saves PDF417 XPM to a file for byte payloads.
+    /// </summary>
+    public static string SaveXpm(byte[] data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var xpm = Xpm(data, encodeOptions, renderOptions);
+        return xpm.WriteText(path);
+    }
+
+    /// <summary>
+    /// Saves PDF417 TGA to a file for byte payloads.
+    /// </summary>
+    public static string SaveTga(byte[] data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var tga = Tga(data, encodeOptions, renderOptions);
+        return tga.WriteBinary(path);
+    }
+
+    /// <summary>
+    /// Saves PDF417 ICO to a file for byte payloads.
+    /// </summary>
+    public static string SaveIco(byte[] data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var ico = Ico(data, encodeOptions, renderOptions);
+        return ico.WriteBinary(path);
     }
 
     /// <summary>
@@ -659,6 +1211,70 @@ public static class Pdf417Code {
     }
 
     /// <summary>
+    /// Saves PDF417 PPM to a stream.
+    /// </summary>
+    public static void SavePpm(string text, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = Encode(text, encodeOptions);
+        MatrixPpmRenderer.RenderToStream(modules, BuildPngOptions(renderOptions), stream);
+    }
+
+    /// <summary>
+    /// Saves PDF417 PBM to a stream.
+    /// </summary>
+    public static void SavePbm(string text, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = Encode(text, encodeOptions);
+        MatrixPbmRenderer.RenderToStream(modules, BuildPngOptions(renderOptions), stream);
+    }
+
+    /// <summary>
+    /// Saves PDF417 PGM to a stream.
+    /// </summary>
+    public static void SavePgm(string text, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = Encode(text, encodeOptions);
+        MatrixPgmRenderer.RenderToStream(modules, BuildPngOptions(renderOptions), stream);
+    }
+
+    /// <summary>
+    /// Saves PDF417 PAM to a stream.
+    /// </summary>
+    public static void SavePam(string text, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = Encode(text, encodeOptions);
+        MatrixPamRenderer.RenderToStream(modules, BuildPngOptions(renderOptions), stream);
+    }
+
+    /// <summary>
+    /// Saves PDF417 XBM to a stream.
+    /// </summary>
+    public static void SaveXbm(string text, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = Encode(text, encodeOptions);
+        MatrixXbmRenderer.RenderToStream(modules, BuildPngOptions(renderOptions), stream);
+    }
+
+    /// <summary>
+    /// Saves PDF417 XPM to a stream.
+    /// </summary>
+    public static void SaveXpm(string text, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = Encode(text, encodeOptions);
+        MatrixXpmRenderer.RenderToStream(modules, BuildPngOptions(renderOptions), stream);
+    }
+
+    /// <summary>
+    /// Saves PDF417 TGA to a stream.
+    /// </summary>
+    public static void SaveTga(string text, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = Encode(text, encodeOptions);
+        MatrixTgaRenderer.RenderToStream(modules, BuildPngOptions(renderOptions), stream);
+    }
+
+    /// <summary>
+    /// Saves PDF417 ICO to a stream.
+    /// </summary>
+    public static void SaveIco(string text, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = Encode(text, encodeOptions);
+        MatrixIcoRenderer.RenderToStream(modules, BuildPngOptions(renderOptions), stream, BuildIcoOptions(renderOptions));
+    }
+
+    /// <summary>
     /// Saves PDF417 PDF to a stream.
     /// </summary>
     /// <param name="text">Input text.</param>
@@ -703,6 +1319,70 @@ public static class Pdf417Code {
     }
 
     /// <summary>
+    /// Saves PDF417 PPM to a stream for byte payloads.
+    /// </summary>
+    public static void SavePpm(byte[] data, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = EncodeBytes(data, encodeOptions);
+        MatrixPpmRenderer.RenderToStream(modules, BuildPngOptions(renderOptions), stream);
+    }
+
+    /// <summary>
+    /// Saves PDF417 PBM to a stream for byte payloads.
+    /// </summary>
+    public static void SavePbm(byte[] data, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = EncodeBytes(data, encodeOptions);
+        MatrixPbmRenderer.RenderToStream(modules, BuildPngOptions(renderOptions), stream);
+    }
+
+    /// <summary>
+    /// Saves PDF417 PGM to a stream for byte payloads.
+    /// </summary>
+    public static void SavePgm(byte[] data, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = EncodeBytes(data, encodeOptions);
+        MatrixPgmRenderer.RenderToStream(modules, BuildPngOptions(renderOptions), stream);
+    }
+
+    /// <summary>
+    /// Saves PDF417 PAM to a stream for byte payloads.
+    /// </summary>
+    public static void SavePam(byte[] data, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = EncodeBytes(data, encodeOptions);
+        MatrixPamRenderer.RenderToStream(modules, BuildPngOptions(renderOptions), stream);
+    }
+
+    /// <summary>
+    /// Saves PDF417 XBM to a stream for byte payloads.
+    /// </summary>
+    public static void SaveXbm(byte[] data, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = EncodeBytes(data, encodeOptions);
+        MatrixXbmRenderer.RenderToStream(modules, BuildPngOptions(renderOptions), stream);
+    }
+
+    /// <summary>
+    /// Saves PDF417 XPM to a stream for byte payloads.
+    /// </summary>
+    public static void SaveXpm(byte[] data, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = EncodeBytes(data, encodeOptions);
+        MatrixXpmRenderer.RenderToStream(modules, BuildPngOptions(renderOptions), stream);
+    }
+
+    /// <summary>
+    /// Saves PDF417 TGA to a stream for byte payloads.
+    /// </summary>
+    public static void SaveTga(byte[] data, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = EncodeBytes(data, encodeOptions);
+        MatrixTgaRenderer.RenderToStream(modules, BuildPngOptions(renderOptions), stream);
+    }
+
+    /// <summary>
+    /// Saves PDF417 ICO to a stream for byte payloads.
+    /// </summary>
+    public static void SaveIco(byte[] data, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = EncodeBytes(data, encodeOptions);
+        MatrixIcoRenderer.RenderToStream(modules, BuildPngOptions(renderOptions), stream, BuildIcoOptions(renderOptions));
+    }
+
+    /// <summary>
     /// Saves PDF417 PDF to a stream for byte payloads.
     /// </summary>
     /// <param name="data">Payload bytes.</param>
@@ -729,10 +1409,15 @@ public static class Pdf417Code {
     }
 
     /// <summary>
-    /// Saves PDF417 to a file based on extension (.png/.svg/.html/.jpg/.bmp/.pdf/.eps).
+    /// Saves PDF417 to a file based on extension (.png/.svg/.svgz/.html/.jpg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps).
     /// Defaults to PNG when no extension is provided.
     /// </summary>
     public static string Save(string text, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, string? title = null) {
+        if (path.EndsWith(".svgz", StringComparison.OrdinalIgnoreCase) ||
+            path.EndsWith(".svg.gz", StringComparison.OrdinalIgnoreCase)) {
+            return SaveSvgz(text, path, encodeOptions, renderOptions);
+        }
+
         var ext = Path.GetExtension(path);
         if (string.IsNullOrWhiteSpace(ext)) return SavePng(text, path, encodeOptions, renderOptions);
 
@@ -749,6 +1434,24 @@ public static class Pdf417Code {
                 return SaveJpeg(text, path, encodeOptions, renderOptions);
             case ".bmp":
                 return SaveBmp(text, path, encodeOptions, renderOptions);
+            case ".ppm":
+                return SavePpm(text, path, encodeOptions, renderOptions);
+            case ".pbm":
+                return SavePbm(text, path, encodeOptions, renderOptions);
+            case ".pgm":
+                return SavePgm(text, path, encodeOptions, renderOptions);
+            case ".pam":
+                return SavePam(text, path, encodeOptions, renderOptions);
+            case ".xbm":
+                return SaveXbm(text, path, encodeOptions, renderOptions);
+            case ".xpm":
+                return SaveXpm(text, path, encodeOptions, renderOptions);
+            case ".tga":
+                return SaveTga(text, path, encodeOptions, renderOptions);
+            case ".ico":
+                return SaveIco(text, path, encodeOptions, renderOptions);
+            case ".svgz":
+                return SaveSvgz(text, path, encodeOptions, renderOptions);
             case ".pdf":
                 return SavePdf(text, path, encodeOptions, renderOptions);
             case ".eps":
@@ -760,10 +1463,15 @@ public static class Pdf417Code {
     }
 
     /// <summary>
-    /// Saves PDF417 to a file for byte payloads based on extension (.png/.svg/.html/.jpg/.bmp/.pdf/.eps).
+    /// Saves PDF417 to a file for byte payloads based on extension (.png/.svg/.svgz/.html/.jpg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps).
     /// Defaults to PNG when no extension is provided.
     /// </summary>
     public static string Save(byte[] data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, string? title = null) {
+        if (path.EndsWith(".svgz", StringComparison.OrdinalIgnoreCase) ||
+            path.EndsWith(".svg.gz", StringComparison.OrdinalIgnoreCase)) {
+            return SaveSvgz(data, path, encodeOptions, renderOptions);
+        }
+
         var ext = Path.GetExtension(path);
         if (string.IsNullOrWhiteSpace(ext)) return SavePng(data, path, encodeOptions, renderOptions);
 
@@ -780,6 +1488,24 @@ public static class Pdf417Code {
                 return SaveJpeg(data, path, encodeOptions, renderOptions);
             case ".bmp":
                 return SaveBmp(data, path, encodeOptions, renderOptions);
+            case ".ppm":
+                return SavePpm(data, path, encodeOptions, renderOptions);
+            case ".pbm":
+                return SavePbm(data, path, encodeOptions, renderOptions);
+            case ".pgm":
+                return SavePgm(data, path, encodeOptions, renderOptions);
+            case ".pam":
+                return SavePam(data, path, encodeOptions, renderOptions);
+            case ".xbm":
+                return SaveXbm(data, path, encodeOptions, renderOptions);
+            case ".xpm":
+                return SaveXpm(data, path, encodeOptions, renderOptions);
+            case ".tga":
+                return SaveTga(data, path, encodeOptions, renderOptions);
+            case ".ico":
+                return SaveIco(data, path, encodeOptions, renderOptions);
+            case ".svgz":
+                return SaveSvgz(data, path, encodeOptions, renderOptions);
             case ".pdf":
                 return SavePdf(data, path, encodeOptions, renderOptions);
             case ".eps":
@@ -854,6 +1580,14 @@ public static class Pdf417Code {
             QuietZone = opts.QuietZone,
             Foreground = opts.Foreground,
             Background = opts.Background
+        };
+    }
+
+    private static IcoRenderOptions BuildIcoOptions(MatrixOptions? options) {
+        var opts = options ?? new MatrixOptions();
+        return new IcoRenderOptions {
+            Sizes = opts.IcoSizes ?? new[] { 16, 32, 48, 64, 128, 256 },
+            PreserveAspectRatio = opts.IcoPreserveAspectRatio
         };
     }
 
@@ -955,6 +1689,22 @@ public static class Pdf417Code {
         /// </summary>
         public Pdf417Builder WithHtmlEmailSafeTable(bool enabled = true) {
             _renderOptions.HtmlEmailSafeTable = enabled;
+            return this;
+        }
+
+        /// <summary>
+        /// Sets ICO output sizes (in pixels).
+        /// </summary>
+        public Pdf417Builder WithIcoSizes(params int[] sizes) {
+            _renderOptions.IcoSizes = sizes;
+            return this;
+        }
+
+        /// <summary>
+        /// Sets ICO aspect ratio preservation behavior.
+        /// </summary>
+        public Pdf417Builder WithIcoPreserveAspectRatio(bool enabled = true) {
+            _renderOptions.IcoPreserveAspectRatio = enabled;
             return this;
         }
 

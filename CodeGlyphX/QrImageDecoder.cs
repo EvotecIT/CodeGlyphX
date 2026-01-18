@@ -57,7 +57,7 @@ public static class QrImageDecoder {
     }
 
     /// <summary>
-    /// Attempts to decode a QR code from common image formats (PNG/BMP/PPM/TGA).
+    /// Attempts to decode a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).
     /// </summary>
     public static bool TryDecodeImage(byte[] image, out QrDecoded decoded) {
 #if NET8_0_OR_GREATER
@@ -74,7 +74,7 @@ public static class QrImageDecoder {
     }
 
     /// <summary>
-    /// Attempts to decode a QR code from common image formats (PNG/BMP/PPM/TGA), with diagnostics and profile options.
+    /// Attempts to decode a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA), with diagnostics and profile options.
     /// </summary>
     public static bool TryDecodeImage(byte[] image, out QrDecoded decoded, out QrPixelDecodeInfo info, QrPixelDecodeOptions? options = null) {
 #if NET8_0_OR_GREATER
@@ -93,7 +93,7 @@ public static class QrImageDecoder {
     }
 
     /// <summary>
-    /// Attempts to decode a QR code from common image formats (PNG/BMP/PPM/TGA).
+    /// Attempts to decode a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).
     /// </summary>
     public static bool TryDecodeImage(byte[] image, QrPixelDecodeOptions? options, out QrDecoded decoded) {
 #if NET8_0_OR_GREATER
@@ -110,7 +110,7 @@ public static class QrImageDecoder {
     }
 
     /// <summary>
-    /// Attempts to decode all QR codes from common image formats (PNG/BMP/PPM/TGA).
+    /// Attempts to decode all QR codes from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).
     /// </summary>
     public static bool TryDecodeAllImage(byte[] image, out QrDecoded[] decoded) {
 #if NET8_0_OR_GREATER
@@ -127,7 +127,7 @@ public static class QrImageDecoder {
     }
 
     /// <summary>
-    /// Attempts to decode all QR codes from common image formats (PNG/BMP/PPM/TGA).
+    /// Attempts to decode all QR codes from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).
     /// </summary>
     public static bool TryDecodeAllImage(byte[] image, QrPixelDecodeOptions? options, out QrDecoded[] decoded) {
 #if NET8_0_OR_GREATER
@@ -144,7 +144,7 @@ public static class QrImageDecoder {
     }
 
     /// <summary>
-    /// Attempts to decode a QR code from an image stream (PNG/BMP/PPM/TGA).
+    /// Attempts to decode a QR code from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).
     /// </summary>
     public static bool TryDecodeImage(Stream stream, out QrDecoded decoded) {
 #if NET8_0_OR_GREATER
@@ -158,7 +158,7 @@ public static class QrImageDecoder {
     }
 
     /// <summary>
-    /// Attempts to decode a QR code from an image stream (PNG/BMP/PPM/TGA), with diagnostics and profile options.
+    /// Attempts to decode a QR code from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA), with diagnostics and profile options.
     /// </summary>
     public static bool TryDecodeImage(Stream stream, out QrDecoded decoded, out QrPixelDecodeInfo info, QrPixelDecodeOptions? options = null) {
 #if NET8_0_OR_GREATER
@@ -173,7 +173,7 @@ public static class QrImageDecoder {
     }
 
     /// <summary>
-    /// Attempts to decode a QR code from an image stream (PNG/BMP/PPM/TGA).
+    /// Attempts to decode a QR code from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).
     /// </summary>
     public static bool TryDecodeImage(Stream stream, QrPixelDecodeOptions? options, out QrDecoded decoded) {
 #if NET8_0_OR_GREATER
@@ -187,7 +187,7 @@ public static class QrImageDecoder {
     }
 
     /// <summary>
-    /// Attempts to decode all QR codes from an image stream (PNG/BMP/PPM/TGA).
+    /// Attempts to decode all QR codes from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).
     /// </summary>
     public static bool TryDecodeAllImage(Stream stream, out QrDecoded[] decoded) {
 #if NET8_0_OR_GREATER
@@ -201,7 +201,7 @@ public static class QrImageDecoder {
     }
 
     /// <summary>
-    /// Attempts to decode all QR codes from an image stream (PNG/BMP/PPM/TGA).
+    /// Attempts to decode all QR codes from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).
     /// </summary>
     public static bool TryDecodeAllImage(Stream stream, QrPixelDecodeOptions? options, out QrDecoded[] decoded) {
 #if NET8_0_OR_GREATER
