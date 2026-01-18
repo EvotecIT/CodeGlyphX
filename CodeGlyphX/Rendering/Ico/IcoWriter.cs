@@ -25,6 +25,9 @@ public static class IcoWriter {
         if (!TryGetPngSize(pngBytes, out var width, out var height)) {
             throw new FormatException("Invalid PNG data.");
         }
+        if (width > 256 || height > 256) {
+            throw new FormatException("ICO images must be 256x256 or smaller.");
+        }
 
         var w = (byte)(width >= 256 ? 0 : width);
         var h = (byte)(height >= 256 ? 0 : height);
@@ -90,6 +93,9 @@ public static class IcoWriter {
             if (png is null) throw new ArgumentNullException(nameof(pngBytes), "PNG entry cannot be null.");
             if (!TryGetPngSize(png, out var width, out var height)) {
                 throw new FormatException("Invalid PNG data.");
+            }
+            if (width > 256 || height > 256) {
+                throw new FormatException("ICO images must be 256x256 or smaller.");
             }
             widths[i] = width;
             heights[i] = height;
