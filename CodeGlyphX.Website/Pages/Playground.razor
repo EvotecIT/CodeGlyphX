@@ -1,0 +1,779 @@
+@page "/playground"
+@using CodeGlyphX
+@using CodeGlyphX.Payloads
+@using CodeGlyphX.Rendering.Png
+
+<PageTitle>Playground - CodeGlyphX</PageTitle>
+
+<div class="playground">
+    <h1>Interactive Playground</h1>
+    <p class="playground-subtitle">
+        Generate QR codes and barcodes in real-time using the actual CodeGlyphX library running in your browser via WebAssembly.
+    </p>
+
+    <div class="playground-grid">
+        <div class="card">
+            <h2>Configuration</h2>
+
+            <div class="form-group">
+                <label>Code Type</label>
+                <select @bind="SelectedCategory" @bind:after="OnCategoryChanged">
+                    <option value="QR">QR Code</option>
+                    <option value="SpecialQR">Special QR Codes</option>
+                    <option value="Barcode">1D Barcodes</option>
+                </select>
+            </div>
+
+            @if (SelectedCategory == "QR")
+            {
+                <div class="form-group">
+                    <label>Content</label>
+                    <textarea rows="3" @bind="Content" @bind:after="GenerateCode" placeholder="Enter text, URL, or data..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Error Correction Level</label>
+                    <select @bind="ErrorCorrection" @bind:after="GenerateCode">
+                        <option value="L">L - Low (7% recovery)</option>
+                        <option value="M">M - Medium (15% recovery)</option>
+                        <option value="Q">Q - Quartile (25% recovery)</option>
+                        <option value="H">H - High (30% recovery)</option>
+                    </select>
+                </div>
+
+                <details class="styling-section">
+                    <summary>Styling Options</summary>
+
+                    <div class="form-group">
+                        <label>Module Shape</label>
+                        <select @bind="ModuleShape" @bind:after="GenerateCode">
+                            <option value="Square">Square (Default)</option>
+                            <option value="Circle">Circle</option>
+                            <option value="Rounded">Rounded</option>
+                        </select>
+                    </div>
+
+                    @if (ModuleShape == "Rounded")
+                    {
+                        <div class="form-group">
+                            <label>Corner Radius: @CornerRadius px</label>
+                            <input type="range" min="1" max="6" @bind="CornerRadius" @bind:after="GenerateCode" />
+                        </div>
+                    }
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Foreground Color</label>
+                            <input type="color" @bind="ForegroundColor" @bind:after="GenerateCode" />
+                        </div>
+                        <div class="form-group">
+                            <label>Background Color</label>
+                            <input type="color" @bind="BackgroundColor" @bind:after="GenerateCode" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" @bind="CustomEyes" @bind:after="GenerateCode" />
+                            Custom Eye Styling
+                        </label>
+                    </div>
+
+                    @if (CustomEyes)
+                    {
+                        <div class="form-group">
+                            <label>Eye Outer Shape</label>
+                            <select @bind="EyeOuterShape" @bind:after="GenerateCode">
+                                <option value="Square">Square</option>
+                                <option value="Circle">Circle</option>
+                                <option value="Rounded">Rounded</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Eye Inner Shape</label>
+                            <select @bind="EyeInnerShape" @bind:after="GenerateCode">
+                                <option value="Square">Square</option>
+                                <option value="Circle">Circle</option>
+                                <option value="Rounded">Rounded</option>
+                            </select>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Eye Outer Color</label>
+                                <input type="color" @bind="EyeOuterColor" @bind:after="GenerateCode" />
+                            </div>
+                            <div class="form-group">
+                                <label>Eye Inner Color</label>
+                                <input type="color" @bind="EyeInnerColor" @bind:after="GenerateCode" />
+                            </div>
+                        </div>
+                    }
+                </details>
+            }
+            else if (SelectedCategory == "SpecialQR")
+            {
+                <div class="form-group">
+                    <label>Payload Type</label>
+                    <select @bind="SpecialPayloadType" @bind:after="OnSpecialPayloadTypeChanged">
+                        <option value="WiFi">WiFi Network</option>
+                        <option value="vCard">Contact Card (vCard)</option>
+                        <option value="Email">Email</option>
+                        <option value="Phone">Phone Number</option>
+                        <option value="SMS">SMS Message</option>
+                        <option value="URL">URL / Website</option>
+                        <option value="OTP">OTP / 2FA Setup</option>
+                        <option value="Girocode">SEPA Girocode (Payment)</option>
+                    </select>
+                </div>
+
+                @if (SpecialPayloadType == "WiFi")
+                {
+                    <div class="form-group">
+                        <label>Network Name (SSID)</label>
+                        <input type="text" @bind="WifiSsid" @bind:after="GenerateCode" placeholder="MyNetwork" />
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="text" @bind="WifiPassword" @bind:after="GenerateCode" placeholder="Password123" />
+                    </div>
+                    <div class="form-group">
+                        <label>Security Type</label>
+                        <select @bind="WifiSecurity" @bind:after="GenerateCode">
+                            <option value="WPA">WPA/WPA2</option>
+                            <option value="WEP">WEP</option>
+                            <option value="None">Open (No Password)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" @bind="WifiHidden" @bind:after="GenerateCode" />
+                            Hidden Network
+                        </label>
+                    </div>
+                }
+                else if (SpecialPayloadType == "vCard")
+                {
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>First Name</label>
+                            <input type="text" @bind="VCardFirstName" @bind:after="GenerateCode" placeholder="John" />
+                        </div>
+                        <div class="form-group">
+                            <label>Last Name</label>
+                            <input type="text" @bind="VCardLastName" @bind:after="GenerateCode" placeholder="Doe" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" @bind="VCardEmail" @bind:after="GenerateCode" placeholder="john@example.com" />
+                    </div>
+                    <div class="form-group">
+                        <label>Phone</label>
+                        <input type="tel" @bind="VCardPhone" @bind:after="GenerateCode" placeholder="+1234567890" />
+                    </div>
+                    <div class="form-group">
+                        <label>Organization</label>
+                        <input type="text" @bind="VCardOrganization" @bind:after="GenerateCode" placeholder="Acme Corp" />
+                    </div>
+                    <div class="form-group">
+                        <label>Website</label>
+                        <input type="url" @bind="VCardWebsite" @bind:after="GenerateCode" placeholder="https://example.com" />
+                    </div>
+                }
+                else if (SpecialPayloadType == "Email")
+                {
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <input type="email" @bind="EmailAddress" @bind:after="GenerateCode" placeholder="contact@example.com" />
+                    </div>
+                    <div class="form-group">
+                        <label>Subject (Optional)</label>
+                        <input type="text" @bind="EmailSubject" @bind:after="GenerateCode" placeholder="Hello!" />
+                    </div>
+                    <div class="form-group">
+                        <label>Body (Optional)</label>
+                        <textarea rows="2" @bind="EmailBody" @bind:after="GenerateCode" placeholder="Message body..."></textarea>
+                    </div>
+                }
+                else if (SpecialPayloadType == "Phone")
+                {
+                    <div class="form-group">
+                        <label>Phone Number</label>
+                        <input type="tel" @bind="PhoneNumber" @bind:after="GenerateCode" placeholder="+1234567890" />
+                    </div>
+                }
+                else if (SpecialPayloadType == "SMS")
+                {
+                    <div class="form-group">
+                        <label>Phone Number</label>
+                        <input type="tel" @bind="SmsNumber" @bind:after="GenerateCode" placeholder="+1234567890" />
+                    </div>
+                    <div class="form-group">
+                        <label>Message</label>
+                        <textarea rows="2" @bind="SmsMessage" @bind:after="GenerateCode" placeholder="Your message..."></textarea>
+                    </div>
+                }
+                else if (SpecialPayloadType == "URL")
+                {
+                    <div class="form-group">
+                        <label>URL</label>
+                        <input type="url" @bind="UrlContent" @bind:after="GenerateCode" placeholder="https://example.com" />
+                    </div>
+                }
+                else if (SpecialPayloadType == "OTP")
+                {
+                    <div class="form-group">
+                        <label>Secret Key (Base32)</label>
+                        <input type="text" @bind="OtpSecret" @bind:after="GenerateCode" placeholder="JBSWY3DPEHPK3PXP" />
+                    </div>
+                    <div class="form-group">
+                        <label>Account Label</label>
+                        <input type="text" @bind="OtpLabel" @bind:after="GenerateCode" placeholder="user@example.com" />
+                    </div>
+                    <div class="form-group">
+                        <label>Issuer</label>
+                        <input type="text" @bind="OtpIssuer" @bind:after="GenerateCode" placeholder="MyApp" />
+                    </div>
+                    <div class="form-group">
+                        <label>Type</label>
+                        <select @bind="OtpType" @bind:after="GenerateCode">
+                            <option value="TOTP">TOTP (Time-based)</option>
+                            <option value="HOTP">HOTP (Counter-based)</option>
+                        </select>
+                    </div>
+                }
+                else if (SpecialPayloadType == "Girocode")
+                {
+                    <div class="form-group">
+                        <label>IBAN</label>
+                        <input type="text" @bind="GirocodeIban" @bind:after="GenerateCode" placeholder="DE89370400440532013000" />
+                    </div>
+                    <div class="form-group">
+                        <label>BIC</label>
+                        <input type="text" @bind="GirocodeBic" @bind:after="GenerateCode" placeholder="COBADEFFXXX" />
+                    </div>
+                    <div class="form-group">
+                        <label>Recipient Name</label>
+                        <input type="text" @bind="GirocodeRecipient" @bind:after="GenerateCode" placeholder="Acme Corp" />
+                    </div>
+                    <div class="form-group">
+                        <label>Amount (EUR)</label>
+                        <input type="number" step="0.01" min="0.01" @bind="GirocodeAmount" @bind:after="GenerateCode" placeholder="99.99" />
+                    </div>
+                    <div class="form-group">
+                        <label>Reference</label>
+                        <input type="text" @bind="GirocodeReference" @bind:after="GenerateCode" placeholder="Invoice-2024-001" />
+                    </div>
+                }
+            }
+            else if (SelectedCategory == "Barcode")
+            {
+                <div class="form-group">
+                    <label>Barcode Type</label>
+                    <select @bind="SelectedBarcodeType" @bind:after="OnBarcodeTypeChanged">
+                        <option value="Code128">Code 128 (Full ASCII)</option>
+                        <option value="Code39">Code 39 (Uppercase + Digits)</option>
+                        <option value="Code93">Code 93 (Uppercase + Digits)</option>
+                        <option value="EAN">EAN (Digits Only)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>@GetBarcodeContentLabel()</label>
+                    <input type="text" @bind="BarcodeContent" @bind:after="GenerateCode" placeholder="@GetBarcodeContentPlaceholder()" />
+                    @if (!string.IsNullOrEmpty(BarcodeHint))
+                    {
+                        <small class="form-hint">@BarcodeHint</small>
+                    }
+                </div>
+            }
+
+            <button class="btn btn-primary" style="width: 100%; margin-top: 1.5rem;" @onclick="GenerateCode">
+                Generate Code
+            </button>
+        </div>
+
+        <div class="card">
+            <h2>Preview</h2>
+            <div class="output-preview">
+                @if (!string.IsNullOrEmpty(ErrorMessage))
+                {
+                    <div style="text-align: center; color: #ef4444;">
+                        <p style="font-size: 2rem; margin-bottom: 0.5rem;">⚠</p>
+                        <p>@ErrorMessage</p>
+                    </div>
+                }
+                else if (!string.IsNullOrEmpty(ImageDataUri))
+                {
+                    <img src="@ImageDataUri" alt="Generated code" />
+                }
+                else
+                {
+                    <div style="text-align: center; color: var(--text-muted);">
+                        <p style="font-size: 2rem; margin-bottom: 0.5rem;">📱</p>
+                        <p>Enter content to generate a code</p>
+                    </div>
+                }
+            </div>
+
+            @if (!string.IsNullOrEmpty(ImageDataUri))
+            {
+                <div class="download-buttons">
+                    <a href="@ImageDataUri" download="@GetDownloadFilename("png")" class="btn btn-secondary">
+                        Download PNG
+                    </a>
+                    @if (!string.IsNullOrEmpty(SvgDataUri))
+                    {
+                        <a href="@SvgDataUri" download="@GetDownloadFilename("svg")" class="btn btn-secondary">
+                            Download SVG
+                        </a>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="card" style="margin-top: 2rem;">
+        <h2>Code Example</h2>
+        <p style="color: var(--text-muted); margin-bottom: 1rem; font-size: 0.9rem;">
+            Here's how to generate this exact code in your .NET application:
+        </p>
+        <pre class="code-block">@GetCodeExample()</pre>
+    </div>
+
+    <div style="margin-top: 3rem; text-align: center; color: var(--text-muted); font-size: 0.9rem;">
+        <p>
+            This playground runs the actual <strong>CodeGlyphX</strong> library in your browser via Blazor WebAssembly.
+            <br/>
+            No server-side processing - everything happens client-side.
+        </p>
+    </div>
+</div>
+
+@code {
+    // Category selection
+    private string SelectedCategory { get; set; } = "QR";
+
+    // QR Code options
+    private string Content { get; set; } = "https://github.com/EvotecIT/CodeGlyphX";
+    private string ErrorCorrection { get; set; } = "M";
+
+    // QR Styling
+    private string ModuleShape { get; set; } = "Square";
+    private int CornerRadius { get; set; } = 3;
+    private string ForegroundColor { get; set; } = "#000000";
+    private string BackgroundColor { get; set; } = "#FFFFFF";
+    private bool CustomEyes { get; set; } = false;
+    private string EyeOuterShape { get; set; } = "Square";
+    private string EyeInnerShape { get; set; } = "Square";
+    private string EyeOuterColor { get; set; } = "#8b5cf6";
+    private string EyeInnerColor { get; set; } = "#06b6d4";
+
+    // Special QR Payloads
+    private string SpecialPayloadType { get; set; } = "WiFi";
+
+    // WiFi
+    private string WifiSsid { get; set; } = "MyNetwork";
+    private string WifiPassword { get; set; } = "Password123";
+    private string WifiSecurity { get; set; } = "WPA";
+    private bool WifiHidden { get; set; } = false;
+
+    // vCard
+    private string VCardFirstName { get; set; } = "John";
+    private string VCardLastName { get; set; } = "Doe";
+    private string VCardEmail { get; set; } = "john@example.com";
+    private string VCardPhone { get; set; } = "+1234567890";
+    private string VCardOrganization { get; set; } = "";
+    private string VCardWebsite { get; set; } = "";
+
+    // Email
+    private string EmailAddress { get; set; } = "contact@example.com";
+    private string EmailSubject { get; set; } = "";
+    private string EmailBody { get; set; } = "";
+
+    // Phone
+    private string PhoneNumber { get; set; } = "+1234567890";
+
+    // SMS
+    private string SmsNumber { get; set; } = "+1234567890";
+    private string SmsMessage { get; set; } = "Hello!";
+
+    // URL
+    private string UrlContent { get; set; } = "https://evotec.xyz";
+
+    // OTP
+    private string OtpSecret { get; set; } = "JBSWY3DPEHPK3PXP";
+    private string OtpLabel { get; set; } = "user@example.com";
+    private string OtpIssuer { get; set; } = "MyApp";
+    private string OtpType { get; set; } = "TOTP";
+
+    // Girocode
+    private string GirocodeIban { get; set; } = "DE89370400440532013000";
+    private string GirocodeBic { get; set; } = "COBADEFFXXX";
+    private string GirocodeRecipient { get; set; } = "Acme Corp";
+    private decimal GirocodeAmount { get; set; } = 99.99m;
+    private string GirocodeReference { get; set; } = "Invoice-2024-001";
+
+    // Barcode options
+    private string SelectedBarcodeType { get; set; } = "Code128";
+    private string BarcodeContent { get; set; } = "PRODUCT-12345";
+    private string BarcodeHint { get; set; } = "";
+
+    // Output
+    private string? ImageDataUri { get; set; }
+    private string? SvgDataUri { get; set; }
+    private string? ErrorMessage { get; set; }
+
+    protected override void OnInitialized()
+    {
+        GenerateCode();
+    }
+
+    private void OnCategoryChanged()
+    {
+        ErrorMessage = null;
+        ImageDataUri = null;
+        SvgDataUri = null;
+        GenerateCode();
+    }
+
+    private void OnSpecialPayloadTypeChanged()
+    {
+        ErrorMessage = null;
+        ImageDataUri = null;
+        SvgDataUri = null;
+        GenerateCode();
+    }
+
+    private void OnBarcodeTypeChanged()
+    {
+        ErrorMessage = null;
+        ImageDataUri = null;
+        SvgDataUri = null;
+
+        // Update hint and content based on barcode type
+        switch (SelectedBarcodeType)
+        {
+            case "Code39":
+            case "Code93":
+                BarcodeHint = "Only uppercase A-Z, digits 0-9, and -. $/+% space allowed";
+                if (!IsValidCode39Content(BarcodeContent))
+                    BarcodeContent = "HELLO-123";
+                break;
+            case "EAN":
+                BarcodeHint = "Enter 8 or 13 digits (will be padded if shorter)";
+                BarcodeContent = "5901234123457";
+                break;
+            default:
+                BarcodeHint = "";
+                BarcodeContent = "PRODUCT-12345";
+                break;
+        }
+
+        GenerateCode();
+    }
+
+    private bool IsValidCode39Content(string content)
+    {
+        if (string.IsNullOrEmpty(content)) return false;
+        foreach (char c in content.ToUpperInvariant())
+        {
+            if (!char.IsLetterOrDigit(c) && c != '-' && c != '.' && c != ' ' && c != '$' && c != '/' && c != '+' && c != '%')
+                return false;
+            if (char.IsLetter(c) && char.IsLower(c))
+                return false;
+        }
+        return true;
+    }
+
+    private string GetBarcodeContentLabel()
+    {
+        return SelectedBarcodeType switch
+        {
+            "EAN" => "Digits (8 or 13)",
+            _ => "Content"
+        };
+    }
+
+    private string GetBarcodeContentPlaceholder()
+    {
+        return SelectedBarcodeType switch
+        {
+            "Code39" => "HELLO-123",
+            "Code93" => "HELLO-123",
+            "EAN" => "5901234123457",
+            _ => "PRODUCT-12345"
+        };
+    }
+
+    private void GenerateCode()
+    {
+        ErrorMessage = null;
+        ImageDataUri = null;
+        SvgDataUri = null;
+
+        try
+        {
+            byte[] pngBytes;
+            string? svg = null;
+
+            if (SelectedCategory == "QR")
+            {
+                if (string.IsNullOrWhiteSpace(Content))
+                    return;
+
+                var qrEcc = ErrorCorrection switch
+                {
+                    "L" => QrErrorCorrectionLevel.L,
+                    "Q" => QrErrorCorrectionLevel.Q,
+                    "H" => QrErrorCorrectionLevel.H,
+                    _ => QrErrorCorrectionLevel.M
+                };
+
+                var options = new QrEasyOptions
+                {
+                    ErrorCorrectionLevel = qrEcc,
+                    Foreground = ParseColor(ForegroundColor),
+                    Background = ParseColor(BackgroundColor),
+                    ModuleShape = ParseModuleShape(ModuleShape),
+                    ModuleCornerRadiusPx = ModuleShape == "Rounded" ? CornerRadius : 0
+                };
+
+                if (CustomEyes)
+                {
+                    options.Eyes = new QrPngEyeOptions
+                    {
+                        UseFrame = true,
+                        OuterShape = ParseModuleShape(EyeOuterShape),
+                        InnerShape = ParseModuleShape(EyeInnerShape),
+                        OuterColor = ParseColor(EyeOuterColor),
+                        InnerColor = ParseColor(EyeInnerColor)
+                    };
+                }
+
+                pngBytes = QrEasy.RenderPng(Content, options);
+                svg = QrEasy.RenderSvg(Content, options);
+            }
+            else if (SelectedCategory == "SpecialQR")
+            {
+                var payloadData = GetSpecialPayloadData();
+                if (payloadData == null || string.IsNullOrWhiteSpace(payloadData.Text))
+                    return;
+
+                pngBytes = QrEasy.RenderPng(payloadData);
+                svg = QrEasy.RenderSvg(payloadData);
+            }
+            else // Barcode
+            {
+                if (string.IsNullOrWhiteSpace(BarcodeContent))
+                    return;
+
+                var barcodeType = SelectedBarcodeType switch
+                {
+                    "Code128" => BarcodeType.Code128,
+                    "Code39" => BarcodeType.Code39,
+                    "Code93" => BarcodeType.Code93,
+                    "EAN" => BarcodeType.EAN,
+                    _ => BarcodeType.Code128
+                };
+
+                string content = BarcodeContent;
+
+                // Special handling for different barcode types
+                if (SelectedBarcodeType == "Code39" || SelectedBarcodeType == "Code93")
+                {
+                    content = content.ToUpperInvariant();
+                    // Validate content
+                    if (!IsValidCode39Content(content))
+                    {
+                        ErrorMessage = "Code 39/93 only supports uppercase A-Z, digits 0-9, and -. $/+% space";
+                        return;
+                    }
+                }
+                else if (SelectedBarcodeType == "EAN")
+                {
+                    // Extract only digits
+                    content = new string(content.Where(char.IsDigit).ToArray());
+                    if (content.Length < 8) content = content.PadLeft(8, '0');
+                }
+
+                pngBytes = BarcodeEasy.RenderPng(barcodeType, content);
+                svg = BarcodeEasy.RenderSvg(barcodeType, content);
+            }
+
+            ImageDataUri = $"data:image/png;base64,{Convert.ToBase64String(pngBytes)}";
+            if (svg != null)
+            {
+                SvgDataUri = $"data:image/svg+xml;base64,{Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(svg))}";
+            }
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = ex.Message;
+        }
+    }
+
+    private QrPayloadData? GetSpecialPayloadData()
+    {
+        return SpecialPayloadType switch
+        {
+            "WiFi" => QrPayloads.Wifi(WifiSsid, WifiSecurity == "None" ? "" : WifiPassword, WifiSecurity, WifiHidden),
+            "vCard" => QrPayloads.Contact(
+                QrContactOutputType.VCard3,
+                VCardFirstName,
+                VCardLastName,
+                phone: VCardPhone,
+                email: VCardEmail,
+                website: string.IsNullOrEmpty(VCardWebsite) ? null : VCardWebsite,
+                org: string.IsNullOrEmpty(VCardOrganization) ? null : VCardOrganization),
+            "Email" => QrPayloads.Email(EmailAddress,
+                string.IsNullOrEmpty(EmailSubject) ? null : EmailSubject,
+                string.IsNullOrEmpty(EmailBody) ? null : EmailBody),
+            "Phone" => QrPayloads.Phone(PhoneNumber),
+            "SMS" => QrPayloads.Sms(SmsNumber, SmsMessage),
+            "URL" => new QrPayloadData(UrlContent),
+            "OTP" => QrPayloads.OneTimePassword(
+                OtpType == "TOTP" ? OtpAuthType.Totp : OtpAuthType.Hotp,
+                OtpSecret, OtpLabel, OtpIssuer),
+            "Girocode" => QrPayloads.Girocode(GirocodeIban, GirocodeBic, GirocodeRecipient, GirocodeAmount, GirocodeReference),
+            _ => null
+        };
+    }
+
+    private Rgba32 ParseColor(string hex)
+    {
+        hex = hex.TrimStart('#');
+        if (hex.Length == 6)
+        {
+            return new Rgba32(
+                Convert.ToByte(hex.Substring(0, 2), 16),
+                Convert.ToByte(hex.Substring(2, 2), 16),
+                Convert.ToByte(hex.Substring(4, 2), 16)
+            );
+        }
+        return new Rgba32(0, 0, 0);
+    }
+
+    private QrPngModuleShape ParseModuleShape(string shape)
+    {
+        return shape switch
+        {
+            "Circle" => QrPngModuleShape.Circle,
+            "Rounded" => QrPngModuleShape.Rounded,
+            _ => QrPngModuleShape.Square
+        };
+    }
+
+    private string GetDownloadFilename(string extension)
+    {
+        string baseName = SelectedCategory switch
+        {
+            "QR" => "qrcode",
+            "SpecialQR" => $"qr-{SpecialPayloadType.ToLowerInvariant()}",
+            "Barcode" => SelectedBarcodeType.ToLowerInvariant(),
+            _ => "code"
+        };
+        return $"{baseName}.{extension}";
+    }
+
+    private string GetCodeExample()
+    {
+        var nl = "\n";
+
+        if (SelectedCategory == "QR")
+        {
+            var escapedContent = EscapeString(Content);
+            if (ModuleShape != "Square" || CustomEyes || ForegroundColor != "#000000")
+            {
+                var sb = new System.Text.StringBuilder();
+                sb.Append("using CodeGlyphX;").Append(nl).Append(nl);
+                sb.Append("var options = new QrEasyOptions").Append(nl);
+                sb.Append("{").Append(nl);
+                sb.Append("    ErrorCorrectionLevel = QrErrorCorrectionLevel.").Append(ErrorCorrection).Append(",").Append(nl);
+                if (ModuleShape != "Square")
+                {
+                    sb.Append("    ModuleShape = QrPngModuleShape.").Append(ModuleShape).Append(",").Append(nl);
+                }
+                if (CustomEyes)
+                {
+                    sb.Append("    Eyes = new QrPngEyeOptions").Append(nl);
+                    sb.Append("    {").Append(nl);
+                    sb.Append("        UseFrame = true,").Append(nl);
+                    sb.Append("        OuterShape = QrPngModuleShape.").Append(EyeOuterShape).Append(",").Append(nl);
+                    sb.Append("        InnerShape = QrPngModuleShape.").Append(EyeInnerShape).Append(nl);
+                    sb.Append("    },").Append(nl);
+                }
+                sb.Append("};").Append(nl).Append(nl);
+                sb.Append("QR.Save(\"").Append(escapedContent).Append("\", \"qrcode.png\", options);");
+                return sb.ToString();
+            }
+            return "using CodeGlyphX;" + nl + nl + "QR.Save(\"" + escapedContent + "\", \"qrcode.png\");";
+        }
+        else if (SelectedCategory == "SpecialQR")
+        {
+            var sb = new System.Text.StringBuilder();
+            sb.Append("using CodeGlyphX;").Append(nl);
+            sb.Append("using CodeGlyphX.Payloads;").Append(nl).Append(nl);
+
+            switch (SpecialPayloadType)
+            {
+                case "WiFi":
+                    sb.Append("QR.Save(QrPayloads.Wifi(\"").Append(EscapeString(WifiSsid)).Append("\", \"").Append(EscapeString(WifiPassword)).Append("\"), \"wifi.png\");");
+                    break;
+                case "vCard":
+                    sb.Append("QR.Save(QrPayloads.VCard(").Append(nl);
+                    sb.Append("    firstName: \"").Append(EscapeString(VCardFirstName)).Append("\",").Append(nl);
+                    sb.Append("    lastName: \"").Append(EscapeString(VCardLastName)).Append("\",").Append(nl);
+                    sb.Append("    email: \"").Append(EscapeString(VCardEmail)).Append("\",").Append(nl);
+                    sb.Append("    phone: \"").Append(EscapeString(VCardPhone)).Append("\"").Append(nl);
+                    sb.Append("), \"contact.png\");");
+                    break;
+                case "Email":
+                    sb.Append("QR.Save(QrPayloads.Email(\"").Append(EscapeString(EmailAddress)).Append("\"), \"email.png\");");
+                    break;
+                case "Phone":
+                    sb.Append("QR.Save(QrPayloads.Phone(\"").Append(EscapeString(PhoneNumber)).Append("\"), \"phone.png\");");
+                    break;
+                case "SMS":
+                    sb.Append("QR.Save(QrPayloads.Sms(\"").Append(EscapeString(SmsNumber)).Append("\", \"").Append(EscapeString(SmsMessage)).Append("\"), \"sms.png\");");
+                    break;
+                case "OTP":
+                    sb.Append("QR.Save(QrPayloads.OneTimePassword(").Append(nl);
+                    sb.Append("    OtpAuthType.").Append(OtpType).Append(",").Append(nl);
+                    sb.Append("    secret: \"").Append(EscapeString(OtpSecret)).Append("\",").Append(nl);
+                    sb.Append("    label: \"").Append(EscapeString(OtpLabel)).Append("\",").Append(nl);
+                    sb.Append("    issuer: \"").Append(EscapeString(OtpIssuer)).Append("\"").Append(nl);
+                    sb.Append("), \"otp.png\");");
+                    break;
+                case "Girocode":
+                    sb.Append("QR.Save(QrPayloads.Girocode(").Append(nl);
+                    sb.Append("    iban: \"").Append(EscapeString(GirocodeIban)).Append("\",").Append(nl);
+                    sb.Append("    bic: \"").Append(EscapeString(GirocodeBic)).Append("\",").Append(nl);
+                    sb.Append("    recipientName: \"").Append(EscapeString(GirocodeRecipient)).Append("\",").Append(nl);
+                    sb.Append("    amount: ").Append(GirocodeAmount).Append("m,").Append(nl);
+                    sb.Append("    reference: \"").Append(EscapeString(GirocodeReference)).Append("\"").Append(nl);
+                    sb.Append("), \"sepa.png\");");
+                    break;
+                default:
+                    sb.Clear();
+                    sb.Append("using CodeGlyphX;").Append(nl).Append(nl);
+                    sb.Append("QR.Save(\"").Append(EscapeString(UrlContent)).Append("\", \"qrcode.png\");");
+                    break;
+            }
+            return sb.ToString();
+        }
+        else // Barcode
+        {
+            var content = SelectedBarcodeType switch
+            {
+                "Code39" or "Code93" => EscapeString(BarcodeContent.ToUpperInvariant()),
+                _ => EscapeString(BarcodeContent)
+            };
+            return "using CodeGlyphX;" + nl + nl + "Barcode.Save(BarcodeType." + SelectedBarcodeType + ", \"" + content + "\", \"barcode.png\");";
+        }
+    }
+
+    private static string EscapeString(string s) => s.Replace("\\", "\\\\").Replace("\"", "\\\"");
+}
