@@ -41,7 +41,9 @@
 - [x] DataMatrix: encode C40/Text/X12/EDIFACT (ECC200).
 - [x] PDF417: full encode/decode + ECC tuning.
 - [x] PDF417: validate perspective warp sampling on skewed screenshots (test + tuning).
-- [ ] Aztec + MaxiCode (advanced, optional) — Aztec scaffolded.
+- [x] Aztec encode/decode (module matrix + pixel).
+- [ ] Aztec pixel detection: bulls-eye + perspective/scale tuning.
+- [ ] MaxiCode (advanced, optional).
 
 ## Phase 5b — Payload completeness (parallel)
 - [x] Payments: RussiaPaymentOrder payload (ST00012).

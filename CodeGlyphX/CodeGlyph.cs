@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using CodeGlyphX.Aztec;
 using CodeGlyphX.DataMatrix;
 using CodeGlyphX.Pdf417;
 using CodeGlyphX.Rendering;
@@ -23,6 +24,14 @@ public static class CodeGlyph {
                 decoded = new CodeGlyphDecoded(barcode);
                 return true;
             }
+            if (AztecDecoder.TryDecode(pixels, width, height, stride, format, out var aztec)) {
+                decoded = new CodeGlyphDecoded(CodeGlyphKind.Aztec, aztec);
+                return true;
+            }
+            if (QrDecoder.TryDecode(pixels, width, height, stride, format, out var qr)) {
+                decoded = new CodeGlyphDecoded(qr);
+                return true;
+            }
             if (DataMatrixDecoder.TryDecode(pixels, width, height, stride, format, out var dataMatrix)) {
                 decoded = new CodeGlyphDecoded(CodeGlyphKind.DataMatrix, dataMatrix);
                 return true;
@@ -31,13 +40,13 @@ public static class CodeGlyph {
                 decoded = new CodeGlyphDecoded(CodeGlyphKind.Pdf417, pdf417);
                 return true;
             }
-            if (QrDecoder.TryDecode(pixels, width, height, stride, format, out var qr)) {
-                decoded = new CodeGlyphDecoded(qr);
-                return true;
-            }
             return false;
         }
 
+        if (AztecDecoder.TryDecode(pixels, width, height, stride, format, out var aztecDecoded)) {
+            decoded = new CodeGlyphDecoded(CodeGlyphKind.Aztec, aztecDecoded);
+            return true;
+        }
         if (QrDecoder.TryDecode(pixels, width, height, stride, format, out var qrDecoded)) {
             decoded = new CodeGlyphDecoded(qrDecoded);
             return true;
@@ -78,6 +87,10 @@ public static class CodeGlyph {
             }
         }
 
+        if (AztecDecoder.TryDecode(pixels, width, height, stride, format, out var aztec)) {
+            list.Add(new CodeGlyphDecoded(CodeGlyphKind.Aztec, aztec));
+        }
+
         if (DataMatrixDecoder.TryDecode(pixels, width, height, stride, format, out var dataMatrix)) {
             list.Add(new CodeGlyphDecoded(CodeGlyphKind.DataMatrix, dataMatrix));
         }
@@ -108,6 +121,14 @@ public static class CodeGlyph {
                 decoded = new CodeGlyphDecoded(barcode);
                 return true;
             }
+            if (AztecDecoder.TryDecode(pixels, width, height, stride, format, out var aztec)) {
+                decoded = new CodeGlyphDecoded(CodeGlyphKind.Aztec, aztec);
+                return true;
+            }
+            if (QrDecoder.TryDecode(pixels, width, height, stride, format, out var qr)) {
+                decoded = new CodeGlyphDecoded(qr);
+                return true;
+            }
             if (DataMatrixDecoder.TryDecode(pixels, width, height, stride, format, out var dataMatrix)) {
                 decoded = new CodeGlyphDecoded(CodeGlyphKind.DataMatrix, dataMatrix);
                 return true;
@@ -116,13 +137,13 @@ public static class CodeGlyph {
                 decoded = new CodeGlyphDecoded(CodeGlyphKind.Pdf417, pdf417);
                 return true;
             }
-            if (QrDecoder.TryDecode(pixels, width, height, stride, format, out var qr)) {
-                decoded = new CodeGlyphDecoded(qr);
-                return true;
-            }
             return false;
         }
 
+        if (AztecDecoder.TryDecode(pixels, width, height, stride, format, out var aztecDecoded)) {
+            decoded = new CodeGlyphDecoded(CodeGlyphKind.Aztec, aztecDecoded);
+            return true;
+        }
         if (QrDecoder.TryDecode(pixels, width, height, stride, format, out var qrDecoded)) {
             decoded = new CodeGlyphDecoded(qrDecoded);
             return true;
@@ -160,6 +181,10 @@ public static class CodeGlyph {
             for (var i = 0; i < qrResults.Length; i++) {
                 list.Add(new CodeGlyphDecoded(qrResults[i]));
             }
+        }
+
+        if (AztecDecoder.TryDecode(pixels, width, height, stride, format, out var aztec)) {
+            list.Add(new CodeGlyphDecoded(CodeGlyphKind.Aztec, aztec));
         }
 
         if (DataMatrixDecoder.TryDecode(pixels, width, height, stride, format, out var dataMatrix)) {

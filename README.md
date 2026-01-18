@@ -27,7 +27,7 @@ CodeGlyphX is a fast, dependency-free toolkit for QR codes and barcodes, with ro
 **CodeGlyphX** is a no-deps QR + barcode toolkit for .NET with:
 - Reliable QR decoding (ECI, FNC1/GS1, Kanji, structured append, Micro QR)
 - 1D barcode encoding/decoding (Code128/GS1-128, Code39, Code93, Code11, Codabar, MSI, Plessey, EAN/UPC, ITF-14)
-- 2D encoding/decoding (Data Matrix, PDF417)
+- 2D encoding/decoding (Data Matrix, PDF417, Aztec)
 - Renderers (SVG / HTML / PNG / JPEG / BMP / PDF / EPS / ASCII) and image decoding (PNG/JPEG/GIF/BMP/PPM/TGA)
 - OTP helpers (otpauth://totp + Base32)
 - WPF controls + demo apps
@@ -94,7 +94,7 @@ dotnet add package CodeGlyphX
 | ITF-14 | ✅ | ✅ | All (see Output formats) | Checksum validation |
 | Data Matrix | ✅ | ✅ | All (see Output formats) | ASCII/C40/Text/X12/EDIFACT/Base256 |
 | PDF417 | ✅ | ✅ | All (see Output formats) | Full encode/decode |
-| Aztec | 🚧 | 🚧 | All (see Output formats) | Scaffolded (planned) |
+| Aztec | ✅ | ✅ | All (see Output formats) | Module matrix + basic pixel decode |
 
 ## Features
 
@@ -107,7 +107,8 @@ dotnet add package CodeGlyphX
 - [x] Base64 + data URI helpers for rendered outputs
 - [x] Payload helpers (URL, WiFi, Email, Phone, SMS, Contact, Calendar, OTP, Social)
 - [x] WPF controls and demo apps
-- [ ] Aztec (planned)
+- [x] Aztec encode + decode (module matrix + pixel)
+- [x] Aztec render helpers (PNG/SVG/HTML/JPEG/BMP/PDF/EPS/ASCII + Save by extension)
 
 ## AOT & trimming
 
@@ -116,7 +117,7 @@ Recommended publish flags: `PublishAot=true` (native), or `PublishTrimmed=true` 
 
 ## Output formats (Save by extension)
 
-Save(...) chooses the output based on file extension for QR/Barcode/DataMatrix/PDF417.
+Save(...) chooses the output based on file extension for QR/Barcode/DataMatrix/PDF417/Aztec.
 
 | Format | Extensions | Notes |
 | --- | --- | --- |

@@ -32,9 +32,14 @@ public sealed class CodeGlyphDecoded {
     public string? Pdf417Text { get; }
 
     /// <summary>
-    /// Gets the decoded text (QR or barcode).
+    /// Gets the decoded Aztec text when <see cref="Kind"/> is <see cref="CodeGlyphKind.Aztec"/>.
     /// </summary>
-    public string Text => Qr?.Text ?? Barcode?.Text ?? DataMatrixText ?? Pdf417Text ?? string.Empty;
+    public string? AztecText { get; }
+
+    /// <summary>
+    /// Gets the decoded text (QR/Barcode/DataMatrix/PDF417/Aztec).
+    /// </summary>
+    public string Text => Qr?.Text ?? Barcode?.Text ?? DataMatrixText ?? Pdf417Text ?? AztecText ?? string.Empty;
 
     /// <summary>
     /// Gets the decoded payload bytes for QR codes.
@@ -52,15 +57,17 @@ public sealed class CodeGlyphDecoded {
     }
 
     internal CodeGlyphDecoded(CodeGlyphKind kind, string text) {
-        if (kind != CodeGlyphKind.DataMatrix && kind != CodeGlyphKind.Pdf417) {
-            throw new ArgumentOutOfRangeException(nameof(kind), kind, "Only DataMatrix or Pdf417 allowed.");
+        if (kind != CodeGlyphKind.DataMatrix && kind != CodeGlyphKind.Pdf417 && kind != CodeGlyphKind.Aztec) {
+            throw new ArgumentOutOfRangeException(nameof(kind), kind, "Only DataMatrix, Pdf417, or Aztec allowed.");
         }
         if (text is null) throw new ArgumentNullException(nameof(text));
         Kind = kind;
         if (kind == CodeGlyphKind.DataMatrix) {
             DataMatrixText = text;
-        } else {
+        } else if (kind == CodeGlyphKind.Pdf417) {
             Pdf417Text = text;
+        } else {
+            AztecText = text;
         }
     }
 }
