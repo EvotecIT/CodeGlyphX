@@ -24,6 +24,8 @@ public static class XpmReader {
         var colors = int.Parse(headerParts[2], CultureInfo.InvariantCulture);
         var charsPerPixel = int.Parse(headerParts[3], CultureInfo.InvariantCulture);
         if (width <= 0 || height <= 0 || colors <= 0 || charsPerPixel <= 0) throw new FormatException("Invalid XPM header.");
+        var pixelCount = (long)width * height;
+        if (pixelCount > int.MaxValue / 4) throw new FormatException("XPM dimensions are too large.");
 
         if (strings.Count < 1 + colors + height) throw new FormatException("Truncated XPM data.");
 
@@ -60,13 +62,11 @@ public static class XpmReader {
             if (!parts[i].Equals("c", StringComparison.OrdinalIgnoreCase)) continue;
             var value = parts[i + 1];
             if (value.Equals("None", StringComparison.OrdinalIgnoreCase)) return new Rgba32(0, 0, 0, 0);
-            if (value.StartsWith("#", StringComparison.Ordinal)) {
-                if (value.Length == 7) {
-                    var r = byte.Parse(value.Substring(1, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture);
-                    var g = byte.Parse(value.Substring(3, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture);
-                    var b = byte.Parse(value.Substring(5, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture);
-                    return new Rgba32(r, g, b, 255);
-                }
+            if (value.Length == 7 && value.StartsWith("#", StringComparison.Ordinal)) {
+                var r = byte.Parse(value.Substring(1, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture);
+                var g = byte.Parse(value.Substring(3, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture);
+                var b = byte.Parse(value.Substring(5, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture);
+                return new Rgba32(r, g, b, 255);
             }
         }
         return new Rgba32(0, 0, 0, 255);

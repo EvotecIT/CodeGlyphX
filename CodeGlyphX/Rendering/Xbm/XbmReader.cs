@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Text;
 
 namespace CodeGlyphX.Rendering.Xbm;
 
@@ -16,9 +17,12 @@ public static class XbmReader {
         width = ExtractDefineValue(text, "_width");
         height = ExtractDefineValue(text, "_height");
         if (width <= 0 || height <= 0) throw new FormatException("Invalid XBM dimensions.");
+        var pixelCount = (long)width * height;
+        if (pixelCount > int.MaxValue / 4) throw new FormatException("XBM dimensions are too large.");
 
         var bytes = ExtractByteArray(text);
         var rowBytes = (width + 7) / 8;
+        if ((long)rowBytes * height > int.MaxValue) throw new FormatException("XBM dimensions are too large.");
         if (bytes.Count < rowBytes * height) throw new FormatException("Truncated XBM data.");
 
         var rgba = new byte[width * height * 4];
@@ -65,28 +69,25 @@ public static class XbmReader {
 
         var list = new List<byte>();
         var span = text.AsSpan(start + 1, end - start - 1);
-        var token = string.Empty;
+        var token = new StringBuilder();
         for (var i = 0; i < span.Length; i++) {
             var c = span[i];
             if (char.IsLetterOrDigit(c) || c == 'x' || c == 'X') {
-                token += c;
+                token.Append(c);
                 continue;
             }
-            if (token.Length > 0) {
-                list.Add(ParseByte(token));
-                token = string.Empty;
+            if (token.Length != 0) {
+                list.Add(ParseByte(token.ToString()));
+                token.Clear();
             }
         }
-        if (token.Length > 0) list.Add(ParseByte(token));
+        if (token.Length != 0) list.Add(ParseByte(token.ToString()));
         return list;
     }
 
     private static byte ParseByte(string token) {
         token = token.Trim();
         if (token.StartsWith("0x", StringComparison.OrdinalIgnoreCase)) {
-            return byte.Parse(token.Substring(2), NumberStyles.HexNumber, CultureInfo.InvariantCulture);
-        }
-        if (token.StartsWith("0X", StringComparison.OrdinalIgnoreCase)) {
             return byte.Parse(token.Substring(2), NumberStyles.HexNumber, CultureInfo.InvariantCulture);
         }
         return byte.Parse(token, NumberStyles.Integer, CultureInfo.InvariantCulture);
