@@ -22,11 +22,16 @@
   </ItemGroup>
 
   <!-- Copy XML documentation to wwwroot for API reference -->
-  <Target Name="CopyXmlDocs" AfterTargets="Build">
+  <Target Name="CopyXmlDocs" AfterTargets="Build;Publish">
     <Copy SourceFiles="..\CodeGlyphX\bin\$(Configuration)\net8.0\CodeGlyphX.xml"
           DestinationFolder="wwwroot\api-docs"
           SkipUnchangedFiles="true"
           Condition="Exists('..\CodeGlyphX\bin\$(Configuration)\net8.0\CodeGlyphX.xml')" />
   </Target>
+
+  <!-- Ensure XML docs are included in publish output -->
+  <ItemGroup>
+    <Content Include="wwwroot\api-docs\**\*.xml" CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
 
 </Project>
