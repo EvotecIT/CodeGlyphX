@@ -7,6 +7,16 @@ namespace CodeGlyphX;
 /// <summary>
 /// Decodes QR codes from raw pixel buffers.
 /// </summary>
+
+/// <example>
+/// <code>
+/// using CodeGlyphX;
+/// var bytes = File.ReadAllBytes("qr.png");
+/// if (QrImageDecoder.TryDecodeImage(bytes, out var decoded)) {
+///     Console.WriteLine(decoded.Text);
+/// }
+/// </code>
+/// </example>
 public static class QrImageDecoder {
     /// <summary>
     /// Attempts to decode a QR code from a raw pixel buffer.

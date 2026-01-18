@@ -26,6 +26,12 @@ namespace CodeGlyphX;
 /// <summary>
 /// Simple PDF417 helpers with fluent and static APIs.
 /// </summary>
+/// <example>
+/// <code>
+/// using CodeGlyphX;
+/// Pdf417Code.Save("Document ID: 98765", "pdf417.png");
+/// </code>
+/// </example>
 public static class Pdf417Code {
     /// <summary>
     /// Starts a fluent PDF417 builder for text payloads.

@@ -25,6 +25,12 @@ namespace CodeGlyphX;
 /// <summary>
 /// Aztec code helpers.
 /// </summary>
+/// <example>
+/// <code>
+/// using CodeGlyphX;
+/// var png = AztecCode.Png("Ticket: CONF-2024");
+/// </code>
+/// </example>
 public static class AztecCode {
     /// <summary>
     /// Encodes a text payload as Aztec.
