@@ -9,6 +9,8 @@ namespace CodeGlyphX.Rendering.Xpm;
 /// Decodes XPM images to RGBA buffers.
 /// </summary>
 public static class XpmReader {
+    private const int MaxDimension = 16384;
+
     /// <summary>
     /// Decodes an XPM image to an RGBA buffer.
     /// </summary>
@@ -24,6 +26,7 @@ public static class XpmReader {
         var colors = int.Parse(headerParts[2], CultureInfo.InvariantCulture);
         var charsPerPixel = int.Parse(headerParts[3], CultureInfo.InvariantCulture);
         if (width <= 0 || height <= 0 || colors <= 0 || charsPerPixel <= 0) throw new FormatException("Invalid XPM header.");
+        if (width > MaxDimension || height > MaxDimension) throw new FormatException("XPM dimensions are too large.");
         var pixelCount = (long)width * height;
         if (pixelCount > int.MaxValue / 4) throw new FormatException("XPM dimensions are too large.");
 

@@ -6,6 +6,8 @@ namespace CodeGlyphX.Rendering.Pbm;
 /// Decodes PBM (P4/P1) images to RGBA buffers.
 /// </summary>
 public static class PbmReader {
+    private const int MaxDimension = 16384;
+
     /// <summary>
     /// Decodes a PBM image to an RGBA buffer.
     /// </summary>
@@ -19,11 +21,13 @@ public static class PbmReader {
         width = ReadIntToken(pbm, ref pos);
         height = ReadIntToken(pbm, ref pos);
         if (width <= 0 || height <= 0) throw new FormatException("Invalid PBM dimensions.");
+        if (width > MaxDimension || height > MaxDimension) throw new FormatException("PBM dimensions are too large.");
 
         SkipWhitespaceAndComments(pbm, ref pos);
 
-        var pixelCount = width * height;
-        var rgba = new byte[pixelCount * 4];
+        var pixelCount = (long)width * height;
+        if (pixelCount > int.MaxValue / 4) throw new FormatException("PBM dimensions are too large.");
+        var rgba = new byte[(int)pixelCount * 4];
 
         if (format == (byte)'1') {
             for (var y = 0; y < height; y++) {
@@ -41,7 +45,7 @@ public static class PbmReader {
         }
 
         var rowBytes = (width + 7) / 8;
-        var required = pos + rowBytes * height;
+        var required = (long)pos + (long)rowBytes * height;
         if (required > pbm.Length) throw new FormatException("Truncated PBM data.");
 
         for (var y = 0; y < height; y++) {
@@ -79,6 +83,7 @@ public static class PbmReader {
             var c = data[pos];
             if (c < (byte)'0' || c > (byte)'9') break;
             sawDigit = true;
+            if (value > (int.MaxValue - 9) / 10) throw new FormatException("PBM header value too large.");
             value = value * 10 + (c - (byte)'0');
             pos++;
         }

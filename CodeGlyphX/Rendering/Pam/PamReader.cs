@@ -6,6 +6,8 @@ namespace CodeGlyphX.Rendering.Pam;
 /// Decodes PAM (P7) images to RGBA buffers.
 /// </summary>
 public static class PamReader {
+    private const int MaxDimension = 16384;
+
     /// <summary>
     /// Decodes a PAM image to an RGBA buffer.
     /// </summary>
@@ -45,13 +47,15 @@ public static class PamReader {
         }
 
         if (width <= 0 || height <= 0) throw new FormatException("Invalid PAM dimensions.");
+        if (width > MaxDimension || height > MaxDimension) throw new FormatException("PAM dimensions are too large.");
         if (maxVal <= 0 || maxVal > 255) throw new FormatException("Unsupported PAM max value.");
         if (depth is not (3 or 4)) throw new FormatException("Unsupported PAM depth.");
         if (tupleType is null) throw new FormatException("Missing PAM tuple type.");
 
-        var pixelCount = width * height;
-        var rgba = new byte[pixelCount * 4];
-        var required = pos + pixelCount * depth;
+        var pixelCount = (long)width * height;
+        if (pixelCount > int.MaxValue / 4) throw new FormatException("PAM dimensions are too large.");
+        var rgba = new byte[(int)pixelCount * 4];
+        var required = (long)pos + pixelCount * depth;
         if (required > pam.Length) throw new FormatException("Truncated PAM data.");
 
         var src = pos;
@@ -100,6 +104,7 @@ public static class PamReader {
             var c = data[pos];
             if (c < (byte)'0' || c > (byte)'9') break;
             sawDigit = true;
+            if (value > (int.MaxValue - 9) / 10) throw new FormatException("PAM header value too large.");
             value = value * 10 + (c - (byte)'0');
             pos++;
         }

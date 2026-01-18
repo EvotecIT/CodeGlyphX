@@ -9,6 +9,8 @@ namespace CodeGlyphX.Rendering.Xbm;
 /// Decodes XBM images to RGBA buffers.
 /// </summary>
 public static class XbmReader {
+    private const int MaxDimension = 16384;
+
     /// <summary>
     /// Decodes an XBM image to an RGBA buffer.
     /// </summary>
@@ -17,6 +19,7 @@ public static class XbmReader {
         width = ExtractDefineValue(text, "_width");
         height = ExtractDefineValue(text, "_height");
         if (width <= 0 || height <= 0) throw new FormatException("Invalid XBM dimensions.");
+        if (width > MaxDimension || height > MaxDimension) throw new FormatException("XBM dimensions are too large.");
         var pixelCount = (long)width * height;
         if (pixelCount > int.MaxValue / 4) throw new FormatException("XBM dimensions are too large.");
 

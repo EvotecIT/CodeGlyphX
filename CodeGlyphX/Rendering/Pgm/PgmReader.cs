@@ -6,6 +6,7 @@ namespace CodeGlyphX.Rendering.Pgm;
 /// Decodes PGM (P5/P2) images to RGBA buffers.
 /// </summary>
 public static class PgmReader {
+    private const int MaxDimension = 16384;
     /// <summary>
     /// Decodes a PGM image to an RGBA buffer.
     /// </summary>
@@ -20,12 +21,14 @@ public static class PgmReader {
         height = ReadIntToken(pgm, ref pos);
         var maxVal = ReadIntToken(pgm, ref pos);
         if (width <= 0 || height <= 0) throw new FormatException("Invalid PGM dimensions.");
+        if (width > MaxDimension || height > MaxDimension) throw new FormatException("PGM dimensions are too large.");
         if (maxVal <= 0 || maxVal > 65535) throw new FormatException("Invalid PGM max value.");
 
         SkipWhitespaceAndComments(pgm, ref pos);
 
-        var pixelCount = width * height;
-        var rgba = new byte[pixelCount * 4];
+        var pixelCount = (long)width * height;
+        if (pixelCount > int.MaxValue / 4) throw new FormatException("PGM dimensions are too large.");
+        var rgba = new byte[(int)pixelCount * 4];
 
         if (format == (byte)'2') {
             for (var i = 0; i < pixelCount; i++) {
@@ -86,6 +89,7 @@ public static class PgmReader {
             var c = data[pos];
             if (c < (byte)'0' || c > (byte)'9') break;
             sawDigit = true;
+            if (value > (int.MaxValue - 9) / 10) throw new FormatException("PGM header value too large.");
             value = value * 10 + (c - (byte)'0');
             pos++;
         }
