@@ -42,7 +42,7 @@ CodeGlyphX is a fast, dependency-free toolkit for QR codes and barcodes, with ro
 
 ## Roadmap & Website
 
-- Roadmap / TODO: `TODO.md`
+- Roadmap: `ROADMAP.md`
 - Website plan: `WEBSITE.md`
 
 ## Installation
