@@ -2,6 +2,10 @@
 using System;
 using System.Buffers;
 using System.Collections.Generic;
+using System.Numerics;
+using System.Runtime.InteropServices;
+using System.Runtime.Intrinsics;
+using System.Runtime.Intrinsics.X86;
 using CodeGlyphX;
 
 namespace CodeGlyphX.Qr;
@@ -1916,6 +1920,33 @@ internal static class QrPixelDecoder {
 
     private static int CountDarkRow(QrGrayImage image, bool invert, int minX, int maxX, int y) {
         var count = 0;
+        var width = maxX - minX + 1;
+        if (width <= 0) return 0;
+
+        if (image.ThresholdMap is null && Sse2.IsSupported && width >= 16) {
+            var gray = image.Gray;
+            var start = y * image.Width + minX;
+            var end = start + width;
+            var i = start;
+            var offset = Vector128.Create((byte)0x80);
+            var threshold = Vector128.Create((byte)(image.Threshold ^ 0x80));
+
+            while (i + 16 <= end) {
+                var vec = MemoryMarshal.Read<Vector128<byte>>(gray.AsSpan(i));
+                var signed = Sse2.Xor(vec, offset).AsSByte();
+                var gt = Sse2.CompareGreaterThan(signed, threshold.AsSByte());
+                var mask = (uint)Sse2.MoveMask(gt.AsByte());
+                count += BitOperations.PopCount(mask);
+                i += 16;
+            }
+
+            for (; i < end; i++) {
+                if (gray[i] > image.Threshold) count++;
+            }
+
+            return invert ? count : width - count;
+        }
+
         for (var x = minX; x <= maxX; x++) {
             if (image.IsBlack(x, y, invert)) count++;
         }
