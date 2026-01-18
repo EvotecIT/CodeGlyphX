@@ -110,6 +110,7 @@ internal sealed class ReedSolomonDecoder {
             for (var j = 0; j < s; j++) {
                 if (i == j) continue;
                 var term = _field.Multiply(errorLocations[j], xiInverse);
+                // In GF(2^m), subtraction equals addition; (1 - term) is term ^ 1.
                 var termPlus1 = (term & 0x1) == 0 ? term | 1 : term & ~1;
                 denominator = _field.Multiply(denominator, termPlus1);
             }

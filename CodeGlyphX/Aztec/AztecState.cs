@@ -5,6 +5,7 @@ namespace CodeGlyphX.Aztec;
 
 internal sealed class AztecState {
     public static readonly AztecState InitialState = new(AztecToken.Empty, AztecHighLevelEncoder.ModeUpper, 0, 0);
+    private const int MaxBinaryShiftBytes = 2047 + 31;
 
     private readonly int _mode;
     private readonly AztecToken _token;
@@ -63,7 +64,7 @@ internal sealed class AztecState {
             : (_binaryShiftByteCount == 62 ? 9 : 8);
 
         var result = new AztecState(token, mode, _binaryShiftByteCount + 1, bitCount + deltaBitCount);
-        if (result._binaryShiftByteCount == 2047 + 31) {
+        if (result._binaryShiftByteCount == MaxBinaryShiftBytes) {
             result = result.EndBinaryShift(index + 1);
         }
         return result;
