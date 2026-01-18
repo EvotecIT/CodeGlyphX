@@ -2,10 +2,15 @@ using System;
 using System.IO;
 using CodeGlyphX.Rendering.Bmp;
 using CodeGlyphX.Rendering.Gif;
+using CodeGlyphX.Rendering.Pam;
+using CodeGlyphX.Rendering.Pgm;
+using CodeGlyphX.Rendering.Pbm;
 using CodeGlyphX.Rendering.Jpeg;
 using CodeGlyphX.Rendering.Png;
 using CodeGlyphX.Rendering.Ppm;
 using CodeGlyphX.Rendering.Tga;
+using CodeGlyphX.Rendering.Xbm;
+using CodeGlyphX.Rendering.Xpm;
 
 namespace CodeGlyphX.Rendering;
 
@@ -33,8 +38,13 @@ public static class ImageReader {
         if (JpegReader.IsJpeg(data)) return JpegReader.DecodeRgba32(data, out width, out height);
         if (GifReader.IsGif(data)) return GifReader.DecodeRgba32(data, out width, out height);
         if (IsBmp(data)) return BmpReader.DecodeRgba32(data, out width, out height);
+        if (IsPbm(data)) return PbmReader.DecodeRgba32(data, out width, out height);
+        if (IsPgm(data)) return PgmReader.DecodeRgba32(data, out width, out height);
+        if (IsPam(data)) return PamReader.DecodeRgba32(data, out width, out height);
         if (IsPpm(data)) return PpmReader.DecodeRgba32(data, out width, out height);
         if (TgaReader.LooksLikeTga(data)) return TgaReader.DecodeRgba32(data, out width, out height);
+        if (IsXpm(data)) return XpmReader.DecodeRgba32(data, out width, out height);
+        if (IsXbm(data)) return XbmReader.DecodeRgba32(data, out width, out height);
 
         throw new FormatException("Unknown image format.");
     }
@@ -84,5 +94,53 @@ public static class ImageReader {
 
     private static bool IsPpm(ReadOnlySpan<byte> data) {
         return data.Length >= 2 && data[0] == (byte)'P' && (data[1] == (byte)'5' || data[1] == (byte)'6');
+    }
+
+    private static bool IsPbm(ReadOnlySpan<byte> data) {
+        return data.Length >= 2 && data[0] == (byte)'P' && (data[1] == (byte)'1' || data[1] == (byte)'4');
+    }
+
+    private static bool IsPgm(ReadOnlySpan<byte> data) {
+        return data.Length >= 2 && data[0] == (byte)'P' && (data[1] == (byte)'2' || data[1] == (byte)'5');
+    }
+
+    private static bool IsPam(ReadOnlySpan<byte> data) {
+        return data.Length >= 2 && data[0] == (byte)'P' && data[1] == (byte)'7';
+    }
+
+    private static bool IsXpm(ReadOnlySpan<byte> data) {
+        return StartsWithAscii(data, "/* XPM */");
+    }
+
+    private static bool IsXbm(ReadOnlySpan<byte> data) {
+        return StartsWithAscii(data, "#define") && ContainsAscii(data, "_width");
+    }
+
+    private static bool StartsWithAscii(ReadOnlySpan<byte> data, string prefix) {
+        var pos = 0;
+        while (pos < data.Length && data[pos] <= 32) pos++;
+        if (pos + prefix.Length > data.Length) return false;
+        for (var i = 0; i < prefix.Length; i++) {
+            if (data[pos + i] != (byte)prefix[i]) return false;
+        }
+        return true;
+    }
+
+    private static bool ContainsAscii(ReadOnlySpan<byte> data, string token) {
+        if (token.Length == 0) return false;
+        for (var i = 0; i <= data.Length - token.Length; i++) {
+            var match = true;
+            for (var j = 0; j < token.Length; j++) {
+                var c = data[i + j];
+                var t = (byte)token[j];
+                if (c == t) continue;
+                if (c >= (byte)'A' && c <= (byte)'Z' && c + 32 == t) continue;
+                if (c >= (byte)'a' && c <= (byte)'z' && c - 32 == t) continue;
+                match = false;
+                break;
+            }
+            if (match) return true;
+        }
+        return false;
     }
 }

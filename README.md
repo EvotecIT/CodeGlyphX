@@ -28,7 +28,7 @@ CodeGlyphX is a fast, dependency-free toolkit for QR codes and barcodes, with ro
 - Reliable QR decoding (ECI, FNC1/GS1, Kanji, structured append, Micro QR)
 - 1D barcode encoding/decoding (Code128/GS1-128, Code39, Code93, Code11, Codabar, MSI, Plessey, EAN/UPC, ITF-14)
 - 2D encoding/decoding (Data Matrix, PDF417, Aztec)
-- Renderers (SVG / HTML / PNG / JPEG / BMP / PDF / EPS / ASCII) and image decoding (PNG/JPEG/GIF/BMP/PPM/TGA)
+- Renderers (SVG / SVGZ / HTML / PNG / JPEG / BMP / PPM / PBM / PGM / PAM / XBM / XPM / TGA / ICO / PDF / EPS / ASCII) and image decoding (PNG/JPEG/GIF/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA)
 - OTP helpers (otpauth://totp + Base32)
 - WPF controls + demo apps
 
@@ -39,6 +39,11 @@ CodeGlyphX is a fast, dependency-free toolkit for QR codes and barcodes, with ro
 - Robust pixel decoder for screenshots, gradients, low-contrast, rotation/mirroring
 - Payload helpers for QR (WiFi, payments, contacts, OTP, social, etc.)
 - Friendly APIs: one-liners + options + fluent presets
+
+## Roadmap & Website
+
+- Roadmap: `ROADMAP.md`
+- Website plan: `WEBSITE.md`
 
 ## Installation
 
@@ -67,8 +72,8 @@ dotnet add package CodeGlyphX
 | Feature | Windows | Linux | macOS |
 | --- | --- | --- | --- |
 | Core encode/decode (QR/1D/2D) | ✅ | ✅ | ✅ |
-| Renderers (PNG/SVG/HTML/JPEG) | ✅ | ✅ | ✅ |
-| Image decoding (PNG/JPEG/GIF/BMP/PPM/TGA) | ✅ | ✅ | ✅ |
+| Renderers (PNG/SVG/SVGZ/HTML/JPEG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA/ICO/PDF/EPS/ASCII) | ✅ | ✅ | ✅ |
+| Image decoding (PNG/JPEG/GIF/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) | ✅ | ✅ | ✅ |
 | WPF controls | ✅ | ❌ | ❌ |
 
 ## Build Status
@@ -102,17 +107,17 @@ dotnet add package CodeGlyphX
 - [x] Micro QR support
 - [x] 1D barcode encode + decode
 - [x] Data Matrix + PDF417 encode + decode
-- [x] SVG / HTML / PNG / JPEG / BMP / PDF / EPS / ASCII renderers
-- [x] Image decode: PNG / JPEG / GIF / BMP / PPM / TGA
+- [x] SVG / SVGZ / HTML / PNG / JPEG / BMP / PPM / PBM / PGM / PAM / XBM / XPM / TGA / ICO / PDF / EPS / ASCII renderers
+- [x] Image decode: PNG / JPEG / GIF / BMP / PPM / PBM / PGM / PAM / XBM / XPM / TGA
 - [x] Base64 + data URI helpers for rendered outputs
 - [x] Payload helpers (URL, WiFi, Email, Phone, SMS, Contact, Calendar, OTP, Social)
 - [x] WPF controls and demo apps
 - [x] Aztec encode + decode (module matrix + pixel)
-- [x] Aztec render helpers (PNG/SVG/HTML/JPEG/BMP/PDF/EPS/ASCII + Save by extension)
+- [x] Aztec render helpers (PNG/SVG/SVGZ/HTML/JPEG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA/ICO/PDF/EPS/ASCII + Save by extension)
 
 ## AOT & trimming
 
-CodeGlyphX is AOT-friendly (no reflection, no runtime codegen) and ships with trimming/AOT analyzers enabled for .NET 8+ targets.  
+CodeGlyphX is AOT-friendly (no reflection, no runtime codegen) and ships with trimming/AOT analyzers enabled for .NET 8+ targets.
 Recommended publish flags: `PublishAot=true` (native), or `PublishTrimmed=true` (size) for app projects.
 
 ## Output formats (Save by extension)
@@ -124,12 +129,33 @@ Save(...) chooses the output based on file extension for QR/Barcode/DataMatrix/P
 | PNG | `.png` | Raster |
 | JPEG | `.jpg`, `.jpeg` | Raster, quality via options |
 | BMP | `.bmp` | Raster |
+| PPM | `.ppm` | Raster (portable pixmap) |
+| PBM | `.pbm` | Raster (portable bitmap) |
+| PGM | `.pgm` | Raster (portable graymap) |
+| PAM | `.pam` | Raster (portable anymap, RGBA) |
+| XBM | `.xbm` | Text (1-bit) |
+| XPM | `.xpm` | Text (2-color) |
+| TGA | `.tga` | Raster |
+| ICO | `.ico` | Raster (PNG inside, multi-size by default) |
 | SVG | `.svg` | Vector |
+| SVGZ | `.svgz`, `.svg.gz` | Vector (gzip-compressed SVG) |
 | HTML | `.html`, `.htm` | Table-based output |
 | PDF | `.pdf` | Vector by default, raster via RenderMode |
 | EPS | `.eps`, `.ps` | Vector by default, raster via RenderMode |
 | ASCII | API only | Use `RenderAscii` methods |
 | Raw RGBA | API only | Use `RenderPixels` methods |
+
+### ICO multi-size
+
+```csharp
+using CodeGlyphX;
+
+var opts = new QrEasyOptions {
+    IcoSizes = new[] { 32, 64, 128 },
+    IcoPreserveAspectRatio = true
+};
+QR.Save("https://example.com", "qr.ico", opts);
+```
 
 ## Payload helpers
 
@@ -148,7 +174,7 @@ QR payload helpers generate well-known structured strings so scanners can trigge
 
 ## Image decoding (for readers)
 
-- PNG, JPEG (baseline + progressive, EXIF orientation), GIF, BMP, PPM, TGA
+- PNG, JPEG (baseline + progressive, EXIF orientation), GIF, BMP, PPM, PBM, PGM, PAM, XBM, XPM, TGA
 - Pure C# decoders (no native image libraries)
 
 ## Quick usage
@@ -164,6 +190,24 @@ QR.Save("https://example.com", "qr.pdf");
 
 ```csharp
 using CodeGlyphX;
+
+// Simple styling (colored eyes + rounded modules)
+var opts = new QrEasyOptions {
+    ModuleShape = QrPngModuleShape.Rounded,
+    ModuleCornerRadiusPx = 3,
+    Eyes = new QrPngEyeOptions {
+        UseFrame = true,
+        OuterShape = QrPngModuleShape.Circle,
+        InnerShape = QrPngModuleShape.Circle,
+        OuterColor = new Rgba32(220, 20, 60),
+        InnerColor = new Rgba32(220, 20, 60),
+    }
+};
+QR.Save("https://example.com", "qr-styled.png", opts);
+```
+
+```csharp
+using CodeGlyphX;
 using CodeGlyphX.Rendering;
 
 // PDF/EPS are vector by default. Use Raster when you need pixels.
@@ -173,7 +217,7 @@ QR.SavePdf("https://example.com", "qr-raster.pdf", mode: RenderMode.Raster);
 Notes:
 - Vector PDF/EPS support square/rounded/circle modules and eye shapes.
 - Gradients and logos automatically fall back to raster to preserve appearance.
-- PDF/EPS are output-only. For decoding, rasterize to PNG/BMP/PPM/TGA and use the image decoders.
+- PDF/EPS are output-only. For decoding, rasterize to PNG/BMP/PPM/PBM/PGM/PAM/TGA and use the image decoders.
 
 ```csharp
 using CodeGlyphX;
@@ -261,5 +305,3 @@ xmlns:wpf="clr-namespace:CodeGlyphX.Wpf;assembly=CodeGlyphX.Wpf"
 ## License
 
 Apache-2.0.
-
-Commercial support and custom licensing are available. Contact: contact@evotec.pl.

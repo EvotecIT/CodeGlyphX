@@ -129,6 +129,159 @@ public static class QR {
     public static byte[] Bmp(QrPayloadData payload, QrEasyOptions? options = null) => QrEasy.RenderBmp(payload, options);
 
     /// <summary>
+    /// Renders a QR code as PPM.
+    /// </summary>
+    public static byte[] Ppm(string payload, QrEasyOptions? options = null) => QrEasy.RenderPpm(payload, options);
+
+    /// <summary>
+    /// Detects a payload type and renders a QR code as PPM.
+    /// </summary>
+    public static byte[] PpmAuto(string payload, QrPayloadDetectOptions? detectOptions = null, QrEasyOptions? options = null) {
+        return QrEasy.RenderPpmAuto(payload, detectOptions, options);
+    }
+
+    /// <summary>
+    /// Renders a QR code as PPM for a payload with embedded defaults.
+    /// </summary>
+    public static byte[] Ppm(QrPayloadData payload, QrEasyOptions? options = null) => QrEasy.RenderPpm(payload, options);
+
+    /// <summary>
+    /// Renders a QR code as PBM.
+    /// </summary>
+    public static byte[] Pbm(string payload, QrEasyOptions? options = null) => QrEasy.RenderPbm(payload, options);
+
+    /// <summary>
+    /// Detects a payload type and renders a QR code as PBM.
+    /// </summary>
+    public static byte[] PbmAuto(string payload, QrPayloadDetectOptions? detectOptions = null, QrEasyOptions? options = null) {
+        return QrEasy.RenderPbmAuto(payload, detectOptions, options);
+    }
+
+    /// <summary>
+    /// Renders a QR code as PBM for a payload with embedded defaults.
+    /// </summary>
+    public static byte[] Pbm(QrPayloadData payload, QrEasyOptions? options = null) => QrEasy.RenderPbm(payload, options);
+
+    /// <summary>
+    /// Renders a QR code as PGM.
+    /// </summary>
+    public static byte[] Pgm(string payload, QrEasyOptions? options = null) => QrEasy.RenderPgm(payload, options);
+
+    /// <summary>
+    /// Detects a payload type and renders a QR code as PGM.
+    /// </summary>
+    public static byte[] PgmAuto(string payload, QrPayloadDetectOptions? detectOptions = null, QrEasyOptions? options = null) {
+        return QrEasy.RenderPgmAuto(payload, detectOptions, options);
+    }
+
+    /// <summary>
+    /// Renders a QR code as PGM for a payload with embedded defaults.
+    /// </summary>
+    public static byte[] Pgm(QrPayloadData payload, QrEasyOptions? options = null) => QrEasy.RenderPgm(payload, options);
+
+    /// <summary>
+    /// Renders a QR code as PAM.
+    /// </summary>
+    public static byte[] Pam(string payload, QrEasyOptions? options = null) => QrEasy.RenderPam(payload, options);
+
+    /// <summary>
+    /// Detects a payload type and renders a QR code as PAM.
+    /// </summary>
+    public static byte[] PamAuto(string payload, QrPayloadDetectOptions? detectOptions = null, QrEasyOptions? options = null) {
+        return QrEasy.RenderPamAuto(payload, detectOptions, options);
+    }
+
+    /// <summary>
+    /// Renders a QR code as PAM for a payload with embedded defaults.
+    /// </summary>
+    public static byte[] Pam(QrPayloadData payload, QrEasyOptions? options = null) => QrEasy.RenderPam(payload, options);
+
+    /// <summary>
+    /// Renders a QR code as XBM.
+    /// </summary>
+    public static string Xbm(string payload, QrEasyOptions? options = null) => QrEasy.RenderXbm(payload, options);
+
+    /// <summary>
+    /// Detects a payload type and renders a QR code as XBM.
+    /// </summary>
+    public static string XbmAuto(string payload, QrPayloadDetectOptions? detectOptions = null, QrEasyOptions? options = null) {
+        return QrEasy.RenderXbmAuto(payload, detectOptions, options);
+    }
+
+    /// <summary>
+    /// Renders a QR code as XBM for a payload with embedded defaults.
+    /// </summary>
+    public static string Xbm(QrPayloadData payload, QrEasyOptions? options = null) => QrEasy.RenderXbm(payload, options);
+
+    /// <summary>
+    /// Renders a QR code as XPM.
+    /// </summary>
+    public static string Xpm(string payload, QrEasyOptions? options = null) => QrEasy.RenderXpm(payload, options);
+
+    /// <summary>
+    /// Detects a payload type and renders a QR code as XPM.
+    /// </summary>
+    public static string XpmAuto(string payload, QrPayloadDetectOptions? detectOptions = null, QrEasyOptions? options = null) {
+        return QrEasy.RenderXpmAuto(payload, detectOptions, options);
+    }
+
+    /// <summary>
+    /// Renders a QR code as XPM for a payload with embedded defaults.
+    /// </summary>
+    public static string Xpm(QrPayloadData payload, QrEasyOptions? options = null) => QrEasy.RenderXpm(payload, options);
+
+    /// <summary>
+    /// Renders a QR code as TGA.
+    /// </summary>
+    public static byte[] Tga(string payload, QrEasyOptions? options = null) => QrEasy.RenderTga(payload, options);
+
+    /// <summary>
+    /// Detects a payload type and renders a QR code as TGA.
+    /// </summary>
+    public static byte[] TgaAuto(string payload, QrPayloadDetectOptions? detectOptions = null, QrEasyOptions? options = null) {
+        return QrEasy.RenderTgaAuto(payload, detectOptions, options);
+    }
+
+    /// <summary>
+    /// Renders a QR code as TGA for a payload with embedded defaults.
+    /// </summary>
+    public static byte[] Tga(QrPayloadData payload, QrEasyOptions? options = null) => QrEasy.RenderTga(payload, options);
+
+    /// <summary>
+    /// Renders a QR code as ICO.
+    /// </summary>
+    public static byte[] Ico(string payload, QrEasyOptions? options = null) => QrEasy.RenderIco(payload, options);
+
+    /// <summary>
+    /// Detects a payload type and renders a QR code as ICO.
+    /// </summary>
+    public static byte[] IcoAuto(string payload, QrPayloadDetectOptions? detectOptions = null, QrEasyOptions? options = null) {
+        return QrEasy.RenderIcoAuto(payload, detectOptions, options);
+    }
+
+    /// <summary>
+    /// Renders a QR code as ICO for a payload with embedded defaults.
+    /// </summary>
+    public static byte[] Ico(QrPayloadData payload, QrEasyOptions? options = null) => QrEasy.RenderIco(payload, options);
+
+    /// <summary>
+    /// Renders a QR code as SVGZ.
+    /// </summary>
+    public static byte[] Svgz(string payload, QrEasyOptions? options = null) => QrEasy.RenderSvgz(payload, options);
+
+    /// <summary>
+    /// Detects a payload type and renders a QR code as SVGZ.
+    /// </summary>
+    public static byte[] SvgzAuto(string payload, QrPayloadDetectOptions? detectOptions = null, QrEasyOptions? options = null) {
+        return QrEasy.RenderSvgzAuto(payload, detectOptions, options);
+    }
+
+    /// <summary>
+    /// Renders a QR code as SVGZ for a payload with embedded defaults.
+    /// </summary>
+    public static byte[] Svgz(QrPayloadData payload, QrEasyOptions? options = null) => QrEasy.RenderSvgz(payload, options);
+
+    /// <summary>
     /// Renders a QR code as PDF.
     /// </summary>
     /// <param name="payload">The payload text.</param>
@@ -352,6 +505,276 @@ public static class QR {
     }
 
     /// <summary>
+    /// Renders a QR code as PPM and writes it to a file.
+    /// </summary>
+    public static string SavePpm(string payload, string path, QrEasyOptions? options = null) {
+        var ppm = Ppm(payload, options);
+        return ppm.WriteBinary(path);
+    }
+
+    /// <summary>
+    /// Renders a QR code as PPM and writes it to a file for a payload with embedded defaults.
+    /// </summary>
+    public static string SavePpm(QrPayloadData payload, string path, QrEasyOptions? options = null) {
+        var ppm = Ppm(payload, options);
+        return ppm.WriteBinary(path);
+    }
+
+    /// <summary>
+    /// Renders a QR code as PPM and writes it to a stream.
+    /// </summary>
+    public static void SavePpm(string payload, Stream stream, QrEasyOptions? options = null) {
+        QrEasy.RenderPpmToStream(payload, stream, options);
+    }
+
+    /// <summary>
+    /// Renders a QR code as PPM and writes it to a stream for a payload with embedded defaults.
+    /// </summary>
+    public static void SavePpm(QrPayloadData payload, Stream stream, QrEasyOptions? options = null) {
+        QrEasy.RenderPpmToStream(payload, stream, options);
+    }
+
+    /// <summary>
+    /// Renders a QR code as PBM and writes it to a file.
+    /// </summary>
+    public static string SavePbm(string payload, string path, QrEasyOptions? options = null) {
+        var pbm = Pbm(payload, options);
+        return pbm.WriteBinary(path);
+    }
+
+    /// <summary>
+    /// Renders a QR code as PBM and writes it to a file for a payload with embedded defaults.
+    /// </summary>
+    public static string SavePbm(QrPayloadData payload, string path, QrEasyOptions? options = null) {
+        var pbm = Pbm(payload, options);
+        return pbm.WriteBinary(path);
+    }
+
+    /// <summary>
+    /// Renders a QR code as PBM and writes it to a stream.
+    /// </summary>
+    public static void SavePbm(string payload, Stream stream, QrEasyOptions? options = null) {
+        QrEasy.RenderPbmToStream(payload, stream, options);
+    }
+
+    /// <summary>
+    /// Renders a QR code as PBM and writes it to a stream for a payload with embedded defaults.
+    /// </summary>
+    public static void SavePbm(QrPayloadData payload, Stream stream, QrEasyOptions? options = null) {
+        QrEasy.RenderPbmToStream(payload, stream, options);
+    }
+
+    /// <summary>
+    /// Renders a QR code as PGM and writes it to a file.
+    /// </summary>
+    public static string SavePgm(string payload, string path, QrEasyOptions? options = null) {
+        var pgm = Pgm(payload, options);
+        return pgm.WriteBinary(path);
+    }
+
+    /// <summary>
+    /// Renders a QR code as PGM and writes it to a file for a payload with embedded defaults.
+    /// </summary>
+    public static string SavePgm(QrPayloadData payload, string path, QrEasyOptions? options = null) {
+        var pgm = Pgm(payload, options);
+        return pgm.WriteBinary(path);
+    }
+
+    /// <summary>
+    /// Renders a QR code as PGM and writes it to a stream.
+    /// </summary>
+    public static void SavePgm(string payload, Stream stream, QrEasyOptions? options = null) {
+        QrEasy.RenderPgmToStream(payload, stream, options);
+    }
+
+    /// <summary>
+    /// Renders a QR code as PGM and writes it to a stream for a payload with embedded defaults.
+    /// </summary>
+    public static void SavePgm(QrPayloadData payload, Stream stream, QrEasyOptions? options = null) {
+        QrEasy.RenderPgmToStream(payload, stream, options);
+    }
+
+    /// <summary>
+    /// Renders a QR code as PAM and writes it to a file.
+    /// </summary>
+    public static string SavePam(string payload, string path, QrEasyOptions? options = null) {
+        var pam = Pam(payload, options);
+        return pam.WriteBinary(path);
+    }
+
+    /// <summary>
+    /// Renders a QR code as PAM and writes it to a file for a payload with embedded defaults.
+    /// </summary>
+    public static string SavePam(QrPayloadData payload, string path, QrEasyOptions? options = null) {
+        var pam = Pam(payload, options);
+        return pam.WriteBinary(path);
+    }
+
+    /// <summary>
+    /// Renders a QR code as PAM and writes it to a stream.
+    /// </summary>
+    public static void SavePam(string payload, Stream stream, QrEasyOptions? options = null) {
+        QrEasy.RenderPamToStream(payload, stream, options);
+    }
+
+    /// <summary>
+    /// Renders a QR code as PAM and writes it to a stream for a payload with embedded defaults.
+    /// </summary>
+    public static void SavePam(QrPayloadData payload, Stream stream, QrEasyOptions? options = null) {
+        QrEasy.RenderPamToStream(payload, stream, options);
+    }
+
+    /// <summary>
+    /// Renders a QR code as XBM and writes it to a file.
+    /// </summary>
+    public static string SaveXbm(string payload, string path, QrEasyOptions? options = null) {
+        var xbm = Xbm(payload, options);
+        return xbm.WriteText(path);
+    }
+
+    /// <summary>
+    /// Renders a QR code as XBM and writes it to a file for a payload with embedded defaults.
+    /// </summary>
+    public static string SaveXbm(QrPayloadData payload, string path, QrEasyOptions? options = null) {
+        var xbm = Xbm(payload, options);
+        return xbm.WriteText(path);
+    }
+
+    /// <summary>
+    /// Renders a QR code as XBM and writes it to a stream.
+    /// </summary>
+    public static void SaveXbm(string payload, Stream stream, QrEasyOptions? options = null) {
+        QrEasy.RenderXbmToStream(payload, stream, options);
+    }
+
+    /// <summary>
+    /// Renders a QR code as XBM and writes it to a stream for a payload with embedded defaults.
+    /// </summary>
+    public static void SaveXbm(QrPayloadData payload, Stream stream, QrEasyOptions? options = null) {
+        QrEasy.RenderXbmToStream(payload, stream, options);
+    }
+
+    /// <summary>
+    /// Renders a QR code as XPM and writes it to a file.
+    /// </summary>
+    public static string SaveXpm(string payload, string path, QrEasyOptions? options = null) {
+        var xpm = Xpm(payload, options);
+        return xpm.WriteText(path);
+    }
+
+    /// <summary>
+    /// Renders a QR code as XPM and writes it to a file for a payload with embedded defaults.
+    /// </summary>
+    public static string SaveXpm(QrPayloadData payload, string path, QrEasyOptions? options = null) {
+        var xpm = Xpm(payload, options);
+        return xpm.WriteText(path);
+    }
+
+    /// <summary>
+    /// Renders a QR code as XPM and writes it to a stream.
+    /// </summary>
+    public static void SaveXpm(string payload, Stream stream, QrEasyOptions? options = null) {
+        QrEasy.RenderXpmToStream(payload, stream, options);
+    }
+
+    /// <summary>
+    /// Renders a QR code as XPM and writes it to a stream for a payload with embedded defaults.
+    /// </summary>
+    public static void SaveXpm(QrPayloadData payload, Stream stream, QrEasyOptions? options = null) {
+        QrEasy.RenderXpmToStream(payload, stream, options);
+    }
+
+    /// <summary>
+    /// Renders a QR code as TGA and writes it to a file.
+    /// </summary>
+    public static string SaveTga(string payload, string path, QrEasyOptions? options = null) {
+        var tga = Tga(payload, options);
+        return tga.WriteBinary(path);
+    }
+
+    /// <summary>
+    /// Renders a QR code as TGA and writes it to a file for a payload with embedded defaults.
+    /// </summary>
+    public static string SaveTga(QrPayloadData payload, string path, QrEasyOptions? options = null) {
+        var tga = Tga(payload, options);
+        return tga.WriteBinary(path);
+    }
+
+    /// <summary>
+    /// Renders a QR code as TGA and writes it to a stream.
+    /// </summary>
+    public static void SaveTga(string payload, Stream stream, QrEasyOptions? options = null) {
+        QrEasy.RenderTgaToStream(payload, stream, options);
+    }
+
+    /// <summary>
+    /// Renders a QR code as TGA and writes it to a stream for a payload with embedded defaults.
+    /// </summary>
+    public static void SaveTga(QrPayloadData payload, Stream stream, QrEasyOptions? options = null) {
+        QrEasy.RenderTgaToStream(payload, stream, options);
+    }
+
+    /// <summary>
+    /// Renders a QR code as ICO and writes it to a file.
+    /// </summary>
+    public static string SaveIco(string payload, string path, QrEasyOptions? options = null) {
+        var ico = Ico(payload, options);
+        return ico.WriteBinary(path);
+    }
+
+    /// <summary>
+    /// Renders a QR code as ICO and writes it to a file for a payload with embedded defaults.
+    /// </summary>
+    public static string SaveIco(QrPayloadData payload, string path, QrEasyOptions? options = null) {
+        var ico = Ico(payload, options);
+        return ico.WriteBinary(path);
+    }
+
+    /// <summary>
+    /// Renders a QR code as ICO and writes it to a stream.
+    /// </summary>
+    public static void SaveIco(string payload, Stream stream, QrEasyOptions? options = null) {
+        QrEasy.RenderIcoToStream(payload, stream, options);
+    }
+
+    /// <summary>
+    /// Renders a QR code as ICO and writes it to a stream for a payload with embedded defaults.
+    /// </summary>
+    public static void SaveIco(QrPayloadData payload, Stream stream, QrEasyOptions? options = null) {
+        QrEasy.RenderIcoToStream(payload, stream, options);
+    }
+
+    /// <summary>
+    /// Renders a QR code as SVGZ and writes it to a file.
+    /// </summary>
+    public static string SaveSvgz(string payload, string path, QrEasyOptions? options = null) {
+        var svgz = Svgz(payload, options);
+        return svgz.WriteBinary(path);
+    }
+
+    /// <summary>
+    /// Renders a QR code as SVGZ and writes it to a file for a payload with embedded defaults.
+    /// </summary>
+    public static string SaveSvgz(QrPayloadData payload, string path, QrEasyOptions? options = null) {
+        var svgz = Svgz(payload, options);
+        return svgz.WriteBinary(path);
+    }
+
+    /// <summary>
+    /// Renders a QR code as SVGZ and writes it to a stream.
+    /// </summary>
+    public static void SaveSvgz(string payload, Stream stream, QrEasyOptions? options = null) {
+        QrEasy.RenderSvgzToStream(payload, stream, options);
+    }
+
+    /// <summary>
+    /// Renders a QR code as SVGZ and writes it to a stream for a payload with embedded defaults.
+    /// </summary>
+    public static void SaveSvgz(QrPayloadData payload, Stream stream, QrEasyOptions? options = null) {
+        QrEasy.RenderSvgzToStream(payload, stream, options);
+    }
+
+    /// <summary>
     /// Saves a PDF QR to a file.
     /// </summary>
     /// <param name="payload">The payload text.</param>
@@ -440,7 +863,7 @@ public static class QR {
     }
 
     /// <summary>
-    /// Saves a QR code to a file based on the file extension (.png/.svg/.html/.jpg/.bmp/.pdf/.eps).
+    /// Saves a QR code to a file based on the file extension (.png/.svg/.svgz/.html/.jpg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps).
     /// Defaults to PNG when no extension is provided.
     /// </summary>
     public static string Save(string payload, string path, QrEasyOptions? options = null, string? title = null) {
@@ -448,7 +871,7 @@ public static class QR {
     }
 
     /// <summary>
-    /// Detects a payload type and saves a QR code to a file based on the file extension (.png/.svg/.html/.jpg/.bmp/.pdf/.eps).
+    /// Detects a payload type and saves a QR code to a file based on the file extension (.png/.svg/.svgz/.html/.jpg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps).
     /// Defaults to PNG when no extension is provided.
     /// </summary>
     public static string SaveAuto(string payload, string path, QrPayloadDetectOptions? detectOptions = null, QrEasyOptions? options = null, string? title = null) {
@@ -457,7 +880,7 @@ public static class QR {
     }
 
     /// <summary>
-    /// Saves a QR code to a file based on the file extension (.png/.svg/.html/.jpg/.bmp/.pdf/.eps).
+    /// Saves a QR code to a file based on the file extension (.png/.svg/.svgz/.html/.jpg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps).
     /// Defaults to PNG when no extension is provided.
     /// </summary>
     public static string Save(QrPayloadData payload, string path, QrEasyOptions? options = null, string? title = null) {
@@ -666,6 +1089,22 @@ public static class QR {
         }
 
         /// <summary>
+        /// Sets ICO output sizes (in pixels).
+        /// </summary>
+        public QrBuilder WithIcoSizes(params int[] sizes) {
+            Options.IcoSizes = sizes;
+            return this;
+        }
+
+        /// <summary>
+        /// Sets ICO aspect ratio preservation behavior.
+        /// </summary>
+        public QrBuilder WithIcoPreserveAspectRatio(bool enabled = true) {
+            Options.IcoPreserveAspectRatio = enabled;
+            return this;
+        }
+
+        /// <summary>
         /// Encodes the QR code.
         /// </summary>
         public QrCode Encode() => _payloadData is null ? QrEasy.Encode(_payload, Options) : QrEasy.Encode(_payloadData, Options);
@@ -689,6 +1128,51 @@ public static class QR {
         /// Renders JPEG bytes.
         /// </summary>
         public byte[] Jpeg() => _payloadData is null ? QrEasy.RenderJpeg(_payload, Options) : QrEasy.RenderJpeg(_payloadData, Options);
+
+        /// <summary>
+        /// Renders PPM bytes.
+        /// </summary>
+        public byte[] Ppm() => _payloadData is null ? QrEasy.RenderPpm(_payload, Options) : QrEasy.RenderPpm(_payloadData, Options);
+
+        /// <summary>
+        /// Renders PBM bytes.
+        /// </summary>
+        public byte[] Pbm() => _payloadData is null ? QrEasy.RenderPbm(_payload, Options) : QrEasy.RenderPbm(_payloadData, Options);
+
+        /// <summary>
+        /// Renders PGM bytes.
+        /// </summary>
+        public byte[] Pgm() => _payloadData is null ? QrEasy.RenderPgm(_payload, Options) : QrEasy.RenderPgm(_payloadData, Options);
+
+        /// <summary>
+        /// Renders PAM bytes.
+        /// </summary>
+        public byte[] Pam() => _payloadData is null ? QrEasy.RenderPam(_payload, Options) : QrEasy.RenderPam(_payloadData, Options);
+
+        /// <summary>
+        /// Renders XBM text.
+        /// </summary>
+        public string Xbm() => _payloadData is null ? QrEasy.RenderXbm(_payload, Options) : QrEasy.RenderXbm(_payloadData, Options);
+
+        /// <summary>
+        /// Renders XPM text.
+        /// </summary>
+        public string Xpm() => _payloadData is null ? QrEasy.RenderXpm(_payload, Options) : QrEasy.RenderXpm(_payloadData, Options);
+
+        /// <summary>
+        /// Renders TGA bytes.
+        /// </summary>
+        public byte[] Tga() => _payloadData is null ? QrEasy.RenderTga(_payload, Options) : QrEasy.RenderTga(_payloadData, Options);
+
+        /// <summary>
+        /// Renders ICO bytes.
+        /// </summary>
+        public byte[] Ico() => _payloadData is null ? QrEasy.RenderIco(_payload, Options) : QrEasy.RenderIco(_payloadData, Options);
+
+        /// <summary>
+        /// Renders SVGZ bytes.
+        /// </summary>
+        public byte[] Svgz() => _payloadData is null ? QrEasy.RenderSvgz(_payload, Options) : QrEasy.RenderSvgz(_payloadData, Options);
 
         /// <summary>
         /// Renders PDF bytes.
@@ -783,6 +1267,150 @@ public static class QR {
         }
 
         /// <summary>
+        /// Saves PPM to a file.
+        /// </summary>
+        public string SavePpm(string path) => _payloadData is null ? QR.SavePpm(_payload, path, Options) : QR.SavePpm(_payloadData, path, Options);
+
+        /// <summary>
+        /// Saves PPM to a stream.
+        /// </summary>
+        public void SavePpm(Stream stream) {
+            if (_payloadData is null) {
+                QR.SavePpm(_payload, stream, Options);
+            } else {
+                QR.SavePpm(_payloadData, stream, Options);
+            }
+        }
+
+        /// <summary>
+        /// Saves PBM to a file.
+        /// </summary>
+        public string SavePbm(string path) => _payloadData is null ? QR.SavePbm(_payload, path, Options) : QR.SavePbm(_payloadData, path, Options);
+
+        /// <summary>
+        /// Saves PBM to a stream.
+        /// </summary>
+        public void SavePbm(Stream stream) {
+            if (_payloadData is null) {
+                QR.SavePbm(_payload, stream, Options);
+            } else {
+                QR.SavePbm(_payloadData, stream, Options);
+            }
+        }
+
+        /// <summary>
+        /// Saves PGM to a file.
+        /// </summary>
+        public string SavePgm(string path) => _payloadData is null ? QR.SavePgm(_payload, path, Options) : QR.SavePgm(_payloadData, path, Options);
+
+        /// <summary>
+        /// Saves PGM to a stream.
+        /// </summary>
+        public void SavePgm(Stream stream) {
+            if (_payloadData is null) {
+                QR.SavePgm(_payload, stream, Options);
+            } else {
+                QR.SavePgm(_payloadData, stream, Options);
+            }
+        }
+
+        /// <summary>
+        /// Saves PAM to a file.
+        /// </summary>
+        public string SavePam(string path) => _payloadData is null ? QR.SavePam(_payload, path, Options) : QR.SavePam(_payloadData, path, Options);
+
+        /// <summary>
+        /// Saves PAM to a stream.
+        /// </summary>
+        public void SavePam(Stream stream) {
+            if (_payloadData is null) {
+                QR.SavePam(_payload, stream, Options);
+            } else {
+                QR.SavePam(_payloadData, stream, Options);
+            }
+        }
+
+        /// <summary>
+        /// Saves XBM to a file.
+        /// </summary>
+        public string SaveXbm(string path) => _payloadData is null ? QR.SaveXbm(_payload, path, Options) : QR.SaveXbm(_payloadData, path, Options);
+
+        /// <summary>
+        /// Saves XBM to a stream.
+        /// </summary>
+        public void SaveXbm(Stream stream) {
+            if (_payloadData is null) {
+                QR.SaveXbm(_payload, stream, Options);
+            } else {
+                QR.SaveXbm(_payloadData, stream, Options);
+            }
+        }
+
+        /// <summary>
+        /// Saves XPM to a file.
+        /// </summary>
+        public string SaveXpm(string path) => _payloadData is null ? QR.SaveXpm(_payload, path, Options) : QR.SaveXpm(_payloadData, path, Options);
+
+        /// <summary>
+        /// Saves XPM to a stream.
+        /// </summary>
+        public void SaveXpm(Stream stream) {
+            if (_payloadData is null) {
+                QR.SaveXpm(_payload, stream, Options);
+            } else {
+                QR.SaveXpm(_payloadData, stream, Options);
+            }
+        }
+
+        /// <summary>
+        /// Saves TGA to a file.
+        /// </summary>
+        public string SaveTga(string path) => _payloadData is null ? QR.SaveTga(_payload, path, Options) : QR.SaveTga(_payloadData, path, Options);
+
+        /// <summary>
+        /// Saves TGA to a stream.
+        /// </summary>
+        public void SaveTga(Stream stream) {
+            if (_payloadData is null) {
+                QR.SaveTga(_payload, stream, Options);
+            } else {
+                QR.SaveTga(_payloadData, stream, Options);
+            }
+        }
+
+        /// <summary>
+        /// Saves ICO to a file.
+        /// </summary>
+        public string SaveIco(string path) => _payloadData is null ? QR.SaveIco(_payload, path, Options) : QR.SaveIco(_payloadData, path, Options);
+
+        /// <summary>
+        /// Saves ICO to a stream.
+        /// </summary>
+        public void SaveIco(Stream stream) {
+            if (_payloadData is null) {
+                QR.SaveIco(_payload, stream, Options);
+            } else {
+                QR.SaveIco(_payloadData, stream, Options);
+            }
+        }
+
+        /// <summary>
+        /// Saves SVGZ to a file.
+        /// </summary>
+        public string SaveSvgz(string path) => _payloadData is null ? QR.SaveSvgz(_payload, path, Options) : QR.SaveSvgz(_payloadData, path, Options);
+
+        /// <summary>
+        /// Saves SVGZ to a stream.
+        /// </summary>
+        public void SaveSvgz(Stream stream) {
+            if (_payloadData is null) {
+                QR.SaveSvgz(_payload, stream, Options);
+            } else {
+                QR.SaveSvgz(_payloadData, stream, Options);
+            }
+        }
+
+        /// <summary>
         /// Saves PDF to a file.
         /// </summary>
     /// <param name="path">Output file path.</param>
@@ -835,7 +1463,7 @@ public static class QR {
         public string SaveAscii(string path, MatrixAsciiRenderOptions? asciiOptions = null) => Ascii(asciiOptions).WriteText(path);
 
         /// <summary>
-        /// Saves based on file extension (.png/.svg/.html/.jpg/.bmp/.pdf/.eps). Defaults to PNG when no extension is provided.
+        /// Saves based on file extension (.png/.svg/.svgz/.html/.jpg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps). Defaults to PNG when no extension is provided.
         /// </summary>
         public string Save(string path, string? title = null) => _payloadData is null
             ? QR.Save(_payload, path, Options, title)
@@ -843,6 +1471,11 @@ public static class QR {
     }
 
     private static string SaveByExtension(string path, string payload, QrPayloadData? payloadData, QrEasyOptions? options, string? title) {
+        if (path.EndsWith(".svgz", StringComparison.OrdinalIgnoreCase) ||
+            path.EndsWith(".svg.gz", StringComparison.OrdinalIgnoreCase)) {
+            return payloadData is null ? SaveSvgz(payload, path, options) : SaveSvgz(payloadData, path, options);
+        }
+
         var ext = Path.GetExtension(path);
         if (string.IsNullOrWhiteSpace(ext)) {
             return payloadData is null ? SavePng(payload, path, options) : SavePng(payloadData, path, options);
@@ -861,6 +1494,24 @@ public static class QR {
                 return payloadData is null ? SaveJpeg(payload, path, options) : SaveJpeg(payloadData, path, options);
             case ".bmp":
                 return payloadData is null ? SaveBmp(payload, path, options) : SaveBmp(payloadData, path, options);
+            case ".ppm":
+                return payloadData is null ? SavePpm(payload, path, options) : SavePpm(payloadData, path, options);
+            case ".pbm":
+                return payloadData is null ? SavePbm(payload, path, options) : SavePbm(payloadData, path, options);
+            case ".pgm":
+                return payloadData is null ? SavePgm(payload, path, options) : SavePgm(payloadData, path, options);
+            case ".pam":
+                return payloadData is null ? SavePam(payload, path, options) : SavePam(payloadData, path, options);
+            case ".xbm":
+                return payloadData is null ? SaveXbm(payload, path, options) : SaveXbm(payloadData, path, options);
+            case ".xpm":
+                return payloadData is null ? SaveXpm(payload, path, options) : SaveXpm(payloadData, path, options);
+            case ".tga":
+                return payloadData is null ? SaveTga(payload, path, options) : SaveTga(payloadData, path, options);
+            case ".ico":
+                return payloadData is null ? SaveIco(payload, path, options) : SaveIco(payloadData, path, options);
+            case ".svgz":
+                return payloadData is null ? SaveSvgz(payload, path, options) : SaveSvgz(payloadData, path, options);
             case ".pdf":
                 return payloadData is null ? SavePdf(payload, path, options) : SavePdf(payloadData, path, options);
             case ".eps":

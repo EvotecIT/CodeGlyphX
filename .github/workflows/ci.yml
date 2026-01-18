@@ -10,6 +10,7 @@ jobs:
   build-test:
     name: Build & Test (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
     strategy:
       fail-fast: false
       matrix:
@@ -41,12 +42,16 @@ jobs:
         if: runner.os != 'Linux'
         run: dotnet test CodeGlyphX.Tests/CodeGlyphX.Tests.csproj -c Release -f net8.0 --no-restore
 
+      - name: Test (net8.0)
+        if: runner.os == 'Linux' && github.event_name == 'pull_request'
+        run: dotnet test CodeGlyphX.Tests/CodeGlyphX.Tests.csproj -c Release -f net8.0 --no-restore
+
       - name: Test (net8.0 + coverage)
-        if: runner.os == 'Linux'
+        if: runner.os == 'Linux' && github.event_name != 'pull_request'
         run: dotnet test CodeGlyphX.Tests/CodeGlyphX.Tests.csproj -c Release -f net8.0 --no-restore --collect:"XPlat Code Coverage"
 
       - name: Upload coverage to Codecov
-        if: runner.os == 'Linux'
+        if: runner.os == 'Linux' && github.event_name != 'pull_request'
         uses: codecov/codecov-action@v5
         with:
           files: ./CodeGlyphX.Tests/TestResults/**/coverage.cobertura.xml

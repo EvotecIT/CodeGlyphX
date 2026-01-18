@@ -4,8 +4,17 @@ using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Ascii;
 using CodeGlyphX.Rendering.Bmp;
 using CodeGlyphX.Rendering.Html;
+using CodeGlyphX.Rendering.Ico;
+using CodeGlyphX.Rendering.Pam;
 using CodeGlyphX.Rendering.Png;
+using CodeGlyphX.Rendering.Pbm;
+using CodeGlyphX.Rendering.Pgm;
+using CodeGlyphX.Rendering.Ppm;
 using CodeGlyphX.Rendering.Svg;
+using CodeGlyphX.Rendering.Svgz;
+using CodeGlyphX.Rendering.Tga;
+using CodeGlyphX.Rendering.Xbm;
+using CodeGlyphX.Rendering.Xpm;
 using Xunit;
 
 namespace CodeGlyphX.Tests;
@@ -26,6 +35,33 @@ public sealed class RendererFormatTests {
         var bmp = QrEasy.RenderBmp(payload);
         Assert.True(IsBmp(bmp));
 
+        var ppm = QrEasy.RenderPpm(payload);
+        Assert.True(IsPpm(ppm));
+
+        var pbm = QrEasy.RenderPbm(payload);
+        Assert.True(IsPbm(pbm));
+
+        var pgm = QrEasy.RenderPgm(payload);
+        Assert.True(IsPgm(pgm));
+
+        var pam = QrEasy.RenderPam(payload);
+        Assert.True(IsPam(pam));
+
+        var xbm = QrEasy.RenderXbm(payload);
+        Assert.StartsWith("#define", xbm, StringComparison.Ordinal);
+
+        var xpm = QrEasy.RenderXpm(payload);
+        Assert.Contains("XPM", xpm, StringComparison.Ordinal);
+
+        var tga = QrEasy.RenderTga(payload);
+        Assert.True(IsTga(tga));
+
+        var ico = QrEasy.RenderIco(payload);
+        Assert.True(IsIco(ico));
+
+        var svgz = QrEasy.RenderSvgz(payload);
+        Assert.True(IsGzip(svgz));
+
         var pdf = QrEasy.RenderPdf(payload);
         Assert.True(IsPdf(pdf));
 
@@ -43,6 +79,18 @@ public sealed class RendererFormatTests {
     }
 
     [Fact]
+    public void Qr_Ico_Respects_MultiSize_Options() {
+        var payload = "https://example.com";
+        var opts = new QrEasyOptions {
+            IcoSizes = new[] { 32, 64, 128 }
+        };
+
+        var ico = QrEasy.RenderIco(payload, opts);
+        Assert.True(IsIco(ico));
+        Assert.Equal(3, GetIcoCount(ico));
+    }
+
+    [Fact]
     public void Barcode_Renderers_Produce_Expected_Formats() {
         var barcode = BarcodeEncoder.Encode(BarcodeType.Code128, "CODEGLYPH-123");
         var png = BarcodePngRenderer.Render(barcode, new BarcodePngRenderOptions());
@@ -56,6 +104,33 @@ public sealed class RendererFormatTests {
 
         var bmp = BarcodeBmpRenderer.Render(barcode, new BarcodePngRenderOptions());
         Assert.True(IsBmp(bmp));
+
+        var ppm = BarcodePpmRenderer.Render(barcode, new BarcodePngRenderOptions());
+        Assert.True(IsPpm(ppm));
+
+        var pbm = BarcodePbmRenderer.Render(barcode, new BarcodePngRenderOptions());
+        Assert.True(IsPbm(pbm));
+
+        var pgm = BarcodePgmRenderer.Render(barcode, new BarcodePngRenderOptions());
+        Assert.True(IsPgm(pgm));
+
+        var pam = BarcodePamRenderer.Render(barcode, new BarcodePngRenderOptions());
+        Assert.True(IsPam(pam));
+
+        var xbm = BarcodeXbmRenderer.Render(barcode, new BarcodePngRenderOptions());
+        Assert.StartsWith("#define", xbm, StringComparison.Ordinal);
+
+        var xpm = BarcodeXpmRenderer.Render(barcode, new BarcodePngRenderOptions());
+        Assert.Contains("XPM", xpm, StringComparison.Ordinal);
+
+        var tga = BarcodeTgaRenderer.Render(barcode, new BarcodePngRenderOptions());
+        Assert.True(IsTga(tga));
+
+        var ico = BarcodeIcoRenderer.Render(barcode, new BarcodePngRenderOptions());
+        Assert.True(IsIco(ico));
+
+        var svgz = BarcodeSvgzRenderer.Render(barcode, new BarcodeSvgRenderOptions());
+        Assert.True(IsGzip(svgz));
 
         var pdf = Barcode.Pdf(BarcodeType.Code128, "CODEGLYPH-123");
         Assert.True(IsPdf(pdf));
@@ -147,6 +222,46 @@ public sealed class RendererFormatTests {
     private static bool IsBmp(byte[] data) {
         if (data is null || data.Length < 2) return false;
         return data[0] == (byte)'B' && data[1] == (byte)'M';
+    }
+
+    private static bool IsPpm(byte[] data) {
+        if (data is null || data.Length < 2) return false;
+        return data[0] == (byte)'P' && data[1] == (byte)'6';
+    }
+
+    private static bool IsPbm(byte[] data) {
+        if (data is null || data.Length < 2) return false;
+        return data[0] == (byte)'P' && data[1] == (byte)'4';
+    }
+
+    private static bool IsPgm(byte[] data) {
+        if (data is null || data.Length < 2) return false;
+        return data[0] == (byte)'P' && data[1] == (byte)'5';
+    }
+
+    private static bool IsPam(byte[] data) {
+        if (data is null || data.Length < 2) return false;
+        return data[0] == (byte)'P' && data[1] == (byte)'7';
+    }
+
+    private static bool IsTga(byte[] data) {
+        if (data is null || data.Length < 3) return false;
+        return data[1] == 0 && data[2] == 2;
+    }
+
+    private static bool IsIco(byte[] data) {
+        if (data is null || data.Length < 4) return false;
+        return data[0] == 0 && data[1] == 0 && data[2] == 1 && data[3] == 0;
+    }
+
+    private static int GetIcoCount(byte[] data) {
+        if (data is null || data.Length < 6) return 0;
+        return data[4] | (data[5] << 8);
+    }
+
+    private static bool IsGzip(byte[] data) {
+        if (data is null || data.Length < 2) return false;
+        return data[0] == 0x1F && data[1] == 0x8B;
     }
 
     private static bool IsPdf(byte[] data) {
