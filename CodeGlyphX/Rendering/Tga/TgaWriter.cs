@@ -7,6 +7,7 @@ namespace CodeGlyphX.Rendering.Tga;
 /// Writes TGA images from RGBA buffers (uncompressed).
 /// </summary>
 public static class TgaWriter {
+    private const int MaxDimension = 16384;
     /// <summary>
     /// Writes a TGA byte array from an RGBA buffer.
     /// </summary>
@@ -23,6 +24,8 @@ public static class TgaWriter {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
         if (width <= 0) throw new ArgumentOutOfRangeException(nameof(width));
         if (height <= 0) throw new ArgumentOutOfRangeException(nameof(height));
+        if (width > MaxDimension) throw new ArgumentOutOfRangeException(nameof(width));
+        if (height > MaxDimension) throw new ArgumentOutOfRangeException(nameof(height));
         if (stride < width * 4) throw new ArgumentOutOfRangeException(nameof(stride));
         if (rgba.Length < (height - 1) * stride + width * 4) throw new ArgumentException("RGBA buffer is too small.", nameof(rgba));
 

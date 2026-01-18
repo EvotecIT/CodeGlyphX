@@ -40,6 +40,11 @@ CodeGlyphX is a fast, dependency-free toolkit for QR codes and barcodes, with ro
 - Payload helpers for QR (WiFi, payments, contacts, OTP, social, etc.)
 - Friendly APIs: one-liners + options + fluent presets
 
+## Roadmap & Website
+
+- Roadmap / TODO: `TODO.md`
+- Website plan: `WEBSITE.md`
+
 ## Installation
 
 ```powershell
@@ -112,7 +117,7 @@ dotnet add package CodeGlyphX
 
 ## AOT & trimming
 
-CodeGlyphX is AOT-friendly (no reflection, no runtime codegen) and ships with trimming/AOT analyzers enabled for .NET 8+ targets.  
+CodeGlyphX is AOT-friendly (no reflection, no runtime codegen) and ships with trimming/AOT analyzers enabled for .NET 8+ targets.
 Recommended publish flags: `PublishAot=true` (native), or `PublishTrimmed=true` (size) for app projects.
 
 ## Output formats (Save by extension)
@@ -300,5 +305,3 @@ xmlns:wpf="clr-namespace:CodeGlyphX.Wpf;assembly=CodeGlyphX.Wpf"
 ## License
 
 Apache-2.0.
-
-Commercial support and custom licensing are available. Contact: contact@evotec.pl.

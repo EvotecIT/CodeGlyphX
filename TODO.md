@@ -1,5 +1,12 @@
 # CodeGlyphX TODO (Easiest → Hardest)
 
+## Current focus (next PRs)
+- [ ] Merge PR #11 (multi-format renderers, multi-size ICO, security hardening).
+- [ ] Fluent API improvements (presets, transparent background helpers, fixed-size icons).
+- [ ] Benchmarks: expand scenarios + publish baseline results.
+- [ ] Website: integrate `WEBSITE.md` content and publish.
+- [ ] Add comparison table vs other libs (feature matrix + no-deps emphasis).
+
 ## Phase 0 — Platform clarity
 - [x] Docs: add a platform/renderer support matrix (Windows/Linux/macOS + WPF).
 - [x] APIs: clearly mark platform-specific features (WPF/Windows-only).
