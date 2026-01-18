@@ -319,6 +319,127 @@ QR.Save(QrPayloads.Girocode(
     </div>
 </section>
 
+<!-- Benchmarks Section -->
+<section class="benchmarks">
+    <div class="section-header">
+        <span class="section-label">Benchmarks</span>
+        <h2>Fast by Default</h2>
+        <p>Local run on Ubuntu 24.04, Ryzen 9 9950X, .NET 8.0 (2026-01-18). Your results will vary.</p>
+    </div>
+
+    <div class="benchmarks-grid">
+        <div class="bench-card">
+            <h3>QR</h3>
+            <table class="bench-table">
+                <thead>
+                    <tr><th>Scenario</th><th>Mean</th><th>Alloc</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>QR PNG (short)</td><td>331.33 us</td><td>431.94 KB</td></tr>
+                    <tr><td>QR PNG (medium)</td><td>713.68 us</td><td>837.75 KB</td></tr>
+                    <tr><td>QR PNG (long)</td><td>2197.99 us</td><td>3041.06 KB</td></tr>
+                    <tr><td>QR SVG (medium)</td><td>99.17 us</td><td>20.03 KB</td></tr>
+                    <tr><td>QR PNG (High EC)</td><td>1094.94 us</td><td>1535.88 KB</td></tr>
+                    <tr><td>QR HTML (medium)</td><td>115.46 us</td><td>137.43 KB</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="bench-card">
+            <h3>Barcode (1D)</h3>
+            <table class="bench-table">
+                <thead>
+                    <tr><th>Scenario</th><th>Mean</th><th>Alloc</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Code 128 PNG</td><td>442.41 us</td><td>756.24 KB</td></tr>
+                    <tr><td>Code 128 SVG</td><td>2.52 us</td><td>17.61 KB</td></tr>
+                    <tr><td>EAN PNG</td><td>191.33 us</td><td>338.54 KB</td></tr>
+                    <tr><td>Code 39 PNG</td><td>311.37 us</td><td>414.49 KB</td></tr>
+                    <tr><td>Code 93 PNG</td><td>222.69 us</td><td>367.76 KB</td></tr>
+                    <tr><td>UPC-A PNG</td><td>175.83 us</td><td>338.85 KB</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="bench-card">
+            <h3>2D Matrix</h3>
+            <table class="bench-table">
+                <thead>
+                    <tr><th>Scenario</th><th>Mean</th><th>Alloc</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Data Matrix PNG (med)</td><td>303.48 us</td><td>447.73 KB</td></tr>
+                    <tr><td>Data Matrix PNG (long)</td><td>711.93 us</td><td>1509.06 KB</td></tr>
+                    <tr><td>Data Matrix SVG</td><td>5.64 us</td><td>12.29 KB</td></tr>
+                    <tr><td>PDF417 PNG</td><td>1730.92 us</td><td>3154.87 KB</td></tr>
+                    <tr><td>PDF417 SVG</td><td>28.79 us</td><td>64.53 KB</td></tr>
+                    <tr><td>Aztec PNG</td><td>260.70 us</td><td>452.30 KB</td></tr>
+                    <tr><td>Aztec SVG</td><td>12.76 us</td><td>59.74 KB</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<!-- Comparison Section -->
+<section class="comparison">
+    <div class="section-header">
+        <span class="section-label">Comparison</span>
+        <h2>How CodeGlyphX Stacks Up</h2>
+        <p>Based on public docs as of 2026-01-18. Capabilities depend on optional renderer packages.</p>
+    </div>
+
+    <div class="table-wrap">
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Library</th>
+                    <th>Encode</th>
+                    <th>Decode</th>
+                    <th>2D Codes</th>
+                    <th>1D Codes</th>
+                    <th>Image Dependencies</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>CodeGlyphX</td>
+                    <td>Yes</td>
+                    <td>Yes</td>
+                    <td>QR, Micro QR, Data Matrix, PDF417, Aztec</td>
+                    <td>Yes</td>
+                    <td>None</td>
+                </tr>
+                <tr>
+                    <td>ZXing.Net</td>
+                    <td>Yes</td>
+                    <td>Yes</td>
+                    <td>QR, Data Matrix, PDF417, Aztec, more</td>
+                    <td>Yes</td>
+                    <td>Bindings for System.Drawing / ImageSharp / SkiaSharp / OpenCV</td>
+                </tr>
+                <tr>
+                    <td>QRCoder</td>
+                    <td>Yes</td>
+                    <td>No</td>
+                    <td>QR only</td>
+                    <td>No</td>
+                    <td>System.Drawing renderer (Windows) or alt renderers</td>
+                </tr>
+                <tr>
+                    <td>Barcoder</td>
+                    <td>Yes</td>
+                    <td>No</td>
+                    <td>QR, Data Matrix, PDF417, Aztec</td>
+                    <td>Yes</td>
+                    <td>ImageSharp.Drawing for image renderer</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
 <!-- CTA Section -->
 <section class="cta">
     <div class="cta-content">

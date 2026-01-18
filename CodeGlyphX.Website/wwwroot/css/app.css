@@ -829,6 +829,98 @@ a:hover {
     opacity: 1;
 }
 
+/* ============================================
+   Benchmarks & Comparison
+   ============================================ */
+
+.benchmarks {
+    padding: 4rem 2rem;
+    background: var(--bg-card);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+}
+
+.benchmarks-grid {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem;
+}
+
+.bench-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+}
+
+.bench-card h3 {
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+}
+
+.bench-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+}
+
+.bench-table th {
+    text-align: left;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.bench-table td {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-muted);
+}
+
+.bench-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.comparison {
+    padding: 4rem 2rem;
+}
+
+.table-wrap {
+    max-width: 1200px;
+    margin: 0 auto;
+    overflow-x: auto;
+}
+
+.comparison-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 720px;
+}
+
+.comparison-table th,
+.comparison-table td {
+    padding: 0.75rem 0.75rem;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+    vertical-align: top;
+}
+
+.comparison-table th {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-dim);
+}
+
+.comparison-table td {
+    color: var(--text-muted);
+}
+
 .copy-btn svg {
     width: 100%;
     height: 100%;
