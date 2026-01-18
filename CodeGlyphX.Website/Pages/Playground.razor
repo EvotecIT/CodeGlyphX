@@ -21,6 +21,7 @@
                     <option value="QR">QR Code</option>
                     <option value="SpecialQR">Special QR Codes</option>
                     <option value="Barcode">1D Barcodes</option>
+                    <option value="Matrix">2D Matrix Codes</option>
                 </select>
             </div>
 
@@ -289,6 +290,22 @@
                     }
                 </div>
             }
+            else if (SelectedCategory == "Matrix")
+            {
+                <div class="form-group">
+                    <label>Matrix Type</label>
+                    <select @bind="SelectedMatrixType" @bind:after="GenerateCode">
+                        <option value="DataMatrix">Data Matrix</option>
+                        <option value="Pdf417">PDF417</option>
+                        <option value="Aztec">Aztec</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Content</label>
+                    <textarea rows="3" @bind="MatrixContent" @bind:after="GenerateCode" placeholder="Enter text or data..."></textarea>
+                </div>
+            }
 
             <button class="btn btn-primary" style="width: 100%; margin-top: 1.5rem;" @onclick="GenerateCode">
                 Generate Code
@@ -420,6 +437,10 @@
     private string SelectedBarcodeType { get; set; } = "Code128";
     private string BarcodeContent { get; set; } = "PRODUCT-12345";
     private string BarcodeHint { get; set; } = "";
+
+    // Matrix code options
+    private string SelectedMatrixType { get; set; } = "DataMatrix";
+    private string MatrixContent { get; set; } = "Serial: ABC123-XYZ789";
 
     // Output
     private string? ImageDataUri { get; set; }
@@ -565,7 +586,7 @@
                 pngBytes = QrEasy.RenderPng(payloadData);
                 svg = QrEasy.RenderSvg(payloadData);
             }
-            else // Barcode
+            else if (SelectedCategory == "Barcode")
             {
                 if (string.IsNullOrWhiteSpace(BarcodeContent))
                     return;
@@ -601,6 +622,27 @@
 
                 pngBytes = BarcodeEasy.RenderPng(barcodeType, content);
                 svg = BarcodeEasy.RenderSvg(barcodeType, content);
+            }
+            else if (SelectedCategory == "Matrix")
+            {
+                if (string.IsNullOrWhiteSpace(MatrixContent))
+                    return;
+
+                switch (SelectedMatrixType)
+                {
+                    case "Pdf417":
+                        pngBytes = Pdf417Code.Png(MatrixContent);
+                        svg = Pdf417Code.Svg(MatrixContent);
+                        break;
+                    case "Aztec":
+                        pngBytes = AztecCode.Png(MatrixContent);
+                        svg = AztecCode.Svg(MatrixContent);
+                        break;
+                    default:
+                        pngBytes = DataMatrixCode.Png(MatrixContent);
+                        svg = DataMatrixCode.Svg(MatrixContent);
+                        break;
+                }
             }
 
             ImageDataUri = $"data:image/png;base64,{Convert.ToBase64String(pngBytes)}";
@@ -673,6 +715,7 @@
             "QR" => "qrcode",
             "SpecialQR" => $"qr-{SpecialPayloadType.ToLowerInvariant()}",
             "Barcode" => SelectedBarcodeType.ToLowerInvariant(),
+            "Matrix" => SelectedMatrixType.ToLowerInvariant(),
             _ => "code"
         };
         return $"{baseName}.{extension}";
@@ -764,7 +807,7 @@
             }
             return sb.ToString();
         }
-        else // Barcode
+        else if (SelectedCategory == "Barcode")
         {
             var content = SelectedBarcodeType switch
             {
@@ -773,6 +816,18 @@
             };
             return "using CodeGlyphX;" + nl + nl + "Barcode.Save(BarcodeType." + SelectedBarcodeType + ", \"" + content + "\", \"barcode.png\");";
         }
+        else if (SelectedCategory == "Matrix")
+        {
+            var content = EscapeString(MatrixContent);
+            var method = SelectedMatrixType switch
+            {
+                "Pdf417" => "Pdf417Code",
+                "Aztec" => "AztecCode",
+                _ => "DataMatrixCode"
+            };
+            return "using CodeGlyphX;" + nl + nl + method + ".Save(\"" + content + "\", \"" + SelectedMatrixType.ToLowerInvariant() + ".png\");";
+        }
+        return "using CodeGlyphX;" + nl + nl + "QR.Save(\"https://example.com\", \"qrcode.png\");";
     }
 
     private static string EscapeString(string s) => s.Replace("\\", "\\\\").Replace("\"", "\\\"");

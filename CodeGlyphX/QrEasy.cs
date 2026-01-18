@@ -26,6 +26,13 @@ namespace CodeGlyphX;
 /// <summary>
 /// One-line QR generation helpers with sane defaults.
 /// </summary>
+/// <example>
+/// <code>
+/// using CodeGlyphX;
+/// var png = QrEasy.RenderPng("https://example.com");
+/// var svg = QrEasy.RenderSvg("https://example.com");
+/// </code>
+/// </example>
 public static class QrEasy {
     /// <summary>
     /// Encodes a payload into a <see cref="QrCode"/> with defaults.

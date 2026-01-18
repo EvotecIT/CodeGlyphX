@@ -11,6 +11,15 @@ namespace CodeGlyphX;
 /// <summary>
 /// Simple QR helpers with fluent and static APIs.
 /// </summary>
+/// <remarks>
+/// Use <see cref="Save(string,string,CodeGlyphX.QrEasyOptions,string)"/> to pick the output format by file extension.
+/// </remarks>
+/// <example>
+/// <code>
+/// using CodeGlyphX;
+/// QR.Save("https://example.com", "qr.png");
+/// </code>
+/// </example>
 public static class QR {
     /// <summary>
     /// Starts a fluent QR builder for plain text.

@@ -24,6 +24,15 @@ namespace CodeGlyphX;
 /// <summary>
 /// Simple barcode helpers with fluent and static APIs.
 /// </summary>
+/// <remarks>
+/// Use <see cref="Save(CodeGlyphX.BarcodeType,string,string,CodeGlyphX.BarcodeOptions)"/> to pick the output format by file extension.
+/// </remarks>
+/// <example>
+/// <code>
+/// using CodeGlyphX;
+/// Barcode.Save(BarcodeType.Code128, "PRODUCT-12345", "barcode.png");
+/// </code>
+/// </example>
 public static class Barcode {
     /// <summary>
     /// Starts a fluent barcode builder.
