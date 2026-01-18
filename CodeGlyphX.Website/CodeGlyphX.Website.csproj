@@ -29,9 +29,4 @@
           Condition="Exists('..\CodeGlyphX\bin\$(Configuration)\net8.0\CodeGlyphX.xml')" />
   </Target>
 
-  <!-- Ensure XML docs are included in publish output -->
-  <ItemGroup>
-    <Content Include="wwwroot\api-docs\**\*.xml" CopyToPublishDirectory="PreserveNewest" />
-  </ItemGroup>
-
 </Project>
