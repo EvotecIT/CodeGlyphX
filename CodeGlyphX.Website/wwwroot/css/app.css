@@ -215,14 +215,21 @@ a:hover {
 .brand-icon {
     width: 36px;
     height: 36px;
-    background: linear-gradient(135deg, var(--primary), var(--secondary));
-    border-radius: 8px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 1.25rem;
 }
 
+.brand-icon img {
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+    display: block;
+}
 .nav {
     display: flex;
     align-items: center;
@@ -438,6 +445,20 @@ a:hover {
 .install-command .copy-btn:hover {
     background: var(--bg-input);
     color: var(--text);
+}
+
+/* Hero Badges */
+.hero-badges {
+    margin-top: 1.5rem;
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.hero-badges img {
+    height: 22px;
+    display: block;
 }
 
 /* Hero Visual */
@@ -883,8 +904,12 @@ a:hover {
     margin-bottom: 0.5rem;
 }
 
-.footer-logo svg {
-    color: var(--primary-light);
+.footer-logo img {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--bg-card);
 }
 
 .footer-brand > p {
@@ -927,6 +952,8 @@ a:hover {
     justify-content: space-between;
     align-items: center;
     padding-top: 2rem;
+    gap: 1rem;
+    flex-wrap: wrap;
 }
 
 .footer-bottom p {
@@ -959,6 +986,17 @@ a:hover {
 .footer-social svg {
     width: 18px;
     height: 18px;
+}
+
+.footer-badges {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.footer-badges img {
+    height: 20px;
+    display: block;
 }
 
 @media (max-width: 768px) {
