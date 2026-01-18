@@ -1,7 +1,10 @@
 @page "/playground"
 @using CodeGlyphX
 @using CodeGlyphX.Payloads
+@using CodeGlyphX.Rendering
 @using CodeGlyphX.Rendering.Png
+@using Microsoft.AspNetCore.Components.Forms
+@using System.Linq
 
 <PageTitle>Playground - CodeGlyphX</PageTitle>
 
@@ -15,6 +18,33 @@
         <div class="card">
             <h2>Configuration</h2>
 
+            <div class="form-group">
+                <label>Mode</label>
+                <select @bind="SelectedMode" @bind:after="OnModeChanged">
+                    <option value="Generate">Generate</option>
+                    <option value="Decode">Decode</option>
+                </select>
+            </div>
+
+            @if (SelectedMode == "Decode")
+            {
+                <div class="form-group">
+                    <label>Image File</label>
+                    <InputFile OnChange="OnDecodeFileChanged" accept="image/*" />
+                    <small class="form-hint">Supports PNG, JPEG, GIF, BMP, PPM/PBM/PGM/PAM, XBM/XPM, TGA.</small>
+                </div>
+
+                <div class="form-group">
+                    <label>Try Decode</label>
+                    <div class="form-row">
+                        <label><input type="checkbox" @bind="DecodeQr" /> QR</label>
+                        <label><input type="checkbox" @bind="DecodeBarcode" /> 1D Barcodes</label>
+                        <label><input type="checkbox" @bind="DecodeMatrix" /> 2D Matrix</label>
+                    </div>
+                </div>
+            }
+            else
+            {
             <div class="form-group">
                 <label>Code Type</label>
                 <select @bind="SelectedCategory" @bind:after="OnCategoryChanged">
@@ -310,10 +340,11 @@
             <button class="btn btn-primary" style="width: 100%; margin-top: 1.5rem;" @onclick="GenerateCode">
                 Generate Code
             </button>
+            }
         </div>
 
         <div class="card">
-            <h2>Preview</h2>
+            <h2>@(SelectedMode == "Decode" ? "Decode Result" : "Preview")</h2>
             <div class="output-preview">
                 @if (!string.IsNullOrEmpty(ErrorMessage))
                 {
@@ -322,7 +353,11 @@
                         <p>@ErrorMessage</p>
                     </div>
                 }
-                else if (!string.IsNullOrEmpty(ImageDataUri))
+                else if (SelectedMode == "Decode" && !string.IsNullOrEmpty(DecodeImageDataUri))
+                {
+                    <img src="@DecodeImageDataUri" alt="Uploaded code" />
+                }
+                else if (SelectedMode == "Generate" && !string.IsNullOrEmpty(ImageDataUri))
                 {
                     <img src="@ImageDataUri" alt="Generated code" />
                 }
@@ -330,12 +365,12 @@
                 {
                     <div style="text-align: center; color: var(--text-muted);">
                         <p style="font-size: 2rem; margin-bottom: 0.5rem;">📱</p>
-                        <p>Enter content to generate a code</p>
+                        <p>@(SelectedMode == "Decode" ? "Upload an image to decode" : "Enter content to generate a code")</p>
                     </div>
                 }
             </div>
 
-            @if (!string.IsNullOrEmpty(ImageDataUri))
+            @if (SelectedMode == "Generate" && !string.IsNullOrEmpty(ImageDataUri))
             {
                 <div class="download-buttons">
                     <a href="@ImageDataUri" download="@GetDownloadFilename("png")" class="btn btn-secondary">
@@ -346,6 +381,29 @@
                         <a href="@SvgDataUri" download="@GetDownloadFilename("svg")" class="btn btn-secondary">
                             Download SVG
                         </a>
+                    }
+                </div>
+            }
+
+            @if (SelectedMode == "Decode")
+            {
+                <div style="margin-top: 1.5rem;">
+                    @if (!string.IsNullOrEmpty(DecodeError))
+                    {
+                        <p style="color: #ef4444;">@DecodeError</p>
+                    }
+                    else if (DecodeResults.Count > 0)
+                    {
+                        <ul style="color: var(--text-muted); margin-left: 1.25rem;">
+                            @foreach (var result in DecodeResults)
+                            {
+                                <li><strong>@result.Type</strong>: @result.Text</li>
+                            }
+                        </ul>
+                    }
+                    else if (!string.IsNullOrEmpty(DecodeImageDataUri))
+                    {
+                        <p style="color: var(--text-muted);">No codes detected.</p>
                     }
                 </div>
             }
@@ -372,6 +430,7 @@
 @code {
     // Category selection
     private string SelectedCategory { get; set; } = "QR";
+    private string SelectedMode { get; set; } = "Generate";
 
     // QR Code options
     private string Content { get; set; } = "https://github.com/EvotecIT/CodeGlyphX";
@@ -446,6 +505,12 @@
     private string? ImageDataUri { get; set; }
     private string? SvgDataUri { get; set; }
     private string? ErrorMessage { get; set; }
+    private string? DecodeImageDataUri { get; set; }
+    private string? DecodeError { get; set; }
+    private readonly List<DecodeResult> DecodeResults = new();
+    private bool DecodeQr { get; set; } = true;
+    private bool DecodeBarcode { get; set; } = true;
+    private bool DecodeMatrix { get; set; } = true;
 
     protected override void OnInitialized()
     {
@@ -454,25 +519,25 @@
 
     private void OnCategoryChanged()
     {
-        ErrorMessage = null;
-        ImageDataUri = null;
-        SvgDataUri = null;
-        GenerateCode();
+        ResetOutputs();
+        if (SelectedMode == "Generate")
+        {
+            GenerateCode();
+        }
     }
 
     private void OnSpecialPayloadTypeChanged()
     {
-        ErrorMessage = null;
-        ImageDataUri = null;
-        SvgDataUri = null;
-        GenerateCode();
+        ResetOutputs();
+        if (SelectedMode == "Generate")
+        {
+            GenerateCode();
+        }
     }
 
     private void OnBarcodeTypeChanged()
     {
-        ErrorMessage = null;
-        ImageDataUri = null;
-        SvgDataUri = null;
+        ResetOutputs();
 
         // Update hint and content based on barcode type
         switch (SelectedBarcodeType)
@@ -493,7 +558,19 @@
                 break;
         }
 
-        GenerateCode();
+        if (SelectedMode == "Generate")
+        {
+            GenerateCode();
+        }
+    }
+
+    private void OnModeChanged()
+    {
+        ResetOutputs();
+        if (SelectedMode == "Generate")
+        {
+            GenerateCode();
+        }
     }
 
     private bool IsValidCode39Content(string content)
@@ -531,9 +608,12 @@
 
     private void GenerateCode()
     {
-        ErrorMessage = null;
-        ImageDataUri = null;
-        SvgDataUri = null;
+        if (SelectedMode != "Generate")
+        {
+            return;
+        }
+
+        ResetOutputs();
 
         try
         {
@@ -657,6 +737,82 @@
         }
     }
 
+    private async Task OnDecodeFileChanged(InputFileChangeEventArgs args)
+    {
+        ResetOutputs();
+        DecodeResults.Clear();
+        DecodeError = null;
+        DecodeImageDataUri = null;
+
+        var file = args.File;
+        if (file is null)
+            return;
+
+        try
+        {
+            using var stream = file.OpenReadStream(5 * 1024 * 1024);
+            using var ms = new MemoryStream();
+            await stream.CopyToAsync(ms);
+            var data = ms.ToArray();
+
+            DecodeImageDataUri = $"data:{file.ContentType};base64,{Convert.ToBase64String(data)}";
+
+            if (DecodeQr && QrImageDecoder.TryDecodeImage(data, out var qr))
+            {
+                AddDecodeResult("QR", qr.Text);
+            }
+
+            if (ImageReader.TryDecodeRgba32(data, out var rgba, out var width, out var height))
+            {
+                if (DecodeBarcode && BarcodeDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out var barcode))
+                {
+                    AddDecodeResult($"Barcode ({barcode.Type})", barcode.Text);
+                }
+
+                if (DecodeMatrix)
+                {
+                    if (CodeGlyphX.DataMatrix.DataMatrixDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out var dm))
+                    {
+                        AddDecodeResult("Data Matrix", dm);
+                    }
+                    if (CodeGlyphX.Pdf417.Pdf417Decoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out var pdf417))
+                    {
+                        AddDecodeResult("PDF417", pdf417);
+                    }
+                    if (AztecCode.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out var aztec))
+                    {
+                        AddDecodeResult("Aztec", aztec);
+                    }
+                }
+            }
+            else
+            {
+                DecodeError = "Unsupported image format.";
+            }
+        }
+        catch (Exception ex)
+        {
+            DecodeError = ex.Message;
+        }
+    }
+
+    private void AddDecodeResult(string type, string text)
+    {
+        if (string.IsNullOrWhiteSpace(text)) return;
+        if (DecodeResults.Any(r => r.Type == type && r.Text == text)) return;
+        DecodeResults.Add(new DecodeResult(type, text));
+    }
+
+    private void ResetOutputs()
+    {
+        ErrorMessage = null;
+        ImageDataUri = null;
+        SvgDataUri = null;
+        DecodeImageDataUri = null;
+        DecodeError = null;
+        DecodeResults.Clear();
+    }
+
     private QrPayloadData? GetSpecialPayloadData()
     {
         return SpecialPayloadType switch
@@ -724,6 +880,22 @@
     private string GetCodeExample()
     {
         var nl = "\n";
+
+        if (SelectedMode == "Decode")
+        {
+            return "using CodeGlyphX;" + nl
+                + "using CodeGlyphX.Rendering;" + nl + nl
+                + "var bytes = File.ReadAllBytes(\"image.png\");" + nl
+                + "if (QrImageDecoder.TryDecodeImage(bytes, out var qr))" + nl
+                + "{" + nl
+                + "    Console.WriteLine(qr.Text);" + nl
+                + "}" + nl + nl
+                + "if (ImageReader.TryDecodeRgba32(bytes, out var rgba, out var w, out var h) &&" + nl
+                + "    BarcodeDecoder.TryDecode(rgba, w, h, w * 4, PixelFormat.Rgba32, out var barcode))" + nl
+                + "{" + nl
+                + "    Console.WriteLine(barcode.Text);" + nl
+                + "}";
+        }
 
         if (SelectedCategory == "QR")
         {
@@ -831,4 +1003,6 @@
     }
 
     private static string EscapeString(string s) => s.Replace("\\", "\\\\").Replace("\"", "\\\"");
+
+    private sealed record DecodeResult(string Type, string Text);
 }
