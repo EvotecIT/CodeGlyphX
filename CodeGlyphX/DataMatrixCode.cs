@@ -25,6 +25,12 @@ namespace CodeGlyphX;
 /// <summary>
 /// Simple Data Matrix helpers with fluent and static APIs.
 /// </summary>
+/// <example>
+/// <code>
+/// using CodeGlyphX;
+/// DataMatrixCode.Save("Serial: ABC123", "datamatrix.png");
+/// </code>
+/// </example>
 public static class DataMatrixCode {
     /// <summary>
     /// Starts a fluent Data Matrix builder for text payloads.

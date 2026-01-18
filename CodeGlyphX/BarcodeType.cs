@@ -1,67 +1,67 @@
 namespace CodeGlyphX;
 
 /// <summary>
-/// Barcode symbologies supported (or planned) by <see cref="BarcodeEncoder"/>.
+/// Barcode symbologies supported by <see cref="BarcodeEncoder"/>.
 /// </summary>
 public enum BarcodeType {
     /// <summary>
-    /// Code 128 (implemented).
+    /// Code 128.
     /// </summary>
     Code128,
     /// <summary>
-    /// GS1-128 (Code 128 with FNC1, implemented).
+    /// GS1-128 (Code 128 with FNC1).
     /// </summary>
     GS1_128,
     /// <summary>
-    /// Code 39 (implemented).
+    /// Code 39.
     /// </summary>
     Code39,
     /// <summary>
-    /// Code 93 (implemented).
+    /// Code 93.
     /// </summary>
     Code93,
     /// <summary>
-    /// EAN family (implemented).
+    /// EAN family.
     /// </summary>
     EAN,
     /// <summary>
-    /// UPC-A (implemented).
+    /// UPC-A.
     /// </summary>
     UPCA,
     /// <summary>
-    /// UPC-E (implemented).
+    /// UPC-E.
     /// </summary>
     UPCE,
     /// <summary>
-    /// ITF-14 (implemented).
+    /// ITF-14.
     /// </summary>
     ITF14,
     /// <summary>
-    /// Codabar (implemented).
+    /// Codabar.
     /// </summary>
     Codabar,
     /// <summary>
-    /// MSI (implemented).
+    /// MSI.
     /// </summary>
     MSI,
     /// <summary>
-    /// Code 11 (implemented).
+    /// Code 11.
     /// </summary>
     Code11,
     /// <summary>
-    /// Plessey (implemented).
+    /// Plessey.
     /// </summary>
     Plessey,
     /// <summary>
-    /// KIX Code (planned).
+    /// KIX Code (not supported).
     /// </summary>
     KixCode,
     /// <summary>
-    /// Data Matrix (planned).
+    /// Data Matrix (not supported in 1D encoder).
     /// </summary>
     DataMatrix,
     /// <summary>
-    /// PDF417 (planned).
+    /// PDF417 (not supported in 1D encoder).
     /// </summary>
     PDF417,
 }

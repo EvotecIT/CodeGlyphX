@@ -8,6 +8,13 @@ namespace CodeGlyphX.Payloads;
 /// <summary>
 /// Helpers for building common QR payloads with recommended defaults.
 /// </summary>
+/// <example>
+/// <code>
+/// using CodeGlyphX;
+/// using CodeGlyphX.Payloads;
+/// QR.Save(QrPayloads.Wifi("MyNetwork", "Password123"), "wifi.png");
+/// </code>
+/// </example>
 public static partial class QrPayloads {
     /// <summary>
     /// Builds a plain text payload.
