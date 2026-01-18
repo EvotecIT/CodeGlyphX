@@ -19,13 +19,13 @@ public static class BarcodeIcoRenderer {
     /// Renders the barcode to an ICO byte array (multi-size).
     /// </summary>
     public static byte[] Render(Barcode1D barcode, BarcodePngRenderOptions opts, IcoRenderOptions? icoOptions) {
+        var rgba = BarcodePngRenderer.RenderPixels(barcode, opts, out var width, out var height, out var stride);
         if (icoOptions is null) {
-            var png = BarcodePngRenderer.Render(barcode, opts);
+            var png = IcoPngBuilder.FromRgbaForIco(rgba, width, height, stride, opts.Background);
             return IcoWriter.WritePng(png);
         }
 
         var sizes = icoOptions.GetNormalizedSizes();
-        var rgba = BarcodePngRenderer.RenderPixels(barcode, opts, out var width, out var height, out var stride);
         var pngs = new byte[sizes.Length][];
         for (var i = 0; i < sizes.Length; i++) {
             var size = sizes[i];
@@ -46,14 +46,14 @@ public static class BarcodeIcoRenderer {
     /// Renders the barcode to an ICO stream (multi-size).
     /// </summary>
     public static void RenderToStream(Barcode1D barcode, BarcodePngRenderOptions opts, Stream stream, IcoRenderOptions? icoOptions) {
+        var rgba = BarcodePngRenderer.RenderPixels(barcode, opts, out var width, out var height, out var stride);
         if (icoOptions is null) {
-            var png = BarcodePngRenderer.Render(barcode, opts);
+            var png = IcoPngBuilder.FromRgbaForIco(rgba, width, height, stride, opts.Background);
             IcoWriter.WritePng(stream, png);
             return;
         }
 
         var sizes = icoOptions.GetNormalizedSizes();
-        var rgba = BarcodePngRenderer.RenderPixels(barcode, opts, out var width, out var height, out var stride);
         var pngs = new byte[sizes.Length][];
         for (var i = 0; i < sizes.Length; i++) {
             var size = sizes[i];

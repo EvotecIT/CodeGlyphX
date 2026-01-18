@@ -20,4 +20,13 @@ internal static class IcoPngBuilder {
         }
         return PngWriter.WriteRgba8(width, height, scanlines);
     }
+
+    public static byte[] FromRgbaForIco(byte[] rgba, int width, int height, int stride, Rgba32 background) {
+        if (width > 256 || height > 256) {
+            var size = 256;
+            var scaled = ImageScaler.ResizeToFitNearest(rgba, width, height, stride, size, size, background, true);
+            return FromRgba(scaled, size, size, size * 4);
+        }
+        return FromRgba(rgba, width, height, stride);
+    }
 }

@@ -19,13 +19,13 @@ public static class MatrixIcoRenderer {
     /// Renders the matrix to an ICO byte array (multi-size).
     /// </summary>
     public static byte[] Render(BitMatrix modules, MatrixPngRenderOptions opts, IcoRenderOptions? icoOptions) {
+        var rgba = MatrixPngRenderer.RenderPixels(modules, opts, out var width, out var height, out var stride);
         if (icoOptions is null) {
-            var png = MatrixPngRenderer.Render(modules, opts);
+            var png = IcoPngBuilder.FromRgbaForIco(rgba, width, height, stride, opts.Background);
             return IcoWriter.WritePng(png);
         }
 
         var sizes = icoOptions.GetNormalizedSizes();
-        var rgba = MatrixPngRenderer.RenderPixels(modules, opts, out var width, out var height, out var stride);
         var pngs = new byte[sizes.Length][];
         for (var i = 0; i < sizes.Length; i++) {
             var size = sizes[i];
@@ -46,14 +46,14 @@ public static class MatrixIcoRenderer {
     /// Renders the matrix to an ICO stream (multi-size).
     /// </summary>
     public static void RenderToStream(BitMatrix modules, MatrixPngRenderOptions opts, Stream stream, IcoRenderOptions? icoOptions) {
+        var rgba = MatrixPngRenderer.RenderPixels(modules, opts, out var width, out var height, out var stride);
         if (icoOptions is null) {
-            var png = MatrixPngRenderer.Render(modules, opts);
+            var png = IcoPngBuilder.FromRgbaForIco(rgba, width, height, stride, opts.Background);
             IcoWriter.WritePng(stream, png);
             return;
         }
 
         var sizes = icoOptions.GetNormalizedSizes();
-        var rgba = MatrixPngRenderer.RenderPixels(modules, opts, out var width, out var height, out var stride);
         var pngs = new byte[sizes.Length][];
         for (var i = 0; i < sizes.Length; i++) {
             var size = sizes[i];
