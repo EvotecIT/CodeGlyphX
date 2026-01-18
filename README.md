@@ -12,7 +12,7 @@ CodeGlyphX is a fast, dependency-free toolkit for QR codes and barcodes, with ro
 [![top language](https://img.shields.io/github/languages/top/EvotecIT/CodeGlyphX.svg)](https://github.com/EvotecIT/CodeGlyphX)
 [![license](https://img.shields.io/github/license/EvotecIT/CodeGlyphX.svg)](https://github.com/EvotecIT/CodeGlyphX)
 [![build](https://github.com/EvotecIT/CodeGlyphX/actions/workflows/ci.yml/badge.svg)](https://github.com/EvotecIT/CodeGlyphX/actions/workflows/ci.yml)
-[![codecov](https://codecov.io/gh/EvotecIT/CodeGlyphX/branch/main/graph/badge.svg)](https://codecov.io/gh/EvotecIT/CodeGlyphX)
+[![codecov](https://codecov.io/gh/EvotecIT/CodeGlyphX/branch/master/graph/badge.svg)](https://codecov.io/gh/EvotecIT/CodeGlyphX)
 
 👨‍💻 Author & Social
 

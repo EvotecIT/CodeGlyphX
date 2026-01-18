@@ -29,8 +29,21 @@ jobs:
         with:
           dotnet-version: '10.0.x'
 
-      - name: Restore Solution
-        run: dotnet restore CodeGlyphX.sln
+      - name: Restore Core
+        run: dotnet restore CodeGlyphX/CodeGlyphX.csproj
+
+      - name: Restore Tests
+        run: dotnet restore CodeGlyphX.Tests/CodeGlyphX.Tests.csproj
+
+      - name: Restore Examples
+        run: dotnet restore CodeGlyphX.Examples/CodeGlyphX.Examples.csproj
+
+      - name: Restore WPF
+        if: runner.os == 'Windows'
+        run: |
+          dotnet restore CodeGlyphX.Wpf/CodeGlyphX.Wpf.csproj
+          dotnet restore CodeGlyphX.ScreenScan.Wpf/CodeGlyphX.ScreenScan.Wpf.csproj
+          dotnet restore CodeGlyphX.Demo.Wpf/CodeGlyphX.Demo.Wpf.csproj
 
       - name: Build Core (net8.0)
         run: dotnet build CodeGlyphX/CodeGlyphX.csproj -c Release -f net8.0 --no-restore

@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <ServiceWorkerAssetsManifest>service-worker-assets.js</ServiceWorkerAssetsManifest>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.11" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.11" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CodeGlyphX\CodeGlyphX.csproj" />
+    <ProjectReference Include="..\..\PSPublishModule\PowerForge.Blazor\PowerForge.Blazor.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ServiceWorker Include="wwwroot\service-worker.js" PublishedContent="wwwroot\service-worker.published.js" />
+  </ItemGroup>
+
+  <!-- Copy XML documentation to wwwroot for API reference -->
+  <Target Name="CopyXmlDocs" AfterTargets="Build">
+    <Copy SourceFiles="..\CodeGlyphX\bin\$(Configuration)\net8.0\CodeGlyphX.xml"
+          DestinationFolder="wwwroot\api-docs"
+          SkipUnchangedFiles="true"
+          Condition="Exists('..\CodeGlyphX\bin\$(Configuration)\net8.0\CodeGlyphX.xml')" />
+  </Target>
+
+</Project>
