@@ -1561,6 +1561,27 @@ public static class Pdf417Code {
     }
 
     /// <summary>
+    /// Attempts to decode a PDF417 symbol from PNG bytes, with diagnostics.
+    /// </summary>
+    public static bool TryDecodePng(byte[] png, out string text, out Pdf417DecodeDiagnostics diagnostics) {
+        return TryDecodePng(png, null, CancellationToken.None, out text, out diagnostics);
+    }
+
+    /// <summary>
+    /// Attempts to decode a PDF417 symbol from PNG bytes with image decode options, with diagnostics.
+    /// </summary>
+    public static bool TryDecodePng(byte[] png, ImageDecodeOptions? options, out string text, out Pdf417DecodeDiagnostics diagnostics) {
+        return TryDecodePng(png, options, CancellationToken.None, out text, out diagnostics);
+    }
+
+    /// <summary>
+    /// Attempts to decode a PDF417 symbol from PNG bytes with image decode options, cancellation, and diagnostics.
+    /// </summary>
+    public static bool TryDecodePng(byte[] png, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text, out Pdf417DecodeDiagnostics diagnostics) {
+        return TryDecodePngCore(png, options, cancellationToken, out text, out diagnostics);
+    }
+
+    /// <summary>
     /// Attempts to decode a PDF417 symbol from a PNG file.
     /// </summary>
     public static bool TryDecodePngFile(string path, out string text) {
@@ -1592,6 +1613,30 @@ public static class Pdf417Code {
     }
 
     /// <summary>
+    /// Attempts to decode a PDF417 symbol from a PNG file, with diagnostics.
+    /// </summary>
+    public static bool TryDecodePngFile(string path, out string text, out Pdf417DecodeDiagnostics diagnostics) {
+        return TryDecodePngFile(path, null, CancellationToken.None, out text, out diagnostics);
+    }
+
+    /// <summary>
+    /// Attempts to decode a PDF417 symbol from a PNG file with image decode options, with diagnostics.
+    /// </summary>
+    public static bool TryDecodePngFile(string path, ImageDecodeOptions? options, out string text, out Pdf417DecodeDiagnostics diagnostics) {
+        return TryDecodePngFile(path, options, CancellationToken.None, out text, out diagnostics);
+    }
+
+    /// <summary>
+    /// Attempts to decode a PDF417 symbol from a PNG file with image decode options, cancellation, and diagnostics.
+    /// </summary>
+    public static bool TryDecodePngFile(string path, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text, out Pdf417DecodeDiagnostics diagnostics) {
+        if (path is null) throw new ArgumentNullException(nameof(path));
+        if (cancellationToken.IsCancellationRequested) { text = string.Empty; diagnostics = new Pdf417DecodeDiagnostics { Failure = "Cancelled." }; return false; }
+        var png = RenderIO.ReadBinary(path);
+        return TryDecodePngCore(png, options, cancellationToken, out text, out diagnostics);
+    }
+
+    /// <summary>
     /// Attempts to decode a PDF417 symbol from a PNG stream.
     /// </summary>
     public static bool TryDecodePng(Stream stream, out string text) {
@@ -1613,6 +1658,30 @@ public static class Pdf417Code {
         if (cancellationToken.IsCancellationRequested) { text = string.Empty; return false; }
         var png = RenderIO.ReadBinary(stream);
         return TryDecodePng(png, options, cancellationToken, out text);
+    }
+
+    /// <summary>
+    /// Attempts to decode a PDF417 symbol from a PNG stream, with diagnostics.
+    /// </summary>
+    public static bool TryDecodePng(Stream stream, out string text, out Pdf417DecodeDiagnostics diagnostics) {
+        return TryDecodePng(stream, null, CancellationToken.None, out text, out diagnostics);
+    }
+
+    /// <summary>
+    /// Attempts to decode a PDF417 symbol from a PNG stream with image decode options, with diagnostics.
+    /// </summary>
+    public static bool TryDecodePng(Stream stream, ImageDecodeOptions? options, out string text, out Pdf417DecodeDiagnostics diagnostics) {
+        return TryDecodePng(stream, options, CancellationToken.None, out text, out diagnostics);
+    }
+
+    /// <summary>
+    /// Attempts to decode a PDF417 symbol from a PNG stream with image decode options, cancellation, and diagnostics.
+    /// </summary>
+    public static bool TryDecodePng(Stream stream, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text, out Pdf417DecodeDiagnostics diagnostics) {
+        if (stream is null) throw new ArgumentNullException(nameof(stream));
+        if (cancellationToken.IsCancellationRequested) { text = string.Empty; diagnostics = new Pdf417DecodeDiagnostics { Failure = "Cancelled." }; return false; }
+        var png = RenderIO.ReadBinary(stream);
+        return TryDecodePngCore(png, options, cancellationToken, out text, out diagnostics);
     }
 
     /// <summary>
@@ -1653,6 +1722,27 @@ public static class Pdf417Code {
     }
 
     /// <summary>
+    /// Attempts to decode a PDF417 symbol from common image formats, with diagnostics.
+    /// </summary>
+    public static bool TryDecodeImage(byte[] image, out string text, out Pdf417DecodeDiagnostics diagnostics) {
+        return TryDecodeImage(image, null, CancellationToken.None, out text, out diagnostics);
+    }
+
+    /// <summary>
+    /// Attempts to decode a PDF417 symbol from common image formats with image decode options, with diagnostics.
+    /// </summary>
+    public static bool TryDecodeImage(byte[] image, ImageDecodeOptions? options, out string text, out Pdf417DecodeDiagnostics diagnostics) {
+        return TryDecodeImage(image, options, CancellationToken.None, out text, out diagnostics);
+    }
+
+    /// <summary>
+    /// Attempts to decode a PDF417 symbol from common image formats with image decode options, cancellation, and diagnostics.
+    /// </summary>
+    public static bool TryDecodeImage(byte[] image, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text, out Pdf417DecodeDiagnostics diagnostics) {
+        return TryDecodeImageCore(image, options, cancellationToken, out text, out diagnostics);
+    }
+
+    /// <summary>
     /// Attempts to decode a PDF417 symbol from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).
     /// </summary>
     public static bool TryDecodeImage(Stream stream, out string text) {
@@ -1685,6 +1775,84 @@ public static class Pdf417Code {
             if (!ImageReader.TryDecodeRgba32(data, out var rgba, out var width, out var height)) { text = string.Empty; return false; }
             if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) { text = string.Empty; return false; }
             return Pdf417Decoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out text);
+        } finally {
+            budgetCts?.Dispose();
+        }
+    }
+
+    /// <summary>
+    /// Attempts to decode a PDF417 symbol from an image stream, with diagnostics.
+    /// </summary>
+    public static bool TryDecodeImage(Stream stream, out string text, out Pdf417DecodeDiagnostics diagnostics) {
+        return TryDecodeImage(stream, null, CancellationToken.None, out text, out diagnostics);
+    }
+
+    /// <summary>
+    /// Attempts to decode a PDF417 symbol from an image stream with image decode options, with diagnostics.
+    /// </summary>
+    public static bool TryDecodeImage(Stream stream, ImageDecodeOptions? options, out string text, out Pdf417DecodeDiagnostics diagnostics) {
+        return TryDecodeImage(stream, options, CancellationToken.None, out text, out diagnostics);
+    }
+
+    /// <summary>
+    /// Attempts to decode a PDF417 symbol from an image stream with image decode options, cancellation, and diagnostics.
+    /// </summary>
+    public static bool TryDecodeImage(Stream stream, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text, out Pdf417DecodeDiagnostics diagnostics) {
+        if (stream is null) throw new ArgumentNullException(nameof(stream));
+        if (cancellationToken.IsCancellationRequested) { text = string.Empty; diagnostics = new Pdf417DecodeDiagnostics { Failure = "Cancelled." }; return false; }
+        var data = RenderIO.ReadBinary(stream);
+        return TryDecodeImageCore(data, options, cancellationToken, out text, out diagnostics);
+    }
+
+    private static bool TryDecodePngCore(byte[] png, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text, out Pdf417DecodeDiagnostics diagnostics) {
+        diagnostics = new Pdf417DecodeDiagnostics();
+        if (png is null) throw new ArgumentNullException(nameof(png));
+        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts);
+        try {
+            if (token.IsCancellationRequested) { text = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
+            var rgba = PngReader.DecodeRgba32(png, out var width, out var height);
+            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) {
+                text = string.Empty;
+                diagnostics.Failure ??= token.IsCancellationRequested ? "Cancelled." : "Image downscale failed.";
+                return false;
+            }
+            if (Pdf417Decoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out text, out var pdfDiag)) {
+                diagnostics = pdfDiag;
+                return true;
+            }
+            diagnostics = pdfDiag;
+            diagnostics.Failure ??= "No PDF417 decoded.";
+            text = string.Empty;
+            return false;
+        } finally {
+            budgetCts?.Dispose();
+        }
+    }
+
+    private static bool TryDecodeImageCore(byte[] image, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text, out Pdf417DecodeDiagnostics diagnostics) {
+        diagnostics = new Pdf417DecodeDiagnostics();
+        if (image is null) throw new ArgumentNullException(nameof(image));
+        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts);
+        try {
+            if (token.IsCancellationRequested) { text = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
+            if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) {
+                text = string.Empty;
+                diagnostics.Failure ??= "Unsupported image format.";
+                return false;
+            }
+            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) {
+                text = string.Empty;
+                diagnostics.Failure ??= token.IsCancellationRequested ? "Cancelled." : "Image downscale failed.";
+                return false;
+            }
+            if (Pdf417Decoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out text, out var pdfDiag)) {
+                diagnostics = pdfDiag;
+                return true;
+            }
+            diagnostics = pdfDiag;
+            diagnostics.Failure ??= "No PDF417 decoded.";
+            text = string.Empty;
+            return false;
         } finally {
             budgetCts?.Dispose();
         }

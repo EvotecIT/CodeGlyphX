@@ -79,6 +79,123 @@ public static class CodeGlyph {
     }
 
     /// <summary>
+    /// Attempts to decode a QR or barcode from raw pixels, with diagnostics.
+    /// </summary>
+    public static bool TryDecode(byte[] pixels, int width, int height, int stride, PixelFormat format, out CodeGlyphDecoded decoded, out CodeGlyphDecodeDiagnostics diagnostics, BarcodeType? expectedBarcode = null, bool preferBarcode = false, QrPixelDecodeOptions? qrOptions = null, CancellationToken cancellationToken = default, BarcodeDecodeOptions? barcodeOptions = null) {
+        diagnostics = new CodeGlyphDecodeDiagnostics();
+        decoded = null!;
+        if (pixels is null) throw new ArgumentNullException(nameof(pixels));
+        if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+
+        if (preferBarcode) {
+            if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+            if (BarcodeDecoder.TryDecode(pixels, width, height, stride, format, expectedBarcode, barcodeOptions, cancellationToken, out var barcode, out var barcodeDiag)) {
+                diagnostics.Barcode = barcodeDiag;
+                diagnostics.Success = true;
+                diagnostics.SuccessKind = CodeGlyphKind.Barcode1D;
+                decoded = new CodeGlyphDecoded(barcode);
+                return true;
+            }
+            diagnostics.Barcode = barcodeDiag;
+
+            if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+            if (AztecDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var aztec, out var aztecDiag)) {
+                diagnostics.Aztec = aztecDiag;
+                diagnostics.Success = true;
+                diagnostics.SuccessKind = CodeGlyphKind.Aztec;
+                decoded = new CodeGlyphDecoded(CodeGlyphKind.Aztec, aztec);
+                return true;
+            }
+            diagnostics.Aztec = aztecDiag;
+
+            if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+            if (QrDecoder.TryDecode(pixels, width, height, stride, format, out var qr, out var qrInfo, qrOptions, cancellationToken)) {
+                diagnostics.Qr = qrInfo;
+                diagnostics.Success = true;
+                diagnostics.SuccessKind = CodeGlyphKind.Qr;
+                decoded = new CodeGlyphDecoded(qr);
+                return true;
+            }
+            diagnostics.Qr = qrInfo;
+
+            if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+            if (DataMatrixDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var dataMatrix, out var dmDiag)) {
+                diagnostics.DataMatrix = dmDiag;
+                diagnostics.Success = true;
+                diagnostics.SuccessKind = CodeGlyphKind.DataMatrix;
+                decoded = new CodeGlyphDecoded(CodeGlyphKind.DataMatrix, dataMatrix);
+                return true;
+            }
+            diagnostics.DataMatrix = dmDiag;
+
+            if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+            if (Pdf417Decoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var pdf417, out var pdfDiag)) {
+                diagnostics.Pdf417 = pdfDiag;
+                diagnostics.Success = true;
+                diagnostics.SuccessKind = CodeGlyphKind.Pdf417;
+                decoded = new CodeGlyphDecoded(CodeGlyphKind.Pdf417, pdf417);
+                return true;
+            }
+            diagnostics.Pdf417 = pdfDiag;
+
+            diagnostics.Failure ??= "No symbol decoded.";
+            return false;
+        }
+
+        if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+        if (AztecDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var aztecDecoded, out var aztecDiag0)) {
+            diagnostics.Aztec = aztecDiag0;
+            diagnostics.Success = true;
+            diagnostics.SuccessKind = CodeGlyphKind.Aztec;
+            decoded = new CodeGlyphDecoded(CodeGlyphKind.Aztec, aztecDecoded);
+            return true;
+        }
+        diagnostics.Aztec = aztecDiag0;
+
+        if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+        if (QrDecoder.TryDecode(pixels, width, height, stride, format, out var qrDecoded, out var qrInfo0, qrOptions, cancellationToken)) {
+            diagnostics.Qr = qrInfo0;
+            diagnostics.Success = true;
+            diagnostics.SuccessKind = CodeGlyphKind.Qr;
+            decoded = new CodeGlyphDecoded(qrDecoded);
+            return true;
+        }
+        diagnostics.Qr = qrInfo0;
+
+        if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+        if (DataMatrixDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var dataMatrixDecoded, out var dmDiag0)) {
+            diagnostics.DataMatrix = dmDiag0;
+            diagnostics.Success = true;
+            diagnostics.SuccessKind = CodeGlyphKind.DataMatrix;
+            decoded = new CodeGlyphDecoded(CodeGlyphKind.DataMatrix, dataMatrixDecoded);
+            return true;
+        }
+        diagnostics.DataMatrix = dmDiag0;
+
+        if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+        if (Pdf417Decoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var pdf417Decoded, out var pdfDiag0)) {
+            diagnostics.Pdf417 = pdfDiag0;
+            diagnostics.Success = true;
+            diagnostics.SuccessKind = CodeGlyphKind.Pdf417;
+            decoded = new CodeGlyphDecoded(CodeGlyphKind.Pdf417, pdf417Decoded);
+            return true;
+        }
+        diagnostics.Pdf417 = pdfDiag0;
+
+        if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+        if (BarcodeDecoder.TryDecode(pixels, width, height, stride, format, expectedBarcode, barcodeOptions, cancellationToken, out var barcodeDecoded, out var barcodeDiag0)) {
+            diagnostics.Barcode = barcodeDiag0;
+            diagnostics.Success = true;
+            diagnostics.SuccessKind = CodeGlyphKind.Barcode1D;
+            decoded = new CodeGlyphDecoded(barcodeDecoded);
+            return true;
+        }
+        diagnostics.Barcode = barcodeDiag0;
+        diagnostics.Failure ??= "No symbol decoded.";
+        return false;
+    }
+
+    /// <summary>
     /// Attempts to decode all QR codes and (optionally) a 1D barcode from raw pixels.
     /// </summary>
     public static bool TryDecodeAll(byte[] pixels, int width, int height, int stride, PixelFormat format, out CodeGlyphDecoded[] decoded, BarcodeType? expectedBarcode = null, bool includeBarcode = true, bool preferBarcode = false, QrPixelDecodeOptions? qrOptions = null, CancellationToken cancellationToken = default, BarcodeDecodeOptions? barcodeOptions = null) {
@@ -125,6 +242,81 @@ public static class CodeGlyph {
         }
 
         if (list.Count == 0) return false;
+        decoded = list.ToArray();
+        return true;
+    }
+
+    /// <summary>
+    /// Attempts to decode all QR codes and (optionally) a 1D barcode from raw pixels, with diagnostics.
+    /// </summary>
+    public static bool TryDecodeAll(byte[] pixels, int width, int height, int stride, PixelFormat format, out CodeGlyphDecoded[] decoded, out CodeGlyphDecodeDiagnostics diagnostics, BarcodeType? expectedBarcode = null, bool includeBarcode = true, bool preferBarcode = false, QrPixelDecodeOptions? qrOptions = null, CancellationToken cancellationToken = default, BarcodeDecodeOptions? barcodeOptions = null) {
+        diagnostics = new CodeGlyphDecodeDiagnostics();
+        decoded = Array.Empty<CodeGlyphDecoded>();
+        if (pixels is null) throw new ArgumentNullException(nameof(pixels));
+        if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+
+        var list = new System.Collections.Generic.List<CodeGlyphDecoded>(4);
+
+        if (includeBarcode && preferBarcode) {
+            if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+            if (BarcodeDecoder.TryDecode(pixels, width, height, stride, format, expectedBarcode, barcodeOptions, cancellationToken, out var barcode, out var barcodeDiag)) {
+                diagnostics.Barcode = barcodeDiag;
+                list.Add(new CodeGlyphDecoded(barcode));
+            } else {
+                diagnostics.Barcode = barcodeDiag;
+            }
+        }
+
+        if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+        if (QrDecoder.TryDecodeAll(pixels, width, height, stride, format, out var qrResults, out var qrInfo, qrOptions, cancellationToken)) {
+            diagnostics.Qr = qrInfo;
+            for (var i = 0; i < qrResults.Length; i++) {
+                list.Add(new CodeGlyphDecoded(qrResults[i]));
+            }
+        } else {
+            diagnostics.Qr = qrInfo;
+        }
+
+        if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+        if (AztecDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var aztec, out var aztecDiag)) {
+            diagnostics.Aztec = aztecDiag;
+            list.Add(new CodeGlyphDecoded(CodeGlyphKind.Aztec, aztec));
+        } else {
+            diagnostics.Aztec = aztecDiag;
+        }
+
+        if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+        if (DataMatrixDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var dataMatrix, out var dmDiag)) {
+            diagnostics.DataMatrix = dmDiag;
+            list.Add(new CodeGlyphDecoded(CodeGlyphKind.DataMatrix, dataMatrix));
+        } else {
+            diagnostics.DataMatrix = dmDiag;
+        }
+
+        if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+        if (Pdf417Decoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var pdf417, out var pdfDiag)) {
+            diagnostics.Pdf417 = pdfDiag;
+            list.Add(new CodeGlyphDecoded(CodeGlyphKind.Pdf417, pdf417));
+        } else {
+            diagnostics.Pdf417 = pdfDiag;
+        }
+
+        if (includeBarcode && !preferBarcode) {
+            if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+            if (BarcodeDecoder.TryDecode(pixels, width, height, stride, format, expectedBarcode, barcodeOptions, cancellationToken, out var barcode, out var barcodeDiag)) {
+                diagnostics.Barcode = barcodeDiag;
+                list.Add(new CodeGlyphDecoded(barcode));
+            } else {
+                diagnostics.Barcode = barcodeDiag;
+            }
+        }
+
+        if (list.Count == 0) {
+            diagnostics.Failure ??= "No symbol decoded.";
+            return false;
+        }
+        diagnostics.Success = true;
+        diagnostics.SuccessKind = list.Count == 1 ? list[0].Kind : null;
         decoded = list.ToArray();
         return true;
     }
@@ -194,6 +386,122 @@ public static class CodeGlyph {
     }
 
     /// <summary>
+    /// Attempts to decode a QR or barcode from raw pixels, with diagnostics.
+    /// </summary>
+    public static bool TryDecode(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat format, out CodeGlyphDecoded decoded, out CodeGlyphDecodeDiagnostics diagnostics, BarcodeType? expectedBarcode = null, bool preferBarcode = false, QrPixelDecodeOptions? qrOptions = null, CancellationToken cancellationToken = default, BarcodeDecodeOptions? barcodeOptions = null) {
+        diagnostics = new CodeGlyphDecodeDiagnostics();
+        decoded = null!;
+        if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+
+        if (preferBarcode) {
+            if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+            if (BarcodeDecoder.TryDecode(pixels, width, height, stride, format, expectedBarcode, barcodeOptions, cancellationToken, out var barcode, out var barcodeDiag)) {
+                diagnostics.Barcode = barcodeDiag;
+                diagnostics.Success = true;
+                diagnostics.SuccessKind = CodeGlyphKind.Barcode1D;
+                decoded = new CodeGlyphDecoded(barcode);
+                return true;
+            }
+            diagnostics.Barcode = barcodeDiag;
+
+            if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+            if (AztecDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var aztec, out var aztecDiag)) {
+                diagnostics.Aztec = aztecDiag;
+                diagnostics.Success = true;
+                diagnostics.SuccessKind = CodeGlyphKind.Aztec;
+                decoded = new CodeGlyphDecoded(CodeGlyphKind.Aztec, aztec);
+                return true;
+            }
+            diagnostics.Aztec = aztecDiag;
+
+            if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+            if (QrDecoder.TryDecode(pixels, width, height, stride, format, out var qr, out var qrInfo, qrOptions, cancellationToken)) {
+                diagnostics.Qr = qrInfo;
+                diagnostics.Success = true;
+                diagnostics.SuccessKind = CodeGlyphKind.Qr;
+                decoded = new CodeGlyphDecoded(qr);
+                return true;
+            }
+            diagnostics.Qr = qrInfo;
+
+            if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+            if (DataMatrixDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var dataMatrix, out var dmDiag)) {
+                diagnostics.DataMatrix = dmDiag;
+                diagnostics.Success = true;
+                diagnostics.SuccessKind = CodeGlyphKind.DataMatrix;
+                decoded = new CodeGlyphDecoded(CodeGlyphKind.DataMatrix, dataMatrix);
+                return true;
+            }
+            diagnostics.DataMatrix = dmDiag;
+
+            if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+            if (Pdf417Decoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var pdf417, out var pdfDiag)) {
+                diagnostics.Pdf417 = pdfDiag;
+                diagnostics.Success = true;
+                diagnostics.SuccessKind = CodeGlyphKind.Pdf417;
+                decoded = new CodeGlyphDecoded(CodeGlyphKind.Pdf417, pdf417);
+                return true;
+            }
+            diagnostics.Pdf417 = pdfDiag;
+
+            diagnostics.Failure ??= "No symbol decoded.";
+            return false;
+        }
+
+        if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+        if (AztecDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var aztecDecoded, out var aztecDiag0)) {
+            diagnostics.Aztec = aztecDiag0;
+            diagnostics.Success = true;
+            diagnostics.SuccessKind = CodeGlyphKind.Aztec;
+            decoded = new CodeGlyphDecoded(CodeGlyphKind.Aztec, aztecDecoded);
+            return true;
+        }
+        diagnostics.Aztec = aztecDiag0;
+
+        if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+        if (QrDecoder.TryDecode(pixels, width, height, stride, format, out var qrDecoded, out var qrInfo0, qrOptions, cancellationToken)) {
+            diagnostics.Qr = qrInfo0;
+            diagnostics.Success = true;
+            diagnostics.SuccessKind = CodeGlyphKind.Qr;
+            decoded = new CodeGlyphDecoded(qrDecoded);
+            return true;
+        }
+        diagnostics.Qr = qrInfo0;
+
+        if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+        if (DataMatrixDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var dataMatrixDecoded, out var dmDiag0)) {
+            diagnostics.DataMatrix = dmDiag0;
+            diagnostics.Success = true;
+            diagnostics.SuccessKind = CodeGlyphKind.DataMatrix;
+            decoded = new CodeGlyphDecoded(CodeGlyphKind.DataMatrix, dataMatrixDecoded);
+            return true;
+        }
+        diagnostics.DataMatrix = dmDiag0;
+
+        if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+        if (Pdf417Decoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var pdf417Decoded, out var pdfDiag0)) {
+            diagnostics.Pdf417 = pdfDiag0;
+            diagnostics.Success = true;
+            diagnostics.SuccessKind = CodeGlyphKind.Pdf417;
+            decoded = new CodeGlyphDecoded(CodeGlyphKind.Pdf417, pdf417Decoded);
+            return true;
+        }
+        diagnostics.Pdf417 = pdfDiag0;
+
+        if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+        if (BarcodeDecoder.TryDecode(pixels, width, height, stride, format, expectedBarcode, barcodeOptions, cancellationToken, out var barcodeDecoded, out var barcodeDiag0)) {
+            diagnostics.Barcode = barcodeDiag0;
+            diagnostics.Success = true;
+            diagnostics.SuccessKind = CodeGlyphKind.Barcode1D;
+            decoded = new CodeGlyphDecoded(barcodeDecoded);
+            return true;
+        }
+        diagnostics.Barcode = barcodeDiag0;
+        diagnostics.Failure ??= "No symbol decoded.";
+        return false;
+    }
+
+    /// <summary>
     /// Attempts to decode all QR codes and (optionally) a 1D barcode from raw pixels.
     /// </summary>
     public static bool TryDecodeAll(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat format, out CodeGlyphDecoded[] decoded, BarcodeType? expectedBarcode = null, bool includeBarcode = true, bool preferBarcode = false, QrPixelDecodeOptions? qrOptions = null, CancellationToken cancellationToken = default, BarcodeDecodeOptions? barcodeOptions = null) {
@@ -239,6 +547,80 @@ public static class CodeGlyph {
         }
 
         if (list.Count == 0) return false;
+        decoded = list.ToArray();
+        return true;
+    }
+
+    /// <summary>
+    /// Attempts to decode all QR codes and (optionally) a 1D barcode from raw pixels, with diagnostics.
+    /// </summary>
+    public static bool TryDecodeAll(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat format, out CodeGlyphDecoded[] decoded, out CodeGlyphDecodeDiagnostics diagnostics, BarcodeType? expectedBarcode = null, bool includeBarcode = true, bool preferBarcode = false, QrPixelDecodeOptions? qrOptions = null, CancellationToken cancellationToken = default, BarcodeDecodeOptions? barcodeOptions = null) {
+        diagnostics = new CodeGlyphDecodeDiagnostics();
+        decoded = Array.Empty<CodeGlyphDecoded>();
+        if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+
+        var list = new System.Collections.Generic.List<CodeGlyphDecoded>(4);
+
+        if (includeBarcode && preferBarcode) {
+            if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+            if (BarcodeDecoder.TryDecode(pixels, width, height, stride, format, expectedBarcode, barcodeOptions, cancellationToken, out var barcode, out var barcodeDiag)) {
+                diagnostics.Barcode = barcodeDiag;
+                list.Add(new CodeGlyphDecoded(barcode));
+            } else {
+                diagnostics.Barcode = barcodeDiag;
+            }
+        }
+
+        if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+        if (QrDecoder.TryDecodeAll(pixels, width, height, stride, format, out var qrResults, out var qrInfo, qrOptions, cancellationToken)) {
+            diagnostics.Qr = qrInfo;
+            for (var i = 0; i < qrResults.Length; i++) {
+                list.Add(new CodeGlyphDecoded(qrResults[i]));
+            }
+        } else {
+            diagnostics.Qr = qrInfo;
+        }
+
+        if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+        if (AztecDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var aztec, out var aztecDiag)) {
+            diagnostics.Aztec = aztecDiag;
+            list.Add(new CodeGlyphDecoded(CodeGlyphKind.Aztec, aztec));
+        } else {
+            diagnostics.Aztec = aztecDiag;
+        }
+
+        if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+        if (DataMatrixDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var dataMatrix, out var dmDiag)) {
+            diagnostics.DataMatrix = dmDiag;
+            list.Add(new CodeGlyphDecoded(CodeGlyphKind.DataMatrix, dataMatrix));
+        } else {
+            diagnostics.DataMatrix = dmDiag;
+        }
+
+        if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+        if (Pdf417Decoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var pdf417, out var pdfDiag)) {
+            diagnostics.Pdf417 = pdfDiag;
+            list.Add(new CodeGlyphDecoded(CodeGlyphKind.Pdf417, pdf417));
+        } else {
+            diagnostics.Pdf417 = pdfDiag;
+        }
+
+        if (includeBarcode && !preferBarcode) {
+            if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+            if (BarcodeDecoder.TryDecode(pixels, width, height, stride, format, expectedBarcode, barcodeOptions, cancellationToken, out var barcode, out var barcodeDiag)) {
+                diagnostics.Barcode = barcodeDiag;
+                list.Add(new CodeGlyphDecoded(barcode));
+            } else {
+                diagnostics.Barcode = barcodeDiag;
+            }
+        }
+
+        if (list.Count == 0) {
+            diagnostics.Failure ??= "No symbol decoded.";
+            return false;
+        }
+        diagnostics.Success = true;
+        diagnostics.SuccessKind = list.Count == 1 ? list[0].Kind : null;
         decoded = list.ToArray();
         return true;
     }
@@ -418,6 +800,39 @@ public static class CodeGlyph {
     }
 
     /// <summary>
+    /// Attempts to decode a QR or barcode from raw pixels using a single options object, with diagnostics.
+    /// </summary>
+    public static bool TryDecode(byte[] pixels, int width, int height, int stride, PixelFormat format, out CodeGlyphDecoded decoded, out CodeGlyphDecodeDiagnostics diagnostics, CodeGlyphDecodeOptions? options) {
+        diagnostics = new CodeGlyphDecodeDiagnostics();
+        var expected = options?.ExpectedBarcode;
+        var prefer = options?.PreferBarcode ?? false;
+        var qr = options?.Qr;
+        var token = options is null ? default : options.CancellationToken;
+        var barcode = options?.Barcode;
+        var imageOptions = options?.Image;
+        if (pixels is null) throw new ArgumentNullException(nameof(pixels));
+        if (imageOptions is null || (imageOptions.MaxDimension <= 0 && imageOptions.MaxMilliseconds <= 0) || stride != width * 4) {
+            return TryDecode(pixels, width, height, stride, format, out decoded, out diagnostics, expected, prefer, qr, token, barcode);
+        }
+
+        var budgetToken = ImageDecodeHelper.ApplyBudget(token, imageOptions, out var budgetCts);
+        try {
+            if (budgetToken.IsCancellationRequested) { decoded = null!; diagnostics.Failure = "Cancelled."; return false; }
+            var buffer = pixels;
+            var w = width;
+            var h = height;
+            if (!ImageDecodeHelper.TryDownscale(ref buffer, ref w, ref h, imageOptions, budgetToken)) {
+                decoded = null!;
+                diagnostics.Failure ??= budgetToken.IsCancellationRequested ? "Cancelled." : "Image downscale failed.";
+                return false;
+            }
+            return TryDecode(buffer, w, h, w * 4, format, out decoded, out diagnostics, expected, prefer, qr, budgetToken, barcode);
+        } finally {
+            budgetCts?.Dispose();
+        }
+    }
+
+    /// <summary>
     /// Attempts to decode all symbols from raw pixels using a single options object.
     /// </summary>
     public static bool TryDecodeAll(byte[] pixels, int width, int height, int stride, PixelFormat format, out CodeGlyphDecoded[] decoded, CodeGlyphDecodeOptions? options) {
@@ -440,6 +855,40 @@ public static class CodeGlyph {
             var h = height;
             if (!ImageDecodeHelper.TryDownscale(ref buffer, ref w, ref h, imageOptions, budgetToken)) { decoded = Array.Empty<CodeGlyphDecoded>(); return false; }
             return TryDecodeAll(buffer, w, h, w * 4, format, out decoded, expected, include, prefer, qr, budgetToken, barcode);
+        } finally {
+            budgetCts?.Dispose();
+        }
+    }
+
+    /// <summary>
+    /// Attempts to decode all symbols from raw pixels using a single options object, with diagnostics.
+    /// </summary>
+    public static bool TryDecodeAll(byte[] pixels, int width, int height, int stride, PixelFormat format, out CodeGlyphDecoded[] decoded, out CodeGlyphDecodeDiagnostics diagnostics, CodeGlyphDecodeOptions? options) {
+        diagnostics = new CodeGlyphDecodeDiagnostics();
+        var expected = options?.ExpectedBarcode;
+        var include = options?.IncludeBarcode ?? true;
+        var prefer = options?.PreferBarcode ?? false;
+        var qr = options?.Qr;
+        var token = options is null ? default : options.CancellationToken;
+        var barcode = options?.Barcode;
+        var imageOptions = options?.Image;
+        if (pixels is null) throw new ArgumentNullException(nameof(pixels));
+        if (imageOptions is null || (imageOptions.MaxDimension <= 0 && imageOptions.MaxMilliseconds <= 0) || stride != width * 4) {
+            return TryDecodeAll(pixels, width, height, stride, format, out decoded, out diagnostics, expected, include, prefer, qr, token, barcode);
+        }
+
+        var budgetToken = ImageDecodeHelper.ApplyBudget(token, imageOptions, out var budgetCts);
+        try {
+            if (budgetToken.IsCancellationRequested) { decoded = Array.Empty<CodeGlyphDecoded>(); diagnostics.Failure = "Cancelled."; return false; }
+            var buffer = pixels;
+            var w = width;
+            var h = height;
+            if (!ImageDecodeHelper.TryDownscale(ref buffer, ref w, ref h, imageOptions, budgetToken)) {
+                decoded = Array.Empty<CodeGlyphDecoded>();
+                diagnostics.Failure ??= budgetToken.IsCancellationRequested ? "Cancelled." : "Image downscale failed.";
+                return false;
+            }
+            return TryDecodeAll(buffer, w, h, w * 4, format, out decoded, out diagnostics, expected, include, prefer, qr, budgetToken, barcode);
         } finally {
             budgetCts?.Dispose();
         }
@@ -490,6 +939,55 @@ public static class CodeGlyph {
             budgetCts?.Dispose();
         }
     }
+
+    /// <summary>
+    /// Attempts to decode all symbols from raw pixels using a single options object, with diagnostics.
+    /// </summary>
+    public static bool TryDecodeAll(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat format, out CodeGlyphDecoded[] decoded, out CodeGlyphDecodeDiagnostics diagnostics, CodeGlyphDecodeOptions? options) {
+        diagnostics = new CodeGlyphDecodeDiagnostics();
+        var expected = options?.ExpectedBarcode;
+        var include = options?.IncludeBarcode ?? true;
+        var prefer = options?.PreferBarcode ?? false;
+        var qr = options?.Qr;
+        var token = options is null ? default : options.CancellationToken;
+        var barcode = options?.Barcode;
+        var imageOptions = options?.Image;
+        if (imageOptions is null || imageOptions.MaxMilliseconds <= 0) {
+            return TryDecodeAll(pixels, width, height, stride, format, out decoded, out diagnostics, expected, include, prefer, qr, token, barcode);
+        }
+
+        var budgetToken = ImageDecodeHelper.ApplyBudget(token, imageOptions, out var budgetCts);
+        try {
+            if (budgetToken.IsCancellationRequested) { decoded = Array.Empty<CodeGlyphDecoded>(); diagnostics.Failure = "Cancelled."; return false; }
+            return TryDecodeAll(pixels, width, height, stride, format, out decoded, out diagnostics, expected, include, prefer, qr, budgetToken, barcode);
+        } finally {
+            budgetCts?.Dispose();
+        }
+    }
+
+    /// <summary>
+    /// Attempts to decode a QR or barcode from raw pixels using a single options object, with diagnostics.
+    /// </summary>
+    public static bool TryDecode(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat format, out CodeGlyphDecoded decoded, out CodeGlyphDecodeDiagnostics diagnostics, CodeGlyphDecodeOptions? options) {
+        diagnostics = new CodeGlyphDecodeDiagnostics();
+        var expected = options?.ExpectedBarcode;
+        var prefer = options?.PreferBarcode ?? false;
+        var qr = options?.Qr;
+        var token = options is null ? default : options.CancellationToken;
+        var barcode = options?.Barcode;
+        var imageOptions = options?.Image;
+        if (imageOptions is null || imageOptions.MaxMilliseconds <= 0) {
+            return TryDecode(pixels, width, height, stride, format, out decoded, out diagnostics, expected, prefer, qr, token, barcode);
+        }
+
+        var budgetToken = ImageDecodeHelper.ApplyBudget(token, imageOptions, out var budgetCts);
+        try {
+            if (budgetToken.IsCancellationRequested) { decoded = null!; diagnostics.Failure = "Cancelled."; return false; }
+            return TryDecode(pixels, width, height, stride, format, out decoded, out diagnostics, expected, prefer, qr, budgetToken, barcode);
+        } finally {
+            budgetCts?.Dispose();
+        }
+    }
 #endif
 
     /// <summary>
@@ -515,6 +1013,33 @@ public static class CodeGlyph {
     }
 
     /// <summary>
+    /// Attempts to decode a QR or barcode from PNG bytes using a single options object, with diagnostics.
+    /// </summary>
+    public static bool TryDecodePng(byte[] png, out CodeGlyphDecoded decoded, out CodeGlyphDecodeDiagnostics diagnostics, CodeGlyphDecodeOptions? options) {
+        diagnostics = new CodeGlyphDecodeDiagnostics();
+        var expected = options?.ExpectedBarcode;
+        var prefer = options?.PreferBarcode ?? false;
+        var qr = options?.Qr;
+        var token = options is null ? default : options.CancellationToken;
+        var barcode = options?.Barcode;
+        var imageOptions = options?.Image;
+        if (png is null) throw new ArgumentNullException(nameof(png));
+        var budgetToken = ImageDecodeHelper.ApplyBudget(token, imageOptions, out var budgetCts);
+        try {
+            if (budgetToken.IsCancellationRequested) { decoded = null!; diagnostics.Failure = "Cancelled."; return false; }
+            var rgba = PngReader.DecodeRgba32(png, out var width, out var height);
+            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, imageOptions, budgetToken)) {
+                decoded = null!;
+                diagnostics.Failure ??= budgetToken.IsCancellationRequested ? "Cancelled." : "Image downscale failed.";
+                return false;
+            }
+            return TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, out diagnostics, expected, prefer, qr, budgetToken, barcode);
+        } finally {
+            budgetCts?.Dispose();
+        }
+    }
+
+    /// <summary>
     /// Attempts to decode a QR or barcode from common image formats using a single options object.
     /// </summary>
     public static bool TryDecodeImage(byte[] image, out CodeGlyphDecoded decoded, CodeGlyphDecodeOptions? options) {
@@ -531,6 +1056,37 @@ public static class CodeGlyph {
             if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) { decoded = null!; return false; }
             if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, imageOptions, budgetToken)) { decoded = null!; return false; }
             return TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, expected, prefer, qr, budgetToken, barcode);
+        } finally {
+            budgetCts?.Dispose();
+        }
+    }
+
+    /// <summary>
+    /// Attempts to decode a QR or barcode from common image formats using a single options object, with diagnostics.
+    /// </summary>
+    public static bool TryDecodeImage(byte[] image, out CodeGlyphDecoded decoded, out CodeGlyphDecodeDiagnostics diagnostics, CodeGlyphDecodeOptions? options) {
+        diagnostics = new CodeGlyphDecodeDiagnostics();
+        var expected = options?.ExpectedBarcode;
+        var prefer = options?.PreferBarcode ?? false;
+        var qr = options?.Qr;
+        var token = options is null ? default : options.CancellationToken;
+        var barcode = options?.Barcode;
+        var imageOptions = options?.Image;
+        if (image is null) throw new ArgumentNullException(nameof(image));
+        var budgetToken = ImageDecodeHelper.ApplyBudget(token, imageOptions, out var budgetCts);
+        try {
+            if (budgetToken.IsCancellationRequested) { decoded = null!; diagnostics.Failure = "Cancelled."; return false; }
+            if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) {
+                decoded = null!;
+                diagnostics.Failure ??= "Unsupported image format.";
+                return false;
+            }
+            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, imageOptions, budgetToken)) {
+                decoded = null!;
+                diagnostics.Failure ??= budgetToken.IsCancellationRequested ? "Cancelled." : "Image downscale failed.";
+                return false;
+            }
+            return TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, out diagnostics, expected, prefer, qr, budgetToken, barcode);
         } finally {
             budgetCts?.Dispose();
         }
