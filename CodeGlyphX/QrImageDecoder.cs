@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Threading;
 using CodeGlyphX.Rendering;
 
 namespace CodeGlyphX;
@@ -43,6 +44,18 @@ public static class QrImageDecoder {
     }
 
     /// <summary>
+    /// Attempts to decode a QR code from a raw pixel buffer, with cancellation.
+    /// </summary>
+    public static bool TryDecode(byte[] pixels, int width, int height, int stride, PixelFormat format, QrPixelDecodeOptions? options, CancellationToken cancellationToken, out QrDecoded decoded) {
+#if NET8_0_OR_GREATER
+        return global::CodeGlyphX.Qr.QrPixelDecoder.TryDecode(pixels, width, height, stride, format, options, cancellationToken, out decoded);
+#else
+        decoded = null!;
+        return false;
+#endif
+    }
+
+    /// <summary>
     /// Attempts to decode all QR codes from a raw pixel buffer.
     /// </summary>
     public static bool TryDecodeAll(byte[] pixels, int width, int height, int stride, PixelFormat format, out QrDecoded[] decoded) {
@@ -60,6 +73,18 @@ public static class QrImageDecoder {
     public static bool TryDecodeAll(byte[] pixels, int width, int height, int stride, PixelFormat format, QrPixelDecodeOptions? options, out QrDecoded[] decoded) {
 #if NET8_0_OR_GREATER
         return global::CodeGlyphX.Qr.QrPixelDecoder.TryDecodeAll(pixels, width, height, stride, format, options, out decoded);
+#else
+        decoded = Array.Empty<QrDecoded>();
+        return false;
+#endif
+    }
+
+    /// <summary>
+    /// Attempts to decode all QR codes from a raw pixel buffer, with cancellation.
+    /// </summary>
+    public static bool TryDecodeAll(byte[] pixels, int width, int height, int stride, PixelFormat format, QrPixelDecodeOptions? options, CancellationToken cancellationToken, out QrDecoded[] decoded) {
+#if NET8_0_OR_GREATER
+        return global::CodeGlyphX.Qr.QrPixelDecoder.TryDecodeAll(pixels, width, height, stride, format, options, cancellationToken, out decoded);
 #else
         decoded = Array.Empty<QrDecoded>();
         return false;
@@ -103,6 +128,25 @@ public static class QrImageDecoder {
     }
 
     /// <summary>
+    /// Attempts to decode a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA), with diagnostics, profile options, and cancellation.
+    /// </summary>
+    public static bool TryDecodeImage(byte[] image, out QrDecoded decoded, out QrPixelDecodeInfo info, QrPixelDecodeOptions? options, CancellationToken cancellationToken) {
+#if NET8_0_OR_GREATER
+        if (image is null) throw new ArgumentNullException(nameof(image));
+        if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) {
+            decoded = null!;
+            info = default;
+            return false;
+        }
+        return QrDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, out info, options, cancellationToken);
+#else
+        decoded = null!;
+        info = default;
+        return false;
+#endif
+    }
+
+    /// <summary>
     /// Attempts to decode a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).
     /// </summary>
     public static bool TryDecodeImage(byte[] image, QrPixelDecodeOptions? options, out QrDecoded decoded) {
@@ -113,6 +157,23 @@ public static class QrImageDecoder {
             return false;
         }
         return global::CodeGlyphX.Qr.QrPixelDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, options, out decoded);
+#else
+        decoded = null!;
+        return false;
+#endif
+    }
+
+    /// <summary>
+    /// Attempts to decode a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA), with cancellation.
+    /// </summary>
+    public static bool TryDecodeImage(byte[] image, QrPixelDecodeOptions? options, CancellationToken cancellationToken, out QrDecoded decoded) {
+#if NET8_0_OR_GREATER
+        if (image is null) throw new ArgumentNullException(nameof(image));
+        if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) {
+            decoded = null!;
+            return false;
+        }
+        return global::CodeGlyphX.Qr.QrPixelDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, options, cancellationToken, out decoded);
 #else
         decoded = null!;
         return false;

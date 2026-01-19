@@ -1066,12 +1066,50 @@ public static class QR {
         }
 
         /// <summary>
+        /// Sets foreground color.
+        /// </summary>
+        public QrBuilder WithForeground(Rgba32 color) {
+            Options.Foreground = color;
+            return this;
+        }
+
+        /// <summary>
+        /// Sets background color.
+        /// </summary>
+        public QrBuilder WithBackground(Rgba32 color) {
+            Options.Background = color;
+            return this;
+        }
+
+        /// <summary>
+        /// Uses a transparent background (alpha = 0).
+        /// </summary>
+        public QrBuilder WithTransparentBackground() {
+            Options.Background = Rgba32.Transparent;
+            return this;
+        }
+
+        /// <summary>
         /// Sets the render style preset.
         /// </summary>
         public QrBuilder WithStyle(QrRenderStyle style) {
             Options.Style = style;
             return this;
         }
+
+        /// <summary>
+        /// Sets a fixed target size (in pixels). Module size is adjusted to fit.
+        /// </summary>
+        public QrBuilder WithTargetSize(int sizePx, bool includeQuietZone = true) {
+            Options.TargetSizePx = sizePx;
+            Options.TargetSizeIncludesQuietZone = includeQuietZone;
+            return this;
+        }
+
+        /// <summary>
+        /// Sets a fixed target size (in pixels). Module size is adjusted to fit.
+        /// </summary>
+        public QrBuilder WithFixedSize(int sizePx, bool includeQuietZone = true) => WithTargetSize(sizePx, includeQuietZone);
 
         /// <summary>
         /// Sets an embedded logo from PNG bytes.

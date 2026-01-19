@@ -781,6 +781,30 @@ public static class Barcode {
         }
 
         /// <summary>
+        /// Sets foreground color.
+        /// </summary>
+        public BarcodeBuilder WithForeground(Rgba32 color) {
+            Options.Foreground = color;
+            return this;
+        }
+
+        /// <summary>
+        /// Sets background color.
+        /// </summary>
+        public BarcodeBuilder WithBackground(Rgba32 color) {
+            Options.Background = color;
+            return this;
+        }
+
+        /// <summary>
+        /// Uses a transparent background (alpha = 0).
+        /// </summary>
+        public BarcodeBuilder WithTransparentBackground() {
+            Options.Background = Rgba32.Transparent;
+            return this;
+        }
+
+        /// <summary>
         /// Sets JPEG quality.
         /// </summary>
         public BarcodeBuilder WithJpegQuality(int quality) {

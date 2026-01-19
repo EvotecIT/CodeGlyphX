@@ -18,6 +18,16 @@ public sealed class QrEasyOptions {
     public int QuietZone { get; set; } = RenderDefaults.QrQuietZone;
 
     /// <summary>
+    /// Target output size in pixels (0 = disabled). When set, module size is adjusted to fit this target.
+    /// </summary>
+    public int TargetSizePx { get; set; } = 0;
+
+    /// <summary>
+    /// When true, <see cref="TargetSizePx"/> includes the quiet zone.
+    /// </summary>
+    public bool TargetSizeIncludesQuietZone { get; set; } = true;
+
+    /// <summary>
     /// Optional error correction level override.
     /// </summary>
     public QrErrorCorrectionLevel? ErrorCorrectionLevel { get; set; }
