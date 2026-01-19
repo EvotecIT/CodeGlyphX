@@ -35,8 +35,8 @@
         {
             await AssemblyLoader.LoadAssembliesAsync(new[]
             {
-                "CodeGlyphX.Playground.dll",
-                "CodeGlyphX.dll"
+                "CodeGlyphX.Playground.wasm",
+                "CodeGlyphX.wasm"
             });
 
             _playgroundType = Type.GetType("CodeGlyphX.Playground.Playground, CodeGlyphX.Playground");
