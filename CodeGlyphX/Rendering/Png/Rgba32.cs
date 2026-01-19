@@ -40,4 +40,9 @@ public readonly struct Rgba32 {
     /// Opaque white.
     /// </summary>
     public static Rgba32 White => new(255, 255, 255, 255);
+
+    /// <summary>
+    /// Transparent (alpha = 0).
+    /// </summary>
+    public static Rgba32 Transparent => new(0, 0, 0, 0);
 }
