@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeGlyphX.Benchmarks", "Co
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeGlyphX.Website", "CodeGlyphX.Website\CodeGlyphX.Website.csproj", "{CCB13BFE-B697-47B6-9545-46EE5D1993A8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeGlyphX.Playground", "CodeGlyphX.Playground\CodeGlyphX.Playground.csproj", "{FA3C7382-5CB5-492D-A69B-DED4868ADCDB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -125,6 +127,18 @@ Global
 		{CCB13BFE-B697-47B6-9545-46EE5D1993A8}.Release|x64.Build.0 = Release|Any CPU
 		{CCB13BFE-B697-47B6-9545-46EE5D1993A8}.Release|x86.ActiveCfg = Release|Any CPU
 		{CCB13BFE-B697-47B6-9545-46EE5D1993A8}.Release|x86.Build.0 = Release|Any CPU
+		{FA3C7382-5CB5-492D-A69B-DED4868ADCDB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA3C7382-5CB5-492D-A69B-DED4868ADCDB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA3C7382-5CB5-492D-A69B-DED4868ADCDB}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{FA3C7382-5CB5-492D-A69B-DED4868ADCDB}.Debug|x64.Build.0 = Debug|Any CPU
+		{FA3C7382-5CB5-492D-A69B-DED4868ADCDB}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{FA3C7382-5CB5-492D-A69B-DED4868ADCDB}.Debug|x86.Build.0 = Debug|Any CPU
+		{FA3C7382-5CB5-492D-A69B-DED4868ADCDB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA3C7382-5CB5-492D-A69B-DED4868ADCDB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA3C7382-5CB5-492D-A69B-DED4868ADCDB}.Release|x64.ActiveCfg = Release|Any CPU
+		{FA3C7382-5CB5-492D-A69B-DED4868ADCDB}.Release|x64.Build.0 = Release|Any CPU
+		{FA3C7382-5CB5-492D-A69B-DED4868ADCDB}.Release|x86.ActiveCfg = Release|Any CPU
+		{FA3C7382-5CB5-492D-A69B-DED4868ADCDB}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

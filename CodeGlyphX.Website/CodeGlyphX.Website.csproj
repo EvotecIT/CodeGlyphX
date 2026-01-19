@@ -13,7 +13,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CodeGlyphX\CodeGlyphX.csproj" />
+    <ProjectReference Include="..\CodeGlyphX.Playground\CodeGlyphX.Playground.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <WasmLazyLoadAssemblies Include="CodeGlyphX.Playground.dll" />
+    <WasmLazyLoadAssemblies Include="CodeGlyphX.dll" />
   </ItemGroup>
 
   <ItemGroup>
