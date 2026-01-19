@@ -17,8 +17,7 @@
     <link rel="icon" type="image/png" href="codeglyphx-qr-icon.png" />
     <link rel="apple-touch-icon" href="codeglyphx-qr-icon.png" />
 
-    <!-- PrismJS for syntax highlighting -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" />
+    <!-- PrismJS CSS loaded lazily only when needed -->
 
     <!-- SEO -->
     <meta name="description" content="CodeGlyphX is a fast, dependency-free toolkit for QR codes and barcodes in .NET. Generate and decode QR, Data Matrix, PDF417, Aztec, and 1D barcodes." />
@@ -71,13 +70,7 @@
     <script src="_framework/blazor.webassembly.js"></script>
     <script>navigator.serviceWorker.register('service-worker.js');</script>
 
-    <!-- PrismJS for syntax highlighting -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-csharp.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-xml-doc.min.js"></script>
-
-    <!-- Theme functions for Blazor -->
+    <!-- Theme and utility functions for Blazor -->
     <script>
         function getTheme() {
             return localStorage.getItem('theme') || 'dark';
@@ -88,7 +81,6 @@
             document.documentElement.setAttribute('data-theme', theme);
         }
 
-        // Copy to clipboard for code blocks
         function copyToClipboard(text) {
             navigator.clipboard.writeText(text).then(function() {
                 return true;
@@ -98,11 +90,36 @@
             });
         }
 
-        // Add copy buttons to code blocks after Blazor loads
-        function initCopyButtons() {
-            document.querySelectorAll('pre.code-block').forEach(function(block) {
-                if (block.querySelector('.copy-btn')) return; // Already has button
+        // Lazy load Prism only when code blocks are present
+        var prismLoaded = false;
+        function loadPrism(callback) {
+            if (prismLoaded) { callback && callback(); return; }
+            var css = document.createElement('link');
+            css.rel = 'stylesheet';
+            css.href = 'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css';
+            document.head.appendChild(css);
 
+            var script = document.createElement('script');
+            script.src = 'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js';
+            script.onload = function() {
+                var csharp = document.createElement('script');
+                csharp.src = 'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-csharp.min.js';
+                csharp.onload = function() { prismLoaded = true; callback && callback(); };
+                document.head.appendChild(csharp);
+            };
+            document.head.appendChild(script);
+        }
+
+        // Initialize code blocks (copy buttons + optional highlighting)
+        function initCodeBlocks() {
+            var blocks = document.querySelectorAll('pre.code-block:not(.initialized)');
+            if (blocks.length === 0) return;
+
+            blocks.forEach(function(block) {
+                block.classList.add('initialized');
+                block.style.position = 'relative';
+
+                // Add copy button
                 var btn = document.createElement('button');
                 btn.className = 'copy-btn';
                 btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>';
@@ -118,31 +135,38 @@
                         }, 2000);
                     });
                 };
-                block.style.position = 'relative';
                 block.appendChild(btn);
             });
-        }
 
-        // Run after Blazor updates the DOM
-        var observer = new MutationObserver(function(mutations) {
-            initCopyButtons();
-            // Apply syntax highlighting to code blocks
-            if (typeof Prism !== 'undefined') {
-                document.querySelectorAll('pre.code-block').forEach(function(block) {
-                    if (!block.classList.contains('prism-highlighted')) {
-                        // Wrap content in code element for Prism
-                        if (!block.querySelector('code')) {
-                            var code = document.createElement('code');
-                            code.className = 'language-csharp';
-                            code.textContent = block.textContent;
-                            block.textContent = '';
-                            block.appendChild(code);
+            // Check if syntax highlighting is needed (no pre-highlighted spans)
+            var needsHighlighting = Array.from(blocks).some(function(b) {
+                return !b.querySelector('.keyword, .string, .comment');
+            });
+
+            if (needsHighlighting) {
+                loadPrism(function() {
+                    blocks.forEach(function(block) {
+                        if (!block.classList.contains('prism-highlighted') && !block.querySelector('.keyword')) {
+                            if (!block.querySelector('code')) {
+                                var code = document.createElement('code');
+                                code.className = 'language-csharp';
+                                code.textContent = block.textContent;
+                                block.textContent = '';
+                                block.appendChild(code);
+                            }
+                            Prism.highlightElement(block.querySelector('code'));
+                            block.classList.add('prism-highlighted');
                         }
-                        Prism.highlightElement(block.querySelector('code'));
-                        block.classList.add('prism-highlighted');
-                    }
+                    });
                 });
             }
+        }
+
+        // Throttled observer - only check periodically, not on every mutation
+        var initTimeout;
+        var observer = new MutationObserver(function() {
+            clearTimeout(initTimeout);
+            initTimeout = setTimeout(initCodeBlocks, 100);
         });
         observer.observe(document.body, { childList: true, subtree: true });
     </script>
