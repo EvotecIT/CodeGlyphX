@@ -1,6 +1,9 @@
 @page "/playground"
 @using CodeGlyphX
 @using CodeGlyphX.Payloads
+@using CodeGlyphX.DataMatrix
+@using CodeGlyphX.Pdf417
+@using CodeGlyphX.Aztec
 @using CodeGlyphX.Rendering
 @using CodeGlyphX.Rendering.Png
 @using Microsoft.AspNetCore.Components.Forms
@@ -30,7 +33,18 @@
             {
                 <div class="form-group">
                     <label>Image File</label>
-                    <InputFile OnChange="OnDecodeFileChanged" accept="image/*" />
+                    <div class="dropzone @(IsDropActive ? "active" : string.Empty)"
+                         @ondragenter="@(() => IsDropActive = true)"
+                         @ondragleave="@(() => IsDropActive = false)"
+                         @ondrop="@(() => IsDropActive = false)"
+                         @ondragover:preventDefault="true"
+                         @ondrop:preventDefault="true">
+                        <InputFile class="drop-input" OnChange="OnDecodeFileChanged" accept="image/*" />
+                        <div class="dropzone-inner">
+                            <strong>Drop an image here</strong>
+                            <span>or click to select</span>
+                        </div>
+                    </div>
                     <small class="form-hint">Supports PNG, JPEG, GIF, BMP, PPM/PBM/PGM/PAM, XBM/XPM, TGA.</small>
                 </div>
 
@@ -58,6 +72,20 @@
             }
             else
             {
+            <div class="form-group">
+                <label>Presets</label>
+                <div class="preset-grid">
+                    <button type="button" class="preset-btn" @onclick="@(() => ApplyPreset("QrUrl"))">QR URL</button>
+                    <button type="button" class="preset-btn" @onclick="@(() => ApplyPreset("QrWifi"))">WiFi</button>
+                    <button type="button" class="preset-btn" @onclick="@(() => ApplyPreset("QrOtp"))">OTP</button>
+                    <button type="button" class="preset-btn" @onclick="@(() => ApplyPreset("BarcodeEan"))">EAN-13</button>
+                    <button type="button" class="preset-btn" @onclick="@(() => ApplyPreset("BarcodeCode128"))">Code 128</button>
+                    <button type="button" class="preset-btn" @onclick="@(() => ApplyPreset("MatrixPdf417"))">PDF417</button>
+                    <button type="button" class="preset-btn" @onclick="@(() => ApplyPreset("MatrixDataMatrix"))">Data Matrix</button>
+                    <button type="button" class="preset-btn" @onclick="@(() => ApplyPreset("MatrixAztec"))">Aztec</button>
+                </div>
+            </div>
+
             <div class="form-group">
                 <label>Code Type</label>
                 <select @bind="SelectedCategory" @bind:after="OnCategoryChanged">
@@ -318,9 +346,17 @@
                     <label>Barcode Type</label>
                     <select @bind="SelectedBarcodeType" @bind:after="OnBarcodeTypeChanged">
                         <option value="Code128">Code 128 (Full ASCII)</option>
+                        <option value="GS1128">GS1-128</option>
                         <option value="Code39">Code 39 (Uppercase + Digits)</option>
                         <option value="Code93">Code 93 (Uppercase + Digits)</option>
+                        <option value="Code11">Code 11</option>
+                        <option value="Codabar">Codabar</option>
+                        <option value="MSI">MSI</option>
+                        <option value="Plessey">Plessey</option>
                         <option value="EAN">EAN (Digits Only)</option>
+                        <option value="UPCA">UPC-A (Digits Only)</option>
+                        <option value="UPCE">UPC-E (Digits Only)</option>
+                        <option value="ITF14">ITF-14 (Digits Only)</option>
                     </select>
                 </div>
 
@@ -348,6 +384,52 @@
                     <label>Content</label>
                     <textarea rows="3" @bind="MatrixContent" @bind:after="GenerateCode" placeholder="Enter text or data..."></textarea>
                 </div>
+
+                @if (SelectedMatrixType == "DataMatrix")
+                {
+                    <div class="form-group">
+                        <label>Encoding Mode</label>
+                        <select @bind="SelectedDataMatrixMode" @bind:after="GenerateCode">
+                            <option value="Auto">Auto</option>
+                            <option value="Ascii">ASCII</option>
+                            <option value="C40">C40</option>
+                            <option value="Text">Text</option>
+                            <option value="X12">X12</option>
+                            <option value="Edifact">EDIFACT</option>
+                            <option value="Base256">Base256</option>
+                        </select>
+                    </div>
+                }
+                else if (SelectedMatrixType == "Pdf417")
+                {
+                    <div class="form-group">
+                        <label>Error Correction Level: @(Pdf417EccLevel < 0 ? "Auto" : Pdf417EccLevel.ToString())</label>
+                        <input type="range" min="-1" max="8" @bind="Pdf417EccLevel" @bind:after="GenerateCode" />
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" @bind="Pdf417Compact" @bind:after="GenerateCode" />
+                            Compact PDF417
+                        </label>
+                    </div>
+                }
+                else if (SelectedMatrixType == "Aztec")
+                {
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" @bind="AztecAutoEcc" @bind:after="GenerateCode" />
+                            Auto error correction
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>Error Correction %: @AztecEccPercent</label>
+                        <input type="range" min="5" max="50" step="1" @bind="AztecEccPercent" @bind:after="GenerateCode" disabled="@AztecAutoEcc" />
+                    </div>
+                    <div class="form-group">
+                        <label>Layers (0 = auto): @AztecLayers</label>
+                        <input type="range" min="0" max="32" step="1" @bind="AztecLayers" @bind:after="GenerateCode" />
+                    </div>
+                }
             }
 
             <button class="btn btn-primary" style="width: 100%; margin-top: 1.5rem;" @onclick="GenerateCode">
@@ -513,6 +595,12 @@
     // Matrix code options
     private string SelectedMatrixType { get; set; } = "DataMatrix";
     private string MatrixContent { get; set; } = "Serial: ABC123-XYZ789";
+    private string SelectedDataMatrixMode { get; set; } = "Auto";
+    private int Pdf417EccLevel { get; set; } = -1;
+    private bool Pdf417Compact { get; set; } = false;
+    private bool AztecAutoEcc { get; set; } = true;
+    private int AztecEccPercent { get; set; } = 23;
+    private int AztecLayers { get; set; } = 0;
 
     // Output
     private string? ImageDataUri { get; set; }
@@ -527,6 +615,7 @@
     private bool DecodeDownscale { get; set; } = true;
     private bool DecodeStopAfterFirst { get; set; } = true;
     private int DecodeMaxDimension { get; set; } = 1024;
+    private bool IsDropActive { get; set; } = false;
 
     protected override void OnInitialized()
     {
@@ -559,17 +648,51 @@
         switch (SelectedBarcodeType)
         {
             case "Code39":
-            case "Code93":
                 BarcodeHint = "Only uppercase A-Z, digits 0-9, and -. $/+% space allowed";
-                if (!IsValidCode39Content(BarcodeContent))
-                    BarcodeContent = "HELLO-123";
+                BarcodeContent = "HELLO-123";
+                break;
+            case "Code93":
+                BarcodeHint = "Uppercase A-Z, digits 0-9, and -. $/+% space (full ASCII requires options)";
+                BarcodeContent = "HELLO-123";
+                break;
+            case "Code11":
+                BarcodeHint = "Digits 0-9 and '-' only";
+                BarcodeContent = "123-45";
+                break;
+            case "Codabar":
+                BarcodeHint = "Digits and - $ . / : +, with optional start/stop A-D";
+                BarcodeContent = "A123456B";
+                break;
+            case "MSI":
+                BarcodeHint = "Digits only";
+                BarcodeContent = "1234567";
+                break;
+            case "Plessey":
+                BarcodeHint = "Hex digits only (0-9, A-F)";
+                BarcodeContent = "A1B2C3";
                 break;
             case "EAN":
-                BarcodeHint = "Enter 8 or 13 digits (will be padded if shorter)";
+                BarcodeHint = "Enter 8 or 13 digits";
                 BarcodeContent = "5901234123457";
                 break;
+            case "UPCA":
+                BarcodeHint = "Enter 12 digits";
+                BarcodeContent = "036000291452";
+                break;
+            case "UPCE":
+                BarcodeHint = "Enter 6-8 digits";
+                BarcodeContent = "042526";
+                break;
+            case "ITF14":
+                BarcodeHint = "Enter 14 digits";
+                BarcodeContent = "10012345678902";
+                break;
+            case "GS1128":
+                BarcodeHint = "GS1 AI format, e.g. (01)09506000134352(10)ABC123";
+                BarcodeContent = "(01)09506000134352(10)ABC123";
+                break;
             default:
-                BarcodeHint = "";
+                BarcodeHint = "Full ASCII (A-Z, a-z, 0-9, symbols)";
                 BarcodeContent = "PRODUCT-12345";
                 break;
         }
@@ -589,6 +712,70 @@
         }
     }
 
+    private void ApplyPreset(string preset)
+    {
+        SelectedMode = "Generate";
+
+        switch (preset)
+        {
+            case "QrUrl":
+                SelectedCategory = "QR";
+                Content = "https://evotec.xyz";
+                ErrorCorrection = "M";
+                break;
+            case "QrWifi":
+                SelectedCategory = "SpecialQR";
+                SpecialPayloadType = "WiFi";
+                WifiSsid = "Office-WiFi";
+                WifiPassword = "Password123";
+                WifiSecurity = "WPA";
+                WifiHidden = false;
+                break;
+            case "QrOtp":
+                SelectedCategory = "SpecialQR";
+                SpecialPayloadType = "OTP";
+                OtpType = "TOTP";
+                OtpLabel = "user@evotec.xyz";
+                OtpIssuer = "CodeGlyphX";
+                OtpSecret = "JBSWY3DPEHPK3PXP";
+                break;
+            case "BarcodeEan":
+                SelectedCategory = "Barcode";
+                SelectedBarcodeType = "EAN";
+                BarcodeContent = "5901234123457";
+                OnBarcodeTypeChanged();
+                break;
+            case "BarcodeCode128":
+                SelectedCategory = "Barcode";
+                SelectedBarcodeType = "Code128";
+                BarcodeContent = "CODE128-1234";
+                OnBarcodeTypeChanged();
+                break;
+            case "MatrixPdf417":
+                SelectedCategory = "Matrix";
+                SelectedMatrixType = "Pdf417";
+                MatrixContent = "Document ID: 98765";
+                Pdf417EccLevel = -1;
+                Pdf417Compact = false;
+                break;
+            case "MatrixDataMatrix":
+                SelectedCategory = "Matrix";
+                SelectedMatrixType = "DataMatrix";
+                MatrixContent = "Serial: ABC123-XYZ789";
+                SelectedDataMatrixMode = "Auto";
+                break;
+            case "MatrixAztec":
+                SelectedCategory = "Matrix";
+                SelectedMatrixType = "Aztec";
+                MatrixContent = "Ticket: CONF-2024";
+                AztecAutoEcc = true;
+                AztecLayers = 0;
+                break;
+        }
+
+        GenerateCode();
+    }
+
     private bool IsValidCode39Content(string content)
     {
         if (string.IsNullOrEmpty(content)) return false;
@@ -602,11 +789,41 @@
         return true;
     }
 
+    private static bool IsValidCode11Content(string content)
+    {
+        if (string.IsNullOrEmpty(content)) return false;
+        foreach (var ch in content)
+        {
+            if (!char.IsDigit(ch) && ch != '-') return false;
+        }
+        return true;
+    }
+
+    private static bool IsValidHexContent(string content)
+    {
+        if (string.IsNullOrEmpty(content)) return false;
+        foreach (var ch in content)
+        {
+            if (!(ch >= '0' && ch <= '9') && !(ch >= 'A' && ch <= 'F') && !(ch >= 'a' && ch <= 'f'))
+                return false;
+        }
+        return true;
+    }
+
+    private static string NormalizeDigits(string content)
+        => new string(content.Where(char.IsDigit).ToArray());
+
     private string GetBarcodeContentLabel()
     {
         return SelectedBarcodeType switch
         {
             "EAN" => "Digits (8 or 13)",
+            "UPCA" => "Digits (12)",
+            "UPCE" => "Digits (6-8)",
+            "ITF14" => "Digits (14)",
+            "MSI" => "Digits",
+            "Code11" => "Digits and '-'",
+            "Plessey" => "Hex digits (0-9, A-F)",
             _ => "Content"
         };
     }
@@ -617,7 +834,15 @@
         {
             "Code39" => "HELLO-123",
             "Code93" => "HELLO-123",
+            "Code11" => "123-45",
+            "Codabar" => "A123456B",
+            "MSI" => "1234567",
+            "Plessey" => "A1B2C3",
             "EAN" => "5901234123457",
+            "UPCA" => "036000291452",
+            "UPCE" => "042526",
+            "ITF14" => "10012345678902",
+            "GS1128" => "(01)09506000134352(10)ABC123",
             _ => "PRODUCT-12345"
         };
     }
@@ -690,30 +915,80 @@
                 var barcodeType = SelectedBarcodeType switch
                 {
                     "Code128" => BarcodeType.Code128,
+                    "GS1128" => BarcodeType.GS1_128,
                     "Code39" => BarcodeType.Code39,
                     "Code93" => BarcodeType.Code93,
+                    "Code11" => BarcodeType.Code11,
+                    "Codabar" => BarcodeType.Codabar,
+                    "MSI" => BarcodeType.MSI,
+                    "Plessey" => BarcodeType.Plessey,
                     "EAN" => BarcodeType.EAN,
+                    "UPCA" => BarcodeType.UPCA,
+                    "UPCE" => BarcodeType.UPCE,
+                    "ITF14" => BarcodeType.ITF14,
                     _ => BarcodeType.Code128
                 };
 
                 string content = BarcodeContent;
 
                 // Special handling for different barcode types
-                if (SelectedBarcodeType == "Code39" || SelectedBarcodeType == "Code93")
+                if (SelectedBarcodeType == "Code39")
                 {
                     content = content.ToUpperInvariant();
-                    // Validate content
                     if (!IsValidCode39Content(content))
                     {
-                        ErrorMessage = "Code 39/93 only supports uppercase A-Z, digits 0-9, and -. $/+% space";
+                        ErrorMessage = "Code 39 supports uppercase A-Z, digits 0-9, and -. $/+% space";
+                        return;
+                    }
+                }
+                else if (SelectedBarcodeType == "Code93")
+                {
+                    content = content.ToUpperInvariant();
+                }
+                else if (SelectedBarcodeType == "Code11")
+                {
+                    content = content.ToUpperInvariant();
+                    if (!IsValidCode11Content(content))
+                    {
+                        ErrorMessage = "Code 11 supports digits and '-' only.";
+                        return;
+                    }
+                }
+                else if (SelectedBarcodeType == "Plessey")
+                {
+                    content = content.ToUpperInvariant();
+                    if (!IsValidHexContent(content))
+                    {
+                        ErrorMessage = "Plessey supports hex digits only (0-9, A-F).";
                         return;
                     }
                 }
                 else if (SelectedBarcodeType == "EAN")
                 {
-                    // Extract only digits
-                    content = new string(content.Where(char.IsDigit).ToArray());
-                    if (content.Length < 8) content = content.PadLeft(8, '0');
+                    content = NormalizeDigits(content);
+                    if (content.Length <= 8) content = content.PadLeft(8, '0');
+                    else if (content.Length < 13) content = content.PadLeft(13, '0');
+                }
+                else if (SelectedBarcodeType == "UPCA")
+                {
+                    content = NormalizeDigits(content).PadLeft(12, '0');
+                }
+                else if (SelectedBarcodeType == "UPCE")
+                {
+                    content = NormalizeDigits(content);
+                    if (content.Length < 6) content = content.PadLeft(6, '0');
+                }
+                else if (SelectedBarcodeType == "ITF14")
+                {
+                    content = NormalizeDigits(content).PadLeft(14, '0');
+                }
+                else if (SelectedBarcodeType == "Codabar")
+                {
+                    content = content.ToUpperInvariant();
+                }
+                else if (SelectedBarcodeType == "MSI")
+                {
+                    content = NormalizeDigits(content);
                 }
 
                 pngBytes = BarcodeEasy.RenderPng(barcodeType, content);
@@ -727,16 +1002,27 @@
                 switch (SelectedMatrixType)
                 {
                     case "Pdf417":
-                        pngBytes = Pdf417Code.Png(MatrixContent);
-                        svg = Pdf417Code.Svg(MatrixContent);
+                        var pdf417Options = new Pdf417EncodeOptions
+                        {
+                            ErrorCorrectionLevel = Pdf417EccLevel,
+                            Compact = Pdf417Compact
+                        };
+                        pngBytes = Pdf417Code.Png(MatrixContent, pdf417Options);
+                        svg = Pdf417Code.Svg(MatrixContent, pdf417Options);
                         break;
                     case "Aztec":
-                        pngBytes = AztecCode.Png(MatrixContent);
-                        svg = AztecCode.Svg(MatrixContent);
+                        var aztecOptions = new AztecEncodeOptions
+                        {
+                            ErrorCorrectionPercent = AztecAutoEcc ? null : AztecEccPercent,
+                            Layers = AztecLayers > 0 ? AztecLayers : null
+                        };
+                        pngBytes = AztecCode.Png(MatrixContent, aztecOptions);
+                        svg = AztecCode.Svg(MatrixContent, aztecOptions);
                         break;
                     default:
-                        pngBytes = DataMatrixCode.Png(MatrixContent);
-                        svg = DataMatrixCode.Svg(MatrixContent);
+                        var dmMode = ParseDataMatrixMode(SelectedDataMatrixMode);
+                        pngBytes = DataMatrixCode.Png(MatrixContent, dmMode);
+                        svg = DataMatrixCode.Svg(MatrixContent, dmMode);
                         break;
                 }
             }
@@ -790,7 +1076,13 @@
             var stride = width * 4;
             var found = false;
 
-            if (DecodeQr && QrDecoder.TryDecode(rgba, width, height, stride, PixelFormat.Rgba32, out var qr))
+            var qrOptions = new QrPixelDecodeOptions {
+                Profile = QrDecodeProfile.Robust,
+                MaxMilliseconds = 450,
+                MaxDimension = DecodeDownscale ? DecodeMaxDimension : 0
+            };
+
+            if (DecodeQr && QrDecoder.TryDecode(rgba, width, height, stride, PixelFormat.Rgba32, out var qr, qrOptions))
             {
                 AddDecodeResult("QR", qr.Text);
                 found = true;
@@ -819,6 +1111,7 @@
                     if ((!found || !DecodeStopAfterFirst) && AztecCode.TryDecode(rgba, width, height, stride, PixelFormat.Rgba32, out var aztec))
                     {
                         AddDecodeResult("Aztec", aztec);
+                        found = true;
                     }
                 }
             }
@@ -935,6 +1228,20 @@
         };
     }
 
+    private static DataMatrixEncodingMode ParseDataMatrixMode(string mode)
+    {
+        return mode switch
+        {
+            "Ascii" => DataMatrixEncodingMode.Ascii,
+            "C40" => DataMatrixEncodingMode.C40,
+            "Text" => DataMatrixEncodingMode.Text,
+            "X12" => DataMatrixEncodingMode.X12,
+            "Edifact" => DataMatrixEncodingMode.Edifact,
+            "Base256" => DataMatrixEncodingMode.Base256,
+            _ => DataMatrixEncodingMode.Auto
+        };
+    }
+
     private string GetDownloadFilename(string extension)
     {
         string baseName = SelectedCategory switch
@@ -946,6 +1253,15 @@
             _ => "code"
         };
         return $"{baseName}.{extension}";
+    }
+
+    private string GetBarcodeTypeEnumName()
+    {
+        return SelectedBarcodeType switch
+        {
+            "GS1128" => "GS1_128",
+            _ => SelectedBarcodeType
+        };
     }
 
     private string GetCodeExample()
@@ -1057,7 +1373,7 @@
                 "Code39" or "Code93" => EscapeString(BarcodeContent.ToUpperInvariant()),
                 _ => EscapeString(BarcodeContent)
             };
-            return "using CodeGlyphX;" + nl + nl + "Barcode.Save(BarcodeType." + SelectedBarcodeType + ", \"" + content + "\", \"barcode.png\");";
+            return "using CodeGlyphX;" + nl + nl + "Barcode.Save(BarcodeType." + GetBarcodeTypeEnumName() + ", \"" + content + "\", \"barcode.png\");";
         }
         else if (SelectedCategory == "Matrix")
         {
