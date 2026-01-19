@@ -377,3 +377,9 @@ dotnet-install.sh
 # CodeMatrix.ScreenScan.Wpf debug captures (may contain OTP secrets)
 capture-*.png
 binarized-*.png
+
+# Website generated artifacts
+CodeGlyphX.Website/wwwroot/api/
+CodeGlyphX.Website/wwwroot/llms.txt
+CodeGlyphX.Website/wwwroot/llms.json
+CodeGlyphX.Website/wwwroot/sitemap.xml
