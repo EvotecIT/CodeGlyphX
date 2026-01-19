@@ -12,6 +12,7 @@ public class Program
         // Or run specific benchmark:
         // BenchmarkRunner.Run<QrCodeBenchmarks>();
         // BenchmarkRunner.Run<BarcodeBenchmarks>();
+        // BenchmarkRunner.Run<QrDecodeBenchmarks>();
         // BenchmarkRunner.Run<DecodingBenchmarks>();
     }
 }
