@@ -70,6 +70,20 @@ public static class AztecCode {
     }
 
     /// <summary>
+    /// Attempts to decode an Aztec symbol from a module matrix, with diagnostics.
+    /// </summary>
+    public static bool TryDecode(BitMatrix modules, out string value, out AztecDecodeDiagnostics diagnostics) {
+        return AztecDecoder.TryDecode(modules, out value, out diagnostics);
+    }
+
+    /// <summary>
+    /// Attempts to decode an Aztec symbol from a module matrix, with cancellation and diagnostics.
+    /// </summary>
+    public static bool TryDecode(BitMatrix modules, CancellationToken cancellationToken, out string value, out AztecDecodeDiagnostics diagnostics) {
+        return AztecDecoder.TryDecode(modules, cancellationToken, out value, out diagnostics);
+    }
+
+    /// <summary>
     /// Attempts to decode an Aztec symbol from raw pixels.
     /// </summary>
     public static bool TryDecode(byte[] pixels, int width, int height, int stride, PixelFormat format, out string value) {
@@ -81,6 +95,20 @@ public static class AztecCode {
     /// </summary>
     public static bool TryDecode(byte[] pixels, int width, int height, int stride, PixelFormat format, CancellationToken cancellationToken, out string value) {
         return AztecDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out value);
+    }
+
+    /// <summary>
+    /// Attempts to decode an Aztec symbol from raw pixels, with diagnostics.
+    /// </summary>
+    public static bool TryDecode(byte[] pixels, int width, int height, int stride, PixelFormat format, out string value, out AztecDecodeDiagnostics diagnostics) {
+        return AztecDecoder.TryDecode(pixels, width, height, stride, format, out value, out diagnostics);
+    }
+
+    /// <summary>
+    /// Attempts to decode an Aztec symbol from raw pixels, with cancellation and diagnostics.
+    /// </summary>
+    public static bool TryDecode(byte[] pixels, int width, int height, int stride, PixelFormat format, CancellationToken cancellationToken, out string value, out AztecDecodeDiagnostics diagnostics) {
+        return AztecDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out value, out diagnostics);
     }
 
 #if NET8_0_OR_GREATER
@@ -96,6 +124,20 @@ public static class AztecCode {
     /// </summary>
     public static bool TryDecode(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat format, CancellationToken cancellationToken, out string value) {
         return AztecDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out value);
+    }
+
+    /// <summary>
+    /// Attempts to decode an Aztec symbol from raw pixels, with diagnostics.
+    /// </summary>
+    public static bool TryDecode(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat format, out string value, out AztecDecodeDiagnostics diagnostics) {
+        return AztecDecoder.TryDecode(pixels, width, height, stride, format, out value, out diagnostics);
+    }
+
+    /// <summary>
+    /// Attempts to decode an Aztec symbol from raw pixels, with cancellation and diagnostics.
+    /// </summary>
+    public static bool TryDecode(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat format, CancellationToken cancellationToken, out string value, out AztecDecodeDiagnostics diagnostics) {
+        return AztecDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out value, out diagnostics);
     }
 #endif
 

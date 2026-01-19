@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using CodeGlyphX.Rendering.Bmp;
 using CodeGlyphX.Rendering.Gif;
+using CodeGlyphX.Rendering.Ico;
 using CodeGlyphX.Rendering.Pam;
 using CodeGlyphX.Rendering.Pgm;
 using CodeGlyphX.Rendering.Pbm;
@@ -35,6 +36,7 @@ public static class ImageReader {
         if (data.Length < 2) throw new FormatException("Unknown image format.");
 
         if (IsPng(data)) return PngReader.DecodeRgba32(data, out width, out height);
+        if (IcoReader.IsIco(data)) return IcoReader.DecodeRgba32(data, out width, out height);
         if (JpegReader.IsJpeg(data)) return JpegReader.DecodeRgba32(data, out width, out height);
         if (GifReader.IsGif(data)) return GifReader.DecodeRgba32(data, out width, out height);
         if (IsBmp(data)) return BmpReader.DecodeRgba32(data, out width, out height);

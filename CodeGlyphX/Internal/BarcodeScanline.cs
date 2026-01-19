@@ -181,9 +181,25 @@ internal static class BarcodeScanline {
 
     private static bool TryDecodeRuns(ReadOnlySpan<byte> luminance, int min, int max, CancellationToken cancellationToken, out bool[] modules) {
         modules = Array.Empty<bool>();
-        if (max - min < 8) return false;
-        var threshold = (min + max) / 2;
-        return TryDecodeRuns(luminance, threshold, cancellationToken, out modules);
+        var range = max - min;
+        if (range <= 0) return false;
+
+        var thresholds = range < 8
+            ? new[] { (min + max) / 2 }
+            : new[] {
+                (min + max) / 2,
+                min + range / 3,
+                min + (range * 2) / 3,
+                min + range / 4,
+                min + (range * 3) / 4
+            };
+
+        for (var i = 0; i < thresholds.Length; i++) {
+            if (cancellationToken.IsCancellationRequested) return false;
+            if (TryDecodeRuns(luminance, thresholds[i], cancellationToken, out modules)) return true;
+        }
+
+        return false;
     }
 
     private static bool TryDecodeRuns(ReadOnlySpan<byte> luminance, int threshold, out bool[] modules) {
