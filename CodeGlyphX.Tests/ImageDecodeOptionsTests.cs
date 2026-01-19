@@ -38,4 +38,13 @@ public sealed class ImageDecodeOptionsTests {
         Assert.True(Barcode.TryDecodePng(png, BarcodeType.Code128, options, out var decoded));
         Assert.Equal("TEST-123", decoded.Text);
     }
+
+    [Fact]
+    public void Qr_Downscales_WithImageOptions() {
+        var png = QR.Png("HELLO-WORLD", new QrEasyOptions { ModuleSize = 18, QuietZone = 4 });
+        var imageOptions = new ImageDecodeOptions { MaxDimension = 200 };
+
+        Assert.True(QR.TryDecodePng(png, imageOptions, options: null, out var decoded));
+        Assert.Equal("HELLO-WORLD", decoded.Text);
+    }
 }
