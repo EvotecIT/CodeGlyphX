@@ -42,10 +42,12 @@
             _playgroundType = Type.GetType("CodeGlyphX.Playground.Playground, CodeGlyphX.Playground");
             if (_playgroundType is null)
                 _loadError = "Playground component failed to load.";
+            StateHasChanged();
         }
         catch (Exception ex)
         {
             _loadError = ex.Message;
+            StateHasChanged();
         }
     }
 }
