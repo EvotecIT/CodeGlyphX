@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Threading;
 using System.Text;
 using CodeGlyphX.Pdf417;
 using CodeGlyphX.Rendering;
@@ -1526,9 +1527,17 @@ public static class Pdf417Code {
     /// Attempts to decode a PDF417 symbol from PNG bytes.
     /// </summary>
     public static bool TryDecodePng(byte[] png, out string text) {
+        return TryDecodePng(png, CancellationToken.None, out text);
+    }
+
+    /// <summary>
+    /// Attempts to decode a PDF417 symbol from PNG bytes, with cancellation.
+    /// </summary>
+    public static bool TryDecodePng(byte[] png, CancellationToken cancellationToken, out string text) {
         if (png is null) throw new ArgumentNullException(nameof(png));
+        if (cancellationToken.IsCancellationRequested) { text = string.Empty; return false; }
         var rgba = PngReader.DecodeRgba32(png, out var width, out var height);
-        return Pdf417Decoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out text);
+        return Pdf417Decoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, cancellationToken, out text);
     }
 
     /// <summary>
@@ -1541,12 +1550,30 @@ public static class Pdf417Code {
     }
 
     /// <summary>
+    /// Attempts to decode a PDF417 symbol from a PNG file, with cancellation.
+    /// </summary>
+    public static bool TryDecodePngFile(string path, CancellationToken cancellationToken, out string text) {
+        if (path is null) throw new ArgumentNullException(nameof(path));
+        var png = RenderIO.ReadBinary(path);
+        return TryDecodePng(png, cancellationToken, out text);
+    }
+
+    /// <summary>
     /// Attempts to decode a PDF417 symbol from a PNG stream.
     /// </summary>
     public static bool TryDecodePng(Stream stream, out string text) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
         var png = RenderIO.ReadBinary(stream);
         return TryDecodePng(png, out text);
+    }
+
+    /// <summary>
+    /// Attempts to decode a PDF417 symbol from a PNG stream, with cancellation.
+    /// </summary>
+    public static bool TryDecodePng(Stream stream, CancellationToken cancellationToken, out string text) {
+        if (stream is null) throw new ArgumentNullException(nameof(stream));
+        var png = RenderIO.ReadBinary(stream);
+        return TryDecodePng(png, cancellationToken, out text);
     }
 
     /// <summary>

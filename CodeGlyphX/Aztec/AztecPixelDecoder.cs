@@ -6,6 +6,7 @@ using PixelSpan = byte[];
 
 using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace CodeGlyphX.Aztec;
 
@@ -25,68 +26,85 @@ internal static class AztecPixelDecoder {
     private static readonly Candidate[] Candidates = BuildCandidates();
 
     public static bool TryDecode(PixelSpan pixels, int width, int height, int stride, PixelFormat format, out string value) {
+        return TryDecode(pixels, width, height, stride, format, CancellationToken.None, out value);
+    }
+
+    public static bool TryDecode(PixelSpan pixels, int width, int height, int stride, PixelFormat format, CancellationToken cancellationToken, out string value) {
         value = string.Empty;
         if (width <= 0 || height <= 0 || stride < width * 4) return false;
         if (!AztecGrayImage.TryCreate(pixels, width, height, stride, format, out var image)) return false;
 
-        if (TryDecodeAllOrientations(image, out value)) return true;
+        if (TryDecodeAllOrientations(image, cancellationToken, out value)) return true;
         return false;
     }
 
-    private static bool TryDecodeAllOrientations(AztecGrayImage image, out string value) {
-        if (TryDecodeWithThresholds(image, invert: false, out value)) return true;
-        if (TryDecodeWithThresholds(image, invert: true, out value)) return true;
+    private static bool TryDecodeAllOrientations(AztecGrayImage image, CancellationToken cancellationToken, out string value) {
+        if (cancellationToken.IsCancellationRequested) { value = string.Empty; return false; }
+        if (TryDecodeWithThresholds(image, invert: false, cancellationToken, out value)) return true;
+        if (cancellationToken.IsCancellationRequested) { value = string.Empty; return false; }
+        if (TryDecodeWithThresholds(image, invert: true, cancellationToken, out value)) return true;
 
         var rot90 = image.Rotate90();
-        if (TryDecodeWithThresholds(rot90, invert: false, out value)) return true;
-        if (TryDecodeWithThresholds(rot90, invert: true, out value)) return true;
+        if (cancellationToken.IsCancellationRequested) { value = string.Empty; return false; }
+        if (TryDecodeWithThresholds(rot90, invert: false, cancellationToken, out value)) return true;
+        if (cancellationToken.IsCancellationRequested) { value = string.Empty; return false; }
+        if (TryDecodeWithThresholds(rot90, invert: true, cancellationToken, out value)) return true;
 
         var rot180 = image.Rotate180();
-        if (TryDecodeWithThresholds(rot180, invert: false, out value)) return true;
-        if (TryDecodeWithThresholds(rot180, invert: true, out value)) return true;
+        if (cancellationToken.IsCancellationRequested) { value = string.Empty; return false; }
+        if (TryDecodeWithThresholds(rot180, invert: false, cancellationToken, out value)) return true;
+        if (cancellationToken.IsCancellationRequested) { value = string.Empty; return false; }
+        if (TryDecodeWithThresholds(rot180, invert: true, cancellationToken, out value)) return true;
 
         var rot270 = image.Rotate270();
-        if (TryDecodeWithThresholds(rot270, invert: false, out value)) return true;
-        if (TryDecodeWithThresholds(rot270, invert: true, out value)) return true;
+        if (cancellationToken.IsCancellationRequested) { value = string.Empty; return false; }
+        if (TryDecodeWithThresholds(rot270, invert: false, cancellationToken, out value)) return true;
+        if (cancellationToken.IsCancellationRequested) { value = string.Empty; return false; }
+        if (TryDecodeWithThresholds(rot270, invert: true, cancellationToken, out value)) return true;
 
         var mirror = image.MirrorX();
-        if (TryDecodeWithThresholds(mirror, invert: false, out value)) return true;
-        if (TryDecodeWithThresholds(mirror, invert: true, out value)) return true;
+        if (cancellationToken.IsCancellationRequested) { value = string.Empty; return false; }
+        if (TryDecodeWithThresholds(mirror, invert: false, cancellationToken, out value)) return true;
+        if (cancellationToken.IsCancellationRequested) { value = string.Empty; return false; }
+        if (TryDecodeWithThresholds(mirror, invert: true, cancellationToken, out value)) return true;
 
         value = string.Empty;
         return false;
     }
-    private static bool TryDecodeWithThresholds(AztecGrayImage image, bool invert, out string value) {
+    private static bool TryDecodeWithThresholds(AztecGrayImage image, bool invert, CancellationToken cancellationToken, out string value) {
         value = string.Empty;
         var thresholds = BuildThresholds(image);
 
         for (var i = 0; i < thresholds.Length; i++) {
+            if (cancellationToken.IsCancellationRequested) return false;
             var tImage = image.WithThreshold(thresholds[i]);
             if (TryFindBoundingBox(tImage, invert, out var minX, out var minY, out var maxX, out var maxY)) {
                 var boxW = maxX - minX + 1;
                 var boxH = maxY - minY + 1;
                 var boxSize = Math.Min(boxW, boxH);
-                if (boxSize >= 11 && TryDecodeFromBox(tImage, invert, minX, minY, boxW, boxH, out value)) {
+                if (boxSize >= 11 && TryDecodeFromBox(tImage, invert, minX, minY, boxW, boxH, cancellationToken, out value)) {
                     return true;
                 }
             }
 
-            if (TryDecodeFromBullseye(tImage, invert, out value)) return true;
+            if (TryDecodeFromBullseye(tImage, invert, cancellationToken, out value)) return true;
         }
 
         var fullFrameTries = Math.Min(2, thresholds.Length);
         for (var i = 0; i < fullFrameTries; i++) {
+            if (cancellationToken.IsCancellationRequested) return false;
             var tImage = image.WithThreshold(thresholds[i]);
-            if (TryDecodeFromFullFrame(tImage, invert, out value)) return true;
+            if (TryDecodeFromFullFrame(tImage, invert, cancellationToken, out value)) return true;
         }
 
         value = string.Empty;
         return false;
     }
 
-    private static bool TryDecodeFromBox(AztecGrayImage image, bool invert, int minX, int minY, int boxW, int boxH, out string value) {
+    private static bool TryDecodeFromBox(AztecGrayImage image, bool invert, int minX, int minY, int boxW, int boxH, CancellationToken cancellationToken, out string value) {
         var boxSize = Math.Min(boxW, boxH);
         for (var i = 0; i < Candidates.Length; i++) {
+            if (cancellationToken.IsCancellationRequested) { value = string.Empty; return false; }
             var candidate = Candidates[i];
             if (candidate.Size > boxSize) continue;
 
@@ -97,7 +115,7 @@ internal static class AztecPixelDecoder {
             var offsetX = minX + (boxW - gridPx) / 2;
             var offsetY = minY + (boxH - gridPx) / 2;
 
-            if (TryDecodeWithOffsets(image, invert, candidate.Size, moduleSize, offsetX, offsetY, out value)) {
+            if (TryDecodeWithOffsets(image, invert, candidate.Size, moduleSize, offsetX, offsetY, cancellationToken, out value)) {
                 return true;
             }
         }
@@ -106,7 +124,7 @@ internal static class AztecPixelDecoder {
         return false;
     }
 
-    private static bool TryDecodeFromFullFrame(AztecGrayImage image, bool invert, out string value) {
+    private static bool TryDecodeFromFullFrame(AztecGrayImage image, bool invert, CancellationToken cancellationToken, out string value) {
         var sizePx = Math.Min(image.Width, image.Height);
         if (sizePx < 11) {
             value = string.Empty;
@@ -114,8 +132,10 @@ internal static class AztecPixelDecoder {
         }
 
         for (var i = 0; i < Candidates.Length; i++) {
+            if (cancellationToken.IsCancellationRequested) { value = string.Empty; return false; }
             var candidate = Candidates[i];
             for (var quietZone = 0; quietZone <= 8; quietZone++) {
+                if (cancellationToken.IsCancellationRequested) { value = string.Empty; return false; }
                 var totalModules = candidate.Size + quietZone * 2;
                 if (totalModules <= 0) continue;
 
@@ -128,7 +148,7 @@ internal static class AztecPixelDecoder {
                 var offsetX = frameOffsetX + quietZone * moduleSize;
                 var offsetY = frameOffsetY + quietZone * moduleSize;
 
-                if (TryDecodeWithOffsets(image, invert, candidate.Size, moduleSize, offsetX, offsetY, out value)) {
+                if (TryDecodeWithOffsets(image, invert, candidate.Size, moduleSize, offsetX, offsetY, cancellationToken, out value)) {
                     return true;
                 }
             }
@@ -138,22 +158,24 @@ internal static class AztecPixelDecoder {
         return false;
     }
 
-    private static bool TryDecodeFromBullseye(AztecGrayImage image, bool invert, out string value) {
+    private static bool TryDecodeFromBullseye(AztecGrayImage image, bool invert, CancellationToken cancellationToken, out string value) {
         value = string.Empty;
+        if (cancellationToken.IsCancellationRequested) return false;
         if (!TryEstimateCenter(image, invert, out var cx, out var cy)) return false;
         if (!TryEstimateModuleSize(image, invert, cx, cy, out var moduleSize)) return false;
 
         for (var delta = -1; delta <= 1; delta++) {
             var size = moduleSize + delta;
             if (size <= 0) continue;
-            if (TryDecodeFromCenter(image, invert, cx, cy, size, out value)) return true;
+            if (TryDecodeFromCenter(image, invert, cx, cy, size, cancellationToken, out value)) return true;
         }
 
         return false;
     }
 
-    private static bool TryDecodeFromCenter(AztecGrayImage image, bool invert, int centerX, int centerY, int moduleSize, out string value) {
+    private static bool TryDecodeFromCenter(AztecGrayImage image, bool invert, int centerX, int centerY, int moduleSize, CancellationToken cancellationToken, out string value) {
         for (var i = 0; i < Candidates.Length; i++) {
+            if (cancellationToken.IsCancellationRequested) { value = string.Empty; return false; }
             var candidate = Candidates[i];
             var totalPx = candidate.Size * moduleSize;
             if (totalPx <= 0) continue;
@@ -161,7 +183,7 @@ internal static class AztecPixelDecoder {
             var offsetX = centerX - totalPx / 2;
             var offsetY = centerY - totalPx / 2;
 
-            if (TryDecodeWithOffsets(image, invert, candidate.Size, moduleSize, offsetX, offsetY, out value)) {
+            if (TryDecodeWithOffsets(image, invert, candidate.Size, moduleSize, offsetX, offsetY, cancellationToken, out value)) {
                 return true;
             }
         }
@@ -249,10 +271,11 @@ internal static class AztecPixelDecoder {
         return true;
     }
 
-    private static bool TryDecodeWithOffsets(AztecGrayImage image, bool invert, int size, int moduleSize, int offsetX, int offsetY, out string value) {
+    private static bool TryDecodeWithOffsets(AztecGrayImage image, bool invert, int size, int moduleSize, int offsetX, int offsetY, CancellationToken cancellationToken, out string value) {
         var maxShift = Math.Max(1, moduleSize / 2);
         for (var dy = -maxShift; dy <= maxShift; dy++) {
             for (var dx = -maxShift; dx <= maxShift; dx++) {
+                if (cancellationToken.IsCancellationRequested) { value = string.Empty; return false; }
                 if (!TrySampleModules(image, invert, size, moduleSize, offsetX + dx, offsetY + dy, out var modules)) {
                     continue;
                 }

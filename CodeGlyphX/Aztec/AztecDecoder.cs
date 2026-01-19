@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using CodeGlyphX;
 using CodeGlyphX.Aztec.Internal;
 using CodeGlyphX.Internal;
@@ -43,21 +44,34 @@ internal static class AztecDecoder {
     };
 
     public static bool TryDecode(BitMatrix modules, out string value) {
+        return TryDecode(modules, CancellationToken.None, out value);
+    }
+
+    public static bool TryDecode(BitMatrix modules, CancellationToken cancellationToken, out string value) {
         value = string.Empty;
         if (modules is null) return false;
+        if (cancellationToken.IsCancellationRequested) return false;
         if (!AztecDetector.TryDetect(modules, out var detectorResult)) return false;
         return TryDecode(detectorResult, out value);
     }
 
 #if NET8_0_OR_GREATER
     public static bool TryDecode(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat format, out string value) {
-        return AztecPixelDecoder.TryDecode(pixels, width, height, stride, format, out value);
+        return AztecPixelDecoder.TryDecode(pixels, width, height, stride, format, CancellationToken.None, out value);
+    }
+
+    public static bool TryDecode(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat format, CancellationToken cancellationToken, out string value) {
+        return AztecPixelDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out value);
     }
 #endif
 
     public static bool TryDecode(byte[] pixels, int width, int height, int stride, PixelFormat format, out string value) {
+        return TryDecode(pixels, width, height, stride, format, CancellationToken.None, out value);
+    }
+
+    public static bool TryDecode(byte[] pixels, int width, int height, int stride, PixelFormat format, CancellationToken cancellationToken, out string value) {
         if (pixels is null) throw new ArgumentNullException(nameof(pixels));
-        return AztecPixelDecoder.TryDecode(pixels, width, height, stride, format, out value);
+        return AztecPixelDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out value);
     }
 
     internal static bool TryDecode(AztecDetectorResult detectorResult, out string value) {

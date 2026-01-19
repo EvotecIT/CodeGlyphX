@@ -1,3 +1,5 @@
+using System;
+
 namespace CodeGlyphX;
 
 /// <summary>
@@ -34,4 +36,43 @@ public sealed class QrPixelDecodeOptions {
     /// Enables extra thresholding/sampling passes for stylized or noisy QR codes (slower).
     /// </summary>
     public bool AggressiveSampling { get; set; } = false;
+
+    /// <summary>
+    /// Fast preset (lower accuracy, fewer transforms).
+    /// </summary>
+    public static QrPixelDecodeOptions Fast() {
+        return new QrPixelDecodeOptions { Profile = QrDecodeProfile.Fast };
+    }
+
+    /// <summary>
+    /// Balanced preset (good default for most images).
+    /// </summary>
+    public static QrPixelDecodeOptions Balanced() {
+        return new QrPixelDecodeOptions { Profile = QrDecodeProfile.Balanced };
+    }
+
+    /// <summary>
+    /// Robust preset (best accuracy, slower).
+    /// </summary>
+    public static QrPixelDecodeOptions Robust() {
+        return new QrPixelDecodeOptions { Profile = QrDecodeProfile.Robust };
+    }
+
+    /// <summary>
+    /// Stylized preset (adds aggressive sampling for QR art).
+    /// </summary>
+    public static QrPixelDecodeOptions Stylized() {
+        return new QrPixelDecodeOptions { Profile = QrDecodeProfile.Robust, AggressiveSampling = true };
+    }
+
+    /// <summary>
+    /// Screen preset (budgeted decode for UI capture scenarios).
+    /// </summary>
+    public static QrPixelDecodeOptions Screen(int maxMilliseconds = 300, int maxDimension = 1200) {
+        return new QrPixelDecodeOptions {
+            Profile = QrDecodeProfile.Balanced,
+            MaxMilliseconds = Math.Max(0, maxMilliseconds),
+            MaxDimension = Math.Max(0, maxDimension)
+        };
+    }
 }

@@ -301,6 +301,28 @@ internal static class QrPixelSampling {
         return black >= 5;
     }
 
+    public static bool SampleModuleCenter3x3(QrGrayImage image, double sx, double sy, bool invert, double moduleSizePx) {
+        var d = GetSampleDeltaCenter(moduleSizePx);
+        var black = 0;
+        for (var iy = -1; iy <= 1; iy++) {
+            for (var ix = -1; ix <= 1; ix++) {
+                if (IsBlackBilinear(image, sx + ix * d, sy + iy * d, invert)) black++;
+            }
+        }
+        return black >= 5;
+    }
+
+    public static bool SampleModuleCenter3x3Loose(QrGrayImage image, double sx, double sy, bool invert, double moduleSizePx) {
+        var d = GetSampleDeltaCenter(moduleSizePx);
+        var black = 0;
+        for (var iy = -1; iy <= 1; iy++) {
+            for (var ix = -1; ix <= 1; ix++) {
+                if (IsBlackBilinear(image, sx + ix * d, sy + iy * d, invert)) black++;
+            }
+        }
+        return black >= 3;
+    }
+
     public static bool SampleModule25Px(QrGrayImage image, double sx, double sy, bool invert, double moduleSizePx) {
         var d = GetSampleDelta5x5(moduleSizePx);
 
@@ -409,6 +431,19 @@ internal static class QrPixelSampling {
         if (d < 0.35) d = 0.35;
 
         var max = moduleSizePx * 0.49;
+        if (d > max) d = max;
+
+        return d;
+    }
+
+    private static double GetSampleDeltaCenter(double moduleSizePx) {
+        if (!(moduleSizePx > 0)) return 0.35;
+
+        var d = moduleSizePx * 0.20;
+        if (d < 0.25) d = 0.25;
+        if (d > 0.65) d = 0.65;
+
+        var max = moduleSizePx * 0.35;
         if (d > max) d = max;
 
         return d;

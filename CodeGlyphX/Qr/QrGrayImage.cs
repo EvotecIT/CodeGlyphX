@@ -33,6 +33,34 @@ internal readonly struct QrGrayImage {
 
     public QrGrayImage WithThreshold(byte threshold) => new(Width, Height, Gray, Min, Max, threshold, null);
 
+    public QrGrayImage WithBinaryBoost(int delta) {
+        if (delta <= 0) return this;
+
+        var w = Width;
+        var h = Height;
+        var boosted = new byte[w * h];
+        Span<int> histogram = stackalloc int[256];
+
+        byte min = 255;
+        byte max = 0;
+
+        var t = Threshold;
+        for (var i = 0; i < Gray.Length; i++) {
+            var v = Gray[i];
+            var b = v <= t ? v - delta : v + delta;
+            if (b < 0) b = 0;
+            else if (b > 255) b = 255;
+            var bv = (byte)b;
+            boosted[i] = bv;
+            histogram[bv]++;
+            if (bv < min) min = bv;
+            if (bv > max) max = bv;
+        }
+
+        var threshold = ComputeOtsuThreshold(histogram, boosted.Length);
+        return new QrGrayImage(w, h, boosted, min, max, threshold, null);
+    }
+
     public QrGrayImage WithContrastStretch(int minRange = 40) {
         var range = Max - Min;
         if (range <= 0 || range >= minRange) return this;

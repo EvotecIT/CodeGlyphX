@@ -861,6 +861,21 @@ internal static class QrPixelDecoder {
 
         var best = diagBase;
 
+        if (settings.AggressiveSampling) {
+            if (budget.IsNearDeadline(150)) {
+                diagnostics = best;
+                return false;
+            }
+            var boosted = baseImage.WithBinaryBoost(12);
+            if (!ReferenceEquals(boosted.Gray, baseImage.Gray)) {
+                if (TryDecodeWithImage(scale, boosted, settings, budget, accept, out result, out var diagBoost)) {
+                    diagnostics = diagBoost;
+                    return true;
+                }
+                best = Better(best, diagBoost);
+            }
+        }
+
         if (settings.AllowNormalize) {
             if (budget.IsNearDeadline(150)) {
                 diagnostics = best;
@@ -2371,6 +2386,7 @@ internal static class QrPixelDecoder {
                 accept,
                 budget,
                 loose: false,
+                centerSampling: false,
                 out result,
                 out moduleDiagnostics)) {
             return true;
@@ -2397,13 +2413,72 @@ internal static class QrPixelDecoder {
                 accept,
                 budget,
                 loose: true,
+                centerSampling: false,
                 out result,
                 out looseDiag)) {
             moduleDiagnostics = looseDiag;
             return true;
         }
 
-        moduleDiagnostics = Better(strictDiag, looseDiag);
+        var best = Better(strictDiag, looseDiag);
+        if (aggressive && ShouldTryCenterSampling(best, moduleSizePx)) {
+            if (TrySampleWithCornersInternal(
+                    image,
+                    invert,
+                    phaseX,
+                    phaseY,
+                    dimension,
+                    cornerTlX,
+                    cornerTlY,
+                    cornerTrX,
+                    cornerTrY,
+                    cornerBrX,
+                    cornerBrY,
+                    cornerBlX,
+                    cornerBlY,
+                    moduleSizePx,
+                    accept,
+                    budget,
+                    loose: false,
+                    centerSampling: true,
+                    out result,
+                    out var centerDiag)) {
+                moduleDiagnostics = centerDiag;
+                return true;
+            }
+
+            var centerLooseDiag = default(global::CodeGlyphX.QrDecodeDiagnostics);
+            if (ShouldTryLooseSampling(centerDiag, moduleSizePx) &&
+                TrySampleWithCornersInternal(
+                    image,
+                    invert,
+                    phaseX,
+                    phaseY,
+                    dimension,
+                    cornerTlX,
+                    cornerTlY,
+                    cornerTrX,
+                    cornerTrY,
+                    cornerBrX,
+                    cornerBrY,
+                    cornerBlX,
+                    cornerBlY,
+                    moduleSizePx,
+                    accept,
+                    budget,
+                    loose: true,
+                    centerSampling: true,
+                    out result,
+                    out centerLooseDiag)) {
+                moduleDiagnostics = centerLooseDiag;
+                return true;
+            }
+
+            best = Better(best, centerDiag);
+            best = Better(best, centerLooseDiag);
+        }
+
+        moduleDiagnostics = best;
         return false;
     }
 
@@ -2425,6 +2500,7 @@ internal static class QrPixelDecoder {
         Func<QrDecoded, bool>? accept,
         DecodeBudget budget,
         bool loose,
+        bool centerSampling,
         out QrDecoded result,
         out global::CodeGlyphX.QrDecodeDiagnostics moduleDiagnostics) {
         result = null!;
@@ -2465,7 +2541,11 @@ internal static class QrPixelDecoder {
                 // (bilinear can blur binary UI edges into mid-gray values around the threshold).
                 // Prefer a tighter sampling pattern for typical UI-rendered QRs (3–6 px/module).
                 // 5x5 sampling is more sensitive to small transform errors; use it only when modules are large.
-                if (moduleSizePx >= 6.0) {
+                if (centerSampling && moduleSizePx >= 1.25) {
+                    bm[mx, my] = loose
+                        ? QrPixelSampling.SampleModuleCenter3x3Loose(image, sx, sy, invert, moduleSizePx)
+                        : QrPixelSampling.SampleModuleCenter3x3(image, sx, sy, invert, moduleSizePx);
+                } else if (moduleSizePx >= 6.0) {
                     bm[mx, my] = loose
                         ? QrPixelSampling.SampleModule25NearestLoose(image, sx, sy, invert, moduleSizePx)
                         : QrPixelSampling.SampleModule25Nearest(image, sx, sy, invert, moduleSizePx);
@@ -2507,6 +2587,11 @@ internal static class QrPixelDecoder {
 
     private static bool ShouldTryLooseSampling(global::CodeGlyphX.QrDecodeDiagnostics diag, double moduleSizePx) {
         if (moduleSizePx < 1.0) return false;
+        return diag.Failure is global::CodeGlyphX.QrDecodeFailure.ReedSolomon or global::CodeGlyphX.QrDecodeFailure.Payload;
+    }
+
+    private static bool ShouldTryCenterSampling(global::CodeGlyphX.QrDecodeDiagnostics diag, double moduleSizePx) {
+        if (moduleSizePx < 1.5) return false;
         return diag.Failure is global::CodeGlyphX.QrDecodeFailure.ReedSolomon or global::CodeGlyphX.QrDecodeFailure.Payload;
     }
 

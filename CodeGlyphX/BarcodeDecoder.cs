@@ -2,6 +2,7 @@ using System;
 using System.Buffers;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using CodeGlyphX.Code11;
 using CodeGlyphX.Code128;
 using CodeGlyphX.Code39;
@@ -25,31 +26,40 @@ public static class BarcodeDecoder {
     /// Attempts to decode a 1D barcode from a raw pixel buffer.
     /// </summary>
     public static bool TryDecode(byte[] pixels, int width, int height, int stride, PixelFormat format, out BarcodeDecoded decoded) {
-        return TryDecode(pixels, width, height, stride, format, null, null, out decoded);
+        return TryDecode(pixels, width, height, stride, format, null, null, CancellationToken.None, out decoded);
     }
 
     /// <summary>
     /// Attempts to decode a 1D barcode from a raw pixel buffer.
     /// </summary>
     public static bool TryDecode(byte[] pixels, int width, int height, int stride, PixelFormat format, BarcodeType? expectedType, out BarcodeDecoded decoded) {
-        return TryDecode(pixels, width, height, stride, format, expectedType, null, out decoded);
+        return TryDecode(pixels, width, height, stride, format, expectedType, null, CancellationToken.None, out decoded);
     }
 
     /// <summary>
     /// Attempts to decode a 1D barcode from a raw pixel buffer with custom decoding options.
     /// </summary>
     public static bool TryDecode(byte[] pixels, int width, int height, int stride, PixelFormat format, BarcodeDecodeOptions? options, out BarcodeDecoded decoded) {
-        return TryDecode(pixels, width, height, stride, format, null, options, out decoded);
+        return TryDecode(pixels, width, height, stride, format, null, options, CancellationToken.None, out decoded);
     }
 
     /// <summary>
     /// Attempts to decode a 1D barcode from a raw pixel buffer with an optional type hint and custom decoding options.
     /// </summary>
     public static bool TryDecode(byte[] pixels, int width, int height, int stride, PixelFormat format, BarcodeType? expectedType, BarcodeDecodeOptions? options, out BarcodeDecoded decoded) {
+        return TryDecode(pixels, width, height, stride, format, expectedType, options, CancellationToken.None, out decoded);
+    }
+
+    /// <summary>
+    /// Attempts to decode a 1D barcode from a raw pixel buffer with an optional type hint, custom options, and cancellation.
+    /// </summary>
+    public static bool TryDecode(byte[] pixels, int width, int height, int stride, PixelFormat format, BarcodeType? expectedType, BarcodeDecodeOptions? options, CancellationToken cancellationToken, out BarcodeDecoded decoded) {
         decoded = null!;
+        if (cancellationToken.IsCancellationRequested) return false;
         if (!BarcodeScanline.TryGetModuleCandidates(pixels, width, height, stride, format, out var candidates)) return false;
         for (var i = 0; i < candidates.Length; i++) {
-            if (TryDecodeWithTransforms(candidates[i], expectedType, options, out decoded)) return true;
+            if (cancellationToken.IsCancellationRequested) return false;
+            if (TryDecodeWithTransforms(candidates[i], expectedType, options, cancellationToken, out decoded)) return true;
         }
         return false;
     }
@@ -59,31 +69,40 @@ public static class BarcodeDecoder {
     /// Attempts to decode a 1D barcode from a raw pixel buffer.
     /// </summary>
     public static bool TryDecode(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat format, out BarcodeDecoded decoded) {
-        return TryDecode(pixels, width, height, stride, format, null, null, out decoded);
+        return TryDecode(pixels, width, height, stride, format, null, null, CancellationToken.None, out decoded);
     }
 
     /// <summary>
     /// Attempts to decode a 1D barcode from a raw pixel buffer.
     /// </summary>
     public static bool TryDecode(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat format, BarcodeType? expectedType, out BarcodeDecoded decoded) {
-        return TryDecode(pixels, width, height, stride, format, expectedType, null, out decoded);
+        return TryDecode(pixels, width, height, stride, format, expectedType, null, CancellationToken.None, out decoded);
     }
 
     /// <summary>
     /// Attempts to decode a 1D barcode from a raw pixel buffer with custom decoding options.
     /// </summary>
     public static bool TryDecode(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat format, BarcodeDecodeOptions? options, out BarcodeDecoded decoded) {
-        return TryDecode(pixels, width, height, stride, format, null, options, out decoded);
+        return TryDecode(pixels, width, height, stride, format, null, options, CancellationToken.None, out decoded);
     }
 
     /// <summary>
     /// Attempts to decode a 1D barcode from a raw pixel buffer with an optional type hint and custom decoding options.
     /// </summary>
     public static bool TryDecode(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat format, BarcodeType? expectedType, BarcodeDecodeOptions? options, out BarcodeDecoded decoded) {
+        return TryDecode(pixels, width, height, stride, format, expectedType, options, CancellationToken.None, out decoded);
+    }
+
+    /// <summary>
+    /// Attempts to decode a 1D barcode from a raw pixel buffer with an optional type hint, custom options, and cancellation.
+    /// </summary>
+    public static bool TryDecode(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat format, BarcodeType? expectedType, BarcodeDecodeOptions? options, CancellationToken cancellationToken, out BarcodeDecoded decoded) {
         decoded = null!;
+        if (cancellationToken.IsCancellationRequested) return false;
         if (!BarcodeScanline.TryGetModuleCandidates(pixels, width, height, stride, format, out var candidates)) return false;
         for (var i = 0; i < candidates.Length; i++) {
-            if (TryDecodeWithTransforms(candidates[i], expectedType, options, out decoded)) return true;
+            if (cancellationToken.IsCancellationRequested) return false;
+            if (TryDecodeWithTransforms(candidates[i], expectedType, options, cancellationToken, out decoded)) return true;
         }
         return false;
     }
@@ -100,94 +119,124 @@ public static class BarcodeDecoder {
     /// Attempts to decode a 1D barcode from a module sequence.
     /// </summary>
     public static bool TryDecode(bool[] modules, BarcodeType? expectedType, out BarcodeDecoded decoded) {
-        return TryDecode(modules, expectedType, null, out decoded);
+        return TryDecode(modules, expectedType, null, CancellationToken.None, out decoded);
     }
 
     /// <summary>
     /// Attempts to decode a 1D barcode from a module sequence with custom decoding options.
     /// </summary>
     public static bool TryDecode(bool[] modules, BarcodeDecodeOptions? options, out BarcodeDecoded decoded) {
-        return TryDecode(modules, null, options, out decoded);
+        return TryDecode(modules, null, options, CancellationToken.None, out decoded);
     }
 
     /// <summary>
     /// Attempts to decode a 1D barcode from a module sequence with an optional type hint and custom decoding options.
     /// </summary>
     public static bool TryDecode(bool[] modules, BarcodeType? expectedType, BarcodeDecodeOptions? options, out BarcodeDecoded decoded) {
+        return TryDecode(modules, expectedType, options, CancellationToken.None, out decoded);
+    }
+
+    /// <summary>
+    /// Attempts to decode a 1D barcode from a module sequence with an optional type hint, custom decoding options, and cancellation.
+    /// </summary>
+    public static bool TryDecode(bool[] modules, BarcodeType? expectedType, BarcodeDecodeOptions? options, CancellationToken cancellationToken, out BarcodeDecoded decoded) {
         decoded = null!;
+        if (cancellationToken.IsCancellationRequested) return false;
         if (modules is null || modules.Length == 0) return false;
-        return TryDecodeWithTransforms(modules, expectedType, options, out decoded);
+        return TryDecodeWithTransforms(modules, expectedType, options, cancellationToken, out decoded);
     }
 
     private static bool TryDecodeWithTransforms(bool[] modules, BarcodeType? expectedType, BarcodeDecodeOptions? options, out BarcodeDecoded decoded) {
-        if (TryDecodeCoreTrimmed(modules, expectedType, options, out decoded)) return true;
-        var inverted = InvertModules(modules);
-        if (TryDecodeCoreTrimmed(inverted, expectedType, options, out decoded)) return true;
-        var reversed = ReverseModules(modules);
-        if (TryDecodeCoreTrimmed(reversed, expectedType, options, out decoded)) return true;
-        var invertedReversed = InvertModules(reversed);
-        return TryDecodeCoreTrimmed(invertedReversed, expectedType, options, out decoded);
+        return TryDecodeWithTransforms(modules, expectedType, options, CancellationToken.None, out decoded);
     }
 
-    private static bool TryDecodeCoreTrimmed(bool[] modules, BarcodeType? expectedType, BarcodeDecodeOptions? options, out BarcodeDecoded decoded) {
+    private static bool TryDecodeWithTransforms(bool[] modules, BarcodeType? expectedType, BarcodeDecodeOptions? options, CancellationToken cancellationToken, out BarcodeDecoded decoded) {
+        if (cancellationToken.IsCancellationRequested) { decoded = null!; return false; }
+        if (TryDecodeCoreTrimmed(modules, expectedType, options, cancellationToken, out decoded)) return true;
+        if (cancellationToken.IsCancellationRequested) return false;
+        var inverted = InvertModules(modules);
+        if (TryDecodeCoreTrimmed(inverted, expectedType, options, cancellationToken, out decoded)) return true;
+        if (cancellationToken.IsCancellationRequested) return false;
+        var reversed = ReverseModules(modules);
+        if (TryDecodeCoreTrimmed(reversed, expectedType, options, cancellationToken, out decoded)) return true;
+        if (cancellationToken.IsCancellationRequested) return false;
+        var invertedReversed = InvertModules(reversed);
+        return TryDecodeCoreTrimmed(invertedReversed, expectedType, options, cancellationToken, out decoded);
+    }
+
+    private static bool TryDecodeCoreTrimmed(bool[] modules, BarcodeType? expectedType, BarcodeDecodeOptions? options, CancellationToken cancellationToken, out BarcodeDecoded decoded) {
         decoded = null!;
+        if (cancellationToken.IsCancellationRequested) return false;
         var trimmed = TrimModules(modules);
         if (trimmed.Length == 0) return false;
-        return TryDecodeCore(trimmed, expectedType, options, out decoded);
+        return TryDecodeCore(trimmed, expectedType, options, cancellationToken, out decoded);
     }
 
-    private static bool TryDecodeCore(bool[] modules, BarcodeType? expectedType, BarcodeDecodeOptions? options, out BarcodeDecoded decoded) {
+    private static bool TryDecodeCore(bool[] modules, BarcodeType? expectedType, BarcodeDecodeOptions? options, CancellationToken cancellationToken, out BarcodeDecoded decoded) {
         decoded = null!;
+        if (cancellationToken.IsCancellationRequested) return false;
         if (expectedType.HasValue) {
             return TryDecodeType(expectedType.Value, modules, options, out decoded);
         }
 
         // Fixed-length symbologies first.
+        if (cancellationToken.IsCancellationRequested) return false;
         if (TryDecodeEan8(modules, out var ean8)) {
             decoded = new BarcodeDecoded(BarcodeType.EAN, ean8);
             return true;
         }
+        if (cancellationToken.IsCancellationRequested) return false;
         if (TryDecodeUpcA(modules, out var upca)) {
             decoded = new BarcodeDecoded(BarcodeType.UPCA, upca);
             return true;
         }
+        if (cancellationToken.IsCancellationRequested) return false;
         if (TryDecodeEan13(modules, out var ean13)) {
             decoded = new BarcodeDecoded(BarcodeType.EAN, ean13);
             return true;
         }
+        if (cancellationToken.IsCancellationRequested) return false;
         if (TryDecodeUpcE(modules, out var upce)) {
             decoded = new BarcodeDecoded(BarcodeType.UPCE, upce);
             return true;
         }
+        if (cancellationToken.IsCancellationRequested) return false;
         if (TryDecodeItf14(modules, out var itf14)) {
             decoded = new BarcodeDecoded(BarcodeType.ITF14, itf14);
             return true;
         }
 
+        if (cancellationToken.IsCancellationRequested) return false;
         if (TryDecodeCode128(modules, out var code128, out var isGs1)) {
             decoded = new BarcodeDecoded(isGs1 ? BarcodeType.GS1_128 : BarcodeType.Code128, code128);
             return true;
         }
+        if (cancellationToken.IsCancellationRequested) return false;
         if (TryDecodeCode39(modules, options, out var code39)) {
             decoded = new BarcodeDecoded(BarcodeType.Code39, code39);
             return true;
         }
+        if (cancellationToken.IsCancellationRequested) return false;
         if (TryDecodeCode93(modules, out var code93)) {
             decoded = new BarcodeDecoded(BarcodeType.Code93, code93);
             return true;
         }
+        if (cancellationToken.IsCancellationRequested) return false;
         if (TryDecodeCodabar(modules, out var codabar)) {
             decoded = new BarcodeDecoded(BarcodeType.Codabar, codabar);
             return true;
         }
+        if (cancellationToken.IsCancellationRequested) return false;
         if (TryDecodeMsi(modules, options, out var msi)) {
             decoded = new BarcodeDecoded(BarcodeType.MSI, msi);
             return true;
         }
+        if (cancellationToken.IsCancellationRequested) return false;
         if (TryDecodeCode11(modules, options, out var code11)) {
             decoded = new BarcodeDecoded(BarcodeType.Code11, code11);
             return true;
         }
+        if (cancellationToken.IsCancellationRequested) return false;
         if (TryDecodePlessey(modules, options, out var plessey)) {
             decoded = new BarcodeDecoded(BarcodeType.Plessey, plessey);
             return true;

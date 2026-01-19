@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Threading;
 using CodeGlyphX.Aztec;
 using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Ascii;
@@ -62,10 +63,24 @@ public static class AztecCode {
     }
 
     /// <summary>
+    /// Attempts to decode an Aztec symbol from a module matrix, with cancellation.
+    /// </summary>
+    public static bool TryDecode(BitMatrix modules, CancellationToken cancellationToken, out string value) {
+        return AztecDecoder.TryDecode(modules, cancellationToken, out value);
+    }
+
+    /// <summary>
     /// Attempts to decode an Aztec symbol from raw pixels.
     /// </summary>
     public static bool TryDecode(byte[] pixels, int width, int height, int stride, PixelFormat format, out string value) {
         return AztecDecoder.TryDecode(pixels, width, height, stride, format, out value);
+    }
+
+    /// <summary>
+    /// Attempts to decode an Aztec symbol from raw pixels, with cancellation.
+    /// </summary>
+    public static bool TryDecode(byte[] pixels, int width, int height, int stride, PixelFormat format, CancellationToken cancellationToken, out string value) {
+        return AztecDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out value);
     }
 
 #if NET8_0_OR_GREATER
@@ -74,6 +89,13 @@ public static class AztecCode {
     /// </summary>
     public static bool TryDecode(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat format, out string value) {
         return AztecDecoder.TryDecode(pixels, width, height, stride, format, out value);
+    }
+
+    /// <summary>
+    /// Attempts to decode an Aztec symbol from raw pixels, with cancellation.
+    /// </summary>
+    public static bool TryDecode(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat format, CancellationToken cancellationToken, out string value) {
+        return AztecDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out value);
     }
 #endif
 

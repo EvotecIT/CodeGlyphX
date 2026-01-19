@@ -1,6 +1,7 @@
 using System;
 using System.Buffers;
 using System.Text;
+using System.Threading;
 using CodeGlyphX.Internal;
 using CodeGlyphX;
 
@@ -39,11 +40,20 @@ public static class DataMatrixDecoder {
     /// Attempts to decode a Data Matrix symbol from a module matrix.
     /// </summary>
     public static bool TryDecode(BitMatrix modules, out string value) {
-        if (modules is null) throw new ArgumentNullException(nameof(modules));
+        return TryDecode(modules, CancellationToken.None, out value);
+    }
 
-        if (TryDecodeCore(modules, out value)) return true;
+    /// <summary>
+    /// Attempts to decode a Data Matrix symbol from a module matrix, with cancellation.
+    /// </summary>
+    public static bool TryDecode(BitMatrix modules, CancellationToken cancellationToken, out string value) {
+        if (modules is null) throw new ArgumentNullException(nameof(modules));
+        if (cancellationToken.IsCancellationRequested) { value = string.Empty; return false; }
+
+        if (TryDecodeCore(modules, cancellationToken, out value)) return true;
+        if (cancellationToken.IsCancellationRequested) { value = string.Empty; return false; }
         var mirror = MirrorX(modules);
-        return TryDecodeCore(mirror, out value);
+        return TryDecodeCore(mirror, cancellationToken, out value);
     }
 
 #if NET8_0_OR_GREATER
@@ -51,7 +61,14 @@ public static class DataMatrixDecoder {
     /// Attempts to decode a Data Matrix symbol from pixels.
     /// </summary>
     public static bool TryDecode(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat format, out string value) {
-        return TryDecodePixels(pixels, width, height, stride, format, out value);
+        return TryDecodePixels(pixels, width, height, stride, format, CancellationToken.None, out value);
+    }
+
+    /// <summary>
+    /// Attempts to decode a Data Matrix symbol from pixels, with cancellation.
+    /// </summary>
+    public static bool TryDecode(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat format, CancellationToken cancellationToken, out string value) {
+        return TryDecodePixels(pixels, width, height, stride, format, cancellationToken, out value);
     }
 #endif
 
@@ -59,29 +76,43 @@ public static class DataMatrixDecoder {
     /// Attempts to decode a Data Matrix symbol from pixels.
     /// </summary>
     public static bool TryDecode(byte[] pixels, int width, int height, int stride, PixelFormat format, out string value) {
-        if (pixels is null) throw new ArgumentNullException(nameof(pixels));
-        return TryDecodePixels(pixels, width, height, stride, format, out value);
+        return TryDecode(pixels, width, height, stride, format, CancellationToken.None, out value);
     }
 
-    private static bool TryDecodePixels(PixelSpan pixels, int width, int height, int stride, PixelFormat format, out string value) {
+    /// <summary>
+    /// Attempts to decode a Data Matrix symbol from pixels, with cancellation.
+    /// </summary>
+    public static bool TryDecode(byte[] pixels, int width, int height, int stride, PixelFormat format, CancellationToken cancellationToken, out string value) {
+        if (pixels is null) throw new ArgumentNullException(nameof(pixels));
+        return TryDecodePixels(pixels, width, height, stride, format, cancellationToken, out value);
+    }
+
+    private static bool TryDecodePixels(PixelSpan pixels, int width, int height, int stride, PixelFormat format, CancellationToken cancellationToken, out string value) {
+        if (cancellationToken.IsCancellationRequested) { value = string.Empty; return false; }
         if (TryExtractModules(pixels, width, height, stride, format, out var modules)) {
-            if (TryDecodeWithRotations(modules, out value)) return true;
+            if (TryDecodeWithRotations(modules, cancellationToken, out value)) return true;
+            if (cancellationToken.IsCancellationRequested) { value = string.Empty; return false; }
             var mirror = MirrorX(modules);
-            if (TryDecodeWithRotations(mirror, out value)) return true;
+            if (TryDecodeWithRotations(mirror, cancellationToken, out value)) return true;
         }
         value = string.Empty;
         return false;
     }
 
-    private static bool TryDecodeWithRotations(BitMatrix modules, out string value) {
-        if (TryDecodeCore(modules, out value)) return true;
-        if (TryDecodeCore(Rotate90(modules), out value)) return true;
-        if (TryDecodeCore(Rotate180(modules), out value)) return true;
-        if (TryDecodeCore(Rotate270(modules), out value)) return true;
+    private static bool TryDecodeWithRotations(BitMatrix modules, CancellationToken cancellationToken, out string value) {
+        if (cancellationToken.IsCancellationRequested) { value = string.Empty; return false; }
+        if (TryDecodeCore(modules, cancellationToken, out value)) return true;
+        if (cancellationToken.IsCancellationRequested) { value = string.Empty; return false; }
+        if (TryDecodeCore(Rotate90(modules), cancellationToken, out value)) return true;
+        if (cancellationToken.IsCancellationRequested) { value = string.Empty; return false; }
+        if (TryDecodeCore(Rotate180(modules), cancellationToken, out value)) return true;
+        if (cancellationToken.IsCancellationRequested) { value = string.Empty; return false; }
+        if (TryDecodeCore(Rotate270(modules), cancellationToken, out value)) return true;
         return false;
     }
 
-    private static bool TryDecodeCore(BitMatrix modules, out string value) {
+    private static bool TryDecodeCore(BitMatrix modules, CancellationToken cancellationToken, out string value) {
+        if (cancellationToken.IsCancellationRequested) { value = string.Empty; return false; }
         if (!DataMatrixSymbolInfo.TryGetForSize(modules.Height, modules.Width, out var symbol)) {
             value = string.Empty;
             return false;
