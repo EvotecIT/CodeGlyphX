@@ -51,6 +51,40 @@ CodeGlyphX is a fast, dependency-free toolkit for QR codes and barcodes, with ro
 dotnet add package CodeGlyphX
 ```
 
+## Decode (unified)
+
+```csharp
+using CodeGlyphX;
+using CodeGlyphX.Rendering;
+
+var options = new CodeGlyphDecodeOptions {
+    PreferBarcode = false,
+    Qr = new QrPixelDecodeOptions {
+        Profile = QrDecodeProfile.Robust,
+        MaxMilliseconds = 800
+    }
+};
+
+if (CodeGlyph.TryDecode(pixels, width, height, stride, PixelFormat.Rgba32, out var decoded, options)) {
+    Console.WriteLine($"{decoded.Kind}: {decoded.Text}");
+}
+```
+
+Cancellation and time budget:
+
+```csharp
+using var cts = new CancellationTokenSource(TimeSpan.FromMilliseconds(500));
+
+var options = new CodeGlyphDecodeOptions {
+    Qr = new QrPixelDecodeOptions { Profile = QrDecodeProfile.Robust },
+    CancellationToken = cts.Token
+};
+
+if (CodeGlyph.TryDecode(pixels, width, height, stride, PixelFormat.Rgba32, out var decoded, options)) {
+    Console.WriteLine(decoded.Text);
+}
+```
+
 ## Supported .NET Versions and Dependencies
 
 ### Core Library (CodeGlyphX)
@@ -82,7 +116,7 @@ dotnet add package CodeGlyphX
 
 ## Benchmarks (local run)
 
-Benchmarks were run on 2026-01-18 (Linux Ubuntu 24.04, Ryzen 9 9950X, .NET 8.0.22). Your results will vary.
+Benchmarks were run on 2026-01-19 (Linux Ubuntu 24.04, Ryzen 9 9950X, .NET 8.0.22). Your results will vary.
 
 ### QR (Encode)
 
@@ -94,6 +128,15 @@ Benchmarks were run on 2026-01-18 (Linux Ubuntu 24.04, Ryzen 9 9950X, .NET 8.0.2
 | QR SVG (medium text) | 99.17 | 20.03 KB |
 | QR PNG (High EC) | 1094.94 | 1535.88 KB |
 | QR HTML (medium text) | 115.46 | 137.43 KB |
+
+### QR (Decode)
+
+| Scenario | Mean (ms) | Allocated | Notes |
+| --- | --- | --- | --- |
+| QR decode (clean, fast) | 2.148 | 103.9 KB | qr-clean-small.png |
+| QR decode (clean, balanced) | 2.124 | 103.9 KB | qr-clean-small.png |
+| QR decode (clean, robust) | 2.193 | 103.9 KB | qr-clean-small.png |
+| QR decode (noisy, robust) | 170.949 | 8507.41 KB | qr-noisy-ui.png (Robust, MaxMilliseconds=800) |
 
 ### 1D Barcodes (Encode)
 
@@ -324,7 +367,16 @@ if (QrImageDecoder.TryDecodeImage(File.ReadAllBytes("code.bmp"), out var decoded
 ```csharp
 using CodeGlyphX;
 
-var options = new QrPixelDecodeOptions { Profile = QrDecodeProfile.Fast };
+var options = QrPixelDecodeOptions.Fast();
+if (QrImageDecoder.TryDecodeImage(File.ReadAllBytes("screen.png"), options, out var decoded)) {
+    Console.WriteLine(decoded.Text);
+}
+```
+
+```csharp
+using CodeGlyphX;
+
+var options = QrPixelDecodeOptions.Screen(maxMilliseconds: 300, maxDimension: 1200);
 if (QrImageDecoder.TryDecodeImage(File.ReadAllBytes("screen.png"), options, out var decoded)) {
     Console.WriteLine(decoded.Text);
 }
