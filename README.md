@@ -70,6 +70,25 @@ if (CodeGlyph.TryDecode(pixels, width, height, stride, PixelFormat.Rgba32, out v
 }
 ```
 
+Presets for easy tuning:
+
+```csharp
+var fast = CodeGlyphDecodeOptions.Fast();
+var robust = CodeGlyphDecodeOptions.Robust();
+var stylized = CodeGlyphDecodeOptions.Stylized();
+var screen = CodeGlyphDecodeOptions.Screen(maxMilliseconds: 300, maxDimension: 1200);
+```
+
+Barcode checksum policy:
+
+```csharp
+var options = new CodeGlyphDecodeOptions {
+    ExpectedBarcode = BarcodeType.Code39,
+    Code39Checksum = Code39ChecksumPolicy.StripIfValid,
+    PreferBarcode = true
+};
+```
+
 Cancellation and time budget:
 
 ```csharp
@@ -80,6 +99,15 @@ var options = new CodeGlyphDecodeOptions {
     CancellationToken = cts.Token
 };
 
+if (CodeGlyph.TryDecode(pixels, width, height, stride, PixelFormat.Rgba32, out var decoded, options)) {
+    Console.WriteLine(decoded.Text);
+}
+```
+
+Screen-friendly preset:
+
+```csharp
+var options = CodeGlyphDecodeOptions.Screen(maxMilliseconds: 300, maxDimension: 1200);
 if (CodeGlyph.TryDecode(pixels, width, height, stride, PixelFormat.Rgba32, out var decoded, options)) {
     Console.WriteLine(decoded.Text);
 }
@@ -378,6 +406,15 @@ using CodeGlyphX;
 
 var options = QrPixelDecodeOptions.Screen(maxMilliseconds: 300, maxDimension: 1200);
 if (QrImageDecoder.TryDecodeImage(File.ReadAllBytes("screen.png"), options, out var decoded)) {
+    Console.WriteLine(decoded.Text);
+}
+```
+
+```csharp
+using CodeGlyphX;
+
+var bytes = File.ReadAllBytes("screen.png");
+if (QR.TryDecodeImage(bytes, QrPixelDecodeOptions.Screen(), out var decoded)) {
     Console.WriteLine(decoded.Text);
 }
 ```
