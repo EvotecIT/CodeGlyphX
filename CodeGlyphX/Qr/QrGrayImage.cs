@@ -259,10 +259,14 @@ internal readonly struct QrGrayImage {
     }
 
     public static bool TryCreate(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat fmt, int scale, out QrGrayImage image) {
-        return TryCreate(pixels, width, height, stride, fmt, scale, minContrast: 24, out image);
+        return TryCreate(pixels, width, height, stride, fmt, scale, minContrast: 24, shouldStop: null, out image);
     }
 
     public static bool TryCreate(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat fmt, int scale, int minContrast, out QrGrayImage image) {
+        return TryCreate(pixels, width, height, stride, fmt, scale, minContrast, shouldStop: null, out image);
+    }
+
+    public static bool TryCreate(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat fmt, int scale, int minContrast, Func<bool>? shouldStop, out QrGrayImage image) {
         image = default;
 
         if (width <= 0 || height <= 0) return false;
@@ -283,6 +287,7 @@ internal readonly struct QrGrayImage {
 
         if (scale == 1) {
             for (var y = 0; y < outH; y++) {
+                if (shouldStop?.Invoke() == true) return false;
                 var row = y * stride;
                 for (var x = 0; x < outW; x++) {
                     var p = row + x * 4;
@@ -313,6 +318,7 @@ internal readonly struct QrGrayImage {
             var blockCount = scale * scale;
 
             for (var y = 0; y < outH; y++) {
+                if (shouldStop?.Invoke() == true) return false;
                 var baseY = y * scale;
                 for (var x = 0; x < outW; x++) {
                     var baseX = x * scale;
