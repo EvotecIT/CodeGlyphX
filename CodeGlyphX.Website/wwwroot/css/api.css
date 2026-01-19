@@ -327,6 +327,14 @@
     gap: 0.75rem;
 }
 
+.type-detail {
+    max-width: 1000px;
+}
+
+.type-header {
+    margin-bottom: 1rem;
+}
+
 .type-badge {
     background: linear-gradient(135deg, var(--api-accent-strong), var(--primary));
     color: white;
@@ -335,6 +343,12 @@
     font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.08em;
+}
+
+.namespace {
+    display: block;
+    margin-top: 0.25rem;
+    color: var(--text-dim);
 }
 
 .member-section {

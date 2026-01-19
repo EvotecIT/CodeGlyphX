@@ -21,7 +21,7 @@
     }
     else
     {
-        <DynamicComponent Type="_playgroundType" />
+        <DynamicComponent Type="_playgroundType" @key="_playgroundType" />
     }
 </div>
 
@@ -37,14 +37,17 @@
 
             foreach (var candidates in new[]
                      {
-                         new[] { "CodeGlyphX.Playground.dll", "CodeGlyphX.dll" },
-                         new[] { "CodeGlyphX.Playground.wasm", "CodeGlyphX.wasm" }
+                         new[] { "CodeGlyphX.Playground.wasm", "CodeGlyphX.wasm" },
+                         new[] { "CodeGlyphX.Playground.dll", "CodeGlyphX.dll" }
                      })
             {
                 try
                 {
-                    await AssemblyLoader.LoadAssembliesAsync(candidates);
-                    _playgroundType = Type.GetType("CodeGlyphX.Playground.Playground, CodeGlyphX.Playground");
+                    var assemblies = await AssemblyLoader.LoadAssembliesAsync(candidates);
+                    _playgroundType = assemblies
+                        .Select(assembly => assembly.GetType("CodeGlyphX.Playground.Playground"))
+                        .FirstOrDefault(type => type != null);
+                    _playgroundType ??= Type.GetType("CodeGlyphX.Playground.Playground, CodeGlyphX.Playground");
                     if (_playgroundType != null)
                         break;
                 }
