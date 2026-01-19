@@ -33,15 +33,30 @@
     {
         try
         {
-            await AssemblyLoader.LoadAssembliesAsync(new[]
-            {
-                "CodeGlyphX.Playground.dll",
-                "CodeGlyphX.dll"
-            });
+            Exception? lastError = null;
 
-            _playgroundType = Type.GetType("CodeGlyphX.Playground.Playground, CodeGlyphX.Playground");
+            foreach (var candidates in new[]
+                     {
+                         new[] { "CodeGlyphX.Playground.dll", "CodeGlyphX.dll" },
+                         new[] { "CodeGlyphX.Playground.wasm", "CodeGlyphX.wasm" }
+                     })
+            {
+                try
+                {
+                    await AssemblyLoader.LoadAssembliesAsync(candidates);
+                    _playgroundType = Type.GetType("CodeGlyphX.Playground.Playground, CodeGlyphX.Playground");
+                    if (_playgroundType != null)
+                        break;
+                }
+                catch (Exception ex)
+                {
+                    lastError = ex;
+                }
+            }
+
             if (_playgroundType is null)
-                _loadError = "Playground component failed to load.";
+                _loadError = lastError?.Message ?? "Playground component failed to load.";
+
             StateHasChanged();
         }
         catch (Exception ex)
