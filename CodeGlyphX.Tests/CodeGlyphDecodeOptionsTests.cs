@@ -65,6 +65,9 @@ public sealed class CodeGlyphDecodeOptionsTests {
         Assert.Equal(QrDecodeProfile.Balanced, options.Qr!.Profile);
         Assert.Equal(250, options.Qr.MaxMilliseconds);
         Assert.Equal(900, options.Qr.MaxDimension);
+        Assert.NotNull(options.Image);
+        Assert.Equal(250, options.Image!.MaxMilliseconds);
+        Assert.Equal(900, options.Image.MaxDimension);
     }
 
     [Fact]
