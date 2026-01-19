@@ -17,8 +17,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <WasmLazyLoadAssemblies Include="CodeGlyphX.Playground.dll" />
-    <WasmLazyLoadAssemblies Include="CodeGlyphX.dll" />
+    <BlazorWebAssemblyLazyLoad Include="CodeGlyphX.Playground.dll" />
+    <BlazorWebAssemblyLazyLoad Include="CodeGlyphX.dll" />
   </ItemGroup>
 
   <ItemGroup>
