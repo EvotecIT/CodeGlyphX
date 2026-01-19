@@ -9,7 +9,14 @@
 <PageTitle>@(_selectedType != null ? $"{_selectedType.Name} - API Reference" : "API Reference") - CodeGlyphX</PageTitle>
 
 <div class="api-layout">
-    <aside class="api-sidebar">
+    <button class="sidebar-toggle" @onclick="ToggleSidebar" aria-label="Toggle API navigation">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+            <path d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+        <span>API Navigation</span>
+    </button>
+    <div class="sidebar-overlay @(_sidebarOpen ? "active" : "")" @onclick="CloseSidebar"></div>
+    <aside class="api-sidebar @(_sidebarOpen ? "sidebar-open" : "")">
         <div class="sidebar-header">
             <a href="docs/api" class="sidebar-title @(string.IsNullOrEmpty(TypeSlug) ? "active" : "")">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
@@ -317,6 +324,10 @@
     private string? _loadError;
     private string _searchFilter = string.Empty;
     private readonly HashSet<string> _expandedSections = new(StringComparer.OrdinalIgnoreCase);
+    private bool _sidebarOpen = false;
+
+    private void ToggleSidebar() => _sidebarOpen = !_sidebarOpen;
+    private void CloseSidebar() => _sidebarOpen = false;
 
     private static readonly string[] MainTypeOrder =
     {

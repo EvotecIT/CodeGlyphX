@@ -1009,6 +1009,11 @@
             Attempts to decode a barcode from PNG bytes with an optional expected type hint.
             </summary>
         </member>
+        <member name="M:CodeGlyphX.Barcode.TryDecodePng(System.Byte[],System.Nullable{CodeGlyphX.BarcodeType},CodeGlyphX.ImageDecodeOptions,CodeGlyphX.BarcodeDecoded@)">
+            <summary>
+            Attempts to decode a barcode from PNG bytes with an optional expected type hint and image decode options.
+            </summary>
+        </member>
         <member name="M:CodeGlyphX.Barcode.TryDecodePng(System.Byte[],System.Nullable{CodeGlyphX.BarcodeType},System.Threading.CancellationToken,CodeGlyphX.BarcodeDecoded@)">
             <summary>
             Attempts to decode a barcode from PNG bytes with an optional expected type hint, with cancellation.
@@ -1034,6 +1039,11 @@
             Attempts to decode a barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with an optional expected type hint.
             </summary>
         </member>
+        <member name="M:CodeGlyphX.Barcode.TryDecodeImage(System.Byte[],System.Nullable{CodeGlyphX.BarcodeType},CodeGlyphX.ImageDecodeOptions,CodeGlyphX.BarcodeDecoded@)">
+            <summary>
+            Attempts to decode a barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with an optional expected type hint and image decode options.
+            </summary>
+        </member>
         <member name="M:CodeGlyphX.Barcode.TryDecodeImage(System.Byte[],System.Nullable{CodeGlyphX.BarcodeType},System.Threading.CancellationToken,CodeGlyphX.BarcodeDecoded@)">
             <summary>
             Attempts to decode a barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with an optional expected type hint, with cancellation.
@@ -1057,6 +1067,11 @@
         <member name="M:CodeGlyphX.Barcode.TryDecodeImage(System.IO.Stream,System.Nullable{CodeGlyphX.BarcodeType},CodeGlyphX.BarcodeDecoded@)">
             <summary>
             Attempts to decode a barcode from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with an optional expected type hint.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Barcode.TryDecodeImage(System.IO.Stream,System.Nullable{CodeGlyphX.BarcodeType},CodeGlyphX.ImageDecodeOptions,CodeGlyphX.BarcodeDecoded@)">
+            <summary>
+            Attempts to decode a barcode from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with an optional expected type hint and image decode options.
             </summary>
         </member>
         <member name="M:CodeGlyphX.Barcode.TryDecodeImage(System.IO.Stream,System.Nullable{CodeGlyphX.BarcodeType},System.Threading.CancellationToken,CodeGlyphX.BarcodeDecoded@)">

@@ -4,7 +4,14 @@
 <PageTitle>Documentation - CodeGlyphX</PageTitle>
 
 <div class="docs-layout">
-    <aside class="docs-sidebar">
+    <button class="docs-sidebar-toggle" @onclick="ToggleSidebar" aria-label="Toggle documentation menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+            <path d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+        <span>Documentation Menu</span>
+    </button>
+    <div class="docs-sidebar-overlay @(_sidebarOpen ? "active" : "")" @onclick="CloseSidebar"></div>
+    <aside class="docs-sidebar @(_sidebarOpen ? "sidebar-open" : "")">
         <nav class="docs-nav">
             <div class="docs-nav-section">
                 <div class="docs-nav-title">Getting Started</div>
@@ -652,4 +659,9 @@ QR.Save("ABC123", "microqr.png", microQr: true);</pre>
 @code {
     [Parameter]
     public string? Section { get; set; }
+
+    private bool _sidebarOpen = false;
+
+    private void ToggleSidebar() => _sidebarOpen = !_sidebarOpen;
+    private void CloseSidebar() => _sidebarOpen = false;
 }

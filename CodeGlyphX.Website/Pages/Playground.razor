@@ -12,7 +12,7 @@
             <p>@_loadError</p>
         </div>
     }
-    else if (_playgroundType == null)
+    else if (!_isReady)
     {
         <div class="card">
             <h2>Loading playground...</h2>
@@ -21,50 +21,52 @@
     }
     else
     {
-        <DynamicComponent Type="_playgroundType" @key="_playgroundType" />
+        <CodeGlyphX.Playground.Playground @key="_componentKey" />
     }
 </div>
 
 @code {
-    private Type? _playgroundType;
+    private bool _assembliesLoaded;
+    private bool _isReady;
     private string? _loadError;
+    private int _componentKey;
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            Exception? lastError = null;
-
-            foreach (var candidates in new[]
-                     {
-                         new[] { "CodeGlyphX.Playground.wasm", "CodeGlyphX.wasm" },
-                         new[] { "CodeGlyphX.Playground.dll", "CodeGlyphX.dll" }
-                     })
+            // Only need to lazy load CodeGlyphX.wasm - Playground component is bundled with main app
+            foreach (var candidate in new[] { "CodeGlyphX.wasm", "CodeGlyphX.dll" })
             {
                 try
                 {
-                    var assemblies = await AssemblyLoader.LoadAssembliesAsync(candidates);
-                    _playgroundType = assemblies
-                        .Select(assembly => assembly.GetType("CodeGlyphX.Playground.Playground"))
-                        .FirstOrDefault(type => type != null);
-                    _playgroundType ??= Type.GetType("CodeGlyphX.Playground.Playground, CodeGlyphX.Playground");
-                    if (_playgroundType != null)
-                        break;
+                    await AssemblyLoader.LoadAssembliesAsync(new[] { candidate });
+                    _assembliesLoaded = true;
+                    break;
                 }
-                catch (Exception ex)
+                catch
                 {
-                    lastError = ex;
+                    // Try next candidate
                 }
             }
 
-            if (_playgroundType is null)
-                _loadError = lastError?.Message ?? "Playground component failed to load.";
-
-            StateHasChanged();
+            if (!_assembliesLoaded)
+                _loadError = "CodeGlyphX engine failed to load.";
         }
         catch (Exception ex)
         {
             _loadError = ex.Message;
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (_assembliesLoaded && !_isReady)
+        {
+            // Wait a tick to ensure assemblies are fully initialized
+            await Task.Yield();
+            _isReady = true;
+            _componentKey++; // Force fresh component instance
             StateHasChanged();
         }
     }

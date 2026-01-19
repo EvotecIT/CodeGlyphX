@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <BlazorWebAssemblyLazyLoad Include="CodeGlyphX.Playground.wasm" />
+    <!-- Only lazy load the heavy CodeGlyphX library, not the Playground component -->
     <BlazorWebAssemblyLazyLoad Include="CodeGlyphX.wasm" />
   </ItemGroup>
 
