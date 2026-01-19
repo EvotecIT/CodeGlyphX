@@ -86,10 +86,15 @@ public partial class MainWindow : Window {
                 }
 
                 var pixels = capture.Buffer;
-                var options = new QrPixelDecodeOptions { Profile = _decodeProfile };
+                var maxDim = Math.Max(w, h);
+                var options = new QrPixelDecodeOptions {
+                    Profile = _decodeProfile,
+                    MaxMilliseconds = 400,
+                    MaxDimension = maxDim > 1600 ? 1600 : 0
+                };
 
                 var sw = Stopwatch.StartNew();
-                var ok = QrDecoder.TryDecode(pixels, w, h, stride, PixelFormat.Bgra32, out var decoded, out var diag, options);
+                var ok = QrDecoder.TryDecode(pixels, w, h, stride, PixelFormat.Bgra32, out var decoded, out var diag, options, ct);
                 var decodeMs = sw.ElapsedMilliseconds;
                 var profileLabel = _decodeProfile.ToString();
                 var status = ok
