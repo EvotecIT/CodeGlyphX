@@ -65,6 +65,20 @@ public sealed class BarcodeDecoderTests {
     }
 
     [Fact]
+    public void Decode_Code128_FromPng_Cancelled_ReturnsFalse() {
+        var png = Barcode.Png(BarcodeType.Code128, "CANCEL-PNG", new BarcodeOptions {
+            ModuleSize = 3,
+            QuietZone = 10,
+            HeightModules = 40
+        });
+
+        using var cts = new CancellationTokenSource();
+        cts.Cancel();
+
+        Assert.False(Barcode.TryDecodePng(png, BarcodeType.Code128, cts.Token, out _));
+    }
+
+    [Fact]
     public void Decode_Code39_FromPixels() {
         var barcode = BarcodeEncoder.EncodeCode39("ABC123", includeChecksum: true, fullAsciiMode: false);
         var pixels = BarcodePngRenderer.RenderPixels(barcode, new BarcodePngRenderOptions {

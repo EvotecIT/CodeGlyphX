@@ -31,6 +31,13 @@ public sealed class AztecTests {
     }
 
     [Fact]
+    public void Aztec_Image_RoundTrip() {
+        var png = AztecCode.Png("AZTEC-IMG");
+        Assert.True(AztecCode.TryDecodeImage(png, out var text));
+        Assert.Equal("AZTEC-IMG", text);
+    }
+
+    [Fact]
     public void Aztec_Decode_Cancelled_ReturnsFalse() {
         var matrix = AztecCode.Encode("AZTEC-CANCEL");
         var pixels = MatrixPngRenderer.RenderPixels(matrix, new MatrixPngRenderOptions {

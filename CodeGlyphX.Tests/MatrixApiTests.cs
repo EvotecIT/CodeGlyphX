@@ -12,10 +12,25 @@ public sealed class MatrixApiTests {
     }
 
     [Fact]
+    public void DataMatrixCode_Image_RoundTrip() {
+        var png = DataMatrixCode.Png("DM-IMG");
+        Assert.True(DataMatrixCode.TryDecodeImage(png, out var text));
+        Assert.Equal("DM-IMG", text);
+    }
+
+    [Fact]
     public void Pdf417Code_Png_RoundTrip() {
         var options = new Pdf417EncodeOptions { ErrorCorrectionLevel = 2 };
         var png = Pdf417Code.Png("PDF-HELLO", options);
         Assert.True(Pdf417Code.TryDecodePng(png, out var text));
         Assert.Equal("PDF-HELLO", text);
+    }
+
+    [Fact]
+    public void Pdf417Code_Image_RoundTrip() {
+        var options = new Pdf417EncodeOptions { ErrorCorrectionLevel = 2 };
+        var png = Pdf417Code.Png("PDF-IMG", options);
+        Assert.True(Pdf417Code.TryDecodeImage(png, out var text));
+        Assert.Equal("PDF-IMG", text);
     }
 }

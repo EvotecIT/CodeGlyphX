@@ -61,6 +61,34 @@ public sealed class QrDecodingSamplesTests {
         Assert.Equal(QrDecodeFailureReason.Cancelled, info.Module.Failure);
     }
 
+    [Fact]
+    public void QrDecode_Wrapper_RespectsCancellation() {
+        var qr = QrCodeEncoder.EncodeText("cancel-wrapper");
+        var png = QrPngRenderer.Render(qr.Modules, new QrPngRenderOptions {
+            ModuleSize = 4,
+            QuietZone = 4
+        });
+
+        using var cts = new CancellationTokenSource();
+        cts.Cancel();
+
+        Assert.False(QR.TryDecodePng(png, options: null, cts.Token, out _));
+    }
+
+    [Fact]
+    public void QrDecode_WrapperImage_RespectsCancellation() {
+        var qr = QrCodeEncoder.EncodeText("cancel-image");
+        var png = QrPngRenderer.Render(qr.Modules, new QrPngRenderOptions {
+            ModuleSize = 4,
+            QuietZone = 4
+        });
+
+        using var cts = new CancellationTokenSource();
+        cts.Cancel();
+
+        Assert.False(QR.TryDecodeImage(png, options: null, cts.Token, out _));
+    }
+
     private static byte[] ReadRepoFile(string relativePath) {
         if (string.IsNullOrWhiteSpace(relativePath)) {
             throw new ArgumentException("Path is required.", nameof(relativePath));
