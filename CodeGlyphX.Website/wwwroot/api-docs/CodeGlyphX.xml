@@ -30,9 +30,19 @@
             Attempts to decode an Aztec symbol from a module matrix.
             </summary>
         </member>
+        <member name="M:CodeGlyphX.AztecCode.TryDecode(CodeGlyphX.BitMatrix,System.Threading.CancellationToken,System.String@)">
+            <summary>
+            Attempts to decode an Aztec symbol from a module matrix, with cancellation.
+            </summary>
+        </member>
         <member name="M:CodeGlyphX.AztecCode.TryDecode(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,System.String@)">
             <summary>
             Attempts to decode an Aztec symbol from raw pixels.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.AztecCode.TryDecode(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,System.Threading.CancellationToken,System.String@)">
+            <summary>
+            Attempts to decode an Aztec symbol from raw pixels, with cancellation.
             </summary>
         </member>
         <member name="M:CodeGlyphX.AztecCode.TryDecode(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,System.String@)">
@@ -40,9 +50,29 @@
             Attempts to decode an Aztec symbol from raw pixels.
             </summary>
         </member>
+        <member name="M:CodeGlyphX.AztecCode.TryDecode(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,System.Threading.CancellationToken,System.String@)">
+            <summary>
+            Attempts to decode an Aztec symbol from raw pixels, with cancellation.
+            </summary>
+        </member>
         <member name="M:CodeGlyphX.AztecCode.TryDecodePng(System.Byte[],System.String@)">
             <summary>
             Attempts to decode an Aztec symbol from PNG bytes.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.AztecCode.TryDecodePng(System.Byte[],System.Threading.CancellationToken,System.String@)">
+            <summary>
+            Attempts to decode an Aztec symbol from PNG bytes, with cancellation.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.AztecCode.TryDecodePng(System.Byte[],CodeGlyphX.ImageDecodeOptions,System.String@)">
+            <summary>
+            Attempts to decode an Aztec symbol from PNG bytes with image decode options.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.AztecCode.TryDecodePng(System.Byte[],CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken,System.String@)">
+            <summary>
+            Attempts to decode an Aztec symbol from PNG bytes with image decode options, with cancellation.
             </summary>
         </member>
         <member name="M:CodeGlyphX.AztecCode.TryDecodePngFile(System.String,System.String@)">
@@ -50,9 +80,79 @@
             Attempts to decode an Aztec symbol from a PNG file.
             </summary>
         </member>
+        <member name="M:CodeGlyphX.AztecCode.TryDecodePngFile(System.String,System.Threading.CancellationToken,System.String@)">
+            <summary>
+            Attempts to decode an Aztec symbol from a PNG file, with cancellation.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.AztecCode.TryDecodePngFile(System.String,CodeGlyphX.ImageDecodeOptions,System.String@)">
+            <summary>
+            Attempts to decode an Aztec symbol from a PNG file with image decode options.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.AztecCode.TryDecodePngFile(System.String,CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken,System.String@)">
+            <summary>
+            Attempts to decode an Aztec symbol from a PNG file with image decode options, with cancellation.
+            </summary>
+        </member>
         <member name="M:CodeGlyphX.AztecCode.TryDecodePng(System.IO.Stream,System.String@)">
             <summary>
             Attempts to decode an Aztec symbol from a PNG stream.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.AztecCode.TryDecodePng(System.IO.Stream,CodeGlyphX.ImageDecodeOptions,System.String@)">
+            <summary>
+            Attempts to decode an Aztec symbol from a PNG stream with image decode options.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.AztecCode.TryDecodeImage(System.Byte[],System.String@)">
+            <summary>
+            Attempts to decode an Aztec symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.AztecCode.TryDecodeImage(System.Byte[],System.Threading.CancellationToken,System.String@)">
+            <summary>
+            Attempts to decode an Aztec symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA), with cancellation.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.AztecCode.TryDecodeImage(System.Byte[],CodeGlyphX.ImageDecodeOptions,System.String@)">
+            <summary>
+            Attempts to decode an Aztec symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.AztecCode.TryDecodeImage(System.Byte[],CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken,System.String@)">
+            <summary>
+            Attempts to decode an Aztec symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options, with cancellation.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.AztecCode.TryDecodeImage(System.IO.Stream,System.String@)">
+            <summary>
+            Attempts to decode an Aztec symbol from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.AztecCode.TryDecodeImage(System.IO.Stream,System.Threading.CancellationToken,System.String@)">
+            <summary>
+            Attempts to decode an Aztec symbol from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA), with cancellation.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.AztecCode.TryDecodeImage(System.IO.Stream,CodeGlyphX.ImageDecodeOptions,System.String@)">
+            <summary>
+            Attempts to decode an Aztec symbol from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.AztecCode.TryDecodeImage(System.IO.Stream,CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken,System.String@)">
+            <summary>
+            Attempts to decode an Aztec symbol from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options, with cancellation.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.AztecCode.TryDecodePng(System.IO.Stream,System.Threading.CancellationToken,System.String@)">
+            <summary>
+            Attempts to decode an Aztec symbol from a PNG stream, with cancellation.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.AztecCode.TryDecodePng(System.IO.Stream,CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken,System.String@)">
+            <summary>
+            Attempts to decode an Aztec symbol from a PNG stream with image decode options, with cancellation.
             </summary>
         </member>
         <member name="M:CodeGlyphX.AztecCode.DecodePng(System.Byte[])">
@@ -899,9 +999,24 @@
             Attempts to decode a barcode from PNG bytes.
             </summary>
         </member>
+        <member name="M:CodeGlyphX.Barcode.TryDecodePng(System.Byte[],System.Threading.CancellationToken,CodeGlyphX.BarcodeDecoded@)">
+            <summary>
+            Attempts to decode a barcode from PNG bytes, with cancellation.
+            </summary>
+        </member>
         <member name="M:CodeGlyphX.Barcode.TryDecodePng(System.Byte[],System.Nullable{CodeGlyphX.BarcodeType},CodeGlyphX.BarcodeDecoded@)">
             <summary>
             Attempts to decode a barcode from PNG bytes with an optional expected type hint.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Barcode.TryDecodePng(System.Byte[],System.Nullable{CodeGlyphX.BarcodeType},System.Threading.CancellationToken,CodeGlyphX.BarcodeDecoded@)">
+            <summary>
+            Attempts to decode a barcode from PNG bytes with an optional expected type hint, with cancellation.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Barcode.TryDecodePng(System.Byte[],System.Nullable{CodeGlyphX.BarcodeType},CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken,CodeGlyphX.BarcodeDecoded@)">
+            <summary>
+            Attempts to decode a barcode from PNG bytes with an optional expected type hint and image decode options, with cancellation.
             </summary>
         </member>
         <member name="M:CodeGlyphX.Barcode.TryDecodeImage(System.Byte[],CodeGlyphX.BarcodeDecoded@)">
@@ -909,9 +1024,24 @@
             Attempts to decode a barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).
             </summary>
         </member>
+        <member name="M:CodeGlyphX.Barcode.TryDecodeImage(System.Byte[],System.Threading.CancellationToken,CodeGlyphX.BarcodeDecoded@)">
+            <summary>
+            Attempts to decode a barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA), with cancellation.
+            </summary>
+        </member>
         <member name="M:CodeGlyphX.Barcode.TryDecodeImage(System.Byte[],System.Nullable{CodeGlyphX.BarcodeType},CodeGlyphX.BarcodeDecoded@)">
             <summary>
             Attempts to decode a barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with an optional expected type hint.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Barcode.TryDecodeImage(System.Byte[],System.Nullable{CodeGlyphX.BarcodeType},System.Threading.CancellationToken,CodeGlyphX.BarcodeDecoded@)">
+            <summary>
+            Attempts to decode a barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with an optional expected type hint, with cancellation.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Barcode.TryDecodeImage(System.Byte[],System.Nullable{CodeGlyphX.BarcodeType},CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken,CodeGlyphX.BarcodeDecoded@)">
+            <summary>
+            Attempts to decode a barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with an optional expected type hint and image decode options, with cancellation.
             </summary>
         </member>
         <member name="M:CodeGlyphX.Barcode.TryDecodeImage(System.IO.Stream,CodeGlyphX.BarcodeDecoded@)">
@@ -919,9 +1049,24 @@
             Attempts to decode a barcode from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).
             </summary>
         </member>
+        <member name="M:CodeGlyphX.Barcode.TryDecodeImage(System.IO.Stream,System.Threading.CancellationToken,CodeGlyphX.BarcodeDecoded@)">
+            <summary>
+            Attempts to decode a barcode from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA), with cancellation.
+            </summary>
+        </member>
         <member name="M:CodeGlyphX.Barcode.TryDecodeImage(System.IO.Stream,System.Nullable{CodeGlyphX.BarcodeType},CodeGlyphX.BarcodeDecoded@)">
             <summary>
             Attempts to decode a barcode from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with an optional expected type hint.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Barcode.TryDecodeImage(System.IO.Stream,System.Nullable{CodeGlyphX.BarcodeType},System.Threading.CancellationToken,CodeGlyphX.BarcodeDecoded@)">
+            <summary>
+            Attempts to decode a barcode from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with an optional expected type hint, with cancellation.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Barcode.TryDecodeImage(System.IO.Stream,System.Nullable{CodeGlyphX.BarcodeType},CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken,CodeGlyphX.BarcodeDecoded@)">
+            <summary>
+            Attempts to decode a barcode from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with an optional expected type hint and image decode options, with cancellation.
             </summary>
         </member>
         <member name="M:CodeGlyphX.Barcode.TryDecodePngFile(System.String,CodeGlyphX.BarcodeDecoded@)">
@@ -929,9 +1074,39 @@
             Attempts to decode a barcode from a PNG file.
             </summary>
         </member>
+        <member name="M:CodeGlyphX.Barcode.TryDecodePngFile(System.String,System.Threading.CancellationToken,CodeGlyphX.BarcodeDecoded@)">
+            <summary>
+            Attempts to decode a barcode from a PNG file, with cancellation.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Barcode.TryDecodePngFile(System.String,CodeGlyphX.ImageDecodeOptions,CodeGlyphX.BarcodeDecoded@)">
+            <summary>
+            Attempts to decode a barcode from a PNG file with image decode options.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Barcode.TryDecodePngFile(System.String,CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken,CodeGlyphX.BarcodeDecoded@)">
+            <summary>
+            Attempts to decode a barcode from a PNG file with image decode options, with cancellation.
+            </summary>
+        </member>
         <member name="M:CodeGlyphX.Barcode.TryDecodePng(System.IO.Stream,CodeGlyphX.BarcodeDecoded@)">
             <summary>
             Attempts to decode a barcode from a PNG stream.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Barcode.TryDecodePng(System.IO.Stream,System.Threading.CancellationToken,CodeGlyphX.BarcodeDecoded@)">
+            <summary>
+            Attempts to decode a barcode from a PNG stream, with cancellation.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Barcode.TryDecodePng(System.IO.Stream,CodeGlyphX.ImageDecodeOptions,CodeGlyphX.BarcodeDecoded@)">
+            <summary>
+            Attempts to decode a barcode from a PNG stream with image decode options.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Barcode.TryDecodePng(System.IO.Stream,CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken,CodeGlyphX.BarcodeDecoded@)">
+            <summary>
+            Attempts to decode a barcode from a PNG stream with image decode options, with cancellation.
             </summary>
         </member>
         <member name="M:CodeGlyphX.Barcode.DecodePng(System.Byte[])">
@@ -982,6 +1157,21 @@
         <member name="M:CodeGlyphX.Barcode.BarcodeBuilder.WithColors(CodeGlyphX.Rendering.Png.Rgba32,CodeGlyphX.Rendering.Png.Rgba32)">
             <summary>
             Sets foreground and background colors.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Barcode.BarcodeBuilder.WithForeground(CodeGlyphX.Rendering.Png.Rgba32)">
+            <summary>
+            Sets foreground color.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Barcode.BarcodeBuilder.WithBackground(CodeGlyphX.Rendering.Png.Rgba32)">
+            <summary>
+            Sets background color.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Barcode.BarcodeBuilder.WithTransparentBackground">
+            <summary>
+            Uses a transparent background (alpha = 0).
             </summary>
         </member>
         <member name="M:CodeGlyphX.Barcode.BarcodeBuilder.WithJpegQuality(System.Int32)">
@@ -1460,6 +1650,11 @@
             Attempts to decode a 1D barcode from a raw pixel buffer with an optional type hint and custom decoding options.
             </summary>
         </member>
+        <member name="M:CodeGlyphX.BarcodeDecoder.TryDecode(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,System.Nullable{CodeGlyphX.BarcodeType},CodeGlyphX.BarcodeDecodeOptions,System.Threading.CancellationToken,CodeGlyphX.BarcodeDecoded@)">
+            <summary>
+            Attempts to decode a 1D barcode from a raw pixel buffer with an optional type hint, custom options, and cancellation.
+            </summary>
+        </member>
         <member name="M:CodeGlyphX.BarcodeDecoder.TryDecode(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.BarcodeDecoded@)">
             <summary>
             Attempts to decode a 1D barcode from a raw pixel buffer.
@@ -1480,6 +1675,11 @@
             Attempts to decode a 1D barcode from a raw pixel buffer with an optional type hint and custom decoding options.
             </summary>
         </member>
+        <member name="M:CodeGlyphX.BarcodeDecoder.TryDecode(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,System.Nullable{CodeGlyphX.BarcodeType},CodeGlyphX.BarcodeDecodeOptions,System.Threading.CancellationToken,CodeGlyphX.BarcodeDecoded@)">
+            <summary>
+            Attempts to decode a 1D barcode from a raw pixel buffer with an optional type hint, custom options, and cancellation.
+            </summary>
+        </member>
         <member name="M:CodeGlyphX.BarcodeDecoder.TryDecode(System.Boolean[],CodeGlyphX.BarcodeDecoded@)">
             <summary>
             Attempts to decode a 1D barcode from a module sequence.
@@ -1498,6 +1698,11 @@
         <member name="M:CodeGlyphX.BarcodeDecoder.TryDecode(System.Boolean[],System.Nullable{CodeGlyphX.BarcodeType},CodeGlyphX.BarcodeDecodeOptions,CodeGlyphX.BarcodeDecoded@)">
             <summary>
             Attempts to decode a 1D barcode from a module sequence with an optional type hint and custom decoding options.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.BarcodeDecoder.TryDecode(System.Boolean[],System.Nullable{CodeGlyphX.BarcodeType},CodeGlyphX.BarcodeDecodeOptions,System.Threading.CancellationToken,CodeGlyphX.BarcodeDecoded@)">
+            <summary>
+            Attempts to decode a 1D barcode from a module sequence with an optional type hint, custom decoding options, and cancellation.
             </summary>
         </member>
         <member name="T:CodeGlyphX.BarcodeEasy">
@@ -2108,72 +2313,72 @@
             Unified decode helpers (QR + 1D + 2D barcodes).
             </summary>
         </member>
-        <member name="M:CodeGlyphX.CodeGlyph.TryDecode(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.CodeGlyphDecoded@,System.Nullable{CodeGlyphX.BarcodeType},System.Boolean)">
+        <member name="M:CodeGlyphX.CodeGlyph.TryDecode(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.CodeGlyphDecoded@,System.Nullable{CodeGlyphX.BarcodeType},System.Boolean,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken,CodeGlyphX.BarcodeDecodeOptions)">
             <summary>
             Attempts to decode a QR or barcode from raw pixels.
             </summary>
         </member>
-        <member name="M:CodeGlyphX.CodeGlyph.TryDecodeAll(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.CodeGlyphDecoded[]@,System.Nullable{CodeGlyphX.BarcodeType},System.Boolean,System.Boolean)">
+        <member name="M:CodeGlyphX.CodeGlyph.TryDecodeAll(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.CodeGlyphDecoded[]@,System.Nullable{CodeGlyphX.BarcodeType},System.Boolean,System.Boolean,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken,CodeGlyphX.BarcodeDecodeOptions)">
             <summary>
             Attempts to decode all QR codes and (optionally) a 1D barcode from raw pixels.
             </summary>
         </member>
-        <member name="M:CodeGlyphX.CodeGlyph.TryDecode(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.CodeGlyphDecoded@,System.Nullable{CodeGlyphX.BarcodeType},System.Boolean)">
+        <member name="M:CodeGlyphX.CodeGlyph.TryDecode(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.CodeGlyphDecoded@,System.Nullable{CodeGlyphX.BarcodeType},System.Boolean,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken,CodeGlyphX.BarcodeDecodeOptions)">
             <summary>
             Attempts to decode a QR or barcode from raw pixels.
             </summary>
         </member>
-        <member name="M:CodeGlyphX.CodeGlyph.TryDecodeAll(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.CodeGlyphDecoded[]@,System.Nullable{CodeGlyphX.BarcodeType},System.Boolean,System.Boolean)">
+        <member name="M:CodeGlyphX.CodeGlyph.TryDecodeAll(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.CodeGlyphDecoded[]@,System.Nullable{CodeGlyphX.BarcodeType},System.Boolean,System.Boolean,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken,CodeGlyphX.BarcodeDecodeOptions)">
             <summary>
             Attempts to decode all QR codes and (optionally) a 1D barcode from raw pixels.
             </summary>
         </member>
-        <member name="M:CodeGlyphX.CodeGlyph.TryDecodePng(System.Byte[],CodeGlyphX.CodeGlyphDecoded@,System.Nullable{CodeGlyphX.BarcodeType},System.Boolean)">
+        <member name="M:CodeGlyphX.CodeGlyph.TryDecodePng(System.Byte[],CodeGlyphX.CodeGlyphDecoded@,System.Nullable{CodeGlyphX.BarcodeType},System.Boolean,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken,CodeGlyphX.BarcodeDecodeOptions)">
             <summary>
             Attempts to decode a QR or 1D barcode from PNG bytes.
             </summary>
         </member>
-        <member name="M:CodeGlyphX.CodeGlyph.TryDecodeImage(System.Byte[],CodeGlyphX.CodeGlyphDecoded@,System.Nullable{CodeGlyphX.BarcodeType},System.Boolean)">
+        <member name="M:CodeGlyphX.CodeGlyph.TryDecodeImage(System.Byte[],CodeGlyphX.CodeGlyphDecoded@,System.Nullable{CodeGlyphX.BarcodeType},System.Boolean,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken,CodeGlyphX.BarcodeDecodeOptions)">
             <summary>
             Attempts to decode a QR or barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).
             </summary>
         </member>
-        <member name="M:CodeGlyphX.CodeGlyph.TryDecodeAllPng(System.Byte[],CodeGlyphX.CodeGlyphDecoded[]@,System.Nullable{CodeGlyphX.BarcodeType},System.Boolean,System.Boolean)">
+        <member name="M:CodeGlyphX.CodeGlyph.TryDecodeAllPng(System.Byte[],CodeGlyphX.CodeGlyphDecoded[]@,System.Nullable{CodeGlyphX.BarcodeType},System.Boolean,System.Boolean,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken,CodeGlyphX.BarcodeDecodeOptions)">
             <summary>
             Attempts to decode all QR codes and (optionally) a 1D barcode from PNG bytes.
             </summary>
         </member>
-        <member name="M:CodeGlyphX.CodeGlyph.TryDecodeAllImage(System.Byte[],CodeGlyphX.CodeGlyphDecoded[]@,System.Nullable{CodeGlyphX.BarcodeType},System.Boolean,System.Boolean)">
+        <member name="M:CodeGlyphX.CodeGlyph.TryDecodeAllImage(System.Byte[],CodeGlyphX.CodeGlyphDecoded[]@,System.Nullable{CodeGlyphX.BarcodeType},System.Boolean,System.Boolean,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken,CodeGlyphX.BarcodeDecodeOptions)">
             <summary>
             Attempts to decode all QR codes and (optionally) a 1D barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).
             </summary>
         </member>
-        <member name="M:CodeGlyphX.CodeGlyph.TryDecodeImage(System.IO.Stream,CodeGlyphX.CodeGlyphDecoded@,System.Nullable{CodeGlyphX.BarcodeType},System.Boolean)">
+        <member name="M:CodeGlyphX.CodeGlyph.TryDecodeImage(System.IO.Stream,CodeGlyphX.CodeGlyphDecoded@,System.Nullable{CodeGlyphX.BarcodeType},System.Boolean,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken,CodeGlyphX.BarcodeDecodeOptions)">
             <summary>
             Attempts to decode a QR or barcode from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).
             </summary>
         </member>
-        <member name="M:CodeGlyphX.CodeGlyph.TryDecodeAllImage(System.IO.Stream,CodeGlyphX.CodeGlyphDecoded[]@,System.Nullable{CodeGlyphX.BarcodeType},System.Boolean,System.Boolean)">
+        <member name="M:CodeGlyphX.CodeGlyph.TryDecodeAllImage(System.IO.Stream,CodeGlyphX.CodeGlyphDecoded[]@,System.Nullable{CodeGlyphX.BarcodeType},System.Boolean,System.Boolean,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken,CodeGlyphX.BarcodeDecodeOptions)">
             <summary>
             Attempts to decode all QR codes and (optionally) a 1D barcode from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).
             </summary>
         </member>
-        <member name="M:CodeGlyphX.CodeGlyph.TryDecodePngFile(System.String,CodeGlyphX.CodeGlyphDecoded@,System.Nullable{CodeGlyphX.BarcodeType},System.Boolean)">
+        <member name="M:CodeGlyphX.CodeGlyph.TryDecodePngFile(System.String,CodeGlyphX.CodeGlyphDecoded@,System.Nullable{CodeGlyphX.BarcodeType},System.Boolean,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken,CodeGlyphX.BarcodeDecodeOptions)">
             <summary>
             Attempts to decode a QR or 1D barcode from a PNG file.
             </summary>
         </member>
-        <member name="M:CodeGlyphX.CodeGlyph.TryDecodeAllPngFile(System.String,CodeGlyphX.CodeGlyphDecoded[]@,System.Nullable{CodeGlyphX.BarcodeType},System.Boolean,System.Boolean)">
+        <member name="M:CodeGlyphX.CodeGlyph.TryDecodeAllPngFile(System.String,CodeGlyphX.CodeGlyphDecoded[]@,System.Nullable{CodeGlyphX.BarcodeType},System.Boolean,System.Boolean,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken,CodeGlyphX.BarcodeDecodeOptions)">
             <summary>
             Attempts to decode all QR codes and (optionally) a 1D barcode from a PNG file.
             </summary>
         </member>
-        <member name="M:CodeGlyphX.CodeGlyph.TryDecodePng(System.IO.Stream,CodeGlyphX.CodeGlyphDecoded@,System.Nullable{CodeGlyphX.BarcodeType},System.Boolean)">
+        <member name="M:CodeGlyphX.CodeGlyph.TryDecodePng(System.IO.Stream,CodeGlyphX.CodeGlyphDecoded@,System.Nullable{CodeGlyphX.BarcodeType},System.Boolean,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken,CodeGlyphX.BarcodeDecodeOptions)">
             <summary>
             Attempts to decode a QR or 1D barcode from a PNG stream.
             </summary>
         </member>
-        <member name="M:CodeGlyphX.CodeGlyph.TryDecodeAllPng(System.IO.Stream,CodeGlyphX.CodeGlyphDecoded[]@,System.Nullable{CodeGlyphX.BarcodeType},System.Boolean,System.Boolean)">
+        <member name="M:CodeGlyphX.CodeGlyph.TryDecodeAllPng(System.IO.Stream,CodeGlyphX.CodeGlyphDecoded[]@,System.Nullable{CodeGlyphX.BarcodeType},System.Boolean,System.Boolean,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken,CodeGlyphX.BarcodeDecodeOptions)">
             <summary>
             Attempts to decode all QR codes and (optionally) a 1D barcode from a PNG stream.
             </summary>
@@ -2191,6 +2396,76 @@
         <member name="M:CodeGlyphX.CodeGlyph.DecodePng(System.IO.Stream,System.Nullable{CodeGlyphX.BarcodeType},System.Boolean)">
             <summary>
             Decodes a QR or 1D barcode from a PNG stream.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.CodeGlyph.TryDecode(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.CodeGlyphDecoded@,CodeGlyphX.CodeGlyphDecodeOptions)">
+            <summary>
+            Attempts to decode a QR or barcode from raw pixels using a single options object.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.CodeGlyph.TryDecodeAll(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.CodeGlyphDecoded[]@,CodeGlyphX.CodeGlyphDecodeOptions)">
+            <summary>
+            Attempts to decode all symbols from raw pixels using a single options object.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.CodeGlyph.TryDecode(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.CodeGlyphDecoded@,CodeGlyphX.CodeGlyphDecodeOptions)">
+            <summary>
+            Attempts to decode a QR or barcode from raw pixels using a single options object.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.CodeGlyph.TryDecodeAll(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.CodeGlyphDecoded[]@,CodeGlyphX.CodeGlyphDecodeOptions)">
+            <summary>
+            Attempts to decode all symbols from raw pixels using a single options object.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.CodeGlyph.TryDecodePng(System.Byte[],CodeGlyphX.CodeGlyphDecoded@,CodeGlyphX.CodeGlyphDecodeOptions)">
+            <summary>
+            Attempts to decode a QR or barcode from PNG bytes using a single options object.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.CodeGlyph.TryDecodeImage(System.Byte[],CodeGlyphX.CodeGlyphDecoded@,CodeGlyphX.CodeGlyphDecodeOptions)">
+            <summary>
+            Attempts to decode a QR or barcode from common image formats using a single options object.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.CodeGlyph.TryDecodeAllPng(System.Byte[],CodeGlyphX.CodeGlyphDecoded[]@,CodeGlyphX.CodeGlyphDecodeOptions)">
+            <summary>
+            Attempts to decode all symbols from PNG bytes using a single options object.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.CodeGlyph.TryDecodeAllImage(System.Byte[],CodeGlyphX.CodeGlyphDecoded[]@,CodeGlyphX.CodeGlyphDecodeOptions)">
+            <summary>
+            Attempts to decode all symbols from common image formats using a single options object.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.CodeGlyph.TryDecodeImage(System.IO.Stream,CodeGlyphX.CodeGlyphDecoded@,CodeGlyphX.CodeGlyphDecodeOptions)">
+            <summary>
+            Attempts to decode a QR or barcode from an image stream using a single options object.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.CodeGlyph.TryDecodeAllImage(System.IO.Stream,CodeGlyphX.CodeGlyphDecoded[]@,CodeGlyphX.CodeGlyphDecodeOptions)">
+            <summary>
+            Attempts to decode all symbols from an image stream using a single options object.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.CodeGlyph.TryDecodePngFile(System.String,CodeGlyphX.CodeGlyphDecoded@,CodeGlyphX.CodeGlyphDecodeOptions)">
+            <summary>
+            Attempts to decode a QR or barcode from a PNG file using a single options object.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.CodeGlyph.TryDecodeAllPngFile(System.String,CodeGlyphX.CodeGlyphDecoded[]@,CodeGlyphX.CodeGlyphDecodeOptions)">
+            <summary>
+            Attempts to decode all symbols from a PNG file using a single options object.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.CodeGlyph.TryDecodePng(System.IO.Stream,CodeGlyphX.CodeGlyphDecoded@,CodeGlyphX.CodeGlyphDecodeOptions)">
+            <summary>
+            Attempts to decode a QR or barcode from a PNG stream using a single options object.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.CodeGlyph.TryDecodeAllPng(System.IO.Stream,CodeGlyphX.CodeGlyphDecoded[]@,CodeGlyphX.CodeGlyphDecodeOptions)">
+            <summary>
+            Attempts to decode all symbols from a PNG stream using a single options object.
             </summary>
         </member>
         <member name="T:CodeGlyphX.CodeGlyphDecoded">
@@ -2236,6 +2511,133 @@
         <member name="P:CodeGlyphX.CodeGlyphDecoded.Bytes">
             <summary>
             Gets the decoded payload bytes for QR codes.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.CodeGlyphDecodeOptions">
+            <summary>
+            Options for unified QR/barcode decoding.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.CodeGlyphDecodeOptions.ExpectedBarcode">
+            <summary>
+            Expected barcode type (optional hint for 1D decoding).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.CodeGlyphDecodeOptions.Barcode">
+            <summary>
+            Options for 1D barcode decoding.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.CodeGlyphDecodeOptions.Code39Checksum">
+            <summary>
+            Controls how Code39 checksum characters are handled during decode.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.CodeGlyphDecodeOptions.MsiChecksum">
+            <summary>
+            Controls how MSI checksum digits are handled during decode.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.CodeGlyphDecodeOptions.Code11Checksum">
+            <summary>
+            Controls how Code 11 checksum characters are handled during decode.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.CodeGlyphDecodeOptions.PlesseyChecksum">
+            <summary>
+            Controls whether Plessey CRC validation is required during decode.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.CodeGlyphDecodeOptions.PreferBarcode">
+            <summary>
+            Prefer trying barcodes before 2D codes.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.CodeGlyphDecodeOptions.IncludeBarcode">
+            <summary>
+            Include 1D barcode results when decoding multiple symbols.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.CodeGlyphDecodeOptions.Qr">
+            <summary>
+            QR decode options (profile, budget, etc.).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.CodeGlyphDecodeOptions.Image">
+            <summary>
+            Image decode options for non-QR symbols.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.CodeGlyphDecodeOptions.Profile">
+            <summary>
+            Speed/accuracy profile for QR pixel decoding (default: Robust).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.CodeGlyphDecodeOptions.MaxDimension">
+            <summary>
+            Maximum dimension (pixels) for QR decoding. Larger inputs will be downscaled by sampling.
+            Set to 0 to disable.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.CodeGlyphDecodeOptions.MaxScale">
+            <summary>
+            Maximum scale to try when decoding QR (1..8). Set to 0 to use profile defaults.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.CodeGlyphDecodeOptions.MaxMilliseconds">
+            <summary>
+            Maximum milliseconds to spend decoding QR (best effort). Set to 0 to disable.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.CodeGlyphDecodeOptions.DisableTransforms">
+            <summary>
+            Disable rotation/mirroring attempts for QR decoding, even in robust profiles.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.CodeGlyphDecodeOptions.AggressiveSampling">
+            <summary>
+            Enables extra thresholding/sampling passes for stylized or noisy QR codes (slower).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.CodeGlyphDecodeOptions.MaxImageDimension">
+            <summary>
+            Maximum image dimension (pixels) for non-QR decoding. Larger inputs will be downscaled.
+            Set to 0 to disable.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.CodeGlyphDecodeOptions.MaxImageMilliseconds">
+            <summary>
+            Maximum milliseconds to spend decoding non-QR symbols (best effort). Set to 0 to disable.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.CodeGlyphDecodeOptions.CancellationToken">
+            <summary>
+            Cancellation token for decoding.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.CodeGlyphDecodeOptions.Screen(System.Int32,System.Int32)">
+            <summary>
+            Screen preset (budgeted decode for UI capture scenarios).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.CodeGlyphDecodeOptions.Fast">
+            <summary>
+            Fast preset (lower accuracy, fewer transforms).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.CodeGlyphDecodeOptions.Balanced">
+            <summary>
+            Balanced preset (good default for most images).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.CodeGlyphDecodeOptions.Robust">
+            <summary>
+            Robust preset (best accuracy, slower).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.CodeGlyphDecodeOptions.Stylized">
+            <summary>
+            Stylized preset (adds aggressive sampling for QR art).
             </summary>
         </member>
         <member name="T:CodeGlyphX.CodeGlyphKind">
@@ -3136,14 +3538,94 @@
             Attempts to decode a Data Matrix symbol from PNG bytes.
             </summary>
         </member>
+        <member name="M:CodeGlyphX.DataMatrixCode.TryDecodePng(System.Byte[],System.Threading.CancellationToken,System.String@)">
+            <summary>
+            Attempts to decode a Data Matrix symbol from PNG bytes, with cancellation.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataMatrixCode.TryDecodePng(System.Byte[],CodeGlyphX.ImageDecodeOptions,System.String@)">
+            <summary>
+            Attempts to decode a Data Matrix symbol from PNG bytes with image decode options.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataMatrixCode.TryDecodePng(System.Byte[],CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken,System.String@)">
+            <summary>
+            Attempts to decode a Data Matrix symbol from PNG bytes with image decode options, with cancellation.
+            </summary>
+        </member>
         <member name="M:CodeGlyphX.DataMatrixCode.TryDecodePngFile(System.String,System.String@)">
             <summary>
             Attempts to decode a Data Matrix symbol from a PNG file.
             </summary>
         </member>
+        <member name="M:CodeGlyphX.DataMatrixCode.TryDecodePngFile(System.String,CodeGlyphX.ImageDecodeOptions,System.String@)">
+            <summary>
+            Attempts to decode a Data Matrix symbol from a PNG file with image decode options.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataMatrixCode.TryDecodePngFile(System.String,CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken,System.String@)">
+            <summary>
+            Attempts to decode a Data Matrix symbol from a PNG file with image decode options, with cancellation.
+            </summary>
+        </member>
         <member name="M:CodeGlyphX.DataMatrixCode.TryDecodePng(System.IO.Stream,System.String@)">
             <summary>
             Attempts to decode a Data Matrix symbol from a PNG stream.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataMatrixCode.TryDecodePng(System.IO.Stream,CodeGlyphX.ImageDecodeOptions,System.String@)">
+            <summary>
+            Attempts to decode a Data Matrix symbol from a PNG stream with image decode options.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataMatrixCode.TryDecodePng(System.IO.Stream,CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken,System.String@)">
+            <summary>
+            Attempts to decode a Data Matrix symbol from a PNG stream with image decode options, with cancellation.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataMatrixCode.TryDecodePng(System.IO.Stream,System.Threading.CancellationToken,System.String@)">
+            <summary>
+            Attempts to decode a Data Matrix symbol from a PNG stream, with cancellation.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataMatrixCode.TryDecodeImage(System.Byte[],System.String@)">
+            <summary>
+            Attempts to decode a Data Matrix symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataMatrixCode.TryDecodeImage(System.Byte[],System.Threading.CancellationToken,System.String@)">
+            <summary>
+            Attempts to decode a Data Matrix symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA), with cancellation.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataMatrixCode.TryDecodeImage(System.Byte[],CodeGlyphX.ImageDecodeOptions,System.String@)">
+            <summary>
+            Attempts to decode a Data Matrix symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataMatrixCode.TryDecodeImage(System.Byte[],CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken,System.String@)">
+            <summary>
+            Attempts to decode a Data Matrix symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options, with cancellation.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataMatrixCode.TryDecodeImage(System.IO.Stream,System.String@)">
+            <summary>
+            Attempts to decode a Data Matrix symbol from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataMatrixCode.TryDecodeImage(System.IO.Stream,System.Threading.CancellationToken,System.String@)">
+            <summary>
+            Attempts to decode a Data Matrix symbol from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA), with cancellation.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataMatrixCode.TryDecodeImage(System.IO.Stream,CodeGlyphX.ImageDecodeOptions,System.String@)">
+            <summary>
+            Attempts to decode a Data Matrix symbol from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataMatrixCode.TryDecodeImage(System.IO.Stream,CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken,System.String@)">
+            <summary>
+            Attempts to decode a Data Matrix symbol from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options, with cancellation.
             </summary>
         </member>
         <member name="M:CodeGlyphX.DataMatrixCode.DecodePng(System.Byte[])">
@@ -3312,14 +3794,29 @@
             Attempts to decode a Data Matrix symbol from a module matrix.
             </summary>
         </member>
+        <member name="M:CodeGlyphX.DataMatrix.DataMatrixDecoder.TryDecode(CodeGlyphX.BitMatrix,System.Threading.CancellationToken,System.String@)">
+            <summary>
+            Attempts to decode a Data Matrix symbol from a module matrix, with cancellation.
+            </summary>
+        </member>
         <member name="M:CodeGlyphX.DataMatrix.DataMatrixDecoder.TryDecode(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,System.String@)">
             <summary>
             Attempts to decode a Data Matrix symbol from pixels.
             </summary>
         </member>
+        <member name="M:CodeGlyphX.DataMatrix.DataMatrixDecoder.TryDecode(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,System.Threading.CancellationToken,System.String@)">
+            <summary>
+            Attempts to decode a Data Matrix symbol from pixels, with cancellation.
+            </summary>
+        </member>
         <member name="M:CodeGlyphX.DataMatrix.DataMatrixDecoder.TryDecode(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,System.String@)">
             <summary>
             Attempts to decode a Data Matrix symbol from pixels.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataMatrix.DataMatrixDecoder.TryDecode(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,System.Threading.CancellationToken,System.String@)">
+            <summary>
+            Attempts to decode a Data Matrix symbol from pixels, with cancellation.
             </summary>
         </member>
         <member name="T:CodeGlyphX.DataMatrix.DataMatrixEncoder">
@@ -3437,6 +3934,27 @@
         <member name="M:CodeGlyphX.Gs1Element.Variable(System.String,System.String)">
             <summary>
             Creates a variable-length GS1 element.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.ImageDecodeOptions">
+            <summary>
+            Options for decoding from image sources (non-QR).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.ImageDecodeOptions.MaxDimension">
+            <summary>
+            Maximum image dimension (pixels) for decoding. Larger inputs will be downscaled.
+            Set to 0 to disable.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.ImageDecodeOptions.MaxMilliseconds">
+            <summary>
+            Maximum milliseconds to spend decoding (best effort). Set to 0 to disable.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.ImageDecodeOptions.Screen(System.Int32,System.Int32)">
+            <summary>
+            Screen preset (budgeted decode for UI capture scenarios).
             </summary>
         </member>
         <member name="M:CodeGlyphX.Internal.RegexCache.DigitsOptional">
@@ -6949,14 +7467,99 @@
             Attempts to decode a PDF417 symbol from PNG bytes.
             </summary>
         </member>
+        <member name="M:CodeGlyphX.Pdf417Code.TryDecodePng(System.Byte[],System.Threading.CancellationToken,System.String@)">
+            <summary>
+            Attempts to decode a PDF417 symbol from PNG bytes, with cancellation.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pdf417Code.TryDecodePng(System.Byte[],CodeGlyphX.ImageDecodeOptions,System.String@)">
+            <summary>
+            Attempts to decode a PDF417 symbol from PNG bytes with image decode options.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pdf417Code.TryDecodePng(System.Byte[],CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken,System.String@)">
+            <summary>
+            Attempts to decode a PDF417 symbol from PNG bytes with image decode options, with cancellation.
+            </summary>
+        </member>
         <member name="M:CodeGlyphX.Pdf417Code.TryDecodePngFile(System.String,System.String@)">
             <summary>
             Attempts to decode a PDF417 symbol from a PNG file.
             </summary>
         </member>
+        <member name="M:CodeGlyphX.Pdf417Code.TryDecodePngFile(System.String,System.Threading.CancellationToken,System.String@)">
+            <summary>
+            Attempts to decode a PDF417 symbol from a PNG file, with cancellation.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pdf417Code.TryDecodePngFile(System.String,CodeGlyphX.ImageDecodeOptions,System.String@)">
+            <summary>
+            Attempts to decode a PDF417 symbol from a PNG file with image decode options.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pdf417Code.TryDecodePngFile(System.String,CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken,System.String@)">
+            <summary>
+            Attempts to decode a PDF417 symbol from a PNG file with image decode options, with cancellation.
+            </summary>
+        </member>
         <member name="M:CodeGlyphX.Pdf417Code.TryDecodePng(System.IO.Stream,System.String@)">
             <summary>
             Attempts to decode a PDF417 symbol from a PNG stream.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pdf417Code.TryDecodePng(System.IO.Stream,CodeGlyphX.ImageDecodeOptions,System.String@)">
+            <summary>
+            Attempts to decode a PDF417 symbol from a PNG stream with image decode options.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pdf417Code.TryDecodePng(System.IO.Stream,CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken,System.String@)">
+            <summary>
+            Attempts to decode a PDF417 symbol from a PNG stream with image decode options, with cancellation.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pdf417Code.TryDecodeImage(System.Byte[],System.String@)">
+            <summary>
+            Attempts to decode a PDF417 symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pdf417Code.TryDecodeImage(System.Byte[],System.Threading.CancellationToken,System.String@)">
+            <summary>
+            Attempts to decode a PDF417 symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA), with cancellation.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pdf417Code.TryDecodeImage(System.Byte[],CodeGlyphX.ImageDecodeOptions,System.String@)">
+            <summary>
+            Attempts to decode a PDF417 symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pdf417Code.TryDecodeImage(System.Byte[],CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken,System.String@)">
+            <summary>
+            Attempts to decode a PDF417 symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options, with cancellation.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pdf417Code.TryDecodeImage(System.IO.Stream,System.String@)">
+            <summary>
+            Attempts to decode a PDF417 symbol from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pdf417Code.TryDecodeImage(System.IO.Stream,System.Threading.CancellationToken,System.String@)">
+            <summary>
+            Attempts to decode a PDF417 symbol from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA), with cancellation.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pdf417Code.TryDecodeImage(System.IO.Stream,CodeGlyphX.ImageDecodeOptions,System.String@)">
+            <summary>
+            Attempts to decode a PDF417 symbol from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pdf417Code.TryDecodeImage(System.IO.Stream,CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken,System.String@)">
+            <summary>
+            Attempts to decode a PDF417 symbol from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options, with cancellation.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pdf417Code.TryDecodePng(System.IO.Stream,System.Threading.CancellationToken,System.String@)">
+            <summary>
+            Attempts to decode a PDF417 symbol from a PNG stream, with cancellation.
             </summary>
         </member>
         <member name="M:CodeGlyphX.Pdf417Code.DecodePng(System.Byte[])">
@@ -7177,14 +7780,29 @@
             Attempts to decode a PDF417 symbol from a module matrix.
             </summary>
         </member>
+        <member name="M:CodeGlyphX.Pdf417.Pdf417Decoder.TryDecode(CodeGlyphX.BitMatrix,System.Threading.CancellationToken,System.String@)">
+            <summary>
+            Attempts to decode a PDF417 symbol from a module matrix, with cancellation.
+            </summary>
+        </member>
         <member name="M:CodeGlyphX.Pdf417.Pdf417Decoder.TryDecode(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,System.String@)">
             <summary>
             Attempts to decode a PDF417 symbol from pixels.
             </summary>
         </member>
+        <member name="M:CodeGlyphX.Pdf417.Pdf417Decoder.TryDecode(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,System.Threading.CancellationToken,System.String@)">
+            <summary>
+            Attempts to decode a PDF417 symbol from pixels, with cancellation.
+            </summary>
+        </member>
         <member name="M:CodeGlyphX.Pdf417.Pdf417Decoder.TryDecode(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,System.String@)">
             <summary>
             Attempts to decode a PDF417 symbol from pixels.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pdf417.Pdf417Decoder.TryDecode(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,System.Threading.CancellationToken,System.String@)">
+            <summary>
+            Attempts to decode a PDF417 symbol from pixels, with cancellation.
             </summary>
         </member>
         <member name="T:CodeGlyphX.Pdf417.Pdf417EncodeOptions">
@@ -7953,9 +8571,29 @@
             Attempts to decode a QR code from a PNG byte array.
             </summary>
         </member>
+        <member name="M:CodeGlyphX.QR.TryDecodePng(System.Byte[],CodeGlyphX.QrPixelDecodeOptions,CodeGlyphX.QrDecoded@)">
+            <summary>
+            Attempts to decode a QR code from a PNG byte array with options.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QR.TryDecodePng(System.Byte[],CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken,CodeGlyphX.QrDecoded@)">
+            <summary>
+            Attempts to decode a QR code from a PNG byte array with options and cancellation.
+            </summary>
+        </member>
         <member name="M:CodeGlyphX.QR.TryDecodeAllPng(System.Byte[],CodeGlyphX.QrDecoded[]@)">
             <summary>
             Attempts to decode all QR codes from a PNG byte array.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QR.TryDecodeAllPng(System.Byte[],CodeGlyphX.QrPixelDecodeOptions,CodeGlyphX.QrDecoded[]@)">
+            <summary>
+            Attempts to decode all QR codes from a PNG byte array with options.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QR.TryDecodeAllPng(System.Byte[],CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken,CodeGlyphX.QrDecoded[]@)">
+            <summary>
+            Attempts to decode all QR codes from a PNG byte array with options and cancellation.
             </summary>
         </member>
         <member name="M:CodeGlyphX.QR.TryDecodePngFile(System.String,CodeGlyphX.QrDecoded@)">
@@ -7963,14 +8601,29 @@
             Attempts to decode a QR code from a PNG file.
             </summary>
         </member>
+        <member name="M:CodeGlyphX.QR.TryDecodePngFile(System.String,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken,CodeGlyphX.QrDecoded@)">
+            <summary>
+            Attempts to decode a QR code from a PNG file with options and cancellation.
+            </summary>
+        </member>
         <member name="M:CodeGlyphX.QR.TryDecodeAllPngFile(System.String,CodeGlyphX.QrDecoded[]@)">
             <summary>
             Attempts to decode all QR codes from a PNG file.
             </summary>
         </member>
+        <member name="M:CodeGlyphX.QR.TryDecodeAllPngFile(System.String,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken,CodeGlyphX.QrDecoded[]@)">
+            <summary>
+            Attempts to decode all QR codes from a PNG file with options and cancellation.
+            </summary>
+        </member>
         <member name="M:CodeGlyphX.QR.TryDecodePng(System.IO.Stream,CodeGlyphX.QrDecoded@)">
             <summary>
             Attempts to decode a QR code from a PNG stream.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QR.TryDecodePng(System.IO.Stream,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken,CodeGlyphX.QrDecoded@)">
+            <summary>
+            Attempts to decode a QR code from a PNG stream with options and cancellation.
             </summary>
         </member>
         <member name="M:CodeGlyphX.QR.TryParsePayload(System.String,CodeGlyphX.Payloads.QrParsedPayload@)">
@@ -7991,6 +8644,71 @@
         <member name="M:CodeGlyphX.QR.TryDecodeAllPng(System.IO.Stream,CodeGlyphX.QrDecoded[]@)">
             <summary>
             Attempts to decode all QR codes from a PNG stream.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QR.TryDecodeAllPng(System.IO.Stream,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken,CodeGlyphX.QrDecoded[]@)">
+            <summary>
+            Attempts to decode all QR codes from a PNG stream with options and cancellation.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QR.TryDecodeImage(System.Byte[],CodeGlyphX.QrDecoded@)">
+            <summary>
+            Attempts to decode a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QR.TryDecodeImage(System.Byte[],CodeGlyphX.QrPixelDecodeOptions,CodeGlyphX.QrDecoded@)">
+            <summary>
+            Attempts to decode a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with options.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QR.TryDecodeImage(System.Byte[],CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken,CodeGlyphX.QrDecoded@)">
+            <summary>
+            Attempts to decode a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with options and cancellation.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QR.TryDecodeAllImage(System.Byte[],CodeGlyphX.QrDecoded[]@)">
+            <summary>
+            Attempts to decode all QR codes from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QR.TryDecodeAllImage(System.Byte[],CodeGlyphX.QrPixelDecodeOptions,CodeGlyphX.QrDecoded[]@)">
+            <summary>
+            Attempts to decode all QR codes from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with options.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QR.TryDecodeAllImage(System.Byte[],CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken,CodeGlyphX.QrDecoded[]@)">
+            <summary>
+            Attempts to decode all QR codes from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with options and cancellation.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QR.TryDecodeImage(System.IO.Stream,CodeGlyphX.QrDecoded@)">
+            <summary>
+            Attempts to decode a QR code from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QR.TryDecodeImage(System.IO.Stream,CodeGlyphX.QrPixelDecodeOptions,CodeGlyphX.QrDecoded@)">
+            <summary>
+            Attempts to decode a QR code from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with options.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QR.TryDecodeImage(System.IO.Stream,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken,CodeGlyphX.QrDecoded@)">
+            <summary>
+            Attempts to decode a QR code from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with options and cancellation.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QR.TryDecodeAllImage(System.IO.Stream,CodeGlyphX.QrDecoded[]@)">
+            <summary>
+            Attempts to decode all QR codes from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QR.TryDecodeAllImage(System.IO.Stream,CodeGlyphX.QrPixelDecodeOptions,CodeGlyphX.QrDecoded[]@)">
+            <summary>
+            Attempts to decode all QR codes from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with options.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QR.TryDecodeAllImage(System.IO.Stream,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken,CodeGlyphX.QrDecoded[]@)">
+            <summary>
+            Attempts to decode all QR codes from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with options and cancellation.
             </summary>
         </member>
         <member name="M:CodeGlyphX.QR.DecodePng(System.Byte[])">
@@ -8038,9 +8756,34 @@
             Sets foreground and background colors.
             </summary>
         </member>
+        <member name="M:CodeGlyphX.QR.QrBuilder.WithForeground(CodeGlyphX.Rendering.Png.Rgba32)">
+            <summary>
+            Sets foreground color.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QR.QrBuilder.WithBackground(CodeGlyphX.Rendering.Png.Rgba32)">
+            <summary>
+            Sets background color.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QR.QrBuilder.WithTransparentBackground">
+            <summary>
+            Uses a transparent background (alpha = 0).
+            </summary>
+        </member>
         <member name="M:CodeGlyphX.QR.QrBuilder.WithStyle(CodeGlyphX.QrRenderStyle)">
             <summary>
             Sets the render style preset.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QR.QrBuilder.WithTargetSize(System.Int32,System.Boolean)">
+            <summary>
+            Sets a fixed target size (in pixels). Module size is adjusted to fit.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QR.QrBuilder.WithFixedSize(System.Int32,System.Boolean)">
+            <summary>
+            Sets a fixed target size (in pixels). Module size is adjusted to fit.
             </summary>
         </member>
         <member name="M:CodeGlyphX.QR.QrBuilder.WithLogoPng(System.Byte[])">
@@ -8493,6 +9236,11 @@
         <member name="F:CodeGlyphX.QrDecodeFailureReason.Payload">
             <summary>
             Payload parsing failed.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.QrDecodeFailureReason.Cancelled">
+            <summary>
+            Decoding was cancelled.
             </summary>
         </member>
         <member name="T:CodeGlyphX.QrDecodeInfo">
@@ -9284,6 +10032,16 @@
             Quiet zone size in modules.
             </summary>
         </member>
+        <member name="P:CodeGlyphX.QrEasyOptions.TargetSizePx">
+            <summary>
+            Target output size in pixels (0 = disabled). When set, module size is adjusted to fit this target.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.QrEasyOptions.TargetSizeIncludesQuietZone">
+            <summary>
+            When true, <see cref="P:CodeGlyphX.QrEasyOptions.TargetSizePx"/> includes the quiet zone.
+            </summary>
+        </member>
         <member name="P:CodeGlyphX.QrEasyOptions.ErrorCorrectionLevel">
             <summary>
             Optional error correction level override.
@@ -9478,6 +10236,11 @@
             Attempts to decode a QR code from a raw pixel buffer.
             </summary>
         </member>
+        <member name="M:CodeGlyphX.QrImageDecoder.TryDecode(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken,CodeGlyphX.QrDecoded@)">
+            <summary>
+            Attempts to decode a QR code from a raw pixel buffer, with cancellation.
+            </summary>
+        </member>
         <member name="M:CodeGlyphX.QrImageDecoder.TryDecodeAll(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded[]@)">
             <summary>
             Attempts to decode all QR codes from a raw pixel buffer.
@@ -9486,6 +10249,11 @@
         <member name="M:CodeGlyphX.QrImageDecoder.TryDecodeAll(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrPixelDecodeOptions,CodeGlyphX.QrDecoded[]@)">
             <summary>
             Attempts to decode all QR codes from a raw pixel buffer.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrImageDecoder.TryDecodeAll(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken,CodeGlyphX.QrDecoded[]@)">
+            <summary>
+            Attempts to decode all QR codes from a raw pixel buffer, with cancellation.
             </summary>
         </member>
         <member name="M:CodeGlyphX.QrImageDecoder.TryDecodeImage(System.Byte[],CodeGlyphX.QrDecoded@)">
@@ -9498,9 +10266,19 @@
             Attempts to decode a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA), with diagnostics and profile options.
             </summary>
         </member>
+        <member name="M:CodeGlyphX.QrImageDecoder.TryDecodeImage(System.Byte[],CodeGlyphX.QrDecoded@,CodeGlyphX.QrPixelDecodeInfo@,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken)">
+            <summary>
+            Attempts to decode a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA), with diagnostics, profile options, and cancellation.
+            </summary>
+        </member>
         <member name="M:CodeGlyphX.QrImageDecoder.TryDecodeImage(System.Byte[],CodeGlyphX.QrPixelDecodeOptions,CodeGlyphX.QrDecoded@)">
             <summary>
             Attempts to decode a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrImageDecoder.TryDecodeImage(System.Byte[],CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken,CodeGlyphX.QrDecoded@)">
+            <summary>
+            Attempts to decode a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA), with cancellation.
             </summary>
         </member>
         <member name="M:CodeGlyphX.QrImageDecoder.TryDecodeAllImage(System.Byte[],CodeGlyphX.QrDecoded[]@)">
@@ -9744,6 +10522,57 @@
         <member name="P:CodeGlyphX.QrPixelDecodeOptions.Profile">
             <summary>
             Speed/accuracy profile (default: Robust).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.QrPixelDecodeOptions.MaxDimension">
+            <summary>
+            Maximum dimension (pixels) for decoding. Larger inputs will be downscaled by sampling.
+            Set to 0 to disable.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.QrPixelDecodeOptions.MaxScale">
+            <summary>
+            Maximum scale to try when decoding (1..8). Set to 0 to use profile defaults.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.QrPixelDecodeOptions.MaxMilliseconds">
+            <summary>
+            Maximum milliseconds to spend decoding (best effort). Set to 0 to disable.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.QrPixelDecodeOptions.DisableTransforms">
+            <summary>
+            Disable rotation/mirroring attempts even in robust profiles.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.QrPixelDecodeOptions.AggressiveSampling">
+            <summary>
+            Enables extra thresholding/sampling passes for stylized or noisy QR codes (slower).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrPixelDecodeOptions.Fast">
+            <summary>
+            Fast preset (lower accuracy, fewer transforms).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrPixelDecodeOptions.Balanced">
+            <summary>
+            Balanced preset (good default for most images).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrPixelDecodeOptions.Robust">
+            <summary>
+            Robust preset (best accuracy, slower).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrPixelDecodeOptions.Stylized">
+            <summary>
+            Stylized preset (adds aggressive sampling for QR art).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrPixelDecodeOptions.Screen(System.Int32,System.Int32)">
+            <summary>
+            Screen preset (budgeted decode for UI capture scenarios).
             </summary>
         </member>
         <member name="T:CodeGlyphX.QrPresets">
@@ -10016,6 +10845,16 @@
             <param name="info">Decode diagnostics.</param>
             <returns><c>true</c> when decoding succeeded; otherwise <c>false</c>.</returns>
         </member>
+        <member name="M:CodeGlyphX.QrDecoder.TryDecode(CodeGlyphX.BitMatrix,CodeGlyphX.QrDecoded@,System.Threading.CancellationToken)">
+            <summary>
+            Attempts to decode a QR code from an exact module grid, with cancellation.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrDecoder.TryDecode(CodeGlyphX.BitMatrix,CodeGlyphX.QrDecoded@,CodeGlyphX.QrDecodeInfo@,System.Threading.CancellationToken)">
+            <summary>
+            Attempts to decode a QR code from an exact module grid, with diagnostics and cancellation.
+            </summary>
+        </member>
         <member name="M:CodeGlyphX.QrDecoder.TryDecode(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded@)">
             <summary>
             Attempts to decode a QR code from raw pixel data (best-effort, clean inputs).
@@ -10033,6 +10872,11 @@
             Attempts to decode a QR code from raw pixel data (best-effort, clean inputs) using the specified profile.
             </summary>
         </member>
+        <member name="M:CodeGlyphX.QrDecoder.TryDecode(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded@,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken)">
+            <summary>
+            Attempts to decode a QR code from raw pixel data (best-effort, clean inputs) using the specified profile, with cancellation.
+            </summary>
+        </member>
         <member name="M:CodeGlyphX.QrDecoder.TryDecode(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded@,CodeGlyphX.QrPixelDecodeInfo@)">
             <summary>
             Attempts to decode a QR code from raw pixel data (best-effort, clean inputs), with diagnostics.
@@ -10041,6 +10885,11 @@
         <member name="M:CodeGlyphX.QrDecoder.TryDecode(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded@,CodeGlyphX.QrPixelDecodeInfo@,CodeGlyphX.QrPixelDecodeOptions)">
             <summary>
             Attempts to decode a QR code from raw pixel data (best-effort, clean inputs), with diagnostics and profile options.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrDecoder.TryDecode(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded@,CodeGlyphX.QrPixelDecodeInfo@,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken)">
+            <summary>
+            Attempts to decode a QR code from raw pixel data (best-effort, clean inputs), with diagnostics, profile options, and cancellation.
             </summary>
         </member>
         <member name="M:CodeGlyphX.QrDecoder.TryDecodeAll(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded[]@)">
@@ -10053,6 +10902,11 @@
             Attempts to decode all QR codes from raw pixel data (best-effort, clean inputs) using the specified profile.
             </summary>
         </member>
+        <member name="M:CodeGlyphX.QrDecoder.TryDecodeAll(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded[]@,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken)">
+            <summary>
+            Attempts to decode all QR codes from raw pixel data (best-effort, clean inputs) using the specified profile, with cancellation.
+            </summary>
+        </member>
         <member name="M:CodeGlyphX.QrDecoder.TryDecodeAll(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded[]@,CodeGlyphX.QrPixelDecodeInfo@)">
             <summary>
             Attempts to decode all QR codes from raw pixel data (best-effort, clean inputs), with diagnostics.
@@ -10061,6 +10915,11 @@
         <member name="M:CodeGlyphX.QrDecoder.TryDecodeAll(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded[]@,CodeGlyphX.QrPixelDecodeInfo@,CodeGlyphX.QrPixelDecodeOptions)">
             <summary>
             Attempts to decode all QR codes from raw pixel data (best-effort, clean inputs), with diagnostics and profile options.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrDecoder.TryDecodeAll(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded[]@,CodeGlyphX.QrPixelDecodeInfo@,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken)">
+            <summary>
+            Attempts to decode all QR codes from raw pixel data (best-effort, clean inputs), with diagnostics, profile options, and cancellation.
             </summary>
         </member>
         <member name="M:CodeGlyphX.QrDecoder.TryDecode(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded@)">
@@ -10080,6 +10939,11 @@
             Attempts to decode a QR code from raw pixel data (best-effort, clean inputs) using the specified profile.
             </summary>
         </member>
+        <member name="M:CodeGlyphX.QrDecoder.TryDecode(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded@,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken)">
+            <summary>
+            Attempts to decode a QR code from raw pixel data (best-effort, clean inputs) using the specified profile, with cancellation.
+            </summary>
+        </member>
         <member name="M:CodeGlyphX.QrDecoder.TryDecode(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded@,CodeGlyphX.QrPixelDecodeInfo@)">
             <summary>
             Attempts to decode a QR code from raw pixel data (best-effort, clean inputs), with diagnostics.
@@ -10088,6 +10952,11 @@
         <member name="M:CodeGlyphX.QrDecoder.TryDecode(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded@,CodeGlyphX.QrPixelDecodeInfo@,CodeGlyphX.QrPixelDecodeOptions)">
             <summary>
             Attempts to decode a QR code from raw pixel data (best-effort, clean inputs), with diagnostics and profile options.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrDecoder.TryDecode(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded@,CodeGlyphX.QrPixelDecodeInfo@,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken)">
+            <summary>
+            Attempts to decode a QR code from raw pixel data (best-effort, clean inputs), with diagnostics, profile options, and cancellation.
             </summary>
         </member>
         <member name="M:CodeGlyphX.QrDecoder.TryDecodeAll(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded[]@)">
@@ -10100,6 +10969,11 @@
             Attempts to decode all QR codes from raw pixel data (best-effort, clean inputs) using the specified profile.
             </summary>
         </member>
+        <member name="M:CodeGlyphX.QrDecoder.TryDecodeAll(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded[]@,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken)">
+            <summary>
+            Attempts to decode all QR codes from raw pixel data (best-effort, clean inputs) using the specified profile, with cancellation.
+            </summary>
+        </member>
         <member name="M:CodeGlyphX.QrDecoder.TryDecodeAll(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded[]@,CodeGlyphX.QrPixelDecodeInfo@)">
             <summary>
             Attempts to decode all QR codes from raw pixel data (best-effort, clean inputs), with diagnostics.
@@ -10108,6 +10982,11 @@
         <member name="M:CodeGlyphX.QrDecoder.TryDecodeAll(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded[]@,CodeGlyphX.QrPixelDecodeInfo@,CodeGlyphX.QrPixelDecodeOptions)">
             <summary>
             Attempts to decode all QR codes from raw pixel data (best-effort, clean inputs), with diagnostics and profile options.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrDecoder.TryDecodeAll(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded[]@,CodeGlyphX.QrPixelDecodeInfo@,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken)">
+            <summary>
+            Attempts to decode all QR codes from raw pixel data (best-effort, clean inputs), with diagnostics, profile options, and cancellation.
             </summary>
         </member>
         <member name="T:CodeGlyphX.Rendering.Ascii.BarcodeAsciiRenderer">
@@ -11900,6 +12779,11 @@
         <member name="P:CodeGlyphX.Rendering.Png.Rgba32.White">
             <summary>
             Opaque white.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.Rgba32.Transparent">
+            <summary>
+            Transparent (alpha = 0).
             </summary>
         </member>
         <member name="T:CodeGlyphX.Rendering.Ppm.BarcodePpmRenderer">
