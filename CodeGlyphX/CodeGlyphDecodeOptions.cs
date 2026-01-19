@@ -64,6 +64,11 @@ public sealed class CodeGlyphDecodeOptions {
     public QrPixelDecodeOptions? Qr { get; set; }
 
     /// <summary>
+    /// Image decode options for non-QR symbols.
+    /// </summary>
+    public ImageDecodeOptions? Image { get; set; }
+
+    /// <summary>
     /// Speed/accuracy profile for QR pixel decoding (default: Robust).
     /// </summary>
     public QrDecodeProfile Profile {
@@ -113,6 +118,23 @@ public sealed class CodeGlyphDecodeOptions {
     }
 
     /// <summary>
+    /// Maximum image dimension (pixels) for non-QR decoding. Larger inputs will be downscaled.
+    /// Set to 0 to disable.
+    /// </summary>
+    public int MaxImageDimension {
+        get => Image?.MaxDimension ?? 0;
+        set => EnsureImage().MaxDimension = value;
+    }
+
+    /// <summary>
+    /// Maximum milliseconds to spend decoding non-QR symbols (best effort). Set to 0 to disable.
+    /// </summary>
+    public int MaxImageMilliseconds {
+        get => Image?.MaxMilliseconds ?? 0;
+        set => EnsureImage().MaxMilliseconds = value;
+    }
+
+    /// <summary>
     /// Cancellation token for decoding.
     /// </summary>
     public CancellationToken CancellationToken { get; set; }
@@ -122,7 +144,8 @@ public sealed class CodeGlyphDecodeOptions {
     /// </summary>
     public static CodeGlyphDecodeOptions Screen(int maxMilliseconds = 300, int maxDimension = 1200) {
         return new CodeGlyphDecodeOptions {
-            Qr = QrPixelDecodeOptions.Screen(maxMilliseconds, maxDimension)
+            Qr = QrPixelDecodeOptions.Screen(maxMilliseconds, maxDimension),
+            Image = ImageDecodeOptions.Screen(maxMilliseconds, maxDimension)
         };
     }
 
@@ -160,5 +183,9 @@ public sealed class CodeGlyphDecodeOptions {
 
     private BarcodeDecodeOptions EnsureBarcode() {
         return Barcode ??= new BarcodeDecodeOptions();
+    }
+
+    private ImageDecodeOptions EnsureImage() {
+        return Image ??= new ImageDecodeOptions();
     }
 }

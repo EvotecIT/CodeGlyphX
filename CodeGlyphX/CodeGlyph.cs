@@ -399,7 +399,22 @@ public static class CodeGlyph {
         var qr = options?.Qr;
         var token = options is null ? default : options.CancellationToken;
         var barcode = options?.Barcode;
-        return TryDecode(pixels, width, height, stride, format, out decoded, expected, prefer, qr, token, barcode);
+        var imageOptions = options?.Image;
+        if (imageOptions is null || (imageOptions.MaxDimension <= 0 && imageOptions.MaxMilliseconds <= 0) || stride != width * 4) {
+            return TryDecode(pixels, width, height, stride, format, out decoded, expected, prefer, qr, token, barcode);
+        }
+
+        var budgetToken = ImageDecodeHelper.ApplyBudget(token, imageOptions, out var budgetCts);
+        try {
+            if (budgetToken.IsCancellationRequested) { decoded = null!; return false; }
+            var buffer = pixels;
+            var w = width;
+            var h = height;
+            if (!ImageDecodeHelper.TryDownscale(ref buffer, ref w, ref h, imageOptions, budgetToken)) { decoded = null!; return false; }
+            return TryDecode(buffer, w, h, w * 4, format, out decoded, expected, prefer, qr, budgetToken, barcode);
+        } finally {
+            budgetCts?.Dispose();
+        }
     }
 
     /// <summary>
@@ -412,7 +427,22 @@ public static class CodeGlyph {
         var qr = options?.Qr;
         var token = options is null ? default : options.CancellationToken;
         var barcode = options?.Barcode;
-        return TryDecodeAll(pixels, width, height, stride, format, out decoded, expected, include, prefer, qr, token, barcode);
+        var imageOptions = options?.Image;
+        if (imageOptions is null || (imageOptions.MaxDimension <= 0 && imageOptions.MaxMilliseconds <= 0) || stride != width * 4) {
+            return TryDecodeAll(pixels, width, height, stride, format, out decoded, expected, include, prefer, qr, token, barcode);
+        }
+
+        var budgetToken = ImageDecodeHelper.ApplyBudget(token, imageOptions, out var budgetCts);
+        try {
+            if (budgetToken.IsCancellationRequested) { decoded = Array.Empty<CodeGlyphDecoded>(); return false; }
+            var buffer = pixels;
+            var w = width;
+            var h = height;
+            if (!ImageDecodeHelper.TryDownscale(ref buffer, ref w, ref h, imageOptions, budgetToken)) { decoded = Array.Empty<CodeGlyphDecoded>(); return false; }
+            return TryDecodeAll(buffer, w, h, w * 4, format, out decoded, expected, include, prefer, qr, budgetToken, barcode);
+        } finally {
+            budgetCts?.Dispose();
+        }
     }
 
 #if NET8_0_OR_GREATER
@@ -425,7 +455,17 @@ public static class CodeGlyph {
         var qr = options?.Qr;
         var token = options is null ? default : options.CancellationToken;
         var barcode = options?.Barcode;
-        return TryDecode(pixels, width, height, stride, format, out decoded, expected, prefer, qr, token, barcode);
+        var imageOptions = options?.Image;
+        if (imageOptions is null || imageOptions.MaxMilliseconds <= 0) {
+            return TryDecode(pixels, width, height, stride, format, out decoded, expected, prefer, qr, token, barcode);
+        }
+
+        var budgetToken = ImageDecodeHelper.ApplyBudget(token, imageOptions, out var budgetCts);
+        try {
+            return TryDecode(pixels, width, height, stride, format, out decoded, expected, prefer, qr, budgetToken, barcode);
+        } finally {
+            budgetCts?.Dispose();
+        }
     }
 
     /// <summary>
@@ -438,7 +478,17 @@ public static class CodeGlyph {
         var qr = options?.Qr;
         var token = options is null ? default : options.CancellationToken;
         var barcode = options?.Barcode;
-        return TryDecodeAll(pixels, width, height, stride, format, out decoded, expected, include, prefer, qr, token, barcode);
+        var imageOptions = options?.Image;
+        if (imageOptions is null || imageOptions.MaxMilliseconds <= 0) {
+            return TryDecodeAll(pixels, width, height, stride, format, out decoded, expected, include, prefer, qr, token, barcode);
+        }
+
+        var budgetToken = ImageDecodeHelper.ApplyBudget(token, imageOptions, out var budgetCts);
+        try {
+            return TryDecodeAll(pixels, width, height, stride, format, out decoded, expected, include, prefer, qr, budgetToken, barcode);
+        } finally {
+            budgetCts?.Dispose();
+        }
     }
 #endif
 
