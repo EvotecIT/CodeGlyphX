@@ -300,7 +300,7 @@ QR payload helpers generate well-known structured strings so scanners can trigge
 
 ## Image decoding (for readers)
 
-- PNG, JPEG (baseline + progressive, EXIF orientation), GIF, BMP, PPM, PBM, PGM, PAM, XBM, XPM, TGA
+- PNG, JPEG (baseline + progressive, EXIF orientation), GIF, BMP, PPM, PBM, PGM, PAM, XBM, XPM, TGA, ICO/CUR
 - Pure C# decoders (no native image libraries)
 
 ## Quick usage
@@ -433,6 +433,43 @@ using CodeGlyphX;
 if (CodeGlyph.TryDecodeAllPng(File.ReadAllBytes("unknown.png"), out var results)) {
     foreach (var item in results) Console.WriteLine($"{item.Kind}: {item.Text}");
 }
+```
+
+### Decode (3 lines each)
+
+```csharp
+using CodeGlyphX;
+
+if (Barcode.TryDecodeImage(File.ReadAllBytes("code.png"), BarcodeType.Code128, out var barcode))
+    Console.WriteLine(barcode.Text);
+```
+
+```csharp
+using CodeGlyphX;
+
+if (DataMatrixCode.TryDecodeImage(File.ReadAllBytes("dm.png"), out var text))
+    Console.WriteLine(text);
+```
+
+```csharp
+using CodeGlyphX;
+
+if (Pdf417Code.TryDecodeImage(File.ReadAllBytes("pdf417.png"), out var text))
+    Console.WriteLine(text);
+```
+
+```csharp
+using CodeGlyphX;
+
+if (AztecCode.TryDecodeImage(File.ReadAllBytes("aztec.png"), out var text))
+    Console.WriteLine(text);
+```
+
+```csharp
+using CodeGlyphX;
+
+var opts = ImageDecodeOptions.Screen(maxMilliseconds: 300, maxDimension: 1200);
+Barcode.TryDecodePng(File.ReadAllBytes("barcode.png"), BarcodeType.Code128, opts, out var barcode);
 ```
 
 ## WPF controls
