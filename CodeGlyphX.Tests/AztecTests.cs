@@ -1,3 +1,4 @@
+using System.Threading;
 using CodeGlyphX;
 using CodeGlyphX.Aztec;
 using CodeGlyphX.Rendering.Png;
@@ -27,6 +28,20 @@ public sealed class AztecTests {
         var rotated = Rotate90Rgba(pixels, width, height, out var rotW, out var rotH);
         Assert.True(AztecCode.TryDecode(rotated, rotW, rotH, rotW * 4, PixelFormat.Rgba32, out var text));
         Assert.Equal("AZTEC-ROTATE", text);
+    }
+
+    [Fact]
+    public void Aztec_Decode_Cancelled_ReturnsFalse() {
+        var matrix = AztecCode.Encode("AZTEC-CANCEL");
+        var pixels = MatrixPngRenderer.RenderPixels(matrix, new MatrixPngRenderOptions {
+            ModuleSize = 3,
+            QuietZone = 2
+        }, out var width, out var height, out _);
+
+        using var cts = new CancellationTokenSource();
+        cts.Cancel();
+
+        Assert.False(AztecCode.TryDecode(pixels, width, height, width * 4, PixelFormat.Rgba32, cts.Token, out _));
     }
 
     private static byte[] Rotate90Rgba(byte[] pixels, int width, int height, out int outWidth, out int outHeight) {

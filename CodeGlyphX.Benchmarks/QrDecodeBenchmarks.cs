@@ -17,7 +17,13 @@ public class QrDecodeBenchmarks
     private int _cleanHeight;
     private int _noisyWidth;
     private int _noisyHeight;
+    private readonly QrPixelDecodeOptions _fast = new() { Profile = QrDecodeProfile.Fast };
+    private readonly QrPixelDecodeOptions _balanced = new() { Profile = QrDecodeProfile.Balanced };
     private readonly QrPixelDecodeOptions _robust = new() {
+        Profile = QrDecodeProfile.Robust,
+        AggressiveSampling = true
+    };
+    private readonly QrPixelDecodeOptions _robustNoisy = new() {
         Profile = QrDecodeProfile.Robust,
         MaxMilliseconds = 800,
         MaxDimension = 1600,
@@ -31,16 +37,28 @@ public class QrDecodeBenchmarks
         LoadRgba("Assets/DecodingSamples/qr-noisy-ui.png", out _noisyRgba, out _noisyWidth, out _noisyHeight);
     }
 
-    [Benchmark(Description = "QR Decode (clean)")]
-    public bool DecodeClean()
+    [Benchmark(Description = "QR Decode (clean, fast)")]
+    public bool DecodeCleanFast()
     {
-        return QrDecoder.TryDecode(_cleanRgba, _cleanWidth, _cleanHeight, _cleanWidth * 4, PixelFormat.Rgba32, out _);
+        return QrDecoder.TryDecode(_cleanRgba, _cleanWidth, _cleanHeight, _cleanWidth * 4, PixelFormat.Rgba32, out _, _fast);
+    }
+
+    [Benchmark(Description = "QR Decode (clean, balanced)")]
+    public bool DecodeCleanBalanced()
+    {
+        return QrDecoder.TryDecode(_cleanRgba, _cleanWidth, _cleanHeight, _cleanWidth * 4, PixelFormat.Rgba32, out _, _balanced);
+    }
+
+    [Benchmark(Description = "QR Decode (clean, robust)")]
+    public bool DecodeCleanRobust()
+    {
+        return QrDecoder.TryDecode(_cleanRgba, _cleanWidth, _cleanHeight, _cleanWidth * 4, PixelFormat.Rgba32, out _, _robust);
     }
 
     [Benchmark(Description = "QR Decode (noisy, robust)")]
     public bool DecodeNoisyRobust()
     {
-        return QrDecoder.TryDecode(_noisyRgba, _noisyWidth, _noisyHeight, _noisyWidth * 4, PixelFormat.Rgba32, out _, _robust);
+        return QrDecoder.TryDecode(_noisyRgba, _noisyWidth, _noisyHeight, _noisyWidth * 4, PixelFormat.Rgba32, out _, _robustNoisy);
     }
 
     private static void LoadRgba(string relativePath, out byte[] rgba, out int width, out int height)

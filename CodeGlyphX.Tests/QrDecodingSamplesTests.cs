@@ -11,6 +11,8 @@ public sealed class QrDecodingSamplesTests {
     [Theory]
     [InlineData("Assets/DecodingSamples/qr-clean-large.png", 1)]
     [InlineData("Assets/DecodingSamples/qr-clean-small.png", 1)]
+    [InlineData("Assets/DecodingSamples/qr-dot-aa.png", 1)]
+    [InlineData("Assets/DecodingSamples/qr-dot-aa-soft.png", 1)]
     public void QrDecode_SampleImages(string relativePath, int minCount) {
         var bytes = ReadRepoFile(relativePath);
         Assert.True(ImageReader.TryDecodeRgba32(bytes, out var rgba, out var width, out var height));
