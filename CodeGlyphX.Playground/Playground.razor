@@ -626,6 +626,7 @@
         {
             GenerateCode();
         }
+        StateHasChanged();
     }
 
     private void OnSpecialPayloadTypeChanged()
@@ -635,6 +636,7 @@
         {
             GenerateCode();
         }
+        StateHasChanged();
     }
 
     private void OnBarcodeTypeChanged()
@@ -698,6 +700,8 @@
         {
             GenerateCode();
         }
+
+        StateHasChanged();
     }
 
     private void OnModeChanged()
@@ -771,6 +775,7 @@
         }
 
         GenerateCode();
+        StateHasChanged();
     }
 
     private bool IsValidCode39Content(string content)
@@ -1034,6 +1039,8 @@
         {
             ErrorMessage = ex.Message;
         }
+
+        StateHasChanged();
     }
 
     private async Task OnDecodeFileChanged(InputFileChangeEventArgs args)
