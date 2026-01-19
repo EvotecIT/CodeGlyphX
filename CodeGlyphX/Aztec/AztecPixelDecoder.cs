@@ -78,7 +78,7 @@ internal static class AztecPixelDecoder {
         for (var i = 0; i < thresholds.Length; i++) {
             if (cancellationToken.IsCancellationRequested) return false;
             var tImage = image.WithThreshold(thresholds[i]);
-            if (TryFindBoundingBox(tImage, invert, out var minX, out var minY, out var maxX, out var maxY)) {
+            if (TryFindBoundingBox(tImage, invert, cancellationToken, out var minX, out var minY, out var maxX, out var maxY)) {
                 var boxW = maxX - minX + 1;
                 var boxH = maxY - minY + 1;
                 var boxSize = Math.Min(boxW, boxH);
@@ -161,7 +161,7 @@ internal static class AztecPixelDecoder {
     private static bool TryDecodeFromBullseye(AztecGrayImage image, bool invert, CancellationToken cancellationToken, out string value) {
         value = string.Empty;
         if (cancellationToken.IsCancellationRequested) return false;
-        if (!TryEstimateCenter(image, invert, out var cx, out var cy)) return false;
+        if (!TryEstimateCenter(image, invert, cancellationToken, out var cx, out var cy)) return false;
         if (!TryEstimateModuleSize(image, invert, cx, cy, out var moduleSize)) return false;
 
         for (var delta = -1; delta <= 1; delta++) {
@@ -192,7 +192,7 @@ internal static class AztecPixelDecoder {
         return false;
     }
 
-    private static bool TryEstimateCenter(AztecGrayImage image, bool invert, out int centerX, out int centerY) {
+    private static bool TryEstimateCenter(AztecGrayImage image, bool invert, CancellationToken cancellationToken, out int centerX, out int centerY) {
         centerX = image.Width / 2;
         centerY = image.Height / 2;
 
@@ -200,9 +200,11 @@ internal static class AztecPixelDecoder {
 
         for (var r = 1; r <= 4; r++) {
             for (var dy = -r; dy <= r; dy++) {
+                if (cancellationToken.IsCancellationRequested) return false;
                 var y = centerY + dy;
                 if (y < 0 || y >= image.Height) continue;
                 for (var dx = -r; dx <= r; dx++) {
+                    if (cancellationToken.IsCancellationRequested) return false;
                     var x = centerX + dx;
                     if (x < 0 || x >= image.Width) continue;
                     if (image.IsBlack(x, y, invert)) {
@@ -307,14 +309,16 @@ internal static class AztecPixelDecoder {
         return black >= 5;
     }
 
-    private static bool TryFindBoundingBox(AztecGrayImage image, bool invert, out int minX, out int minY, out int maxX, out int maxY) {
+    private static bool TryFindBoundingBox(AztecGrayImage image, bool invert, CancellationToken cancellationToken, out int minX, out int minY, out int maxX, out int maxY) {
         minX = image.Width;
         minY = image.Height;
         maxX = -1;
         maxY = -1;
 
         for (var y = 0; y < image.Height; y++) {
+            if ((y & 63) == 0 && cancellationToken.IsCancellationRequested) return false;
             for (var x = 0; x < image.Width; x++) {
+                if ((x & 255) == 0 && cancellationToken.IsCancellationRequested) return false;
                 if (!image.IsBlack(x, y, invert)) continue;
                 if (x < minX) minX = x;
                 if (x > maxX) maxX = x;

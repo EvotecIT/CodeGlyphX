@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using CodeGlyphX.Rendering.Png;
+using CodeGlyphX;
 
 namespace CodeGlyphX.Rendering;
 

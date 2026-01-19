@@ -501,7 +501,17 @@ public static class CodeGlyph {
         var qr = options?.Qr;
         var token = options is null ? default : options.CancellationToken;
         var barcode = options?.Barcode;
-        return TryDecodePng(png, out decoded, expected, prefer, qr, token, barcode);
+        var imageOptions = options?.Image;
+        if (png is null) throw new ArgumentNullException(nameof(png));
+        var budgetToken = ImageDecodeHelper.ApplyBudget(token, imageOptions, out var budgetCts);
+        try {
+            if (budgetToken.IsCancellationRequested) { decoded = null!; return false; }
+            var rgba = PngReader.DecodeRgba32(png, out var width, out var height);
+            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, imageOptions, budgetToken)) { decoded = null!; return false; }
+            return TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, expected, prefer, qr, budgetToken, barcode);
+        } finally {
+            budgetCts?.Dispose();
+        }
     }
 
     /// <summary>
@@ -513,7 +523,17 @@ public static class CodeGlyph {
         var qr = options?.Qr;
         var token = options is null ? default : options.CancellationToken;
         var barcode = options?.Barcode;
-        return TryDecodeImage(image, out decoded, expected, prefer, qr, token, barcode);
+        var imageOptions = options?.Image;
+        if (image is null) throw new ArgumentNullException(nameof(image));
+        var budgetToken = ImageDecodeHelper.ApplyBudget(token, imageOptions, out var budgetCts);
+        try {
+            if (budgetToken.IsCancellationRequested) { decoded = null!; return false; }
+            if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) { decoded = null!; return false; }
+            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, imageOptions, budgetToken)) { decoded = null!; return false; }
+            return TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, expected, prefer, qr, budgetToken, barcode);
+        } finally {
+            budgetCts?.Dispose();
+        }
     }
 
     /// <summary>
@@ -526,7 +546,17 @@ public static class CodeGlyph {
         var qr = options?.Qr;
         var token = options is null ? default : options.CancellationToken;
         var barcode = options?.Barcode;
-        return TryDecodeAllPng(png, out decoded, expected, include, prefer, qr, token, barcode);
+        var imageOptions = options?.Image;
+        if (png is null) throw new ArgumentNullException(nameof(png));
+        var budgetToken = ImageDecodeHelper.ApplyBudget(token, imageOptions, out var budgetCts);
+        try {
+            if (budgetToken.IsCancellationRequested) { decoded = Array.Empty<CodeGlyphDecoded>(); return false; }
+            var rgba = PngReader.DecodeRgba32(png, out var width, out var height);
+            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, imageOptions, budgetToken)) { decoded = Array.Empty<CodeGlyphDecoded>(); return false; }
+            return TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, expected, include, prefer, qr, budgetToken, barcode);
+        } finally {
+            budgetCts?.Dispose();
+        }
     }
 
     /// <summary>
@@ -539,7 +569,17 @@ public static class CodeGlyph {
         var qr = options?.Qr;
         var token = options is null ? default : options.CancellationToken;
         var barcode = options?.Barcode;
-        return TryDecodeAllImage(image, out decoded, expected, include, prefer, qr, token, barcode);
+        var imageOptions = options?.Image;
+        if (image is null) throw new ArgumentNullException(nameof(image));
+        var budgetToken = ImageDecodeHelper.ApplyBudget(token, imageOptions, out var budgetCts);
+        try {
+            if (budgetToken.IsCancellationRequested) { decoded = Array.Empty<CodeGlyphDecoded>(); return false; }
+            if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) { decoded = Array.Empty<CodeGlyphDecoded>(); return false; }
+            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, imageOptions, budgetToken)) { decoded = Array.Empty<CodeGlyphDecoded>(); return false; }
+            return TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, expected, include, prefer, qr, budgetToken, barcode);
+        } finally {
+            budgetCts?.Dispose();
+        }
     }
 
     /// <summary>
@@ -551,7 +591,18 @@ public static class CodeGlyph {
         var qr = options?.Qr;
         var token = options is null ? default : options.CancellationToken;
         var barcode = options?.Barcode;
-        return TryDecodeImage(stream, out decoded, expected, prefer, qr, token, barcode);
+        var imageOptions = options?.Image;
+        if (stream is null) throw new ArgumentNullException(nameof(stream));
+        var budgetToken = ImageDecodeHelper.ApplyBudget(token, imageOptions, out var budgetCts);
+        try {
+            if (budgetToken.IsCancellationRequested) { decoded = null!; return false; }
+            var data = RenderIO.ReadBinary(stream);
+            if (!ImageReader.TryDecodeRgba32(data, out var rgba, out var width, out var height)) { decoded = null!; return false; }
+            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, imageOptions, budgetToken)) { decoded = null!; return false; }
+            return TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, expected, prefer, qr, budgetToken, barcode);
+        } finally {
+            budgetCts?.Dispose();
+        }
     }
 
     /// <summary>
@@ -564,56 +615,53 @@ public static class CodeGlyph {
         var qr = options?.Qr;
         var token = options is null ? default : options.CancellationToken;
         var barcode = options?.Barcode;
-        return TryDecodeAllImage(stream, out decoded, expected, include, prefer, qr, token, barcode);
+        var imageOptions = options?.Image;
+        if (stream is null) throw new ArgumentNullException(nameof(stream));
+        var budgetToken = ImageDecodeHelper.ApplyBudget(token, imageOptions, out var budgetCts);
+        try {
+            if (budgetToken.IsCancellationRequested) { decoded = Array.Empty<CodeGlyphDecoded>(); return false; }
+            var data = RenderIO.ReadBinary(stream);
+            if (!ImageReader.TryDecodeRgba32(data, out var rgba, out var width, out var height)) { decoded = Array.Empty<CodeGlyphDecoded>(); return false; }
+            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, imageOptions, budgetToken)) { decoded = Array.Empty<CodeGlyphDecoded>(); return false; }
+            return TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, expected, include, prefer, qr, budgetToken, barcode);
+        } finally {
+            budgetCts?.Dispose();
+        }
     }
 
     /// <summary>
     /// Attempts to decode a QR or barcode from a PNG file using a single options object.
     /// </summary>
     public static bool TryDecodePngFile(string path, out CodeGlyphDecoded decoded, CodeGlyphDecodeOptions? options) {
-        var expected = options?.ExpectedBarcode;
-        var prefer = options?.PreferBarcode ?? false;
-        var qr = options?.Qr;
-        var token = options is null ? default : options.CancellationToken;
-        var barcode = options?.Barcode;
-        return TryDecodePngFile(path, out decoded, expected, prefer, qr, token, barcode);
+        if (path is null) throw new ArgumentNullException(nameof(path));
+        var png = RenderIO.ReadBinary(path);
+        return TryDecodePng(png, out decoded, options);
     }
 
     /// <summary>
     /// Attempts to decode all symbols from a PNG file using a single options object.
     /// </summary>
     public static bool TryDecodeAllPngFile(string path, out CodeGlyphDecoded[] decoded, CodeGlyphDecodeOptions? options) {
-        var expected = options?.ExpectedBarcode;
-        var include = options?.IncludeBarcode ?? true;
-        var prefer = options?.PreferBarcode ?? false;
-        var qr = options?.Qr;
-        var token = options is null ? default : options.CancellationToken;
-        var barcode = options?.Barcode;
-        return TryDecodeAllPngFile(path, out decoded, expected, include, prefer, qr, token, barcode);
+        if (path is null) throw new ArgumentNullException(nameof(path));
+        var png = RenderIO.ReadBinary(path);
+        return TryDecodeAllPng(png, out decoded, options);
     }
 
     /// <summary>
     /// Attempts to decode a QR or barcode from a PNG stream using a single options object.
     /// </summary>
     public static bool TryDecodePng(Stream stream, out CodeGlyphDecoded decoded, CodeGlyphDecodeOptions? options) {
-        var expected = options?.ExpectedBarcode;
-        var prefer = options?.PreferBarcode ?? false;
-        var qr = options?.Qr;
-        var token = options is null ? default : options.CancellationToken;
-        var barcode = options?.Barcode;
-        return TryDecodePng(stream, out decoded, expected, prefer, qr, token, barcode);
+        if (stream is null) throw new ArgumentNullException(nameof(stream));
+        var png = RenderIO.ReadBinary(stream);
+        return TryDecodePng(png, out decoded, options);
     }
 
     /// <summary>
     /// Attempts to decode all symbols from a PNG stream using a single options object.
     /// </summary>
     public static bool TryDecodeAllPng(Stream stream, out CodeGlyphDecoded[] decoded, CodeGlyphDecodeOptions? options) {
-        var expected = options?.ExpectedBarcode;
-        var include = options?.IncludeBarcode ?? true;
-        var prefer = options?.PreferBarcode ?? false;
-        var qr = options?.Qr;
-        var token = options is null ? default : options.CancellationToken;
-        var barcode = options?.Barcode;
-        return TryDecodeAllPng(stream, out decoded, expected, include, prefer, qr, token, barcode);
+        if (stream is null) throw new ArgumentNullException(nameof(stream));
+        var png = RenderIO.ReadBinary(stream);
+        return TryDecodeAllPng(png, out decoded, options);
     }
 }

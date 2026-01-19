@@ -80,6 +80,7 @@ public static class Pdf417Decoder {
                 offset += 17;
 
                 for (var x = 0; x < cols; x++) {
+                    if ((x & 31) == 0 && cancellationToken.IsCancellationRequested) return FailDecode(out value);
                     if (!TryReadCodeword(modules, y, offset, 17, cluster, out var cw)) {
                         return FailDecode(out value);
                     }
@@ -116,6 +117,7 @@ public static class Pdf417Decoder {
 
             var ec = new ErrorCorrection();
             for (var level = 0; level <= 8; level++) {
+                if (cancellationToken.IsCancellationRequested) return FailDecode(out value);
                 var k = 1 << (level + 1);
                 if (total <= k) continue;
                 var expectedLength = total - k;
