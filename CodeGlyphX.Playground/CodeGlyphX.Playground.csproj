@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.11" />
     <ProjectReference Include="..\CodeGlyphX\CodeGlyphX.csproj" />
   </ItemGroup>
 
