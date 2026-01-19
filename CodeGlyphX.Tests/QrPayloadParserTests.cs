@@ -31,7 +31,7 @@ public sealed class QrPayloadParserTests {
         WriteBits('c', 8);
         WriteBits(0, 4);            // terminator
 
-        Assert.True(QrPayloadParser.TryParse(data, version: 1, out var payload, out var segments, out var structuredAppend, out var fnc1Mode));
+        Assert.True(QrPayloadParser.TryParse(data, version: 1, shouldStop: null, out var payload, out var segments, out var structuredAppend, out var fnc1Mode));
         Assert.Equal(new byte[] { (byte)'a', (byte)'b', (byte)'c' }, payload);
         Assert.Single(segments);
         Assert.Equal(QrTextEncoding.Utf8, segments[0].Encoding);
@@ -67,7 +67,7 @@ public sealed class QrPayloadParserTests {
         // terminator
         WriteBits(0, 4);
 
-        Assert.True(QrPayloadParser.TryParse(data, version: 1, out var payload, out var segments, out var structuredAppend, out var fnc1Mode));
+        Assert.True(QrPayloadParser.TryParse(data, version: 1, shouldStop: null, out var payload, out var segments, out var structuredAppend, out var fnc1Mode));
         Assert.Equal(new byte[] { (byte)'A', (byte)'1', (byte)'-' }, payload);
         Assert.Single(segments);
         Assert.Equal(QrTextEncoding.Latin1, segments[0].Encoding);
@@ -114,7 +114,7 @@ public sealed class QrPayloadParserTests {
 
         WriteBits(0, 4); // terminator
 
-        Assert.True(QrPayloadParser.TryParse(data, version: 1, out var payload, out var segments, out var structuredAppend, out var fnc1Mode));
+        Assert.True(QrPayloadParser.TryParse(data, version: 1, shouldStop: null, out var payload, out var segments, out var structuredAppend, out var fnc1Mode));
         Assert.Equal(QrFnc1Mode.FirstPosition, fnc1Mode);
         Assert.Single(segments);
         Assert.False(structuredAppend.HasValue);
@@ -143,7 +143,7 @@ public sealed class QrPayloadParserTests {
         WriteBits(0xFF, 8);
         WriteBits(0, 4);            // terminator
 
-        Assert.True(QrPayloadParser.TryParse(data, version: 1, out var payload, out var segments, out var structuredAppend, out var fnc1Mode));
+        Assert.True(QrPayloadParser.TryParse(data, version: 1, shouldStop: null, out var payload, out var segments, out var structuredAppend, out var fnc1Mode));
         Assert.Equal(new byte[] { 0x80, 0xFF }, payload);
         Assert.Single(segments);
         Assert.Equal(QrTextEncoding.Latin1, segments[0].Encoding);
@@ -181,7 +181,7 @@ public sealed class QrPayloadParserTests {
         WriteBits(0xA3, 8);
         WriteBits(0, 4);            // terminator
 
-        Assert.True(QrPayloadParser.TryParse(data, version: 1, out var payload, out var segments, out var structuredAppend, out var fnc1Mode));
+        Assert.True(QrPayloadParser.TryParse(data, version: 1, shouldStop: null, out var payload, out var segments, out var structuredAppend, out var fnc1Mode));
         Assert.Equal(new byte[] { 0xC2, 0xA2, 0xA3 }, payload);
         Assert.Equal(2, segments.Length);
         Assert.Equal(QrTextEncoding.Utf8, segments[0].Encoding);
@@ -221,7 +221,7 @@ public sealed class QrPayloadParserTests {
         WriteBits('k', 8);
         WriteBits(0, 4);      // terminator
 
-        Assert.True(QrPayloadParser.TryParse(data, version: 1, out var payload, out var segments, out var structuredAppend, out var fnc1Mode));
+        Assert.True(QrPayloadParser.TryParse(data, version: 1, shouldStop: null, out var payload, out var segments, out var structuredAppend, out var fnc1Mode));
         Assert.Equal(new byte[] { (byte)'o', (byte)'k' }, payload);
         Assert.Single(segments);
         Assert.True(structuredAppend.HasValue);
