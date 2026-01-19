@@ -25,6 +25,7 @@ using CodeGlyphX.Rendering.Xpm;
 namespace CodeGlyphX;
 
 public static partial class Pdf417Code {
+    /// <summary>
     /// Fluent PDF417 builder.
     /// </summary>
     public sealed class Pdf417Builder {

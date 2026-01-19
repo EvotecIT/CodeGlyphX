@@ -24,6 +24,7 @@ using CodeGlyphX.Rendering.Xpm;
 namespace CodeGlyphX;
 
 public static partial class DataMatrixCode {
+    /// <summary>
     /// Fluent Data Matrix builder.
     /// </summary>
     public sealed class DataMatrixBuilder {

@@ -25,6 +25,7 @@ using CodeGlyphX.Rendering.Xpm;
 namespace CodeGlyphX;
 
 public static partial class Pdf417Code {
+    /// <summary>
     /// Attempts to decode a PDF417 symbol from PNG bytes.
     /// </summary>
     public static bool TryDecodePng(byte[] png, out string text) {
@@ -434,7 +435,5 @@ public static partial class Pdf417Code {
             EmailSafeTable = opts.HtmlEmailSafeTable
         };
     }
-
-    /// <summary>
 
 }

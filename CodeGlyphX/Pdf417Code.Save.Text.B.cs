@@ -383,6 +383,4 @@ public static partial class Pdf417Code {
         }
     }
 
-    /// <summary>
-
 }

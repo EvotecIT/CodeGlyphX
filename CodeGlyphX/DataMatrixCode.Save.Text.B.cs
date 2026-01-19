@@ -382,6 +382,4 @@ public static partial class DataMatrixCode {
         }
     }
 
-    /// <summary>
-
 }

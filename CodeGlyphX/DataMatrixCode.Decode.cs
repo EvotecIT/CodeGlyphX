@@ -24,6 +24,7 @@ using CodeGlyphX.Rendering.Xpm;
 namespace CodeGlyphX;
 
 public static partial class DataMatrixCode {
+    /// <summary>
     /// Attempts to decode a Data Matrix symbol from PNG bytes.
     /// </summary>
     public static bool TryDecodePng(byte[] png, out string text) {
@@ -426,7 +427,5 @@ public static partial class DataMatrixCode {
             EmailSafeTable = opts.HtmlEmailSafeTable
         };
     }
-
-    /// <summary>
 
 }
