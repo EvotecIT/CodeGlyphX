@@ -16,14 +16,14 @@ public static class CodeGlyph {
     /// <summary>
     /// Attempts to decode a QR or barcode from raw pixels.
     /// </summary>
-    public static bool TryDecode(byte[] pixels, int width, int height, int stride, PixelFormat format, out CodeGlyphDecoded decoded, BarcodeType? expectedBarcode = null, bool preferBarcode = false, QrPixelDecodeOptions? qrOptions = null, CancellationToken cancellationToken = default) {
+    public static bool TryDecode(byte[] pixels, int width, int height, int stride, PixelFormat format, out CodeGlyphDecoded decoded, BarcodeType? expectedBarcode = null, bool preferBarcode = false, QrPixelDecodeOptions? qrOptions = null, CancellationToken cancellationToken = default, BarcodeDecodeOptions? barcodeOptions = null) {
         decoded = null!;
         if (pixels is null) throw new ArgumentNullException(nameof(pixels));
         if (cancellationToken.IsCancellationRequested) return false;
 
         if (preferBarcode) {
             if (cancellationToken.IsCancellationRequested) return false;
-            if (BarcodeDecoder.TryDecode(pixels, width, height, stride, format, expectedBarcode, options: null, cancellationToken, out var barcode)) {
+            if (BarcodeDecoder.TryDecode(pixels, width, height, stride, format, expectedBarcode, barcodeOptions, cancellationToken, out var barcode)) {
                 decoded = new CodeGlyphDecoded(barcode);
                 return true;
             }
@@ -71,7 +71,7 @@ public static class CodeGlyph {
             return true;
         }
         if (cancellationToken.IsCancellationRequested) return false;
-        if (BarcodeDecoder.TryDecode(pixels, width, height, stride, format, expectedBarcode, options: null, cancellationToken, out var barcodeDecoded)) {
+        if (BarcodeDecoder.TryDecode(pixels, width, height, stride, format, expectedBarcode, barcodeOptions, cancellationToken, out var barcodeDecoded)) {
             decoded = new CodeGlyphDecoded(barcodeDecoded);
             return true;
         }
@@ -81,7 +81,7 @@ public static class CodeGlyph {
     /// <summary>
     /// Attempts to decode all QR codes and (optionally) a 1D barcode from raw pixels.
     /// </summary>
-    public static bool TryDecodeAll(byte[] pixels, int width, int height, int stride, PixelFormat format, out CodeGlyphDecoded[] decoded, BarcodeType? expectedBarcode = null, bool includeBarcode = true, bool preferBarcode = false, QrPixelDecodeOptions? qrOptions = null, CancellationToken cancellationToken = default) {
+    public static bool TryDecodeAll(byte[] pixels, int width, int height, int stride, PixelFormat format, out CodeGlyphDecoded[] decoded, BarcodeType? expectedBarcode = null, bool includeBarcode = true, bool preferBarcode = false, QrPixelDecodeOptions? qrOptions = null, CancellationToken cancellationToken = default, BarcodeDecodeOptions? barcodeOptions = null) {
         decoded = Array.Empty<CodeGlyphDecoded>();
         if (pixels is null) throw new ArgumentNullException(nameof(pixels));
         if (cancellationToken.IsCancellationRequested) return false;
@@ -90,7 +90,7 @@ public static class CodeGlyph {
 
         if (includeBarcode && preferBarcode) {
             if (cancellationToken.IsCancellationRequested) return false;
-            if (BarcodeDecoder.TryDecode(pixels, width, height, stride, format, expectedBarcode, options: null, cancellationToken, out var barcode)) {
+            if (BarcodeDecoder.TryDecode(pixels, width, height, stride, format, expectedBarcode, barcodeOptions, cancellationToken, out var barcode)) {
                 list.Add(new CodeGlyphDecoded(barcode));
             }
         }
@@ -119,7 +119,7 @@ public static class CodeGlyph {
 
         if (includeBarcode && !preferBarcode) {
             if (cancellationToken.IsCancellationRequested) return false;
-            if (BarcodeDecoder.TryDecode(pixels, width, height, stride, format, expectedBarcode, options: null, cancellationToken, out var barcode)) {
+            if (BarcodeDecoder.TryDecode(pixels, width, height, stride, format, expectedBarcode, barcodeOptions, cancellationToken, out var barcode)) {
                 list.Add(new CodeGlyphDecoded(barcode));
             }
         }
@@ -133,12 +133,12 @@ public static class CodeGlyph {
     /// <summary>
     /// Attempts to decode a QR or barcode from raw pixels.
     /// </summary>
-    public static bool TryDecode(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat format, out CodeGlyphDecoded decoded, BarcodeType? expectedBarcode = null, bool preferBarcode = false, QrPixelDecodeOptions? qrOptions = null, CancellationToken cancellationToken = default) {
+    public static bool TryDecode(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat format, out CodeGlyphDecoded decoded, BarcodeType? expectedBarcode = null, bool preferBarcode = false, QrPixelDecodeOptions? qrOptions = null, CancellationToken cancellationToken = default, BarcodeDecodeOptions? barcodeOptions = null) {
         decoded = null!;
         if (cancellationToken.IsCancellationRequested) return false;
         if (preferBarcode) {
             if (cancellationToken.IsCancellationRequested) return false;
-            if (BarcodeDecoder.TryDecode(pixels, width, height, stride, format, expectedBarcode, options: null, cancellationToken, out var barcode)) {
+            if (BarcodeDecoder.TryDecode(pixels, width, height, stride, format, expectedBarcode, barcodeOptions, cancellationToken, out var barcode)) {
                 decoded = new CodeGlyphDecoded(barcode);
                 return true;
             }
@@ -186,7 +186,7 @@ public static class CodeGlyph {
             return true;
         }
         if (cancellationToken.IsCancellationRequested) return false;
-        if (BarcodeDecoder.TryDecode(pixels, width, height, stride, format, expectedBarcode, options: null, cancellationToken, out var barcodeDecoded)) {
+        if (BarcodeDecoder.TryDecode(pixels, width, height, stride, format, expectedBarcode, barcodeOptions, cancellationToken, out var barcodeDecoded)) {
             decoded = new CodeGlyphDecoded(barcodeDecoded);
             return true;
         }
@@ -196,7 +196,7 @@ public static class CodeGlyph {
     /// <summary>
     /// Attempts to decode all QR codes and (optionally) a 1D barcode from raw pixels.
     /// </summary>
-    public static bool TryDecodeAll(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat format, out CodeGlyphDecoded[] decoded, BarcodeType? expectedBarcode = null, bool includeBarcode = true, bool preferBarcode = false, QrPixelDecodeOptions? qrOptions = null, CancellationToken cancellationToken = default) {
+    public static bool TryDecodeAll(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat format, out CodeGlyphDecoded[] decoded, BarcodeType? expectedBarcode = null, bool includeBarcode = true, bool preferBarcode = false, QrPixelDecodeOptions? qrOptions = null, CancellationToken cancellationToken = default, BarcodeDecodeOptions? barcodeOptions = null) {
         decoded = Array.Empty<CodeGlyphDecoded>();
         if (cancellationToken.IsCancellationRequested) return false;
 
@@ -204,7 +204,7 @@ public static class CodeGlyph {
 
         if (includeBarcode && preferBarcode) {
             if (cancellationToken.IsCancellationRequested) return false;
-            if (BarcodeDecoder.TryDecode(pixels, width, height, stride, format, expectedBarcode, options: null, cancellationToken, out var barcode)) {
+            if (BarcodeDecoder.TryDecode(pixels, width, height, stride, format, expectedBarcode, barcodeOptions, cancellationToken, out var barcode)) {
                 list.Add(new CodeGlyphDecoded(barcode));
             }
         }
@@ -233,7 +233,7 @@ public static class CodeGlyph {
 
         if (includeBarcode && !preferBarcode) {
             if (cancellationToken.IsCancellationRequested) return false;
-            if (BarcodeDecoder.TryDecode(pixels, width, height, stride, format, expectedBarcode, options: null, cancellationToken, out var barcode)) {
+            if (BarcodeDecoder.TryDecode(pixels, width, height, stride, format, expectedBarcode, barcodeOptions, cancellationToken, out var barcode)) {
                 list.Add(new CodeGlyphDecoded(barcode));
             }
         }
@@ -247,117 +247,117 @@ public static class CodeGlyph {
     /// <summary>
     /// Attempts to decode a QR or 1D barcode from PNG bytes.
     /// </summary>
-    public static bool TryDecodePng(byte[] png, out CodeGlyphDecoded decoded, BarcodeType? expectedBarcode = null, bool preferBarcode = false, QrPixelDecodeOptions? qrOptions = null, CancellationToken cancellationToken = default) {
+    public static bool TryDecodePng(byte[] png, out CodeGlyphDecoded decoded, BarcodeType? expectedBarcode = null, bool preferBarcode = false, QrPixelDecodeOptions? qrOptions = null, CancellationToken cancellationToken = default, BarcodeDecodeOptions? barcodeOptions = null) {
         decoded = null!;
         if (png is null) throw new ArgumentNullException(nameof(png));
         if (cancellationToken.IsCancellationRequested) return false;
         var rgba = PngReader.DecodeRgba32(png, out var width, out var height);
         if (cancellationToken.IsCancellationRequested) return false;
-        return TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, expectedBarcode, preferBarcode, qrOptions, cancellationToken);
+        return TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, expectedBarcode, preferBarcode, qrOptions, cancellationToken, barcodeOptions);
     }
 
     /// <summary>
     /// Attempts to decode a QR or barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).
     /// </summary>
-    public static bool TryDecodeImage(byte[] image, out CodeGlyphDecoded decoded, BarcodeType? expectedBarcode = null, bool preferBarcode = false, QrPixelDecodeOptions? qrOptions = null, CancellationToken cancellationToken = default) {
+    public static bool TryDecodeImage(byte[] image, out CodeGlyphDecoded decoded, BarcodeType? expectedBarcode = null, bool preferBarcode = false, QrPixelDecodeOptions? qrOptions = null, CancellationToken cancellationToken = default, BarcodeDecodeOptions? barcodeOptions = null) {
         decoded = null!;
         if (image is null) throw new ArgumentNullException(nameof(image));
         if (cancellationToken.IsCancellationRequested) return false;
         if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) return false;
         if (cancellationToken.IsCancellationRequested) return false;
-        return TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, expectedBarcode, preferBarcode, qrOptions, cancellationToken);
+        return TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, expectedBarcode, preferBarcode, qrOptions, cancellationToken, barcodeOptions);
     }
 
     /// <summary>
     /// Attempts to decode all QR codes and (optionally) a 1D barcode from PNG bytes.
     /// </summary>
-    public static bool TryDecodeAllPng(byte[] png, out CodeGlyphDecoded[] decoded, BarcodeType? expectedBarcode = null, bool includeBarcode = true, bool preferBarcode = false, QrPixelDecodeOptions? qrOptions = null, CancellationToken cancellationToken = default) {
+    public static bool TryDecodeAllPng(byte[] png, out CodeGlyphDecoded[] decoded, BarcodeType? expectedBarcode = null, bool includeBarcode = true, bool preferBarcode = false, QrPixelDecodeOptions? qrOptions = null, CancellationToken cancellationToken = default, BarcodeDecodeOptions? barcodeOptions = null) {
         decoded = Array.Empty<CodeGlyphDecoded>();
         if (png is null) throw new ArgumentNullException(nameof(png));
         if (cancellationToken.IsCancellationRequested) return false;
         var rgba = PngReader.DecodeRgba32(png, out var width, out var height);
         if (cancellationToken.IsCancellationRequested) return false;
-        return TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, expectedBarcode, includeBarcode, preferBarcode, qrOptions, cancellationToken);
+        return TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, expectedBarcode, includeBarcode, preferBarcode, qrOptions, cancellationToken, barcodeOptions);
     }
 
     /// <summary>
     /// Attempts to decode all QR codes and (optionally) a 1D barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).
     /// </summary>
-    public static bool TryDecodeAllImage(byte[] image, out CodeGlyphDecoded[] decoded, BarcodeType? expectedBarcode = null, bool includeBarcode = true, bool preferBarcode = false, QrPixelDecodeOptions? qrOptions = null, CancellationToken cancellationToken = default) {
+    public static bool TryDecodeAllImage(byte[] image, out CodeGlyphDecoded[] decoded, BarcodeType? expectedBarcode = null, bool includeBarcode = true, bool preferBarcode = false, QrPixelDecodeOptions? qrOptions = null, CancellationToken cancellationToken = default, BarcodeDecodeOptions? barcodeOptions = null) {
         decoded = Array.Empty<CodeGlyphDecoded>();
         if (image is null) throw new ArgumentNullException(nameof(image));
         if (cancellationToken.IsCancellationRequested) return false;
         if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) return false;
         if (cancellationToken.IsCancellationRequested) return false;
-        return TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, expectedBarcode, includeBarcode, preferBarcode, qrOptions, cancellationToken);
+        return TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, expectedBarcode, includeBarcode, preferBarcode, qrOptions, cancellationToken, barcodeOptions);
     }
 
     /// <summary>
     /// Attempts to decode a QR or barcode from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).
     /// </summary>
-    public static bool TryDecodeImage(Stream stream, out CodeGlyphDecoded decoded, BarcodeType? expectedBarcode = null, bool preferBarcode = false, QrPixelDecodeOptions? qrOptions = null, CancellationToken cancellationToken = default) {
+    public static bool TryDecodeImage(Stream stream, out CodeGlyphDecoded decoded, BarcodeType? expectedBarcode = null, bool preferBarcode = false, QrPixelDecodeOptions? qrOptions = null, CancellationToken cancellationToken = default, BarcodeDecodeOptions? barcodeOptions = null) {
         decoded = null!;
         if (stream is null) throw new ArgumentNullException(nameof(stream));
         if (cancellationToken.IsCancellationRequested) return false;
         var rgba = ImageReader.DecodeRgba32(stream, out var width, out var height);
         if (cancellationToken.IsCancellationRequested) return false;
-        return TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, expectedBarcode, preferBarcode, qrOptions, cancellationToken);
+        return TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, expectedBarcode, preferBarcode, qrOptions, cancellationToken, barcodeOptions);
     }
 
     /// <summary>
     /// Attempts to decode all QR codes and (optionally) a 1D barcode from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).
     /// </summary>
-    public static bool TryDecodeAllImage(Stream stream, out CodeGlyphDecoded[] decoded, BarcodeType? expectedBarcode = null, bool includeBarcode = true, bool preferBarcode = false, QrPixelDecodeOptions? qrOptions = null, CancellationToken cancellationToken = default) {
+    public static bool TryDecodeAllImage(Stream stream, out CodeGlyphDecoded[] decoded, BarcodeType? expectedBarcode = null, bool includeBarcode = true, bool preferBarcode = false, QrPixelDecodeOptions? qrOptions = null, CancellationToken cancellationToken = default, BarcodeDecodeOptions? barcodeOptions = null) {
         decoded = Array.Empty<CodeGlyphDecoded>();
         if (stream is null) throw new ArgumentNullException(nameof(stream));
         if (cancellationToken.IsCancellationRequested) return false;
         var rgba = ImageReader.DecodeRgba32(stream, out var width, out var height);
         if (cancellationToken.IsCancellationRequested) return false;
-        return TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, expectedBarcode, includeBarcode, preferBarcode, qrOptions, cancellationToken);
+        return TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, expectedBarcode, includeBarcode, preferBarcode, qrOptions, cancellationToken, barcodeOptions);
     }
 
     /// <summary>
     /// Attempts to decode a QR or 1D barcode from a PNG file.
     /// </summary>
-    public static bool TryDecodePngFile(string path, out CodeGlyphDecoded decoded, BarcodeType? expectedBarcode = null, bool preferBarcode = false, QrPixelDecodeOptions? qrOptions = null, CancellationToken cancellationToken = default) {
+    public static bool TryDecodePngFile(string path, out CodeGlyphDecoded decoded, BarcodeType? expectedBarcode = null, bool preferBarcode = false, QrPixelDecodeOptions? qrOptions = null, CancellationToken cancellationToken = default, BarcodeDecodeOptions? barcodeOptions = null) {
         decoded = null!;
         if (path is null) throw new ArgumentNullException(nameof(path));
         if (cancellationToken.IsCancellationRequested) return false;
         var png = RenderIO.ReadBinary(path);
-        return TryDecodePng(png, out decoded, expectedBarcode, preferBarcode, qrOptions, cancellationToken);
+        return TryDecodePng(png, out decoded, expectedBarcode, preferBarcode, qrOptions, cancellationToken, barcodeOptions);
     }
 
     /// <summary>
     /// Attempts to decode all QR codes and (optionally) a 1D barcode from a PNG file.
     /// </summary>
-    public static bool TryDecodeAllPngFile(string path, out CodeGlyphDecoded[] decoded, BarcodeType? expectedBarcode = null, bool includeBarcode = true, bool preferBarcode = false, QrPixelDecodeOptions? qrOptions = null, CancellationToken cancellationToken = default) {
+    public static bool TryDecodeAllPngFile(string path, out CodeGlyphDecoded[] decoded, BarcodeType? expectedBarcode = null, bool includeBarcode = true, bool preferBarcode = false, QrPixelDecodeOptions? qrOptions = null, CancellationToken cancellationToken = default, BarcodeDecodeOptions? barcodeOptions = null) {
         decoded = Array.Empty<CodeGlyphDecoded>();
         if (path is null) throw new ArgumentNullException(nameof(path));
         if (cancellationToken.IsCancellationRequested) return false;
         var png = RenderIO.ReadBinary(path);
-        return TryDecodeAllPng(png, out decoded, expectedBarcode, includeBarcode, preferBarcode, qrOptions, cancellationToken);
+        return TryDecodeAllPng(png, out decoded, expectedBarcode, includeBarcode, preferBarcode, qrOptions, cancellationToken, barcodeOptions);
     }
 
     /// <summary>
     /// Attempts to decode a QR or 1D barcode from a PNG stream.
     /// </summary>
-    public static bool TryDecodePng(Stream stream, out CodeGlyphDecoded decoded, BarcodeType? expectedBarcode = null, bool preferBarcode = false, QrPixelDecodeOptions? qrOptions = null, CancellationToken cancellationToken = default) {
+    public static bool TryDecodePng(Stream stream, out CodeGlyphDecoded decoded, BarcodeType? expectedBarcode = null, bool preferBarcode = false, QrPixelDecodeOptions? qrOptions = null, CancellationToken cancellationToken = default, BarcodeDecodeOptions? barcodeOptions = null) {
         decoded = null!;
         if (stream is null) throw new ArgumentNullException(nameof(stream));
         if (cancellationToken.IsCancellationRequested) return false;
         var png = RenderIO.ReadBinary(stream);
-        return TryDecodePng(png, out decoded, expectedBarcode, preferBarcode, qrOptions, cancellationToken);
+        return TryDecodePng(png, out decoded, expectedBarcode, preferBarcode, qrOptions, cancellationToken, barcodeOptions);
     }
 
     /// <summary>
     /// Attempts to decode all QR codes and (optionally) a 1D barcode from a PNG stream.
     /// </summary>
-    public static bool TryDecodeAllPng(Stream stream, out CodeGlyphDecoded[] decoded, BarcodeType? expectedBarcode = null, bool includeBarcode = true, bool preferBarcode = false, QrPixelDecodeOptions? qrOptions = null, CancellationToken cancellationToken = default) {
+    public static bool TryDecodeAllPng(Stream stream, out CodeGlyphDecoded[] decoded, BarcodeType? expectedBarcode = null, bool includeBarcode = true, bool preferBarcode = false, QrPixelDecodeOptions? qrOptions = null, CancellationToken cancellationToken = default, BarcodeDecodeOptions? barcodeOptions = null) {
         decoded = Array.Empty<CodeGlyphDecoded>();
         if (stream is null) throw new ArgumentNullException(nameof(stream));
         if (cancellationToken.IsCancellationRequested) return false;
         var png = RenderIO.ReadBinary(stream);
-        return TryDecodeAllPng(png, out decoded, expectedBarcode, includeBarcode, preferBarcode, qrOptions, cancellationToken);
+        return TryDecodeAllPng(png, out decoded, expectedBarcode, includeBarcode, preferBarcode, qrOptions, cancellationToken, barcodeOptions);
     }
 
     /// <summary>
@@ -398,7 +398,8 @@ public static class CodeGlyph {
         var prefer = options?.PreferBarcode ?? false;
         var qr = options?.Qr;
         var token = options is null ? default : options.CancellationToken;
-        return TryDecode(pixels, width, height, stride, format, out decoded, expected, prefer, qr, token);
+        var barcode = options?.Barcode;
+        return TryDecode(pixels, width, height, stride, format, out decoded, expected, prefer, qr, token, barcode);
     }
 
     /// <summary>
@@ -410,7 +411,8 @@ public static class CodeGlyph {
         var prefer = options?.PreferBarcode ?? false;
         var qr = options?.Qr;
         var token = options is null ? default : options.CancellationToken;
-        return TryDecodeAll(pixels, width, height, stride, format, out decoded, expected, include, prefer, qr, token);
+        var barcode = options?.Barcode;
+        return TryDecodeAll(pixels, width, height, stride, format, out decoded, expected, include, prefer, qr, token, barcode);
     }
 
 #if NET8_0_OR_GREATER
@@ -422,7 +424,8 @@ public static class CodeGlyph {
         var prefer = options?.PreferBarcode ?? false;
         var qr = options?.Qr;
         var token = options is null ? default : options.CancellationToken;
-        return TryDecode(pixels, width, height, stride, format, out decoded, expected, prefer, qr, token);
+        var barcode = options?.Barcode;
+        return TryDecode(pixels, width, height, stride, format, out decoded, expected, prefer, qr, token, barcode);
     }
 
     /// <summary>
@@ -434,7 +437,8 @@ public static class CodeGlyph {
         var prefer = options?.PreferBarcode ?? false;
         var qr = options?.Qr;
         var token = options is null ? default : options.CancellationToken;
-        return TryDecodeAll(pixels, width, height, stride, format, out decoded, expected, include, prefer, qr, token);
+        var barcode = options?.Barcode;
+        return TryDecodeAll(pixels, width, height, stride, format, out decoded, expected, include, prefer, qr, token, barcode);
     }
 #endif
 
@@ -446,7 +450,8 @@ public static class CodeGlyph {
         var prefer = options?.PreferBarcode ?? false;
         var qr = options?.Qr;
         var token = options is null ? default : options.CancellationToken;
-        return TryDecodePng(png, out decoded, expected, prefer, qr, token);
+        var barcode = options?.Barcode;
+        return TryDecodePng(png, out decoded, expected, prefer, qr, token, barcode);
     }
 
     /// <summary>
@@ -457,7 +462,8 @@ public static class CodeGlyph {
         var prefer = options?.PreferBarcode ?? false;
         var qr = options?.Qr;
         var token = options is null ? default : options.CancellationToken;
-        return TryDecodeImage(image, out decoded, expected, prefer, qr, token);
+        var barcode = options?.Barcode;
+        return TryDecodeImage(image, out decoded, expected, prefer, qr, token, barcode);
     }
 
     /// <summary>
@@ -469,7 +475,8 @@ public static class CodeGlyph {
         var prefer = options?.PreferBarcode ?? false;
         var qr = options?.Qr;
         var token = options is null ? default : options.CancellationToken;
-        return TryDecodeAllPng(png, out decoded, expected, include, prefer, qr, token);
+        var barcode = options?.Barcode;
+        return TryDecodeAllPng(png, out decoded, expected, include, prefer, qr, token, barcode);
     }
 
     /// <summary>
@@ -481,7 +488,8 @@ public static class CodeGlyph {
         var prefer = options?.PreferBarcode ?? false;
         var qr = options?.Qr;
         var token = options is null ? default : options.CancellationToken;
-        return TryDecodeAllImage(image, out decoded, expected, include, prefer, qr, token);
+        var barcode = options?.Barcode;
+        return TryDecodeAllImage(image, out decoded, expected, include, prefer, qr, token, barcode);
     }
 
     /// <summary>
@@ -492,7 +500,8 @@ public static class CodeGlyph {
         var prefer = options?.PreferBarcode ?? false;
         var qr = options?.Qr;
         var token = options is null ? default : options.CancellationToken;
-        return TryDecodeImage(stream, out decoded, expected, prefer, qr, token);
+        var barcode = options?.Barcode;
+        return TryDecodeImage(stream, out decoded, expected, prefer, qr, token, barcode);
     }
 
     /// <summary>
@@ -504,7 +513,8 @@ public static class CodeGlyph {
         var prefer = options?.PreferBarcode ?? false;
         var qr = options?.Qr;
         var token = options is null ? default : options.CancellationToken;
-        return TryDecodeAllImage(stream, out decoded, expected, include, prefer, qr, token);
+        var barcode = options?.Barcode;
+        return TryDecodeAllImage(stream, out decoded, expected, include, prefer, qr, token, barcode);
     }
 
     /// <summary>
@@ -515,7 +525,8 @@ public static class CodeGlyph {
         var prefer = options?.PreferBarcode ?? false;
         var qr = options?.Qr;
         var token = options is null ? default : options.CancellationToken;
-        return TryDecodePngFile(path, out decoded, expected, prefer, qr, token);
+        var barcode = options?.Barcode;
+        return TryDecodePngFile(path, out decoded, expected, prefer, qr, token, barcode);
     }
 
     /// <summary>
@@ -527,7 +538,8 @@ public static class CodeGlyph {
         var prefer = options?.PreferBarcode ?? false;
         var qr = options?.Qr;
         var token = options is null ? default : options.CancellationToken;
-        return TryDecodeAllPngFile(path, out decoded, expected, include, prefer, qr, token);
+        var barcode = options?.Barcode;
+        return TryDecodeAllPngFile(path, out decoded, expected, include, prefer, qr, token, barcode);
     }
 
     /// <summary>
@@ -538,7 +550,8 @@ public static class CodeGlyph {
         var prefer = options?.PreferBarcode ?? false;
         var qr = options?.Qr;
         var token = options is null ? default : options.CancellationToken;
-        return TryDecodePng(stream, out decoded, expected, prefer, qr, token);
+        var barcode = options?.Barcode;
+        return TryDecodePng(stream, out decoded, expected, prefer, qr, token, barcode);
     }
 
     /// <summary>
@@ -550,6 +563,7 @@ public static class CodeGlyph {
         var prefer = options?.PreferBarcode ?? false;
         var qr = options?.Qr;
         var token = options is null ? default : options.CancellationToken;
-        return TryDecodeAllPng(stream, out decoded, expected, include, prefer, qr, token);
+        var barcode = options?.Barcode;
+        return TryDecodeAllPng(stream, out decoded, expected, include, prefer, qr, token, barcode);
     }
 }

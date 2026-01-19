@@ -1568,6 +1568,41 @@ public static class Pdf417Code {
     }
 
     /// <summary>
+    /// Attempts to decode a PDF417 symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).
+    /// </summary>
+    public static bool TryDecodeImage(byte[] image, out string text) {
+        return TryDecodeImage(image, CancellationToken.None, out text);
+    }
+
+    /// <summary>
+    /// Attempts to decode a PDF417 symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA), with cancellation.
+    /// </summary>
+    public static bool TryDecodeImage(byte[] image, CancellationToken cancellationToken, out string text) {
+        if (image is null) throw new ArgumentNullException(nameof(image));
+        if (cancellationToken.IsCancellationRequested) { text = string.Empty; return false; }
+        if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) { text = string.Empty; return false; }
+        return Pdf417Decoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, cancellationToken, out text);
+    }
+
+    /// <summary>
+    /// Attempts to decode a PDF417 symbol from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).
+    /// </summary>
+    public static bool TryDecodeImage(Stream stream, out string text) {
+        return TryDecodeImage(stream, CancellationToken.None, out text);
+    }
+
+    /// <summary>
+    /// Attempts to decode a PDF417 symbol from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA), with cancellation.
+    /// </summary>
+    public static bool TryDecodeImage(Stream stream, CancellationToken cancellationToken, out string text) {
+        if (stream is null) throw new ArgumentNullException(nameof(stream));
+        if (cancellationToken.IsCancellationRequested) { text = string.Empty; return false; }
+        var data = RenderIO.ReadBinary(stream);
+        if (!ImageReader.TryDecodeRgba32(data, out var rgba, out var width, out var height)) { text = string.Empty; return false; }
+        return Pdf417Decoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, cancellationToken, out text);
+    }
+
+    /// <summary>
     /// Attempts to decode a PDF417 symbol from a PNG stream, with cancellation.
     /// </summary>
     public static bool TryDecodePng(Stream stream, CancellationToken cancellationToken, out string text) {

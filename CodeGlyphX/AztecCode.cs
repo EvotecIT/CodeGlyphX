@@ -103,9 +103,17 @@ public static class AztecCode {
     /// Attempts to decode an Aztec symbol from PNG bytes.
     /// </summary>
     public static bool TryDecodePng(byte[] png, out string text) {
+        return TryDecodePng(png, CancellationToken.None, out text);
+    }
+
+    /// <summary>
+    /// Attempts to decode an Aztec symbol from PNG bytes, with cancellation.
+    /// </summary>
+    public static bool TryDecodePng(byte[] png, CancellationToken cancellationToken, out string text) {
         if (png is null) throw new ArgumentNullException(nameof(png));
+        if (cancellationToken.IsCancellationRequested) { text = string.Empty; return false; }
         var rgba = PngReader.DecodeRgba32(png, out var width, out var height);
-        return AztecDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out text);
+        return AztecDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, cancellationToken, out text);
     }
 
     /// <summary>
@@ -118,12 +126,65 @@ public static class AztecCode {
     }
 
     /// <summary>
+    /// Attempts to decode an Aztec symbol from a PNG file, with cancellation.
+    /// </summary>
+    public static bool TryDecodePngFile(string path, CancellationToken cancellationToken, out string text) {
+        if (path is null) throw new ArgumentNullException(nameof(path));
+        var png = RenderIO.ReadBinary(path);
+        return TryDecodePng(png, cancellationToken, out text);
+    }
+
+    /// <summary>
     /// Attempts to decode an Aztec symbol from a PNG stream.
     /// </summary>
     public static bool TryDecodePng(Stream stream, out string text) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
         var png = RenderIO.ReadBinary(stream);
         return TryDecodePng(png, out text);
+    }
+
+    /// <summary>
+    /// Attempts to decode an Aztec symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).
+    /// </summary>
+    public static bool TryDecodeImage(byte[] image, out string text) {
+        return TryDecodeImage(image, CancellationToken.None, out text);
+    }
+
+    /// <summary>
+    /// Attempts to decode an Aztec symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA), with cancellation.
+    /// </summary>
+    public static bool TryDecodeImage(byte[] image, CancellationToken cancellationToken, out string text) {
+        if (image is null) throw new ArgumentNullException(nameof(image));
+        if (cancellationToken.IsCancellationRequested) { text = string.Empty; return false; }
+        if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) { text = string.Empty; return false; }
+        return AztecDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, cancellationToken, out text);
+    }
+
+    /// <summary>
+    /// Attempts to decode an Aztec symbol from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).
+    /// </summary>
+    public static bool TryDecodeImage(Stream stream, out string text) {
+        return TryDecodeImage(stream, CancellationToken.None, out text);
+    }
+
+    /// <summary>
+    /// Attempts to decode an Aztec symbol from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA), with cancellation.
+    /// </summary>
+    public static bool TryDecodeImage(Stream stream, CancellationToken cancellationToken, out string text) {
+        if (stream is null) throw new ArgumentNullException(nameof(stream));
+        if (cancellationToken.IsCancellationRequested) { text = string.Empty; return false; }
+        var data = RenderIO.ReadBinary(stream);
+        if (!ImageReader.TryDecodeRgba32(data, out var rgba, out var width, out var height)) { text = string.Empty; return false; }
+        return AztecDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, cancellationToken, out text);
+    }
+
+    /// <summary>
+    /// Attempts to decode an Aztec symbol from a PNG stream, with cancellation.
+    /// </summary>
+    public static bool TryDecodePng(Stream stream, CancellationToken cancellationToken, out string text) {
+        if (stream is null) throw new ArgumentNullException(nameof(stream));
+        var png = RenderIO.ReadBinary(stream);
+        return TryDecodePng(png, cancellationToken, out text);
     }
 
     /// <summary>

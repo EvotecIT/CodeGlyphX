@@ -56,7 +56,7 @@ public static class BarcodeDecoder {
     public static bool TryDecode(byte[] pixels, int width, int height, int stride, PixelFormat format, BarcodeType? expectedType, BarcodeDecodeOptions? options, CancellationToken cancellationToken, out BarcodeDecoded decoded) {
         decoded = null!;
         if (cancellationToken.IsCancellationRequested) return false;
-        if (!BarcodeScanline.TryGetModuleCandidates(pixels, width, height, stride, format, out var candidates)) return false;
+        if (!BarcodeScanline.TryGetModuleCandidates(pixels, width, height, stride, format, cancellationToken, out var candidates)) return false;
         for (var i = 0; i < candidates.Length; i++) {
             if (cancellationToken.IsCancellationRequested) return false;
             if (TryDecodeWithTransforms(candidates[i], expectedType, options, cancellationToken, out decoded)) return true;
@@ -99,7 +99,7 @@ public static class BarcodeDecoder {
     public static bool TryDecode(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat format, BarcodeType? expectedType, BarcodeDecodeOptions? options, CancellationToken cancellationToken, out BarcodeDecoded decoded) {
         decoded = null!;
         if (cancellationToken.IsCancellationRequested) return false;
-        if (!BarcodeScanline.TryGetModuleCandidates(pixels, width, height, stride, format, out var candidates)) return false;
+        if (!BarcodeScanline.TryGetModuleCandidates(pixels, width, height, stride, format, cancellationToken, out var candidates)) return false;
         for (var i = 0; i < candidates.Length; i++) {
             if (cancellationToken.IsCancellationRequested) return false;
             if (TryDecodeWithTransforms(candidates[i], expectedType, options, cancellationToken, out decoded)) return true;

@@ -12,6 +12,43 @@ public sealed class CodeGlyphDecodeOptions {
     public BarcodeType? ExpectedBarcode { get; set; }
 
     /// <summary>
+    /// Options for 1D barcode decoding.
+    /// </summary>
+    public BarcodeDecodeOptions? Barcode { get; set; }
+
+    /// <summary>
+    /// Controls how Code39 checksum characters are handled during decode.
+    /// </summary>
+    public Code39ChecksumPolicy Code39Checksum {
+        get => Barcode?.Code39Checksum ?? Code39ChecksumPolicy.None;
+        set => EnsureBarcode().Code39Checksum = value;
+    }
+
+    /// <summary>
+    /// Controls how MSI checksum digits are handled during decode.
+    /// </summary>
+    public MsiChecksumPolicy MsiChecksum {
+        get => Barcode?.MsiChecksum ?? MsiChecksumPolicy.None;
+        set => EnsureBarcode().MsiChecksum = value;
+    }
+
+    /// <summary>
+    /// Controls how Code 11 checksum characters are handled during decode.
+    /// </summary>
+    public Code11ChecksumPolicy Code11Checksum {
+        get => Barcode?.Code11Checksum ?? Code11ChecksumPolicy.None;
+        set => EnsureBarcode().Code11Checksum = value;
+    }
+
+    /// <summary>
+    /// Controls whether Plessey CRC validation is required during decode.
+    /// </summary>
+    public PlesseyChecksumPolicy PlesseyChecksum {
+        get => Barcode?.PlesseyChecksum ?? PlesseyChecksumPolicy.RequireValid;
+        set => EnsureBarcode().PlesseyChecksum = value;
+    }
+
+    /// <summary>
     /// Prefer trying barcodes before 2D codes.
     /// </summary>
     public bool PreferBarcode { get; set; }
@@ -89,7 +126,39 @@ public sealed class CodeGlyphDecodeOptions {
         };
     }
 
+    /// <summary>
+    /// Fast preset (lower accuracy, fewer transforms).
+    /// </summary>
+    public static CodeGlyphDecodeOptions Fast() {
+        return new CodeGlyphDecodeOptions { Qr = QrPixelDecodeOptions.Fast() };
+    }
+
+    /// <summary>
+    /// Balanced preset (good default for most images).
+    /// </summary>
+    public static CodeGlyphDecodeOptions Balanced() {
+        return new CodeGlyphDecodeOptions { Qr = QrPixelDecodeOptions.Balanced() };
+    }
+
+    /// <summary>
+    /// Robust preset (best accuracy, slower).
+    /// </summary>
+    public static CodeGlyphDecodeOptions Robust() {
+        return new CodeGlyphDecodeOptions { Qr = QrPixelDecodeOptions.Robust() };
+    }
+
+    /// <summary>
+    /// Stylized preset (adds aggressive sampling for QR art).
+    /// </summary>
+    public static CodeGlyphDecodeOptions Stylized() {
+        return new CodeGlyphDecodeOptions { Qr = QrPixelDecodeOptions.Stylized() };
+    }
+
     private QrPixelDecodeOptions EnsureQr() {
         return Qr ??= new QrPixelDecodeOptions();
+    }
+
+    private BarcodeDecodeOptions EnsureBarcode() {
+        return Barcode ??= new BarcodeDecodeOptions();
     }
 }

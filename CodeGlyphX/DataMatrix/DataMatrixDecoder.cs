@@ -118,9 +118,14 @@ public static class DataMatrixDecoder {
             return false;
         }
 
-        var dataRegion = ExtractDataRegion(modules, symbol);
-        var codewords = DataMatrixPlacement.ReadCodewords(dataRegion, symbol.CodewordCount);
-        if (!TryDecodeCodewords(codewords, symbol, out value)) {
+        var dataRegion = ExtractDataRegion(modules, symbol, cancellationToken);
+        if (dataRegion is null) {
+            value = string.Empty;
+            return false;
+        }
+        var codewords = DataMatrixPlacement.ReadCodewords(dataRegion, symbol.CodewordCount, cancellationToken);
+        if (cancellationToken.IsCancellationRequested) { value = string.Empty; return false; }
+        if (!TryDecodeCodewords(codewords, symbol, cancellationToken, out value)) {
             value = string.Empty;
             return false;
         }
@@ -128,7 +133,7 @@ public static class DataMatrixDecoder {
         return true;
     }
 
-    private static BitMatrix ExtractDataRegion(BitMatrix modules, DataMatrixSymbolInfo symbol) {
+    private static BitMatrix? ExtractDataRegion(BitMatrix modules, DataMatrixSymbolInfo symbol, CancellationToken cancellationToken) {
         var dataRegion = new BitMatrix(symbol.DataRegionCols, symbol.DataRegionRows);
         var regionRows = symbol.RegionRows;
         var regionCols = symbol.RegionCols;
@@ -138,10 +143,12 @@ public static class DataMatrixDecoder {
         var regionDataCols = symbol.RegionDataCols;
 
         for (var regionRow = 0; regionRow < regionRows; regionRow++) {
+            if (cancellationToken.IsCancellationRequested) return null;
             for (var regionCol = 0; regionCol < regionCols; regionCol++) {
                 var startRow = regionRow * regionTotalRows;
                 var startCol = regionCol * regionTotalCols;
                 for (var y = 0; y < regionDataRows; y++) {
+                    if (cancellationToken.IsCancellationRequested) return null;
                     for (var x = 0; x < regionDataCols; x++) {
                         var dataRow = regionRow * regionDataRows + y;
                         var dataCol = regionCol * regionDataCols + x;
@@ -154,7 +161,7 @@ public static class DataMatrixDecoder {
         return dataRegion;
     }
 
-    private static bool TryDecodeCodewords(byte[] codewords, DataMatrixSymbolInfo symbol, out string value) {
+    private static bool TryDecodeCodewords(byte[] codewords, DataMatrixSymbolInfo symbol, CancellationToken cancellationToken, out string value) {
         var blocks = symbol.BlockCount;
         var maxDataBlock = 0;
         for (var i = 0; i < blocks; i++) {
@@ -170,6 +177,7 @@ public static class DataMatrixDecoder {
 
         var offset = 0;
         for (var i = 0; i < maxDataBlock; i++) {
+            if (cancellationToken.IsCancellationRequested) return Fail(out value);
             for (var b = 0; b < blocks; b++) {
                 if (i >= dataBlocks[b].Length) continue;
                 if (offset >= codewords.Length) return Fail(out value);
@@ -178,6 +186,7 @@ public static class DataMatrixDecoder {
         }
 
         for (var i = 0; i < symbol.EccBlockSize; i++) {
+            if (cancellationToken.IsCancellationRequested) return Fail(out value);
             for (var b = 0; b < blocks; b++) {
                 if (offset >= codewords.Length) return Fail(out value);
                 eccBlocks[b][i] = codewords[offset++];
@@ -187,6 +196,7 @@ public static class DataMatrixDecoder {
         var data = new byte[symbol.DataCodewords];
         var dataOffset = 0;
         for (var b = 0; b < blocks; b++) {
+            if (cancellationToken.IsCancellationRequested) return Fail(out value);
             var block = new byte[dataBlocks[b].Length + eccBlocks[b].Length];
             Buffer.BlockCopy(dataBlocks[b], 0, block, 0, dataBlocks[b].Length);
             Buffer.BlockCopy(eccBlocks[b], 0, block, dataBlocks[b].Length, eccBlocks[b].Length);
@@ -195,7 +205,8 @@ public static class DataMatrixDecoder {
             dataOffset += dataBlocks[b].Length;
         }
 
-        value = DecodeData(data);
+        value = DecodeData(data, cancellationToken);
+        if (cancellationToken.IsCancellationRequested) return Fail(out value);
         return true;
     }
 
@@ -206,10 +217,10 @@ public static class DataMatrixDecoder {
 
     internal static string DecodeDataCodewords(byte[] dataCodewords) {
         if (dataCodewords is null) throw new ArgumentNullException(nameof(dataCodewords));
-        return DecodeData(dataCodewords);
+        return DecodeData(dataCodewords, CancellationToken.None);
     }
 
-    private static string DecodeData(PixelSpan data) {
+    private static string DecodeData(PixelSpan data, CancellationToken cancellationToken) {
         var sb = new StringBuilder(data.Length);
         var mode = DataMatrixEncodation.Ascii;
         var index = 0;
@@ -218,6 +229,7 @@ public static class DataMatrixDecoder {
         Encoding? base256Encoding = null;
 
         while (index < data.Length) {
+            if (cancellationToken.IsCancellationRequested) break;
             switch (mode) {
                 case DataMatrixEncodation.Ascii:
                     mode = DecodeAsciiSegment(data, ref index, sb, ref upperShift, ref macroTrailer, ref base256Encoding);

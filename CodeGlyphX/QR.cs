@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Threading;
 using CodeGlyphX.Payloads;
 using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Ascii;
@@ -901,20 +902,50 @@ public static class QR {
     /// Attempts to decode a QR code from a PNG byte array.
     /// </summary>
     public static bool TryDecodePng(byte[] png, out QrDecoded decoded) {
+        return TryDecodePng(png, options: null, CancellationToken.None, out decoded);
+    }
+
+    /// <summary>
+    /// Attempts to decode a QR code from a PNG byte array with options.
+    /// </summary>
+    public static bool TryDecodePng(byte[] png, QrPixelDecodeOptions? options, out QrDecoded decoded) {
+        return TryDecodePng(png, options, CancellationToken.None, out decoded);
+    }
+
+    /// <summary>
+    /// Attempts to decode a QR code from a PNG byte array with options and cancellation.
+    /// </summary>
+    public static bool TryDecodePng(byte[] png, QrPixelDecodeOptions? options, CancellationToken cancellationToken, out QrDecoded decoded) {
         decoded = null!;
         if (png is null) return false;
+        if (cancellationToken.IsCancellationRequested) return false;
         var rgba = PngReader.DecodeRgba32(png, out var width, out var height);
-        return QrDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded);
+        return QrDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, options, cancellationToken);
     }
 
     /// <summary>
     /// Attempts to decode all QR codes from a PNG byte array.
     /// </summary>
     public static bool TryDecodeAllPng(byte[] png, out QrDecoded[] decoded) {
+        return TryDecodeAllPng(png, options: null, CancellationToken.None, out decoded);
+    }
+
+    /// <summary>
+    /// Attempts to decode all QR codes from a PNG byte array with options.
+    /// </summary>
+    public static bool TryDecodeAllPng(byte[] png, QrPixelDecodeOptions? options, out QrDecoded[] decoded) {
+        return TryDecodeAllPng(png, options, CancellationToken.None, out decoded);
+    }
+
+    /// <summary>
+    /// Attempts to decode all QR codes from a PNG byte array with options and cancellation.
+    /// </summary>
+    public static bool TryDecodeAllPng(byte[] png, QrPixelDecodeOptions? options, CancellationToken cancellationToken, out QrDecoded[] decoded) {
         decoded = Array.Empty<QrDecoded>();
         if (png is null) return false;
+        if (cancellationToken.IsCancellationRequested) return false;
         var rgba = PngReader.DecodeRgba32(png, out var width, out var height);
-        return QrDecoder.TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded);
+        return QrDecoder.TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, options, cancellationToken);
     }
 
     /// <summary>
@@ -928,6 +959,16 @@ public static class QR {
     }
 
     /// <summary>
+    /// Attempts to decode a QR code from a PNG file with options and cancellation.
+    /// </summary>
+    public static bool TryDecodePngFile(string path, QrPixelDecodeOptions? options, CancellationToken cancellationToken, out QrDecoded decoded) {
+        decoded = null!;
+        if (string.IsNullOrWhiteSpace(path)) return false;
+        if (!path.TryReadBinary(out var data)) return false;
+        return TryDecodePng(data, options, cancellationToken, out decoded);
+    }
+
+    /// <summary>
     /// Attempts to decode all QR codes from a PNG file.
     /// </summary>
     public static bool TryDecodeAllPngFile(string path, out QrDecoded[] decoded) {
@@ -938,6 +979,16 @@ public static class QR {
     }
 
     /// <summary>
+    /// Attempts to decode all QR codes from a PNG file with options and cancellation.
+    /// </summary>
+    public static bool TryDecodeAllPngFile(string path, QrPixelDecodeOptions? options, CancellationToken cancellationToken, out QrDecoded[] decoded) {
+        decoded = Array.Empty<QrDecoded>();
+        if (string.IsNullOrWhiteSpace(path)) return false;
+        if (!path.TryReadBinary(out var data)) return false;
+        return TryDecodeAllPng(data, options, cancellationToken, out decoded);
+    }
+
+    /// <summary>
     /// Attempts to decode a QR code from a PNG stream.
     /// </summary>
     public static bool TryDecodePng(Stream stream, out QrDecoded decoded) {
@@ -945,6 +996,17 @@ public static class QR {
         if (stream is null) return false;
         var data = stream.ReadBinary();
         return TryDecodePng(data, out decoded);
+    }
+
+    /// <summary>
+    /// Attempts to decode a QR code from a PNG stream with options and cancellation.
+    /// </summary>
+    public static bool TryDecodePng(Stream stream, QrPixelDecodeOptions? options, CancellationToken cancellationToken, out QrDecoded decoded) {
+        decoded = null!;
+        if (stream is null) return false;
+        if (cancellationToken.IsCancellationRequested) return false;
+        var data = stream.ReadBinary();
+        return TryDecodePng(data, options, cancellationToken, out decoded);
     }
 
     /// <summary>
@@ -976,6 +1038,119 @@ public static class QR {
         if (stream is null) return false;
         var data = stream.ReadBinary();
         return TryDecodeAllPng(data, out decoded);
+    }
+
+    /// <summary>
+    /// Attempts to decode all QR codes from a PNG stream with options and cancellation.
+    /// </summary>
+    public static bool TryDecodeAllPng(Stream stream, QrPixelDecodeOptions? options, CancellationToken cancellationToken, out QrDecoded[] decoded) {
+        decoded = Array.Empty<QrDecoded>();
+        if (stream is null) return false;
+        if (cancellationToken.IsCancellationRequested) return false;
+        var data = stream.ReadBinary();
+        return TryDecodeAllPng(data, options, cancellationToken, out decoded);
+    }
+
+    /// <summary>
+    /// Attempts to decode a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).
+    /// </summary>
+    public static bool TryDecodeImage(byte[] image, out QrDecoded decoded) {
+        return TryDecodeImage(image, options: null, CancellationToken.None, out decoded);
+    }
+
+    /// <summary>
+    /// Attempts to decode a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with options.
+    /// </summary>
+    public static bool TryDecodeImage(byte[] image, QrPixelDecodeOptions? options, out QrDecoded decoded) {
+        return TryDecodeImage(image, options, CancellationToken.None, out decoded);
+    }
+
+    /// <summary>
+    /// Attempts to decode a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with options and cancellation.
+    /// </summary>
+    public static bool TryDecodeImage(byte[] image, QrPixelDecodeOptions? options, CancellationToken cancellationToken, out QrDecoded decoded) {
+        decoded = null!;
+        if (image is null) return false;
+        if (cancellationToken.IsCancellationRequested) return false;
+        if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) return false;
+        return QrDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, options, cancellationToken);
+    }
+
+    /// <summary>
+    /// Attempts to decode all QR codes from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).
+    /// </summary>
+    public static bool TryDecodeAllImage(byte[] image, out QrDecoded[] decoded) {
+        return TryDecodeAllImage(image, options: null, CancellationToken.None, out decoded);
+    }
+
+    /// <summary>
+    /// Attempts to decode all QR codes from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with options.
+    /// </summary>
+    public static bool TryDecodeAllImage(byte[] image, QrPixelDecodeOptions? options, out QrDecoded[] decoded) {
+        return TryDecodeAllImage(image, options, CancellationToken.None, out decoded);
+    }
+
+    /// <summary>
+    /// Attempts to decode all QR codes from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with options and cancellation.
+    /// </summary>
+    public static bool TryDecodeAllImage(byte[] image, QrPixelDecodeOptions? options, CancellationToken cancellationToken, out QrDecoded[] decoded) {
+        decoded = Array.Empty<QrDecoded>();
+        if (image is null) return false;
+        if (cancellationToken.IsCancellationRequested) return false;
+        if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) return false;
+        return QrDecoder.TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, options, cancellationToken);
+    }
+
+    /// <summary>
+    /// Attempts to decode a QR code from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).
+    /// </summary>
+    public static bool TryDecodeImage(Stream stream, out QrDecoded decoded) {
+        return TryDecodeImage(stream, options: null, CancellationToken.None, out decoded);
+    }
+
+    /// <summary>
+    /// Attempts to decode a QR code from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with options.
+    /// </summary>
+    public static bool TryDecodeImage(Stream stream, QrPixelDecodeOptions? options, out QrDecoded decoded) {
+        return TryDecodeImage(stream, options, CancellationToken.None, out decoded);
+    }
+
+    /// <summary>
+    /// Attempts to decode a QR code from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with options and cancellation.
+    /// </summary>
+    public static bool TryDecodeImage(Stream stream, QrPixelDecodeOptions? options, CancellationToken cancellationToken, out QrDecoded decoded) {
+        decoded = null!;
+        if (stream is null) return false;
+        if (cancellationToken.IsCancellationRequested) return false;
+        var data = RenderIO.ReadBinary(stream);
+        if (!ImageReader.TryDecodeRgba32(data, out var rgba, out var width, out var height)) return false;
+        return QrDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, options, cancellationToken);
+    }
+
+    /// <summary>
+    /// Attempts to decode all QR codes from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).
+    /// </summary>
+    public static bool TryDecodeAllImage(Stream stream, out QrDecoded[] decoded) {
+        return TryDecodeAllImage(stream, options: null, CancellationToken.None, out decoded);
+    }
+
+    /// <summary>
+    /// Attempts to decode all QR codes from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with options.
+    /// </summary>
+    public static bool TryDecodeAllImage(Stream stream, QrPixelDecodeOptions? options, out QrDecoded[] decoded) {
+        return TryDecodeAllImage(stream, options, CancellationToken.None, out decoded);
+    }
+
+    /// <summary>
+    /// Attempts to decode all QR codes from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with options and cancellation.
+    /// </summary>
+    public static bool TryDecodeAllImage(Stream stream, QrPixelDecodeOptions? options, CancellationToken cancellationToken, out QrDecoded[] decoded) {
+        decoded = Array.Empty<QrDecoded>();
+        if (stream is null) return false;
+        if (cancellationToken.IsCancellationRequested) return false;
+        var data = RenderIO.ReadBinary(stream);
+        if (!ImageReader.TryDecodeRgba32(data, out var rgba, out var width, out var height)) return false;
+        return QrDecoder.TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, options, cancellationToken);
     }
 
     /// <summary>
