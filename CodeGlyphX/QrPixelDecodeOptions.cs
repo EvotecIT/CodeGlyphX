@@ -34,6 +34,11 @@ public sealed partial class QrPixelDecodeOptions {
     public int BudgetMilliseconds { get; set; } = 0;
 
     /// <summary>
+    /// Attempts to auto-crop likely QR regions before decoding (useful for screenshots).
+    /// </summary>
+    public bool AutoCrop { get; set; } = false;
+
+    /// <summary>
     /// Disable rotation/mirroring attempts even in robust profiles.
     /// </summary>
     public bool DisableTransforms { get; set; } = false;
@@ -77,9 +82,9 @@ public sealed partial class QrPixelDecodeOptions {
     public static QrPixelDecodeOptions Screen(int maxMilliseconds = 300, int maxDimension = 1200) {
         return new QrPixelDecodeOptions {
             Profile = QrDecodeProfile.Balanced,
-            MaxMilliseconds = Math.Max(0, maxMilliseconds),
             BudgetMilliseconds = Math.Max(0, maxMilliseconds),
-            MaxDimension = Math.Max(0, maxDimension)
+            MaxDimension = Math.Max(0, maxDimension),
+            AutoCrop = true
         };
     }
 }

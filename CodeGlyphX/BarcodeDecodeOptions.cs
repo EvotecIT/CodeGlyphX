@@ -20,6 +20,16 @@ public sealed partial class BarcodeDecodeOptions {
     /// Controls whether Plessey CRC validation is required during decode.
     /// </summary>
     public PlesseyChecksumPolicy PlesseyChecksum { get; set; } = PlesseyChecksumPolicy.RequireValid;
+
+    /// <summary>
+    /// Enables tile-based scanning for multiple barcodes in one image.
+    /// </summary>
+    public bool EnableTileScan { get; set; } = false;
+
+    /// <summary>
+    /// Tile grid size for multi-scan (0 = auto, 2..4 recommended).
+    /// </summary>
+    public int TileGrid { get; set; } = 0;
 }
 
 /// <summary>

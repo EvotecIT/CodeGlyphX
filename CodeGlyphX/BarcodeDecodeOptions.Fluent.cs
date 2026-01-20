@@ -32,4 +32,13 @@ public sealed partial class BarcodeDecodeOptions {
         PlesseyChecksum = policy;
         return this;
     }
+
+    /// <summary>
+    /// Enables or disables tile scanning for multiple barcodes.
+    /// </summary>
+    public BarcodeDecodeOptions WithTileScan(bool enabled = true, int tileGrid = 0) {
+        EnableTileScan = enabled;
+        TileGrid = tileGrid;
+        return this;
+    }
 }

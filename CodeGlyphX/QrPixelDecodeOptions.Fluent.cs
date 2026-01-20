@@ -44,6 +44,14 @@ public sealed partial class QrPixelDecodeOptions {
     }
 
     /// <summary>
+    /// Enables or disables auto-crop for QR decoding.
+    /// </summary>
+    public QrPixelDecodeOptions WithAutoCrop(bool enabled = true) {
+        AutoCrop = enabled;
+        return this;
+    }
+
+    /// <summary>
     /// Sets the time+dimension budget in one call.
     /// </summary>
     public QrPixelDecodeOptions WithBudget(int maxMilliseconds, int maxDimension = 0) {

@@ -207,8 +207,10 @@ public static partial class CodeGlyph {
 
         if (includeBarcode && preferBarcode) {
             if (cancellationToken.IsCancellationRequested) return false;
-            if (BarcodeDecoder.TryDecode(pixels, width, height, stride, format, expectedBarcode, barcodeOptions, cancellationToken, out var barcode)) {
-                list.Add(new CodeGlyphDecoded(barcode));
+            if (BarcodeDecoder.TryDecodeAll(pixels, width, height, stride, format, out var barcodes, expectedBarcode, barcodeOptions, cancellationToken)) {
+                for (var i = 0; i < barcodes.Length; i++) {
+                    list.Add(new CodeGlyphDecoded(barcodes[i]));
+                }
             }
         }
 
@@ -236,8 +238,10 @@ public static partial class CodeGlyph {
 
         if (includeBarcode && !preferBarcode) {
             if (cancellationToken.IsCancellationRequested) return false;
-            if (BarcodeDecoder.TryDecode(pixels, width, height, stride, format, expectedBarcode, barcodeOptions, cancellationToken, out var barcode)) {
-                list.Add(new CodeGlyphDecoded(barcode));
+            if (BarcodeDecoder.TryDecodeAll(pixels, width, height, stride, format, out var barcodes, expectedBarcode, barcodeOptions, cancellationToken)) {
+                for (var i = 0; i < barcodes.Length; i++) {
+                    list.Add(new CodeGlyphDecoded(barcodes[i]));
+                }
             }
         }
 
@@ -259,11 +263,11 @@ public static partial class CodeGlyph {
 
         if (includeBarcode && preferBarcode) {
             if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
-            if (BarcodeDecoder.TryDecode(pixels, width, height, stride, format, expectedBarcode, barcodeOptions, cancellationToken, out var barcode, out var barcodeDiag)) {
-                diagnostics.Barcode = barcodeDiag;
-                list.Add(new CodeGlyphDecoded(barcode));
-            } else {
-                diagnostics.Barcode = barcodeDiag;
+            if (BarcodeDecoder.TryDecodeAll(pixels, width, height, stride, format, out var barcodes, expectedBarcode, barcodeOptions, cancellationToken)) {
+                for (var i = 0; i < barcodes.Length; i++) {
+                    list.Add(new CodeGlyphDecoded(barcodes[i]));
+                }
+                diagnostics.Barcode = new BarcodeDecodeDiagnostics { Success = true, CandidateCount = barcodes.Length };
             }
         }
 
@@ -303,11 +307,11 @@ public static partial class CodeGlyph {
 
         if (includeBarcode && !preferBarcode) {
             if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
-            if (BarcodeDecoder.TryDecode(pixels, width, height, stride, format, expectedBarcode, barcodeOptions, cancellationToken, out var barcode, out var barcodeDiag)) {
-                diagnostics.Barcode = barcodeDiag;
-                list.Add(new CodeGlyphDecoded(barcode));
-            } else {
-                diagnostics.Barcode = barcodeDiag;
+            if (BarcodeDecoder.TryDecodeAll(pixels, width, height, stride, format, out var barcodes, expectedBarcode, barcodeOptions, cancellationToken)) {
+                for (var i = 0; i < barcodes.Length; i++) {
+                    list.Add(new CodeGlyphDecoded(barcodes[i]));
+                }
+                diagnostics.Barcode = new BarcodeDecodeDiagnostics { Success = true, CandidateCount = barcodes.Length };
             }
         }
 
@@ -512,8 +516,10 @@ public static partial class CodeGlyph {
 
         if (includeBarcode && preferBarcode) {
             if (cancellationToken.IsCancellationRequested) return false;
-            if (BarcodeDecoder.TryDecode(pixels, width, height, stride, format, expectedBarcode, barcodeOptions, cancellationToken, out var barcode)) {
-                list.Add(new CodeGlyphDecoded(barcode));
+            if (BarcodeDecoder.TryDecodeAll(pixels, width, height, stride, format, out var barcodes, expectedBarcode, barcodeOptions, cancellationToken)) {
+                for (var i = 0; i < barcodes.Length; i++) {
+                    list.Add(new CodeGlyphDecoded(barcodes[i]));
+                }
             }
         }
 
@@ -541,8 +547,10 @@ public static partial class CodeGlyph {
 
         if (includeBarcode && !preferBarcode) {
             if (cancellationToken.IsCancellationRequested) return false;
-            if (BarcodeDecoder.TryDecode(pixels, width, height, stride, format, expectedBarcode, barcodeOptions, cancellationToken, out var barcode)) {
-                list.Add(new CodeGlyphDecoded(barcode));
+            if (BarcodeDecoder.TryDecodeAll(pixels, width, height, stride, format, out var barcodes, expectedBarcode, barcodeOptions, cancellationToken)) {
+                for (var i = 0; i < barcodes.Length; i++) {
+                    list.Add(new CodeGlyphDecoded(barcodes[i]));
+                }
             }
         }
 
@@ -563,11 +571,11 @@ public static partial class CodeGlyph {
 
         if (includeBarcode && preferBarcode) {
             if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
-            if (BarcodeDecoder.TryDecode(pixels, width, height, stride, format, expectedBarcode, barcodeOptions, cancellationToken, out var barcode, out var barcodeDiag)) {
-                diagnostics.Barcode = barcodeDiag;
-                list.Add(new CodeGlyphDecoded(barcode));
-            } else {
-                diagnostics.Barcode = barcodeDiag;
+            if (BarcodeDecoder.TryDecodeAll(pixels, width, height, stride, format, out var barcodes, expectedBarcode, barcodeOptions, cancellationToken)) {
+                for (var i = 0; i < barcodes.Length; i++) {
+                    list.Add(new CodeGlyphDecoded(barcodes[i]));
+                }
+                diagnostics.Barcode = new BarcodeDecodeDiagnostics { Success = true, CandidateCount = barcodes.Length };
             }
         }
 
@@ -607,11 +615,11 @@ public static partial class CodeGlyph {
 
         if (includeBarcode && !preferBarcode) {
             if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
-            if (BarcodeDecoder.TryDecode(pixels, width, height, stride, format, expectedBarcode, barcodeOptions, cancellationToken, out var barcode, out var barcodeDiag)) {
-                diagnostics.Barcode = barcodeDiag;
-                list.Add(new CodeGlyphDecoded(barcode));
-            } else {
-                diagnostics.Barcode = barcodeDiag;
+            if (BarcodeDecoder.TryDecodeAll(pixels, width, height, stride, format, out var barcodes, expectedBarcode, barcodeOptions, cancellationToken)) {
+                for (var i = 0; i < barcodes.Length; i++) {
+                    list.Add(new CodeGlyphDecoded(barcodes[i]));
+                }
+                diagnostics.Barcode = new BarcodeDecodeDiagnostics { Success = true, CandidateCount = barcodes.Length };
             }
         }
 
@@ -626,4 +634,3 @@ public static partial class CodeGlyph {
     }
 #endif
 }
-
