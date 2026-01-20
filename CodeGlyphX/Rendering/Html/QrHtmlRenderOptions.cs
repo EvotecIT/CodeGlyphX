@@ -6,7 +6,7 @@ namespace CodeGlyphX.Rendering.Html;
 /// <summary>
 /// Options for <see cref="HtmlQrRenderer"/>.
 /// </summary>
-public sealed class QrHtmlRenderOptions {
+public sealed partial class QrHtmlRenderOptions {
     /// <summary>
     /// Gets or sets the size of a single QR module in pixels.
     /// </summary>

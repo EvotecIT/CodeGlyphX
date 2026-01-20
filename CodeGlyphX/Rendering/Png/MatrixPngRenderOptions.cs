@@ -5,7 +5,7 @@ namespace CodeGlyphX.Rendering.Png;
 /// <summary>
 /// Options for rendering generic 2D matrices to PNG.
 /// </summary>
-public sealed class MatrixPngRenderOptions {
+public sealed partial class MatrixPngRenderOptions {
     /// <summary>
     /// Module size in pixels.
     /// </summary>

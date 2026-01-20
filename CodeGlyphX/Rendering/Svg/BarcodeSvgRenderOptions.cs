@@ -5,7 +5,7 @@ namespace CodeGlyphX.Rendering.Svg;
 /// <summary>
 /// Options for <see cref="SvgBarcodeRenderer"/>.
 /// </summary>
-public sealed class BarcodeSvgRenderOptions {
+public sealed partial class BarcodeSvgRenderOptions {
     /// <summary>
     /// Gets or sets the size of a single module in pixels.
     /// </summary>
