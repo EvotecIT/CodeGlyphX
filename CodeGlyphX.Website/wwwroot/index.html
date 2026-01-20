@@ -8,9 +8,7 @@
     <base href="/" />
 
     <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/fonts.css" />
 
     <link rel="stylesheet" href="css/app.css" />
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
@@ -96,14 +94,14 @@
             if (prismLoaded) { callback && callback(); return; }
             var css = document.createElement('link');
             css.rel = 'stylesheet';
-            css.href = 'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css';
+            css.href = 'vendor/prism/prism-tomorrow.min.css';
             document.head.appendChild(css);
 
             var script = document.createElement('script');
-            script.src = 'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js';
+            script.src = 'vendor/prism/prism.min.js';
             script.onload = function() {
                 var csharp = document.createElement('script');
-                csharp.src = 'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-csharp.min.js';
+                csharp.src = 'vendor/prism/prism-csharp.min.js';
                 csharp.onload = function() { prismLoaded = true; callback && callback(); };
                 document.head.appendChild(csharp);
             };

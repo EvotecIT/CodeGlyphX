@@ -1730,6 +1730,16 @@
             Controls whether Plessey CRC validation is required during decode.
             </summary>
         </member>
+        <member name="P:CodeGlyphX.BarcodeDecodeOptions.EnableTileScan">
+            <summary>
+            Enables tile-based scanning for multiple barcodes in one image.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.BarcodeDecodeOptions.TileGrid">
+            <summary>
+            Tile grid size for multi-scan (0 = auto, 2..4 recommended).
+            </summary>
+        </member>
         <member name="M:CodeGlyphX.BarcodeDecodeOptions.WithCode39Checksum(CodeGlyphX.Code39ChecksumPolicy)">
             <summary>
             Sets Code39 checksum handling.
@@ -1748,6 +1758,11 @@
         <member name="M:CodeGlyphX.BarcodeDecodeOptions.WithPlesseyChecksum(CodeGlyphX.PlesseyChecksumPolicy)">
             <summary>
             Sets Plessey CRC handling.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.BarcodeDecodeOptions.WithTileScan(System.Boolean,System.Int32)">
+            <summary>
+            Enables or disables tile scanning for multiple barcodes.
             </summary>
         </member>
         <member name="T:CodeGlyphX.Code39ChecksumPolicy">
@@ -1865,6 +1880,11 @@
             Attempts to decode a 1D barcode from a raw pixel buffer with diagnostics.
             </summary>
         </member>
+        <member name="M:CodeGlyphX.BarcodeDecoder.TryDecodeAll(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.BarcodeDecoded[]@,System.Nullable{CodeGlyphX.BarcodeType},CodeGlyphX.BarcodeDecodeOptions,System.Threading.CancellationToken)">
+            <summary>
+            Attempts to decode all 1D barcodes from a raw pixel buffer.
+            </summary>
+        </member>
         <member name="M:CodeGlyphX.BarcodeDecoder.TryDecode(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.BarcodeDecoded@)">
             <summary>
             Attempts to decode a 1D barcode from a raw pixel buffer.
@@ -1893,6 +1913,11 @@
         <member name="M:CodeGlyphX.BarcodeDecoder.TryDecode(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,System.Nullable{CodeGlyphX.BarcodeType},CodeGlyphX.BarcodeDecodeOptions,System.Threading.CancellationToken,CodeGlyphX.BarcodeDecoded@,CodeGlyphX.BarcodeDecodeDiagnostics@)">
             <summary>
             Attempts to decode a 1D barcode from a raw pixel buffer with diagnostics.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.BarcodeDecoder.TryDecodeAll(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.BarcodeDecoded[]@,System.Nullable{CodeGlyphX.BarcodeType},CodeGlyphX.BarcodeDecodeOptions,System.Threading.CancellationToken)">
+            <summary>
+            Attempts to decode all 1D barcodes from a raw pixel buffer.
             </summary>
         </member>
         <member name="M:CodeGlyphX.BarcodeDecoder.TryDecode(System.Boolean[],CodeGlyphX.BarcodeDecoded@)">
@@ -11585,6 +11610,11 @@
             When set, this is used for internal time budgeting instead of MaxMilliseconds.
             </summary>
         </member>
+        <member name="P:CodeGlyphX.QrPixelDecodeOptions.AutoCrop">
+            <summary>
+            Attempts to auto-crop likely QR regions before decoding (useful for screenshots).
+            </summary>
+        </member>
         <member name="P:CodeGlyphX.QrPixelDecodeOptions.DisableTransforms">
             <summary>
             Disable rotation/mirroring attempts even in robust profiles.
@@ -11643,6 +11673,11 @@
         <member name="M:CodeGlyphX.QrPixelDecodeOptions.WithBudgetMilliseconds(System.Int32)">
             <summary>
             Sets a hard decode time budget without profile downgrades.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrPixelDecodeOptions.WithAutoCrop(System.Boolean)">
+            <summary>
+            Enables or disables auto-crop for QR decoding.
             </summary>
         </member>
         <member name="M:CodeGlyphX.QrPixelDecodeOptions.WithBudget(System.Int32,System.Int32)">
