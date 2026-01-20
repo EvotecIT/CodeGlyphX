@@ -1,61 +1,81 @@
 namespace CodeGlyphX.Rendering.Png;
 
 public sealed partial class QrPngRenderOptions {
-    /// <summary>Sets the module size in pixels.</summary>
+    /// <summary>
+    /// Sets the module size in pixels.
+    /// </summary>
     public QrPngRenderOptions WithModuleSize(int size) {
         ModuleSize = size;
         return this;
     }
 
-    /// <summary>Sets the quiet zone size (in modules).</summary>
+    /// <summary>
+    /// Sets the quiet zone size in modules.
+    /// </summary>
     public QrPngRenderOptions WithQuietZone(int quietZone) {
         QuietZone = quietZone;
         return this;
     }
 
-    /// <summary>Sets the foreground color.</summary>
+    /// <summary>
+    /// Sets the foreground color.
+    /// </summary>
     public QrPngRenderOptions WithForeground(Rgba32 color) {
         Foreground = color;
         return this;
     }
 
-    /// <summary>Sets the background color.</summary>
+    /// <summary>
+    /// Sets the background color.
+    /// </summary>
     public QrPngRenderOptions WithBackground(Rgba32 color) {
         Background = color;
         return this;
     }
 
-    /// <summary>Sets the foreground gradient options.</summary>
+    /// <summary>
+    /// Sets the foreground gradient.
+    /// </summary>
     public QrPngRenderOptions WithForegroundGradient(QrPngGradientOptions? gradient) {
         ForegroundGradient = gradient;
         return this;
     }
 
-    /// <summary>Sets the eye styling options.</summary>
+    /// <summary>
+    /// Sets custom eye (finder) options.
+    /// </summary>
     public QrPngRenderOptions WithEyes(QrPngEyeOptions? eyes) {
         Eyes = eyes;
         return this;
     }
 
-    /// <summary>Sets the module shape.</summary>
+    /// <summary>
+    /// Sets the module shape.
+    /// </summary>
     public QrPngRenderOptions WithModuleShape(QrPngModuleShape shape) {
         ModuleShape = shape;
         return this;
     }
 
-    /// <summary>Sets the module scale.</summary>
+    /// <summary>
+    /// Sets the module scale.
+    /// </summary>
     public QrPngRenderOptions WithModuleScale(double scale) {
         ModuleScale = scale;
         return this;
     }
 
-    /// <summary>Sets the module corner radius in pixels.</summary>
+    /// <summary>
+    /// Sets the module corner radius in pixels.
+    /// </summary>
     public QrPngRenderOptions WithModuleCornerRadiusPx(int radiusPx) {
         ModuleCornerRadiusPx = radiusPx;
         return this;
     }
 
-    /// <summary>Sets the logo options.</summary>
+    /// <summary>
+    /// Sets the logo overlay options.
+    /// </summary>
     public QrPngRenderOptions WithLogo(QrPngLogoOptions? logo) {
         Logo = logo;
         return this;
@@ -63,25 +83,33 @@ public sealed partial class QrPngRenderOptions {
 }
 
 public sealed partial class MatrixPngRenderOptions {
-    /// <summary>Sets the module size in pixels.</summary>
+    /// <summary>
+    /// Sets the module size in pixels.
+    /// </summary>
     public MatrixPngRenderOptions WithModuleSize(int size) {
         ModuleSize = size;
         return this;
     }
 
-    /// <summary>Sets the quiet zone size (in modules).</summary>
+    /// <summary>
+    /// Sets the quiet zone size in modules.
+    /// </summary>
     public MatrixPngRenderOptions WithQuietZone(int quietZone) {
         QuietZone = quietZone;
         return this;
     }
 
-    /// <summary>Sets the foreground color.</summary>
+    /// <summary>
+    /// Sets the foreground color.
+    /// </summary>
     public MatrixPngRenderOptions WithForeground(Rgba32 color) {
         Foreground = color;
         return this;
     }
 
-    /// <summary>Sets the background color.</summary>
+    /// <summary>
+    /// Sets the background color.
+    /// </summary>
     public MatrixPngRenderOptions WithBackground(Rgba32 color) {
         Background = color;
         return this;
@@ -89,55 +117,73 @@ public sealed partial class MatrixPngRenderOptions {
 }
 
 public sealed partial class BarcodePngRenderOptions {
-    /// <summary>Sets the module size in pixels.</summary>
+    /// <summary>
+    /// Sets the module size in pixels.
+    /// </summary>
     public BarcodePngRenderOptions WithModuleSize(int size) {
         ModuleSize = size;
         return this;
     }
 
-    /// <summary>Sets the quiet zone size (in modules).</summary>
+    /// <summary>
+    /// Sets the quiet zone size in modules.
+    /// </summary>
     public BarcodePngRenderOptions WithQuietZone(int quietZone) {
         QuietZone = quietZone;
         return this;
     }
 
-    /// <summary>Sets the bar height in modules.</summary>
+    /// <summary>
+    /// Sets the barcode height in modules.
+    /// </summary>
     public BarcodePngRenderOptions WithHeightModules(int heightModules) {
         HeightModules = heightModules;
         return this;
     }
 
-    /// <summary>Sets the bar color.</summary>
+    /// <summary>
+    /// Sets the bar (foreground) color.
+    /// </summary>
     public BarcodePngRenderOptions WithForeground(Rgba32 color) {
         Foreground = color;
         return this;
     }
 
-    /// <summary>Sets the background color.</summary>
+    /// <summary>
+    /// Sets the background color.
+    /// </summary>
     public BarcodePngRenderOptions WithBackground(Rgba32 color) {
         Background = color;
         return this;
     }
 
-    /// <summary>Sets the human-readable label text.</summary>
+    /// <summary>
+    /// Sets the label text.
+    /// </summary>
     public BarcodePngRenderOptions WithLabelText(string? text) {
         LabelText = text;
         return this;
     }
 
-    /// <summary>Sets the label font size in pixels.</summary>
+    /// <summary>
+    /// Sets the label font size in pixels.
+    /// </summary>
     public BarcodePngRenderOptions WithLabelFontSize(int size) {
         LabelFontSize = size;
         return this;
     }
 
-    /// <summary>Sets the label margin in pixels.</summary>
+    /// <summary>
+    /// Sets the label margin in pixels.
+    /// </summary>
     public BarcodePngRenderOptions WithLabelMargin(int margin) {
         LabelMargin = margin;
         return this;
     }
 
-    /// <summary>Sets the label color.</summary>
+    /// <summary>
+    /// Sets the label color.
+    /// </summary>
     public BarcodePngRenderOptions WithLabelColor(Rgba32 color) {
         LabelColor = color;
         return this;

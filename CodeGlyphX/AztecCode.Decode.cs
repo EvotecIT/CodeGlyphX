@@ -149,6 +149,43 @@ public static partial class AztecCode {
     }
 
     /// <summary>
+    /// Attempts to decode an Aztec symbol from PNG bytes in a span.
+    /// </summary>
+    public static bool TryDecodePng(ReadOnlySpan<byte> png, out string text) {
+        return TryDecodePng(png, null, CancellationToken.None, out text);
+    }
+
+    /// <summary>
+    /// Attempts to decode an Aztec symbol from PNG bytes in a span, with cancellation.
+    /// </summary>
+    public static bool TryDecodePng(ReadOnlySpan<byte> png, CancellationToken cancellationToken, out string text) {
+        return TryDecodePng(png, null, cancellationToken, out text);
+    }
+
+    /// <summary>
+    /// Attempts to decode an Aztec symbol from PNG bytes in a span with image decode options.
+    /// </summary>
+    public static bool TryDecodePng(ReadOnlySpan<byte> png, ImageDecodeOptions? options, out string text) {
+        return TryDecodePng(png, options, CancellationToken.None, out text);
+    }
+
+    /// <summary>
+    /// Attempts to decode an Aztec symbol from PNG bytes in a span with image decode options, with cancellation.
+    /// </summary>
+    public static bool TryDecodePng(ReadOnlySpan<byte> png, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text) {
+        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
+        try {
+            if (token.IsCancellationRequested) { text = string.Empty; return false; }
+            var rgba = PngReader.DecodeRgba32(png, out var width, out var height);
+            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) { text = string.Empty; return false; }
+            return AztecDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out text);
+        } finally {
+            budgetCts?.Dispose();
+            budgetScope?.Dispose();
+        }
+    }
+
+    /// <summary>
     /// Attempts to decode an Aztec symbol from PNG bytes, with diagnostics.
     /// </summary>
     public static bool TryDecodePng(byte[] png, out string text, out AztecDecodeDiagnostics diagnostics) {
@@ -167,6 +204,48 @@ public static partial class AztecCode {
     /// </summary>
     public static bool TryDecodePng(byte[] png, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text, out AztecDecodeDiagnostics diagnostics) {
         return TryDecodePngCore(png, options, cancellationToken, out text, out diagnostics);
+    }
+
+    /// <summary>
+    /// Attempts to decode an Aztec symbol from PNG bytes in a span, with diagnostics.
+    /// </summary>
+    public static bool TryDecodePng(ReadOnlySpan<byte> png, out string text, out AztecDecodeDiagnostics diagnostics) {
+        return TryDecodePng(png, null, CancellationToken.None, out text, out diagnostics);
+    }
+
+    /// <summary>
+    /// Attempts to decode an Aztec symbol from PNG bytes in a span with image decode options, with diagnostics.
+    /// </summary>
+    public static bool TryDecodePng(ReadOnlySpan<byte> png, ImageDecodeOptions? options, out string text, out AztecDecodeDiagnostics diagnostics) {
+        return TryDecodePng(png, options, CancellationToken.None, out text, out diagnostics);
+    }
+
+    /// <summary>
+    /// Attempts to decode an Aztec symbol from PNG bytes in a span with image decode options, cancellation, and diagnostics.
+    /// </summary>
+    public static bool TryDecodePng(ReadOnlySpan<byte> png, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text, out AztecDecodeDiagnostics diagnostics) {
+        diagnostics = new AztecDecodeDiagnostics();
+        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
+        try {
+            if (token.IsCancellationRequested) { text = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
+            var rgba = PngReader.DecodeRgba32(png, out var width, out var height);
+            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) {
+                text = string.Empty;
+                diagnostics.Failure ??= token.IsCancellationRequested ? "Cancelled." : "Image downscale failed.";
+                return false;
+            }
+            if (AztecDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out text, out var azDiag)) {
+                diagnostics = azDiag;
+                return true;
+            }
+            diagnostics = azDiag;
+            diagnostics.Failure ??= "No Aztec decoded.";
+            text = string.Empty;
+            return false;
+        } finally {
+            budgetCts?.Dispose();
+            budgetScope?.Dispose();
+        }
     }
 
     /// <summary>
@@ -309,6 +388,89 @@ public static partial class AztecCode {
     /// </summary>
     public static bool TryDecodeImage(byte[] image, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text, out AztecDecodeDiagnostics diagnostics) {
         return TryDecodeImageCore(image, options, cancellationToken, out text, out diagnostics);
+    }
+
+    /// <summary>
+    /// Attempts to decode an Aztec symbol from common image formats in a span.
+    /// </summary>
+    public static bool TryDecodeImage(ReadOnlySpan<byte> image, out string text) {
+        return TryDecodeImage(image, null, CancellationToken.None, out text);
+    }
+
+    /// <summary>
+    /// Attempts to decode an Aztec symbol from common image formats in a span, with cancellation.
+    /// </summary>
+    public static bool TryDecodeImage(ReadOnlySpan<byte> image, CancellationToken cancellationToken, out string text) {
+        return TryDecodeImage(image, null, cancellationToken, out text);
+    }
+
+    /// <summary>
+    /// Attempts to decode an Aztec symbol from common image formats in a span with image decode options.
+    /// </summary>
+    public static bool TryDecodeImage(ReadOnlySpan<byte> image, ImageDecodeOptions? options, out string text) {
+        return TryDecodeImage(image, options, CancellationToken.None, out text);
+    }
+
+    /// <summary>
+    /// Attempts to decode an Aztec symbol from common image formats in a span with image decode options, with cancellation.
+    /// </summary>
+    public static bool TryDecodeImage(ReadOnlySpan<byte> image, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text) {
+        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
+        try {
+            if (token.IsCancellationRequested) { text = string.Empty; return false; }
+            if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) { text = string.Empty; return false; }
+            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) { text = string.Empty; return false; }
+            return AztecDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out text);
+        } finally {
+            budgetCts?.Dispose();
+            budgetScope?.Dispose();
+        }
+    }
+
+    /// <summary>
+    /// Attempts to decode an Aztec symbol from common image formats in a span, with diagnostics.
+    /// </summary>
+    public static bool TryDecodeImage(ReadOnlySpan<byte> image, out string text, out AztecDecodeDiagnostics diagnostics) {
+        return TryDecodeImage(image, null, CancellationToken.None, out text, out diagnostics);
+    }
+
+    /// <summary>
+    /// Attempts to decode an Aztec symbol from common image formats in a span with image decode options, with diagnostics.
+    /// </summary>
+    public static bool TryDecodeImage(ReadOnlySpan<byte> image, ImageDecodeOptions? options, out string text, out AztecDecodeDiagnostics diagnostics) {
+        return TryDecodeImage(image, options, CancellationToken.None, out text, out diagnostics);
+    }
+
+    /// <summary>
+    /// Attempts to decode an Aztec symbol from common image formats in a span with image decode options, cancellation, and diagnostics.
+    /// </summary>
+    public static bool TryDecodeImage(ReadOnlySpan<byte> image, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text, out AztecDecodeDiagnostics diagnostics) {
+        diagnostics = new AztecDecodeDiagnostics();
+        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
+        try {
+            if (token.IsCancellationRequested) { text = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
+            if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) {
+                text = string.Empty;
+                diagnostics.Failure ??= "Unsupported image format.";
+                return false;
+            }
+            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) {
+                text = string.Empty;
+                diagnostics.Failure ??= token.IsCancellationRequested ? "Cancelled." : "Image downscale failed.";
+                return false;
+            }
+            if (AztecDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out text, out var azDiag)) {
+                diagnostics = azDiag;
+                return true;
+            }
+            diagnostics = azDiag;
+            diagnostics.Failure ??= "No Aztec decoded.";
+            text = string.Empty;
+            return false;
+        } finally {
+            budgetCts?.Dispose();
+            budgetScope?.Dispose();
+        }
     }
 
     /// <summary>
