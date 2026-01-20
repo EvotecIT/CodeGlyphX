@@ -1,0 +1,438 @@
+@using CodeGlyphX
+@using CodeGlyphX.Payloads
+@using CodeGlyphX.DataMatrix
+@using CodeGlyphX.Pdf417
+@using CodeGlyphX.Aztec
+@using CodeGlyphX.Rendering
+@using CodeGlyphX.Rendering.Png
+@using Microsoft.AspNetCore.Components.Forms
+
+@if (Host is null)
+{
+    <div class="card">
+        <h2>Configuration</h2>
+        <p>Loading...</p>
+    </div>
+}
+else
+{
+    <div class="card">
+        <h2>Configuration</h2>
+
+        <div class="form-group">
+            <label>Mode</label>
+            <select @bind="Host.SelectedMode" @bind:after="Host.OnModeChanged">
+                <option value="Generate">Generate</option>
+                <option value="Decode">Decode</option>
+            </select>
+        </div>
+
+        @if (Host.SelectedMode == "Decode")
+        {
+            <div class="form-group">
+                <label>Image File</label>
+                <div class="dropzone @(Host.IsDropActive ? "active" : string.Empty)"
+                     @ondragenter="@(() => Host.IsDropActive = true)"
+                     @ondragleave="@(() => Host.IsDropActive = false)"
+                     @ondrop="@(() => Host.IsDropActive = false)"
+                     @ondragover:preventDefault="true"
+                     @ondrop:preventDefault="true">
+                    <InputFile class="drop-input" OnChange="Host.OnDecodeFileChanged" accept="image/*" />
+                    <div class="dropzone-inner">
+                        <strong>Drop an image here</strong>
+                        <span>or click to select</span>
+                    </div>
+                </div>
+                <small class="form-hint">Supports PNG, JPEG, GIF, BMP, TIFF, PPM/PBM/PGM/PAM, XBM/XPM, TGA, ICO.</small>
+            </div>
+
+            <div class="form-group">
+                <label>Decode Options</label>
+                <div class="form-row">
+                    <label><input type="checkbox" @bind="Host.DecodeDownscale" /> Downscale large images</label>
+                    <label><input type="checkbox" @bind="Host.DecodeStopAfterFirst" /> Stop after first match</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Max dimension (px): @Host.DecodeMaxDimension</label>
+                <input type="range" min="512" max="2048" step="128" @bind="Host.DecodeMaxDimension" />
+            </div>
+
+            <div class="form-group">
+                <label>Max time (ms): @Host.DecodeMaxMilliseconds</label>
+                <input type="range" min="200" max="2000" step="50" @bind="Host.DecodeMaxMilliseconds" />
+            </div>
+
+            <div class="form-group">
+                <label>Try Decode</label>
+                <div class="form-row">
+                    <label><input type="checkbox" @bind="Host.DecodeQr" /> QR</label>
+                    <label><input type="checkbox" @bind="Host.DecodeBarcode" /> 1D Barcodes</label>
+                    <label><input type="checkbox" @bind="Host.DecodeMatrix" /> 2D Matrix</label>
+                </div>
+                @if (Host.IsDecoding)
+                {
+                    <div class="form-row" style="margin-top:8px;">
+                        <small>@Host.DecodeStatus</small>
+                        <button type="button" class="preset-btn" @onclick="Host.CancelDecode">Cancel</button>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="form-group">
+                <label>Presets</label>
+                <div class="preset-grid">
+                    <button type="button" class="preset-btn" @onclick="@(() => Host.ApplyPreset("QrUrl"))">QR URL</button>
+                    <button type="button" class="preset-btn" @onclick="@(() => Host.ApplyPreset("QrWifi"))">WiFi</button>
+                    <button type="button" class="preset-btn" @onclick="@(() => Host.ApplyPreset("QrOtp"))">OTP</button>
+                    <button type="button" class="preset-btn" @onclick="@(() => Host.ApplyPreset("BarcodeEan"))">EAN-13</button>
+                    <button type="button" class="preset-btn" @onclick="@(() => Host.ApplyPreset("BarcodeCode128"))">Code 128</button>
+                    <button type="button" class="preset-btn" @onclick="@(() => Host.ApplyPreset("MatrixPdf417"))">PDF417</button>
+                    <button type="button" class="preset-btn" @onclick="@(() => Host.ApplyPreset("MatrixDataMatrix"))">Data Matrix</button>
+                    <button type="button" class="preset-btn" @onclick="@(() => Host.ApplyPreset("MatrixAztec"))">Aztec</button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Code Type</label>
+                <select @bind="Host.SelectedCategory" @bind:after="Host.OnCategoryChanged">
+                    <option value="QR">QR Code</option>
+                    <option value="SpecialQR">Special QR Codes</option>
+                    <option value="Barcode">1D Barcodes</option>
+                    <option value="Matrix">2D Matrix Codes</option>
+                </select>
+            </div>
+
+            @if (Host.SelectedCategory == "QR")
+            {
+                <div class="form-group">
+                    <label>Content</label>
+                    <textarea rows="3" @bind="Host.Content" @bind:after="Host.GenerateCode" placeholder="Enter text, URL, or data..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Error Correction Level</label>
+                    <select @bind="Host.ErrorCorrection" @bind:after="Host.GenerateCode">
+                        <option value="L">L - Low (7% recovery)</option>
+                        <option value="M">M - Medium (15% recovery)</option>
+                        <option value="Q">Q - Quartile (25% recovery)</option>
+                        <option value="H">H - High (30% recovery)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Module Shape</label>
+                    <select @bind="Host.ModuleShape" @bind:after="Host.GenerateCode">
+                        <option value="Square">Square</option>
+                        <option value="Circle">Circle</option>
+                        <option value="Rounded">Rounded</option>
+                    </select>
+                </div>
+
+                @if (Host.ModuleShape == "Rounded")
+                {
+                    <div class="form-group">
+                        <label>Corner Radius: @Host.CornerRadius</label>
+                        <input type="range" min="0" max="8" step="1" @bind="Host.CornerRadius" @bind:after="Host.GenerateCode" />
+                    </div>
+                }
+
+                <div class="form-group">
+                    <label>Colors</label>
+                    <div class="form-row">
+                        <input type="color" @bind="Host.ForegroundColor" @bind:after="Host.GenerateCode" />
+                        <input type="color" @bind="Host.BackgroundColor" @bind:after="Host.GenerateCode" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" @bind="Host.CustomEyes" @bind:after="Host.GenerateCode" />
+                        Customize eyes
+                    </label>
+                </div>
+
+                @if (Host.CustomEyes)
+                {
+                    <div class="form-group">
+                        <label>Eye Outer Shape</label>
+                        <select @bind="Host.EyeOuterShape" @bind:after="Host.GenerateCode">
+                            <option value="Square">Square</option>
+                            <option value="Circle">Circle</option>
+                            <option value="Rounded">Rounded</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Eye Inner Shape</label>
+                        <select @bind="Host.EyeInnerShape" @bind:after="Host.GenerateCode">
+                            <option value="Square">Square</option>
+                            <option value="Circle">Circle</option>
+                            <option value="Rounded">Rounded</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Eye Colors</label>
+                        <div class="form-row">
+                            <input type="color" @bind="Host.EyeOuterColor" @bind:after="Host.GenerateCode" />
+                            <input type="color" @bind="Host.EyeInnerColor" @bind:after="Host.GenerateCode" />
+                        </div>
+                    </div>
+                }
+            }
+            else if (Host.SelectedCategory == "SpecialQR")
+            {
+                <div class="form-group">
+                    <label>Type</label>
+                    <select @bind="Host.SpecialPayloadType" @bind:after="Host.GenerateCode">
+                        <option value="WiFi">WiFi</option>
+                        <option value="vCard">vCard</option>
+                        <option value="Email">Email</option>
+                        <option value="Phone">Phone</option>
+                        <option value="SMS">SMS</option>
+                        <option value="URL">URL</option>
+                        <option value="OTP">OTP</option>
+                        <option value="Girocode">Girocode</option>
+                    </select>
+                </div>
+
+                @if (Host.SpecialPayloadType == "WiFi")
+                {
+                    <div class="form-group">
+                        <label>SSID</label>
+                        <input type="text" @bind="Host.WifiSsid" @bind:after="Host.GenerateCode" />
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="text" @bind="Host.WifiPassword" @bind:after="Host.GenerateCode" />
+                    </div>
+                    <div class="form-group">
+                        <label>Security</label>
+                        <select @bind="Host.WifiSecurity" @bind:after="Host.GenerateCode">
+                            <option value="WPA">WPA/WPA2</option>
+                            <option value="WEP">WEP</option>
+                            <option value="None">None</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label><input type="checkbox" @bind="Host.WifiHidden" @bind:after="Host.GenerateCode" /> Hidden network</label>
+                    </div>
+                }
+                else if (Host.SpecialPayloadType == "vCard")
+                {
+                    <div class="form-group">
+                        <label>First name</label>
+                        <input type="text" @bind="Host.VCardFirstName" @bind:after="Host.GenerateCode" />
+                    </div>
+                    <div class="form-group">
+                        <label>Last name</label>
+                        <input type="text" @bind="Host.VCardLastName" @bind:after="Host.GenerateCode" />
+                    </div>
+                    <div class="form-group">
+                        <label>Phone</label>
+                        <input type="text" @bind="Host.VCardPhone" @bind:after="Host.GenerateCode" />
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="text" @bind="Host.VCardEmail" @bind:after="Host.GenerateCode" />
+                    </div>
+                    <div class="form-group">
+                        <label>Website</label>
+                        <input type="text" @bind="Host.VCardWebsite" @bind:after="Host.GenerateCode" />
+                    </div>
+                    <div class="form-group">
+                        <label>Organization</label>
+                        <input type="text" @bind="Host.VCardOrganization" @bind:after="Host.GenerateCode" />
+                    </div>
+                }
+                else if (Host.SpecialPayloadType == "Email")
+                {
+                    <div class="form-group">
+                        <label>Address</label>
+                        <input type="text" @bind="Host.EmailAddress" @bind:after="Host.GenerateCode" />
+                    </div>
+                    <div class="form-group">
+                        <label>Subject</label>
+                        <input type="text" @bind="Host.EmailSubject" @bind:after="Host.GenerateCode" />
+                    </div>
+                    <div class="form-group">
+                        <label>Body</label>
+                        <textarea rows="2" @bind="Host.EmailBody" @bind:after="Host.GenerateCode"></textarea>
+                    </div>
+                }
+                else if (Host.SpecialPayloadType == "Phone")
+                {
+                    <div class="form-group">
+                        <label>Phone number</label>
+                        <input type="text" @bind="Host.PhoneNumber" @bind:after="Host.GenerateCode" />
+                    </div>
+                }
+                else if (Host.SpecialPayloadType == "SMS")
+                {
+                    <div class="form-group">
+                        <label>Number</label>
+                        <input type="text" @bind="Host.SmsNumber" @bind:after="Host.GenerateCode" />
+                    </div>
+                    <div class="form-group">
+                        <label>Message</label>
+                        <textarea rows="2" @bind="Host.SmsMessage" @bind:after="Host.GenerateCode"></textarea>
+                    </div>
+                }
+                else if (Host.SpecialPayloadType == "URL")
+                {
+                    <div class="form-group">
+                        <label>URL</label>
+                        <input type="text" @bind="Host.UrlContent" @bind:after="Host.GenerateCode" />
+                    </div>
+                }
+                else if (Host.SpecialPayloadType == "OTP")
+                {
+                    <div class="form-group">
+                        <label>Type</label>
+                        <select @bind="Host.OtpType" @bind:after="Host.GenerateCode">
+                            <option value="TOTP">TOTP</option>
+                            <option value="HOTP">HOTP</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Secret</label>
+                        <input type="text" @bind="Host.OtpSecret" @bind:after="Host.GenerateCode" />
+                    </div>
+                    <div class="form-group">
+                        <label>Label</label>
+                        <input type="text" @bind="Host.OtpLabel" @bind:after="Host.GenerateCode" />
+                    </div>
+                    <div class="form-group">
+                        <label>Issuer</label>
+                        <input type="text" @bind="Host.OtpIssuer" @bind:after="Host.GenerateCode" />
+                    </div>
+                }
+                else if (Host.SpecialPayloadType == "Girocode")
+                {
+                    <div class="form-group">
+                        <label>IBAN</label>
+                        <input type="text" @bind="Host.GirocodeIban" @bind:after="Host.GenerateCode" />
+                    </div>
+                    <div class="form-group">
+                        <label>BIC</label>
+                        <input type="text" @bind="Host.GirocodeBic" @bind:after="Host.GenerateCode" />
+                    </div>
+                    <div class="form-group">
+                        <label>Recipient</label>
+                        <input type="text" @bind="Host.GirocodeRecipient" @bind:after="Host.GenerateCode" />
+                    </div>
+                    <div class="form-group">
+                        <label>Amount</label>
+                        <input type="number" step="0.01" @bind="Host.GirocodeAmount" @bind:after="Host.GenerateCode" />
+                    </div>
+                    <div class="form-group">
+                        <label>Reference</label>
+                        <input type="text" @bind="Host.GirocodeReference" @bind:after="Host.GenerateCode" />
+                    </div>
+                }
+            }
+            else if (Host.SelectedCategory == "Barcode")
+            {
+                <div class="form-group">
+                    <label>Barcode Type</label>
+                    <select @bind="Host.SelectedBarcodeType" @bind:after="Host.OnBarcodeTypeChanged">
+                        <option value="Code128">Code 128</option>
+                        <option value="GS1128">GS1-128</option>
+                        <option value="Code39">Code 39</option>
+                        <option value="Code93">Code 93</option>
+                        <option value="Code11">Code 11</option>
+                        <option value="Codabar">Codabar</option>
+                        <option value="MSI">MSI</option>
+                        <option value="Plessey">Plessey</option>
+                        <option value="EAN">EAN-13</option>
+                        <option value="UPCA">UPC-A</option>
+                        <option value="UPCE">UPC-E</option>
+                        <option value="ITF14">ITF-14</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>@Host.GetBarcodeContentLabel()</label>
+                    <input type="text" @bind="Host.BarcodeContent" @bind:after="Host.GenerateCode" placeholder="@Host.GetBarcodeContentPlaceholder()" />
+                    @if (!string.IsNullOrEmpty(Host.BarcodeHint))
+                    {
+                        <small class="form-hint">@Host.BarcodeHint</small>
+                    }
+                </div>
+            }
+            else if (Host.SelectedCategory == "Matrix")
+            {
+                <div class="form-group">
+                    <label>Matrix Type</label>
+                    <select @bind="Host.SelectedMatrixType" @bind:after="Host.GenerateCode">
+                        <option value="DataMatrix">Data Matrix</option>
+                        <option value="Pdf417">PDF417</option>
+                        <option value="Aztec">Aztec</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Content</label>
+                    <textarea rows="3" @bind="Host.MatrixContent" @bind:after="Host.GenerateCode"></textarea>
+                </div>
+
+                @if (Host.SelectedMatrixType == "DataMatrix")
+                {
+                    <div class="form-group">
+                        <label>Encoding Mode</label>
+                        <select @bind="Host.SelectedDataMatrixMode" @bind:after="Host.GenerateCode">
+                            <option value="Auto">Auto</option>
+                            <option value="Ascii">ASCII</option>
+                            <option value="C40">C40</option>
+                            <option value="Text">Text</option>
+                            <option value="X12">X12</option>
+                            <option value="Edifact">Edifact</option>
+                            <option value="Base256">Base256</option>
+                        </select>
+                    </div>
+                }
+                else if (Host.SelectedMatrixType == "Pdf417")
+                {
+                    <div class="form-group">
+                        <label>Error Correction: @Host.Pdf417EccLevel</label>
+                        <input type="range" min="-1" max="8" step="1" @bind="Host.Pdf417EccLevel" @bind:after="Host.GenerateCode" />
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" @bind="Host.Pdf417Compact" @bind:after="Host.GenerateCode" />
+                            Compact PDF417
+                        </label>
+                    </div>
+                }
+                else if (Host.SelectedMatrixType == "Aztec")
+                {
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" @bind="Host.AztecAutoEcc" @bind:after="Host.GenerateCode" />
+                            Auto error correction
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>Error Correction %: @Host.AztecEccPercent</label>
+                        <input type="range" min="5" max="50" step="1" @bind="Host.AztecEccPercent" @bind:after="Host.GenerateCode" disabled="@Host.AztecAutoEcc" />
+                    </div>
+                    <div class="form-group">
+                        <label>Layers (0 = auto): @Host.AztecLayers</label>
+                        <input type="range" min="0" max="32" step="1" @bind="Host.AztecLayers" @bind:after="Host.GenerateCode" />
+                    </div>
+                }
+            }
+
+            <button class="btn btn-primary" style="width: 100%; margin-top: 1.5rem;" @onclick="Host.GenerateCode">
+                Generate Code
+            </button>
+        }
+    </div>
+}
+
+@code {
+    [CascadingParameter]
+    public Playground? Host { get; set; }
+}
