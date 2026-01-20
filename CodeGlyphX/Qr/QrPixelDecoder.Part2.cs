@@ -54,7 +54,9 @@ internal static partial class QrPixelDecoder {
             settings.MinContrast,
             settings.AggressiveSampling);
 
-        if (TryDecodeWithImage(scale, baseImage, fastSettings, budget, accept, out result, out var diagFast)) {
+        var candidates = new List<QrFinderPatternDetector.FinderPattern>(8);
+
+        if (TryDecodeWithImage(scale, baseImage, fastSettings, candidates, budget, accept, out result, out var diagFast)) {
             diagnostics = diagFast;
             return true;
         }
@@ -63,14 +65,14 @@ internal static partial class QrPixelDecoder {
         var best = diagFast;
 
         if (scale == 1 && settings.AllowTransforms) {
-            if (TryDecodeWithTransformsFast(scale, baseImage, fastSettings, budget, accept, out result, out var diagFastTransform)) {
+            if (TryDecodeWithTransformsFast(scale, baseImage, fastSettings, candidates, budget, accept, out result, out var diagFastTransform)) {
                 diagnostics = diagFastTransform;
                 return true;
             }
             best = Better(best, diagFastTransform);
         }
 
-        if (TryDecodeImageAndStretch(scale, baseImage, settings, budget, accept, out result, out var diagBase)) {
+        if (TryDecodeImageAndStretch(scale, baseImage, settings, candidates, budget, accept, out result, out var diagBase)) {
             diagnostics = diagBase;
             return true;
         }
@@ -78,7 +80,7 @@ internal static partial class QrPixelDecoder {
         best = Better(best, diagBase);
 
         if (scale == 1 && settings.AllowTransforms) {
-            if (TryDecodeWithTransforms(scale, baseImage, settings, budget, accept, out result, out var diagTransform)) {
+            if (TryDecodeWithTransforms(scale, baseImage, settings, candidates, budget, accept, out result, out var diagTransform)) {
                 diagnostics = diagTransform;
                 return true;
             }
@@ -104,6 +106,7 @@ internal static partial class QrPixelDecoder {
         int scale,
         QrGrayImage baseImage,
         QrProfileSettings settings,
+        List<QrFinderPatternDetector.FinderPattern> candidates,
         DecodeBudget budget,
         Func<QrDecoded, bool>? accept,
         out QrDecoded result,
@@ -145,7 +148,6 @@ internal static partial class QrPixelDecoder {
 
         var best = default(QrPixelDecodeDiagnostics);
         var tightBudget = budget.Enabled && budget.MaxMilliseconds <= 800;
-        var candidates = new List<QrFinderPatternDetector.FinderPattern>(8);
         var thresholdLimit = GetBudgetThresholdLimit(budget);
         if (thresholdCount > thresholdLimit) {
             thresholdCount = thresholdLimit;
@@ -289,6 +291,7 @@ internal static partial class QrPixelDecoder {
         int scale,
         QrGrayImage baseImage,
         QrProfileSettings settings,
+        List<QrFinderPatternDetector.FinderPattern> candidates,
         DecodeBudget budget,
         Func<QrDecoded, bool>? accept,
         out QrDecoded result,
@@ -298,7 +301,7 @@ internal static partial class QrPixelDecoder {
 
         if (budget.IsExpired || budget.IsNearDeadline(120)) return false;
 
-        if (TryDecodeWithImage(scale, baseImage, settings, budget, accept, out result, out var diagBase)) {
+        if (TryDecodeWithImage(scale, baseImage, settings, candidates, budget, accept, out result, out var diagBase)) {
             diagnostics = diagBase;
             return true;
         }
@@ -312,7 +315,7 @@ internal static partial class QrPixelDecoder {
             }
             var boosted = baseImage.WithBinaryBoost(12);
             if (!ReferenceEquals(boosted.Gray, baseImage.Gray)) {
-                if (TryDecodeWithImage(scale, boosted, settings, budget, accept, out result, out var diagBoost)) {
+                if (TryDecodeWithImage(scale, boosted, settings, candidates, budget, accept, out result, out var diagBoost)) {
                     diagnostics = diagBoost;
                     return true;
                 }
@@ -326,7 +329,7 @@ internal static partial class QrPixelDecoder {
                 return false;
             }
             var normalized = baseImage.WithLocalNormalize(GetNormalizeWindow(baseImage));
-            if (TryDecodeWithImage(scale, normalized, settings, budget, accept, out result, out var diagNorm)) {
+            if (TryDecodeWithImage(scale, normalized, settings, candidates, budget, accept, out result, out var diagNorm)) {
                 diagnostics = diagNorm;
                 return true;
             }
@@ -341,7 +344,7 @@ internal static partial class QrPixelDecoder {
             if (range < 48) {
                 var stretched = baseImage.WithContrastStretch(48);
                 if (!ReferenceEquals(stretched.Gray, baseImage.Gray)) {
-                    if (TryDecodeWithImage(scale, stretched, settings, budget, accept, out result, out var diagStretch)) {
+                    if (TryDecodeWithImage(scale, stretched, settings, candidates, budget, accept, out result, out var diagStretch)) {
                         diagnostics = diagStretch;
                         return true;
                     }
@@ -349,7 +352,7 @@ internal static partial class QrPixelDecoder {
 
                     if (settings.AllowNormalize) {
                         var normStretch = stretched.WithLocalNormalize(GetNormalizeWindow(stretched));
-                        if (TryDecodeWithImage(scale, normStretch, settings, budget, accept, out result, out var diagNormStretch)) {
+                        if (TryDecodeWithImage(scale, normStretch, settings, candidates, budget, accept, out result, out var diagNormStretch)) {
                             diagnostics = diagNormStretch;
                             return true;
                         }
@@ -367,6 +370,7 @@ internal static partial class QrPixelDecoder {
         int scale,
         QrGrayImage baseImage,
         QrProfileSettings settings,
+        List<QrFinderPatternDetector.FinderPattern> candidates,
         DecodeBudget budget,
         Func<QrDecoded, bool>? accept,
         out QrDecoded result,
@@ -382,7 +386,7 @@ internal static partial class QrPixelDecoder {
         }
         var rot90 = baseImage.Rotate90();
         if (budget.IsExpired) return false;
-        if (TryDecodeImageAndStretch(scale, rot90, settings, budget, accept, out result, out var d90)) {
+        if (TryDecodeImageAndStretch(scale, rot90, settings, candidates, budget, accept, out result, out var d90)) {
             diagnostics = d90;
             return true;
         }
@@ -394,7 +398,7 @@ internal static partial class QrPixelDecoder {
         }
         var rot180 = baseImage.Rotate180();
         if (budget.IsExpired) return false;
-        if (TryDecodeImageAndStretch(scale, rot180, settings, budget, accept, out result, out var d180)) {
+        if (TryDecodeImageAndStretch(scale, rot180, settings, candidates, budget, accept, out result, out var d180)) {
             diagnostics = d180;
             return true;
         }
@@ -406,7 +410,7 @@ internal static partial class QrPixelDecoder {
         }
         var rot270 = baseImage.Rotate270();
         if (budget.IsExpired) return false;
-        if (TryDecodeImageAndStretch(scale, rot270, settings, budget, accept, out result, out var d270)) {
+        if (TryDecodeImageAndStretch(scale, rot270, settings, candidates, budget, accept, out result, out var d270)) {
             diagnostics = d270;
             return true;
         }
@@ -418,7 +422,7 @@ internal static partial class QrPixelDecoder {
         }
         var mirror = baseImage.MirrorX();
         if (budget.IsExpired) return false;
-        if (TryDecodeImageAndStretch(scale, mirror, settings, budget, accept, out result, out var dm0)) {
+        if (TryDecodeImageAndStretch(scale, mirror, settings, candidates, budget, accept, out result, out var dm0)) {
             diagnostics = dm0;
             return true;
         }
@@ -430,7 +434,7 @@ internal static partial class QrPixelDecoder {
         }
         var mirror90 = mirror.Rotate90();
         if (budget.IsExpired) return false;
-        if (TryDecodeImageAndStretch(scale, mirror90, settings, budget, accept, out result, out var dm90)) {
+        if (TryDecodeImageAndStretch(scale, mirror90, settings, candidates, budget, accept, out result, out var dm90)) {
             diagnostics = dm90;
             return true;
         }
@@ -442,7 +446,7 @@ internal static partial class QrPixelDecoder {
         }
         var mirror180 = mirror.Rotate180();
         if (budget.IsExpired) return false;
-        if (TryDecodeImageAndStretch(scale, mirror180, settings, budget, accept, out result, out var dm180)) {
+        if (TryDecodeImageAndStretch(scale, mirror180, settings, candidates, budget, accept, out result, out var dm180)) {
             diagnostics = dm180;
             return true;
         }
@@ -454,7 +458,7 @@ internal static partial class QrPixelDecoder {
         }
         var mirror270 = mirror.Rotate270();
         if (budget.IsExpired) return false;
-        if (TryDecodeImageAndStretch(scale, mirror270, settings, budget, accept, out result, out var dm270)) {
+        if (TryDecodeImageAndStretch(scale, mirror270, settings, candidates, budget, accept, out result, out var dm270)) {
             diagnostics = dm270;
             return true;
         }
@@ -468,6 +472,7 @@ internal static partial class QrPixelDecoder {
         int scale,
         QrGrayImage baseImage,
         QrProfileSettings settings,
+        List<QrFinderPatternDetector.FinderPattern> candidates,
         DecodeBudget budget,
         Func<QrDecoded, bool>? accept,
         out QrDecoded result,
@@ -483,7 +488,7 @@ internal static partial class QrPixelDecoder {
         }
         var rot90 = baseImage.Rotate90();
         if (budget.IsExpired) return false;
-        if (TryDecodeWithImage(scale, rot90, settings, budget, accept, out result, out var d90)) {
+        if (TryDecodeWithImage(scale, rot90, settings, candidates, budget, accept, out result, out var d90)) {
             diagnostics = d90;
             return true;
         }
@@ -495,7 +500,7 @@ internal static partial class QrPixelDecoder {
         }
         var rot180 = baseImage.Rotate180();
         if (budget.IsExpired) return false;
-        if (TryDecodeWithImage(scale, rot180, settings, budget, accept, out result, out var d180)) {
+        if (TryDecodeWithImage(scale, rot180, settings, candidates, budget, accept, out result, out var d180)) {
             diagnostics = d180;
             return true;
         }
@@ -507,7 +512,7 @@ internal static partial class QrPixelDecoder {
         }
         var rot270 = baseImage.Rotate270();
         if (budget.IsExpired) return false;
-        if (TryDecodeWithImage(scale, rot270, settings, budget, accept, out result, out var d270)) {
+        if (TryDecodeWithImage(scale, rot270, settings, candidates, budget, accept, out result, out var d270)) {
             diagnostics = d270;
             return true;
         }
@@ -519,7 +524,7 @@ internal static partial class QrPixelDecoder {
         }
         var mirror = baseImage.MirrorX();
         if (budget.IsExpired) return false;
-        if (TryDecodeWithImage(scale, mirror, settings, budget, accept, out result, out var dm0)) {
+        if (TryDecodeWithImage(scale, mirror, settings, candidates, budget, accept, out result, out var dm0)) {
             diagnostics = dm0;
             return true;
         }
@@ -531,7 +536,7 @@ internal static partial class QrPixelDecoder {
         }
         var mirror90 = mirror.Rotate90();
         if (budget.IsExpired) return false;
-        if (TryDecodeWithImage(scale, mirror90, settings, budget, accept, out result, out var dm90)) {
+        if (TryDecodeWithImage(scale, mirror90, settings, candidates, budget, accept, out result, out var dm90)) {
             diagnostics = dm90;
             return true;
         }
@@ -543,7 +548,7 @@ internal static partial class QrPixelDecoder {
         }
         var mirror180 = mirror.Rotate180();
         if (budget.IsExpired) return false;
-        if (TryDecodeWithImage(scale, mirror180, settings, budget, accept, out result, out var dm180)) {
+        if (TryDecodeWithImage(scale, mirror180, settings, candidates, budget, accept, out result, out var dm180)) {
             diagnostics = dm180;
             return true;
         }
@@ -555,7 +560,7 @@ internal static partial class QrPixelDecoder {
         }
         var mirror270 = mirror.Rotate270();
         if (budget.IsExpired) return false;
-        if (TryDecodeWithImage(scale, mirror270, settings, budget, accept, out result, out var dm270)) {
+        if (TryDecodeWithImage(scale, mirror270, settings, candidates, budget, accept, out result, out var dm270)) {
             diagnostics = dm270;
             return true;
         }
@@ -567,17 +572,18 @@ internal static partial class QrPixelDecoder {
 
     private static void CollectAllFromImage(QrGrayImage baseImage, QrProfileSettings settings, PooledList<QrDecoded> list, HashSet<string> seen, Func<QrDecoded, bool>? accept, DecodeBudget budget) {
         if (budget.IsExpired) return;
-        CollectAllFromImageCore(baseImage, settings, list, seen, accept, budget);
+        var candidates = new List<QrFinderPatternDetector.FinderPattern>(8);
+        CollectAllFromImageCore(baseImage, settings, list, seen, accept, budget, candidates);
         if (settings.AllowNormalize) {
             if (budget.IsNearDeadline(150)) return;
             var normalized = baseImage.WithLocalNormalize(GetNormalizeWindow(baseImage));
             if (!budget.IsExpired) {
-                CollectAllFromImageCore(normalized, settings, list, seen, accept, budget);
+                CollectAllFromImageCore(normalized, settings, list, seen, accept, budget, candidates);
             }
         }
     }
 
-    private static void CollectAllFromImageCore(QrGrayImage baseImage, QrProfileSettings settings, PooledList<QrDecoded> list, HashSet<string> seen, Func<QrDecoded, bool>? accept, DecodeBudget budget) {
+    private static void CollectAllFromImageCore(QrGrayImage baseImage, QrProfileSettings settings, PooledList<QrDecoded> list, HashSet<string> seen, Func<QrDecoded, bool>? accept, DecodeBudget budget, List<QrFinderPatternDetector.FinderPattern> candidates) {
         Span<byte> thresholds = stackalloc byte[12];
         var thresholdCount = 0;
         if (settings.AllowExtraThresholds) {
@@ -601,7 +607,6 @@ internal static partial class QrPixelDecoder {
             AddThresholdCandidate(ref thresholds, ref thresholdCount, baseImage.Threshold);
         }
 
-        var candidates = new List<QrFinderPatternDetector.FinderPattern>(8);
         var thresholdLimit = GetBudgetThresholdLimit(budget);
         if (thresholdCount > thresholdLimit) {
             thresholdCount = thresholdLimit;

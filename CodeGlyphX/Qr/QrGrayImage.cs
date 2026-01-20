@@ -314,80 +314,119 @@ internal readonly struct QrGrayImage {
         byte max = 0;
 
         if (scale == 1) {
-            for (var y = 0; y < outH; y++) {
-                if (shouldStop?.Invoke() == true) return false;
-                var row = y * stride;
-                for (var x = 0; x < outW; x++) {
-                    var p = row + x * 4;
+            if (fmt == PixelFormat.Bgra32) {
+                for (var y = 0; y < outH; y++) {
+                    if (shouldStop?.Invoke() == true) return false;
+                    var row = y * stride;
+                    for (var x = 0; x < outW; x++) {
+                        var p = row + x * 4;
+                        var b = pixels[p + 0];
+                        var g = pixels[p + 1];
+                        var r = pixels[p + 2];
 
-                    byte r, g, b;
-                    if (fmt == PixelFormat.Bgra32) {
-                        b = pixels[p + 0];
-                        g = pixels[p + 1];
-                        r = pixels[p + 2];
-                    } else {
-                        r = pixels[p + 0];
-                        g = pixels[p + 1];
-                        b = pixels[p + 2];
+                        var lum = (r * 299 + g * 587 + b * 114 + 500) / 1000;
+                        var l = (byte)lum;
+
+                        var idx = y * outW + x;
+                        gray[idx] = l;
+                        histogram[l]++;
+
+                        if (l < min) min = l;
+                        if (l > max) max = l;
                     }
+                }
+            } else {
+                for (var y = 0; y < outH; y++) {
+                    if (shouldStop?.Invoke() == true) return false;
+                    var row = y * stride;
+                    for (var x = 0; x < outW; x++) {
+                        var p = row + x * 4;
+                        var r = pixels[p + 0];
+                        var g = pixels[p + 1];
+                        var b = pixels[p + 2];
 
-                    var lum = (r * 299 + g * 587 + b * 114 + 500) / 1000;
-                    var l = (byte)lum;
+                        var lum = (r * 299 + g * 587 + b * 114 + 500) / 1000;
+                        var l = (byte)lum;
 
-                    var idx = y * outW + x;
-                    gray[idx] = l;
-                    histogram[l]++;
+                        var idx = y * outW + x;
+                        gray[idx] = l;
+                        histogram[l]++;
 
-                    if (l < min) min = l;
-                    if (l > max) max = l;
+                        if (l < min) min = l;
+                        if (l > max) max = l;
+                    }
                 }
             }
         } else {
             var blockCount = scale * scale;
 
-            for (var y = 0; y < outH; y++) {
-                if (shouldStop?.Invoke() == true) return false;
-                var baseY = y * scale;
-                for (var x = 0; x < outW; x++) {
-                    var baseX = x * scale;
+            if (fmt == PixelFormat.Bgra32) {
+                for (var y = 0; y < outH; y++) {
+                    if (shouldStop?.Invoke() == true) return false;
+                    var baseY = y * scale;
+                    for (var x = 0; x < outW; x++) {
+                        var baseX = x * scale;
 
-                    var sumR = 0;
-                    var sumG = 0;
-                    var sumB = 0;
+                        var sumR = 0;
+                        var sumG = 0;
+                        var sumB = 0;
 
-                    for (var dy = 0; dy < scale; dy++) {
-                        var row = (baseY + dy) * stride;
-                        var p = row + baseX * 4;
+                        for (var dy = 0; dy < scale; dy++) {
+                            var row = (baseY + dy) * stride;
+                            var p = row + baseX * 4;
 
-                        for (var dx = 0; dx < scale; dx++) {
-                            byte r, g, b;
-                            if (fmt == PixelFormat.Bgra32) {
-                                b = pixels[p + 0];
-                                g = pixels[p + 1];
-                                r = pixels[p + 2];
-                            } else {
-                                r = pixels[p + 0];
-                                g = pixels[p + 1];
-                                b = pixels[p + 2];
+                            for (var dx = 0; dx < scale; dx++) {
+                                sumB += pixels[p + 0];
+                                sumG += pixels[p + 1];
+                                sumR += pixels[p + 2];
+                                p += 4;
                             }
-
-                            sumR += r;
-                            sumG += g;
-                            sumB += b;
-
-                            p += 4;
                         }
+
+                        var lum = (299 * sumR + 587 * sumG + 114 * sumB + 500 * blockCount) / (1000 * blockCount);
+                        var l = (byte)lum;
+
+                        var idx = y * outW + x;
+                        gray[idx] = l;
+                        histogram[l]++;
+
+                        if (l < min) min = l;
+                        if (l > max) max = l;
                     }
+                }
+            } else {
+                for (var y = 0; y < outH; y++) {
+                    if (shouldStop?.Invoke() == true) return false;
+                    var baseY = y * scale;
+                    for (var x = 0; x < outW; x++) {
+                        var baseX = x * scale;
 
-                    var lum = (299 * sumR + 587 * sumG + 114 * sumB + 500 * blockCount) / (1000 * blockCount);
-                    var l = (byte)lum;
+                        var sumR = 0;
+                        var sumG = 0;
+                        var sumB = 0;
 
-                    var idx = y * outW + x;
-                    gray[idx] = l;
-                    histogram[l]++;
+                        for (var dy = 0; dy < scale; dy++) {
+                            var row = (baseY + dy) * stride;
+                            var p = row + baseX * 4;
 
-                    if (l < min) min = l;
-                    if (l > max) max = l;
+                            for (var dx = 0; dx < scale; dx++) {
+                                sumR += pixels[p + 0];
+                                sumG += pixels[p + 1];
+                                sumB += pixels[p + 2];
+                                p += 4;
+                            }
+                        }
+
+                        var lum = (299 * sumR + 587 * sumG + 114 * sumB + 500 * blockCount) / (1000 * blockCount);
+                        var l = (byte)lum;
+
+                        var idx = y * outW + x;
+                        gray[idx] = l;
+                        histogram[l]++;
+
+                        if (l < min) min = l;
+                        if (l > max) max = l;
+                    }
                 }
             }
         }
