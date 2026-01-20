@@ -21,6 +21,9 @@ internal static class Pdf417DecodedBitStreamParser {
     private const int NumericCompactionLatch = 902;
     private const int ByteCompactionLatch6 = 924;
     private const int ModeShiftToByte = 913;
+    private const int MacroPdf417ControlBlock = 928;
+    private const int MacroPdf417Terminator = 922;
+    private const int MacroPdf417OptionalField = 923;
 
     private const int Pl = 25;
     private const int Ll = 27;
@@ -36,7 +39,12 @@ internal static class Pdf417DecodedBitStreamParser {
     private static readonly BigInteger[] Exp900 = CreateExp900();
 
     public static string? Decode(int[] codewords) {
+        return Decode(codewords, out _);
+    }
+
+    public static string? Decode(int[] codewords, out Pdf417MacroMetadata? macro) {
         if (codewords is null) throw new ArgumentNullException(nameof(codewords));
+        macro = null;
         var sb = new StringBuilder(codewords.Length * 2);
         var index = 0;
         var mode = TextCompactionLatch;
@@ -57,6 +65,11 @@ internal static class Pdf417DecodedBitStreamParser {
                 mode = TextCompactionLatch;
                 continue;
             }
+            if (code == MacroPdf417ControlBlock) {
+                if (!DecodeMacroBlock(codewords, ref index, ref macro)) return null;
+                mode = TextCompactionLatch;
+                continue;
+            }
             if (code == ModeShiftToByte) {
                 if (index >= codewords.Length) break;
                 sb.Append((char)codewords[index++]);
@@ -71,6 +84,159 @@ internal static class Pdf417DecodedBitStreamParser {
         }
 
         return sb.ToString();
+    }
+
+    private static bool DecodeMacroBlock(int[] codewords, ref int index, ref Pdf417MacroMetadata? macro) {
+        if (index + 1 >= codewords.Length) return false;
+
+        var segmentCodewords = new[] { codewords[index], codewords[index + 1] };
+        index += 2;
+
+        var segmentIndexText = DecodeBase900ToBase10(segmentCodewords, 2);
+        if (segmentIndexText is null || !int.TryParse(segmentIndexText, out var segmentIndex)) return false;
+
+        var fileId = new StringBuilder();
+        while (index < codewords.Length) {
+            var code = codewords[index];
+            if (code == MacroPdf417Terminator || code == MacroPdf417OptionalField) break;
+            if (code >= TextCompactionLatch) break;
+            fileId.Append(code.ToString("000", System.Globalization.CultureInfo.InvariantCulture));
+            index++;
+        }
+
+        var isLastSegment = false;
+        int? segmentCount = null;
+        string? fileName = null;
+        string? sender = null;
+        string? addressee = null;
+        long? timestamp = null;
+        long? fileSize = null;
+        int? checksum = null;
+
+        while (index < codewords.Length) {
+            var code = codewords[index];
+            if (code == MacroPdf417Terminator) {
+                isLastSegment = true;
+                index++;
+                break;
+            }
+            if (code != MacroPdf417OptionalField) break;
+            if (index + 1 >= codewords.Length) return false;
+            index++; // skip 923
+            var field = codewords[index++];
+            switch (field) {
+                case 0: {
+                    var text = new StringBuilder();
+                    index = DecodeMacroText(codewords, index, text);
+                    fileName = text.ToString();
+                    break;
+                }
+                case 1: {
+                    var numeric = new StringBuilder();
+                    index = DecodeMacroNumeric(codewords, index, numeric);
+                    if (!int.TryParse(numeric.ToString(), out var value)) return false;
+                    segmentCount = value;
+                    break;
+                }
+                case 2: {
+                    var numeric = new StringBuilder();
+                    index = DecodeMacroNumeric(codewords, index, numeric);
+                    if (!long.TryParse(numeric.ToString(), out var value)) return false;
+                    timestamp = value;
+                    break;
+                }
+                case 3: {
+                    var text = new StringBuilder();
+                    index = DecodeMacroText(codewords, index, text);
+                    sender = text.ToString();
+                    break;
+                }
+                case 4: {
+                    var text = new StringBuilder();
+                    index = DecodeMacroText(codewords, index, text);
+                    addressee = text.ToString();
+                    break;
+                }
+                case 5: {
+                    var numeric = new StringBuilder();
+                    index = DecodeMacroNumeric(codewords, index, numeric);
+                    if (!long.TryParse(numeric.ToString(), out var value)) return false;
+                    fileSize = value;
+                    break;
+                }
+                case 6: {
+                    var numeric = new StringBuilder();
+                    index = DecodeMacroNumeric(codewords, index, numeric);
+                    if (!int.TryParse(numeric.ToString(), out var value)) return false;
+                    checksum = value;
+                    break;
+                }
+                default:
+                    return false;
+            }
+        }
+
+        macro = new Pdf417MacroMetadata(segmentIndex, fileId.ToString(), isLastSegment, segmentCount, fileName, timestamp, sender, addressee, fileSize, checksum);
+        return true;
+    }
+
+    private static int DecodeMacroText(int[] codewords, int index, StringBuilder sb) {
+        var textData = new List<int>();
+        var byteData = new List<int>();
+
+        while (index < codewords.Length) {
+            var code = codewords[index];
+            if (code == MacroPdf417OptionalField || code == MacroPdf417Terminator || code == MacroPdf417ControlBlock) break;
+            if (code < TextCompactionLatch) {
+                textData.Add(code / 30);
+                textData.Add(code % 30);
+                index++;
+                continue;
+            }
+            if (code == TextCompactionLatch) {
+                textData.Add(TextCompactionLatch);
+                index++;
+                continue;
+            }
+            if (code == ModeShiftToByte) {
+                index++;
+                if (index >= codewords.Length) break;
+                textData.Add(ModeShiftToByte);
+                byteData.Add(codewords[index++]);
+                continue;
+            }
+            break;
+        }
+
+        DecodeTextCompactionData(textData, byteData, sb);
+        return index;
+    }
+
+    private static int DecodeMacroNumeric(int[] codewords, int index, StringBuilder sb) {
+        var count = 0;
+        var numericCodewords = new int[15];
+        while (index < codewords.Length) {
+            var code = codewords[index];
+            if (code == MacroPdf417OptionalField || code == MacroPdf417Terminator || code == MacroPdf417ControlBlock) break;
+            if (code >= TextCompactionLatch) break;
+            numericCodewords[count++] = code;
+            index++;
+
+            if (count == 15) {
+                var decoded = DecodeBase900ToBase10(numericCodewords, count);
+                if (decoded is null) return index;
+                sb.Append(decoded);
+                count = 0;
+            }
+        }
+
+        if (count > 0) {
+            var decoded = DecodeBase900ToBase10(numericCodewords, count);
+            if (decoded is null) return index;
+            sb.Append(decoded);
+        }
+
+        return index;
     }
 
     private static int DecodeTextCompaction(int[] codewords, int index, StringBuilder sb) {

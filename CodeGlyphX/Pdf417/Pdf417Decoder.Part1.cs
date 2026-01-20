@@ -35,6 +35,11 @@ public static partial class Pdf417Decoder {
     }
 
     private static bool TryDecodeCore(BitMatrix modules, CancellationToken cancellationToken, out string value) {
+        return TryDecodeCore(modules, cancellationToken, out value, out _);
+    }
+
+    private static bool TryDecodeCore(BitMatrix modules, CancellationToken cancellationToken, out string value, out Pdf417MacroMetadata? macro) {
+        macro = null;
         if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; return false; }
         var width = modules.Width;
         var height = modules.Height;
@@ -134,7 +139,7 @@ public static partial class Pdf417Decoder {
 
             var dataCodewords = new int[lengthDescriptor - 1];
             Array.Copy(received, 1, dataCodewords, 0, dataCodewords.Length);
-            var decoded = Pdf417DecodedBitStreamParser.Decode(dataCodewords);
+            var decoded = Pdf417DecodedBitStreamParser.Decode(dataCodewords, out macro);
             if (decoded is null) {
                 return FailDecode(out value);
             }
