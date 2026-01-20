@@ -1076,7 +1076,12 @@
             _decodeCts?.Cancel();
             _decodeCts?.Dispose();
             _decodeCts = new CancellationTokenSource();
+            if (DecodeMaxMilliseconds > 0)
+            {
+                _decodeCts.CancelAfter(DecodeMaxMilliseconds);
+            }
             var token = _decodeCts.Token;
+            using var budgetScope = CodeGlyphBudget.Begin(DecodeMaxMilliseconds);
 
             using var stream = file.OpenReadStream(5 * 1024 * 1024);
             using var ms = new MemoryStream();
@@ -1171,29 +1176,71 @@
                     DecodeError = "Time budget exceeded.";
                     return;
                 }
-                using var stageCts = CreateStageCts(token, stageBudget);
-
-                if (CodeGlyphX.DataMatrix.DataMatrixDecoder.TryDecode(rgba, width, height, stride, PixelFormat.Rgba32, stageCts.Token, out var dm))
+                var matrixMax = DecodeMaxDimension > 0 ? Math.Min(DecodeMaxDimension, 640) : 640;
+                var matrixRgba = rgba;
+                var matrixWidth = width;
+                var matrixHeight = height;
+                if (matrixMax > 0 && (matrixWidth > matrixMax || matrixHeight > matrixMax))
                 {
-                    AddDecodeResult("Data Matrix", dm);
-                    found = true;
+                    if (DecodeDownscale)
+                    {
+                        await UpdateDecodeStatusAsync("Downscaling for matrix decode...");
+                        matrixRgba = ResizeNearest(matrixRgba, matrixWidth, matrixHeight, matrixMax, out matrixWidth, out matrixHeight);
+                    }
+                    else
+                    {
+                        DecodeStatus = $"Skipped matrix decode (image too large: {matrixWidth}x{matrixHeight}).";
+                        return;
+                    }
+                }
+
+                var pixelCount = matrixWidth * matrixHeight;
+                var maxPixels = matrixMax > 0 ? matrixMax * matrixMax : 1_000_000;
+                if (pixelCount > maxPixels * 2)
+                {
+                    DecodeStatus = $"Skipped matrix decode (image too large: {matrixWidth}x{matrixHeight}).";
+                    return;
+                }
+                if (stageBudget < 150)
+                {
+                    DecodeStatus = "Skipped matrix decode (insufficient time budget).";
+                    return;
+                }
+
+                using var stageCts = CreateStageCts(token, stageBudget);
+                var matrixStride = matrixWidth * 4;
+                var sliceBudget = Math.Max(100, stageBudget / 3);
+
+                using (var dmCts = CreateStageCts(stageCts.Token, sliceBudget))
+                {
+                    if (CodeGlyphX.DataMatrix.DataMatrixDecoder.TryDecode(matrixRgba, matrixWidth, matrixHeight, matrixStride, PixelFormat.Rgba32, dmCts.Token, out var dm))
+                    {
+                        AddDecodeResult("Data Matrix", dm);
+                        found = true;
+                    }
                 }
                 await Task.Yield();
                 if (!found || !DecodeStopAfterFirst)
                 {
-                    if (CodeGlyphX.Pdf417.Pdf417Decoder.TryDecode(rgba, width, height, stride, PixelFormat.Rgba32, stageCts.Token, out var pdf417))
+                    using (var pdfCts = CreateStageCts(stageCts.Token, sliceBudget))
                     {
-                        AddDecodeResult("PDF417", pdf417);
-                        found = true;
+                        if (CodeGlyphX.Pdf417.Pdf417Decoder.TryDecode(matrixRgba, matrixWidth, matrixHeight, matrixStride, PixelFormat.Rgba32, pdfCts.Token, out var pdf417))
+                        {
+                            AddDecodeResult("PDF417", pdf417);
+                            found = true;
+                        }
                     }
                     await Task.Yield();
                 }
                 if (!found || !DecodeStopAfterFirst)
                 {
-                    if (AztecCode.TryDecode(rgba, width, height, stride, PixelFormat.Rgba32, stageCts.Token, out var aztec))
+                    using (var azCts = CreateStageCts(stageCts.Token, sliceBudget))
                     {
-                        AddDecodeResult("Aztec", aztec);
-                        found = true;
+                        if (AztecCode.TryDecode(matrixRgba, matrixWidth, matrixHeight, matrixStride, PixelFormat.Rgba32, azCts.Token, out var aztec))
+                        {
+                            AddDecodeResult("Aztec", aztec);
+                            found = true;
+                        }
                     }
                     await Task.Yield();
                 }
@@ -1201,7 +1248,9 @@
 
             if (token.IsCancellationRequested)
             {
-                DecodeError = "Decode cancelled.";
+                DecodeError = DecodeMaxMilliseconds > 0 && sw.ElapsedMilliseconds >= DecodeMaxMilliseconds
+                    ? "Time budget exceeded."
+                    : "Decode cancelled.";
                 return;
             }
 
