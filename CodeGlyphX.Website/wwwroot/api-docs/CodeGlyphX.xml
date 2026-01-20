@@ -2833,6 +2833,16 @@
             Attempts to decode all symbols from a PNG stream using a single options object.
             </summary>
         </member>
+        <member name="T:CodeGlyphX.CodeGlyphBudget">
+            <summary>
+            Provides a temporary decode time budget for operations that honor it.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.CodeGlyphBudget.Begin(System.Int32)">
+            <summary>
+            Starts a decode time budget scope. Dispose the returned handle to restore the previous budget.
+            </summary>
+        </member>
         <member name="T:CodeGlyphX.CodeGlyphDecoded">
             <summary>
             Result of decoding a QR or barcode symbol.
