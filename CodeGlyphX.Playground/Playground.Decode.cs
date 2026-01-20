@@ -88,7 +88,8 @@ public partial class Playground {
                     Profile = QrDecodeProfile.Robust,
                     AggressiveSampling = true,
                     BudgetMilliseconds = DecodeMaxMilliseconds,
-                    MaxDimension = DecodeDownscale ? DecodeMaxDimension : 0
+                    MaxDimension = DecodeDownscale ? DecodeMaxDimension : 0,
+                    EnableTileScan = !DecodeStopAfterFirst
                 };
                 if (DecodeStopAfterFirst)
                 {

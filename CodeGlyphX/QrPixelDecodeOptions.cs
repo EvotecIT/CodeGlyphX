@@ -90,9 +90,11 @@ public sealed partial class QrPixelDecodeOptions {
     /// Screen preset (budgeted decode for UI capture scenarios).
     /// </summary>
     public static QrPixelDecodeOptions Screen(int maxMilliseconds = 300, int maxDimension = 1200) {
+        var budget = Math.Max(0, maxMilliseconds);
         return new QrPixelDecodeOptions {
             Profile = QrDecodeProfile.Balanced,
-            BudgetMilliseconds = Math.Max(0, maxMilliseconds),
+            MaxMilliseconds = budget,
+            BudgetMilliseconds = budget,
             MaxDimension = Math.Max(0, maxDimension),
             AutoCrop = true
         };
