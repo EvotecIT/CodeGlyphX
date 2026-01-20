@@ -24,14 +24,20 @@ public static partial class QrPayloads {
     /// <summary>
     /// Builds a URL payload.
     /// </summary>
-    public static QrPayloadData Url(string url) => new(NormalizeUrl(url));
+    public static QrPayloadData Url(string url) {
+        var normalized = NormalizeUrl(url);
+        if (!QrPayloadValidation.IsValidUrl(normalized)) throw new ArgumentException("URL is invalid.", nameof(url));
+        return new QrPayloadData(normalized);
+    }
 
     /// <summary>
     /// Builds a bookmark payload (MEBKM).
     /// </summary>
     public static QrPayloadData Bookmark(string url, string title) {
         if (string.IsNullOrWhiteSpace(url)) throw new ArgumentException("URL must not be empty.", nameof(url));
-        var safeUrl = EscapeInput(NormalizeUrl(url));
+        var normalized = NormalizeUrl(url);
+        if (!QrPayloadValidation.IsValidUrl(normalized)) throw new ArgumentException("URL is invalid.", nameof(url));
+        var safeUrl = EscapeInput(normalized);
         var safeTitle = EscapeInput(title ?? string.Empty);
         var payload = string.IsNullOrEmpty(safeTitle)
             ? "MEBKM:URL:" + safeUrl + ";;"
@@ -46,6 +52,9 @@ public static partial class QrPayloads {
         var sanitized = string.IsNullOrEmpty(number)
             ? string.Empty
             : RegexCache.WhatsappSanitize().Replace(number, string.Empty);
+        if (!string.IsNullOrEmpty(number) && string.IsNullOrEmpty(sanitized)) {
+            throw new ArgumentException("WhatsApp number is invalid.", nameof(number));
+        }
         var payload = "https://wa.me/" + sanitized + "?text=" + Uri.EscapeDataString(message ?? string.Empty);
         return new QrPayloadData(payload);
     }
@@ -54,6 +63,8 @@ public static partial class QrPayloads {
     /// Builds a Wi-Fi payload.
     /// </summary>
     public static QrPayloadData Wifi(string ssid, string password, string authType = "WPA", bool hidden = false, bool escapeHexStrings = true) {
+        if (string.IsNullOrWhiteSpace(ssid)) throw new ArgumentException("SSID must not be empty.", nameof(ssid));
+        if (!QrPayloadValidation.IsValidWifiAuth(authType)) throw new ArgumentException("WiFi auth type is invalid.", nameof(authType));
         var safeSsid = EscapeInput(ssid ?? string.Empty);
         var safePassword = EscapeInput(password ?? string.Empty);
         if (escapeHexStrings && IsHexStyle(safeSsid)) safeSsid = "\"" + safeSsid + "\"";
@@ -66,6 +77,7 @@ public static partial class QrPayloads {
     /// Builds an email payload.
     /// </summary>
     public static QrPayloadData Email(string address, string? subject = null, string? message = null, QrMailEncoding encoding = QrMailEncoding.Mailto) {
+        if (!QrPayloadValidation.IsValidEmail(address)) throw new ArgumentException("Email address is invalid.", nameof(address));
         var payload = encoding switch {
             QrMailEncoding.Mailto => BuildMailto(address, subject, message),
             QrMailEncoding.Matmsg => "MATMSG:TO:" + (address ?? string.Empty) + ";SUB:" + EscapeInput(subject ?? string.Empty) + ";BODY:" + EscapeInput(message ?? string.Empty) + ";;",
@@ -79,6 +91,7 @@ public static partial class QrPayloads {
     /// Builds an MMS payload.
     /// </summary>
     public static QrPayloadData Mms(string number, string? subject = null, QrMmsEncoding encoding = QrMmsEncoding.Mms) {
+        if (!QrPayloadValidation.IsValidPhone(number, 5)) throw new ArgumentException("MMS number is invalid.", nameof(number));
         var payload = encoding switch {
             QrMmsEncoding.Mmsto => "mmsto:" + number + (string.IsNullOrEmpty(subject) ? string.Empty : ("?subject=" + Uri.EscapeDataString(subject))),
             QrMmsEncoding.Mms => "mms:" + number + (string.IsNullOrEmpty(subject) ? string.Empty : ("?body=" + Uri.EscapeDataString(subject))),
@@ -91,6 +104,7 @@ public static partial class QrPayloads {
     /// Builds an SMS payload.
     /// </summary>
     public static QrPayloadData Sms(string number, string? message = null, QrSmsEncoding encoding = QrSmsEncoding.Sms) {
+        if (!QrPayloadValidation.IsValidPhone(number, 5)) throw new ArgumentException("SMS number is invalid.", nameof(number));
         var payload = encoding switch {
             QrSmsEncoding.Sms => "sms:" + number + (string.IsNullOrEmpty(message) ? string.Empty : ("?body=" + Uri.EscapeDataString(message))),
             QrSmsEncoding.SmsIos => "sms:" + number + (string.IsNullOrEmpty(message) ? string.Empty : (";body=" + Uri.EscapeDataString(message))),
@@ -104,6 +118,7 @@ public static partial class QrPayloads {
     /// Builds a phone payload (tel:).
     /// </summary>
     public static QrPayloadData Phone(string number) {
+        if (!QrPayloadValidation.IsValidPhone(number, 5)) throw new ArgumentException("Phone number is invalid.", nameof(number));
         return new QrPayloadData("tel:" + (number ?? string.Empty));
     }
 
@@ -111,11 +126,14 @@ public static partial class QrPayloads {
     /// Builds a geolocation payload.
     /// </summary>
     public static QrPayloadData Geo(string latitude, string longitude, QrGeolocationEncoding encoding = QrGeolocationEncoding.Geo) {
-        var lat = (latitude ?? string.Empty).Replace(",", ".");
-        var lon = (longitude ?? string.Empty).Replace(",", ".");
+        if (!TryParseGeo(latitude, longitude, out var lat, out var lon)) {
+            throw new ArgumentException("Latitude/longitude are invalid.");
+        }
+        var latText = lat.ToString(CultureInfo.InvariantCulture);
+        var lonText = lon.ToString(CultureInfo.InvariantCulture);
         var payload = encoding == QrGeolocationEncoding.GoogleMaps
-            ? "http://maps.google.com/maps?q=" + lat + "," + lon
-            : "geo:" + lat + "," + lon;
+            ? "http://maps.google.com/maps?q=" + latText + "," + lonText
+            : "geo:" + latText + "," + lonText;
         return new QrPayloadData(payload);
     }
 
@@ -322,13 +340,28 @@ public static partial class QrPayloads {
         string? transactionNote = null,
         decimal? amount = null,
         string? currency = "INR") {
+        if (!QrPayloadValidation.IsValidUpiVpa(vpa)) throw new ArgumentException("UPI VPA is invalid.", nameof(vpa));
         return new QrPayloadData(QrPayload.Upi(vpa, name, merchantCode, transactionRef, transactionNote, amount, currency));
     }
 
     private static string NormalizeUrl(string url) {
         if (url is null) return string.Empty;
-        if (url.StartsWith("http", StringComparison.OrdinalIgnoreCase)) return url;
-        return "http://" + url;
+        var trimmed = url.Trim();
+        if (trimmed.Length == 0) return string.Empty;
+        if (trimmed.StartsWith("http://", StringComparison.OrdinalIgnoreCase) || trimmed.StartsWith("https://", StringComparison.OrdinalIgnoreCase)) {
+            return trimmed;
+        }
+        return "http://" + trimmed;
+    }
+
+    private static bool TryParseGeo(string latitude, string longitude, out double lat, out double lon) {
+        lat = 0;
+        lon = 0;
+        if (!double.TryParse(latitude?.Trim().Replace(",", "."), NumberStyles.Float, CultureInfo.InvariantCulture, out lat)) return false;
+        if (!double.TryParse(longitude?.Trim().Replace(",", "."), NumberStyles.Float, CultureInfo.InvariantCulture, out lon)) return false;
+        if (lat < -90 || lat > 90) return false;
+        if (lon < -180 || lon > 180) return false;
+        return true;
     }
 
     private static void AppendContactTel(StringBuilder sb, QrContactOutputType outputType, string? number, string type21, string type21Suffix, string type4) {

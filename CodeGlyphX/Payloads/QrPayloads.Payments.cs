@@ -6,6 +6,29 @@ namespace CodeGlyphX.Payloads;
 
 public static partial class QrPayloads {
     /// <summary>
+    /// Builds a PayPal.Me payment payload.
+    /// </summary>
+    public static QrPayloadData PayPalMe(string handleOrUrl, decimal? amount = null, string? currency = null, bool useHttps = true) {
+        var handle = NormalizePayPalHandle(handleOrUrl);
+        if (string.IsNullOrWhiteSpace(handle)) throw new ArgumentException("PayPal handle must not be empty.", nameof(handleOrUrl));
+
+        if (amount.HasValue && amount.Value <= 0m) {
+            throw new ArgumentOutOfRangeException(nameof(amount), "Amount must be positive.");
+        }
+
+        var baseUrl = (useHttps ? "https://" : "http://") + "paypal.me/" + handle;
+        if (!amount.HasValue) return new QrPayloadData(baseUrl);
+
+        var amountText = amount.Value.ToString("0.##", CultureInfo.InvariantCulture);
+        var currencyText = string.IsNullOrWhiteSpace(currency) ? string.Empty : currency.Trim().ToUpperInvariant();
+        if (!string.IsNullOrEmpty(currencyText) && !QrPayloadValidation.IsValidCurrency(currencyText)) {
+            throw new ArgumentException("Currency is invalid.", nameof(currency));
+        }
+        var payload = baseUrl + "/" + amountText + currencyText;
+        return new QrPayloadData(payload);
+    }
+
+    /// <summary>
     /// Builds a SEPA Girocode payload.
     /// </summary>
     public static QrPayloadData Girocode(
@@ -66,6 +89,44 @@ public static partial class QrPayloads {
             messageToGirocodeUser;
 
         return new QrPayloadData(payload, QrErrorCorrectionLevel.M, textEncoding: MapGirocodeEncoding(encoding));
+    }
+
+    private static string NormalizePayPalHandle(string handleOrUrl) {
+        if (string.IsNullOrWhiteSpace(handleOrUrl)) return string.Empty;
+        var trimmed = handleOrUrl.Trim();
+        if (trimmed.StartsWith("@", StringComparison.Ordinal)) trimmed = trimmed.Substring(1);
+
+        if (trimmed.StartsWith("http://", StringComparison.OrdinalIgnoreCase) || trimmed.StartsWith("https://", StringComparison.OrdinalIgnoreCase)) {
+            if (Uri.TryCreate(trimmed, UriKind.Absolute, out var uri)) {
+                if (IsPayPalMeHost(uri.Host)) {
+                    return ExtractFirstSegment(uri.AbsolutePath);
+                }
+            }
+            return trimmed;
+        }
+
+        if (trimmed.StartsWith("paypal.me/", StringComparison.OrdinalIgnoreCase) || trimmed.StartsWith("www.paypal.me/", StringComparison.OrdinalIgnoreCase)) {
+            if (Uri.TryCreate("https://" + trimmed, UriKind.Absolute, out var uri)) {
+                return ExtractFirstSegment(uri.AbsolutePath);
+            }
+        }
+
+        return trimmed;
+    }
+
+    private static bool IsPayPalMeHost(string host) {
+        if (string.IsNullOrEmpty(host)) return false;
+        if (host.Equals("paypal.me", StringComparison.OrdinalIgnoreCase)) return true;
+        if (host.Equals("www.paypal.me", StringComparison.OrdinalIgnoreCase)) return true;
+        return false;
+    }
+
+    private static string ExtractFirstSegment(string path) {
+        if (string.IsNullOrEmpty(path)) return string.Empty;
+        var trimmed = path.Trim('/');
+        if (trimmed.Length == 0) return string.Empty;
+        var slash = trimmed.IndexOf('/');
+        return slash < 0 ? trimmed : trimmed.Substring(0, slash);
     }
 
     /// <summary>
