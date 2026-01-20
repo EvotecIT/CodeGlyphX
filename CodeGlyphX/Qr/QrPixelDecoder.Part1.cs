@@ -299,7 +299,8 @@ internal static partial class QrPixelDecoder {
         }
         var settings = GetProfileSettings(profile, Math.Min(width, height));
         settings = ApplyOverrides(settings, options, scaleStart);
-        var budget = new DecodeBudget(options?.MaxMilliseconds ?? 0, cancellationToken);
+        var budgetMilliseconds = options?.BudgetMilliseconds > 0 ? options.BudgetMilliseconds : options?.MaxMilliseconds ?? 0;
+        var budget = new DecodeBudget(budgetMilliseconds, cancellationToken);
 
         if (budget.IsExpired) {
             var failure = budget.IsCancelled ? global::CodeGlyphX.QrDecodeFailure.Cancelled : global::CodeGlyphX.QrDecodeFailure.Payload;
@@ -529,7 +530,8 @@ internal static partial class QrPixelDecoder {
         }
         var settings = GetProfileSettings(profile, Math.Min(width, height));
         settings = ApplyOverrides(settings, options, scaleStart);
-        var budget = new DecodeBudget(options?.MaxMilliseconds ?? 0, cancellationToken);
+        var budgetMilliseconds = options?.BudgetMilliseconds > 0 ? options.BudgetMilliseconds : options?.MaxMilliseconds ?? 0;
+        var budget = new DecodeBudget(budgetMilliseconds, cancellationToken);
         if (budget.IsExpired || budget.IsNearDeadline(120)) return false;
 
         Func<bool>? shouldStop = budget.Enabled ? () => budget.IsNearDeadline(120) : null;

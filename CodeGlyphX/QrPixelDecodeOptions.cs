@@ -28,6 +28,12 @@ public sealed partial class QrPixelDecodeOptions {
     public int MaxMilliseconds { get; set; } = 0;
 
     /// <summary>
+    /// Hard budget in milliseconds for decoding (best effort), without profile downgrades.
+    /// When set, this is used for internal time budgeting instead of MaxMilliseconds.
+    /// </summary>
+    public int BudgetMilliseconds { get; set; } = 0;
+
+    /// <summary>
     /// Disable rotation/mirroring attempts even in robust profiles.
     /// </summary>
     public bool DisableTransforms { get; set; } = false;
@@ -72,6 +78,7 @@ public sealed partial class QrPixelDecodeOptions {
         return new QrPixelDecodeOptions {
             Profile = QrDecodeProfile.Balanced,
             MaxMilliseconds = Math.Max(0, maxMilliseconds),
+            BudgetMilliseconds = Math.Max(0, maxMilliseconds),
             MaxDimension = Math.Max(0, maxDimension)
         };
     }

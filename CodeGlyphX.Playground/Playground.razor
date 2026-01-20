@@ -1128,7 +1128,8 @@
                 var qrOptions = new QrPixelDecodeOptions
                 {
                     Profile = QrDecodeProfile.Robust,
-                    MaxMilliseconds = qrBudget,
+                    AggressiveSampling = true,
+                    BudgetMilliseconds = DecodeMaxMilliseconds,
                     MaxDimension = DecodeDownscale ? DecodeMaxDimension : 0
                 };
                 if (QrDecoder.TryDecode(rgba, width, height, stride, PixelFormat.Rgba32, out var qr, qrOptions, token))
