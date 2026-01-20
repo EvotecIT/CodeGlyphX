@@ -1,6 +1,9 @@
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Threading;
+using CodeGlyphX.Internal;
 using CodeGlyphX.Rendering;
 
 namespace CodeGlyphX;
@@ -479,6 +482,90 @@ public static class QrImageDecoder {
         info = default;
         return false;
 #endif
+    }
+
+    /// <summary>
+    /// Decodes a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) and returns diagnostics.
+    /// </summary>
+    public static DecodeResult<QrDecoded> DecodeImageResult(byte[] image, ImageDecodeOptions? imageOptions = null, QrPixelDecodeOptions? options = null, CancellationToken cancellationToken = default) {
+#if NET8_0_OR_GREATER
+        if (image is null) throw new ArgumentNullException(nameof(image));
+        return DecodeImageResult((ReadOnlySpan<byte>)image, imageOptions, options, cancellationToken);
+#else
+        _ = imageOptions;
+        _ = options;
+        _ = cancellationToken;
+        if (image is null) throw new ArgumentNullException(nameof(image));
+        return new DecodeResult<QrDecoded>(DecodeFailureReason.Error, default, TimeSpan.Zero, "QR decoding requires .NET 8 or later.");
+#endif
+    }
+
+    /// <summary>
+    /// Decodes a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) in a span and returns diagnostics.
+    /// </summary>
+    public static DecodeResult<QrDecoded> DecodeImageResult(ReadOnlySpan<byte> image, ImageDecodeOptions? imageOptions = null, QrPixelDecodeOptions? options = null, CancellationToken cancellationToken = default) {
+#if NET8_0_OR_GREATER
+        var stopwatch = Stopwatch.StartNew();
+        _ = DecodeResultHelpers.TryGetImageInfo(image, out var info, out var formatKnown);
+        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, imageOptions, out var budgetCts, out var budgetScope);
+        try {
+            if (token.IsCancellationRequested) {
+                return new DecodeResult<QrDecoded>(DecodeFailureReason.Cancelled, info, stopwatch.Elapsed);
+            }
+            if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) {
+                var imageFailure = DecodeResultHelpers.FailureForImageRead(image, formatKnown, token);
+                return new DecodeResult<QrDecoded>(imageFailure, info, stopwatch.Elapsed);
+            }
+
+            info = DecodeResultHelpers.EnsureDimensions(info, formatKnown, width, height);
+
+            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, imageOptions, token)) {
+                return new DecodeResult<QrDecoded>(DecodeFailureReason.Cancelled, info, stopwatch.Elapsed);
+            }
+            if (global::CodeGlyphX.Qr.QrPixelDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, options, token, out var decoded)) {
+                return new DecodeResult<QrDecoded>(decoded, info, stopwatch.Elapsed);
+            }
+            var failure = DecodeResultHelpers.FailureForDecode(token);
+            return new DecodeResult<QrDecoded>(failure, info, stopwatch.Elapsed);
+        } catch (Exception ex) {
+            return new DecodeResult<QrDecoded>(DecodeFailureReason.Error, info, stopwatch.Elapsed, ex.Message);
+        } finally {
+            budgetCts?.Dispose();
+            budgetScope?.Dispose();
+        }
+#else
+        _ = imageOptions;
+        _ = options;
+        _ = cancellationToken;
+        return new DecodeResult<QrDecoded>(DecodeFailureReason.Error, default, TimeSpan.Zero, "QR decoding requires .NET 8 or later.");
+#endif
+    }
+
+    /// <summary>
+    /// Decodes a QR code from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) and returns diagnostics.
+    /// </summary>
+    public static DecodeResult<QrDecoded> DecodeImageResult(Stream stream, ImageDecodeOptions? imageOptions = null, QrPixelDecodeOptions? options = null, CancellationToken cancellationToken = default) {
+#if NET8_0_OR_GREATER
+        if (stream is null) throw new ArgumentNullException(nameof(stream));
+        if (stream is MemoryStream memory && memory.TryGetBuffer(out var buffer)) {
+            return DecodeImageResult(buffer.AsSpan(), imageOptions, options, cancellationToken);
+        }
+        var data = RenderIO.ReadBinary(stream);
+        return DecodeImageResult(data, imageOptions, options, cancellationToken);
+#else
+        _ = imageOptions;
+        _ = options;
+        _ = cancellationToken;
+        if (stream is null) throw new ArgumentNullException(nameof(stream));
+        return new DecodeResult<QrDecoded>(DecodeFailureReason.Error, default, TimeSpan.Zero, "QR decoding requires .NET 8 or later.");
+#endif
+    }
+
+    /// <summary>
+    /// Decodes a batch of QR images with shared settings and aggregated diagnostics.
+    /// </summary>
+    public static DecodeBatchResult<QrDecoded> DecodeImageBatch(IEnumerable<byte[]> images, ImageDecodeOptions? imageOptions = null, QrPixelDecodeOptions? options = null, CancellationToken cancellationToken = default) {
+        return DecodeBatchHelpers.Run(images, image => DecodeImageResult(image, imageOptions, options, cancellationToken), cancellationToken);
     }
 
     /// <summary>

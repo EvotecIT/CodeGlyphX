@@ -1,7 +1,10 @@
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using CodeGlyphX.DataMatrix;
+using CodeGlyphX.Internal;
 using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Ascii;
 using CodeGlyphX.Rendering.Bmp;
@@ -301,6 +304,67 @@ public static partial class DataMatrixCode {
             budgetCts?.Dispose();
             budgetScope?.Dispose();
         }
+    }
+
+    /// <summary>
+    /// Decodes a Data Matrix symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) and returns diagnostics.
+    /// </summary>
+    public static DecodeResult<string> DecodeImageResult(byte[] image, ImageDecodeOptions? options = null, CancellationToken cancellationToken = default) {
+        if (image is null) throw new ArgumentNullException(nameof(image));
+        return DecodeImageResult((ReadOnlySpan<byte>)image, options, cancellationToken);
+    }
+
+    /// <summary>
+    /// Decodes a Data Matrix symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) in a span and returns diagnostics.
+    /// </summary>
+    public static DecodeResult<string> DecodeImageResult(ReadOnlySpan<byte> image, ImageDecodeOptions? options = null, CancellationToken cancellationToken = default) {
+        var stopwatch = Stopwatch.StartNew();
+        _ = DecodeResultHelpers.TryGetImageInfo(image, out var info, out var formatKnown);
+        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
+        try {
+            if (token.IsCancellationRequested) {
+                return new DecodeResult<string>(DecodeFailureReason.Cancelled, info, stopwatch.Elapsed);
+            }
+            if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) {
+                var imageFailure = DecodeResultHelpers.FailureForImageRead(image, formatKnown, token);
+                return new DecodeResult<string>(imageFailure, info, stopwatch.Elapsed);
+            }
+
+            info = DecodeResultHelpers.EnsureDimensions(info, formatKnown, width, height);
+
+            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) {
+                return new DecodeResult<string>(DecodeFailureReason.Cancelled, info, stopwatch.Elapsed);
+            }
+            if (DataMatrixDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out var text)) {
+                return new DecodeResult<string>(text, info, stopwatch.Elapsed);
+            }
+            var failure = DecodeResultHelpers.FailureForDecode(token);
+            return new DecodeResult<string>(failure, info, stopwatch.Elapsed);
+        } catch (Exception ex) {
+            return new DecodeResult<string>(DecodeFailureReason.Error, info, stopwatch.Elapsed, ex.Message);
+        } finally {
+            budgetCts?.Dispose();
+            budgetScope?.Dispose();
+        }
+    }
+
+    /// <summary>
+    /// Decodes a Data Matrix symbol from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) and returns diagnostics.
+    /// </summary>
+    public static DecodeResult<string> DecodeImageResult(Stream stream, ImageDecodeOptions? options = null, CancellationToken cancellationToken = default) {
+        if (stream is null) throw new ArgumentNullException(nameof(stream));
+        if (stream is MemoryStream memory && memory.TryGetBuffer(out var buffer)) {
+            return DecodeImageResult(buffer.AsSpan(), options, cancellationToken);
+        }
+        var data = RenderIO.ReadBinary(stream);
+        return DecodeImageResult(data, options, cancellationToken);
+    }
+
+    /// <summary>
+    /// Decodes a batch of Data Matrix images with shared settings and aggregated diagnostics.
+    /// </summary>
+    public static DecodeBatchResult<string> DecodeImageBatch(IEnumerable<byte[]> images, ImageDecodeOptions? options = null, CancellationToken cancellationToken = default) {
+        return DecodeBatchHelpers.Run(images, image => DecodeImageResult(image, options, cancellationToken), cancellationToken);
     }
 
     /// <summary>

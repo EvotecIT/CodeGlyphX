@@ -1,6 +1,9 @@
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Threading;
+using CodeGlyphX.Internal;
 using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Ascii;
 using CodeGlyphX.Rendering.Bmp;
@@ -228,6 +231,75 @@ public static partial class Barcode {
             budgetCts?.Dispose();
             budgetScope?.Dispose();
         }
+    }
+
+    /// <summary>
+    /// Decodes a barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) and returns diagnostics.
+    /// </summary>
+    public static DecodeResult<BarcodeDecoded> DecodeImageResult(byte[] image, BarcodeType? expectedType = null, ImageDecodeOptions? options = null, BarcodeDecodeOptions? decodeOptions = null, CancellationToken cancellationToken = default) {
+        if (image is null) throw new ArgumentNullException(nameof(image));
+        return DecodeImageResult((ReadOnlySpan<byte>)image, expectedType, options, decodeOptions, cancellationToken);
+    }
+
+    /// <summary>
+    /// Decodes a barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) in a span and returns diagnostics.
+    /// </summary>
+    public static DecodeResult<BarcodeDecoded> DecodeImageResult(ReadOnlySpan<byte> image, BarcodeType? expectedType = null, ImageDecodeOptions? options = null, BarcodeDecodeOptions? decodeOptions = null, CancellationToken cancellationToken = default) {
+        var stopwatch = Stopwatch.StartNew();
+        _ = DecodeResultHelpers.TryGetImageInfo(image, out var info, out var formatKnown);
+        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
+        try {
+            if (token.IsCancellationRequested) {
+                return new DecodeResult<BarcodeDecoded>(DecodeFailureReason.Cancelled, info, stopwatch.Elapsed);
+            }
+            if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) {
+                var imageFailure = DecodeResultHelpers.FailureForImageRead(image, formatKnown, token);
+                return new DecodeResult<BarcodeDecoded>(imageFailure, info, stopwatch.Elapsed);
+            }
+
+            info = DecodeResultHelpers.EnsureDimensions(info, formatKnown, width, height);
+
+            var original = rgba;
+            var originalWidth = width;
+            var originalHeight = height;
+            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) {
+                return new DecodeResult<BarcodeDecoded>(DecodeFailureReason.Cancelled, info, stopwatch.Elapsed);
+            }
+            if (BarcodeDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, expectedType, decodeOptions, token, out var decoded)) {
+                return new DecodeResult<BarcodeDecoded>(decoded, info, stopwatch.Elapsed);
+            }
+            if (!ReferenceEquals(rgba, original) && !token.IsCancellationRequested) {
+                if (BarcodeDecoder.TryDecode(original, originalWidth, originalHeight, originalWidth * 4, PixelFormat.Rgba32, expectedType, decodeOptions, token, out decoded)) {
+                    return new DecodeResult<BarcodeDecoded>(decoded, info, stopwatch.Elapsed);
+                }
+            }
+            var failure = DecodeResultHelpers.FailureForDecode(token);
+            return new DecodeResult<BarcodeDecoded>(failure, info, stopwatch.Elapsed);
+        } catch (Exception ex) {
+            return new DecodeResult<BarcodeDecoded>(DecodeFailureReason.Error, info, stopwatch.Elapsed, ex.Message);
+        } finally {
+            budgetCts?.Dispose();
+            budgetScope?.Dispose();
+        }
+    }
+
+    /// <summary>
+    /// Decodes a barcode from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) and returns diagnostics.
+    /// </summary>
+    public static DecodeResult<BarcodeDecoded> DecodeImageResult(Stream stream, BarcodeType? expectedType = null, ImageDecodeOptions? options = null, BarcodeDecodeOptions? decodeOptions = null, CancellationToken cancellationToken = default) {
+        if (stream is null) throw new ArgumentNullException(nameof(stream));
+        if (stream is MemoryStream memory && memory.TryGetBuffer(out var buffer)) {
+            return DecodeImageResult(buffer.AsSpan(), expectedType, options, decodeOptions, cancellationToken);
+        }
+        var data = RenderIO.ReadBinary(stream);
+        return DecodeImageResult(data, expectedType, options, decodeOptions, cancellationToken);
+    }
+
+    /// <summary>
+    /// Decodes a batch of barcode images with shared settings and aggregated diagnostics.
+    /// </summary>
+    public static DecodeBatchResult<BarcodeDecoded> DecodeImageBatch(IEnumerable<byte[]> images, BarcodeType? expectedType = null, ImageDecodeOptions? options = null, BarcodeDecodeOptions? decodeOptions = null, CancellationToken cancellationToken = default) {
+        return DecodeBatchHelpers.Run(images, image => DecodeImageResult(image, expectedType, options, decodeOptions, cancellationToken), cancellationToken);
     }
 
     /// <summary>

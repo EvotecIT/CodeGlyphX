@@ -1,7 +1,7 @@
 namespace CodeGlyphX.Rendering;
 
 /// <summary>
-/// Basic image metadata returned by <see cref="ImageReader.TryReadInfo"/>.
+/// Basic image metadata returned by ImageReader.TryReadInfo.
 /// </summary>
 public readonly struct ImageInfo {
     /// <summary>
