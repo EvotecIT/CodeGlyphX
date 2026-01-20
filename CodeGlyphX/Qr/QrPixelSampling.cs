@@ -301,6 +301,28 @@ internal static class QrPixelSampling {
         return black >= 5;
     }
 
+    public static bool SampleModuleCenter3x3(QrGrayImage image, double sx, double sy, bool invert, double moduleSizePx) {
+        var d = GetSampleDeltaCenter(moduleSizePx);
+        var black = 0;
+        for (var iy = -1; iy <= 1; iy++) {
+            for (var ix = -1; ix <= 1; ix++) {
+                if (IsBlackBilinear(image, sx + ix * d, sy + iy * d, invert)) black++;
+            }
+        }
+        return black >= 5;
+    }
+
+    public static bool SampleModuleCenter3x3Loose(QrGrayImage image, double sx, double sy, bool invert, double moduleSizePx) {
+        var d = GetSampleDeltaCenter(moduleSizePx);
+        var black = 0;
+        for (var iy = -1; iy <= 1; iy++) {
+            for (var ix = -1; ix <= 1; ix++) {
+                if (IsBlackBilinear(image, sx + ix * d, sy + iy * d, invert)) black++;
+            }
+        }
+        return black >= 3;
+    }
+
     public static bool SampleModule25Px(QrGrayImage image, double sx, double sy, bool invert, double moduleSizePx) {
         var d = GetSampleDelta5x5(moduleSizePx);
 
@@ -327,6 +349,19 @@ internal static class QrPixelSampling {
         return black >= 13;
     }
 
+    public static bool SampleModule25NearestLoose(QrGrayImage image, double sx, double sy, bool invert, double moduleSizePx) {
+        var d = GetSampleDelta5x5(moduleSizePx);
+
+        var black = 0;
+        for (var iy = -2; iy <= 2; iy++) {
+            for (var ix = -2; ix <= 2; ix++) {
+                if (IsBlackNearest(image, sx + ix * d, sy + iy * d, invert)) black++;
+            }
+        }
+
+        return black >= 7;
+    }
+
     public static bool SampleModule9Px(QrGrayImage image, double sx, double sy, bool invert, double moduleSizePx) {
         // For non-integer module sizes (common on UI-scaled QR) we need to sample a larger fraction of a module.
         // If the delta is too large at downscaled resolutions, samples spill into neighbors and decoding fails.
@@ -343,6 +378,20 @@ internal static class QrPixelSampling {
         return black >= 5;
     }
 
+    public static bool SampleModule9PxLoose(QrGrayImage image, double sx, double sy, bool invert, double moduleSizePx) {
+        var d = GetSampleDelta(moduleSizePx);
+
+        var black = 0;
+        for (var iy = -1; iy <= 1; iy++) {
+            for (var ix = -1; ix <= 1; ix++) {
+                var x = sx + ix * d;
+                var y = sy + iy * d;
+                if (IsBlackBilinear(image, x, y, invert)) black++;
+            }
+        }
+        return black >= 3;
+    }
+
     public static bool SampleModule9Nearest(QrGrayImage image, double sx, double sy, bool invert, double moduleSizePx) {
         var d = GetSampleDelta(moduleSizePx);
 
@@ -357,6 +406,20 @@ internal static class QrPixelSampling {
         return black >= 5;
     }
 
+    public static bool SampleModule9NearestLoose(QrGrayImage image, double sx, double sy, bool invert, double moduleSizePx) {
+        var d = GetSampleDelta(moduleSizePx);
+
+        var black = 0;
+        for (var iy = -1; iy <= 1; iy++) {
+            for (var ix = -1; ix <= 1; ix++) {
+                var x = sx + ix * d;
+                var y = sy + iy * d;
+                if (IsBlackNearest(image, x, y, invert)) black++;
+            }
+        }
+        return black >= 3;
+    }
+
     private static double GetSampleDelta(double moduleSizePx) {
         if (!(moduleSizePx > 0)) return 0.85;
 
@@ -368,6 +431,19 @@ internal static class QrPixelSampling {
         if (d < 0.35) d = 0.35;
 
         var max = moduleSizePx * 0.49;
+        if (d > max) d = max;
+
+        return d;
+    }
+
+    private static double GetSampleDeltaCenter(double moduleSizePx) {
+        if (!(moduleSizePx > 0)) return 0.35;
+
+        var d = moduleSizePx * 0.20;
+        if (d < 0.25) d = 0.25;
+        if (d > 0.65) d = 0.65;
+
+        var max = moduleSizePx * 0.35;
         if (d > max) d = max;
 
         return d;

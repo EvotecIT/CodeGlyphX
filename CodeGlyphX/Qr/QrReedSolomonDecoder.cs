@@ -3,7 +3,7 @@ using System;
 namespace CodeGlyphX.Qr;
 
 internal static class QrReedSolomonDecoder {
-    public static bool TryCorrectInPlace(byte[] codewords, int eccLen) {
+    public static bool TryCorrectInPlace(byte[] codewords, int eccLen, Func<bool>? shouldStop = null) {
         if (codewords is null) throw new ArgumentNullException(nameof(codewords));
         if (eccLen <= 0) throw new ArgumentOutOfRangeException(nameof(eccLen));
         if (eccLen >= codewords.Length) throw new ArgumentOutOfRangeException(nameof(eccLen));
@@ -11,9 +11,13 @@ internal static class QrReedSolomonDecoder {
         var syndromes = new byte[eccLen];
         var hasError = false;
         for (var i = 0; i < eccLen; i++) {
+            if (shouldStop?.Invoke() == true) return false;
             var eval = (byte)0;
             var x = QrReedSolomon.ExpOf(i);
-            for (var j = 0; j < codewords.Length; j++) eval = (byte)(QrReedSolomon.Multiply(eval, x) ^ codewords[j]);
+            for (var j = 0; j < codewords.Length; j++) {
+                if ((j & 15) == 0 && shouldStop?.Invoke() == true) return false;
+                eval = (byte)(QrReedSolomon.Multiply(eval, x) ^ codewords[j]);
+            }
             syndromes[i] = eval;
             if (eval != 0) hasError = true;
         }
@@ -31,6 +35,7 @@ internal static class QrReedSolomonDecoder {
         var b = (byte)1;
 
         for (var n = 0; n < eccLen; n++) {
+            if (shouldStop?.Invoke() == true) return false;
             var d = syndromes[n];
             for (var i = 1; i <= L; i++) d ^= QrReedSolomon.Multiply(sigma[i], syndromes[n - i]);
 
@@ -64,6 +69,7 @@ internal static class QrReedSolomonDecoder {
         var errorLocations = new byte[L];
         var e = 0;
         for (var i = 1; i < 256 && e < L; i++) {
+            if ((i & 7) == 0 && shouldStop?.Invoke() == true) return false;
             if (EvaluatePoly(sigma, L + 1, (byte)i) == 0) {
                 errorLocations[e] = QrReedSolomon.Inverse((byte)i);
                 e++;
@@ -76,6 +82,7 @@ internal static class QrReedSolomonDecoder {
         for (var i = 0; i <= L; i++) {
             if (sigma[i] == 0) continue;
             for (var j = 0; j < eccLen; j++) {
+                if ((j & 15) == 0 && shouldStop?.Invoke() == true) return false;
                 var idx = i + j;
                 if (idx >= eccLen) break;
                 omega[idx] ^= QrReedSolomon.Multiply(sigma[i], syndromes[j]);
@@ -88,6 +95,7 @@ internal static class QrReedSolomonDecoder {
 
         // Forney: correct
         for (var i = 0; i < errorLocations.Length; i++) {
+            if (shouldStop?.Invoke() == true) return false;
             var xi = errorLocations[i];
             var xiInv = QrReedSolomon.Inverse(xi);
 
@@ -103,9 +111,13 @@ internal static class QrReedSolomonDecoder {
 
         // Verify
         for (var i = 0; i < eccLen; i++) {
+            if (shouldStop?.Invoke() == true) return false;
             var eval = (byte)0;
             var x = QrReedSolomon.ExpOf(i);
-            for (var j = 0; j < codewords.Length; j++) eval = (byte)(QrReedSolomon.Multiply(eval, x) ^ codewords[j]);
+            for (var j = 0; j < codewords.Length; j++) {
+                if ((j & 15) == 0 && shouldStop?.Invoke() == true) return false;
+                eval = (byte)(QrReedSolomon.Multiply(eval, x) ^ codewords[j]);
+            }
             if (eval != 0) return false;
         }
 
@@ -118,4 +130,3 @@ internal static class QrReedSolomonDecoder {
         return y;
     }
 }
-

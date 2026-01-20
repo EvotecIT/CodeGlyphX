@@ -116,6 +116,55 @@ public sealed class RoundTripTests {
     }
 
     [Fact]
+    public void DecodePixels_CanDecodeDotStyleAntiAliasedQr() {
+        var text = "Dot QR AA";
+        var qr = QrCodeEncoder.EncodeText(text, QrErrorCorrectionLevel.M, 1, 10, null);
+        var png = QrPngRenderer.Render(qr.Modules, new QrPngRenderOptions {
+            ModuleSize = 8,
+            QuietZone = 4,
+            ModuleShape = QrPngModuleShape.Circle,
+            ModuleScale = 0.65
+        });
+
+        var (rgba, width, height, stride) = PngTestDecoder.DecodeRgba32(png);
+
+        // Simulate UI scaling + anti-aliasing on dot-style modules.
+        var dstW = Math.Max(32, width - 17);
+        var dstH = Math.Max(32, height - 17);
+        var scaled = ResizeBilinearRgba32(rgba, width, height, stride, dstW, dstH, out var dstStride);
+
+        var options = new QrPixelDecodeOptions { Profile = QrDecodeProfile.Robust, AggressiveSampling = true };
+        Assert.True(QrDecoder.TryDecode(scaled, dstW, dstH, dstStride, PixelFormat.Rgba32, out var decoded, options));
+        Assert.Equal(text, decoded.Text);
+    }
+
+    [Fact]
+    public void DecodePixels_CanDecodeDotStyleBilinearScaled() {
+        var text = "Dot QR scaled";
+        var qr = QrCodeEncoder.EncodeText(text, QrErrorCorrectionLevel.M, 1, 10, null);
+        var png = QrPngRenderer.Render(qr.Modules, new QrPngRenderOptions {
+            ModuleSize = 9,
+            QuietZone = 4,
+            ModuleShape = QrPngModuleShape.Circle,
+            ModuleScale = 0.7
+        });
+
+        var (rgba, width, height, stride) = PngTestDecoder.DecodeRgba32(png);
+
+        // Bilinear scale down to introduce anti-aliasing.
+        var dstW = (int)Math.Max(32, width * 0.78);
+        var dstH = (int)Math.Max(32, height * 0.78);
+        var scaled = ResizeBilinearRgba32(rgba, width, height, stride, dstW, dstH, out var dstStride);
+
+        var options = new QrPixelDecodeOptions {
+            Profile = QrDecodeProfile.Robust,
+            AggressiveSampling = true
+        };
+        Assert.True(QrDecoder.TryDecode(scaled, dstW, dstH, dstStride, PixelFormat.Rgba32, out var decoded, options));
+        Assert.Equal(text, decoded.Text);
+    }
+
+    [Fact]
     public void DecodePixels_CanDecodeOddModuleSizeQr() {
         var text = "Odd module size QR";
         var qr = QrCodeEncoder.EncodeText(text, QrErrorCorrectionLevel.M, 1, 10, null);

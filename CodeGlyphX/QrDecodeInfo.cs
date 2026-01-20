@@ -28,6 +28,10 @@ public enum QrDecodeFailureReason {
     /// Payload parsing failed.
     /// </summary>
     Payload = 5,
+    /// <summary>
+    /// Decoding was cancelled.
+    /// </summary>
+    Cancelled = 6,
 }
 
 /// <summary>
@@ -74,6 +78,7 @@ public readonly struct QrDecodeInfo {
         QrDecodeFailureReason.FormatInfo => $"format info mismatch (best distance {FormatBestDistance})",
         QrDecodeFailureReason.ReedSolomon => $"reed-solomon failed (v{Version}, {ErrorCorrectionLevel}, m{Mask})",
         QrDecodeFailureReason.Payload => $"payload parse failed (v{Version}, {ErrorCorrectionLevel}, m{Mask})",
+        QrDecodeFailureReason.Cancelled => "cancelled",
         _ => "unknown failure"
     };
 
@@ -107,6 +112,7 @@ public readonly struct QrDecodeInfo {
             QrDecodeFailure.FormatInfo => QrDecodeFailureReason.FormatInfo,
             QrDecodeFailure.ReedSolomon => QrDecodeFailureReason.ReedSolomon,
             QrDecodeFailure.Payload => QrDecodeFailureReason.Payload,
+            QrDecodeFailure.Cancelled => QrDecodeFailureReason.Cancelled,
             _ => QrDecodeFailureReason.InvalidInput
         };
     }

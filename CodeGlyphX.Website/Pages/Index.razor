@@ -35,6 +35,72 @@
 
         <div class="install-command">
             <code>dotnet add package CodeGlyphX</code>
+            <button class="copy-btn" onclick="copyToClipboard('dotnet add package CodeGlyphX')" title="Copy install command">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="9" y="9" width="13" height="13" rx="2"/>
+                    <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>
+                </svg>
+            </button>
+        </div>
+
+        <div class="hero-badges">
+            <a href="https://github.com/EvotecIT/CodeGlyphX" target="_blank" rel="noopener">
+                <img src="https://img.shields.io/github/stars/EvotecIT/CodeGlyphX?style=social" alt="GitHub stars" height="20" loading="lazy" />
+            </a>
+            <a href="https://www.nuget.org/packages/CodeGlyphX" target="_blank" rel="noopener">
+                <img src="https://img.shields.io/nuget/dt/CodeGlyphX" alt="NuGet downloads" height="20" loading="lazy" />
+            </a>
+        </div>
+
+        <div class="hero-code-preview">
+            <div class="code-preview-item qr-preview" title="QR Code">
+                <svg viewBox="0 0 21 21" fill="currentColor">
+                    <!-- Top-left finder: 7x7 with hollow center -->
+                    <path d="M0,0h7v7h-7zM1,1v5h5v-5zM2,2h3v3h-3z"/>
+                    <!-- Top-right finder -->
+                    <path d="M14,0h7v7h-7zM15,1v5h5v-5zM16,2h3v3h-3z"/>
+                    <!-- Bottom-left finder -->
+                    <path d="M0,14h7v7h-7zM1,15v5h5v-5zM2,16h3v3h-3z"/>
+                    <!-- Timing patterns -->
+                    <rect x="8" y="6" width="1" height="1"/><rect x="10" y="6" width="1" height="1"/><rect x="12" y="6" width="1" height="1"/>
+                    <rect x="6" y="8" width="1" height="1"/><rect x="6" y="10" width="1" height="1"/><rect x="6" y="12" width="1" height="1"/>
+                    <!-- Data area -->
+                    <rect x="8" y="8" width="1" height="1"/><rect x="10" y="8" width="1" height="1"/><rect x="12" y="8" width="1" height="1"/>
+                    <rect x="9" y="9" width="1" height="1"/><rect x="11" y="9" width="1" height="1"/>
+                    <rect x="8" y="10" width="1" height="1"/><rect x="10" y="10" width="1" height="1"/><rect x="12" y="10" width="1" height="1"/>
+                    <rect x="9" y="11" width="1" height="1"/><rect x="11" y="11" width="1" height="1"/>
+                    <rect x="8" y="12" width="1" height="1"/><rect x="10" y="12" width="1" height="1"/><rect x="12" y="12" width="1" height="1"/>
+                    <rect x="14" y="8" width="1" height="1"/><rect x="16" y="9" width="1" height="1"/><rect x="18" y="8" width="1" height="1"/><rect x="15" y="10" width="1" height="1"/><rect x="17" y="11" width="1" height="1"/><rect x="19" y="10" width="1" height="1"/>
+                    <rect x="8" y="14" width="1" height="1"/><rect x="10" y="15" width="1" height="1"/><rect x="12" y="14" width="1" height="1"/><rect x="9" y="16" width="1" height="1"/><rect x="11" y="17" width="1" height="1"/>
+                    <rect x="14" y="14" width="1" height="1"/><rect x="16" y="15" width="1" height="1"/><rect x="18" y="14" width="1" height="1"/><rect x="15" y="16" width="1" height="1"/><rect x="17" y="17" width="1" height="1"/><rect x="19" y="16" width="1" height="1"/><rect x="20" y="18" width="1" height="1"/>
+                </svg>
+            </div>
+            <div class="code-preview-item barcode-preview" title="Code 128">
+                <svg viewBox="0 0 67 40" fill="currentColor">
+                    <rect x="0" y="0" width="2" height="40"/><rect x="3" y="0" width="1" height="40"/><rect x="5" y="0" width="2" height="40"/><rect x="9" y="0" width="1" height="40"/><rect x="11" y="0" width="3" height="40"/><rect x="15" y="0" width="1" height="40"/><rect x="18" y="0" width="1" height="40"/><rect x="20" y="0" width="2" height="40"/><rect x="24" y="0" width="1" height="40"/><rect x="26" y="0" width="3" height="40"/><rect x="31" y="0" width="1" height="40"/><rect x="33" y="0" width="2" height="40"/><rect x="37" y="0" width="1" height="40"/><rect x="39" y="0" width="1" height="40"/><rect x="42" y="0" width="2" height="40"/><rect x="45" y="0" width="1" height="40"/><rect x="48" y="0" width="3" height="40"/><rect x="52" y="0" width="1" height="40"/><rect x="55" y="0" width="2" height="40"/><rect x="58" y="0" width="1" height="40"/><rect x="61" y="0" width="1" height="40"/><rect x="63" y="0" width="2" height="40"/><rect x="66" y="0" width="1" height="40"/>
+                </svg>
+            </div>
+            <div class="code-preview-item matrix-preview" title="Data Matrix">
+                <svg viewBox="0 0 14 14" fill="currentColor">
+                    <!-- L-finder: solid left column and top row -->
+                    <rect x="0" y="0" width="14" height="1"/><rect x="0" y="1" width="1" height="13"/>
+                    <!-- Clock track: alternating on right and bottom -->
+                    <rect x="13" y="1" width="1" height="1"/><rect x="13" y="3" width="1" height="1"/><rect x="13" y="5" width="1" height="1"/><rect x="13" y="7" width="1" height="1"/><rect x="13" y="9" width="1" height="1"/><rect x="13" y="11" width="1" height="1"/><rect x="13" y="13" width="1" height="1"/>
+                    <rect x="2" y="13" width="1" height="1"/><rect x="4" y="13" width="1" height="1"/><rect x="6" y="13" width="1" height="1"/><rect x="8" y="13" width="1" height="1"/><rect x="10" y="13" width="1" height="1"/><rect x="12" y="13" width="1" height="1"/>
+                    <!-- Dense data fill -->
+                    <rect x="2" y="2" width="1" height="1"/><rect x="3" y="2" width="1" height="1"/><rect x="5" y="2" width="1" height="1"/><rect x="7" y="2" width="1" height="1"/><rect x="8" y="2" width="1" height="1"/><rect x="10" y="2" width="1" height="1"/><rect x="11" y="2" width="1" height="1"/>
+                    <rect x="2" y="3" width="1" height="1"/><rect x="4" y="3" width="1" height="1"/><rect x="6" y="3" width="1" height="1"/><rect x="8" y="3" width="1" height="1"/><rect x="9" y="3" width="1" height="1"/><rect x="11" y="3" width="1" height="1"/>
+                    <rect x="3" y="4" width="1" height="1"/><rect x="4" y="4" width="1" height="1"/><rect x="6" y="4" width="1" height="1"/><rect x="7" y="4" width="1" height="1"/><rect x="9" y="4" width="1" height="1"/><rect x="10" y="4" width="1" height="1"/><rect x="12" y="4" width="1" height="1"/>
+                    <rect x="2" y="5" width="1" height="1"/><rect x="5" y="5" width="1" height="1"/><rect x="6" y="5" width="1" height="1"/><rect x="8" y="5" width="1" height="1"/><rect x="10" y="5" width="1" height="1"/><rect x="11" y="5" width="1" height="1"/>
+                    <rect x="3" y="6" width="1" height="1"/><rect x="4" y="6" width="1" height="1"/><rect x="7" y="6" width="1" height="1"/><rect x="8" y="6" width="1" height="1"/><rect x="9" y="6" width="1" height="1"/><rect x="11" y="6" width="1" height="1"/><rect x="12" y="6" width="1" height="1"/>
+                    <rect x="2" y="7" width="1" height="1"/><rect x="4" y="7" width="1" height="1"/><rect x="5" y="7" width="1" height="1"/><rect x="7" y="7" width="1" height="1"/><rect x="9" y="7" width="1" height="1"/><rect x="10" y="7" width="1" height="1"/>
+                    <rect x="3" y="8" width="1" height="1"/><rect x="5" y="8" width="1" height="1"/><rect x="6" y="8" width="1" height="1"/><rect x="8" y="8" width="1" height="1"/><rect x="10" y="8" width="1" height="1"/><rect x="11" y="8" width="1" height="1"/><rect x="12" y="8" width="1" height="1"/>
+                    <rect x="2" y="9" width="1" height="1"/><rect x="4" y="9" width="1" height="1"/><rect x="6" y="9" width="1" height="1"/><rect x="7" y="9" width="1" height="1"/><rect x="9" y="9" width="1" height="1"/><rect x="11" y="9" width="1" height="1"/>
+                    <rect x="3" y="10" width="1" height="1"/><rect x="4" y="10" width="1" height="1"/><rect x="5" y="10" width="1" height="1"/><rect x="7" y="10" width="1" height="1"/><rect x="8" y="10" width="1" height="1"/><rect x="10" y="10" width="1" height="1"/><rect x="12" y="10" width="1" height="1"/>
+                    <rect x="2" y="11" width="1" height="1"/><rect x="5" y="11" width="1" height="1"/><rect x="6" y="11" width="1" height="1"/><rect x="8" y="11" width="1" height="1"/><rect x="9" y="11" width="1" height="1"/><rect x="11" y="11" width="1" height="1"/>
+                    <rect x="3" y="12" width="1" height="1"/><rect x="4" y="12" width="1" height="1"/><rect x="6" y="12" width="1" height="1"/><rect x="7" y="12" width="1" height="1"/><rect x="9" y="12" width="1" height="1"/><rect x="10" y="12" width="1" height="1"/><rect x="11" y="12" width="1" height="1"/>
+                </svg>
+            </div>
         </div>
     </div>
 </section>
@@ -301,6 +367,127 @@ QR.Save(QrPayloads.Girocode(
     amount: 99.99m,
     reference: <span class="string">"Invoice 2024-001"</span>
 ), <span class="string">"payment.png"</span>);</pre>
+    </div>
+</section>
+
+<!-- Benchmarks Section -->
+<section class="benchmarks">
+    <div class="section-header">
+        <span class="section-label">Benchmarks</span>
+        <h2>Fast by Default</h2>
+        <p>Local run on Ubuntu 24.04, Ryzen 9 9950X, .NET 8.0 (2026-01-18). Your results will vary.</p>
+    </div>
+
+    <div class="benchmarks-grid">
+        <div class="bench-card">
+            <h3>QR</h3>
+            <table class="bench-table">
+                <thead>
+                    <tr><th>Scenario</th><th>Mean</th><th>Alloc</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>QR PNG (short)</td><td>331.33 us</td><td>431.94 KB</td></tr>
+                    <tr><td>QR PNG (medium)</td><td>713.68 us</td><td>837.75 KB</td></tr>
+                    <tr><td>QR PNG (long)</td><td>2197.99 us</td><td>3041.06 KB</td></tr>
+                    <tr><td>QR SVG (medium)</td><td>99.17 us</td><td>20.03 KB</td></tr>
+                    <tr><td>QR PNG (High EC)</td><td>1094.94 us</td><td>1535.88 KB</td></tr>
+                    <tr><td>QR HTML (medium)</td><td>115.46 us</td><td>137.43 KB</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="bench-card">
+            <h3>Barcode (1D)</h3>
+            <table class="bench-table">
+                <thead>
+                    <tr><th>Scenario</th><th>Mean</th><th>Alloc</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Code 128 PNG</td><td>442.41 us</td><td>756.24 KB</td></tr>
+                    <tr><td>Code 128 SVG</td><td>2.52 us</td><td>17.61 KB</td></tr>
+                    <tr><td>EAN PNG</td><td>191.33 us</td><td>338.54 KB</td></tr>
+                    <tr><td>Code 39 PNG</td><td>311.37 us</td><td>414.49 KB</td></tr>
+                    <tr><td>Code 93 PNG</td><td>222.69 us</td><td>367.76 KB</td></tr>
+                    <tr><td>UPC-A PNG</td><td>175.83 us</td><td>338.85 KB</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="bench-card">
+            <h3>2D Matrix</h3>
+            <table class="bench-table">
+                <thead>
+                    <tr><th>Scenario</th><th>Mean</th><th>Alloc</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Data Matrix PNG (med)</td><td>303.48 us</td><td>447.73 KB</td></tr>
+                    <tr><td>Data Matrix PNG (long)</td><td>711.93 us</td><td>1509.06 KB</td></tr>
+                    <tr><td>Data Matrix SVG</td><td>5.64 us</td><td>12.29 KB</td></tr>
+                    <tr><td>PDF417 PNG</td><td>1730.92 us</td><td>3154.87 KB</td></tr>
+                    <tr><td>PDF417 SVG</td><td>28.79 us</td><td>64.53 KB</td></tr>
+                    <tr><td>Aztec PNG</td><td>260.70 us</td><td>452.30 KB</td></tr>
+                    <tr><td>Aztec SVG</td><td>12.76 us</td><td>59.74 KB</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<!-- Comparison Section -->
+<section class="comparison">
+    <div class="section-header">
+        <span class="section-label">Comparison</span>
+        <h2>How CodeGlyphX Stacks Up</h2>
+        <p>Based on public docs as of 2026-01-18. Capabilities depend on optional renderer packages.</p>
+    </div>
+
+    <div class="table-wrap">
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Library</th>
+                    <th>Encode</th>
+                    <th>Decode</th>
+                    <th>2D Codes</th>
+                    <th>1D Codes</th>
+                    <th>Image Dependencies</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>CodeGlyphX</td>
+                    <td>Yes</td>
+                    <td>Yes</td>
+                    <td>QR, Micro QR, Data Matrix, PDF417, Aztec</td>
+                    <td>Yes</td>
+                    <td>None</td>
+                </tr>
+                <tr>
+                    <td>ZXing.Net</td>
+                    <td>Yes</td>
+                    <td>Yes</td>
+                    <td>QR, Data Matrix, PDF417, Aztec, more</td>
+                    <td>Yes</td>
+                    <td>Bindings for System.Drawing / ImageSharp / SkiaSharp / OpenCV</td>
+                </tr>
+                <tr>
+                    <td>QRCoder</td>
+                    <td>Yes</td>
+                    <td>No</td>
+                    <td>QR only</td>
+                    <td>No</td>
+                    <td>System.Drawing renderer (Windows) or alt renderers</td>
+                </tr>
+                <tr>
+                    <td>Barcoder</td>
+                    <td>Yes</td>
+                    <td>No</td>
+                    <td>QR, Data Matrix, PDF417, Aztec</td>
+                    <td>Yes</td>
+                    <td>ImageSharp.Drawing for image renderer</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </section>
 

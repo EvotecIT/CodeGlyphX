@@ -33,5 +33,7 @@ public enum QrPayloadType {
     /// <summary>Social profile payload.</summary>
     Social,
     /// <summary>Bookmark payload.</summary>
-    Bookmark
+    Bookmark,
+    /// <summary>PayPal payment payload.</summary>
+    PayPal
 }

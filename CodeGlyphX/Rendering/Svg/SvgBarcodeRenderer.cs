@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Text;
 using CodeGlyphX.Rendering;
 
@@ -65,6 +66,17 @@ public static class SvgBarcodeRenderer {
 
         sb.Append("</svg>");
         return sb.ToString();
+    }
+
+    /// <summary>
+    /// Renders the barcode to an SVG stream.
+    /// </summary>
+    /// <param name="barcode">Barcode to render.</param>
+    /// <param name="opts">Rendering options.</param>
+    /// <param name="stream">Target stream.</param>
+    public static void RenderToStream(Barcode1D barcode, BarcodeSvgRenderOptions opts, Stream stream) {
+        var svg = Render(barcode, opts);
+        RenderIO.WriteText(stream, svg);
     }
 
     /// <summary>

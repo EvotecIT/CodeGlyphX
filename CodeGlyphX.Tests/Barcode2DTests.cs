@@ -1,3 +1,4 @@
+using System.Threading;
 using Xunit;
 
 namespace CodeGlyphX.Tests;
@@ -60,6 +61,22 @@ public sealed class Barcode2DTests {
     }
 
     [Fact]
+    public void DataMatrix_Decode_Cancelled_ReturnsFalse() {
+        var matrix = DataMatrix.DataMatrixEncoder.Encode("MatrixCancel");
+        var pixels = Rendering.Png.MatrixPngRenderer.RenderPixels(
+            matrix,
+            new Rendering.Png.MatrixPngRenderOptions { ModuleSize = 4, QuietZone = 2 },
+            out var width,
+            out var height,
+            out var stride);
+
+        using var cts = new CancellationTokenSource();
+        cts.Cancel();
+
+        Assert.False(DataMatrix.DataMatrixDecoder.TryDecode(pixels, width, height, stride, PixelFormat.Rgba32, cts.Token, out _));
+    }
+
+    [Fact]
     public void DataMatrix_RoundTrip_Pixels_Mirrored() {
         var matrix = DataMatrix.DataMatrixEncoder.Encode("MatrixMirror");
         var pixels = Rendering.Png.MatrixPngRenderer.RenderPixels(
@@ -101,6 +118,22 @@ public sealed class Barcode2DTests {
 
         Assert.True(Pdf417.Pdf417Decoder.TryDecode(pixels, width, height, stride, PixelFormat.Rgba32, out var text));
         Assert.Equal("Pdf417Example", text);
+    }
+
+    [Fact]
+    public void Pdf417_Decode_Cancelled_ReturnsFalse() {
+        var matrix = Pdf417.Pdf417Encoder.Encode("Pdf417Cancel");
+        var pixels = Rendering.Png.MatrixPngRenderer.RenderPixels(
+            matrix,
+            new Rendering.Png.MatrixPngRenderOptions { ModuleSize = 3, QuietZone = 2 },
+            out var width,
+            out var height,
+            out var stride);
+
+        using var cts = new CancellationTokenSource();
+        cts.Cancel();
+
+        Assert.False(Pdf417.Pdf417Decoder.TryDecode(pixels, width, height, stride, PixelFormat.Rgba32, cts.Token, out _));
     }
 
     [Fact]

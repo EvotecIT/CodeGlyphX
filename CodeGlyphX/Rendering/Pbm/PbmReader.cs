@@ -99,11 +99,15 @@ public static class PbmReader {
                 while (pos < data.Length && data[pos] != (byte)'\n' && data[pos] != (byte)'\r') pos++;
                 continue;
             }
-            if (c <= 32) {
+            if (IsAsciiWhitespace(c)) {
                 pos++;
                 continue;
             }
             break;
         }
+    }
+
+    private static bool IsAsciiWhitespace(byte c) {
+        return c == (byte)' ' || c == (byte)'\t' || c == (byte)'\r' || c == (byte)'\n' || c == (byte)'\f';
     }
 }

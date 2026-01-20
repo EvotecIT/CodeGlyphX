@@ -8,6 +8,13 @@ namespace CodeGlyphX;
 /// <summary>
 /// One-line barcode helpers with sane defaults.
 /// </summary>
+/// <example>
+/// <code>
+/// using CodeGlyphX;
+/// var png = BarcodeEasy.RenderPng(BarcodeType.Code128, "PRODUCT-12345");
+/// var svg = BarcodeEasy.RenderSvg(BarcodeType.Code128, "PRODUCT-12345");
+/// </code>
+/// </example>
 public static class BarcodeEasy {
     /// <summary>
     /// Encodes a barcode value using the specified <see cref="BarcodeType"/>.

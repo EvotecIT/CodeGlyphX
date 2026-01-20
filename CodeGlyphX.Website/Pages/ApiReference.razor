@@ -1,13 +1,22 @@
 @page "/docs/api"
 @page "/docs/api/{TypeSlug}"
-@using PowerForge.Blazor
-@inject DocumentationService DocService
-@inject NavigationManager Navigation
+@inject HttpClient Http
+
+<HeadContent>
+    <link rel="stylesheet" href="css/api.css" />
+</HeadContent>
 
 <PageTitle>@(_selectedType != null ? $"{_selectedType.Name} - API Reference" : "API Reference") - CodeGlyphX</PageTitle>
 
 <div class="api-layout">
-    <aside class="api-sidebar">
+    <button class="sidebar-toggle" @onclick="ToggleSidebar" aria-label="Toggle API navigation">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+            <path d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+        <span>API Navigation</span>
+    </button>
+    <div class="sidebar-overlay @(_sidebarOpen ? "active" : "")" @onclick="CloseSidebar"></div>
+    <aside class="api-sidebar @(_sidebarOpen ? "sidebar-open" : "")">
         <div class="sidebar-header">
             <a href="docs/api" class="sidebar-title @(string.IsNullOrEmpty(TypeSlug) ? "active" : "")">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
@@ -19,7 +28,7 @@
         </div>
 
         <div class="sidebar-search">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
                 <circle cx="11" cy="11" r="8"/>
                 <path d="M21 21l-4.35-4.35"/>
             </svg>
@@ -27,7 +36,7 @@
             @if (!string.IsNullOrEmpty(_searchFilter))
             {
                 <button class="clear-search" @onclick="() => _searchFilter = string.Empty">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M18 6L6 18M6 6l12 12"/>
                     </svg>
                 </button>
@@ -39,9 +48,12 @@
             {
                 <div class="sidebar-loading">Loading...</div>
             }
-            else if (_apiDoc != null)
+            else if (!string.IsNullOrEmpty(_loadError))
             {
-                @* Main API types first *@
+                <div class="sidebar-error">@_loadError</div>
+            }
+            else if (_index != null)
+            {
                 @if (GetMainTypes().Any())
                 {
                     <div class="nav-section">
@@ -57,9 +69,8 @@
                             <div class="nav-section-content">
                                 @foreach (var type in GetMainTypes())
                                 {
-                                    var typeSlug = type.FullName.Replace(".", "-").ToLowerInvariant();
-                                    <a href="docs/api/@typeSlug" class="type-item @(TypeSlug == typeSlug ? "active" : "")">
-                                        <span class="type-icon @type.Kind.ToString().ToLowerInvariant()">@GetTypeIcon(type.Kind)</span>
+                                    <a href="docs/api/@type.Slug" class="type-item @(TypeSlug == type.Slug ? "active" : "")">
+                                        <span class="type-icon @type.Kind.ToLowerInvariant()">@GetTypeIcon(type.Kind)</span>
                                         <span class="type-name">@type.Name</span>
                                     </a>
                                 }
@@ -68,29 +79,24 @@
                     </div>
                 }
 
-                @* Namespaces *@
                 @foreach (var ns in GetFilteredNamespaces())
                 {
-                    var nsKey = ns.Name;
-                    var filteredTypes = GetFilteredTypes(ns).Where(t => !IsMainType(t.Name)).ToList();
-                    if (!filteredTypes.Any()) continue;
-
+                    var nsKey = ns.Key;
                     <div class="nav-section">
                         <div class="nav-section-header" @onclick="() => ToggleSection(nsKey)">
                             <svg class="chevron @(_expandedSections.Contains(nsKey) ? "expanded" : "")" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M9 18l6-6-6-6"/>
                             </svg>
-                            <span>@GetShortNamespace(ns.Name)</span>
-                            <span class="type-count">@filteredTypes.Count</span>
+                            <span>@GetShortNamespace(ns.Key)</span>
+                            <span class="type-count">@ns.Count()</span>
                         </div>
                         @if (_expandedSections.Contains(nsKey))
                         {
                             <div class="nav-section-content">
-                                @foreach (var type in filteredTypes)
+                                @foreach (var type in ns.OrderBy(t => t.Name))
                                 {
-                                    var typeSlug = type.FullName.Replace(".", "-").ToLowerInvariant();
-                                    <a href="docs/api/@typeSlug" class="type-item @(TypeSlug == typeSlug ? "active" : "")">
-                                        <span class="type-icon @type.Kind.ToString().ToLowerInvariant()">@GetTypeIcon(type.Kind)</span>
+                                    <a href="docs/api/@type.Slug" class="type-item @(TypeSlug == type.Slug ? "active" : "")">
+                                        <span class="type-icon @type.Kind.ToLowerInvariant()">@GetTypeIcon(type.Kind)</span>
                                         <span class="type-name">@type.Name</span>
                                     </a>
                                 }
@@ -119,13 +125,19 @@
                 <p>Loading API documentation...</p>
             </div>
         }
+        else if (!string.IsNullOrEmpty(_loadError))
+        {
+            <div class="loading-state">
+                <p>@_loadError</p>
+            </div>
+        }
         else if (string.IsNullOrEmpty(TypeSlug))
         {
             <div class="api-overview">
                 <h1>API Reference</h1>
                 <p class="lead">Complete API documentation for CodeGlyphX, auto-generated from XML documentation.</p>
 
-                @if (_apiDoc != null)
+                @if (_index != null)
                 {
                     <section class="quick-start">
                         <h2>Quick Start</h2>
@@ -133,10 +145,9 @@
                         <div class="quick-grid">
                             @foreach (var type in GetMainTypes().Take(6))
                             {
-                                var typeSlug = type.FullName.Replace(".", "-").ToLowerInvariant();
-                                <a href="docs/api/@typeSlug" class="quick-card">
+                                <a href="docs/api/@type.Slug" class="quick-card">
                                     <div class="quick-card-header">
-                                        <span class="type-icon large @type.Kind.ToString().ToLowerInvariant()">@GetTypeIcon(type.Kind)</span>
+                                        <span class="type-icon large @type.Kind.ToLowerInvariant()">@GetTypeIcon(type.Kind)</span>
                                         <strong>@type.Name</strong>
                                     </div>
                                     @if (!string.IsNullOrEmpty(type.Summary))
@@ -150,16 +161,15 @@
 
                     <section class="all-namespaces">
                         <h2>All Namespaces</h2>
-                        <p class="section-desc">Browse all @_apiDoc.Types.Count types organized by namespace.</p>
-                        @foreach (var ns in _apiDoc.Namespaces.OrderBy(n => n.Name))
+                        <p class="section-desc">Browse all @_index.TypeCount types organized by namespace.</p>
+                        @foreach (var ns in _index.Types.GroupBy(t => t.Namespace).OrderBy(n => n.Key))
                         {
                             <div class="namespace-group">
-                                <h3>@ns.Name <span class="count">(@ns.Types.Count)</span></h3>
+                                <h3>@(string.IsNullOrWhiteSpace(ns.Key) ? "(global)" : ns.Key) <span class="count">(@ns.Count())</span></h3>
                                 <div class="type-chips">
-                                    @foreach (var type in ns.Types.OrderBy(t => t.Name))
+                                    @foreach (var type in ns.OrderBy(t => t.Name))
                                     {
-                                        var typeSlug = type.FullName.Replace(".", "-").ToLowerInvariant();
-                                        <a href="docs/api/@typeSlug" class="type-chip @type.Kind.ToString().ToLowerInvariant()">
+                                        <a href="docs/api/@type.Slug" class="type-chip @type.Kind.ToLowerInvariant()">
                                             <span class="chip-icon">@GetTypeIcon(type.Kind)</span>
                                             @type.Name
                                         </a>
@@ -177,14 +187,12 @@
                 <nav class="breadcrumb">
                     <a href="docs/api">API Reference</a>
                     <span class="sep">/</span>
-                    <a href="docs/api">@_selectedType.Namespace</a>
-                    <span class="sep">/</span>
                     <span class="current">@_selectedType.Name</span>
                 </nav>
 
                 <header class="type-header">
                     <div class="type-title-row">
-                        <span class="type-badge @_selectedType.Kind.ToString().ToLowerInvariant()">@_selectedType.Kind</span>
+                        <span class="type-badge @_selectedType.Kind.ToLowerInvariant()">@_selectedType.Kind</span>
                         <h1>@_selectedType.Name</h1>
                     </div>
                     <code class="namespace">namespace @_selectedType.Namespace</code>
@@ -192,935 +200,177 @@
 
                 @if (!string.IsNullOrEmpty(_selectedType.Summary))
                 {
-                    <p class="type-summary">@_selectedType.Summary</p>
+                    <p class="type-summary">@FormatText(_selectedType.Summary)</p>
                 }
 
                 @if (!string.IsNullOrEmpty(_selectedType.Remarks))
                 {
                     <section class="remarks">
                         <h2>Remarks</h2>
-                        <p>@_selectedType.Remarks</p>
+                        <p>@FormatText(_selectedType.Remarks)</p>
                     </section>
                 }
 
-                @if (_selectedType.Constructors.Any())
+                @if (_selectedType.Examples.Count > 0)
                 {
-                    <section class="members-section">
-                        <h2>Constructors</h2>
-                        @foreach (var ctor in _selectedType.Constructors)
+                    <section class="examples">
+                        <h2>Examples</h2>
+                        @foreach (var ex in _selectedType.Examples)
                         {
-                            <div class="member-card">
-                                <code class="member-sig">@(_selectedType.Name)(@FormatParams(ctor.Parameters))</code>
-                                @if (!string.IsNullOrEmpty(ctor.Summary))
-                                {
-                                    <p class="member-desc">@ctor.Summary</p>
-                                }
-                                @if (ctor.Parameters.Any())
-                                {
-                                    <div class="params-list">
-                                        @foreach (var p in ctor.Parameters)
-                                        {
-                                            <div class="param-row">
-                                                <code>@p.Name</code>
-                                                <span>@p.Description</span>
-                                            </div>
-                                        }
-                                    </div>
-                                }
-                            </div>
+                            <h3>@ex.Title</h3>
+                            @if (!string.IsNullOrWhiteSpace(ex.Code))
+                            {
+                                <pre class="code-block"><code class="language-csharp">@FormatCode(ex.Code)</code></pre>
+                            }
+                            @if (!string.IsNullOrWhiteSpace(ex.Remarks))
+                            {
+                                <p>@ex.Remarks</p>
+                            }
                         }
                     </section>
                 }
 
-                @if (_selectedType.Properties.Any())
+                @foreach (var group in _selectedType.Members.GroupBy(m => m.Kind))
                 {
-                    <section class="members-section">
-                        <h2>Properties</h2>
-                        <div class="members-table">
-                            <div class="table-header">
-                                <div class="col-name">Name</div>
-                                <div class="col-desc">Description</div>
-                            </div>
-                            @foreach (var prop in _selectedType.Properties.OrderBy(p => p.Name))
-                            {
-                                <div class="table-row">
-                                    <div class="col-name"><code>@prop.Name</code></div>
-                                    <div class="col-desc">@(prop.Summary ?? prop.Value ?? "—")</div>
-                                </div>
-                            }
-                        </div>
-                    </section>
-                }
-
-                @if (_selectedType.Methods.Any())
-                {
-                    <section class="members-section">
-                        <h2>Methods</h2>
-                        @foreach (var method in _selectedType.Methods.OrderBy(m => m.Name))
+                    <section class="member-section">
+                        <h2>@group.Key</h2>
+                        @foreach (var member in group)
                         {
-                            <div class="member-card">
-                                <code class="member-sig">@(method.Name)(@FormatParams(method.Parameters))</code>
-                                @if (!string.IsNullOrEmpty(method.Summary))
+                            <div class="member-card" id="@member.Anchor">
+                                <div class="member-header">
+                                    <code class="member-signature">@member.Signature</code>
+                                </div>
+
+                                @if (!string.IsNullOrEmpty(member.Summary))
                                 {
-                                    <p class="member-desc">@method.Summary</p>
+                                    <p class="member-summary">@FormatText(member.Summary)</p>
                                 }
-                                @if (method.Parameters.Any())
+
+                                @if (!string.IsNullOrEmpty(member.Remarks))
                                 {
-                                    <div class="params-list">
-                                        @foreach (var p in method.Parameters)
+                                    <p class="member-remarks">@FormatText(member.Remarks)</p>
+                                }
+
+                                @if (member.Parameters.Count > 0)
+                                {
+                                    <h4>Parameters</h4>
+                                    <dl class="param-list">
+                                        @foreach (var param in member.Parameters)
                                         {
-                                            <div class="param-row">
-                                                <code>@p.Name</code>
-                                                <span>@p.Description</span>
-                                            </div>
+                                            <dt>@param.Name <span class="param-type">@param.Type</span></dt>
+                                            @if (!string.IsNullOrEmpty(param.Description))
+                                            {
+                                                <dd>@FormatText(param.Description)</dd>
+                                            }
                                         }
-                                    </div>
+                                    </dl>
                                 }
-                                @if (!string.IsNullOrEmpty(method.Returns))
+
+                                @if (!string.IsNullOrEmpty(member.Returns))
                                 {
-                                    <div class="returns-info">
-                                        <strong>Returns:</strong> @method.Returns
-                                    </div>
+                                    <h4>Returns</h4>
+                                    <p>@member.Returns</p>
+                                }
+
+                                @if (member.Exceptions.Count > 0)
+                                {
+                                    <h4>Exceptions</h4>
+                                    <ul class="exception-list">
+                                        @foreach (var ex in member.Exceptions)
+                                        {
+                                            <li>@ex.Type @if (!string.IsNullOrEmpty(ex.Description)) { <span>- @ex.Description</span> }</li>
+                                        }
+                                    </ul>
+                                }
+
+                                @if (member.Examples.Count > 0)
+                                {
+                                    <h4>Examples</h4>
+                                        @foreach (var ex in member.Examples)
+                                        {
+                                            <h5>@ex.Title</h5>
+                                            @if (!string.IsNullOrWhiteSpace(ex.Code))
+                                            {
+                                                <pre class="code-block"><code class="language-csharp">@FormatCode(ex.Code)</code></pre>
+                                            }
+                                            @if (!string.IsNullOrWhiteSpace(ex.Remarks))
+                                            {
+                                                <p>@ex.Remarks</p>
+                                            }
+                                    }
                                 }
                             </div>
                         }
-                    </section>
-                }
-
-                @if (_selectedType.Fields.Any())
-                {
-                    <section class="members-section">
-                        <h2>Fields</h2>
-                        <div class="members-table">
-                            <div class="table-header">
-                                <div class="col-name">Name</div>
-                                <div class="col-desc">Description</div>
-                            </div>
-                            @foreach (var field in _selectedType.Fields.OrderBy(f => f.Name))
-                            {
-                                <div class="table-row">
-                                    <div class="col-name"><code>@field.Name</code></div>
-                                    <div class="col-desc">@(field.Summary ?? "—")</div>
-                                </div>
-                            }
-                        </div>
-                    </section>
-                }
-
-                @if (_selectedType.EnumValues.Any())
-                {
-                    <section class="members-section">
-                        <h2>Values</h2>
-                        <div class="members-table">
-                            <div class="table-header">
-                                <div class="col-name">Name</div>
-                                <div class="col-desc">Description</div>
-                            </div>
-                            @foreach (var val in _selectedType.EnumValues)
-                            {
-                                <div class="table-row">
-                                    <div class="col-name">
-                                        <code>@val.Name</code>
-                                        @if (!string.IsNullOrEmpty(val.Value))
-                                        {
-                                            <span class="enum-val">= @val.Value</span>
-                                        }
-                                    </div>
-                                    <div class="col-desc">@(val.Summary ?? "—")</div>
-                                </div>
-                            }
-                        </div>
-                    </section>
-                }
-
-                @if (!string.IsNullOrEmpty(_selectedType.Example))
-                {
-                    <section class="members-section">
-                        <h2>Example</h2>
-                        <pre class="code-block">@_selectedType.Example</pre>
                     </section>
                 }
             </article>
         }
         else
         {
-            <div class="not-found">
-                <h1>Type Not Found</h1>
-                <p>The requested type could not be found in the API documentation.</p>
-                <a href="docs/api" class="back-btn">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
-                        <path d="M19 12H5M12 19l-7-7 7-7"/>
-                    </svg>
-                    Back to API Reference
-                </a>
+            <div class="loading-state">
+                <p>API type not found.</p>
             </div>
         }
     </main>
 </div>
 
-<style>
-    /* Custom scrollbar for dark theme - minimal and subtle */
-    .api-layout ::-webkit-scrollbar {
-        width: 6px;
-        height: 6px;
-    }
-
-    .api-layout ::-webkit-scrollbar-track {
-        background: transparent;
-    }
-
-    .api-layout ::-webkit-scrollbar-thumb {
-        background: rgba(255, 255, 255, 0.08);
-        border-radius: 3px;
-    }
-
-    .api-layout ::-webkit-scrollbar-thumb:hover {
-        background: rgba(255, 255, 255, 0.15);
-    }
-
-    .api-layout ::-webkit-scrollbar-corner {
-        background: transparent;
-    }
-
-    .api-layout {
-        display: flex;
-        height: calc(100vh - 80px);
-        margin-top: 80px;
-        overflow: hidden;
-    }
-
-    /* Sidebar */
-    .api-sidebar {
-        width: 280px;
-        flex-shrink: 0;
-        background: var(--surface);
-        border-right: 1px solid var(--border);
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-        overflow: hidden;
-    }
-
-    .sidebar-header {
-        padding: 1rem;
-        border-bottom: 1px solid var(--border);
-        flex-shrink: 0;
-    }
-
-    .sidebar-title {
-        display: flex;
-        align-items: center;
-        gap: 0.6rem;
-        color: var(--text);
-        text-decoration: none;
-        font-size: 1rem;
-        font-weight: 600;
-        padding: 0.5rem 0.75rem;
-        margin: -0.5rem -0.75rem;
-        border-radius: 6px;
-        transition: background 0.15s;
-    }
-
-    .sidebar-title:hover {
-        background: var(--bg-secondary);
-    }
-
-    .sidebar-title.active {
-        background: var(--accent);
-        color: white;
-    }
-
-    .sidebar-search {
-        padding: 0.75rem 1rem;
-        border-bottom: 1px solid var(--border);
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        background: var(--bg);
-        flex-shrink: 0;
-    }
-
-    .sidebar-search svg {
-        width: 16px;
-        height: 16px;
-        color: var(--text-muted);
-        flex-shrink: 0;
-    }
-
-    .sidebar-search input {
-        flex: 1;
-        border: none;
-        background: transparent;
-        color: var(--text);
-        font-size: 0.875rem;
-        outline: none;
-        min-width: 0;
-    }
-
-    .sidebar-search input::placeholder {
-        color: var(--text-muted);
-    }
-
-    .clear-search {
-        background: none;
-        border: none;
-        padding: 0;
-        cursor: pointer;
-        color: var(--text-muted);
-        display: flex;
-    }
-
-    .clear-search:hover {
-        color: var(--text);
-    }
-
-    .sidebar-nav {
-        flex: 1;
-        overflow-y: auto;
-        overflow-x: hidden;
-        padding: 0.5rem 0;
-    }
-
-    .sidebar-loading {
-        padding: 1rem;
-        color: var(--text-muted);
-        text-align: center;
-    }
-
-    .sidebar-footer {
-        padding: 0.75rem 1rem;
-        border-top: 1px solid var(--border);
-        flex-shrink: 0;
-    }
-
-    .back-link {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        color: var(--text-muted);
-        text-decoration: none;
-        font-size: 0.8rem;
-    }
-
-    .back-link:hover {
-        color: var(--accent);
-    }
-
-    .nav-section {
-        margin-bottom: 0.125rem;
-    }
-
-    .nav-section-header {
-        display: flex;
-        align-items: center;
-        gap: 0.4rem;
-        padding: 0.5rem 1rem;
-        cursor: pointer;
-        color: var(--text-muted);
-        font-size: 0.7rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        user-select: none;
-    }
-
-    .nav-section-header:hover {
-        color: var(--text);
-        background: rgba(255,255,255,0.03);
-    }
-
-    .nav-section-header.main-api {
-        color: var(--accent);
-    }
-
-    .nav-section-header .chevron {
-        width: 12px;
-        height: 12px;
-        transition: transform 0.15s;
-        flex-shrink: 0;
-    }
-
-    .nav-section-header .chevron.expanded {
-        transform: rotate(90deg);
-    }
-
-    .type-count {
-        margin-left: auto;
-        background: rgba(255,255,255,0.08);
-        padding: 0.1rem 0.4rem;
-        border-radius: 3px;
-        font-size: 0.6rem;
-    }
-
-    .nav-section-content {
-        padding: 0.125rem 0;
-    }
-
-    .type-item {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        padding: 0.35rem 1rem 0.35rem 1.75rem;
-        color: var(--text);
-        text-decoration: none;
-        font-size: 0.825rem;
-    }
-
-    .type-item:hover {
-        background: rgba(255,255,255,0.05);
-    }
-
-    .type-item.active {
-        background: var(--accent);
-        color: white;
-    }
-
-    .type-item.active .type-icon {
-        background: rgba(255,255,255,0.25);
-    }
-
-    .type-icon {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 18px;
-        height: 18px;
-        border-radius: 3px;
-        font-size: 0.65rem;
-        font-weight: 700;
-        flex-shrink: 0;
-    }
-
-    .type-icon.class { background: #3b82f6; color: white; }
-    .type-icon.interface { background: #8b5cf6; color: white; }
-    .type-icon.struct { background: #22c55e; color: white; }
-    .type-icon.enum { background: #f59e0b; color: white; }
-    .type-icon.delegate { background: #ec4899; color: white; }
-
-    .type-icon.large {
-        width: 32px;
-        height: 32px;
-        font-size: 0.85rem;
-    }
-
-    .type-name {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
-
-    /* Main content */
-    .api-content {
-        flex: 1;
-        min-width: 0;
-        padding: 2rem 3rem;
-        overflow-y: auto;
-        overflow-x: hidden;
-        height: 100%;
-    }
-
-    .loading-state {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        padding: 4rem;
-        color: var(--text-muted);
-    }
-
-    .spinner {
-        width: 32px;
-        height: 32px;
-        border: 3px solid var(--border);
-        border-top-color: var(--accent);
-        border-radius: 50%;
-        animation: spin 0.8s linear infinite;
-        margin-bottom: 1rem;
-    }
-
-    @@keyframes spin {
-        to { transform: rotate(360deg); }
-    }
-
-    /* Overview */
-    .api-overview {
-        max-width: 900px;
-    }
-
-    .api-overview h1 {
-        font-size: 2rem;
-        margin-bottom: 0.5rem;
-    }
-
-    .lead {
-        color: var(--text-muted);
-        font-size: 1.1rem;
-        margin-bottom: 2.5rem;
-    }
-
-    .quick-start, .all-namespaces {
-        margin-bottom: 3rem;
-    }
-
-    .quick-start h2, .all-namespaces h2 {
-        font-size: 1.25rem;
-        margin-bottom: 0.35rem;
-    }
-
-    .section-desc {
-        color: var(--text-muted);
-        font-size: 0.9rem;
-        margin-bottom: 1.25rem;
-    }
-
-    .quick-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-        gap: 1rem;
-    }
-
-    .quick-card {
-        display: block;
-        padding: 1.25rem;
-        background: var(--surface);
-        border: 1px solid var(--border);
-        border-radius: 10px;
-        color: var(--text);
-        text-decoration: none;
-        transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
-    }
-
-    .quick-card:hover {
-        border-color: var(--accent);
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    }
-
-    .quick-card-header {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        margin-bottom: 0.6rem;
-    }
-
-    .quick-card-header strong {
-        font-size: 1.05rem;
-    }
-
-    .quick-card p {
-        color: var(--text-muted);
-        font-size: 0.85rem;
-        margin: 0;
-        line-height: 1.5;
-    }
-
-    .namespace-group {
-        margin-bottom: 1.5rem;
-    }
-
-    .namespace-group h3 {
-        font-size: 0.95rem;
-        margin-bottom: 0.75rem;
-        color: var(--text);
-        font-weight: 600;
-    }
-
-    .namespace-group .count {
-        color: var(--text-muted);
-        font-weight: 400;
-        font-size: 0.85rem;
-    }
-
-    .type-chips {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.4rem;
-    }
-
-    .type-chip {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.3rem;
-        padding: 0.3rem 0.6rem;
-        background: var(--surface);
-        border: 1px solid var(--border);
-        border-radius: 5px;
-        color: var(--text);
-        text-decoration: none;
-        font-size: 0.8rem;
-        transition: all 0.15s;
-    }
-
-    .type-chip:hover {
-        border-color: var(--accent);
-        background: var(--accent);
-        color: white;
-    }
-
-    .chip-icon {
-        font-weight: 700;
-        font-size: 0.65rem;
-        opacity: 0.7;
-    }
-
-    .type-chip:hover .chip-icon {
-        opacity: 1;
-    }
-
-    /* Breadcrumb */
-    .breadcrumb {
-        display: flex;
-        align-items: center;
-        gap: 0.4rem;
-        font-size: 0.85rem;
-        margin-bottom: 1.25rem;
-        color: var(--text-muted);
-    }
-
-    .breadcrumb a {
-        color: var(--text-muted);
-        text-decoration: none;
-    }
-
-    .breadcrumb a:hover {
-        color: var(--accent);
-    }
-
-    .breadcrumb .sep {
-        opacity: 0.5;
-    }
-
-    .breadcrumb .current {
-        color: var(--text);
-        font-weight: 500;
-    }
-
-    /* Type detail */
-    .type-detail {
-        max-width: 800px;
-    }
-
-    .type-header {
-        margin-bottom: 1.5rem;
-        padding-bottom: 1.25rem;
-        border-bottom: 1px solid var(--border);
-    }
-
-    .type-title-row {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        margin-bottom: 0.5rem;
-    }
-
-    .type-badge {
-        padding: 0.3rem 0.6rem;
-        border-radius: 4px;
-        font-size: 0.65rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-    }
-
-    .type-badge.class { background: #3b82f6; color: white; }
-    .type-badge.interface { background: #8b5cf6; color: white; }
-    .type-badge.struct { background: #22c55e; color: white; }
-    .type-badge.enum { background: #f59e0b; color: white; }
-
-    .type-header h1 {
-        font-size: 1.75rem;
-        margin: 0;
-    }
-
-    .namespace {
-        color: var(--text-muted);
-        font-size: 0.85rem;
-        font-family: 'JetBrains Mono', monospace;
-    }
-
-    .type-summary {
-        font-size: 1.05rem;
-        color: var(--text-muted);
-        margin-bottom: 2rem;
-        line-height: 1.6;
-    }
-
-    .members-section {
-        margin-bottom: 2.5rem;
-    }
-
-    .members-section h2 {
-        font-size: 1.1rem;
-        margin-bottom: 1rem;
-        padding-bottom: 0.5rem;
-        border-bottom: 1px solid var(--border);
-        color: var(--text);
-    }
-
-    .member-card {
-        background: var(--surface);
-        border: 1px solid var(--border);
-        border-radius: 8px;
-        padding: 1rem 1.25rem;
-        margin-bottom: 0.75rem;
-    }
-
-    .member-sig {
-        display: block;
-        font-size: 0.9rem;
-        color: var(--accent);
-        font-family: 'JetBrains Mono', monospace;
-        margin-bottom: 0.5rem;
-        word-break: break-word;
-    }
-
-    .member-desc {
-        color: var(--text-muted);
-        margin: 0;
-        font-size: 0.9rem;
-        line-height: 1.5;
-    }
-
-    .params-list {
-        margin-top: 0.75rem;
-        padding-top: 0.75rem;
-        border-top: 1px solid var(--border);
-    }
-
-    .param-row {
-        display: grid;
-        grid-template-columns: 120px 1fr;
-        gap: 1rem;
-        padding: 0.3rem 0;
-        font-size: 0.85rem;
-    }
-
-    .param-row code {
-        color: var(--accent);
-        font-family: 'JetBrains Mono', monospace;
-    }
-
-    .param-row span {
-        color: var(--text-muted);
-    }
-
-    .returns-info {
-        margin-top: 0.75rem;
-        padding-top: 0.75rem;
-        border-top: 1px solid var(--border);
-        font-size: 0.85rem;
-        color: var(--text-muted);
-    }
-
-    .returns-info strong {
-        color: var(--text);
-    }
-
-    .members-table {
-        border: 1px solid var(--border);
-        border-radius: 8px;
-        overflow: hidden;
-    }
-
-    .table-header {
-        display: grid;
-        grid-template-columns: 180px 1fr;
-        background: var(--surface);
-        border-bottom: 1px solid var(--border);
-        font-size: 0.75rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        color: var(--text-muted);
-    }
-
-    .table-header .col-name,
-    .table-header .col-desc {
-        padding: 0.6rem 1rem;
-    }
-
-    .table-row {
-        display: grid;
-        grid-template-columns: 180px 1fr;
-        border-bottom: 1px solid var(--border);
-        font-size: 0.875rem;
-    }
-
-    .table-row:last-child {
-        border-bottom: none;
-    }
-
-    .table-row .col-name {
-        padding: 0.75rem 1rem;
-        background: rgba(255,255,255,0.02);
-    }
-
-    .table-row .col-name code {
-        color: var(--text);
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 0.85rem;
-    }
-
-    .table-row .col-desc {
-        padding: 0.75rem 1rem;
-        color: var(--text-muted);
-    }
-
-    .enum-val {
-        color: var(--text-muted);
-        font-size: 0.75rem;
-        margin-left: 0.5rem;
-        font-family: 'JetBrains Mono', monospace;
-    }
-
-    .not-found {
-        text-align: center;
-        padding: 4rem 2rem;
-    }
-
-    .not-found h1 {
-        margin-bottom: 0.5rem;
-    }
-
-    .not-found p {
-        color: var(--text-muted);
-        margin-bottom: 1.5rem;
-    }
-
-    .back-btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        padding: 0.6rem 1.2rem;
-        background: var(--accent);
-        color: white;
-        text-decoration: none;
-        border-radius: 6px;
-        font-size: 0.9rem;
-        font-weight: 500;
-    }
-
-    .back-btn:hover {
-        opacity: 0.9;
-    }
-
-    /* Firefox scrollbar */
-    .api-layout * {
-        scrollbar-width: thin;
-        scrollbar-color: rgba(255, 255, 255, 0.08) transparent;
-    }
-
-    /* Responsive */
-    @@media (max-width: 900px) {
-        .api-content {
-            padding: 1.5rem;
-        }
-
-        .param-row {
-            grid-template-columns: 100px 1fr;
-        }
-
-        .table-header,
-        .table-row {
-            grid-template-columns: 140px 1fr;
-        }
-    }
-
-    @@media (max-width: 768px) {
-        .api-layout {
-            flex-direction: column;
-            height: auto;
-            min-height: calc(100vh - 80px);
-            margin-top: 70px;
-        }
-
-        .api-sidebar {
-            width: 100%;
-            height: auto;
-            max-height: 50vh;
-            flex-shrink: 0;
-        }
-
-        .api-content {
-            padding: 1rem;
-            height: auto;
-            flex: 1;
-        }
-
-        .table-header,
-        .table-row {
-            grid-template-columns: 1fr;
-        }
-
-        .table-row .col-name {
-            border-bottom: 1px solid var(--border);
-        }
-    }
-</style>
-
 @code {
     [Parameter]
     public string? TypeSlug { get; set; }
 
-    private ApiDoc? _apiDoc;
-    private ApiType? _selectedType;
+    private ApiIndex? _index;
+    private ApiTypeDetail? _selectedType;
     private bool _isLoading = true;
-    private string _searchFilter = "";
-    private HashSet<string> _expandedSections = new() { "main" };
+    private string? _loadError;
+    private string _searchFilter = string.Empty;
+    private readonly HashSet<string> _expandedSections = new(StringComparer.OrdinalIgnoreCase);
+    private bool _sidebarOpen = false;
 
-    private static readonly HashSet<string> MainTypeNames = new(StringComparer.OrdinalIgnoreCase)
+    private void ToggleSidebar() => _sidebarOpen = !_sidebarOpen;
+    private void CloseSidebar() => _sidebarOpen = false;
+
+    private static readonly string[] MainTypeOrder =
     {
-        "QR", "QrEasy", "Barcode", "BarcodeEasy", "DataMatrixCode", "Pdf417Code", "AztecCode",
-        "QrImageDecoder", "CodeGlyph", "QrPayloads", "BarcodeType", "QrErrorCorrectionLevel"
+        "QR",
+        "Barcode",
+        "QrEasy",
+        "BarcodeEasy",
+        "QrImageDecoder",
+        "DataMatrixCode",
+        "Pdf417Code",
+        "AztecCode"
     };
 
     protected override async Task OnInitializedAsync()
     {
-        await LoadApiDocAsync();
+        await LoadIndexAsync();
+        await LoadTypeAsync();
     }
 
-    protected override void OnParametersSet()
+    protected override async Task OnParametersSetAsync()
     {
-        if (_apiDoc != null && !string.IsNullOrEmpty(TypeSlug))
-        {
-            _selectedType = _apiDoc.Types.FirstOrDefault(t =>
-                t.FullName.Replace(".", "-").Equals(TypeSlug, StringComparison.OrdinalIgnoreCase));
+        if (_index == null)
+            await LoadIndexAsync();
 
-            // Auto-expand the section containing the selected type
-            if (_selectedType != null)
-            {
-                if (IsMainType(_selectedType.Name))
-                    _expandedSections.Add("main");
-                else
-                    _expandedSections.Add(_selectedType.Namespace);
-            }
-        }
-        else
-        {
-            _selectedType = null;
-        }
+        await LoadTypeAsync();
     }
 
-    private async Task LoadApiDocAsync()
+    private async Task LoadIndexAsync()
     {
+        _isLoading = true;
+        _loadError = null;
         try
         {
-            var source = DocService.Sources.FirstOrDefault(s => s.Id == "api") as HttpXmlDocumentationSource;
-            if (source != null)
+            _index = await Http.GetFromJsonAsync<ApiIndex>("api/index.json");
+            if (_index != null)
             {
-                await source.LoadPagesAsync();
-                _apiDoc = source.GetApiDoc();
-
-                if (!string.IsNullOrEmpty(TypeSlug))
-                {
-                    _selectedType = _apiDoc?.Types.FirstOrDefault(t =>
-                        t.FullName.Replace(".", "-").Equals(TypeSlug, StringComparison.OrdinalIgnoreCase));
-                }
+                foreach (var ns in _index.Types.Select(t => string.IsNullOrWhiteSpace(t.Namespace) ? "(global)" : t.Namespace).Distinct())
+                    _expandedSections.Add(ns);
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error loading API docs: {ex.Message}");
+            _loadError = ex.Message;
         }
         finally
         {
@@ -1128,67 +378,201 @@
         }
     }
 
-    private void ToggleSection(string sectionKey)
+    private async Task LoadTypeAsync()
     {
-        if (_expandedSections.Contains(sectionKey))
-            _expandedSections.Remove(sectionKey);
-        else
-            _expandedSections.Add(sectionKey);
+        if (string.IsNullOrWhiteSpace(TypeSlug))
+        {
+            _selectedType = null;
+            return;
+        }
+
+        try
+        {
+            _selectedType = await Http.GetFromJsonAsync<ApiTypeDetail>($"api/types/{TypeSlug}.json");
+        }
+        catch
+        {
+            _selectedType = null;
+        }
     }
 
-    private IEnumerable<ApiType> GetMainTypes()
+    private IEnumerable<ApiTypeSummary> GetMainTypes()
     {
-        if (_apiDoc == null) return Enumerable.Empty<ApiType>();
-        return _apiDoc.Types
-            .Where(t => IsMainType(t.Name) && MatchesFilter(t))
-            .OrderBy(t => t.Name);
+        if (_index == null)
+            yield break;
+        foreach (var name in MainTypeOrder)
+        {
+            var type = _index.Types.FirstOrDefault(t => string.Equals(t.Name, name, StringComparison.OrdinalIgnoreCase));
+            if (type != null)
+                yield return type;
+        }
     }
 
-    private IEnumerable<ApiNamespace> GetFilteredNamespaces()
+    private IEnumerable<IGrouping<string, ApiTypeSummary>> GetFilteredNamespaces()
     {
-        if (_apiDoc == null) return Enumerable.Empty<ApiNamespace>();
-        return _apiDoc.Namespaces.Where(ns => GetFilteredTypes(ns).Any());
+        if (_index == null) return Enumerable.Empty<IGrouping<string, ApiTypeSummary>>();
+
+        IEnumerable<ApiTypeSummary> types = _index.Types;
+        if (!string.IsNullOrWhiteSpace(_searchFilter))
+        {
+            var query = _searchFilter.Trim();
+            types = types.Where(t =>
+                t.Name.Contains(query, StringComparison.OrdinalIgnoreCase) ||
+                t.FullName.Contains(query, StringComparison.OrdinalIgnoreCase) ||
+                (t.Summary ?? string.Empty).Contains(query, StringComparison.OrdinalIgnoreCase));
+        }
+
+        types = types.Where(t => !IsMainType(t.Name));
+
+        return types
+            .GroupBy(t => string.IsNullOrWhiteSpace(t.Namespace) ? "(global)" : t.Namespace)
+            .OrderBy(g => g.Key, StringComparer.OrdinalIgnoreCase);
     }
 
-    private IEnumerable<ApiType> GetFilteredTypes(ApiNamespace ns)
-    {
-        return ns.Types.Where(MatchesFilter).OrderBy(t => t.Name);
-    }
-
-    private bool MatchesFilter(ApiType type)
-    {
-        if (string.IsNullOrWhiteSpace(_searchFilter)) return true;
-        return type.Name.Contains(_searchFilter, StringComparison.OrdinalIgnoreCase) ||
-               type.FullName.Contains(_searchFilter, StringComparison.OrdinalIgnoreCase);
-    }
-
-    private static bool IsMainType(string name) => MainTypeNames.Contains(name);
-
-    private static string GetTypeIcon(ApiTypeKind kind) => kind switch
-    {
-        ApiTypeKind.Interface => "I",
-        ApiTypeKind.Enum => "E",
-        ApiTypeKind.Struct => "S",
-        ApiTypeKind.Delegate => "D",
-        _ => "C"
-    };
+    private static bool IsMainType(string name)
+        => MainTypeOrder.Contains(name, StringComparer.OrdinalIgnoreCase);
 
     private static string GetShortNamespace(string ns)
     {
-        if (string.IsNullOrEmpty(ns)) return ns;
-        var parts = ns.Split('.');
-        return parts.Length > 2 ? string.Join(".", parts.Skip(1)) : ns;
+        if (string.IsNullOrWhiteSpace(ns)) return "(global)";
+        var parts = ns.Split('.', StringSplitOptions.RemoveEmptyEntries);
+        return parts.Length == 0 ? ns : parts[^1];
     }
 
-    private static string Truncate(string text, int maxLength)
+    private static string FormatCode(string? code)
     {
-        if (string.IsNullOrEmpty(text) || text.Length <= maxLength) return text;
-        return text.Substring(0, maxLength - 3) + "...";
+        if (string.IsNullOrWhiteSpace(code)) return string.Empty;
+
+        var lines = code.Replace("\r", string.Empty).Split('\n').ToList();
+        while (lines.Count > 0 && string.IsNullOrWhiteSpace(lines[0]))
+            lines.RemoveAt(0);
+        while (lines.Count > 0 && string.IsNullOrWhiteSpace(lines[^1]))
+            lines.RemoveAt(lines.Count - 1);
+
+        if (lines.Count == 0) return string.Empty;
+
+        var minIndent = lines
+            .Where(line => line.Length > 0)
+            .Select(line => line.TakeWhile(ch => ch == ' ' || ch == '\t').Count())
+            .DefaultIfEmpty(0)
+            .Min();
+
+        if (minIndent > 0)
+        {
+            for (var i = 0; i < lines.Count; i++)
+            {
+                var line = lines[i];
+                lines[i] = line.Length >= minIndent ? line.Substring(minIndent) : line;
+            }
+        }
+
+        return string.Join("\n", lines);
     }
 
-    private static string FormatParams(List<ApiParameter> parameters)
+    private static MarkupString FormatText(string? text)
     {
-        if (parameters == null || !parameters.Any()) return "";
-        return string.Join(", ", parameters.Select(p => p.Name));
+        if (string.IsNullOrWhiteSpace(text)) return new MarkupString(string.Empty);
+
+        var normalized = text.Replace("\r", string.Empty);
+        var paragraphs = normalized.Split("\n\n", StringSplitOptions.None)
+            .Select(p => System.Text.RegularExpressions.Regex.Replace(p.Replace("\n", " "), "\\s+", " ").Trim());
+        var collapsed = string.Join("\n\n", paragraphs);
+        var encoded = System.Net.WebUtility.HtmlEncode(collapsed);
+        encoded = encoded
+            .Replace(".", ".<wbr>")
+            .Replace(",", ",<wbr>")
+            .Replace(")", ")<wbr>")
+            .Replace(">", "><wbr>")
+            .Replace("\n\n", "<br/><br/>");
+
+        return new MarkupString(encoded);
+    }
+
+    private static string Truncate(string value, int length)
+    {
+        if (string.IsNullOrWhiteSpace(value)) return string.Empty;
+        return value.Length <= length ? value : value.Substring(0, length).Trim() + "...";
+    }
+
+    private void ToggleSection(string key)
+    {
+        if (_expandedSections.Contains(key))
+            _expandedSections.Remove(key);
+        else
+            _expandedSections.Add(key);
+    }
+
+    private static string GetTypeIcon(string kind)
+        => kind switch
+        {
+            "Class" => "C",
+            "Struct" => "S",
+            "Interface" => "I",
+            "Enum" => "E",
+            "Delegate" => "D",
+            _ => "T"
+        };
+
+    private sealed class ApiIndex
+    {
+        public string? Title { get; set; }
+        public int TypeCount { get; set; }
+        public List<ApiTypeSummary> Types { get; set; } = new();
+    }
+
+    private sealed class ApiTypeSummary
+    {
+        public string Name { get; set; } = string.Empty;
+        public string FullName { get; set; } = string.Empty;
+        public string Namespace { get; set; } = string.Empty;
+        public string Kind { get; set; } = string.Empty;
+        public string Slug { get; set; } = string.Empty;
+        public string? Summary { get; set; }
+    }
+
+    private sealed class ApiTypeDetail
+    {
+        public string Name { get; set; } = string.Empty;
+        public string Namespace { get; set; } = string.Empty;
+        public string Kind { get; set; } = string.Empty;
+        public string Slug { get; set; } = string.Empty;
+        public string? Summary { get; set; }
+        public string? Remarks { get; set; }
+        public List<ApiExample> Examples { get; set; } = new();
+        public List<ApiMember> Members { get; set; } = new();
+    }
+
+    private sealed class ApiMember
+    {
+        public string Name { get; set; } = string.Empty;
+        public string Kind { get; set; } = string.Empty;
+        public string Signature { get; set; } = string.Empty;
+        public string Anchor { get; set; } = string.Empty;
+        public string? Summary { get; set; }
+        public string? Remarks { get; set; }
+        public string? Returns { get; set; }
+        public List<ApiParameter> Parameters { get; set; } = new();
+        public List<ApiException> Exceptions { get; set; } = new();
+        public List<ApiExample> Examples { get; set; } = new();
+    }
+
+    private sealed class ApiParameter
+    {
+        public string Name { get; set; } = string.Empty;
+        public string Type { get; set; } = string.Empty;
+        public string? Description { get; set; }
+    }
+
+    private sealed class ApiException
+    {
+        public string Type { get; set; } = string.Empty;
+        public string? Description { get; set; }
+    }
+
+    private sealed class ApiExample
+    {
+        public string Title { get; set; } = string.Empty;
+        public string? Code { get; set; }
+        public string? Remarks { get; set; }
     }
 }

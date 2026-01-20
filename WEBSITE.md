@@ -6,7 +6,7 @@ This document outlines the planned improvements for the CodeGlyphX website. Task
 
 ### What's Working Well
 - **Home Page**: Hero, stats, features grid, supported formats, code examples, CTA
-- **Playground**: QR codes with styling, Special QR payloads, basic 1D barcodes
+- **Playground**: QR styling, special QR payloads, expanded 1D barcodes, 2D matrix codes (Data Matrix/PDF417/Aztec), decode tab (drag & drop)
 - **Documentation**: Good coverage of all symbologies with code examples
 - **API Reference**: Collapsible sidebar, type details, navigation
 
@@ -16,6 +16,52 @@ Located in `Assets/Logo/`:
 - `codeglyphx-qr-icon.ico` - Windows icon format
 - `Logo-evotec.png` - Evotec company logo
 - `Logo-evotec-wide.png` - Wide Evotec logo
+
+---
+
+## Priority 0: Performance & SEO (Critical)
+
+### 0.1 Stop Shipping PowerForge/PowerShell/Roslyn in WASM
+**Problem**: `PowerForge.Blazor` pulls in **PowerForge + PowerShell SDK + Roslyn**, which explodes WASM payload (see Lighthouse “enormous network payloads” and long main-thread tasks).
+**Goal**: Remove those dependencies from the client bundle.
+**Tasks**:
+- Replace `PowerForge.Blazor` runtime doc rendering with **build-time generated** API docs (DocFX or PowerForge CLI output).
+- Output **static HTML/JSON** into `wwwroot/api/` or `docs/api/` and render in a lightweight Razor component (no PowerShell SDK).
+- If we keep PowerForge, split it into a **minimal docs-only package** (no PowerShell SDK, no Roslyn) and reference *that* from the website.
+- Re-check `dotnet list package --include-transitive` to confirm PowerShell/Roslyn packages disappear.
+
+### 0.2 Split Site: Static Marketing + WASM Playground Only
+**Goal**: Avoid loading WASM on the landing/docs pages.
+**Tasks**:
+- Create a **static shell** for `/`, `/docs`, `/docs/api` (DocFX output or prerendered HTML).
+- Move interactive features to **`/playground/`** (separate Blazor WASM app or lazy-loaded route).
+- Update navigation links so landing pages do not load `blazor.webassembly.js` at all.
+
+### 0.3 Reduce Main-Thread Work (Lighthouse TBT / Long Tasks)
+**Tasks**:
+- Defer syntax highlighting: run Prism in `requestIdleCallback` or after first paint; do **not** observe the entire DOM continuously.
+- Remove MutationObserver once highlighting/copy buttons are initialized for the active page.
+- Avoid heavy JS on non-doc pages (load Prism only on docs routes).
+
+### 0.4 Cut Initial Network Payload
+**Tasks**:
+- Enable `PublishTrimmed` for the website publish build.
+- Ensure `InvariantGlobalization` / minimal globalization data (only if acceptable).
+- Turn off debug symbols and sourcemaps for production.
+- Avoid bundling unused assets into the service worker cache.
+
+### 0.5 Cache & Compression
+**Tasks**:
+- Enable **Brotli** for `.wasm`, `.dll`, `.js`, `.css` on the host (Cloudflare or server config).
+- Set long-lived caching headers for hashed assets (`_framework/*`, fonts, images) and short TTL for `index.html`.
+- Add `preconnect` for external origins used above-the-fold (e.g., `cdnjs.cloudflare.com` if Prism stays).
+
+### 0.6 SEO + Crawlability (SPA Fixes)
+**Tasks**:
+- Add `robots.txt` and `sitemap.xml` (include docs + API pages).
+- Add canonical URLs and per-page `<meta name="description">` (via `HeadContent` in each Razor page).
+- Add `og:image`, `og:url`, `twitter:card`, and `theme-color`.
+- Ensure **static HTML** exists for key pages so crawlers don’t require JS.
 
 ---
 
@@ -55,50 +101,8 @@ Located in `Assets/Logo/`:
 
 ## Priority 2: Playground Enhancements
 
-### 2.1 Add 2D Matrix Codes to Playground
-**File**: `CodeGlyphX.Website/Pages/Playground.razor`
-**Task**: Add new category tabs:
-- Data Matrix (with size options)
-- PDF417 (with error correction)
-- Aztec (with error correction %)
-
-**Implementation**:
-```csharp
-// Add to SelectedCategory options
-<option value="DataMatrix">Data Matrix</option>
-<option value="PDF417">PDF417</option>
-<option value="Aztec">Aztec</option>
-```
-
-### 2.2 Add More 1D Barcode Types
-**File**: `CodeGlyphX.Website/Pages/Playground.razor`
-**Task**: Expand barcode dropdown to include:
-- [ ] Codabar
-- [ ] MSI (with checksum options)
-- [ ] Plessey
-- [ ] ITF / ITF-14
-- [ ] UPC-A
-- [ ] UPC-E
-- [ ] Code 11
-
-### 2.3 Add Image Decoder Demo
-**File**: `CodeGlyphX.Website/Pages/Playground.razor` (new section)
-**Task**: Add "Decode" tab that allows:
-- Upload image (drag & drop or file picker)
-- Display decoded result (text, format type)
-- Show confidence/metadata
-
-### 2.4 Add Preset Examples
-**File**: `CodeGlyphX.Website/Pages/Playground.razor`
-**Task**: Add quick-select buttons for common use cases:
-- "WiFi Network" - Pre-fills WiFi form
-- "Business Card" - Pre-fills vCard
-- "Product Barcode" - EAN-13 example
-- "Event Ticket" - Aztec with sample data
-- "Shipping Label" - Code 128 example
-
-### 2.5 Add Size/Scale Control
-**File**: `CodeGlyphX.Website/Pages/Playground.razor`
+### 2.1 Add Size/Scale Control
+**Files**: `CodeGlyphX.Playground/PlaygroundConfig.razor`, `CodeGlyphX.Playground/Playground.Generate.cs`
 **Task**: Add module size slider (1-20px) for QR codes
 
 ---
@@ -208,6 +212,29 @@ Located in `Assets/Logo/`:
 - Add Open Graph tags
 - Add structured data (JSON-LD)
 
+### 5.5 API Docs: Ensure Examples Are Included
+**Goal**: Ensure XML `<example>` blocks flow into the API viewer.
+**Tasks**:
+- Add/verify `<example>` tags in CodeGlyphX public APIs (classes + key methods).
+- Add a build check that fails if examples are missing for “main API” types.
+- If using PowerForge docs engine, confirm XML `<example>` and `<remarks>` are rendered into the generated output.
+
+### 5.6 Hybrid API Docs Pipeline (PowerForge.ApiDocs)
+**Goal**: Generate static HTML + JSON (search/index) for fast API docs without shipping PowerForge in WASM.
+**Automation**:
+- Use `Build/Build-Website.ps1` for CI/release builds (generates API docs + builds the site).
+- Use `Build/Run-Website.ps1` for local dev (generates docs + runs the site, with optional `-Watch`).
+
+### 5.7 LLM-Friendly Docs (llms.txt + llms.json)
+**Goal**: Provide machine-friendly instructions for LLMs without HTML parsing.
+**Automation**:
+- `Build/Generate-Llms.ps1` creates `wwwroot/llms.txt` and `wwwroot/llms.json`.
+- `Build/Build-Website.ps1` runs it by default; pass `-SkipLlms` to skip.
+**Outputs**:
+- `wwwroot/api/index.html` + `wwwroot/api/types/*.html` (static HTML)
+- `wwwroot/api/index.json` + `wwwroot/api/types/*.json` + `wwwroot/api/search.json` (UI/search)
+- `wwwroot/api/sitemap.xml` (SEO)
+
 ---
 
 ## Priority 6: Future Enhancements
@@ -250,11 +277,18 @@ CodeGlyphX.Website/
 │   └── MainLayout.razor         # Header, footer
 ├── Pages/
 │   ├── Index.razor              # Home page
-│   ├── Playground.razor         # Interactive playground
+│   ├── Playground.razor         # Hosts the playground component
 │   ├── Docs.razor               # Documentation (all sections)
 │   └── ApiReference.razor       # API reference browser
 └── Components/
     └── [shared components]
+
+CodeGlyphX.Playground/
+├── Playground.razor             # Playground shell
+├── PlaygroundConfig.razor       # UI configuration panel
+├── Playground.Generate.cs       # Generation logic
+├── Playground.Decode.cs         # Decode logic
+└── PlaygroundPreview.razor      # Preview/output panel
 ```
 
 ---

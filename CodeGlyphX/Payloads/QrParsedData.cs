@@ -44,4 +44,7 @@ public static class QrParsedData {
 
     /// <summary>Bookmark payload.</summary>
     public sealed record Bookmark(string Url, string? Title);
+
+    /// <summary>PayPal payment payload (PayPal.Me).</summary>
+    public sealed record PayPal(string Handle, decimal? Amount, string? Currency, string Url);
 }

@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Text;
 
 namespace CodeGlyphX.Rendering.Svg;
@@ -49,5 +50,41 @@ public static class MatrixSvgRenderer {
 
         sb.Append("</svg>");
         return sb.ToString();
+    }
+
+    /// <summary>
+    /// Renders the matrix to an SVG stream.
+    /// </summary>
+    /// <param name="modules">Matrix modules.</param>
+    /// <param name="opts">Rendering options.</param>
+    /// <param name="stream">Target stream.</param>
+    public static void RenderToStream(BitMatrix modules, MatrixSvgRenderOptions opts, Stream stream) {
+        var svg = Render(modules, opts);
+        RenderIO.WriteText(stream, svg);
+    }
+
+    /// <summary>
+    /// Renders the matrix to an SVG file.
+    /// </summary>
+    /// <param name="modules">Matrix modules.</param>
+    /// <param name="opts">Rendering options.</param>
+    /// <param name="path">Output file path.</param>
+    /// <returns>The output file path.</returns>
+    public static string RenderToFile(BitMatrix modules, MatrixSvgRenderOptions opts, string path) {
+        var svg = Render(modules, opts);
+        return RenderIO.WriteText(path, svg);
+    }
+
+    /// <summary>
+    /// Renders the matrix to an SVG file under the specified directory.
+    /// </summary>
+    /// <param name="modules">Matrix modules.</param>
+    /// <param name="opts">Rendering options.</param>
+    /// <param name="directory">Output directory.</param>
+    /// <param name="fileName">Output file name.</param>
+    /// <returns>The output file path.</returns>
+    public static string RenderToFile(BitMatrix modules, MatrixSvgRenderOptions opts, string directory, string fileName) {
+        var svg = Render(modules, opts);
+        return RenderIO.WriteText(directory, fileName, svg);
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Globalization;
 using System.Text;
+using System.IO;
 using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Png;
 
@@ -135,6 +136,17 @@ public static class SvgQrRenderer {
     }
 
     /// <summary>
+    /// Renders the QR module matrix to an SVG stream.
+    /// </summary>
+    /// <param name="modules">QR modules.</param>
+    /// <param name="opts">Rendering options.</param>
+    /// <param name="stream">Target stream.</param>
+    public static void RenderToStream(BitMatrix modules, QrSvgRenderOptions opts, Stream stream) {
+        var svg = Render(modules, opts);
+        RenderIO.WriteText(stream, svg);
+    }
+
+    /// <summary>
     /// Renders the QR module matrix to an SVG file.
     /// </summary>
     /// <param name="modules">QR modules.</param>
@@ -242,6 +254,12 @@ public static class SvgQrRenderer {
         if (scale <= 0) return;
         if (scale > 1.0) scale = 1.0;
 
+        if (shape == QrPngModuleShape.Dot) scale *= QrPngShapeDefaults.DotScale;
+        if (shape == QrPngModuleShape.DotGrid) {
+            AppendDotGrid(sb, cellX, cellY, cellSize, scale, fill);
+            return;
+        }
+
         var size = cellSize * scale;
         var inset = (cellSize - size) / 2.0;
         var x = cellX + inset;
@@ -251,6 +269,21 @@ public static class SvgQrRenderer {
             var r = size / 2.0;
             sb.Append("<circle cx=\"").Append(Format(x + r)).Append("\" cy=\"").Append(Format(y + r))
                 .Append("\" r=\"").Append(Format(r)).Append("\" fill=\"").Append(fill).Append("\"/>");
+            return;
+        }
+        if (shape == QrPngModuleShape.Diamond) {
+            var cx = x + size / 2.0;
+            var cy = y + size / 2.0;
+            sb.Append("<polygon points=\"")
+                .Append(Format(cx)).Append(',').Append(Format(y)).Append(' ')
+                .Append(Format(x + size)).Append(',').Append(Format(cy)).Append(' ')
+                .Append(Format(cx)).Append(',').Append(Format(y + size)).Append(' ')
+                .Append(Format(x)).Append(',').Append(Format(cy))
+                .Append("\" fill=\"").Append(fill).Append("\"/>");
+            return;
+        }
+        if (shape == QrPngModuleShape.Squircle) {
+            AppendSquircle(sb, x, y, size, fill);
             return;
         }
 
@@ -267,6 +300,54 @@ public static class SvgQrRenderer {
             sb.Append(" rx=\"").Append(Format(radius)).Append("\" ry=\"").Append(Format(radius)).Append('"');
         }
         sb.Append("/>");
+    }
+
+    private static void AppendDotGrid(StringBuilder sb, double cellX, double cellY, double cellSize, double scale, string fill) {
+        if (scale <= 0) return;
+        if (scale > 1.0) scale = 1.0;
+
+        scale *= QrPngShapeDefaults.DotGridScale;
+        var gridSize = cellSize * scale;
+        var inset = (cellSize - gridSize) / 2.0;
+        var baseX = cellX + inset;
+        var baseY = cellY + inset;
+
+        var dotRadius = Math.Max(QrPngShapeDefaults.DotGridMinRadius, gridSize * QrPngShapeDefaults.DotGridRadiusFactor);
+        var c0 = baseX + gridSize * QrPngShapeDefaults.DotGridCenterFactor;
+        var c1 = baseX + gridSize * (1.0 - QrPngShapeDefaults.DotGridCenterFactor);
+        var r = dotRadius;
+
+        AppendCircle(sb, c0, baseY + gridSize * QrPngShapeDefaults.DotGridCenterFactor, r, fill);
+        AppendCircle(sb, c1, baseY + gridSize * QrPngShapeDefaults.DotGridCenterFactor, r, fill);
+        AppendCircle(sb, c0, baseY + gridSize * (1.0 - QrPngShapeDefaults.DotGridCenterFactor), r, fill);
+        AppendCircle(sb, c1, baseY + gridSize * (1.0 - QrPngShapeDefaults.DotGridCenterFactor), r, fill);
+    }
+
+    private static void AppendCircle(StringBuilder sb, double cx, double cy, double radius, string fill) {
+        if (radius <= 0) return;
+        sb.Append("<circle cx=\"").Append(Format(cx)).Append("\" cy=\"").Append(Format(cy))
+            .Append("\" r=\"").Append(Format(radius)).Append("\" fill=\"").Append(fill).Append("\"/>");
+    }
+
+    private static void AppendSquircle(StringBuilder sb, double x, double y, double size, string fill) {
+        const int steps = 32;
+        var cx = x + size / 2.0;
+        var cy = y + size / 2.0;
+        var r = size / 2.0;
+
+        sb.Append("<polygon points=\"");
+        for (var i = 0; i < steps; i++) {
+            var angle = i * (Math.PI * 2.0 / steps);
+            var cos = Math.Cos(angle);
+            var sin = Math.Sin(angle);
+            var dx = Math.Sign(cos) * Math.Sqrt(Math.Abs(cos)) * r;
+            var dy = Math.Sign(sin) * Math.Sqrt(Math.Abs(sin)) * r;
+            var px = cx + dx;
+            var py = cy + dy;
+            if (i > 0) sb.Append(' ');
+            sb.Append(Format(px)).Append(',').Append(Format(py));
+        }
+        sb.Append("\" fill=\"").Append(fill).Append("\"/>");
     }
 
     private static void DrawEyeFrame(

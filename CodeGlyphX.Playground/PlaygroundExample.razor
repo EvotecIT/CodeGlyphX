@@ -1,0 +1,24 @@
+@using CodeGlyphX
+
+@if (Host is null)
+{
+    <div class="card" style="margin-top: 2rem;">
+        <h2>Code Example</h2>
+        <p>Loading...</p>
+    </div>
+}
+else
+{
+    <div class="card" style="margin-top: 2rem;">
+        <h2>Code Example</h2>
+        <p style="color: var(--text-muted); margin-bottom: 1rem; font-size: 0.9rem;">
+            Here's how to generate this exact code in your .NET application:
+        </p>
+        <pre class="code-block">@Host.GetCodeExample()</pre>
+    </div>
+}
+
+@code {
+    [CascadingParameter]
+    public Playground? Host { get; set; }
+}

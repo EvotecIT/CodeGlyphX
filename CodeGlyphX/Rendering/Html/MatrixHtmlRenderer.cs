@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Text;
 
 namespace CodeGlyphX.Rendering.Html;
@@ -55,6 +56,42 @@ public static class MatrixHtmlRenderer {
 
         sb.Append("</table>");
         return sb.ToString();
+    }
+
+    /// <summary>
+    /// Renders the matrix to an HTML stream.
+    /// </summary>
+    /// <param name="modules">Matrix modules.</param>
+    /// <param name="opts">Rendering options.</param>
+    /// <param name="stream">Target stream.</param>
+    public static void RenderToStream(BitMatrix modules, MatrixHtmlRenderOptions opts, Stream stream) {
+        var html = Render(modules, opts);
+        RenderIO.WriteText(stream, html);
+    }
+
+    /// <summary>
+    /// Renders the matrix to an HTML file.
+    /// </summary>
+    /// <param name="modules">Matrix modules.</param>
+    /// <param name="opts">Rendering options.</param>
+    /// <param name="path">Output file path.</param>
+    /// <returns>The output file path.</returns>
+    public static string RenderToFile(BitMatrix modules, MatrixHtmlRenderOptions opts, string path) {
+        var html = Render(modules, opts);
+        return RenderIO.WriteText(path, html);
+    }
+
+    /// <summary>
+    /// Renders the matrix to an HTML file under the specified directory.
+    /// </summary>
+    /// <param name="modules">Matrix modules.</param>
+    /// <param name="opts">Rendering options.</param>
+    /// <param name="directory">Output directory.</param>
+    /// <param name="fileName">Output file name.</param>
+    /// <returns>The output file path.</returns>
+    public static string RenderToFile(BitMatrix modules, MatrixHtmlRenderOptions opts, string directory, string fileName) {
+        var html = Render(modules, opts);
+        return RenderIO.WriteText(directory, fileName, html);
     }
 
     private static bool IsDark(BitMatrix modules, int quietZone, int xOut, int yOut) {

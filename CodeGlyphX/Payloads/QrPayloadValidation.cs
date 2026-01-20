@@ -66,13 +66,17 @@ internal static class QrPayloadValidation {
         if (IsWhiteSpace(address)) return false;
         var at = address.IndexOf('@');
         if (at <= 0 || at == address.Length - 1) return false;
+        if (address.LastIndexOf('@') != at) return false;
         var dot = address.IndexOf('.', at + 1);
         return dot > at + 1 && dot < address.Length - 1;
     }
 
-    public static bool IsValidPhone(string? number) {
+    public static bool IsValidPhone(string? number) => IsValidPhone(number, 3);
+
+    public static bool IsValidPhone(string? number, int minDigits) {
         if (number is null) return false;
         if (IsWhiteSpace(number)) return false;
+        if (minDigits < 1) minDigits = 1;
         var digits = 0;
         for (var i = 0; i < number.Length; i++) {
             var ch = number[i];
@@ -83,7 +87,7 @@ internal static class QrPayloadValidation {
             if (ch is '+' or '-' or ' ' or '(' or ')' or '.') continue;
             return false;
         }
-        return digits >= 3;
+        return digits >= minDigits;
     }
 
     public static bool IsValidUrl(string? url) {

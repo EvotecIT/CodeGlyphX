@@ -27,7 +27,7 @@ internal readonly struct QrPayloadSegment {
 internal static class QrPayloadParser {
     private const string AlphanumericTable = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ $%*+-./:";
 
-    public static bool TryParse(byte[] dataCodewords, int version, out byte[] payload, out QrPayloadSegment[] segments, out QrStructuredAppend? structuredAppend, out QrFnc1Mode fnc1Mode) {
+    public static bool TryParse(byte[] dataCodewords, int version, Func<bool>? shouldStop, out byte[] payload, out QrPayloadSegment[] segments, out QrStructuredAppend? structuredAppend, out QrFnc1Mode fnc1Mode) {
         payload = null!;
         segments = null!;
         structuredAppend = null;
@@ -35,11 +35,13 @@ internal static class QrPayloadParser {
 
         if (dataCodewords is null) return false;
         if (version is < 1 or > 40) return false;
+        if (shouldStop?.Invoke() == true) return false;
 
         var bitLen = dataCodewords.Length * 8;
         var bitPos = 0;
 
         int ReadBits(int n) {
+            if (shouldStop?.Invoke() == true) return -1;
             if (n == 0) return 0;
             if (n < 0 || n > 31) throw new ArgumentOutOfRangeException(nameof(n));
             if (bitPos + n > bitLen) return -1;
@@ -79,6 +81,7 @@ internal static class QrPayloadParser {
 
         try {
             while (true) {
+                if (shouldStop?.Invoke() == true) return false;
                 var mode = ReadBits(4);
                 if (mode < 0) {
                     // Some encoders omit an explicit terminator if the payload exactly fills the available space,
@@ -122,6 +125,7 @@ internal static class QrPayloadParser {
                     if (charCount < 0) return false;
 
                     for (var i = 0; i < charCount; i++) {
+                        if (shouldStop?.Invoke() == true) return false;
                         var b = ReadBits(8);
                         if (b < 0) return false;
                         AddByte((byte)b);
@@ -141,6 +145,7 @@ internal static class QrPayloadParser {
                     encoding = QrTextEncoding.ShiftJis;
 
                     for (var i = 0; i < charCount; i++) {
+                        if (shouldStop?.Invoke() == true) return false;
                         var v = ReadBits(13);
                         if (v < 0) return false;
                         var assembled = ((v / 0xC0) << 8) | (v % 0xC0);
@@ -174,6 +179,7 @@ internal static class QrPayloadParser {
 
                     var remaining = charCount;
                     while (remaining >= 3) {
+                        if (shouldStop?.Invoke() == true) return false;
                         var v = ReadBits(10);
                         if (v < 0 || v > 999) return false;
                         AddByte((byte)('0' + (v / 100)));
@@ -183,11 +189,13 @@ internal static class QrPayloadParser {
                     }
 
                     if (remaining == 2) {
+                        if (shouldStop?.Invoke() == true) return false;
                         var v = ReadBits(7);
                         if (v < 0 || v > 99) return false;
                         AddByte((byte)('0' + (v / 10)));
                         AddByte((byte)('0' + (v % 10)));
                     } else if (remaining == 1) {
+                        if (shouldStop?.Invoke() == true) return false;
                         var v = ReadBits(4);
                         if (v < 0 || v > 9) return false;
                         AddByte((byte)('0' + v));
@@ -207,6 +215,7 @@ internal static class QrPayloadParser {
                     var rawLen = 0;
                     try {
                         while (remaining >= 2) {
+                            if (shouldStop?.Invoke() == true) return false;
                             var v = ReadBits(11);
                             if (v < 0 || v >= 45 * 45) return false;
                             var a = v / 45;
@@ -217,6 +226,7 @@ internal static class QrPayloadParser {
                         }
 
                         if (remaining == 1) {
+                            if (shouldStop?.Invoke() == true) return false;
                             var v = ReadBits(6);
                             if (v < 0 || v >= 45) return false;
                             raw[rawLen++] = (byte)AlphanumericTable[v];

@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 
 #if NET8_0_OR_GREATER
 using CodewordSpan = System.ReadOnlySpan<byte>;
@@ -67,6 +68,10 @@ internal static class DataMatrixPlacement {
     }
 
     public static byte[] ReadCodewords(BitMatrix modules, int codewordCount) {
+        return ReadCodewords(modules, codewordCount, CancellationToken.None);
+    }
+
+    public static byte[] ReadCodewords(BitMatrix modules, int codewordCount, CancellationToken cancellationToken) {
         if (modules is null) throw new ArgumentNullException(nameof(modules));
         if (codewordCount <= 0) throw new ArgumentOutOfRangeException(nameof(codewordCount));
 
@@ -80,6 +85,7 @@ internal static class DataMatrixPlacement {
         var col = 0;
 
         do {
+            if (cancellationToken.IsCancellationRequested) return Array.Empty<byte>();
             if (row == rows && col == 0) {
                 Corner1(modules, ref codewordIndex, rows, cols, codewords, assigned);
             }

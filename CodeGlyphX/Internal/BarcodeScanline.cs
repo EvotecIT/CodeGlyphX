@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Buffers;
+using System.Threading;
 
 #if NET8_0_OR_GREATER
 using PixelSpan = System.ReadOnlySpan<byte>;
@@ -12,6 +13,10 @@ namespace CodeGlyphX.Internal;
 
 internal static class BarcodeScanline {
     public static bool TryGetModules(PixelSpan pixels, int width, int height, int stride, PixelFormat format, out bool[] modules) {
+        return TryGetModules(pixels, width, height, stride, format, CancellationToken.None, out modules);
+    }
+
+    public static bool TryGetModules(PixelSpan pixels, int width, int height, int stride, PixelFormat format, CancellationToken cancellationToken, out bool[] modules) {
         modules = Array.Empty<bool>();
 #if !NET8_0_OR_GREATER
         if (pixels is null) throw new ArgumentNullException(nameof(pixels));
@@ -20,6 +25,7 @@ internal static class BarcodeScanline {
 #endif
         if (width <= 0 || height <= 0) return false;
         if (stride < width * 4) return false;
+        if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
 
         var bestLen = 0;
         var best = Array.Empty<bool>();
@@ -28,9 +34,9 @@ internal static class BarcodeScanline {
         var y1 = height / 3;
         var y2 = (height * 2) / 3;
 
-        TryPickBest(TryGetModulesFromHorizontal(pixels, width, height, stride, format, y0, out var m0), m0, ref bestLen, ref best);
-        TryPickBest(TryGetModulesFromHorizontal(pixels, width, height, stride, format, y1, out var m1), m1, ref bestLen, ref best);
-        TryPickBest(TryGetModulesFromHorizontal(pixels, width, height, stride, format, y2, out var m2), m2, ref bestLen, ref best);
+        TryPickBest(TryGetModulesFromHorizontal(pixels, width, height, stride, format, y0, cancellationToken, out var m0), m0, ref bestLen, ref best);
+        TryPickBest(TryGetModulesFromHorizontal(pixels, width, height, stride, format, y1, cancellationToken, out var m1), m1, ref bestLen, ref best);
+        TryPickBest(TryGetModulesFromHorizontal(pixels, width, height, stride, format, y2, cancellationToken, out var m2), m2, ref bestLen, ref best);
 
         if (bestLen > 0) {
             modules = best;
@@ -41,9 +47,9 @@ internal static class BarcodeScanline {
         var x1 = width / 3;
         var x2 = (width * 2) / 3;
 
-        TryPickBest(TryGetModulesFromVertical(pixels, width, height, stride, format, x0, out var v0), v0, ref bestLen, ref best);
-        TryPickBest(TryGetModulesFromVertical(pixels, width, height, stride, format, x1, out var v1), v1, ref bestLen, ref best);
-        TryPickBest(TryGetModulesFromVertical(pixels, width, height, stride, format, x2, out var v2), v2, ref bestLen, ref best);
+        TryPickBest(TryGetModulesFromVertical(pixels, width, height, stride, format, x0, cancellationToken, out var v0), v0, ref bestLen, ref best);
+        TryPickBest(TryGetModulesFromVertical(pixels, width, height, stride, format, x1, cancellationToken, out var v1), v1, ref bestLen, ref best);
+        TryPickBest(TryGetModulesFromVertical(pixels, width, height, stride, format, x2, cancellationToken, out var v2), v2, ref bestLen, ref best);
 
         if (bestLen == 0) return false;
         modules = best;
@@ -51,6 +57,10 @@ internal static class BarcodeScanline {
     }
 
     public static bool TryGetModuleCandidates(PixelSpan pixels, int width, int height, int stride, PixelFormat format, out bool[][] candidates) {
+        return TryGetModuleCandidates(pixels, width, height, stride, format, CancellationToken.None, out candidates);
+    }
+
+    public static bool TryGetModuleCandidates(PixelSpan pixels, int width, int height, int stride, PixelFormat format, CancellationToken cancellationToken, out bool[][] candidates) {
         candidates = Array.Empty<bool[]>();
 #if !NET8_0_OR_GREATER
         if (pixels is null) throw new ArgumentNullException(nameof(pixels));
@@ -59,6 +69,7 @@ internal static class BarcodeScanline {
 #endif
         if (width <= 0 || height <= 0) return false;
         if (stride < width * 4) return false;
+        if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
 
         var list = new List<bool[]>(8);
 
@@ -66,18 +77,19 @@ internal static class BarcodeScanline {
         var y1 = height / 3;
         var y2 = (height * 2) / 3;
 
-        TryCollectCandidatesFromHorizontal(pixels, width, height, stride, format, y0, list);
-        TryCollectCandidatesFromHorizontal(pixels, width, height, stride, format, y1, list);
-        TryCollectCandidatesFromHorizontal(pixels, width, height, stride, format, y2, list);
+        TryCollectCandidatesFromHorizontal(pixels, width, height, stride, format, y0, cancellationToken, list);
+        TryCollectCandidatesFromHorizontal(pixels, width, height, stride, format, y1, cancellationToken, list);
+        TryCollectCandidatesFromHorizontal(pixels, width, height, stride, format, y2, cancellationToken, list);
 
         var x0 = width / 2;
         var x1 = width / 3;
         var x2 = (width * 2) / 3;
 
-        TryCollectCandidatesFromVertical(pixels, width, height, stride, format, x0, list);
-        TryCollectCandidatesFromVertical(pixels, width, height, stride, format, x1, list);
-        TryCollectCandidatesFromVertical(pixels, width, height, stride, format, x2, list);
+        TryCollectCandidatesFromVertical(pixels, width, height, stride, format, x0, cancellationToken, list);
+        TryCollectCandidatesFromVertical(pixels, width, height, stride, format, x1, cancellationToken, list);
+        TryCollectCandidatesFromVertical(pixels, width, height, stride, format, x2, cancellationToken, list);
 
+        if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
         if (list.Count == 0) return false;
         candidates = list.ToArray();
         return true;
@@ -90,7 +102,7 @@ internal static class BarcodeScanline {
         best = candidate;
     }
 
-    private static bool TryGetModulesFromHorizontal(PixelSpan pixels, int width, int height, int stride, PixelFormat format, int y, out bool[] modules) {
+    private static bool TryGetModulesFromHorizontal(PixelSpan pixels, int width, int height, int stride, PixelFormat format, int y, CancellationToken cancellationToken, out bool[] modules) {
         modules = Array.Empty<bool>();
         if ((uint)y >= (uint)height) return false;
         var rented = ArrayPool<byte>.Shared.Rent(width);
@@ -101,6 +113,7 @@ internal static class BarcodeScanline {
 
         try {
             for (var x = 0; x < width; x++) {
+                if ((x & 127) == 0 && DecodeBudget.ShouldAbort(cancellationToken)) return false;
                 var p = offset + x * 4;
                 byte r;
                 byte g;
@@ -120,13 +133,13 @@ internal static class BarcodeScanline {
                 if (lum > max) max = lum;
             }
 
-            return TryDecodeRuns(luminance, min, max, out modules);
+            return TryDecodeRuns(luminance, min, max, cancellationToken, out modules);
         } finally {
             ArrayPool<byte>.Shared.Return(rented);
         }
     }
 
-    private static bool TryGetModulesFromVertical(PixelSpan pixels, int width, int height, int stride, PixelFormat format, int x, out bool[] modules) {
+    private static bool TryGetModulesFromVertical(PixelSpan pixels, int width, int height, int stride, PixelFormat format, int x, CancellationToken cancellationToken, out bool[] modules) {
         modules = Array.Empty<bool>();
         if ((uint)x >= (uint)width) return false;
         var rented = ArrayPool<byte>.Shared.Rent(height);
@@ -136,6 +149,7 @@ internal static class BarcodeScanline {
 
         try {
             for (var y = 0; y < height; y++) {
+                if ((y & 127) == 0 && DecodeBudget.ShouldAbort(cancellationToken)) return false;
                 var p = y * stride + x * 4;
                 byte r;
                 byte g;
@@ -155,20 +169,44 @@ internal static class BarcodeScanline {
                 if (lum > max) max = lum;
             }
 
-            return TryDecodeRuns(luminance, min, max, out modules);
+            return TryDecodeRuns(luminance, min, max, cancellationToken, out modules);
         } finally {
             ArrayPool<byte>.Shared.Return(rented);
         }
     }
 
     private static bool TryDecodeRuns(ReadOnlySpan<byte> luminance, int min, int max, out bool[] modules) {
+        return TryDecodeRuns(luminance, min, max, CancellationToken.None, out modules);
+    }
+
+    private static bool TryDecodeRuns(ReadOnlySpan<byte> luminance, int min, int max, CancellationToken cancellationToken, out bool[] modules) {
         modules = Array.Empty<bool>();
-        if (max - min < 8) return false;
-        var threshold = (min + max) / 2;
-        return TryDecodeRuns(luminance, threshold, out modules);
+        var range = max - min;
+        if (range <= 0) return false;
+
+        var thresholds = range < 8
+            ? new[] { (min + max) / 2 }
+            : new[] {
+                (min + max) / 2,
+                min + range / 3,
+                min + (range * 2) / 3,
+                min + range / 4,
+                min + (range * 3) / 4
+            };
+
+        for (var i = 0; i < thresholds.Length; i++) {
+            if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
+            if (TryDecodeRuns(luminance, thresholds[i], cancellationToken, out modules)) return true;
+        }
+
+        return false;
     }
 
     private static bool TryDecodeRuns(ReadOnlySpan<byte> luminance, int threshold, out bool[] modules) {
+        return TryDecodeRuns(luminance, threshold, CancellationToken.None, out modules);
+    }
+
+    private static bool TryDecodeRuns(ReadOnlySpan<byte> luminance, int threshold, CancellationToken cancellationToken, out bool[] modules) {
         modules = Array.Empty<bool>();
         if (luminance.Length == 0) return false;
 
@@ -180,6 +218,7 @@ internal static class BarcodeScanline {
 
         try {
             for (var i = 1; i < luminance.Length; i++) {
+                if ((i & 255) == 0 && DecodeBudget.ShouldAbort(cancellationToken)) return false;
                 var isBar = luminance[i] < threshold;
                 if (isBar == current) {
                     runLen++;
@@ -193,6 +232,7 @@ internal static class BarcodeScanline {
             runBars[runCount] = current;
             runs[runCount++] = runLen;
 
+            if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
             var start = 0;
             while (start < runCount && !runBars[start]) start++;
             var end = runCount - 1;
@@ -201,12 +241,14 @@ internal static class BarcodeScanline {
 
             var minRun = int.MaxValue;
             for (var i = start; i <= end; i++) {
+                if ((i & 255) == 0 && DecodeBudget.ShouldAbort(cancellationToken)) return false;
                 if (runs[i] < minRun) minRun = runs[i];
             }
             if (minRun <= 0) return false;
 
             var totalModules = 0;
             for (var i = start; i <= end; i++) {
+                if ((i & 255) == 0 && DecodeBudget.ShouldAbort(cancellationToken)) return false;
                 var modulesCount = (int)Math.Round(runs[i] / (double)minRun);
                 if (modulesCount < 1) modulesCount = 1;
                 totalModules += modulesCount;
@@ -216,6 +258,7 @@ internal static class BarcodeScanline {
             modules = new bool[totalModules];
             var offset = 0;
             for (var i = start; i <= end; i++) {
+                if ((i & 255) == 0 && DecodeBudget.ShouldAbort(cancellationToken)) return false;
                 var modulesCount = (int)Math.Round(runs[i] / (double)minRun);
                 if (modulesCount < 1) modulesCount = 1;
                 var isBar = runBars[i];
@@ -231,7 +274,7 @@ internal static class BarcodeScanline {
         }
     }
 
-    private static void TryCollectCandidatesFromHorizontal(PixelSpan pixels, int width, int height, int stride, PixelFormat format, int y, List<bool[]> candidates) {
+    private static void TryCollectCandidatesFromHorizontal(PixelSpan pixels, int width, int height, int stride, PixelFormat format, int y, CancellationToken cancellationToken, List<bool[]> candidates) {
         if ((uint)y >= (uint)height) return;
         var rented = ArrayPool<byte>.Shared.Rent(width);
         var luminance = rented.AsSpan(0, width);
@@ -241,6 +284,7 @@ internal static class BarcodeScanline {
 
         try {
             for (var x = 0; x < width; x++) {
+                if ((x & 127) == 0 && DecodeBudget.ShouldAbort(cancellationToken)) return;
                 var p = offset + x * 4;
                 byte r;
                 byte g;
@@ -260,13 +304,13 @@ internal static class BarcodeScanline {
                 if (lum > max) max = lum;
             }
 
-            TryCollectCandidates(luminance, min, max, candidates);
+            TryCollectCandidates(luminance, min, max, cancellationToken, candidates);
         } finally {
             ArrayPool<byte>.Shared.Return(rented);
         }
     }
 
-    private static void TryCollectCandidatesFromVertical(PixelSpan pixels, int width, int height, int stride, PixelFormat format, int x, List<bool[]> candidates) {
+    private static void TryCollectCandidatesFromVertical(PixelSpan pixels, int width, int height, int stride, PixelFormat format, int x, CancellationToken cancellationToken, List<bool[]> candidates) {
         if ((uint)x >= (uint)width) return;
         var rented = ArrayPool<byte>.Shared.Rent(height);
         var luminance = rented.AsSpan(0, height);
@@ -275,6 +319,7 @@ internal static class BarcodeScanline {
 
         try {
             for (var y = 0; y < height; y++) {
+                if ((y & 127) == 0 && DecodeBudget.ShouldAbort(cancellationToken)) return;
                 var p = y * stride + x * 4;
                 byte r;
                 byte g;
@@ -294,18 +339,23 @@ internal static class BarcodeScanline {
                 if (lum > max) max = lum;
             }
 
-            TryCollectCandidates(luminance, min, max, candidates);
+            TryCollectCandidates(luminance, min, max, cancellationToken, candidates);
         } finally {
             ArrayPool<byte>.Shared.Return(rented);
         }
     }
 
     private static void TryCollectCandidates(ReadOnlySpan<byte> luminance, int min, int max, List<bool[]> candidates) {
+        TryCollectCandidates(luminance, min, max, CancellationToken.None, candidates);
+    }
+
+    private static void TryCollectCandidates(ReadOnlySpan<byte> luminance, int min, int max, CancellationToken cancellationToken, List<bool[]> candidates) {
         if (max - min < 8) return;
         var range = max - min;
         var thresholds = new[] { (min + max) / 2, min + range / 3, min + (range * 2) / 3 };
         for (var i = 0; i < thresholds.Length; i++) {
-            if (TryDecodeRuns(luminance, thresholds[i], out var modules)) {
+            if (DecodeBudget.ShouldAbort(cancellationToken)) return;
+            if (TryDecodeRuns(luminance, thresholds[i], cancellationToken, out var modules)) {
                 AddUniqueCandidate(candidates, modules);
             }
         }

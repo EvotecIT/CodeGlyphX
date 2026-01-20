@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using CodeGlyphX.Rendering.Png;
 using Xunit;
 
@@ -18,6 +19,21 @@ public sealed class BarcodeDecoderTests {
         Assert.True(BarcodeDecoder.TryDecode(pixels, width, height, stride, PixelFormat.Rgba32, out var decoded));
         Assert.Equal(BarcodeType.Code128, decoded.Type);
         Assert.Equal("CODEMATRIX-123", decoded.Text);
+    }
+
+    [Fact]
+    public void Decode_Code128_Cancelled_ReturnsFalse() {
+        var barcode = BarcodeEncoder.Encode(BarcodeType.Code128, "CANCEL-128");
+        var pixels = BarcodePngRenderer.RenderPixels(barcode, new BarcodePngRenderOptions {
+            ModuleSize = 3,
+            QuietZone = 10,
+            HeightModules = 40
+        }, out var width, out var height, out var stride);
+
+        using var cts = new CancellationTokenSource();
+        cts.Cancel();
+
+        Assert.False(BarcodeDecoder.TryDecode(pixels, width, height, stride, PixelFormat.Rgba32, BarcodeType.Code128, options: null, cts.Token, out _));
     }
 
     [Fact]
@@ -46,6 +62,20 @@ public sealed class BarcodeDecoderTests {
         Assert.True(Barcode.TryDecodePng(png, out var decoded));
         Assert.Equal(BarcodeType.Code128, decoded.Type);
         Assert.Equal("CODEMATRIX-123", decoded.Text);
+    }
+
+    [Fact]
+    public void Decode_Code128_FromPng_Cancelled_ReturnsFalse() {
+        var png = Barcode.Png(BarcodeType.Code128, "CANCEL-PNG", new BarcodeOptions {
+            ModuleSize = 3,
+            QuietZone = 10,
+            HeightModules = 40
+        });
+
+        using var cts = new CancellationTokenSource();
+        cts.Cancel();
+
+        Assert.False(Barcode.TryDecodePng(png, BarcodeType.Code128, cts.Token, out _));
     }
 
     [Fact]

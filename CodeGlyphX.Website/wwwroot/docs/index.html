@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Documentation - CodeGlyphX</title>
+  <meta name="description" content="CodeGlyphX documentation - learn how to generate and decode QR codes, barcodes, and 2D matrix codes in .NET." />
+  <link rel="icon" type="image/png" href="/codeglyphx-qr-icon.png" />
+  <link rel="apple-touch-icon" href="/codeglyphx-qr-icon.png" />
+  <link rel="stylesheet" href="/css/api-docs.css" />
+  <script>(function(){var theme=localStorage.getItem('theme')||'dark';document.documentElement.setAttribute('data-theme',theme);})();</script>
+</head>
+<body>
+  <div class="page">
+<header class="header">
+    <div class="header-content">
+        <a href="/" class="brand">
+            <div class="brand-icon">
+                <img src="/codeglyphx-qr-icon.png" alt="CodeGlyphX logo" />
+            </div>
+            <span>CodeGlyphX</span>
+        </a>
+
+        <!-- Mobile hamburger toggle -->
+        <input type="checkbox" id="nav-toggle" class="nav-toggle-checkbox" />
+        <label for="nav-toggle" class="nav-toggle" aria-label="Toggle navigation">
+            <span></span>
+            <span></span>
+            <span></span>
+        </label>
+
+        <nav class="nav">
+            <div class="nav-links">
+                <a href="/">Home</a>
+                <a href="/playground/">Playground</a>
+                <a href="/docs/">Documentation</a>
+                <a href="/api/">API Reference</a>
+            </div>
+            <div class="nav-actions">
+                <button class="theme-toggle" title="Toggle theme" aria-label="Toggle theme">
+                    <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="5"/>
+                        <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+                    </svg>
+                    <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
+                    </svg>
+                </button>
+                <a href="https://github.com/EvotecIT/CodeGlyphX" target="_blank" rel="noopener" class="nav-icon" title="GitHub">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                    </svg>
+                </a>
+                <a href="https://www.nuget.org/packages/CodeGlyphX" target="_blank" rel="noopener" class="nav-cta">
+                    <svg viewBox="0 0 24 24" fill="currentColor" class="nav-cta-icon">
+                        <path d="M12 0L1.75 6v12L12 24l10.25-6V6zm-1.775 18a3.11 3.11 0 01-3.111-3.111 3.11 3.11 0 013.111-3.111 3.11 3.11 0 013.111 3.111A3.11 3.11 0 0110.225 18zm4.91-6.944a1.867 1.867 0 01-1.867-1.867 1.867 1.867 0 011.866-1.866 1.867 1.867 0 011.867 1.866 1.867 1.867 0 01-1.867 1.867z"/>
+                    </svg>
+                    Get Started
+                </a>
+            </div>
+        </nav>
+    </div>
+</header>
+
+<main>
+<div class="docs-static">
+    <h1>CodeGlyphX Documentation</h1>
+    <p class="lead">
+        Welcome to the CodeGlyphX documentation. CodeGlyphX is a zero-dependency .NET library
+        for generating and decoding QR codes, barcodes, and other 2D matrix codes.
+    </p>
+
+    <section class="docs-section">
+        <h2>Getting Started</h2>
+        <div class="docs-cards">
+            <div class="docs-card">
+                <h3>Installation</h3>
+                <p>Install CodeGlyphX via NuGet:</p>
+                <pre class="code-block">dotnet add package CodeGlyphX</pre>
+            </div>
+            <div class="docs-card">
+                <h3>Quick Start</h3>
+                <pre class="code-block"><span class="keyword">using</span> CodeGlyphX;
+
+<span class="comment">// Generate a QR code</span>
+QR.Save(<span class="string">"Hello, World!"</span>, <span class="string">"hello.png"</span>);
+
+<span class="comment">// Generate a barcode</span>
+Barcode.Save(BarcodeType.Code128, <span class="string">"PRODUCT-123"</span>, <span class="string">"barcode.png"</span>);</pre>
+            </div>
+        </div>
+    </section>
+
+    <section class="docs-section">
+        <h2>Key Features</h2>
+        <ul class="docs-features">
+            <li><strong>Zero external dependencies</strong> - No System.Drawing, SkiaSharp, or ImageSharp required</li>
+            <li><strong>Full encode &amp; decode</strong> - Round-trip support for all symbologies</li>
+            <li><strong>Multiple output formats</strong> - PNG, SVG, PDF, EPS, HTML, and many more</li>
+            <li><strong>Cross-platform</strong> - Windows, Linux, macOS</li>
+            <li><strong>AOT compatible</strong> - Works with Native AOT and trimming</li>
+        </ul>
+    </section>
+
+    <section class="docs-section">
+        <h2>Supported Formats</h2>
+
+        <h3>2D Matrix Codes</h3>
+        <p>QR Code, Micro QR, Data Matrix, PDF417, Aztec</p>
+
+        <h3>1D Linear Barcodes</h3>
+        <p>Code 128, GS1-128, Code 39, Code 93, Code 11, Codabar, MSI, Plessey, EAN-8, EAN-13, UPC-A, UPC-E, ITF-14</p>
+    </section>
+
+    <section class="docs-section">
+        <h2>Resources</h2>
+        <div class="docs-links">
+            <a href="/api/" class="docs-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                </svg>
+                API Reference
+            </a>
+            <a href="/playground/" class="docs-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                    <path d="M8 5v14l11-7z"/>
+                </svg>
+                Interactive Playground
+            </a>
+            <a href="https://github.com/EvotecIT/CodeGlyphX" target="_blank" class="docs-link">
+                <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                </svg>
+                GitHub Repository
+            </a>
+            <a href="https://github.com/EvotecIT/CodeGlyphX/issues" target="_blank" class="docs-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M12 16v-4M12 8h.01"/>
+                </svg>
+                Report Issues
+            </a>
+        </div>
+    </section>
+</div>
+</main>
+<footer class="footer">
+    <div class="footer-content">
+        <div class="footer-brand">
+            <div class="footer-logo">
+                <img src="/codeglyphx-qr-icon.png" alt="CodeGlyphX logo" />
+                <span>CodeGlyphX</span>
+            </div>
+            <p>Zero-dependency QR &amp; barcode toolkit for .NET</p>
+        </div>
+        <div class="footer-links">
+            <div class="footer-section">
+                <h4>Product</h4>
+                <a href="/">Home</a>
+                <a href="/playground">Playground</a>
+                <a href="/docs">Documentation</a>
+            </div>
+            <div class="footer-section">
+                <h4>Resources</h4>
+                <a href="https://www.nuget.org/packages/CodeGlyphX" target="_blank" rel="noopener">NuGet Package</a>
+                <a href="https://github.com/EvotecIT/CodeGlyphX" target="_blank" rel="noopener">GitHub Repository</a>
+                <a href="https://github.com/EvotecIT/CodeGlyphX/issues" target="_blank" rel="noopener">Report Issue</a>
+            </div>
+            <div class="footer-section">
+                <h4>Company</h4>
+                <a href="https://evotec.xyz" target="_blank" rel="noopener">Evotec Services</a>
+                <a href="https://evotec.xyz/hub" target="_blank" rel="noopener">Blog</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="footer-badges">
+                <a href="https://github.com/EvotecIT/CodeGlyphX" target="_blank" rel="noopener">
+                    <img src="https://img.shields.io/github/stars/EvotecIT/CodeGlyphX?style=social" alt="GitHub stars" />
+                </a>
+                <a href="https://www.nuget.org/packages/CodeGlyphX" target="_blank" rel="noopener">
+                    <img src="https://img.shields.io/nuget/dt/CodeGlyphX" alt="NuGet downloads" />
+                </a>
+            </div>
+            <p>Apache 2.0 License &bull; &copy; 2026 Evotec Services sp. z o.o.</p>
+        </div>
+    </div>
+</footer>
+
+  </div>
+  <script>
+    function copyToClipboard(text) {
+      navigator.clipboard.writeText(text).then(function() {
+        // Optional: show feedback
+      });
+    }
+    // Theme toggle
+    document.querySelectorAll('.theme-toggle').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var current = document.documentElement.getAttribute('data-theme') || 'dark';
+        var next = current === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem('theme', next);
+      });
+    });
+    // Mobile nav toggle
+    var navToggle = document.getElementById('nav-toggle');
+    if (navToggle) {
+      navToggle.addEventListener('change', function() {
+        document.body.classList.toggle('nav-open', this.checked);
+      });
+    }
+  </script>
+</body>
+</html>

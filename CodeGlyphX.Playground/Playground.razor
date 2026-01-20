@@ -1,0 +1,18 @@
+@using CodeGlyphX
+
+<div class="playground">
+    <h1>Interactive Playground</h1>
+    <p class="playground-subtitle">
+        Generate QR codes and barcodes in real-time using the actual CodeGlyphX library running in your browser via WebAssembly.
+    </p>
+
+    <CascadingValue Value="this">
+        <div class="playground-grid">
+            <PlaygroundConfig />
+            <PlaygroundPreview />
+        </div>
+
+        <PlaygroundExample />
+        <PlaygroundFooter />
+    </CascadingValue>
+</div>

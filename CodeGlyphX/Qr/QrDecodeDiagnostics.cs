@@ -7,6 +7,7 @@ internal enum QrDecodeFailure {
     FormatInfo = 3,
     ReedSolomon = 4,
     Payload = 5,
+    Cancelled = 6,
 }
 
 internal readonly struct QrDecodeDiagnostics {
@@ -36,8 +37,8 @@ internal readonly struct QrDecodeDiagnostics {
             QrDecodeFailure.InvalidSize => $"invalid-size v{Version}",
             QrDecodeFailure.FormatInfo => $"format (v{Version}, d{FormatBestDistance})",
             QrDecodeFailure.ReedSolomon => $"rs (v{Version}, {ErrorCorrectionLevel}, m{Mask})",
+            QrDecodeFailure.Cancelled => "cancelled",
             _ => $"payload (v{Version}, {ErrorCorrectionLevel}, m{Mask})",
         };
     }
 }
-

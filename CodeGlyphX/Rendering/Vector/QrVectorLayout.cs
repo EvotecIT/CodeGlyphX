@@ -86,6 +86,8 @@ internal static class QrVectorLayout {
         if (opts.ForegroundGradient is not null) return true;
         if (opts.Logo is not null) return true;
         if (opts.Eyes is not null && (opts.Eyes.OuterGradient is not null || opts.Eyes.InnerGradient is not null)) return true;
+        if (!IsVectorShapeSupported(opts.ModuleShape)) return true;
+        if (opts.Eyes is not null && (!IsVectorShapeSupported(opts.Eyes.OuterShape) || !IsVectorShapeSupported(opts.Eyes.InnerShape))) return true;
         return false;
     }
 
@@ -153,6 +155,12 @@ internal static class QrVectorLayout {
         if (scale < 0.1) scale = 0.1;
         if (scale > 1.0) scale = 1.0;
         return Math.Max(1, (int)Math.Round(size * scale));
+    }
+
+    private static bool IsVectorShapeSupported(QrPngModuleShape shape) {
+        return shape == QrPngModuleShape.Square ||
+               shape == QrPngModuleShape.Circle ||
+               shape == QrPngModuleShape.Rounded;
     }
 
     private static bool IsInEye(int x, int y, int size) {

@@ -1,0 +1,82 @@
+@using CodeGlyphX
+
+@if (Host is null)
+{
+    <div class="card">
+        <h2>Preview</h2>
+        <p>Loading...</p>
+    </div>
+}
+else
+{
+    <div class="card">
+        <h2>@(Host.SelectedMode == "Decode" ? "Decode Result" : "Preview")</h2>
+        <div class="output-preview">
+            @if (!string.IsNullOrEmpty(Host.ErrorMessage))
+            {
+                <div style="text-align: center; color: #ef4444;">
+                    <p style="font-size: 2rem; margin-bottom: 0.5rem;">⚠</p>
+                    <p>@Host.ErrorMessage</p>
+                </div>
+            }
+            else if (Host.SelectedMode == "Decode" && !string.IsNullOrEmpty(Host.DecodeImageDataUri))
+            {
+                <img src="@Host.DecodeImageDataUri" alt="Uploaded code" />
+            }
+            else if (Host.SelectedMode == "Generate" && !string.IsNullOrEmpty(Host.ImageDataUri))
+            {
+                <img src="@Host.ImageDataUri" alt="Generated code" />
+            }
+            else
+            {
+                <div style="text-align: center; color: var(--text-muted);">
+                    <p style="font-size: 2rem; margin-bottom: 0.5rem;">📱</p>
+                    <p>@(Host.SelectedMode == "Decode" ? "Upload an image to decode" : "Enter content to generate a code")</p>
+                </div>
+            }
+        </div>
+
+        @if (Host.SelectedMode == "Generate" && !string.IsNullOrEmpty(Host.ImageDataUri))
+        {
+            <div class="download-buttons">
+                <a href="@Host.ImageDataUri" download="@Host.GetDownloadFilename("png")" class="btn btn-secondary">
+                    Download PNG
+                </a>
+                @if (!string.IsNullOrEmpty(Host.SvgDataUri))
+                {
+                    <a href="@Host.SvgDataUri" download="@Host.GetDownloadFilename("svg")" class="btn btn-secondary">
+                        Download SVG
+                    </a>
+                }
+            </div>
+        }
+
+        @if (Host.SelectedMode == "Decode")
+        {
+            <div style="margin-top: 1.5rem;">
+                @if (!string.IsNullOrEmpty(Host.DecodeError))
+                {
+                    <p style="color: #ef4444;">@Host.DecodeError</p>
+                }
+                else if (Host.DecodeResults.Count > 0)
+                {
+                    <ul style="color: var(--text-muted); margin-left: 1.25rem;">
+                        @foreach (var result in Host.DecodeResults)
+                        {
+                            <li><strong>@result.Type</strong>: @result.Text</li>
+                        }
+                    </ul>
+                }
+                else if (!string.IsNullOrEmpty(Host.DecodeImageDataUri))
+                {
+                    <p style="color: var(--text-muted);">No codes detected.</p>
+                }
+            </div>
+        }
+    </div>
+}
+
+@code {
+    [CascadingParameter]
+    public Playground? Host { get; set; }
+}

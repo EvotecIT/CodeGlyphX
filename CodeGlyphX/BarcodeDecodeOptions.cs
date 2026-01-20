@@ -3,7 +3,7 @@ namespace CodeGlyphX;
 /// <summary>
 /// Options controlling how 1D barcode decoding behaves.
 /// </summary>
-public sealed class BarcodeDecodeOptions {
+public sealed partial class BarcodeDecodeOptions {
     /// <summary>
     /// Controls how Code39 checksum characters are handled during decode.
     /// </summary>
@@ -20,6 +20,16 @@ public sealed class BarcodeDecodeOptions {
     /// Controls whether Plessey CRC validation is required during decode.
     /// </summary>
     public PlesseyChecksumPolicy PlesseyChecksum { get; set; } = PlesseyChecksumPolicy.RequireValid;
+
+    /// <summary>
+    /// Enables tile-based scanning for multiple barcodes in one image.
+    /// </summary>
+    public bool EnableTileScan { get; set; } = false;
+
+    /// <summary>
+    /// Tile grid size for multi-scan (0 = auto, 2..4 recommended).
+    /// </summary>
+    public int TileGrid { get; set; } = 0;
 }
 
 /// <summary>

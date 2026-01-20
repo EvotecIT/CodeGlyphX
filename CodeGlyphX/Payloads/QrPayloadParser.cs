@@ -84,6 +84,11 @@ public static class QrPayloadParser {
             return true;
         }
 
+        if (TryParsePayPal(raw, out var paypal)) {
+            parsed = new QrParsedPayload(QrPayloadType.PayPal, raw, paypal);
+            return true;
+        }
+
         if (LooksLikeUrl(raw)) {
             parsed = new QrParsedPayload(QrPayloadType.Url, raw, raw);
             return true;
@@ -161,6 +166,13 @@ public static class QrPayloadParser {
         var urlText = UnescapeField(url);
         var titleText = title.Length == 0 ? null : UnescapeField(title);
         bookmark = new QrParsedData.Bookmark(urlText, titleText);
+        return true;
+    }
+
+    private static bool TryParsePayPal(string raw, out QrParsedData.PayPal paypal) {
+        paypal = null!;
+        if (!TryNormalizePayPalUrl(raw, out var url, out var handle, out var amount, out var currency)) return false;
+        paypal = new QrParsedData.PayPal(handle, amount, currency, url);
         return true;
     }
 
@@ -573,6 +585,64 @@ public static class QrPayloadParser {
         return false;
     }
 
+    private static bool TryNormalizePayPalUrl(string raw, out string url, out string handle, out decimal? amount, out string? currency) {
+        url = string.Empty;
+        handle = string.Empty;
+        amount = null;
+        currency = null;
+
+        var candidate = raw;
+        if (!candidate.StartsWith("http://", StringComparison.OrdinalIgnoreCase) &&
+            !candidate.StartsWith("https://", StringComparison.OrdinalIgnoreCase)) {
+            if (!candidate.StartsWith("paypal.me/", StringComparison.OrdinalIgnoreCase) &&
+                !candidate.StartsWith("www.paypal.me/", StringComparison.OrdinalIgnoreCase)) {
+                return false;
+            }
+            candidate = "https://" + candidate;
+        }
+
+        if (!Uri.TryCreate(candidate, UriKind.Absolute, out var uri)) return false;
+        if (!IsPayPalMeHost(uri.Host)) return false;
+
+        var segments = uri.AbsolutePath.Trim('/').Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+        if (segments.Length == 0) return false;
+        handle = segments[0];
+        if (string.IsNullOrEmpty(handle)) return false;
+
+        if (segments.Length >= 2) {
+            var amountText = segments[1];
+            ParsePayPalAmount(amountText, out amount, out currency);
+        }
+
+        url = uri.GetLeftPart(UriPartial.Path);
+        return true;
+    }
+
+    private static void ParsePayPalAmount(string amountText, out decimal? amount, out string? currency) {
+        amount = null;
+        currency = null;
+        if (string.IsNullOrWhiteSpace(amountText)) return;
+
+        var end = amountText.Length - 1;
+        while (end >= 0 && char.IsLetter(amountText[end])) end--;
+        var numberPart = amountText.Substring(0, end + 1);
+        var currencyPart = amountText.Substring(end + 1);
+
+        if (decimal.TryParse(numberPart, NumberStyles.Number, CultureInfo.InvariantCulture, out var value)) {
+            amount = value;
+        }
+        if (!string.IsNullOrEmpty(currencyPart)) {
+            currency = currencyPart.ToUpperInvariant();
+        }
+    }
+
+    private static bool IsPayPalMeHost(string host) {
+        if (string.IsNullOrEmpty(host)) return false;
+        if (host.Equals("paypal.me", StringComparison.OrdinalIgnoreCase)) return true;
+        if (host.Equals("www.paypal.me", StringComparison.OrdinalIgnoreCase)) return true;
+        return false;
+    }
+
     private static void ValidateParsed(QrParsedPayload parsed, QrPayloadParseOptions? options, QrPayloadValidationResult validation) {
         switch (parsed.Type) {
             case QrPayloadType.Wifi:
@@ -588,11 +658,11 @@ public static class QrPayloadParser {
                 break;
             case QrPayloadType.Phone:
                 if (!parsed.TryGet<QrParsedData.Phone>(out var phone)) break;
-                if (!QrPayloadValidation.IsValidPhone(phone.Number)) validation.Add("Phone number is invalid.");
+                if (!QrPayloadValidation.IsValidPhone(phone.Number, 5)) validation.Add("Phone number is invalid.");
                 break;
             case QrPayloadType.Sms:
                 if (!parsed.TryGet<QrParsedData.Sms>(out var sms)) break;
-                if (!QrPayloadValidation.IsValidPhone(sms.Number)) validation.Add("SMS number is invalid.");
+                if (!QrPayloadValidation.IsValidPhone(sms.Number, 5)) validation.Add("SMS number is invalid.");
                 break;
             case QrPayloadType.Upi:
                 if (!parsed.TryGet<QrParsedData.Upi>(out var upi)) break;
@@ -639,6 +709,15 @@ public static class QrPayloadParser {
             case QrPayloadType.Bookmark:
                 if (!parsed.TryGet<QrParsedData.Bookmark>(out var bm)) break;
                 if (!QrPayloadValidation.IsValidUrl(bm.Url)) validation.Add("Bookmark URL is invalid.");
+                break;
+            case QrPayloadType.PayPal:
+                if (!parsed.TryGet<QrParsedData.PayPal>(out var paypal)) break;
+                if (string.IsNullOrWhiteSpace(paypal.Handle)) validation.Add("PayPal handle is missing.");
+                if (paypal.Amount.HasValue && paypal.Amount.Value <= 0m) validation.Add("PayPal amount must be positive.");
+                if (!string.IsNullOrEmpty(paypal.Currency) && !QrPayloadValidation.IsValidCurrency(paypal.Currency)) {
+                    validation.Add("PayPal currency is invalid.");
+                }
+                if (!QrPayloadValidation.IsValidUrl(paypal.Url)) validation.Add("PayPal URL is invalid.");
                 break;
             case QrPayloadType.Url:
                 if (!QrPayloadValidation.IsValidUrl(parsed.Raw)) validation.Add("URL is invalid.");

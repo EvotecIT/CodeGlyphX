@@ -51,6 +51,68 @@ CodeGlyphX is a fast, dependency-free toolkit for QR codes and barcodes, with ro
 dotnet add package CodeGlyphX
 ```
 
+## Decode (unified)
+
+```csharp
+using CodeGlyphX;
+using CodeGlyphX.Rendering;
+
+var options = new CodeGlyphDecodeOptions {
+    PreferBarcode = false,
+    Qr = new QrPixelDecodeOptions {
+        Profile = QrDecodeProfile.Robust,
+        MaxMilliseconds = 800
+    }
+};
+
+if (CodeGlyph.TryDecode(pixels, width, height, stride, PixelFormat.Rgba32, out var decoded, options)) {
+    Console.WriteLine($"{decoded.Kind}: {decoded.Text}");
+}
+```
+
+Presets for easy tuning:
+
+```csharp
+var fast = CodeGlyphDecodeOptions.Fast();
+var robust = CodeGlyphDecodeOptions.Robust();
+var stylized = CodeGlyphDecodeOptions.Stylized();
+var screen = CodeGlyphDecodeOptions.Screen(maxMilliseconds: 300, maxDimension: 1200);
+```
+
+Barcode checksum policy:
+
+```csharp
+var options = new CodeGlyphDecodeOptions {
+    ExpectedBarcode = BarcodeType.Code39,
+    Code39Checksum = Code39ChecksumPolicy.StripIfValid,
+    PreferBarcode = true
+};
+```
+
+Cancellation and time budget:
+
+```csharp
+using var cts = new CancellationTokenSource(TimeSpan.FromMilliseconds(500));
+
+var options = new CodeGlyphDecodeOptions {
+    Qr = new QrPixelDecodeOptions { Profile = QrDecodeProfile.Robust },
+    CancellationToken = cts.Token
+};
+
+if (CodeGlyph.TryDecode(pixels, width, height, stride, PixelFormat.Rgba32, out var decoded, options)) {
+    Console.WriteLine(decoded.Text);
+}
+```
+
+Screen-friendly preset:
+
+```csharp
+var options = CodeGlyphDecodeOptions.Screen(maxMilliseconds: 300, maxDimension: 1200);
+if (CodeGlyph.TryDecode(pixels, width, height, stride, PixelFormat.Rgba32, out var decoded, options)) {
+    Console.WriteLine(decoded.Text);
+}
+```
+
 ## Supported .NET Versions and Dependencies
 
 ### Core Library (CodeGlyphX)
@@ -79,6 +141,70 @@ dotnet add package CodeGlyphX
 ## Build Status
 
 **Cross-Platform Testing:** Builds and tests run on Windows, Linux, and macOS. Windows additionally builds WPF and .NET Framework targets.
+
+## Benchmarks (local run)
+
+Benchmarks were run on 2026-01-19 (Linux Ubuntu 24.04, Ryzen 9 9950X, .NET 8.0.22). Your results will vary.
+
+### QR (Encode)
+
+| Scenario | Mean (us) | Allocated |
+| --- | --- | --- |
+| QR PNG (short text) | 331.33 | 431.94 KB |
+| QR PNG (medium text) | 713.68 | 837.75 KB |
+| QR PNG (long text) | 2197.99 | 3041.06 KB |
+| QR SVG (medium text) | 99.17 | 20.03 KB |
+| QR PNG (High EC) | 1094.94 | 1535.88 KB |
+| QR HTML (medium text) | 115.46 | 137.43 KB |
+
+### QR (Decode)
+
+| Scenario | Mean (ms) | Allocated | Notes |
+| --- | --- | --- | --- |
+| QR decode (clean, fast) | 2.148 | 103.9 KB | qr-clean-small.png |
+| QR decode (clean, balanced) | 2.124 | 103.9 KB | qr-clean-small.png |
+| QR decode (clean, robust) | 2.193 | 103.9 KB | qr-clean-small.png |
+| QR decode (noisy, robust) | 170.949 | 8507.41 KB | qr-noisy-ui.png (Robust, MaxMilliseconds=800) |
+
+### 1D Barcodes (Encode)
+
+| Scenario | Mean (us) | Allocated |
+| --- | --- | --- |
+| Code 128 PNG | 442.41 | 756.24 KB |
+| Code 128 SVG | 2.52 | 17.61 KB |
+| EAN PNG | 191.33 | 338.54 KB |
+| Code 39 PNG | 311.37 | 414.49 KB |
+| Code 93 PNG | 222.69 | 367.76 KB |
+| UPC-A PNG | 175.83 | 338.85 KB |
+
+### 2D Matrix Codes (Encode)
+
+| Scenario | Mean (us) | Allocated |
+| --- | --- | --- |
+| Data Matrix PNG (medium) | 303.48 | 447.73 KB |
+| Data Matrix PNG (long) | 711.93 | 1509.06 KB |
+| Data Matrix SVG | 5.64 | 12.29 KB |
+| PDF417 PNG | 1730.92 | 3154.87 KB |
+| PDF417 SVG | 28.79 | 64.53 KB |
+| Aztec PNG | 260.70 | 452.30 KB |
+| Aztec SVG | 12.76 | 59.74 KB |
+
+### Run benchmarks
+
+```powershell
+dotnet run -c Release --framework net8.0 --project CodeGlyphX.Benchmarks/CodeGlyphX.Benchmarks.csproj -- --filter "*"
+```
+
+## Comparison (selected libraries)
+
+Based on public docs as of 2026-01-18. Capabilities depend on optional renderer packages.
+
+| Library | Encode | Decode | 2D Codes | 1D Codes | Image Dependencies |
+| --- | --- | --- | --- | --- | --- |
+| CodeGlyphX | ✅ | ✅ | QR, Micro QR, Data Matrix, PDF417, Aztec | ✅ | None |
+| ZXing.Net | ✅ | ✅ | QR, Data Matrix, PDF417, Aztec, more | ✅ | Bindings for System.Drawing / ImageSharp / SkiaSharp / OpenCV |
+| QRCoder | ✅ | ❌ | QR only | ❌ | System.Drawing renderer (Windows) or alt renderers |
+| Barcoder | ✅ | ❌ | QR, Data Matrix, PDF417, Aztec | ✅ | ImageSharp.Drawing for image renderer |
 
 ## Supported Symbologies
 
@@ -174,7 +300,7 @@ QR payload helpers generate well-known structured strings so scanners can trigge
 
 ## Image decoding (for readers)
 
-- PNG, JPEG (baseline + progressive, EXIF orientation), GIF, BMP, PPM, PBM, PGM, PAM, XBM, XPM, TGA
+- PNG, JPEG (baseline + progressive, EXIF orientation), GIF, BMP, PPM, PBM, PGM, PAM, XBM, XPM, TGA, ICO/CUR
 - Pure C# decoders (no native image libraries)
 
 ## Quick usage
@@ -269,8 +395,26 @@ if (QrImageDecoder.TryDecodeImage(File.ReadAllBytes("code.bmp"), out var decoded
 ```csharp
 using CodeGlyphX;
 
-var options = new QrPixelDecodeOptions { Profile = QrDecodeProfile.Fast };
+var options = QrPixelDecodeOptions.Fast();
 if (QrImageDecoder.TryDecodeImage(File.ReadAllBytes("screen.png"), options, out var decoded)) {
+    Console.WriteLine(decoded.Text);
+}
+```
+
+```csharp
+using CodeGlyphX;
+
+var options = QrPixelDecodeOptions.Screen(maxMilliseconds: 300, maxDimension: 1200);
+if (QrImageDecoder.TryDecodeImage(File.ReadAllBytes("screen.png"), options, out var decoded)) {
+    Console.WriteLine(decoded.Text);
+}
+```
+
+```csharp
+using CodeGlyphX;
+
+var bytes = File.ReadAllBytes("screen.png");
+if (QR.TryDecodeImage(bytes, QrPixelDecodeOptions.Screen(), out var decoded)) {
     Console.WriteLine(decoded.Text);
 }
 ```
@@ -289,6 +433,43 @@ using CodeGlyphX;
 if (CodeGlyph.TryDecodeAllPng(File.ReadAllBytes("unknown.png"), out var results)) {
     foreach (var item in results) Console.WriteLine($"{item.Kind}: {item.Text}");
 }
+```
+
+### Decode (3 lines each)
+
+```csharp
+using CodeGlyphX;
+
+if (Barcode.TryDecodeImage(File.ReadAllBytes("code.png"), BarcodeType.Code128, out var barcode))
+    Console.WriteLine(barcode.Text);
+```
+
+```csharp
+using CodeGlyphX;
+
+if (DataMatrixCode.TryDecodeImage(File.ReadAllBytes("dm.png"), out var text))
+    Console.WriteLine(text);
+```
+
+```csharp
+using CodeGlyphX;
+
+if (Pdf417Code.TryDecodeImage(File.ReadAllBytes("pdf417.png"), out var text))
+    Console.WriteLine(text);
+```
+
+```csharp
+using CodeGlyphX;
+
+if (AztecCode.TryDecodeImage(File.ReadAllBytes("aztec.png"), out var text))
+    Console.WriteLine(text);
+```
+
+```csharp
+using CodeGlyphX;
+
+var opts = ImageDecodeOptions.Screen(maxMilliseconds: 300, maxDimension: 1200);
+Barcode.TryDecodePng(File.ReadAllBytes("barcode.png"), BarcodeType.Code128, opts, out var barcode);
 ```
 
 ## WPF controls
