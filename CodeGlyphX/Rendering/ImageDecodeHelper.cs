@@ -39,9 +39,11 @@ internal static class ImageDecodeHelper {
         return true;
     }
 
-    public static CancellationToken ApplyBudget(CancellationToken cancellationToken, ImageDecodeOptions? options, out CancellationTokenSource? budgetCts) {
+    public static CancellationToken ApplyBudget(CancellationToken cancellationToken, ImageDecodeOptions? options, out CancellationTokenSource? budgetCts, out IDisposable? budgetScope) {
         budgetCts = null;
+        budgetScope = null;
         if (options is null || options.MaxMilliseconds <= 0) return cancellationToken;
+        budgetScope = Internal.DecodeBudget.Begin(options.MaxMilliseconds);
         if (cancellationToken.CanBeCanceled) {
             budgetCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
             budgetCts.CancelAfter(options.MaxMilliseconds);

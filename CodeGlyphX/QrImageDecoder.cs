@@ -411,7 +411,7 @@ public static class QrImageDecoder {
     private static bool TryDecodeImageCore(byte[] image, ImageDecodeOptions? imageOptions, QrPixelDecodeOptions? options, CancellationToken cancellationToken, out QrDecoded decoded) {
         decoded = null!;
         if (image is null) throw new ArgumentNullException(nameof(image));
-        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, imageOptions, out var budgetCts);
+        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, imageOptions, out var budgetCts, out var budgetScope);
         try {
             if (token.IsCancellationRequested) return false;
             if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) return false;
@@ -419,6 +419,7 @@ public static class QrImageDecoder {
             return global::CodeGlyphX.Qr.QrPixelDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, options, token, out decoded);
         } finally {
             budgetCts?.Dispose();
+            budgetScope?.Dispose();
         }
     }
 
@@ -426,7 +427,7 @@ public static class QrImageDecoder {
         decoded = null!;
         info = default;
         if (image is null) throw new ArgumentNullException(nameof(image));
-        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, imageOptions, out var budgetCts);
+        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, imageOptions, out var budgetCts, out var budgetScope);
         try {
             if (token.IsCancellationRequested) return false;
             if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) return false;
@@ -434,13 +435,14 @@ public static class QrImageDecoder {
             return QrDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, out info, options, token);
         } finally {
             budgetCts?.Dispose();
+            budgetScope?.Dispose();
         }
     }
 
     private static bool TryDecodeAllImageCore(byte[] image, ImageDecodeOptions? imageOptions, QrPixelDecodeOptions? options, CancellationToken cancellationToken, out QrDecoded[] decoded) {
         decoded = Array.Empty<QrDecoded>();
         if (image is null) throw new ArgumentNullException(nameof(image));
-        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, imageOptions, out var budgetCts);
+        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, imageOptions, out var budgetCts, out var budgetScope);
         try {
             if (token.IsCancellationRequested) return false;
             if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) return false;
@@ -448,6 +450,7 @@ public static class QrImageDecoder {
             return global::CodeGlyphX.Qr.QrPixelDecoder.TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, options, token, out decoded);
         } finally {
             budgetCts?.Dispose();
+            budgetScope?.Dispose();
         }
     }
 #endif

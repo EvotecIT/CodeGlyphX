@@ -15,11 +15,11 @@ namespace CodeGlyphX.DataMatrix;
 
 public static partial class DataMatrixDecoder {
     private static bool TryDecodePixels(PixelSpan pixels, int width, int height, int stride, PixelFormat format, CancellationToken cancellationToken, out string value) {
-        if (cancellationToken.IsCancellationRequested) { value = string.Empty; return false; }
+        if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; return false; }
         if (TryExtractModules(pixels, width, height, stride, format, cancellationToken, out var modules)) {
-            if (cancellationToken.IsCancellationRequested) { value = string.Empty; return false; }
+            if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; return false; }
             if (TryDecodeWithRotations(modules, cancellationToken, out value)) return true;
-            if (cancellationToken.IsCancellationRequested) { value = string.Empty; return false; }
+            if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; return false; }
             var mirror = MirrorX(modules);
             if (TryDecodeWithRotations(mirror, cancellationToken, out value)) return true;
         }
@@ -28,11 +28,11 @@ public static partial class DataMatrixDecoder {
     }
 
     private static bool TryDecodePixels(PixelSpan pixels, int width, int height, int stride, PixelFormat format, CancellationToken cancellationToken, out string value, DataMatrixDecodeDiagnostics diagnostics) {
-        if (cancellationToken.IsCancellationRequested) { value = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
+        if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
         if (TryExtractModules(pixels, width, height, stride, format, cancellationToken, out var modules)) {
-            if (cancellationToken.IsCancellationRequested) { value = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
+            if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
             if (TryDecodeWithRotations(modules, cancellationToken, diagnostics, out value)) { diagnostics.Success = true; return true; }
-            if (cancellationToken.IsCancellationRequested) { value = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
+            if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
             diagnostics.MirroredTried = true;
             var mirror = MirrorX(modules);
             if (TryDecodeWithRotations(mirror, cancellationToken, diagnostics, out value)) { diagnostics.Success = true; return true; }
@@ -45,31 +45,31 @@ public static partial class DataMatrixDecoder {
     }
 
     private static bool TryDecodeWithRotations(BitMatrix modules, CancellationToken cancellationToken, out string value) {
-        if (cancellationToken.IsCancellationRequested) { value = string.Empty; return false; }
+        if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; return false; }
         if (TryDecodeCore(modules, cancellationToken, out value)) return true;
-        if (cancellationToken.IsCancellationRequested) { value = string.Empty; return false; }
+        if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; return false; }
         if (TryDecodeCore(Rotate90(modules), cancellationToken, out value)) return true;
-        if (cancellationToken.IsCancellationRequested) { value = string.Empty; return false; }
+        if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; return false; }
         if (TryDecodeCore(Rotate180(modules), cancellationToken, out value)) return true;
-        if (cancellationToken.IsCancellationRequested) { value = string.Empty; return false; }
+        if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; return false; }
         if (TryDecodeCore(Rotate270(modules), cancellationToken, out value)) return true;
         return false;
     }
 
     private static bool TryDecodeWithRotations(BitMatrix modules, CancellationToken cancellationToken, DataMatrixDecodeDiagnostics diagnostics, out string value) {
-        if (cancellationToken.IsCancellationRequested) { value = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
+        if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
         if (TryDecodeCore(modules, cancellationToken, diagnostics, out value)) return true;
-        if (cancellationToken.IsCancellationRequested) { value = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
+        if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
         if (TryDecodeCore(Rotate90(modules), cancellationToken, diagnostics, out value)) return true;
-        if (cancellationToken.IsCancellationRequested) { value = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
+        if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
         if (TryDecodeCore(Rotate180(modules), cancellationToken, diagnostics, out value)) return true;
-        if (cancellationToken.IsCancellationRequested) { value = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
+        if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
         if (TryDecodeCore(Rotate270(modules), cancellationToken, diagnostics, out value)) return true;
         return false;
     }
 
     private static bool TryDecodeCore(BitMatrix modules, CancellationToken cancellationToken, out string value) {
-        if (cancellationToken.IsCancellationRequested) { value = string.Empty; return false; }
+        if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; return false; }
         if (!DataMatrixSymbolInfo.TryGetForSize(modules.Height, modules.Width, out var symbol)) {
             value = string.Empty;
             return false;
@@ -81,7 +81,7 @@ public static partial class DataMatrixDecoder {
             return false;
         }
         var codewords = DataMatrixPlacement.ReadCodewords(dataRegion, symbol.CodewordCount, cancellationToken);
-        if (cancellationToken.IsCancellationRequested) { value = string.Empty; return false; }
+        if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; return false; }
         if (!TryDecodeCodewords(codewords, symbol, cancellationToken, out value)) {
             value = string.Empty;
             return false;
@@ -92,7 +92,7 @@ public static partial class DataMatrixDecoder {
 
     private static bool TryDecodeCore(BitMatrix modules, CancellationToken cancellationToken, DataMatrixDecodeDiagnostics diagnostics, out string value) {
         diagnostics.AttemptCount++;
-        if (cancellationToken.IsCancellationRequested) { value = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
+        if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
         if (!DataMatrixSymbolInfo.TryGetForSize(modules.Height, modules.Width, out var symbol)) {
             value = string.Empty;
             diagnostics.Failure ??= "Unsupported symbol size.";
@@ -106,9 +106,9 @@ public static partial class DataMatrixDecoder {
             return false;
         }
         var codewords = DataMatrixPlacement.ReadCodewords(dataRegion, symbol.CodewordCount, cancellationToken);
-        if (cancellationToken.IsCancellationRequested) { value = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
+        if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
         if (!TryDecodeCodewords(codewords, symbol, cancellationToken, out value)) {
-            if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; value = string.Empty; return false; }
+            if (DecodeBudget.ShouldAbort(cancellationToken)) { diagnostics.Failure = "Cancelled."; value = string.Empty; return false; }
             diagnostics.Failure ??= "Failed to decode codewords.";
             value = string.Empty;
             return false;
@@ -127,12 +127,12 @@ public static partial class DataMatrixDecoder {
         var regionDataCols = symbol.RegionDataCols;
 
         for (var regionRow = 0; regionRow < regionRows; regionRow++) {
-            if (cancellationToken.IsCancellationRequested) return null;
+            if (DecodeBudget.ShouldAbort(cancellationToken)) return null;
             for (var regionCol = 0; regionCol < regionCols; regionCol++) {
                 var startRow = regionRow * regionTotalRows;
                 var startCol = regionCol * regionTotalCols;
                 for (var y = 0; y < regionDataRows; y++) {
-                    if (cancellationToken.IsCancellationRequested) return null;
+                    if (DecodeBudget.ShouldAbort(cancellationToken)) return null;
                     for (var x = 0; x < regionDataCols; x++) {
                         var dataRow = regionRow * regionDataRows + y;
                         var dataCol = regionCol * regionDataCols + x;
@@ -161,7 +161,7 @@ public static partial class DataMatrixDecoder {
 
         var offset = 0;
         for (var i = 0; i < maxDataBlock; i++) {
-            if (cancellationToken.IsCancellationRequested) return Fail(out value);
+            if (DecodeBudget.ShouldAbort(cancellationToken)) return Fail(out value);
             for (var b = 0; b < blocks; b++) {
                 if (i >= dataBlocks[b].Length) continue;
                 if (offset >= codewords.Length) return Fail(out value);
@@ -170,7 +170,7 @@ public static partial class DataMatrixDecoder {
         }
 
         for (var i = 0; i < symbol.EccBlockSize; i++) {
-            if (cancellationToken.IsCancellationRequested) return Fail(out value);
+            if (DecodeBudget.ShouldAbort(cancellationToken)) return Fail(out value);
             for (var b = 0; b < blocks; b++) {
                 if (offset >= codewords.Length) return Fail(out value);
                 eccBlocks[b][i] = codewords[offset++];
@@ -180,7 +180,7 @@ public static partial class DataMatrixDecoder {
         var data = new byte[symbol.DataCodewords];
         var dataOffset = 0;
         for (var b = 0; b < blocks; b++) {
-            if (cancellationToken.IsCancellationRequested) return Fail(out value);
+            if (DecodeBudget.ShouldAbort(cancellationToken)) return Fail(out value);
             var block = new byte[dataBlocks[b].Length + eccBlocks[b].Length];
             Buffer.BlockCopy(dataBlocks[b], 0, block, 0, dataBlocks[b].Length);
             Buffer.BlockCopy(eccBlocks[b], 0, block, dataBlocks[b].Length, eccBlocks[b].Length);
@@ -190,7 +190,7 @@ public static partial class DataMatrixDecoder {
         }
 
         value = DecodeData(data, cancellationToken);
-        if (cancellationToken.IsCancellationRequested) return Fail(out value);
+        if (DecodeBudget.ShouldAbort(cancellationToken)) return Fail(out value);
         return true;
     }
 
@@ -213,7 +213,7 @@ public static partial class DataMatrixDecoder {
         Encoding? base256Encoding = null;
 
         while (index < data.Length) {
-            if (cancellationToken.IsCancellationRequested) break;
+            if (DecodeBudget.ShouldAbort(cancellationToken)) break;
             switch (mode) {
                 case DataMatrixEncodation.Ascii:
                     mode = DecodeAsciiSegment(data, ref index, sb, ref upperShift, ref macroTrailer, ref base256Encoding);

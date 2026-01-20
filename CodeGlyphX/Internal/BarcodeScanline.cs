@@ -25,7 +25,7 @@ internal static class BarcodeScanline {
 #endif
         if (width <= 0 || height <= 0) return false;
         if (stride < width * 4) return false;
-        if (cancellationToken.IsCancellationRequested) return false;
+        if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
 
         var bestLen = 0;
         var best = Array.Empty<bool>();
@@ -69,7 +69,7 @@ internal static class BarcodeScanline {
 #endif
         if (width <= 0 || height <= 0) return false;
         if (stride < width * 4) return false;
-        if (cancellationToken.IsCancellationRequested) return false;
+        if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
 
         var list = new List<bool[]>(8);
 
@@ -89,7 +89,7 @@ internal static class BarcodeScanline {
         TryCollectCandidatesFromVertical(pixels, width, height, stride, format, x1, cancellationToken, list);
         TryCollectCandidatesFromVertical(pixels, width, height, stride, format, x2, cancellationToken, list);
 
-        if (cancellationToken.IsCancellationRequested) return false;
+        if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
         if (list.Count == 0) return false;
         candidates = list.ToArray();
         return true;
@@ -113,7 +113,7 @@ internal static class BarcodeScanline {
 
         try {
             for (var x = 0; x < width; x++) {
-                if ((x & 127) == 0 && cancellationToken.IsCancellationRequested) return false;
+                if ((x & 127) == 0 && DecodeBudget.ShouldAbort(cancellationToken)) return false;
                 var p = offset + x * 4;
                 byte r;
                 byte g;
@@ -149,7 +149,7 @@ internal static class BarcodeScanline {
 
         try {
             for (var y = 0; y < height; y++) {
-                if ((y & 127) == 0 && cancellationToken.IsCancellationRequested) return false;
+                if ((y & 127) == 0 && DecodeBudget.ShouldAbort(cancellationToken)) return false;
                 var p = y * stride + x * 4;
                 byte r;
                 byte g;
@@ -195,7 +195,7 @@ internal static class BarcodeScanline {
             };
 
         for (var i = 0; i < thresholds.Length; i++) {
-            if (cancellationToken.IsCancellationRequested) return false;
+            if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
             if (TryDecodeRuns(luminance, thresholds[i], cancellationToken, out modules)) return true;
         }
 
@@ -218,7 +218,7 @@ internal static class BarcodeScanline {
 
         try {
             for (var i = 1; i < luminance.Length; i++) {
-                if ((i & 255) == 0 && cancellationToken.IsCancellationRequested) return false;
+                if ((i & 255) == 0 && DecodeBudget.ShouldAbort(cancellationToken)) return false;
                 var isBar = luminance[i] < threshold;
                 if (isBar == current) {
                     runLen++;
@@ -232,7 +232,7 @@ internal static class BarcodeScanline {
             runBars[runCount] = current;
             runs[runCount++] = runLen;
 
-            if (cancellationToken.IsCancellationRequested) return false;
+            if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
             var start = 0;
             while (start < runCount && !runBars[start]) start++;
             var end = runCount - 1;
@@ -241,14 +241,14 @@ internal static class BarcodeScanline {
 
             var minRun = int.MaxValue;
             for (var i = start; i <= end; i++) {
-                if ((i & 255) == 0 && cancellationToken.IsCancellationRequested) return false;
+                if ((i & 255) == 0 && DecodeBudget.ShouldAbort(cancellationToken)) return false;
                 if (runs[i] < minRun) minRun = runs[i];
             }
             if (minRun <= 0) return false;
 
             var totalModules = 0;
             for (var i = start; i <= end; i++) {
-                if ((i & 255) == 0 && cancellationToken.IsCancellationRequested) return false;
+                if ((i & 255) == 0 && DecodeBudget.ShouldAbort(cancellationToken)) return false;
                 var modulesCount = (int)Math.Round(runs[i] / (double)minRun);
                 if (modulesCount < 1) modulesCount = 1;
                 totalModules += modulesCount;
@@ -258,7 +258,7 @@ internal static class BarcodeScanline {
             modules = new bool[totalModules];
             var offset = 0;
             for (var i = start; i <= end; i++) {
-                if ((i & 255) == 0 && cancellationToken.IsCancellationRequested) return false;
+                if ((i & 255) == 0 && DecodeBudget.ShouldAbort(cancellationToken)) return false;
                 var modulesCount = (int)Math.Round(runs[i] / (double)minRun);
                 if (modulesCount < 1) modulesCount = 1;
                 var isBar = runBars[i];
@@ -284,7 +284,7 @@ internal static class BarcodeScanline {
 
         try {
             for (var x = 0; x < width; x++) {
-                if ((x & 127) == 0 && cancellationToken.IsCancellationRequested) return;
+                if ((x & 127) == 0 && DecodeBudget.ShouldAbort(cancellationToken)) return;
                 var p = offset + x * 4;
                 byte r;
                 byte g;
@@ -319,7 +319,7 @@ internal static class BarcodeScanline {
 
         try {
             for (var y = 0; y < height; y++) {
-                if ((y & 127) == 0 && cancellationToken.IsCancellationRequested) return;
+                if ((y & 127) == 0 && DecodeBudget.ShouldAbort(cancellationToken)) return;
                 var p = y * stride + x * 4;
                 byte r;
                 byte g;
@@ -354,7 +354,7 @@ internal static class BarcodeScanline {
         var range = max - min;
         var thresholds = new[] { (min + max) / 2, min + range / 3, min + (range * 2) / 3 };
         for (var i = 0; i < thresholds.Length; i++) {
-            if (cancellationToken.IsCancellationRequested) return;
+            if (DecodeBudget.ShouldAbort(cancellationToken)) return;
             if (TryDecodeRuns(luminance, thresholds[i], cancellationToken, out var modules)) {
                 AddUniqueCandidate(candidates, modules);
             }

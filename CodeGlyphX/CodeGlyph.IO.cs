@@ -508,12 +508,13 @@ public static partial class CodeGlyph {
         if (cancellationToken.IsCancellationRequested) return false;
         if (imageOptions is null || imageOptions.MaxMilliseconds <= 0) return action(cancellationToken);
 
-        var budgetToken = ImageDecodeHelper.ApplyBudget(cancellationToken, imageOptions, out var budgetCts);
+        var budgetToken = ImageDecodeHelper.ApplyBudget(cancellationToken, imageOptions, out var budgetCts, out var budgetScope);
         try {
             if (budgetToken.IsCancellationRequested) return false;
             return action(budgetToken);
         } finally {
             budgetCts?.Dispose();
+            budgetScope?.Dispose();
         }
     }
 

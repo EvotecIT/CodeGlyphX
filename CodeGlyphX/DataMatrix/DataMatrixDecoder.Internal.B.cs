@@ -219,7 +219,7 @@ public static partial class DataMatrixDecoder {
     private static bool TryExtractModules(PixelSpan pixels, int width, int height, int stride, PixelFormat format, CancellationToken cancellationToken, out BitMatrix modules) {
         modules = null!;
         if (width <= 0 || height <= 0 || stride <= 0) return false;
-        if (cancellationToken.IsCancellationRequested) return false;
+        if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
 
         var invert = false;
         if (!TryFindBoundingBox(pixels, width, height, stride, format, invert: false, cancellationToken, out var box)) {
@@ -240,11 +240,11 @@ public static partial class DataMatrixDecoder {
         modules = new BitMatrix(cols, rows);
         var half = moduleSize / 2.0;
         for (var y = 0; y < rows; y++) {
-            if (cancellationToken.IsCancellationRequested) return false;
+            if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
             var sy = (int)Math.Round(box.Top + (y * moduleSize) + half);
             sy = Clamp(sy, 0, height - 1);
             for (var x = 0; x < cols; x++) {
-                if (cancellationToken.IsCancellationRequested) return false;
+                if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
                 var sx = (int)Math.Round(box.Left + (x * moduleSize) + half);
                 sx = Clamp(sx, 0, width - 1);
                 var dark = IsDark(pixels, width, height, stride, format, sx, sy);
@@ -280,7 +280,7 @@ public static partial class DataMatrixDecoder {
         var sawAny = false;
 
         for (var i = start; i <= end; i++) {
-            if (cancellationToken.IsCancellationRequested) return false;
+            if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
             var x = horizontal ? i : fixedPos;
             var y = horizontal ? fixedPos : i;
             var dark = IsDark(pixels, width, height, stride, format, x, y);
@@ -315,10 +315,10 @@ public static partial class DataMatrixDecoder {
         var bottom = -1;
 
         for (var y = 0; y < height; y++) {
-            if (cancellationToken.IsCancellationRequested) { box = default; return false; }
+            if (DecodeBudget.ShouldAbort(cancellationToken)) { box = default; return false; }
             var row = y * stride;
             for (var x = 0; x < width; x++) {
-                if (cancellationToken.IsCancellationRequested) { box = default; return false; }
+                if (DecodeBudget.ShouldAbort(cancellationToken)) { box = default; return false; }
                 var dark = IsDarkAt(pixels, row, x, format);
                 if (invert) dark = !dark;
                 if (!dark) continue;

@@ -362,7 +362,7 @@ public static partial class QR {
     private static bool TryDecodePngCore(byte[] png, ImageDecodeOptions? imageOptions, QrPixelDecodeOptions? options, CancellationToken cancellationToken, out QrDecoded decoded) {
         decoded = null!;
         if (png is null) return false;
-        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, imageOptions, out var budgetCts);
+        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, imageOptions, out var budgetCts, out var budgetScope);
         try {
             if (token.IsCancellationRequested) return false;
             var rgba = PngReader.DecodeRgba32(png, out var width, out var height);
@@ -370,6 +370,7 @@ public static partial class QR {
             return QrDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, options, token);
         } finally {
             budgetCts?.Dispose();
+            budgetScope?.Dispose();
         }
     }
 
@@ -377,7 +378,7 @@ public static partial class QR {
         decoded = null!;
         info = default;
         if (png is null) return false;
-        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, imageOptions, out var budgetCts);
+        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, imageOptions, out var budgetCts, out var budgetScope);
         try {
             if (token.IsCancellationRequested) return false;
             var rgba = PngReader.DecodeRgba32(png, out var width, out var height);
@@ -385,13 +386,14 @@ public static partial class QR {
             return QrDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, out info, options, token);
         } finally {
             budgetCts?.Dispose();
+            budgetScope?.Dispose();
         }
     }
 
     private static bool TryDecodeAllPngCore(byte[] png, ImageDecodeOptions? imageOptions, QrPixelDecodeOptions? options, CancellationToken cancellationToken, out QrDecoded[] decoded) {
         decoded = Array.Empty<QrDecoded>();
         if (png is null) return false;
-        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, imageOptions, out var budgetCts);
+        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, imageOptions, out var budgetCts, out var budgetScope);
         try {
             if (token.IsCancellationRequested) return false;
             var rgba = PngReader.DecodeRgba32(png, out var width, out var height);
@@ -399,6 +401,7 @@ public static partial class QR {
             return QrDecoder.TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, options, token);
         } finally {
             budgetCts?.Dispose();
+            budgetScope?.Dispose();
         }
     }
 
@@ -406,7 +409,7 @@ public static partial class QR {
         decoded = Array.Empty<QrDecoded>();
         info = default;
         if (png is null) return false;
-        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, imageOptions, out var budgetCts);
+        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, imageOptions, out var budgetCts, out var budgetScope);
         try {
             if (token.IsCancellationRequested) return false;
             var rgba = PngReader.DecodeRgba32(png, out var width, out var height);
@@ -414,6 +417,7 @@ public static partial class QR {
             return QrDecoder.TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, out info, options, token);
         } finally {
             budgetCts?.Dispose();
+            budgetScope?.Dispose();
         }
     }
 }
