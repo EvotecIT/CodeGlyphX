@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Text;
 using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Png;
@@ -81,6 +82,17 @@ public static class HtmlQrRenderer {
             Eyes = opts.Eyes,
         };
         return CodeGlyphX.Rendering.Svg.SvgQrRenderer.Render(modules, svg);
+    }
+
+    /// <summary>
+    /// Renders the QR module matrix to an HTML stream.
+    /// </summary>
+    /// <param name="modules">QR modules.</param>
+    /// <param name="opts">Rendering options.</param>
+    /// <param name="stream">Target stream.</param>
+    public static void RenderToStream(BitMatrix modules, QrHtmlRenderOptions opts, Stream stream) {
+        var html = Render(modules, opts);
+        RenderIO.WriteText(stream, html);
     }
 
     /// <summary>

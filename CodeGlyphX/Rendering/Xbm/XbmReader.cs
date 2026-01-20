@@ -50,7 +50,11 @@ public static class XbmReader {
         var idx = text.IndexOf(suffix, StringComparison.OrdinalIgnoreCase);
         while (idx >= 0) {
             var lineStart = text.LastIndexOf('\n', idx);
-            if (lineStart < 0) lineStart = 0;
+            if (lineStart < 0) {
+                lineStart = 0;
+            } else {
+                lineStart += 1;
+            }
             var lineEnd = text.IndexOf('\n', idx);
             if (lineEnd < 0) lineEnd = text.Length;
             var line = text.Substring(lineStart, lineEnd - lineStart);

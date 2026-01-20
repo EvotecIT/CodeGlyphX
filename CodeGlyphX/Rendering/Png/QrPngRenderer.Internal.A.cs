@@ -211,6 +211,8 @@ public static partial class QrPngRenderer {
 
         if (scale < 0.1) scale = 0.1;
         if (scale > 1.0) scale = 1.0;
+        if (shape == QrPngModuleShape.Dot) scale *= QrPngShapeDefaults.DotScale;
+        if (shape == QrPngModuleShape.DotGrid) scale *= QrPngShapeDefaults.DotGridScale;
 
         var inset = (int)Math.Round((moduleSize - moduleSize * scale) / 2.0);
         if (inset < 0) inset = 0;
@@ -226,6 +228,17 @@ public static partial class QrPngRenderer {
         var circleR = inner / 2.0;
         var circleR2 = circleR * circleR;
 
+        var dotGridCenter0 = 0.0;
+        var dotGridCenter1 = 0.0;
+        var dotGridRadius = 0.0;
+        var dotGridRadiusSq = 0.0;
+        if (shape == QrPngModuleShape.DotGrid) {
+            dotGridCenter0 = (inner - 1) * QrPngShapeDefaults.DotGridCenterFactor;
+            dotGridCenter1 = (inner - 1) * (1.0 - QrPngShapeDefaults.DotGridCenterFactor);
+            dotGridRadius = Math.Max(QrPngShapeDefaults.DotGridMinRadius, inner * QrPngShapeDefaults.DotGridRadiusFactor);
+            dotGridRadiusSq = dotGridRadius * dotGridRadius;
+        }
+
         for (var y = 0; y < moduleSize; y++) {
             for (var x = 0; x < moduleSize; x++) {
                 if (x < inset || x >= inset + inner || y < inset || y >= inset + inner) {
@@ -238,6 +251,10 @@ public static partial class QrPngRenderer {
                     QrPngModuleShape.Square => true,
                     QrPngModuleShape.Circle => InsideCircle(lx, ly, center, circleR2),
                     QrPngModuleShape.Rounded => InsideRoundedLocal(lx, ly, inner, radius, r2),
+                    QrPngModuleShape.Diamond => InsideDiamond(lx, ly, center, circleR),
+                    QrPngModuleShape.Squircle => InsideSquircle(lx, ly, center, circleR),
+                    QrPngModuleShape.Dot => InsideCircle(lx, ly, center, circleR2),
+                    QrPngModuleShape.DotGrid => InsideDotGrid(lx, ly, dotGridCenter0, dotGridCenter1, dotGridRadiusSq),
                     _ => true,
                 };
                 mask[y * moduleSize + x] = inside;
@@ -250,6 +267,34 @@ public static partial class QrPngRenderer {
     private static bool InsideCircle(int x, int y, double center, double radiusSq) {
         var dx = x - center;
         var dy = y - center;
+        return dx * dx + dy * dy <= radiusSq;
+    }
+
+    private static bool InsideDiamond(int x, int y, double center, double radius) {
+        var dx = Math.Abs(x - center);
+        var dy = Math.Abs(y - center);
+        return dx + dy <= radius;
+    }
+
+    private static bool InsideSquircle(int x, int y, double center, double radius) {
+        if (radius <= 0) return false;
+        var dx = Math.Abs(x - center) / radius;
+        var dy = Math.Abs(y - center) / radius;
+        var dx2 = dx * dx;
+        var dy2 = dy * dy;
+        return dx2 * dx2 + dy2 * dy2 <= 1.0;
+    }
+
+    private static bool InsideDotGrid(int x, int y, double c0, double c1, double radiusSq) {
+        return InsideCircle(x, y, c0, radiusSq) ||
+               InsideCircle(x, y, c1, radiusSq) ||
+               InsideCircle(x, y, c0, radiusSq, c1) ||
+               InsideCircle(x, y, c1, radiusSq, c0);
+    }
+
+    private static bool InsideCircle(int x, int y, double cx, double radiusSq, double cy) {
+        var dx = x - cx;
+        var dy = y - cy;
         return dx * dx + dy * dy <= radiusSq;
     }
 

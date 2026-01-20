@@ -75,27 +75,92 @@ public static partial class QrPngRenderer {
         var innerGradient = eye.InnerGradient;
 
         if (outerGradient is null) {
-            FillRoundedRect(scanlines, widthPx, heightPx, stride, outerX, outerY, outerScaled, outerScaled, outerColor, eye.OuterCornerRadiusPx);
+            FillShape(scanlines, widthPx, heightPx, stride, outerX, outerY, outerScaled, outerScaled, outerColor, eye.OuterShape, eye.OuterCornerRadiusPx);
         } else {
-            FillRoundedRectGradient(scanlines, widthPx, heightPx, stride, outerX, outerY, outerScaled, outerScaled, outerGradient, eye.OuterCornerRadiusPx);
+            FillShapeGradient(scanlines, widthPx, heightPx, stride, outerX, outerY, outerScaled, outerScaled, outerGradient, eye.OuterShape, eye.OuterCornerRadiusPx);
         }
-        FillRoundedRect(scanlines, widthPx, heightPx, stride, innerX, innerY, innerScaled, innerScaled, opts.Background, eye.InnerCornerRadiusPx);
+        FillShape(scanlines, widthPx, heightPx, stride, innerX, innerY, innerScaled, innerScaled, opts.Background, eye.OuterShape, eye.InnerCornerRadiusPx);
 
         if (dotScaled > 0) {
-            if (eye.InnerShape == QrPngModuleShape.Circle) {
-                if (innerGradient is null) {
-                    FillEllipse(scanlines, widthPx, heightPx, stride, dotX, dotY, dotScaled, dotScaled, innerColor);
-                } else {
-                    FillEllipseGradient(scanlines, widthPx, heightPx, stride, dotX, dotY, dotScaled, dotScaled, innerGradient);
-                }
+            if (innerGradient is null) {
+                FillShape(scanlines, widthPx, heightPx, stride, dotX, dotY, dotScaled, dotScaled, innerColor, eye.InnerShape, eye.InnerCornerRadiusPx);
             } else {
-                var radius = eye.InnerShape == QrPngModuleShape.Rounded ? eye.InnerCornerRadiusPx : 0;
-                if (innerGradient is null) {
-                    FillRoundedRect(scanlines, widthPx, heightPx, stride, dotX, dotY, dotScaled, dotScaled, innerColor, radius);
-                } else {
-                    FillRoundedRectGradient(scanlines, widthPx, heightPx, stride, dotX, dotY, dotScaled, dotScaled, innerGradient, radius);
-                }
+                FillShapeGradient(scanlines, widthPx, heightPx, stride, dotX, dotY, dotScaled, dotScaled, innerGradient, eye.InnerShape, eye.InnerCornerRadiusPx);
             }
+        }
+    }
+
+    private static void FillShape(
+        byte[] scanlines,
+        int widthPx,
+        int heightPx,
+        int stride,
+        int x,
+        int y,
+        int w,
+        int h,
+        Rgba32 color,
+        QrPngModuleShape shape,
+        int radius) {
+        switch (shape) {
+            case QrPngModuleShape.Circle:
+                FillEllipse(scanlines, widthPx, heightPx, stride, x, y, w, h, color);
+                return;
+            case QrPngModuleShape.Rounded:
+                FillRoundedRect(scanlines, widthPx, heightPx, stride, x, y, w, h, color, radius);
+                return;
+            case QrPngModuleShape.Diamond:
+                FillDiamond(scanlines, widthPx, heightPx, stride, x, y, w, h, color);
+                return;
+            case QrPngModuleShape.Squircle:
+                FillSquircle(scanlines, widthPx, heightPx, stride, x, y, w, h, color);
+                return;
+            case QrPngModuleShape.Dot:
+                FillDot(scanlines, widthPx, heightPx, stride, x, y, w, h, color);
+                return;
+            case QrPngModuleShape.DotGrid:
+                FillDotGrid(scanlines, widthPx, heightPx, stride, x, y, w, h, color);
+                return;
+            default:
+                FillRoundedRect(scanlines, widthPx, heightPx, stride, x, y, w, h, color, 0);
+                return;
+        }
+    }
+
+    private static void FillShapeGradient(
+        byte[] scanlines,
+        int widthPx,
+        int heightPx,
+        int stride,
+        int x,
+        int y,
+        int w,
+        int h,
+        QrPngGradientOptions gradient,
+        QrPngModuleShape shape,
+        int radius) {
+        switch (shape) {
+            case QrPngModuleShape.Circle:
+                FillEllipseGradient(scanlines, widthPx, heightPx, stride, x, y, w, h, gradient);
+                return;
+            case QrPngModuleShape.Rounded:
+                FillRoundedRectGradient(scanlines, widthPx, heightPx, stride, x, y, w, h, gradient, radius);
+                return;
+            case QrPngModuleShape.Diamond:
+                FillDiamondGradient(scanlines, widthPx, heightPx, stride, x, y, w, h, gradient);
+                return;
+            case QrPngModuleShape.Squircle:
+                FillSquircleGradient(scanlines, widthPx, heightPx, stride, x, y, w, h, gradient);
+                return;
+            case QrPngModuleShape.Dot:
+                FillDotGradient(scanlines, widthPx, heightPx, stride, x, y, w, h, gradient);
+                return;
+            case QrPngModuleShape.DotGrid:
+                FillDotGridGradient(scanlines, widthPx, heightPx, stride, x, y, w, h, gradient);
+                return;
+            default:
+                FillRoundedRectGradient(scanlines, widthPx, heightPx, stride, x, y, w, h, gradient, 0);
+                return;
         }
     }
 
@@ -127,6 +192,43 @@ public static partial class QrPngRenderer {
             for (var px = x0; px < x1; px++) {
                 var dx = (px + 0.5 - cx) / rx;
                 if (dx * dx + dy * dy > 1.0) continue;
+                var p = py * (stride + 1) + 1 + px * 4;
+                scanlines[p + 0] = color.R;
+                scanlines[p + 1] = color.G;
+                scanlines[p + 2] = color.B;
+                scanlines[p + 3] = color.A;
+            }
+        }
+    }
+
+    private static void FillDiamond(
+        byte[] scanlines,
+        int widthPx,
+        int heightPx,
+        int stride,
+        int x,
+        int y,
+        int w,
+        int h,
+        Rgba32 color) {
+        if (w <= 0 || h <= 0) return;
+        var x0 = Math.Max(0, x);
+        var y0 = Math.Max(0, y);
+        var x1 = Math.Min(widthPx, x + w);
+        var y1 = Math.Min(heightPx, y + h);
+        if (x1 <= x0 || y1 <= y0) return;
+
+        var rx = w / 2.0;
+        var ry = h / 2.0;
+        if (rx <= 0 || ry <= 0) return;
+        var cx = x + rx;
+        var cy = y + ry;
+
+        for (var py = y0; py < y1; py++) {
+            var dy = Math.Abs(py + 0.5 - cy) / ry;
+            for (var px = x0; px < x1; px++) {
+                var dx = Math.Abs(px + 0.5 - cx) / rx;
+                if (dx + dy > 1.0) continue;
                 var p = py * (stride + 1) + 1 + px * 4;
                 scanlines[p + 0] = color.R;
                 scanlines[p + 1] = color.G;
@@ -172,6 +274,247 @@ public static partial class QrPngRenderer {
                 scanlines[p + 3] = color.A;
             }
         }
+    }
+
+    private static void FillDot(
+        byte[] scanlines,
+        int widthPx,
+        int heightPx,
+        int stride,
+        int x,
+        int y,
+        int w,
+        int h,
+        Rgba32 color) {
+        var size = Math.Min(w, h);
+        var dotSize = (int)Math.Round(size * QrPngShapeDefaults.DotScale);
+        if (dotSize <= 0) return;
+        var insetX = (w - dotSize) / 2;
+        var insetY = (h - dotSize) / 2;
+        FillEllipse(scanlines, widthPx, heightPx, stride, x + insetX, y + insetY, dotSize, dotSize, color);
+    }
+
+    private static void FillDotGradient(
+        byte[] scanlines,
+        int widthPx,
+        int heightPx,
+        int stride,
+        int x,
+        int y,
+        int w,
+        int h,
+        QrPngGradientOptions gradient) {
+        var size = Math.Min(w, h);
+        var dotSize = (int)Math.Round(size * QrPngShapeDefaults.DotScale);
+        if (dotSize <= 0) return;
+        var insetX = (w - dotSize) / 2;
+        var insetY = (h - dotSize) / 2;
+        FillEllipseGradient(scanlines, widthPx, heightPx, stride, x + insetX, y + insetY, dotSize, dotSize, gradient);
+    }
+
+    private static void FillDiamondGradient(
+        byte[] scanlines,
+        int widthPx,
+        int heightPx,
+        int stride,
+        int x,
+        int y,
+        int w,
+        int h,
+        QrPngGradientOptions gradient) {
+        if (w <= 0 || h <= 0) return;
+        var x0 = Math.Max(0, x);
+        var y0 = Math.Max(0, y);
+        var x1 = Math.Min(widthPx, x + w);
+        var y1 = Math.Min(heightPx, y + h);
+        if (x1 <= x0 || y1 <= y0) return;
+
+        var rx = w / 2.0;
+        var ry = h / 2.0;
+        if (rx <= 0 || ry <= 0) return;
+        var cx = x + rx;
+        var cy = y + ry;
+
+        for (var py = y0; py < y1; py++) {
+            var dy = Math.Abs(py + 0.5 - cy) / ry;
+            for (var px = x0; px < x1; px++) {
+                var dx = Math.Abs(px + 0.5 - cx) / rx;
+                if (dx + dy > 1.0) continue;
+                var color = GetGradientColorInBox(gradient, px, py, x0, y0, x1 - x0, y1 - y0);
+                var p = py * (stride + 1) + 1 + px * 4;
+                scanlines[p + 0] = color.R;
+                scanlines[p + 1] = color.G;
+                scanlines[p + 2] = color.B;
+                scanlines[p + 3] = color.A;
+            }
+        }
+    }
+
+    private static void FillSquircle(
+        byte[] scanlines,
+        int widthPx,
+        int heightPx,
+        int stride,
+        int x,
+        int y,
+        int w,
+        int h,
+        Rgba32 color) {
+        if (w <= 0 || h <= 0) return;
+        var x0 = Math.Max(0, x);
+        var y0 = Math.Max(0, y);
+        var x1 = Math.Min(widthPx, x + w);
+        var y1 = Math.Min(heightPx, y + h);
+        if (x1 <= x0 || y1 <= y0) return;
+
+        var rx = w / 2.0;
+        var ry = h / 2.0;
+        if (rx <= 0 || ry <= 0) return;
+        var cx = x + rx;
+        var cy = y + ry;
+
+        for (var py = y0; py < y1; py++) {
+            var dy = Math.Abs(py + 0.5 - cy) / ry;
+            var dy2 = dy * dy;
+            for (var px = x0; px < x1; px++) {
+                var dx = Math.Abs(px + 0.5 - cx) / rx;
+                var dx2 = dx * dx;
+                if (dx2 * dx2 + dy2 * dy2 > 1.0) continue;
+                var p = py * (stride + 1) + 1 + px * 4;
+                scanlines[p + 0] = color.R;
+                scanlines[p + 1] = color.G;
+                scanlines[p + 2] = color.B;
+                scanlines[p + 3] = color.A;
+            }
+        }
+    }
+
+    private static void FillSquircleGradient(
+        byte[] scanlines,
+        int widthPx,
+        int heightPx,
+        int stride,
+        int x,
+        int y,
+        int w,
+        int h,
+        QrPngGradientOptions gradient) {
+        if (w <= 0 || h <= 0) return;
+        var x0 = Math.Max(0, x);
+        var y0 = Math.Max(0, y);
+        var x1 = Math.Min(widthPx, x + w);
+        var y1 = Math.Min(heightPx, y + h);
+        if (x1 <= x0 || y1 <= y0) return;
+
+        var rx = w / 2.0;
+        var ry = h / 2.0;
+        if (rx <= 0 || ry <= 0) return;
+        var cx = x + rx;
+        var cy = y + ry;
+
+        for (var py = y0; py < y1; py++) {
+            var dy = Math.Abs(py + 0.5 - cy) / ry;
+            var dy2 = dy * dy;
+            for (var px = x0; px < x1; px++) {
+                var dx = Math.Abs(px + 0.5 - cx) / rx;
+                var dx2 = dx * dx;
+                if (dx2 * dx2 + dy2 * dy2 > 1.0) continue;
+                var color = GetGradientColorInBox(gradient, px, py, x0, y0, x1 - x0, y1 - y0);
+                var p = py * (stride + 1) + 1 + px * 4;
+                scanlines[p + 0] = color.R;
+                scanlines[p + 1] = color.G;
+                scanlines[p + 2] = color.B;
+                scanlines[p + 3] = color.A;
+            }
+        }
+    }
+
+    private static void FillDotGrid(
+        byte[] scanlines,
+        int widthPx,
+        int heightPx,
+        int stride,
+        int x,
+        int y,
+        int w,
+        int h,
+        Rgba32 color) {
+        var size = Math.Min(w, h);
+        var gridSize = size * QrPngShapeDefaults.DotGridScale;
+        if (gridSize <= 0) return;
+        var insetX = (w - gridSize) / 2.0;
+        var insetY = (h - gridSize) / 2.0;
+        var baseX = x + insetX;
+        var baseY = y + insetY;
+
+        var radius = Math.Max(QrPngShapeDefaults.DotGridMinRadius, gridSize * QrPngShapeDefaults.DotGridRadiusFactor);
+        var c0 = QrPngShapeDefaults.DotGridCenterFactor;
+        var c1 = 1.0 - QrPngShapeDefaults.DotGridCenterFactor;
+
+        FillEllipse(scanlines, widthPx, heightPx, stride, (int)Math.Round(baseX + gridSize * c0 - radius), (int)Math.Round(baseY + gridSize * c0 - radius), (int)Math.Round(radius * 2), (int)Math.Round(radius * 2), color);
+        FillEllipse(scanlines, widthPx, heightPx, stride, (int)Math.Round(baseX + gridSize * c1 - radius), (int)Math.Round(baseY + gridSize * c0 - radius), (int)Math.Round(radius * 2), (int)Math.Round(radius * 2), color);
+        FillEllipse(scanlines, widthPx, heightPx, stride, (int)Math.Round(baseX + gridSize * c0 - radius), (int)Math.Round(baseY + gridSize * c1 - radius), (int)Math.Round(radius * 2), (int)Math.Round(radius * 2), color);
+        FillEllipse(scanlines, widthPx, heightPx, stride, (int)Math.Round(baseX + gridSize * c1 - radius), (int)Math.Round(baseY + gridSize * c1 - radius), (int)Math.Round(radius * 2), (int)Math.Round(radius * 2), color);
+    }
+
+    private static void FillDotGridGradient(
+        byte[] scanlines,
+        int widthPx,
+        int heightPx,
+        int stride,
+        int x,
+        int y,
+        int w,
+        int h,
+        QrPngGradientOptions gradient) {
+        if (w <= 0 || h <= 0) return;
+        var size = Math.Min(w, h);
+        var gridSize = size * QrPngShapeDefaults.DotGridScale;
+        if (gridSize <= 0) return;
+        var insetX = (w - gridSize) / 2.0;
+        var insetY = (h - gridSize) / 2.0;
+        var baseX = x + insetX;
+        var baseY = y + insetY;
+
+        var radius = Math.Max(QrPngShapeDefaults.DotGridMinRadius, gridSize * QrPngShapeDefaults.DotGridRadiusFactor);
+        var r2 = radius * radius;
+        var c0 = gridSize * QrPngShapeDefaults.DotGridCenterFactor;
+        var c1 = gridSize * (1.0 - QrPngShapeDefaults.DotGridCenterFactor);
+
+        var x0 = Math.Max(0, x);
+        var y0 = Math.Max(0, y);
+        var x1 = Math.Min(widthPx, x + w);
+        var y1 = Math.Min(heightPx, y + h);
+
+        for (var py = y0; py < y1; py++) {
+            var localY = py - baseY;
+            for (var px = x0; px < x1; px++) {
+                var localX = px - baseX;
+                var inside = InsideCircleLocal(localX, localY, c0, r2) ||
+                             InsideCircleLocal(localX, localY, c1, r2) ||
+                             InsideCircleLocal(localX, localY, c0, r2, c1) ||
+                             InsideCircleLocal(localX, localY, c1, r2, c0);
+                if (!inside) continue;
+                var color = GetGradientColorInBox(gradient, px, py, x0, y0, x1 - x0, y1 - y0);
+                var p = py * (stride + 1) + 1 + px * 4;
+                scanlines[p + 0] = color.R;
+                scanlines[p + 1] = color.G;
+                scanlines[p + 2] = color.B;
+                scanlines[p + 3] = color.A;
+            }
+        }
+    }
+
+    private static bool InsideCircleLocal(double x, double y, double center, double radiusSq) {
+        var dx = x - center;
+        var dy = y - center;
+        return dx * dx + dy * dy <= radiusSq;
+    }
+
+    private static bool InsideCircleLocal(double x, double y, double cx, double radiusSq, double cy) {
+        var dx = x - cx;
+        var dy = y - cy;
+        return dx * dx + dy * dy <= radiusSq;
     }
 
     private static int ScaleSize(int size, double scale) {

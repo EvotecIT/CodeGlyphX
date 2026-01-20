@@ -9,6 +9,7 @@ using CodeGlyphX.Rendering.Pbm;
 using CodeGlyphX.Rendering.Jpeg;
 using CodeGlyphX.Rendering.Png;
 using CodeGlyphX.Rendering.Ppm;
+using CodeGlyphX.Rendering.Tiff;
 using CodeGlyphX.Rendering.Tga;
 using CodeGlyphX.Rendering.Xbm;
 using CodeGlyphX.Rendering.Xpm;
@@ -36,6 +37,7 @@ public static class ImageReader {
         if (data.Length < 2) throw new FormatException("Unknown image format.");
 
         if (IsPng(data)) return PngReader.DecodeRgba32(data, out width, out height);
+        if (TiffReader.IsTiff(data)) return TiffReader.DecodeRgba32(data, out width, out height);
         if (IcoReader.IsIco(data)) return IcoReader.DecodeRgba32(data, out width, out height);
         if (JpegReader.IsJpeg(data)) return JpegReader.DecodeRgba32(data, out width, out height);
         if (GifReader.IsGif(data)) return GifReader.DecodeRgba32(data, out width, out height);
@@ -80,6 +82,38 @@ public static class ImageReader {
             height = 0;
             return false;
         }
+    }
+
+    /// <summary>
+    /// Detects the image format from a byte buffer.
+    /// </summary>
+    public static ImageFormat DetectFormat(ReadOnlySpan<byte> data) {
+        if (TryDetectFormat(data, out var format)) return format;
+        throw new FormatException("Unknown image format.");
+    }
+
+    /// <summary>
+    /// Attempts to detect the image format from a byte buffer.
+    /// </summary>
+    public static bool TryDetectFormat(ReadOnlySpan<byte> data, out ImageFormat format) {
+        format = ImageFormat.Unknown;
+        if (data.Length < 2) return false;
+
+        if (IsPng(data)) { format = ImageFormat.Png; return true; }
+        if (TiffReader.IsTiff(data)) { format = ImageFormat.Tiff; return true; }
+        if (IcoReader.IsIco(data)) { format = ImageFormat.Ico; return true; }
+        if (JpegReader.IsJpeg(data)) { format = ImageFormat.Jpeg; return true; }
+        if (GifReader.IsGif(data)) { format = ImageFormat.Gif; return true; }
+        if (IsBmp(data)) { format = ImageFormat.Bmp; return true; }
+        if (IsPbm(data)) { format = ImageFormat.Pbm; return true; }
+        if (IsPgm(data)) { format = ImageFormat.Pgm; return true; }
+        if (IsPam(data)) { format = ImageFormat.Pam; return true; }
+        if (IsPpm(data)) { format = ImageFormat.Ppm; return true; }
+        if (TgaReader.LooksLikeTga(data)) { format = ImageFormat.Tga; return true; }
+        if (IsXpm(data)) { format = ImageFormat.Xpm; return true; }
+        if (IsXbm(data)) { format = ImageFormat.Xbm; return true; }
+
+        return false;
     }
 
     private static bool IsPng(ReadOnlySpan<byte> data) {

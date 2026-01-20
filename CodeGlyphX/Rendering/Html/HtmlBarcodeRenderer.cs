@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Text;
 using CodeGlyphX.Rendering;
 
@@ -67,6 +68,42 @@ public static class HtmlBarcodeRenderer {
         }
 
         return sb.ToString();
+    }
+
+    /// <summary>
+    /// Renders the barcode to an HTML stream.
+    /// </summary>
+    /// <param name="barcode">Barcode to render.</param>
+    /// <param name="opts">Rendering options.</param>
+    /// <param name="stream">Target stream.</param>
+    public static void RenderToStream(Barcode1D barcode, BarcodeHtmlRenderOptions opts, Stream stream) {
+        var html = Render(barcode, opts);
+        RenderIO.WriteText(stream, html);
+    }
+
+    /// <summary>
+    /// Renders the barcode to an HTML file.
+    /// </summary>
+    /// <param name="barcode">Barcode to render.</param>
+    /// <param name="opts">Rendering options.</param>
+    /// <param name="path">Output file path.</param>
+    /// <returns>The output file path.</returns>
+    public static string RenderToFile(Barcode1D barcode, BarcodeHtmlRenderOptions opts, string path) {
+        var html = Render(barcode, opts);
+        return RenderIO.WriteText(path, html);
+    }
+
+    /// <summary>
+    /// Renders the barcode to an HTML file under the specified directory.
+    /// </summary>
+    /// <param name="barcode">Barcode to render.</param>
+    /// <param name="opts">Rendering options.</param>
+    /// <param name="directory">Output directory.</param>
+    /// <param name="fileName">Output file name.</param>
+    /// <returns>The output file path.</returns>
+    public static string RenderToFile(Barcode1D barcode, BarcodeHtmlRenderOptions opts, string directory, string fileName) {
+        var html = Render(barcode, opts);
+        return RenderIO.WriteText(directory, fileName, html);
     }
 
     private static void AppendCell(StringBuilder sb, bool emailSafe, int widthPx, int heightPx, string color) {
