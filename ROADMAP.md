@@ -2,42 +2,30 @@
 
 This list contains **only work we still want to do** (no already‑done items).
 
-## Phase 1 — Quick wins (days)
-- [x] Docs: add short decode/encode snippets for each symbology (3–5 lines).
-- [x] Tests: golden vectors for all supported input image formats.
-- [x] Decode: ensure image budget + downscale options are wired everywhere (audit remaining entrypoints).
-
-## Phase 2 — Reader robustness (week)
-- [x] 1D: improve scanline selection for low‑contrast images (more thresholds + adaptive).
-- [x] Aztec: stronger bullseye detection on noisy screenshots.
-- [x] PDF417: improve start‑pattern candidate ranking on skewed inputs.
-- [x] Optional: expose “confidence/diagnostics” for non‑QR decoders.
-
-## Phase 3 — Fancy QR styling (week)
-- [x] Dot variants for module shapes (beyond scale/size tweaks).
-- Gradients / multi‑color with safe defaults.
-- Logo safety scoring + warnings in API.
-
-## Phase 4 — Payload gaps (week)
-- [x] Add missing payload helpers (e.g., PayPal payment intent).
-- [x] Tighten validation + normalization for all payloads.
+## Phase 4 — API & DX expansion (days → week)
+- High-level image decode overloads that accept `BarcodeDecodeOptions` (tile scan + checksum policies).
+- Fluent builders for render options (PNG/SVG/HTML/PDF) to match decode fluents.
+- Add `DecodeResult<T>` + `DecodeFailureReason` for richer diagnostics (elapsed, failure, format).
+- Add `ImageInfo`/header preflight (dimensions + format) before full decode.
+- Add `TryDecodeAll` multi-code APIs for Data Matrix / PDF417 / Aztec images.
+- Span/Memory overloads for image decode across formats (avoid `byte[]` copy paths).
+- Batch decode API with shared settings + aggregated diagnostics.
 
 ## Phase 5 — Additional symbologies (weeks)
-- Add missing 1D symbologies: Pharmacode, Code32 (optional).
-- Add 2D symbologies: MaxiCode (optional), MicroPDF417 (optional).
+- GS1 DataBar family (Omni/Truncated/Stacked/Expanded).
+- GS1 Composite (CC-A / CC-B / CC-C).
+- MicroPDF417 + Macro PDF417.
+- MaxiCode (optional).
+- DotCode (optional).
+- Postal: USPS IMB, POSTNET/PLANET (optional).
+- Industrial 2‑of‑5 variants (Interleaved 2‑of‑5 beyond ITF‑14, Matrix 2‑of‑5).
+- Telepen (optional), Patch Code (optional).
+- Pharmacode (one‑track / two‑track), Code32 (optional).
 - Decoder test packs for any newly added symbologies.
 
 ## Phase 6 — Image formats (weeks)
-- [x] ICO/CUR **decode** (read embedded PNG/BMP).
-- [ ] WebP **decode** (lossless + VP8).
-- [x] TIFF **decode** (baseline only).
-- [ ] Optional: WebP **encode** (lossless first).
-
-## Phase 7 — API polish (parallel)
-- [x] Fluent builders for decode options (QR/1D/2D presets).
-- [x] Stream‑first overloads where still missing.
-- [x] Async decode helpers with cancellation.
-- [x] Auto‑detect helpers: bytes → format → decode.
+- WebP **decode** (lossless + VP8).
+- Optional: WebP **encode** (lossless first).
 
 ## Phase 8 — Performance + AOT (parallel)
 - Reduce allocations in hot decode loops.

@@ -220,6 +220,7 @@ Based on public docs as of 2026-01-18. Capabilities depend on optional renderer 
 | Codabar | ✅ | ✅ | All (see Output formats) | A/B/C/D start/stop |
 | MSI | ✅ | ✅ | All (see Output formats) | Mod10 / Mod10Mod10 |
 | Plessey | ✅ | ✅ | All (see Output formats) | CRC |
+| KIX / Royal Mail 4-State | ✅ | ❌ | All (see Output formats) | Encode only (matrix renderers) |
 | EAN-8 / EAN-13 | ✅ | ✅ | All (see Output formats) | Checksum validation |
 | UPC-A / UPC-E | ✅ | ✅ | All (see Output formats) | Checksum validation |
 | ITF-14 | ✅ | ✅ | All (see Output formats) | Checksum validation |
@@ -233,6 +234,7 @@ Based on public docs as of 2026-01-18. Capabilities depend on optional renderer 
 - [x] Micro QR support
 - [x] 1D barcode encode + decode
 - [x] Data Matrix + PDF417 encode + decode
+- [x] Matrix barcode encoding (Data Matrix / PDF417 / KIX) with dedicated matrix renderers
 - [x] SVG / SVGZ / HTML / PNG / JPEG / BMP / PPM / PBM / PGM / PAM / XBM / XPM / TGA / ICO / PDF / EPS / ASCII renderers
 - [x] Image decode: PNG / JPEG / GIF / BMP / PPM / PBM / PGM / PAM / XBM / XPM / TGA
 - [x] Base64 + data URI helpers for rendered outputs
@@ -249,6 +251,7 @@ Recommended publish flags: `PublishAot=true` (native), or `PublishTrimmed=true` 
 ## Output formats (Save by extension)
 
 Save(...) chooses the output based on file extension for QR/Barcode/DataMatrix/PDF417/Aztec.
+For other matrix barcodes (e.g., KIX/Royal Mail 4‑State), use the `Matrix*` renderers with a `BitMatrix` from `MatrixBarcodeEncoder`.
 
 | Format | Extensions | Notes |
 | --- | --- | --- |
