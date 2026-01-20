@@ -9,10 +9,19 @@ namespace CodeGlyphX.Ean;
 /// </summary>
 public static class EanEncoder {
     /// <summary>
-    /// Encodes an EAN barcode (EAN-8 or EAN-13, depending on input length).
+    /// Encodes an EAN barcode (EAN-8 or EAN-13, depending on input length). Use "+NN" or "+NNNNN" to append add-ons.
     /// </summary>
     public static Barcode1D Encode(string content) {
         if (content is null) throw new ArgumentNullException(nameof(content));
+        var addOn = (string?)null;
+        var plusIndex = content.IndexOf('+');
+        if (plusIndex >= 0) {
+            if (content.IndexOf('+', plusIndex + 1) >= 0) throw new InvalidOperationException("Only one add-on separator '+' is supported.");
+            addOn = content.Substring(plusIndex + 1);
+            content = content.Substring(0, plusIndex);
+            if (addOn.Length == 0) throw new InvalidOperationException("Add-on digits are required after '+'.");
+        }
+
         if (!RegexCache.DigitsOptional().IsMatch(content)) throw new InvalidOperationException("Can only encode numerical digits (0-9)");
 
         var checksum = 0;
@@ -27,10 +36,22 @@ public static class EanEncoder {
         }
 
         if (content.Length == 8) {
-            return EncodeEan8(content);
+            var baseCode = EncodeEan8(content);
+            if (!string.IsNullOrEmpty(addOn)) {
+                var segments = new List<BarSegment>(baseCode.Segments);
+                EanAddOn.AppendAddOn(segments, addOn!);
+                return new Barcode1D(segments);
+            }
+            return baseCode;
         }
         if (content.Length == 13) {
-            return EncodeEan13(content);
+            var baseCode = EncodeEan13(content);
+            if (!string.IsNullOrEmpty(addOn)) {
+                var segments = new List<BarSegment>(baseCode.Segments);
+                EanAddOn.AppendAddOn(segments, addOn!);
+                return new Barcode1D(segments);
+            }
+            return baseCode;
         }
 
         throw new InvalidOperationException("Invalid content length. Should be 7 or 12 if the code does not include a checksum, 8 or 13 if the code already includes a checksum");
