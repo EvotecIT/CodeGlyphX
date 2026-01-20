@@ -1,0 +1,223 @@
+{
+  "name": "Sms",
+  "fullName": "CodeGlyphX.Payloads.QrParsedData.Sms",
+  "namespace": "CodeGlyphX.Payloads",
+  "kind": "Class",
+  "slug": "codeglyphx-payloads-qrparseddata-sms",
+  "summary": "SMS payload.",
+  "remarks": null,
+  "examples": [],
+  "seeAlso": [],
+  "members": [
+    {
+      "name": "Sms",
+      "kind": "Constructor",
+      "summary": "SMS payload.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "Number",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "Body",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "Sms(string Number, string Body)",
+      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.Sms.#ctor(System.String,System.String)",
+      "anchor": "constructor-sms-sms-string-number-string-body"
+    },
+    {
+      "name": "ToString",
+      "kind": "Method",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "string ToString()",
+      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.Sms.ToString",
+      "anchor": "method-tostring-string-tostring"
+    },
+    {
+      "name": "op_Inequality",
+      "kind": "Method",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "left",
+          "type": "QrParsedData.Sms",
+          "description": null
+        },
+        {
+          "name": "right",
+          "type": "QrParsedData.Sms",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool op_Inequality(QrParsedData.Sms left, QrParsedData.Sms right)",
+      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.Sms.op_Inequality(CodeGlyphX.Payloads.QrParsedData.Sms,CodeGlyphX.Payloads.QrParsedData.Sms)",
+      "anchor": "method-op-inequality-static-bool-op-inequality-qrparseddata-sms-left-qrparseddata-sms-right"
+    },
+    {
+      "name": "op_Equality",
+      "kind": "Method",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "left",
+          "type": "QrParsedData.Sms",
+          "description": null
+        },
+        {
+          "name": "right",
+          "type": "QrParsedData.Sms",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool op_Equality(QrParsedData.Sms left, QrParsedData.Sms right)",
+      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.Sms.op_Equality(CodeGlyphX.Payloads.QrParsedData.Sms,CodeGlyphX.Payloads.QrParsedData.Sms)",
+      "anchor": "method-op-equality-static-bool-op-equality-qrparseddata-sms-left-qrparseddata-sms-right"
+    },
+    {
+      "name": "GetHashCode",
+      "kind": "Method",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "int GetHashCode()",
+      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.Sms.GetHashCode",
+      "anchor": "method-gethashcode-int-gethashcode"
+    },
+    {
+      "name": "Equals",
+      "kind": "Method",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "obj",
+          "type": "object",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "bool Equals(object obj)",
+      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.Sms.Equals(System.Object)",
+      "anchor": "method-equals-bool-equals-object-obj"
+    },
+    {
+      "name": "Equals",
+      "kind": "Method",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "other",
+          "type": "QrParsedData.Sms",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "bool Equals(QrParsedData.Sms other)",
+      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.Sms.Equals(CodeGlyphX.Payloads.QrParsedData.Sms)",
+      "anchor": "method-equals-bool-equals-qrparseddata-sms-other"
+    },
+    {
+      "name": "\u003CClone\u003E$",
+      "kind": "Method",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "QrParsedData.Sms \u003CClone\u003E$()",
+      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.Sms.\u003CClone\u003E$",
+      "anchor": "method-clone-qrparseddata-sms-clone"
+    },
+    {
+      "name": "Deconstruct",
+      "kind": "Method",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "Number",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "Body",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "void Deconstruct(out string Number, out string Body)",
+      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.Sms.Deconstruct(System.String@,System.String@)",
+      "anchor": "method-deconstruct-void-deconstruct-out-string-number-out-string-body"
+    },
+    {
+      "name": "Number",
+      "kind": "Property",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "string Number {get; set; }",
+      "xmlId": "P:CodeGlyphX.Payloads.QrParsedData.Sms.Number",
+      "anchor": "property-number-string-number-get-set"
+    },
+    {
+      "name": "Body",
+      "kind": "Property",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "string Body {get; set; }",
+      "xmlId": "P:CodeGlyphX.Payloads.QrParsedData.Sms.Body",
+      "anchor": "property-body-string-body-get-set"
+    }
+  ]
+}

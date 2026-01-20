@@ -1,0 +1,55 @@
+{
+  "name": "IcoRenderOptions",
+  "fullName": "CodeGlyphX.Rendering.Ico.IcoRenderOptions",
+  "namespace": "CodeGlyphX.Rendering.Ico",
+  "kind": "Class",
+  "slug": "codeglyphx-rendering-ico-icorenderoptions",
+  "summary": "Options for ICO rendering (multi-size).",
+  "remarks": null,
+  "examples": [],
+  "seeAlso": [],
+  "members": [
+    {
+      "name": "IcoRenderOptions",
+      "kind": "Constructor",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "IcoRenderOptions()",
+      "xmlId": "M:CodeGlyphX.Rendering.Ico.IcoRenderOptions.#ctor",
+      "anchor": "constructor-icorenderoptions-icorenderoptions"
+    },
+    {
+      "name": "Sizes",
+      "kind": "Property",
+      "summary": "Output sizes in pixels (1..256). Defaults to common icon sizes.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "int[] Sizes {get; set; }",
+      "xmlId": "P:CodeGlyphX.Rendering.Ico.IcoRenderOptions.Sizes",
+      "anchor": "property-sizes-int-sizes-get-set"
+    },
+    {
+      "name": "PreserveAspectRatio",
+      "kind": "Property",
+      "summary": "Preserves aspect ratio and pads to square when true.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "bool PreserveAspectRatio {get; set; }",
+      "xmlId": "P:CodeGlyphX.Rendering.Ico.IcoRenderOptions.PreserveAspectRatio",
+      "anchor": "property-preserveaspectratio-bool-preserveaspectratio-get-set"
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+# CodeGlyphX
+Version: 1.0.0
+Package: CodeGlyphX
+API types: 266
+
+Install:
+- dotnet add package CodeGlyphX
+
+Quickstart (C#):
+```csharp
+using CodeGlyphX;
+
+// Generate a QR code
+QR.Save("https://example.com", "qr.png");
+
+// Generate a barcode
+Barcode.Save(BarcodeType.Code128, "PRODUCT-123", "barcode.png");
+
+// Decode an image
+if (QrImageDecoder.TryDecodeImage(imageBytes, out var result))
+{
+    Console.WriteLine(result.Text);
+}
+```
+
+Machine-friendly API data (no HTML parsing required):
+- /api/index.json
+- /api/search.json
+- /api/types/{slug}.json
+
+Slug rule: lower-case, dots and symbols become dashes. Example: CodeGlyphX.QR -> codeglyphx-qr
+Generated from XML docs during the website build (Build/Build-Website.ps1).

@@ -1,0 +1,41 @@
+{
+  "name": "BarcodeDecoded",
+  "fullName": "CodeGlyphX.BarcodeDecoded",
+  "namespace": "CodeGlyphX",
+  "kind": "Class",
+  "slug": "codeglyphx-barcodedecoded",
+  "summary": "Result of decoding a 1D barcode payload.",
+  "remarks": null,
+  "examples": [],
+  "seeAlso": [],
+  "members": [
+    {
+      "name": "Type",
+      "kind": "Property",
+      "summary": "Gets the decoded barcode type.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "BarcodeType Type {get; }",
+      "xmlId": "P:CodeGlyphX.BarcodeDecoded.Type",
+      "anchor": "property-type-barcodetype-type-get"
+    },
+    {
+      "name": "Text",
+      "kind": "Property",
+      "summary": "Gets the decoded text.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "string Text {get; }",
+      "xmlId": "P:CodeGlyphX.BarcodeDecoded.Text",
+      "anchor": "property-text-string-text-get"
+    }
+  ]
+}

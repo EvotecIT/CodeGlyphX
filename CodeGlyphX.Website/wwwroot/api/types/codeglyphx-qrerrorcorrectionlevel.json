@@ -1,0 +1,83 @@
+{
+  "name": "QrErrorCorrectionLevel",
+  "fullName": "CodeGlyphX.QrErrorCorrectionLevel",
+  "namespace": "CodeGlyphX",
+  "kind": "Enum",
+  "slug": "codeglyphx-qrerrorcorrectionlevel",
+  "summary": "QR Code error correction level.",
+  "remarks": null,
+  "examples": [],
+  "seeAlso": [],
+  "members": [
+    {
+      "name": "value__",
+      "kind": "Field",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "int value__",
+      "xmlId": "F:CodeGlyphX.QrErrorCorrectionLevel.value__",
+      "anchor": "field-value-int-value"
+    },
+    {
+      "name": "L",
+      "kind": "Field",
+      "summary": "Low (~7%).",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "QrErrorCorrectionLevel L",
+      "xmlId": "F:CodeGlyphX.QrErrorCorrectionLevel.L",
+      "anchor": "field-l-qrerrorcorrectionlevel-l"
+    },
+    {
+      "name": "M",
+      "kind": "Field",
+      "summary": "Medium (~15%).",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "QrErrorCorrectionLevel M",
+      "xmlId": "F:CodeGlyphX.QrErrorCorrectionLevel.M",
+      "anchor": "field-m-qrerrorcorrectionlevel-m"
+    },
+    {
+      "name": "Q",
+      "kind": "Field",
+      "summary": "Quartile (~25%).",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "QrErrorCorrectionLevel Q",
+      "xmlId": "F:CodeGlyphX.QrErrorCorrectionLevel.Q",
+      "anchor": "field-q-qrerrorcorrectionlevel-q"
+    },
+    {
+      "name": "H",
+      "kind": "Field",
+      "summary": "High (~30%).",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "QrErrorCorrectionLevel H",
+      "xmlId": "F:CodeGlyphX.QrErrorCorrectionLevel.H",
+      "anchor": "field-h-qrerrorcorrectionlevel-h"
+    }
+  ]
+}

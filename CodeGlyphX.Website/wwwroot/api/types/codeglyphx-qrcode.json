@@ -1,0 +1,118 @@
+{
+  "name": "QrCode",
+  "fullName": "CodeGlyphX.QrCode",
+  "namespace": "CodeGlyphX",
+  "kind": "Class",
+  "slug": "codeglyphx-qrcode",
+  "summary": "A generated QR code (modules \u002B metadata).",
+  "remarks": null,
+  "examples": [],
+  "seeAlso": [],
+  "members": [
+    {
+      "name": "QrCode",
+      "kind": "Constructor",
+      "summary": "Creates a new CodeGlyphX.QrCode.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "version",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "errorCorrectionLevel",
+          "type": "QrErrorCorrectionLevel",
+          "description": null
+        },
+        {
+          "name": "mask",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "modules",
+          "type": "BitMatrix",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "QrCode(int version, QrErrorCorrectionLevel errorCorrectionLevel, int mask, BitMatrix modules)",
+      "xmlId": "M:CodeGlyphX.QrCode.#ctor(System.Int32,CodeGlyphX.QrErrorCorrectionLevel,System.Int32,CodeGlyphX.BitMatrix)",
+      "anchor": "constructor-qrcode-qrcode-int-version-qrerrorcorrectionlevel-errorcorrectionlevel-int-mask-bitmatrix-modules"
+    },
+    {
+      "name": "Version",
+      "kind": "Property",
+      "summary": "Gets the QR version (1..40).",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "int Version {get; }",
+      "xmlId": "P:CodeGlyphX.QrCode.Version",
+      "anchor": "property-version-int-version-get"
+    },
+    {
+      "name": "ErrorCorrectionLevel",
+      "kind": "Property",
+      "summary": "Gets the error correction level used for encoding.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "QrErrorCorrectionLevel ErrorCorrectionLevel {get; }",
+      "xmlId": "P:CodeGlyphX.QrCode.ErrorCorrectionLevel",
+      "anchor": "property-errorcorrectionlevel-qrerrorcorrectionlevel-errorcorrectionlevel-get"
+    },
+    {
+      "name": "Mask",
+      "kind": "Property",
+      "summary": "Gets the selected mask pattern (0..7).",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "int Mask {get; }",
+      "xmlId": "P:CodeGlyphX.QrCode.Mask",
+      "anchor": "property-mask-int-mask-get"
+    },
+    {
+      "name": "Modules",
+      "kind": "Property",
+      "summary": "Gets the QR modules (dark = true, light = false), without quiet zone.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "BitMatrix Modules {get; }",
+      "xmlId": "P:CodeGlyphX.QrCode.Modules",
+      "anchor": "property-modules-bitmatrix-modules-get"
+    },
+    {
+      "name": "Size",
+      "kind": "Property",
+      "summary": "Gets the module matrix size (width/height), i.e. Version * 4 \u002B 17.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "int Size {get; }",
+      "xmlId": "P:CodeGlyphX.QrCode.Size",
+      "anchor": "property-size-int-size-get"
+    }
+  ]
+}

@@ -1,0 +1,66 @@
+{
+  "name": "QrArtWarning",
+  "fullName": "CodeGlyphX.QrArtWarning",
+  "namespace": "CodeGlyphX",
+  "kind": "Struct",
+  "slug": "codeglyphx-qrartwarning",
+  "summary": "QR art warning with a short message.",
+  "remarks": null,
+  "examples": [],
+  "seeAlso": [],
+  "members": [
+    {
+      "name": "QrArtWarning",
+      "kind": "Constructor",
+      "summary": "Creates a warning entry.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "kind",
+          "type": "QrArtWarningKind",
+          "description": "Warning category."
+        },
+        {
+          "name": "message",
+          "type": "string",
+          "description": "Human-readable warning message."
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "QrArtWarning(QrArtWarningKind kind, string message)",
+      "xmlId": "M:CodeGlyphX.QrArtWarning.#ctor(CodeGlyphX.QrArtWarningKind,System.String)",
+      "anchor": "constructor-qrartwarning-qrartwarning-qrartwarningkind-kind-string-message"
+    },
+    {
+      "name": "Kind",
+      "kind": "Property",
+      "summary": "Warning kind.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "QrArtWarningKind Kind {get; }",
+      "xmlId": "P:CodeGlyphX.QrArtWarning.Kind",
+      "anchor": "property-kind-qrartwarningkind-kind-get"
+    },
+    {
+      "name": "Message",
+      "kind": "Property",
+      "summary": "Warning message.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "string Message {get; }",
+      "xmlId": "P:CodeGlyphX.QrArtWarning.Message",
+      "anchor": "property-message-string-message-get"
+    }
+  ]
+}

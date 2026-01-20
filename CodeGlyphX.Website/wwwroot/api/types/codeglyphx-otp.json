@@ -1,0 +1,1688 @@
+{
+  "name": "Otp",
+  "fullName": "CodeGlyphX.Otp",
+  "namespace": "CodeGlyphX",
+  "kind": "Class",
+  "slug": "codeglyphx-otp",
+  "summary": "Simple OTP helpers with fluent and static APIs.",
+  "remarks": null,
+  "examples": [],
+  "seeAlso": [],
+  "members": [
+    {
+      "name": "TotpUri",
+      "kind": "Method",
+      "summary": "Builds a TOTP URI from a Base32 secret.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "issuer",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "account",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "secretBase32",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "alg",
+          "type": "OtpAlgorithm",
+          "description": null
+        },
+        {
+          "name": "digits",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "period",
+          "type": "int",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string TotpUri(string issuer, string account, string secretBase32, OtpAlgorithm alg, int digits, int period)",
+      "xmlId": "M:CodeGlyphX.Otp.TotpUri(System.String,System.String,System.String,CodeGlyphX.OtpAlgorithm,System.Int32,System.Int32)",
+      "anchor": "method-totpuri-static-string-totpuri-string-issuer-string-account-string-secretbase32-otpalgorithm-alg-int-digits-int-period"
+    },
+    {
+      "name": "TotpUri",
+      "kind": "Method",
+      "summary": "Builds a TOTP URI from raw secret bytes.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "issuer",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "account",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "secret",
+          "type": "byte[]",
+          "description": null
+        },
+        {
+          "name": "alg",
+          "type": "OtpAlgorithm",
+          "description": null
+        },
+        {
+          "name": "digits",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "period",
+          "type": "int",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string TotpUri(string issuer, string account, byte[] secret, OtpAlgorithm alg, int digits, int period)",
+      "xmlId": "M:CodeGlyphX.Otp.TotpUri(System.String,System.String,System.Byte[],CodeGlyphX.OtpAlgorithm,System.Int32,System.Int32)",
+      "anchor": "method-totpuri-static-string-totpuri-string-issuer-string-account-byte-secret-otpalgorithm-alg-int-digits-int-period"
+    },
+    {
+      "name": "HotpUri",
+      "kind": "Method",
+      "summary": "Builds a HOTP URI from a Base32 secret.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "issuer",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "account",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "secretBase32",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "counter",
+          "type": "long",
+          "description": null
+        },
+        {
+          "name": "alg",
+          "type": "OtpAlgorithm",
+          "description": null
+        },
+        {
+          "name": "digits",
+          "type": "int",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string HotpUri(string issuer, string account, string secretBase32, long counter, OtpAlgorithm alg, int digits)",
+      "xmlId": "M:CodeGlyphX.Otp.HotpUri(System.String,System.String,System.String,System.Int64,CodeGlyphX.OtpAlgorithm,System.Int32)",
+      "anchor": "method-hotpuri-static-string-hotpuri-string-issuer-string-account-string-secretbase32-long-counter-otpalgorithm-alg-int-digits"
+    },
+    {
+      "name": "HotpUri",
+      "kind": "Method",
+      "summary": "Builds a HOTP URI from raw secret bytes.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "issuer",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "account",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "secret",
+          "type": "byte[]",
+          "description": null
+        },
+        {
+          "name": "counter",
+          "type": "long",
+          "description": null
+        },
+        {
+          "name": "alg",
+          "type": "OtpAlgorithm",
+          "description": null
+        },
+        {
+          "name": "digits",
+          "type": "int",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string HotpUri(string issuer, string account, byte[] secret, long counter, OtpAlgorithm alg, int digits)",
+      "xmlId": "M:CodeGlyphX.Otp.HotpUri(System.String,System.String,System.Byte[],System.Int64,CodeGlyphX.OtpAlgorithm,System.Int32)",
+      "anchor": "method-hotpuri-static-string-hotpuri-string-issuer-string-account-byte-secret-long-counter-otpalgorithm-alg-int-digits"
+    },
+    {
+      "name": "TotpPng",
+      "kind": "Method",
+      "summary": "Renders a TOTP QR as PNG from a Base32 secret.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "issuer",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "account",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "secretBase32",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "QrEasyOptions",
+          "description": null
+        },
+        {
+          "name": "alg",
+          "type": "OtpAlgorithm",
+          "description": null
+        },
+        {
+          "name": "digits",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "period",
+          "type": "int",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static byte[] TotpPng(string issuer, string account, string secretBase32, QrEasyOptions options, OtpAlgorithm alg, int digits, int period)",
+      "xmlId": "M:CodeGlyphX.Otp.TotpPng(System.String,System.String,System.String,CodeGlyphX.QrEasyOptions,CodeGlyphX.OtpAlgorithm,System.Int32,System.Int32)",
+      "anchor": "method-totppng-static-byte-totppng-string-issuer-string-account-string-secretbase32-qreasyoptions-options-otpalgorithm-alg-int-digits-int-period"
+    },
+    {
+      "name": "TotpSvg",
+      "kind": "Method",
+      "summary": "Renders a TOTP QR as SVG from a Base32 secret.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "issuer",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "account",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "secretBase32",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "QrEasyOptions",
+          "description": null
+        },
+        {
+          "name": "alg",
+          "type": "OtpAlgorithm",
+          "description": null
+        },
+        {
+          "name": "digits",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "period",
+          "type": "int",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string TotpSvg(string issuer, string account, string secretBase32, QrEasyOptions options, OtpAlgorithm alg, int digits, int period)",
+      "xmlId": "M:CodeGlyphX.Otp.TotpSvg(System.String,System.String,System.String,CodeGlyphX.QrEasyOptions,CodeGlyphX.OtpAlgorithm,System.Int32,System.Int32)",
+      "anchor": "method-totpsvg-static-string-totpsvg-string-issuer-string-account-string-secretbase32-qreasyoptions-options-otpalgorithm-alg-int-digits-int-period"
+    },
+    {
+      "name": "TotpHtml",
+      "kind": "Method",
+      "summary": "Renders a TOTP QR as HTML from a Base32 secret.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "issuer",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "account",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "secretBase32",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "QrEasyOptions",
+          "description": null
+        },
+        {
+          "name": "alg",
+          "type": "OtpAlgorithm",
+          "description": null
+        },
+        {
+          "name": "digits",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "period",
+          "type": "int",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string TotpHtml(string issuer, string account, string secretBase32, QrEasyOptions options, OtpAlgorithm alg, int digits, int period)",
+      "xmlId": "M:CodeGlyphX.Otp.TotpHtml(System.String,System.String,System.String,CodeGlyphX.QrEasyOptions,CodeGlyphX.OtpAlgorithm,System.Int32,System.Int32)",
+      "anchor": "method-totphtml-static-string-totphtml-string-issuer-string-account-string-secretbase32-qreasyoptions-options-otpalgorithm-alg-int-digits-int-period"
+    },
+    {
+      "name": "TotpJpeg",
+      "kind": "Method",
+      "summary": "Renders a TOTP QR as JPEG from a Base32 secret.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "issuer",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "account",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "secretBase32",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "QrEasyOptions",
+          "description": null
+        },
+        {
+          "name": "alg",
+          "type": "OtpAlgorithm",
+          "description": null
+        },
+        {
+          "name": "digits",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "period",
+          "type": "int",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static byte[] TotpJpeg(string issuer, string account, string secretBase32, QrEasyOptions options, OtpAlgorithm alg, int digits, int period)",
+      "xmlId": "M:CodeGlyphX.Otp.TotpJpeg(System.String,System.String,System.String,CodeGlyphX.QrEasyOptions,CodeGlyphX.OtpAlgorithm,System.Int32,System.Int32)",
+      "anchor": "method-totpjpeg-static-byte-totpjpeg-string-issuer-string-account-string-secretbase32-qreasyoptions-options-otpalgorithm-alg-int-digits-int-period"
+    },
+    {
+      "name": "HotpPng",
+      "kind": "Method",
+      "summary": "Renders a HOTP QR as PNG from a Base32 secret.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "issuer",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "account",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "secretBase32",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "counter",
+          "type": "long",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "QrEasyOptions",
+          "description": null
+        },
+        {
+          "name": "alg",
+          "type": "OtpAlgorithm",
+          "description": null
+        },
+        {
+          "name": "digits",
+          "type": "int",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static byte[] HotpPng(string issuer, string account, string secretBase32, long counter, QrEasyOptions options, OtpAlgorithm alg, int digits)",
+      "xmlId": "M:CodeGlyphX.Otp.HotpPng(System.String,System.String,System.String,System.Int64,CodeGlyphX.QrEasyOptions,CodeGlyphX.OtpAlgorithm,System.Int32)",
+      "anchor": "method-hotppng-static-byte-hotppng-string-issuer-string-account-string-secretbase32-long-counter-qreasyoptions-options-otpalgorithm-alg-int-digits"
+    },
+    {
+      "name": "HotpSvg",
+      "kind": "Method",
+      "summary": "Renders a HOTP QR as SVG from a Base32 secret.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "issuer",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "account",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "secretBase32",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "counter",
+          "type": "long",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "QrEasyOptions",
+          "description": null
+        },
+        {
+          "name": "alg",
+          "type": "OtpAlgorithm",
+          "description": null
+        },
+        {
+          "name": "digits",
+          "type": "int",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string HotpSvg(string issuer, string account, string secretBase32, long counter, QrEasyOptions options, OtpAlgorithm alg, int digits)",
+      "xmlId": "M:CodeGlyphX.Otp.HotpSvg(System.String,System.String,System.String,System.Int64,CodeGlyphX.QrEasyOptions,CodeGlyphX.OtpAlgorithm,System.Int32)",
+      "anchor": "method-hotpsvg-static-string-hotpsvg-string-issuer-string-account-string-secretbase32-long-counter-qreasyoptions-options-otpalgorithm-alg-int-digits"
+    },
+    {
+      "name": "HotpHtml",
+      "kind": "Method",
+      "summary": "Renders a HOTP QR as HTML from a Base32 secret.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "issuer",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "account",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "secretBase32",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "counter",
+          "type": "long",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "QrEasyOptions",
+          "description": null
+        },
+        {
+          "name": "alg",
+          "type": "OtpAlgorithm",
+          "description": null
+        },
+        {
+          "name": "digits",
+          "type": "int",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string HotpHtml(string issuer, string account, string secretBase32, long counter, QrEasyOptions options, OtpAlgorithm alg, int digits)",
+      "xmlId": "M:CodeGlyphX.Otp.HotpHtml(System.String,System.String,System.String,System.Int64,CodeGlyphX.QrEasyOptions,CodeGlyphX.OtpAlgorithm,System.Int32)",
+      "anchor": "method-hotphtml-static-string-hotphtml-string-issuer-string-account-string-secretbase32-long-counter-qreasyoptions-options-otpalgorithm-alg-int-digits"
+    },
+    {
+      "name": "HotpJpeg",
+      "kind": "Method",
+      "summary": "Renders a HOTP QR as JPEG from a Base32 secret.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "issuer",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "account",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "secretBase32",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "counter",
+          "type": "long",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "QrEasyOptions",
+          "description": null
+        },
+        {
+          "name": "alg",
+          "type": "OtpAlgorithm",
+          "description": null
+        },
+        {
+          "name": "digits",
+          "type": "int",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static byte[] HotpJpeg(string issuer, string account, string secretBase32, long counter, QrEasyOptions options, OtpAlgorithm alg, int digits)",
+      "xmlId": "M:CodeGlyphX.Otp.HotpJpeg(System.String,System.String,System.String,System.Int64,CodeGlyphX.QrEasyOptions,CodeGlyphX.OtpAlgorithm,System.Int32)",
+      "anchor": "method-hotpjpeg-static-byte-hotpjpeg-string-issuer-string-account-string-secretbase32-long-counter-qreasyoptions-options-otpalgorithm-alg-int-digits"
+    },
+    {
+      "name": "SaveTotpPng",
+      "kind": "Method",
+      "summary": "Saves a TOTP PNG to a file.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "issuer",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "account",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "secretBase32",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "path",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "QrEasyOptions",
+          "description": null
+        },
+        {
+          "name": "alg",
+          "type": "OtpAlgorithm",
+          "description": null
+        },
+        {
+          "name": "digits",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "period",
+          "type": "int",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string SaveTotpPng(string issuer, string account, string secretBase32, string path, QrEasyOptions options, OtpAlgorithm alg, int digits, int period)",
+      "xmlId": "M:CodeGlyphX.Otp.SaveTotpPng(System.String,System.String,System.String,System.String,CodeGlyphX.QrEasyOptions,CodeGlyphX.OtpAlgorithm,System.Int32,System.Int32)",
+      "anchor": "method-savetotppng-static-string-savetotppng-string-issuer-string-account-string-secretbase32-string-path-qreasyoptions-options-otpalgorithm-alg-int-digits-int-period"
+    },
+    {
+      "name": "SaveTotpPng",
+      "kind": "Method",
+      "summary": "Saves a TOTP PNG to a stream.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "issuer",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "account",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "secretBase32",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "stream",
+          "type": "Stream",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "QrEasyOptions",
+          "description": null
+        },
+        {
+          "name": "alg",
+          "type": "OtpAlgorithm",
+          "description": null
+        },
+        {
+          "name": "digits",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "period",
+          "type": "int",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static void SaveTotpPng(string issuer, string account, string secretBase32, Stream stream, QrEasyOptions options, OtpAlgorithm alg, int digits, int period)",
+      "xmlId": "M:CodeGlyphX.Otp.SaveTotpPng(System.String,System.String,System.String,System.IO.Stream,CodeGlyphX.QrEasyOptions,CodeGlyphX.OtpAlgorithm,System.Int32,System.Int32)",
+      "anchor": "method-savetotppng-static-void-savetotppng-string-issuer-string-account-string-secretbase32-stream-stream-qreasyoptions-options-otpalgorithm-alg-int-digits-int-period"
+    },
+    {
+      "name": "SaveTotpSvg",
+      "kind": "Method",
+      "summary": "Saves a TOTP SVG to a file.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "issuer",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "account",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "secretBase32",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "path",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "QrEasyOptions",
+          "description": null
+        },
+        {
+          "name": "alg",
+          "type": "OtpAlgorithm",
+          "description": null
+        },
+        {
+          "name": "digits",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "period",
+          "type": "int",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string SaveTotpSvg(string issuer, string account, string secretBase32, string path, QrEasyOptions options, OtpAlgorithm alg, int digits, int period)",
+      "xmlId": "M:CodeGlyphX.Otp.SaveTotpSvg(System.String,System.String,System.String,System.String,CodeGlyphX.QrEasyOptions,CodeGlyphX.OtpAlgorithm,System.Int32,System.Int32)",
+      "anchor": "method-savetotpsvg-static-string-savetotpsvg-string-issuer-string-account-string-secretbase32-string-path-qreasyoptions-options-otpalgorithm-alg-int-digits-int-period"
+    },
+    {
+      "name": "SaveTotpSvg",
+      "kind": "Method",
+      "summary": "Saves a TOTP SVG to a stream.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "issuer",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "account",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "secretBase32",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "stream",
+          "type": "Stream",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "QrEasyOptions",
+          "description": null
+        },
+        {
+          "name": "alg",
+          "type": "OtpAlgorithm",
+          "description": null
+        },
+        {
+          "name": "digits",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "period",
+          "type": "int",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static void SaveTotpSvg(string issuer, string account, string secretBase32, Stream stream, QrEasyOptions options, OtpAlgorithm alg, int digits, int period)",
+      "xmlId": "M:CodeGlyphX.Otp.SaveTotpSvg(System.String,System.String,System.String,System.IO.Stream,CodeGlyphX.QrEasyOptions,CodeGlyphX.OtpAlgorithm,System.Int32,System.Int32)",
+      "anchor": "method-savetotpsvg-static-void-savetotpsvg-string-issuer-string-account-string-secretbase32-stream-stream-qreasyoptions-options-otpalgorithm-alg-int-digits-int-period"
+    },
+    {
+      "name": "SaveTotpHtml",
+      "kind": "Method",
+      "summary": "Saves a TOTP HTML to a file.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "issuer",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "account",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "secretBase32",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "path",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "QrEasyOptions",
+          "description": null
+        },
+        {
+          "name": "alg",
+          "type": "OtpAlgorithm",
+          "description": null
+        },
+        {
+          "name": "digits",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "period",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string SaveTotpHtml(string issuer, string account, string secretBase32, string path, QrEasyOptions options, OtpAlgorithm alg, int digits, int period, string title)",
+      "xmlId": "M:CodeGlyphX.Otp.SaveTotpHtml(System.String,System.String,System.String,System.String,CodeGlyphX.QrEasyOptions,CodeGlyphX.OtpAlgorithm,System.Int32,System.Int32,System.String)",
+      "anchor": "method-savetotphtml-static-string-savetotphtml-string-issuer-string-account-string-secretbase32-string-path-qreasyoptions-options-otpalgorithm-alg-int-digits-int-period-string-title"
+    },
+    {
+      "name": "SaveTotpHtml",
+      "kind": "Method",
+      "summary": "Saves a TOTP HTML to a stream.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "issuer",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "account",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "secretBase32",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "stream",
+          "type": "Stream",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "QrEasyOptions",
+          "description": null
+        },
+        {
+          "name": "alg",
+          "type": "OtpAlgorithm",
+          "description": null
+        },
+        {
+          "name": "digits",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "period",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static void SaveTotpHtml(string issuer, string account, string secretBase32, Stream stream, QrEasyOptions options, OtpAlgorithm alg, int digits, int period, string title)",
+      "xmlId": "M:CodeGlyphX.Otp.SaveTotpHtml(System.String,System.String,System.String,System.IO.Stream,CodeGlyphX.QrEasyOptions,CodeGlyphX.OtpAlgorithm,System.Int32,System.Int32,System.String)",
+      "anchor": "method-savetotphtml-static-void-savetotphtml-string-issuer-string-account-string-secretbase32-stream-stream-qreasyoptions-options-otpalgorithm-alg-int-digits-int-period-string-title"
+    },
+    {
+      "name": "SaveTotpJpeg",
+      "kind": "Method",
+      "summary": "Saves a TOTP JPEG to a file.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "issuer",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "account",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "secretBase32",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "path",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "QrEasyOptions",
+          "description": null
+        },
+        {
+          "name": "alg",
+          "type": "OtpAlgorithm",
+          "description": null
+        },
+        {
+          "name": "digits",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "period",
+          "type": "int",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string SaveTotpJpeg(string issuer, string account, string secretBase32, string path, QrEasyOptions options, OtpAlgorithm alg, int digits, int period)",
+      "xmlId": "M:CodeGlyphX.Otp.SaveTotpJpeg(System.String,System.String,System.String,System.String,CodeGlyphX.QrEasyOptions,CodeGlyphX.OtpAlgorithm,System.Int32,System.Int32)",
+      "anchor": "method-savetotpjpeg-static-string-savetotpjpeg-string-issuer-string-account-string-secretbase32-string-path-qreasyoptions-options-otpalgorithm-alg-int-digits-int-period"
+    },
+    {
+      "name": "SaveTotpJpeg",
+      "kind": "Method",
+      "summary": "Saves a TOTP JPEG to a stream.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "issuer",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "account",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "secretBase32",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "stream",
+          "type": "Stream",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "QrEasyOptions",
+          "description": null
+        },
+        {
+          "name": "alg",
+          "type": "OtpAlgorithm",
+          "description": null
+        },
+        {
+          "name": "digits",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "period",
+          "type": "int",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static void SaveTotpJpeg(string issuer, string account, string secretBase32, Stream stream, QrEasyOptions options, OtpAlgorithm alg, int digits, int period)",
+      "xmlId": "M:CodeGlyphX.Otp.SaveTotpJpeg(System.String,System.String,System.String,System.IO.Stream,CodeGlyphX.QrEasyOptions,CodeGlyphX.OtpAlgorithm,System.Int32,System.Int32)",
+      "anchor": "method-savetotpjpeg-static-void-savetotpjpeg-string-issuer-string-account-string-secretbase32-stream-stream-qreasyoptions-options-otpalgorithm-alg-int-digits-int-period"
+    },
+    {
+      "name": "SaveHotpPng",
+      "kind": "Method",
+      "summary": "Saves a HOTP PNG to a file.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "issuer",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "account",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "secretBase32",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "counter",
+          "type": "long",
+          "description": null
+        },
+        {
+          "name": "path",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "QrEasyOptions",
+          "description": null
+        },
+        {
+          "name": "alg",
+          "type": "OtpAlgorithm",
+          "description": null
+        },
+        {
+          "name": "digits",
+          "type": "int",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string SaveHotpPng(string issuer, string account, string secretBase32, long counter, string path, QrEasyOptions options, OtpAlgorithm alg, int digits)",
+      "xmlId": "M:CodeGlyphX.Otp.SaveHotpPng(System.String,System.String,System.String,System.Int64,System.String,CodeGlyphX.QrEasyOptions,CodeGlyphX.OtpAlgorithm,System.Int32)",
+      "anchor": "method-savehotppng-static-string-savehotppng-string-issuer-string-account-string-secretbase32-long-counter-string-path-qreasyoptions-options-otpalgorithm-alg-int-digits"
+    },
+    {
+      "name": "SaveHotpPng",
+      "kind": "Method",
+      "summary": "Saves a HOTP PNG to a stream.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "issuer",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "account",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "secretBase32",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "counter",
+          "type": "long",
+          "description": null
+        },
+        {
+          "name": "stream",
+          "type": "Stream",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "QrEasyOptions",
+          "description": null
+        },
+        {
+          "name": "alg",
+          "type": "OtpAlgorithm",
+          "description": null
+        },
+        {
+          "name": "digits",
+          "type": "int",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static void SaveHotpPng(string issuer, string account, string secretBase32, long counter, Stream stream, QrEasyOptions options, OtpAlgorithm alg, int digits)",
+      "xmlId": "M:CodeGlyphX.Otp.SaveHotpPng(System.String,System.String,System.String,System.Int64,System.IO.Stream,CodeGlyphX.QrEasyOptions,CodeGlyphX.OtpAlgorithm,System.Int32)",
+      "anchor": "method-savehotppng-static-void-savehotppng-string-issuer-string-account-string-secretbase32-long-counter-stream-stream-qreasyoptions-options-otpalgorithm-alg-int-digits"
+    },
+    {
+      "name": "SaveHotpSvg",
+      "kind": "Method",
+      "summary": "Saves a HOTP SVG to a file.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "issuer",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "account",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "secretBase32",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "counter",
+          "type": "long",
+          "description": null
+        },
+        {
+          "name": "path",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "QrEasyOptions",
+          "description": null
+        },
+        {
+          "name": "alg",
+          "type": "OtpAlgorithm",
+          "description": null
+        },
+        {
+          "name": "digits",
+          "type": "int",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string SaveHotpSvg(string issuer, string account, string secretBase32, long counter, string path, QrEasyOptions options, OtpAlgorithm alg, int digits)",
+      "xmlId": "M:CodeGlyphX.Otp.SaveHotpSvg(System.String,System.String,System.String,System.Int64,System.String,CodeGlyphX.QrEasyOptions,CodeGlyphX.OtpAlgorithm,System.Int32)",
+      "anchor": "method-savehotpsvg-static-string-savehotpsvg-string-issuer-string-account-string-secretbase32-long-counter-string-path-qreasyoptions-options-otpalgorithm-alg-int-digits"
+    },
+    {
+      "name": "SaveHotpSvg",
+      "kind": "Method",
+      "summary": "Saves a HOTP SVG to a stream.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "issuer",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "account",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "secretBase32",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "counter",
+          "type": "long",
+          "description": null
+        },
+        {
+          "name": "stream",
+          "type": "Stream",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "QrEasyOptions",
+          "description": null
+        },
+        {
+          "name": "alg",
+          "type": "OtpAlgorithm",
+          "description": null
+        },
+        {
+          "name": "digits",
+          "type": "int",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static void SaveHotpSvg(string issuer, string account, string secretBase32, long counter, Stream stream, QrEasyOptions options, OtpAlgorithm alg, int digits)",
+      "xmlId": "M:CodeGlyphX.Otp.SaveHotpSvg(System.String,System.String,System.String,System.Int64,System.IO.Stream,CodeGlyphX.QrEasyOptions,CodeGlyphX.OtpAlgorithm,System.Int32)",
+      "anchor": "method-savehotpsvg-static-void-savehotpsvg-string-issuer-string-account-string-secretbase32-long-counter-stream-stream-qreasyoptions-options-otpalgorithm-alg-int-digits"
+    },
+    {
+      "name": "SaveHotpHtml",
+      "kind": "Method",
+      "summary": "Saves a HOTP HTML to a file.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "issuer",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "account",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "secretBase32",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "counter",
+          "type": "long",
+          "description": null
+        },
+        {
+          "name": "path",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "QrEasyOptions",
+          "description": null
+        },
+        {
+          "name": "alg",
+          "type": "OtpAlgorithm",
+          "description": null
+        },
+        {
+          "name": "digits",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string SaveHotpHtml(string issuer, string account, string secretBase32, long counter, string path, QrEasyOptions options, OtpAlgorithm alg, int digits, string title)",
+      "xmlId": "M:CodeGlyphX.Otp.SaveHotpHtml(System.String,System.String,System.String,System.Int64,System.String,CodeGlyphX.QrEasyOptions,CodeGlyphX.OtpAlgorithm,System.Int32,System.String)",
+      "anchor": "method-savehotphtml-static-string-savehotphtml-string-issuer-string-account-string-secretbase32-long-counter-string-path-qreasyoptions-options-otpalgorithm-alg-int-digits-string-title"
+    },
+    {
+      "name": "SaveHotpHtml",
+      "kind": "Method",
+      "summary": "Saves a HOTP HTML to a stream.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "issuer",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "account",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "secretBase32",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "counter",
+          "type": "long",
+          "description": null
+        },
+        {
+          "name": "stream",
+          "type": "Stream",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "QrEasyOptions",
+          "description": null
+        },
+        {
+          "name": "alg",
+          "type": "OtpAlgorithm",
+          "description": null
+        },
+        {
+          "name": "digits",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static void SaveHotpHtml(string issuer, string account, string secretBase32, long counter, Stream stream, QrEasyOptions options, OtpAlgorithm alg, int digits, string title)",
+      "xmlId": "M:CodeGlyphX.Otp.SaveHotpHtml(System.String,System.String,System.String,System.Int64,System.IO.Stream,CodeGlyphX.QrEasyOptions,CodeGlyphX.OtpAlgorithm,System.Int32,System.String)",
+      "anchor": "method-savehotphtml-static-void-savehotphtml-string-issuer-string-account-string-secretbase32-long-counter-stream-stream-qreasyoptions-options-otpalgorithm-alg-int-digits-string-title"
+    },
+    {
+      "name": "SaveHotpJpeg",
+      "kind": "Method",
+      "summary": "Saves a HOTP JPEG to a file.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "issuer",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "account",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "secretBase32",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "counter",
+          "type": "long",
+          "description": null
+        },
+        {
+          "name": "path",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "QrEasyOptions",
+          "description": null
+        },
+        {
+          "name": "alg",
+          "type": "OtpAlgorithm",
+          "description": null
+        },
+        {
+          "name": "digits",
+          "type": "int",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string SaveHotpJpeg(string issuer, string account, string secretBase32, long counter, string path, QrEasyOptions options, OtpAlgorithm alg, int digits)",
+      "xmlId": "M:CodeGlyphX.Otp.SaveHotpJpeg(System.String,System.String,System.String,System.Int64,System.String,CodeGlyphX.QrEasyOptions,CodeGlyphX.OtpAlgorithm,System.Int32)",
+      "anchor": "method-savehotpjpeg-static-string-savehotpjpeg-string-issuer-string-account-string-secretbase32-long-counter-string-path-qreasyoptions-options-otpalgorithm-alg-int-digits"
+    },
+    {
+      "name": "SaveHotpJpeg",
+      "kind": "Method",
+      "summary": "Saves a HOTP JPEG to a stream.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "issuer",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "account",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "secretBase32",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "counter",
+          "type": "long",
+          "description": null
+        },
+        {
+          "name": "stream",
+          "type": "Stream",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "QrEasyOptions",
+          "description": null
+        },
+        {
+          "name": "alg",
+          "type": "OtpAlgorithm",
+          "description": null
+        },
+        {
+          "name": "digits",
+          "type": "int",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static void SaveHotpJpeg(string issuer, string account, string secretBase32, long counter, Stream stream, QrEasyOptions options, OtpAlgorithm alg, int digits)",
+      "xmlId": "M:CodeGlyphX.Otp.SaveHotpJpeg(System.String,System.String,System.String,System.Int64,System.IO.Stream,CodeGlyphX.QrEasyOptions,CodeGlyphX.OtpAlgorithm,System.Int32)",
+      "anchor": "method-savehotpjpeg-static-void-savehotpjpeg-string-issuer-string-account-string-secretbase32-long-counter-stream-stream-qreasyoptions-options-otpalgorithm-alg-int-digits"
+    },
+    {
+      "name": "SaveTotp",
+      "kind": "Method",
+      "summary": "Saves a TOTP QR based on file extension (.png/.svg/.html/.jpg/.bmp/.pdf/.eps).\n Defaults to PNG when no extension is provided.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "issuer",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "account",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "secretBase32",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "path",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "QrEasyOptions",
+          "description": null
+        },
+        {
+          "name": "alg",
+          "type": "OtpAlgorithm",
+          "description": null
+        },
+        {
+          "name": "digits",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "period",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string SaveTotp(string issuer, string account, string secretBase32, string path, QrEasyOptions options, OtpAlgorithm alg, int digits, int period, string title)",
+      "xmlId": "M:CodeGlyphX.Otp.SaveTotp(System.String,System.String,System.String,System.String,CodeGlyphX.QrEasyOptions,CodeGlyphX.OtpAlgorithm,System.Int32,System.Int32,System.String)",
+      "anchor": "method-savetotp-static-string-savetotp-string-issuer-string-account-string-secretbase32-string-path-qreasyoptions-options-otpalgorithm-alg-int-digits-int-period-string-title"
+    },
+    {
+      "name": "SaveHotp",
+      "kind": "Method",
+      "summary": "Saves a HOTP QR based on file extension (.png/.svg/.html/.jpg/.bmp/.pdf/.eps).\n Defaults to PNG when no extension is provided.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "issuer",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "account",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "secretBase32",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "counter",
+          "type": "long",
+          "description": null
+        },
+        {
+          "name": "path",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "QrEasyOptions",
+          "description": null
+        },
+        {
+          "name": "alg",
+          "type": "OtpAlgorithm",
+          "description": null
+        },
+        {
+          "name": "digits",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string SaveHotp(string issuer, string account, string secretBase32, long counter, string path, QrEasyOptions options, OtpAlgorithm alg, int digits, string title)",
+      "xmlId": "M:CodeGlyphX.Otp.SaveHotp(System.String,System.String,System.String,System.Int64,System.String,CodeGlyphX.QrEasyOptions,CodeGlyphX.OtpAlgorithm,System.Int32,System.String)",
+      "anchor": "method-savehotp-static-string-savehotp-string-issuer-string-account-string-secretbase32-long-counter-string-path-qreasyoptions-options-otpalgorithm-alg-int-digits-string-title"
+    },
+    {
+      "name": "Totp",
+      "kind": "Method",
+      "summary": "Starts a fluent TOTP builder.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "issuer",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "account",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "secretBase32",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "QrEasyOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static Otp.TotpBuilder Totp(string issuer, string account, string secretBase32, QrEasyOptions options)",
+      "xmlId": "M:CodeGlyphX.Otp.Totp(System.String,System.String,System.String,CodeGlyphX.QrEasyOptions)",
+      "anchor": "method-totp-static-otp-totpbuilder-totp-string-issuer-string-account-string-secretbase32-qreasyoptions-options"
+    },
+    {
+      "name": "Hotp",
+      "kind": "Method",
+      "summary": "Starts a fluent HOTP builder.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "issuer",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "account",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "secretBase32",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "counter",
+          "type": "long",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "QrEasyOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static Otp.HotpBuilder Hotp(string issuer, string account, string secretBase32, long counter, QrEasyOptions options)",
+      "xmlId": "M:CodeGlyphX.Otp.Hotp(System.String,System.String,System.String,System.Int64,CodeGlyphX.QrEasyOptions)",
+      "anchor": "method-hotp-static-otp-hotpbuilder-hotp-string-issuer-string-account-string-secretbase32-long-counter-qreasyoptions-options"
+    }
+  ]
+}

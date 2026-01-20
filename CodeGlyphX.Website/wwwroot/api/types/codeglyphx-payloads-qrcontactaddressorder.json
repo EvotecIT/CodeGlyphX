@@ -1,0 +1,55 @@
+{
+  "name": "QrContactAddressOrder",
+  "fullName": "CodeGlyphX.Payloads.QrContactAddressOrder",
+  "namespace": "CodeGlyphX.Payloads",
+  "kind": "Enum",
+  "slug": "codeglyphx-payloads-qrcontactaddressorder",
+  "summary": "Address field ordering in contact payloads.",
+  "remarks": null,
+  "examples": [],
+  "seeAlso": [],
+  "members": [
+    {
+      "name": "value__",
+      "kind": "Field",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "int value__",
+      "xmlId": "F:CodeGlyphX.Payloads.QrContactAddressOrder.value__",
+      "anchor": "field-value-int-value"
+    },
+    {
+      "name": "Default",
+      "kind": "Field",
+      "summary": "Default order (street then house number).",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "QrContactAddressOrder Default",
+      "xmlId": "F:CodeGlyphX.Payloads.QrContactAddressOrder.Default",
+      "anchor": "field-default-qrcontactaddressorder-default"
+    },
+    {
+      "name": "Reversed",
+      "kind": "Field",
+      "summary": "Reversed order (house number then street).",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "QrContactAddressOrder Reversed",
+      "xmlId": "F:CodeGlyphX.Payloads.QrContactAddressOrder.Reversed",
+      "anchor": "field-reversed-qrcontactaddressorder-reversed"
+    }
+  ]
+}

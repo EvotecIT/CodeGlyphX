@@ -1,0 +1,199 @@
+{
+  "name": "Otp",
+  "fullName": "CodeGlyphX.Payloads.QrParsedData.Otp",
+  "namespace": "CodeGlyphX.Payloads",
+  "kind": "Class",
+  "slug": "codeglyphx-payloads-qrparseddata-otp",
+  "summary": "OTP payload (otpauth://).",
+  "remarks": null,
+  "examples": [],
+  "seeAlso": [],
+  "members": [
+    {
+      "name": "Otp",
+      "kind": "Constructor",
+      "summary": "OTP payload (otpauth://).",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "Payload",
+          "type": "OtpAuthPayload",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "Otp(OtpAuthPayload Payload)",
+      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.Otp.#ctor(CodeGlyphX.OtpAuthPayload)",
+      "anchor": "constructor-otp-otp-otpauthpayload-payload"
+    },
+    {
+      "name": "ToString",
+      "kind": "Method",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "string ToString()",
+      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.Otp.ToString",
+      "anchor": "method-tostring-string-tostring"
+    },
+    {
+      "name": "op_Inequality",
+      "kind": "Method",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "left",
+          "type": "QrParsedData.Otp",
+          "description": null
+        },
+        {
+          "name": "right",
+          "type": "QrParsedData.Otp",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool op_Inequality(QrParsedData.Otp left, QrParsedData.Otp right)",
+      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.Otp.op_Inequality(CodeGlyphX.Payloads.QrParsedData.Otp,CodeGlyphX.Payloads.QrParsedData.Otp)",
+      "anchor": "method-op-inequality-static-bool-op-inequality-qrparseddata-otp-left-qrparseddata-otp-right"
+    },
+    {
+      "name": "op_Equality",
+      "kind": "Method",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "left",
+          "type": "QrParsedData.Otp",
+          "description": null
+        },
+        {
+          "name": "right",
+          "type": "QrParsedData.Otp",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool op_Equality(QrParsedData.Otp left, QrParsedData.Otp right)",
+      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.Otp.op_Equality(CodeGlyphX.Payloads.QrParsedData.Otp,CodeGlyphX.Payloads.QrParsedData.Otp)",
+      "anchor": "method-op-equality-static-bool-op-equality-qrparseddata-otp-left-qrparseddata-otp-right"
+    },
+    {
+      "name": "GetHashCode",
+      "kind": "Method",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "int GetHashCode()",
+      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.Otp.GetHashCode",
+      "anchor": "method-gethashcode-int-gethashcode"
+    },
+    {
+      "name": "Equals",
+      "kind": "Method",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "obj",
+          "type": "object",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "bool Equals(object obj)",
+      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.Otp.Equals(System.Object)",
+      "anchor": "method-equals-bool-equals-object-obj"
+    },
+    {
+      "name": "Equals",
+      "kind": "Method",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "other",
+          "type": "QrParsedData.Otp",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "bool Equals(QrParsedData.Otp other)",
+      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.Otp.Equals(CodeGlyphX.Payloads.QrParsedData.Otp)",
+      "anchor": "method-equals-bool-equals-qrparseddata-otp-other"
+    },
+    {
+      "name": "\u003CClone\u003E$",
+      "kind": "Method",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "QrParsedData.Otp \u003CClone\u003E$()",
+      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.Otp.\u003CClone\u003E$",
+      "anchor": "method-clone-qrparseddata-otp-clone"
+    },
+    {
+      "name": "Deconstruct",
+      "kind": "Method",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "Payload",
+          "type": "OtpAuthPayload",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "void Deconstruct(out OtpAuthPayload Payload)",
+      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.Otp.Deconstruct(CodeGlyphX.OtpAuthPayload@)",
+      "anchor": "method-deconstruct-void-deconstruct-out-otpauthpayload-payload"
+    },
+    {
+      "name": "Payload",
+      "kind": "Property",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "OtpAuthPayload Payload {get; set; }",
+      "xmlId": "P:CodeGlyphX.Payloads.QrParsedData.Otp.Payload",
+      "anchor": "property-payload-otpauthpayload-payload-get-set"
+    }
+  ]
+}

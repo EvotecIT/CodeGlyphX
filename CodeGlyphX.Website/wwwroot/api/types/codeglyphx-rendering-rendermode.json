@@ -1,0 +1,55 @@
+{
+  "name": "RenderMode",
+  "fullName": "CodeGlyphX.Rendering.RenderMode",
+  "namespace": "CodeGlyphX.Rendering",
+  "kind": "Enum",
+  "slug": "codeglyphx-rendering-rendermode",
+  "summary": "Output mode for vector-capable formats.",
+  "remarks": "Vector output is the default for PDF/EPS. Raster mode uses pixel rendering and is recommended\n when gradients, logos, or bitmap-only effects are needed.",
+  "examples": [],
+  "seeAlso": [],
+  "members": [
+    {
+      "name": "value__",
+      "kind": "Field",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "int value__",
+      "xmlId": "F:CodeGlyphX.Rendering.RenderMode.value__",
+      "anchor": "field-value-int-value"
+    },
+    {
+      "name": "Vector",
+      "kind": "Field",
+      "summary": "Vector output (default).",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "RenderMode Vector",
+      "xmlId": "F:CodeGlyphX.Rendering.RenderMode.Vector",
+      "anchor": "field-vector-rendermode-vector"
+    },
+    {
+      "name": "Raster",
+      "kind": "Field",
+      "summary": "Raster output.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "RenderMode Raster",
+      "xmlId": "F:CodeGlyphX.Rendering.RenderMode.Raster",
+      "anchor": "field-raster-rendermode-raster"
+    }
+  ]
+}

@@ -1,0 +1,88 @@
+{
+  "name": "PamWriter",
+  "fullName": "CodeGlyphX.Rendering.Pam.PamWriter",
+  "namespace": "CodeGlyphX.Rendering.Pam",
+  "kind": "Class",
+  "slug": "codeglyphx-rendering-pam-pamwriter",
+  "summary": "Writes PAM (P7) images from RGBA buffers.",
+  "remarks": null,
+  "examples": [],
+  "seeAlso": [],
+  "members": [
+    {
+      "name": "WriteRgba32",
+      "kind": "Method",
+      "summary": "Writes a PAM byte array from an RGBA buffer.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "width",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "height",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "rgba",
+          "type": "ReadOnlySpan\u003Cbyte\u003E",
+          "description": null
+        },
+        {
+          "name": "stride",
+          "type": "int",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static byte[] WriteRgba32(int width, int height, ReadOnlySpan\u003Cbyte\u003E rgba, int stride)",
+      "xmlId": "M:CodeGlyphX.Rendering.Pam.PamWriter.WriteRgba32(System.Int32,System.Int32,System.ReadOnlySpan{System.Byte},System.Int32)",
+      "anchor": "method-writergba32-static-byte-writergba32-int-width-int-height-readonlyspan-byte-rgba-int-stride"
+    },
+    {
+      "name": "WriteRgba32",
+      "kind": "Method",
+      "summary": "Writes a PAM (P7) stream from an RGBA buffer.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "stream",
+          "type": "Stream",
+          "description": null
+        },
+        {
+          "name": "width",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "height",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "rgba",
+          "type": "ReadOnlySpan\u003Cbyte\u003E",
+          "description": null
+        },
+        {
+          "name": "stride",
+          "type": "int",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static void WriteRgba32(Stream stream, int width, int height, ReadOnlySpan\u003Cbyte\u003E rgba, int stride)",
+      "xmlId": "M:CodeGlyphX.Rendering.Pam.PamWriter.WriteRgba32(System.IO.Stream,System.Int32,System.Int32,System.ReadOnlySpan{System.Byte},System.Int32)",
+      "anchor": "method-writergba32-static-void-writergba32-stream-stream-int-width-int-height-readonlyspan-byte-rgba-int-stride"
+    }
+  ]
+}

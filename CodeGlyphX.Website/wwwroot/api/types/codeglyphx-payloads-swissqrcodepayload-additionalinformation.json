@@ -1,0 +1,80 @@
+{
+  "name": "AdditionalInformation",
+  "fullName": "CodeGlyphX.Payloads.SwissQrCodePayload.AdditionalInformation",
+  "namespace": "CodeGlyphX.Payloads",
+  "kind": "Class",
+  "slug": "codeglyphx-payloads-swissqrcodepayload-additionalinformation",
+  "summary": "Additional information section.",
+  "remarks": null,
+  "examples": [],
+  "seeAlso": [],
+  "members": [
+    {
+      "name": "AdditionalInformation",
+      "kind": "Constructor",
+      "summary": "Creates an additional information block.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "unstructuredMessage",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "billInformation",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "AdditionalInformation(string unstructuredMessage, string billInformation)",
+      "xmlId": "M:CodeGlyphX.Payloads.SwissQrCodePayload.AdditionalInformation.#ctor(System.String,System.String)",
+      "anchor": "constructor-additionalinformation-additionalinformation-string-unstructuredmessage-string-billinformation"
+    },
+    {
+      "name": "UnstructuredMessage",
+      "kind": "Property",
+      "summary": "Unstructured message (single line).",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "string UnstructuredMessage {get; }",
+      "xmlId": "P:CodeGlyphX.Payloads.SwissQrCodePayload.AdditionalInformation.UnstructuredMessage",
+      "anchor": "property-unstructuredmessage-string-unstructuredmessage-get"
+    },
+    {
+      "name": "BillInformation",
+      "kind": "Property",
+      "summary": "Bill information (single line).",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "string BillInformation {get; }",
+      "xmlId": "P:CodeGlyphX.Payloads.SwissQrCodePayload.AdditionalInformation.BillInformation",
+      "anchor": "property-billinformation-string-billinformation-get"
+    },
+    {
+      "name": "Trailer",
+      "kind": "Property",
+      "summary": "Trailer marker.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "string Trailer {get; }",
+      "xmlId": "P:CodeGlyphX.Payloads.SwissQrCodePayload.AdditionalInformation.Trailer",
+      "anchor": "property-trailer-string-trailer-get"
+    }
+  ]
+}

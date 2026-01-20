@@ -1,0 +1,55 @@
+{
+  "name": "OtpAuthType",
+  "fullName": "CodeGlyphX.OtpAuthType",
+  "namespace": "CodeGlyphX",
+  "kind": "Enum",
+  "slug": "codeglyphx-otpauthtype",
+  "summary": "OTP token type for otpauth:// URIs.",
+  "remarks": null,
+  "examples": [],
+  "seeAlso": [],
+  "members": [
+    {
+      "name": "value__",
+      "kind": "Field",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "int value__",
+      "xmlId": "F:CodeGlyphX.OtpAuthType.value__",
+      "anchor": "field-value-int-value"
+    },
+    {
+      "name": "Totp",
+      "kind": "Field",
+      "summary": "Time-based one-time password.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "OtpAuthType Totp",
+      "xmlId": "F:CodeGlyphX.OtpAuthType.Totp",
+      "anchor": "field-totp-otpauthtype-totp"
+    },
+    {
+      "name": "Hotp",
+      "kind": "Field",
+      "summary": "Counter-based one-time password.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "OtpAuthType Hotp",
+      "xmlId": "F:CodeGlyphX.OtpAuthType.Hotp",
+      "anchor": "field-hotp-otpauthtype-hotp"
+    }
+  ]
+}

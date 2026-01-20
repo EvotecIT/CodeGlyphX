@@ -1,0 +1,55 @@
+{
+  "name": "QrAppStorePlatform",
+  "fullName": "CodeGlyphX.Payloads.QrAppStorePlatform",
+  "namespace": "CodeGlyphX.Payloads",
+  "kind": "Enum",
+  "slug": "codeglyphx-payloads-qrappstoreplatform",
+  "summary": "App store target platform.",
+  "remarks": null,
+  "examples": [],
+  "seeAlso": [],
+  "members": [
+    {
+      "name": "value__",
+      "kind": "Field",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "int value__",
+      "xmlId": "F:CodeGlyphX.Payloads.QrAppStorePlatform.value__",
+      "anchor": "field-value-int-value"
+    },
+    {
+      "name": "Apple",
+      "kind": "Field",
+      "summary": "Apple App Store.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "QrAppStorePlatform Apple",
+      "xmlId": "F:CodeGlyphX.Payloads.QrAppStorePlatform.Apple",
+      "anchor": "field-apple-qrappstoreplatform-apple"
+    },
+    {
+      "name": "GooglePlay",
+      "kind": "Field",
+      "summary": "Google Play.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "QrAppStorePlatform GooglePlay",
+      "xmlId": "F:CodeGlyphX.Payloads.QrAppStorePlatform.GooglePlay",
+      "anchor": "field-googleplay-qrappstoreplatform-googleplay"
+    }
+  ]
+}

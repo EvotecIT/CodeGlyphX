@@ -1,0 +1,69 @@
+{
+  "name": "QrSmsEncoding",
+  "fullName": "CodeGlyphX.Payloads.QrSmsEncoding",
+  "namespace": "CodeGlyphX.Payloads",
+  "kind": "Enum",
+  "slug": "codeglyphx-payloads-qrsmsencoding",
+  "summary": "SMS payload formats.",
+  "remarks": null,
+  "examples": [],
+  "seeAlso": [],
+  "members": [
+    {
+      "name": "value__",
+      "kind": "Field",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "int value__",
+      "xmlId": "F:CodeGlyphX.Payloads.QrSmsEncoding.value__",
+      "anchor": "field-value-int-value"
+    },
+    {
+      "name": "Sms",
+      "kind": "Field",
+      "summary": "sms: URI with body query.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "QrSmsEncoding Sms",
+      "xmlId": "F:CodeGlyphX.Payloads.QrSmsEncoding.Sms",
+      "anchor": "field-sms-qrsmsencoding-sms"
+    },
+    {
+      "name": "Smsto",
+      "kind": "Field",
+      "summary": "SMSTO format.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "QrSmsEncoding Smsto",
+      "xmlId": "F:CodeGlyphX.Payloads.QrSmsEncoding.Smsto",
+      "anchor": "field-smsto-qrsmsencoding-smsto"
+    },
+    {
+      "name": "SmsIos",
+      "kind": "Field",
+      "summary": "iOS sms: with body parameter.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "QrSmsEncoding SmsIos",
+      "xmlId": "F:CodeGlyphX.Payloads.QrSmsEncoding.SmsIos",
+      "anchor": "field-smsios-qrsmsencoding-smsios"
+    }
+  ]
+}

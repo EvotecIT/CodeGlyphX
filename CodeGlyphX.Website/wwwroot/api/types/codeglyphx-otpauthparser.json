@@ -1,0 +1,138 @@
+{
+  "name": "OtpAuthParser",
+  "fullName": "CodeGlyphX.OtpAuthParser",
+  "namespace": "CodeGlyphX",
+  "kind": "Class",
+  "slug": "codeglyphx-otpauthparser",
+  "summary": "Parser for otpauth:// URIs.",
+  "remarks": null,
+  "examples": [],
+  "seeAlso": [],
+  "members": [
+    {
+      "name": "Parse",
+      "kind": "Method",
+      "summary": "Parses an otpauth:// URI or throws System.FormatException.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "uri",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static OtpAuthPayload Parse(string uri)",
+      "xmlId": "M:CodeGlyphX.OtpAuthParser.Parse(System.String)",
+      "anchor": "method-parse-static-otpauthpayload-parse-string-uri"
+    },
+    {
+      "name": "TryParse",
+      "kind": "Method",
+      "summary": "Attempts to parse an otpauth:// URI.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "uri",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "payload",
+          "type": "OtpAuthPayload",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryParse(string uri, out OtpAuthPayload payload)",
+      "xmlId": "M:CodeGlyphX.OtpAuthParser.TryParse(System.String,CodeGlyphX.OtpAuthPayload@)",
+      "anchor": "method-tryparse-static-bool-tryparse-string-uri-out-otpauthpayload-payload"
+    },
+    {
+      "name": "TryParse",
+      "kind": "Method",
+      "summary": "Attempts to parse an otpauth:// URI, returning a failure reason on error.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "uri",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "payload",
+          "type": "OtpAuthPayload",
+          "description": null
+        },
+        {
+          "name": "error",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryParse(string uri, out OtpAuthPayload payload, out string error)",
+      "xmlId": "M:CodeGlyphX.OtpAuthParser.TryParse(System.String,CodeGlyphX.OtpAuthPayload@,System.String@)",
+      "anchor": "method-tryparse-static-bool-tryparse-string-uri-out-otpauthpayload-payload-out-string-error"
+    },
+    {
+      "name": "ParseDetailed",
+      "kind": "Method",
+      "summary": "Parses an otpauth:// URI and returns warnings.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "uri",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static OtpAuthParseResult ParseDetailed(string uri)",
+      "xmlId": "M:CodeGlyphX.OtpAuthParser.ParseDetailed(System.String)",
+      "anchor": "method-parsedetailed-static-otpauthparseresult-parsedetailed-string-uri"
+    },
+    {
+      "name": "TryParseDetailed",
+      "kind": "Method",
+      "summary": "Attempts to parse an otpauth:// URI and returns warnings.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "uri",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "result",
+          "type": "OtpAuthParseResult",
+          "description": null
+        },
+        {
+          "name": "error",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryParseDetailed(string uri, out OtpAuthParseResult result, out string error)",
+      "xmlId": "M:CodeGlyphX.OtpAuthParser.TryParseDetailed(System.String,CodeGlyphX.OtpAuthParseResult@,System.String@)",
+      "anchor": "method-tryparsedetailed-static-bool-tryparsedetailed-string-uri-out-otpauthparseresult-result-out-string-error"
+    }
+  ]
+}

@@ -1,0 +1,233 @@
+{
+  "name": "QrCodeEncoder",
+  "fullName": "CodeGlyphX.QrCodeEncoder",
+  "namespace": "CodeGlyphX",
+  "kind": "Class",
+  "slug": "codeglyphx-qrcodeencoder",
+  "summary": "Encodes QR codes (byte mode \u002B optional Kanji mode).",
+  "remarks": null,
+  "examples": [],
+  "seeAlso": [],
+  "members": [
+    {
+      "name": "EncodeText",
+      "kind": "Method",
+      "summary": "Encodes a UTF-8 text payload as a QR code.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "text",
+          "type": "string",
+          "description": "Text payload to encode."
+        },
+        {
+          "name": "ecc",
+          "type": "QrErrorCorrectionLevel",
+          "description": "Error correction level."
+        },
+        {
+          "name": "minVersion",
+          "type": "int",
+          "description": "Minimum allowed QR version (1..40)."
+        },
+        {
+          "name": "maxVersion",
+          "type": "int",
+          "description": "Maximum allowed QR version (1..40)."
+        },
+        {
+          "name": "forceMask",
+          "type": "Nullable\u003Cint\u003E",
+          "description": "Optional forced mask (0..7). When null, the best mask is chosen."
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static QrCode EncodeText(string text, QrErrorCorrectionLevel ecc, int minVersion, int maxVersion, Nullable\u003Cint\u003E forceMask)",
+      "xmlId": "M:CodeGlyphX.QrCodeEncoder.EncodeText(System.String,CodeGlyphX.QrErrorCorrectionLevel,System.Int32,System.Int32,System.Nullable{System.Int32})",
+      "anchor": "method-encodetext-static-qrcode-encodetext-string-text-qrerrorcorrectionlevel-ecc-int-minversion-int-maxversion-nullable-int-forcemask"
+    },
+    {
+      "name": "EncodeText",
+      "kind": "Method",
+      "summary": "Encodes a text payload using a specific QR text encoding (optionally with ECI).",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "text",
+          "type": "string",
+          "description": "Text payload to encode."
+        },
+        {
+          "name": "encoding",
+          "type": "QrTextEncoding",
+          "description": "Encoding to use for QR byte mode."
+        },
+        {
+          "name": "ecc",
+          "type": "QrErrorCorrectionLevel",
+          "description": "Error correction level."
+        },
+        {
+          "name": "minVersion",
+          "type": "int",
+          "description": "Minimum allowed QR version (1..40)."
+        },
+        {
+          "name": "maxVersion",
+          "type": "int",
+          "description": "Maximum allowed QR version (1..40)."
+        },
+        {
+          "name": "forceMask",
+          "type": "Nullable\u003Cint\u003E",
+          "description": "Optional forced mask (0..7). When null, the best mask is chosen."
+        },
+        {
+          "name": "includeEci",
+          "type": "bool",
+          "description": "When true, emits an ECI header for non-default encodings."
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static QrCode EncodeText(string text, QrTextEncoding encoding, QrErrorCorrectionLevel ecc, int minVersion, int maxVersion, Nullable\u003Cint\u003E forceMask, bool includeEci)",
+      "xmlId": "M:CodeGlyphX.QrCodeEncoder.EncodeText(System.String,CodeGlyphX.QrTextEncoding,CodeGlyphX.QrErrorCorrectionLevel,System.Int32,System.Int32,System.Nullable{System.Int32},System.Boolean)",
+      "anchor": "method-encodetext-static-qrcode-encodetext-string-text-qrtextencoding-encoding-qrerrorcorrectionlevel-ecc-int-minversion-int-maxversion-nullable-int-forcemask-bool-includeeci"
+    },
+    {
+      "name": "EncodeKanji",
+      "kind": "Method",
+      "summary": "Encodes a QR Kanji-mode payload (Shift-JIS JIS X 0208).",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "text",
+          "type": "string",
+          "description": "Kanji text payload to encode."
+        },
+        {
+          "name": "ecc",
+          "type": "QrErrorCorrectionLevel",
+          "description": "Error correction level."
+        },
+        {
+          "name": "minVersion",
+          "type": "int",
+          "description": "Minimum allowed QR version (1..40)."
+        },
+        {
+          "name": "maxVersion",
+          "type": "int",
+          "description": "Maximum allowed QR version (1..40)."
+        },
+        {
+          "name": "forceMask",
+          "type": "Nullable\u003Cint\u003E",
+          "description": "Optional forced mask (0..7). When null, the best mask is chosen."
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static QrCode EncodeKanji(string text, QrErrorCorrectionLevel ecc, int minVersion, int maxVersion, Nullable\u003Cint\u003E forceMask)",
+      "xmlId": "M:CodeGlyphX.QrCodeEncoder.EncodeKanji(System.String,CodeGlyphX.QrErrorCorrectionLevel,System.Int32,System.Int32,System.Nullable{System.Int32})",
+      "anchor": "method-encodekanji-static-qrcode-encodekanji-string-text-qrerrorcorrectionlevel-ecc-int-minversion-int-maxversion-nullable-int-forcemask"
+    },
+    {
+      "name": "EncodeBytes",
+      "kind": "Method",
+      "summary": "Encodes an arbitrary byte payload (QR byte mode).",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "data",
+          "type": "byte[]",
+          "description": "Bytes to encode."
+        },
+        {
+          "name": "ecc",
+          "type": "QrErrorCorrectionLevel",
+          "description": "Error correction level."
+        },
+        {
+          "name": "minVersion",
+          "type": "int",
+          "description": "Minimum allowed QR version (1..40)."
+        },
+        {
+          "name": "maxVersion",
+          "type": "int",
+          "description": "Maximum allowed QR version (1..40)."
+        },
+        {
+          "name": "forceMask",
+          "type": "Nullable\u003Cint\u003E",
+          "description": "Optional forced mask (0..7). When null, the best mask is chosen."
+        },
+        {
+          "name": "eciAssignmentNumber",
+          "type": "Nullable\u003Cint\u003E",
+          "description": "Optional ECI assignment number to emit before the payload."
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static QrCode EncodeBytes(byte[] data, QrErrorCorrectionLevel ecc, int minVersion, int maxVersion, Nullable\u003Cint\u003E forceMask, Nullable\u003Cint\u003E eciAssignmentNumber)",
+      "xmlId": "M:CodeGlyphX.QrCodeEncoder.EncodeBytes(System.Byte[],CodeGlyphX.QrErrorCorrectionLevel,System.Int32,System.Int32,System.Nullable{System.Int32},System.Nullable{System.Int32})",
+      "anchor": "method-encodebytes-static-qrcode-encodebytes-byte-data-qrerrorcorrectionlevel-ecc-int-minversion-int-maxversion-nullable-int-forcemask-nullable-int-eciassignmentnumber"
+    },
+    {
+      "name": "EncodeBytes",
+      "kind": "Method",
+      "summary": "Encodes an arbitrary byte payload (QR byte mode).",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "data",
+          "type": "ReadOnlySpan\u003Cbyte\u003E",
+          "description": "Bytes to encode."
+        },
+        {
+          "name": "ecc",
+          "type": "QrErrorCorrectionLevel",
+          "description": "Error correction level."
+        },
+        {
+          "name": "minVersion",
+          "type": "int",
+          "description": "Minimum allowed QR version (1..40)."
+        },
+        {
+          "name": "maxVersion",
+          "type": "int",
+          "description": "Maximum allowed QR version (1..40)."
+        },
+        {
+          "name": "forceMask",
+          "type": "Nullable\u003Cint\u003E",
+          "description": "Optional forced mask (0..7). When null, the best mask is chosen."
+        },
+        {
+          "name": "eciAssignmentNumber",
+          "type": "Nullable\u003Cint\u003E",
+          "description": "Optional ECI assignment number to emit before the payload."
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static QrCode EncodeBytes(ReadOnlySpan\u003Cbyte\u003E data, QrErrorCorrectionLevel ecc, int minVersion, int maxVersion, Nullable\u003Cint\u003E forceMask, Nullable\u003Cint\u003E eciAssignmentNumber)",
+      "xmlId": "M:CodeGlyphX.QrCodeEncoder.EncodeBytes(System.ReadOnlySpan{System.Byte},CodeGlyphX.QrErrorCorrectionLevel,System.Int32,System.Int32,System.Nullable{System.Int32},System.Nullable{System.Int32})",
+      "anchor": "method-encodebytes-static-qrcode-encodebytes-readonlyspan-byte-data-qrerrorcorrectionlevel-ecc-int-minversion-int-maxversion-nullable-int-forcemask-nullable-int-eciassignmentnumber"
+    }
+  ]
+}

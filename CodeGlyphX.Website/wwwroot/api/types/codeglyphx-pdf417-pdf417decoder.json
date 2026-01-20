@@ -1,0 +1,533 @@
+{
+  "name": "Pdf417Decoder",
+  "fullName": "CodeGlyphX.Pdf417.Pdf417Decoder",
+  "namespace": "CodeGlyphX.Pdf417",
+  "kind": "Class",
+  "slug": "codeglyphx-pdf417-pdf417decoder",
+  "summary": "Decodes PDF417 barcodes.",
+  "remarks": null,
+  "examples": [],
+  "seeAlso": [],
+  "members": [
+    {
+      "name": "TryDecode",
+      "kind": "Method",
+      "summary": "Attempts to decode a PDF417 symbol from a module matrix.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "modules",
+          "type": "BitMatrix",
+          "description": null
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecode(BitMatrix modules, out string value)",
+      "xmlId": "M:CodeGlyphX.Pdf417.Pdf417Decoder.TryDecode(CodeGlyphX.BitMatrix,System.String@)",
+      "anchor": "method-trydecode-static-bool-trydecode-bitmatrix-modules-out-string-value"
+    },
+    {
+      "name": "TryDecode",
+      "kind": "Method",
+      "summary": "Attempts to decode a PDF417 symbol from a module matrix, with cancellation.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "modules",
+          "type": "BitMatrix",
+          "description": null
+        },
+        {
+          "name": "cancellationToken",
+          "type": "CancellationToken",
+          "description": null
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecode(BitMatrix modules, CancellationToken cancellationToken, out string value)",
+      "xmlId": "M:CodeGlyphX.Pdf417.Pdf417Decoder.TryDecode(CodeGlyphX.BitMatrix,System.Threading.CancellationToken,System.String@)",
+      "anchor": "method-trydecode-static-bool-trydecode-bitmatrix-modules-cancellationtoken-cancellationtoken-out-string-value"
+    },
+    {
+      "name": "TryDecode",
+      "kind": "Method",
+      "summary": "Attempts to decode a PDF417 symbol from a module matrix, with diagnostics.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "modules",
+          "type": "BitMatrix",
+          "description": null
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "diagnostics",
+          "type": "Pdf417DecodeDiagnostics",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecode(BitMatrix modules, out string value, out Pdf417DecodeDiagnostics diagnostics)",
+      "xmlId": "M:CodeGlyphX.Pdf417.Pdf417Decoder.TryDecode(CodeGlyphX.BitMatrix,System.String@,CodeGlyphX.Pdf417DecodeDiagnostics@)",
+      "anchor": "method-trydecode-static-bool-trydecode-bitmatrix-modules-out-string-value-out-pdf417decodediagnostics-diagnostics"
+    },
+    {
+      "name": "TryDecode",
+      "kind": "Method",
+      "summary": "Attempts to decode a PDF417 symbol from a module matrix, with cancellation and diagnostics.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "modules",
+          "type": "BitMatrix",
+          "description": null
+        },
+        {
+          "name": "cancellationToken",
+          "type": "CancellationToken",
+          "description": null
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "diagnostics",
+          "type": "Pdf417DecodeDiagnostics",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecode(BitMatrix modules, CancellationToken cancellationToken, out string value, out Pdf417DecodeDiagnostics diagnostics)",
+      "xmlId": "M:CodeGlyphX.Pdf417.Pdf417Decoder.TryDecode(CodeGlyphX.BitMatrix,System.Threading.CancellationToken,System.String@,CodeGlyphX.Pdf417DecodeDiagnostics@)",
+      "anchor": "method-trydecode-static-bool-trydecode-bitmatrix-modules-cancellationtoken-cancellationtoken-out-string-value-out-pdf417decodediagnostics-diagnostics"
+    },
+    {
+      "name": "TryDecode",
+      "kind": "Method",
+      "summary": "Attempts to decode a PDF417 symbol from pixels.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "pixels",
+          "type": "ReadOnlySpan\u003Cbyte\u003E",
+          "description": null
+        },
+        {
+          "name": "width",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "height",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "stride",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "format",
+          "type": "PixelFormat",
+          "description": null
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecode(ReadOnlySpan\u003Cbyte\u003E pixels, int width, int height, int stride, PixelFormat format, out string value)",
+      "xmlId": "M:CodeGlyphX.Pdf417.Pdf417Decoder.TryDecode(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,System.String@)",
+      "anchor": "method-trydecode-static-bool-trydecode-readonlyspan-byte-pixels-int-width-int-height-int-stride-pixelformat-format-out-string-value"
+    },
+    {
+      "name": "TryDecode",
+      "kind": "Method",
+      "summary": "Attempts to decode a PDF417 symbol from pixels, with cancellation.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "pixels",
+          "type": "ReadOnlySpan\u003Cbyte\u003E",
+          "description": null
+        },
+        {
+          "name": "width",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "height",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "stride",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "format",
+          "type": "PixelFormat",
+          "description": null
+        },
+        {
+          "name": "cancellationToken",
+          "type": "CancellationToken",
+          "description": null
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecode(ReadOnlySpan\u003Cbyte\u003E pixels, int width, int height, int stride, PixelFormat format, CancellationToken cancellationToken, out string value)",
+      "xmlId": "M:CodeGlyphX.Pdf417.Pdf417Decoder.TryDecode(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,System.Threading.CancellationToken,System.String@)",
+      "anchor": "method-trydecode-static-bool-trydecode-readonlyspan-byte-pixels-int-width-int-height-int-stride-pixelformat-format-cancellationtoken-cancellationtoken-out-string-value"
+    },
+    {
+      "name": "TryDecode",
+      "kind": "Method",
+      "summary": "Attempts to decode a PDF417 symbol from pixels, with diagnostics.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "pixels",
+          "type": "ReadOnlySpan\u003Cbyte\u003E",
+          "description": null
+        },
+        {
+          "name": "width",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "height",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "stride",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "format",
+          "type": "PixelFormat",
+          "description": null
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "diagnostics",
+          "type": "Pdf417DecodeDiagnostics",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecode(ReadOnlySpan\u003Cbyte\u003E pixels, int width, int height, int stride, PixelFormat format, out string value, out Pdf417DecodeDiagnostics diagnostics)",
+      "xmlId": "M:CodeGlyphX.Pdf417.Pdf417Decoder.TryDecode(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,System.String@,CodeGlyphX.Pdf417DecodeDiagnostics@)",
+      "anchor": "method-trydecode-static-bool-trydecode-readonlyspan-byte-pixels-int-width-int-height-int-stride-pixelformat-format-out-string-value-out-pdf417decodediagnostics-diagnostics"
+    },
+    {
+      "name": "TryDecode",
+      "kind": "Method",
+      "summary": "Attempts to decode a PDF417 symbol from pixels, with cancellation and diagnostics.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "pixels",
+          "type": "ReadOnlySpan\u003Cbyte\u003E",
+          "description": null
+        },
+        {
+          "name": "width",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "height",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "stride",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "format",
+          "type": "PixelFormat",
+          "description": null
+        },
+        {
+          "name": "cancellationToken",
+          "type": "CancellationToken",
+          "description": null
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "diagnostics",
+          "type": "Pdf417DecodeDiagnostics",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecode(ReadOnlySpan\u003Cbyte\u003E pixels, int width, int height, int stride, PixelFormat format, CancellationToken cancellationToken, out string value, out Pdf417DecodeDiagnostics diagnostics)",
+      "xmlId": "M:CodeGlyphX.Pdf417.Pdf417Decoder.TryDecode(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,System.Threading.CancellationToken,System.String@,CodeGlyphX.Pdf417DecodeDiagnostics@)",
+      "anchor": "method-trydecode-static-bool-trydecode-readonlyspan-byte-pixels-int-width-int-height-int-stride-pixelformat-format-cancellationtoken-cancellationtoken-out-string-value-out-pdf417decodediagnostics-diagnostics"
+    },
+    {
+      "name": "TryDecode",
+      "kind": "Method",
+      "summary": "Attempts to decode a PDF417 symbol from pixels.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "pixels",
+          "type": "byte[]",
+          "description": null
+        },
+        {
+          "name": "width",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "height",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "stride",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "format",
+          "type": "PixelFormat",
+          "description": null
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecode(byte[] pixels, int width, int height, int stride, PixelFormat format, out string value)",
+      "xmlId": "M:CodeGlyphX.Pdf417.Pdf417Decoder.TryDecode(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,System.String@)",
+      "anchor": "method-trydecode-static-bool-trydecode-byte-pixels-int-width-int-height-int-stride-pixelformat-format-out-string-value"
+    },
+    {
+      "name": "TryDecode",
+      "kind": "Method",
+      "summary": "Attempts to decode a PDF417 symbol from pixels, with cancellation.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "pixels",
+          "type": "byte[]",
+          "description": null
+        },
+        {
+          "name": "width",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "height",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "stride",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "format",
+          "type": "PixelFormat",
+          "description": null
+        },
+        {
+          "name": "cancellationToken",
+          "type": "CancellationToken",
+          "description": null
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecode(byte[] pixels, int width, int height, int stride, PixelFormat format, CancellationToken cancellationToken, out string value)",
+      "xmlId": "M:CodeGlyphX.Pdf417.Pdf417Decoder.TryDecode(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,System.Threading.CancellationToken,System.String@)",
+      "anchor": "method-trydecode-static-bool-trydecode-byte-pixels-int-width-int-height-int-stride-pixelformat-format-cancellationtoken-cancellationtoken-out-string-value"
+    },
+    {
+      "name": "TryDecode",
+      "kind": "Method",
+      "summary": "Attempts to decode a PDF417 symbol from pixels, with diagnostics.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "pixels",
+          "type": "byte[]",
+          "description": null
+        },
+        {
+          "name": "width",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "height",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "stride",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "format",
+          "type": "PixelFormat",
+          "description": null
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "diagnostics",
+          "type": "Pdf417DecodeDiagnostics",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecode(byte[] pixels, int width, int height, int stride, PixelFormat format, out string value, out Pdf417DecodeDiagnostics diagnostics)",
+      "xmlId": "M:CodeGlyphX.Pdf417.Pdf417Decoder.TryDecode(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,System.String@,CodeGlyphX.Pdf417DecodeDiagnostics@)",
+      "anchor": "method-trydecode-static-bool-trydecode-byte-pixels-int-width-int-height-int-stride-pixelformat-format-out-string-value-out-pdf417decodediagnostics-diagnostics"
+    },
+    {
+      "name": "TryDecode",
+      "kind": "Method",
+      "summary": "Attempts to decode a PDF417 symbol from pixels, with cancellation and diagnostics.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "pixels",
+          "type": "byte[]",
+          "description": null
+        },
+        {
+          "name": "width",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "height",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "stride",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "format",
+          "type": "PixelFormat",
+          "description": null
+        },
+        {
+          "name": "cancellationToken",
+          "type": "CancellationToken",
+          "description": null
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "diagnostics",
+          "type": "Pdf417DecodeDiagnostics",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecode(byte[] pixels, int width, int height, int stride, PixelFormat format, CancellationToken cancellationToken, out string value, out Pdf417DecodeDiagnostics diagnostics)",
+      "xmlId": "M:CodeGlyphX.Pdf417.Pdf417Decoder.TryDecode(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,System.Threading.CancellationToken,System.String@,CodeGlyphX.Pdf417DecodeDiagnostics@)",
+      "anchor": "method-trydecode-static-bool-trydecode-byte-pixels-int-width-int-height-int-stride-pixelformat-format-cancellationtoken-cancellationtoken-out-string-value-out-pdf417decodediagnostics-diagnostics"
+    }
+  ]
+}

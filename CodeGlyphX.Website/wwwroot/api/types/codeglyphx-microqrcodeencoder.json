@@ -1,0 +1,218 @@
+{
+  "name": "MicroQrCodeEncoder",
+  "fullName": "CodeGlyphX.MicroQrCodeEncoder",
+  "namespace": "CodeGlyphX",
+  "kind": "Class",
+  "slug": "codeglyphx-microqrcodeencoder",
+  "summary": "Encodes Micro QR codes (M1..M4).",
+  "remarks": null,
+  "examples": [],
+  "seeAlso": [],
+  "members": [
+    {
+      "name": "EncodeBytes",
+      "kind": "Method",
+      "summary": "Encodes a byte payload as a Micro QR code.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "data",
+          "type": "byte[]",
+          "description": null
+        },
+        {
+          "name": "ecc",
+          "type": "QrErrorCorrectionLevel",
+          "description": null
+        },
+        {
+          "name": "minVersion",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "maxVersion",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "forceMask",
+          "type": "Nullable\u003Cint\u003E",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static MicroQrCode EncodeBytes(byte[] data, QrErrorCorrectionLevel ecc, int minVersion, int maxVersion, Nullable\u003Cint\u003E forceMask)",
+      "xmlId": "M:CodeGlyphX.MicroQrCodeEncoder.EncodeBytes(System.Byte[],CodeGlyphX.QrErrorCorrectionLevel,System.Int32,System.Int32,System.Nullable{System.Int32})",
+      "anchor": "method-encodebytes-static-microqrcode-encodebytes-byte-data-qrerrorcorrectionlevel-ecc-int-minversion-int-maxversion-nullable-int-forcemask"
+    },
+    {
+      "name": "EncodeText",
+      "kind": "Method",
+      "summary": "Encodes a text payload as a Micro QR code (byte mode, using a QR text encoding).",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "text",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "encoding",
+          "type": "QrTextEncoding",
+          "description": null
+        },
+        {
+          "name": "ecc",
+          "type": "QrErrorCorrectionLevel",
+          "description": null
+        },
+        {
+          "name": "minVersion",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "maxVersion",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "forceMask",
+          "type": "Nullable\u003Cint\u003E",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static MicroQrCode EncodeText(string text, QrTextEncoding encoding, QrErrorCorrectionLevel ecc, int minVersion, int maxVersion, Nullable\u003Cint\u003E forceMask)",
+      "xmlId": "M:CodeGlyphX.MicroQrCodeEncoder.EncodeText(System.String,CodeGlyphX.QrTextEncoding,CodeGlyphX.QrErrorCorrectionLevel,System.Int32,System.Int32,System.Nullable{System.Int32})",
+      "anchor": "method-encodetext-static-microqrcode-encodetext-string-text-qrtextencoding-encoding-qrerrorcorrectionlevel-ecc-int-minversion-int-maxversion-nullable-int-forcemask"
+    },
+    {
+      "name": "EncodeNumeric",
+      "kind": "Method",
+      "summary": "Encodes numeric text as a Micro QR code (numeric mode).",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "digits",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "ecc",
+          "type": "QrErrorCorrectionLevel",
+          "description": null
+        },
+        {
+          "name": "minVersion",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "maxVersion",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "forceMask",
+          "type": "Nullable\u003Cint\u003E",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static MicroQrCode EncodeNumeric(string digits, QrErrorCorrectionLevel ecc, int minVersion, int maxVersion, Nullable\u003Cint\u003E forceMask)",
+      "xmlId": "M:CodeGlyphX.MicroQrCodeEncoder.EncodeNumeric(System.String,CodeGlyphX.QrErrorCorrectionLevel,System.Int32,System.Int32,System.Nullable{System.Int32})",
+      "anchor": "method-encodenumeric-static-microqrcode-encodenumeric-string-digits-qrerrorcorrectionlevel-ecc-int-minversion-int-maxversion-nullable-int-forcemask"
+    },
+    {
+      "name": "EncodeAlphanumeric",
+      "kind": "Method",
+      "summary": "Encodes alphanumeric text as a Micro QR code (alphanumeric mode).",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "text",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "ecc",
+          "type": "QrErrorCorrectionLevel",
+          "description": null
+        },
+        {
+          "name": "minVersion",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "maxVersion",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "forceMask",
+          "type": "Nullable\u003Cint\u003E",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static MicroQrCode EncodeAlphanumeric(string text, QrErrorCorrectionLevel ecc, int minVersion, int maxVersion, Nullable\u003Cint\u003E forceMask)",
+      "xmlId": "M:CodeGlyphX.MicroQrCodeEncoder.EncodeAlphanumeric(System.String,CodeGlyphX.QrErrorCorrectionLevel,System.Int32,System.Int32,System.Nullable{System.Int32})",
+      "anchor": "method-encodealphanumeric-static-microqrcode-encodealphanumeric-string-text-qrerrorcorrectionlevel-ecc-int-minversion-int-maxversion-nullable-int-forcemask"
+    },
+    {
+      "name": "EncodeKanji",
+      "kind": "Method",
+      "summary": "Encodes Kanji text as a Micro QR code (Kanji mode).",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "text",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "ecc",
+          "type": "QrErrorCorrectionLevel",
+          "description": null
+        },
+        {
+          "name": "minVersion",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "maxVersion",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "forceMask",
+          "type": "Nullable\u003Cint\u003E",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static MicroQrCode EncodeKanji(string text, QrErrorCorrectionLevel ecc, int minVersion, int maxVersion, Nullable\u003Cint\u003E forceMask)",
+      "xmlId": "M:CodeGlyphX.MicroQrCodeEncoder.EncodeKanji(System.String,CodeGlyphX.QrErrorCorrectionLevel,System.Int32,System.Int32,System.Nullable{System.Int32})",
+      "anchor": "method-encodekanji-static-microqrcode-encodekanji-string-text-qrerrorcorrectionlevel-ecc-int-minversion-int-maxversion-nullable-int-forcemask"
+    }
+  ]
+}

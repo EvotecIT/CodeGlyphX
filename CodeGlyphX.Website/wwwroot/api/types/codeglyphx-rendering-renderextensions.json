@@ -1,0 +1,513 @@
+{
+  "name": "RenderExtensions",
+  "fullName": "CodeGlyphX.Rendering.RenderExtensions",
+  "namespace": "CodeGlyphX.Rendering",
+  "kind": "Class",
+  "slug": "codeglyphx-rendering-renderextensions",
+  "summary": "Convenience extension methods for rendered outputs.",
+  "remarks": null,
+  "examples": [],
+  "seeAlso": [],
+  "members": [
+    {
+      "name": "WriteBinary",
+      "kind": "Method",
+      "summary": "Writes binary data to a file.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "data",
+          "type": "byte[]",
+          "description": null
+        },
+        {
+          "name": "path",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string WriteBinary(byte[] data, string path)",
+      "xmlId": "M:CodeGlyphX.Rendering.RenderExtensions.WriteBinary(System.Byte[],System.String)",
+      "anchor": "method-writebinary-static-string-writebinary-byte-data-string-path"
+    },
+    {
+      "name": "WriteBinary",
+      "kind": "Method",
+      "summary": "Writes binary data to a file under the specified directory.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "data",
+          "type": "byte[]",
+          "description": null
+        },
+        {
+          "name": "directory",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "fileName",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string WriteBinary(byte[] data, string directory, string fileName)",
+      "xmlId": "M:CodeGlyphX.Rendering.RenderExtensions.WriteBinary(System.Byte[],System.String,System.String)",
+      "anchor": "method-writebinary-static-string-writebinary-byte-data-string-directory-string-filename"
+    },
+    {
+      "name": "WriteBinary",
+      "kind": "Method",
+      "summary": "Writes binary data to a stream.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "data",
+          "type": "byte[]",
+          "description": null
+        },
+        {
+          "name": "stream",
+          "type": "Stream",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static void WriteBinary(byte[] data, Stream stream)",
+      "xmlId": "M:CodeGlyphX.Rendering.RenderExtensions.WriteBinary(System.Byte[],System.IO.Stream)",
+      "anchor": "method-writebinary-static-void-writebinary-byte-data-stream-stream"
+    },
+    {
+      "name": "WriteText",
+      "kind": "Method",
+      "summary": "Writes text to a file.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "text",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "path",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "encoding",
+          "type": "Encoding",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string WriteText(string text, string path, Encoding encoding)",
+      "xmlId": "M:CodeGlyphX.Rendering.RenderExtensions.WriteText(System.String,System.String,System.Text.Encoding)",
+      "anchor": "method-writetext-static-string-writetext-string-text-string-path-encoding-encoding"
+    },
+    {
+      "name": "WriteText",
+      "kind": "Method",
+      "summary": "Writes text to a file under the specified directory.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "text",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "directory",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "fileName",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "encoding",
+          "type": "Encoding",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string WriteText(string text, string directory, string fileName, Encoding encoding)",
+      "xmlId": "M:CodeGlyphX.Rendering.RenderExtensions.WriteText(System.String,System.String,System.String,System.Text.Encoding)",
+      "anchor": "method-writetext-static-string-writetext-string-text-string-directory-string-filename-encoding-encoding"
+    },
+    {
+      "name": "WriteText",
+      "kind": "Method",
+      "summary": "Writes text to a stream.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "text",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "stream",
+          "type": "Stream",
+          "description": null
+        },
+        {
+          "name": "encoding",
+          "type": "Encoding",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static void WriteText(string text, Stream stream, Encoding encoding)",
+      "xmlId": "M:CodeGlyphX.Rendering.RenderExtensions.WriteText(System.String,System.IO.Stream,System.Text.Encoding)",
+      "anchor": "method-writetext-static-void-writetext-string-text-stream-stream-encoding-encoding"
+    },
+    {
+      "name": "ReadBinary",
+      "kind": "Method",
+      "summary": "Reads binary data from a file path.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "path",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static byte[] ReadBinary(string path)",
+      "xmlId": "M:CodeGlyphX.Rendering.RenderExtensions.ReadBinary(System.String)",
+      "anchor": "method-readbinary-static-byte-readbinary-string-path"
+    },
+    {
+      "name": "ReadText",
+      "kind": "Method",
+      "summary": "Reads text from a file path.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "path",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "encoding",
+          "type": "Encoding",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string ReadText(string path, Encoding encoding)",
+      "xmlId": "M:CodeGlyphX.Rendering.RenderExtensions.ReadText(System.String,System.Text.Encoding)",
+      "anchor": "method-readtext-static-string-readtext-string-path-encoding-encoding"
+    },
+    {
+      "name": "ReadBinary",
+      "kind": "Method",
+      "summary": "Reads binary data from a stream.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "stream",
+          "type": "Stream",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static byte[] ReadBinary(Stream stream)",
+      "xmlId": "M:CodeGlyphX.Rendering.RenderExtensions.ReadBinary(System.IO.Stream)",
+      "anchor": "method-readbinary-static-byte-readbinary-stream-stream"
+    },
+    {
+      "name": "ReadText",
+      "kind": "Method",
+      "summary": "Reads text from a stream.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "stream",
+          "type": "Stream",
+          "description": null
+        },
+        {
+          "name": "encoding",
+          "type": "Encoding",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string ReadText(Stream stream, Encoding encoding)",
+      "xmlId": "M:CodeGlyphX.Rendering.RenderExtensions.ReadText(System.IO.Stream,System.Text.Encoding)",
+      "anchor": "method-readtext-static-string-readtext-stream-stream-encoding-encoding"
+    },
+    {
+      "name": "TryReadBinary",
+      "kind": "Method",
+      "summary": "Attempts to read binary data from a file path.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "path",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "data",
+          "type": "byte[]",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryReadBinary(string path, out byte[] data)",
+      "xmlId": "M:CodeGlyphX.Rendering.RenderExtensions.TryReadBinary(System.String,System.Byte[]@)",
+      "anchor": "method-tryreadbinary-static-bool-tryreadbinary-string-path-out-byte-data"
+    },
+    {
+      "name": "TryReadText",
+      "kind": "Method",
+      "summary": "Attempts to read text from a file path.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "path",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "text",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "encoding",
+          "type": "Encoding",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryReadText(string path, out string text, Encoding encoding)",
+      "xmlId": "M:CodeGlyphX.Rendering.RenderExtensions.TryReadText(System.String,System.String@,System.Text.Encoding)",
+      "anchor": "method-tryreadtext-static-bool-tryreadtext-string-path-out-string-text-encoding-encoding"
+    },
+    {
+      "name": "WrapHtml",
+      "kind": "Method",
+      "summary": "Wraps HTML content in a minimal document shell.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "innerHtml",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string WrapHtml(string innerHtml, string title)",
+      "xmlId": "M:CodeGlyphX.Rendering.RenderExtensions.WrapHtml(System.String,System.String)",
+      "anchor": "method-wraphtml-static-string-wraphtml-string-innerhtml-string-title"
+    },
+    {
+      "name": "ToBase64",
+      "kind": "Method",
+      "summary": "Encodes binary data as Base64.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "data",
+          "type": "byte[]",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string ToBase64(byte[] data)",
+      "xmlId": "M:CodeGlyphX.Rendering.RenderExtensions.ToBase64(System.Byte[])",
+      "anchor": "method-tobase64-static-string-tobase64-byte-data"
+    },
+    {
+      "name": "ToBase64",
+      "kind": "Method",
+      "summary": "Encodes text as Base64 (UTF-8 by default).",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "text",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "encoding",
+          "type": "Encoding",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string ToBase64(string text, Encoding encoding)",
+      "xmlId": "M:CodeGlyphX.Rendering.RenderExtensions.ToBase64(System.String,System.Text.Encoding)",
+      "anchor": "method-tobase64-static-string-tobase64-string-text-encoding-encoding"
+    },
+    {
+      "name": "ToDataUri",
+      "kind": "Method",
+      "summary": "Encodes binary data as a Base64 data URI.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "data",
+          "type": "byte[]",
+          "description": null
+        },
+        {
+          "name": "mimeType",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string ToDataUri(byte[] data, string mimeType)",
+      "xmlId": "M:CodeGlyphX.Rendering.RenderExtensions.ToDataUri(System.Byte[],System.String)",
+      "anchor": "method-todatauri-static-string-todatauri-byte-data-string-mimetype"
+    },
+    {
+      "name": "ToPngDataUri",
+      "kind": "Method",
+      "summary": "Encodes PNG bytes as a Base64 data URI.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "data",
+          "type": "byte[]",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string ToPngDataUri(byte[] data)",
+      "xmlId": "M:CodeGlyphX.Rendering.RenderExtensions.ToPngDataUri(System.Byte[])",
+      "anchor": "method-topngdatauri-static-string-topngdatauri-byte-data"
+    },
+    {
+      "name": "ToJpegDataUri",
+      "kind": "Method",
+      "summary": "Encodes JPEG bytes as a Base64 data URI.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "data",
+          "type": "byte[]",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string ToJpegDataUri(byte[] data)",
+      "xmlId": "M:CodeGlyphX.Rendering.RenderExtensions.ToJpegDataUri(System.Byte[])",
+      "anchor": "method-tojpegdatauri-static-string-tojpegdatauri-byte-data"
+    },
+    {
+      "name": "ToBmpDataUri",
+      "kind": "Method",
+      "summary": "Encodes BMP bytes as a Base64 data URI.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "data",
+          "type": "byte[]",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string ToBmpDataUri(byte[] data)",
+      "xmlId": "M:CodeGlyphX.Rendering.RenderExtensions.ToBmpDataUri(System.Byte[])",
+      "anchor": "method-tobmpdatauri-static-string-tobmpdatauri-byte-data"
+    },
+    {
+      "name": "ToSvgDataUri",
+      "kind": "Method",
+      "summary": "Encodes SVG content as a Base64 data URI.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "svg",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "encoding",
+          "type": "Encoding",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string ToSvgDataUri(string svg, Encoding encoding)",
+      "xmlId": "M:CodeGlyphX.Rendering.RenderExtensions.ToSvgDataUri(System.String,System.Text.Encoding)",
+      "anchor": "method-tosvgdatauri-static-string-tosvgdatauri-string-svg-encoding-encoding"
+    }
+  ]
+}

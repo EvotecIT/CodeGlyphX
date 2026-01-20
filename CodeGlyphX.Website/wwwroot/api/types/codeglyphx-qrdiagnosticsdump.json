@@ -1,0 +1,153 @@
+{
+  "name": "QrDiagnosticsDump",
+  "fullName": "CodeGlyphX.QrDiagnosticsDump",
+  "namespace": "CodeGlyphX",
+  "kind": "Class",
+  "slug": "codeglyphx-qrdiagnosticsdump",
+  "summary": "Builds and writes diagnostic dumps for QR pixel decoding attempts.",
+  "remarks": null,
+  "examples": [],
+  "seeAlso": [],
+  "members": [
+    {
+      "name": "Build",
+      "kind": "Method",
+      "summary": "Builds a diagnostic summary string for a decode attempt.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "info",
+          "type": "QrPixelDecodeInfo",
+          "description": null
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "source",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string Build(QrPixelDecodeInfo info, string label, string source)",
+      "xmlId": "M:CodeGlyphX.QrDiagnosticsDump.Build(CodeGlyphX.QrPixelDecodeInfo,System.String,System.String)",
+      "anchor": "method-build-static-string-build-qrpixeldecodeinfo-info-string-label-string-source"
+    },
+    {
+      "name": "WriteText",
+      "kind": "Method",
+      "summary": "Writes diagnostics to a text file.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "path",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "info",
+          "type": "QrPixelDecodeInfo",
+          "description": null
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "source",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string WriteText(string path, QrPixelDecodeInfo info, string label, string source)",
+      "xmlId": "M:CodeGlyphX.QrDiagnosticsDump.WriteText(System.String,CodeGlyphX.QrPixelDecodeInfo,System.String,System.String)",
+      "anchor": "method-writetext-static-string-writetext-string-path-qrpixeldecodeinfo-info-string-label-string-source"
+    },
+    {
+      "name": "WriteText",
+      "kind": "Method",
+      "summary": "Writes diagnostics to a text file in the provided directory.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "directory",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "fileName",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "info",
+          "type": "QrPixelDecodeInfo",
+          "description": null
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "source",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string WriteText(string directory, string fileName, QrPixelDecodeInfo info, string label, string source)",
+      "xmlId": "M:CodeGlyphX.QrDiagnosticsDump.WriteText(System.String,System.String,CodeGlyphX.QrPixelDecodeInfo,System.String,System.String)",
+      "anchor": "method-writetext-static-string-writetext-string-directory-string-filename-qrpixeldecodeinfo-info-string-label-string-source"
+    },
+    {
+      "name": "WriteText",
+      "kind": "Method",
+      "summary": "Writes diagnostics to a text stream.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "stream",
+          "type": "Stream",
+          "description": null
+        },
+        {
+          "name": "info",
+          "type": "QrPixelDecodeInfo",
+          "description": null
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "source",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static void WriteText(Stream stream, QrPixelDecodeInfo info, string label, string source)",
+      "xmlId": "M:CodeGlyphX.QrDiagnosticsDump.WriteText(System.IO.Stream,CodeGlyphX.QrPixelDecodeInfo,System.String,System.String)",
+      "anchor": "method-writetext-static-void-writetext-stream-stream-qrpixeldecodeinfo-info-string-label-string-source"
+    }
+  ]
+}

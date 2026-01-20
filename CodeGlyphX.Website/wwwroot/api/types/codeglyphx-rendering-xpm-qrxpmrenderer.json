@@ -1,0 +1,153 @@
+{
+  "name": "QrXpmRenderer",
+  "fullName": "CodeGlyphX.Rendering.Xpm.QrXpmRenderer",
+  "namespace": "CodeGlyphX.Rendering.Xpm",
+  "kind": "Class",
+  "slug": "codeglyphx-rendering-xpm-qrxpmrenderer",
+  "summary": "Renders QR modules to XPM.",
+  "remarks": null,
+  "examples": [],
+  "seeAlso": [],
+  "members": [
+    {
+      "name": "Render",
+      "kind": "Method",
+      "summary": "Renders the QR module matrix to an XPM string.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "modules",
+          "type": "BitMatrix",
+          "description": null
+        },
+        {
+          "name": "opts",
+          "type": "QrPngRenderOptions",
+          "description": null
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string Render(BitMatrix modules, QrPngRenderOptions opts, string name)",
+      "xmlId": "M:CodeGlyphX.Rendering.Xpm.QrXpmRenderer.Render(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Png.QrPngRenderOptions,System.String)",
+      "anchor": "method-render-static-string-render-bitmatrix-modules-qrpngrenderoptions-opts-string-name"
+    },
+    {
+      "name": "RenderToStream",
+      "kind": "Method",
+      "summary": "Renders the QR module matrix to an XPM stream.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "modules",
+          "type": "BitMatrix",
+          "description": null
+        },
+        {
+          "name": "opts",
+          "type": "QrPngRenderOptions",
+          "description": null
+        },
+        {
+          "name": "stream",
+          "type": "Stream",
+          "description": null
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static void RenderToStream(BitMatrix modules, QrPngRenderOptions opts, Stream stream, string name)",
+      "xmlId": "M:CodeGlyphX.Rendering.Xpm.QrXpmRenderer.RenderToStream(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Png.QrPngRenderOptions,System.IO.Stream,System.String)",
+      "anchor": "method-rendertostream-static-void-rendertostream-bitmatrix-modules-qrpngrenderoptions-opts-stream-stream-string-name"
+    },
+    {
+      "name": "RenderToFile",
+      "kind": "Method",
+      "summary": "Renders the QR module matrix to an XPM file.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "modules",
+          "type": "BitMatrix",
+          "description": null
+        },
+        {
+          "name": "opts",
+          "type": "QrPngRenderOptions",
+          "description": null
+        },
+        {
+          "name": "path",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string RenderToFile(BitMatrix modules, QrPngRenderOptions opts, string path, string name)",
+      "xmlId": "M:CodeGlyphX.Rendering.Xpm.QrXpmRenderer.RenderToFile(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Png.QrPngRenderOptions,System.String,System.String)",
+      "anchor": "method-rendertofile-static-string-rendertofile-bitmatrix-modules-qrpngrenderoptions-opts-string-path-string-name"
+    },
+    {
+      "name": "RenderToFile",
+      "kind": "Method",
+      "summary": "Renders the QR module matrix to an XPM file under the specified directory.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "modules",
+          "type": "BitMatrix",
+          "description": null
+        },
+        {
+          "name": "opts",
+          "type": "QrPngRenderOptions",
+          "description": null
+        },
+        {
+          "name": "directory",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "fileName",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string RenderToFile(BitMatrix modules, QrPngRenderOptions opts, string directory, string fileName, string name)",
+      "xmlId": "M:CodeGlyphX.Rendering.Xpm.QrXpmRenderer.RenderToFile(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Png.QrPngRenderOptions,System.String,System.String,System.String)",
+      "anchor": "method-rendertofile-static-string-rendertofile-bitmatrix-modules-qrpngrenderoptions-opts-string-directory-string-filename-string-name"
+    }
+  ]
+}

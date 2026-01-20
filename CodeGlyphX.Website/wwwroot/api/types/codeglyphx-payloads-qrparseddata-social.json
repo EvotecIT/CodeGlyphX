@@ -1,0 +1,247 @@
+{
+  "name": "Social",
+  "fullName": "CodeGlyphX.Payloads.QrParsedData.Social",
+  "namespace": "CodeGlyphX.Payloads",
+  "kind": "Class",
+  "slug": "codeglyphx-payloads-qrparseddata-social",
+  "summary": "Social profile payload.",
+  "remarks": null,
+  "examples": [],
+  "seeAlso": [],
+  "members": [
+    {
+      "name": "Social",
+      "kind": "Constructor",
+      "summary": "Social profile payload.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "Raw",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "Network",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "HandleOrUrl",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "Social(string Raw, string Network, string HandleOrUrl)",
+      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.Social.#ctor(System.String,System.String,System.String)",
+      "anchor": "constructor-social-social-string-raw-string-network-string-handleorurl"
+    },
+    {
+      "name": "ToString",
+      "kind": "Method",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "string ToString()",
+      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.Social.ToString",
+      "anchor": "method-tostring-string-tostring"
+    },
+    {
+      "name": "op_Inequality",
+      "kind": "Method",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "left",
+          "type": "QrParsedData.Social",
+          "description": null
+        },
+        {
+          "name": "right",
+          "type": "QrParsedData.Social",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool op_Inequality(QrParsedData.Social left, QrParsedData.Social right)",
+      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.Social.op_Inequality(CodeGlyphX.Payloads.QrParsedData.Social,CodeGlyphX.Payloads.QrParsedData.Social)",
+      "anchor": "method-op-inequality-static-bool-op-inequality-qrparseddata-social-left-qrparseddata-social-right"
+    },
+    {
+      "name": "op_Equality",
+      "kind": "Method",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "left",
+          "type": "QrParsedData.Social",
+          "description": null
+        },
+        {
+          "name": "right",
+          "type": "QrParsedData.Social",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool op_Equality(QrParsedData.Social left, QrParsedData.Social right)",
+      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.Social.op_Equality(CodeGlyphX.Payloads.QrParsedData.Social,CodeGlyphX.Payloads.QrParsedData.Social)",
+      "anchor": "method-op-equality-static-bool-op-equality-qrparseddata-social-left-qrparseddata-social-right"
+    },
+    {
+      "name": "GetHashCode",
+      "kind": "Method",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "int GetHashCode()",
+      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.Social.GetHashCode",
+      "anchor": "method-gethashcode-int-gethashcode"
+    },
+    {
+      "name": "Equals",
+      "kind": "Method",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "obj",
+          "type": "object",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "bool Equals(object obj)",
+      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.Social.Equals(System.Object)",
+      "anchor": "method-equals-bool-equals-object-obj"
+    },
+    {
+      "name": "Equals",
+      "kind": "Method",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "other",
+          "type": "QrParsedData.Social",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "bool Equals(QrParsedData.Social other)",
+      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.Social.Equals(CodeGlyphX.Payloads.QrParsedData.Social)",
+      "anchor": "method-equals-bool-equals-qrparseddata-social-other"
+    },
+    {
+      "name": "\u003CClone\u003E$",
+      "kind": "Method",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "QrParsedData.Social \u003CClone\u003E$()",
+      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.Social.\u003CClone\u003E$",
+      "anchor": "method-clone-qrparseddata-social-clone"
+    },
+    {
+      "name": "Deconstruct",
+      "kind": "Method",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "Raw",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "Network",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "HandleOrUrl",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "void Deconstruct(out string Raw, out string Network, out string HandleOrUrl)",
+      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.Social.Deconstruct(System.String@,System.String@,System.String@)",
+      "anchor": "method-deconstruct-void-deconstruct-out-string-raw-out-string-network-out-string-handleorurl"
+    },
+    {
+      "name": "Raw",
+      "kind": "Property",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "string Raw {get; set; }",
+      "xmlId": "P:CodeGlyphX.Payloads.QrParsedData.Social.Raw",
+      "anchor": "property-raw-string-raw-get-set"
+    },
+    {
+      "name": "Network",
+      "kind": "Property",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "string Network {get; set; }",
+      "xmlId": "P:CodeGlyphX.Payloads.QrParsedData.Social.Network",
+      "anchor": "property-network-string-network-get-set"
+    },
+    {
+      "name": "HandleOrUrl",
+      "kind": "Property",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "string HandleOrUrl {get; set; }",
+      "xmlId": "P:CodeGlyphX.Payloads.QrParsedData.Social.HandleOrUrl",
+      "anchor": "property-handleorurl-string-handleorurl-get-set"
+    }
+  ]
+}

@@ -4,6 +4,26 @@
         <name>CodeGlyphX</name>
     </assembly>
     <members>
+        <member name="T:CodeGlyphX.Aztec.AztecEncodeOptions">
+            <summary>
+            Options for future Aztec encoding support.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Aztec.AztecEncodeOptions.Layers">
+            <summary>
+            Target number of layers. When null, the encoder will choose automatically.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Aztec.AztecEncodeOptions.ErrorCorrectionPercent">
+            <summary>
+            Target error correction percentage. When null, the encoder will choose automatically.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Aztec.AztecEncodeOptions.Compact">
+            <summary>
+            When true, encode as compact Aztec when possible.
+            </summary>
+        </member>
         <member name="T:CodeGlyphX.AztecCode">
             <summary>
             Aztec code helpers.
@@ -799,26 +819,6 @@
         <member name="P:CodeGlyphX.AztecDecodeDiagnostics.Failure">
             <summary>
             Optional failure message when decoding fails.
-            </summary>
-        </member>
-        <member name="T:CodeGlyphX.Aztec.AztecEncodeOptions">
-            <summary>
-            Options for future Aztec encoding support.
-            </summary>
-        </member>
-        <member name="P:CodeGlyphX.Aztec.AztecEncodeOptions.Layers">
-            <summary>
-            Target number of layers. When null, the encoder will choose automatically.
-            </summary>
-        </member>
-        <member name="P:CodeGlyphX.Aztec.AztecEncodeOptions.ErrorCorrectionPercent">
-            <summary>
-            Target error correction percentage. When null, the encoder will choose automatically.
-            </summary>
-        </member>
-        <member name="P:CodeGlyphX.Aztec.AztecEncodeOptions.Compact">
-            <summary>
-            When true, encode as compact Aztec when possible.
             </summary>
         </member>
         <member name="T:CodeGlyphX.Barcode">
@@ -3165,6 +3165,117 @@
         <member name="F:CodeGlyphX.CodeGlyphKind.Aztec">
             <summary>Aztec.</summary>
         </member>
+        <member name="T:CodeGlyphX.DataMatrix.DataMatrixDecoder">
+            <summary>
+            Decodes Data Matrix (ECC200) symbols.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataMatrix.DataMatrixDecoder.TryDecode(CodeGlyphX.BitMatrix,System.String@)">
+            <summary>
+            Attempts to decode a Data Matrix symbol from a module matrix.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataMatrix.DataMatrixDecoder.TryDecode(CodeGlyphX.BitMatrix,System.Threading.CancellationToken,System.String@)">
+            <summary>
+            Attempts to decode a Data Matrix symbol from a module matrix, with cancellation.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataMatrix.DataMatrixDecoder.TryDecode(CodeGlyphX.BitMatrix,System.String@,CodeGlyphX.DataMatrixDecodeDiagnostics@)">
+            <summary>
+            Attempts to decode a Data Matrix symbol from a module matrix, with diagnostics.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataMatrix.DataMatrixDecoder.TryDecode(CodeGlyphX.BitMatrix,System.Threading.CancellationToken,System.String@,CodeGlyphX.DataMatrixDecodeDiagnostics@)">
+            <summary>
+            Attempts to decode a Data Matrix symbol from a module matrix, with cancellation and diagnostics.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataMatrix.DataMatrixDecoder.TryDecode(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,System.String@)">
+            <summary>
+            Attempts to decode a Data Matrix symbol from pixels.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataMatrix.DataMatrixDecoder.TryDecode(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,System.Threading.CancellationToken,System.String@)">
+            <summary>
+            Attempts to decode a Data Matrix symbol from pixels, with cancellation.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataMatrix.DataMatrixDecoder.TryDecode(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,System.String@,CodeGlyphX.DataMatrixDecodeDiagnostics@)">
+            <summary>
+            Attempts to decode a Data Matrix symbol from pixels, with diagnostics.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataMatrix.DataMatrixDecoder.TryDecode(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,System.Threading.CancellationToken,System.String@,CodeGlyphX.DataMatrixDecodeDiagnostics@)">
+            <summary>
+            Attempts to decode a Data Matrix symbol from pixels, with cancellation and diagnostics.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataMatrix.DataMatrixDecoder.TryDecode(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,System.String@)">
+            <summary>
+            Attempts to decode a Data Matrix symbol from pixels.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataMatrix.DataMatrixDecoder.TryDecode(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,System.Threading.CancellationToken,System.String@)">
+            <summary>
+            Attempts to decode a Data Matrix symbol from pixels, with cancellation.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataMatrix.DataMatrixDecoder.TryDecode(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,System.String@,CodeGlyphX.DataMatrixDecodeDiagnostics@)">
+            <summary>
+            Attempts to decode a Data Matrix symbol from pixels, with diagnostics.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataMatrix.DataMatrixDecoder.TryDecode(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,System.Threading.CancellationToken,System.String@,CodeGlyphX.DataMatrixDecodeDiagnostics@)">
+            <summary>
+            Attempts to decode a Data Matrix symbol from pixels, with cancellation and diagnostics.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.DataMatrix.DataMatrixEncoder">
+            <summary>
+            Encodes Data Matrix (ECC200) symbols.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataMatrix.DataMatrixEncoder.Encode(System.String,CodeGlyphX.DataMatrix.DataMatrixEncodingMode)">
+            <summary>
+            Encodes a string into a Data Matrix symbol.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataMatrix.DataMatrixEncoder.EncodeBytes(System.Byte[],CodeGlyphX.DataMatrix.DataMatrixEncodingMode)">
+            <summary>
+            Encodes raw bytes into a Data Matrix symbol.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataMatrix.DataMatrixEncoder.EncodeBytes(System.ReadOnlySpan{System.Byte},CodeGlyphX.DataMatrix.DataMatrixEncodingMode)">
+            <summary>
+            Encodes raw bytes into a Data Matrix symbol.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.DataMatrix.DataMatrixEncodingMode">
+            <summary>
+            High-level data encoding modes for Data Matrix.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.DataMatrix.DataMatrixEncodingMode.Auto">
+            <summary>Choose the smallest mode automatically.</summary>
+        </member>
+        <member name="F:CodeGlyphX.DataMatrix.DataMatrixEncodingMode.Ascii">
+            <summary>ASCII encodation (default for Latin-1 text).</summary>
+        </member>
+        <member name="F:CodeGlyphX.DataMatrix.DataMatrixEncodingMode.C40">
+            <summary>C40 encodation (uppercase optimized).</summary>
+        </member>
+        <member name="F:CodeGlyphX.DataMatrix.DataMatrixEncodingMode.Text">
+            <summary>Text encodation (lowercase optimized).</summary>
+        </member>
+        <member name="F:CodeGlyphX.DataMatrix.DataMatrixEncodingMode.X12">
+            <summary>X12 encodation (ANSI X12 subset).</summary>
+        </member>
+        <member name="F:CodeGlyphX.DataMatrix.DataMatrixEncodingMode.Edifact">
+            <summary>EDIFACT encodation (ASCII 32-95).</summary>
+        </member>
+        <member name="F:CodeGlyphX.DataMatrix.DataMatrixEncodingMode.Base256">
+            <summary>Base256 encodation (for binary or UTF-8 data).</summary>
+        </member>
         <member name="T:CodeGlyphX.DataMatrixCode">
             <summary>
             Simple Data Matrix helpers with fluent and static APIs.
@@ -4389,117 +4500,6 @@
             Optional failure message when decoding fails.
             </summary>
         </member>
-        <member name="T:CodeGlyphX.DataMatrix.DataMatrixDecoder">
-            <summary>
-            Decodes Data Matrix (ECC200) symbols.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.DataMatrix.DataMatrixDecoder.TryDecode(CodeGlyphX.BitMatrix,System.String@)">
-            <summary>
-            Attempts to decode a Data Matrix symbol from a module matrix.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.DataMatrix.DataMatrixDecoder.TryDecode(CodeGlyphX.BitMatrix,System.Threading.CancellationToken,System.String@)">
-            <summary>
-            Attempts to decode a Data Matrix symbol from a module matrix, with cancellation.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.DataMatrix.DataMatrixDecoder.TryDecode(CodeGlyphX.BitMatrix,System.String@,CodeGlyphX.DataMatrixDecodeDiagnostics@)">
-            <summary>
-            Attempts to decode a Data Matrix symbol from a module matrix, with diagnostics.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.DataMatrix.DataMatrixDecoder.TryDecode(CodeGlyphX.BitMatrix,System.Threading.CancellationToken,System.String@,CodeGlyphX.DataMatrixDecodeDiagnostics@)">
-            <summary>
-            Attempts to decode a Data Matrix symbol from a module matrix, with cancellation and diagnostics.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.DataMatrix.DataMatrixDecoder.TryDecode(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,System.String@)">
-            <summary>
-            Attempts to decode a Data Matrix symbol from pixels.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.DataMatrix.DataMatrixDecoder.TryDecode(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,System.Threading.CancellationToken,System.String@)">
-            <summary>
-            Attempts to decode a Data Matrix symbol from pixels, with cancellation.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.DataMatrix.DataMatrixDecoder.TryDecode(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,System.String@,CodeGlyphX.DataMatrixDecodeDiagnostics@)">
-            <summary>
-            Attempts to decode a Data Matrix symbol from pixels, with diagnostics.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.DataMatrix.DataMatrixDecoder.TryDecode(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,System.Threading.CancellationToken,System.String@,CodeGlyphX.DataMatrixDecodeDiagnostics@)">
-            <summary>
-            Attempts to decode a Data Matrix symbol from pixels, with cancellation and diagnostics.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.DataMatrix.DataMatrixDecoder.TryDecode(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,System.String@)">
-            <summary>
-            Attempts to decode a Data Matrix symbol from pixels.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.DataMatrix.DataMatrixDecoder.TryDecode(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,System.Threading.CancellationToken,System.String@)">
-            <summary>
-            Attempts to decode a Data Matrix symbol from pixels, with cancellation.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.DataMatrix.DataMatrixDecoder.TryDecode(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,System.String@,CodeGlyphX.DataMatrixDecodeDiagnostics@)">
-            <summary>
-            Attempts to decode a Data Matrix symbol from pixels, with diagnostics.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.DataMatrix.DataMatrixDecoder.TryDecode(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,System.Threading.CancellationToken,System.String@,CodeGlyphX.DataMatrixDecodeDiagnostics@)">
-            <summary>
-            Attempts to decode a Data Matrix symbol from pixels, with cancellation and diagnostics.
-            </summary>
-        </member>
-        <member name="T:CodeGlyphX.DataMatrix.DataMatrixEncoder">
-            <summary>
-            Encodes Data Matrix (ECC200) symbols.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.DataMatrix.DataMatrixEncoder.Encode(System.String,CodeGlyphX.DataMatrix.DataMatrixEncodingMode)">
-            <summary>
-            Encodes a string into a Data Matrix symbol.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.DataMatrix.DataMatrixEncoder.EncodeBytes(System.Byte[],CodeGlyphX.DataMatrix.DataMatrixEncodingMode)">
-            <summary>
-            Encodes raw bytes into a Data Matrix symbol.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.DataMatrix.DataMatrixEncoder.EncodeBytes(System.ReadOnlySpan{System.Byte},CodeGlyphX.DataMatrix.DataMatrixEncodingMode)">
-            <summary>
-            Encodes raw bytes into a Data Matrix symbol.
-            </summary>
-        </member>
-        <member name="T:CodeGlyphX.DataMatrix.DataMatrixEncodingMode">
-            <summary>
-            High-level data encoding modes for Data Matrix.
-            </summary>
-        </member>
-        <member name="F:CodeGlyphX.DataMatrix.DataMatrixEncodingMode.Auto">
-            <summary>Choose the smallest mode automatically.</summary>
-        </member>
-        <member name="F:CodeGlyphX.DataMatrix.DataMatrixEncodingMode.Ascii">
-            <summary>ASCII encodation (default for Latin-1 text).</summary>
-        </member>
-        <member name="F:CodeGlyphX.DataMatrix.DataMatrixEncodingMode.C40">
-            <summary>C40 encodation (uppercase optimized).</summary>
-        </member>
-        <member name="F:CodeGlyphX.DataMatrix.DataMatrixEncodingMode.Text">
-            <summary>Text encodation (lowercase optimized).</summary>
-        </member>
-        <member name="F:CodeGlyphX.DataMatrix.DataMatrixEncodingMode.X12">
-            <summary>X12 encodation (ANSI X12 subset).</summary>
-        </member>
-        <member name="F:CodeGlyphX.DataMatrix.DataMatrixEncodingMode.Edifact">
-            <summary>EDIFACT encodation (ASCII 32-95).</summary>
-        </member>
-        <member name="F:CodeGlyphX.DataMatrix.DataMatrixEncodingMode.Base256">
-            <summary>Base256 encodation (for binary or UTF-8 data).</summary>
-        </member>
         <member name="T:CodeGlyphX.Ean.EanEncoder">
             <summary>
             Encodes EAN-8 and EAN-13 barcodes.
@@ -4936,6 +4936,16 @@
             <param name="result">Decoded payload.</param>
             <returns><c>true</c> when decoding succeeded; otherwise <c>false</c>.</returns>
         </member>
+        <member name="T:CodeGlyphX.Msi.MsiEncoder">
+            <summary>
+            Encodes MSI (Modified Plessey) barcodes.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Msi.MsiEncoder.Encode(System.String,CodeGlyphX.MsiChecksumType)">
+            <summary>
+            Encodes an MSI barcode.
+            </summary>
+        </member>
         <member name="T:CodeGlyphX.MsiChecksumType">
             <summary>
             Checksum variants for MSI barcodes.
@@ -4954,16 +4964,6 @@
         <member name="F:CodeGlyphX.MsiChecksumType.Mod10Mod10">
             <summary>
             Two consecutive Mod 10 checksum digits.
-            </summary>
-        </member>
-        <member name="T:CodeGlyphX.Msi.MsiEncoder">
-            <summary>
-            Encodes MSI (Modified Plessey) barcodes.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.Msi.MsiEncoder.Encode(System.String,CodeGlyphX.MsiChecksumType)">
-            <summary>
-            Encodes an MSI barcode.
             </summary>
         </member>
         <member name="T:CodeGlyphX.Otp">
@@ -7253,6 +7253,140 @@
             Returns the contact block string.
             </summary>
         </member>
+        <member name="T:CodeGlyphX.Pdf417.Pdf417Compaction">
+            <summary>
+            High-level compaction mode selection for PDF417.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Pdf417.Pdf417Compaction.Auto">
+            <summary>Choose compaction automatically.</summary>
+        </member>
+        <member name="F:CodeGlyphX.Pdf417.Pdf417Compaction.Text">
+            <summary>Use text compaction.</summary>
+        </member>
+        <member name="F:CodeGlyphX.Pdf417.Pdf417Compaction.Byte">
+            <summary>Use byte compaction.</summary>
+        </member>
+        <member name="F:CodeGlyphX.Pdf417.Pdf417Compaction.Numeric">
+            <summary>Use numeric compaction.</summary>
+        </member>
+        <member name="T:CodeGlyphX.Pdf417.Pdf417Decoder">
+            <summary>
+            Decodes PDF417 barcodes.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pdf417.Pdf417Decoder.TryDecode(CodeGlyphX.BitMatrix,System.String@)">
+            <summary>
+            Attempts to decode a PDF417 symbol from a module matrix.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pdf417.Pdf417Decoder.TryDecode(CodeGlyphX.BitMatrix,System.Threading.CancellationToken,System.String@)">
+            <summary>
+            Attempts to decode a PDF417 symbol from a module matrix, with cancellation.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pdf417.Pdf417Decoder.TryDecode(CodeGlyphX.BitMatrix,System.String@,CodeGlyphX.Pdf417DecodeDiagnostics@)">
+            <summary>
+            Attempts to decode a PDF417 symbol from a module matrix, with diagnostics.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pdf417.Pdf417Decoder.TryDecode(CodeGlyphX.BitMatrix,System.Threading.CancellationToken,System.String@,CodeGlyphX.Pdf417DecodeDiagnostics@)">
+            <summary>
+            Attempts to decode a PDF417 symbol from a module matrix, with cancellation and diagnostics.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pdf417.Pdf417Decoder.TryDecode(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,System.String@)">
+            <summary>
+            Attempts to decode a PDF417 symbol from pixels.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pdf417.Pdf417Decoder.TryDecode(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,System.Threading.CancellationToken,System.String@)">
+            <summary>
+            Attempts to decode a PDF417 symbol from pixels, with cancellation.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pdf417.Pdf417Decoder.TryDecode(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,System.String@,CodeGlyphX.Pdf417DecodeDiagnostics@)">
+            <summary>
+            Attempts to decode a PDF417 symbol from pixels, with diagnostics.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pdf417.Pdf417Decoder.TryDecode(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,System.Threading.CancellationToken,System.String@,CodeGlyphX.Pdf417DecodeDiagnostics@)">
+            <summary>
+            Attempts to decode a PDF417 symbol from pixels, with cancellation and diagnostics.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pdf417.Pdf417Decoder.TryDecode(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,System.String@)">
+            <summary>
+            Attempts to decode a PDF417 symbol from pixels.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pdf417.Pdf417Decoder.TryDecode(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,System.Threading.CancellationToken,System.String@)">
+            <summary>
+            Attempts to decode a PDF417 symbol from pixels, with cancellation.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pdf417.Pdf417Decoder.TryDecode(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,System.String@,CodeGlyphX.Pdf417DecodeDiagnostics@)">
+            <summary>
+            Attempts to decode a PDF417 symbol from pixels, with diagnostics.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pdf417.Pdf417Decoder.TryDecode(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,System.Threading.CancellationToken,System.String@,CodeGlyphX.Pdf417DecodeDiagnostics@)">
+            <summary>
+            Attempts to decode a PDF417 symbol from pixels, with cancellation and diagnostics.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Pdf417.Pdf417EncodeOptions">
+            <summary>
+            Options for PDF417 encoding.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Pdf417.Pdf417EncodeOptions.MinColumns">
+            <summary>Minimum number of data columns (1..30).</summary>
+        </member>
+        <member name="P:CodeGlyphX.Pdf417.Pdf417EncodeOptions.MaxColumns">
+            <summary>Maximum number of data columns (1..30).</summary>
+        </member>
+        <member name="P:CodeGlyphX.Pdf417.Pdf417EncodeOptions.MinRows">
+            <summary>Minimum number of rows (3..90).</summary>
+        </member>
+        <member name="P:CodeGlyphX.Pdf417.Pdf417EncodeOptions.MaxRows">
+            <summary>Maximum number of rows (3..90).</summary>
+        </member>
+        <member name="P:CodeGlyphX.Pdf417.Pdf417EncodeOptions.ErrorCorrectionLevel">
+            <summary>Error correction level (0..8). Use -1 for auto.</summary>
+        </member>
+        <member name="P:CodeGlyphX.Pdf417.Pdf417EncodeOptions.TargetAspectRatio">
+            <summary>Target aspect ratio (width / height).</summary>
+        </member>
+        <member name="P:CodeGlyphX.Pdf417.Pdf417EncodeOptions.Compact">
+            <summary>Compact PDF417 (not recommended).</summary>
+        </member>
+        <member name="P:CodeGlyphX.Pdf417.Pdf417EncodeOptions.Compaction">
+            <summary>High-level compaction mode.</summary>
+        </member>
+        <member name="P:CodeGlyphX.Pdf417.Pdf417EncodeOptions.TextEncoding">
+            <summary>Text encoding used for byte compaction.</summary>
+        </member>
+        <member name="T:CodeGlyphX.Pdf417.Pdf417Encoder">
+            <summary>
+            Encodes PDF417 barcodes.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pdf417.Pdf417Encoder.Encode(System.String,CodeGlyphX.Pdf417.Pdf417EncodeOptions)">
+            <summary>
+            Encodes a text payload as PDF417.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pdf417.Pdf417Encoder.EncodeBytes(System.Byte[],CodeGlyphX.Pdf417.Pdf417EncodeOptions)">
+            <summary>
+            Encodes a byte payload as PDF417 (byte compaction).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pdf417.Pdf417Encoder.EncodeBytes(System.ReadOnlySpan{System.Byte},CodeGlyphX.Pdf417.Pdf417EncodeOptions)">
+            <summary>
+            Encodes a byte payload as PDF417 (byte compaction).
+            </summary>
+        </member>
         <member name="T:CodeGlyphX.Pdf417Code">
             <summary>
             Simple PDF417 helpers with fluent and static APIs.
@@ -8525,140 +8659,6 @@
         <member name="P:CodeGlyphX.Pdf417DecodeDiagnostics.Failure">
             <summary>
             Optional failure message when decoding fails.
-            </summary>
-        </member>
-        <member name="T:CodeGlyphX.Pdf417.Pdf417Compaction">
-            <summary>
-            High-level compaction mode selection for PDF417.
-            </summary>
-        </member>
-        <member name="F:CodeGlyphX.Pdf417.Pdf417Compaction.Auto">
-            <summary>Choose compaction automatically.</summary>
-        </member>
-        <member name="F:CodeGlyphX.Pdf417.Pdf417Compaction.Text">
-            <summary>Use text compaction.</summary>
-        </member>
-        <member name="F:CodeGlyphX.Pdf417.Pdf417Compaction.Byte">
-            <summary>Use byte compaction.</summary>
-        </member>
-        <member name="F:CodeGlyphX.Pdf417.Pdf417Compaction.Numeric">
-            <summary>Use numeric compaction.</summary>
-        </member>
-        <member name="T:CodeGlyphX.Pdf417.Pdf417Decoder">
-            <summary>
-            Decodes PDF417 barcodes.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.Pdf417.Pdf417Decoder.TryDecode(CodeGlyphX.BitMatrix,System.String@)">
-            <summary>
-            Attempts to decode a PDF417 symbol from a module matrix.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.Pdf417.Pdf417Decoder.TryDecode(CodeGlyphX.BitMatrix,System.Threading.CancellationToken,System.String@)">
-            <summary>
-            Attempts to decode a PDF417 symbol from a module matrix, with cancellation.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.Pdf417.Pdf417Decoder.TryDecode(CodeGlyphX.BitMatrix,System.String@,CodeGlyphX.Pdf417DecodeDiagnostics@)">
-            <summary>
-            Attempts to decode a PDF417 symbol from a module matrix, with diagnostics.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.Pdf417.Pdf417Decoder.TryDecode(CodeGlyphX.BitMatrix,System.Threading.CancellationToken,System.String@,CodeGlyphX.Pdf417DecodeDiagnostics@)">
-            <summary>
-            Attempts to decode a PDF417 symbol from a module matrix, with cancellation and diagnostics.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.Pdf417.Pdf417Decoder.TryDecode(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,System.String@)">
-            <summary>
-            Attempts to decode a PDF417 symbol from pixels.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.Pdf417.Pdf417Decoder.TryDecode(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,System.Threading.CancellationToken,System.String@)">
-            <summary>
-            Attempts to decode a PDF417 symbol from pixels, with cancellation.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.Pdf417.Pdf417Decoder.TryDecode(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,System.String@,CodeGlyphX.Pdf417DecodeDiagnostics@)">
-            <summary>
-            Attempts to decode a PDF417 symbol from pixels, with diagnostics.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.Pdf417.Pdf417Decoder.TryDecode(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,System.Threading.CancellationToken,System.String@,CodeGlyphX.Pdf417DecodeDiagnostics@)">
-            <summary>
-            Attempts to decode a PDF417 symbol from pixels, with cancellation and diagnostics.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.Pdf417.Pdf417Decoder.TryDecode(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,System.String@)">
-            <summary>
-            Attempts to decode a PDF417 symbol from pixels.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.Pdf417.Pdf417Decoder.TryDecode(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,System.Threading.CancellationToken,System.String@)">
-            <summary>
-            Attempts to decode a PDF417 symbol from pixels, with cancellation.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.Pdf417.Pdf417Decoder.TryDecode(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,System.String@,CodeGlyphX.Pdf417DecodeDiagnostics@)">
-            <summary>
-            Attempts to decode a PDF417 symbol from pixels, with diagnostics.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.Pdf417.Pdf417Decoder.TryDecode(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,System.Threading.CancellationToken,System.String@,CodeGlyphX.Pdf417DecodeDiagnostics@)">
-            <summary>
-            Attempts to decode a PDF417 symbol from pixels, with cancellation and diagnostics.
-            </summary>
-        </member>
-        <member name="T:CodeGlyphX.Pdf417.Pdf417EncodeOptions">
-            <summary>
-            Options for PDF417 encoding.
-            </summary>
-        </member>
-        <member name="P:CodeGlyphX.Pdf417.Pdf417EncodeOptions.MinColumns">
-            <summary>Minimum number of data columns (1..30).</summary>
-        </member>
-        <member name="P:CodeGlyphX.Pdf417.Pdf417EncodeOptions.MaxColumns">
-            <summary>Maximum number of data columns (1..30).</summary>
-        </member>
-        <member name="P:CodeGlyphX.Pdf417.Pdf417EncodeOptions.MinRows">
-            <summary>Minimum number of rows (3..90).</summary>
-        </member>
-        <member name="P:CodeGlyphX.Pdf417.Pdf417EncodeOptions.MaxRows">
-            <summary>Maximum number of rows (3..90).</summary>
-        </member>
-        <member name="P:CodeGlyphX.Pdf417.Pdf417EncodeOptions.ErrorCorrectionLevel">
-            <summary>Error correction level (0..8). Use -1 for auto.</summary>
-        </member>
-        <member name="P:CodeGlyphX.Pdf417.Pdf417EncodeOptions.TargetAspectRatio">
-            <summary>Target aspect ratio (width / height).</summary>
-        </member>
-        <member name="P:CodeGlyphX.Pdf417.Pdf417EncodeOptions.Compact">
-            <summary>Compact PDF417 (not recommended).</summary>
-        </member>
-        <member name="P:CodeGlyphX.Pdf417.Pdf417EncodeOptions.Compaction">
-            <summary>High-level compaction mode.</summary>
-        </member>
-        <member name="P:CodeGlyphX.Pdf417.Pdf417EncodeOptions.TextEncoding">
-            <summary>Text encoding used for byte compaction.</summary>
-        </member>
-        <member name="T:CodeGlyphX.Pdf417.Pdf417Encoder">
-            <summary>
-            Encodes PDF417 barcodes.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.Pdf417.Pdf417Encoder.Encode(System.String,CodeGlyphX.Pdf417.Pdf417EncodeOptions)">
-            <summary>
-            Encodes a text payload as PDF417.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.Pdf417.Pdf417Encoder.EncodeBytes(System.Byte[],CodeGlyphX.Pdf417.Pdf417EncodeOptions)">
-            <summary>
-            Encodes a byte payload as PDF417 (byte compaction).
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.Pdf417.Pdf417Encoder.EncodeBytes(System.ReadOnlySpan{System.Byte},CodeGlyphX.Pdf417.Pdf417EncodeOptions)">
-            <summary>
-            Encodes a byte payload as PDF417 (byte compaction).
             </summary>
         </member>
         <member name="T:CodeGlyphX.PixelFormat">
@@ -10078,6 +10078,284 @@
             <summary>
             Saves a QR code to a file based on the file extension (.png/.svg/.svgz/.html/.jpg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps).
             Defaults to PNG when no extension is provided.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Qr.QrPerspectiveTransform">
+            <summary>
+            Minimal perspective transform (ported from common QR grid-sampling approaches).
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.QrCodeEncoder">
+            <summary>
+            Encodes QR codes (byte mode + optional Kanji mode).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrCodeEncoder.EncodeText(System.String,CodeGlyphX.QrErrorCorrectionLevel,System.Int32,System.Int32,System.Nullable{System.Int32})">
+            <summary>
+            Encodes a UTF-8 text payload as a QR code.
+            </summary>
+            <param name="text">Text payload to encode.</param>
+            <param name="ecc">Error correction level.</param>
+            <param name="minVersion">Minimum allowed QR version (1..40).</param>
+            <param name="maxVersion">Maximum allowed QR version (1..40).</param>
+            <param name="forceMask">Optional forced mask (0..7). When null, the best mask is chosen.</param>
+        </member>
+        <member name="M:CodeGlyphX.QrCodeEncoder.EncodeText(System.String,CodeGlyphX.QrTextEncoding,CodeGlyphX.QrErrorCorrectionLevel,System.Int32,System.Int32,System.Nullable{System.Int32},System.Boolean)">
+            <summary>
+            Encodes a text payload using a specific QR text encoding (optionally with ECI).
+            </summary>
+            <param name="text">Text payload to encode.</param>
+            <param name="encoding">Encoding to use for QR byte mode.</param>
+            <param name="ecc">Error correction level.</param>
+            <param name="minVersion">Minimum allowed QR version (1..40).</param>
+            <param name="maxVersion">Maximum allowed QR version (1..40).</param>
+            <param name="forceMask">Optional forced mask (0..7). When null, the best mask is chosen.</param>
+            <param name="includeEci">When true, emits an ECI header for non-default encodings.</param>
+        </member>
+        <member name="M:CodeGlyphX.QrCodeEncoder.EncodeKanji(System.String,CodeGlyphX.QrErrorCorrectionLevel,System.Int32,System.Int32,System.Nullable{System.Int32})">
+            <summary>
+            Encodes a QR Kanji-mode payload (Shift-JIS JIS X 0208).
+            </summary>
+            <param name="text">Kanji text payload to encode.</param>
+            <param name="ecc">Error correction level.</param>
+            <param name="minVersion">Minimum allowed QR version (1..40).</param>
+            <param name="maxVersion">Maximum allowed QR version (1..40).</param>
+            <param name="forceMask">Optional forced mask (0..7). When null, the best mask is chosen.</param>
+        </member>
+        <member name="M:CodeGlyphX.QrCodeEncoder.EncodeBytes(System.Byte[],CodeGlyphX.QrErrorCorrectionLevel,System.Int32,System.Int32,System.Nullable{System.Int32},System.Nullable{System.Int32})">
+            <summary>
+            Encodes an arbitrary byte payload (QR byte mode).
+            </summary>
+            <param name="data">Bytes to encode.</param>
+            <param name="ecc">Error correction level.</param>
+            <param name="minVersion">Minimum allowed QR version (1..40).</param>
+            <param name="maxVersion">Maximum allowed QR version (1..40).</param>
+            <param name="forceMask">Optional forced mask (0..7). When null, the best mask is chosen.</param>
+            <param name="eciAssignmentNumber">Optional ECI assignment number to emit before the payload.</param>
+        </member>
+        <member name="M:CodeGlyphX.QrCodeEncoder.EncodeBytes(System.ReadOnlySpan{System.Byte},CodeGlyphX.QrErrorCorrectionLevel,System.Int32,System.Int32,System.Nullable{System.Int32},System.Nullable{System.Int32})">
+            <summary>
+            Encodes an arbitrary byte payload (QR byte mode).
+            </summary>
+            <param name="data">Bytes to encode.</param>
+            <param name="ecc">Error correction level.</param>
+            <param name="minVersion">Minimum allowed QR version (1..40).</param>
+            <param name="maxVersion">Maximum allowed QR version (1..40).</param>
+            <param name="forceMask">Optional forced mask (0..7). When null, the best mask is chosen.</param>
+            <param name="eciAssignmentNumber">Optional ECI assignment number to emit before the payload.</param>
+        </member>
+        <member name="T:CodeGlyphX.QrDecoded">
+            <summary>
+            Result of decoding a QR code payload.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.QrDecoded.Version">
+            <summary>
+            Gets the decoded QR version (1..40).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.QrDecoded.ErrorCorrectionLevel">
+            <summary>
+            Gets the decoded error correction level.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.QrDecoded.Mask">
+            <summary>
+            Gets the decoded mask pattern (0..7).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.QrDecoded.Bytes">
+            <summary>
+            Gets the decoded payload bytes.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.QrDecoded.Text">
+            <summary>
+            Gets the decoded payload interpreted as text (ISO-8859-1 by default; respects ECI per segment).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.QrDecoded.StructuredAppend">
+            <summary>
+            Structured append metadata when the payload participates in a multi-symbol sequence.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.QrDecoded.Fnc1Mode">
+            <summary>
+            Indicates whether the payload uses FNC1 (GS1) mode.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.QrDecoded.Parsed">
+            <summary>
+            Gets the parsed payload when recognized (URL, WiFi, contact, etc.).
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.QrDecoder">
+            <summary>
+            Decodes QR codes from a module grid or from raw pixels (clean images).
+            </summary>
+            <remarks>
+            Current scope: byte + kanji payloads on clean/generated images and clean on-screen QR codes.
+            </remarks>
+        </member>
+        <member name="M:CodeGlyphX.QrDecoder.TryDecode(CodeGlyphX.BitMatrix,CodeGlyphX.QrDecoded@)">
+            <summary>
+            Attempts to decode a QR code from an exact module grid (no quiet zone).
+            </summary>
+            <param name="modules">Square matrix of QR modules (dark = <c>true</c>).</param>
+            <param name="result">Decoded payload.</param>
+            <returns><c>true</c> when decoding succeeded; otherwise <c>false</c>.</returns>
+        </member>
+        <member name="M:CodeGlyphX.QrDecoder.TryDecode(CodeGlyphX.BitMatrix,CodeGlyphX.QrDecoded@,CodeGlyphX.QrDecodeInfo@)">
+            <summary>
+            Attempts to decode a QR code from an exact module grid (no quiet zone), with diagnostics.
+            </summary>
+            <param name="modules">Square matrix of QR modules (dark = <c>true</c>).</param>
+            <param name="result">Decoded payload.</param>
+            <param name="info">Decode diagnostics.</param>
+            <returns><c>true</c> when decoding succeeded; otherwise <c>false</c>.</returns>
+        </member>
+        <member name="M:CodeGlyphX.QrDecoder.TryDecode(CodeGlyphX.BitMatrix,CodeGlyphX.QrDecoded@,System.Threading.CancellationToken)">
+            <summary>
+            Attempts to decode a QR code from an exact module grid, with cancellation.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrDecoder.TryDecode(CodeGlyphX.BitMatrix,CodeGlyphX.QrDecoded@,CodeGlyphX.QrDecodeInfo@,System.Threading.CancellationToken)">
+            <summary>
+            Attempts to decode a QR code from an exact module grid, with diagnostics and cancellation.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrDecoder.TryDecode(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded@)">
+            <summary>
+            Attempts to decode a QR code from raw pixel data (best-effort, clean inputs).
+            </summary>
+            <param name="pixels">Pixel buffer.</param>
+            <param name="width">Image width in pixels.</param>
+            <param name="height">Image height in pixels.</param>
+            <param name="stride">Bytes per row.</param>
+            <param name="fmt">Pixel format (4 bytes per pixel).</param>
+            <param name="result">Decoded payload.</param>
+            <returns><c>true</c> when decoding succeeded; otherwise <c>false</c>.</returns>
+        </member>
+        <member name="M:CodeGlyphX.QrDecoder.TryDecode(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded@,CodeGlyphX.QrPixelDecodeOptions)">
+            <summary>
+            Attempts to decode a QR code from raw pixel data (best-effort, clean inputs) using the specified profile.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrDecoder.TryDecode(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded@,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken)">
+            <summary>
+            Attempts to decode a QR code from raw pixel data (best-effort, clean inputs) using the specified profile, with cancellation.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrDecoder.TryDecode(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded@,CodeGlyphX.QrPixelDecodeInfo@)">
+            <summary>
+            Attempts to decode a QR code from raw pixel data (best-effort, clean inputs), with diagnostics.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrDecoder.TryDecode(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded@,CodeGlyphX.QrPixelDecodeInfo@,CodeGlyphX.QrPixelDecodeOptions)">
+            <summary>
+            Attempts to decode a QR code from raw pixel data (best-effort, clean inputs), with diagnostics and profile options.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrDecoder.TryDecode(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded@,CodeGlyphX.QrPixelDecodeInfo@,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken)">
+            <summary>
+            Attempts to decode a QR code from raw pixel data (best-effort, clean inputs), with diagnostics, profile options, and cancellation.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrDecoder.TryDecodeAll(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded[]@)">
+            <summary>
+            Attempts to decode all QR codes from raw pixel data (best-effort, clean inputs).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrDecoder.TryDecodeAll(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded[]@,CodeGlyphX.QrPixelDecodeOptions)">
+            <summary>
+            Attempts to decode all QR codes from raw pixel data (best-effort, clean inputs) using the specified profile.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrDecoder.TryDecodeAll(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded[]@,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken)">
+            <summary>
+            Attempts to decode all QR codes from raw pixel data (best-effort, clean inputs) using the specified profile, with cancellation.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrDecoder.TryDecodeAll(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded[]@,CodeGlyphX.QrPixelDecodeInfo@)">
+            <summary>
+            Attempts to decode all QR codes from raw pixel data (best-effort, clean inputs), with diagnostics.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrDecoder.TryDecodeAll(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded[]@,CodeGlyphX.QrPixelDecodeInfo@,CodeGlyphX.QrPixelDecodeOptions)">
+            <summary>
+            Attempts to decode all QR codes from raw pixel data (best-effort, clean inputs), with diagnostics and profile options.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrDecoder.TryDecodeAll(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded[]@,CodeGlyphX.QrPixelDecodeInfo@,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken)">
+            <summary>
+            Attempts to decode all QR codes from raw pixel data (best-effort, clean inputs), with diagnostics, profile options, and cancellation.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrDecoder.TryDecode(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded@)">
+            <summary>
+            Attempts to decode a QR code from raw pixel data (best-effort, clean inputs).
+            </summary>
+            <param name="pixels">Pixel buffer.</param>
+            <param name="width">Image width in pixels.</param>
+            <param name="height">Image height in pixels.</param>
+            <param name="stride">Bytes per row.</param>
+            <param name="fmt">Pixel format (4 bytes per pixel).</param>
+            <param name="result">Decoded payload.</param>
+            <returns><c>true</c> when decoding succeeded; otherwise <c>false</c>.</returns>
+        </member>
+        <member name="M:CodeGlyphX.QrDecoder.TryDecode(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded@,CodeGlyphX.QrPixelDecodeOptions)">
+            <summary>
+            Attempts to decode a QR code from raw pixel data (best-effort, clean inputs) using the specified profile.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrDecoder.TryDecode(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded@,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken)">
+            <summary>
+            Attempts to decode a QR code from raw pixel data (best-effort, clean inputs) using the specified profile, with cancellation.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrDecoder.TryDecode(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded@,CodeGlyphX.QrPixelDecodeInfo@)">
+            <summary>
+            Attempts to decode a QR code from raw pixel data (best-effort, clean inputs), with diagnostics.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrDecoder.TryDecode(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded@,CodeGlyphX.QrPixelDecodeInfo@,CodeGlyphX.QrPixelDecodeOptions)">
+            <summary>
+            Attempts to decode a QR code from raw pixel data (best-effort, clean inputs), with diagnostics and profile options.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrDecoder.TryDecode(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded@,CodeGlyphX.QrPixelDecodeInfo@,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken)">
+            <summary>
+            Attempts to decode a QR code from raw pixel data (best-effort, clean inputs), with diagnostics, profile options, and cancellation.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrDecoder.TryDecodeAll(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded[]@)">
+            <summary>
+            Attempts to decode all QR codes from raw pixel data (best-effort, clean inputs).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrDecoder.TryDecodeAll(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded[]@,CodeGlyphX.QrPixelDecodeOptions)">
+            <summary>
+            Attempts to decode all QR codes from raw pixel data (best-effort, clean inputs) using the specified profile.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrDecoder.TryDecodeAll(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded[]@,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken)">
+            <summary>
+            Attempts to decode all QR codes from raw pixel data (best-effort, clean inputs) using the specified profile, with cancellation.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrDecoder.TryDecodeAll(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded[]@,CodeGlyphX.QrPixelDecodeInfo@)">
+            <summary>
+            Attempts to decode all QR codes from raw pixel data (best-effort, clean inputs), with diagnostics.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrDecoder.TryDecodeAll(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded[]@,CodeGlyphX.QrPixelDecodeInfo@,CodeGlyphX.QrPixelDecodeOptions)">
+            <summary>
+            Attempts to decode all QR codes from raw pixel data (best-effort, clean inputs), with diagnostics and profile options.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrDecoder.TryDecodeAll(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded[]@,CodeGlyphX.QrPixelDecodeInfo@,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken)">
+            <summary>
+            Attempts to decode all QR codes from raw pixel data (best-effort, clean inputs), with diagnostics, profile options, and cancellation.
             </summary>
         </member>
         <member name="T:CodeGlyphX.QrArtWarningKind">
@@ -11615,6 +11893,16 @@
             Attempts to auto-crop likely QR regions before decoding (useful for screenshots).
             </summary>
         </member>
+        <member name="P:CodeGlyphX.QrPixelDecodeOptions.EnableTileScan">
+            <summary>
+            Enables tile-based scanning for multiple QR codes in one image.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.QrPixelDecodeOptions.TileGrid">
+            <summary>
+            Tile grid size for multi-scan (0 = auto, 2..4 recommended).
+            </summary>
+        </member>
         <member name="P:CodeGlyphX.QrPixelDecodeOptions.DisableTransforms">
             <summary>
             Disable rotation/mirroring attempts even in robust profiles.
@@ -11693,6 +11981,11 @@
         <member name="M:CodeGlyphX.QrPixelDecodeOptions.WithAggressiveSampling(System.Boolean)">
             <summary>
             Enables or disables aggressive sampling.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrPixelDecodeOptions.WithTileScan(System.Boolean,System.Int32)">
+            <summary>
+            Enables tile-based scanning for multiple QR codes.
             </summary>
         </member>
         <member name="T:CodeGlyphX.QrPresets">
@@ -11829,284 +12122,6 @@
         <member name="F:CodeGlyphX.QrTextEncoding.ShiftJis">
             <summary>
             Shift-JIS (JIS X 0208 + halfwidth katakana).
-            </summary>
-        </member>
-        <member name="T:CodeGlyphX.Qr.QrPerspectiveTransform">
-            <summary>
-            Minimal perspective transform (ported from common QR grid-sampling approaches).
-            </summary>
-        </member>
-        <member name="T:CodeGlyphX.QrCodeEncoder">
-            <summary>
-            Encodes QR codes (byte mode + optional Kanji mode).
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.QrCodeEncoder.EncodeText(System.String,CodeGlyphX.QrErrorCorrectionLevel,System.Int32,System.Int32,System.Nullable{System.Int32})">
-            <summary>
-            Encodes a UTF-8 text payload as a QR code.
-            </summary>
-            <param name="text">Text payload to encode.</param>
-            <param name="ecc">Error correction level.</param>
-            <param name="minVersion">Minimum allowed QR version (1..40).</param>
-            <param name="maxVersion">Maximum allowed QR version (1..40).</param>
-            <param name="forceMask">Optional forced mask (0..7). When null, the best mask is chosen.</param>
-        </member>
-        <member name="M:CodeGlyphX.QrCodeEncoder.EncodeText(System.String,CodeGlyphX.QrTextEncoding,CodeGlyphX.QrErrorCorrectionLevel,System.Int32,System.Int32,System.Nullable{System.Int32},System.Boolean)">
-            <summary>
-            Encodes a text payload using a specific QR text encoding (optionally with ECI).
-            </summary>
-            <param name="text">Text payload to encode.</param>
-            <param name="encoding">Encoding to use for QR byte mode.</param>
-            <param name="ecc">Error correction level.</param>
-            <param name="minVersion">Minimum allowed QR version (1..40).</param>
-            <param name="maxVersion">Maximum allowed QR version (1..40).</param>
-            <param name="forceMask">Optional forced mask (0..7). When null, the best mask is chosen.</param>
-            <param name="includeEci">When true, emits an ECI header for non-default encodings.</param>
-        </member>
-        <member name="M:CodeGlyphX.QrCodeEncoder.EncodeKanji(System.String,CodeGlyphX.QrErrorCorrectionLevel,System.Int32,System.Int32,System.Nullable{System.Int32})">
-            <summary>
-            Encodes a QR Kanji-mode payload (Shift-JIS JIS X 0208).
-            </summary>
-            <param name="text">Kanji text payload to encode.</param>
-            <param name="ecc">Error correction level.</param>
-            <param name="minVersion">Minimum allowed QR version (1..40).</param>
-            <param name="maxVersion">Maximum allowed QR version (1..40).</param>
-            <param name="forceMask">Optional forced mask (0..7). When null, the best mask is chosen.</param>
-        </member>
-        <member name="M:CodeGlyphX.QrCodeEncoder.EncodeBytes(System.Byte[],CodeGlyphX.QrErrorCorrectionLevel,System.Int32,System.Int32,System.Nullable{System.Int32},System.Nullable{System.Int32})">
-            <summary>
-            Encodes an arbitrary byte payload (QR byte mode).
-            </summary>
-            <param name="data">Bytes to encode.</param>
-            <param name="ecc">Error correction level.</param>
-            <param name="minVersion">Minimum allowed QR version (1..40).</param>
-            <param name="maxVersion">Maximum allowed QR version (1..40).</param>
-            <param name="forceMask">Optional forced mask (0..7). When null, the best mask is chosen.</param>
-            <param name="eciAssignmentNumber">Optional ECI assignment number to emit before the payload.</param>
-        </member>
-        <member name="M:CodeGlyphX.QrCodeEncoder.EncodeBytes(System.ReadOnlySpan{System.Byte},CodeGlyphX.QrErrorCorrectionLevel,System.Int32,System.Int32,System.Nullable{System.Int32},System.Nullable{System.Int32})">
-            <summary>
-            Encodes an arbitrary byte payload (QR byte mode).
-            </summary>
-            <param name="data">Bytes to encode.</param>
-            <param name="ecc">Error correction level.</param>
-            <param name="minVersion">Minimum allowed QR version (1..40).</param>
-            <param name="maxVersion">Maximum allowed QR version (1..40).</param>
-            <param name="forceMask">Optional forced mask (0..7). When null, the best mask is chosen.</param>
-            <param name="eciAssignmentNumber">Optional ECI assignment number to emit before the payload.</param>
-        </member>
-        <member name="T:CodeGlyphX.QrDecoded">
-            <summary>
-            Result of decoding a QR code payload.
-            </summary>
-        </member>
-        <member name="P:CodeGlyphX.QrDecoded.Version">
-            <summary>
-            Gets the decoded QR version (1..40).
-            </summary>
-        </member>
-        <member name="P:CodeGlyphX.QrDecoded.ErrorCorrectionLevel">
-            <summary>
-            Gets the decoded error correction level.
-            </summary>
-        </member>
-        <member name="P:CodeGlyphX.QrDecoded.Mask">
-            <summary>
-            Gets the decoded mask pattern (0..7).
-            </summary>
-        </member>
-        <member name="P:CodeGlyphX.QrDecoded.Bytes">
-            <summary>
-            Gets the decoded payload bytes.
-            </summary>
-        </member>
-        <member name="P:CodeGlyphX.QrDecoded.Text">
-            <summary>
-            Gets the decoded payload interpreted as text (ISO-8859-1 by default; respects ECI per segment).
-            </summary>
-        </member>
-        <member name="P:CodeGlyphX.QrDecoded.StructuredAppend">
-            <summary>
-            Structured append metadata when the payload participates in a multi-symbol sequence.
-            </summary>
-        </member>
-        <member name="P:CodeGlyphX.QrDecoded.Fnc1Mode">
-            <summary>
-            Indicates whether the payload uses FNC1 (GS1) mode.
-            </summary>
-        </member>
-        <member name="P:CodeGlyphX.QrDecoded.Parsed">
-            <summary>
-            Gets the parsed payload when recognized (URL, WiFi, contact, etc.).
-            </summary>
-        </member>
-        <member name="T:CodeGlyphX.QrDecoder">
-            <summary>
-            Decodes QR codes from a module grid or from raw pixels (clean images).
-            </summary>
-            <remarks>
-            Current scope: byte + kanji payloads on clean/generated images and clean on-screen QR codes.
-            </remarks>
-        </member>
-        <member name="M:CodeGlyphX.QrDecoder.TryDecode(CodeGlyphX.BitMatrix,CodeGlyphX.QrDecoded@)">
-            <summary>
-            Attempts to decode a QR code from an exact module grid (no quiet zone).
-            </summary>
-            <param name="modules">Square matrix of QR modules (dark = <c>true</c>).</param>
-            <param name="result">Decoded payload.</param>
-            <returns><c>true</c> when decoding succeeded; otherwise <c>false</c>.</returns>
-        </member>
-        <member name="M:CodeGlyphX.QrDecoder.TryDecode(CodeGlyphX.BitMatrix,CodeGlyphX.QrDecoded@,CodeGlyphX.QrDecodeInfo@)">
-            <summary>
-            Attempts to decode a QR code from an exact module grid (no quiet zone), with diagnostics.
-            </summary>
-            <param name="modules">Square matrix of QR modules (dark = <c>true</c>).</param>
-            <param name="result">Decoded payload.</param>
-            <param name="info">Decode diagnostics.</param>
-            <returns><c>true</c> when decoding succeeded; otherwise <c>false</c>.</returns>
-        </member>
-        <member name="M:CodeGlyphX.QrDecoder.TryDecode(CodeGlyphX.BitMatrix,CodeGlyphX.QrDecoded@,System.Threading.CancellationToken)">
-            <summary>
-            Attempts to decode a QR code from an exact module grid, with cancellation.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.QrDecoder.TryDecode(CodeGlyphX.BitMatrix,CodeGlyphX.QrDecoded@,CodeGlyphX.QrDecodeInfo@,System.Threading.CancellationToken)">
-            <summary>
-            Attempts to decode a QR code from an exact module grid, with diagnostics and cancellation.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.QrDecoder.TryDecode(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded@)">
-            <summary>
-            Attempts to decode a QR code from raw pixel data (best-effort, clean inputs).
-            </summary>
-            <param name="pixels">Pixel buffer.</param>
-            <param name="width">Image width in pixels.</param>
-            <param name="height">Image height in pixels.</param>
-            <param name="stride">Bytes per row.</param>
-            <param name="fmt">Pixel format (4 bytes per pixel).</param>
-            <param name="result">Decoded payload.</param>
-            <returns><c>true</c> when decoding succeeded; otherwise <c>false</c>.</returns>
-        </member>
-        <member name="M:CodeGlyphX.QrDecoder.TryDecode(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded@,CodeGlyphX.QrPixelDecodeOptions)">
-            <summary>
-            Attempts to decode a QR code from raw pixel data (best-effort, clean inputs) using the specified profile.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.QrDecoder.TryDecode(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded@,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken)">
-            <summary>
-            Attempts to decode a QR code from raw pixel data (best-effort, clean inputs) using the specified profile, with cancellation.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.QrDecoder.TryDecode(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded@,CodeGlyphX.QrPixelDecodeInfo@)">
-            <summary>
-            Attempts to decode a QR code from raw pixel data (best-effort, clean inputs), with diagnostics.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.QrDecoder.TryDecode(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded@,CodeGlyphX.QrPixelDecodeInfo@,CodeGlyphX.QrPixelDecodeOptions)">
-            <summary>
-            Attempts to decode a QR code from raw pixel data (best-effort, clean inputs), with diagnostics and profile options.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.QrDecoder.TryDecode(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded@,CodeGlyphX.QrPixelDecodeInfo@,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken)">
-            <summary>
-            Attempts to decode a QR code from raw pixel data (best-effort, clean inputs), with diagnostics, profile options, and cancellation.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.QrDecoder.TryDecodeAll(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded[]@)">
-            <summary>
-            Attempts to decode all QR codes from raw pixel data (best-effort, clean inputs).
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.QrDecoder.TryDecodeAll(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded[]@,CodeGlyphX.QrPixelDecodeOptions)">
-            <summary>
-            Attempts to decode all QR codes from raw pixel data (best-effort, clean inputs) using the specified profile.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.QrDecoder.TryDecodeAll(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded[]@,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken)">
-            <summary>
-            Attempts to decode all QR codes from raw pixel data (best-effort, clean inputs) using the specified profile, with cancellation.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.QrDecoder.TryDecodeAll(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded[]@,CodeGlyphX.QrPixelDecodeInfo@)">
-            <summary>
-            Attempts to decode all QR codes from raw pixel data (best-effort, clean inputs), with diagnostics.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.QrDecoder.TryDecodeAll(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded[]@,CodeGlyphX.QrPixelDecodeInfo@,CodeGlyphX.QrPixelDecodeOptions)">
-            <summary>
-            Attempts to decode all QR codes from raw pixel data (best-effort, clean inputs), with diagnostics and profile options.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.QrDecoder.TryDecodeAll(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded[]@,CodeGlyphX.QrPixelDecodeInfo@,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken)">
-            <summary>
-            Attempts to decode all QR codes from raw pixel data (best-effort, clean inputs), with diagnostics, profile options, and cancellation.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.QrDecoder.TryDecode(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded@)">
-            <summary>
-            Attempts to decode a QR code from raw pixel data (best-effort, clean inputs).
-            </summary>
-            <param name="pixels">Pixel buffer.</param>
-            <param name="width">Image width in pixels.</param>
-            <param name="height">Image height in pixels.</param>
-            <param name="stride">Bytes per row.</param>
-            <param name="fmt">Pixel format (4 bytes per pixel).</param>
-            <param name="result">Decoded payload.</param>
-            <returns><c>true</c> when decoding succeeded; otherwise <c>false</c>.</returns>
-        </member>
-        <member name="M:CodeGlyphX.QrDecoder.TryDecode(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded@,CodeGlyphX.QrPixelDecodeOptions)">
-            <summary>
-            Attempts to decode a QR code from raw pixel data (best-effort, clean inputs) using the specified profile.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.QrDecoder.TryDecode(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded@,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken)">
-            <summary>
-            Attempts to decode a QR code from raw pixel data (best-effort, clean inputs) using the specified profile, with cancellation.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.QrDecoder.TryDecode(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded@,CodeGlyphX.QrPixelDecodeInfo@)">
-            <summary>
-            Attempts to decode a QR code from raw pixel data (best-effort, clean inputs), with diagnostics.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.QrDecoder.TryDecode(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded@,CodeGlyphX.QrPixelDecodeInfo@,CodeGlyphX.QrPixelDecodeOptions)">
-            <summary>
-            Attempts to decode a QR code from raw pixel data (best-effort, clean inputs), with diagnostics and profile options.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.QrDecoder.TryDecode(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded@,CodeGlyphX.QrPixelDecodeInfo@,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken)">
-            <summary>
-            Attempts to decode a QR code from raw pixel data (best-effort, clean inputs), with diagnostics, profile options, and cancellation.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.QrDecoder.TryDecodeAll(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded[]@)">
-            <summary>
-            Attempts to decode all QR codes from raw pixel data (best-effort, clean inputs).
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.QrDecoder.TryDecodeAll(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded[]@,CodeGlyphX.QrPixelDecodeOptions)">
-            <summary>
-            Attempts to decode all QR codes from raw pixel data (best-effort, clean inputs) using the specified profile.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.QrDecoder.TryDecodeAll(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded[]@,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken)">
-            <summary>
-            Attempts to decode all QR codes from raw pixel data (best-effort, clean inputs) using the specified profile, with cancellation.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.QrDecoder.TryDecodeAll(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded[]@,CodeGlyphX.QrPixelDecodeInfo@)">
-            <summary>
-            Attempts to decode all QR codes from raw pixel data (best-effort, clean inputs), with diagnostics.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.QrDecoder.TryDecodeAll(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded[]@,CodeGlyphX.QrPixelDecodeInfo@,CodeGlyphX.QrPixelDecodeOptions)">
-            <summary>
-            Attempts to decode all QR codes from raw pixel data (best-effort, clean inputs), with diagnostics and profile options.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.QrDecoder.TryDecodeAll(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded[]@,CodeGlyphX.QrPixelDecodeInfo@,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken)">
-            <summary>
-            Attempts to decode all QR codes from raw pixel data (best-effort, clean inputs), with diagnostics, profile options, and cancellation.
             </summary>
         </member>
         <member name="T:CodeGlyphX.Rendering.Ascii.BarcodeAsciiRenderer">
@@ -14638,96 +14653,6 @@
             Raster output.
             </summary>
         </member>
-        <member name="T:CodeGlyphX.Rendering.Svgz.BarcodeSvgzRenderer">
-            <summary>
-            Renders barcodes to SVGZ.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.Rendering.Svgz.BarcodeSvgzRenderer.Render(CodeGlyphX.Barcode1D,CodeGlyphX.Rendering.Svg.BarcodeSvgRenderOptions)">
-            <summary>
-            Renders a barcode to SVGZ bytes.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.Rendering.Svgz.BarcodeSvgzRenderer.RenderToStream(CodeGlyphX.Barcode1D,CodeGlyphX.Rendering.Svg.BarcodeSvgRenderOptions,System.IO.Stream)">
-            <summary>
-            Renders a barcode to an SVGZ stream.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.Rendering.Svgz.BarcodeSvgzRenderer.RenderToFile(CodeGlyphX.Barcode1D,CodeGlyphX.Rendering.Svg.BarcodeSvgRenderOptions,System.String)">
-            <summary>
-            Renders a barcode to an SVGZ file.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.Rendering.Svgz.BarcodeSvgzRenderer.RenderToFile(CodeGlyphX.Barcode1D,CodeGlyphX.Rendering.Svg.BarcodeSvgRenderOptions,System.String,System.String)">
-            <summary>
-            Renders a barcode to an SVGZ file under the specified directory.
-            </summary>
-        </member>
-        <member name="T:CodeGlyphX.Rendering.Svgz.MatrixSvgzRenderer">
-            <summary>
-            Renders matrix modules to SVGZ.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.Rendering.Svgz.MatrixSvgzRenderer.Render(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Svg.MatrixSvgRenderOptions)">
-            <summary>
-            Renders the module matrix to SVGZ bytes.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.Rendering.Svgz.MatrixSvgzRenderer.RenderToStream(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Svg.MatrixSvgRenderOptions,System.IO.Stream)">
-            <summary>
-            Renders the module matrix to an SVGZ stream.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.Rendering.Svgz.MatrixSvgzRenderer.RenderToFile(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Svg.MatrixSvgRenderOptions,System.String)">
-            <summary>
-            Renders the module matrix to an SVGZ file.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.Rendering.Svgz.MatrixSvgzRenderer.RenderToFile(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Svg.MatrixSvgRenderOptions,System.String,System.String)">
-            <summary>
-            Renders the module matrix to an SVGZ file under the specified directory.
-            </summary>
-        </member>
-        <member name="T:CodeGlyphX.Rendering.Svgz.QrSvgzRenderer">
-            <summary>
-            Renders QR modules to SVGZ.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.Rendering.Svgz.QrSvgzRenderer.Render(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Svg.QrSvgRenderOptions)">
-            <summary>
-            Renders the QR module matrix to SVGZ bytes.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.Rendering.Svgz.QrSvgzRenderer.RenderToStream(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Svg.QrSvgRenderOptions,System.IO.Stream)">
-            <summary>
-            Renders the QR module matrix to an SVGZ stream.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.Rendering.Svgz.QrSvgzRenderer.RenderToFile(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Svg.QrSvgRenderOptions,System.String)">
-            <summary>
-            Renders the QR module matrix to an SVGZ file.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.Rendering.Svgz.QrSvgzRenderer.RenderToFile(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Svg.QrSvgRenderOptions,System.String,System.String)">
-            <summary>
-            Renders the QR module matrix to an SVGZ file under the specified directory.
-            </summary>
-        </member>
-        <member name="T:CodeGlyphX.Rendering.Svgz.SvgzWriter">
-            <summary>
-            Writes SVGZ (gzip-compressed SVG).
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.Rendering.Svgz.SvgzWriter.WriteSvg(System.String)">
-            <summary>
-            Writes SVGZ bytes from an SVG string.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.Rendering.Svgz.SvgzWriter.WriteSvg(System.IO.Stream,System.String)">
-            <summary>
-            Writes SVGZ bytes to a stream from an SVG string.
-            </summary>
-        </member>
         <member name="T:CodeGlyphX.Rendering.Svg.BarcodeSvgRenderOptions">
             <summary>
             Options for <see cref="T:CodeGlyphX.Rendering.Svg.SvgBarcodeRenderer"/>.
@@ -14973,6 +14898,96 @@
             <param name="directory">Output directory.</param>
             <param name="fileName">Output file name.</param>
             <returns>The output file path.</returns>
+        </member>
+        <member name="T:CodeGlyphX.Rendering.Svgz.BarcodeSvgzRenderer">
+            <summary>
+            Renders barcodes to SVGZ.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Svgz.BarcodeSvgzRenderer.Render(CodeGlyphX.Barcode1D,CodeGlyphX.Rendering.Svg.BarcodeSvgRenderOptions)">
+            <summary>
+            Renders a barcode to SVGZ bytes.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Svgz.BarcodeSvgzRenderer.RenderToStream(CodeGlyphX.Barcode1D,CodeGlyphX.Rendering.Svg.BarcodeSvgRenderOptions,System.IO.Stream)">
+            <summary>
+            Renders a barcode to an SVGZ stream.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Svgz.BarcodeSvgzRenderer.RenderToFile(CodeGlyphX.Barcode1D,CodeGlyphX.Rendering.Svg.BarcodeSvgRenderOptions,System.String)">
+            <summary>
+            Renders a barcode to an SVGZ file.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Svgz.BarcodeSvgzRenderer.RenderToFile(CodeGlyphX.Barcode1D,CodeGlyphX.Rendering.Svg.BarcodeSvgRenderOptions,System.String,System.String)">
+            <summary>
+            Renders a barcode to an SVGZ file under the specified directory.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Rendering.Svgz.MatrixSvgzRenderer">
+            <summary>
+            Renders matrix modules to SVGZ.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Svgz.MatrixSvgzRenderer.Render(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Svg.MatrixSvgRenderOptions)">
+            <summary>
+            Renders the module matrix to SVGZ bytes.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Svgz.MatrixSvgzRenderer.RenderToStream(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Svg.MatrixSvgRenderOptions,System.IO.Stream)">
+            <summary>
+            Renders the module matrix to an SVGZ stream.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Svgz.MatrixSvgzRenderer.RenderToFile(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Svg.MatrixSvgRenderOptions,System.String)">
+            <summary>
+            Renders the module matrix to an SVGZ file.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Svgz.MatrixSvgzRenderer.RenderToFile(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Svg.MatrixSvgRenderOptions,System.String,System.String)">
+            <summary>
+            Renders the module matrix to an SVGZ file under the specified directory.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Rendering.Svgz.QrSvgzRenderer">
+            <summary>
+            Renders QR modules to SVGZ.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Svgz.QrSvgzRenderer.Render(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Svg.QrSvgRenderOptions)">
+            <summary>
+            Renders the QR module matrix to SVGZ bytes.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Svgz.QrSvgzRenderer.RenderToStream(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Svg.QrSvgRenderOptions,System.IO.Stream)">
+            <summary>
+            Renders the QR module matrix to an SVGZ stream.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Svgz.QrSvgzRenderer.RenderToFile(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Svg.QrSvgRenderOptions,System.String)">
+            <summary>
+            Renders the QR module matrix to an SVGZ file.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Svgz.QrSvgzRenderer.RenderToFile(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Svg.QrSvgRenderOptions,System.String,System.String)">
+            <summary>
+            Renders the QR module matrix to an SVGZ file under the specified directory.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Rendering.Svgz.SvgzWriter">
+            <summary>
+            Writes SVGZ (gzip-compressed SVG).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Svgz.SvgzWriter.WriteSvg(System.String)">
+            <summary>
+            Writes SVGZ bytes from an SVG string.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Svgz.SvgzWriter.WriteSvg(System.IO.Stream,System.String)">
+            <summary>
+            Writes SVGZ bytes to a stream from an SVG string.
+            </summary>
         </member>
         <member name="T:CodeGlyphX.Rendering.Tga.BarcodeTgaRenderer">
             <summary>
@@ -15279,6 +15294,16 @@
             Encodes a UPC-A barcode.
             </summary>
         </member>
+        <member name="T:CodeGlyphX.UpcE.UpcEEncoder">
+            <summary>
+            Encodes UPC-E barcodes.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.UpcE.UpcEEncoder.Encode(System.String,CodeGlyphX.UpcENumberSystem)">
+            <summary>
+            Encodes a UPC-E barcode.
+            </summary>
+        </member>
         <member name="T:CodeGlyphX.UpcENumberSystem">
             <summary>
             UPC-E number system (0 or 1).
@@ -15292,16 +15317,6 @@
         <member name="F:CodeGlyphX.UpcENumberSystem.One">
             <summary>
             Number system 1.
-            </summary>
-        </member>
-        <member name="T:CodeGlyphX.UpcE.UpcEEncoder">
-            <summary>
-            Encodes UPC-E barcodes.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.UpcE.UpcEEncoder.Encode(System.String,CodeGlyphX.UpcENumberSystem)">
-            <summary>
-            Encodes a UPC-E barcode.
             </summary>
         </member>
         <member name="T:System.Text.RegularExpressions.Generated.DigitsOptional_0">

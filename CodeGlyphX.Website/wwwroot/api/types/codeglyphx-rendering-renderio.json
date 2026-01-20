@@ -1,0 +1,648 @@
+{
+  "name": "RenderIO",
+  "fullName": "CodeGlyphX.Rendering.RenderIO",
+  "namespace": "CodeGlyphX.Rendering",
+  "kind": "Class",
+  "slug": "codeglyphx-rendering-renderio",
+  "summary": "Simple file and stream helpers for rendered assets.",
+  "remarks": null,
+  "examples": [],
+  "seeAlso": [],
+  "members": [
+    {
+      "name": "WriteBinary",
+      "kind": "Method",
+      "summary": "Writes binary data to a file and returns the full path.",
+      "remarks": null,
+      "returns": "The output file path.",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "string",
+          "description": "Output file path."
+        },
+        {
+          "name": "data",
+          "type": "byte[]",
+          "description": "Binary data to write."
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string WriteBinary(string path, byte[] data)",
+      "xmlId": "M:CodeGlyphX.Rendering.RenderIO.WriteBinary(System.String,System.Byte[])",
+      "anchor": "method-writebinary-static-string-writebinary-string-path-byte-data"
+    },
+    {
+      "name": "WriteBinaryAsync",
+      "kind": "Method",
+      "summary": "Writes binary data to a file asynchronously and returns the full path.",
+      "remarks": null,
+      "returns": "The output file path.",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "string",
+          "description": "Output file path."
+        },
+        {
+          "name": "data",
+          "type": "byte[]",
+          "description": "Binary data to write."
+        },
+        {
+          "name": "cancellationToken",
+          "type": "CancellationToken",
+          "description": "Cancellation token."
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static Task\u003Cstring\u003E WriteBinaryAsync(string path, byte[] data, CancellationToken cancellationToken)",
+      "xmlId": "M:CodeGlyphX.Rendering.RenderIO.WriteBinaryAsync(System.String,System.Byte[],System.Threading.CancellationToken)",
+      "anchor": "method-writebinaryasync-static-task-string-writebinaryasync-string-path-byte-data-cancellationtoken-cancellationtoken"
+    },
+    {
+      "name": "WriteBinary",
+      "kind": "Method",
+      "summary": "Writes binary data to a file under the specified directory.",
+      "remarks": null,
+      "returns": "The output file path.",
+      "parameters": [
+        {
+          "name": "directory",
+          "type": "string",
+          "description": "Output directory."
+        },
+        {
+          "name": "fileName",
+          "type": "string",
+          "description": "Output file name."
+        },
+        {
+          "name": "data",
+          "type": "byte[]",
+          "description": "Binary data to write."
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string WriteBinary(string directory, string fileName, byte[] data)",
+      "xmlId": "M:CodeGlyphX.Rendering.RenderIO.WriteBinary(System.String,System.String,System.Byte[])",
+      "anchor": "method-writebinary-static-string-writebinary-string-directory-string-filename-byte-data"
+    },
+    {
+      "name": "WriteBinaryAsync",
+      "kind": "Method",
+      "summary": "Writes binary data to a file under the specified directory asynchronously.",
+      "remarks": null,
+      "returns": "The output file path.",
+      "parameters": [
+        {
+          "name": "directory",
+          "type": "string",
+          "description": "Output directory."
+        },
+        {
+          "name": "fileName",
+          "type": "string",
+          "description": "Output file name."
+        },
+        {
+          "name": "data",
+          "type": "byte[]",
+          "description": "Binary data to write."
+        },
+        {
+          "name": "cancellationToken",
+          "type": "CancellationToken",
+          "description": "Cancellation token."
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static Task\u003Cstring\u003E WriteBinaryAsync(string directory, string fileName, byte[] data, CancellationToken cancellationToken)",
+      "xmlId": "M:CodeGlyphX.Rendering.RenderIO.WriteBinaryAsync(System.String,System.String,System.Byte[],System.Threading.CancellationToken)",
+      "anchor": "method-writebinaryasync-static-task-string-writebinaryasync-string-directory-string-filename-byte-data-cancellationtoken-cancellationtoken"
+    },
+    {
+      "name": "WriteBinary",
+      "kind": "Method",
+      "summary": "Writes binary data to a stream.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "stream",
+          "type": "Stream",
+          "description": "Target stream."
+        },
+        {
+          "name": "data",
+          "type": "byte[]",
+          "description": "Binary data to write."
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static void WriteBinary(Stream stream, byte[] data)",
+      "xmlId": "M:CodeGlyphX.Rendering.RenderIO.WriteBinary(System.IO.Stream,System.Byte[])",
+      "anchor": "method-writebinary-static-void-writebinary-stream-stream-byte-data"
+    },
+    {
+      "name": "WriteBinaryAsync",
+      "kind": "Method",
+      "summary": "Writes binary data to a stream asynchronously.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "stream",
+          "type": "Stream",
+          "description": "Target stream."
+        },
+        {
+          "name": "data",
+          "type": "byte[]",
+          "description": "Binary data to write."
+        },
+        {
+          "name": "cancellationToken",
+          "type": "CancellationToken",
+          "description": "Cancellation token."
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static Task WriteBinaryAsync(Stream stream, byte[] data, CancellationToken cancellationToken)",
+      "xmlId": "M:CodeGlyphX.Rendering.RenderIO.WriteBinaryAsync(System.IO.Stream,System.Byte[],System.Threading.CancellationToken)",
+      "anchor": "method-writebinaryasync-static-task-writebinaryasync-stream-stream-byte-data-cancellationtoken-cancellationtoken"
+    },
+    {
+      "name": "ReadBinary",
+      "kind": "Method",
+      "summary": "Reads binary data from a file.",
+      "remarks": null,
+      "returns": "Binary file contents.",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "string",
+          "description": "Input file path."
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static byte[] ReadBinary(string path)",
+      "xmlId": "M:CodeGlyphX.Rendering.RenderIO.ReadBinary(System.String)",
+      "anchor": "method-readbinary-static-byte-readbinary-string-path"
+    },
+    {
+      "name": "ReadBinaryAsync",
+      "kind": "Method",
+      "summary": "Reads binary data from a file asynchronously.",
+      "remarks": null,
+      "returns": "Binary file contents.",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "string",
+          "description": "Input file path."
+        },
+        {
+          "name": "cancellationToken",
+          "type": "CancellationToken",
+          "description": "Cancellation token."
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static Task\u003Cbyte[]\u003E ReadBinaryAsync(string path, CancellationToken cancellationToken)",
+      "xmlId": "M:CodeGlyphX.Rendering.RenderIO.ReadBinaryAsync(System.String,System.Threading.CancellationToken)",
+      "anchor": "method-readbinaryasync-static-task-byte-readbinaryasync-string-path-cancellationtoken-cancellationtoken"
+    },
+    {
+      "name": "ReadBinary",
+      "kind": "Method",
+      "summary": "Reads binary data from a stream.",
+      "remarks": null,
+      "returns": "Binary data.",
+      "parameters": [
+        {
+          "name": "stream",
+          "type": "Stream",
+          "description": "Input stream."
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static byte[] ReadBinary(Stream stream)",
+      "xmlId": "M:CodeGlyphX.Rendering.RenderIO.ReadBinary(System.IO.Stream)",
+      "anchor": "method-readbinary-static-byte-readbinary-stream-stream"
+    },
+    {
+      "name": "ReadBinaryAsync",
+      "kind": "Method",
+      "summary": "Reads binary data from a stream asynchronously.",
+      "remarks": null,
+      "returns": "Binary data.",
+      "parameters": [
+        {
+          "name": "stream",
+          "type": "Stream",
+          "description": "Input stream."
+        },
+        {
+          "name": "cancellationToken",
+          "type": "CancellationToken",
+          "description": "Cancellation token."
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static Task\u003Cbyte[]\u003E ReadBinaryAsync(Stream stream, CancellationToken cancellationToken)",
+      "xmlId": "M:CodeGlyphX.Rendering.RenderIO.ReadBinaryAsync(System.IO.Stream,System.Threading.CancellationToken)",
+      "anchor": "method-readbinaryasync-static-task-byte-readbinaryasync-stream-stream-cancellationtoken-cancellationtoken"
+    },
+    {
+      "name": "TryReadBinary",
+      "kind": "Method",
+      "summary": "Attempts to read binary data from a file.",
+      "remarks": null,
+      "returns": "True when the file exists and was read.",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "string",
+          "description": "Input file path."
+        },
+        {
+          "name": "data",
+          "type": "byte[]",
+          "description": "Binary file contents."
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryReadBinary(string path, out byte[] data)",
+      "xmlId": "M:CodeGlyphX.Rendering.RenderIO.TryReadBinary(System.String,System.Byte[]@)",
+      "anchor": "method-tryreadbinary-static-bool-tryreadbinary-string-path-out-byte-data"
+    },
+    {
+      "name": "ReadText",
+      "kind": "Method",
+      "summary": "Reads text from a file.",
+      "remarks": null,
+      "returns": "Text content.",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "string",
+          "description": "Input file path."
+        },
+        {
+          "name": "encoding",
+          "type": "Encoding",
+          "description": "Optional text encoding (defaults to UTF-8)."
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string ReadText(string path, Encoding encoding)",
+      "xmlId": "M:CodeGlyphX.Rendering.RenderIO.ReadText(System.String,System.Text.Encoding)",
+      "anchor": "method-readtext-static-string-readtext-string-path-encoding-encoding"
+    },
+    {
+      "name": "ReadTextAsync",
+      "kind": "Method",
+      "summary": "Reads text from a file asynchronously.",
+      "remarks": null,
+      "returns": "Text content.",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "string",
+          "description": "Input file path."
+        },
+        {
+          "name": "encoding",
+          "type": "Encoding",
+          "description": "Optional text encoding (defaults to UTF-8)."
+        },
+        {
+          "name": "cancellationToken",
+          "type": "CancellationToken",
+          "description": "Cancellation token."
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static Task\u003Cstring\u003E ReadTextAsync(string path, Encoding encoding, CancellationToken cancellationToken)",
+      "xmlId": "M:CodeGlyphX.Rendering.RenderIO.ReadTextAsync(System.String,System.Text.Encoding,System.Threading.CancellationToken)",
+      "anchor": "method-readtextasync-static-task-string-readtextasync-string-path-encoding-encoding-cancellationtoken-cancellationtoken"
+    },
+    {
+      "name": "ReadText",
+      "kind": "Method",
+      "summary": "Reads text from a stream.",
+      "remarks": null,
+      "returns": "Text content.",
+      "parameters": [
+        {
+          "name": "stream",
+          "type": "Stream",
+          "description": "Input stream."
+        },
+        {
+          "name": "encoding",
+          "type": "Encoding",
+          "description": "Optional text encoding (defaults to UTF-8)."
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string ReadText(Stream stream, Encoding encoding)",
+      "xmlId": "M:CodeGlyphX.Rendering.RenderIO.ReadText(System.IO.Stream,System.Text.Encoding)",
+      "anchor": "method-readtext-static-string-readtext-stream-stream-encoding-encoding"
+    },
+    {
+      "name": "ReadTextAsync",
+      "kind": "Method",
+      "summary": "Reads text from a stream asynchronously.",
+      "remarks": null,
+      "returns": "Text content.",
+      "parameters": [
+        {
+          "name": "stream",
+          "type": "Stream",
+          "description": "Input stream."
+        },
+        {
+          "name": "encoding",
+          "type": "Encoding",
+          "description": "Optional text encoding (defaults to UTF-8)."
+        },
+        {
+          "name": "cancellationToken",
+          "type": "CancellationToken",
+          "description": "Cancellation token."
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static Task\u003Cstring\u003E ReadTextAsync(Stream stream, Encoding encoding, CancellationToken cancellationToken)",
+      "xmlId": "M:CodeGlyphX.Rendering.RenderIO.ReadTextAsync(System.IO.Stream,System.Text.Encoding,System.Threading.CancellationToken)",
+      "anchor": "method-readtextasync-static-task-string-readtextasync-stream-stream-encoding-encoding-cancellationtoken-cancellationtoken"
+    },
+    {
+      "name": "TryReadText",
+      "kind": "Method",
+      "summary": "Attempts to read text from a file.",
+      "remarks": null,
+      "returns": "True when the file exists and was read.",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "string",
+          "description": "Input file path."
+        },
+        {
+          "name": "text",
+          "type": "string",
+          "description": "Text content."
+        },
+        {
+          "name": "encoding",
+          "type": "Encoding",
+          "description": "Optional text encoding (defaults to UTF-8)."
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryReadText(string path, out string text, Encoding encoding)",
+      "xmlId": "M:CodeGlyphX.Rendering.RenderIO.TryReadText(System.String,System.String@,System.Text.Encoding)",
+      "anchor": "method-tryreadtext-static-bool-tryreadtext-string-path-out-string-text-encoding-encoding"
+    },
+    {
+      "name": "WriteText",
+      "kind": "Method",
+      "summary": "Writes text to a file and returns the full path.",
+      "remarks": null,
+      "returns": "The output file path.",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "string",
+          "description": "Output file path."
+        },
+        {
+          "name": "text",
+          "type": "string",
+          "description": "Text content."
+        },
+        {
+          "name": "encoding",
+          "type": "Encoding",
+          "description": "Optional text encoding (defaults to UTF-8)."
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string WriteText(string path, string text, Encoding encoding)",
+      "xmlId": "M:CodeGlyphX.Rendering.RenderIO.WriteText(System.String,System.String,System.Text.Encoding)",
+      "anchor": "method-writetext-static-string-writetext-string-path-string-text-encoding-encoding"
+    },
+    {
+      "name": "WriteTextAsync",
+      "kind": "Method",
+      "summary": "Writes text to a file asynchronously and returns the full path.",
+      "remarks": null,
+      "returns": "The output file path.",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "string",
+          "description": "Output file path."
+        },
+        {
+          "name": "text",
+          "type": "string",
+          "description": "Text content."
+        },
+        {
+          "name": "encoding",
+          "type": "Encoding",
+          "description": "Optional text encoding (defaults to UTF-8)."
+        },
+        {
+          "name": "cancellationToken",
+          "type": "CancellationToken",
+          "description": "Cancellation token."
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static Task\u003Cstring\u003E WriteTextAsync(string path, string text, Encoding encoding, CancellationToken cancellationToken)",
+      "xmlId": "M:CodeGlyphX.Rendering.RenderIO.WriteTextAsync(System.String,System.String,System.Text.Encoding,System.Threading.CancellationToken)",
+      "anchor": "method-writetextasync-static-task-string-writetextasync-string-path-string-text-encoding-encoding-cancellationtoken-cancellationtoken"
+    },
+    {
+      "name": "WriteText",
+      "kind": "Method",
+      "summary": "Writes text to a stream.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "stream",
+          "type": "Stream",
+          "description": "Target stream."
+        },
+        {
+          "name": "text",
+          "type": "string",
+          "description": "Text content."
+        },
+        {
+          "name": "encoding",
+          "type": "Encoding",
+          "description": "Optional text encoding (defaults to UTF-8)."
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static void WriteText(Stream stream, string text, Encoding encoding)",
+      "xmlId": "M:CodeGlyphX.Rendering.RenderIO.WriteText(System.IO.Stream,System.String,System.Text.Encoding)",
+      "anchor": "method-writetext-static-void-writetext-stream-stream-string-text-encoding-encoding"
+    },
+    {
+      "name": "WriteTextAsync",
+      "kind": "Method",
+      "summary": "Writes text to a stream asynchronously.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "stream",
+          "type": "Stream",
+          "description": "Target stream."
+        },
+        {
+          "name": "text",
+          "type": "string",
+          "description": "Text content."
+        },
+        {
+          "name": "encoding",
+          "type": "Encoding",
+          "description": "Optional text encoding (defaults to UTF-8)."
+        },
+        {
+          "name": "cancellationToken",
+          "type": "CancellationToken",
+          "description": "Cancellation token."
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static Task WriteTextAsync(Stream stream, string text, Encoding encoding, CancellationToken cancellationToken)",
+      "xmlId": "M:CodeGlyphX.Rendering.RenderIO.WriteTextAsync(System.IO.Stream,System.String,System.Text.Encoding,System.Threading.CancellationToken)",
+      "anchor": "method-writetextasync-static-task-writetextasync-stream-stream-string-text-encoding-encoding-cancellationtoken-cancellationtoken"
+    },
+    {
+      "name": "WriteText",
+      "kind": "Method",
+      "summary": "Writes text to a file under the specified directory.",
+      "remarks": null,
+      "returns": "The output file path.",
+      "parameters": [
+        {
+          "name": "directory",
+          "type": "string",
+          "description": "Output directory."
+        },
+        {
+          "name": "fileName",
+          "type": "string",
+          "description": "Output file name."
+        },
+        {
+          "name": "text",
+          "type": "string",
+          "description": "Text content."
+        },
+        {
+          "name": "encoding",
+          "type": "Encoding",
+          "description": "Optional text encoding (defaults to UTF-8)."
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string WriteText(string directory, string fileName, string text, Encoding encoding)",
+      "xmlId": "M:CodeGlyphX.Rendering.RenderIO.WriteText(System.String,System.String,System.String,System.Text.Encoding)",
+      "anchor": "method-writetext-static-string-writetext-string-directory-string-filename-string-text-encoding-encoding"
+    },
+    {
+      "name": "WriteTextAsync",
+      "kind": "Method",
+      "summary": "Writes text to a file under the specified directory asynchronously.",
+      "remarks": null,
+      "returns": "The output file path.",
+      "parameters": [
+        {
+          "name": "directory",
+          "type": "string",
+          "description": "Output directory."
+        },
+        {
+          "name": "fileName",
+          "type": "string",
+          "description": "Output file name."
+        },
+        {
+          "name": "text",
+          "type": "string",
+          "description": "Text content."
+        },
+        {
+          "name": "encoding",
+          "type": "Encoding",
+          "description": "Optional text encoding (defaults to UTF-8)."
+        },
+        {
+          "name": "cancellationToken",
+          "type": "CancellationToken",
+          "description": "Cancellation token."
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static Task\u003Cstring\u003E WriteTextAsync(string directory, string fileName, string text, Encoding encoding, CancellationToken cancellationToken)",
+      "xmlId": "M:CodeGlyphX.Rendering.RenderIO.WriteTextAsync(System.String,System.String,System.String,System.Text.Encoding,System.Threading.CancellationToken)",
+      "anchor": "method-writetextasync-static-task-string-writetextasync-string-directory-string-filename-string-text-encoding-encoding-cancellationtoken-cancellationtoken"
+    }
+  ]
+}

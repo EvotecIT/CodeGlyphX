@@ -1,0 +1,55 @@
+{
+  "name": "QrPayloadParseOptions",
+  "fullName": "CodeGlyphX.Payloads.QrPayloadParseOptions",
+  "namespace": "CodeGlyphX.Payloads",
+  "kind": "Class",
+  "slug": "codeglyphx-payloads-qrpayloadparseoptions",
+  "summary": "Options controlling payload parsing and validation.",
+  "remarks": null,
+  "examples": [],
+  "seeAlso": [],
+  "members": [
+    {
+      "name": "QrPayloadParseOptions",
+      "kind": "Constructor",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "QrPayloadParseOptions()",
+      "xmlId": "M:CodeGlyphX.Payloads.QrPayloadParseOptions.#ctor",
+      "anchor": "constructor-qrpayloadparseoptions-qrpayloadparseoptions"
+    },
+    {
+      "name": "Strict",
+      "kind": "Property",
+      "summary": "When enabled, parsed payloads are validated against stricter schema rules.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "bool Strict {get; set; }",
+      "xmlId": "P:CodeGlyphX.Payloads.QrPayloadParseOptions.Strict",
+      "anchor": "property-strict-bool-strict-get-set"
+    },
+    {
+      "name": "AllowUnknownWifiAuth",
+      "kind": "Property",
+      "summary": "Whether unknown Wi-Fi auth types are allowed in strict mode.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "bool AllowUnknownWifiAuth {get; set; }",
+      "xmlId": "P:CodeGlyphX.Payloads.QrPayloadParseOptions.AllowUnknownWifiAuth",
+      "anchor": "property-allowunknownwifiauth-bool-allowunknownwifiauth-get-set"
+    }
+  ]
+}

@@ -1,0 +1,1760 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AztecCode - CodeGlyphX API Reference</title>
+  <meta name="description" content="Aztec code helpers." />
+  <link rel="stylesheet" href="../style.css" />
+  <script>(function(){var theme=localStorage.getItem('theme')||'dark';document.documentElement.setAttribute('data-theme',theme);})();</script>
+</head>
+<body>
+  <div class="page">
+<header class="header">
+    <div class="header-content">
+        <a href="/" class="brand">
+            <div class="brand-icon">
+                <img src="/codeglyphx-qr-icon.png" alt="CodeGlyphX logo" width="28" height="28" />
+            </div>
+            <span>CodeGlyphX</span>
+        </a>
+
+        <!-- Mobile hamburger toggle -->
+        <input type="checkbox" id="nav-toggle" class="nav-toggle-checkbox" />
+        <label for="nav-toggle" class="nav-toggle" aria-label="Toggle navigation">
+            <span></span>
+            <span></span>
+            <span></span>
+        </label>
+
+        <nav class="nav">
+            <div class="nav-links">
+                <a href="/">Home</a>
+                <a href="/playground/">Playground</a>
+                <a href="/docs/">Documentation</a>
+                <a href="/api/">API Reference</a>
+            </div>
+            <div class="nav-actions">
+                <button class="theme-toggle" title="Toggle theme" aria-label="Toggle theme">
+                    <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="5"/>
+                        <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+                    </svg>
+                    <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
+                    </svg>
+                </button>
+                <a href="https://github.com/EvotecIT/CodeGlyphX" target="_blank" rel="noopener" class="nav-icon" title="GitHub">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                    </svg>
+                </a>
+                <a href="https://www.nuget.org/packages/CodeGlyphX" target="_blank" rel="noopener" class="nav-cta">
+                    <svg viewBox="0 0 24 24" fill="currentColor" class="nav-cta-icon">
+                        <path d="M12 0L1.75 6v12L12 24l10.25-6V6zm-1.775 18a3.11 3.11 0 01-3.111-3.111 3.11 3.11 0 013.111-3.111 3.11 3.11 0 013.111 3.111A3.11 3.11 0 0110.225 18zm4.91-6.944a1.867 1.867 0 01-1.867-1.867 1.867 1.867 0 011.866-1.866 1.867 1.867 0 011.867 1.866 1.867 1.867 0 01-1.867 1.867z"/>
+                    </svg>
+                    Get Started
+                </a>
+            </div>
+        </nav>
+    </div>
+</header>
+
+<main class="type-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">API Reference</a>
+    <span class="sep">/</span><span>CodeGlyphX</span>
+  </nav>
+  <header class="type-header">
+    <h1>AztecCode</h1>
+    <div class="type-meta">Class · CodeGlyphX</div>
+  </header>
+  <p class="type-summary">Aztec code helpers.</p>
+  <section class="examples">
+    <h2>Examples</h2>
+    <h3>EXAMPLE 1</h3>
+    <pre><code>
+            using CodeGlyphX;
+            var png = AztecCode.Png(&quot;Ticket: CONF-2024&quot;);</code></pre>
+  </section>
+  <section class="member-section">
+    <h2>Methods</h2>
+    <div class="member" id="method-encode-static-bitmatrix-encode-string-text-aztecencodeoptions-options">
+      <code class="signature">static BitMatrix Encode(string text, AztecEncodeOptions options)</code>
+      <p class="member-summary">Encodes a text payload as Aztec.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>text <span class="param-type">string</span></dt>
+        <dt>options <span class="param-type">AztecEncodeOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-encode-static-bitmatrix-encode-readonlyspan-byte-data-aztecencodeoptions-options">
+      <code class="signature">static BitMatrix Encode(ReadOnlySpan&lt;byte&gt; data, AztecEncodeOptions options)</code>
+      <p class="member-summary">Encodes binary payload as Aztec.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>data <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
+        <dt>options <span class="param-type">AztecEncodeOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-png-static-byte-png-string-text-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static byte[] Png(string text, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Renders Aztec to PNG bytes.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>text <span class="param-type">string</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-png-static-byte-png-readonlyspan-byte-data-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static byte[] Png(ReadOnlySpan&lt;byte&gt; data, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Renders Aztec to PNG bytes.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>data <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-svg-static-string-svg-string-text-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static string Svg(string text, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Renders Aztec to SVG markup.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>text <span class="param-type">string</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-svgz-static-byte-svgz-string-text-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static byte[] Svgz(string text, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Renders Aztec to SVGZ.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>text <span class="param-type">string</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-svg-static-string-svg-readonlyspan-byte-data-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static string Svg(ReadOnlySpan&lt;byte&gt; data, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Renders Aztec to SVG markup.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>data <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-svgz-static-byte-svgz-readonlyspan-byte-data-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static byte[] Svgz(ReadOnlySpan&lt;byte&gt; data, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Renders Aztec to SVGZ.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>data <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-html-static-string-html-string-text-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static string Html(string text, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Renders Aztec to HTML markup.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>text <span class="param-type">string</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-html-static-string-html-readonlyspan-byte-data-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static string Html(ReadOnlySpan&lt;byte&gt; data, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Renders Aztec to HTML markup.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>data <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-jpeg-static-byte-jpeg-string-text-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static byte[] Jpeg(string text, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Renders Aztec to JPEG bytes.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>text <span class="param-type">string</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-jpeg-static-byte-jpeg-readonlyspan-byte-data-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static byte[] Jpeg(ReadOnlySpan&lt;byte&gt; data, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Renders Aztec to JPEG bytes.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>data <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-bmp-static-byte-bmp-string-text-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static byte[] Bmp(string text, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Renders Aztec to BMP bytes.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>text <span class="param-type">string</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-bmp-static-byte-bmp-readonlyspan-byte-data-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static byte[] Bmp(ReadOnlySpan&lt;byte&gt; data, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Renders Aztec to BMP bytes.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>data <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-ppm-static-byte-ppm-string-text-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static byte[] Ppm(string text, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Renders Aztec to PPM bytes.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>text <span class="param-type">string</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-ppm-static-byte-ppm-readonlyspan-byte-data-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static byte[] Ppm(ReadOnlySpan&lt;byte&gt; data, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Renders Aztec to PPM bytes.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>data <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-pbm-static-byte-pbm-string-text-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static byte[] Pbm(string text, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Renders Aztec to PBM bytes.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>text <span class="param-type">string</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-pgm-static-byte-pgm-string-text-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static byte[] Pgm(string text, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Renders Aztec to PGM bytes.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>text <span class="param-type">string</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-pam-static-byte-pam-string-text-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static byte[] Pam(string text, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Renders Aztec to PAM bytes.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>text <span class="param-type">string</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-xbm-static-string-xbm-string-text-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static string Xbm(string text, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Renders Aztec to XBM.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>text <span class="param-type">string</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-xpm-static-string-xpm-string-text-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static string Xpm(string text, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Renders Aztec to XPM.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>text <span class="param-type">string</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-pbm-static-byte-pbm-readonlyspan-byte-data-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static byte[] Pbm(ReadOnlySpan&lt;byte&gt; data, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Renders Aztec to PBM bytes.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>data <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-pgm-static-byte-pgm-readonlyspan-byte-data-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static byte[] Pgm(ReadOnlySpan&lt;byte&gt; data, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Renders Aztec to PGM bytes.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>data <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-pam-static-byte-pam-readonlyspan-byte-data-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static byte[] Pam(ReadOnlySpan&lt;byte&gt; data, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Renders Aztec to PAM bytes.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>data <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-xbm-static-string-xbm-readonlyspan-byte-data-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static string Xbm(ReadOnlySpan&lt;byte&gt; data, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Renders Aztec to XBM.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>data <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-xpm-static-string-xpm-readonlyspan-byte-data-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static string Xpm(ReadOnlySpan&lt;byte&gt; data, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Renders Aztec to XPM.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>data <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-tga-static-byte-tga-string-text-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static byte[] Tga(string text, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Renders Aztec to TGA bytes.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>text <span class="param-type">string</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-tga-static-byte-tga-readonlyspan-byte-data-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static byte[] Tga(ReadOnlySpan&lt;byte&gt; data, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Renders Aztec to TGA bytes.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>data <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-ico-static-byte-ico-string-text-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static byte[] Ico(string text, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Renders Aztec to ICO bytes.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>text <span class="param-type">string</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-ico-static-byte-ico-readonlyspan-byte-data-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static byte[] Ico(ReadOnlySpan&lt;byte&gt; data, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Renders Aztec to ICO bytes.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>data <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-pdf-static-byte-pdf-string-text-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions-rendermode-rendermode">
+      <code class="signature">static byte[] Pdf(string text, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions, RenderMode renderMode)</code>
+      <p class="member-summary">Renders Aztec to PDF bytes.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>text <span class="param-type">string</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+        <dt>renderMode <span class="param-type">RenderMode</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-pdf-static-byte-pdf-readonlyspan-byte-data-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions-rendermode-rendermode">
+      <code class="signature">static byte[] Pdf(ReadOnlySpan&lt;byte&gt; data, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions, RenderMode renderMode)</code>
+      <p class="member-summary">Renders Aztec to PDF bytes.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>data <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+        <dt>renderMode <span class="param-type">RenderMode</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-eps-static-string-eps-string-text-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions-rendermode-rendermode">
+      <code class="signature">static string Eps(string text, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions, RenderMode renderMode)</code>
+      <p class="member-summary">Renders Aztec to EPS markup.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>text <span class="param-type">string</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+        <dt>renderMode <span class="param-type">RenderMode</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-eps-static-string-eps-readonlyspan-byte-data-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions-rendermode-rendermode">
+      <code class="signature">static string Eps(ReadOnlySpan&lt;byte&gt; data, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions, RenderMode renderMode)</code>
+      <p class="member-summary">Renders Aztec to EPS markup.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>data <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+        <dt>renderMode <span class="param-type">RenderMode</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-ascii-static-string-ascii-string-text-aztecencodeoptions-encodeoptions-matrixasciirenderoptions-renderoptions">
+      <code class="signature">static string Ascii(string text, AztecEncodeOptions encodeOptions, MatrixAsciiRenderOptions renderOptions)</code>
+      <p class="member-summary">Renders Aztec to ASCII text.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>text <span class="param-type">string</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixAsciiRenderOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-ascii-static-string-ascii-readonlyspan-byte-data-aztecencodeoptions-encodeoptions-matrixasciirenderoptions-renderoptions">
+      <code class="signature">static string Ascii(ReadOnlySpan&lt;byte&gt; data, AztecEncodeOptions encodeOptions, MatrixAsciiRenderOptions renderOptions)</code>
+      <p class="member-summary">Renders Aztec to ASCII text.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>data <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixAsciiRenderOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-save-static-string-save-string-text-string-path-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions-string-title">
+      <code class="signature">static string Save(string text, string path, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions, string title)</code>
+      <p class="member-summary">Saves Aztec to a file based on extension (.png/.svg/.svgz/.html/.jpg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps).
+ Defaults to PNG when no extension is provided.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>text <span class="param-type">string</span></dt>
+        <dt>path <span class="param-type">string</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+        <dt>title <span class="param-type">string</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-trydecode-static-bool-trydecode-bitmatrix-modules-out-string-value">
+      <code class="signature">static bool TryDecode(BitMatrix modules, out string value)</code>
+      <p class="member-summary">Attempts to decode an Aztec symbol from a module matrix.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>modules <span class="param-type">BitMatrix</span></dt>
+        <dt>value <span class="param-type">string</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-trydecode-static-bool-trydecode-bitmatrix-modules-cancellationtoken-cancellationtoken-out-string-value">
+      <code class="signature">static bool TryDecode(BitMatrix modules, CancellationToken cancellationToken, out string value)</code>
+      <p class="member-summary">Attempts to decode an Aztec symbol from a module matrix, with cancellation.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>modules <span class="param-type">BitMatrix</span></dt>
+        <dt>cancellationToken <span class="param-type">CancellationToken</span></dt>
+        <dt>value <span class="param-type">string</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-trydecode-static-bool-trydecode-bitmatrix-modules-out-string-value-out-aztecdecodediagnostics-diagnostics">
+      <code class="signature">static bool TryDecode(BitMatrix modules, out string value, out AztecDecodeDiagnostics diagnostics)</code>
+      <p class="member-summary">Attempts to decode an Aztec symbol from a module matrix, with diagnostics.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>modules <span class="param-type">BitMatrix</span></dt>
+        <dt>value <span class="param-type">string</span></dt>
+        <dt>diagnostics <span class="param-type">AztecDecodeDiagnostics</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-trydecode-static-bool-trydecode-bitmatrix-modules-cancellationtoken-cancellationtoken-out-string-value-out-aztecdecodediagnostics-diagnostics">
+      <code class="signature">static bool TryDecode(BitMatrix modules, CancellationToken cancellationToken, out string value, out AztecDecodeDiagnostics diagnostics)</code>
+      <p class="member-summary">Attempts to decode an Aztec symbol from a module matrix, with cancellation and diagnostics.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>modules <span class="param-type">BitMatrix</span></dt>
+        <dt>cancellationToken <span class="param-type">CancellationToken</span></dt>
+        <dt>value <span class="param-type">string</span></dt>
+        <dt>diagnostics <span class="param-type">AztecDecodeDiagnostics</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-trydecode-static-bool-trydecode-byte-pixels-int-width-int-height-int-stride-pixelformat-format-out-string-value">
+      <code class="signature">static bool TryDecode(byte[] pixels, int width, int height, int stride, PixelFormat format, out string value)</code>
+      <p class="member-summary">Attempts to decode an Aztec symbol from raw pixels.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>pixels <span class="param-type">byte[]</span></dt>
+        <dt>width <span class="param-type">int</span></dt>
+        <dt>height <span class="param-type">int</span></dt>
+        <dt>stride <span class="param-type">int</span></dt>
+        <dt>format <span class="param-type">PixelFormat</span></dt>
+        <dt>value <span class="param-type">string</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-trydecode-static-bool-trydecode-byte-pixels-int-width-int-height-int-stride-pixelformat-format-cancellationtoken-cancellationtoken-out-string-value">
+      <code class="signature">static bool TryDecode(byte[] pixels, int width, int height, int stride, PixelFormat format, CancellationToken cancellationToken, out string value)</code>
+      <p class="member-summary">Attempts to decode an Aztec symbol from raw pixels, with cancellation.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>pixels <span class="param-type">byte[]</span></dt>
+        <dt>width <span class="param-type">int</span></dt>
+        <dt>height <span class="param-type">int</span></dt>
+        <dt>stride <span class="param-type">int</span></dt>
+        <dt>format <span class="param-type">PixelFormat</span></dt>
+        <dt>cancellationToken <span class="param-type">CancellationToken</span></dt>
+        <dt>value <span class="param-type">string</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-trydecode-static-bool-trydecode-byte-pixels-int-width-int-height-int-stride-pixelformat-format-out-string-value-out-aztecdecodediagnostics-diagnostics">
+      <code class="signature">static bool TryDecode(byte[] pixels, int width, int height, int stride, PixelFormat format, out string value, out AztecDecodeDiagnostics diagnostics)</code>
+      <p class="member-summary">Attempts to decode an Aztec symbol from raw pixels, with diagnostics.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>pixels <span class="param-type">byte[]</span></dt>
+        <dt>width <span class="param-type">int</span></dt>
+        <dt>height <span class="param-type">int</span></dt>
+        <dt>stride <span class="param-type">int</span></dt>
+        <dt>format <span class="param-type">PixelFormat</span></dt>
+        <dt>value <span class="param-type">string</span></dt>
+        <dt>diagnostics <span class="param-type">AztecDecodeDiagnostics</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-trydecode-static-bool-trydecode-byte-pixels-int-width-int-height-int-stride-pixelformat-format-cancellationtoken-cancellationtoken-out-string-value-out-aztecdecodediagnostics-diagnostics">
+      <code class="signature">static bool TryDecode(byte[] pixels, int width, int height, int stride, PixelFormat format, CancellationToken cancellationToken, out string value, out AztecDecodeDiagnostics diagnostics)</code>
+      <p class="member-summary">Attempts to decode an Aztec symbol from raw pixels, with cancellation and diagnostics.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>pixels <span class="param-type">byte[]</span></dt>
+        <dt>width <span class="param-type">int</span></dt>
+        <dt>height <span class="param-type">int</span></dt>
+        <dt>stride <span class="param-type">int</span></dt>
+        <dt>format <span class="param-type">PixelFormat</span></dt>
+        <dt>cancellationToken <span class="param-type">CancellationToken</span></dt>
+        <dt>value <span class="param-type">string</span></dt>
+        <dt>diagnostics <span class="param-type">AztecDecodeDiagnostics</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-trydecode-static-bool-trydecode-readonlyspan-byte-pixels-int-width-int-height-int-stride-pixelformat-format-out-string-value">
+      <code class="signature">static bool TryDecode(ReadOnlySpan&lt;byte&gt; pixels, int width, int height, int stride, PixelFormat format, out string value)</code>
+      <p class="member-summary">Attempts to decode an Aztec symbol from raw pixels.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>pixels <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
+        <dt>width <span class="param-type">int</span></dt>
+        <dt>height <span class="param-type">int</span></dt>
+        <dt>stride <span class="param-type">int</span></dt>
+        <dt>format <span class="param-type">PixelFormat</span></dt>
+        <dt>value <span class="param-type">string</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-trydecode-static-bool-trydecode-readonlyspan-byte-pixels-int-width-int-height-int-stride-pixelformat-format-cancellationtoken-cancellationtoken-out-string-value">
+      <code class="signature">static bool TryDecode(ReadOnlySpan&lt;byte&gt; pixels, int width, int height, int stride, PixelFormat format, CancellationToken cancellationToken, out string value)</code>
+      <p class="member-summary">Attempts to decode an Aztec symbol from raw pixels, with cancellation.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>pixels <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
+        <dt>width <span class="param-type">int</span></dt>
+        <dt>height <span class="param-type">int</span></dt>
+        <dt>stride <span class="param-type">int</span></dt>
+        <dt>format <span class="param-type">PixelFormat</span></dt>
+        <dt>cancellationToken <span class="param-type">CancellationToken</span></dt>
+        <dt>value <span class="param-type">string</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-trydecode-static-bool-trydecode-readonlyspan-byte-pixels-int-width-int-height-int-stride-pixelformat-format-out-string-value-out-aztecdecodediagnostics-diagnostics">
+      <code class="signature">static bool TryDecode(ReadOnlySpan&lt;byte&gt; pixels, int width, int height, int stride, PixelFormat format, out string value, out AztecDecodeDiagnostics diagnostics)</code>
+      <p class="member-summary">Attempts to decode an Aztec symbol from raw pixels, with diagnostics.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>pixels <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
+        <dt>width <span class="param-type">int</span></dt>
+        <dt>height <span class="param-type">int</span></dt>
+        <dt>stride <span class="param-type">int</span></dt>
+        <dt>format <span class="param-type">PixelFormat</span></dt>
+        <dt>value <span class="param-type">string</span></dt>
+        <dt>diagnostics <span class="param-type">AztecDecodeDiagnostics</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-trydecode-static-bool-trydecode-readonlyspan-byte-pixels-int-width-int-height-int-stride-pixelformat-format-cancellationtoken-cancellationtoken-out-string-value-out-aztecdecodediagnostics-diagnostics">
+      <code class="signature">static bool TryDecode(ReadOnlySpan&lt;byte&gt; pixels, int width, int height, int stride, PixelFormat format, CancellationToken cancellationToken, out string value, out AztecDecodeDiagnostics diagnostics)</code>
+      <p class="member-summary">Attempts to decode an Aztec symbol from raw pixels, with cancellation and diagnostics.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>pixels <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
+        <dt>width <span class="param-type">int</span></dt>
+        <dt>height <span class="param-type">int</span></dt>
+        <dt>stride <span class="param-type">int</span></dt>
+        <dt>format <span class="param-type">PixelFormat</span></dt>
+        <dt>cancellationToken <span class="param-type">CancellationToken</span></dt>
+        <dt>value <span class="param-type">string</span></dt>
+        <dt>diagnostics <span class="param-type">AztecDecodeDiagnostics</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-trydecodepng-static-bool-trydecodepng-byte-png-out-string-text">
+      <code class="signature">static bool TryDecodePng(byte[] png, out string text)</code>
+      <p class="member-summary">Attempts to decode an Aztec symbol from PNG bytes.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>png <span class="param-type">byte[]</span></dt>
+        <dt>text <span class="param-type">string</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-trydecodepng-static-bool-trydecodepng-byte-png-cancellationtoken-cancellationtoken-out-string-text">
+      <code class="signature">static bool TryDecodePng(byte[] png, CancellationToken cancellationToken, out string text)</code>
+      <p class="member-summary">Attempts to decode an Aztec symbol from PNG bytes, with cancellation.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>png <span class="param-type">byte[]</span></dt>
+        <dt>cancellationToken <span class="param-type">CancellationToken</span></dt>
+        <dt>text <span class="param-type">string</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-trydecodepng-static-bool-trydecodepng-byte-png-imagedecodeoptions-options-out-string-text">
+      <code class="signature">static bool TryDecodePng(byte[] png, ImageDecodeOptions options, out string text)</code>
+      <p class="member-summary">Attempts to decode an Aztec symbol from PNG bytes with image decode options.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>png <span class="param-type">byte[]</span></dt>
+        <dt>options <span class="param-type">ImageDecodeOptions</span></dt>
+        <dt>text <span class="param-type">string</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-trydecodepng-static-bool-trydecodepng-byte-png-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-string-text">
+      <code class="signature">static bool TryDecodePng(byte[] png, ImageDecodeOptions options, CancellationToken cancellationToken, out string text)</code>
+      <p class="member-summary">Attempts to decode an Aztec symbol from PNG bytes with image decode options, with cancellation.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>png <span class="param-type">byte[]</span></dt>
+        <dt>options <span class="param-type">ImageDecodeOptions</span></dt>
+        <dt>cancellationToken <span class="param-type">CancellationToken</span></dt>
+        <dt>text <span class="param-type">string</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-trydecodepng-static-bool-trydecodepng-byte-png-out-string-text-out-aztecdecodediagnostics-diagnostics">
+      <code class="signature">static bool TryDecodePng(byte[] png, out string text, out AztecDecodeDiagnostics diagnostics)</code>
+      <p class="member-summary">Attempts to decode an Aztec symbol from PNG bytes, with diagnostics.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>png <span class="param-type">byte[]</span></dt>
+        <dt>text <span class="param-type">string</span></dt>
+        <dt>diagnostics <span class="param-type">AztecDecodeDiagnostics</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-trydecodepng-static-bool-trydecodepng-byte-png-imagedecodeoptions-options-out-string-text-out-aztecdecodediagnostics-diagnostics">
+      <code class="signature">static bool TryDecodePng(byte[] png, ImageDecodeOptions options, out string text, out AztecDecodeDiagnostics diagnostics)</code>
+      <p class="member-summary">Attempts to decode an Aztec symbol from PNG bytes with image decode options, with diagnostics.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>png <span class="param-type">byte[]</span></dt>
+        <dt>options <span class="param-type">ImageDecodeOptions</span></dt>
+        <dt>text <span class="param-type">string</span></dt>
+        <dt>diagnostics <span class="param-type">AztecDecodeDiagnostics</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-trydecodepng-static-bool-trydecodepng-byte-png-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-string-text-out-aztecdecodediagnostics-diagnostics">
+      <code class="signature">static bool TryDecodePng(byte[] png, ImageDecodeOptions options, CancellationToken cancellationToken, out string text, out AztecDecodeDiagnostics diagnostics)</code>
+      <p class="member-summary">Attempts to decode an Aztec symbol from PNG bytes with image decode options, cancellation, and diagnostics.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>png <span class="param-type">byte[]</span></dt>
+        <dt>options <span class="param-type">ImageDecodeOptions</span></dt>
+        <dt>cancellationToken <span class="param-type">CancellationToken</span></dt>
+        <dt>text <span class="param-type">string</span></dt>
+        <dt>diagnostics <span class="param-type">AztecDecodeDiagnostics</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-trydecodepngfile-static-bool-trydecodepngfile-string-path-out-string-text">
+      <code class="signature">static bool TryDecodePngFile(string path, out string text)</code>
+      <p class="member-summary">Attempts to decode an Aztec symbol from a PNG file.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>path <span class="param-type">string</span></dt>
+        <dt>text <span class="param-type">string</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-trydecodepngfile-static-bool-trydecodepngfile-string-path-cancellationtoken-cancellationtoken-out-string-text">
+      <code class="signature">static bool TryDecodePngFile(string path, CancellationToken cancellationToken, out string text)</code>
+      <p class="member-summary">Attempts to decode an Aztec symbol from a PNG file, with cancellation.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>path <span class="param-type">string</span></dt>
+        <dt>cancellationToken <span class="param-type">CancellationToken</span></dt>
+        <dt>text <span class="param-type">string</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-trydecodepngfile-static-bool-trydecodepngfile-string-path-imagedecodeoptions-options-out-string-text">
+      <code class="signature">static bool TryDecodePngFile(string path, ImageDecodeOptions options, out string text)</code>
+      <p class="member-summary">Attempts to decode an Aztec symbol from a PNG file with image decode options.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>path <span class="param-type">string</span></dt>
+        <dt>options <span class="param-type">ImageDecodeOptions</span></dt>
+        <dt>text <span class="param-type">string</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-trydecodepngfile-static-bool-trydecodepngfile-string-path-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-string-text">
+      <code class="signature">static bool TryDecodePngFile(string path, ImageDecodeOptions options, CancellationToken cancellationToken, out string text)</code>
+      <p class="member-summary">Attempts to decode an Aztec symbol from a PNG file with image decode options, with cancellation.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>path <span class="param-type">string</span></dt>
+        <dt>options <span class="param-type">ImageDecodeOptions</span></dt>
+        <dt>cancellationToken <span class="param-type">CancellationToken</span></dt>
+        <dt>text <span class="param-type">string</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-trydecodepngfile-static-bool-trydecodepngfile-string-path-out-string-text-out-aztecdecodediagnostics-diagnostics">
+      <code class="signature">static bool TryDecodePngFile(string path, out string text, out AztecDecodeDiagnostics diagnostics)</code>
+      <p class="member-summary">Attempts to decode an Aztec symbol from a PNG file, with diagnostics.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>path <span class="param-type">string</span></dt>
+        <dt>text <span class="param-type">string</span></dt>
+        <dt>diagnostics <span class="param-type">AztecDecodeDiagnostics</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-trydecodepngfile-static-bool-trydecodepngfile-string-path-imagedecodeoptions-options-out-string-text-out-aztecdecodediagnostics-diagnostics">
+      <code class="signature">static bool TryDecodePngFile(string path, ImageDecodeOptions options, out string text, out AztecDecodeDiagnostics diagnostics)</code>
+      <p class="member-summary">Attempts to decode an Aztec symbol from a PNG file with image decode options, with diagnostics.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>path <span class="param-type">string</span></dt>
+        <dt>options <span class="param-type">ImageDecodeOptions</span></dt>
+        <dt>text <span class="param-type">string</span></dt>
+        <dt>diagnostics <span class="param-type">AztecDecodeDiagnostics</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-trydecodepngfile-static-bool-trydecodepngfile-string-path-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-string-text-out-aztecdecodediagnostics-diagnostics">
+      <code class="signature">static bool TryDecodePngFile(string path, ImageDecodeOptions options, CancellationToken cancellationToken, out string text, out AztecDecodeDiagnostics diagnostics)</code>
+      <p class="member-summary">Attempts to decode an Aztec symbol from a PNG file with image decode options, cancellation, and diagnostics.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>path <span class="param-type">string</span></dt>
+        <dt>options <span class="param-type">ImageDecodeOptions</span></dt>
+        <dt>cancellationToken <span class="param-type">CancellationToken</span></dt>
+        <dt>text <span class="param-type">string</span></dt>
+        <dt>diagnostics <span class="param-type">AztecDecodeDiagnostics</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-trydecodepng-static-bool-trydecodepng-stream-stream-out-string-text">
+      <code class="signature">static bool TryDecodePng(Stream stream, out string text)</code>
+      <p class="member-summary">Attempts to decode an Aztec symbol from a PNG stream.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>stream <span class="param-type">Stream</span></dt>
+        <dt>text <span class="param-type">string</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-trydecodepng-static-bool-trydecodepng-stream-stream-imagedecodeoptions-options-out-string-text">
+      <code class="signature">static bool TryDecodePng(Stream stream, ImageDecodeOptions options, out string text)</code>
+      <p class="member-summary">Attempts to decode an Aztec symbol from a PNG stream with image decode options.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>stream <span class="param-type">Stream</span></dt>
+        <dt>options <span class="param-type">ImageDecodeOptions</span></dt>
+        <dt>text <span class="param-type">string</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-trydecodepng-static-bool-trydecodepng-stream-stream-out-string-text-out-aztecdecodediagnostics-diagnostics">
+      <code class="signature">static bool TryDecodePng(Stream stream, out string text, out AztecDecodeDiagnostics diagnostics)</code>
+      <p class="member-summary">Attempts to decode an Aztec symbol from a PNG stream, with diagnostics.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>stream <span class="param-type">Stream</span></dt>
+        <dt>text <span class="param-type">string</span></dt>
+        <dt>diagnostics <span class="param-type">AztecDecodeDiagnostics</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-trydecodepng-static-bool-trydecodepng-stream-stream-imagedecodeoptions-options-out-string-text-out-aztecdecodediagnostics-diagnostics">
+      <code class="signature">static bool TryDecodePng(Stream stream, ImageDecodeOptions options, out string text, out AztecDecodeDiagnostics diagnostics)</code>
+      <p class="member-summary">Attempts to decode an Aztec symbol from a PNG stream with image decode options, with diagnostics.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>stream <span class="param-type">Stream</span></dt>
+        <dt>options <span class="param-type">ImageDecodeOptions</span></dt>
+        <dt>text <span class="param-type">string</span></dt>
+        <dt>diagnostics <span class="param-type">AztecDecodeDiagnostics</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-trydecodeimage-static-bool-trydecodeimage-byte-image-out-string-text">
+      <code class="signature">static bool TryDecodeImage(byte[] image, out string text)</code>
+      <p class="member-summary">Attempts to decode an Aztec symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>image <span class="param-type">byte[]</span></dt>
+        <dt>text <span class="param-type">string</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-trydecodeimage-static-bool-trydecodeimage-byte-image-cancellationtoken-cancellationtoken-out-string-text">
+      <code class="signature">static bool TryDecodeImage(byte[] image, CancellationToken cancellationToken, out string text)</code>
+      <p class="member-summary">Attempts to decode an Aztec symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA), with cancellation.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>image <span class="param-type">byte[]</span></dt>
+        <dt>cancellationToken <span class="param-type">CancellationToken</span></dt>
+        <dt>text <span class="param-type">string</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-trydecodeimage-static-bool-trydecodeimage-byte-image-imagedecodeoptions-options-out-string-text">
+      <code class="signature">static bool TryDecodeImage(byte[] image, ImageDecodeOptions options, out string text)</code>
+      <p class="member-summary">Attempts to decode an Aztec symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>image <span class="param-type">byte[]</span></dt>
+        <dt>options <span class="param-type">ImageDecodeOptions</span></dt>
+        <dt>text <span class="param-type">string</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-trydecodeimage-static-bool-trydecodeimage-byte-image-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-string-text">
+      <code class="signature">static bool TryDecodeImage(byte[] image, ImageDecodeOptions options, CancellationToken cancellationToken, out string text)</code>
+      <p class="member-summary">Attempts to decode an Aztec symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options, with cancellation.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>image <span class="param-type">byte[]</span></dt>
+        <dt>options <span class="param-type">ImageDecodeOptions</span></dt>
+        <dt>cancellationToken <span class="param-type">CancellationToken</span></dt>
+        <dt>text <span class="param-type">string</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-trydecodeimage-static-bool-trydecodeimage-byte-image-out-string-text-out-aztecdecodediagnostics-diagnostics">
+      <code class="signature">static bool TryDecodeImage(byte[] image, out string text, out AztecDecodeDiagnostics diagnostics)</code>
+      <p class="member-summary">Attempts to decode an Aztec symbol from common image formats, with diagnostics.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>image <span class="param-type">byte[]</span></dt>
+        <dt>text <span class="param-type">string</span></dt>
+        <dt>diagnostics <span class="param-type">AztecDecodeDiagnostics</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-trydecodeimage-static-bool-trydecodeimage-byte-image-imagedecodeoptions-options-out-string-text-out-aztecdecodediagnostics-diagnostics">
+      <code class="signature">static bool TryDecodeImage(byte[] image, ImageDecodeOptions options, out string text, out AztecDecodeDiagnostics diagnostics)</code>
+      <p class="member-summary">Attempts to decode an Aztec symbol from common image formats with image decode options, with diagnostics.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>image <span class="param-type">byte[]</span></dt>
+        <dt>options <span class="param-type">ImageDecodeOptions</span></dt>
+        <dt>text <span class="param-type">string</span></dt>
+        <dt>diagnostics <span class="param-type">AztecDecodeDiagnostics</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-trydecodeimage-static-bool-trydecodeimage-byte-image-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-string-text-out-aztecdecodediagnostics-diagnostics">
+      <code class="signature">static bool TryDecodeImage(byte[] image, ImageDecodeOptions options, CancellationToken cancellationToken, out string text, out AztecDecodeDiagnostics diagnostics)</code>
+      <p class="member-summary">Attempts to decode an Aztec symbol from common image formats with image decode options, cancellation, and diagnostics.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>image <span class="param-type">byte[]</span></dt>
+        <dt>options <span class="param-type">ImageDecodeOptions</span></dt>
+        <dt>cancellationToken <span class="param-type">CancellationToken</span></dt>
+        <dt>text <span class="param-type">string</span></dt>
+        <dt>diagnostics <span class="param-type">AztecDecodeDiagnostics</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-trydecodeimage-static-bool-trydecodeimage-stream-stream-out-string-text">
+      <code class="signature">static bool TryDecodeImage(Stream stream, out string text)</code>
+      <p class="member-summary">Attempts to decode an Aztec symbol from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>stream <span class="param-type">Stream</span></dt>
+        <dt>text <span class="param-type">string</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-trydecodeimage-static-bool-trydecodeimage-stream-stream-cancellationtoken-cancellationtoken-out-string-text">
+      <code class="signature">static bool TryDecodeImage(Stream stream, CancellationToken cancellationToken, out string text)</code>
+      <p class="member-summary">Attempts to decode an Aztec symbol from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA), with cancellation.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>stream <span class="param-type">Stream</span></dt>
+        <dt>cancellationToken <span class="param-type">CancellationToken</span></dt>
+        <dt>text <span class="param-type">string</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-trydecodeimage-static-bool-trydecodeimage-stream-stream-imagedecodeoptions-options-out-string-text">
+      <code class="signature">static bool TryDecodeImage(Stream stream, ImageDecodeOptions options, out string text)</code>
+      <p class="member-summary">Attempts to decode an Aztec symbol from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>stream <span class="param-type">Stream</span></dt>
+        <dt>options <span class="param-type">ImageDecodeOptions</span></dt>
+        <dt>text <span class="param-type">string</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-trydecodeimage-static-bool-trydecodeimage-stream-stream-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-string-text">
+      <code class="signature">static bool TryDecodeImage(Stream stream, ImageDecodeOptions options, CancellationToken cancellationToken, out string text)</code>
+      <p class="member-summary">Attempts to decode an Aztec symbol from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options, with cancellation.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>stream <span class="param-type">Stream</span></dt>
+        <dt>options <span class="param-type">ImageDecodeOptions</span></dt>
+        <dt>cancellationToken <span class="param-type">CancellationToken</span></dt>
+        <dt>text <span class="param-type">string</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-trydecodeimage-static-bool-trydecodeimage-stream-stream-out-string-text-out-aztecdecodediagnostics-diagnostics">
+      <code class="signature">static bool TryDecodeImage(Stream stream, out string text, out AztecDecodeDiagnostics diagnostics)</code>
+      <p class="member-summary">Attempts to decode an Aztec symbol from an image stream, with diagnostics.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>stream <span class="param-type">Stream</span></dt>
+        <dt>text <span class="param-type">string</span></dt>
+        <dt>diagnostics <span class="param-type">AztecDecodeDiagnostics</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-trydecodeimage-static-bool-trydecodeimage-stream-stream-imagedecodeoptions-options-out-string-text-out-aztecdecodediagnostics-diagnostics">
+      <code class="signature">static bool TryDecodeImage(Stream stream, ImageDecodeOptions options, out string text, out AztecDecodeDiagnostics diagnostics)</code>
+      <p class="member-summary">Attempts to decode an Aztec symbol from an image stream with image decode options, with diagnostics.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>stream <span class="param-type">Stream</span></dt>
+        <dt>options <span class="param-type">ImageDecodeOptions</span></dt>
+        <dt>text <span class="param-type">string</span></dt>
+        <dt>diagnostics <span class="param-type">AztecDecodeDiagnostics</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-trydecodeimage-static-bool-trydecodeimage-stream-stream-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-string-text-out-aztecdecodediagnostics-diagnostics">
+      <code class="signature">static bool TryDecodeImage(Stream stream, ImageDecodeOptions options, CancellationToken cancellationToken, out string text, out AztecDecodeDiagnostics diagnostics)</code>
+      <p class="member-summary">Attempts to decode an Aztec symbol from an image stream with image decode options, cancellation, and diagnostics.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>stream <span class="param-type">Stream</span></dt>
+        <dt>options <span class="param-type">ImageDecodeOptions</span></dt>
+        <dt>cancellationToken <span class="param-type">CancellationToken</span></dt>
+        <dt>text <span class="param-type">string</span></dt>
+        <dt>diagnostics <span class="param-type">AztecDecodeDiagnostics</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-trydecodepng-static-bool-trydecodepng-stream-stream-cancellationtoken-cancellationtoken-out-string-text">
+      <code class="signature">static bool TryDecodePng(Stream stream, CancellationToken cancellationToken, out string text)</code>
+      <p class="member-summary">Attempts to decode an Aztec symbol from a PNG stream, with cancellation.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>stream <span class="param-type">Stream</span></dt>
+        <dt>cancellationToken <span class="param-type">CancellationToken</span></dt>
+        <dt>text <span class="param-type">string</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-trydecodepng-static-bool-trydecodepng-stream-stream-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-string-text">
+      <code class="signature">static bool TryDecodePng(Stream stream, ImageDecodeOptions options, CancellationToken cancellationToken, out string text)</code>
+      <p class="member-summary">Attempts to decode an Aztec symbol from a PNG stream with image decode options, with cancellation.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>stream <span class="param-type">Stream</span></dt>
+        <dt>options <span class="param-type">ImageDecodeOptions</span></dt>
+        <dt>cancellationToken <span class="param-type">CancellationToken</span></dt>
+        <dt>text <span class="param-type">string</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-trydecodepng-static-bool-trydecodepng-stream-stream-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-string-text-out-aztecdecodediagnostics-diagnostics">
+      <code class="signature">static bool TryDecodePng(Stream stream, ImageDecodeOptions options, CancellationToken cancellationToken, out string text, out AztecDecodeDiagnostics diagnostics)</code>
+      <p class="member-summary">Attempts to decode an Aztec symbol from a PNG stream with image decode options, cancellation, and diagnostics.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>stream <span class="param-type">Stream</span></dt>
+        <dt>options <span class="param-type">ImageDecodeOptions</span></dt>
+        <dt>cancellationToken <span class="param-type">CancellationToken</span></dt>
+        <dt>text <span class="param-type">string</span></dt>
+        <dt>diagnostics <span class="param-type">AztecDecodeDiagnostics</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-decodepng-static-string-decodepng-byte-png">
+      <code class="signature">static string DecodePng(byte[] png)</code>
+      <p class="member-summary">Decodes an Aztec symbol from PNG bytes.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>png <span class="param-type">byte[]</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-decodepngfile-static-string-decodepngfile-string-path">
+      <code class="signature">static string DecodePngFile(string path)</code>
+      <p class="member-summary">Decodes an Aztec symbol from a PNG file.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>path <span class="param-type">string</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-decodepng-static-string-decodepng-stream-stream">
+      <code class="signature">static string DecodePng(Stream stream)</code>
+      <p class="member-summary">Decodes an Aztec symbol from a PNG stream.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>stream <span class="param-type">Stream</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-savepng-static-string-savepng-string-text-string-path-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static string SavePng(string text, string path, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Saves Aztec PNG to a file.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>text <span class="param-type">string</span></dt>
+        <dt>path <span class="param-type">string</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-savepng-static-void-savepng-string-text-stream-stream-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static void SavePng(string text, Stream stream, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Saves Aztec PNG to a stream.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>text <span class="param-type">string</span></dt>
+        <dt>stream <span class="param-type">Stream</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-savesvg-static-string-savesvg-string-text-string-path-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static string SaveSvg(string text, string path, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Saves Aztec SVG to a file.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>text <span class="param-type">string</span></dt>
+        <dt>path <span class="param-type">string</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-savesvgz-static-string-savesvgz-string-text-string-path-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static string SaveSvgz(string text, string path, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Saves Aztec SVGZ to a file.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>text <span class="param-type">string</span></dt>
+        <dt>path <span class="param-type">string</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-savesvg-static-void-savesvg-string-text-stream-stream-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static void SaveSvg(string text, Stream stream, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Saves Aztec SVG to a stream.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>text <span class="param-type">string</span></dt>
+        <dt>stream <span class="param-type">Stream</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-savesvgz-static-void-savesvgz-string-text-stream-stream-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static void SaveSvgz(string text, Stream stream, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Saves Aztec SVGZ to a stream.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>text <span class="param-type">string</span></dt>
+        <dt>stream <span class="param-type">Stream</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-savehtml-static-string-savehtml-string-text-string-path-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions-string-title">
+      <code class="signature">static string SaveHtml(string text, string path, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions, string title)</code>
+      <p class="member-summary">Saves Aztec HTML to a file.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>text <span class="param-type">string</span></dt>
+        <dt>path <span class="param-type">string</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+        <dt>title <span class="param-type">string</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-savehtml-static-void-savehtml-string-text-stream-stream-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions-string-title">
+      <code class="signature">static void SaveHtml(string text, Stream stream, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions, string title)</code>
+      <p class="member-summary">Saves Aztec HTML to a stream.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>text <span class="param-type">string</span></dt>
+        <dt>stream <span class="param-type">Stream</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+        <dt>title <span class="param-type">string</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-savejpeg-static-string-savejpeg-string-text-string-path-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static string SaveJpeg(string text, string path, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Saves Aztec JPEG to a file.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>text <span class="param-type">string</span></dt>
+        <dt>path <span class="param-type">string</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-savejpeg-static-void-savejpeg-string-text-stream-stream-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static void SaveJpeg(string text, Stream stream, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Saves Aztec JPEG to a stream.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>text <span class="param-type">string</span></dt>
+        <dt>stream <span class="param-type">Stream</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-savebmp-static-string-savebmp-string-text-string-path-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static string SaveBmp(string text, string path, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Saves Aztec BMP to a file.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>text <span class="param-type">string</span></dt>
+        <dt>path <span class="param-type">string</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-savebmp-static-void-savebmp-string-text-stream-stream-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static void SaveBmp(string text, Stream stream, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Saves Aztec BMP to a stream.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>text <span class="param-type">string</span></dt>
+        <dt>stream <span class="param-type">Stream</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-saveppm-static-string-saveppm-string-text-string-path-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static string SavePpm(string text, string path, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Saves Aztec PPM to a file.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>text <span class="param-type">string</span></dt>
+        <dt>path <span class="param-type">string</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-saveppm-static-void-saveppm-string-text-stream-stream-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static void SavePpm(string text, Stream stream, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Saves Aztec PPM to a stream.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>text <span class="param-type">string</span></dt>
+        <dt>stream <span class="param-type">Stream</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-savepbm-static-string-savepbm-string-text-string-path-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static string SavePbm(string text, string path, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Saves Aztec PBM to a file.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>text <span class="param-type">string</span></dt>
+        <dt>path <span class="param-type">string</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-savepbm-static-void-savepbm-string-text-stream-stream-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static void SavePbm(string text, Stream stream, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Saves Aztec PBM to a stream.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>text <span class="param-type">string</span></dt>
+        <dt>stream <span class="param-type">Stream</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-savepgm-static-string-savepgm-string-text-string-path-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static string SavePgm(string text, string path, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Saves Aztec PGM to a file.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>text <span class="param-type">string</span></dt>
+        <dt>path <span class="param-type">string</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-savepgm-static-void-savepgm-string-text-stream-stream-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static void SavePgm(string text, Stream stream, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Saves Aztec PGM to a stream.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>text <span class="param-type">string</span></dt>
+        <dt>stream <span class="param-type">Stream</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-savepam-static-string-savepam-string-text-string-path-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static string SavePam(string text, string path, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Saves Aztec PAM to a file.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>text <span class="param-type">string</span></dt>
+        <dt>path <span class="param-type">string</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-savepam-static-void-savepam-string-text-stream-stream-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static void SavePam(string text, Stream stream, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Saves Aztec PAM to a stream.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>text <span class="param-type">string</span></dt>
+        <dt>stream <span class="param-type">Stream</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-savexbm-static-string-savexbm-string-text-string-path-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static string SaveXbm(string text, string path, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Saves Aztec XBM to a file.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>text <span class="param-type">string</span></dt>
+        <dt>path <span class="param-type">string</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-savexbm-static-void-savexbm-string-text-stream-stream-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static void SaveXbm(string text, Stream stream, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Saves Aztec XBM to a stream.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>text <span class="param-type">string</span></dt>
+        <dt>stream <span class="param-type">Stream</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-savexpm-static-string-savexpm-string-text-string-path-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static string SaveXpm(string text, string path, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Saves Aztec XPM to a file.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>text <span class="param-type">string</span></dt>
+        <dt>path <span class="param-type">string</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-savexpm-static-void-savexpm-string-text-stream-stream-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static void SaveXpm(string text, Stream stream, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Saves Aztec XPM to a stream.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>text <span class="param-type">string</span></dt>
+        <dt>stream <span class="param-type">Stream</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-savetga-static-string-savetga-string-text-string-path-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static string SaveTga(string text, string path, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Saves Aztec TGA to a file.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>text <span class="param-type">string</span></dt>
+        <dt>path <span class="param-type">string</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-savetga-static-void-savetga-string-text-stream-stream-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static void SaveTga(string text, Stream stream, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Saves Aztec TGA to a stream.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>text <span class="param-type">string</span></dt>
+        <dt>stream <span class="param-type">Stream</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-saveico-static-string-saveico-string-text-string-path-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static string SaveIco(string text, string path, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Saves Aztec ICO to a file.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>text <span class="param-type">string</span></dt>
+        <dt>path <span class="param-type">string</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-saveico-static-void-saveico-string-text-stream-stream-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static void SaveIco(string text, Stream stream, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Saves Aztec ICO to a stream.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>text <span class="param-type">string</span></dt>
+        <dt>stream <span class="param-type">Stream</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-savepdf-static-string-savepdf-string-text-string-path-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions-rendermode-rendermode">
+      <code class="signature">static string SavePdf(string text, string path, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions, RenderMode renderMode)</code>
+      <p class="member-summary">Saves Aztec PDF to a file.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>text <span class="param-type">string</span></dt>
+        <dt>path <span class="param-type">string</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+        <dt>renderMode <span class="param-type">RenderMode</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-savepdf-static-void-savepdf-string-text-stream-stream-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions-rendermode-rendermode">
+      <code class="signature">static void SavePdf(string text, Stream stream, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions, RenderMode renderMode)</code>
+      <p class="member-summary">Saves Aztec PDF to a stream.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>text <span class="param-type">string</span></dt>
+        <dt>stream <span class="param-type">Stream</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+        <dt>renderMode <span class="param-type">RenderMode</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-saveeps-static-string-saveeps-string-text-string-path-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions-rendermode-rendermode">
+      <code class="signature">static string SaveEps(string text, string path, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions, RenderMode renderMode)</code>
+      <p class="member-summary">Saves Aztec EPS to a file.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>text <span class="param-type">string</span></dt>
+        <dt>path <span class="param-type">string</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+        <dt>renderMode <span class="param-type">RenderMode</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-saveeps-static-void-saveeps-string-text-stream-stream-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions-rendermode-rendermode">
+      <code class="signature">static void SaveEps(string text, Stream stream, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions, RenderMode renderMode)</code>
+      <p class="member-summary">Saves Aztec EPS to a stream.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>text <span class="param-type">string</span></dt>
+        <dt>stream <span class="param-type">Stream</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+        <dt>renderMode <span class="param-type">RenderMode</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-savepng-static-string-savepng-readonlyspan-byte-data-string-path-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static string SavePng(ReadOnlySpan&lt;byte&gt; data, string path, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Saves Aztec PNG to a file.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>data <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
+        <dt>path <span class="param-type">string</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-savepng-static-void-savepng-readonlyspan-byte-data-stream-stream-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static void SavePng(ReadOnlySpan&lt;byte&gt; data, Stream stream, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Saves Aztec PNG to a stream.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>data <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
+        <dt>stream <span class="param-type">Stream</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-savesvg-static-string-savesvg-readonlyspan-byte-data-string-path-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static string SaveSvg(ReadOnlySpan&lt;byte&gt; data, string path, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Saves Aztec SVG to a file.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>data <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
+        <dt>path <span class="param-type">string</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-savesvg-static-void-savesvg-readonlyspan-byte-data-stream-stream-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static void SaveSvg(ReadOnlySpan&lt;byte&gt; data, Stream stream, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Saves Aztec SVG to a stream.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>data <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
+        <dt>stream <span class="param-type">Stream</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-savehtml-static-string-savehtml-readonlyspan-byte-data-string-path-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions-string-title">
+      <code class="signature">static string SaveHtml(ReadOnlySpan&lt;byte&gt; data, string path, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions, string title)</code>
+      <p class="member-summary">Saves Aztec HTML to a file.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>data <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
+        <dt>path <span class="param-type">string</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+        <dt>title <span class="param-type">string</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-savehtml-static-void-savehtml-readonlyspan-byte-data-stream-stream-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions-string-title">
+      <code class="signature">static void SaveHtml(ReadOnlySpan&lt;byte&gt; data, Stream stream, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions, string title)</code>
+      <p class="member-summary">Saves Aztec HTML to a stream.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>data <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
+        <dt>stream <span class="param-type">Stream</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+        <dt>title <span class="param-type">string</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-savejpeg-static-string-savejpeg-readonlyspan-byte-data-string-path-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static string SaveJpeg(ReadOnlySpan&lt;byte&gt; data, string path, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Saves Aztec JPEG to a file.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>data <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
+        <dt>path <span class="param-type">string</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-savejpeg-static-void-savejpeg-readonlyspan-byte-data-stream-stream-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static void SaveJpeg(ReadOnlySpan&lt;byte&gt; data, Stream stream, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Saves Aztec JPEG to a stream.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>data <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
+        <dt>stream <span class="param-type">Stream</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-savebmp-static-string-savebmp-readonlyspan-byte-data-string-path-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static string SaveBmp(ReadOnlySpan&lt;byte&gt; data, string path, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Saves Aztec BMP to a file.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>data <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
+        <dt>path <span class="param-type">string</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-savebmp-static-void-savebmp-readonlyspan-byte-data-stream-stream-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static void SaveBmp(ReadOnlySpan&lt;byte&gt; data, Stream stream, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Saves Aztec BMP to a stream.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>data <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
+        <dt>stream <span class="param-type">Stream</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-saveppm-static-string-saveppm-readonlyspan-byte-data-string-path-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static string SavePpm(ReadOnlySpan&lt;byte&gt; data, string path, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Saves Aztec PPM to a file.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>data <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
+        <dt>path <span class="param-type">string</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-saveppm-static-void-saveppm-readonlyspan-byte-data-stream-stream-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static void SavePpm(ReadOnlySpan&lt;byte&gt; data, Stream stream, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Saves Aztec PPM to a stream.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>data <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
+        <dt>stream <span class="param-type">Stream</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-savepbm-static-string-savepbm-readonlyspan-byte-data-string-path-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static string SavePbm(ReadOnlySpan&lt;byte&gt; data, string path, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Saves Aztec PBM to a file.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>data <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
+        <dt>path <span class="param-type">string</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-savepbm-static-void-savepbm-readonlyspan-byte-data-stream-stream-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static void SavePbm(ReadOnlySpan&lt;byte&gt; data, Stream stream, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Saves Aztec PBM to a stream.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>data <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
+        <dt>stream <span class="param-type">Stream</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-savepgm-static-string-savepgm-readonlyspan-byte-data-string-path-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static string SavePgm(ReadOnlySpan&lt;byte&gt; data, string path, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Saves Aztec PGM to a file.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>data <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
+        <dt>path <span class="param-type">string</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-savepgm-static-void-savepgm-readonlyspan-byte-data-stream-stream-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static void SavePgm(ReadOnlySpan&lt;byte&gt; data, Stream stream, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Saves Aztec PGM to a stream.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>data <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
+        <dt>stream <span class="param-type">Stream</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-savepam-static-string-savepam-readonlyspan-byte-data-string-path-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static string SavePam(ReadOnlySpan&lt;byte&gt; data, string path, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Saves Aztec PAM to a file.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>data <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
+        <dt>path <span class="param-type">string</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-savepam-static-void-savepam-readonlyspan-byte-data-stream-stream-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static void SavePam(ReadOnlySpan&lt;byte&gt; data, Stream stream, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Saves Aztec PAM to a stream.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>data <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
+        <dt>stream <span class="param-type">Stream</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-savexbm-static-string-savexbm-readonlyspan-byte-data-string-path-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static string SaveXbm(ReadOnlySpan&lt;byte&gt; data, string path, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Saves Aztec XBM to a file.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>data <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
+        <dt>path <span class="param-type">string</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-savexbm-static-void-savexbm-readonlyspan-byte-data-stream-stream-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static void SaveXbm(ReadOnlySpan&lt;byte&gt; data, Stream stream, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Saves Aztec XBM to a stream.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>data <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
+        <dt>stream <span class="param-type">Stream</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-savexpm-static-string-savexpm-readonlyspan-byte-data-string-path-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static string SaveXpm(ReadOnlySpan&lt;byte&gt; data, string path, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Saves Aztec XPM to a file.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>data <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
+        <dt>path <span class="param-type">string</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-savexpm-static-void-savexpm-readonlyspan-byte-data-stream-stream-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static void SaveXpm(ReadOnlySpan&lt;byte&gt; data, Stream stream, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Saves Aztec XPM to a stream.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>data <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
+        <dt>stream <span class="param-type">Stream</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-savetga-static-string-savetga-readonlyspan-byte-data-string-path-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static string SaveTga(ReadOnlySpan&lt;byte&gt; data, string path, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Saves Aztec TGA to a file.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>data <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
+        <dt>path <span class="param-type">string</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-savetga-static-void-savetga-readonlyspan-byte-data-stream-stream-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static void SaveTga(ReadOnlySpan&lt;byte&gt; data, Stream stream, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Saves Aztec TGA to a stream.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>data <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
+        <dt>stream <span class="param-type">Stream</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-saveico-static-string-saveico-readonlyspan-byte-data-string-path-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static string SaveIco(ReadOnlySpan&lt;byte&gt; data, string path, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Saves Aztec ICO to a file.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>data <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
+        <dt>path <span class="param-type">string</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-saveico-static-void-saveico-readonlyspan-byte-data-stream-stream-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static void SaveIco(ReadOnlySpan&lt;byte&gt; data, Stream stream, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Saves Aztec ICO to a stream.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>data <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
+        <dt>stream <span class="param-type">Stream</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-savesvgz-static-string-savesvgz-readonlyspan-byte-data-string-path-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static string SaveSvgz(ReadOnlySpan&lt;byte&gt; data, string path, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Saves Aztec SVGZ to a file.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>data <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
+        <dt>path <span class="param-type">string</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-savesvgz-static-void-savesvgz-readonlyspan-byte-data-stream-stream-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions">
+      <code class="signature">static void SaveSvgz(ReadOnlySpan&lt;byte&gt; data, Stream stream, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions)</code>
+      <p class="member-summary">Saves Aztec SVGZ to a stream.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>data <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
+        <dt>stream <span class="param-type">Stream</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-savepdf-static-string-savepdf-readonlyspan-byte-data-string-path-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions-rendermode-rendermode">
+      <code class="signature">static string SavePdf(ReadOnlySpan&lt;byte&gt; data, string path, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions, RenderMode renderMode)</code>
+      <p class="member-summary">Saves Aztec PDF to a file.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>data <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
+        <dt>path <span class="param-type">string</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+        <dt>renderMode <span class="param-type">RenderMode</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-savepdf-static-void-savepdf-readonlyspan-byte-data-stream-stream-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions-rendermode-rendermode">
+      <code class="signature">static void SavePdf(ReadOnlySpan&lt;byte&gt; data, Stream stream, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions, RenderMode renderMode)</code>
+      <p class="member-summary">Saves Aztec PDF to a stream.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>data <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
+        <dt>stream <span class="param-type">Stream</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+        <dt>renderMode <span class="param-type">RenderMode</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-saveeps-static-string-saveeps-readonlyspan-byte-data-string-path-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions-rendermode-rendermode">
+      <code class="signature">static string SaveEps(ReadOnlySpan&lt;byte&gt; data, string path, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions, RenderMode renderMode)</code>
+      <p class="member-summary">Saves Aztec EPS to a file.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>data <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
+        <dt>path <span class="param-type">string</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+        <dt>renderMode <span class="param-type">RenderMode</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-saveeps-static-void-saveeps-readonlyspan-byte-data-stream-stream-aztecencodeoptions-encodeoptions-matrixoptions-renderoptions-rendermode-rendermode">
+      <code class="signature">static void SaveEps(ReadOnlySpan&lt;byte&gt; data, Stream stream, AztecEncodeOptions encodeOptions, MatrixOptions renderOptions, RenderMode renderMode)</code>
+      <p class="member-summary">Saves Aztec EPS to a stream.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>data <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
+        <dt>stream <span class="param-type">Stream</span></dt>
+        <dt>encodeOptions <span class="param-type">AztecEncodeOptions</span></dt>
+        <dt>renderOptions <span class="param-type">MatrixOptions</span></dt>
+        <dt>renderMode <span class="param-type">RenderMode</span></dt>
+      </dl>
+    </div>
+  </section>
+</main>
+<footer class="footer">
+    <div class="footer-content">
+        <div class="footer-brand">
+            <div class="footer-logo">
+                <img src="/codeglyphx-qr-icon.png" alt="CodeGlyphX logo" width="28" height="28" />
+                <span>CodeGlyphX</span>
+            </div>
+            <p>Zero-dependency QR &amp; barcode toolkit for .NET</p>
+        </div>
+        <div class="footer-links">
+            <div class="footer-section">
+                <h4>Product</h4>
+                <a href="/">Home</a>
+                <a href="/playground">Playground</a>
+                <a href="/docs">Documentation</a>
+            </div>
+            <div class="footer-section">
+                <h4>Resources</h4>
+                <a href="https://www.nuget.org/packages/CodeGlyphX" target="_blank" rel="noopener">NuGet Package</a>
+                <a href="https://github.com/EvotecIT/CodeGlyphX" target="_blank" rel="noopener">GitHub Repository</a>
+                <a href="https://github.com/EvotecIT/CodeGlyphX/issues" target="_blank" rel="noopener">Report Issue</a>
+            </div>
+            <div class="footer-section">
+                <h4>Company</h4>
+                <a href="https://evotec.xyz" target="_blank" rel="noopener">Evotec Services</a>
+                <a href="https://evotec.xyz/hub" target="_blank" rel="noopener">Blog</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="footer-badges">
+                <a href="https://github.com/EvotecIT/CodeGlyphX" target="_blank" rel="noopener">
+                    <img src="https://img.shields.io/github/stars/EvotecIT/CodeGlyphX?style=social" alt="GitHub stars" height="20" loading="lazy" />
+                </a>
+                <a href="https://www.nuget.org/packages/CodeGlyphX" target="_blank" rel="noopener">
+                    <img src="https://img.shields.io/nuget/dt/CodeGlyphX" alt="NuGet downloads" height="20" loading="lazy" />
+                </a>
+            </div>
+            <p>Apache 2.0 License &bull; &copy; 2026 Evotec Services sp. z o.o.</p>
+        </div>
+    </div>
+</footer>
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,69 @@
+{
+  "name": "MsiChecksumType",
+  "fullName": "CodeGlyphX.MsiChecksumType",
+  "namespace": "CodeGlyphX",
+  "kind": "Enum",
+  "slug": "codeglyphx-msichecksumtype",
+  "summary": "Checksum variants for MSI barcodes.",
+  "remarks": null,
+  "examples": [],
+  "seeAlso": [],
+  "members": [
+    {
+      "name": "value__",
+      "kind": "Field",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "int value__",
+      "xmlId": "F:CodeGlyphX.MsiChecksumType.value__",
+      "anchor": "field-value-int-value"
+    },
+    {
+      "name": "None",
+      "kind": "Field",
+      "summary": "No checksum digit.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "MsiChecksumType None",
+      "xmlId": "F:CodeGlyphX.MsiChecksumType.None",
+      "anchor": "field-none-msichecksumtype-none"
+    },
+    {
+      "name": "Mod10",
+      "kind": "Field",
+      "summary": "Mod 10 (Luhn-style) checksum.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "MsiChecksumType Mod10",
+      "xmlId": "F:CodeGlyphX.MsiChecksumType.Mod10",
+      "anchor": "field-mod10-msichecksumtype-mod10"
+    },
+    {
+      "name": "Mod10Mod10",
+      "kind": "Field",
+      "summary": "Two consecutive Mod 10 checksum digits.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "MsiChecksumType Mod10Mod10",
+      "xmlId": "F:CodeGlyphX.MsiChecksumType.Mod10Mod10",
+      "anchor": "field-mod10mod10-msichecksumtype-mod10mod10"
+    }
+  ]
+}
