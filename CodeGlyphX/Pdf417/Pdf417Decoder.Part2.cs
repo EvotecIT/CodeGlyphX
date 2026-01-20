@@ -14,6 +14,7 @@ using PixelSpan = byte[];
 namespace CodeGlyphX.Pdf417;
 
 public static partial class Pdf417Decoder {
+#if NET8_0_OR_GREATER
     private static bool TryDecodeWithPerspective(PixelSpan pixels, int width, int height, int stride, PixelFormat format, BoundingBox box, Candidate candidate, int threshold, bool invert, CancellationToken cancellationToken, Pdf417DecodeDiagnostics diagnostics, out string value) {
         value = string.Empty;
         if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
@@ -105,6 +106,7 @@ public static partial class Pdf417Decoder {
         var avg = sum / count;
         return avg < threshold;
     }
+#endif
 
     private static bool TryFindRowEdges(
         PixelSpan pixels,
