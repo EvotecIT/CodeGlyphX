@@ -25,9 +25,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="..\\README.md" Pack="true" PackagePath="\\" />
-    <None Include="..\\LICENSE" Pack="true" PackagePath="\\" />
-    <None Include="..\\Assets\\Logo\\codeglyphx-qr-icon.png" Pack="true" PackagePath="\\" />
+    <None Include="..\\README.md" Pack="true" PackagePath="/" />
+    <None Include="..\\LICENSE" Pack="true" PackagePath="/" />
+    <None Include="..\\Assets\\Logo\\codeglyphx-qr-icon.png" Pack="true" PackagePath="/" />
   </ItemGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'net472' Or '$(TargetFramework)' == 'netstandard2.0' ">
     <PackageReference Include="System.Memory" Version="4.5.5" />

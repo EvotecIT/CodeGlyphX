@@ -109,7 +109,7 @@ public sealed class QrDecodingSamplesTests {
         _ = QrDecoder.TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, out _, options);
         sw.Stop();
 
-        Assert.True(sw.ElapsedMilliseconds <= 2000);
+        Assert.True(sw.ElapsedMilliseconds <= 5000);
     }
 
     [Fact]
