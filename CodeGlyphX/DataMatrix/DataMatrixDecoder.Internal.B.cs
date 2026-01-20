@@ -216,19 +216,20 @@ public static partial class DataMatrixDecoder {
         return value;
     }
 
-    private static bool TryExtractModules(PixelSpan pixels, int width, int height, int stride, PixelFormat format, out BitMatrix modules) {
+    private static bool TryExtractModules(PixelSpan pixels, int width, int height, int stride, PixelFormat format, CancellationToken cancellationToken, out BitMatrix modules) {
         modules = null!;
         if (width <= 0 || height <= 0 || stride <= 0) return false;
+        if (cancellationToken.IsCancellationRequested) return false;
 
         var invert = false;
-        if (!TryFindBoundingBox(pixels, width, height, stride, format, invert: false, out var box)) {
-            if (!TryFindBoundingBox(pixels, width, height, stride, format, invert: true, out box)) return false;
+        if (!TryFindBoundingBox(pixels, width, height, stride, format, invert: false, cancellationToken, out var box)) {
+            if (!TryFindBoundingBox(pixels, width, height, stride, format, invert: true, cancellationToken, out box)) return false;
             invert = true;
         }
 
         if (box.Width <= 1 || box.Height <= 1) return false;
 
-        if (!TryEstimateModuleSize(pixels, width, height, stride, format, box, invert, out var moduleSize)) {
+        if (!TryEstimateModuleSize(pixels, width, height, stride, format, box, invert, cancellationToken, out var moduleSize)) {
             return false;
         }
 
@@ -239,9 +240,11 @@ public static partial class DataMatrixDecoder {
         modules = new BitMatrix(cols, rows);
         var half = moduleSize / 2.0;
         for (var y = 0; y < rows; y++) {
+            if (cancellationToken.IsCancellationRequested) return false;
             var sy = (int)Math.Round(box.Top + (y * moduleSize) + half);
             sy = Clamp(sy, 0, height - 1);
             for (var x = 0; x < cols; x++) {
+                if (cancellationToken.IsCancellationRequested) return false;
                 var sx = (int)Math.Round(box.Left + (x * moduleSize) + half);
                 sx = Clamp(sx, 0, width - 1);
                 var dark = IsDark(pixels, width, height, stride, format, sx, sy);
@@ -252,16 +255,16 @@ public static partial class DataMatrixDecoder {
         return true;
     }
 
-    private static bool TryEstimateModuleSize(PixelSpan pixels, int width, int height, int stride, PixelFormat format, BoundingBox box, bool invert, out int moduleSize) {
+    private static bool TryEstimateModuleSize(PixelSpan pixels, int width, int height, int stride, PixelFormat format, BoundingBox box, bool invert, CancellationToken cancellationToken, out int moduleSize) {
         moduleSize = 0;
 
         var midY = box.Top + box.Height / 2;
         var midX = box.Left + box.Width / 2;
 
-        if (!TryFindMinRun(pixels, width, height, stride, format, box.Left, box.Right, midY, horizontal: true, invert, out var hMin)) {
+        if (!TryFindMinRun(pixels, width, height, stride, format, box.Left, box.Right, midY, horizontal: true, invert, cancellationToken, out var hMin)) {
             return false;
         }
-        if (!TryFindMinRun(pixels, width, height, stride, format, box.Top, box.Bottom, midX, horizontal: false, invert, out var vMin)) {
+        if (!TryFindMinRun(pixels, width, height, stride, format, box.Top, box.Bottom, midX, horizontal: false, invert, cancellationToken, out var vMin)) {
             return false;
         }
 
@@ -269,7 +272,7 @@ public static partial class DataMatrixDecoder {
         return moduleSize > 0;
     }
 
-    private static bool TryFindMinRun(PixelSpan pixels, int width, int height, int stride, PixelFormat format, int start, int end, int fixedPos, bool horizontal, bool invert, out int minRun) {
+    private static bool TryFindMinRun(PixelSpan pixels, int width, int height, int stride, PixelFormat format, int start, int end, int fixedPos, bool horizontal, bool invert, CancellationToken cancellationToken, out int minRun) {
         minRun = int.MaxValue;
 
         var prev = false;
@@ -277,6 +280,7 @@ public static partial class DataMatrixDecoder {
         var sawAny = false;
 
         for (var i = start; i <= end; i++) {
+            if (cancellationToken.IsCancellationRequested) return false;
             var x = horizontal ? i : fixedPos;
             var y = horizontal ? fixedPos : i;
             var dark = IsDark(pixels, width, height, stride, format, x, y);
@@ -304,15 +308,17 @@ public static partial class DataMatrixDecoder {
         return true;
     }
 
-    private static bool TryFindBoundingBox(PixelSpan pixels, int width, int height, int stride, PixelFormat format, bool invert, out BoundingBox box) {
+    private static bool TryFindBoundingBox(PixelSpan pixels, int width, int height, int stride, PixelFormat format, bool invert, CancellationToken cancellationToken, out BoundingBox box) {
         var left = width;
         var right = -1;
         var top = height;
         var bottom = -1;
 
         for (var y = 0; y < height; y++) {
+            if (cancellationToken.IsCancellationRequested) { box = default; return false; }
             var row = y * stride;
             for (var x = 0; x < width; x++) {
+                if (cancellationToken.IsCancellationRequested) { box = default; return false; }
                 var dark = IsDarkAt(pixels, row, x, format);
                 if (invert) dark = !dark;
                 if (!dark) continue;

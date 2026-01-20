@@ -16,7 +16,8 @@ namespace CodeGlyphX.DataMatrix;
 public static partial class DataMatrixDecoder {
     private static bool TryDecodePixels(PixelSpan pixels, int width, int height, int stride, PixelFormat format, CancellationToken cancellationToken, out string value) {
         if (cancellationToken.IsCancellationRequested) { value = string.Empty; return false; }
-        if (TryExtractModules(pixels, width, height, stride, format, out var modules)) {
+        if (TryExtractModules(pixels, width, height, stride, format, cancellationToken, out var modules)) {
+            if (cancellationToken.IsCancellationRequested) { value = string.Empty; return false; }
             if (TryDecodeWithRotations(modules, cancellationToken, out value)) return true;
             if (cancellationToken.IsCancellationRequested) { value = string.Empty; return false; }
             var mirror = MirrorX(modules);
@@ -28,7 +29,8 @@ public static partial class DataMatrixDecoder {
 
     private static bool TryDecodePixels(PixelSpan pixels, int width, int height, int stride, PixelFormat format, CancellationToken cancellationToken, out string value, DataMatrixDecodeDiagnostics diagnostics) {
         if (cancellationToken.IsCancellationRequested) { value = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
-        if (TryExtractModules(pixels, width, height, stride, format, out var modules)) {
+        if (TryExtractModules(pixels, width, height, stride, format, cancellationToken, out var modules)) {
+            if (cancellationToken.IsCancellationRequested) { value = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
             if (TryDecodeWithRotations(modules, cancellationToken, diagnostics, out value)) { diagnostics.Success = true; return true; }
             if (cancellationToken.IsCancellationRequested) { value = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
             diagnostics.MirroredTried = true;

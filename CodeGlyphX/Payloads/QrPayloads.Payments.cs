@@ -20,7 +20,7 @@ public static partial class QrPayloads {
         if (!amount.HasValue) return new QrPayloadData(baseUrl);
 
         var amountText = amount.Value.ToString("0.##", CultureInfo.InvariantCulture);
-        var currencyText = string.IsNullOrWhiteSpace(currency) ? string.Empty : currency.Trim().ToUpperInvariant();
+        var currencyText = currency?.Trim().ToUpperInvariant() ?? string.Empty;
         if (!string.IsNullOrEmpty(currencyText) && !QrPayloadValidation.IsValidCurrency(currencyText)) {
             throw new ArgumentException("Currency is invalid.", nameof(currency));
         }

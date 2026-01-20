@@ -33,7 +33,7 @@ internal static class AztecPixelDecoder {
     public static bool TryDecode(PixelSpan pixels, int width, int height, int stride, PixelFormat format, CancellationToken cancellationToken, out string value) {
         value = string.Empty;
         if (width <= 0 || height <= 0 || stride < width * 4) return false;
-        if (!AztecGrayImage.TryCreate(pixels, width, height, stride, format, out var image)) return false;
+        if (!AztecGrayImage.TryCreate(pixels, width, height, stride, format, cancellationToken, out var image)) return false;
 
         if (TryDecodeAllOrientations(image, cancellationToken, out value)) return true;
         return false;
@@ -45,7 +45,7 @@ internal static class AztecPixelDecoder {
             diagnostics.Failure ??= "Invalid image size.";
             return false;
         }
-        if (!AztecGrayImage.TryCreate(pixels, width, height, stride, format, out var image)) {
+        if (!AztecGrayImage.TryCreate(pixels, width, height, stride, format, cancellationToken, out var image)) {
             diagnostics.Failure ??= "Unsupported pixel format.";
             return false;
         }
@@ -369,13 +369,15 @@ internal static class AztecPixelDecoder {
         return len;
     }
 
-    private static bool TrySampleModules(AztecGrayImage image, bool invert, int size, int moduleSize, int offsetX, int offsetY, out BitMatrix modules) {
+    private static bool TrySampleModules(AztecGrayImage image, bool invert, int size, int moduleSize, int offsetX, int offsetY, CancellationToken cancellationToken, out BitMatrix modules) {
         modules = new BitMatrix(size, size);
 
         var centerOffset = moduleSize / 2;
         for (var y = 0; y < size; y++) {
+            if (cancellationToken.IsCancellationRequested) return false;
             var sy = offsetY + y * moduleSize + centerOffset;
             for (var x = 0; x < size; x++) {
+                if (cancellationToken.IsCancellationRequested) return false;
                 var sx = offsetX + x * moduleSize + centerOffset;
                 var black = SampleMajority3x3(image, sx, sy, invert);
                 modules.Set(x, y, black);
@@ -390,7 +392,7 @@ internal static class AztecPixelDecoder {
         for (var dy = -maxShift; dy <= maxShift; dy++) {
             for (var dx = -maxShift; dx <= maxShift; dx++) {
                 if (cancellationToken.IsCancellationRequested) { value = string.Empty; return false; }
-                if (!TrySampleModules(image, invert, size, moduleSize, offsetX + dx, offsetY + dy, out var modules)) {
+                if (!TrySampleModules(image, invert, size, moduleSize, offsetX + dx, offsetY + dy, cancellationToken, out var modules)) {
                     continue;
                 }
                 if (AztecDecoder.TryDecode(modules, out value)) return true;
@@ -586,7 +588,7 @@ internal static class AztecPixelDecoder {
             return new AztecGrayImage(w, h, mirrored, _threshold, Min, Max);
         }
 
-        public static bool TryCreate(PixelSpan pixels, int width, int height, int stride, PixelFormat format, out AztecGrayImage image) {
+        public static bool TryCreate(PixelSpan pixels, int width, int height, int stride, PixelFormat format, CancellationToken cancellationToken, out AztecGrayImage image) {
             image = default;
             if (width <= 0 || height <= 0 || stride < width * 4) return false;
 #if NET8_0_OR_GREATER
@@ -606,9 +608,11 @@ internal static class AztecPixelDecoder {
             byte max = 0;
 
             for (var y = 0; y < height; y++) {
+                if ((y & 31) == 0 && cancellationToken.IsCancellationRequested) return false;
                 var row = y * stride;
                 var dst = y * width;
                 for (var x = 0; x < width; x++) {
+                    if ((x & 255) == 0 && cancellationToken.IsCancellationRequested) return false;
                     var idx = row + x * 4;
                     byte r;
                     byte g;

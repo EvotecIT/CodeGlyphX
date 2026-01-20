@@ -298,7 +298,8 @@ public static partial class Pdf417Decoder {
     private static bool TryDecodeFromBox(PixelSpan pixels, int width, int height, int stride, PixelFormat format, BoundingBox box, int threshold, bool invert, CancellationToken cancellationToken, out string value) {
         foreach (var candidate in BuildCandidates(pixels, width, height, stride, format, threshold, box, invert)) {
             if (cancellationToken.IsCancellationRequested) { value = string.Empty; return false; }
-            var modules = SampleModules(pixels, width, height, stride, format, box, candidate.WidthModules, candidate.HeightModules, candidate.ModuleSize, threshold, invert);
+            var modules = SampleModules(pixels, width, height, stride, format, box, candidate.WidthModules, candidate.HeightModules, candidate.ModuleSize, threshold, invert, cancellationToken);
+            if (cancellationToken.IsCancellationRequested) { value = string.Empty; return false; }
             if (TryDecodeWithRotations(modules, cancellationToken, out value)) return true;
 
             var trimmed = TrimModuleBorder(modules);
@@ -318,7 +319,8 @@ public static partial class Pdf417Decoder {
     private static bool TryDecodeFromBox(PixelSpan pixels, int width, int height, int stride, PixelFormat format, BoundingBox box, int threshold, bool invert, CancellationToken cancellationToken, Pdf417DecodeDiagnostics diagnostics, out string value) {
         foreach (var candidate in BuildCandidates(pixels, width, height, stride, format, threshold, box, invert)) {
             if (cancellationToken.IsCancellationRequested) { value = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
-            var modules = SampleModules(pixels, width, height, stride, format, box, candidate.WidthModules, candidate.HeightModules, candidate.ModuleSize, threshold, invert);
+            var modules = SampleModules(pixels, width, height, stride, format, box, candidate.WidthModules, candidate.HeightModules, candidate.ModuleSize, threshold, invert, cancellationToken);
+            if (cancellationToken.IsCancellationRequested) { value = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
             if (TryDecodeWithRotations(modules, cancellationToken, diagnostics, out value)) return true;
 
             var trimmed = TrimModuleBorder(modules);
@@ -386,7 +388,7 @@ public static partial class Pdf417Decoder {
         seen.Add((moduleSize, widthModules, heightModules));
     }
 
-    private static BitMatrix SampleModules(PixelSpan pixels, int width, int height, int stride, PixelFormat format, BoundingBox box, int widthModules, int heightModules, int moduleSize, int threshold, bool invert) {
+    private static BitMatrix SampleModules(PixelSpan pixels, int width, int height, int stride, PixelFormat format, BoundingBox box, int widthModules, int heightModules, int moduleSize, int threshold, bool invert, CancellationToken cancellationToken) {
         var modules = new BitMatrix(widthModules, heightModules);
         var totalWidth = widthModules * moduleSize;
         var totalHeight = heightModules * moduleSize;
@@ -395,9 +397,11 @@ public static partial class Pdf417Decoder {
 
         var half = moduleSize / 2.0;
         for (var y = 0; y < heightModules; y++) {
+            if (cancellationToken.IsCancellationRequested) return modules;
             var sy = (int)Math.Round(offsetY + (y * moduleSize) + half);
             sy = Clamp(sy, 0, height - 1);
             for (var x = 0; x < widthModules; x++) {
+                if (cancellationToken.IsCancellationRequested) return modules;
                 var sx = (int)Math.Round(offsetX + (x * moduleSize) + half);
                 sx = Clamp(sx, 0, width - 1);
                 var dark = IsDark(pixels, width, height, stride, format, sx, sy, threshold);
@@ -415,10 +419,10 @@ public static partial class Pdf417Decoder {
         var shearList = new List<double>(12);
         int? leftEdgeMid = null;
         var midRow = box.Top + box.Height / 2;
-        if (TryFindLeftEdge(pixels, width, height, stride, format, box.Left, box.Right, midRow, threshold, invert, out var leftEdge)) {
+        if (TryFindLeftEdge(pixels, width, height, stride, format, box.Left, box.Right, midRow, threshold, invert, cancellationToken, out var leftEdge)) {
             leftEdgeMid = leftEdge;
         }
-        if (TryEstimateShear(pixels, width, height, stride, format, box, candidate, threshold, invert, out var estimated)) {
+        if (TryEstimateShear(pixels, width, height, stride, format, box, candidate, threshold, invert, cancellationToken, out var estimated)) {
             shearList.Add(estimated);
             shearList.Add(estimated - 0.12);
             shearList.Add(estimated + 0.12);
@@ -431,7 +435,8 @@ public static partial class Pdf417Decoder {
 
         for (var i = 0; i < shearList.Count; i++) {
             if (cancellationToken.IsCancellationRequested) { value = string.Empty; return false; }
-            var modules = SampleModulesSheared(pixels, width, height, stride, format, box, candidate.WidthModules, candidate.HeightModules, candidate.ModuleSize, threshold, invert, shearList[i], leftEdgeMid);
+            var modules = SampleModulesSheared(pixels, width, height, stride, format, box, candidate.WidthModules, candidate.HeightModules, candidate.ModuleSize, threshold, invert, shearList[i], leftEdgeMid, cancellationToken);
+            if (cancellationToken.IsCancellationRequested) { value = string.Empty; return false; }
             if (TryDecodeWithRotations(modules, cancellationToken, out value)) return true;
             var trimmed = TrimModuleBorder(modules);
             if (!ReferenceEquals(trimmed, modules) && TryDecodeWithRotations(trimmed, cancellationToken, out value)) return true;
@@ -448,10 +453,10 @@ public static partial class Pdf417Decoder {
         var shearList = new List<double>(12);
         int? leftEdgeMid = null;
         var midRow = box.Top + box.Height / 2;
-        if (TryFindLeftEdge(pixels, width, height, stride, format, box.Left, box.Right, midRow, threshold, invert, out var leftEdge)) {
+        if (TryFindLeftEdge(pixels, width, height, stride, format, box.Left, box.Right, midRow, threshold, invert, cancellationToken, out var leftEdge)) {
             leftEdgeMid = leftEdge;
         }
-        if (TryEstimateShear(pixels, width, height, stride, format, box, candidate, threshold, invert, out var estimated)) {
+        if (TryEstimateShear(pixels, width, height, stride, format, box, candidate, threshold, invert, cancellationToken, out var estimated)) {
             shearList.Add(estimated);
             shearList.Add(estimated - 0.12);
             shearList.Add(estimated + 0.12);
@@ -464,7 +469,8 @@ public static partial class Pdf417Decoder {
 
         for (var i = 0; i < shearList.Count; i++) {
             if (cancellationToken.IsCancellationRequested) { value = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
-            var modules = SampleModulesSheared(pixels, width, height, stride, format, box, candidate.WidthModules, candidate.HeightModules, candidate.ModuleSize, threshold, invert, shearList[i], leftEdgeMid);
+            var modules = SampleModulesSheared(pixels, width, height, stride, format, box, candidate.WidthModules, candidate.HeightModules, candidate.ModuleSize, threshold, invert, shearList[i], leftEdgeMid, cancellationToken);
+            if (cancellationToken.IsCancellationRequested) { value = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
             if (TryDecodeWithRotations(modules, cancellationToken, diagnostics, out value)) return true;
             var trimmed = TrimModuleBorder(modules);
             if (!ReferenceEquals(trimmed, modules) && TryDecodeWithRotations(trimmed, cancellationToken, diagnostics, out value)) return true;
@@ -476,7 +482,8 @@ public static partial class Pdf417Decoder {
 
     private static bool TryDecodeWithRowAligned(PixelSpan pixels, int width, int height, int stride, PixelFormat format, BoundingBox box, Candidate candidate, int threshold, bool invert, CancellationToken cancellationToken, out string value) {
         if (cancellationToken.IsCancellationRequested) { value = string.Empty; return false; }
-        var modules = SampleModulesRowAligned(pixels, width, height, stride, format, box, candidate.WidthModules, candidate.HeightModules, candidate.ModuleSize, threshold, invert);
+        var modules = SampleModulesRowAligned(pixels, width, height, stride, format, box, candidate.WidthModules, candidate.HeightModules, candidate.ModuleSize, threshold, invert, cancellationToken);
+        if (cancellationToken.IsCancellationRequested) { value = string.Empty; return false; }
         if (TryDecodeWithRotations(modules, cancellationToken, out value)) return true;
         var trimmed = TrimModuleBorder(modules);
         if (!ReferenceEquals(trimmed, modules) && TryDecodeWithRotations(trimmed, cancellationToken, out value)) return true;
@@ -486,7 +493,8 @@ public static partial class Pdf417Decoder {
 
     private static bool TryDecodeWithRowAligned(PixelSpan pixels, int width, int height, int stride, PixelFormat format, BoundingBox box, Candidate candidate, int threshold, bool invert, CancellationToken cancellationToken, Pdf417DecodeDiagnostics diagnostics, out string value) {
         if (cancellationToken.IsCancellationRequested) { value = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
-        var modules = SampleModulesRowAligned(pixels, width, height, stride, format, box, candidate.WidthModules, candidate.HeightModules, candidate.ModuleSize, threshold, invert);
+        var modules = SampleModulesRowAligned(pixels, width, height, stride, format, box, candidate.WidthModules, candidate.HeightModules, candidate.ModuleSize, threshold, invert, cancellationToken);
+        if (cancellationToken.IsCancellationRequested) { value = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
         if (TryDecodeWithRotations(modules, cancellationToken, diagnostics, out value)) return true;
         var trimmed = TrimModuleBorder(modules);
         if (!ReferenceEquals(trimmed, modules) && TryDecodeWithRotations(trimmed, cancellationToken, diagnostics, out value)) return true;
@@ -494,7 +502,7 @@ public static partial class Pdf417Decoder {
         return false;
     }
 
-    private static BitMatrix SampleModulesRowAligned(PixelSpan pixels, int width, int height, int stride, PixelFormat format, BoundingBox box, int widthModules, int heightModules, int moduleSize, int threshold, bool invert) {
+    private static BitMatrix SampleModulesRowAligned(PixelSpan pixels, int width, int height, int stride, PixelFormat format, BoundingBox box, int widthModules, int heightModules, int moduleSize, int threshold, bool invert, CancellationToken cancellationToken) {
         var modules = new BitMatrix(widthModules, heightModules);
         var totalWidth = widthModules * moduleSize;
         var totalHeight = heightModules * moduleSize;
@@ -505,11 +513,12 @@ public static partial class Pdf417Decoder {
         var minRun = Math.Max(2, moduleSize / 2);
 
         for (var y = 0; y < heightModules; y++) {
+            if (cancellationToken.IsCancellationRequested) return modules;
             var sy = (int)Math.Round(offsetY + (y * moduleSize) + half);
             sy = Clamp(sy, 0, height - 1);
 
             var rowOffsetX = baseOffsetX;
-            if (TryFindLeftEdgeRun(pixels, width, height, stride, format, box.Left, box.Right, sy, threshold, invert, minRun, out var leftEdge)) {
+            if (TryFindLeftEdgeRun(pixels, width, height, stride, format, box.Left, box.Right, sy, threshold, invert, minRun, cancellationToken, out var leftEdge)) {
                 rowOffsetX = leftEdge - half;
                 var delta = rowOffsetX - baseOffsetX;
                 if (delta > maxShift) rowOffsetX = baseOffsetX + maxShift;
@@ -517,6 +526,7 @@ public static partial class Pdf417Decoder {
             }
 
             for (var x = 0; x < widthModules; x++) {
+                if (cancellationToken.IsCancellationRequested) return modules;
                 var sx = (int)Math.Round(rowOffsetX + (x * moduleSize) + half);
                 sx = Clamp(sx, 0, width - 1);
                 var dark = IsDark(pixels, width, height, stride, format, sx, sy, threshold);
@@ -527,7 +537,7 @@ public static partial class Pdf417Decoder {
         return modules;
     }
 
-    private static bool TryEstimateShear(PixelSpan pixels, int width, int height, int stride, PixelFormat format, BoundingBox box, Candidate candidate, int threshold, bool invert, out double shearModulesPerRow) {
+    private static bool TryEstimateShear(PixelSpan pixels, int width, int height, int stride, PixelFormat format, BoundingBox box, Candidate candidate, int threshold, bool invert, CancellationToken cancellationToken, out double shearModulesPerRow) {
         shearModulesPerRow = 0;
         var sampleTop = box.Top + (int)(box.Height * 0.2);
         var sampleBottom = box.Bottom - (int)(box.Height * 0.2);
@@ -536,8 +546,8 @@ public static partial class Pdf417Decoder {
         if (sampleBottom > box.Bottom) sampleBottom = box.Bottom;
         if (sampleTop >= sampleBottom) return false;
 
-        if (!TryFindLeftEdge(pixels, width, height, stride, format, box.Left, box.Right, sampleTop, threshold, invert, out var leftTop)) return false;
-        if (!TryFindLeftEdge(pixels, width, height, stride, format, box.Left, box.Right, sampleBottom, threshold, invert, out var leftBottom)) return false;
+        if (!TryFindLeftEdge(pixels, width, height, stride, format, box.Left, box.Right, sampleTop, threshold, invert, cancellationToken, out var leftTop)) return false;
+        if (!TryFindLeftEdge(pixels, width, height, stride, format, box.Left, box.Right, sampleBottom, threshold, invert, cancellationToken, out var leftBottom)) return false;
 
         var delta = leftBottom - leftTop;
         if (candidate.HeightModules <= 1 || candidate.ModuleSize <= 0) return false;
@@ -546,11 +556,12 @@ public static partial class Pdf417Decoder {
         return Math.Abs(shearModulesPerRow) > 0.02;
     }
 
-    private static bool TryFindLeftEdge(PixelSpan pixels, int width, int height, int stride, PixelFormat format, int left, int right, int y, int threshold, bool invert, out int xFound) {
+    private static bool TryFindLeftEdge(PixelSpan pixels, int width, int height, int stride, PixelFormat format, int left, int right, int y, int threshold, bool invert, CancellationToken cancellationToken, out int xFound) {
         xFound = 0;
         if ((uint)y >= (uint)height) return false;
         var row = y * stride;
         for (var x = left; x <= right; x++) {
+            if (cancellationToken.IsCancellationRequested) return false;
             if ((uint)x >= (uint)width) break;
             var dark = IsDarkAt(pixels, row, x, format, threshold);
             if (invert) dark = !dark;
@@ -562,12 +573,13 @@ public static partial class Pdf417Decoder {
         return false;
     }
 
-    private static bool TryFindLeftEdgeRun(PixelSpan pixels, int width, int height, int stride, PixelFormat format, int left, int right, int y, int threshold, bool invert, int minRun, out int xFound) {
+    private static bool TryFindLeftEdgeRun(PixelSpan pixels, int width, int height, int stride, PixelFormat format, int left, int right, int y, int threshold, bool invert, int minRun, CancellationToken cancellationToken, out int xFound) {
         xFound = 0;
         if ((uint)y >= (uint)height) return false;
         var row = y * stride;
         var run = 0;
         for (var x = left; x <= right; x++) {
+            if (cancellationToken.IsCancellationRequested) return false;
             if ((uint)x >= (uint)width) break;
             var dark = IsDarkAt(pixels, row, x, format, threshold);
             if (invert) dark = !dark;
@@ -589,7 +601,7 @@ public static partial class Pdf417Decoder {
         value = string.Empty;
         if (cancellationToken.IsCancellationRequested) return false;
 
-        if (!TryFindRowEdges(pixels, width, height, stride, format, threshold, invert, box, candidate, out var topLeft, out var topRight, out var bottomRight, out var bottomLeft)) {
+        if (!TryFindRowEdges(pixels, width, height, stride, format, threshold, invert, box, candidate, cancellationToken, out var topLeft, out var topRight, out var bottomRight, out var bottomLeft)) {
             return false;
         }
 
@@ -617,7 +629,8 @@ public static partial class Pdf417Decoder {
 
         for (var i = 0; i < offsets.Length; i++) {
             if (cancellationToken.IsCancellationRequested) return false;
-            var modules = SampleModulesPerspective(pixels, width, height, stride, format, candidate.WidthModules, candidate.HeightModules, threshold, invert, transform, offsets[i].x, offsets[i].y);
+            var modules = SampleModulesPerspective(pixels, width, height, stride, format, candidate.WidthModules, candidate.HeightModules, threshold, invert, transform, offsets[i].x, offsets[i].y, cancellationToken);
+            if (cancellationToken.IsCancellationRequested) { value = string.Empty; return false; }
             if (TryDecodeWithRotations(modules, cancellationToken, out value)) return true;
 
             var trimmed = TrimModuleBorder(modules);
