@@ -78,4 +78,13 @@ public sealed partial class QrPixelDecodeOptions {
         AggressiveSampling = enabled;
         return this;
     }
+
+    /// <summary>
+    /// Enables tile-based scanning for multiple QR codes.
+    /// </summary>
+    public QrPixelDecodeOptions WithTileScan(bool enabled = true, int tileGrid = 0) {
+        EnableTileScan = enabled;
+        TileGrid = tileGrid;
+        return this;
+    }
 }

@@ -39,6 +39,16 @@ public sealed partial class QrPixelDecodeOptions {
     public bool AutoCrop { get; set; } = false;
 
     /// <summary>
+    /// Enables tile-based scanning for multiple QR codes in one image.
+    /// </summary>
+    public bool EnableTileScan { get; set; } = false;
+
+    /// <summary>
+    /// Tile grid size for multi-scan (0 = auto, 2..4 recommended).
+    /// </summary>
+    public int TileGrid { get; set; } = 0;
+
+    /// <summary>
     /// Disable rotation/mirroring attempts even in robust profiles.
     /// </summary>
     public bool DisableTransforms { get; set; } = false;

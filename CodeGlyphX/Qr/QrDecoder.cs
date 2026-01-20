@@ -185,14 +185,22 @@ public static partial class QrDecoder {
     /// Attempts to decode all QR codes from raw pixel data (best-effort, clean inputs) using the specified profile.
     /// </summary>
     public static bool TryDecodeAll(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat fmt, out QrDecoded[] results, QrPixelDecodeOptions? options) {
-        return QrPixelDecoder.TryDecodeAll(pixels, width, height, stride, fmt, options, out results);
+        var ok = QrPixelDecoder.TryDecodeAll(pixels, width, height, stride, fmt, options, out results);
+        if (options?.EnableTileScan == true) {
+            ok = ApplyTileScan(pixels, width, height, stride, fmt, options, CancellationToken.None, ref results) || ok;
+        }
+        return ok;
     }
 
     /// <summary>
     /// Attempts to decode all QR codes from raw pixel data (best-effort, clean inputs) using the specified profile, with cancellation.
     /// </summary>
     public static bool TryDecodeAll(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat fmt, out QrDecoded[] results, QrPixelDecodeOptions? options, CancellationToken cancellationToken) {
-        return QrPixelDecoder.TryDecodeAll(pixels, width, height, stride, fmt, options, cancellationToken, out results);
+        var ok = QrPixelDecoder.TryDecodeAll(pixels, width, height, stride, fmt, options, cancellationToken, out results);
+        if (options?.EnableTileScan == true && !cancellationToken.IsCancellationRequested) {
+            ok = ApplyTileScan(pixels, width, height, stride, fmt, options, cancellationToken, ref results) || ok;
+        }
+        return ok;
     }
 
     /// <summary>
@@ -209,6 +217,9 @@ public static partial class QrDecoder {
     /// </summary>
     public static bool TryDecodeAll(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat fmt, out QrDecoded[] results, out QrPixelDecodeInfo info, QrPixelDecodeOptions? options) {
         var ok = QrPixelDecoder.TryDecodeAll(pixels, width, height, stride, fmt, options, out results, out var diagnostics);
+        if (options?.EnableTileScan == true) {
+            ok = ApplyTileScan(pixels, width, height, stride, fmt, options, CancellationToken.None, ref results) || ok;
+        }
         info = QrPixelDecodeInfo.FromInternal(diagnostics);
         return ok;
     }
@@ -218,8 +229,81 @@ public static partial class QrDecoder {
     /// </summary>
     public static bool TryDecodeAll(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat fmt, out QrDecoded[] results, out QrPixelDecodeInfo info, QrPixelDecodeOptions? options, CancellationToken cancellationToken) {
         var ok = QrPixelDecoder.TryDecodeAll(pixels, width, height, stride, fmt, options, cancellationToken, out results, out var diagnostics);
+        if (options?.EnableTileScan == true && !cancellationToken.IsCancellationRequested) {
+            ok = ApplyTileScan(pixels, width, height, stride, fmt, options, cancellationToken, ref results) || ok;
+        }
         info = QrPixelDecodeInfo.FromInternal(diagnostics);
         return ok;
+    }
+
+    private static bool ApplyTileScan(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat fmt, QrPixelDecodeOptions options, CancellationToken cancellationToken, ref QrDecoded[] results) {
+        if (width <= 0 || height <= 0 || stride < width * 4) return results.Length > 0;
+        var list = new System.Collections.Generic.List<QrDecoded>(results.Length + 4);
+        var seen = new System.Collections.Generic.HashSet<string>(StringComparer.Ordinal);
+        for (var i = 0; i < results.Length; i++) {
+            var key = Convert.ToBase64String(results[i].Bytes);
+            if (seen.Add(key)) list.Add(results[i]);
+        }
+
+        var budgetMs = options.BudgetMilliseconds > 0 ? options.BudgetMilliseconds : options.MaxMilliseconds;
+        var tileBudgetMs = budgetMs > 0 ? Math.Max(300, budgetMs / 2) : 0;
+        var sw = tileBudgetMs > 0 ? System.Diagnostics.Stopwatch.StartNew() : null;
+
+        bool ShouldStop() {
+            if (cancellationToken.IsCancellationRequested) return true;
+            if (tileBudgetMs > 0 && sw is not null && sw.ElapsedMilliseconds >= tileBudgetMs) return true;
+            return false;
+        }
+
+        var grid = options.TileGrid > 0 ? options.TileGrid : (Math.Max(width, height) >= 900 ? 3 : 2);
+        if (grid < 2) grid = 2;
+        if (grid > 4) grid = 4;
+        var pad = Math.Max(8, Math.Min(width, height) / 40);
+        var tileW = width / grid;
+        var tileH = height / grid;
+
+        for (var ty = 0; ty < grid; ty++) {
+            for (var tx = 0; tx < grid; tx++) {
+                if (ShouldStop()) break;
+                var x0 = tx * tileW;
+                var y0 = ty * tileH;
+                var x1 = (tx == grid - 1) ? width : (tx + 1) * tileW;
+                var y1 = (ty == grid - 1) ? height : (ty + 1) * tileH;
+
+                x0 = Math.Max(0, x0 - pad);
+                y0 = Math.Max(0, y0 - pad);
+                x1 = Math.Min(width, x1 + pad);
+                y1 = Math.Min(height, y1 + pad);
+
+                var tw = x1 - x0;
+                var th = y1 - y0;
+                if (tw < 48 || th < 48) continue;
+
+                var tileStride = tw * 4;
+                var len = tileStride * th;
+                var buffer = System.Buffers.ArrayPool<byte>.Shared.Rent(len);
+                try {
+                    var tileSpan = buffer.AsSpan(0, len);
+                    for (var y = 0; y < th; y++) {
+                        if (ShouldStop()) break;
+                        var srcIndex = (y0 + y) * stride + x0 * 4;
+                        pixels.Slice(srcIndex, tileStride).CopyTo(tileSpan.Slice(y * tileStride, tileStride));
+                    }
+                    if (ShouldStop()) break;
+                    if (TryDecode(tileSpan, tw, th, tileStride, fmt, out var decoded, options, cancellationToken)) {
+                        var key = Convert.ToBase64String(decoded.Bytes);
+                        if (seen.Add(key)) list.Add(decoded);
+                    }
+                } finally {
+                    System.Buffers.ArrayPool<byte>.Shared.Return(buffer);
+                }
+            }
+            if (ShouldStop()) break;
+        }
+
+        if (list.Count == results.Length) return results.Length > 0;
+        results = list.ToArray();
+        return results.Length > 0;
     }
 
     internal static bool TryDecodePixelsInternal(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat fmt, out QrDecoded result, out QrPixelDecodeDiagnostics diagnostics) {

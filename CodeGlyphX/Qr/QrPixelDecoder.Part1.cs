@@ -516,6 +516,10 @@ internal static partial class QrPixelDecoder {
     }
 
     internal static bool TryDecodeAll(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat fmt, QrPixelDecodeOptions? options, Func<QrDecoded, bool>? accept, CancellationToken cancellationToken, out QrDecoded[] results) {
+        return TryDecodeAll(pixels, width, height, stride, fmt, options, accept, cancellationToken, allowTileScan: true, out results);
+    }
+
+    private static bool TryDecodeAll(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat fmt, QrPixelDecodeOptions? options, Func<QrDecoded, bool>? accept, CancellationToken cancellationToken, bool allowTileScan, out QrDecoded[] results) {
         results = Array.Empty<QrDecoded>();
 
         if (width <= 0 || height <= 0) return false;
@@ -531,8 +535,17 @@ internal static partial class QrPixelDecoder {
         var settings = GetProfileSettings(profile, Math.Min(width, height));
         settings = ApplyOverrides(settings, options, scaleStart);
         var budgetMilliseconds = options?.BudgetMilliseconds > 0 ? options.BudgetMilliseconds : options?.MaxMilliseconds ?? 0;
-        var budget = new DecodeBudget(budgetMilliseconds, cancellationToken);
+        var enableTileScan = allowTileScan && options?.EnableTileScan == true;
+        var tileBudgetMs = 0;
+        var baseBudgetMs = budgetMilliseconds;
+        if (enableTileScan && budgetMilliseconds > 0) {
+            tileBudgetMs = Math.Max(300, budgetMilliseconds / 3);
+            baseBudgetMs = Math.Max(300, budgetMilliseconds - tileBudgetMs);
+        }
+        var budget = new DecodeBudget(baseBudgetMs, cancellationToken);
         if (budget.IsExpired || budget.IsNearDeadline(120)) return false;
+        DecodeBudget tileBudget = default;
+        var useTileBudget = enableTileScan && budgetMilliseconds > 0;
 
         Func<bool>? shouldStop = budget.Enabled ? () => budget.IsNearDeadline(120) : null;
         if (!QrGrayImage.TryCreate(pixels, width, height, stride, fmt, scale: scaleStart, settings.MinContrast, shouldStop, out var baseImage)) {
@@ -548,22 +561,83 @@ internal static partial class QrPixelDecoder {
             return true;
         }
 
-        var range = baseImage.Max - baseImage.Min;
-        if (settings.AllowContrastStretch && range < 48) {
-            var stretched = baseImage.WithContrastStretch(48);
-            if (!ReferenceEquals(stretched.Gray, baseImage.Gray)) {
-                CollectAllFromImage(stretched, settings, list, seen, accept, budget);
-                if (budget.IsExpired) {
-                    if (list.Count == 0) return false;
-                    results = list.ToArray();
-                    return true;
+        var skipExtraPasses = enableTileScan && list.Count > 0;
+        if (!skipExtraPasses) {
+            var range = baseImage.Max - baseImage.Min;
+            if (settings.AllowContrastStretch && range < 48) {
+                var stretched = baseImage.WithContrastStretch(48);
+                if (!ReferenceEquals(stretched.Gray, baseImage.Gray)) {
+                    CollectAllFromImage(stretched, settings, list, seen, accept, budget);
+                    if (budget.IsExpired) {
+                        if (list.Count == 0) return false;
+                        results = list.ToArray();
+                        return true;
+                    }
                 }
             }
-        }
 
-        for (var scale = scaleStart + 1; scale <= settings.CollectMaxScale; scale++) {
-            if (budget.IsExpired) break;
-            CollectAllAtScale(pixels, width, height, stride, fmt, scale, settings, list, seen, accept, budget);
+            for (var scale = scaleStart + 1; scale <= settings.CollectMaxScale; scale++) {
+                if (budget.IsExpired) break;
+                CollectAllAtScale(pixels, width, height, stride, fmt, scale, settings, list, seen, accept, budget);
+            }
+        }
+        if (enableTileScan) {
+            if (useTileBudget) {
+                tileBudget = new DecodeBudget(tileBudgetMs, cancellationToken);
+            } else {
+                tileBudget = budget;
+            }
+            if (tileBudget.IsExpired) {
+                if (list.Count == 0) return false;
+                results = list.ToArray();
+                return true;
+            }
+            var grid = options?.TileGrid > 0 ? options.TileGrid : (Math.Max(width, height) >= 900 ? 3 : 2);
+            if (grid < 2) grid = 2;
+            if (grid > 4) grid = 4;
+
+            var pad = Math.Max(8, Math.Min(width, height) / 40);
+            var tileW = width / grid;
+            var tileH = height / grid;
+            for (var ty = 0; ty < grid; ty++) {
+                for (var tx = 0; tx < grid; tx++) {
+                    if (tileBudget.IsExpired) break;
+                    var x0 = tx * tileW;
+                    var y0 = ty * tileH;
+                    var x1 = (tx == grid - 1) ? width : (tx + 1) * tileW;
+                    var y1 = (ty == grid - 1) ? height : (ty + 1) * tileH;
+
+                    x0 = Math.Max(0, x0 - pad);
+                    y0 = Math.Max(0, y0 - pad);
+                    x1 = Math.Min(width, x1 + pad);
+                    y1 = Math.Min(height, y1 + pad);
+
+                    var tw = x1 - x0;
+                    var th = y1 - y0;
+                    if (tw < 48 || th < 48) continue;
+
+                    var tileStride = tw * 4;
+                    var len = tileStride * th;
+                    var buffer = ArrayPool<byte>.Shared.Rent(len);
+                    try {
+                        var tileSpan = buffer.AsSpan(0, len);
+                        for (var y = 0; y < th; y++) {
+                            if (tileBudget.IsExpired) break;
+                            var srcIndex = (y0 + y) * stride + x0 * 4;
+                            pixels.Slice(srcIndex, tileStride).CopyTo(tileSpan.Slice(y * tileStride, tileStride));
+                        }
+                        if (tileBudget.IsExpired) break;
+
+                        if (tileBudget.IsNearDeadline(120)) break;
+                        if (TryDecode(tileSpan, tw, th, tileStride, fmt, options, accept, cancellationToken, out var decoded, out _)) {
+                            AddResult(list, seen, decoded, accept);
+                        }
+                    } finally {
+                        ArrayPool<byte>.Shared.Return(buffer);
+                    }
+                }
+                if (tileBudget.IsExpired) break;
+            }
         }
 
         if (list.Count == 0) return false;
