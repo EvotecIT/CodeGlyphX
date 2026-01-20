@@ -5,7 +5,7 @@ namespace CodeGlyphX;
 /// <summary>
 /// Options for unified QR/barcode decoding.
 /// </summary>
-public sealed class CodeGlyphDecodeOptions {
+public sealed partial class CodeGlyphDecodeOptions {
     /// <summary>
     /// Expected barcode type (optional hint for 1D decoding).
     /// </summary>

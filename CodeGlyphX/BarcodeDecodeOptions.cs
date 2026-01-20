@@ -3,7 +3,7 @@ namespace CodeGlyphX;
 /// <summary>
 /// Options controlling how 1D barcode decoding behaves.
 /// </summary>
-public sealed class BarcodeDecodeOptions {
+public sealed partial class BarcodeDecodeOptions {
     /// <summary>
     /// Controls how Code39 checksum characters are handled during decode.
     /// </summary>

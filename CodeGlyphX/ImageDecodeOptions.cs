@@ -3,7 +3,7 @@ namespace CodeGlyphX;
 /// <summary>
 /// Options for decoding from image sources (non-QR).
 /// </summary>
-public sealed class ImageDecodeOptions {
+public sealed partial class ImageDecodeOptions {
     /// <summary>
     /// Maximum image dimension (pixels) for decoding. Larger inputs will be downscaled.
     /// Set to 0 to disable.
@@ -25,4 +25,3 @@ public sealed class ImageDecodeOptions {
         };
     }
 }
-
