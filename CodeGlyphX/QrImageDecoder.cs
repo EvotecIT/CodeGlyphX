@@ -220,6 +220,129 @@ public static class QrImageDecoder {
     }
 
     /// <summary>
+    /// Attempts to decode a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) from a span.
+    /// </summary>
+    public static bool TryDecodeImage(ReadOnlySpan<byte> image, out QrDecoded decoded) {
+#if NET8_0_OR_GREATER
+        if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) {
+            decoded = null!;
+            return false;
+        }
+        return global::CodeGlyphX.Qr.QrPixelDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded);
+#else
+        decoded = null!;
+        return false;
+#endif
+    }
+
+    /// <summary>
+    /// Attempts to decode a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) from a span, with diagnostics and profile options.
+    /// </summary>
+    public static bool TryDecodeImage(ReadOnlySpan<byte> image, out QrDecoded decoded, out QrPixelDecodeInfo info, QrPixelDecodeOptions? options = null) {
+#if NET8_0_OR_GREATER
+        if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) {
+            decoded = null!;
+            info = default;
+            return false;
+        }
+        return QrDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, out info, options);
+#else
+        decoded = null!;
+        info = default;
+        return false;
+#endif
+    }
+
+    /// <summary>
+    /// Attempts to decode a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) from a span, with diagnostics, profile options, and cancellation.
+    /// </summary>
+    public static bool TryDecodeImage(ReadOnlySpan<byte> image, out QrDecoded decoded, out QrPixelDecodeInfo info, QrPixelDecodeOptions? options, CancellationToken cancellationToken) {
+#if NET8_0_OR_GREATER
+        if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) {
+            decoded = null!;
+            info = default;
+            return false;
+        }
+        return QrDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, out info, options, cancellationToken);
+#else
+        decoded = null!;
+        info = default;
+        return false;
+#endif
+    }
+
+    /// <summary>
+    /// Attempts to decode a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options from a span.
+    /// </summary>
+    public static bool TryDecodeImage(ReadOnlySpan<byte> image, ImageDecodeOptions? imageOptions, QrPixelDecodeOptions? options, out QrDecoded decoded) {
+        return TryDecodeImage(image, imageOptions, options, CancellationToken.None, out decoded);
+    }
+
+    /// <summary>
+    /// Attempts to decode a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options and cancellation from a span.
+    /// </summary>
+    public static bool TryDecodeImage(ReadOnlySpan<byte> image, ImageDecodeOptions? imageOptions, QrPixelDecodeOptions? options, CancellationToken cancellationToken, out QrDecoded decoded) {
+#if NET8_0_OR_GREATER
+        return TryDecodeImageCore(image, imageOptions, options, cancellationToken, out decoded);
+#else
+        decoded = null!;
+        return false;
+#endif
+    }
+
+    /// <summary>
+    /// Attempts to decode a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options, diagnostics, and profile options from a span.
+    /// </summary>
+    public static bool TryDecodeImage(ReadOnlySpan<byte> image, ImageDecodeOptions? imageOptions, out QrDecoded decoded, out QrPixelDecodeInfo info, QrPixelDecodeOptions? options = null) {
+        return TryDecodeImage(image, imageOptions, out decoded, out info, options, CancellationToken.None);
+    }
+
+    /// <summary>
+    /// Attempts to decode a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options, diagnostics, profile options, and cancellation from a span.
+    /// </summary>
+    public static bool TryDecodeImage(ReadOnlySpan<byte> image, ImageDecodeOptions? imageOptions, out QrDecoded decoded, out QrPixelDecodeInfo info, QrPixelDecodeOptions? options, CancellationToken cancellationToken) {
+#if NET8_0_OR_GREATER
+        return TryDecodeImageCore(image, imageOptions, options, cancellationToken, out decoded, out info);
+#else
+        decoded = null!;
+        info = default;
+        return false;
+#endif
+    }
+
+    /// <summary>
+    /// Attempts to decode a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) from a span with profile options.
+    /// </summary>
+    public static bool TryDecodeImage(ReadOnlySpan<byte> image, QrPixelDecodeOptions? options, out QrDecoded decoded) {
+#if NET8_0_OR_GREATER
+        if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) {
+            decoded = null!;
+            return false;
+        }
+        return global::CodeGlyphX.Qr.QrPixelDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, options, out decoded);
+#else
+        decoded = null!;
+        return false;
+#endif
+    }
+
+    /// <summary>
+    /// Attempts to decode a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) from a span, with cancellation.
+    /// </summary>
+    public static bool TryDecodeImage(ReadOnlySpan<byte> image, QrPixelDecodeOptions? options, CancellationToken cancellationToken, out QrDecoded decoded) {
+#if NET8_0_OR_GREATER
+        if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) {
+            decoded = null!;
+            return false;
+        }
+        return global::CodeGlyphX.Qr.QrPixelDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, options, cancellationToken, out decoded);
+#else
+        decoded = null!;
+        return false;
+#endif
+    }
+
+    /// <summary>
     /// Attempts to decode all QR codes from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).
     /// </summary>
     public static bool TryDecodeAllImage(byte[] image, out QrDecoded[] decoded) {
@@ -427,6 +550,35 @@ public static class QrImageDecoder {
         decoded = null!;
         info = default;
         if (image is null) throw new ArgumentNullException(nameof(image));
+        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, imageOptions, out var budgetCts, out var budgetScope);
+        try {
+            if (token.IsCancellationRequested) return false;
+            if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) return false;
+            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, imageOptions, token)) return false;
+            return QrDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, out info, options, token);
+        } finally {
+            budgetCts?.Dispose();
+            budgetScope?.Dispose();
+        }
+    }
+
+    private static bool TryDecodeImageCore(ReadOnlySpan<byte> image, ImageDecodeOptions? imageOptions, QrPixelDecodeOptions? options, CancellationToken cancellationToken, out QrDecoded decoded) {
+        decoded = null!;
+        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, imageOptions, out var budgetCts, out var budgetScope);
+        try {
+            if (token.IsCancellationRequested) return false;
+            if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) return false;
+            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, imageOptions, token)) return false;
+            return global::CodeGlyphX.Qr.QrPixelDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, options, token, out decoded);
+        } finally {
+            budgetCts?.Dispose();
+            budgetScope?.Dispose();
+        }
+    }
+
+    private static bool TryDecodeImageCore(ReadOnlySpan<byte> image, ImageDecodeOptions? imageOptions, QrPixelDecodeOptions? options, CancellationToken cancellationToken, out QrDecoded decoded, out QrPixelDecodeInfo info) {
+        decoded = null!;
+        info = default;
         var token = ImageDecodeHelper.ApplyBudget(cancellationToken, imageOptions, out var budgetCts, out var budgetScope);
         try {
             if (token.IsCancellationRequested) return false;
