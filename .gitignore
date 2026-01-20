@@ -383,3 +383,5 @@ CodeGlyphX.Website/wwwroot/api/
 CodeGlyphX.Website/wwwroot/llms.txt
 CodeGlyphX.Website/wwwroot/llms.json
 CodeGlyphX.Website/wwwroot/sitemap.xml
+.playwright-mcp/*
+.claude/*
