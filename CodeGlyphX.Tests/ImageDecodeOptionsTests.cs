@@ -17,7 +17,8 @@ public sealed class ImageDecodeOptionsTests {
             out var stride);
 
         var options = new CodeGlyphDecodeOptions {
-            Image = new ImageDecodeOptions { MaxDimension = 200 }
+            Image = new ImageDecodeOptions { MaxDimension = 200, MaxMilliseconds = 200 },
+            Qr = new QrPixelDecodeOptions { Profile = QrDecodeProfile.Fast, MaxMilliseconds = 200 }
         };
 
         Assert.True(CodeGlyph.TryDecode(pixels, width, height, stride, PixelFormat.Rgba32, out var decoded, options));

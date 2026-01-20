@@ -251,4 +251,45 @@ public sealed class QrPngRendererTests {
         Assert.True(rgba[left + 0] > rgba[left + 1]);
         Assert.True(rgba[right + 1] > rgba[right + 0]);
     }
+
+    [Theory]
+    [InlineData(QrPngModuleShape.Diamond)]
+    [InlineData(QrPngModuleShape.Squircle)]
+    [InlineData(QrPngModuleShape.Dot)]
+    [InlineData(QrPngModuleShape.DotGrid)]
+    public void Render_With_Fancy_Module_Shapes_Draws_Module(QrPngModuleShape shape) {
+        var qr = QrCodeEncoder.EncodeText("HELLO", QrErrorCorrectionLevel.H);
+
+        var opts = new QrPngRenderOptions {
+            ModuleSize = 6,
+            QuietZone = 2,
+            Foreground = Rgba32.Black,
+            Background = Rgba32.White,
+            ModuleShape = shape,
+        };
+
+        var png = QrPngRenderer.Render(qr.Modules, opts);
+        var (rgba, _, _, stride) = PngTestDecoder.DecodeRgba32(png);
+
+        var mx = 0;
+        var my = 0;
+        var found = false;
+        for (var y = 0; y < qr.Modules.Height && !found; y++) {
+            for (var x = 0; x < qr.Modules.Width; x++) {
+                if (!qr.Modules[x, y]) continue;
+                mx = x;
+                my = y;
+                found = true;
+                break;
+            }
+        }
+        Assert.True(found);
+
+        var px = (opts.QuietZone + mx) * opts.ModuleSize + opts.ModuleSize / 2;
+        var py = (opts.QuietZone + my) * opts.ModuleSize + opts.ModuleSize / 2;
+        var p = py * stride + px * 4;
+        Assert.Equal(0, rgba[p + 0]);
+        Assert.Equal(0, rgba[p + 1]);
+        Assert.Equal(0, rgba[p + 2]);
+    }
 }

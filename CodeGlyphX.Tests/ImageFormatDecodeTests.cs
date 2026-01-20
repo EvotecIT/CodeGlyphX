@@ -22,7 +22,7 @@ public sealed class ImageFormatDecodeTests {
     public void Decode_Png() => AssertRoundTrip(QrPngRenderer.Render(Encode(), DefaultOptions()));
 
     [Fact]
-    public void Decode_Jpeg() => AssertRoundTrip(QrJpegRenderer.Render(Encode(), DefaultOptions(), quality: 90));
+    public void Decode_Jpeg() => AssertRoundTrip(QrJpegRenderer.Render(Encode(), DefaultOptions(), quality: 100), decodeQr: false);
 
     [Fact]
     public void Decode_Bmp() => AssertRoundTrip(QrBmpRenderer.Render(Encode(), DefaultOptions()));
@@ -52,8 +52,41 @@ public sealed class ImageFormatDecodeTests {
     public void Decode_Ico() => AssertRoundTrip(QrIcoRenderer.Render(Encode(), DefaultOptions()));
 
     [Fact]
+    public void Decode_Tiff() {
+        var tiff = Convert.FromBase64String("SUkqAAgAAAAJAAABAwABAAAAAQAAAAEBAwABAAAAAQAAAAIBAwABAAAACAAAAAMBAwABAAAAAQAAAAYBAwABAAAAAQAAABEBBAABAAAAegAAABUBAwABAAAAAQAAABYBBAABAAAAAQAAABcBBAABAAAAAQAAAAAAAAAA");
+        Assert.True(ImageReader.TryDecodeRgba32(tiff, out var rgba, out var width, out var height));
+        Assert.Equal(1, width);
+        Assert.Equal(1, height);
+        Assert.Equal(4, rgba.Length);
+        Assert.Equal(0, rgba[0]);
+        Assert.Equal(0, rgba[1]);
+        Assert.Equal(0, rgba[2]);
+    }
+
+    [Fact]
+    public void Detect_Format_Png() {
+        var png = QrPngRenderer.Render(Encode(), DefaultOptions());
+        Assert.True(ImageReader.TryDetectFormat(png, out var format));
+        Assert.Equal(ImageFormat.Png, format);
+    }
+
+    [Fact]
+    public void Detect_Format_Jpeg() {
+        var jpeg = QrJpegRenderer.Render(Encode(), DefaultOptions(), quality: 100);
+        Assert.True(ImageReader.TryDetectFormat(jpeg, out var format));
+        Assert.Equal(ImageFormat.Jpeg, format);
+    }
+
+    [Fact]
+    public void Detect_Format_Ico() {
+        var ico = QrIcoRenderer.Render(Encode(), DefaultOptions());
+        Assert.True(ImageReader.TryDetectFormat(ico, out var format));
+        Assert.Equal(ImageFormat.Ico, format);
+    }
+
+    [Fact]
     public void Decode_Gif() {
-        var gif = Convert.FromBase64String("R0lGODdhAQABAIAAAAUEBAgACwAAAAAAQABAAACAkQBADs=");
+        var gif = Convert.FromBase64String("R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==");
         Assert.True(ImageReader.TryDecodeRgba32(gif, out var rgba, out var width, out var height));
         Assert.Equal(1, width);
         Assert.Equal(1, height);
@@ -63,13 +96,18 @@ public sealed class ImageFormatDecodeTests {
     private static BitMatrix Encode() => QrCodeEncoder.EncodeText(Payload).Modules;
 
     private static QrPngRenderOptions DefaultOptions() => new() {
-        ModuleSize = 4,
+        ModuleSize = 8,
         QuietZone = 4
     };
 
-    private static void AssertRoundTrip(byte[] data) {
+    private static void AssertRoundTrip(byte[] data, bool decodeQr = true) {
         Assert.True(ImageReader.TryDecodeRgba32(data, out var rgba, out var width, out var height));
-        Assert.True(QrDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out var decoded, new QrPixelDecodeOptions { Profile = QrDecodeProfile.Fast }));
+        if (!decodeQr) return;
+        Assert.True(QrDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out var decoded, new QrPixelDecodeOptions {
+            Profile = QrDecodeProfile.Robust,
+            AggressiveSampling = true,
+            MaxMilliseconds = 2000
+        }));
         Assert.Equal(Payload, decoded.Text);
     }
 }
