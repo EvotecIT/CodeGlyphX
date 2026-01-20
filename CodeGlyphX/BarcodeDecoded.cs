@@ -12,7 +12,7 @@ public sealed class BarcodeDecoded {
     public BarcodeType Type { get; }
 
     /// <summary>
-    /// Gets the decoded text.
+    /// Gets the decoded text (for EAN/UPC add-ons this includes a '+' suffix, e.g. "123456789012+12").
     /// </summary>
     public string Text { get; }
 

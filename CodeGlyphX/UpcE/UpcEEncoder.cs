@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using CodeGlyphX.Ean;
 using CodeGlyphX.Internal;
 
 namespace CodeGlyphX.UpcE;
@@ -9,10 +10,19 @@ namespace CodeGlyphX.UpcE;
 /// </summary>
 public static class UpcEEncoder {
     /// <summary>
-    /// Encodes a UPC-E barcode.
+    /// Encodes a UPC-E barcode. Use "+NN" or "+NNNNN" to append add-ons.
     /// </summary>
     public static Barcode1D Encode(string content, UpcENumberSystem numberSystem = UpcENumberSystem.Zero) {
         if (content is null) throw new ArgumentNullException(nameof(content));
+        var addOn = (string?)null;
+        var plusIndex = content.IndexOf('+');
+        if (plusIndex >= 0) {
+            if (content.IndexOf('+', plusIndex + 1) >= 0) throw new InvalidOperationException("Only one add-on separator '+' is supported.");
+            addOn = content.Substring(plusIndex + 1);
+            content = content.Substring(0, plusIndex);
+            if (addOn.Length == 0) throw new InvalidOperationException("Add-on digits are required after '+'.");
+        }
+
         if (!RegexCache.DigitsOptional().IsMatch(content)) throw new InvalidOperationException("Can only encode numerical digits (0-9)");
         if (numberSystem != UpcENumberSystem.Zero && numberSystem != UpcENumberSystem.One) {
             throw new InvalidOperationException("Only number systems 0 and 1 are supported by UPC E");
@@ -31,6 +41,9 @@ public static class UpcEEncoder {
             BarcodeSegments.AppendBits(segments, parity[i] == UpcETables.Parity.Even ? encoded.Even : encoded.Odd);
         }
         BarcodeSegments.AppendBits(segments, new[] { false, true, false, true, false, true });
+        if (!string.IsNullOrEmpty(addOn)) {
+            EanAddOn.AppendAddOn(segments, addOn!);
+        }
         return new Barcode1D(segments);
     }
 

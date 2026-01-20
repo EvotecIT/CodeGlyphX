@@ -86,10 +86,30 @@ public static partial class BarcodeDecoder {
             decoded = new BarcodeDecoded(BarcodeType.ITF14, itf14);
             return true;
         }
+        if (cancellationToken.IsCancellationRequested) return false;
+        if (TryDecodeItf(modules, out var itf)) {
+            decoded = new BarcodeDecoded(BarcodeType.ITF, itf);
+            return true;
+        }
+        if (cancellationToken.IsCancellationRequested) return false;
+        if (TryDecodeMatrix2of5(modules, out var matrix25)) {
+            decoded = new BarcodeDecoded(BarcodeType.Matrix2of5, matrix25);
+            return true;
+        }
+        if (cancellationToken.IsCancellationRequested) return false;
+        if (TryDecodeIata2of5(modules, out var iata25)) {
+            decoded = new BarcodeDecoded(BarcodeType.IATA2of5, iata25);
+            return true;
+        }
 
         if (cancellationToken.IsCancellationRequested) return false;
         if (TryDecodeCode128(modules, out var code128, out var isGs1)) {
             decoded = new BarcodeDecoded(isGs1 ? BarcodeType.GS1_128 : BarcodeType.Code128, code128);
+            return true;
+        }
+        if (cancellationToken.IsCancellationRequested) return false;
+        if (TryDecodeCode32(modules, options, out var code32)) {
+            decoded = new BarcodeDecoded(BarcodeType.Code32, code32);
             return true;
         }
         if (cancellationToken.IsCancellationRequested) return false;
@@ -120,6 +140,21 @@ public static partial class BarcodeDecoder {
         if (cancellationToken.IsCancellationRequested) return false;
         if (TryDecodePlessey(modules, options, out var plessey)) {
             decoded = new BarcodeDecoded(BarcodeType.Plessey, plessey);
+            return true;
+        }
+        if (cancellationToken.IsCancellationRequested) return false;
+        if (TryDecodePatchCode(modules, out var patch)) {
+            decoded = new BarcodeDecoded(BarcodeType.PatchCode, patch);
+            return true;
+        }
+        if (cancellationToken.IsCancellationRequested) return false;
+        if (TryDecodeTelepen(modules, out var telepen)) {
+            decoded = new BarcodeDecoded(BarcodeType.Telepen, telepen);
+            return true;
+        }
+        if (cancellationToken.IsCancellationRequested) return false;
+        if (TryDecodePharmacode(modules, out var pharmacode)) {
+            decoded = new BarcodeDecoded(BarcodeType.Pharmacode, pharmacode);
             return true;
         }
 
@@ -157,6 +192,24 @@ public static partial class BarcodeDecoder {
                     return true;
                 }
                 return false;
+            case BarcodeType.ITF:
+                if (TryDecodeItf(modules, out var itf)) {
+                    decoded = new BarcodeDecoded(BarcodeType.ITF, itf);
+                    return true;
+                }
+                return false;
+            case BarcodeType.Matrix2of5:
+                if (TryDecodeMatrix2of5(modules, out var matrix25)) {
+                    decoded = new BarcodeDecoded(BarcodeType.Matrix2of5, matrix25);
+                    return true;
+                }
+                return false;
+            case BarcodeType.IATA2of5:
+                if (TryDecodeIata2of5(modules, out var iata25)) {
+                    decoded = new BarcodeDecoded(BarcodeType.IATA2of5, iata25);
+                    return true;
+                }
+                return false;
             case BarcodeType.Code128:
                 if (TryDecodeCode128(modules, out var code128, out var isGs1)) {
                     decoded = new BarcodeDecoded(isGs1 ? BarcodeType.GS1_128 : BarcodeType.Code128, code128);
@@ -166,6 +219,12 @@ public static partial class BarcodeDecoder {
             case BarcodeType.GS1_128:
                 if (TryDecodeCode128(modules, out var gs1, out var isGs1Only) && isGs1Only) {
                     decoded = new BarcodeDecoded(BarcodeType.GS1_128, gs1);
+                    return true;
+                }
+                return false;
+            case BarcodeType.Code32:
+                if (TryDecodeCode32(modules, options, out var code32)) {
+                    decoded = new BarcodeDecoded(BarcodeType.Code32, code32);
                     return true;
                 }
                 return false;
@@ -202,6 +261,24 @@ public static partial class BarcodeDecoder {
             case BarcodeType.Plessey:
                 if (TryDecodePlessey(modules, options, out var plessey)) {
                     decoded = new BarcodeDecoded(BarcodeType.Plessey, plessey);
+                    return true;
+                }
+                return false;
+            case BarcodeType.PatchCode:
+                if (TryDecodePatchCode(modules, out var patch)) {
+                    decoded = new BarcodeDecoded(BarcodeType.PatchCode, patch);
+                    return true;
+                }
+                return false;
+            case BarcodeType.Telepen:
+                if (TryDecodeTelepen(modules, out var telepen)) {
+                    decoded = new BarcodeDecoded(BarcodeType.Telepen, telepen);
+                    return true;
+                }
+                return false;
+            case BarcodeType.Pharmacode:
+                if (TryDecodePharmacode(modules, out var pharmacode)) {
+                    decoded = new BarcodeDecoded(BarcodeType.Pharmacode, pharmacode);
                     return true;
                 }
                 return false;
