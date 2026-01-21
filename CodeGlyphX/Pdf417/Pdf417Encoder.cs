@@ -215,10 +215,11 @@ public static class Pdf417Encoder {
         if (string.IsNullOrEmpty(value)) return;
         codewords.Add(923);
         codewords.Add(field);
+        var safe = value!;
         if (numeric) {
-            codewords.AddRange(EncodeNumericField(value));
+            codewords.AddRange(EncodeNumericField(safe));
         } else {
-            codewords.AddRange(Pdf417HighLevelEncoder.Encode(value, Pdf417Compaction.Text, null));
+            codewords.AddRange(Pdf417HighLevelEncoder.Encode(safe, Pdf417Compaction.Text, null));
         }
     }
 

@@ -177,8 +177,9 @@ public static class MicroPdf417Encoder {
             if (string.IsNullOrEmpty(mapped)) {
                 throw new InvalidOperationException("Invalid MicroPDF417 pattern character.");
             }
-            for (var j = 0; j < mapped.Length; j++) {
-                bits.Add(mapped[j] == '1');
+            var safe = mapped!;
+            for (var j = 0; j < safe.Length; j++) {
+                bits.Add(safe[j] == '1');
             }
         }
 
