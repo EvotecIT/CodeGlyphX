@@ -188,10 +188,14 @@ try {
             $context.Response.ContentLength64 = $bytes.Length
             try {
                 $context.Response.OutputStream.Write($bytes, 0, $bytes.Length)
-            } catch [System.IO.IOException] {
+            } catch {
                 # Client disconnected mid-response; ignore to keep the dev server running.
             } finally {
-                $context.Response.OutputStream.Close()
+                try {
+                    $context.Response.OutputStream.Close()
+                } catch {
+                    # Ignore shutdown errors from aborted connections.
+                }
             }
         }
     }
