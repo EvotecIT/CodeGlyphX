@@ -487,8 +487,8 @@ public static partial class BarcodeDecoder {
             if (runs[i] > maxBar) maxBar = runs[i];
         }
 
-        if (minBar <= 0 || maxBar < minBar * 2) return false;
-        var threshold = (minBar + maxBar) / 2.0;
+        if (minBar <= 0 || (long)maxBar < (long)minBar * 2) return false;
+        var threshold = ((long)minBar + maxBar) / 2.0;
 
         for (var i = 1; i < runs.Length; i += 2) {
             if (runs[i] > threshold) return false;

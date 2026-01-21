@@ -258,7 +258,6 @@ public static class DataBarExpandedDecoder {
                 content = sb.ToString();
                 return true;
             default:
-                if (encodingMethod < 7 || encodingMethod > 14) return false;
                 if (!TryDecodeGtinConstantNine(bits, ref pos, sb, includeAi: true)) return false;
                 if (!TryDecodeWeightAndDate(bits, ref pos, sb, encodingMethod)) return false;
                 content = sb.ToString();
@@ -372,19 +371,19 @@ public static class DataBarExpandedDecoder {
 
     private static bool TryDecodeWeightAndDate(bool[] bits, ref int pos, StringBuilder sb, int encodingMethod) {
         if (pos + 36 > bits.Length) return false;
-        if (encodingMethod < 7 || encodingMethod > 14) return false;
         var firstAi = encodingMethod switch {
             7 or 9 or 11 or 13 => "310",
             8 or 10 or 12 or 14 => "320",
-            _ => string.Empty
+            _ => null
         };
         var dateAi = encodingMethod switch {
             7 or 8 => "11",
             9 or 10 => "13",
             11 or 12 => "15",
             13 or 14 => "17",
-            _ => string.Empty
+            _ => null
         };
+        if (firstAi is null || dateAi is null) return false;
 
         var weight = ReadBits(bits, pos, 20);
         pos += 20;

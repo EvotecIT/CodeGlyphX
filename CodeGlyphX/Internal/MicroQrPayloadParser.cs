@@ -78,7 +78,7 @@ internal static class MicroQrPayloadParser {
 
             var mode = modeBits == 0 ? (int)MicroQrMode.Numeric : ReadBits(modeBits);
             if (mode < 0) return false;
-            if (mode is < 0 or > 3) return false;
+            if (mode > 3) return false;
 
             var countBits = MicroQrTables.GetLengthIndicatorBits((MicroQrMode)mode, version);
             if (countBits <= 0) return false;
