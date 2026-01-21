@@ -68,7 +68,7 @@
     {
       "name": "SegmentCount",
       "kind": "Property",
-      "summary": "Optional total segment count.",
+      "summary": "Optional total segment count (last segment only).",
       "remarks": null,
       "returns": null,
       "parameters": [],
@@ -82,7 +82,7 @@
     {
       "name": "FileName",
       "kind": "Property",
-      "summary": "Optional file name.",
+      "summary": "Optional file name (last segment only).",
       "remarks": null,
       "returns": null,
       "parameters": [],
@@ -96,7 +96,7 @@
     {
       "name": "Timestamp",
       "kind": "Property",
-      "summary": "Optional timestamp.",
+      "summary": "Optional timestamp (last segment only).",
       "remarks": null,
       "returns": null,
       "parameters": [],
@@ -110,7 +110,7 @@
     {
       "name": "Sender",
       "kind": "Property",
-      "summary": "Optional sender.",
+      "summary": "Optional sender (last segment only).",
       "remarks": null,
       "returns": null,
       "parameters": [],
@@ -124,7 +124,7 @@
     {
       "name": "Addressee",
       "kind": "Property",
-      "summary": "Optional addressee.",
+      "summary": "Optional addressee (last segment only).",
       "remarks": null,
       "returns": null,
       "parameters": [],
@@ -138,7 +138,7 @@
     {
       "name": "FileSize",
       "kind": "Property",
-      "summary": "Optional file size.",
+      "summary": "Optional file size (last segment only).",
       "remarks": null,
       "returns": null,
       "parameters": [],
@@ -152,7 +152,7 @@
     {
       "name": "Checksum",
       "kind": "Property",
-      "summary": "Optional checksum.",
+      "summary": "Optional checksum (last segment only).",
       "remarks": null,
       "returns": null,
       "parameters": [],

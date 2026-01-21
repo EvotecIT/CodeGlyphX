@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Pdf417MacroOptions - CodeGlyphX API Reference</title>
-  <meta name="description" content="Options for Macro PDF417 encoding." />
+  <title>Pdf417MacroAssembler - CodeGlyphX API Reference</title>
+  <meta name="description" content="Collects Macro PDF417 segments and assembles the original payload when complete." />
   <link rel="stylesheet" href="../style.css" />
   <script>(function(){var theme=localStorage.getItem('theme')||'dark';document.documentElement.setAttribute('data-theme',theme);})();</script>
 </head>
@@ -65,57 +65,121 @@
     <span class="sep">/</span><span>CodeGlyphX.Pdf417</span>
   </nav>
   <header class="type-header">
-    <h1>Pdf417MacroOptions</h1>
+    <h1>Pdf417MacroAssembler</h1>
     <div class="type-meta">Class · CodeGlyphX.Pdf417</div>
   </header>
-  <p class="type-summary">Options for Macro PDF417 encoding.</p>
+  <p class="type-summary">Collects Macro PDF417 segments and assembles the original payload when complete.</p>
   <section class="member-section">
     <h2>Constructors</h2>
-    <div class="member" id="constructor-pdf417macrooptions-pdf417macrooptions">
-      <code class="signature">Pdf417MacroOptions()</code>
+    <div class="member" id="constructor-pdf417macroassembler-pdf417macroassembler">
+      <code class="signature">Pdf417MacroAssembler()</code>
+    </div>
+  </section>
+  <section class="member-section">
+    <h2>Methods</h2>
+    <div class="member" id="method-tryadd-bool-tryadd-pdf417decoded-decoded">
+      <code class="signature">bool TryAdd(Pdf417Decoded decoded)</code>
+      <p class="member-summary">Attempts to add a decoded Macro PDF417 segment.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>decoded <span class="param-type">Pdf417Decoded</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-tryadd-bool-tryadd-codeglyphdecoded-decoded">
+      <code class="signature">bool TryAdd(CodeGlyphDecoded decoded)</code>
+      <p class="member-summary">Attempts to add a decoded Macro PDF417 segment from a CodeGlyphX.CodeGlyphDecoded wrapper.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>decoded <span class="param-type">CodeGlyphDecoded</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-add-void-add-pdf417decoded-decoded">
+      <code class="signature">void Add(Pdf417Decoded decoded)</code>
+      <p class="member-summary">Adds a decoded Macro PDF417 segment.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>decoded <span class="param-type">Pdf417Decoded</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-add-void-add-codeglyphdecoded-decoded">
+      <code class="signature">void Add(CodeGlyphDecoded decoded)</code>
+      <p class="member-summary">Adds a decoded Macro PDF417 segment from a CodeGlyphX.CodeGlyphDecoded wrapper.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>decoded <span class="param-type">CodeGlyphDecoded</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-tryadd-bool-tryadd-string-text-pdf417macrometadata-macro">
+      <code class="signature">bool TryAdd(string text, Pdf417MacroMetadata macro)</code>
+      <p class="member-summary">Attempts to add a Macro PDF417 segment with explicit metadata.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>text <span class="param-type">string</span></dt>
+        <dt>macro <span class="param-type">Pdf417MacroMetadata</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-tryassemble-bool-tryassemble-out-string-text">
+      <code class="signature">bool TryAssemble(out string text)</code>
+      <p class="member-summary">Attempts to assemble the full payload when all segments are present.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>text <span class="param-type">string</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-assemble-string-assemble">
+      <code class="signature">string Assemble()</code>
+      <p class="member-summary">Assembles the full payload when all segments are present.</p>
     </div>
   </section>
   <section class="member-section">
     <h2>Propertys</h2>
-    <div class="member" id="property-segmentindex-int-segmentindex-get-set">
-      <code class="signature">int SegmentIndex {get; set; }</code>
-      <p class="member-summary">Segment index (0..809999).</p>
+    <div class="member" id="property-fileid-string-fileid-get">
+      <code class="signature">string FileId {get; }</code>
+      <p class="member-summary">Gets the Macro PDF417 file identifier when known.</p>
     </div>
-    <div class="member" id="property-fileid-string-fileid-get-set">
-      <code class="signature">string FileId {get; set; }</code>
-      <p class="member-summary">File identifier as a numeric string (length must be a multiple of 3).</p>
+    <div class="member" id="property-segmentcount-nullable-int-segmentcount-get">
+      <code class="signature">Nullable&lt;int&gt; SegmentCount {get; }</code>
+      <p class="member-summary">Gets the expected segment count when present in metadata.</p>
     </div>
-    <div class="member" id="property-islastsegment-bool-islastsegment-get-set">
-      <code class="signature">bool IsLastSegment {get; set; }</code>
-      <p class="member-summary">Indicates whether this segment is the last segment.</p>
+    <div class="member" id="property-haslastsegment-bool-haslastsegment-get">
+      <code class="signature">bool HasLastSegment {get; }</code>
+      <p class="member-summary">Gets whether a segment flagged as the last segment was received.</p>
     </div>
-    <div class="member" id="property-segmentcount-nullable-int-segmentcount-get-set">
-      <code class="signature">Nullable&lt;int&gt; SegmentCount {get; set; }</code>
-      <p class="member-summary">Optional total segment count (last segment only).</p>
+    <div class="member" id="property-lastsegmentindex-nullable-int-lastsegmentindex-get">
+      <code class="signature">Nullable&lt;int&gt; LastSegmentIndex {get; }</code>
+      <p class="member-summary">Gets the index of the last segment when known.</p>
     </div>
-    <div class="member" id="property-filename-string-filename-get-set">
-      <code class="signature">string FileName {get; set; }</code>
-      <p class="member-summary">Optional file name (last segment only).</p>
+    <div class="member" id="property-receivedcount-int-receivedcount-get">
+      <code class="signature">int ReceivedCount {get; }</code>
+      <p class="member-summary">Gets the number of segments collected.</p>
     </div>
-    <div class="member" id="property-timestamp-nullable-long-timestamp-get-set">
-      <code class="signature">Nullable&lt;long&gt; Timestamp {get; set; }</code>
-      <p class="member-summary">Optional timestamp (last segment only).</p>
+    <div class="member" id="property-filename-string-filename-get">
+      <code class="signature">string FileName {get; }</code>
+      <p class="member-summary">Gets the file name when present.</p>
     </div>
-    <div class="member" id="property-sender-string-sender-get-set">
-      <code class="signature">string Sender {get; set; }</code>
-      <p class="member-summary">Optional sender (last segment only).</p>
+    <div class="member" id="property-timestamp-nullable-long-timestamp-get">
+      <code class="signature">Nullable&lt;long&gt; Timestamp {get; }</code>
+      <p class="member-summary">Gets the timestamp when present.</p>
     </div>
-    <div class="member" id="property-addressee-string-addressee-get-set">
-      <code class="signature">string Addressee {get; set; }</code>
-      <p class="member-summary">Optional addressee (last segment only).</p>
+    <div class="member" id="property-sender-string-sender-get">
+      <code class="signature">string Sender {get; }</code>
+      <p class="member-summary">Gets the sender when present.</p>
     </div>
-    <div class="member" id="property-filesize-nullable-long-filesize-get-set">
-      <code class="signature">Nullable&lt;long&gt; FileSize {get; set; }</code>
-      <p class="member-summary">Optional file size (last segment only).</p>
+    <div class="member" id="property-addressee-string-addressee-get">
+      <code class="signature">string Addressee {get; }</code>
+      <p class="member-summary">Gets the addressee when present.</p>
     </div>
-    <div class="member" id="property-checksum-nullable-int-checksum-get-set">
-      <code class="signature">Nullable&lt;int&gt; Checksum {get; set; }</code>
-      <p class="member-summary">Optional checksum (last segment only).</p>
+    <div class="member" id="property-filesize-nullable-long-filesize-get">
+      <code class="signature">Nullable&lt;long&gt; FileSize {get; }</code>
+      <p class="member-summary">Gets the file size when present.</p>
+    </div>
+    <div class="member" id="property-checksum-nullable-int-checksum-get">
+      <code class="signature">Nullable&lt;int&gt; Checksum {get; }</code>
+      <p class="member-summary">Gets the checksum when present.</p>
+    </div>
+    <div class="member" id="property-iscomplete-bool-iscomplete-get">
+      <code class="signature">bool IsComplete {get; }</code>
+      <p class="member-summary">Gets whether all expected segments have been collected.</p>
     </div>
   </section>
 </main>

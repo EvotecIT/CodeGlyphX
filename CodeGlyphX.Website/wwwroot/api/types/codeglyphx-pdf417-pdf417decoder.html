@@ -186,6 +186,33 @@
         <dt>diagnostics <span class="param-type">Pdf417DecodeDiagnostics</span></dt>
       </dl>
     </div>
+    <div class="member" id="method-trydecode-static-bool-trydecode-readonlyspan-byte-pixels-int-width-int-height-int-stride-pixelformat-format-out-pdf417decoded-decoded">
+      <code class="signature">static bool TryDecode(ReadOnlySpan&lt;byte&gt; pixels, int width, int height, int stride, PixelFormat format, out Pdf417Decoded decoded)</code>
+      <p class="member-summary">Attempts to decode a PDF417 symbol from pixels, including Macro metadata when present.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>pixels <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
+        <dt>width <span class="param-type">int</span></dt>
+        <dt>height <span class="param-type">int</span></dt>
+        <dt>stride <span class="param-type">int</span></dt>
+        <dt>format <span class="param-type">PixelFormat</span></dt>
+        <dt>decoded <span class="param-type">Pdf417Decoded</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-trydecode-static-bool-trydecode-readonlyspan-byte-pixels-int-width-int-height-int-stride-pixelformat-format-cancellationtoken-cancellationtoken-out-pdf417decoded-decoded">
+      <code class="signature">static bool TryDecode(ReadOnlySpan&lt;byte&gt; pixels, int width, int height, int stride, PixelFormat format, CancellationToken cancellationToken, out Pdf417Decoded decoded)</code>
+      <p class="member-summary">Attempts to decode a PDF417 symbol from pixels, with cancellation and Macro metadata when present.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>pixels <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
+        <dt>width <span class="param-type">int</span></dt>
+        <dt>height <span class="param-type">int</span></dt>
+        <dt>stride <span class="param-type">int</span></dt>
+        <dt>format <span class="param-type">PixelFormat</span></dt>
+        <dt>cancellationToken <span class="param-type">CancellationToken</span></dt>
+        <dt>decoded <span class="param-type">Pdf417Decoded</span></dt>
+      </dl>
+    </div>
     <div class="member" id="method-trydecode-static-bool-trydecode-byte-pixels-int-width-int-height-int-stride-pixelformat-format-out-string-value">
       <code class="signature">static bool TryDecode(byte[] pixels, int width, int height, int stride, PixelFormat format, out string value)</code>
       <p class="member-summary">Attempts to decode a PDF417 symbol from pixels.</p>
@@ -240,6 +267,33 @@
         <dt>cancellationToken <span class="param-type">CancellationToken</span></dt>
         <dt>value <span class="param-type">string</span></dt>
         <dt>diagnostics <span class="param-type">Pdf417DecodeDiagnostics</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-trydecode-static-bool-trydecode-byte-pixels-int-width-int-height-int-stride-pixelformat-format-out-pdf417decoded-decoded">
+      <code class="signature">static bool TryDecode(byte[] pixels, int width, int height, int stride, PixelFormat format, out Pdf417Decoded decoded)</code>
+      <p class="member-summary">Attempts to decode a PDF417 symbol from pixels, including Macro metadata when present.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>pixels <span class="param-type">byte[]</span></dt>
+        <dt>width <span class="param-type">int</span></dt>
+        <dt>height <span class="param-type">int</span></dt>
+        <dt>stride <span class="param-type">int</span></dt>
+        <dt>format <span class="param-type">PixelFormat</span></dt>
+        <dt>decoded <span class="param-type">Pdf417Decoded</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-trydecode-static-bool-trydecode-byte-pixels-int-width-int-height-int-stride-pixelformat-format-cancellationtoken-cancellationtoken-out-pdf417decoded-decoded">
+      <code class="signature">static bool TryDecode(byte[] pixels, int width, int height, int stride, PixelFormat format, CancellationToken cancellationToken, out Pdf417Decoded decoded)</code>
+      <p class="member-summary">Attempts to decode a PDF417 symbol from pixels, with cancellation and Macro metadata when present.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>pixels <span class="param-type">byte[]</span></dt>
+        <dt>width <span class="param-type">int</span></dt>
+        <dt>height <span class="param-type">int</span></dt>
+        <dt>stride <span class="param-type">int</span></dt>
+        <dt>format <span class="param-type">PixelFormat</span></dt>
+        <dt>cancellationToken <span class="param-type">CancellationToken</span></dt>
+        <dt>decoded <span class="param-type">Pdf417Decoded</span></dt>
       </dl>
     </div>
   </section>

@@ -80,6 +80,34 @@
       "anchor": "property-pdf417text-string-pdf417text-get"
     },
     {
+      "name": "Pdf417",
+      "kind": "Property",
+      "summary": "Gets the decoded PDF417 payload when CodeGlyphX.CodeGlyphDecoded.Kind is CodeGlyphX.CodeGlyphKind.Pdf417.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "Pdf417Decoded Pdf417 {get; }",
+      "xmlId": "P:CodeGlyphX.CodeGlyphDecoded.Pdf417",
+      "anchor": "property-pdf417-pdf417decoded-pdf417-get"
+    },
+    {
+      "name": "Pdf417Macro",
+      "kind": "Property",
+      "summary": "Gets the Macro PDF417 metadata when present.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "Pdf417MacroMetadata Pdf417Macro {get; }",
+      "xmlId": "P:CodeGlyphX.CodeGlyphDecoded.Pdf417Macro",
+      "anchor": "property-pdf417macro-pdf417macrometadata-pdf417macro-get"
+    },
+    {
       "name": "AztecText",
       "kind": "Property",
       "summary": "Gets the decoded Aztec text when CodeGlyphX.CodeGlyphDecoded.Kind is CodeGlyphX.CodeGlyphKind.Aztec.",

@@ -1,11 +1,11 @@
 {
   "title": "CodeGlyphX API Reference",
-  "generatedAtUtc": "2026-01-20T22:07:24.5317502Z",
+  "generatedAtUtc": "2026-01-21T13:11:05.2736141Z",
   "assembly": {
     "assemblyName": "CodeGlyphX",
     "assemblyVersion": "1.0.0.0"
   },
-  "typeCount": 306,
+  "typeCount": 309,
   "types": [
     {
       "name": "AztecCode",
@@ -278,6 +278,14 @@
       "kind": "Class",
       "slug": "codeglyphx-imagedecodeoptions",
       "summary": "Options for decoding from image sources (non-QR)."
+    },
+    {
+      "name": "MatrixBarcodeDecoder",
+      "fullName": "CodeGlyphX.MatrixBarcodeDecoder",
+      "namespace": "CodeGlyphX",
+      "kind": "Class",
+      "slug": "codeglyphx-matrixbarcodedecoder",
+      "summary": "Decodes 2D barcode symbologies from a CodeGlyphX.BitMatrix."
     },
     {
       "name": "MatrixBarcodeEncoder",
@@ -814,6 +822,14 @@
       "kind": "Class",
       "slug": "codeglyphx-code25-iata2of5encoder",
       "summary": "Encodes IATA 2 of 5 barcodes."
+    },
+    {
+      "name": "Industrial2of5Encoder",
+      "fullName": "CodeGlyphX.Code25.Industrial2of5Encoder",
+      "namespace": "CodeGlyphX.Code25",
+      "kind": "Class",
+      "slug": "codeglyphx-code25-industrial2of5encoder",
+      "summary": "Encodes Industrial (Discrete) 2 of 5 barcodes."
     },
     {
       "name": "Matrix2of5Encoder",
@@ -1470,6 +1486,14 @@
       "kind": "Class",
       "slug": "codeglyphx-pdf417-pdf417encoder",
       "summary": "Encodes PDF417 barcodes."
+    },
+    {
+      "name": "Pdf417MacroAssembler",
+      "fullName": "CodeGlyphX.Pdf417.Pdf417MacroAssembler",
+      "namespace": "CodeGlyphX.Pdf417",
+      "kind": "Class",
+      "slug": "codeglyphx-pdf417-pdf417macroassembler",
+      "summary": "Collects Macro PDF417 segments and assembles the original payload when complete."
     },
     {
       "name": "Pdf417MacroMetadata",

@@ -2791,6 +2791,12 @@
       "summary": "Encodes an Interleaved 2 of 5 (ITF) barcode."
     },
     {
+      "title": "BarcodeEncoder.EncodeIndustrial2of5",
+      "kind": "Method",
+      "href": "types/codeglyphx-barcodeencoder.html#method-encodeindustrial2of5-static-barcode1d-encodeindustrial2of5-string-value-bool-includechecksum",
+      "summary": "Encodes an Industrial (Discrete) 2 of 5 barcode."
+    },
+    {
       "title": "BarcodeEncoder.EncodeMatrix2of5",
       "kind": "Method",
       "href": "types/codeglyphx-barcodeencoder.html#method-encodematrix2of5-static-barcode1d-encodematrix2of5-string-value-bool-includechecksum",
@@ -3011,6 +3017,12 @@
       "kind": "Field",
       "href": "types/codeglyphx-barcodetype.html#field-itf-barcodetype-itf",
       "summary": "Interleaved 2 of 5 (ITF)."
+    },
+    {
+      "title": "BarcodeType.Industrial2of5",
+      "kind": "Field",
+      "href": "types/codeglyphx-barcodetype.html#field-industrial2of5-barcodetype-industrial2of5",
+      "summary": "Industrial (Discrete) 2 of 5."
     },
     {
       "title": "BarcodeType.Matrix2of5",
@@ -3703,6 +3715,12 @@
       "summary": "Attempts to decode all symbols from a PNG stream using a single options object."
     },
     {
+      "title": "CodeGlyph.TryDecode",
+      "kind": "Method",
+      "href": "types/codeglyphx-codeglyph.html#method-trydecode-static-bool-trydecode-bitmatrix-modules-out-codeglyphdecoded-decoded-nullable-barcodetype-expectedbarcode-bool-preferbarcode",
+      "summary": "Attempts to decode a QR or barcode from a module matrix."
+    },
+    {
       "title": "CodeGlyphX.CodeGlyphBudget",
       "kind": "Type",
       "href": "types/codeglyphx-codeglyphbudget.html",
@@ -3749,6 +3767,18 @@
       "kind": "Property",
       "href": "types/codeglyphx-codeglyphdecoded.html#property-pdf417text-string-pdf417text-get",
       "summary": "Gets the decoded PDF417 text when CodeGlyphX.CodeGlyphDecoded.Kind is CodeGlyphX.CodeGlyphKind.Pdf417."
+    },
+    {
+      "title": "CodeGlyphDecoded.Pdf417",
+      "kind": "Property",
+      "href": "types/codeglyphx-codeglyphdecoded.html#property-pdf417-pdf417decoded-pdf417-get",
+      "summary": "Gets the decoded PDF417 payload when CodeGlyphX.CodeGlyphDecoded.Kind is CodeGlyphX.CodeGlyphKind.Pdf417."
+    },
+    {
+      "title": "CodeGlyphDecoded.Pdf417Macro",
+      "kind": "Property",
+      "href": "types/codeglyphx-codeglyphdecoded.html#property-pdf417macro-pdf417macrometadata-pdf417macro-get",
+      "summary": "Gets the Macro PDF417 metadata when present."
     },
     {
       "title": "CodeGlyphDecoded.AztecText",
@@ -6061,6 +6091,60 @@
       "summary": "Maximum milliseconds to spend decoding (best effort). Set to 0 to disable."
     },
     {
+      "title": "CodeGlyphX.MatrixBarcodeDecoder",
+      "kind": "Type",
+      "href": "types/codeglyphx-matrixbarcodedecoder.html",
+      "summary": "Decodes 2D barcode symbologies from a CodeGlyphX.BitMatrix."
+    },
+    {
+      "title": "MatrixBarcodeDecoder.TryDecodeAny",
+      "kind": "Method",
+      "href": "types/codeglyphx-matrixbarcodedecoder.html#method-trydecodeany-static-bool-trydecodeany-bitmatrix-modules-out-barcodedecoded-decoded-nullable-barcodetype-expectedtype",
+      "summary": "Attempts to decode any supported matrix barcode from a CodeGlyphX.BitMatrix."
+    },
+    {
+      "title": "MatrixBarcodeDecoder.TryDecode",
+      "kind": "Method",
+      "href": "types/codeglyphx-matrixbarcodedecoder.html#method-trydecode-static-bool-trydecode-barcodetype-type-bitmatrix-modules-out-string-text",
+      "summary": "Attempts to decode a 2D barcode using the specified CodeGlyphX.BarcodeType."
+    },
+    {
+      "title": "MatrixBarcodeDecoder.TryDecodeGs1DataBarOmni",
+      "kind": "Method",
+      "href": "types/codeglyphx-matrixbarcodedecoder.html#method-trydecodegs1databaromni-static-bool-trydecodegs1databaromni-bitmatrix-modules-out-string-text",
+      "summary": "Attempts to decode a GS1 DataBar-14 Omnidirectional symbol from a CodeGlyphX.BitMatrix."
+    },
+    {
+      "title": "MatrixBarcodeDecoder.TryDecodeGs1DataBarStacked",
+      "kind": "Method",
+      "href": "types/codeglyphx-matrixbarcodedecoder.html#method-trydecodegs1databarstacked-static-bool-trydecodegs1databarstacked-bitmatrix-modules-out-string-text",
+      "summary": "Attempts to decode a GS1 DataBar-14 Stacked symbol from a CodeGlyphX.BitMatrix."
+    },
+    {
+      "title": "MatrixBarcodeDecoder.TryDecodeGs1DataBarExpandedStacked",
+      "kind": "Method",
+      "href": "types/codeglyphx-matrixbarcodedecoder.html#method-trydecodegs1databarexpandedstacked-static-bool-trydecodegs1databarexpandedstacked-bitmatrix-modules-out-string-text",
+      "summary": "Attempts to decode a GS1 DataBar Expanded Stacked symbol from a CodeGlyphX.BitMatrix."
+    },
+    {
+      "title": "MatrixBarcodeDecoder.TryDecodeDataMatrix",
+      "kind": "Method",
+      "href": "types/codeglyphx-matrixbarcodedecoder.html#method-trydecodedatamatrix-static-bool-trydecodedatamatrix-bitmatrix-modules-out-string-text",
+      "summary": "Attempts to decode a Data Matrix symbol from a CodeGlyphX.BitMatrix."
+    },
+    {
+      "title": "MatrixBarcodeDecoder.TryDecodePdf417",
+      "kind": "Method",
+      "href": "types/codeglyphx-matrixbarcodedecoder.html#method-trydecodepdf417-static-bool-trydecodepdf417-bitmatrix-modules-out-string-text",
+      "summary": "Attempts to decode a PDF417 symbol from a CodeGlyphX.BitMatrix."
+    },
+    {
+      "title": "MatrixBarcodeDecoder.TryDecodeMicroPdf417",
+      "kind": "Method",
+      "href": "types/codeglyphx-matrixbarcodedecoder.html#method-trydecodemicropdf417-static-bool-trydecodemicropdf417-bitmatrix-modules-out-string-text",
+      "summary": "Attempts to decode a MicroPDF417 symbol from a CodeGlyphX.BitMatrix."
+    },
+    {
       "title": "CodeGlyphX.MatrixBarcodeEncoder",
       "kind": "Type",
       "href": "types/codeglyphx-matrixbarcodeencoder.html",
@@ -7363,6 +7447,12 @@
       "summary": "Encodes a text payload as PDF417."
     },
     {
+      "title": "Pdf417Code.EncodeMacro",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-encodemacro-static-bitmatrix-encodemacro-string-text-pdf417macrooptions-macro-pdf417encodeoptions-options",
+      "summary": "Encodes a Macro PDF417 payload."
+    },
+    {
       "title": "Pdf417Code.EncodeBytes",
       "kind": "Method",
       "href": "types/codeglyphx-pdf417code.html#method-encodebytes-static-bitmatrix-encodebytes-byte-data-pdf417encodeoptions-options",
@@ -8051,6 +8141,252 @@
       "kind": "Method",
       "href": "types/codeglyphx-pdf417code.html#method-decodepng-static-string-decodepng-stream-stream",
       "summary": "Decodes a PDF417 symbol from a PNG stream."
+    },
+    {
+      "title": "Pdf417Code.PngMacro",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-pngmacro-static-byte-pngmacro-string-text-pdf417macrooptions-macro-pdf417encodeoptions-encodeoptions-matrixoptions-renderoptions",
+      "summary": "Renders Macro PDF417 as PNG."
+    },
+    {
+      "title": "Pdf417Code.SvgMacro",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-svgmacro-static-string-svgmacro-string-text-pdf417macrooptions-macro-pdf417encodeoptions-encodeoptions-matrixoptions-renderoptions",
+      "summary": "Renders Macro PDF417 as SVG."
+    },
+    {
+      "title": "Pdf417Code.SvgzMacro",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-svgzmacro-static-byte-svgzmacro-string-text-pdf417macrooptions-macro-pdf417encodeoptions-encodeoptions-matrixoptions-renderoptions",
+      "summary": "Renders Macro PDF417 as SVGZ."
+    },
+    {
+      "title": "Pdf417Code.HtmlMacro",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-htmlmacro-static-string-htmlmacro-string-text-pdf417macrooptions-macro-pdf417encodeoptions-encodeoptions-matrixoptions-renderoptions",
+      "summary": "Renders Macro PDF417 as HTML."
+    },
+    {
+      "title": "Pdf417Code.JpegMacro",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-jpegmacro-static-byte-jpegmacro-string-text-pdf417macrooptions-macro-pdf417encodeoptions-encodeoptions-matrixoptions-renderoptions",
+      "summary": "Renders Macro PDF417 as JPEG."
+    },
+    {
+      "title": "Pdf417Code.BmpMacro",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-bmpmacro-static-byte-bmpmacro-string-text-pdf417macrooptions-macro-pdf417encodeoptions-encodeoptions-matrixoptions-renderoptions",
+      "summary": "Renders Macro PDF417 as BMP."
+    },
+    {
+      "title": "Pdf417Code.PpmMacro",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-ppmmacro-static-byte-ppmmacro-string-text-pdf417macrooptions-macro-pdf417encodeoptions-encodeoptions-matrixoptions-renderoptions",
+      "summary": "Renders Macro PDF417 as PPM."
+    },
+    {
+      "title": "Pdf417Code.PbmMacro",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-pbmmacro-static-byte-pbmmacro-string-text-pdf417macrooptions-macro-pdf417encodeoptions-encodeoptions-matrixoptions-renderoptions",
+      "summary": "Renders Macro PDF417 as PBM."
+    },
+    {
+      "title": "Pdf417Code.PgmMacro",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-pgmmacro-static-byte-pgmmacro-string-text-pdf417macrooptions-macro-pdf417encodeoptions-encodeoptions-matrixoptions-renderoptions",
+      "summary": "Renders Macro PDF417 as PGM."
+    },
+    {
+      "title": "Pdf417Code.PamMacro",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-pammacro-static-byte-pammacro-string-text-pdf417macrooptions-macro-pdf417encodeoptions-encodeoptions-matrixoptions-renderoptions",
+      "summary": "Renders Macro PDF417 as PAM."
+    },
+    {
+      "title": "Pdf417Code.XbmMacro",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-xbmmacro-static-string-xbmmacro-string-text-pdf417macrooptions-macro-pdf417encodeoptions-encodeoptions-matrixoptions-renderoptions",
+      "summary": "Renders Macro PDF417 as XBM."
+    },
+    {
+      "title": "Pdf417Code.XpmMacro",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-xpmmacro-static-string-xpmmacro-string-text-pdf417macrooptions-macro-pdf417encodeoptions-encodeoptions-matrixoptions-renderoptions",
+      "summary": "Renders Macro PDF417 as XPM."
+    },
+    {
+      "title": "Pdf417Code.TgaMacro",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-tgamacro-static-byte-tgamacro-string-text-pdf417macrooptions-macro-pdf417encodeoptions-encodeoptions-matrixoptions-renderoptions",
+      "summary": "Renders Macro PDF417 as TGA."
+    },
+    {
+      "title": "Pdf417Code.IcoMacro",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-icomacro-static-byte-icomacro-string-text-pdf417macrooptions-macro-pdf417encodeoptions-encodeoptions-matrixoptions-renderoptions",
+      "summary": "Renders Macro PDF417 as ICO."
+    },
+    {
+      "title": "Pdf417Code.PdfMacro",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-pdfmacro-static-byte-pdfmacro-string-text-pdf417macrooptions-macro-pdf417encodeoptions-encodeoptions-matrixoptions-renderoptions-rendermode-rendermode",
+      "summary": "Renders Macro PDF417 as PDF."
+    },
+    {
+      "title": "Pdf417Code.EpsMacro",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-epsmacro-static-string-epsmacro-string-text-pdf417macrooptions-macro-pdf417encodeoptions-encodeoptions-matrixoptions-renderoptions-rendermode-rendermode",
+      "summary": "Renders Macro PDF417 as EPS."
+    },
+    {
+      "title": "Pdf417Code.AsciiMacro",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-asciimacro-static-string-asciimacro-string-text-pdf417macrooptions-macro-pdf417encodeoptions-encodeoptions-matrixasciirenderoptions-options",
+      "summary": "Renders Macro PDF417 as ASCII."
+    },
+    {
+      "title": "Pdf417Code.TryDecodePng",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-trydecodepng-static-bool-trydecodepng-byte-png-out-pdf417decoded-decoded",
+      "summary": "Attempts to decode a Macro PDF417 symbol from PNG bytes."
+    },
+    {
+      "title": "Pdf417Code.TryDecodePng",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-trydecodepng-static-bool-trydecodepng-byte-png-cancellationtoken-cancellationtoken-out-pdf417decoded-decoded",
+      "summary": "Attempts to decode a Macro PDF417 symbol from PNG bytes, with cancellation."
+    },
+    {
+      "title": "Pdf417Code.TryDecodePng",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-trydecodepng-static-bool-trydecodepng-byte-png-imagedecodeoptions-options-out-pdf417decoded-decoded",
+      "summary": "Attempts to decode a Macro PDF417 symbol from PNG bytes with image decode options."
+    },
+    {
+      "title": "Pdf417Code.TryDecodePng",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-trydecodepng-static-bool-trydecodepng-byte-png-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-pdf417decoded-decoded",
+      "summary": "Attempts to decode a Macro PDF417 symbol from PNG bytes with image decode options, with cancellation."
+    },
+    {
+      "title": "Pdf417Code.TryDecodePng",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-trydecodepng-static-bool-trydecodepng-readonlyspan-byte-png-out-pdf417decoded-decoded",
+      "summary": "Attempts to decode a Macro PDF417 symbol from PNG bytes in a span."
+    },
+    {
+      "title": "Pdf417Code.TryDecodePng",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-trydecodepng-static-bool-trydecodepng-readonlyspan-byte-png-cancellationtoken-cancellationtoken-out-pdf417decoded-decoded",
+      "summary": "Attempts to decode a Macro PDF417 symbol from PNG bytes in a span, with cancellation."
+    },
+    {
+      "title": "Pdf417Code.TryDecodePng",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-trydecodepng-static-bool-trydecodepng-readonlyspan-byte-png-imagedecodeoptions-options-out-pdf417decoded-decoded",
+      "summary": "Attempts to decode a Macro PDF417 symbol from PNG bytes in a span with image decode options."
+    },
+    {
+      "title": "Pdf417Code.TryDecodePng",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-trydecodepng-static-bool-trydecodepng-readonlyspan-byte-png-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-pdf417decoded-decoded",
+      "summary": "Attempts to decode a Macro PDF417 symbol from PNG bytes in a span with image decode options, with cancellation."
+    },
+    {
+      "title": "Pdf417Code.TryDecodePngFile",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-trydecodepngfile-static-bool-trydecodepngfile-string-path-out-pdf417decoded-decoded",
+      "summary": "Attempts to decode a Macro PDF417 symbol from a PNG file."
+    },
+    {
+      "title": "Pdf417Code.TryDecodePngFile",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-trydecodepngfile-static-bool-trydecodepngfile-string-path-cancellationtoken-cancellationtoken-out-pdf417decoded-decoded",
+      "summary": "Attempts to decode a Macro PDF417 symbol from a PNG file, with cancellation."
+    },
+    {
+      "title": "Pdf417Code.TryDecodePngFile",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-trydecodepngfile-static-bool-trydecodepngfile-string-path-imagedecodeoptions-options-out-pdf417decoded-decoded",
+      "summary": "Attempts to decode a Macro PDF417 symbol from a PNG file with image decode options."
+    },
+    {
+      "title": "Pdf417Code.TryDecodePngFile",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-trydecodepngfile-static-bool-trydecodepngfile-string-path-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-pdf417decoded-decoded",
+      "summary": "Attempts to decode a Macro PDF417 symbol from a PNG file with image decode options, with cancellation."
+    },
+    {
+      "title": "Pdf417Code.TryDecodePng",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-trydecodepng-static-bool-trydecodepng-stream-stream-out-pdf417decoded-decoded",
+      "summary": "Attempts to decode a Macro PDF417 symbol from a PNG stream."
+    },
+    {
+      "title": "Pdf417Code.TryDecodePng",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-trydecodepng-static-bool-trydecodepng-stream-stream-imagedecodeoptions-options-out-pdf417decoded-decoded",
+      "summary": "Attempts to decode a Macro PDF417 symbol from a PNG stream with image decode options."
+    },
+    {
+      "title": "Pdf417Code.TryDecodePng",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-trydecodepng-static-bool-trydecodepng-stream-stream-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-pdf417decoded-decoded",
+      "summary": "Attempts to decode a Macro PDF417 symbol from a PNG stream with image decode options, with cancellation."
+    },
+    {
+      "title": "Pdf417Code.TryDecodeImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-trydecodeimage-static-bool-trydecodeimage-byte-image-out-pdf417decoded-decoded",
+      "summary": "Attempts to decode a Macro PDF417 symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA)."
+    },
+    {
+      "title": "Pdf417Code.TryDecodeImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-trydecodeimage-static-bool-trydecodeimage-byte-image-cancellationtoken-cancellationtoken-out-pdf417decoded-decoded",
+      "summary": "Attempts to decode a Macro PDF417 symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA), with cancellation."
+    },
+    {
+      "title": "Pdf417Code.TryDecodeImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-trydecodeimage-static-bool-trydecodeimage-byte-image-imagedecodeoptions-options-out-pdf417decoded-decoded",
+      "summary": "Attempts to decode a Macro PDF417 symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options."
+    },
+    {
+      "title": "Pdf417Code.TryDecodeImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-trydecodeimage-static-bool-trydecodeimage-byte-image-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-pdf417decoded-decoded",
+      "summary": "Attempts to decode a Macro PDF417 symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options, with cancellation."
+    },
+    {
+      "title": "Pdf417Code.TryDecodeImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-trydecodeimage-static-bool-trydecodeimage-readonlyspan-byte-image-out-pdf417decoded-decoded",
+      "summary": "Attempts to decode a Macro PDF417 symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) in a span."
+    },
+    {
+      "title": "Pdf417Code.TryDecodeImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-trydecodeimage-static-bool-trydecodeimage-readonlyspan-byte-image-cancellationtoken-cancellationtoken-out-pdf417decoded-decoded",
+      "summary": "Attempts to decode a Macro PDF417 symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) in a span, with cancellation."
+    },
+    {
+      "title": "Pdf417Code.TryDecodeImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-trydecodeimage-static-bool-trydecodeimage-readonlyspan-byte-image-imagedecodeoptions-options-out-pdf417decoded-decoded",
+      "summary": "Attempts to decode a Macro PDF417 symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) in a span with image decode options."
+    },
+    {
+      "title": "Pdf417Code.TryDecodeImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-trydecodeimage-static-bool-trydecodeimage-readonlyspan-byte-image-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-pdf417decoded-decoded",
+      "summary": "Attempts to decode a Macro PDF417 symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) in a span with image decode options, with cancellation."
+    },
+    {
+      "title": "Pdf417Code.SaveMacro",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-savemacro-static-string-savemacro-string-text-pdf417macrooptions-macro-string-path-pdf417encodeoptions-encodeoptions-matrixoptions-renderoptions-string-title-rendermode-rendermode",
+      "summary": "Saves Macro PDF417 to a file based on extension (.png/.svg/.svgz/.html/.jpg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps).\n Defaults to PNG when no extension is provided."
     },
     {
       "title": "Pdf417Code.SavePng",
@@ -13093,6 +13429,18 @@
       "summary": "Encodes an IATA 2 of 5 barcode. When is true,\n a Mod-10 check digit is appended."
     },
     {
+      "title": "CodeGlyphX.Code25.Industrial2of5Encoder",
+      "kind": "Type",
+      "href": "types/codeglyphx-code25-industrial2of5encoder.html",
+      "summary": "Encodes Industrial (Discrete) 2 of 5 barcodes."
+    },
+    {
+      "title": "Industrial2of5Encoder.Encode",
+      "kind": "Method",
+      "href": "types/codeglyphx-code25-industrial2of5encoder.html#method-encode-static-barcode1d-encode-string-content-bool-includechecksum",
+      "summary": "Encodes an Industrial 2 of 5 barcode. When is true,\n a Mod-10 check digit is appended."
+    },
+    {
       "title": "CodeGlyphX.Code25.Matrix2of5Encoder",
       "kind": "Type",
       "href": "types/codeglyphx-code25-matrix2of5encoder.html",
@@ -16689,6 +17037,18 @@
     {
       "title": "Pdf417Decoder.TryDecode",
       "kind": "Method",
+      "href": "types/codeglyphx-pdf417-pdf417decoder.html#method-trydecode-static-bool-trydecode-readonlyspan-byte-pixels-int-width-int-height-int-stride-pixelformat-format-out-pdf417decoded-decoded",
+      "summary": "Attempts to decode a PDF417 symbol from pixels, including Macro metadata when present."
+    },
+    {
+      "title": "Pdf417Decoder.TryDecode",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417-pdf417decoder.html#method-trydecode-static-bool-trydecode-readonlyspan-byte-pixels-int-width-int-height-int-stride-pixelformat-format-cancellationtoken-cancellationtoken-out-pdf417decoded-decoded",
+      "summary": "Attempts to decode a PDF417 symbol from pixels, with cancellation and Macro metadata when present."
+    },
+    {
+      "title": "Pdf417Decoder.TryDecode",
+      "kind": "Method",
       "href": "types/codeglyphx-pdf417-pdf417decoder.html#method-trydecode-static-bool-trydecode-byte-pixels-int-width-int-height-int-stride-pixelformat-format-out-string-value",
       "summary": "Attempts to decode a PDF417 symbol from pixels."
     },
@@ -16709,6 +17069,18 @@
       "kind": "Method",
       "href": "types/codeglyphx-pdf417-pdf417decoder.html#method-trydecode-static-bool-trydecode-byte-pixels-int-width-int-height-int-stride-pixelformat-format-cancellationtoken-cancellationtoken-out-string-value-out-pdf417decodediagnostics-diagnostics",
       "summary": "Attempts to decode a PDF417 symbol from pixels, with cancellation and diagnostics."
+    },
+    {
+      "title": "Pdf417Decoder.TryDecode",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417-pdf417decoder.html#method-trydecode-static-bool-trydecode-byte-pixels-int-width-int-height-int-stride-pixelformat-format-out-pdf417decoded-decoded",
+      "summary": "Attempts to decode a PDF417 symbol from pixels, including Macro metadata when present."
+    },
+    {
+      "title": "Pdf417Decoder.TryDecode",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417-pdf417decoder.html#method-trydecode-static-bool-trydecode-byte-pixels-int-width-int-height-int-stride-pixelformat-format-cancellationtoken-cancellationtoken-out-pdf417decoded-decoded",
+      "summary": "Attempts to decode a PDF417 symbol from pixels, with cancellation and Macro metadata when present."
     },
     {
       "title": "CodeGlyphX.Pdf417.Pdf417EncodeOptions",
@@ -16805,6 +17177,132 @@
       "kind": "Method",
       "href": "types/codeglyphx-pdf417-pdf417encoder.html#method-encodebytes-static-bitmatrix-encodebytes-readonlyspan-byte-data-pdf417encodeoptions-options",
       "summary": "Encodes a byte payload as PDF417 (byte compaction)."
+    },
+    {
+      "title": "CodeGlyphX.Pdf417.Pdf417MacroAssembler",
+      "kind": "Type",
+      "href": "types/codeglyphx-pdf417-pdf417macroassembler.html",
+      "summary": "Collects Macro PDF417 segments and assembles the original payload when complete."
+    },
+    {
+      "title": "Pdf417MacroAssembler.Pdf417MacroAssembler",
+      "kind": "Constructor",
+      "href": "types/codeglyphx-pdf417-pdf417macroassembler.html#constructor-pdf417macroassembler-pdf417macroassembler",
+      "summary": null
+    },
+    {
+      "title": "Pdf417MacroAssembler.TryAdd",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417-pdf417macroassembler.html#method-tryadd-bool-tryadd-pdf417decoded-decoded",
+      "summary": "Attempts to add a decoded Macro PDF417 segment."
+    },
+    {
+      "title": "Pdf417MacroAssembler.TryAdd",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417-pdf417macroassembler.html#method-tryadd-bool-tryadd-codeglyphdecoded-decoded",
+      "summary": "Attempts to add a decoded Macro PDF417 segment from a CodeGlyphX.CodeGlyphDecoded wrapper."
+    },
+    {
+      "title": "Pdf417MacroAssembler.Add",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417-pdf417macroassembler.html#method-add-void-add-pdf417decoded-decoded",
+      "summary": "Adds a decoded Macro PDF417 segment."
+    },
+    {
+      "title": "Pdf417MacroAssembler.Add",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417-pdf417macroassembler.html#method-add-void-add-codeglyphdecoded-decoded",
+      "summary": "Adds a decoded Macro PDF417 segment from a CodeGlyphX.CodeGlyphDecoded wrapper."
+    },
+    {
+      "title": "Pdf417MacroAssembler.TryAdd",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417-pdf417macroassembler.html#method-tryadd-bool-tryadd-string-text-pdf417macrometadata-macro",
+      "summary": "Attempts to add a Macro PDF417 segment with explicit metadata."
+    },
+    {
+      "title": "Pdf417MacroAssembler.TryAssemble",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417-pdf417macroassembler.html#method-tryassemble-bool-tryassemble-out-string-text",
+      "summary": "Attempts to assemble the full payload when all segments are present."
+    },
+    {
+      "title": "Pdf417MacroAssembler.Assemble",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417-pdf417macroassembler.html#method-assemble-string-assemble",
+      "summary": "Assembles the full payload when all segments are present."
+    },
+    {
+      "title": "Pdf417MacroAssembler.FileId",
+      "kind": "Property",
+      "href": "types/codeglyphx-pdf417-pdf417macroassembler.html#property-fileid-string-fileid-get",
+      "summary": "Gets the Macro PDF417 file identifier when known."
+    },
+    {
+      "title": "Pdf417MacroAssembler.SegmentCount",
+      "kind": "Property",
+      "href": "types/codeglyphx-pdf417-pdf417macroassembler.html#property-segmentcount-nullable-int-segmentcount-get",
+      "summary": "Gets the expected segment count when present in metadata."
+    },
+    {
+      "title": "Pdf417MacroAssembler.HasLastSegment",
+      "kind": "Property",
+      "href": "types/codeglyphx-pdf417-pdf417macroassembler.html#property-haslastsegment-bool-haslastsegment-get",
+      "summary": "Gets whether a segment flagged as the last segment was received."
+    },
+    {
+      "title": "Pdf417MacroAssembler.LastSegmentIndex",
+      "kind": "Property",
+      "href": "types/codeglyphx-pdf417-pdf417macroassembler.html#property-lastsegmentindex-nullable-int-lastsegmentindex-get",
+      "summary": "Gets the index of the last segment when known."
+    },
+    {
+      "title": "Pdf417MacroAssembler.ReceivedCount",
+      "kind": "Property",
+      "href": "types/codeglyphx-pdf417-pdf417macroassembler.html#property-receivedcount-int-receivedcount-get",
+      "summary": "Gets the number of segments collected."
+    },
+    {
+      "title": "Pdf417MacroAssembler.FileName",
+      "kind": "Property",
+      "href": "types/codeglyphx-pdf417-pdf417macroassembler.html#property-filename-string-filename-get",
+      "summary": "Gets the file name when present."
+    },
+    {
+      "title": "Pdf417MacroAssembler.Timestamp",
+      "kind": "Property",
+      "href": "types/codeglyphx-pdf417-pdf417macroassembler.html#property-timestamp-nullable-long-timestamp-get",
+      "summary": "Gets the timestamp when present."
+    },
+    {
+      "title": "Pdf417MacroAssembler.Sender",
+      "kind": "Property",
+      "href": "types/codeglyphx-pdf417-pdf417macroassembler.html#property-sender-string-sender-get",
+      "summary": "Gets the sender when present."
+    },
+    {
+      "title": "Pdf417MacroAssembler.Addressee",
+      "kind": "Property",
+      "href": "types/codeglyphx-pdf417-pdf417macroassembler.html#property-addressee-string-addressee-get",
+      "summary": "Gets the addressee when present."
+    },
+    {
+      "title": "Pdf417MacroAssembler.FileSize",
+      "kind": "Property",
+      "href": "types/codeglyphx-pdf417-pdf417macroassembler.html#property-filesize-nullable-long-filesize-get",
+      "summary": "Gets the file size when present."
+    },
+    {
+      "title": "Pdf417MacroAssembler.Checksum",
+      "kind": "Property",
+      "href": "types/codeglyphx-pdf417-pdf417macroassembler.html#property-checksum-nullable-int-checksum-get",
+      "summary": "Gets the checksum when present."
+    },
+    {
+      "title": "Pdf417MacroAssembler.IsComplete",
+      "kind": "Property",
+      "href": "types/codeglyphx-pdf417-pdf417macroassembler.html#property-iscomplete-bool-iscomplete-get",
+      "summary": "Gets whether all expected segments have been collected."
     },
     {
       "title": "CodeGlyphX.Pdf417.Pdf417MacroMetadata",
@@ -16906,43 +17404,43 @@
       "title": "Pdf417MacroOptions.SegmentCount",
       "kind": "Property",
       "href": "types/codeglyphx-pdf417-pdf417macrooptions.html#property-segmentcount-nullable-int-segmentcount-get-set",
-      "summary": "Optional total segment count."
+      "summary": "Optional total segment count (last segment only)."
     },
     {
       "title": "Pdf417MacroOptions.FileName",
       "kind": "Property",
       "href": "types/codeglyphx-pdf417-pdf417macrooptions.html#property-filename-string-filename-get-set",
-      "summary": "Optional file name."
+      "summary": "Optional file name (last segment only)."
     },
     {
       "title": "Pdf417MacroOptions.Timestamp",
       "kind": "Property",
       "href": "types/codeglyphx-pdf417-pdf417macrooptions.html#property-timestamp-nullable-long-timestamp-get-set",
-      "summary": "Optional timestamp."
+      "summary": "Optional timestamp (last segment only)."
     },
     {
       "title": "Pdf417MacroOptions.Sender",
       "kind": "Property",
       "href": "types/codeglyphx-pdf417-pdf417macrooptions.html#property-sender-string-sender-get-set",
-      "summary": "Optional sender."
+      "summary": "Optional sender (last segment only)."
     },
     {
       "title": "Pdf417MacroOptions.Addressee",
       "kind": "Property",
       "href": "types/codeglyphx-pdf417-pdf417macrooptions.html#property-addressee-string-addressee-get-set",
-      "summary": "Optional addressee."
+      "summary": "Optional addressee (last segment only)."
     },
     {
       "title": "Pdf417MacroOptions.FileSize",
       "kind": "Property",
       "href": "types/codeglyphx-pdf417-pdf417macrooptions.html#property-filesize-nullable-long-filesize-get-set",
-      "summary": "Optional file size."
+      "summary": "Optional file size (last segment only)."
     },
     {
       "title": "Pdf417MacroOptions.Checksum",
       "kind": "Property",
       "href": "types/codeglyphx-pdf417-pdf417macrooptions.html#property-checksum-nullable-int-checksum-get-set",
-      "summary": "Optional checksum."
+      "summary": "Optional checksum (last segment only)."
     },
     {
       "title": "CodeGlyphX.Pharmacode.PharmacodeEncoder",

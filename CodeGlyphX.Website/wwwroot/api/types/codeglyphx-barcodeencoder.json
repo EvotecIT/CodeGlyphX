@@ -210,6 +210,31 @@
       "anchor": "method-encodeitf-static-barcode1d-encodeitf-string-value-bool-includechecksum"
     },
     {
+      "name": "EncodeIndustrial2of5",
+      "kind": "Method",
+      "summary": "Encodes an Industrial (Discrete) 2 of 5 barcode.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "value",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "includeChecksum",
+          "type": "bool",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static Barcode1D EncodeIndustrial2of5(string value, bool includeChecksum)",
+      "xmlId": "M:CodeGlyphX.BarcodeEncoder.EncodeIndustrial2of5(System.String,System.Boolean)",
+      "anchor": "method-encodeindustrial2of5-static-barcode1d-encodeindustrial2of5-string-value-bool-includechecksum"
+    },
+    {
       "name": "EncodeMatrix2of5",
       "kind": "Method",
       "summary": "Encodes a Matrix (Standard) 2 of 5 barcode.",

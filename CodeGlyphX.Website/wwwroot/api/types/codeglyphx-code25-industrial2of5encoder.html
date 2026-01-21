@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>CodeGlyphDecoded - CodeGlyphX API Reference</title>
-  <meta name="description" content="Result of decoding a QR or barcode symbol." />
+  <title>Industrial2of5Encoder - CodeGlyphX API Reference</title>
+  <meta name="description" content="Encodes Industrial (Discrete) 2 of 5 barcodes." />
   <link rel="stylesheet" href="../style.css" />
   <script>(function(){var theme=localStorage.getItem('theme')||'dark';document.documentElement.setAttribute('data-theme',theme);})();</script>
 </head>
@@ -62,54 +62,24 @@
 <main class="type-detail">
   <nav class="breadcrumb">
     <a href="../index.html">API Reference</a>
-    <span class="sep">/</span><span>CodeGlyphX</span>
+    <span class="sep">/</span><span>CodeGlyphX.Code25</span>
   </nav>
   <header class="type-header">
-    <h1>CodeGlyphDecoded</h1>
-    <div class="type-meta">Class · CodeGlyphX</div>
+    <h1>Industrial2of5Encoder</h1>
+    <div class="type-meta">Class · CodeGlyphX.Code25</div>
   </header>
-  <p class="type-summary">Result of decoding a QR or barcode symbol.</p>
+  <p class="type-summary">Encodes Industrial (Discrete) 2 of 5 barcodes.</p>
   <section class="member-section">
-    <h2>Propertys</h2>
-    <div class="member" id="property-kind-codeglyphkind-kind-get">
-      <code class="signature">CodeGlyphKind Kind {get; }</code>
-      <p class="member-summary">Gets the decoded symbol kind.</p>
-    </div>
-    <div class="member" id="property-qr-qrdecoded-qr-get">
-      <code class="signature">QrDecoded Qr {get; }</code>
-      <p class="member-summary">Gets the decoded QR result when CodeGlyphX.CodeGlyphDecoded.Kind is CodeGlyphX.CodeGlyphKind.Qr.</p>
-    </div>
-    <div class="member" id="property-barcode-barcodedecoded-barcode-get">
-      <code class="signature">BarcodeDecoded Barcode {get; }</code>
-      <p class="member-summary">Gets the decoded barcode result when CodeGlyphX.CodeGlyphDecoded.Kind is CodeGlyphX.CodeGlyphKind.Barcode1D.</p>
-    </div>
-    <div class="member" id="property-datamatrixtext-string-datamatrixtext-get">
-      <code class="signature">string DataMatrixText {get; }</code>
-      <p class="member-summary">Gets the decoded Data Matrix text when CodeGlyphX.CodeGlyphDecoded.Kind is CodeGlyphX.CodeGlyphKind.DataMatrix.</p>
-    </div>
-    <div class="member" id="property-pdf417text-string-pdf417text-get">
-      <code class="signature">string Pdf417Text {get; }</code>
-      <p class="member-summary">Gets the decoded PDF417 text when CodeGlyphX.CodeGlyphDecoded.Kind is CodeGlyphX.CodeGlyphKind.Pdf417.</p>
-    </div>
-    <div class="member" id="property-pdf417-pdf417decoded-pdf417-get">
-      <code class="signature">Pdf417Decoded Pdf417 {get; }</code>
-      <p class="member-summary">Gets the decoded PDF417 payload when CodeGlyphX.CodeGlyphDecoded.Kind is CodeGlyphX.CodeGlyphKind.Pdf417.</p>
-    </div>
-    <div class="member" id="property-pdf417macro-pdf417macrometadata-pdf417macro-get">
-      <code class="signature">Pdf417MacroMetadata Pdf417Macro {get; }</code>
-      <p class="member-summary">Gets the Macro PDF417 metadata when present.</p>
-    </div>
-    <div class="member" id="property-aztectext-string-aztectext-get">
-      <code class="signature">string AztecText {get; }</code>
-      <p class="member-summary">Gets the decoded Aztec text when CodeGlyphX.CodeGlyphDecoded.Kind is CodeGlyphX.CodeGlyphKind.Aztec.</p>
-    </div>
-    <div class="member" id="property-text-string-text-get">
-      <code class="signature">string Text {get; }</code>
-      <p class="member-summary">Gets the decoded text (QR/Barcode/DataMatrix/PDF417/Aztec).</p>
-    </div>
-    <div class="member" id="property-bytes-byte-bytes-get">
-      <code class="signature">byte[] Bytes {get; }</code>
-      <p class="member-summary">Gets the decoded payload bytes for QR codes.</p>
+    <h2>Methods</h2>
+    <div class="member" id="method-encode-static-barcode1d-encode-string-content-bool-includechecksum">
+      <code class="signature">static Barcode1D Encode(string content, bool includeChecksum)</code>
+      <p class="member-summary">Encodes an Industrial 2 of 5 barcode. When is true,
+ a Mod-10 check digit is appended.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>content <span class="param-type">string</span></dt>
+        <dt>includeChecksum <span class="param-type">bool</span></dt>
+      </dl>
     </div>
   </section>
 </main>

@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>CodeGlyphDecoded - CodeGlyphX API Reference</title>
-  <meta name="description" content="Result of decoding a QR or barcode symbol." />
+  <title>MatrixBarcodeDecoder - CodeGlyphX API Reference</title>
+  <meta name="description" content="Decodes 2D barcode symbologies from a CodeGlyphX.BitMatrix." />
   <link rel="stylesheet" href="../style.css" />
   <script>(function(){var theme=localStorage.getItem('theme')||'dark';document.documentElement.setAttribute('data-theme',theme);})();</script>
 </head>
@@ -65,51 +65,90 @@
     <span class="sep">/</span><span>CodeGlyphX</span>
   </nav>
   <header class="type-header">
-    <h1>CodeGlyphDecoded</h1>
+    <h1>MatrixBarcodeDecoder</h1>
     <div class="type-meta">Class · CodeGlyphX</div>
   </header>
-  <p class="type-summary">Result of decoding a QR or barcode symbol.</p>
+  <p class="type-summary">Decodes 2D barcode symbologies from a CodeGlyphX.BitMatrix.</p>
   <section class="member-section">
-    <h2>Propertys</h2>
-    <div class="member" id="property-kind-codeglyphkind-kind-get">
-      <code class="signature">CodeGlyphKind Kind {get; }</code>
-      <p class="member-summary">Gets the decoded symbol kind.</p>
+    <h2>Methods</h2>
+    <div class="member" id="method-trydecodeany-static-bool-trydecodeany-bitmatrix-modules-out-barcodedecoded-decoded-nullable-barcodetype-expectedtype">
+      <code class="signature">static bool TryDecodeAny(BitMatrix modules, out BarcodeDecoded decoded, Nullable&lt;BarcodeType&gt; expectedType)</code>
+      <p class="member-summary">Attempts to decode any supported matrix barcode from a CodeGlyphX.BitMatrix.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>modules <span class="param-type">BitMatrix</span></dt>
+        <dd>Module matrix to decode.</dd>
+        <dt>decoded <span class="param-type">BarcodeDecoded</span></dt>
+        <dd>Decoded barcode payload.</dd>
+        <dt>expectedType <span class="param-type">Nullable&lt;BarcodeType&gt;</span></dt>
+        <dd>Optional expected matrix barcode type to decode.</dd>
+      </dl>
+      <h4>Returns</h4>
+      <p>true when decoding succeeds.</p>
     </div>
-    <div class="member" id="property-qr-qrdecoded-qr-get">
-      <code class="signature">QrDecoded Qr {get; }</code>
-      <p class="member-summary">Gets the decoded QR result when CodeGlyphX.CodeGlyphDecoded.Kind is CodeGlyphX.CodeGlyphKind.Qr.</p>
+    <div class="member" id="method-trydecode-static-bool-trydecode-barcodetype-type-bitmatrix-modules-out-string-text">
+      <code class="signature">static bool TryDecode(BarcodeType type, BitMatrix modules, out string text)</code>
+      <p class="member-summary">Attempts to decode a 2D barcode using the specified CodeGlyphX.BarcodeType.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>type <span class="param-type">BarcodeType</span></dt>
+        <dt>modules <span class="param-type">BitMatrix</span></dt>
+        <dt>text <span class="param-type">string</span></dt>
+      </dl>
     </div>
-    <div class="member" id="property-barcode-barcodedecoded-barcode-get">
-      <code class="signature">BarcodeDecoded Barcode {get; }</code>
-      <p class="member-summary">Gets the decoded barcode result when CodeGlyphX.CodeGlyphDecoded.Kind is CodeGlyphX.CodeGlyphKind.Barcode1D.</p>
+    <div class="member" id="method-trydecodegs1databaromni-static-bool-trydecodegs1databaromni-bitmatrix-modules-out-string-text">
+      <code class="signature">static bool TryDecodeGs1DataBarOmni(BitMatrix modules, out string text)</code>
+      <p class="member-summary">Attempts to decode a GS1 DataBar-14 Omnidirectional symbol from a CodeGlyphX.BitMatrix.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>modules <span class="param-type">BitMatrix</span></dt>
+        <dt>text <span class="param-type">string</span></dt>
+      </dl>
     </div>
-    <div class="member" id="property-datamatrixtext-string-datamatrixtext-get">
-      <code class="signature">string DataMatrixText {get; }</code>
-      <p class="member-summary">Gets the decoded Data Matrix text when CodeGlyphX.CodeGlyphDecoded.Kind is CodeGlyphX.CodeGlyphKind.DataMatrix.</p>
+    <div class="member" id="method-trydecodegs1databarstacked-static-bool-trydecodegs1databarstacked-bitmatrix-modules-out-string-text">
+      <code class="signature">static bool TryDecodeGs1DataBarStacked(BitMatrix modules, out string text)</code>
+      <p class="member-summary">Attempts to decode a GS1 DataBar-14 Stacked symbol from a CodeGlyphX.BitMatrix.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>modules <span class="param-type">BitMatrix</span></dt>
+        <dt>text <span class="param-type">string</span></dt>
+      </dl>
     </div>
-    <div class="member" id="property-pdf417text-string-pdf417text-get">
-      <code class="signature">string Pdf417Text {get; }</code>
-      <p class="member-summary">Gets the decoded PDF417 text when CodeGlyphX.CodeGlyphDecoded.Kind is CodeGlyphX.CodeGlyphKind.Pdf417.</p>
+    <div class="member" id="method-trydecodegs1databarexpandedstacked-static-bool-trydecodegs1databarexpandedstacked-bitmatrix-modules-out-string-text">
+      <code class="signature">static bool TryDecodeGs1DataBarExpandedStacked(BitMatrix modules, out string text)</code>
+      <p class="member-summary">Attempts to decode a GS1 DataBar Expanded Stacked symbol from a CodeGlyphX.BitMatrix.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>modules <span class="param-type">BitMatrix</span></dt>
+        <dt>text <span class="param-type">string</span></dt>
+      </dl>
     </div>
-    <div class="member" id="property-pdf417-pdf417decoded-pdf417-get">
-      <code class="signature">Pdf417Decoded Pdf417 {get; }</code>
-      <p class="member-summary">Gets the decoded PDF417 payload when CodeGlyphX.CodeGlyphDecoded.Kind is CodeGlyphX.CodeGlyphKind.Pdf417.</p>
+    <div class="member" id="method-trydecodedatamatrix-static-bool-trydecodedatamatrix-bitmatrix-modules-out-string-text">
+      <code class="signature">static bool TryDecodeDataMatrix(BitMatrix modules, out string text)</code>
+      <p class="member-summary">Attempts to decode a Data Matrix symbol from a CodeGlyphX.BitMatrix.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>modules <span class="param-type">BitMatrix</span></dt>
+        <dt>text <span class="param-type">string</span></dt>
+      </dl>
     </div>
-    <div class="member" id="property-pdf417macro-pdf417macrometadata-pdf417macro-get">
-      <code class="signature">Pdf417MacroMetadata Pdf417Macro {get; }</code>
-      <p class="member-summary">Gets the Macro PDF417 metadata when present.</p>
+    <div class="member" id="method-trydecodepdf417-static-bool-trydecodepdf417-bitmatrix-modules-out-string-text">
+      <code class="signature">static bool TryDecodePdf417(BitMatrix modules, out string text)</code>
+      <p class="member-summary">Attempts to decode a PDF417 symbol from a CodeGlyphX.BitMatrix.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>modules <span class="param-type">BitMatrix</span></dt>
+        <dt>text <span class="param-type">string</span></dt>
+      </dl>
     </div>
-    <div class="member" id="property-aztectext-string-aztectext-get">
-      <code class="signature">string AztecText {get; }</code>
-      <p class="member-summary">Gets the decoded Aztec text when CodeGlyphX.CodeGlyphDecoded.Kind is CodeGlyphX.CodeGlyphKind.Aztec.</p>
-    </div>
-    <div class="member" id="property-text-string-text-get">
-      <code class="signature">string Text {get; }</code>
-      <p class="member-summary">Gets the decoded text (QR/Barcode/DataMatrix/PDF417/Aztec).</p>
-    </div>
-    <div class="member" id="property-bytes-byte-bytes-get">
-      <code class="signature">byte[] Bytes {get; }</code>
-      <p class="member-summary">Gets the decoded payload bytes for QR codes.</p>
+    <div class="member" id="method-trydecodemicropdf417-static-bool-trydecodemicropdf417-bitmatrix-modules-out-string-text">
+      <code class="signature">static bool TryDecodeMicroPdf417(BitMatrix modules, out string text)</code>
+      <p class="member-summary">Attempts to decode a MicroPDF417 symbol from a CodeGlyphX.BitMatrix.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>modules <span class="param-type">BitMatrix</span></dt>
+        <dt>text <span class="param-type">string</span></dt>
+      </dl>
     </div>
   </section>
 </main>

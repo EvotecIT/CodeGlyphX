@@ -150,6 +150,20 @@
       "anchor": "field-itf-barcodetype-itf"
     },
     {
+      "name": "Industrial2of5",
+      "kind": "Field",
+      "summary": "Industrial (Discrete) 2 of 5.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "BarcodeType Industrial2of5",
+      "xmlId": "F:CodeGlyphX.BarcodeType.Industrial2of5",
+      "anchor": "field-industrial2of5-barcodetype-industrial2of5"
+    },
+    {
       "name": "Matrix2of5",
       "kind": "Field",
       "summary": "Matrix (Standard) 2 of 5.",

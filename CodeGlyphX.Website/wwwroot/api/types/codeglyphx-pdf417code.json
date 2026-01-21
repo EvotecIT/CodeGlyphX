@@ -101,6 +101,36 @@
       "anchor": "method-encode-static-bitmatrix-encode-string-text-pdf417encodeoptions-options"
     },
     {
+      "name": "EncodeMacro",
+      "kind": "Method",
+      "summary": "Encodes a Macro PDF417 payload.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "text",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "macro",
+          "type": "Pdf417MacroOptions",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "Pdf417EncodeOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static BitMatrix EncodeMacro(string text, Pdf417MacroOptions macro, Pdf417EncodeOptions options)",
+      "xmlId": "M:CodeGlyphX.Pdf417Code.EncodeMacro(System.String,CodeGlyphX.Pdf417.Pdf417MacroOptions,CodeGlyphX.Pdf417.Pdf417EncodeOptions)",
+      "anchor": "method-encodemacro-static-bitmatrix-encodemacro-string-text-pdf417macrooptions-macro-pdf417encodeoptions-options"
+    },
+    {
       "name": "EncodeBytes",
       "kind": "Method",
       "summary": "Encodes a byte payload as PDF417.",
@@ -3644,6 +3674,1351 @@
       "signature": "static string DecodePng(Stream stream)",
       "xmlId": "M:CodeGlyphX.Pdf417Code.DecodePng(System.IO.Stream)",
       "anchor": "method-decodepng-static-string-decodepng-stream-stream"
+    },
+    {
+      "name": "PngMacro",
+      "kind": "Method",
+      "summary": "Renders Macro PDF417 as PNG.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "text",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "macro",
+          "type": "Pdf417MacroOptions",
+          "description": null
+        },
+        {
+          "name": "encodeOptions",
+          "type": "Pdf417EncodeOptions",
+          "description": null
+        },
+        {
+          "name": "renderOptions",
+          "type": "MatrixOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static byte[] PngMacro(string text, Pdf417MacroOptions macro, Pdf417EncodeOptions encodeOptions, MatrixOptions renderOptions)",
+      "xmlId": "M:CodeGlyphX.Pdf417Code.PngMacro(System.String,CodeGlyphX.Pdf417.Pdf417MacroOptions,CodeGlyphX.Pdf417.Pdf417EncodeOptions,CodeGlyphX.MatrixOptions)",
+      "anchor": "method-pngmacro-static-byte-pngmacro-string-text-pdf417macrooptions-macro-pdf417encodeoptions-encodeoptions-matrixoptions-renderoptions"
+    },
+    {
+      "name": "SvgMacro",
+      "kind": "Method",
+      "summary": "Renders Macro PDF417 as SVG.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "text",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "macro",
+          "type": "Pdf417MacroOptions",
+          "description": null
+        },
+        {
+          "name": "encodeOptions",
+          "type": "Pdf417EncodeOptions",
+          "description": null
+        },
+        {
+          "name": "renderOptions",
+          "type": "MatrixOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string SvgMacro(string text, Pdf417MacroOptions macro, Pdf417EncodeOptions encodeOptions, MatrixOptions renderOptions)",
+      "xmlId": "M:CodeGlyphX.Pdf417Code.SvgMacro(System.String,CodeGlyphX.Pdf417.Pdf417MacroOptions,CodeGlyphX.Pdf417.Pdf417EncodeOptions,CodeGlyphX.MatrixOptions)",
+      "anchor": "method-svgmacro-static-string-svgmacro-string-text-pdf417macrooptions-macro-pdf417encodeoptions-encodeoptions-matrixoptions-renderoptions"
+    },
+    {
+      "name": "SvgzMacro",
+      "kind": "Method",
+      "summary": "Renders Macro PDF417 as SVGZ.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "text",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "macro",
+          "type": "Pdf417MacroOptions",
+          "description": null
+        },
+        {
+          "name": "encodeOptions",
+          "type": "Pdf417EncodeOptions",
+          "description": null
+        },
+        {
+          "name": "renderOptions",
+          "type": "MatrixOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static byte[] SvgzMacro(string text, Pdf417MacroOptions macro, Pdf417EncodeOptions encodeOptions, MatrixOptions renderOptions)",
+      "xmlId": "M:CodeGlyphX.Pdf417Code.SvgzMacro(System.String,CodeGlyphX.Pdf417.Pdf417MacroOptions,CodeGlyphX.Pdf417.Pdf417EncodeOptions,CodeGlyphX.MatrixOptions)",
+      "anchor": "method-svgzmacro-static-byte-svgzmacro-string-text-pdf417macrooptions-macro-pdf417encodeoptions-encodeoptions-matrixoptions-renderoptions"
+    },
+    {
+      "name": "HtmlMacro",
+      "kind": "Method",
+      "summary": "Renders Macro PDF417 as HTML.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "text",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "macro",
+          "type": "Pdf417MacroOptions",
+          "description": null
+        },
+        {
+          "name": "encodeOptions",
+          "type": "Pdf417EncodeOptions",
+          "description": null
+        },
+        {
+          "name": "renderOptions",
+          "type": "MatrixOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string HtmlMacro(string text, Pdf417MacroOptions macro, Pdf417EncodeOptions encodeOptions, MatrixOptions renderOptions)",
+      "xmlId": "M:CodeGlyphX.Pdf417Code.HtmlMacro(System.String,CodeGlyphX.Pdf417.Pdf417MacroOptions,CodeGlyphX.Pdf417.Pdf417EncodeOptions,CodeGlyphX.MatrixOptions)",
+      "anchor": "method-htmlmacro-static-string-htmlmacro-string-text-pdf417macrooptions-macro-pdf417encodeoptions-encodeoptions-matrixoptions-renderoptions"
+    },
+    {
+      "name": "JpegMacro",
+      "kind": "Method",
+      "summary": "Renders Macro PDF417 as JPEG.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "text",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "macro",
+          "type": "Pdf417MacroOptions",
+          "description": null
+        },
+        {
+          "name": "encodeOptions",
+          "type": "Pdf417EncodeOptions",
+          "description": null
+        },
+        {
+          "name": "renderOptions",
+          "type": "MatrixOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static byte[] JpegMacro(string text, Pdf417MacroOptions macro, Pdf417EncodeOptions encodeOptions, MatrixOptions renderOptions)",
+      "xmlId": "M:CodeGlyphX.Pdf417Code.JpegMacro(System.String,CodeGlyphX.Pdf417.Pdf417MacroOptions,CodeGlyphX.Pdf417.Pdf417EncodeOptions,CodeGlyphX.MatrixOptions)",
+      "anchor": "method-jpegmacro-static-byte-jpegmacro-string-text-pdf417macrooptions-macro-pdf417encodeoptions-encodeoptions-matrixoptions-renderoptions"
+    },
+    {
+      "name": "BmpMacro",
+      "kind": "Method",
+      "summary": "Renders Macro PDF417 as BMP.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "text",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "macro",
+          "type": "Pdf417MacroOptions",
+          "description": null
+        },
+        {
+          "name": "encodeOptions",
+          "type": "Pdf417EncodeOptions",
+          "description": null
+        },
+        {
+          "name": "renderOptions",
+          "type": "MatrixOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static byte[] BmpMacro(string text, Pdf417MacroOptions macro, Pdf417EncodeOptions encodeOptions, MatrixOptions renderOptions)",
+      "xmlId": "M:CodeGlyphX.Pdf417Code.BmpMacro(System.String,CodeGlyphX.Pdf417.Pdf417MacroOptions,CodeGlyphX.Pdf417.Pdf417EncodeOptions,CodeGlyphX.MatrixOptions)",
+      "anchor": "method-bmpmacro-static-byte-bmpmacro-string-text-pdf417macrooptions-macro-pdf417encodeoptions-encodeoptions-matrixoptions-renderoptions"
+    },
+    {
+      "name": "PpmMacro",
+      "kind": "Method",
+      "summary": "Renders Macro PDF417 as PPM.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "text",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "macro",
+          "type": "Pdf417MacroOptions",
+          "description": null
+        },
+        {
+          "name": "encodeOptions",
+          "type": "Pdf417EncodeOptions",
+          "description": null
+        },
+        {
+          "name": "renderOptions",
+          "type": "MatrixOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static byte[] PpmMacro(string text, Pdf417MacroOptions macro, Pdf417EncodeOptions encodeOptions, MatrixOptions renderOptions)",
+      "xmlId": "M:CodeGlyphX.Pdf417Code.PpmMacro(System.String,CodeGlyphX.Pdf417.Pdf417MacroOptions,CodeGlyphX.Pdf417.Pdf417EncodeOptions,CodeGlyphX.MatrixOptions)",
+      "anchor": "method-ppmmacro-static-byte-ppmmacro-string-text-pdf417macrooptions-macro-pdf417encodeoptions-encodeoptions-matrixoptions-renderoptions"
+    },
+    {
+      "name": "PbmMacro",
+      "kind": "Method",
+      "summary": "Renders Macro PDF417 as PBM.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "text",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "macro",
+          "type": "Pdf417MacroOptions",
+          "description": null
+        },
+        {
+          "name": "encodeOptions",
+          "type": "Pdf417EncodeOptions",
+          "description": null
+        },
+        {
+          "name": "renderOptions",
+          "type": "MatrixOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static byte[] PbmMacro(string text, Pdf417MacroOptions macro, Pdf417EncodeOptions encodeOptions, MatrixOptions renderOptions)",
+      "xmlId": "M:CodeGlyphX.Pdf417Code.PbmMacro(System.String,CodeGlyphX.Pdf417.Pdf417MacroOptions,CodeGlyphX.Pdf417.Pdf417EncodeOptions,CodeGlyphX.MatrixOptions)",
+      "anchor": "method-pbmmacro-static-byte-pbmmacro-string-text-pdf417macrooptions-macro-pdf417encodeoptions-encodeoptions-matrixoptions-renderoptions"
+    },
+    {
+      "name": "PgmMacro",
+      "kind": "Method",
+      "summary": "Renders Macro PDF417 as PGM.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "text",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "macro",
+          "type": "Pdf417MacroOptions",
+          "description": null
+        },
+        {
+          "name": "encodeOptions",
+          "type": "Pdf417EncodeOptions",
+          "description": null
+        },
+        {
+          "name": "renderOptions",
+          "type": "MatrixOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static byte[] PgmMacro(string text, Pdf417MacroOptions macro, Pdf417EncodeOptions encodeOptions, MatrixOptions renderOptions)",
+      "xmlId": "M:CodeGlyphX.Pdf417Code.PgmMacro(System.String,CodeGlyphX.Pdf417.Pdf417MacroOptions,CodeGlyphX.Pdf417.Pdf417EncodeOptions,CodeGlyphX.MatrixOptions)",
+      "anchor": "method-pgmmacro-static-byte-pgmmacro-string-text-pdf417macrooptions-macro-pdf417encodeoptions-encodeoptions-matrixoptions-renderoptions"
+    },
+    {
+      "name": "PamMacro",
+      "kind": "Method",
+      "summary": "Renders Macro PDF417 as PAM.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "text",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "macro",
+          "type": "Pdf417MacroOptions",
+          "description": null
+        },
+        {
+          "name": "encodeOptions",
+          "type": "Pdf417EncodeOptions",
+          "description": null
+        },
+        {
+          "name": "renderOptions",
+          "type": "MatrixOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static byte[] PamMacro(string text, Pdf417MacroOptions macro, Pdf417EncodeOptions encodeOptions, MatrixOptions renderOptions)",
+      "xmlId": "M:CodeGlyphX.Pdf417Code.PamMacro(System.String,CodeGlyphX.Pdf417.Pdf417MacroOptions,CodeGlyphX.Pdf417.Pdf417EncodeOptions,CodeGlyphX.MatrixOptions)",
+      "anchor": "method-pammacro-static-byte-pammacro-string-text-pdf417macrooptions-macro-pdf417encodeoptions-encodeoptions-matrixoptions-renderoptions"
+    },
+    {
+      "name": "XbmMacro",
+      "kind": "Method",
+      "summary": "Renders Macro PDF417 as XBM.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "text",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "macro",
+          "type": "Pdf417MacroOptions",
+          "description": null
+        },
+        {
+          "name": "encodeOptions",
+          "type": "Pdf417EncodeOptions",
+          "description": null
+        },
+        {
+          "name": "renderOptions",
+          "type": "MatrixOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string XbmMacro(string text, Pdf417MacroOptions macro, Pdf417EncodeOptions encodeOptions, MatrixOptions renderOptions)",
+      "xmlId": "M:CodeGlyphX.Pdf417Code.XbmMacro(System.String,CodeGlyphX.Pdf417.Pdf417MacroOptions,CodeGlyphX.Pdf417.Pdf417EncodeOptions,CodeGlyphX.MatrixOptions)",
+      "anchor": "method-xbmmacro-static-string-xbmmacro-string-text-pdf417macrooptions-macro-pdf417encodeoptions-encodeoptions-matrixoptions-renderoptions"
+    },
+    {
+      "name": "XpmMacro",
+      "kind": "Method",
+      "summary": "Renders Macro PDF417 as XPM.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "text",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "macro",
+          "type": "Pdf417MacroOptions",
+          "description": null
+        },
+        {
+          "name": "encodeOptions",
+          "type": "Pdf417EncodeOptions",
+          "description": null
+        },
+        {
+          "name": "renderOptions",
+          "type": "MatrixOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string XpmMacro(string text, Pdf417MacroOptions macro, Pdf417EncodeOptions encodeOptions, MatrixOptions renderOptions)",
+      "xmlId": "M:CodeGlyphX.Pdf417Code.XpmMacro(System.String,CodeGlyphX.Pdf417.Pdf417MacroOptions,CodeGlyphX.Pdf417.Pdf417EncodeOptions,CodeGlyphX.MatrixOptions)",
+      "anchor": "method-xpmmacro-static-string-xpmmacro-string-text-pdf417macrooptions-macro-pdf417encodeoptions-encodeoptions-matrixoptions-renderoptions"
+    },
+    {
+      "name": "TgaMacro",
+      "kind": "Method",
+      "summary": "Renders Macro PDF417 as TGA.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "text",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "macro",
+          "type": "Pdf417MacroOptions",
+          "description": null
+        },
+        {
+          "name": "encodeOptions",
+          "type": "Pdf417EncodeOptions",
+          "description": null
+        },
+        {
+          "name": "renderOptions",
+          "type": "MatrixOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static byte[] TgaMacro(string text, Pdf417MacroOptions macro, Pdf417EncodeOptions encodeOptions, MatrixOptions renderOptions)",
+      "xmlId": "M:CodeGlyphX.Pdf417Code.TgaMacro(System.String,CodeGlyphX.Pdf417.Pdf417MacroOptions,CodeGlyphX.Pdf417.Pdf417EncodeOptions,CodeGlyphX.MatrixOptions)",
+      "anchor": "method-tgamacro-static-byte-tgamacro-string-text-pdf417macrooptions-macro-pdf417encodeoptions-encodeoptions-matrixoptions-renderoptions"
+    },
+    {
+      "name": "IcoMacro",
+      "kind": "Method",
+      "summary": "Renders Macro PDF417 as ICO.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "text",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "macro",
+          "type": "Pdf417MacroOptions",
+          "description": null
+        },
+        {
+          "name": "encodeOptions",
+          "type": "Pdf417EncodeOptions",
+          "description": null
+        },
+        {
+          "name": "renderOptions",
+          "type": "MatrixOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static byte[] IcoMacro(string text, Pdf417MacroOptions macro, Pdf417EncodeOptions encodeOptions, MatrixOptions renderOptions)",
+      "xmlId": "M:CodeGlyphX.Pdf417Code.IcoMacro(System.String,CodeGlyphX.Pdf417.Pdf417MacroOptions,CodeGlyphX.Pdf417.Pdf417EncodeOptions,CodeGlyphX.MatrixOptions)",
+      "anchor": "method-icomacro-static-byte-icomacro-string-text-pdf417macrooptions-macro-pdf417encodeoptions-encodeoptions-matrixoptions-renderoptions"
+    },
+    {
+      "name": "PdfMacro",
+      "kind": "Method",
+      "summary": "Renders Macro PDF417 as PDF.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "text",
+          "type": "string",
+          "description": "Input text."
+        },
+        {
+          "name": "macro",
+          "type": "Pdf417MacroOptions",
+          "description": "Macro PDF417 metadata."
+        },
+        {
+          "name": "encodeOptions",
+          "type": "Pdf417EncodeOptions",
+          "description": "Encoding options."
+        },
+        {
+          "name": "renderOptions",
+          "type": "MatrixOptions",
+          "description": "Rendering options."
+        },
+        {
+          "name": "renderMode",
+          "type": "RenderMode",
+          "description": "Vector or raster output."
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static byte[] PdfMacro(string text, Pdf417MacroOptions macro, Pdf417EncodeOptions encodeOptions, MatrixOptions renderOptions, RenderMode renderMode)",
+      "xmlId": "M:CodeGlyphX.Pdf417Code.PdfMacro(System.String,CodeGlyphX.Pdf417.Pdf417MacroOptions,CodeGlyphX.Pdf417.Pdf417EncodeOptions,CodeGlyphX.MatrixOptions,CodeGlyphX.Rendering.RenderMode)",
+      "anchor": "method-pdfmacro-static-byte-pdfmacro-string-text-pdf417macrooptions-macro-pdf417encodeoptions-encodeoptions-matrixoptions-renderoptions-rendermode-rendermode"
+    },
+    {
+      "name": "EpsMacro",
+      "kind": "Method",
+      "summary": "Renders Macro PDF417 as EPS.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "text",
+          "type": "string",
+          "description": "Input text."
+        },
+        {
+          "name": "macro",
+          "type": "Pdf417MacroOptions",
+          "description": "Macro PDF417 metadata."
+        },
+        {
+          "name": "encodeOptions",
+          "type": "Pdf417EncodeOptions",
+          "description": "Encoding options."
+        },
+        {
+          "name": "renderOptions",
+          "type": "MatrixOptions",
+          "description": "Rendering options."
+        },
+        {
+          "name": "renderMode",
+          "type": "RenderMode",
+          "description": "Vector or raster output."
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string EpsMacro(string text, Pdf417MacroOptions macro, Pdf417EncodeOptions encodeOptions, MatrixOptions renderOptions, RenderMode renderMode)",
+      "xmlId": "M:CodeGlyphX.Pdf417Code.EpsMacro(System.String,CodeGlyphX.Pdf417.Pdf417MacroOptions,CodeGlyphX.Pdf417.Pdf417EncodeOptions,CodeGlyphX.MatrixOptions,CodeGlyphX.Rendering.RenderMode)",
+      "anchor": "method-epsmacro-static-string-epsmacro-string-text-pdf417macrooptions-macro-pdf417encodeoptions-encodeoptions-matrixoptions-renderoptions-rendermode-rendermode"
+    },
+    {
+      "name": "AsciiMacro",
+      "kind": "Method",
+      "summary": "Renders Macro PDF417 as ASCII.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "text",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "macro",
+          "type": "Pdf417MacroOptions",
+          "description": null
+        },
+        {
+          "name": "encodeOptions",
+          "type": "Pdf417EncodeOptions",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "MatrixAsciiRenderOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string AsciiMacro(string text, Pdf417MacroOptions macro, Pdf417EncodeOptions encodeOptions, MatrixAsciiRenderOptions options)",
+      "xmlId": "M:CodeGlyphX.Pdf417Code.AsciiMacro(System.String,CodeGlyphX.Pdf417.Pdf417MacroOptions,CodeGlyphX.Pdf417.Pdf417EncodeOptions,CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions)",
+      "anchor": "method-asciimacro-static-string-asciimacro-string-text-pdf417macrooptions-macro-pdf417encodeoptions-encodeoptions-matrixasciirenderoptions-options"
+    },
+    {
+      "name": "TryDecodePng",
+      "kind": "Method",
+      "summary": "Attempts to decode a Macro PDF417 symbol from PNG bytes.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "png",
+          "type": "byte[]",
+          "description": null
+        },
+        {
+          "name": "decoded",
+          "type": "Pdf417Decoded",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodePng(byte[] png, out Pdf417Decoded decoded)",
+      "xmlId": "M:CodeGlyphX.Pdf417Code.TryDecodePng(System.Byte[],CodeGlyphX.Pdf417.Pdf417Decoded@)",
+      "anchor": "method-trydecodepng-static-bool-trydecodepng-byte-png-out-pdf417decoded-decoded"
+    },
+    {
+      "name": "TryDecodePng",
+      "kind": "Method",
+      "summary": "Attempts to decode a Macro PDF417 symbol from PNG bytes, with cancellation.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "png",
+          "type": "byte[]",
+          "description": null
+        },
+        {
+          "name": "cancellationToken",
+          "type": "CancellationToken",
+          "description": null
+        },
+        {
+          "name": "decoded",
+          "type": "Pdf417Decoded",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodePng(byte[] png, CancellationToken cancellationToken, out Pdf417Decoded decoded)",
+      "xmlId": "M:CodeGlyphX.Pdf417Code.TryDecodePng(System.Byte[],System.Threading.CancellationToken,CodeGlyphX.Pdf417.Pdf417Decoded@)",
+      "anchor": "method-trydecodepng-static-bool-trydecodepng-byte-png-cancellationtoken-cancellationtoken-out-pdf417decoded-decoded"
+    },
+    {
+      "name": "TryDecodePng",
+      "kind": "Method",
+      "summary": "Attempts to decode a Macro PDF417 symbol from PNG bytes with image decode options.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "png",
+          "type": "byte[]",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "ImageDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "decoded",
+          "type": "Pdf417Decoded",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodePng(byte[] png, ImageDecodeOptions options, out Pdf417Decoded decoded)",
+      "xmlId": "M:CodeGlyphX.Pdf417Code.TryDecodePng(System.Byte[],CodeGlyphX.ImageDecodeOptions,CodeGlyphX.Pdf417.Pdf417Decoded@)",
+      "anchor": "method-trydecodepng-static-bool-trydecodepng-byte-png-imagedecodeoptions-options-out-pdf417decoded-decoded"
+    },
+    {
+      "name": "TryDecodePng",
+      "kind": "Method",
+      "summary": "Attempts to decode a Macro PDF417 symbol from PNG bytes with image decode options, with cancellation.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "png",
+          "type": "byte[]",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "ImageDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "cancellationToken",
+          "type": "CancellationToken",
+          "description": null
+        },
+        {
+          "name": "decoded",
+          "type": "Pdf417Decoded",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodePng(byte[] png, ImageDecodeOptions options, CancellationToken cancellationToken, out Pdf417Decoded decoded)",
+      "xmlId": "M:CodeGlyphX.Pdf417Code.TryDecodePng(System.Byte[],CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken,CodeGlyphX.Pdf417.Pdf417Decoded@)",
+      "anchor": "method-trydecodepng-static-bool-trydecodepng-byte-png-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-pdf417decoded-decoded"
+    },
+    {
+      "name": "TryDecodePng",
+      "kind": "Method",
+      "summary": "Attempts to decode a Macro PDF417 symbol from PNG bytes in a span.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "png",
+          "type": "ReadOnlySpan\u003Cbyte\u003E",
+          "description": null
+        },
+        {
+          "name": "decoded",
+          "type": "Pdf417Decoded",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodePng(ReadOnlySpan\u003Cbyte\u003E png, out Pdf417Decoded decoded)",
+      "xmlId": "M:CodeGlyphX.Pdf417Code.TryDecodePng(System.ReadOnlySpan{System.Byte},CodeGlyphX.Pdf417.Pdf417Decoded@)",
+      "anchor": "method-trydecodepng-static-bool-trydecodepng-readonlyspan-byte-png-out-pdf417decoded-decoded"
+    },
+    {
+      "name": "TryDecodePng",
+      "kind": "Method",
+      "summary": "Attempts to decode a Macro PDF417 symbol from PNG bytes in a span, with cancellation.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "png",
+          "type": "ReadOnlySpan\u003Cbyte\u003E",
+          "description": null
+        },
+        {
+          "name": "cancellationToken",
+          "type": "CancellationToken",
+          "description": null
+        },
+        {
+          "name": "decoded",
+          "type": "Pdf417Decoded",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodePng(ReadOnlySpan\u003Cbyte\u003E png, CancellationToken cancellationToken, out Pdf417Decoded decoded)",
+      "xmlId": "M:CodeGlyphX.Pdf417Code.TryDecodePng(System.ReadOnlySpan{System.Byte},System.Threading.CancellationToken,CodeGlyphX.Pdf417.Pdf417Decoded@)",
+      "anchor": "method-trydecodepng-static-bool-trydecodepng-readonlyspan-byte-png-cancellationtoken-cancellationtoken-out-pdf417decoded-decoded"
+    },
+    {
+      "name": "TryDecodePng",
+      "kind": "Method",
+      "summary": "Attempts to decode a Macro PDF417 symbol from PNG bytes in a span with image decode options.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "png",
+          "type": "ReadOnlySpan\u003Cbyte\u003E",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "ImageDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "decoded",
+          "type": "Pdf417Decoded",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodePng(ReadOnlySpan\u003Cbyte\u003E png, ImageDecodeOptions options, out Pdf417Decoded decoded)",
+      "xmlId": "M:CodeGlyphX.Pdf417Code.TryDecodePng(System.ReadOnlySpan{System.Byte},CodeGlyphX.ImageDecodeOptions,CodeGlyphX.Pdf417.Pdf417Decoded@)",
+      "anchor": "method-trydecodepng-static-bool-trydecodepng-readonlyspan-byte-png-imagedecodeoptions-options-out-pdf417decoded-decoded"
+    },
+    {
+      "name": "TryDecodePng",
+      "kind": "Method",
+      "summary": "Attempts to decode a Macro PDF417 symbol from PNG bytes in a span with image decode options, with cancellation.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "png",
+          "type": "ReadOnlySpan\u003Cbyte\u003E",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "ImageDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "cancellationToken",
+          "type": "CancellationToken",
+          "description": null
+        },
+        {
+          "name": "decoded",
+          "type": "Pdf417Decoded",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodePng(ReadOnlySpan\u003Cbyte\u003E png, ImageDecodeOptions options, CancellationToken cancellationToken, out Pdf417Decoded decoded)",
+      "xmlId": "M:CodeGlyphX.Pdf417Code.TryDecodePng(System.ReadOnlySpan{System.Byte},CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken,CodeGlyphX.Pdf417.Pdf417Decoded@)",
+      "anchor": "method-trydecodepng-static-bool-trydecodepng-readonlyspan-byte-png-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-pdf417decoded-decoded"
+    },
+    {
+      "name": "TryDecodePngFile",
+      "kind": "Method",
+      "summary": "Attempts to decode a Macro PDF417 symbol from a PNG file.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "path",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "decoded",
+          "type": "Pdf417Decoded",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodePngFile(string path, out Pdf417Decoded decoded)",
+      "xmlId": "M:CodeGlyphX.Pdf417Code.TryDecodePngFile(System.String,CodeGlyphX.Pdf417.Pdf417Decoded@)",
+      "anchor": "method-trydecodepngfile-static-bool-trydecodepngfile-string-path-out-pdf417decoded-decoded"
+    },
+    {
+      "name": "TryDecodePngFile",
+      "kind": "Method",
+      "summary": "Attempts to decode a Macro PDF417 symbol from a PNG file, with cancellation.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "path",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "cancellationToken",
+          "type": "CancellationToken",
+          "description": null
+        },
+        {
+          "name": "decoded",
+          "type": "Pdf417Decoded",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodePngFile(string path, CancellationToken cancellationToken, out Pdf417Decoded decoded)",
+      "xmlId": "M:CodeGlyphX.Pdf417Code.TryDecodePngFile(System.String,System.Threading.CancellationToken,CodeGlyphX.Pdf417.Pdf417Decoded@)",
+      "anchor": "method-trydecodepngfile-static-bool-trydecodepngfile-string-path-cancellationtoken-cancellationtoken-out-pdf417decoded-decoded"
+    },
+    {
+      "name": "TryDecodePngFile",
+      "kind": "Method",
+      "summary": "Attempts to decode a Macro PDF417 symbol from a PNG file with image decode options.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "path",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "ImageDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "decoded",
+          "type": "Pdf417Decoded",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodePngFile(string path, ImageDecodeOptions options, out Pdf417Decoded decoded)",
+      "xmlId": "M:CodeGlyphX.Pdf417Code.TryDecodePngFile(System.String,CodeGlyphX.ImageDecodeOptions,CodeGlyphX.Pdf417.Pdf417Decoded@)",
+      "anchor": "method-trydecodepngfile-static-bool-trydecodepngfile-string-path-imagedecodeoptions-options-out-pdf417decoded-decoded"
+    },
+    {
+      "name": "TryDecodePngFile",
+      "kind": "Method",
+      "summary": "Attempts to decode a Macro PDF417 symbol from a PNG file with image decode options, with cancellation.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "path",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "ImageDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "cancellationToken",
+          "type": "CancellationToken",
+          "description": null
+        },
+        {
+          "name": "decoded",
+          "type": "Pdf417Decoded",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodePngFile(string path, ImageDecodeOptions options, CancellationToken cancellationToken, out Pdf417Decoded decoded)",
+      "xmlId": "M:CodeGlyphX.Pdf417Code.TryDecodePngFile(System.String,CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken,CodeGlyphX.Pdf417.Pdf417Decoded@)",
+      "anchor": "method-trydecodepngfile-static-bool-trydecodepngfile-string-path-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-pdf417decoded-decoded"
+    },
+    {
+      "name": "TryDecodePng",
+      "kind": "Method",
+      "summary": "Attempts to decode a Macro PDF417 symbol from a PNG stream.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "stream",
+          "type": "Stream",
+          "description": null
+        },
+        {
+          "name": "decoded",
+          "type": "Pdf417Decoded",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodePng(Stream stream, out Pdf417Decoded decoded)",
+      "xmlId": "M:CodeGlyphX.Pdf417Code.TryDecodePng(System.IO.Stream,CodeGlyphX.Pdf417.Pdf417Decoded@)",
+      "anchor": "method-trydecodepng-static-bool-trydecodepng-stream-stream-out-pdf417decoded-decoded"
+    },
+    {
+      "name": "TryDecodePng",
+      "kind": "Method",
+      "summary": "Attempts to decode a Macro PDF417 symbol from a PNG stream with image decode options.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "stream",
+          "type": "Stream",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "ImageDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "decoded",
+          "type": "Pdf417Decoded",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodePng(Stream stream, ImageDecodeOptions options, out Pdf417Decoded decoded)",
+      "xmlId": "M:CodeGlyphX.Pdf417Code.TryDecodePng(System.IO.Stream,CodeGlyphX.ImageDecodeOptions,CodeGlyphX.Pdf417.Pdf417Decoded@)",
+      "anchor": "method-trydecodepng-static-bool-trydecodepng-stream-stream-imagedecodeoptions-options-out-pdf417decoded-decoded"
+    },
+    {
+      "name": "TryDecodePng",
+      "kind": "Method",
+      "summary": "Attempts to decode a Macro PDF417 symbol from a PNG stream with image decode options, with cancellation.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "stream",
+          "type": "Stream",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "ImageDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "cancellationToken",
+          "type": "CancellationToken",
+          "description": null
+        },
+        {
+          "name": "decoded",
+          "type": "Pdf417Decoded",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodePng(Stream stream, ImageDecodeOptions options, CancellationToken cancellationToken, out Pdf417Decoded decoded)",
+      "xmlId": "M:CodeGlyphX.Pdf417Code.TryDecodePng(System.IO.Stream,CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken,CodeGlyphX.Pdf417.Pdf417Decoded@)",
+      "anchor": "method-trydecodepng-static-bool-trydecodepng-stream-stream-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-pdf417decoded-decoded"
+    },
+    {
+      "name": "TryDecodeImage",
+      "kind": "Method",
+      "summary": "Attempts to decode a Macro PDF417 symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "image",
+          "type": "byte[]",
+          "description": null
+        },
+        {
+          "name": "decoded",
+          "type": "Pdf417Decoded",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodeImage(byte[] image, out Pdf417Decoded decoded)",
+      "xmlId": "M:CodeGlyphX.Pdf417Code.TryDecodeImage(System.Byte[],CodeGlyphX.Pdf417.Pdf417Decoded@)",
+      "anchor": "method-trydecodeimage-static-bool-trydecodeimage-byte-image-out-pdf417decoded-decoded"
+    },
+    {
+      "name": "TryDecodeImage",
+      "kind": "Method",
+      "summary": "Attempts to decode a Macro PDF417 symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA), with cancellation.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "image",
+          "type": "byte[]",
+          "description": null
+        },
+        {
+          "name": "cancellationToken",
+          "type": "CancellationToken",
+          "description": null
+        },
+        {
+          "name": "decoded",
+          "type": "Pdf417Decoded",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodeImage(byte[] image, CancellationToken cancellationToken, out Pdf417Decoded decoded)",
+      "xmlId": "M:CodeGlyphX.Pdf417Code.TryDecodeImage(System.Byte[],System.Threading.CancellationToken,CodeGlyphX.Pdf417.Pdf417Decoded@)",
+      "anchor": "method-trydecodeimage-static-bool-trydecodeimage-byte-image-cancellationtoken-cancellationtoken-out-pdf417decoded-decoded"
+    },
+    {
+      "name": "TryDecodeImage",
+      "kind": "Method",
+      "summary": "Attempts to decode a Macro PDF417 symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "image",
+          "type": "byte[]",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "ImageDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "decoded",
+          "type": "Pdf417Decoded",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodeImage(byte[] image, ImageDecodeOptions options, out Pdf417Decoded decoded)",
+      "xmlId": "M:CodeGlyphX.Pdf417Code.TryDecodeImage(System.Byte[],CodeGlyphX.ImageDecodeOptions,CodeGlyphX.Pdf417.Pdf417Decoded@)",
+      "anchor": "method-trydecodeimage-static-bool-trydecodeimage-byte-image-imagedecodeoptions-options-out-pdf417decoded-decoded"
+    },
+    {
+      "name": "TryDecodeImage",
+      "kind": "Method",
+      "summary": "Attempts to decode a Macro PDF417 symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options, with cancellation.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "image",
+          "type": "byte[]",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "ImageDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "cancellationToken",
+          "type": "CancellationToken",
+          "description": null
+        },
+        {
+          "name": "decoded",
+          "type": "Pdf417Decoded",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodeImage(byte[] image, ImageDecodeOptions options, CancellationToken cancellationToken, out Pdf417Decoded decoded)",
+      "xmlId": "M:CodeGlyphX.Pdf417Code.TryDecodeImage(System.Byte[],CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken,CodeGlyphX.Pdf417.Pdf417Decoded@)",
+      "anchor": "method-trydecodeimage-static-bool-trydecodeimage-byte-image-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-pdf417decoded-decoded"
+    },
+    {
+      "name": "TryDecodeImage",
+      "kind": "Method",
+      "summary": "Attempts to decode a Macro PDF417 symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) in a span.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "image",
+          "type": "ReadOnlySpan\u003Cbyte\u003E",
+          "description": null
+        },
+        {
+          "name": "decoded",
+          "type": "Pdf417Decoded",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodeImage(ReadOnlySpan\u003Cbyte\u003E image, out Pdf417Decoded decoded)",
+      "xmlId": "M:CodeGlyphX.Pdf417Code.TryDecodeImage(System.ReadOnlySpan{System.Byte},CodeGlyphX.Pdf417.Pdf417Decoded@)",
+      "anchor": "method-trydecodeimage-static-bool-trydecodeimage-readonlyspan-byte-image-out-pdf417decoded-decoded"
+    },
+    {
+      "name": "TryDecodeImage",
+      "kind": "Method",
+      "summary": "Attempts to decode a Macro PDF417 symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) in a span, with cancellation.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "image",
+          "type": "ReadOnlySpan\u003Cbyte\u003E",
+          "description": null
+        },
+        {
+          "name": "cancellationToken",
+          "type": "CancellationToken",
+          "description": null
+        },
+        {
+          "name": "decoded",
+          "type": "Pdf417Decoded",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodeImage(ReadOnlySpan\u003Cbyte\u003E image, CancellationToken cancellationToken, out Pdf417Decoded decoded)",
+      "xmlId": "M:CodeGlyphX.Pdf417Code.TryDecodeImage(System.ReadOnlySpan{System.Byte},System.Threading.CancellationToken,CodeGlyphX.Pdf417.Pdf417Decoded@)",
+      "anchor": "method-trydecodeimage-static-bool-trydecodeimage-readonlyspan-byte-image-cancellationtoken-cancellationtoken-out-pdf417decoded-decoded"
+    },
+    {
+      "name": "TryDecodeImage",
+      "kind": "Method",
+      "summary": "Attempts to decode a Macro PDF417 symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) in a span with image decode options.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "image",
+          "type": "ReadOnlySpan\u003Cbyte\u003E",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "ImageDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "decoded",
+          "type": "Pdf417Decoded",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodeImage(ReadOnlySpan\u003Cbyte\u003E image, ImageDecodeOptions options, out Pdf417Decoded decoded)",
+      "xmlId": "M:CodeGlyphX.Pdf417Code.TryDecodeImage(System.ReadOnlySpan{System.Byte},CodeGlyphX.ImageDecodeOptions,CodeGlyphX.Pdf417.Pdf417Decoded@)",
+      "anchor": "method-trydecodeimage-static-bool-trydecodeimage-readonlyspan-byte-image-imagedecodeoptions-options-out-pdf417decoded-decoded"
+    },
+    {
+      "name": "TryDecodeImage",
+      "kind": "Method",
+      "summary": "Attempts to decode a Macro PDF417 symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) in a span with image decode options, with cancellation.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "image",
+          "type": "ReadOnlySpan\u003Cbyte\u003E",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "ImageDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "cancellationToken",
+          "type": "CancellationToken",
+          "description": null
+        },
+        {
+          "name": "decoded",
+          "type": "Pdf417Decoded",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodeImage(ReadOnlySpan\u003Cbyte\u003E image, ImageDecodeOptions options, CancellationToken cancellationToken, out Pdf417Decoded decoded)",
+      "xmlId": "M:CodeGlyphX.Pdf417Code.TryDecodeImage(System.ReadOnlySpan{System.Byte},CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken,CodeGlyphX.Pdf417.Pdf417Decoded@)",
+      "anchor": "method-trydecodeimage-static-bool-trydecodeimage-readonlyspan-byte-image-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-pdf417decoded-decoded"
+    },
+    {
+      "name": "SaveMacro",
+      "kind": "Method",
+      "summary": "Saves Macro PDF417 to a file based on extension (.png/.svg/.svgz/.html/.jpg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps).\n Defaults to PNG when no extension is provided.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "text",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "macro",
+          "type": "Pdf417MacroOptions",
+          "description": null
+        },
+        {
+          "name": "path",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "encodeOptions",
+          "type": "Pdf417EncodeOptions",
+          "description": null
+        },
+        {
+          "name": "renderOptions",
+          "type": "MatrixOptions",
+          "description": null
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "renderMode",
+          "type": "RenderMode",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string SaveMacro(string text, Pdf417MacroOptions macro, string path, Pdf417EncodeOptions encodeOptions, MatrixOptions renderOptions, string title, RenderMode renderMode)",
+      "xmlId": "M:CodeGlyphX.Pdf417Code.SaveMacro(System.String,CodeGlyphX.Pdf417.Pdf417MacroOptions,System.String,CodeGlyphX.Pdf417.Pdf417EncodeOptions,CodeGlyphX.MatrixOptions,System.String,CodeGlyphX.Rendering.RenderMode)",
+      "anchor": "method-savemacro-static-string-savemacro-string-text-pdf417macrooptions-macro-string-path-pdf417encodeoptions-encodeoptions-matrixoptions-renderoptions-string-title-rendermode-rendermode"
     },
     {
       "name": "SavePng",

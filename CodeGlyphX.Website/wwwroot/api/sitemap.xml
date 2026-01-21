@@ -35,6 +35,7 @@
   <url><loc>http://localhost:5001/api/types/codeglyphx-gs1element.html</loc></url>
   <url><loc>http://localhost:5001/api/types/codeglyphx-otp-hotpbuilder.html</loc></url>
   <url><loc>http://localhost:5001/api/types/codeglyphx-imagedecodeoptions.html</loc></url>
+  <url><loc>http://localhost:5001/api/types/codeglyphx-matrixbarcodedecoder.html</loc></url>
   <url><loc>http://localhost:5001/api/types/codeglyphx-matrixbarcodeencoder.html</loc></url>
   <url><loc>http://localhost:5001/api/types/codeglyphx-matrixoptions.html</loc></url>
   <url><loc>http://localhost:5001/api/types/codeglyphx-microqrcode.html</loc></url>
@@ -102,6 +103,7 @@
   <url><loc>http://localhost:5001/api/types/codeglyphx-codabar-codabarencoder.html</loc></url>
   <url><loc>http://localhost:5001/api/types/codeglyphx-code11-code11encoder.html</loc></url>
   <url><loc>http://localhost:5001/api/types/codeglyphx-code25-iata2of5encoder.html</loc></url>
+  <url><loc>http://localhost:5001/api/types/codeglyphx-code25-industrial2of5encoder.html</loc></url>
   <url><loc>http://localhost:5001/api/types/codeglyphx-code25-matrix2of5encoder.html</loc></url>
   <url><loc>http://localhost:5001/api/types/codeglyphx-code32-code32encoder.html</loc></url>
   <url><loc>http://localhost:5001/api/types/codeglyphx-code39-code39encoder.html</loc></url>
@@ -184,6 +186,7 @@
   <url><loc>http://localhost:5001/api/types/codeglyphx-pdf417-pdf417decoder.html</loc></url>
   <url><loc>http://localhost:5001/api/types/codeglyphx-pdf417-pdf417encodeoptions.html</loc></url>
   <url><loc>http://localhost:5001/api/types/codeglyphx-pdf417-pdf417encoder.html</loc></url>
+  <url><loc>http://localhost:5001/api/types/codeglyphx-pdf417-pdf417macroassembler.html</loc></url>
   <url><loc>http://localhost:5001/api/types/codeglyphx-pdf417-pdf417macrometadata.html</loc></url>
   <url><loc>http://localhost:5001/api/types/codeglyphx-pdf417-pdf417macrooptions.html</loc></url>
   <url><loc>http://localhost:5001/api/types/codeglyphx-pharmacode-pharmacodeencoder.html</loc></url>

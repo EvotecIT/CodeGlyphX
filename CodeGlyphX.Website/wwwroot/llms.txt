@@ -1,7 +1,7 @@
 # CodeGlyphX
 Version: 1.0.0
 Package: CodeGlyphX
-API types: 306
+API types: 309
 
 Install:
 - dotnet add package CodeGlyphX
