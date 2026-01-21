@@ -72,9 +72,9 @@ $tempPublish = Join-Path $repoRoot "temp-playground"
 $tempDocs = Join-Path $repoRoot "temp-docs"
 $playgroundRoot = Join-Path $publishRoot "playground"
 $docsRoot = Join-Path $publishRoot "docs"
-$baseConstants = if ($Configuration -eq "Debug") { "DEBUG%3BTRACE" } else { "TRACE" }
-$docsConstants = "$baseConstants%3BDOCS_BUILD"
-$playgroundConstants = "$baseConstants%3BPLAYGROUND_BUILD"
+$baseConstants = if ($Configuration -eq "Debug") { "DEBUG;TRACE" } else { "TRACE" }
+$docsConstants = "$baseConstants;DOCS_BUILD"
+$playgroundConstants = "$baseConstants;PLAYGROUND_BUILD"
 
 if (-not (Test-Path $websiteProjectPath)) { throw "Missing website project at $websiteProjectPath" }
 if (-not (Test-Path $wwwrootSource)) { throw "Missing wwwroot at $wwwrootSource" }
@@ -100,7 +100,7 @@ Invoke-Step "Publishing docs (Blazor WASM)..." @(
     "-f",$Framework,
     "-o",$tempDocs,
     "-p:BaseHref=/docs/",
-    "-p:DefineConstants=$docsConstants"
+    "-p:DefineConstants=`"$docsConstants`""
 )
 
 if (Test-Path $docsRoot) {
@@ -108,11 +108,6 @@ if (Test-Path $docsRoot) {
 }
 New-Item -ItemType Directory -Path $docsRoot -Force | Out-Null
 Copy-Item -Path (Join-Path $tempDocs "wwwroot" "*") -Destination $docsRoot -Recurse -Force
-
-$docsCompressed = Get-ChildItem -Path $docsRoot -Recurse -Include *.br, *.gz -File -ErrorAction SilentlyContinue
-if ($docsCompressed) {
-    $docsCompressed | Remove-Item -Force
-}
 
 $docsIndex = Join-Path $docsRoot "index.html"
 $docs404 = Join-Path $docsRoot "404.html"
@@ -134,16 +129,11 @@ Invoke-Step "Publishing playground (Blazor WASM)..." @(
     "-f",$Framework,
     "-o",$tempPublish,
     "-p:BaseHref=/playground/",
-    "-p:DefineConstants=$playgroundConstants"
+    "-p:DefineConstants=`"$playgroundConstants`""
 )
 
 New-Item -ItemType Directory -Path $playgroundRoot -Force | Out-Null
 Copy-Item -Path (Join-Path $tempPublish "wwwroot" "*") -Destination $playgroundRoot -Recurse -Force
-
-$compressed = Get-ChildItem -Path $playgroundRoot -Recurse -Include *.br, *.gz -File -ErrorAction SilentlyContinue
-if ($compressed) {
-    $compressed | Remove-Item -Force
-}
 
 $playgroundIndex = Join-Path $playgroundRoot "index.html"
 $playground404 = Join-Path $playgroundRoot "404.html"

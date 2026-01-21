@@ -48,7 +48,7 @@ $apiFooter = Join-Path $repoRoot "CodeGlyphX.Website" "wwwroot" "api-fragments" 
 
 if (-not (Test-Path $codeGlyphProject)) { throw "Missing CodeGlyphX.csproj at $codeGlyphProject" }
 if (-not (Test-Path $websiteProjectPath)) { throw "Missing website project at $websiteProjectPath" }
-if (-not (Test-Path $PowerForgeCliProject)) { throw "Missing PowerForge.Cli project at $PowerForgeCliProject" }
+if (-not (Test-Path $PowerForgeCliProject -PathType Leaf)) { throw "Missing PowerForge.Cli project at $PowerForgeCliProject" }
 if (-not (Test-Path $apiCss)) { throw "Missing API docs CSS at $apiCss" }
 if (-not (Test-Path $apiHeader)) { throw "Missing API docs header at $apiHeader" }
 if (-not (Test-Path $apiFooter)) { throw "Missing API docs footer at $apiFooter" }
