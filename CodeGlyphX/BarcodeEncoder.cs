@@ -38,6 +38,7 @@ public static class BarcodeEncoder {
             BarcodeType.UPCE => UpcEEncoder.Encode(value, UpcENumberSystem.Zero),
             BarcodeType.ITF14 => Itf14Encoder.Encode(value),
             BarcodeType.ITF => ItfEncoder.Encode(value),
+            BarcodeType.Industrial2of5 => Industrial2of5Encoder.Encode(value),
             BarcodeType.Matrix2of5 => Matrix2of5Encoder.Encode(value),
             BarcodeType.IATA2of5 => Iata2of5Encoder.Encode(value),
             BarcodeType.PatchCode => PatchCodeEncoder.Encode(value),
@@ -106,6 +107,11 @@ public static class BarcodeEncoder {
     /// Encodes an Interleaved 2 of 5 (ITF) barcode.
     /// </summary>
     public static Barcode1D EncodeItf(string value, bool includeChecksum = false) => ItfEncoder.Encode(value, includeChecksum);
+
+    /// <summary>
+    /// Encodes an Industrial (Discrete) 2 of 5 barcode.
+    /// </summary>
+    public static Barcode1D EncodeIndustrial2of5(string value, bool includeChecksum = false) => Industrial2of5Encoder.Encode(value, includeChecksum);
 
     /// <summary>
     /// Encodes a Matrix (Standard) 2 of 5 barcode.

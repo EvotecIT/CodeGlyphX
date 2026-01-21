@@ -41,6 +41,10 @@ public enum BarcodeType {
     /// </summary>
     ITF,
     /// <summary>
+    /// Industrial (Discrete) 2 of 5.
+    /// </summary>
+    Industrial2of5,
+    /// <summary>
     /// Matrix (Standard) 2 of 5.
     /// </summary>
     Matrix2of5,

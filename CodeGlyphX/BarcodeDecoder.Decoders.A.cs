@@ -9,6 +9,7 @@ using CodeGlyphX.Code39;
 using CodeGlyphX.Code32;
 using CodeGlyphX.Code93;
 using CodeGlyphX.Codabar;
+using CodeGlyphX.DataBar;
 using CodeGlyphX.Ean;
 using CodeGlyphX.Itf;
 using CodeGlyphX.Internal;
@@ -753,6 +754,10 @@ public static partial class BarcodeDecoder {
         return TryDecodeDiscrete2of5(modules, Matrix2of5StartBars, Matrix2of5StopBars, out text);
     }
 
+    private static bool TryDecodeIndustrial2of5(bool[] modules, out string text) {
+        return TryDecodeDiscrete2of5(modules, Industrial2of5StartBars, Industrial2of5StopBars, out text);
+    }
+
     private static bool TryDecodeIata2of5(bool[] modules, out string text) {
         return TryDecodeDiscrete2of5(modules, Iata2of5StartBars, Iata2of5StopBars, out text);
     }
@@ -868,6 +873,14 @@ public static partial class BarcodeDecoder {
             text = raw;
         }
         return true;
+    }
+
+    private static bool TryDecodeGs1DataBarTruncated(bool[] modules, out string text) {
+        return DataBar14Decoder.TryDecodeTruncated(modules, out text);
+    }
+
+    private static bool TryDecodeGs1DataBarExpanded(bool[] modules, out string text) {
+        return DataBarExpandedDecoder.TryDecodeExpanded(modules, out text);
     }
 
 }

@@ -8,6 +8,7 @@ using CodeGlyphX.Code128;
 using CodeGlyphX.Code39;
 using CodeGlyphX.Code93;
 using CodeGlyphX.Codabar;
+using CodeGlyphX.DataBar;
 using CodeGlyphX.Ean;
 using CodeGlyphX.Itf;
 using CodeGlyphX.Internal;
@@ -92,6 +93,11 @@ public static partial class BarcodeDecoder {
             return true;
         }
         if (cancellationToken.IsCancellationRequested) return false;
+        if (TryDecodeIndustrial2of5(modules, out var industrial25)) {
+            decoded = new BarcodeDecoded(BarcodeType.Industrial2of5, industrial25);
+            return true;
+        }
+        if (cancellationToken.IsCancellationRequested) return false;
         if (TryDecodeMatrix2of5(modules, out var matrix25)) {
             decoded = new BarcodeDecoded(BarcodeType.Matrix2of5, matrix25);
             return true;
@@ -157,6 +163,16 @@ public static partial class BarcodeDecoder {
             decoded = new BarcodeDecoded(BarcodeType.Pharmacode, pharmacode);
             return true;
         }
+        if (cancellationToken.IsCancellationRequested) return false;
+        if (TryDecodeGs1DataBarTruncated(modules, out var dataBarTruncated)) {
+            decoded = new BarcodeDecoded(BarcodeType.GS1DataBarTruncated, dataBarTruncated);
+            return true;
+        }
+        if (cancellationToken.IsCancellationRequested) return false;
+        if (TryDecodeGs1DataBarExpanded(modules, out var dataBarExpanded)) {
+            decoded = new BarcodeDecoded(BarcodeType.GS1DataBarExpanded, dataBarExpanded);
+            return true;
+        }
 
         return false;
     }
@@ -195,6 +211,12 @@ public static partial class BarcodeDecoder {
             case BarcodeType.ITF:
                 if (TryDecodeItf(modules, out var itf)) {
                     decoded = new BarcodeDecoded(BarcodeType.ITF, itf);
+                    return true;
+                }
+                return false;
+            case BarcodeType.Industrial2of5:
+                if (TryDecodeIndustrial2of5(modules, out var industrial25)) {
+                    decoded = new BarcodeDecoded(BarcodeType.Industrial2of5, industrial25);
                     return true;
                 }
                 return false;
@@ -279,6 +301,18 @@ public static partial class BarcodeDecoder {
             case BarcodeType.Pharmacode:
                 if (TryDecodePharmacode(modules, out var pharmacode)) {
                     decoded = new BarcodeDecoded(BarcodeType.Pharmacode, pharmacode);
+                    return true;
+                }
+                return false;
+            case BarcodeType.GS1DataBarTruncated:
+                if (TryDecodeGs1DataBarTruncated(modules, out var dataBarTruncated)) {
+                    decoded = new BarcodeDecoded(BarcodeType.GS1DataBarTruncated, dataBarTruncated);
+                    return true;
+                }
+                return false;
+            case BarcodeType.GS1DataBarExpanded:
+                if (TryDecodeGs1DataBarExpanded(modules, out var dataBarExpanded)) {
+                    decoded = new BarcodeDecoded(BarcodeType.GS1DataBarExpanded, dataBarExpanded);
                     return true;
                 }
                 return false;
