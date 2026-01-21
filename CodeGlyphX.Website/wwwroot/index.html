@@ -93,7 +93,11 @@
     </script>
 
     <script src="_framework/blazor.webassembly#[.{fingerprint}].js"></script>
-    <script>navigator.serviceWorker.register('service-worker.js');</script>
+    <script>
+        if (location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
+            navigator.serviceWorker.register('service-worker.js');
+        }
+    </script>
 
     <!-- Theme and utility functions for Blazor -->
     <script>
