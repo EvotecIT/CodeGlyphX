@@ -2,6 +2,8 @@
 
 CodeGlyphX is a fast, dependency-free toolkit for QR codes and barcodes, with robust decoding and a minimal API. It targets modern .NET as well as legacy .NET Framework, and includes renderers, payload helpers, and WPF controls.
 
+Status: Actively developed · Stable core · Expanding format support
+
 📦 NuGet Package
 
 [![nuget downloads](https://img.shields.io/nuget/dt/CodeGlyphX?label=nuget%20downloads)](https://www.nuget.org/packages/CodeGlyphX)
@@ -43,7 +45,6 @@ CodeGlyphX is a fast, dependency-free toolkit for QR codes and barcodes, with ro
 ## Roadmap & Website
 
 - Roadmap: `ROADMAP.md`
-- Website plan: `WEBSITE.md`
 
 ## Installation
 
@@ -131,6 +132,8 @@ if (CodeGlyph.TryDecode(pixels, width, height, stride, PixelFormat.Rgba32, out v
 
 ## Platform support (at a glance)
 
+Runs wherever .NET runs (Windows, Linux, macOS). WPF controls are Windows-only.
+
 | Feature | Windows | Linux | macOS |
 | --- | --- | --- | --- |
 | Core encode/decode (QR/1D/2D) | ✅ | ✅ | ✅ |
@@ -145,6 +148,7 @@ if (CodeGlyph.TryDecode(pixels, width, height, stride, PixelFormat.Rgba32, out v
 ## Benchmarks (local run)
 
 Benchmarks were run on 2026-01-19 (Linux Ubuntu 24.04, Ryzen 9 9950X, .NET 8.0.22). Your results will vary.
+Benchmarks run on identical hardware with default settings.
 
 ### QR (Encode)
 

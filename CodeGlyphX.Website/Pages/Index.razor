@@ -15,6 +15,7 @@
             QR codes, Data Matrix, PDF417, Aztec, and all major 1D barcode formats.
             No System.Drawing. No SkiaSharp. Just pure .NET.
         </p>
+        <p class="hero-status">Actively developed - Stable core - Expanding format support</p>
 
         <div class="hero-buttons">
             <a href="/playground/" class="btn btn-primary">
@@ -119,8 +120,8 @@
             <p>Dependencies</p>
         </div>
         <div class="stat-item">
-            <div class="stat-value">3</div>
-            <p>Platforms</p>
+            <div class="stat-value">Any</div>
+            <p>Runs Wherever .NET Runs</p>
         </div>
     </div>
 </section>
@@ -133,105 +134,139 @@
         <p>Everything you need for barcode generation and scanning, with none of the bloat.</p>
     </div>
 
-    <div class="features-grid">
-        <div class="feature-card">
-            <div class="feature-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                    <path d="M13 10V3L4 14h7v7l9-11h-7z"/>
-                </svg>
+    <div class="feature-groups">
+        <div class="feature-group">
+            <div class="feature-group-header">
+                <span class="feature-group-label">Encoding</span>
+                <span class="feature-group-note">Symbologies + payload helpers</span>
             </div>
-            <h3>Zero Dependencies</h3>
-            <p>No System.Drawing, SkiaSharp, or ImageSharp required. Pure managed code that deploys anywhere without native library headaches.</p>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                        </svg>
+                    </div>
+                    <h3>Encode &amp; Decode</h3>
+                    <p>Full round-trip support. Generate codes and read them back from PNG, JPEG, BMP, GIF, and more with robust pixel detection.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <rect x="3" y="3" width="7" height="7" rx="1"/>
+                            <rect x="14" y="3" width="7" height="7" rx="1"/>
+                            <rect x="3" y="14" width="7" height="7" rx="1"/>
+                            <rect x="14" y="14" width="7" height="7" rx="1"/>
+                        </svg>
+                    </div>
+                    <h3>2D Codes</h3>
+                    <p>QR Code, Micro QR, Data Matrix, PDF417, and Aztec with full ECI, Kanji, structured append, and FNC1/GS1 support.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <rect x="2" y="6" width="2" height="12"/>
+                            <rect x="5" y="6" width="1" height="12"/>
+                            <rect x="7" y="6" width="3" height="12"/>
+                            <rect x="11" y="6" width="1" height="12"/>
+                            <rect x="13" y="6" width="2" height="12"/>
+                            <rect x="16" y="6" width="1" height="12"/>
+                            <rect x="18" y="6" width="2" height="12"/>
+                            <rect x="21" y="6" width="1" height="12"/>
+                        </svg>
+                    </div>
+                    <h3>1D Barcodes</h3>
+                    <p>Code 128, GS1-128, Code 39, Code 93, Codabar, MSI, Plessey, EAN-8/13, UPC-A/E, ITF-14, and more.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+                        </svg>
+                    </div>
+                    <h3>Payment Helpers</h3>
+                    <p>Built-in support for SEPA Girocode, Swiss QR Bill, BezahlCode, UPI, and cryptocurrency addresses.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                        </svg>
+                    </div>
+                    <h3>OTP Support</h3>
+                    <p>Generate otpauth:// TOTP and HOTP codes compatible with Google Authenticator, Microsoft Authenticator, and Authy.</p>
+                </div>
+            </div>
         </div>
 
-        <div class="feature-card">
-            <div class="feature-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                    <path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
-                </svg>
+        <div class="feature-group">
+            <div class="feature-group-header">
+                <span class="feature-group-label">Rendering</span>
+                <span class="feature-group-note">Vector and raster outputs</span>
             </div>
-            <h3>Encode &amp; Decode</h3>
-            <p>Full round-trip support. Generate codes and read them back from PNG, JPEG, BMP, GIF, and more with robust pixel detection.</p>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                        </svg>
+                    </div>
+                    <h3>Vector Outputs</h3>
+                    <p>SVG, SVGZ, PDF, EPS, and HTML for clean, scalable rendering in print and UI pipelines.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                        </svg>
+                    </div>
+                    <h3>Raster Outputs</h3>
+                    <p>PNG, JPEG, BMP, ICO, plus PPM, PBM, PGM, PAM, TGA, XBM, and XPM for tools and legacy pipelines.</p>
+                </div>
+            </div>
         </div>
 
-        <div class="feature-card">
-            <div class="feature-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                    <rect x="3" y="3" width="7" height="7" rx="1"/>
-                    <rect x="14" y="3" width="7" height="7" rx="1"/>
-                    <rect x="3" y="14" width="7" height="7" rx="1"/>
-                    <rect x="14" y="14" width="7" height="7" rx="1"/>
-                </svg>
+        <div class="feature-group">
+            <div class="feature-group-header">
+                <span class="feature-group-label">Runtime</span>
+                <span class="feature-group-note">Deployment + portability</span>
             </div>
-            <h3>2D Codes</h3>
-            <p>QR Code, Micro QR, Data Matrix, PDF417, and Aztec with full ECI, Kanji, structured append, and FNC1/GS1 support.</p>
-        </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                        </svg>
+                    </div>
+                    <h3>Zero Dependencies</h3>
+                    <p>No System.Drawing, SkiaSharp, or ImageSharp required. Pure managed code that deploys anywhere without native library headaches.</p>
+                </div>
 
-        <div class="feature-card">
-            <div class="feature-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                    <rect x="2" y="6" width="2" height="12"/>
-                    <rect x="5" y="6" width="1" height="12"/>
-                    <rect x="7" y="6" width="3" height="12"/>
-                    <rect x="11" y="6" width="1" height="12"/>
-                    <rect x="13" y="6" width="2" height="12"/>
-                    <rect x="16" y="6" width="1" height="12"/>
-                    <rect x="18" y="6" width="2" height="12"/>
-                    <rect x="21" y="6" width="1" height="12"/>
-                </svg>
-            </div>
-            <h3>1D Barcodes</h3>
-            <p>Code 128, GS1-128, Code 39, Code 93, Codabar, MSI, Plessey, EAN-8/13, UPC-A/E, ITF-14, and more.</p>
-        </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                        </svg>
+                    </div>
+                    <h3>AOT &amp; Trim Ready</h3>
+                    <p>No reflection, no runtime codegen. Fully compatible with Native AOT publishing and aggressive trimming.</p>
+                </div>
 
-        <div class="feature-card">
-            <div class="feature-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                    <path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                </svg>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/>
+                        </svg>
+                    </div>
+                    <h3>Cross-Platform</h3>
+                    <p>Runs identically on Windows, Linux, and macOS. Targets .NET 8+, .NET Standard 2.0, and .NET Framework 4.7.2.</p>
+                </div>
             </div>
-            <h3>Multiple Outputs</h3>
-            <p>Render to PNG, JPEG, BMP, SVG, SVGZ, PDF, EPS, HTML, ASCII art, and exotic formats like PPM, PBM, TGA, ICO, XBM, XPM.</p>
-        </div>
-
-        <div class="feature-card">
-            <div class="feature-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                    <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
-                </svg>
-            </div>
-            <h3>AOT &amp; Trim Ready</h3>
-            <p>No reflection, no runtime codegen. Fully compatible with Native AOT publishing and aggressive trimming.</p>
-        </div>
-
-        <div class="feature-card">
-            <div class="feature-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                    <path d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/>
-                </svg>
-            </div>
-            <h3>Cross-Platform</h3>
-            <p>Runs identically on Windows, Linux, and macOS. Targets .NET 8+, .NET Standard 2.0, and .NET Framework 4.7.2.</p>
-        </div>
-
-        <div class="feature-card">
-            <div class="feature-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                    <path d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
-                </svg>
-            </div>
-            <h3>Payment Helpers</h3>
-            <p>Built-in support for SEPA Girocode, Swiss QR Bill, BezahlCode, UPI, and cryptocurrency addresses.</p>
-        </div>
-
-        <div class="feature-card">
-            <div class="feature-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                    <path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
-                </svg>
-            </div>
-            <h3>OTP Support</h3>
-            <p>Generate otpauth:// TOTP and HOTP codes compatible with Google Authenticator, Microsoft Authenticator, and Authy.</p>
         </div>
     </div>
 </section>
@@ -247,11 +282,11 @@
     <div class="symbology-category">
         <h3>2D Matrix Codes</h3>
         <div class="symbology-grid">
-            <span class="symbology-tag">QR Code</span>
+            <span class="symbology-tag featured">QR Code</span>
+            <span class="symbology-tag featured">Data Matrix</span>
+            <span class="symbology-tag featured">PDF417</span>
+            <span class="symbology-tag featured">Aztec</span>
             <span class="symbology-tag">Micro QR</span>
-            <span class="symbology-tag">Data Matrix</span>
-            <span class="symbology-tag">PDF417</span>
-            <span class="symbology-tag">Aztec</span>
         </div>
     </div>
 
@@ -374,6 +409,7 @@ QR.Save(QrPayloads.Girocode(
         <span class="section-label">Benchmarks</span>
         <h2>Fast by Default</h2>
         <p>Local run on Ubuntu 24.04, Ryzen 9 9950X, .NET 8.0 (2026-01-18). Your results will vary.</p>
+        <p class="bench-note">Benchmarks run on identical hardware with default settings.</p>
     </div>
 
     <div class="benchmarks-grid">

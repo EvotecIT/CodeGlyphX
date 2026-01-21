@@ -70,6 +70,7 @@
                 Welcome to the CodeGlyphX documentation. CodeGlyphX is a zero-dependency .NET library
                 for generating and decoding QR codes, barcodes, and other 2D matrix codes.
             </p>
+            <div class="docs-status">Actively developed - Stable core - Expanding format support</div>
 
             <h2>Key Features</h2>
             <ul style="color: var(--text-muted); margin-left: 1.5rem;">
@@ -82,7 +83,7 @@
 
             <h2>Supported Symbologies</h2>
             <h3>2D Matrix Codes</h3>
-            <p>QR Code, Micro QR, Data Matrix, PDF417, Aztec</p>
+            <p>QR Code, Data Matrix, PDF417, Aztec, Micro QR</p>
 
             <h3>1D Linear Barcodes</h3>
             <p>Code 128, GS1-128, Code 39, Code 93, Code 11, Codabar, MSI, Plessey, EAN-8, EAN-13, UPC-A, UPC-E, ITF-14</p>
@@ -106,6 +107,10 @@ if (QrImageDecoder.TryDecodeImage(imageBytes, out var result))
             <p>
                 If you encounter issues or have questions, please visit the
                 <a href="https://github.com/EvotecIT/CodeGlyphX/issues" target="_blank">GitHub Issues</a> page.
+            </p>
+            <p>
+                For planned work and known gaps, see the
+                <a href="https://github.com/EvotecIT/CodeGlyphX/blob/master/ROADMAP.md" target="_blank">ROADMAP</a>.
             </p>
         }
         else if (Section == "installation")
