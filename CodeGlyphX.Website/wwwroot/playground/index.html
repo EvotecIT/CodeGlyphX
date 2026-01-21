@@ -47,6 +47,7 @@
         <a class="dismiss">🗙</a>
     </div>
 
+    <script src="/js/site.js"></script>
     <script src="/_framework/blazor.webassembly#[.{fingerprint}].js"></script>
 
     <!-- Theme functions for Blazor -->
@@ -60,15 +61,6 @@
             document.documentElement.setAttribute('data-theme', theme);
         }
 
-        // Copy to clipboard for code blocks
-        function copyToClipboard(text) {
-            navigator.clipboard.writeText(text).then(function() {
-                return true;
-            }).catch(function(err) {
-                console.error('Could not copy text: ', err);
-                return false;
-            });
-        }
     </script>
 </body>
 

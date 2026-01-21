@@ -1,5 +1,6 @@
 @page "/docs"
 @page "/docs/{Section}"
+@inject IJSRuntime JS
 
 <PageTitle>Documentation - CodeGlyphX</PageTitle>
 
@@ -685,5 +686,10 @@ QR.Save("ABC123", "microqr.png", microQr: true);</pre>
     {
         // Documentation is embedded in this Razor file
         return "https://github.com/EvotecIT/CodeGlyphX/edit/master/CodeGlyphX.Website/Pages/Docs.razor";
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await JS.InvokeVoidAsync("CodeGlyphX.initCodeBlocks");
     }
 }

@@ -1,6 +1,7 @@
 @page "/docs/api"
 @page "/docs/api/{TypeSlug}"
 @inject HttpClient Http
+@inject IJSRuntime JS
 
 <HeadContent>
     <link rel="stylesheet" href="css/api.css" />
@@ -328,6 +329,11 @@
 
     private void ToggleSidebar() => _sidebarOpen = !_sidebarOpen;
     private void CloseSidebar() => _sidebarOpen = false;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await JS.InvokeVoidAsync("CodeGlyphX.initCodeBlocks");
+    }
 
     private static readonly string[] MainTypeOrder =
     {

@@ -972,6 +972,16 @@ body.using-keyboard .hero h1:focus-visible {
     opacity: 1;
 }
 
+.code-block:focus-within .copy-btn {
+    opacity: 1;
+}
+
+@media (hover: none) {
+    .copy-btn {
+        opacity: 1;
+    }
+}
+
 .copy-btn:hover {
     background: var(--primary);
     border-color: var(--primary);
@@ -982,6 +992,28 @@ body.using-keyboard .hero h1:focus-visible {
     background: var(--success);
     border-color: var(--success);
     color: white;
+    opacity: 1;
+}
+
+.copy-btn-inline {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    width: 28px;
+    height: 28px;
+    padding: 4px;
+    opacity: 1;
+}
+
+.docs-content .copy-btn,
+.docs-static .copy-btn {
+    opacity: 1;
+}
+
+.type-detail pre:hover .copy-btn,
+.type-detail pre:focus-within .copy-btn,
+code.signature:hover .copy-btn,
+code.signature:focus-within .copy-btn {
     opacity: 1;
 }
 
@@ -1086,6 +1118,157 @@ body.using-keyboard .hero h1:focus-visible {
 .copy-btn svg {
     width: 100%;
     height: 100%;
+}
+
+/* ============================================
+   Showcase Section
+   ============================================ */
+
+.showcase {
+    padding: 6rem 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.showcase-grid {
+    display: grid;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.showcase-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.showcase-card:hover {
+    border-color: var(--primary);
+    box-shadow: var(--glow-primary);
+}
+
+.showcase-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.showcase-icon {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.showcase-icon svg {
+    width: 24px;
+    height: 24px;
+    stroke: white;
+}
+
+.showcase-title h3 {
+    font-size: 1.5rem;
+    margin: 0;
+    color: var(--text);
+}
+
+.showcase-badge {
+    display: inline-block;
+    font-size: 0.75rem;
+    padding: 0.25rem 0.75rem;
+    background: var(--bg-input);
+    border-radius: 100px;
+    color: var(--text-muted);
+    margin-top: 0.25rem;
+}
+
+.showcase-description {
+    color: var(--text-muted);
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+}
+
+.showcase-features {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+.showcase-feature {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    padding: 0.5rem 1rem;
+    background: var(--bg-input);
+    border-radius: 8px;
+}
+
+.showcase-feature svg {
+    color: var(--success);
+    flex-shrink: 0;
+}
+
+.showcase-images {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.showcase-img {
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+@media (min-width: 768px) {
+    .showcase-img {
+        max-width: calc(50% - 0.5rem);
+    }
+}
+
+.showcase-actions {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.showcase-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: var(--text-muted);
+}
+
+.showcase-status .status-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--secondary);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
+
+.showcase-cta {
+    text-align: center;
+    color: var(--text-muted);
+    margin-top: 2rem;
+}
+
+.showcase-cta a {
+    color: var(--primary-light);
 }
 
 /* ============================================
