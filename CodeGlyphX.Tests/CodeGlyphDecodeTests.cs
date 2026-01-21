@@ -71,7 +71,7 @@ public sealed class CodeGlyphDecodeTests {
     public void DecodeAll_Qr_FromPng() {
         var png = QR.Png("HELLO-ALL");
 
-        Assert.True(CodeGlyph.TryDecodeAllPng(png, out var decoded));
+        Assert.True(CodeGlyph.TryDecodeAllPng(png, out var decoded, includeBarcode: false));
         Assert.Single(decoded);
         Assert.Equal(CodeGlyphKind.Qr, decoded[0].Kind);
         Assert.Equal("HELLO-ALL", decoded[0].Text);

@@ -121,6 +121,12 @@ public sealed class Barcode1DTests {
     }
 
     [Fact]
+    public void Industrial2of5_TotalModules() {
+        var barcode = Industrial2of5Encoder.Encode("123456");
+        Assert.Equal(103, barcode.TotalModules);
+    }
+
+    [Fact]
     public void Iata2of5_TotalModules() {
         var barcode = Iata2of5Encoder.Encode("123456");
         Assert.Equal(97, barcode.TotalModules);
