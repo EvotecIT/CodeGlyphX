@@ -338,8 +338,8 @@ public static partial class BarcodeDecoder {
             if (runs[i] > maxRun) maxRun = runs[i];
         }
 
-        if (minRun <= 0 || maxRun < minRun * 2) return false;
-        var threshold = (minRun + maxRun) / 2.0;
+        if (minRun <= 0 || (long)maxRun < (long)minRun * 2) return false;
+        var threshold = ((long)minRun + maxRun) / 2.0;
 
         for (var i = 1; i < runs.Length; i += 2) {
             if (runs[i] > threshold) return false;
@@ -387,8 +387,8 @@ public static partial class BarcodeDecoder {
             if (runs[i] > maxRun) maxRun = runs[i];
         }
 
-        if (minRun <= 0 || maxRun < minRun * 2) return false;
-        var threshold = (minRun + maxRun) / 2.0;
+        if (minRun <= 0 || (long)maxRun < (long)minRun * 2) return false;
+        var threshold = ((long)minRun + maxRun) / 2.0;
 
         var pairs = runs.Length / 2;
         var pairKinds = new TelepenPairKind[pairs];
@@ -636,8 +636,8 @@ public static partial class BarcodeDecoder {
             if (runs[i] > maxRun) maxRun = runs[i];
         }
 
-        if (minRun <= 0 || maxRun < minRun * 2) return false;
-        var threshold = (minRun + maxRun) / 2.0;
+        if (minRun <= 0 || (long)maxRun < (long)minRun * 2) return false;
+        var threshold = ((long)minRun + maxRun) / 2.0;
 
         // Start pattern: narrow bar/space/bar/space.
         if (runs.Length < 4) return false;
@@ -712,8 +712,8 @@ public static partial class BarcodeDecoder {
             if (runs[i] > maxRun) maxRun = runs[i];
         }
 
-        if (minRun <= 0 || maxRun < minRun * 2) return false;
-        var threshold = (minRun + maxRun) / 2.0;
+        if (minRun <= 0 || (long)maxRun < (long)minRun * 2) return false;
+        var threshold = ((long)minRun + maxRun) / 2.0;
 
         // Start pattern: narrow bar/space/bar/space.
         if (runs.Length < 4) return false;
@@ -777,8 +777,8 @@ public static partial class BarcodeDecoder {
             if (runs[i] > maxRun) maxRun = runs[i];
         }
 
-        if (minRun <= 0 || maxRun < minRun * 2) return false;
-        var threshold = (minRun + maxRun) / 2.0;
+        if (minRun <= 0 || (long)maxRun < (long)minRun * 2) return false;
+        var threshold = ((long)minRun + maxRun) / 2.0;
 
         for (var i = 1; i < runs.Length; i += 2) {
             if (runs[i] > threshold) return false;

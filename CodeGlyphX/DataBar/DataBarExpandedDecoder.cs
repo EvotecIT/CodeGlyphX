@@ -372,6 +372,7 @@ public static class DataBarExpandedDecoder {
 
     private static bool TryDecodeWeightAndDate(bool[] bits, ref int pos, StringBuilder sb, int encodingMethod) {
         if (pos + 36 > bits.Length) return false;
+        if (encodingMethod < 7 || encodingMethod > 14) return false;
         var firstAi = encodingMethod switch {
             7 or 9 or 11 or 13 => "310",
             8 or 10 or 12 or 14 => "320",
@@ -384,7 +385,6 @@ public static class DataBarExpandedDecoder {
             13 or 14 => "17",
             _ => string.Empty
         };
-        if (firstAi.Length == 0 || dateAi.Length == 0) return false;
 
         var weight = ReadBits(bits, pos, 20);
         pos += 20;

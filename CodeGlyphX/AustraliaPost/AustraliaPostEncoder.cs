@@ -97,14 +97,10 @@ public static class AustraliaPostEncoder {
             return IsCContent(customerInfo);
         }
 
-        if (length == 23) {
-            format = AustraliaPostFormat.Customer3;
-            fcc = AustraliaPostTables.FccCustomer3;
-            table = AustraliaPostCustomerEncodingTable.N;
-            return IsDigitsOnly(customerInfo);
-        }
-
-        return false;
+        format = AustraliaPostFormat.Customer3;
+        fcc = AustraliaPostTables.FccCustomer3;
+        table = AustraliaPostCustomerEncodingTable.N;
+        return IsDigitsOnly(customerInfo);
     }
 
     private static bool IsDigitsOnly(string value) {
