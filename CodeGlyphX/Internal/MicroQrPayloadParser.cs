@@ -161,10 +161,6 @@ internal static class MicroQrPayloadParser {
 
         FlushSegment();
         payload = bytes.Count == 0 ? Array.Empty<byte>() : bytes.ToArray();
-        if (segments.Count == 0) {
-            text = string.Empty;
-            return true;
-        }
 
         var sb = new System.Text.StringBuilder();
         for (var i = 0; i < segments.Count; i++) {

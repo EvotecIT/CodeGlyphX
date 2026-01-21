@@ -33,6 +33,7 @@ internal static class QrPixelSampling {
         var bestDist = int.MaxValue;
         var bestTiming = int.MinValue;
         var bestScalePenalty = double.PositiveInfinity;
+        const double scaleEpsilon = 1e-6;
 
         for (var sy = 0; sy < ScaleFactors.Length; sy++) {
             var scaleY = ScaleFactors[sy];
@@ -63,7 +64,7 @@ internal static class QrPixelSampling {
                     bestPhaseX = phX;
                     bestPhaseY = phY;
 
-                    if (bestDist == 0 && bestTiming > (dimension - 16) * 2 - 4 && bestScalePenalty == 0) return;
+                    if (bestDist == 0 && bestTiming > (dimension - 16) * 2 - 4 && bestScalePenalty <= scaleEpsilon) return;
                 }
             }
         }

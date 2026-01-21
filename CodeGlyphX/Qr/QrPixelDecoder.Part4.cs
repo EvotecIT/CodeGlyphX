@@ -500,6 +500,7 @@ internal static partial class QrPixelDecoder {
         offsets[2] = 0.60;
 
         var best = default(global::CodeGlyphX.QrDecodeDiagnostics);
+        const double jitterEpsilon = 1e-9;
 
         for (var yi = 0; yi < offsets.Length; yi++) {
             if (budget.IsExpired) return false;
@@ -507,7 +508,7 @@ internal static partial class QrPixelDecoder {
             for (var xi = 0; xi < offsets.Length; xi++) {
                 if (budget.IsExpired) return false;
                 var ox = offsets[xi];
-                if (ox == 0 && oy == 0) continue;
+                if (Math.Abs(ox) <= jitterEpsilon && Math.Abs(oy) <= jitterEpsilon) continue;
 
                 var jx = cornerBrX + vxX * ox + vyX * oy;
                 var jy = cornerBrY + vxY * ox + vyY * oy;
@@ -556,6 +557,7 @@ internal static partial class QrPixelDecoder {
         offsets[2] = 0.35;
 
         var best = default(global::CodeGlyphX.QrDecodeDiagnostics);
+        const double jitterEpsilon = 1e-9;
 
         for (var yi = 0; yi < offsets.Length; yi++) {
             if (budget.IsExpired) return false;
@@ -563,7 +565,7 @@ internal static partial class QrPixelDecoder {
             for (var xi = 0; xi < offsets.Length; xi++) {
                 if (budget.IsExpired) return false;
                 var ox = phaseX + offsets[xi];
-                if (ox == phaseX && oy == phaseY) continue;
+                if (Math.Abs(ox - phaseX) <= jitterEpsilon && Math.Abs(oy - phaseY) <= jitterEpsilon) continue;
 
                 if (TrySampleWithCorners(
                         image,

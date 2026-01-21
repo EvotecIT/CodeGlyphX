@@ -26,7 +26,6 @@ public static class PbmReader {
         SkipWhitespaceAndComments(pbm, ref pos);
 
         var pixelCount = (long)width * height;
-        if (pixelCount > int.MaxValue / 4) throw new FormatException("PBM dimensions are too large.");
         var rgba = new byte[(int)pixelCount * 4];
 
         if (format == (byte)'1') {

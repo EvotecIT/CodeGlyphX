@@ -46,7 +46,7 @@ internal static class QrPayloadValidation {
 
     public static bool IsValidBic(string? bic, bool required = false) {
         if (string.IsNullOrEmpty(bic)) return !required;
-        var value = bic ?? string.Empty;
+        var value = bic!;
         return RegexCache.Bic().IsMatch(value.Replace(" ", ""));
     }
 

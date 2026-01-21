@@ -28,7 +28,6 @@ public static class XpmReader {
         if (width <= 0 || height <= 0 || colors <= 0 || charsPerPixel <= 0) throw new FormatException("Invalid XPM header.");
         if (width > MaxDimension || height > MaxDimension) throw new FormatException("XPM dimensions are too large.");
         var pixelCount = (long)width * height;
-        if (pixelCount > int.MaxValue / 4) throw new FormatException("XPM dimensions are too large.");
 
         if (strings.Count < 1 + colors + height) throw new FormatException("Truncated XPM data.");
 

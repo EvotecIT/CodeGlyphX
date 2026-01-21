@@ -146,10 +146,8 @@ public sealed class RussiaPaymentOrderPayload {
     }
 
     private static string MapEncoding(QrRussiaPaymentEncoding encoding) {
-        return encoding switch {
-            QrRussiaPaymentEncoding.Utf8 => "2",
-            _ => "2"
-        };
+        _ = encoding;
+        return "2";
     }
 
     private static long ToKopeks(decimal amount) {

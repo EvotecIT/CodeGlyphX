@@ -184,7 +184,7 @@ internal static class QrFinderPatternDetector {
             }
         }
 
-        if (bestScore == double.NegativeInfinity) return false;
+        if (double.IsNegativeInfinity(bestScore)) return false;
 
         // Assign points: the point shared by the two shorter distances is top-left.
         var d01 = Dist2(bestA, bestB);

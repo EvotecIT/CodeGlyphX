@@ -41,7 +41,7 @@ public static class QrPayload {
 
         var hasQuery = false;
         if (subject is { Length: > 0 }) {
-            sb.Append(hasQuery ? '&' : '?');
+            sb.Append('?');
             sb.Append("subject=");
             PercentEncoding.AppendEscaped(sb, subject);
             hasQuery = true;
