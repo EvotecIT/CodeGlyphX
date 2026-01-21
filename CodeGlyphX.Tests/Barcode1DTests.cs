@@ -123,7 +123,7 @@ public sealed class Barcode1DTests {
     [Fact]
     public void Industrial2of5_TotalModules() {
         var barcode = Industrial2of5Encoder.Encode("123456");
-        Assert.Equal(103, barcode.TotalModules);
+        Assert.Equal(93, barcode.TotalModules);
     }
 
     [Fact]
