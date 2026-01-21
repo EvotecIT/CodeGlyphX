@@ -7,7 +7,9 @@
     <title>Playground - CodeGlyphX</title>
     <base href="/playground/" />
 
+    <link rel="preload" id="webassembly" />
     <!-- Fonts -->
+    <script type="importmap"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -45,7 +47,7 @@
         <a class="dismiss">🗙</a>
     </div>
 
-    <script src="/_framework/blazor.webassembly.js"></script>
+    <script src="/_framework/blazor.webassembly#[.{fingerprint}].js"></script>
 
     <!-- Theme functions for Blazor -->
     <script>

@@ -7,7 +7,9 @@
     <title>CodeGlyphX - No-deps QR & Barcode Toolkit for .NET</title>
     <base href="/" />
 
+    <link rel="preload" id="webassembly" />
     <!-- Fonts -->
+    <script type="importmap"></script>
     <link rel="preload" href="css/fonts.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="css/fonts.css" /></noscript>
     <link rel="preload" href="fonts/inter/Inter-600-latin.woff2" as="font" type="font/woff2" crossorigin>
@@ -90,7 +92,7 @@
         })();
     </script>
 
-    <script src="_framework/blazor.webassembly.js"></script>
+    <script src="_framework/blazor.webassembly#[.{fingerprint}].js"></script>
     <script>navigator.serviceWorker.register('service-worker.js');</script>
 
     <!-- Theme and utility functions for Blazor -->

@@ -1,11 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <ServiceWorkerAssetsManifest>service-worker-assets.js</ServiceWorkerAssetsManifest>
     <WasmEnableWebcil>true</WasmEnableWebcil>
+    <OverrideHtmlAssetPlaceholders>true</OverrideHtmlAssetPlaceholders>
 
     <!-- Publish optimizations -->
     <PublishTrimmed>true</PublishTrimmed>
@@ -16,8 +17,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.11" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.11" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="10.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="10.0.0" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
@@ -25,7 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!-- Only lazy load the heavy CodeGlyphX library, not the Playground component -->
+    <BlazorWebAssemblyLazyLoad Include="CodeGlyphX.Playground.wasm" />
     <BlazorWebAssemblyLazyLoad Include="CodeGlyphX.wasm" />
   </ItemGroup>
 
@@ -35,10 +36,14 @@
 
   <!-- Copy XML documentation to wwwroot for API reference -->
   <Target Name="CopyXmlDocs" AfterTargets="Build;Publish">
+    <Copy SourceFiles="..\CodeGlyphX\bin\$(Configuration)\net10.0\CodeGlyphX.xml"
+          DestinationFolder="wwwroot\api-docs"
+          SkipUnchangedFiles="true"
+          Condition="Exists('..\CodeGlyphX\bin\$(Configuration)\net10.0\CodeGlyphX.xml')" />
     <Copy SourceFiles="..\CodeGlyphX\bin\$(Configuration)\net8.0\CodeGlyphX.xml"
           DestinationFolder="wwwroot\api-docs"
           SkipUnchangedFiles="true"
-          Condition="Exists('..\CodeGlyphX\bin\$(Configuration)\net8.0\CodeGlyphX.xml')" />
+          Condition="!Exists('..\CodeGlyphX\bin\$(Configuration)\net10.0\CodeGlyphX.xml') and Exists('..\CodeGlyphX\bin\$(Configuration)\net8.0\CodeGlyphX.xml')" />
   </Target>
 
 </Project>
