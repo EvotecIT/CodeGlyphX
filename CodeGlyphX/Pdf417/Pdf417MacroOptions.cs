@@ -20,37 +20,37 @@ public sealed class Pdf417MacroOptions {
     public bool IsLastSegment { get; set; }
 
     /// <summary>
-    /// Optional total segment count.
+    /// Optional total segment count (last segment only).
     /// </summary>
     public int? SegmentCount { get; set; }
 
     /// <summary>
-    /// Optional file name.
+    /// Optional file name (last segment only).
     /// </summary>
     public string? FileName { get; set; }
 
     /// <summary>
-    /// Optional timestamp.
+    /// Optional timestamp (last segment only).
     /// </summary>
     public long? Timestamp { get; set; }
 
     /// <summary>
-    /// Optional sender.
+    /// Optional sender (last segment only).
     /// </summary>
     public string? Sender { get; set; }
 
     /// <summary>
-    /// Optional addressee.
+    /// Optional addressee (last segment only).
     /// </summary>
     public string? Addressee { get; set; }
 
     /// <summary>
-    /// Optional file size.
+    /// Optional file size (last segment only).
     /// </summary>
     public long? FileSize { get; set; }
 
     /// <summary>
-    /// Optional checksum.
+    /// Optional checksum (last segment only).
     /// </summary>
     public int? Checksum { get; set; }
 }

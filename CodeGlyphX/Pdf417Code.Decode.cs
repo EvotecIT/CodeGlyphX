@@ -336,7 +336,7 @@ public static partial class Pdf417Code {
             if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) {
                 return new DecodeResult<string>(DecodeFailureReason.Cancelled, info, stopwatch.Elapsed);
             }
-            if (Pdf417Decoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out var text)) {
+            if (Pdf417Decoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out string text)) {
                 return new DecodeResult<string>(text, info, stopwatch.Elapsed);
             }
             var failure = DecodeResultHelpers.FailureForDecode(token);
@@ -666,11 +666,11 @@ public static partial class Pdf417Code {
 
     private static void CollectAllFromRgba(byte[] rgba, int width, int height, int stride, CancellationToken token, System.Collections.Generic.List<string> list, System.Collections.Generic.HashSet<string> seen) {
         if (token.IsCancellationRequested) return;
-        if (Pdf417Decoder.TryDecode(rgba, width, height, stride, PixelFormat.Rgba32, token, out var text)) {
+        if (Pdf417Decoder.TryDecode(rgba, width, height, stride, PixelFormat.Rgba32, token, out string text)) {
             AddUnique(list, seen, text);
         }
         ScanTiles(rgba, width, height, stride, token, (tile, tw, th, tstride) => {
-            if (Pdf417Decoder.TryDecode(tile, tw, th, tstride, PixelFormat.Rgba32, token, out var value)) {
+            if (Pdf417Decoder.TryDecode(tile, tw, th, tstride, PixelFormat.Rgba32, token, out string value)) {
                 AddUnique(list, seen, value);
             }
         });
@@ -728,7 +728,7 @@ public static partial class Pdf417Code {
     /// Decodes a PDF417 symbol from PNG bytes.
     /// </summary>
     public static string DecodePng(byte[] png) {
-        if (!TryDecodePng(png, out var text)) {
+        if (!TryDecodePng(png, out string text)) {
             throw new FormatException("PNG does not contain a decodable PDF417 symbol.");
         }
         return text;
@@ -738,7 +738,7 @@ public static partial class Pdf417Code {
     /// Decodes a PDF417 symbol from a PNG file.
     /// </summary>
     public static string DecodePngFile(string path) {
-        if (!TryDecodePngFile(path, out var text)) {
+        if (!TryDecodePngFile(path, out string text)) {
             throw new FormatException("PNG file does not contain a decodable PDF417 symbol.");
         }
         return text;
@@ -748,7 +748,7 @@ public static partial class Pdf417Code {
     /// Decodes a PDF417 symbol from a PNG stream.
     /// </summary>
     public static string DecodePng(Stream stream) {
-        if (!TryDecodePng(stream, out var text)) {
+        if (!TryDecodePng(stream, out string text)) {
             throw new FormatException("PNG stream does not contain a decodable PDF417 symbol.");
         }
         return text;

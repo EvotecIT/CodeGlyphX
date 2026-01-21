@@ -33,6 +33,9 @@ public static class Pdf417Encoder {
 
         var macroCodewords = EncodeMacroBlock(macro);
         var dataCodewords = Pdf417HighLevelEncoder.Encode(text, options.Compaction, options.TextEncoding);
+        if (dataCodewords.Count > 0 && dataCodewords[0] < 900) {
+            dataCodewords.Insert(0, 900);
+        }
         macroCodewords.AddRange(dataCodewords);
         return EncodeCodewords(macroCodewords, options);
     }
@@ -173,6 +176,16 @@ public static class Pdf417Encoder {
 
         if (macro.SegmentIndex < 0 || macro.SegmentIndex > 809999) {
             throw new InvalidOperationException("Macro PDF417 segment index must be in range 0-809999.");
+        }
+        if (!macro.IsLastSegment &&
+            (macro.SegmentCount.HasValue ||
+             macro.FileName is not null ||
+             macro.Timestamp.HasValue ||
+             macro.Sender is not null ||
+             macro.Addressee is not null ||
+             macro.FileSize.HasValue ||
+             macro.Checksum.HasValue)) {
+            throw new InvalidOperationException("Macro PDF417 optional fields are only allowed on the last segment.");
         }
 
         var codewords = new List<int>(64) { 928 };

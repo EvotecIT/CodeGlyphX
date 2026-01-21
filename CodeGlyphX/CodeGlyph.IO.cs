@@ -613,9 +613,9 @@ public static partial class CodeGlyph {
                 return true;
             }
             if (cancellationToken.IsCancellationRequested) return false;
-            var pdf417 = string.Empty;
+            Pdf417Decoded pdf417 = null!;
             if (TryWithImageBudget(imageOptions, cancellationToken, token => Pdf417Decoder.TryDecode(pixels, width, height, stride, format, token, out pdf417))) {
-                decoded = new CodeGlyphDecoded(CodeGlyphKind.Pdf417, pdf417);
+                decoded = new CodeGlyphDecoded(pdf417);
                 return true;
             }
             return false;
@@ -638,9 +638,9 @@ public static partial class CodeGlyph {
             return true;
         }
         if (cancellationToken.IsCancellationRequested) return false;
-        var pdf417Decoded = string.Empty;
+        Pdf417Decoded pdf417Decoded = null!;
         if (TryWithImageBudget(imageOptions, cancellationToken, token => Pdf417Decoder.TryDecode(pixels, width, height, stride, format, token, out pdf417Decoded))) {
-            decoded = new CodeGlyphDecoded(CodeGlyphKind.Pdf417, pdf417Decoded);
+            decoded = new CodeGlyphDecoded(pdf417Decoded);
             return true;
         }
         if (cancellationToken.IsCancellationRequested) return false;
@@ -838,9 +838,9 @@ public static partial class CodeGlyph {
         }
 
         if (cancellationToken.IsCancellationRequested) return false;
-        var pdf417 = string.Empty;
+        Pdf417Decoded pdf417 = null!;
         if (TryWithImageBudget(imageOptions, cancellationToken, token => Pdf417Decoder.TryDecode(pixels, width, height, stride, format, token, out pdf417))) {
-            list.Add(new CodeGlyphDecoded(CodeGlyphKind.Pdf417, pdf417));
+            list.Add(new CodeGlyphDecoded(pdf417));
         }
 
         if (includeBarcode && !preferBarcode) {

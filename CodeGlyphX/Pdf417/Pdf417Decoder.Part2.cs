@@ -16,6 +16,50 @@ namespace CodeGlyphX.Pdf417;
 
 public static partial class Pdf417Decoder {
 #if NET8_0_OR_GREATER
+    private static bool TryDecodeWithPerspective(PixelSpan pixels, int width, int height, int stride, PixelFormat format, BoundingBox box, Candidate candidate, int threshold, bool invert, CancellationToken cancellationToken, out Pdf417Decoded decoded) {
+        decoded = null!;
+        if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
+
+        if (!TryFindRowEdges(pixels, width, height, stride, format, threshold, invert, box, candidate, cancellationToken, out var topLeft, out var topRight, out var bottomRight, out var bottomLeft)) {
+            return false;
+        }
+
+        var transform = Qr.QrPerspectiveTransform.QuadrilateralToQuadrilateral(
+            0, 0,
+            candidate.WidthModules - 1, 0,
+            candidate.WidthModules - 1, candidate.HeightModules - 1,
+            0, candidate.HeightModules - 1,
+            topLeft.x, topLeft.y,
+            topRight.x, topRight.y,
+            bottomRight.x, bottomRight.y,
+            bottomLeft.x, bottomLeft.y);
+
+        var offsets = new (double x, double y)[] {
+            (0, 0),
+            (0.25, 0),
+            (-0.25, 0),
+            (0, 0.25),
+            (0, -0.25),
+            (0.25, 0.25),
+            (-0.25, 0.25),
+            (0.25, -0.25),
+            (-0.25, -0.25),
+        };
+
+        for (var i = 0; i < offsets.Length; i++) {
+            if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
+            var modules = SampleModulesPerspective(pixels, width, height, stride, format, candidate.WidthModules, candidate.HeightModules, threshold, invert, transform, offsets[i].x, offsets[i].y, cancellationToken);
+            if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
+            if (TryDecodeWithRotations(modules, cancellationToken, out decoded)) return true;
+
+            var trimmed = TrimModuleBorder(modules);
+            if (!ReferenceEquals(trimmed, modules) && TryDecodeWithRotations(trimmed, cancellationToken, out decoded)) return true;
+        }
+
+        decoded = null!;
+        return false;
+    }
+
     private static bool TryDecodeWithPerspective(PixelSpan pixels, int width, int height, int stride, PixelFormat format, BoundingBox box, Candidate candidate, int threshold, bool invert, CancellationToken cancellationToken, Pdf417DecodeDiagnostics diagnostics, out string value) {
         value = string.Empty;
         if (DecodeBudget.ShouldAbort(cancellationToken)) { diagnostics.Failure = "Cancelled."; return false; }
@@ -343,6 +387,19 @@ public static partial class Pdf417Decoder {
         if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; return false; }
         if (TryDecode(Rotate270(modules), cancellationToken, out value)) return true;
         value = string.Empty;
+        return false;
+    }
+
+    private static bool TryDecodeWithRotations(BitMatrix modules, CancellationToken cancellationToken, out Pdf417Decoded decoded) {
+        if (DecodeBudget.ShouldAbort(cancellationToken)) { decoded = null!; return false; }
+        if (TryDecode(modules, cancellationToken, out Pdf417Decoded pdf417)) { decoded = pdf417; return true; }
+        if (DecodeBudget.ShouldAbort(cancellationToken)) { decoded = null!; return false; }
+        if (TryDecode(Rotate90(modules), cancellationToken, out pdf417)) { decoded = pdf417; return true; }
+        if (DecodeBudget.ShouldAbort(cancellationToken)) { decoded = null!; return false; }
+        if (TryDecode(Rotate180(modules), cancellationToken, out pdf417)) { decoded = pdf417; return true; }
+        if (DecodeBudget.ShouldAbort(cancellationToken)) { decoded = null!; return false; }
+        if (TryDecode(Rotate270(modules), cancellationToken, out pdf417)) { decoded = pdf417; return true; }
+        decoded = null!;
         return false;
     }
 

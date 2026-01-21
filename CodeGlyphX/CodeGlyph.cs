@@ -31,8 +31,8 @@ public static partial class CodeGlyph {
             }
             if (!squareish) {
                 if (cancellationToken.IsCancellationRequested) return false;
-                if (Pdf417Decoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var pdf417Pref)) {
-                    decoded = new CodeGlyphDecoded(CodeGlyphKind.Pdf417, pdf417Pref);
+                if (Pdf417Decoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out Pdf417Decoded pdf417Pref)) {
+                    decoded = new CodeGlyphDecoded(pdf417Pref);
                     return true;
                 }
                 if (cancellationToken.IsCancellationRequested) return false;
@@ -86,8 +86,8 @@ public static partial class CodeGlyph {
                 }
             }
             if (cancellationToken.IsCancellationRequested) return false;
-            if (Pdf417Decoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var pdf417Pref0)) {
-                decoded = new CodeGlyphDecoded(CodeGlyphKind.Pdf417, pdf417Pref0);
+            if (Pdf417Decoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out Pdf417Decoded pdf417Pref0)) {
+                decoded = new CodeGlyphDecoded(pdf417Pref0);
                 return true;
             }
             return false;
@@ -95,8 +95,8 @@ public static partial class CodeGlyph {
 
         if (!squareish) {
             if (cancellationToken.IsCancellationRequested) return false;
-            if (Pdf417Decoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var pdf417Non)) {
-                decoded = new CodeGlyphDecoded(CodeGlyphKind.Pdf417, pdf417Non);
+            if (Pdf417Decoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out Pdf417Decoded pdf417Non)) {
+                decoded = new CodeGlyphDecoded(pdf417Non);
                 return true;
             }
             if (cancellationToken.IsCancellationRequested) return false;
@@ -156,8 +156,8 @@ public static partial class CodeGlyph {
             }
         }
         if (cancellationToken.IsCancellationRequested) return false;
-        if (Pdf417Decoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var pdf417Non0)) {
-            decoded = new CodeGlyphDecoded(CodeGlyphKind.Pdf417, pdf417Non0);
+        if (Pdf417Decoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out Pdf417Decoded pdf417Non0)) {
+            decoded = new CodeGlyphDecoded(pdf417Non0);
             return true;
         }
         if (cancellationToken.IsCancellationRequested) return false;
@@ -502,8 +502,8 @@ public static partial class CodeGlyph {
             }
 
             if (cancellationToken.IsCancellationRequested) return false;
-            if (Pdf417Decoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var pdf417)) {
-                list.Add(new CodeGlyphDecoded(CodeGlyphKind.Pdf417, pdf417));
+            if (Pdf417Decoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out Pdf417Decoded pdf417)) {
+                list.Add(new CodeGlyphDecoded(pdf417));
             }
         }
 
@@ -651,8 +651,8 @@ public static partial class CodeGlyph {
             }
             if (!squareish) {
                 if (cancellationToken.IsCancellationRequested) return false;
-                if (Pdf417Decoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var pdf417)) {
-                    decoded = new CodeGlyphDecoded(CodeGlyphKind.Pdf417, pdf417);
+                if (Pdf417Decoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out Pdf417Decoded pdf417)) {
+                    decoded = new CodeGlyphDecoded(pdf417);
                     return true;
                 }
                 if (cancellationToken.IsCancellationRequested) return false;
@@ -706,8 +706,8 @@ public static partial class CodeGlyph {
                 }
             }
             if (cancellationToken.IsCancellationRequested) return false;
-            if (Pdf417Decoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var pdf4170)) {
-                decoded = new CodeGlyphDecoded(CodeGlyphKind.Pdf417, pdf4170);
+            if (Pdf417Decoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out Pdf417Decoded pdf4170)) {
+                decoded = new CodeGlyphDecoded(pdf4170);
                 return true;
             }
             return false;
@@ -715,8 +715,8 @@ public static partial class CodeGlyph {
 
         if (!squareish) {
             if (cancellationToken.IsCancellationRequested) return false;
-            if (Pdf417Decoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var pdf417Decoded)) {
-                decoded = new CodeGlyphDecoded(CodeGlyphKind.Pdf417, pdf417Decoded);
+            if (Pdf417Decoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out Pdf417Decoded pdf417Decoded)) {
+                decoded = new CodeGlyphDecoded(pdf417Decoded);
                 return true;
             }
             if (cancellationToken.IsCancellationRequested) return false;
@@ -776,8 +776,8 @@ public static partial class CodeGlyph {
             }
         }
         if (cancellationToken.IsCancellationRequested) return false;
-        if (Pdf417Decoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var pdf417Decoded0)) {
-            decoded = new CodeGlyphDecoded(CodeGlyphKind.Pdf417, pdf417Decoded0);
+        if (Pdf417Decoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out Pdf417Decoded pdf417Decoded0)) {
+            decoded = new CodeGlyphDecoded(pdf417Decoded0);
             return true;
         }
         if (cancellationToken.IsCancellationRequested) return false;
@@ -1120,8 +1120,8 @@ public static partial class CodeGlyph {
             }
 
             if (cancellationToken.IsCancellationRequested) return false;
-            if (Pdf417Decoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var pdf417)) {
-                list.Add(new CodeGlyphDecoded(CodeGlyphKind.Pdf417, pdf417));
+            if (Pdf417Decoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out Pdf417Decoded pdf417)) {
+                list.Add(new CodeGlyphDecoded(pdf417));
             }
         }
 
