@@ -109,6 +109,12 @@ larger structural changes.
 - [x] Scope service workers to `/docs/` and `/playground/`.
 - [x] Add build-specific routing for `/docs/` and `/playground/`.
 
+## Checklist: Content & Features
+- [x] Add Showcase section featuring AuthIMO as real-world example.
+- [x] Add copy buttons to code blocks (docs, API reference, playground).
+- [ ] Retake AuthIMO screenshots for website-ready quality (clean backgrounds, consistent sizing).
+- [ ] Add AuthIMO download links once releases are published (.msi, portable .exe).
+
 ## Notes
 - This plan assumes we keep Blazor for the interactive playground only.
 - GitHub Pages cannot set cache headers; Cloudflare rules are required.
