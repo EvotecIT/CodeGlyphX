@@ -31,8 +31,11 @@ public partial class Playground {
 
         try
         {
-            _decodeCts?.Cancel();
-            _decodeCts?.Dispose();
+            if (_decodeCts is not null)
+            {
+                await _decodeCts.CancelAsync();
+                _decodeCts.Dispose();
+            }
             _decodeCts = new CancellationTokenSource();
             if (DecodeMaxMilliseconds > 0)
             {
@@ -344,9 +347,12 @@ public partial class Playground {
         }
     }
 
-    internal void CancelDecode()
+    internal async Task CancelDecode()
     {
-        _decodeCts?.Cancel();
+        if (_decodeCts is not null)
+        {
+            await _decodeCts.CancelAsync();
+        }
         DecodeStatus = "Cancelling...";
     }
 

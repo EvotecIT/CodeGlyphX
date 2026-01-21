@@ -1,4 +1,5 @@
 @using CodeGlyphX
+@inject IJSRuntime JS
 
 @if (Host is null)
 {
@@ -21,4 +22,9 @@ else
 @code {
     [CascadingParameter]
     public Playground? Host { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await JS.InvokeVoidAsync("CodeGlyphX.initCodeBlocks");
+    }
 }
