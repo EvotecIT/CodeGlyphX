@@ -43,8 +43,8 @@ public static partial class CodeGlyph {
             decoded = new CodeGlyphDecoded(CodeGlyphKind.DataMatrix, dataMatrix);
             return true;
         }
-        if (Pdf417Decoder.TryDecode(modules, out string pdf417)) {
-            decoded = new CodeGlyphDecoded(CodeGlyphKind.Pdf417, pdf417);
+        if (Pdf417Decoder.TryDecode(modules, out Pdf417Decoded pdf417)) {
+            decoded = new CodeGlyphDecoded(pdf417);
             return true;
         }
         if (MicroPdf417Decoder.TryDecode(modules, out var microPdf417)) {
@@ -70,8 +70,8 @@ public static partial class CodeGlyph {
                 }
                 return false;
             case BarcodeType.PDF417:
-                if (Pdf417Decoder.TryDecode(modules, out string pdf417)) {
-                    decoded = new CodeGlyphDecoded(CodeGlyphKind.Pdf417, pdf417);
+                if (Pdf417Decoder.TryDecode(modules, out Pdf417Decoded pdf417)) {
+                    decoded = new CodeGlyphDecoded(pdf417);
                     return true;
                 }
                 return false;
