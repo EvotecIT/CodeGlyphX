@@ -36,7 +36,7 @@ public sealed class Pdf417PixelRobustnessTests {
         SetPixel(expanded, newStride, 0, 0);
         SetPixel(expanded, newStride, newWidth - 1, newHeight - 1);
 
-        Assert.True(Pdf417Decoder.TryDecode(expanded, newWidth, newHeight, newStride, PixelFormat.Rgba32, out var text));
+        Assert.True(Pdf417Decoder.TryDecode(expanded, newWidth, newHeight, newStride, PixelFormat.Rgba32, out string text));
         Assert.Equal("NoiseTest", text);
     }
 
@@ -53,7 +53,7 @@ public sealed class Pdf417PixelRobustnessTests {
         // Shift both dark/light near the high end to break the fixed 128 threshold.
         ApplyLowContrast(pixels, low: 150, high: 170);
 
-        Assert.True(Pdf417Decoder.TryDecode(pixels, width, height, stride, PixelFormat.Rgba32, out var text));
+        Assert.True(Pdf417Decoder.TryDecode(pixels, width, height, stride, PixelFormat.Rgba32, out string text));
         Assert.Equal("LowContrast", text);
     }
 
@@ -100,7 +100,7 @@ public sealed class Pdf417PixelRobustnessTests {
             }
         }
 
-        Assert.True(Pdf417Decoder.TryDecode(warped, dstWidth, dstHeight, dstStride, PixelFormat.Rgba32, out var text));
+        Assert.True(Pdf417Decoder.TryDecode(warped, dstWidth, dstHeight, dstStride, PixelFormat.Rgba32, out string text));
         Assert.Equal("SkewTest", text);
     }
 

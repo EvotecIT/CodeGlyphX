@@ -299,7 +299,7 @@ public sealed class Barcode2DTests {
         using var cts = new CancellationTokenSource();
         cts.Cancel();
 
-        Assert.False(Pdf417.Pdf417Decoder.TryDecode(pixels, width, height, stride, PixelFormat.Rgba32, cts.Token, out _));
+        Assert.False(Pdf417.Pdf417Decoder.TryDecode(pixels, width, height, stride, PixelFormat.Rgba32, cts.Token, out string _));
     }
 
     [Fact]

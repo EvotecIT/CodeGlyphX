@@ -1,3 +1,4 @@
+using CodeGlyphX.Pdf417;
 using CodeGlyphX.Rendering.Png;
 using Xunit;
 
@@ -30,5 +31,27 @@ public sealed class CodeGlyphMatrixDecodeTests {
         Assert.True(CodeGlyph.TryDecode(modules, out var decoded, expectedBarcode: BarcodeType.GS1DataBarOmni));
         Assert.Equal(CodeGlyphKind.Barcode1D, decoded.Kind);
         Assert.Equal(value, decoded.Text);
+    }
+
+    [Fact]
+    public void Decode_Pdf417_Macro_FromModules() {
+        var macro = new Pdf417MacroOptions {
+            SegmentIndex = 0,
+            FileId = "123",
+            IsLastSegment = true,
+            FileName = "file.txt",
+            Sender = "sender@example.com"
+        };
+        var modules = Pdf417Code.EncodeMacro("MACRO-PDF417", macro);
+
+        Assert.True(CodeGlyph.TryDecode(modules, out var decoded));
+        Assert.Equal(CodeGlyphKind.Pdf417, decoded.Kind);
+        Assert.Equal("MACRO-PDF417", decoded.Text);
+        Assert.NotNull(decoded.Pdf417Macro);
+        Assert.Equal(0, decoded.Pdf417Macro!.SegmentIndex);
+        Assert.Equal("123", decoded.Pdf417Macro.FileId);
+        Assert.True(decoded.Pdf417Macro.IsLastSegment);
+        Assert.Equal("file.txt", decoded.Pdf417Macro.FileName);
+        Assert.Equal("sender@example.com", decoded.Pdf417Macro.Sender);
     }
 }
