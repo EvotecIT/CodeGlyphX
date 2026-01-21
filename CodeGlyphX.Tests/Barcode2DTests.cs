@@ -208,7 +208,7 @@ public sealed class Barcode2DTests {
     [Fact]
     public void Pdf417_RoundTrip_Modules() {
         var matrix = Pdf417.Pdf417Encoder.Encode("Pdf417Example");
-        Assert.True(Pdf417.Pdf417Decoder.TryDecode(matrix, out var text));
+        Assert.True(Pdf417.Pdf417Decoder.TryDecode(matrix, out string text));
         Assert.Equal("Pdf417Example", text);
     }
 
@@ -249,7 +249,7 @@ public sealed class Barcode2DTests {
         };
 
         var matrix = Pdf417Encoder.EncodeMacro("MacroPayload", options);
-        Assert.True(Pdf417Decoder.TryDecode(matrix, out var decoded));
+        Assert.True(Pdf417Decoder.TryDecode(matrix, out Pdf417Decoded decoded));
         Assert.Equal("MacroPayload", decoded.Text);
         Assert.NotNull(decoded.Macro);
         Assert.Equal(5, decoded.Macro!.SegmentIndex);
@@ -268,7 +268,7 @@ public sealed class Barcode2DTests {
     public void Pdf417_RoundTrip_Modules_WithPadding() {
         var matrix = Pdf417.Pdf417Encoder.Encode("Pdf417Example");
         var padded = PadColumns(matrix, left: 4, right: 3);
-        Assert.True(Pdf417.Pdf417Decoder.TryDecode(padded, out var text));
+        Assert.True(Pdf417.Pdf417Decoder.TryDecode(padded, out string text));
         Assert.Equal("Pdf417Example", text);
     }
 
@@ -282,7 +282,7 @@ public sealed class Barcode2DTests {
             out var height,
             out var stride);
 
-        Assert.True(Pdf417.Pdf417Decoder.TryDecode(pixels, width, height, stride, PixelFormat.Rgba32, out var text));
+        Assert.True(Pdf417.Pdf417Decoder.TryDecode(pixels, width, height, stride, PixelFormat.Rgba32, out string text));
         Assert.Equal("Pdf417Example", text);
     }
 
@@ -313,7 +313,7 @@ public sealed class Barcode2DTests {
             out var stride);
 
         var mirrored = MirrorPixels(pixels, width, height);
-        Assert.True(Pdf417.Pdf417Decoder.TryDecode(mirrored, width, height, stride, PixelFormat.Rgba32, out var text));
+        Assert.True(Pdf417.Pdf417Decoder.TryDecode(mirrored, width, height, stride, PixelFormat.Rgba32, out string text));
         Assert.Equal("Pdf417Mirror", text);
     }
 
