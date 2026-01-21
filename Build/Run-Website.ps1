@@ -186,8 +186,13 @@ try {
             $bytes = [IO.File]::ReadAllBytes($fullPath)
             $context.Response.ContentType = Get-ContentType -Path $fullPath
             $context.Response.ContentLength64 = $bytes.Length
-            $context.Response.OutputStream.Write($bytes, 0, $bytes.Length)
-            $context.Response.OutputStream.Close()
+            try {
+                $context.Response.OutputStream.Write($bytes, 0, $bytes.Length)
+            } catch [System.IO.IOException] {
+                # Client disconnected mid-response; ignore to keep the dev server running.
+            } finally {
+                $context.Response.OutputStream.Close()
+            }
         }
     }
 } finally {
