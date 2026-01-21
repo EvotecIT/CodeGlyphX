@@ -3,25 +3,19 @@
 This list contains **only work we still want to do** (no already‑done items).
 
 ## Phase 4 — API & DX expansion (days → week)
-- High-level image decode overloads that accept `BarcodeDecodeOptions` (tile scan + checksum policies).
-- Fluent builders for render options (PNG/SVG/HTML/PDF) to match decode fluents.
-- Add `DecodeResult<T>` + `DecodeFailureReason` for richer diagnostics (elapsed, failure, format).
-- Add `ImageInfo`/header preflight (dimensions + format) before full decode.
-- Add `TryDecodeAll` multi-code APIs for Data Matrix / PDF417 / Aztec images.
-- Span/Memory overloads for image decode across formats (avoid `byte[]` copy paths).
-- Batch decode API with shared settings + aggregated diagnostics.
+_No open items._
 
 ## Phase 5 — Additional symbologies (weeks)
-- GS1 DataBar family (Omni/Truncated/Stacked/Expanded).
-- GS1 Composite (CC-A / CC-B / CC-C).
-- MicroPDF417 + Macro PDF417.
-- MaxiCode (optional).
-- DotCode (optional).
-- Postal: USPS IMB, POSTNET/PLANET (optional).
-- Industrial 2‑of‑5 variants (Interleaved 2‑of‑5 beyond ITF‑14, Matrix 2‑of‑5).
-- Telepen (optional), Patch Code (optional).
-- Pharmacode (one‑track / two‑track), Code32 (optional).
-- Decoder test packs for any newly added symbologies.
+- MaxiCode — decode + encode.
+- Code 16K + Code 49 (stacked 1D).
+- Codablock F (stacked).
+- DotCode.
+- Micro Data Matrix.
+- rMQR (rectangular Micro QR).
+- Grid Matrix.
+- Han Xin.
+- GS1 Composite (CC-A / CC-B / CC-C) — decode first, then encode.
+- Decoder test packs + golden vectors for any newly added symbologies.
 
 ## Phase 6 — Image formats (weeks)
 - WebP **decode** (lossless + VP8).

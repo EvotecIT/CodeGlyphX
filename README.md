@@ -27,7 +27,7 @@ CodeGlyphX is a fast, dependency-free toolkit for QR codes and barcodes, with ro
 **CodeGlyphX** is a no-deps QR + barcode toolkit for .NET with:
 - Reliable QR decoding (ECI, FNC1/GS1, Kanji, structured append, Micro QR)
 - 1D barcode encoding/decoding (Code128/GS1-128, Code39, Code93, Code11, Codabar, MSI, Plessey, EAN/UPC, ITF-14)
-- 2D encoding/decoding (Data Matrix, PDF417, Aztec)
+- 2D encoding/decoding (Data Matrix, MicroPDF417, PDF417, Aztec)
 - Renderers (SVG / SVGZ / HTML / PNG / JPEG / BMP / PPM / PBM / PGM / PAM / XBM / XPM / TGA / ICO / PDF / EPS / ASCII) and image decoding (PNG/JPEG/GIF/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA)
 - OTP helpers (otpauth://totp + Base32)
 - WPF controls + demo apps
@@ -201,8 +201,8 @@ Based on public docs as of 2026-01-18. Capabilities depend on optional renderer 
 
 | Library | Encode | Decode | 2D Codes | 1D Codes | Image Dependencies |
 | --- | --- | --- | --- | --- | --- |
-| CodeGlyphX | ✅ | ✅ | QR, Micro QR, Data Matrix, PDF417, Aztec | ✅ | None |
-| ZXing.Net | ✅ | ✅ | QR, Data Matrix, PDF417, Aztec, more | ✅ | Bindings for System.Drawing / ImageSharp / SkiaSharp / OpenCV |
+| CodeGlyphX | ✅ | ✅ | QR, Micro QR, Data Matrix, MicroPDF417, PDF417, Aztec | ✅ | None (built-in PNG/JPEG/GIF/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA/ICO/TIFF decode) |
+| ZXing.Net | ✅ | ✅ | QR, Data Matrix, PDF417, Aztec, more | ✅ | Image I/O via bindings on .NET Standard/5+; System.Drawing on full .NET Framework |
 | QRCoder | ✅ | ❌ | QR only | ❌ | System.Drawing renderer (Windows) or alt renderers |
 | Barcoder | ✅ | ❌ | QR, Data Matrix, PDF417, Aztec | ✅ | ImageSharp.Drawing for image renderer |
 
@@ -220,12 +220,31 @@ Based on public docs as of 2026-01-18. Capabilities depend on optional renderer 
 | Codabar | ✅ | ✅ | All (see Output formats) | A/B/C/D start/stop |
 | MSI | ✅ | ✅ | All (see Output formats) | Mod10 / Mod10Mod10 |
 | Plessey | ✅ | ✅ | All (see Output formats) | CRC |
-| KIX / Royal Mail 4-State | ✅ | ❌ | All (see Output formats) | Encode only (matrix renderers) |
-| EAN-8 / EAN-13 | ✅ | ✅ | All (see Output formats) | Checksum validation |
-| UPC-A / UPC-E | ✅ | ✅ | All (see Output formats) | Checksum validation |
+| Telepen | ✅ | ✅ | All (see Output formats) | ASCII 0-127, checksum |
+| Pharmacode (one-track) | ✅ | ✅ | All (see Output formats) | Numeric 3–131070 |
+| Pharmacode (two-track) | ✅ | ✅ | All (see Output formats) | Matrix renderers (top/bottom/full bars), numeric 4–64570080 |
+| Code 32 (Italian Pharmacode) | ✅ | ✅ | All (see Output formats) | 8 digits + checksum |
+| POSTNET / PLANET | ✅ | ✅ | All (see Output formats) | Matrix renderers (tall/short bars), checksum |
+| KIX / Royal Mail 4-State | ✅ | ✅ | All (see Output formats) | KIX (headerless) + RM4SCC (headers + checksum), matrix renderers |
+| Australia Post (Customer) | ✅ | ✅ | All (see Output formats) | Standard + Customer 2/3, RS parity (ambiguous N/C decode for numeric-only Customer 3) |
+| Japan Post | ✅ | ✅ | All (see Output formats) | 67-bar 4-state, modulo-19 check |
+| USPS Intelligent Mail (IMB) | ✅ | ✅ | All (see Output formats) | 65-bar 4-state, tracking + routing (5/9/11) |
+| GS1 DataBar-14 Truncated | ✅ | ✅ | All (see Output formats) | GTIN-13 input (check digit computed) |
+| GS1 DataBar-14 Omnidirectional | ✅ | ✅ | All (see Output formats) | Matrix renderers |
+| GS1 DataBar-14 Stacked | ✅ | ✅ | All (see Output formats) | Matrix renderers |
+| GS1 DataBar Expanded | ✅ | ✅ | All (see Output formats) | GS1 AI strings (linear) |
+| GS1 DataBar Expanded Stacked | ✅ | ✅ | All (see Output formats) | Matrix renderers |
+| EAN-8 / EAN-13 | ✅ | ✅ | All (see Output formats) | Checksum validation, +2/+5 add-ons |
+| UPC-A / UPC-E | ✅ | ✅ | All (see Output formats) | Checksum validation, +2/+5 add-ons |
 | ITF-14 | ✅ | ✅ | All (see Output formats) | Checksum validation |
+| ITF (Interleaved 2 of 5) | ✅ | ✅ | All (see Output formats) | Even-length digits, optional checksum |
+| Industrial 2 of 5 | ✅ | ✅ | All (see Output formats) | Optional checksum |
+| Matrix 2 of 5 | ✅ | ✅ | All (see Output formats) | Optional checksum |
+| IATA 2 of 5 | ✅ | ✅ | All (see Output formats) | Optional checksum |
+| Patch Code | ✅ | ✅ | All (see Output formats) | Single symbol (1,2,3,4,6,T) |
 | Data Matrix | ✅ | ✅ | All (see Output formats) | ASCII/C40/Text/X12/EDIFACT/Base256 |
-| PDF417 | ✅ | ✅ | All (see Output formats) | Full encode/decode |
+| MicroPDF417 | ✅ | ✅ | All (see Output formats) | Module matrix encode/decode |
+| PDF417 | ✅ | ✅ | All (see Output formats) | Full encode/decode, Macro PDF417 metadata |
 | Aztec | ✅ | ✅ | All (see Output formats) | Module matrix + basic pixel decode |
 
 ## Features
@@ -233,10 +252,10 @@ Based on public docs as of 2026-01-18. Capabilities depend on optional renderer 
 - [x] QR encode + robust decode
 - [x] Micro QR support
 - [x] 1D barcode encode + decode
-- [x] Data Matrix + PDF417 encode + decode
-- [x] Matrix barcode encoding (Data Matrix / PDF417 / KIX) with dedicated matrix renderers
+- [x] Data Matrix + MicroPDF417 + PDF417 encode + decode
+- [x] Matrix barcode encoding (Data Matrix / MicroPDF417 / PDF417 / KIX / GS1 DataBar) with dedicated matrix renderers
 - [x] SVG / SVGZ / HTML / PNG / JPEG / BMP / PPM / PBM / PGM / PAM / XBM / XPM / TGA / ICO / PDF / EPS / ASCII renderers
-- [x] Image decode: PNG / JPEG / GIF / BMP / PPM / PBM / PGM / PAM / XBM / XPM / TGA
+- [x] Image decode: PNG / JPEG / GIF / BMP / PPM / PBM / PGM / PAM / XBM / XPM / TGA / ICO / TIFF
 - [x] Base64 + data URI helpers for rendered outputs
 - [x] Payload helpers (URL, WiFi, Email, Phone, SMS, Contact, Calendar, OTP, Social)
 - [x] WPF controls and demo apps
