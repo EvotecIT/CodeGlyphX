@@ -26,7 +26,7 @@
     {
       "name": "Text",
       "kind": "Property",
-      "summary": "Gets the decoded text.",
+      "summary": "Gets the decoded text (for EAN/UPC add-ons this includes a \u0027\u002B\u0027 suffix, e.g. \u0022123456789012\u002B12\u0022).",
       "remarks": null,
       "returns": null,
       "parameters": [],

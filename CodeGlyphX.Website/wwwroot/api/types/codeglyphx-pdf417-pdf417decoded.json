@@ -1,0 +1,41 @@
+{
+  "name": "Pdf417Decoded",
+  "fullName": "CodeGlyphX.Pdf417.Pdf417Decoded",
+  "namespace": "CodeGlyphX.Pdf417",
+  "kind": "Class",
+  "slug": "codeglyphx-pdf417-pdf417decoded",
+  "summary": "Result of decoding a PDF417 symbol.",
+  "remarks": null,
+  "examples": [],
+  "seeAlso": [],
+  "members": [
+    {
+      "name": "Text",
+      "kind": "Property",
+      "summary": "Gets the decoded payload text.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "string Text {get; }",
+      "xmlId": "P:CodeGlyphX.Pdf417.Pdf417Decoded.Text",
+      "anchor": "property-text-string-text-get"
+    },
+    {
+      "name": "Macro",
+      "kind": "Property",
+      "summary": "Gets Macro PDF417 metadata when present.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "Pdf417MacroMetadata Macro {get; }",
+      "xmlId": "P:CodeGlyphX.Pdf417.Pdf417Decoded.Macro",
+      "anchor": "property-macro-pdf417macrometadata-macro-get"
+    }
+  ]
+}

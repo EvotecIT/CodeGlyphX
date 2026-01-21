@@ -178,6 +178,81 @@
       "signature": "static bool TryDetectFormat(ReadOnlySpan\u003Cbyte\u003E data, out ImageFormat format)",
       "xmlId": "M:CodeGlyphX.Rendering.ImageReader.TryDetectFormat(System.ReadOnlySpan{System.Byte},CodeGlyphX.Rendering.ImageFormat@)",
       "anchor": "method-trydetectformat-static-bool-trydetectformat-readonlyspan-byte-data-out-imageformat-format"
+    },
+    {
+      "name": "TryReadInfo",
+      "kind": "Method",
+      "summary": "Attempts to read image format and dimensions without decoding pixels.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "data",
+          "type": "byte[]",
+          "description": null
+        },
+        {
+          "name": "info",
+          "type": "ImageInfo",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryReadInfo(byte[] data, out ImageInfo info)",
+      "xmlId": "M:CodeGlyphX.Rendering.ImageReader.TryReadInfo(System.Byte[],CodeGlyphX.Rendering.ImageInfo@)",
+      "anchor": "method-tryreadinfo-static-bool-tryreadinfo-byte-data-out-imageinfo-info"
+    },
+    {
+      "name": "TryReadInfo",
+      "kind": "Method",
+      "summary": "Attempts to read image format and dimensions without decoding pixels.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "data",
+          "type": "ReadOnlySpan\u003Cbyte\u003E",
+          "description": null
+        },
+        {
+          "name": "info",
+          "type": "ImageInfo",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryReadInfo(ReadOnlySpan\u003Cbyte\u003E data, out ImageInfo info)",
+      "xmlId": "M:CodeGlyphX.Rendering.ImageReader.TryReadInfo(System.ReadOnlySpan{System.Byte},CodeGlyphX.Rendering.ImageInfo@)",
+      "anchor": "method-tryreadinfo-static-bool-tryreadinfo-readonlyspan-byte-data-out-imageinfo-info"
+    },
+    {
+      "name": "TryReadInfo",
+      "kind": "Method",
+      "summary": "Attempts to read image format and dimensions from a stream without decoding pixels.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "stream",
+          "type": "Stream",
+          "description": null
+        },
+        {
+          "name": "info",
+          "type": "ImageInfo",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryReadInfo(Stream stream, out ImageInfo info)",
+      "xmlId": "M:CodeGlyphX.Rendering.ImageReader.TryReadInfo(System.IO.Stream,CodeGlyphX.Rendering.ImageInfo@)",
+      "anchor": "method-tryreadinfo-static-bool-tryreadinfo-stream-stream-out-imageinfo-info"
     }
   ]
 }

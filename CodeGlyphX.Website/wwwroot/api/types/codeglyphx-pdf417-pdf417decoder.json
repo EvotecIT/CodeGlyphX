@@ -37,6 +37,31 @@
     {
       "name": "TryDecode",
       "kind": "Method",
+      "summary": "Attempts to decode a PDF417 symbol from a module matrix, including Macro metadata when present.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "modules",
+          "type": "BitMatrix",
+          "description": null
+        },
+        {
+          "name": "decoded",
+          "type": "Pdf417Decoded",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecode(BitMatrix modules, out Pdf417Decoded decoded)",
+      "xmlId": "M:CodeGlyphX.Pdf417.Pdf417Decoder.TryDecode(CodeGlyphX.BitMatrix,CodeGlyphX.Pdf417.Pdf417Decoded@)",
+      "anchor": "method-trydecode-static-bool-trydecode-bitmatrix-modules-out-pdf417decoded-decoded"
+    },
+    {
+      "name": "TryDecode",
+      "kind": "Method",
       "summary": "Attempts to decode a PDF417 symbol from a module matrix, with cancellation.",
       "remarks": null,
       "returns": null,
@@ -63,6 +88,36 @@
       "signature": "static bool TryDecode(BitMatrix modules, CancellationToken cancellationToken, out string value)",
       "xmlId": "M:CodeGlyphX.Pdf417.Pdf417Decoder.TryDecode(CodeGlyphX.BitMatrix,System.Threading.CancellationToken,System.String@)",
       "anchor": "method-trydecode-static-bool-trydecode-bitmatrix-modules-cancellationtoken-cancellationtoken-out-string-value"
+    },
+    {
+      "name": "TryDecode",
+      "kind": "Method",
+      "summary": "Attempts to decode a PDF417 symbol from a module matrix, with cancellation and Macro metadata when present.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "modules",
+          "type": "BitMatrix",
+          "description": null
+        },
+        {
+          "name": "cancellationToken",
+          "type": "CancellationToken",
+          "description": null
+        },
+        {
+          "name": "decoded",
+          "type": "Pdf417Decoded",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecode(BitMatrix modules, CancellationToken cancellationToken, out Pdf417Decoded decoded)",
+      "xmlId": "M:CodeGlyphX.Pdf417.Pdf417Decoder.TryDecode(CodeGlyphX.BitMatrix,System.Threading.CancellationToken,CodeGlyphX.Pdf417.Pdf417Decoded@)",
+      "anchor": "method-trydecode-static-bool-trydecode-bitmatrix-modules-cancellationtoken-cancellationtoken-out-pdf417decoded-decoded"
     },
     {
       "name": "TryDecode",

@@ -29,13 +29,13 @@ jobs:
       - name: Restore
         run: dotnet restore CodeGlyphX.Website/CodeGlyphX.Website.csproj
 
-      - name: Publish
-        run: dotnet publish CodeGlyphX.Website/CodeGlyphX.Website.csproj -c Release -o site
+      - name: Build website (static + playground)
+        run: pwsh Build/Publish-WebsitePages.ps1 -Configuration Release -Framework net8.0 -OutputPath site
 
       - name: Upload Pages Artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: site/wwwroot
+          path: site
 
   deploy:
     runs-on: ubuntu-latest

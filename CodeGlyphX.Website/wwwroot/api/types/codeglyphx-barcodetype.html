@@ -32,7 +32,6 @@
                 <a href="/">Home</a>
                 <a href="/playground/">Playground</a>
                 <a href="/docs/">Documentation</a>
-                <a href="/api/">API Reference</a>
             </div>
             <div class="nav-actions">
                 <button class="theme-toggle" title="Toggle theme" aria-label="Toggle theme">
@@ -44,7 +43,7 @@
                         <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
                     </svg>
                 </button>
-                <a href="https://github.com/EvotecIT/CodeGlyphX" target="_blank" rel="noopener" class="nav-icon" title="GitHub">
+                <a href="https://github.com/EvotecIT/CodeGlyphX" target="_blank" rel="noopener" class="nav-icon" title="GitHub" aria-label="GitHub">
                     <svg viewBox="0 0 24 24" fill="currentColor">
                         <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
                     </svg>
@@ -107,6 +106,22 @@
       <code class="signature">BarcodeType ITF14</code>
       <p class="member-summary">ITF-14.</p>
     </div>
+    <div class="member" id="field-itf-barcodetype-itf">
+      <code class="signature">BarcodeType ITF</code>
+      <p class="member-summary">Interleaved 2 of 5 (ITF).</p>
+    </div>
+    <div class="member" id="field-matrix2of5-barcodetype-matrix2of5">
+      <code class="signature">BarcodeType Matrix2of5</code>
+      <p class="member-summary">Matrix (Standard) 2 of 5.</p>
+    </div>
+    <div class="member" id="field-iata2of5-barcodetype-iata2of5">
+      <code class="signature">BarcodeType IATA2of5</code>
+      <p class="member-summary">IATA 2 of 5.</p>
+    </div>
+    <div class="member" id="field-patchcode-barcodetype-patchcode">
+      <code class="signature">BarcodeType PatchCode</code>
+      <p class="member-summary">Patch Code.</p>
+    </div>
     <div class="member" id="field-codabar-barcodetype-codabar">
       <code class="signature">BarcodeType Codabar</code>
       <p class="member-summary">Codabar.</p>
@@ -123,6 +138,66 @@
       <code class="signature">BarcodeType Plessey</code>
       <p class="member-summary">Plessey.</p>
     </div>
+    <div class="member" id="field-telepen-barcodetype-telepen">
+      <code class="signature">BarcodeType Telepen</code>
+      <p class="member-summary">Telepen.</p>
+    </div>
+    <div class="member" id="field-pharmacode-barcodetype-pharmacode">
+      <code class="signature">BarcodeType Pharmacode</code>
+      <p class="member-summary">Pharmacode (one-track).</p>
+    </div>
+    <div class="member" id="field-pharmacodetwotrack-barcodetype-pharmacodetwotrack">
+      <code class="signature">BarcodeType PharmacodeTwoTrack</code>
+      <p class="member-summary">Pharmacode (two-track).</p>
+    </div>
+    <div class="member" id="field-code32-barcodetype-code32">
+      <code class="signature">BarcodeType Code32</code>
+      <p class="member-summary">Code 32 (Italian Pharmacode).</p>
+    </div>
+    <div class="member" id="field-postnet-barcodetype-postnet">
+      <code class="signature">BarcodeType Postnet</code>
+      <p class="member-summary">POSTNET.</p>
+    </div>
+    <div class="member" id="field-planet-barcodetype-planet">
+      <code class="signature">BarcodeType Planet</code>
+      <p class="member-summary">PLANET.</p>
+    </div>
+    <div class="member" id="field-royalmail4state-barcodetype-royalmail4state">
+      <code class="signature">BarcodeType RoyalMail4State</code>
+      <p class="member-summary">Royal Mail 4-State Customer Code (RM4SCC).</p>
+    </div>
+    <div class="member" id="field-australiapost-barcodetype-australiapost">
+      <code class="signature">BarcodeType AustraliaPost</code>
+      <p class="member-summary">Australia Post customer barcode.</p>
+    </div>
+    <div class="member" id="field-japanpost-barcodetype-japanpost">
+      <code class="signature">BarcodeType JapanPost</code>
+      <p class="member-summary">Japan Post barcode.</p>
+    </div>
+    <div class="member" id="field-gs1databartruncated-barcodetype-gs1databartruncated">
+      <code class="signature">BarcodeType GS1DataBarTruncated</code>
+      <p class="member-summary">GS1 DataBar-14 Truncated.</p>
+    </div>
+    <div class="member" id="field-gs1databaromni-barcodetype-gs1databaromni">
+      <code class="signature">BarcodeType GS1DataBarOmni</code>
+      <p class="member-summary">GS1 DataBar-14 Omnidirectional.</p>
+    </div>
+    <div class="member" id="field-gs1databarstacked-barcodetype-gs1databarstacked">
+      <code class="signature">BarcodeType GS1DataBarStacked</code>
+      <p class="member-summary">GS1 DataBar-14 Stacked.</p>
+    </div>
+    <div class="member" id="field-gs1databarexpanded-barcodetype-gs1databarexpanded">
+      <code class="signature">BarcodeType GS1DataBarExpanded</code>
+      <p class="member-summary">GS1 DataBar Expanded.</p>
+    </div>
+    <div class="member" id="field-gs1databarexpandedstacked-barcodetype-gs1databarexpandedstacked">
+      <code class="signature">BarcodeType GS1DataBarExpandedStacked</code>
+      <p class="member-summary">GS1 DataBar Expanded Stacked.</p>
+    </div>
+    <div class="member" id="field-uspsimb-barcodetype-uspsimb">
+      <code class="signature">BarcodeType UspsImb</code>
+      <p class="member-summary">USPS Intelligent Mail Barcode (IMB).</p>
+    </div>
     <div class="member" id="field-kixcode-barcodetype-kixcode">
       <code class="signature">BarcodeType KixCode</code>
       <p class="member-summary">KIX Code (not supported).</p>
@@ -134,6 +209,10 @@
     <div class="member" id="field-pdf417-barcodetype-pdf417">
       <code class="signature">BarcodeType PDF417</code>
       <p class="member-summary">PDF417 (not supported in 1D encoder).</p>
+    </div>
+    <div class="member" id="field-micropdf417-barcodetype-micropdf417">
+      <code class="signature">BarcodeType MicroPDF417</code>
+      <p class="member-summary">MicroPDF417 (not supported in 1D encoder).</p>
     </div>
   </section>
 </main>
@@ -148,19 +227,19 @@
         </div>
         <div class="footer-links">
             <div class="footer-section">
-                <h4>Product</h4>
+                <h3>Product</h3>
                 <a href="/">Home</a>
-                <a href="/playground">Playground</a>
-                <a href="/docs">Documentation</a>
+                <a href="/playground/">Playground</a>
+                <a href="/docs/">Documentation</a>
             </div>
             <div class="footer-section">
-                <h4>Resources</h4>
+                <h3>Resources</h3>
                 <a href="https://www.nuget.org/packages/CodeGlyphX" target="_blank" rel="noopener">NuGet Package</a>
                 <a href="https://github.com/EvotecIT/CodeGlyphX" target="_blank" rel="noopener">GitHub Repository</a>
                 <a href="https://github.com/EvotecIT/CodeGlyphX/issues" target="_blank" rel="noopener">Report Issue</a>
             </div>
             <div class="footer-section">
-                <h4>Company</h4>
+                <h3>Company</h3>
                 <a href="https://evotec.xyz" target="_blank" rel="noopener">Evotec Services</a>
                 <a href="https://evotec.xyz/hub" target="_blank" rel="noopener">Blog</a>
             </div>
@@ -168,10 +247,10 @@
         <div class="footer-bottom">
             <div class="footer-badges">
                 <a href="https://github.com/EvotecIT/CodeGlyphX" target="_blank" rel="noopener">
-                    <img src="https://img.shields.io/github/stars/EvotecIT/CodeGlyphX?style=social" alt="GitHub stars" height="20" loading="lazy" />
+                    <img src="https://img.shields.io/github/stars/EvotecIT/CodeGlyphX?style=social" alt="GitHub stars" width="100" height="20" loading="lazy" />
                 </a>
                 <a href="https://www.nuget.org/packages/CodeGlyphX" target="_blank" rel="noopener">
-                    <img src="https://img.shields.io/nuget/dt/CodeGlyphX" alt="NuGet downloads" height="20" loading="lazy" />
+                    <img src="https://img.shields.io/nuget/dt/CodeGlyphX" alt="NuGet downloads" width="100" height="20" loading="lazy" />
                 </a>
             </div>
             <p>Apache 2.0 License &bull; &copy; 2026 Evotec Services sp. z o.o.</p>

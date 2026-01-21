@@ -5,8 +5,9 @@ This plan focuses on real Lighthouse/PageSpeed findings and the current hosting 
 larger structural changes.
 
 ## Current Reality
-- The site is a Blazor WASM SPA, so the runtime loads on every route.
-- API docs are static JSON/HTML in `wwwroot/api/` and are now committed to git.
+- Home is static HTML, while Docs and Playground are Blazor WASM builds at `/docs/` and `/playground/`.
+- API docs are static JSON/HTML in `wwwroot/api/` and are served under `/docs/api/`.
+- The publish script strips `.br`/`.gz` and rewrites `blazor.boot.json` integrity hashes.
 - GitHub Pages controls cache headers; long TTL requires Cloudflare rules.
 
 ## Priority 0: Fix What PageSpeed Flags (No Architecture Change)
@@ -66,21 +67,17 @@ larger structural changes.
 ## Priority 2: Structural Split (Big Win)
 
 ### 2.1 Split SPA into static + WASM
-**Goal**: No WASM on Home/Docs/API; WASM only on `/playground/`.
-**Approach**:
-- Keep existing Blazor WASM project but change base href to `/playground/`.
-- Generate static pages for:
-  - `/` (Home)
-  - `/docs`
-  - `/docs/api` (use `wwwroot/api/` JSON/HTML)
-- Update Pages workflow to publish:
-  - `site/` (static shell)
-  - `site/playground/` (WASM app)
+**Goal**: Static Home, WASM only where needed.
+**Approach (current)**:
+- Home is static at `/`.
+- Docs are WASM at `/docs/` (dynamic routing + sidebar state).
+- Playground is WASM at `/playground/`.
+- API reference is static under `/docs/api/`.
 
 ### 2.2 Service worker scope
 **Goal**: SW should not control the whole site.
-**Fix**:
-- Serve service worker only under `/playground/`.
+**Fix (current)**:
+- Service worker is scoped to each WASM base (`/docs/`, `/playground/`).
 
 ## Priority 3: UX and Content Polish
 
@@ -95,18 +92,22 @@ larger structural changes.
 - Avoid low contrast on code snippets.
 
 ## Checklist: What to Change Now
-- [ ] Add width/height for badges and logo.
-- [ ] Increase contrast for code comments + muted text.
-- [ ] Add underline or icon for external links.
-- [ ] Normalize heading levels across pages.
-- [ ] Inline critical CSS, defer `fonts.css`.
-- [ ] Reduce font weights + preload one weight.
+- [x] Add width/height for badges and logo.
+- [x] Increase contrast for code comments + muted text.
+- [x] Add underline or icon for external links.
+- [x] Normalize heading levels across pages.
+- [x] Defer `fonts.css` (preload + onload).
+- [ ] Inline critical CSS for the hero + header.
+- [x] Reduce font weights + preload one weight.
+ - [x] Add `favicon.ico` to avoid browser 404s.
+ - [x] Ensure boot.json integrity is updated after stripping `.br`/`.gz`.
 
 ## Checklist: Structural Split
-- [ ] Create static `site/` output for Home/Docs/API.
-- [ ] Publish WASM under `/playground/`.
-- [ ] Update navigation links (no route changes).
-- [ ] Restrict service worker scope to `/playground/`.
+- [x] Create static `site/` output for Home + API reference.
+- [x] Publish WASM under `/playground/`.
+- [x] Update navigation links (no route changes).
+- [x] Scope service workers to `/docs/` and `/playground/`.
+- [x] Add build-specific routing for `/docs/` and `/playground/`.
 
 ## Notes
 - This plan assumes we keep Blazor for the interactive playground only.

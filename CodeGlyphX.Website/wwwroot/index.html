@@ -8,7 +8,11 @@
     <base href="/" />
 
     <!-- Fonts -->
-    <link rel="stylesheet" href="css/fonts.css" />
+    <link rel="preload" href="css/fonts.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="css/fonts.css" /></noscript>
+    <link rel="preload" href="fonts/inter/Inter-600-latin.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preconnect" href="https://img.shields.io" crossorigin>
+    <link rel="preload" href="codeglyphx-qr-icon.png" as="image" type="image/png">
 
     <link rel="stylesheet" href="css/app.css" />
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
@@ -64,6 +68,27 @@
         <a href="" class="reload">Reload</a>
         <a class="dismiss">🗙</a>
     </div>
+
+    <script>
+        (function() {
+            function enableKeyboardFocus() {
+                document.body.classList.add('using-keyboard');
+            }
+
+            function disableKeyboardFocus() {
+                document.body.classList.remove('using-keyboard');
+            }
+
+            window.addEventListener('keydown', function(e) {
+                if (e.key === 'Tab' || e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+                    enableKeyboardFocus();
+                }
+            });
+
+            window.addEventListener('mousedown', disableKeyboardFocus, true);
+            window.addEventListener('touchstart', disableKeyboardFocus, true);
+        })();
+    </script>
 
     <script src="_framework/blazor.webassembly.js"></script>
     <script>navigator.serviceWorker.register('service-worker.js');</script>

@@ -4,6 +4,115 @@
         <name>CodeGlyphX</name>
     </assembly>
     <members>
+        <member name="T:CodeGlyphX.AustraliaPost.AustraliaPostDecoded">
+            <summary>
+            Decoded Australia Post customer barcode information.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.AustraliaPost.AustraliaPostDecoded.Format">
+            <summary>
+            Gets the decoded barcode format.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.AustraliaPost.AustraliaPostDecoded.FormatControlCode">
+            <summary>
+            Gets the format control code (FCC).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.AustraliaPost.AustraliaPostDecoded.Dpid">
+            <summary>
+            Gets the Delivery Point Identifier (DPID).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.AustraliaPost.AustraliaPostDecoded.CustomerInfo">
+            <summary>
+            Gets the customer information field (may be empty for Standard format).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.AustraliaPost.AustraliaPostDecoded.CustomerInfoEncoding">
+            <summary>
+            Gets the customer information encoding table, if present.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.AustraliaPost.AustraliaPostDecoded.IsCustomerInfoAmbiguous">
+            <summary>
+            Gets whether the customer information encoding was ambiguous.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.AustraliaPost.AustraliaPostDecoded.Value">
+            <summary>
+            Gets the concatenated payload (DPID + customer info).
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.AustraliaPost.AustraliaPostDecoder">
+            <summary>
+            Decodes Australia Post customer barcodes.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.AustraliaPost.AustraliaPostDecoder.TryDecode(CodeGlyphX.BitMatrix,System.String@)">
+            <summary>
+            Attempts to decode an Australia Post customer barcode from a <see cref="T:CodeGlyphX.BitMatrix"/>.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.AustraliaPost.AustraliaPostDecoder.TryDecode(CodeGlyphX.BitMatrix,System.Nullable{CodeGlyphX.AustraliaPost.AustraliaPostCustomerEncodingTable},CodeGlyphX.AustraliaPost.AustraliaPostDecoded@)">
+            <summary>
+            Attempts to decode an Australia Post customer barcode from a <see cref="T:CodeGlyphX.BitMatrix"/>.
+            </summary>
+            <remarks>
+            For Customer Barcode 3 (67 bars), numeric-only customer data can be ambiguous between N and C tables.
+            Provide <paramref name="preferredCustomerTable"/> to disambiguate if needed.
+            </remarks>
+        </member>
+        <member name="T:CodeGlyphX.AustraliaPost.AustraliaPostEncoder">
+            <summary>
+            Encodes Australia Post customer barcodes.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.AustraliaPost.AustraliaPostEncoder.Encode(System.String)">
+            <summary>
+            Encodes an Australia Post customer barcode into a <see cref="T:CodeGlyphX.BitMatrix"/>.
+            </summary>
+            <remarks>
+            Supported payload lengths:
+            8 (Standard), 13 (Customer 2, C table), 16 (Customer 2, N table),
+            18 (Customer 3, C table), 23 (Customer 3, N table).
+            </remarks>
+        </member>
+        <member name="T:CodeGlyphX.AustraliaPost.AustraliaPostFormat">
+            <summary>
+            Australia Post customer barcode formats.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.AustraliaPost.AustraliaPostFormat.Standard">
+            <summary>
+            Standard Customer Barcode (37 bars).
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.AustraliaPost.AustraliaPostFormat.Customer2">
+            <summary>
+            Customer Barcode 2 (52 bars).
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.AustraliaPost.AustraliaPostFormat.Customer3">
+            <summary>
+            Customer Barcode 3 (67 bars).
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.AustraliaPost.AustraliaPostCustomerEncodingTable">
+            <summary>
+            Customer information encoding tables for Australia Post customer barcodes.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.AustraliaPost.AustraliaPostCustomerEncodingTable.N">
+            <summary>
+            N Encoding Table (numeric digits).
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.AustraliaPost.AustraliaPostCustomerEncodingTable.C">
+            <summary>
+            C Encoding Table (alphanumeric + space/#).
+            </summary>
+        </member>
         <member name="T:CodeGlyphX.Aztec.AztecEncodeOptions">
             <summary>
             Options for future Aztec encoding support.
@@ -301,6 +410,26 @@
             Attempts to decode an Aztec symbol from PNG bytes with image decode options, with cancellation.
             </summary>
         </member>
+        <member name="M:CodeGlyphX.AztecCode.TryDecodePng(System.ReadOnlySpan{System.Byte},System.String@)">
+            <summary>
+            Attempts to decode an Aztec symbol from PNG bytes in a span.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.AztecCode.TryDecodePng(System.ReadOnlySpan{System.Byte},System.Threading.CancellationToken,System.String@)">
+            <summary>
+            Attempts to decode an Aztec symbol from PNG bytes in a span, with cancellation.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.AztecCode.TryDecodePng(System.ReadOnlySpan{System.Byte},CodeGlyphX.ImageDecodeOptions,System.String@)">
+            <summary>
+            Attempts to decode an Aztec symbol from PNG bytes in a span with image decode options.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.AztecCode.TryDecodePng(System.ReadOnlySpan{System.Byte},CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken,System.String@)">
+            <summary>
+            Attempts to decode an Aztec symbol from PNG bytes in a span with image decode options, with cancellation.
+            </summary>
+        </member>
         <member name="M:CodeGlyphX.AztecCode.TryDecodePng(System.Byte[],System.String@,CodeGlyphX.AztecDecodeDiagnostics@)">
             <summary>
             Attempts to decode an Aztec symbol from PNG bytes, with diagnostics.
@@ -314,6 +443,21 @@
         <member name="M:CodeGlyphX.AztecCode.TryDecodePng(System.Byte[],CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken,System.String@,CodeGlyphX.AztecDecodeDiagnostics@)">
             <summary>
             Attempts to decode an Aztec symbol from PNG bytes with image decode options, cancellation, and diagnostics.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.AztecCode.TryDecodePng(System.ReadOnlySpan{System.Byte},System.String@,CodeGlyphX.AztecDecodeDiagnostics@)">
+            <summary>
+            Attempts to decode an Aztec symbol from PNG bytes in a span, with diagnostics.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.AztecCode.TryDecodePng(System.ReadOnlySpan{System.Byte},CodeGlyphX.ImageDecodeOptions,System.String@,CodeGlyphX.AztecDecodeDiagnostics@)">
+            <summary>
+            Attempts to decode an Aztec symbol from PNG bytes in a span with image decode options, with diagnostics.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.AztecCode.TryDecodePng(System.ReadOnlySpan{System.Byte},CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken,System.String@,CodeGlyphX.AztecDecodeDiagnostics@)">
+            <summary>
+            Attempts to decode an Aztec symbol from PNG bytes in a span with image decode options, cancellation, and diagnostics.
             </summary>
         </member>
         <member name="M:CodeGlyphX.AztecCode.TryDecodePngFile(System.String,System.String@)">
@@ -391,6 +535,26 @@
             Attempts to decode an Aztec symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options, with cancellation.
             </summary>
         </member>
+        <member name="M:CodeGlyphX.AztecCode.DecodeImageResult(System.Byte[],CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken)">
+            <summary>
+            Decodes an Aztec symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) and returns diagnostics.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.AztecCode.DecodeImageResult(System.ReadOnlySpan{System.Byte},CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken)">
+            <summary>
+            Decodes an Aztec symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) in a span and returns diagnostics.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.AztecCode.DecodeImageResult(System.IO.Stream,CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken)">
+            <summary>
+            Decodes an Aztec symbol from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) and returns diagnostics.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.AztecCode.DecodeImageBatch(System.Collections.Generic.IEnumerable{System.Byte[]},CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken)">
+            <summary>
+            Decodes a batch of Aztec images with shared settings and aggregated diagnostics.
+            </summary>
+        </member>
         <member name="M:CodeGlyphX.AztecCode.TryDecodeImage(System.Byte[],System.String@,CodeGlyphX.AztecDecodeDiagnostics@)">
             <summary>
             Attempts to decode an Aztec symbol from common image formats, with diagnostics.
@@ -404,6 +568,71 @@
         <member name="M:CodeGlyphX.AztecCode.TryDecodeImage(System.Byte[],CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken,System.String@,CodeGlyphX.AztecDecodeDiagnostics@)">
             <summary>
             Attempts to decode an Aztec symbol from common image formats with image decode options, cancellation, and diagnostics.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.AztecCode.TryDecodeImage(System.ReadOnlySpan{System.Byte},System.String@)">
+            <summary>
+            Attempts to decode an Aztec symbol from common image formats in a span.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.AztecCode.TryDecodeImage(System.ReadOnlySpan{System.Byte},System.Threading.CancellationToken,System.String@)">
+            <summary>
+            Attempts to decode an Aztec symbol from common image formats in a span, with cancellation.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.AztecCode.TryDecodeImage(System.ReadOnlySpan{System.Byte},CodeGlyphX.ImageDecodeOptions,System.String@)">
+            <summary>
+            Attempts to decode an Aztec symbol from common image formats in a span with image decode options.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.AztecCode.TryDecodeImage(System.ReadOnlySpan{System.Byte},CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken,System.String@)">
+            <summary>
+            Attempts to decode an Aztec symbol from common image formats in a span with image decode options, with cancellation.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.AztecCode.TryDecodeImage(System.ReadOnlySpan{System.Byte},System.String@,CodeGlyphX.AztecDecodeDiagnostics@)">
+            <summary>
+            Attempts to decode an Aztec symbol from common image formats in a span, with diagnostics.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.AztecCode.TryDecodeImage(System.ReadOnlySpan{System.Byte},CodeGlyphX.ImageDecodeOptions,System.String@,CodeGlyphX.AztecDecodeDiagnostics@)">
+            <summary>
+            Attempts to decode an Aztec symbol from common image formats in a span with image decode options, with diagnostics.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.AztecCode.TryDecodeImage(System.ReadOnlySpan{System.Byte},CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken,System.String@,CodeGlyphX.AztecDecodeDiagnostics@)">
+            <summary>
+            Attempts to decode an Aztec symbol from common image formats in a span with image decode options, cancellation, and diagnostics.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.AztecCode.TryDecodeAllImage(System.Byte[],System.String[]@)">
+            <summary>
+            Attempts to decode all Aztec symbols from common image formats.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.AztecCode.TryDecodeAllImage(System.Byte[],CodeGlyphX.ImageDecodeOptions,System.String[]@)">
+            <summary>
+            Attempts to decode all Aztec symbols from common image formats with image decode options.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.AztecCode.TryDecodeAllImage(System.Byte[],CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken,System.String[]@)">
+            <summary>
+            Attempts to decode all Aztec symbols from common image formats with image decode options, with cancellation.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.AztecCode.TryDecodeAllImage(System.IO.Stream,System.String[]@)">
+            <summary>
+            Attempts to decode all Aztec symbols from an image stream.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.AztecCode.TryDecodeAllImage(System.IO.Stream,CodeGlyphX.ImageDecodeOptions,System.String[]@)">
+            <summary>
+            Attempts to decode all Aztec symbols from an image stream with image decode options.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.AztecCode.TryDecodeAllImage(System.IO.Stream,CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken,System.String[]@)">
+            <summary>
+            Attempts to decode all Aztec symbols from an image stream with image decode options, with cancellation.
             </summary>
         </member>
         <member name="M:CodeGlyphX.AztecCode.TryDecodeImage(System.IO.Stream,System.String@)">
@@ -1318,6 +1547,11 @@
             Attempts to decode a barcode from PNG bytes with an optional expected type hint and image decode options.
             </summary>
         </member>
+        <member name="M:CodeGlyphX.Barcode.TryDecodePng(System.Byte[],System.Nullable{CodeGlyphX.BarcodeType},CodeGlyphX.ImageDecodeOptions,CodeGlyphX.BarcodeDecodeOptions,CodeGlyphX.BarcodeDecoded@)">
+            <summary>
+            Attempts to decode a barcode from PNG bytes with an optional expected type hint, image decode options, and barcode decode options.
+            </summary>
+        </member>
         <member name="M:CodeGlyphX.Barcode.TryDecodePng(System.Byte[],System.Nullable{CodeGlyphX.BarcodeType},System.Threading.CancellationToken,CodeGlyphX.BarcodeDecoded@)">
             <summary>
             Attempts to decode a barcode from PNG bytes with an optional expected type hint, with cancellation.
@@ -1326,6 +1560,11 @@
         <member name="M:CodeGlyphX.Barcode.TryDecodePng(System.Byte[],System.Nullable{CodeGlyphX.BarcodeType},CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken,CodeGlyphX.BarcodeDecoded@)">
             <summary>
             Attempts to decode a barcode from PNG bytes with an optional expected type hint and image decode options, with cancellation.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Barcode.TryDecodePng(System.Byte[],System.Nullable{CodeGlyphX.BarcodeType},CodeGlyphX.ImageDecodeOptions,CodeGlyphX.BarcodeDecodeOptions,System.Threading.CancellationToken,CodeGlyphX.BarcodeDecoded@)">
+            <summary>
+            Attempts to decode a barcode from PNG bytes with an optional expected type hint, image decode options, barcode decode options, and cancellation.
             </summary>
         </member>
         <member name="M:CodeGlyphX.Barcode.TryDecodeImage(System.Byte[],CodeGlyphX.BarcodeDecoded@)">
@@ -1348,6 +1587,11 @@
             Attempts to decode a barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with an optional expected type hint and image decode options.
             </summary>
         </member>
+        <member name="M:CodeGlyphX.Barcode.TryDecodeImage(System.Byte[],System.Nullable{CodeGlyphX.BarcodeType},CodeGlyphX.ImageDecodeOptions,CodeGlyphX.BarcodeDecodeOptions,CodeGlyphX.BarcodeDecoded@)">
+            <summary>
+            Attempts to decode a barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with an optional expected type hint, image decode options, and barcode decode options.
+            </summary>
+        </member>
         <member name="M:CodeGlyphX.Barcode.TryDecodeImage(System.Byte[],System.Nullable{CodeGlyphX.BarcodeType},System.Threading.CancellationToken,CodeGlyphX.BarcodeDecoded@)">
             <summary>
             Attempts to decode a barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with an optional expected type hint, with cancellation.
@@ -1356,6 +1600,56 @@
         <member name="M:CodeGlyphX.Barcode.TryDecodeImage(System.Byte[],System.Nullable{CodeGlyphX.BarcodeType},CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken,CodeGlyphX.BarcodeDecoded@)">
             <summary>
             Attempts to decode a barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with an optional expected type hint and image decode options, with cancellation.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Barcode.TryDecodeImage(System.Byte[],System.Nullable{CodeGlyphX.BarcodeType},CodeGlyphX.ImageDecodeOptions,CodeGlyphX.BarcodeDecodeOptions,System.Threading.CancellationToken,CodeGlyphX.BarcodeDecoded@)">
+            <summary>
+            Attempts to decode a barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with an optional expected type hint, image decode options, barcode decode options, and cancellation.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Barcode.TryDecodeImage(System.ReadOnlySpan{System.Byte},CodeGlyphX.BarcodeDecoded@)">
+            <summary>
+            Attempts to decode a barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Barcode.TryDecodeImage(System.ReadOnlySpan{System.Byte},System.Threading.CancellationToken,CodeGlyphX.BarcodeDecoded@)">
+            <summary>
+            Attempts to decode a barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA), with cancellation.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Barcode.TryDecodeImage(System.ReadOnlySpan{System.Byte},System.Nullable{CodeGlyphX.BarcodeType},CodeGlyphX.BarcodeDecoded@)">
+            <summary>
+            Attempts to decode a barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with an optional expected type hint.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Barcode.TryDecodeImage(System.ReadOnlySpan{System.Byte},System.Nullable{CodeGlyphX.BarcodeType},CodeGlyphX.ImageDecodeOptions,CodeGlyphX.BarcodeDecodeOptions,CodeGlyphX.BarcodeDecoded@)">
+            <summary>
+            Attempts to decode a barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with an optional expected type hint and image decode options.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Barcode.TryDecodeImage(System.ReadOnlySpan{System.Byte},System.Nullable{CodeGlyphX.BarcodeType},CodeGlyphX.ImageDecodeOptions,CodeGlyphX.BarcodeDecodeOptions,System.Threading.CancellationToken,CodeGlyphX.BarcodeDecoded@)">
+            <summary>
+            Attempts to decode a barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with an optional expected type hint, image decode options, barcode decode options, and cancellation.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Barcode.DecodeImageResult(System.Byte[],System.Nullable{CodeGlyphX.BarcodeType},CodeGlyphX.ImageDecodeOptions,CodeGlyphX.BarcodeDecodeOptions,System.Threading.CancellationToken)">
+            <summary>
+            Decodes a barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) and returns diagnostics.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Barcode.DecodeImageResult(System.ReadOnlySpan{System.Byte},System.Nullable{CodeGlyphX.BarcodeType},CodeGlyphX.ImageDecodeOptions,CodeGlyphX.BarcodeDecodeOptions,System.Threading.CancellationToken)">
+            <summary>
+            Decodes a barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) in a span and returns diagnostics.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Barcode.DecodeImageResult(System.IO.Stream,System.Nullable{CodeGlyphX.BarcodeType},CodeGlyphX.ImageDecodeOptions,CodeGlyphX.BarcodeDecodeOptions,System.Threading.CancellationToken)">
+            <summary>
+            Decodes a barcode from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) and returns diagnostics.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Barcode.DecodeImageBatch(System.Collections.Generic.IEnumerable{System.Byte[]},System.Nullable{CodeGlyphX.BarcodeType},CodeGlyphX.ImageDecodeOptions,CodeGlyphX.BarcodeDecodeOptions,System.Threading.CancellationToken)">
+            <summary>
+            Decodes a batch of barcode images with shared settings and aggregated diagnostics.
             </summary>
         </member>
         <member name="M:CodeGlyphX.Barcode.TryDecodeImage(System.IO.Stream,CodeGlyphX.BarcodeDecoded@)">
@@ -1378,6 +1672,11 @@
             Attempts to decode a barcode from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with an optional expected type hint and image decode options.
             </summary>
         </member>
+        <member name="M:CodeGlyphX.Barcode.TryDecodeImage(System.IO.Stream,System.Nullable{CodeGlyphX.BarcodeType},CodeGlyphX.ImageDecodeOptions,CodeGlyphX.BarcodeDecodeOptions,CodeGlyphX.BarcodeDecoded@)">
+            <summary>
+            Attempts to decode a barcode from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with an optional expected type hint, image decode options, and barcode decode options.
+            </summary>
+        </member>
         <member name="M:CodeGlyphX.Barcode.TryDecodeImage(System.IO.Stream,System.Nullable{CodeGlyphX.BarcodeType},System.Threading.CancellationToken,CodeGlyphX.BarcodeDecoded@)">
             <summary>
             Attempts to decode a barcode from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with an optional expected type hint, with cancellation.
@@ -1386,6 +1685,11 @@
         <member name="M:CodeGlyphX.Barcode.TryDecodeImage(System.IO.Stream,System.Nullable{CodeGlyphX.BarcodeType},CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken,CodeGlyphX.BarcodeDecoded@)">
             <summary>
             Attempts to decode a barcode from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with an optional expected type hint and image decode options, with cancellation.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Barcode.TryDecodeImage(System.IO.Stream,System.Nullable{CodeGlyphX.BarcodeType},CodeGlyphX.ImageDecodeOptions,CodeGlyphX.BarcodeDecodeOptions,System.Threading.CancellationToken,CodeGlyphX.BarcodeDecoded@)">
+            <summary>
+            Attempts to decode a barcode from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with an optional expected type hint, image decode options, barcode decode options, and cancellation.
             </summary>
         </member>
         <member name="M:CodeGlyphX.Barcode.TryDecodePngFile(System.String,CodeGlyphX.BarcodeDecoded@)">
@@ -1403,9 +1707,19 @@
             Attempts to decode a barcode from a PNG file with image decode options.
             </summary>
         </member>
+        <member name="M:CodeGlyphX.Barcode.TryDecodePngFile(System.String,CodeGlyphX.ImageDecodeOptions,CodeGlyphX.BarcodeDecodeOptions,CodeGlyphX.BarcodeDecoded@)">
+            <summary>
+            Attempts to decode a barcode from a PNG file with image decode options and barcode decode options.
+            </summary>
+        </member>
         <member name="M:CodeGlyphX.Barcode.TryDecodePngFile(System.String,CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken,CodeGlyphX.BarcodeDecoded@)">
             <summary>
             Attempts to decode a barcode from a PNG file with image decode options, with cancellation.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Barcode.TryDecodePngFile(System.String,CodeGlyphX.ImageDecodeOptions,CodeGlyphX.BarcodeDecodeOptions,System.Threading.CancellationToken,CodeGlyphX.BarcodeDecoded@)">
+            <summary>
+            Attempts to decode a barcode from a PNG file with image decode options, barcode decode options, and cancellation.
             </summary>
         </member>
         <member name="M:CodeGlyphX.Barcode.TryDecodePng(System.IO.Stream,CodeGlyphX.BarcodeDecoded@)">
@@ -1423,9 +1737,19 @@
             Attempts to decode a barcode from a PNG stream with image decode options.
             </summary>
         </member>
+        <member name="M:CodeGlyphX.Barcode.TryDecodePng(System.IO.Stream,CodeGlyphX.ImageDecodeOptions,CodeGlyphX.BarcodeDecodeOptions,CodeGlyphX.BarcodeDecoded@)">
+            <summary>
+            Attempts to decode a barcode from a PNG stream with image decode options and barcode decode options.
+            </summary>
+        </member>
         <member name="M:CodeGlyphX.Barcode.TryDecodePng(System.IO.Stream,CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken,CodeGlyphX.BarcodeDecoded@)">
             <summary>
             Attempts to decode a barcode from a PNG stream with image decode options, with cancellation.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Barcode.TryDecodePng(System.IO.Stream,CodeGlyphX.ImageDecodeOptions,CodeGlyphX.BarcodeDecodeOptions,System.Threading.CancellationToken,CodeGlyphX.BarcodeDecoded@)">
+            <summary>
+            Attempts to decode a barcode from a PNG stream with image decode options, barcode decode options, and cancellation.
             </summary>
         </member>
         <member name="M:CodeGlyphX.Barcode.DecodePng(System.Byte[])">
@@ -1667,7 +1991,7 @@
         </member>
         <member name="P:CodeGlyphX.BarcodeDecoded.Text">
             <summary>
-            Gets the decoded text.
+            Gets the decoded text (for EAN/UPC add-ons this includes a '+' suffix, e.g. "123456789012+12").
             </summary>
         </member>
         <member name="T:CodeGlyphX.BarcodeDecodeDiagnostics">
@@ -2258,6 +2582,26 @@
             Encodes an ITF-14 barcode.
             </summary>
         </member>
+        <member name="M:CodeGlyphX.BarcodeEncoder.EncodeItf(System.String,System.Boolean)">
+            <summary>
+            Encodes an Interleaved 2 of 5 (ITF) barcode.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.BarcodeEncoder.EncodeMatrix2of5(System.String,System.Boolean)">
+            <summary>
+            Encodes a Matrix (Standard) 2 of 5 barcode.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.BarcodeEncoder.EncodeIata2of5(System.String,System.Boolean)">
+            <summary>
+            Encodes an IATA 2 of 5 barcode.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.BarcodeEncoder.EncodePatchCode(System.String)">
+            <summary>
+            Encodes a Patch Code symbol.
+            </summary>
+        </member>
         <member name="M:CodeGlyphX.BarcodeEncoder.EncodeCodabar(System.String,System.Char,System.Char)">
             <summary>
             Encodes a Codabar barcode.
@@ -2276,6 +2620,21 @@
         <member name="M:CodeGlyphX.BarcodeEncoder.EncodePlessey(System.String)">
             <summary>
             Encodes a Plessey barcode.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.BarcodeEncoder.EncodeTelepen(System.String)">
+            <summary>
+            Encodes a Telepen barcode (ASCII mode).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.BarcodeEncoder.EncodePharmacode(System.String)">
+            <summary>
+            Encodes a Pharmacode (one-track) barcode value.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.BarcodeEncoder.EncodeCode32(System.String)">
+            <summary>
+            Encodes a Code 32 (Italian Pharmacode) barcode value.
             </summary>
         </member>
         <member name="T:CodeGlyphX.BarcodeOptions">
@@ -2398,6 +2757,26 @@
             ITF-14.
             </summary>
         </member>
+        <member name="F:CodeGlyphX.BarcodeType.ITF">
+            <summary>
+            Interleaved 2 of 5 (ITF).
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.BarcodeType.Matrix2of5">
+            <summary>
+            Matrix (Standard) 2 of 5.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.BarcodeType.IATA2of5">
+            <summary>
+            IATA 2 of 5.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.BarcodeType.PatchCode">
+            <summary>
+            Patch Code.
+            </summary>
+        </member>
         <member name="F:CodeGlyphX.BarcodeType.Codabar">
             <summary>
             Codabar.
@@ -2418,6 +2797,81 @@
             Plessey.
             </summary>
         </member>
+        <member name="F:CodeGlyphX.BarcodeType.Telepen">
+            <summary>
+            Telepen.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.BarcodeType.Pharmacode">
+            <summary>
+            Pharmacode (one-track).
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.BarcodeType.PharmacodeTwoTrack">
+            <summary>
+            Pharmacode (two-track).
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.BarcodeType.Code32">
+            <summary>
+            Code 32 (Italian Pharmacode).
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.BarcodeType.Postnet">
+            <summary>
+            POSTNET.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.BarcodeType.Planet">
+            <summary>
+            PLANET.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.BarcodeType.RoyalMail4State">
+            <summary>
+            Royal Mail 4-State Customer Code (RM4SCC).
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.BarcodeType.AustraliaPost">
+            <summary>
+            Australia Post customer barcode.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.BarcodeType.JapanPost">
+            <summary>
+            Japan Post barcode.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.BarcodeType.GS1DataBarTruncated">
+            <summary>
+            GS1 DataBar-14 Truncated.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.BarcodeType.GS1DataBarOmni">
+            <summary>
+            GS1 DataBar-14 Omnidirectional.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.BarcodeType.GS1DataBarStacked">
+            <summary>
+            GS1 DataBar-14 Stacked.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.BarcodeType.GS1DataBarExpanded">
+            <summary>
+            GS1 DataBar Expanded.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.BarcodeType.GS1DataBarExpandedStacked">
+            <summary>
+            GS1 DataBar Expanded Stacked.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.BarcodeType.UspsImb">
+            <summary>
+            USPS Intelligent Mail Barcode (IMB).
+            </summary>
+        </member>
         <member name="F:CodeGlyphX.BarcodeType.KixCode">
             <summary>
             KIX Code (not supported).
@@ -2431,6 +2885,11 @@
         <member name="F:CodeGlyphX.BarcodeType.PDF417">
             <summary>
             PDF417 (not supported in 1D encoder).
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.BarcodeType.MicroPDF417">
+            <summary>
+            MicroPDF417 (not supported in 1D encoder).
             </summary>
         </member>
         <member name="T:CodeGlyphX.BarSegment">
@@ -2526,6 +2985,39 @@
         <member name="M:CodeGlyphX.Code11.Code11Encoder.Encode(System.String,System.Boolean)">
             <summary>
             Encodes a Code 11 barcode.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Code25.Iata2of5Encoder">
+            <summary>
+            Encodes IATA 2 of 5 barcodes.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Code25.Iata2of5Encoder.Encode(System.String,System.Boolean)">
+            <summary>
+            Encodes an IATA 2 of 5 barcode. When <paramref name="includeChecksum"/> is true,
+            a Mod-10 check digit is appended.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Code25.Matrix2of5Encoder">
+            <summary>
+            Encodes Matrix (Standard) 2 of 5 barcodes.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Code25.Matrix2of5Encoder.Encode(System.String,System.Boolean)">
+            <summary>
+            Encodes a Matrix 2 of 5 barcode. When <paramref name="includeChecksum"/> is true,
+            a Mod-10 check digit is appended.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Code32.Code32Encoder">
+            <summary>
+            Encodes Code 32 (Italian Pharmacode) barcodes.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Code32.Code32Encoder.Encode(System.String)">
+            <summary>
+            Encodes a Code 32 barcode from 1-8 digits (left-padded to 8, checksum appended) or 9 digits (checksum validated).
+            A leading 'A' is allowed and ignored.
             </summary>
         </member>
         <member name="T:CodeGlyphX.Code39.Code39Encoder">
@@ -2816,6 +3308,21 @@
         <member name="M:CodeGlyphX.CodeGlyph.TryDecodeImage(System.Byte[],CodeGlyphX.CodeGlyphDecoded@,CodeGlyphX.CodeGlyphDecodeDiagnostics@,CodeGlyphX.CodeGlyphDecodeOptions)">
             <summary>
             Attempts to decode a QR or barcode from common image formats using a single options object, with diagnostics.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.CodeGlyph.DecodeImageResult(System.Byte[],CodeGlyphX.CodeGlyphDecodeOptions)">
+            <summary>
+            Decodes a QR or barcode from common image formats using a single options object and returns diagnostics.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.CodeGlyph.DecodeImageResult(System.IO.Stream,CodeGlyphX.CodeGlyphDecodeOptions)">
+            <summary>
+            Decodes a QR or barcode from an image stream using a single options object and returns diagnostics.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.CodeGlyph.DecodeImageBatch(System.Collections.Generic.IEnumerable{System.Byte[]},CodeGlyphX.CodeGlyphDecodeOptions)">
+            <summary>
+            Decodes a batch of QR/barcode images using a single options object and returns aggregated diagnostics.
             </summary>
         </member>
         <member name="M:CodeGlyphX.CodeGlyph.TryDecodeAllPng(System.Byte[],CodeGlyphX.CodeGlyphDecoded[]@,CodeGlyphX.CodeGlyphDecodeOptions)">
@@ -3164,6 +3671,91 @@
         </member>
         <member name="F:CodeGlyphX.CodeGlyphKind.Aztec">
             <summary>Aztec.</summary>
+        </member>
+        <member name="T:CodeGlyphX.DataBar.DataBar14Decoder">
+            <summary>
+            Decodes GS1 DataBar-14 symbols (Truncated / Omni / Stacked).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataBar.DataBar14Decoder.TryDecodeTruncated(CodeGlyphX.Barcode1D,System.String@)">
+            <summary>
+            Attempts to decode a GS1 DataBar-14 Truncated symbol from a <see cref="T:CodeGlyphX.Barcode1D"/>.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataBar.DataBar14Decoder.TryDecodeTruncated(System.Boolean[],System.String@)">
+            <summary>
+            Attempts to decode a GS1 DataBar-14 Truncated symbol from a module array.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataBar.DataBar14Decoder.TryDecodeOmni(CodeGlyphX.BitMatrix,System.String@)">
+            <summary>
+            Attempts to decode a GS1 DataBar-14 Omnidirectional symbol from a <see cref="T:CodeGlyphX.BitMatrix"/>.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataBar.DataBar14Decoder.TryDecodeStacked(CodeGlyphX.BitMatrix,System.String@)">
+            <summary>
+            Attempts to decode a GS1 DataBar-14 Stacked symbol from a <see cref="T:CodeGlyphX.BitMatrix"/>.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.DataBar.DataBar14Encoder">
+            <summary>
+            Encodes GS1 DataBar-14 symbols (Truncated / Omni / Stacked).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataBar.DataBar14Encoder.EncodeTruncated(System.String)">
+            <summary>
+            Encodes a GS1 DataBar-14 Truncated symbol into a <see cref="T:CodeGlyphX.Barcode1D"/>.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataBar.DataBar14Encoder.EncodeOmni(System.String)">
+            <summary>
+            Encodes a GS1 DataBar-14 Omnidirectional symbol into a <see cref="T:CodeGlyphX.BitMatrix"/>.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataBar.DataBar14Encoder.EncodeStacked(System.String)">
+            <summary>
+            Encodes a GS1 DataBar-14 Stacked symbol into a <see cref="T:CodeGlyphX.BitMatrix"/>.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.DataBar.DataBarExpandedDecoder">
+            <summary>
+            Decodes GS1 DataBar Expanded symbols (linear and stacked).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataBar.DataBarExpandedDecoder.TryDecodeExpanded(CodeGlyphX.Barcode1D,System.String@)">
+            <summary>
+            Attempts to decode a GS1 DataBar Expanded symbol from a <see cref="T:CodeGlyphX.Barcode1D"/>.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataBar.DataBarExpandedDecoder.TryDecodeExpanded(System.Boolean[],System.String@)">
+            <summary>
+            Attempts to decode a GS1 DataBar Expanded symbol from module data.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataBar.DataBarExpandedDecoder.TryDecodeExpandedStacked(CodeGlyphX.BitMatrix,System.String@)">
+            <summary>
+            Attempts to decode a GS1 DataBar Expanded Stacked symbol from a <see cref="T:CodeGlyphX.BitMatrix"/>.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.DataBar.DataBarExpandedEncoder">
+            <summary>
+            Encodes GS1 DataBar Expanded symbols (linear and stacked).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataBar.DataBarExpandedEncoder.EncodeExpanded(System.String)">
+            <summary>
+            Encodes a GS1 DataBar Expanded symbol into a <see cref="T:CodeGlyphX.Barcode1D"/>.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataBar.DataBarExpandedEncoder.EncodeExpandedStacked(System.String,System.Int32)">
+            <summary>
+            Encodes a GS1 DataBar Expanded Stacked symbol into a <see cref="T:CodeGlyphX.BitMatrix"/>.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.DataBar.DataBarExpandedTables">
+            <summary>
+            Lookup tables for GS1 DataBar Expanded encoding/decoding.
+            </summary>
         </member>
         <member name="T:CodeGlyphX.DataMatrix.DataMatrixDecoder">
             <summary>
@@ -3752,6 +4344,26 @@
             Attempts to decode a Data Matrix symbol from PNG bytes with image decode options, with cancellation.
             </summary>
         </member>
+        <member name="M:CodeGlyphX.DataMatrixCode.TryDecodePng(System.ReadOnlySpan{System.Byte},System.String@)">
+            <summary>
+            Attempts to decode a Data Matrix symbol from PNG bytes in a span.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataMatrixCode.TryDecodePng(System.ReadOnlySpan{System.Byte},System.Threading.CancellationToken,System.String@)">
+            <summary>
+            Attempts to decode a Data Matrix symbol from PNG bytes in a span, with cancellation.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataMatrixCode.TryDecodePng(System.ReadOnlySpan{System.Byte},CodeGlyphX.ImageDecodeOptions,System.String@)">
+            <summary>
+            Attempts to decode a Data Matrix symbol from PNG bytes in a span with image decode options.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataMatrixCode.TryDecodePng(System.ReadOnlySpan{System.Byte},CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken,System.String@)">
+            <summary>
+            Attempts to decode a Data Matrix symbol from PNG bytes in a span with image decode options, with cancellation.
+            </summary>
+        </member>
         <member name="M:CodeGlyphX.DataMatrixCode.TryDecodePng(System.Byte[],System.String@,CodeGlyphX.DataMatrixDecodeDiagnostics@)">
             <summary>
             Attempts to decode a Data Matrix symbol from PNG bytes, with diagnostics.
@@ -3765,6 +4377,21 @@
         <member name="M:CodeGlyphX.DataMatrixCode.TryDecodePng(System.Byte[],CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken,System.String@,CodeGlyphX.DataMatrixDecodeDiagnostics@)">
             <summary>
             Attempts to decode a Data Matrix symbol from PNG bytes with image decode options, cancellation, and diagnostics.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataMatrixCode.TryDecodePng(System.ReadOnlySpan{System.Byte},System.String@,CodeGlyphX.DataMatrixDecodeDiagnostics@)">
+            <summary>
+            Attempts to decode a Data Matrix symbol from PNG bytes in a span, with diagnostics.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataMatrixCode.TryDecodePng(System.ReadOnlySpan{System.Byte},CodeGlyphX.ImageDecodeOptions,System.String@,CodeGlyphX.DataMatrixDecodeDiagnostics@)">
+            <summary>
+            Attempts to decode a Data Matrix symbol from PNG bytes in a span with image decode options, with diagnostics.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataMatrixCode.TryDecodePng(System.ReadOnlySpan{System.Byte},CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken,System.String@,CodeGlyphX.DataMatrixDecodeDiagnostics@)">
+            <summary>
+            Attempts to decode a Data Matrix symbol from PNG bytes in a span with image decode options, cancellation, and diagnostics.
             </summary>
         </member>
         <member name="M:CodeGlyphX.DataMatrixCode.TryDecodePngFile(System.String,System.String@)">
@@ -3852,6 +4479,26 @@
             Attempts to decode a Data Matrix symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options, with cancellation.
             </summary>
         </member>
+        <member name="M:CodeGlyphX.DataMatrixCode.DecodeImageResult(System.Byte[],CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken)">
+            <summary>
+            Decodes a Data Matrix symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) and returns diagnostics.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataMatrixCode.DecodeImageResult(System.ReadOnlySpan{System.Byte},CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken)">
+            <summary>
+            Decodes a Data Matrix symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) in a span and returns diagnostics.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataMatrixCode.DecodeImageResult(System.IO.Stream,CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken)">
+            <summary>
+            Decodes a Data Matrix symbol from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) and returns diagnostics.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataMatrixCode.DecodeImageBatch(System.Collections.Generic.IEnumerable{System.Byte[]},CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken)">
+            <summary>
+            Decodes a batch of Data Matrix images with shared settings and aggregated diagnostics.
+            </summary>
+        </member>
         <member name="M:CodeGlyphX.DataMatrixCode.TryDecodeImage(System.Byte[],System.String@,CodeGlyphX.DataMatrixDecodeDiagnostics@)">
             <summary>
             Attempts to decode a Data Matrix symbol from common image formats, with diagnostics.
@@ -3865,6 +4512,71 @@
         <member name="M:CodeGlyphX.DataMatrixCode.TryDecodeImage(System.Byte[],CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken,System.String@,CodeGlyphX.DataMatrixDecodeDiagnostics@)">
             <summary>
             Attempts to decode a Data Matrix symbol from common image formats with image decode options, cancellation, and diagnostics.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataMatrixCode.TryDecodeImage(System.ReadOnlySpan{System.Byte},System.String@,CodeGlyphX.DataMatrixDecodeDiagnostics@)">
+            <summary>
+            Attempts to decode a Data Matrix symbol from common image formats in a span, with diagnostics.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataMatrixCode.TryDecodeImage(System.ReadOnlySpan{System.Byte},CodeGlyphX.ImageDecodeOptions,System.String@,CodeGlyphX.DataMatrixDecodeDiagnostics@)">
+            <summary>
+            Attempts to decode a Data Matrix symbol from common image formats in a span with image decode options, with diagnostics.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataMatrixCode.TryDecodeImage(System.ReadOnlySpan{System.Byte},CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken,System.String@,CodeGlyphX.DataMatrixDecodeDiagnostics@)">
+            <summary>
+            Attempts to decode a Data Matrix symbol from common image formats in a span with image decode options, cancellation, and diagnostics.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataMatrixCode.TryDecodeImage(System.ReadOnlySpan{System.Byte},System.String@)">
+            <summary>
+            Attempts to decode a Data Matrix symbol from common image formats in a span.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataMatrixCode.TryDecodeImage(System.ReadOnlySpan{System.Byte},System.Threading.CancellationToken,System.String@)">
+            <summary>
+            Attempts to decode a Data Matrix symbol from common image formats in a span, with cancellation.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataMatrixCode.TryDecodeImage(System.ReadOnlySpan{System.Byte},CodeGlyphX.ImageDecodeOptions,System.String@)">
+            <summary>
+            Attempts to decode a Data Matrix symbol from common image formats in a span with image decode options.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataMatrixCode.TryDecodeImage(System.ReadOnlySpan{System.Byte},CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken,System.String@)">
+            <summary>
+            Attempts to decode a Data Matrix symbol from common image formats in a span with image decode options, with cancellation.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataMatrixCode.TryDecodeAllImage(System.Byte[],System.String[]@)">
+            <summary>
+            Attempts to decode all Data Matrix symbols from common image formats.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataMatrixCode.TryDecodeAllImage(System.Byte[],CodeGlyphX.ImageDecodeOptions,System.String[]@)">
+            <summary>
+            Attempts to decode all Data Matrix symbols from common image formats with image decode options.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataMatrixCode.TryDecodeAllImage(System.Byte[],CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken,System.String[]@)">
+            <summary>
+            Attempts to decode all Data Matrix symbols from common image formats with image decode options, with cancellation.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataMatrixCode.TryDecodeAllImage(System.IO.Stream,System.String[]@)">
+            <summary>
+            Attempts to decode all Data Matrix symbols from an image stream.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataMatrixCode.TryDecodeAllImage(System.IO.Stream,CodeGlyphX.ImageDecodeOptions,System.String[]@)">
+            <summary>
+            Attempts to decode all Data Matrix symbols from an image stream with image decode options.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataMatrixCode.TryDecodeAllImage(System.IO.Stream,CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken,System.String[]@)">
+            <summary>
+            Attempts to decode all Data Matrix symbols from an image stream with image decode options, with cancellation.
             </summary>
         </member>
         <member name="M:CodeGlyphX.DataMatrixCode.TryDecodeImage(System.IO.Stream,System.String@)">
@@ -4500,6 +5212,176 @@
             Optional failure message when decoding fails.
             </summary>
         </member>
+        <member name="T:CodeGlyphX.DecodeBatchDiagnostics">
+            <summary>
+            Aggregated diagnostics for a batch decode run.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.DecodeBatchDiagnostics.Total">
+            <summary>
+            Gets total number of inputs processed.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.DecodeBatchDiagnostics.Success">
+            <summary>
+            Gets the number of successful decodes.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.DecodeBatchDiagnostics.InvalidInput">
+            <summary>
+            Gets the number of invalid input failures.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.DecodeBatchDiagnostics.UnsupportedFormat">
+            <summary>
+            Gets the number of unsupported format failures.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.DecodeBatchDiagnostics.Cancelled">
+            <summary>
+            Gets the number of cancelled decodes.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.DecodeBatchDiagnostics.NoResult">
+            <summary>
+            Gets the number of no-result decodes.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.DecodeBatchDiagnostics.Error">
+            <summary>
+            Gets the number of unexpected errors.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.DecodeBatchDiagnostics.TotalElapsed">
+            <summary>
+            Gets the total elapsed time across all items.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.DecodeBatchDiagnostics.FailureCount">
+            <summary>
+            Gets the number of failed decodes.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.DecodeBatchDiagnostics.AverageElapsed">
+            <summary>
+            Gets the average elapsed time per item.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.DecodeBatchResult`1">
+            <summary>
+            Result set for a batch decode operation.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.DecodeBatchResult`1.Results">
+            <summary>
+            Gets the per-item decode results.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.DecodeBatchResult`1.Diagnostics">
+            <summary>
+            Gets aggregated diagnostics for the batch.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.DecodeBatchResult`1.Count">
+            <summary>
+            Gets the number of results returned.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.DecodeFailureReason">
+            <summary>
+            Describes why decoding failed.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.DecodeFailureReason.None">
+            <summary>
+            No failure (success).
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.DecodeFailureReason.InvalidInput">
+            <summary>
+            Input was invalid.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.DecodeFailureReason.UnsupportedFormat">
+            <summary>
+            Image format or data was not supported.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.DecodeFailureReason.Cancelled">
+            <summary>
+            Operation was cancelled.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.DecodeFailureReason.NoResult">
+            <summary>
+            Decoding completed but no symbols were found.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.DecodeFailureReason.Error">
+            <summary>
+            An unexpected error occurred.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.DecodeResult`1">
+            <summary>
+            Represents the outcome of a decode attempt.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.DecodeResult`1.Value">
+            <summary>
+            Gets the decoded value when successful.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.DecodeResult`1.Failure">
+            <summary>
+            Gets the failure reason.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.DecodeResult`1.Image">
+            <summary>
+            Gets image metadata when available.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.DecodeResult`1.Elapsed">
+            <summary>
+            Gets the elapsed decoding time.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.DecodeResult`1.Message">
+            <summary>
+            Gets a human-friendly message describing the outcome.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.DecodeResult`1.IsSuccess">
+            <summary>
+            Gets a value indicating whether decoding succeeded.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.DecodeResult`1.Format">
+            <summary>
+            Gets the image format when available.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.DecodeResult`1.Width">
+            <summary>
+            Gets the image width when available.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.DecodeResult`1.Height">
+            <summary>
+            Gets the image height when available.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DecodeResult`1.#ctor(`0,CodeGlyphX.Rendering.ImageInfo,System.TimeSpan)">
+            <summary>
+            Creates a successful decode result.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DecodeResult`1.#ctor(CodeGlyphX.DecodeFailureReason,CodeGlyphX.Rendering.ImageInfo,System.TimeSpan,System.String)">
+            <summary>
+            Creates a failed decode result.
+            </summary>
+        </member>
         <member name="T:CodeGlyphX.Ean.EanEncoder">
             <summary>
             Encodes EAN-8 and EAN-13 barcodes.
@@ -4507,7 +5389,7 @@
         </member>
         <member name="M:CodeGlyphX.Ean.EanEncoder.Encode(System.String)">
             <summary>
-            Encodes an EAN barcode (EAN-8 or EAN-13, depending on input length).
+            Encodes an EAN barcode (EAN-8 or EAN-13, depending on input length). Use "+NN" or "+NNNNN" to append add-ons.
             </summary>
         </member>
         <member name="T:CodeGlyphX.Gs1">
@@ -4748,6 +5630,47 @@
             Encodes an ITF-14 barcode. Accepts 13 digits (checksum calculated) or 14 digits (checksum verified).
             </summary>
         </member>
+        <member name="T:CodeGlyphX.Itf.ItfEncoder">
+            <summary>
+            Encodes Interleaved 2 of 5 (ITF) barcodes.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Itf.ItfEncoder.Encode(System.String,System.Boolean)">
+            <summary>
+            Encodes an ITF barcode. The input length must be even.
+            If <paramref name="includeChecksum"/> is true, odd-length inputs get a checksum appended and even-length inputs are validated.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.JapanPost.JapanPostDecoder">
+            <summary>
+            Decodes Japan Post barcodes.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.JapanPost.JapanPostDecoder.TryDecode(CodeGlyphX.BitMatrix,System.String@)">
+            <summary>
+            Attempts to decode a Japan Post barcode from a <see cref="T:CodeGlyphX.BitMatrix"/>.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.JapanPost.JapanPostEncoder">
+            <summary>
+            Encodes Japan Post barcodes.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.JapanPost.JapanPostEncoder.Encode(System.String)">
+            <summary>
+            Encodes a Japan Post barcode into a <see cref="T:CodeGlyphX.BitMatrix"/>.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Kix.KixDecoder">
+            <summary>
+            Decodes KIX (Royal Mail 4-state, without headers) barcodes.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Kix.KixDecoder.TryDecode(CodeGlyphX.BitMatrix,System.String@)">
+            <summary>
+            Attempts to decode a KIX barcode from a <see cref="T:CodeGlyphX.BitMatrix"/>.
+            </summary>
+        </member>
         <member name="T:CodeGlyphX.Kix.KixEncoder">
             <summary>
             Encodes KIX (Royal Mail 4-state, without headers) barcodes.
@@ -4773,6 +5696,56 @@
             Encodes a KIX code into a <see cref="T:CodeGlyphX.BitMatrix"/>.
             </summary>
         </member>
+        <member name="M:CodeGlyphX.MatrixBarcodeEncoder.EncodePharmacodeTwoTrack(System.String)">
+            <summary>
+            Encodes a Pharmacode (two-track) barcode into a <see cref="T:CodeGlyphX.BitMatrix"/>.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.MatrixBarcodeEncoder.EncodePostnet(System.String)">
+            <summary>
+            Encodes a POSTNET symbol into a <see cref="T:CodeGlyphX.BitMatrix"/>.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.MatrixBarcodeEncoder.EncodePlanet(System.String)">
+            <summary>
+            Encodes a PLANET symbol into a <see cref="T:CodeGlyphX.BitMatrix"/>.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.MatrixBarcodeEncoder.EncodeRoyalMail4State(System.String)">
+            <summary>
+            Encodes a Royal Mail 4-State Customer Code (RM4SCC) symbol into a <see cref="T:CodeGlyphX.BitMatrix"/>.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.MatrixBarcodeEncoder.EncodeAustraliaPost(System.String)">
+            <summary>
+            Encodes an Australia Post customer barcode into a <see cref="T:CodeGlyphX.BitMatrix"/>.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.MatrixBarcodeEncoder.EncodeJapanPost(System.String)">
+            <summary>
+            Encodes a Japan Post barcode into a <see cref="T:CodeGlyphX.BitMatrix"/>.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.MatrixBarcodeEncoder.EncodeUspsImb(System.String)">
+            <summary>
+            Encodes a USPS Intelligent Mail Barcode (IMB) into a <see cref="T:CodeGlyphX.BitMatrix"/>.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.MatrixBarcodeEncoder.EncodeGs1DataBarOmni(System.String)">
+            <summary>
+            Encodes a GS1 DataBar-14 Omnidirectional symbol into a <see cref="T:CodeGlyphX.BitMatrix"/>.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.MatrixBarcodeEncoder.EncodeGs1DataBarStacked(System.String)">
+            <summary>
+            Encodes a GS1 DataBar-14 Stacked symbol into a <see cref="T:CodeGlyphX.BitMatrix"/>.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.MatrixBarcodeEncoder.EncodeGs1DataBarExpandedStacked(System.String)">
+            <summary>
+            Encodes a GS1 DataBar Expanded Stacked symbol into a <see cref="T:CodeGlyphX.BitMatrix"/>.
+            </summary>
+        </member>
         <member name="M:CodeGlyphX.MatrixBarcodeEncoder.EncodeDataMatrix(System.String)">
             <summary>
             Encodes a Data Matrix symbol into a <see cref="T:CodeGlyphX.BitMatrix"/>.
@@ -4781,6 +5754,11 @@
         <member name="M:CodeGlyphX.MatrixBarcodeEncoder.EncodePdf417(System.String)">
             <summary>
             Encodes a PDF417 symbol into a <see cref="T:CodeGlyphX.BitMatrix"/>.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.MatrixBarcodeEncoder.EncodeMicroPdf417(System.String)">
+            <summary>
+            Encodes a MicroPDF417 symbol into a <see cref="T:CodeGlyphX.BitMatrix"/>.
             </summary>
         </member>
         <member name="T:CodeGlyphX.MatrixOptions">
@@ -5794,6 +6772,16 @@
         <member name="P:CodeGlyphX.OtpQrSafetyReport.Issues">
             <summary>
             Gets any warnings or suggestions.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.PatchCode.PatchCodeEncoder">
+            <summary>
+            Encodes Patch Code symbols.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.PatchCode.PatchCodeEncoder.Encode(System.String)">
+            <summary>
+            Encodes a Patch Code symbol. Valid values are: 1, 2, 3, 4, 6, T.
             </summary>
         </member>
         <member name="T:CodeGlyphX.Payloads.QrParsedData">
@@ -7253,6 +8241,61 @@
             Returns the contact block string.
             </summary>
         </member>
+        <member name="T:CodeGlyphX.Pdf417.MicroPdf417Decoder">
+            <summary>
+            Decodes MicroPDF417 symbols from a <see cref="T:CodeGlyphX.BitMatrix"/>.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pdf417.MicroPdf417Decoder.TryDecode(CodeGlyphX.BitMatrix,System.String@)">
+            <summary>
+            Attempts to decode a MicroPDF417 symbol from a <see cref="T:CodeGlyphX.BitMatrix"/>.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Pdf417.MicroPdf417EncodeOptions">
+            <summary>
+            Options for MicroPDF417 encoding.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Pdf417.MicroPdf417EncodeOptions.Columns">
+            <summary>
+            Fixed number of data columns (1..4). Leave null to auto-select.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Pdf417.MicroPdf417EncodeOptions.Rows">
+            <summary>
+            Fixed number of rows (4..44). Leave null to auto-select.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Pdf417.MicroPdf417EncodeOptions.Compaction">
+            <summary>
+            High-level compaction mode.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Pdf417.MicroPdf417EncodeOptions.TextEncoding">
+            <summary>
+            Text encoding used for byte compaction.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Pdf417.MicroPdf417Encoder">
+            <summary>
+            Encodes MicroPDF417 symbols into a <see cref="T:CodeGlyphX.BitMatrix"/>.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pdf417.MicroPdf417Encoder.Encode(System.String,CodeGlyphX.Pdf417.MicroPdf417EncodeOptions)">
+            <summary>
+            Encodes a text payload as MicroPDF417.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pdf417.MicroPdf417Encoder.EncodeBytes(System.Byte[],CodeGlyphX.Pdf417.MicroPdf417EncodeOptions)">
+            <summary>
+            Encodes a byte payload as MicroPDF417.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pdf417.MicroPdf417Encoder.EncodeBytes(System.ReadOnlySpan{System.Byte},CodeGlyphX.Pdf417.MicroPdf417EncodeOptions)">
+            <summary>
+            Encodes a byte payload as MicroPDF417.
+            </summary>
+        </member>
         <member name="T:CodeGlyphX.Pdf417.Pdf417Compaction">
             <summary>
             High-level compaction mode selection for PDF417.
@@ -7270,6 +8313,21 @@
         <member name="F:CodeGlyphX.Pdf417.Pdf417Compaction.Numeric">
             <summary>Use numeric compaction.</summary>
         </member>
+        <member name="T:CodeGlyphX.Pdf417.Pdf417Decoded">
+            <summary>
+            Result of decoding a PDF417 symbol.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Pdf417.Pdf417Decoded.Text">
+            <summary>
+            Gets the decoded payload text.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Pdf417.Pdf417Decoded.Macro">
+            <summary>
+            Gets Macro PDF417 metadata when present.
+            </summary>
+        </member>
         <member name="T:CodeGlyphX.Pdf417.Pdf417Decoder">
             <summary>
             Decodes PDF417 barcodes.
@@ -7280,9 +8338,19 @@
             Attempts to decode a PDF417 symbol from a module matrix.
             </summary>
         </member>
+        <member name="M:CodeGlyphX.Pdf417.Pdf417Decoder.TryDecode(CodeGlyphX.BitMatrix,CodeGlyphX.Pdf417.Pdf417Decoded@)">
+            <summary>
+            Attempts to decode a PDF417 symbol from a module matrix, including Macro metadata when present.
+            </summary>
+        </member>
         <member name="M:CodeGlyphX.Pdf417.Pdf417Decoder.TryDecode(CodeGlyphX.BitMatrix,System.Threading.CancellationToken,System.String@)">
             <summary>
             Attempts to decode a PDF417 symbol from a module matrix, with cancellation.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pdf417.Pdf417Decoder.TryDecode(CodeGlyphX.BitMatrix,System.Threading.CancellationToken,CodeGlyphX.Pdf417.Pdf417Decoded@)">
+            <summary>
+            Attempts to decode a PDF417 symbol from a module matrix, with cancellation and Macro metadata when present.
             </summary>
         </member>
         <member name="M:CodeGlyphX.Pdf417.Pdf417Decoder.TryDecode(CodeGlyphX.BitMatrix,System.String@,CodeGlyphX.Pdf417DecodeDiagnostics@)">
@@ -7377,6 +8445,11 @@
             Encodes a text payload as PDF417.
             </summary>
         </member>
+        <member name="M:CodeGlyphX.Pdf417.Pdf417Encoder.EncodeMacro(System.String,CodeGlyphX.Pdf417.Pdf417MacroOptions,CodeGlyphX.Pdf417.Pdf417EncodeOptions)">
+            <summary>
+            Encodes a Macro PDF417 payload.
+            </summary>
+        </member>
         <member name="M:CodeGlyphX.Pdf417.Pdf417Encoder.EncodeBytes(System.Byte[],CodeGlyphX.Pdf417.Pdf417EncodeOptions)">
             <summary>
             Encodes a byte payload as PDF417 (byte compaction).
@@ -7385,6 +8458,116 @@
         <member name="M:CodeGlyphX.Pdf417.Pdf417Encoder.EncodeBytes(System.ReadOnlySpan{System.Byte},CodeGlyphX.Pdf417.Pdf417EncodeOptions)">
             <summary>
             Encodes a byte payload as PDF417 (byte compaction).
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Pdf417.Pdf417MacroMetadata">
+            <summary>
+            Macro PDF417 metadata payload.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Pdf417.Pdf417MacroMetadata.SegmentIndex">
+            <summary>
+            Gets the segment index.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Pdf417.Pdf417MacroMetadata.FileId">
+            <summary>
+            Gets the file identifier.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Pdf417.Pdf417MacroMetadata.IsLastSegment">
+            <summary>
+            Gets whether this segment is marked as the last segment.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Pdf417.Pdf417MacroMetadata.SegmentCount">
+            <summary>
+            Gets the total number of segments, if present.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Pdf417.Pdf417MacroMetadata.FileName">
+            <summary>
+            Gets the file name, if present.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Pdf417.Pdf417MacroMetadata.Timestamp">
+            <summary>
+            Gets the timestamp, if present.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Pdf417.Pdf417MacroMetadata.Sender">
+            <summary>
+            Gets the sender, if present.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Pdf417.Pdf417MacroMetadata.Addressee">
+            <summary>
+            Gets the addressee, if present.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Pdf417.Pdf417MacroMetadata.FileSize">
+            <summary>
+            Gets the file size, if present.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Pdf417.Pdf417MacroMetadata.Checksum">
+            <summary>
+            Gets the checksum, if present.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Pdf417.Pdf417MacroOptions">
+            <summary>
+            Options for Macro PDF417 encoding.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Pdf417.Pdf417MacroOptions.SegmentIndex">
+            <summary>
+            Segment index (0..809999).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Pdf417.Pdf417MacroOptions.FileId">
+            <summary>
+            File identifier as a numeric string (length must be a multiple of 3).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Pdf417.Pdf417MacroOptions.IsLastSegment">
+            <summary>
+            Indicates whether this segment is the last segment.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Pdf417.Pdf417MacroOptions.SegmentCount">
+            <summary>
+            Optional total segment count.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Pdf417.Pdf417MacroOptions.FileName">
+            <summary>
+            Optional file name.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Pdf417.Pdf417MacroOptions.Timestamp">
+            <summary>
+            Optional timestamp.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Pdf417.Pdf417MacroOptions.Sender">
+            <summary>
+            Optional sender.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Pdf417.Pdf417MacroOptions.Addressee">
+            <summary>
+            Optional addressee.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Pdf417.Pdf417MacroOptions.FileSize">
+            <summary>
+            Optional file size.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Pdf417.Pdf417MacroOptions.Checksum">
+            <summary>
+            Optional checksum.
             </summary>
         </member>
         <member name="T:CodeGlyphX.Pdf417Code">
@@ -7898,6 +9081,26 @@
             Attempts to decode a PDF417 symbol from PNG bytes with image decode options, with cancellation.
             </summary>
         </member>
+        <member name="M:CodeGlyphX.Pdf417Code.TryDecodePng(System.ReadOnlySpan{System.Byte},System.String@)">
+            <summary>
+            Attempts to decode a PDF417 symbol from PNG bytes in a span.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pdf417Code.TryDecodePng(System.ReadOnlySpan{System.Byte},System.Threading.CancellationToken,System.String@)">
+            <summary>
+            Attempts to decode a PDF417 symbol from PNG bytes in a span, with cancellation.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pdf417Code.TryDecodePng(System.ReadOnlySpan{System.Byte},CodeGlyphX.ImageDecodeOptions,System.String@)">
+            <summary>
+            Attempts to decode a PDF417 symbol from PNG bytes in a span with image decode options.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pdf417Code.TryDecodePng(System.ReadOnlySpan{System.Byte},CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken,System.String@)">
+            <summary>
+            Attempts to decode a PDF417 symbol from PNG bytes in a span with image decode options, with cancellation.
+            </summary>
+        </member>
         <member name="M:CodeGlyphX.Pdf417Code.TryDecodePng(System.Byte[],System.String@,CodeGlyphX.Pdf417DecodeDiagnostics@)">
             <summary>
             Attempts to decode a PDF417 symbol from PNG bytes, with diagnostics.
@@ -7911,6 +9114,21 @@
         <member name="M:CodeGlyphX.Pdf417Code.TryDecodePng(System.Byte[],CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken,System.String@,CodeGlyphX.Pdf417DecodeDiagnostics@)">
             <summary>
             Attempts to decode a PDF417 symbol from PNG bytes with image decode options, cancellation, and diagnostics.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pdf417Code.TryDecodePng(System.ReadOnlySpan{System.Byte},System.String@,CodeGlyphX.Pdf417DecodeDiagnostics@)">
+            <summary>
+            Attempts to decode a PDF417 symbol from PNG bytes in a span, with diagnostics.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pdf417Code.TryDecodePng(System.ReadOnlySpan{System.Byte},CodeGlyphX.ImageDecodeOptions,System.String@,CodeGlyphX.Pdf417DecodeDiagnostics@)">
+            <summary>
+            Attempts to decode a PDF417 symbol from PNG bytes in a span with image decode options, with diagnostics.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pdf417Code.TryDecodePng(System.ReadOnlySpan{System.Byte},CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken,System.String@,CodeGlyphX.Pdf417DecodeDiagnostics@)">
+            <summary>
+            Attempts to decode a PDF417 symbol from PNG bytes in a span with image decode options, cancellation, and diagnostics.
             </summary>
         </member>
         <member name="M:CodeGlyphX.Pdf417Code.TryDecodePngFile(System.String,System.String@)">
@@ -7998,6 +9216,26 @@
             Attempts to decode a PDF417 symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options, with cancellation.
             </summary>
         </member>
+        <member name="M:CodeGlyphX.Pdf417Code.DecodeImageResult(System.Byte[],CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken)">
+            <summary>
+            Decodes a PDF417 symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) and returns diagnostics.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pdf417Code.DecodeImageResult(System.ReadOnlySpan{System.Byte},CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken)">
+            <summary>
+            Decodes a PDF417 symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) in a span and returns diagnostics.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pdf417Code.DecodeImageResult(System.IO.Stream,CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken)">
+            <summary>
+            Decodes a PDF417 symbol from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) and returns diagnostics.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pdf417Code.DecodeImageBatch(System.Collections.Generic.IEnumerable{System.Byte[]},CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken)">
+            <summary>
+            Decodes a batch of PDF417 images with shared settings and aggregated diagnostics.
+            </summary>
+        </member>
         <member name="M:CodeGlyphX.Pdf417Code.TryDecodeImage(System.Byte[],System.String@,CodeGlyphX.Pdf417DecodeDiagnostics@)">
             <summary>
             Attempts to decode a PDF417 symbol from common image formats, with diagnostics.
@@ -8011,6 +9249,71 @@
         <member name="M:CodeGlyphX.Pdf417Code.TryDecodeImage(System.Byte[],CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken,System.String@,CodeGlyphX.Pdf417DecodeDiagnostics@)">
             <summary>
             Attempts to decode a PDF417 symbol from common image formats with image decode options, cancellation, and diagnostics.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pdf417Code.TryDecodeImage(System.ReadOnlySpan{System.Byte},System.String@,CodeGlyphX.Pdf417DecodeDiagnostics@)">
+            <summary>
+            Attempts to decode a PDF417 symbol from common image formats in a span, with diagnostics.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pdf417Code.TryDecodeImage(System.ReadOnlySpan{System.Byte},CodeGlyphX.ImageDecodeOptions,System.String@,CodeGlyphX.Pdf417DecodeDiagnostics@)">
+            <summary>
+            Attempts to decode a PDF417 symbol from common image formats in a span with image decode options, with diagnostics.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pdf417Code.TryDecodeImage(System.ReadOnlySpan{System.Byte},CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken,System.String@,CodeGlyphX.Pdf417DecodeDiagnostics@)">
+            <summary>
+            Attempts to decode a PDF417 symbol from common image formats in a span with image decode options, cancellation, and diagnostics.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pdf417Code.TryDecodeImage(System.ReadOnlySpan{System.Byte},System.String@)">
+            <summary>
+            Attempts to decode a PDF417 symbol from common image formats in a span.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pdf417Code.TryDecodeImage(System.ReadOnlySpan{System.Byte},System.Threading.CancellationToken,System.String@)">
+            <summary>
+            Attempts to decode a PDF417 symbol from common image formats in a span, with cancellation.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pdf417Code.TryDecodeImage(System.ReadOnlySpan{System.Byte},CodeGlyphX.ImageDecodeOptions,System.String@)">
+            <summary>
+            Attempts to decode a PDF417 symbol from common image formats in a span with image decode options.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pdf417Code.TryDecodeImage(System.ReadOnlySpan{System.Byte},CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken,System.String@)">
+            <summary>
+            Attempts to decode a PDF417 symbol from common image formats in a span with image decode options, with cancellation.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pdf417Code.TryDecodeAllImage(System.Byte[],System.String[]@)">
+            <summary>
+            Attempts to decode all PDF417 symbols from common image formats.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pdf417Code.TryDecodeAllImage(System.Byte[],CodeGlyphX.ImageDecodeOptions,System.String[]@)">
+            <summary>
+            Attempts to decode all PDF417 symbols from common image formats with image decode options.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pdf417Code.TryDecodeAllImage(System.Byte[],CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken,System.String[]@)">
+            <summary>
+            Attempts to decode all PDF417 symbols from common image formats with image decode options, with cancellation.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pdf417Code.TryDecodeAllImage(System.IO.Stream,System.String[]@)">
+            <summary>
+            Attempts to decode all PDF417 symbols from an image stream.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pdf417Code.TryDecodeAllImage(System.IO.Stream,CodeGlyphX.ImageDecodeOptions,System.String[]@)">
+            <summary>
+            Attempts to decode all PDF417 symbols from an image stream with image decode options.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pdf417Code.TryDecodeAllImage(System.IO.Stream,CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken,System.String[]@)">
+            <summary>
+            Attempts to decode all PDF417 symbols from an image stream with image decode options, with cancellation.
             </summary>
         </member>
         <member name="M:CodeGlyphX.Pdf417Code.TryDecodeImage(System.IO.Stream,System.String@)">
@@ -8661,6 +9964,46 @@
             Optional failure message when decoding fails.
             </summary>
         </member>
+        <member name="T:CodeGlyphX.Pharmacode.PharmacodeEncoder">
+            <summary>
+            Encodes Pharmacode (one-track) barcodes.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pharmacode.PharmacodeEncoder.Encode(System.String)">
+            <summary>
+            Encodes a Pharmacode (one-track) barcode value.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pharmacode.PharmacodeEncoder.Encode(System.Int32)">
+            <summary>
+            Encodes a Pharmacode (one-track) barcode value.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Pharmacode.PharmacodeTwoTrackDecoder">
+            <summary>
+            Decodes Pharmacode (two-track) barcodes.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pharmacode.PharmacodeTwoTrackDecoder.TryDecode(CodeGlyphX.BitMatrix,System.String@)">
+            <summary>
+            Attempts to decode a Pharmacode (two-track) barcode from a <see cref="T:CodeGlyphX.BitMatrix"/>.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Pharmacode.PharmacodeTwoTrackEncoder">
+            <summary>
+            Encodes Pharmacode (two-track) barcodes.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pharmacode.PharmacodeTwoTrackEncoder.Encode(System.String)">
+            <summary>
+            Encodes a Pharmacode (two-track) barcode value into a <see cref="T:CodeGlyphX.BitMatrix"/>.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pharmacode.PharmacodeTwoTrackEncoder.Encode(System.Int32)">
+            <summary>
+            Encodes a Pharmacode (two-track) barcode value into a <see cref="T:CodeGlyphX.BitMatrix"/>.
+            </summary>
+        </member>
         <member name="T:CodeGlyphX.PixelFormat">
             <summary>
             Supported raw pixel formats for QR decoding.
@@ -8685,6 +10028,67 @@
             <summary>
             Encodes a Plessey barcode (hex digits only).
             </summary>
+        </member>
+        <member name="T:CodeGlyphX.Postal.PlanetEncoder">
+            <summary>
+            Encodes PLANET barcodes.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Postal.PlanetEncoder.Encode(System.String)">
+            <summary>
+            Encodes a PLANET barcode into a <see cref="T:CodeGlyphX.BitMatrix"/>.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Postal.PostnetDecoder">
+            <summary>
+            Decodes POSTNET barcodes.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Postal.PostnetDecoder.TryDecode(CodeGlyphX.BitMatrix,System.String@)">
+            <summary>
+            Attempts to decode a POSTNET barcode from a <see cref="T:CodeGlyphX.BitMatrix"/>.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Postal.PlanetDecoder">
+            <summary>
+            Decodes PLANET barcodes.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Postal.PlanetDecoder.TryDecode(CodeGlyphX.BitMatrix,System.String@)">
+            <summary>
+            Attempts to decode a PLANET barcode from a <see cref="T:CodeGlyphX.BitMatrix"/>.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Postal.PostnetEncoder">
+            <summary>
+            Encodes POSTNET barcodes.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Postal.PostnetEncoder.Encode(System.String)">
+            <summary>
+            Encodes a POSTNET barcode into a <see cref="T:CodeGlyphX.BitMatrix"/>.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Postal.UspsImbDecoder">
+            <summary>
+            Decodes USPS Intelligent Mail Barcodes (IMB).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Postal.UspsImbDecoder.TryDecode(CodeGlyphX.BitMatrix,System.String@)">
+            <summary>
+            Attempts to decode a USPS IMB symbol from a <see cref="T:CodeGlyphX.BitMatrix"/>.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Postal.UspsImbEncoder">
+            <summary>
+            Encodes USPS Intelligent Mail Barcodes (IMB).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Postal.UspsImbEncoder.Encode(System.String)">
+            <summary>
+            Encodes a USPS IMB payload into a <see cref="T:CodeGlyphX.BitMatrix"/>.
+            </summary>
+            <param name="content">Tracking code (20 digits) with optional routing code separated by '-'.</param>
         </member>
         <member name="T:CodeGlyphX.QR">
             <summary>
@@ -11583,6 +12987,51 @@
             Attempts to decode a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA), with cancellation.
             </summary>
         </member>
+        <member name="M:CodeGlyphX.QrImageDecoder.TryDecodeImage(System.ReadOnlySpan{System.Byte},CodeGlyphX.QrDecoded@)">
+            <summary>
+            Attempts to decode a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) from a span.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrImageDecoder.TryDecodeImage(System.ReadOnlySpan{System.Byte},CodeGlyphX.QrDecoded@,CodeGlyphX.QrPixelDecodeInfo@,CodeGlyphX.QrPixelDecodeOptions)">
+            <summary>
+            Attempts to decode a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) from a span, with diagnostics and profile options.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrImageDecoder.TryDecodeImage(System.ReadOnlySpan{System.Byte},CodeGlyphX.QrDecoded@,CodeGlyphX.QrPixelDecodeInfo@,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken)">
+            <summary>
+            Attempts to decode a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) from a span, with diagnostics, profile options, and cancellation.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrImageDecoder.TryDecodeImage(System.ReadOnlySpan{System.Byte},CodeGlyphX.ImageDecodeOptions,CodeGlyphX.QrPixelDecodeOptions,CodeGlyphX.QrDecoded@)">
+            <summary>
+            Attempts to decode a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options from a span.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrImageDecoder.TryDecodeImage(System.ReadOnlySpan{System.Byte},CodeGlyphX.ImageDecodeOptions,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken,CodeGlyphX.QrDecoded@)">
+            <summary>
+            Attempts to decode a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options and cancellation from a span.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrImageDecoder.TryDecodeImage(System.ReadOnlySpan{System.Byte},CodeGlyphX.ImageDecodeOptions,CodeGlyphX.QrDecoded@,CodeGlyphX.QrPixelDecodeInfo@,CodeGlyphX.QrPixelDecodeOptions)">
+            <summary>
+            Attempts to decode a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options, diagnostics, and profile options from a span.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrImageDecoder.TryDecodeImage(System.ReadOnlySpan{System.Byte},CodeGlyphX.ImageDecodeOptions,CodeGlyphX.QrDecoded@,CodeGlyphX.QrPixelDecodeInfo@,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken)">
+            <summary>
+            Attempts to decode a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options, diagnostics, profile options, and cancellation from a span.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrImageDecoder.TryDecodeImage(System.ReadOnlySpan{System.Byte},CodeGlyphX.QrPixelDecodeOptions,CodeGlyphX.QrDecoded@)">
+            <summary>
+            Attempts to decode a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) from a span with profile options.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrImageDecoder.TryDecodeImage(System.ReadOnlySpan{System.Byte},CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken,CodeGlyphX.QrDecoded@)">
+            <summary>
+            Attempts to decode a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) from a span, with cancellation.
+            </summary>
+        </member>
         <member name="M:CodeGlyphX.QrImageDecoder.TryDecodeAllImage(System.Byte[],CodeGlyphX.QrDecoded[]@)">
             <summary>
             Attempts to decode all QR codes from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).
@@ -11636,6 +13085,26 @@
         <member name="M:CodeGlyphX.QrImageDecoder.TryDecodeImage(System.IO.Stream,CodeGlyphX.ImageDecodeOptions,CodeGlyphX.QrDecoded@,CodeGlyphX.QrPixelDecodeInfo@,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken)">
             <summary>
             Attempts to decode a QR code from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options, diagnostics, profile options, and cancellation.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrImageDecoder.DecodeImageResult(System.Byte[],CodeGlyphX.ImageDecodeOptions,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken)">
+            <summary>
+            Decodes a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) and returns diagnostics.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrImageDecoder.DecodeImageResult(System.ReadOnlySpan{System.Byte},CodeGlyphX.ImageDecodeOptions,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken)">
+            <summary>
+            Decodes a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) in a span and returns diagnostics.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrImageDecoder.DecodeImageResult(System.IO.Stream,CodeGlyphX.ImageDecodeOptions,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken)">
+            <summary>
+            Decodes a QR code from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) and returns diagnostics.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrImageDecoder.DecodeImageBatch(System.Collections.Generic.IEnumerable{System.Byte[]},CodeGlyphX.ImageDecodeOptions,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken)">
+            <summary>
+            Decodes a batch of QR images with shared settings and aggregated diagnostics.
             </summary>
         </member>
         <member name="M:CodeGlyphX.QrImageDecoder.TryDecodeAllImage(System.IO.Stream,CodeGlyphX.QrDecoded[]@)">
@@ -12169,6 +13638,36 @@
             Line separator used between rows.
             </summary>
         </member>
+        <member name="M:CodeGlyphX.Rendering.Ascii.BarcodeAsciiRenderOptions.WithModuleWidth(System.Int32)">
+            <summary>
+            Sets the module width in characters.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Ascii.BarcodeAsciiRenderOptions.WithQuietZone(System.Int32)">
+            <summary>
+            Sets the quiet zone size in modules.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Ascii.BarcodeAsciiRenderOptions.WithHeight(System.Int32)">
+            <summary>
+            Sets the height in text rows.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Ascii.BarcodeAsciiRenderOptions.WithDark(System.String)">
+            <summary>
+            Sets the character(s) used for bars.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Ascii.BarcodeAsciiRenderOptions.WithLight(System.String)">
+            <summary>
+            Sets the character(s) used for spaces.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Ascii.BarcodeAsciiRenderOptions.WithNewLine(System.String)">
+            <summary>
+            Sets the line separator.
+            </summary>
+        </member>
         <member name="T:CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderer">
             <summary>
             Renders 2D matrices as ASCII text.
@@ -12212,6 +13711,36 @@
         <member name="P:CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions.NewLine">
             <summary>
             Line separator used between rows.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions.WithQuietZone(System.Int32)">
+            <summary>
+            Sets the quiet zone size in modules.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions.WithModuleWidth(System.Int32)">
+            <summary>
+            Sets the module width in characters.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions.WithModuleHeight(System.Int32)">
+            <summary>
+            Sets the module height in rows.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions.WithDark(System.String)">
+            <summary>
+            Sets the character(s) used for dark modules.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions.WithLight(System.String)">
+            <summary>
+            Sets the character(s) used for light modules.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions.WithNewLine(System.String)">
+            <summary>
+            Sets the line separator.
             </summary>
         </member>
         <member name="T:CodeGlyphX.Rendering.Bmp.BarcodeBmpRenderer">
@@ -12504,6 +14033,61 @@
             Label font family.
             </summary>
         </member>
+        <member name="M:CodeGlyphX.Rendering.Html.BarcodeHtmlRenderOptions.WithModuleSize(System.Int32)">
+            <summary>
+            Sets the module size in pixels.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Html.BarcodeHtmlRenderOptions.WithQuietZone(System.Int32)">
+            <summary>
+            Sets the quiet zone size in modules.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Html.BarcodeHtmlRenderOptions.WithHeightModules(System.Int32)">
+            <summary>
+            Sets the barcode height in modules.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Html.BarcodeHtmlRenderOptions.WithBarColor(System.String)">
+            <summary>
+            Sets the bar color (CSS value).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Html.BarcodeHtmlRenderOptions.WithBackgroundColor(System.String)">
+            <summary>
+            Sets the background color (CSS value).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Html.BarcodeHtmlRenderOptions.WithEmailSafeTable(System.Boolean)">
+            <summary>
+            Enables or disables email-safe HTML output.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Html.BarcodeHtmlRenderOptions.WithLabelText(System.String)">
+            <summary>
+            Sets the label text.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Html.BarcodeHtmlRenderOptions.WithLabelFontSize(System.Int32)">
+            <summary>
+            Sets the label font size in pixels.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Html.BarcodeHtmlRenderOptions.WithLabelMargin(System.Int32)">
+            <summary>
+            Sets the label margin in pixels.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Html.BarcodeHtmlRenderOptions.WithLabelColor(System.String)">
+            <summary>
+            Sets the label color (CSS value).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Html.BarcodeHtmlRenderOptions.WithLabelFontFamily(System.String)">
+            <summary>
+            Sets the label font family.
+            </summary>
+        </member>
         <member name="T:CodeGlyphX.Rendering.Html.HtmlBarcodeRenderer">
             <summary>
             Renders 1D barcodes to HTML (table-based).
@@ -12645,6 +14229,31 @@
             When true, renders HTML using email-safe tables.
             </summary>
         </member>
+        <member name="M:CodeGlyphX.Rendering.Html.MatrixHtmlRenderOptions.WithModuleSize(System.Int32)">
+            <summary>
+            Sets the module size in pixels.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Html.MatrixHtmlRenderOptions.WithQuietZone(System.Int32)">
+            <summary>
+            Sets the quiet zone size in modules.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Html.MatrixHtmlRenderOptions.WithDarkColor(System.String)">
+            <summary>
+            Sets the dark color (CSS value).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Html.MatrixHtmlRenderOptions.WithLightColor(System.String)">
+            <summary>
+            Sets the light color (CSS value).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Html.MatrixHtmlRenderOptions.WithEmailSafeTable(System.Boolean)">
+            <summary>
+            Enables or disables email-safe HTML output.
+            </summary>
+        </member>
         <member name="T:CodeGlyphX.Rendering.Html.QrHtmlRenderOptions">
             <summary>
             Options for <see cref="T:CodeGlyphX.Rendering.Html.HtmlQrRenderer"/>.
@@ -12703,6 +14312,61 @@
         <member name="P:CodeGlyphX.Rendering.Html.QrHtmlRenderOptions.Eyes">
             <summary>
             Optional eye (finder) styling overrides.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Html.QrHtmlRenderOptions.WithModuleSize(System.Int32)">
+            <summary>
+            Sets the module size in pixels.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Html.QrHtmlRenderOptions.WithQuietZone(System.Int32)">
+            <summary>
+            Sets the quiet zone size in modules.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Html.QrHtmlRenderOptions.WithDarkColor(System.String)">
+            <summary>
+            Sets the dark color (CSS value).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Html.QrHtmlRenderOptions.WithLightColor(System.String)">
+            <summary>
+            Sets the light color (CSS value).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Html.QrHtmlRenderOptions.WithEmailSafeTable(System.Boolean)">
+            <summary>
+            Enables or disables email-safe HTML output.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Html.QrHtmlRenderOptions.WithLogo(CodeGlyphX.Rendering.QrLogoOptions)">
+            <summary>
+            Sets the logo overlay options.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Html.QrHtmlRenderOptions.WithModuleShape(CodeGlyphX.Rendering.Png.QrPngModuleShape)">
+            <summary>
+            Sets the module shape.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Html.QrHtmlRenderOptions.WithModuleScale(System.Double)">
+            <summary>
+            Sets the module scale.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Html.QrHtmlRenderOptions.WithModuleCornerRadiusPx(System.Int32)">
+            <summary>
+            Sets the module corner radius in pixels.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Html.QrHtmlRenderOptions.WithForegroundGradient(CodeGlyphX.Rendering.Png.QrPngGradientOptions)">
+            <summary>
+            Sets the foreground gradient.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Html.QrHtmlRenderOptions.WithEyes(CodeGlyphX.Rendering.Png.QrPngEyeOptions)">
+            <summary>
+            Sets custom eye (finder) options.
             </summary>
         </member>
         <member name="T:CodeGlyphX.Rendering.Ico.BarcodeIcoRenderer">
@@ -12768,6 +14432,16 @@
         <member name="P:CodeGlyphX.Rendering.Ico.IcoRenderOptions.PreserveAspectRatio">
             <summary>
             Preserves aspect ratio and pads to square when true.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Ico.IcoRenderOptions.WithSizes(System.Int32[])">
+            <summary>
+            Sets the output icon sizes in pixels.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Ico.IcoRenderOptions.WithPreserveAspectRatio(System.Boolean)">
+            <summary>
+            Sets whether to preserve aspect ratio when rendering icons.
             </summary>
         </member>
         <member name="T:CodeGlyphX.Rendering.Ico.IcoWriter">
@@ -12940,6 +14614,36 @@
             ICO image (embedded PNG/BMP).
             </summary>
         </member>
+        <member name="T:CodeGlyphX.Rendering.ImageInfo">
+            <summary>
+            Basic image metadata returned by ImageReader.TryReadInfo.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.ImageInfo.Format">
+            <summary>
+            Image format.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.ImageInfo.Width">
+            <summary>
+            Image width in pixels.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.ImageInfo.Height">
+            <summary>
+            Image height in pixels.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.ImageInfo.IsValid">
+            <summary>
+            Indicates whether the info looks valid.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.ImageInfo.#ctor(CodeGlyphX.Rendering.ImageFormat,System.Int32,System.Int32)">
+            <summary>
+            Creates a new <see cref="T:CodeGlyphX.Rendering.ImageInfo"/>.
+            </summary>
+        </member>
         <member name="T:CodeGlyphX.Rendering.ImageReader">
             <summary>
             Auto-detects common image formats and decodes to RGBA buffers.
@@ -12973,6 +14677,21 @@
         <member name="M:CodeGlyphX.Rendering.ImageReader.TryDetectFormat(System.ReadOnlySpan{System.Byte},CodeGlyphX.Rendering.ImageFormat@)">
             <summary>
             Attempts to detect the image format from a byte buffer.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.ImageReader.TryReadInfo(System.Byte[],CodeGlyphX.Rendering.ImageInfo@)">
+            <summary>
+            Attempts to read image format and dimensions without decoding pixels.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.ImageReader.TryReadInfo(System.ReadOnlySpan{System.Byte},CodeGlyphX.Rendering.ImageInfo@)">
+            <summary>
+            Attempts to read image format and dimensions without decoding pixels.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.ImageReader.TryReadInfo(System.IO.Stream,CodeGlyphX.Rendering.ImageInfo@)">
+            <summary>
+            Attempts to read image format and dimensions from a stream without decoding pixels.
             </summary>
         </member>
         <member name="T:CodeGlyphX.Rendering.Jpeg.BarcodeJpegRenderer">
@@ -13634,6 +15353,51 @@
             Label color.
             </summary>
         </member>
+        <member name="M:CodeGlyphX.Rendering.Png.BarcodePngRenderOptions.WithModuleSize(System.Int32)">
+            <summary>
+            Sets the module size in pixels.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Png.BarcodePngRenderOptions.WithQuietZone(System.Int32)">
+            <summary>
+            Sets the quiet zone size in modules.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Png.BarcodePngRenderOptions.WithHeightModules(System.Int32)">
+            <summary>
+            Sets the barcode height in modules.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Png.BarcodePngRenderOptions.WithForeground(CodeGlyphX.Rendering.Png.Rgba32)">
+            <summary>
+            Sets the bar (foreground) color.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Png.BarcodePngRenderOptions.WithBackground(CodeGlyphX.Rendering.Png.Rgba32)">
+            <summary>
+            Sets the background color.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Png.BarcodePngRenderOptions.WithLabelText(System.String)">
+            <summary>
+            Sets the label text.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Png.BarcodePngRenderOptions.WithLabelFontSize(System.Int32)">
+            <summary>
+            Sets the label font size in pixels.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Png.BarcodePngRenderOptions.WithLabelMargin(System.Int32)">
+            <summary>
+            Sets the label margin in pixels.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Png.BarcodePngRenderOptions.WithLabelColor(CodeGlyphX.Rendering.Png.Rgba32)">
+            <summary>
+            Sets the label color.
+            </summary>
+        </member>
         <member name="T:CodeGlyphX.Rendering.Png.MatrixPngRenderer">
             <summary>
             Renders generic 2D matrices to PNG images (RGBA8).
@@ -13699,6 +15463,26 @@
         <member name="P:CodeGlyphX.Rendering.Png.MatrixPngRenderOptions.Background">
             <summary>
             Background color.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Png.MatrixPngRenderOptions.WithModuleSize(System.Int32)">
+            <summary>
+            Sets the module size in pixels.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Png.MatrixPngRenderOptions.WithQuietZone(System.Int32)">
+            <summary>
+            Sets the quiet zone size in modules.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Png.MatrixPngRenderOptions.WithForeground(CodeGlyphX.Rendering.Png.Rgba32)">
+            <summary>
+            Sets the foreground color.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Png.MatrixPngRenderOptions.WithBackground(CodeGlyphX.Rendering.Png.Rgba32)">
+            <summary>
+            Sets the background color.
             </summary>
         </member>
         <member name="T:CodeGlyphX.Rendering.Png.PngReader">
@@ -14056,6 +15840,56 @@
         <member name="P:CodeGlyphX.Rendering.Png.QrPngRenderOptions.Logo">
             <summary>
             Optional logo overlay (centered).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Png.QrPngRenderOptions.WithModuleSize(System.Int32)">
+            <summary>
+            Sets the module size in pixels.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Png.QrPngRenderOptions.WithQuietZone(System.Int32)">
+            <summary>
+            Sets the quiet zone size in modules.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Png.QrPngRenderOptions.WithForeground(CodeGlyphX.Rendering.Png.Rgba32)">
+            <summary>
+            Sets the foreground color.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Png.QrPngRenderOptions.WithBackground(CodeGlyphX.Rendering.Png.Rgba32)">
+            <summary>
+            Sets the background color.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Png.QrPngRenderOptions.WithForegroundGradient(CodeGlyphX.Rendering.Png.QrPngGradientOptions)">
+            <summary>
+            Sets the foreground gradient.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Png.QrPngRenderOptions.WithEyes(CodeGlyphX.Rendering.Png.QrPngEyeOptions)">
+            <summary>
+            Sets custom eye (finder) options.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Png.QrPngRenderOptions.WithModuleShape(CodeGlyphX.Rendering.Png.QrPngModuleShape)">
+            <summary>
+            Sets the module shape.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Png.QrPngRenderOptions.WithModuleScale(System.Double)">
+            <summary>
+            Sets the module scale.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Png.QrPngRenderOptions.WithModuleCornerRadiusPx(System.Int32)">
+            <summary>
+            Sets the module corner radius in pixels.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Png.QrPngRenderOptions.WithLogo(CodeGlyphX.Rendering.Png.QrPngLogoOptions)">
+            <summary>
+            Sets the logo overlay options.
             </summary>
         </member>
         <member name="T:CodeGlyphX.Rendering.Png.Rgba32">
@@ -14708,6 +16542,56 @@
             Label font family.
             </summary>
         </member>
+        <member name="M:CodeGlyphX.Rendering.Svg.BarcodeSvgRenderOptions.WithModuleSize(System.Int32)">
+            <summary>
+            Sets the module size in pixels.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Svg.BarcodeSvgRenderOptions.WithQuietZone(System.Int32)">
+            <summary>
+            Sets the quiet zone size in modules.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Svg.BarcodeSvgRenderOptions.WithHeightModules(System.Int32)">
+            <summary>
+            Sets the barcode height in modules.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Svg.BarcodeSvgRenderOptions.WithBarColor(System.String)">
+            <summary>
+            Sets the bar color (CSS value).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Svg.BarcodeSvgRenderOptions.WithBackgroundColor(System.String)">
+            <summary>
+            Sets the background color (CSS value).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Svg.BarcodeSvgRenderOptions.WithLabelText(System.String)">
+            <summary>
+            Sets the label text.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Svg.BarcodeSvgRenderOptions.WithLabelFontSize(System.Int32)">
+            <summary>
+            Sets the label font size in pixels.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Svg.BarcodeSvgRenderOptions.WithLabelMargin(System.Int32)">
+            <summary>
+            Sets the label margin in pixels.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Svg.BarcodeSvgRenderOptions.WithLabelColor(System.String)">
+            <summary>
+            Sets the label color (CSS value).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Svg.BarcodeSvgRenderOptions.WithLabelFontFamily(System.String)">
+            <summary>
+            Sets the label font family.
+            </summary>
+        </member>
         <member name="T:CodeGlyphX.Rendering.Svg.MatrixSvgRenderer">
             <summary>
             Renders generic 2D matrices to SVG.
@@ -14770,6 +16654,26 @@
             Background color (CSS).
             </summary>
         </member>
+        <member name="M:CodeGlyphX.Rendering.Svg.MatrixSvgRenderOptions.WithModuleSize(System.Int32)">
+            <summary>
+            Sets the module size in pixels.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Svg.MatrixSvgRenderOptions.WithQuietZone(System.Int32)">
+            <summary>
+            Sets the quiet zone size in modules.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Svg.MatrixSvgRenderOptions.WithDarkColor(System.String)">
+            <summary>
+            Sets the dark color (CSS value).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Svg.MatrixSvgRenderOptions.WithLightColor(System.String)">
+            <summary>
+            Sets the light color (CSS value).
+            </summary>
+        </member>
         <member name="T:CodeGlyphX.Rendering.Svg.QrSvgRenderOptions">
             <summary>
             Options for <see cref="T:CodeGlyphX.Rendering.Svg.SvgQrRenderer"/>.
@@ -14823,6 +16727,56 @@
         <member name="P:CodeGlyphX.Rendering.Svg.QrSvgRenderOptions.Eyes">
             <summary>
             Optional eye (finder) styling overrides.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Svg.QrSvgRenderOptions.WithModuleSize(System.Int32)">
+            <summary>
+            Sets the module size in pixels.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Svg.QrSvgRenderOptions.WithQuietZone(System.Int32)">
+            <summary>
+            Sets the quiet zone size in modules.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Svg.QrSvgRenderOptions.WithDarkColor(System.String)">
+            <summary>
+            Sets the dark color (CSS value).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Svg.QrSvgRenderOptions.WithLightColor(System.String)">
+            <summary>
+            Sets the light color (CSS value).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Svg.QrSvgRenderOptions.WithLogo(CodeGlyphX.Rendering.QrLogoOptions)">
+            <summary>
+            Sets the logo overlay options.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Svg.QrSvgRenderOptions.WithModuleShape(CodeGlyphX.Rendering.Png.QrPngModuleShape)">
+            <summary>
+            Sets the module shape.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Svg.QrSvgRenderOptions.WithModuleScale(System.Double)">
+            <summary>
+            Sets the module scale.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Svg.QrSvgRenderOptions.WithModuleCornerRadiusPx(System.Int32)">
+            <summary>
+            Sets the module corner radius in pixels.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Svg.QrSvgRenderOptions.WithForegroundGradient(CodeGlyphX.Rendering.Png.QrPngGradientOptions)">
+            <summary>
+            Sets the foreground gradient.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Svg.QrSvgRenderOptions.WithEyes(CodeGlyphX.Rendering.Png.QrPngEyeOptions)">
+            <summary>
+            Sets custom eye (finder) options.
             </summary>
         </member>
         <member name="T:CodeGlyphX.Rendering.Svg.SvgBarcodeRenderer">
@@ -15284,6 +17238,38 @@
             Writes an XPM string from an RGBA buffer.
             </summary>
         </member>
+        <member name="T:CodeGlyphX.RoyalMail.RoyalMailFourStateDecoder">
+            <summary>
+            Decodes Royal Mail 4-State Customer Code (RM4SCC) barcodes.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.RoyalMail.RoyalMailFourStateDecoder.TryDecode(CodeGlyphX.BitMatrix,System.String@)">
+            <summary>
+            Attempts to decode a Royal Mail 4-State barcode from a <see cref="T:CodeGlyphX.BitMatrix"/>.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.RoyalMail.RoyalMailFourStateEncoder">
+            <summary>
+            Encodes Royal Mail 4-State Customer Code (RM4SCC) barcodes.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.RoyalMail.RoyalMailFourStateEncoder.Encode(System.String,System.Boolean)">
+            <summary>
+            Encodes a Royal Mail 4-State barcode into a matrix.
+            </summary>
+            <param name="content">Payload (digits and uppercase A-Z).</param>
+            <param name="includeHeaders">When true, includes start/stop bars and checksum (RM4SCC). When false, encodes KIX (headerless).</param>
+        </member>
+        <member name="T:CodeGlyphX.Telepen.TelepenEncoder">
+            <summary>
+            Encodes Telepen barcodes (ASCII mode).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Telepen.TelepenEncoder.Encode(System.String)">
+            <summary>
+            Encodes a Telepen barcode. Supports ASCII characters in the 0-127 range.
+            </summary>
+        </member>
         <member name="T:CodeGlyphX.UpcA.UpcAEncoder">
             <summary>
             Encodes UPC-A barcodes.
@@ -15291,7 +17277,7 @@
         </member>
         <member name="M:CodeGlyphX.UpcA.UpcAEncoder.Encode(System.String)">
             <summary>
-            Encodes a UPC-A barcode.
+            Encodes a UPC-A barcode. Use "+NN" or "+NNNNN" to append add-ons.
             </summary>
         </member>
         <member name="T:CodeGlyphX.UpcE.UpcEEncoder">
@@ -15301,7 +17287,7 @@
         </member>
         <member name="M:CodeGlyphX.UpcE.UpcEEncoder.Encode(System.String,CodeGlyphX.UpcENumberSystem)">
             <summary>
-            Encodes a UPC-E barcode.
+            Encodes a UPC-E barcode. Use "+NN" or "+NNNNN" to append add-ons.
             </summary>
         </member>
         <member name="T:CodeGlyphX.UpcENumberSystem">

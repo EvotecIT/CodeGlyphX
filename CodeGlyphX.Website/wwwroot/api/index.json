@@ -1,11 +1,11 @@
 {
   "title": "CodeGlyphX API Reference",
-  "generatedAtUtc": "2026-01-20T10:14:56.4208334Z",
+  "generatedAtUtc": "2026-01-20T22:07:24.5317502Z",
   "assembly": {
     "assemblyName": "CodeGlyphX",
     "assemblyVersion": "1.0.0.0"
   },
-  "typeCount": 266,
+  "typeCount": 306,
   "types": [
     {
       "name": "AztecCode",
@@ -214,6 +214,38 @@
       "kind": "Class",
       "slug": "codeglyphx-datamatrixdecodediagnostics",
       "summary": "Diagnostics for Data Matrix decoding."
+    },
+    {
+      "name": "DecodeBatchDiagnostics",
+      "fullName": "CodeGlyphX.DecodeBatchDiagnostics",
+      "namespace": "CodeGlyphX",
+      "kind": "Struct",
+      "slug": "codeglyphx-decodebatchdiagnostics",
+      "summary": "Aggregated diagnostics for a batch decode run."
+    },
+    {
+      "name": "DecodeBatchResult",
+      "fullName": "CodeGlyphX.DecodeBatchResult\u00601",
+      "namespace": "CodeGlyphX",
+      "kind": "Struct",
+      "slug": "codeglyphx-decodebatchresult-1",
+      "summary": null
+    },
+    {
+      "name": "DecodeFailureReason",
+      "fullName": "CodeGlyphX.DecodeFailureReason",
+      "namespace": "CodeGlyphX",
+      "kind": "Enum",
+      "slug": "codeglyphx-decodefailurereason",
+      "summary": "Describes why decoding failed."
+    },
+    {
+      "name": "DecodeResult",
+      "fullName": "CodeGlyphX.DecodeResult\u00601",
+      "namespace": "CodeGlyphX",
+      "kind": "Struct",
+      "slug": "codeglyphx-decoderesult-1",
+      "summary": null
     },
     {
       "name": "Gs1",
@@ -712,6 +744,46 @@
       "summary": "UPC-E number system (0 or 1)."
     },
     {
+      "name": "AustraliaPostCustomerEncodingTable",
+      "fullName": "CodeGlyphX.AustraliaPost.AustraliaPostCustomerEncodingTable",
+      "namespace": "CodeGlyphX.AustraliaPost",
+      "kind": "Enum",
+      "slug": "codeglyphx-australiapost-australiapostcustomerencodingtable",
+      "summary": "Customer information encoding tables for Australia Post customer barcodes."
+    },
+    {
+      "name": "AustraliaPostDecoded",
+      "fullName": "CodeGlyphX.AustraliaPost.AustraliaPostDecoded",
+      "namespace": "CodeGlyphX.AustraliaPost",
+      "kind": "Class",
+      "slug": "codeglyphx-australiapost-australiapostdecoded",
+      "summary": "Decoded Australia Post customer barcode information."
+    },
+    {
+      "name": "AustraliaPostDecoder",
+      "fullName": "CodeGlyphX.AustraliaPost.AustraliaPostDecoder",
+      "namespace": "CodeGlyphX.AustraliaPost",
+      "kind": "Class",
+      "slug": "codeglyphx-australiapost-australiapostdecoder",
+      "summary": "Decodes Australia Post customer barcodes."
+    },
+    {
+      "name": "AustraliaPostEncoder",
+      "fullName": "CodeGlyphX.AustraliaPost.AustraliaPostEncoder",
+      "namespace": "CodeGlyphX.AustraliaPost",
+      "kind": "Class",
+      "slug": "codeglyphx-australiapost-australiapostencoder",
+      "summary": "Encodes Australia Post customer barcodes."
+    },
+    {
+      "name": "AustraliaPostFormat",
+      "fullName": "CodeGlyphX.AustraliaPost.AustraliaPostFormat",
+      "namespace": "CodeGlyphX.AustraliaPost",
+      "kind": "Enum",
+      "slug": "codeglyphx-australiapost-australiapostformat",
+      "summary": "Australia Post customer barcode formats."
+    },
+    {
       "name": "AztecEncodeOptions",
       "fullName": "CodeGlyphX.Aztec.AztecEncodeOptions",
       "namespace": "CodeGlyphX.Aztec",
@@ -736,6 +808,30 @@
       "summary": "Encodes Code 11 barcodes."
     },
     {
+      "name": "Iata2of5Encoder",
+      "fullName": "CodeGlyphX.Code25.Iata2of5Encoder",
+      "namespace": "CodeGlyphX.Code25",
+      "kind": "Class",
+      "slug": "codeglyphx-code25-iata2of5encoder",
+      "summary": "Encodes IATA 2 of 5 barcodes."
+    },
+    {
+      "name": "Matrix2of5Encoder",
+      "fullName": "CodeGlyphX.Code25.Matrix2of5Encoder",
+      "namespace": "CodeGlyphX.Code25",
+      "kind": "Class",
+      "slug": "codeglyphx-code25-matrix2of5encoder",
+      "summary": "Encodes Matrix (Standard) 2 of 5 barcodes."
+    },
+    {
+      "name": "Code32Encoder",
+      "fullName": "CodeGlyphX.Code32.Code32Encoder",
+      "namespace": "CodeGlyphX.Code32",
+      "kind": "Class",
+      "slug": "codeglyphx-code32-code32encoder",
+      "summary": "Encodes Code 32 (Italian Pharmacode) barcodes."
+    },
+    {
       "name": "Code39Encoder",
       "fullName": "CodeGlyphX.Code39.Code39Encoder",
       "namespace": "CodeGlyphX.Code39",
@@ -750,6 +846,38 @@
       "kind": "Class",
       "slug": "codeglyphx-code93-code93encoder",
       "summary": "Encodes Code 93 barcodes."
+    },
+    {
+      "name": "DataBar14Decoder",
+      "fullName": "CodeGlyphX.DataBar.DataBar14Decoder",
+      "namespace": "CodeGlyphX.DataBar",
+      "kind": "Class",
+      "slug": "codeglyphx-databar-databar14decoder",
+      "summary": "Decodes GS1 DataBar-14 symbols (Truncated / Omni / Stacked)."
+    },
+    {
+      "name": "DataBar14Encoder",
+      "fullName": "CodeGlyphX.DataBar.DataBar14Encoder",
+      "namespace": "CodeGlyphX.DataBar",
+      "kind": "Class",
+      "slug": "codeglyphx-databar-databar14encoder",
+      "summary": "Encodes GS1 DataBar-14 symbols (Truncated / Omni / Stacked)."
+    },
+    {
+      "name": "DataBarExpandedDecoder",
+      "fullName": "CodeGlyphX.DataBar.DataBarExpandedDecoder",
+      "namespace": "CodeGlyphX.DataBar",
+      "kind": "Class",
+      "slug": "codeglyphx-databar-databarexpandeddecoder",
+      "summary": "Decodes GS1 DataBar Expanded symbols (linear and stacked)."
+    },
+    {
+      "name": "DataBarExpandedEncoder",
+      "fullName": "CodeGlyphX.DataBar.DataBarExpandedEncoder",
+      "namespace": "CodeGlyphX.DataBar",
+      "kind": "Class",
+      "slug": "codeglyphx-databar-databarexpandedencoder",
+      "summary": "Encodes GS1 DataBar Expanded symbols (linear and stacked)."
     },
     {
       "name": "DataMatrixDecoder",
@@ -800,6 +928,38 @@
       "summary": "Encodes ITF-14 (Interleaved 2 of 5) barcodes."
     },
     {
+      "name": "ItfEncoder",
+      "fullName": "CodeGlyphX.Itf.ItfEncoder",
+      "namespace": "CodeGlyphX.Itf",
+      "kind": "Class",
+      "slug": "codeglyphx-itf-itfencoder",
+      "summary": "Encodes Interleaved 2 of 5 (ITF) barcodes."
+    },
+    {
+      "name": "JapanPostDecoder",
+      "fullName": "CodeGlyphX.JapanPost.JapanPostDecoder",
+      "namespace": "CodeGlyphX.JapanPost",
+      "kind": "Class",
+      "slug": "codeglyphx-japanpost-japanpostdecoder",
+      "summary": "Decodes Japan Post barcodes."
+    },
+    {
+      "name": "JapanPostEncoder",
+      "fullName": "CodeGlyphX.JapanPost.JapanPostEncoder",
+      "namespace": "CodeGlyphX.JapanPost",
+      "kind": "Class",
+      "slug": "codeglyphx-japanpost-japanpostencoder",
+      "summary": "Encodes Japan Post barcodes."
+    },
+    {
+      "name": "KixDecoder",
+      "fullName": "CodeGlyphX.Kix.KixDecoder",
+      "namespace": "CodeGlyphX.Kix",
+      "kind": "Class",
+      "slug": "codeglyphx-kix-kixdecoder",
+      "summary": "Decodes KIX (Royal Mail 4-state, without headers) barcodes."
+    },
+    {
       "name": "KixEncoder",
       "fullName": "CodeGlyphX.Kix.KixEncoder",
       "namespace": "CodeGlyphX.Kix",
@@ -814,6 +974,14 @@
       "kind": "Class",
       "slug": "codeglyphx-msi-msiencoder",
       "summary": "Encodes MSI (Modified Plessey) barcodes."
+    },
+    {
+      "name": "PatchCodeEncoder",
+      "fullName": "CodeGlyphX.PatchCode.PatchCodeEncoder",
+      "namespace": "CodeGlyphX.PatchCode",
+      "kind": "Class",
+      "slug": "codeglyphx-patchcode-patchcodeencoder",
+      "summary": "Encodes Patch Code symbols."
     },
     {
       "name": "AdditionalInformation",
@@ -1240,12 +1408,44 @@
       "summary": "WiFi payload."
     },
     {
+      "name": "MicroPdf417Decoder",
+      "fullName": "CodeGlyphX.Pdf417.MicroPdf417Decoder",
+      "namespace": "CodeGlyphX.Pdf417",
+      "kind": "Class",
+      "slug": "codeglyphx-pdf417-micropdf417decoder",
+      "summary": "Decodes MicroPDF417 symbols from a CodeGlyphX.BitMatrix."
+    },
+    {
+      "name": "MicroPdf417EncodeOptions",
+      "fullName": "CodeGlyphX.Pdf417.MicroPdf417EncodeOptions",
+      "namespace": "CodeGlyphX.Pdf417",
+      "kind": "Class",
+      "slug": "codeglyphx-pdf417-micropdf417encodeoptions",
+      "summary": "Options for MicroPDF417 encoding."
+    },
+    {
+      "name": "MicroPdf417Encoder",
+      "fullName": "CodeGlyphX.Pdf417.MicroPdf417Encoder",
+      "namespace": "CodeGlyphX.Pdf417",
+      "kind": "Class",
+      "slug": "codeglyphx-pdf417-micropdf417encoder",
+      "summary": "Encodes MicroPDF417 symbols into a CodeGlyphX.BitMatrix."
+    },
+    {
       "name": "Pdf417Compaction",
       "fullName": "CodeGlyphX.Pdf417.Pdf417Compaction",
       "namespace": "CodeGlyphX.Pdf417",
       "kind": "Enum",
       "slug": "codeglyphx-pdf417-pdf417compaction",
       "summary": "High-level compaction mode selection for PDF417."
+    },
+    {
+      "name": "Pdf417Decoded",
+      "fullName": "CodeGlyphX.Pdf417.Pdf417Decoded",
+      "namespace": "CodeGlyphX.Pdf417",
+      "kind": "Class",
+      "slug": "codeglyphx-pdf417-pdf417decoded",
+      "summary": "Result of decoding a PDF417 symbol."
     },
     {
       "name": "Pdf417Decoder",
@@ -1272,12 +1472,100 @@
       "summary": "Encodes PDF417 barcodes."
     },
     {
+      "name": "Pdf417MacroMetadata",
+      "fullName": "CodeGlyphX.Pdf417.Pdf417MacroMetadata",
+      "namespace": "CodeGlyphX.Pdf417",
+      "kind": "Class",
+      "slug": "codeglyphx-pdf417-pdf417macrometadata",
+      "summary": "Macro PDF417 metadata payload."
+    },
+    {
+      "name": "Pdf417MacroOptions",
+      "fullName": "CodeGlyphX.Pdf417.Pdf417MacroOptions",
+      "namespace": "CodeGlyphX.Pdf417",
+      "kind": "Class",
+      "slug": "codeglyphx-pdf417-pdf417macrooptions",
+      "summary": "Options for Macro PDF417 encoding."
+    },
+    {
+      "name": "PharmacodeEncoder",
+      "fullName": "CodeGlyphX.Pharmacode.PharmacodeEncoder",
+      "namespace": "CodeGlyphX.Pharmacode",
+      "kind": "Class",
+      "slug": "codeglyphx-pharmacode-pharmacodeencoder",
+      "summary": "Encodes Pharmacode (one-track) barcodes."
+    },
+    {
+      "name": "PharmacodeTwoTrackDecoder",
+      "fullName": "CodeGlyphX.Pharmacode.PharmacodeTwoTrackDecoder",
+      "namespace": "CodeGlyphX.Pharmacode",
+      "kind": "Class",
+      "slug": "codeglyphx-pharmacode-pharmacodetwotrackdecoder",
+      "summary": "Decodes Pharmacode (two-track) barcodes."
+    },
+    {
+      "name": "PharmacodeTwoTrackEncoder",
+      "fullName": "CodeGlyphX.Pharmacode.PharmacodeTwoTrackEncoder",
+      "namespace": "CodeGlyphX.Pharmacode",
+      "kind": "Class",
+      "slug": "codeglyphx-pharmacode-pharmacodetwotrackencoder",
+      "summary": "Encodes Pharmacode (two-track) barcodes."
+    },
+    {
       "name": "PlesseyEncoder",
       "fullName": "CodeGlyphX.Plessey.PlesseyEncoder",
       "namespace": "CodeGlyphX.Plessey",
       "kind": "Class",
       "slug": "codeglyphx-plessey-plesseyencoder",
       "summary": "Encodes Plessey barcodes."
+    },
+    {
+      "name": "PlanetDecoder",
+      "fullName": "CodeGlyphX.Postal.PlanetDecoder",
+      "namespace": "CodeGlyphX.Postal",
+      "kind": "Class",
+      "slug": "codeglyphx-postal-planetdecoder",
+      "summary": "Decodes PLANET barcodes."
+    },
+    {
+      "name": "PlanetEncoder",
+      "fullName": "CodeGlyphX.Postal.PlanetEncoder",
+      "namespace": "CodeGlyphX.Postal",
+      "kind": "Class",
+      "slug": "codeglyphx-postal-planetencoder",
+      "summary": "Encodes PLANET barcodes."
+    },
+    {
+      "name": "PostnetDecoder",
+      "fullName": "CodeGlyphX.Postal.PostnetDecoder",
+      "namespace": "CodeGlyphX.Postal",
+      "kind": "Class",
+      "slug": "codeglyphx-postal-postnetdecoder",
+      "summary": "Decodes POSTNET barcodes."
+    },
+    {
+      "name": "PostnetEncoder",
+      "fullName": "CodeGlyphX.Postal.PostnetEncoder",
+      "namespace": "CodeGlyphX.Postal",
+      "kind": "Class",
+      "slug": "codeglyphx-postal-postnetencoder",
+      "summary": "Encodes POSTNET barcodes."
+    },
+    {
+      "name": "UspsImbDecoder",
+      "fullName": "CodeGlyphX.Postal.UspsImbDecoder",
+      "namespace": "CodeGlyphX.Postal",
+      "kind": "Class",
+      "slug": "codeglyphx-postal-uspsimbdecoder",
+      "summary": "Decodes USPS Intelligent Mail Barcodes (IMB)."
+    },
+    {
+      "name": "UspsImbEncoder",
+      "fullName": "CodeGlyphX.Postal.UspsImbEncoder",
+      "namespace": "CodeGlyphX.Postal",
+      "kind": "Class",
+      "slug": "codeglyphx-postal-uspsimbencoder",
+      "summary": "Encodes USPS Intelligent Mail Barcodes (IMB)."
     },
     {
       "name": "ColorUtils",
@@ -1294,6 +1582,14 @@
       "kind": "Enum",
       "slug": "codeglyphx-rendering-imageformat",
       "summary": "Known image formats supported by CodeGlyphX.Rendering.ImageReader."
+    },
+    {
+      "name": "ImageInfo",
+      "fullName": "CodeGlyphX.Rendering.ImageInfo",
+      "namespace": "CodeGlyphX.Rendering",
+      "kind": "Struct",
+      "slug": "codeglyphx-rendering-imageinfo",
+      "summary": "Basic image metadata returned by ImageReader.TryReadInfo."
     },
     {
       "name": "ImageReader",
@@ -2086,6 +2382,30 @@
       "kind": "Class",
       "slug": "codeglyphx-rendering-xpm-xpmwriter",
       "summary": "Writes XPM (X Pixmap) images from RGBA buffers."
+    },
+    {
+      "name": "RoyalMailFourStateDecoder",
+      "fullName": "CodeGlyphX.RoyalMail.RoyalMailFourStateDecoder",
+      "namespace": "CodeGlyphX.RoyalMail",
+      "kind": "Class",
+      "slug": "codeglyphx-royalmail-royalmailfourstatedecoder",
+      "summary": "Decodes Royal Mail 4-State Customer Code (RM4SCC) barcodes."
+    },
+    {
+      "name": "RoyalMailFourStateEncoder",
+      "fullName": "CodeGlyphX.RoyalMail.RoyalMailFourStateEncoder",
+      "namespace": "CodeGlyphX.RoyalMail",
+      "kind": "Class",
+      "slug": "codeglyphx-royalmail-royalmailfourstateencoder",
+      "summary": "Encodes Royal Mail 4-State Customer Code (RM4SCC) barcodes."
+    },
+    {
+      "name": "TelepenEncoder",
+      "fullName": "CodeGlyphX.Telepen.TelepenEncoder",
+      "namespace": "CodeGlyphX.Telepen",
+      "kind": "Class",
+      "slug": "codeglyphx-telepen-telepenencoder",
+      "summary": "Encodes Telepen barcodes (ASCII mode)."
     },
     {
       "name": "EncodedNumber",

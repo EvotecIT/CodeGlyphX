@@ -32,8 +32,8 @@
 
     /* Text */
     --text: #f4f4f5;
-    --text-muted: #a1a1aa;
-    --text-dim: #71717a;
+    --text-muted: #c1c7d6;
+    --text-dim: #9aa4b2;
 
     /* Borders */
     --border: #27272a;
@@ -155,7 +155,7 @@ body {
 
 /* Typography */
 h1, h2, h3, h4 {
-    font-weight: 700;
+    font-weight: 600;
     line-height: 1.2;
     letter-spacing: -0.02em;
 }
@@ -283,7 +283,7 @@ a:hover {
     align-items: center;
     gap: 0.5rem;
     padding: 0.5rem 1.25rem;
-    background: var(--primary);
+    background: var(--primary-dark);
     color: white !important;
     border-radius: 8px;
     font-weight: 600;
@@ -295,7 +295,7 @@ a:hover {
 }
 
 .nav-cta:hover {
-    background: var(--primary-dark);
+    background: var(--primary);
 }
 
 /* ============================================
@@ -365,6 +365,16 @@ a:hover {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+}
+
+.hero h1:focus,
+.hero h1:focus-visible {
+    outline: none;
+}
+
+body.using-keyboard .hero h1:focus-visible {
+    outline: 2px solid var(--primary-light);
+    outline-offset: 4px;
 }
 
 .hero-tagline {
@@ -469,8 +479,15 @@ a:hover {
     flex-wrap: wrap;
 }
 
+.hero-badges a {
+    display: inline-flex;
+    align-items: center;
+}
+
 .hero-badges img {
-    height: 22px;
+    height: 20px;
+    width: 100px;
+    object-fit: contain;
     display: block;
 }
 
@@ -599,7 +616,7 @@ a:hover {
     }
 }
 
-.stat-item h3 {
+.stat-item .stat-value {
     font-size: 2.5rem;
     background: linear-gradient(135deg, var(--primary-light), var(--secondary));
     -webkit-background-clip: text;
@@ -882,7 +899,8 @@ a:hover {
 /* Legacy manual highlighting (fallback) */
 .code-block .keyword { color: #c678dd; }
 .code-block .string { color: #98c379; }
-.code-block .comment { color: #5c6370; }
+.code-block .comment { color: #9aa4b2; }
+.code-block .token.comment { color: #9aa4b2; }
 .code-block .type { color: #e5c07b; }
 .code-block .method { color: #61afef; }
 
@@ -1081,7 +1099,7 @@ a:hover {
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    font-weight: 700;
+    font-weight: 600;
     font-size: 1.25rem;
     color: var(--text);
     margin-bottom: 0.5rem;
@@ -1109,7 +1127,7 @@ a:hover {
     border-bottom: 1px solid var(--border);
 }
 
-.footer-section h4 {
+.footer-section h3 {
     font-size: 0.875rem;
     font-weight: 600;
     text-transform: uppercase;
@@ -1119,15 +1137,34 @@ a:hover {
 }
 
 .footer-section a {
-    display: block;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
     color: var(--text-muted);
     font-size: 0.9rem;
     padding: 0.375rem 0;
     transition: color 0.2s;
+    text-decoration: none;
+}
+
+.footer-section a::after {
+    content: "↗";
+    font-size: 0.75em;
+    opacity: 0.6;
 }
 
 .footer-section a:hover {
     color: var(--primary-light);
+    text-decoration: underline;
+    text-decoration-color: currentColor;
+    text-underline-offset: 3px;
+}
+
+.footer-section a:focus-visible {
+    color: var(--primary-light);
+    text-decoration: underline;
+    text-decoration-color: currentColor;
+    text-underline-offset: 3px;
 }
 
 .footer-bottom {
@@ -1179,6 +1216,8 @@ a:hover {
 
 .footer-badges img {
     height: 20px;
+    width: 100px;
+    object-fit: contain;
     display: block;
 }
 
@@ -1444,21 +1483,53 @@ a:hover {
     color: var(--text-muted);
     font-size: 0.9rem;
     border-radius: 6px;
+    border-left: 2px solid transparent;
+    text-decoration: none;
     transition: all 0.2s;
 }
 
 .docs-nav a:hover {
     color: var(--text);
     background: var(--bg-input);
+    border-left-color: var(--primary-light);
+    text-decoration: none;
 }
 
 .docs-nav a.active {
     color: var(--primary-light);
     background: rgba(139, 92, 246, 0.1);
+    border-left-color: var(--primary-light);
+    text-decoration: none;
 }
 
 .docs-content {
     min-width: 0;
+}
+
+.docs-content h1:focus {
+    outline: none;
+}
+
+.docs-content h1:focus-visible {
+    outline: none;
+}
+
+body.using-keyboard .docs-content h1:focus-visible {
+    outline: 2px solid var(--primary-light);
+    outline-offset: 4px;
+}
+
+.docs-static h1:focus {
+    outline: none;
+}
+
+.docs-static h1:focus-visible {
+    outline: none;
+}
+
+body.using-keyboard .docs-static h1:focus-visible {
+    outline: 2px solid var(--primary-light);
+    outline-offset: 4px;
 }
 
 .docs-content h1 {
@@ -1592,6 +1663,17 @@ a:hover {
 .main {
     flex: 1;
     padding: 2rem;
+}
+
+.main a:not(.btn):not(.nav-icon):not(.nav-cta):not(.copy-btn):not(.hero-badge-link) {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-thickness: 2px;
+    text-decoration-color: rgba(139, 92, 246, 0.35);
+}
+
+.main a:not(.btn):not(.nav-icon):not(.nav-cta):not(.copy-btn):not(.hero-badge-link):hover {
+    text-decoration-color: currentColor;
 }
 
 /* ============================================

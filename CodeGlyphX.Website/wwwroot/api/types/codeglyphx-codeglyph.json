@@ -2525,6 +2525,81 @@
       "anchor": "method-trydecodeimage-static-bool-trydecodeimage-byte-image-out-codeglyphdecoded-decoded-out-codeglyphdecodediagnostics-diagnostics-codeglyphdecodeoptions-options"
     },
     {
+      "name": "DecodeImageResult",
+      "kind": "Method",
+      "summary": "Decodes a QR or barcode from common image formats using a single options object and returns diagnostics.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "image",
+          "type": "byte[]",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "CodeGlyphDecodeOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static DecodeResult\u003CCodeGlyphDecoded\u003E DecodeImageResult(byte[] image, CodeGlyphDecodeOptions options)",
+      "xmlId": "M:CodeGlyphX.CodeGlyph.DecodeImageResult(System.Byte[],CodeGlyphX.CodeGlyphDecodeOptions)",
+      "anchor": "method-decodeimageresult-static-decoderesult-codeglyphdecoded-decodeimageresult-byte-image-codeglyphdecodeoptions-options"
+    },
+    {
+      "name": "DecodeImageResult",
+      "kind": "Method",
+      "summary": "Decodes a QR or barcode from an image stream using a single options object and returns diagnostics.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "stream",
+          "type": "Stream",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "CodeGlyphDecodeOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static DecodeResult\u003CCodeGlyphDecoded\u003E DecodeImageResult(Stream stream, CodeGlyphDecodeOptions options)",
+      "xmlId": "M:CodeGlyphX.CodeGlyph.DecodeImageResult(System.IO.Stream,CodeGlyphX.CodeGlyphDecodeOptions)",
+      "anchor": "method-decodeimageresult-static-decoderesult-codeglyphdecoded-decodeimageresult-stream-stream-codeglyphdecodeoptions-options"
+    },
+    {
+      "name": "DecodeImageBatch",
+      "kind": "Method",
+      "summary": "Decodes a batch of QR/barcode images using a single options object and returns aggregated diagnostics.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "images",
+          "type": "IEnumerable\u003Cbyte[]\u003E",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "CodeGlyphDecodeOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static DecodeBatchResult\u003CCodeGlyphDecoded\u003E DecodeImageBatch(IEnumerable\u003Cbyte[]\u003E images, CodeGlyphDecodeOptions options)",
+      "xmlId": "M:CodeGlyphX.CodeGlyph.DecodeImageBatch(System.Collections.Generic.IEnumerable{System.Byte[]},CodeGlyphX.CodeGlyphDecodeOptions)",
+      "anchor": "method-decodeimagebatch-static-decodebatchresult-codeglyphdecoded-decodeimagebatch-ienumerable-byte-images-codeglyphdecodeoptions-options"
+    },
+    {
       "name": "TryDecodeAllPng",
       "kind": "Method",
       "summary": "Attempts to decode all symbols from PNG bytes using a single options object.",

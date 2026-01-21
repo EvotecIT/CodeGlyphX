@@ -24,6 +24,126 @@
       "anchor": "constructor-barcodeasciirenderoptions-barcodeasciirenderoptions"
     },
     {
+      "name": "WithModuleWidth",
+      "kind": "Method",
+      "summary": "Sets the module width in characters.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "width",
+          "type": "int",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "BarcodeAsciiRenderOptions WithModuleWidth(int width)",
+      "xmlId": "M:CodeGlyphX.Rendering.Ascii.BarcodeAsciiRenderOptions.WithModuleWidth(System.Int32)",
+      "anchor": "method-withmodulewidth-barcodeasciirenderoptions-withmodulewidth-int-width"
+    },
+    {
+      "name": "WithQuietZone",
+      "kind": "Method",
+      "summary": "Sets the quiet zone size in modules.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "quietZone",
+          "type": "int",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "BarcodeAsciiRenderOptions WithQuietZone(int quietZone)",
+      "xmlId": "M:CodeGlyphX.Rendering.Ascii.BarcodeAsciiRenderOptions.WithQuietZone(System.Int32)",
+      "anchor": "method-withquietzone-barcodeasciirenderoptions-withquietzone-int-quietzone"
+    },
+    {
+      "name": "WithHeight",
+      "kind": "Method",
+      "summary": "Sets the height in text rows.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "height",
+          "type": "int",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "BarcodeAsciiRenderOptions WithHeight(int height)",
+      "xmlId": "M:CodeGlyphX.Rendering.Ascii.BarcodeAsciiRenderOptions.WithHeight(System.Int32)",
+      "anchor": "method-withheight-barcodeasciirenderoptions-withheight-int-height"
+    },
+    {
+      "name": "WithDark",
+      "kind": "Method",
+      "summary": "Sets the character(s) used for bars.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "dark",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "BarcodeAsciiRenderOptions WithDark(string dark)",
+      "xmlId": "M:CodeGlyphX.Rendering.Ascii.BarcodeAsciiRenderOptions.WithDark(System.String)",
+      "anchor": "method-withdark-barcodeasciirenderoptions-withdark-string-dark"
+    },
+    {
+      "name": "WithLight",
+      "kind": "Method",
+      "summary": "Sets the character(s) used for spaces.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "light",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "BarcodeAsciiRenderOptions WithLight(string light)",
+      "xmlId": "M:CodeGlyphX.Rendering.Ascii.BarcodeAsciiRenderOptions.WithLight(System.String)",
+      "anchor": "method-withlight-barcodeasciirenderoptions-withlight-string-light"
+    },
+    {
+      "name": "WithNewLine",
+      "kind": "Method",
+      "summary": "Sets the line separator.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "newLine",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "BarcodeAsciiRenderOptions WithNewLine(string newLine)",
+      "xmlId": "M:CodeGlyphX.Rendering.Ascii.BarcodeAsciiRenderOptions.WithNewLine(System.String)",
+      "anchor": "method-withnewline-barcodeasciirenderoptions-withnewline-string-newline"
+    },
+    {
       "name": "ModuleWidth",
       "kind": "Property",
       "summary": "Module width in characters.",

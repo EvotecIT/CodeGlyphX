@@ -24,6 +24,226 @@
       "anchor": "constructor-barcodehtmlrenderoptions-barcodehtmlrenderoptions"
     },
     {
+      "name": "WithModuleSize",
+      "kind": "Method",
+      "summary": "Sets the module size in pixels.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "size",
+          "type": "int",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "BarcodeHtmlRenderOptions WithModuleSize(int size)",
+      "xmlId": "M:CodeGlyphX.Rendering.Html.BarcodeHtmlRenderOptions.WithModuleSize(System.Int32)",
+      "anchor": "method-withmodulesize-barcodehtmlrenderoptions-withmodulesize-int-size"
+    },
+    {
+      "name": "WithQuietZone",
+      "kind": "Method",
+      "summary": "Sets the quiet zone size in modules.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "quietZone",
+          "type": "int",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "BarcodeHtmlRenderOptions WithQuietZone(int quietZone)",
+      "xmlId": "M:CodeGlyphX.Rendering.Html.BarcodeHtmlRenderOptions.WithQuietZone(System.Int32)",
+      "anchor": "method-withquietzone-barcodehtmlrenderoptions-withquietzone-int-quietzone"
+    },
+    {
+      "name": "WithHeightModules",
+      "kind": "Method",
+      "summary": "Sets the barcode height in modules.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "heightModules",
+          "type": "int",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "BarcodeHtmlRenderOptions WithHeightModules(int heightModules)",
+      "xmlId": "M:CodeGlyphX.Rendering.Html.BarcodeHtmlRenderOptions.WithHeightModules(System.Int32)",
+      "anchor": "method-withheightmodules-barcodehtmlrenderoptions-withheightmodules-int-heightmodules"
+    },
+    {
+      "name": "WithBarColor",
+      "kind": "Method",
+      "summary": "Sets the bar color (CSS value).",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "color",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "BarcodeHtmlRenderOptions WithBarColor(string color)",
+      "xmlId": "M:CodeGlyphX.Rendering.Html.BarcodeHtmlRenderOptions.WithBarColor(System.String)",
+      "anchor": "method-withbarcolor-barcodehtmlrenderoptions-withbarcolor-string-color"
+    },
+    {
+      "name": "WithBackgroundColor",
+      "kind": "Method",
+      "summary": "Sets the background color (CSS value).",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "color",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "BarcodeHtmlRenderOptions WithBackgroundColor(string color)",
+      "xmlId": "M:CodeGlyphX.Rendering.Html.BarcodeHtmlRenderOptions.WithBackgroundColor(System.String)",
+      "anchor": "method-withbackgroundcolor-barcodehtmlrenderoptions-withbackgroundcolor-string-color"
+    },
+    {
+      "name": "WithEmailSafeTable",
+      "kind": "Method",
+      "summary": "Enables or disables email-safe HTML output.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "enabled",
+          "type": "bool",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "BarcodeHtmlRenderOptions WithEmailSafeTable(bool enabled)",
+      "xmlId": "M:CodeGlyphX.Rendering.Html.BarcodeHtmlRenderOptions.WithEmailSafeTable(System.Boolean)",
+      "anchor": "method-withemailsafetable-barcodehtmlrenderoptions-withemailsafetable-bool-enabled"
+    },
+    {
+      "name": "WithLabelText",
+      "kind": "Method",
+      "summary": "Sets the label text.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "text",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "BarcodeHtmlRenderOptions WithLabelText(string text)",
+      "xmlId": "M:CodeGlyphX.Rendering.Html.BarcodeHtmlRenderOptions.WithLabelText(System.String)",
+      "anchor": "method-withlabeltext-barcodehtmlrenderoptions-withlabeltext-string-text"
+    },
+    {
+      "name": "WithLabelFontSize",
+      "kind": "Method",
+      "summary": "Sets the label font size in pixels.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "size",
+          "type": "int",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "BarcodeHtmlRenderOptions WithLabelFontSize(int size)",
+      "xmlId": "M:CodeGlyphX.Rendering.Html.BarcodeHtmlRenderOptions.WithLabelFontSize(System.Int32)",
+      "anchor": "method-withlabelfontsize-barcodehtmlrenderoptions-withlabelfontsize-int-size"
+    },
+    {
+      "name": "WithLabelMargin",
+      "kind": "Method",
+      "summary": "Sets the label margin in pixels.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "margin",
+          "type": "int",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "BarcodeHtmlRenderOptions WithLabelMargin(int margin)",
+      "xmlId": "M:CodeGlyphX.Rendering.Html.BarcodeHtmlRenderOptions.WithLabelMargin(System.Int32)",
+      "anchor": "method-withlabelmargin-barcodehtmlrenderoptions-withlabelmargin-int-margin"
+    },
+    {
+      "name": "WithLabelColor",
+      "kind": "Method",
+      "summary": "Sets the label color (CSS value).",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "color",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "BarcodeHtmlRenderOptions WithLabelColor(string color)",
+      "xmlId": "M:CodeGlyphX.Rendering.Html.BarcodeHtmlRenderOptions.WithLabelColor(System.String)",
+      "anchor": "method-withlabelcolor-barcodehtmlrenderoptions-withlabelcolor-string-color"
+    },
+    {
+      "name": "WithLabelFontFamily",
+      "kind": "Method",
+      "summary": "Sets the label font family.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "family",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "BarcodeHtmlRenderOptions WithLabelFontFamily(string family)",
+      "xmlId": "M:CodeGlyphX.Rendering.Html.BarcodeHtmlRenderOptions.WithLabelFontFamily(System.String)",
+      "anchor": "method-withlabelfontfamily-barcodehtmlrenderoptions-withlabelfontfamily-string-family"
+    },
+    {
       "name": "ModuleSize",
       "kind": "Property",
       "summary": "Gets or sets the size of a single module in pixels.",
