@@ -12,7 +12,11 @@ using Barcoder.Renderer.Image;
 
 namespace CodeGlyphX.Benchmarks;
 
+#if BENCH_QUICK
+[SimpleJob(RuntimeMoniker.Net80, warmupCount: 1, iterationCount: 3, invocationCount: 1)]
+#else
 [SimpleJob(RuntimeMoniker.Net80)]
+#endif
 [MemoryDiagnoser]
 [RankColumn]
 public class Code39CompareBenchmarks

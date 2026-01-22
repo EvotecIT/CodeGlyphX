@@ -16,10 +16,26 @@
   </ItemGroup>
 
   <PropertyGroup>
+    <CompareExternal Condition="'$(CompareExternal)' == '' and '$(COMPARE_EXTERNAL)' != ''">$(COMPARE_EXTERNAL)</CompareExternal>
     <CompareExternal Condition="'$(CompareExternal)' == ''">false</CompareExternal>
+
+    <CompareZXing Condition="'$(CompareZXing)' == '' and '$(COMPARE_ZXING)' != ''">$(COMPARE_ZXING)</CompareZXing>
     <CompareZXing Condition="'$(CompareZXing)' == ''">$(CompareExternal)</CompareZXing>
+
+    <CompareQRCoder Condition="'$(CompareQRCoder)' == '' and '$(COMPARE_QRCODER)' != ''">$(COMPARE_QRCODER)</CompareQRCoder>
     <CompareQRCoder Condition="'$(CompareQRCoder)' == ''">$(CompareExternal)</CompareQRCoder>
+
+    <CompareBarcoder Condition="'$(CompareBarcoder)' == '' and '$(COMPARE_BARCODER)' != ''">$(COMPARE_BARCODER)</CompareBarcoder>
     <CompareBarcoder Condition="'$(CompareBarcoder)' == ''">$(CompareExternal)</CompareBarcoder>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <BenchQuick Condition="'$(BenchQuick)' == '' and '$(BENCH_QUICK)' != ''">$(BENCH_QUICK)</BenchQuick>
+    <BenchQuick Condition="'$(BenchQuick)' == ''">false</BenchQuick>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(BenchQuick)' == 'true'">
+    <DefineConstants>$(DefineConstants);BENCH_QUICK</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(CompareZXing)' == 'true'">
