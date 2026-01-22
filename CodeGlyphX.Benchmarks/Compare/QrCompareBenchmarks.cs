@@ -61,6 +61,7 @@ public class QrCompareBenchmarks
 #endif
 
 #if COMPARE_BARCODER
+        _targetSizePx = (qr.Size + _options.QuietZone * 2) * _options.ModuleSize;
         var barcoderOptions = CompareBenchmarkHelpers.CreateBarcoderMatrixOptions(new MatrixOptions
         {
             ModuleSize = _options.ModuleSize,

@@ -106,7 +106,7 @@ internal static class PreflightChecks
         });
 #endif
 
-        if (!hasFailures)
+        if (failures.Count == 0)
         {
             Console.WriteLine("Preflight checks passed.");
             return 0;
