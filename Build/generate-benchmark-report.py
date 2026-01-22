@@ -295,6 +295,35 @@ def build_comparison_section(lines, compare_files):
         title = TITLE_MAP.get(base_name, base_name)
         lines.append(f"#### {title}")
         lines.append("")
+        lines.append(
+            "| Scenario | CodeGlyphX (Mean / Alloc) | ZXing.Net (Mean / Alloc) | QRCoder (Mean / Alloc) | Barcoder (Mean / Alloc) |"
+        )
+        lines.append("| --- | --- | --- | --- | --- |")
+
+        scenarios = {}
+        for row in rows:
+            method = normalize_method(row.get("Method", ""))
+            if not method:
+                continue
+            vendor, scenario = parse_vendor_scenario(method)
+            scenario = normalize_compare_scenario(scenario)
+            scenarios.setdefault(scenario, {})[vendor] = row
+
+        for scenario in sorted(scenarios.keys()):
+            group = scenarios[scenario]
+
+            def cell(vendor):
+                item = group.get(vendor)
+                if not item:
+                    return ""
+                mean = normalize_mean_text(item.get("Mean", ""))
+                allocated = item.get("Allocated", "")
+                return f"{mean}<br>{allocated}"
+
+            lines.append(
+                f"| {scenario} | {cell('CodeGlyphX')} | {cell('ZXing.Net')} | {cell('QRCoder')} | {cell('Barcoder')} |"
+            )
+        lines.append("")
 
 
 def build_baseline_payload(baseline_files):
@@ -359,35 +388,6 @@ def build_comparisons_payload(compare_files):
             scenarios.append(entry)
         comparisons.append({"id": base_name, "title": title, "scenarios": scenarios})
     return comparisons
-        lines.append(
-            "| Scenario | CodeGlyphX (Mean / Alloc) | ZXing.Net (Mean / Alloc) | QRCoder (Mean / Alloc) | Barcoder (Mean / Alloc) |"
-        )
-        lines.append("| --- | --- | --- | --- | --- |")
-
-        scenarios = {}
-        for row in rows:
-            method = normalize_method(row.get("Method", ""))
-            if not method:
-                continue
-            vendor, scenario = parse_vendor_scenario(method)
-            scenario = normalize_compare_scenario(scenario)
-            scenarios.setdefault(scenario, {})[vendor] = row
-
-        for scenario in sorted(scenarios.keys()):
-            group = scenarios[scenario]
-
-            def cell(vendor):
-                item = group.get(vendor)
-                if not item:
-                    return ""
-                mean = normalize_mean_text(item.get("Mean", ""))
-                allocated = item.get("Allocated", "")
-                return f"{mean}<br>{allocated}"
-
-            lines.append(
-                f"| {scenario} | {cell('CodeGlyphX')} | {cell('ZXing.Net')} | {cell('QRCoder')} | {cell('Barcoder')} |"
-            )
-        lines.append("")
 
 
 def format_run_mode(run_mode: str) -> str:
@@ -608,6 +608,7 @@ def write_json(
 
     baseline = build_baseline_payload(baseline_files)
     comparisons = build_comparisons_payload(compare_files)
+    summary_rows, summary_items = build_summary(compare_files) if compare_files else ([], [])
 
     notes = [
         format_run_mode(run_mode),

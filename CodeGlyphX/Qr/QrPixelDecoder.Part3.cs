@@ -421,15 +421,15 @@ internal static partial class QrPixelDecoder {
         candidates.Sort(static (a, b) => b.Count.CompareTo(a.Count));
         var n = Math.Min(candidates.Count, 4);
 
-        var orientationsBuf = new SingleFinderOrientation[3];
-        var dimsBuf = new int[8];
+        Span<SingleFinderOrientation> orientationsBuf = stackalloc SingleFinderOrientation[3];
+        Span<int> dimsBuf = stackalloc int[8];
 
         for (var i = 0; i < n; i++) {
             var c = candidates[i];
             var moduleSize = c.ModuleSize;
             if (moduleSize <= 0) continue;
 
-            var orientations = orientationsBuf.AsSpan();
+            var orientations = orientationsBuf;
             var oCount = 0;
             var fx = c.X / image.Width;
             var fy = c.Y / image.Height;
@@ -447,7 +447,7 @@ internal static partial class QrPixelDecoder {
                 var orientation = orientations[oi];
                 if (!TryGetMaxDimension(image, c, moduleSize, orientation, out var maxDim)) continue;
 
-                var dims = dimsBuf.AsSpan();
+                var dims = dimsBuf;
                 var dimsCount = 0;
                 var baseDim = NearestValidDimension(maxDim);
                 AddDimensionCandidate(ref dims, ref dimsCount, baseDim);

@@ -116,19 +116,19 @@ public sealed class Barcode1DTests {
 
     [Fact]
     public void Matrix2of5_TotalModules() {
-        var barcode = Matrix2of5Encoder.Encode("123456");
+        var barcode = Matrix2Of5Encoder.Encode("123456");
         Assert.Equal(107, barcode.TotalModules);
     }
 
     [Fact]
     public void Industrial2of5_TotalModules() {
-        var barcode = Industrial2of5Encoder.Encode("123456");
+        var barcode = Industrial2Of5Encoder.Encode("123456");
         Assert.Equal(93, barcode.TotalModules);
     }
 
     [Fact]
     public void Iata2of5_TotalModules() {
-        var barcode = Iata2of5Encoder.Encode("123456");
+        var barcode = Iata2Of5Encoder.Encode("123456");
         Assert.Equal(97, barcode.TotalModules);
     }
 

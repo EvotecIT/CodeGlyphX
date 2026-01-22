@@ -3,20 +3,60 @@
   "entries": [
     {
       "os": "windows",
-      "runMode": "quick",
-      "generatedUtc": "2026-01-22T14:07:09.5645104Z",
-      "publish": false,
+      "runMode": "full",
+      "generatedUtc": "2026-01-22T15:35:36.4149651Z",
+      "publish": true,
       "framework": "net8.0",
       "configuration": "Release",
-      "artifacts": "/mnt/c/Support/GitHub/CodeMatrix/Build/BenchmarkResults/windows-20260122-124936",
+      "artifacts": "C:\\Support\\GitHub\\CodeMatrix\\Build\\BenchmarkResults\\windows-20260122-155044",
       "meta": {
         "commit": null,
         "branch": null,
-        "dotnetSdk": "10.0.100",
+        "dotnetSdk": "10.0.102",
+        "runtime": null,
+        "osDescription": "Microsoft Windows 10.0.26200",
+        "osArchitecture": null,
+        "processArchitecture": null,
+        "machineName": "EVOMONSTER",
+        "processorCount": 32
+      }
+    },
+    {
+      "os": "windows",
+      "runMode": "quick",
+      "generatedUtc": "2026-01-22T17:26:26.0203945Z",
+      "publish": false,
+      "framework": "net8.0",
+      "configuration": "Release",
+      "artifacts": "C:\\Support\\GitHub\\CodeMatrix\\Build\\BenchmarkResults\\windows-20260122-182522",
+      "meta": {
+        "commit": null,
+        "branch": null,
+        "dotnetSdk": "10.0.102",
         "runtime": ".NET 9.0.10",
-        "osDescription": "Ubuntu 24.04.3 LTS",
+        "osDescription": "Microsoft Windows 10.0.26200",
         "osArchitecture": "X64",
         "processArchitecture": "X64",
+        "machineName": "EVOMONSTER",
+        "processorCount": 32
+      }
+    },
+    {
+      "os": "linux",
+      "runMode": "quick",
+      "generatedUtc": "2026-01-22T20:12:10.480520+00:00",
+      "publish": false,
+      "framework": "net8.0",
+      "configuration": "Release",
+      "artifacts": "/mnt/c/Support/GitHub/CodeMatrix/Build/BenchmarkResults/linux-20260122-211130",
+      "meta": {
+        "commit": null,
+        "branch": null,
+        "dotnetSdk": null,
+        "runtime": null,
+        "osDescription": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+        "osArchitecture": "x86_64",
+        "processArchitecture": "x86_64",
         "machineName": "EVOMONSTER",
         "processorCount": 32
       }

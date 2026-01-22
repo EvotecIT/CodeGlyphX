@@ -10,6 +10,15 @@ internal static class Program {
         var outputDir = ExampleRunner.PrepareOutputDirectory();
         var runner = new ExampleRunner(outputDir);
 
+        var runDiagnostics = Environment.GetEnvironmentVariable("CODEGLYPHX_DIAG_QR");
+        if (!string.IsNullOrEmpty(runDiagnostics) &&
+            (string.Equals(runDiagnostics, "1", StringComparison.OrdinalIgnoreCase) ||
+             string.Equals(runDiagnostics, "true", StringComparison.OrdinalIgnoreCase))) {
+            runner.Run("QR (diagnostics)", QrDiagnosticsExample.Run);
+            runner.PrintSummary();
+            return;
+        }
+
         runner.Run("QR (basic)", QrGenerationExample.Run);
         runner.Run("QR (payloads)", QrPayloadsExample.Run);
         runner.Run("QR (styling)", QrFancyExample.Run);
