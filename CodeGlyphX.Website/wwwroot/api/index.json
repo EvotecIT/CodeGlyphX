@@ -1,6 +1,6 @@
 {
   "title": "CodeGlyphX API Reference",
-  "generatedAtUtc": "2026-01-22T18:19:59.36978Z",
+  "generatedAtUtc": "2026-01-22T20:38:14.4412745Z",
   "assembly": {
     "assemblyName": "CodeGlyphX",
     "assemblyVersion": "1.0.0.0"
@@ -816,24 +816,24 @@
       "summary": "Encodes Code 11 barcodes."
     },
     {
-      "name": "Iata2of5Encoder",
-      "fullName": "CodeGlyphX.Code25.Iata2of5Encoder",
+      "name": "Iata2Of5Encoder",
+      "fullName": "CodeGlyphX.Code25.Iata2Of5Encoder",
       "namespace": "CodeGlyphX.Code25",
       "kind": "Class",
       "slug": "codeglyphx-code25-iata2of5encoder",
       "summary": "Encodes IATA 2 of 5 barcodes."
     },
     {
-      "name": "Industrial2of5Encoder",
-      "fullName": "CodeGlyphX.Code25.Industrial2of5Encoder",
+      "name": "Industrial2Of5Encoder",
+      "fullName": "CodeGlyphX.Code25.Industrial2Of5Encoder",
       "namespace": "CodeGlyphX.Code25",
       "kind": "Class",
       "slug": "codeglyphx-code25-industrial2of5encoder",
       "summary": "Encodes Industrial (Discrete) 2 of 5 barcodes."
     },
     {
-      "name": "Matrix2of5Encoder",
-      "fullName": "CodeGlyphX.Code25.Matrix2of5Encoder",
+      "name": "Matrix2Of5Encoder",
+      "fullName": "CodeGlyphX.Code25.Matrix2Of5Encoder",
       "namespace": "CodeGlyphX.Code25",
       "kind": "Class",
       "slug": "codeglyphx-code25-matrix2of5encoder",

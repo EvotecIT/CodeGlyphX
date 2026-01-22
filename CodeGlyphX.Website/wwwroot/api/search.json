@@ -4819,30 +4819,6 @@
       "summary": "Attempts to decode a Data Matrix symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options, with cancellation."
     },
     {
-      "title": "DataMatrixCode.DecodeImageResult",
-      "kind": "Method",
-      "href": "types/codeglyphx-datamatrixcode.html#method-decodeimageresult-static-decoderesult-string-decodeimageresult-byte-image-imagedecodeoptions-options-cancellationtoken-cancellationtoken",
-      "summary": "Decodes a Data Matrix symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) and returns diagnostics."
-    },
-    {
-      "title": "DataMatrixCode.DecodeImageResult",
-      "kind": "Method",
-      "href": "types/codeglyphx-datamatrixcode.html#method-decodeimageresult-static-decoderesult-string-decodeimageresult-readonlyspan-byte-image-imagedecodeoptions-options-cancellationtoken-cancellationtoken",
-      "summary": "Decodes a Data Matrix symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) in a span and returns diagnostics."
-    },
-    {
-      "title": "DataMatrixCode.DecodeImageResult",
-      "kind": "Method",
-      "href": "types/codeglyphx-datamatrixcode.html#method-decodeimageresult-static-decoderesult-string-decodeimageresult-stream-stream-imagedecodeoptions-options-cancellationtoken-cancellationtoken",
-      "summary": "Decodes a Data Matrix symbol from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) and returns diagnostics."
-    },
-    {
-      "title": "DataMatrixCode.DecodeImageBatch",
-      "kind": "Method",
-      "href": "types/codeglyphx-datamatrixcode.html#method-decodeimagebatch-static-decodebatchresult-string-decodeimagebatch-ienumerable-byte-images-imagedecodeoptions-options-cancellationtoken-cancellationtoken",
-      "summary": "Decodes a batch of Data Matrix images with shared settings and aggregated diagnostics."
-    },
-    {
       "title": "DataMatrixCode.TryDecodeImage",
       "kind": "Method",
       "href": "types/codeglyphx-datamatrixcode.html#method-trydecodeimage-static-bool-trydecodeimage-byte-image-out-string-text-out-datamatrixdecodediagnostics-diagnostics",
@@ -4903,42 +4879,6 @@
       "summary": "Attempts to decode a Data Matrix symbol from common image formats in a span with image decode options, with cancellation."
     },
     {
-      "title": "DataMatrixCode.TryDecodeAllImage",
-      "kind": "Method",
-      "href": "types/codeglyphx-datamatrixcode.html#method-trydecodeallimage-static-bool-trydecodeallimage-byte-image-out-string-texts",
-      "summary": "Attempts to decode all Data Matrix symbols from common image formats."
-    },
-    {
-      "title": "DataMatrixCode.TryDecodeAllImage",
-      "kind": "Method",
-      "href": "types/codeglyphx-datamatrixcode.html#method-trydecodeallimage-static-bool-trydecodeallimage-byte-image-imagedecodeoptions-options-out-string-texts",
-      "summary": "Attempts to decode all Data Matrix symbols from common image formats with image decode options."
-    },
-    {
-      "title": "DataMatrixCode.TryDecodeAllImage",
-      "kind": "Method",
-      "href": "types/codeglyphx-datamatrixcode.html#method-trydecodeallimage-static-bool-trydecodeallimage-byte-image-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-string-texts",
-      "summary": "Attempts to decode all Data Matrix symbols from common image formats with image decode options, with cancellation."
-    },
-    {
-      "title": "DataMatrixCode.TryDecodeAllImage",
-      "kind": "Method",
-      "href": "types/codeglyphx-datamatrixcode.html#method-trydecodeallimage-static-bool-trydecodeallimage-stream-stream-out-string-texts",
-      "summary": "Attempts to decode all Data Matrix symbols from an image stream."
-    },
-    {
-      "title": "DataMatrixCode.TryDecodeAllImage",
-      "kind": "Method",
-      "href": "types/codeglyphx-datamatrixcode.html#method-trydecodeallimage-static-bool-trydecodeallimage-stream-stream-imagedecodeoptions-options-out-string-texts",
-      "summary": "Attempts to decode all Data Matrix symbols from an image stream with image decode options."
-    },
-    {
-      "title": "DataMatrixCode.TryDecodeAllImage",
-      "kind": "Method",
-      "href": "types/codeglyphx-datamatrixcode.html#method-trydecodeallimage-static-bool-trydecodeallimage-stream-stream-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-string-texts",
-      "summary": "Attempts to decode all Data Matrix symbols from an image stream with image decode options, with cancellation."
-    },
-    {
       "title": "DataMatrixCode.TryDecodeImage",
       "kind": "Method",
       "href": "types/codeglyphx-datamatrixcode.html#method-trydecodeimage-static-bool-trydecodeimage-stream-stream-out-string-text",
@@ -4979,6 +4919,66 @@
       "kind": "Method",
       "href": "types/codeglyphx-datamatrixcode.html#method-trydecodeimage-static-bool-trydecodeimage-stream-stream-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-string-text-out-datamatrixdecodediagnostics-diagnostics",
       "summary": "Attempts to decode a Data Matrix symbol from an image stream with image decode options, cancellation, and diagnostics."
+    },
+    {
+      "title": "DataMatrixCode.DecodeImageResult",
+      "kind": "Method",
+      "href": "types/codeglyphx-datamatrixcode.html#method-decodeimageresult-static-decoderesult-string-decodeimageresult-byte-image-imagedecodeoptions-options-cancellationtoken-cancellationtoken",
+      "summary": "Decodes a Data Matrix symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) and returns diagnostics."
+    },
+    {
+      "title": "DataMatrixCode.DecodeImageResult",
+      "kind": "Method",
+      "href": "types/codeglyphx-datamatrixcode.html#method-decodeimageresult-static-decoderesult-string-decodeimageresult-readonlyspan-byte-image-imagedecodeoptions-options-cancellationtoken-cancellationtoken",
+      "summary": "Decodes a Data Matrix symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) in a span and returns diagnostics."
+    },
+    {
+      "title": "DataMatrixCode.DecodeImageResult",
+      "kind": "Method",
+      "href": "types/codeglyphx-datamatrixcode.html#method-decodeimageresult-static-decoderesult-string-decodeimageresult-stream-stream-imagedecodeoptions-options-cancellationtoken-cancellationtoken",
+      "summary": "Decodes a Data Matrix symbol from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) and returns diagnostics."
+    },
+    {
+      "title": "DataMatrixCode.DecodeImageBatch",
+      "kind": "Method",
+      "href": "types/codeglyphx-datamatrixcode.html#method-decodeimagebatch-static-decodebatchresult-string-decodeimagebatch-ienumerable-byte-images-imagedecodeoptions-options-cancellationtoken-cancellationtoken",
+      "summary": "Decodes a batch of Data Matrix images with shared settings and aggregated diagnostics."
+    },
+    {
+      "title": "DataMatrixCode.TryDecodeAllImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-datamatrixcode.html#method-trydecodeallimage-static-bool-trydecodeallimage-byte-image-out-string-texts",
+      "summary": "Attempts to decode all Data Matrix symbols from common image formats."
+    },
+    {
+      "title": "DataMatrixCode.TryDecodeAllImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-datamatrixcode.html#method-trydecodeallimage-static-bool-trydecodeallimage-byte-image-imagedecodeoptions-options-out-string-texts",
+      "summary": "Attempts to decode all Data Matrix symbols from common image formats with image decode options."
+    },
+    {
+      "title": "DataMatrixCode.TryDecodeAllImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-datamatrixcode.html#method-trydecodeallimage-static-bool-trydecodeallimage-byte-image-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-string-texts",
+      "summary": "Attempts to decode all Data Matrix symbols from common image formats with image decode options, with cancellation."
+    },
+    {
+      "title": "DataMatrixCode.TryDecodeAllImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-datamatrixcode.html#method-trydecodeallimage-static-bool-trydecodeallimage-stream-stream-out-string-texts",
+      "summary": "Attempts to decode all Data Matrix symbols from an image stream."
+    },
+    {
+      "title": "DataMatrixCode.TryDecodeAllImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-datamatrixcode.html#method-trydecodeallimage-static-bool-trydecodeallimage-stream-stream-imagedecodeoptions-options-out-string-texts",
+      "summary": "Attempts to decode all Data Matrix symbols from an image stream with image decode options."
+    },
+    {
+      "title": "DataMatrixCode.TryDecodeAllImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-datamatrixcode.html#method-trydecodeallimage-static-bool-trydecodeallimage-stream-stream-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-string-texts",
+      "summary": "Attempts to decode all Data Matrix symbols from an image stream with image decode options, with cancellation."
     },
     {
       "title": "DataMatrixCode.DecodePng",
@@ -13417,37 +13417,37 @@
       "summary": "Encodes a Code 11 barcode."
     },
     {
-      "title": "CodeGlyphX.Code25.Iata2of5Encoder",
+      "title": "CodeGlyphX.Code25.Iata2Of5Encoder",
       "kind": "Type",
       "href": "types/codeglyphx-code25-iata2of5encoder.html",
       "summary": "Encodes IATA 2 of 5 barcodes."
     },
     {
-      "title": "Iata2of5Encoder.Encode",
+      "title": "Iata2Of5Encoder.Encode",
       "kind": "Method",
       "href": "types/codeglyphx-code25-iata2of5encoder.html#method-encode-static-barcode1d-encode-string-content-bool-includechecksum",
       "summary": "Encodes an IATA 2 of 5 barcode. When is true,\n a Mod-10 check digit is appended."
     },
     {
-      "title": "CodeGlyphX.Code25.Industrial2of5Encoder",
+      "title": "CodeGlyphX.Code25.Industrial2Of5Encoder",
       "kind": "Type",
       "href": "types/codeglyphx-code25-industrial2of5encoder.html",
       "summary": "Encodes Industrial (Discrete) 2 of 5 barcodes."
     },
     {
-      "title": "Industrial2of5Encoder.Encode",
+      "title": "Industrial2Of5Encoder.Encode",
       "kind": "Method",
       "href": "types/codeglyphx-code25-industrial2of5encoder.html#method-encode-static-barcode1d-encode-string-content-bool-includechecksum",
       "summary": "Encodes an Industrial 2 of 5 barcode. When is true,\n a Mod-10 check digit is appended."
     },
     {
-      "title": "CodeGlyphX.Code25.Matrix2of5Encoder",
+      "title": "CodeGlyphX.Code25.Matrix2Of5Encoder",
       "kind": "Type",
       "href": "types/codeglyphx-code25-matrix2of5encoder.html",
       "summary": "Encodes Matrix (Standard) 2 of 5 barcodes."
     },
     {
-      "title": "Matrix2of5Encoder.Encode",
+      "title": "Matrix2Of5Encoder.Encode",
       "kind": "Method",
       "href": "types/codeglyphx-code25-matrix2of5encoder.html#method-encode-static-barcode1d-encode-string-content-bool-includechecksum",
       "summary": "Encodes a Matrix 2 of 5 barcode. When is true,\n a Mod-10 check digit is appended."

@@ -1,6 +1,6 @@
 {
-  "name": "Iata2of5Encoder",
-  "fullName": "CodeGlyphX.Code25.Iata2of5Encoder",
+  "name": "Iata2Of5Encoder",
+  "fullName": "CodeGlyphX.Code25.Iata2Of5Encoder",
   "namespace": "CodeGlyphX.Code25",
   "kind": "Class",
   "slug": "codeglyphx-code25-iata2of5encoder",
@@ -31,7 +31,7 @@
       "examples": [],
       "seeAlso": [],
       "signature": "static Barcode1D Encode(string content, bool includeChecksum)",
-      "xmlId": "M:CodeGlyphX.Code25.Iata2of5Encoder.Encode(System.String,System.Boolean)",
+      "xmlId": "M:CodeGlyphX.Code25.Iata2Of5Encoder.Encode(System.String,System.Boolean)",
       "anchor": "method-encode-static-barcode1d-encode-string-content-bool-includechecksum"
     }
   ]
