@@ -1,9 +1,20 @@
 # Benchmarks
 
+**Data locations**
+- Human-readable report: `BENCHMARK.md`
+- Website JSON: `Assets/Data/benchmark.json`
+- Summary JSON: `Assets/Data/benchmark-summary.json`
+- Index JSON: `Assets/Data/benchmark-index.json`
+
+**Publish flag**
+- Quick runs default to `publish=false` (draft).
+- Full runs default to `publish=true`.
+- Override with `-Publish` or `-NoPublish` on the report generator.
+
 <!-- BENCHMARK:WINDOWS:QUICK:START -->
 ## WINDOWS
 
-Updated: 2026-01-22 12:45:03 UTC
+Updated: 2026-01-22 14:07:08 UTC
 Framework: net8.0
 Configuration: Release
 Artifacts: /mnt/c/Support/GitHub/CodeMatrix/Build/BenchmarkResults/windows-20260122-124936

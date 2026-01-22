@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "entries": [
+    {
+      "os": "windows",
+      "runMode": "quick",
+      "generatedUtc": "2026-01-22T14:07:09.5645104Z",
+      "publish": false,
+      "framework": "net8.0",
+      "configuration": "Release",
+      "artifacts": "/mnt/c/Support/GitHub/CodeMatrix/Build/BenchmarkResults/windows-20260122-124936",
+      "meta": {
+        "commit": null,
+        "branch": null,
+        "dotnetSdk": "10.0.100",
+        "runtime": ".NET 9.0.10",
+        "osDescription": "Ubuntu 24.04.3 LTS",
+        "osArchitecture": "X64",
+        "processArchitecture": "X64",
+        "machineName": "EVOMONSTER",
+        "processorCount": 32
+      }
+    }
+  ]
+}
