@@ -841,6 +841,7 @@ body.using-keyboard .hero h1:focus-visible {
     display: flex;
     gap: 0.5rem;
     margin-bottom: 1rem;
+    flex-wrap: wrap;
 }
 
 .code-tab {
@@ -1598,13 +1599,6 @@ body.using-keyboard .showcase-hero h1:focus-visible {
 }
 
 /* Action buttons row */
-.showcase-actions {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    flex-wrap: wrap;
-}
-
 .showcase-actions .btn {
     display: inline-flex;
     align-items: center;
@@ -1887,36 +1881,6 @@ body.using-keyboard .showcase-hero h1:focus-visible {
     margin-bottom: 1.5rem;
     padding-bottom: 1rem;
     border-bottom: 1px solid var(--border);
-}
-
-/* Code example platform tabs */
-.code-tabs {
-    display: flex;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
-    flex-wrap: wrap;
-}
-
-.code-tab {
-    padding: 0.5rem 1rem;
-    background: var(--bg-input);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    color: var(--text-muted);
-    font-size: 0.875rem;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.code-tab:hover {
-    background: var(--bg-card-hover);
-    color: var(--text);
-}
-
-.code-tab.active {
-    background: var(--primary);
-    border-color: var(--primary);
-    color: white;
 }
 
 .form-group {

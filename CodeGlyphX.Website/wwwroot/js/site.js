@@ -1,7 +1,7 @@
 (() => {
     function copyText(text) {
         if (!text) return;
-        if (navigator.clipboard && navigator.clipboard.writeText) {
+        if (navigator.clipboard?.writeText) {
             navigator.clipboard.writeText(text).catch(() => { });
             return;
         }
@@ -13,16 +13,16 @@
         document.body.appendChild(textarea);
         textarea.select();
         try {
-            document.execCommand('copy');
+            document.execCommand('copy'); // Fallback for older browsers
         } catch {
             // ignore
         }
-        document.body.removeChild(textarea);
+        textarea.remove();
     }
 
     function loadPrism(callback) {
         if (globalThis.__codeGlyphPrismLoaded) {
-            callback && callback();
+            callback?.();
             return;
         }
         const css = document.createElement('link');
@@ -37,7 +37,7 @@
             csharp.src = '/vendor/prism/prism-csharp.min.js';
             csharp.onload = () => {
                 globalThis.__codeGlyphPrismLoaded = true;
-                callback && callback();
+                callback?.();
             };
             document.head.appendChild(csharp);
         };
@@ -114,9 +114,7 @@
                 blocksNeedingHighlight.forEach((block) => {
                     if (!block.classList.contains('prism-highlighted')) {
                         block.classList.add('language-csharp', 'prism-highlighted');
-                        if (globalThis.Prism && globalThis.Prism.highlightElement) {
-                            globalThis.Prism.highlightElement(block);
-                        }
+                        globalThis.Prism?.highlightElement?.(block);
                     }
                     // Add copy button AFTER highlighting
                     addCopyButton(block);
@@ -130,7 +128,7 @@
         if (!(target instanceof Element)) return;
         const button = target.closest('[data-copy]');
         if (!button) return;
-        const text = button.getAttribute('data-copy');
+        const text = button.dataset.copy;
         if (!text) return;
         copyText(text);
     });
