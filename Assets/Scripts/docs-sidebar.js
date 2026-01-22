@@ -1,7 +1,7 @@
 // Docs sidebar toggle (static pages)
-var docsToggle = document.querySelector('.docs-sidebar-toggle');
-var docsSidebar = document.querySelector('.docs-sidebar');
-var docsOverlay = document.querySelector('.docs-sidebar-overlay');
+const docsToggle = document.querySelector('.docs-sidebar-toggle');
+const docsSidebar = document.querySelector('.docs-sidebar');
+const docsOverlay = document.querySelector('.docs-sidebar-overlay');
 
 if (docsToggle && docsSidebar) {
   docsToggle.addEventListener('click', function() {

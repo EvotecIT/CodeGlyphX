@@ -21,7 +21,7 @@
     }
 
     function loadPrism(callback) {
-        if (window.__codeGlyphPrismLoaded) {
+        if (globalThis.__codeGlyphPrismLoaded) {
             callback && callback();
             return;
         }
@@ -36,7 +36,7 @@
             const csharp = document.createElement('script');
             csharp.src = '/vendor/prism/prism-csharp.min.js';
             csharp.onload = () => {
-                window.__codeGlyphPrismLoaded = true;
+                globalThis.__codeGlyphPrismLoaded = true;
                 callback && callback();
             };
             document.head.appendChild(csharp);
@@ -114,8 +114,8 @@
                 blocksNeedingHighlight.forEach((block) => {
                     if (!block.classList.contains('prism-highlighted')) {
                         block.classList.add('language-csharp', 'prism-highlighted');
-                        if (window.Prism && window.Prism.highlightElement) {
-                            window.Prism.highlightElement(block);
+                        if (globalThis.Prism && globalThis.Prism.highlightElement) {
+                            globalThis.Prism.highlightElement(block);
                         }
                     }
                     // Add copy button AFTER highlighting
@@ -138,7 +138,7 @@
     let initTimer = 0;
     function scheduleInit() {
         if (initTimer) return;
-        initTimer = window.setTimeout(() => {
+        initTimer = globalThis.setTimeout(() => {
             initTimer = 0;
             initCodeBlocks();
         }, 100);
@@ -153,6 +153,6 @@
     const observer = new MutationObserver(scheduleInit);
     observer.observe(document.body, { childList: true, subtree: true });
 
-    window.CodeGlyphX = window.CodeGlyphX || {};
-    window.CodeGlyphX.initCodeBlocks = initCodeBlocks;
+    globalThis.CodeGlyphX = globalThis.CodeGlyphX || {};
+    globalThis.CodeGlyphX.initCodeBlocks = initCodeBlocks;
 })();

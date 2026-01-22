@@ -475,30 +475,6 @@
       "summary": "Attempts to decode an Aztec symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options, with cancellation."
     },
     {
-      "title": "AztecCode.DecodeImageResult",
-      "kind": "Method",
-      "href": "types/codeglyphx-azteccode.html#method-decodeimageresult-static-decoderesult-string-decodeimageresult-byte-image-imagedecodeoptions-options-cancellationtoken-cancellationtoken",
-      "summary": "Decodes an Aztec symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) and returns diagnostics."
-    },
-    {
-      "title": "AztecCode.DecodeImageResult",
-      "kind": "Method",
-      "href": "types/codeglyphx-azteccode.html#method-decodeimageresult-static-decoderesult-string-decodeimageresult-readonlyspan-byte-image-imagedecodeoptions-options-cancellationtoken-cancellationtoken",
-      "summary": "Decodes an Aztec symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) in a span and returns diagnostics."
-    },
-    {
-      "title": "AztecCode.DecodeImageResult",
-      "kind": "Method",
-      "href": "types/codeglyphx-azteccode.html#method-decodeimageresult-static-decoderesult-string-decodeimageresult-stream-stream-imagedecodeoptions-options-cancellationtoken-cancellationtoken",
-      "summary": "Decodes an Aztec symbol from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) and returns diagnostics."
-    },
-    {
-      "title": "AztecCode.DecodeImageBatch",
-      "kind": "Method",
-      "href": "types/codeglyphx-azteccode.html#method-decodeimagebatch-static-decodebatchresult-string-decodeimagebatch-ienumerable-byte-images-imagedecodeoptions-options-cancellationtoken-cancellationtoken",
-      "summary": "Decodes a batch of Aztec images with shared settings and aggregated diagnostics."
-    },
-    {
       "title": "AztecCode.TryDecodeImage",
       "kind": "Method",
       "href": "types/codeglyphx-azteccode.html#method-trydecodeimage-static-bool-trydecodeimage-byte-image-out-string-text-out-aztecdecodediagnostics-diagnostics",
@@ -559,42 +535,6 @@
       "summary": "Attempts to decode an Aztec symbol from common image formats in a span with image decode options, cancellation, and diagnostics."
     },
     {
-      "title": "AztecCode.TryDecodeAllImage",
-      "kind": "Method",
-      "href": "types/codeglyphx-azteccode.html#method-trydecodeallimage-static-bool-trydecodeallimage-byte-image-out-string-texts",
-      "summary": "Attempts to decode all Aztec symbols from common image formats."
-    },
-    {
-      "title": "AztecCode.TryDecodeAllImage",
-      "kind": "Method",
-      "href": "types/codeglyphx-azteccode.html#method-trydecodeallimage-static-bool-trydecodeallimage-byte-image-imagedecodeoptions-options-out-string-texts",
-      "summary": "Attempts to decode all Aztec symbols from common image formats with image decode options."
-    },
-    {
-      "title": "AztecCode.TryDecodeAllImage",
-      "kind": "Method",
-      "href": "types/codeglyphx-azteccode.html#method-trydecodeallimage-static-bool-trydecodeallimage-byte-image-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-string-texts",
-      "summary": "Attempts to decode all Aztec symbols from common image formats with image decode options, with cancellation."
-    },
-    {
-      "title": "AztecCode.TryDecodeAllImage",
-      "kind": "Method",
-      "href": "types/codeglyphx-azteccode.html#method-trydecodeallimage-static-bool-trydecodeallimage-stream-stream-out-string-texts",
-      "summary": "Attempts to decode all Aztec symbols from an image stream."
-    },
-    {
-      "title": "AztecCode.TryDecodeAllImage",
-      "kind": "Method",
-      "href": "types/codeglyphx-azteccode.html#method-trydecodeallimage-static-bool-trydecodeallimage-stream-stream-imagedecodeoptions-options-out-string-texts",
-      "summary": "Attempts to decode all Aztec symbols from an image stream with image decode options."
-    },
-    {
-      "title": "AztecCode.TryDecodeAllImage",
-      "kind": "Method",
-      "href": "types/codeglyphx-azteccode.html#method-trydecodeallimage-static-bool-trydecodeallimage-stream-stream-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-string-texts",
-      "summary": "Attempts to decode all Aztec symbols from an image stream with image decode options, with cancellation."
-    },
-    {
       "title": "AztecCode.TryDecodeImage",
       "kind": "Method",
       "href": "types/codeglyphx-azteccode.html#method-trydecodeimage-static-bool-trydecodeimage-stream-stream-out-string-text",
@@ -635,6 +575,66 @@
       "kind": "Method",
       "href": "types/codeglyphx-azteccode.html#method-trydecodeimage-static-bool-trydecodeimage-stream-stream-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-string-text-out-aztecdecodediagnostics-diagnostics",
       "summary": "Attempts to decode an Aztec symbol from an image stream with image decode options, cancellation, and diagnostics."
+    },
+    {
+      "title": "AztecCode.DecodeImageResult",
+      "kind": "Method",
+      "href": "types/codeglyphx-azteccode.html#method-decodeimageresult-static-decoderesult-string-decodeimageresult-byte-image-imagedecodeoptions-options-cancellationtoken-cancellationtoken",
+      "summary": "Decodes an Aztec symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) and returns diagnostics."
+    },
+    {
+      "title": "AztecCode.DecodeImageResult",
+      "kind": "Method",
+      "href": "types/codeglyphx-azteccode.html#method-decodeimageresult-static-decoderesult-string-decodeimageresult-readonlyspan-byte-image-imagedecodeoptions-options-cancellationtoken-cancellationtoken",
+      "summary": "Decodes an Aztec symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) in a span and returns diagnostics."
+    },
+    {
+      "title": "AztecCode.DecodeImageResult",
+      "kind": "Method",
+      "href": "types/codeglyphx-azteccode.html#method-decodeimageresult-static-decoderesult-string-decodeimageresult-stream-stream-imagedecodeoptions-options-cancellationtoken-cancellationtoken",
+      "summary": "Decodes an Aztec symbol from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) and returns diagnostics."
+    },
+    {
+      "title": "AztecCode.DecodeImageBatch",
+      "kind": "Method",
+      "href": "types/codeglyphx-azteccode.html#method-decodeimagebatch-static-decodebatchresult-string-decodeimagebatch-ienumerable-byte-images-imagedecodeoptions-options-cancellationtoken-cancellationtoken",
+      "summary": "Decodes a batch of Aztec images with shared settings and aggregated diagnostics."
+    },
+    {
+      "title": "AztecCode.TryDecodeAllImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-azteccode.html#method-trydecodeallimage-static-bool-trydecodeallimage-byte-image-out-string-texts",
+      "summary": "Attempts to decode all Aztec symbols from common image formats."
+    },
+    {
+      "title": "AztecCode.TryDecodeAllImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-azteccode.html#method-trydecodeallimage-static-bool-trydecodeallimage-byte-image-imagedecodeoptions-options-out-string-texts",
+      "summary": "Attempts to decode all Aztec symbols from common image formats with image decode options."
+    },
+    {
+      "title": "AztecCode.TryDecodeAllImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-azteccode.html#method-trydecodeallimage-static-bool-trydecodeallimage-byte-image-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-string-texts",
+      "summary": "Attempts to decode all Aztec symbols from common image formats with image decode options, with cancellation."
+    },
+    {
+      "title": "AztecCode.TryDecodeAllImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-azteccode.html#method-trydecodeallimage-static-bool-trydecodeallimage-stream-stream-out-string-texts",
+      "summary": "Attempts to decode all Aztec symbols from an image stream."
+    },
+    {
+      "title": "AztecCode.TryDecodeAllImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-azteccode.html#method-trydecodeallimage-static-bool-trydecodeallimage-stream-stream-imagedecodeoptions-options-out-string-texts",
+      "summary": "Attempts to decode all Aztec symbols from an image stream with image decode options."
+    },
+    {
+      "title": "AztecCode.TryDecodeAllImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-azteccode.html#method-trydecodeallimage-static-bool-trydecodeallimage-stream-stream-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-string-texts",
+      "summary": "Attempts to decode all Aztec symbols from an image stream with image decode options, with cancellation."
     },
     {
       "title": "AztecCode.TryDecodePng",
@@ -1345,30 +1345,6 @@
       "summary": "Attempts to decode a barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with an optional expected type hint, image decode options, barcode decode options, and cancellation."
     },
     {
-      "title": "Barcode.DecodeImageResult",
-      "kind": "Method",
-      "href": "types/codeglyphx-barcode.html#method-decodeimageresult-static-decoderesult-barcodedecoded-decodeimageresult-byte-image-nullable-barcodetype-expectedtype-imagedecodeoptions-options-barcodedecodeoptions-decodeoptions-cancellationtoken-cancellationtoken",
-      "summary": "Decodes a barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) and returns diagnostics."
-    },
-    {
-      "title": "Barcode.DecodeImageResult",
-      "kind": "Method",
-      "href": "types/codeglyphx-barcode.html#method-decodeimageresult-static-decoderesult-barcodedecoded-decodeimageresult-readonlyspan-byte-image-nullable-barcodetype-expectedtype-imagedecodeoptions-options-barcodedecodeoptions-decodeoptions-cancellationtoken-cancellationtoken",
-      "summary": "Decodes a barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) in a span and returns diagnostics."
-    },
-    {
-      "title": "Barcode.DecodeImageResult",
-      "kind": "Method",
-      "href": "types/codeglyphx-barcode.html#method-decodeimageresult-static-decoderesult-barcodedecoded-decodeimageresult-stream-stream-nullable-barcodetype-expectedtype-imagedecodeoptions-options-barcodedecodeoptions-decodeoptions-cancellationtoken-cancellationtoken",
-      "summary": "Decodes a barcode from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) and returns diagnostics."
-    },
-    {
-      "title": "Barcode.DecodeImageBatch",
-      "kind": "Method",
-      "href": "types/codeglyphx-barcode.html#method-decodeimagebatch-static-decodebatchresult-barcodedecoded-decodeimagebatch-ienumerable-byte-images-nullable-barcodetype-expectedtype-imagedecodeoptions-options-barcodedecodeoptions-decodeoptions-cancellationtoken-cancellationtoken",
-      "summary": "Decodes a batch of barcode images with shared settings and aggregated diagnostics."
-    },
-    {
       "title": "Barcode.TryDecodeImage",
       "kind": "Method",
       "href": "types/codeglyphx-barcode.html#method-trydecodeimage-static-bool-trydecodeimage-stream-stream-out-barcodedecoded-decoded",
@@ -1415,6 +1391,30 @@
       "kind": "Method",
       "href": "types/codeglyphx-barcode.html#method-trydecodeimage-static-bool-trydecodeimage-stream-stream-nullable-barcodetype-expectedtype-imagedecodeoptions-options-barcodedecodeoptions-decodeoptions-cancellationtoken-cancellationtoken-out-barcodedecoded-decoded",
       "summary": "Attempts to decode a barcode from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with an optional expected type hint, image decode options, barcode decode options, and cancellation."
+    },
+    {
+      "title": "Barcode.DecodeImageResult",
+      "kind": "Method",
+      "href": "types/codeglyphx-barcode.html#method-decodeimageresult-static-decoderesult-barcodedecoded-decodeimageresult-byte-image-nullable-barcodetype-expectedtype-imagedecodeoptions-options-barcodedecodeoptions-decodeoptions-cancellationtoken-cancellationtoken",
+      "summary": "Decodes a barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) and returns diagnostics."
+    },
+    {
+      "title": "Barcode.DecodeImageResult",
+      "kind": "Method",
+      "href": "types/codeglyphx-barcode.html#method-decodeimageresult-static-decoderesult-barcodedecoded-decodeimageresult-readonlyspan-byte-image-nullable-barcodetype-expectedtype-imagedecodeoptions-options-barcodedecodeoptions-decodeoptions-cancellationtoken-cancellationtoken",
+      "summary": "Decodes a barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) in a span and returns diagnostics."
+    },
+    {
+      "title": "Barcode.DecodeImageResult",
+      "kind": "Method",
+      "href": "types/codeglyphx-barcode.html#method-decodeimageresult-static-decoderesult-barcodedecoded-decodeimageresult-stream-stream-nullable-barcodetype-expectedtype-imagedecodeoptions-options-barcodedecodeoptions-decodeoptions-cancellationtoken-cancellationtoken",
+      "summary": "Decodes a barcode from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) and returns diagnostics."
+    },
+    {
+      "title": "Barcode.DecodeImageBatch",
+      "kind": "Method",
+      "href": "types/codeglyphx-barcode.html#method-decodeimagebatch-static-decodebatchresult-barcodedecoded-decodeimagebatch-ienumerable-byte-images-nullable-barcodetype-expectedtype-imagedecodeoptions-options-barcodedecodeoptions-decodeoptions-cancellationtoken-cancellationtoken",
+      "summary": "Decodes a batch of barcode images with shared settings and aggregated diagnostics."
     },
     {
       "title": "Barcode.TryDecodePngFile",

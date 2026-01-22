@@ -6,7 +6,7 @@
   <title>Barcode - CodeGlyphX API Reference</title>
   <meta name="description" content="Simple barcode helpers with fluent and static APIs." />
   <link rel="stylesheet" href="../style.css" />
-  <script>(function(){var theme=localStorage.getItem('theme')||'dark';document.documentElement.setAttribute('data-theme',theme);})();</script>
+  <script>(function(){const theme=localStorage.getItem('theme')||'dark';document.documentElement.dataset.theme=theme;})();</script>
 </head>
 <body>
   <div class="page">
@@ -27,7 +27,7 @@
             <span></span>
         </label>
 
-        <nav class="nav">
+        <nav class="nav" aria-label="Main navigation">
             <div class="nav-links">
                 <a href="/">Home</a>
                 <a href="/playground/">Playground</a>
@@ -509,54 +509,6 @@
         <dt>decoded <span class="param-type">BarcodeDecoded</span></dt>
       </dl>
     </div>
-    <div class="member" id="method-decodeimageresult-static-decoderesult-barcodedecoded-decodeimageresult-byte-image-nullable-barcodetype-expectedtype-imagedecodeoptions-options-barcodedecodeoptions-decodeoptions-cancellationtoken-cancellationtoken">
-      <code class="signature">static DecodeResult&lt;BarcodeDecoded&gt; DecodeImageResult(byte[] image, Nullable&lt;BarcodeType&gt; expectedType, ImageDecodeOptions options, BarcodeDecodeOptions decodeOptions, CancellationToken cancellationToken)</code>
-      <p class="member-summary">Decodes a barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) and returns diagnostics.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>image <span class="param-type">byte[]</span></dt>
-        <dt>expectedType <span class="param-type">Nullable&lt;BarcodeType&gt;</span></dt>
-        <dt>options <span class="param-type">ImageDecodeOptions</span></dt>
-        <dt>decodeOptions <span class="param-type">BarcodeDecodeOptions</span></dt>
-        <dt>cancellationToken <span class="param-type">CancellationToken</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-decodeimageresult-static-decoderesult-barcodedecoded-decodeimageresult-readonlyspan-byte-image-nullable-barcodetype-expectedtype-imagedecodeoptions-options-barcodedecodeoptions-decodeoptions-cancellationtoken-cancellationtoken">
-      <code class="signature">static DecodeResult&lt;BarcodeDecoded&gt; DecodeImageResult(ReadOnlySpan&lt;byte&gt; image, Nullable&lt;BarcodeType&gt; expectedType, ImageDecodeOptions options, BarcodeDecodeOptions decodeOptions, CancellationToken cancellationToken)</code>
-      <p class="member-summary">Decodes a barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) in a span and returns diagnostics.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>image <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
-        <dt>expectedType <span class="param-type">Nullable&lt;BarcodeType&gt;</span></dt>
-        <dt>options <span class="param-type">ImageDecodeOptions</span></dt>
-        <dt>decodeOptions <span class="param-type">BarcodeDecodeOptions</span></dt>
-        <dt>cancellationToken <span class="param-type">CancellationToken</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-decodeimageresult-static-decoderesult-barcodedecoded-decodeimageresult-stream-stream-nullable-barcodetype-expectedtype-imagedecodeoptions-options-barcodedecodeoptions-decodeoptions-cancellationtoken-cancellationtoken">
-      <code class="signature">static DecodeResult&lt;BarcodeDecoded&gt; DecodeImageResult(Stream stream, Nullable&lt;BarcodeType&gt; expectedType, ImageDecodeOptions options, BarcodeDecodeOptions decodeOptions, CancellationToken cancellationToken)</code>
-      <p class="member-summary">Decodes a barcode from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) and returns diagnostics.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>stream <span class="param-type">Stream</span></dt>
-        <dt>expectedType <span class="param-type">Nullable&lt;BarcodeType&gt;</span></dt>
-        <dt>options <span class="param-type">ImageDecodeOptions</span></dt>
-        <dt>decodeOptions <span class="param-type">BarcodeDecodeOptions</span></dt>
-        <dt>cancellationToken <span class="param-type">CancellationToken</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-decodeimagebatch-static-decodebatchresult-barcodedecoded-decodeimagebatch-ienumerable-byte-images-nullable-barcodetype-expectedtype-imagedecodeoptions-options-barcodedecodeoptions-decodeoptions-cancellationtoken-cancellationtoken">
-      <code class="signature">static DecodeBatchResult&lt;BarcodeDecoded&gt; DecodeImageBatch(IEnumerable&lt;byte[]&gt; images, Nullable&lt;BarcodeType&gt; expectedType, ImageDecodeOptions options, BarcodeDecodeOptions decodeOptions, CancellationToken cancellationToken)</code>
-      <p class="member-summary">Decodes a batch of barcode images with shared settings and aggregated diagnostics.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>images <span class="param-type">IEnumerable&lt;byte[]&gt;</span></dt>
-        <dt>expectedType <span class="param-type">Nullable&lt;BarcodeType&gt;</span></dt>
-        <dt>options <span class="param-type">ImageDecodeOptions</span></dt>
-        <dt>decodeOptions <span class="param-type">BarcodeDecodeOptions</span></dt>
-        <dt>cancellationToken <span class="param-type">CancellationToken</span></dt>
-      </dl>
-    </div>
     <div class="member" id="method-trydecodeimage-static-bool-trydecodeimage-stream-stream-out-barcodedecoded-decoded">
       <code class="signature">static bool TryDecodeImage(Stream stream, out BarcodeDecoded decoded)</code>
       <p class="member-summary">Attempts to decode a barcode from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).</p>
@@ -643,6 +595,54 @@
         <dt>decodeOptions <span class="param-type">BarcodeDecodeOptions</span></dt>
         <dt>cancellationToken <span class="param-type">CancellationToken</span></dt>
         <dt>decoded <span class="param-type">BarcodeDecoded</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-decodeimageresult-static-decoderesult-barcodedecoded-decodeimageresult-byte-image-nullable-barcodetype-expectedtype-imagedecodeoptions-options-barcodedecodeoptions-decodeoptions-cancellationtoken-cancellationtoken">
+      <code class="signature">static DecodeResult&lt;BarcodeDecoded&gt; DecodeImageResult(byte[] image, Nullable&lt;BarcodeType&gt; expectedType, ImageDecodeOptions options, BarcodeDecodeOptions decodeOptions, CancellationToken cancellationToken)</code>
+      <p class="member-summary">Decodes a barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) and returns diagnostics.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>image <span class="param-type">byte[]</span></dt>
+        <dt>expectedType <span class="param-type">Nullable&lt;BarcodeType&gt;</span></dt>
+        <dt>options <span class="param-type">ImageDecodeOptions</span></dt>
+        <dt>decodeOptions <span class="param-type">BarcodeDecodeOptions</span></dt>
+        <dt>cancellationToken <span class="param-type">CancellationToken</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-decodeimageresult-static-decoderesult-barcodedecoded-decodeimageresult-readonlyspan-byte-image-nullable-barcodetype-expectedtype-imagedecodeoptions-options-barcodedecodeoptions-decodeoptions-cancellationtoken-cancellationtoken">
+      <code class="signature">static DecodeResult&lt;BarcodeDecoded&gt; DecodeImageResult(ReadOnlySpan&lt;byte&gt; image, Nullable&lt;BarcodeType&gt; expectedType, ImageDecodeOptions options, BarcodeDecodeOptions decodeOptions, CancellationToken cancellationToken)</code>
+      <p class="member-summary">Decodes a barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) in a span and returns diagnostics.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>image <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
+        <dt>expectedType <span class="param-type">Nullable&lt;BarcodeType&gt;</span></dt>
+        <dt>options <span class="param-type">ImageDecodeOptions</span></dt>
+        <dt>decodeOptions <span class="param-type">BarcodeDecodeOptions</span></dt>
+        <dt>cancellationToken <span class="param-type">CancellationToken</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-decodeimageresult-static-decoderesult-barcodedecoded-decodeimageresult-stream-stream-nullable-barcodetype-expectedtype-imagedecodeoptions-options-barcodedecodeoptions-decodeoptions-cancellationtoken-cancellationtoken">
+      <code class="signature">static DecodeResult&lt;BarcodeDecoded&gt; DecodeImageResult(Stream stream, Nullable&lt;BarcodeType&gt; expectedType, ImageDecodeOptions options, BarcodeDecodeOptions decodeOptions, CancellationToken cancellationToken)</code>
+      <p class="member-summary">Decodes a barcode from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) and returns diagnostics.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>stream <span class="param-type">Stream</span></dt>
+        <dt>expectedType <span class="param-type">Nullable&lt;BarcodeType&gt;</span></dt>
+        <dt>options <span class="param-type">ImageDecodeOptions</span></dt>
+        <dt>decodeOptions <span class="param-type">BarcodeDecodeOptions</span></dt>
+        <dt>cancellationToken <span class="param-type">CancellationToken</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-decodeimagebatch-static-decodebatchresult-barcodedecoded-decodeimagebatch-ienumerable-byte-images-nullable-barcodetype-expectedtype-imagedecodeoptions-options-barcodedecodeoptions-decodeoptions-cancellationtoken-cancellationtoken">
+      <code class="signature">static DecodeBatchResult&lt;BarcodeDecoded&gt; DecodeImageBatch(IEnumerable&lt;byte[]&gt; images, Nullable&lt;BarcodeType&gt; expectedType, ImageDecodeOptions options, BarcodeDecodeOptions decodeOptions, CancellationToken cancellationToken)</code>
+      <p class="member-summary">Decodes a batch of barcode images with shared settings and aggregated diagnostics.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>images <span class="param-type">IEnumerable&lt;byte[]&gt;</span></dt>
+        <dt>expectedType <span class="param-type">Nullable&lt;BarcodeType&gt;</span></dt>
+        <dt>options <span class="param-type">ImageDecodeOptions</span></dt>
+        <dt>decodeOptions <span class="param-type">BarcodeDecodeOptions</span></dt>
+        <dt>cancellationToken <span class="param-type">CancellationToken</span></dt>
       </dl>
     </div>
     <div class="member" id="method-trydecodepngfile-static-bool-trydecodepngfile-string-path-out-barcodedecoded-decoded">

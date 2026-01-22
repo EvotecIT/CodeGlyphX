@@ -1,1915 +1,1915 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>http://localhost:5001/</loc>
+    <loc>https://codeglyphx.com/</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/playground/</loc>
+    <loc>https://codeglyphx.com/playground/</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/docs/</loc>
+    <loc>https://codeglyphx.com/docs/</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/faq/</loc>
+    <loc>https://codeglyphx.com/faq/</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/showcase/</loc>
+    <loc>https://codeglyphx.com/showcase/</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/</loc>
+    <loc>https://codeglyphx.com/api/</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/llms.txt</loc>
+    <loc>https://codeglyphx.com/llms.txt</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/llms.json</loc>
+    <loc>https://codeglyphx.com/llms.json</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/llms-full.txt</loc>
+    <loc>https://codeglyphx.com/llms-full.txt</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/index.html</loc>
+    <loc>https://codeglyphx.com/api/index.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-azteccode.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-azteccode.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-aztecdecodediagnostics.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-aztecdecodediagnostics.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-barcode.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-barcode.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-barcode1d.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-barcode1d.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-barcode-barcodebuilder.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-barcode-barcodebuilder.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-barcodedecoded.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-barcodedecoded.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-barcodedecodediagnostics.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-barcodedecodediagnostics.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-barcodedecodeoptions.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-barcodedecodeoptions.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-barcodedecoder.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-barcodedecoder.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-barcodeeasy.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-barcodeeasy.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-barcodeencoder.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-barcodeencoder.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-barcodeoptions.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-barcodeoptions.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-barcodetype.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-barcodetype.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-barsegment.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-barsegment.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-bitmatrix.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-bitmatrix.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-code11checksumpolicy.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-code11checksumpolicy.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-code39checksumpolicy.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-code39checksumpolicy.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-codeglyph.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-codeglyph.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-codeglyphbudget.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-codeglyphbudget.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-codeglyphdecoded.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-codeglyphdecoded.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-codeglyphdecodediagnostics.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-codeglyphdecodediagnostics.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-codeglyphdecodeoptions.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-codeglyphdecodeoptions.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-codeglyphkind.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-codeglyphkind.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-datamatrixcode-datamatrixbuilder.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-datamatrixcode-datamatrixbuilder.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-datamatrixcode.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-datamatrixcode.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-datamatrixdecodediagnostics.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-datamatrixdecodediagnostics.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-decodebatchdiagnostics.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-decodebatchdiagnostics.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-decodebatchresult-1.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-decodebatchresult-1.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-decodefailurereason.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-decodefailurereason.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-decoderesult-1.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-decoderesult-1.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-gs1.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-gs1.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-gs1element.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-gs1element.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-otp-hotpbuilder.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-otp-hotpbuilder.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-imagedecodeoptions.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-imagedecodeoptions.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-matrixbarcodedecoder.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-matrixbarcodedecoder.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-matrixbarcodeencoder.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-matrixbarcodeencoder.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-matrixoptions.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-matrixoptions.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-microqrcode.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-microqrcode.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-microqrcodeencoder.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-microqrcodeencoder.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-microqrdecoded.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-microqrdecoded.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-microqrdecoder.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-microqrdecoder.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-msichecksumpolicy.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-msichecksumpolicy.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-msichecksumtype.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-msichecksumtype.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-otp.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-otp.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-otpalgorithm.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-otpalgorithm.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-otpauthhotp.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-otpauthhotp.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-otpauthparser.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-otpauthparser.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-otpauthparseresult.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-otpauthparseresult.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-otpauthpayload.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-otpauthpayload.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-otpauthsecret.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-otpauthsecret.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-otpauthtotp.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-otpauthtotp.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-otpauthtype.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-otpauthtype.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-otpauthvalidationoptions.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-otpauthvalidationoptions.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-otpauthvalidator.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-otpauthvalidator.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-otpqrdecoder.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-otpqrdecoder.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-otpqrpreset.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-otpqrpreset.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-otpqrsafety.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-otpqrsafety.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-otpqrsafetyreport.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-otpqrsafetyreport.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-pdf417code-pdf417builder.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-pdf417code-pdf417builder.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-pdf417code.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-pdf417code.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-pdf417decodediagnostics.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-pdf417decodediagnostics.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-pixelformat.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-pixelformat.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-plesseychecksumpolicy.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-plesseychecksumpolicy.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-qr.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-qr.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-qrartsafety.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-qrartsafety.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-qrartsafetyreport.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-qrartsafetyreport.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-qrartwarning.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-qrartwarning.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-qrartwarningkind.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-qrartwarningkind.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-qr-qrbuilder.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-qr-qrbuilder.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-qrcode.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-qrcode.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-qrcodeencoder.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-qrcodeencoder.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-qrdecoded.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-qrdecoded.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-qrdecodefailurereason.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-qrdecodefailurereason.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-qrdecodeinfo.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-qrdecodeinfo.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-qrdecodeprofile.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-qrdecodeprofile.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-qrdecoder.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-qrdecoder.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-qrdiagnosticsdump.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-qrdiagnosticsdump.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-qreasy.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-qreasy.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-qreasyoptions.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-qreasyoptions.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-qrerrorcorrectionlevel.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-qrerrorcorrectionlevel.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-qrfnc1mode.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-qrfnc1mode.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-qrimagedecoder.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-qrimagedecoder.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-qrpixeldebug.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-qrpixeldebug.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-qrpixeldebugmode.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-qrpixeldebugmode.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-qrpixeldebugoptions.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-qrpixeldebugoptions.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-qrpixeldecodeinfo.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-qrpixeldecodeinfo.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-qrpixeldecodeoptions.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-qrpixeldecodeoptions.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-qrpresets.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-qrpresets.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-qrrenderstyle.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-qrrenderstyle.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-qrstructuredappend.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-qrstructuredappend.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-qrtextencoding.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-qrtextencoding.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-otp-totpbuilder.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-otp-totpbuilder.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-upcenumbersystem.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-upcenumbersystem.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-australiapost-australiapostcustomerencodingtable.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-australiapost-australiapostcustomerencodingtable.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-australiapost-australiapostdecoded.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-australiapost-australiapostdecoded.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-australiapost-australiapostdecoder.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-australiapost-australiapostdecoder.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-australiapost-australiapostencoder.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-australiapost-australiapostencoder.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-australiapost-australiapostformat.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-australiapost-australiapostformat.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-aztec-aztecencodeoptions.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-aztec-aztecencodeoptions.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-codabar-codabarencoder.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-codabar-codabarencoder.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-code11-code11encoder.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-code11-code11encoder.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-code25-iata2of5encoder.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-code25-iata2of5encoder.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-code25-industrial2of5encoder.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-code25-industrial2of5encoder.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-code25-matrix2of5encoder.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-code25-matrix2of5encoder.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-code32-code32encoder.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-code32-code32encoder.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-code39-code39encoder.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-code39-code39encoder.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-code93-code93encoder.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-code93-code93encoder.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-databar-databar14decoder.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-databar-databar14decoder.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-databar-databar14encoder.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-databar-databar14encoder.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-databar-databarexpandeddecoder.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-databar-databarexpandeddecoder.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-databar-databarexpandedencoder.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-databar-databarexpandedencoder.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-datamatrix-datamatrixdecoder.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-datamatrix-datamatrixdecoder.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-datamatrix-datamatrixencoder.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-datamatrix-datamatrixencoder.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-datamatrix-datamatrixencodingmode.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-datamatrix-datamatrixencodingmode.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-ean-eanencoder.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-ean-eanencoder.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-ean-eantables-encodednumber.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-ean-eantables-encodednumber.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-itf-itf14encoder.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-itf-itf14encoder.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-itf-itfencoder.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-itf-itfencoder.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-japanpost-japanpostdecoder.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-japanpost-japanpostdecoder.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-japanpost-japanpostencoder.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-japanpost-japanpostencoder.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-kix-kixdecoder.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-kix-kixdecoder.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-kix-kixencoder.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-kix-kixencoder.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-msi-msiencoder.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-msi-msiencoder.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-patchcode-patchcodeencoder.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-patchcode-patchcodeencoder.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-payloads-swissqrcodepayload-additionalinformation.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-payloads-swissqrcodepayload-additionalinformation.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-payloads-swissqrcodepayload-contact-addresstype.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-payloads-swissqrcodepayload-contact-addresstype.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-payloads-qrparseddata-appstore.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-payloads-qrparseddata-appstore.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-payloads-qrparseddata-bookmark.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-payloads-qrparseddata-bookmark.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-payloads-qrparseddata-calendar.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-payloads-qrparseddata-calendar.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-payloads-swissqrcodepayload-contact.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-payloads-swissqrcodepayload-contact.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-payloads-qrparseddata-email.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-payloads-qrparseddata-email.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-payloads-qrparseddata-geo.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-payloads-qrparseddata-geo.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-payloads-swissqrcodepayload-iban.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-payloads-swissqrcodepayload-iban.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-payloads-swissqrcodepayload-iban-ibantype.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-payloads-swissqrcodepayload-iban-ibantype.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-payloads-qrparseddata-mecard.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-payloads-qrparseddata-mecard.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-payloads-qrparseddata-otp.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-payloads-qrparseddata-otp.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-payloads-qrparseddata-paypal.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-payloads-qrparseddata-paypal.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-payloads-qrparseddata-phone.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-payloads-qrparseddata-phone.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-payloads-qrappstoreplatform.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-payloads-qrappstoreplatform.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-payloads-qrbezahlauthoritytype.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-payloads-qrbezahlauthoritytype.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-payloads-qrbezahlperiodicunit.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-payloads-qrbezahlperiodicunit.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-payloads-qrbitcoinliketype.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-payloads-qrbitcoinliketype.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-payloads-qrcalendarencoding.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-payloads-qrcalendarencoding.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-payloads-qrcontactaddressorder.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-payloads-qrcontactaddressorder.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-payloads-qrcontactaddresstype.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-payloads-qrcontactaddresstype.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-payloads-qrcontactoutputtype.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-payloads-qrcontactoutputtype.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-payloads-qrgeolocationencoding.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-payloads-qrgeolocationencoding.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-payloads-qrgirocodeencoding.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-payloads-qrgirocodeencoding.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-payloads-qrgirocoderemittancetype.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-payloads-qrgirocoderemittancetype.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-payloads-qrgirocodeversion.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-payloads-qrgirocodeversion.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-payloads-qrmailencoding.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-payloads-qrmailencoding.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-payloads-qrmmsencoding.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-payloads-qrmmsencoding.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-payloads-qrparseddata.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-payloads-qrparseddata.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-payloads-qrparsedpayload.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-payloads-qrparsedpayload.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-payloads-qrpayload.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-payloads-qrpayload.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-payloads-qrpayloaddata.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-payloads-qrpayloaddata.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-payloads-qrpayloaddetectoptions.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-payloads-qrpayloaddetectoptions.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-payloads-qrpayloadparseoptions.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-payloads-qrpayloadparseoptions.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-payloads-qrpayloadparser.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-payloads-qrpayloadparser.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-payloads-qrpayloads.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-payloads-qrpayloads.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-payloads-qrpayloadtype.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-payloads-qrpayloadtype.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-payloads-qrpayloadvalidationresult.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-payloads-qrpayloadvalidationresult.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-payloads-qrrussiapaymentencoding.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-payloads-qrrussiapaymentencoding.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-payloads-qrshadowsocksmethod.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-payloads-qrshadowsocksmethod.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-payloads-qrsmsencoding.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-payloads-qrsmsencoding.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-payloads-qrswisscurrency.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-payloads-qrswisscurrency.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-payloads-swissqrcodepayload-reference.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-payloads-swissqrcodepayload-reference.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-payloads-swissqrcodepayload-reference-referencetexttype.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-payloads-swissqrcodepayload-reference-referencetexttype.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-payloads-swissqrcodepayload-reference-referencetype.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-payloads-swissqrcodepayload-reference-referencetype.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-payloads-russiapaymentorderpayload.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-payloads-russiapaymentorderpayload.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-payloads-slovenianupnqrpayload.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-payloads-slovenianupnqrpayload.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-payloads-qrparseddata-sms.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-payloads-qrparseddata-sms.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-payloads-qrparseddata-social.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-payloads-qrparseddata-social.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-payloads-swissqrcodepayload.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-payloads-swissqrcodepayload.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-payloads-qrparseddata-upi.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-payloads-qrparseddata-upi.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-payloads-qrparseddata-vcard.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-payloads-qrparseddata-vcard.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-payloads-qrparseddata-wifi.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-payloads-qrparseddata-wifi.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-pdf417-micropdf417decoder.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-pdf417-micropdf417decoder.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-pdf417-micropdf417encodeoptions.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-pdf417-micropdf417encodeoptions.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-pdf417-micropdf417encoder.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-pdf417-micropdf417encoder.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-pdf417-pdf417compaction.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-pdf417-pdf417compaction.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-pdf417-pdf417decoded.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-pdf417-pdf417decoded.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-pdf417-pdf417decoder.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-pdf417-pdf417decoder.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-pdf417-pdf417encodeoptions.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-pdf417-pdf417encodeoptions.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-pdf417-pdf417encoder.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-pdf417-pdf417encoder.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-pdf417-pdf417macroassembler.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-pdf417-pdf417macroassembler.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-pdf417-pdf417macrometadata.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-pdf417-pdf417macrometadata.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-pdf417-pdf417macrooptions.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-pdf417-pdf417macrooptions.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-pharmacode-pharmacodeencoder.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-pharmacode-pharmacodeencoder.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-pharmacode-pharmacodetwotrackdecoder.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-pharmacode-pharmacodetwotrackdecoder.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-pharmacode-pharmacodetwotrackencoder.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-pharmacode-pharmacodetwotrackencoder.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-plessey-plesseyencoder.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-plessey-plesseyencoder.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-postal-planetdecoder.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-postal-planetdecoder.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-postal-planetencoder.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-postal-planetencoder.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-postal-postnetdecoder.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-postal-postnetdecoder.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-postal-postnetencoder.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-postal-postnetencoder.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-postal-uspsimbdecoder.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-postal-uspsimbdecoder.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-postal-uspsimbencoder.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-postal-uspsimbencoder.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-colorutils.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-colorutils.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-imageformat.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-imageformat.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-imageinfo.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-imageinfo.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-imagereader.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-imagereader.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-logobuilder.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-logobuilder.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-qrlogooptions.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-qrlogooptions.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-renderdefaults.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-renderdefaults.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-renderextensions.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-renderextensions.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-renderio.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-renderio.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-rendermode.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-rendermode.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-ascii-barcodeasciirenderer.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-ascii-barcodeasciirenderer.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-ascii-barcodeasciirenderoptions.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-ascii-barcodeasciirenderoptions.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-ascii-matrixasciirenderer.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-ascii-matrixasciirenderer.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-ascii-matrixasciirenderoptions.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-ascii-matrixasciirenderoptions.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-bmp-barcodebmprenderer.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-bmp-barcodebmprenderer.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-bmp-bmpreader.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-bmp-bmpreader.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-bmp-bmpwriter.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-bmp-bmpwriter.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-bmp-matrixbmprenderer.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-bmp-matrixbmprenderer.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-bmp-qrbmprenderer.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-bmp-qrbmprenderer.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-eps-barcodeepsrenderer.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-eps-barcodeepsrenderer.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-eps-epswriter.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-eps-epswriter.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-eps-matrixepsrenderer.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-eps-matrixepsrenderer.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-eps-qrepsrenderer.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-eps-qrepsrenderer.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-gif-gifreader.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-gif-gifreader.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-html-barcodehtmlrenderoptions.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-html-barcodehtmlrenderoptions.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-html-htmlbarcoderenderer.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-html-htmlbarcoderenderer.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-html-htmlqrrenderer.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-html-htmlqrrenderer.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-html-matrixhtmlrenderer.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-html-matrixhtmlrenderer.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-html-matrixhtmlrenderoptions.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-html-matrixhtmlrenderoptions.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-html-qrhtmlrenderoptions.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-html-qrhtmlrenderoptions.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-ico-barcodeicorenderer.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-ico-barcodeicorenderer.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-ico-icoreader.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-ico-icoreader.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-ico-icorenderoptions.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-ico-icorenderoptions.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-ico-icowriter.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-ico-icowriter.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-ico-matrixicorenderer.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-ico-matrixicorenderer.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-ico-qricorenderer.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-ico-qricorenderer.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-jpeg-barcodejpegrenderer.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-jpeg-barcodejpegrenderer.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-jpeg-jpegreader.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-jpeg-jpegreader.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-jpeg-matrixjpegrenderer.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-jpeg-matrixjpegrenderer.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-jpeg-qrjpegrenderer.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-jpeg-qrjpegrenderer.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-pam-barcodepamrenderer.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-pam-barcodepamrenderer.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-pam-matrixpamrenderer.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-pam-matrixpamrenderer.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-pam-pamreader.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-pam-pamreader.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-pam-pamwriter.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-pam-pamwriter.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-pam-qrpamrenderer.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-pam-qrpamrenderer.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-pbm-barcodepbmrenderer.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-pbm-barcodepbmrenderer.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-pbm-matrixpbmrenderer.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-pbm-matrixpbmrenderer.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-pbm-pbmreader.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-pbm-pbmreader.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-pbm-pbmwriter.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-pbm-pbmwriter.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-pbm-qrpbmrenderer.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-pbm-qrpbmrenderer.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-pdf-barcodepdfrenderer.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-pdf-barcodepdfrenderer.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-pdf-matrixpdfrenderer.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-pdf-matrixpdfrenderer.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-pdf-pdfwriter.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-pdf-pdfwriter.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-pdf-qrpdfrenderer.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-pdf-qrpdfrenderer.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-pgm-barcodepgmrenderer.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-pgm-barcodepgmrenderer.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-pgm-matrixpgmrenderer.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-pgm-matrixpgmrenderer.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-pgm-pgmreader.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-pgm-pgmreader.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-pgm-pgmwriter.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-pgm-pgmwriter.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-pgm-qrpgmrenderer.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-pgm-qrpgmrenderer.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-png-barcodepngrenderer.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-png-barcodepngrenderer.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-png-barcodepngrenderoptions.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-png-barcodepngrenderoptions.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-png-matrixpngrenderer.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-png-matrixpngrenderer.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-png-matrixpngrenderoptions.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-png-matrixpngrenderoptions.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-png-pngreader.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-png-pngreader.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-png-qrpngeyeoptions.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-png-qrpngeyeoptions.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-png-qrpnggradientoptions.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-png-qrpnggradientoptions.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-png-qrpnggradienttype.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-png-qrpnggradienttype.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-png-qrpnglogooptions.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-png-qrpnglogooptions.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-png-qrpngmoduleshape.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-png-qrpngmoduleshape.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-png-qrpngrenderer.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-png-qrpngrenderer.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-png-qrpngrenderoptions.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-png-qrpngrenderoptions.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-png-rgba32.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-png-rgba32.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-ppm-barcodeppmrenderer.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-ppm-barcodeppmrenderer.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-ppm-matrixppmrenderer.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-ppm-matrixppmrenderer.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-ppm-ppmreader.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-ppm-ppmreader.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-ppm-ppmwriter.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-ppm-ppmwriter.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-ppm-qrppmrenderer.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-ppm-qrppmrenderer.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-svg-barcodesvgrenderoptions.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-svg-barcodesvgrenderoptions.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-svg-matrixsvgrenderer.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-svg-matrixsvgrenderer.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-svg-matrixsvgrenderoptions.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-svg-matrixsvgrenderoptions.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-svg-qrsvgrenderoptions.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-svg-qrsvgrenderoptions.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-svg-svgbarcoderenderer.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-svg-svgbarcoderenderer.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-svg-svgqrrenderer.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-svg-svgqrrenderer.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-svgz-barcodesvgzrenderer.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-svgz-barcodesvgzrenderer.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-svgz-matrixsvgzrenderer.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-svgz-matrixsvgzrenderer.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-svgz-qrsvgzrenderer.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-svgz-qrsvgzrenderer.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-svgz-svgzwriter.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-svgz-svgzwriter.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-tga-barcodetgarenderer.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-tga-barcodetgarenderer.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-tga-matrixtgarenderer.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-tga-matrixtgarenderer.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-tga-qrtgarenderer.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-tga-qrtgarenderer.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-tga-tgareader.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-tga-tgareader.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-tga-tgawriter.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-tga-tgawriter.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-xbm-barcodexbmrenderer.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-xbm-barcodexbmrenderer.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-xbm-matrixxbmrenderer.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-xbm-matrixxbmrenderer.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-xbm-qrxbmrenderer.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-xbm-qrxbmrenderer.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-xbm-xbmreader.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-xbm-xbmreader.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-xbm-xbmwriter.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-xbm-xbmwriter.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-xpm-barcodexpmrenderer.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-xpm-barcodexpmrenderer.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-xpm-matrixxpmrenderer.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-xpm-matrixxpmrenderer.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-xpm-qrxpmrenderer.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-xpm-qrxpmrenderer.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-xpm-xpmreader.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-xpm-xpmreader.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-rendering-xpm-xpmwriter.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-rendering-xpm-xpmwriter.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-royalmail-royalmailfourstatedecoder.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-royalmail-royalmailfourstatedecoder.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-royalmail-royalmailfourstateencoder.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-royalmail-royalmailfourstateencoder.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-telepen-telepenencoder.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-telepen-telepenencoder.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-upca-upcatables-encodednumber.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-upca-upcatables-encodednumber.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-upca-upcaencoder.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-upca-upcaencoder.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-upce-upcetables-encodednumber.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-upce-upcetables-encodednumber.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-upce-upcetables-parity.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-upce-upcetables-parity.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-upce-upcetables-paritypatterns.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-upce-upcetables-paritypatterns.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:5001/api/types/codeglyphx-upce-upceencoder.html</loc>
+    <loc>https://codeglyphx.com/api/types/codeglyphx-upce-upceencoder.html</loc>
     <lastmod>2026-01-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>

@@ -1,30 +1,30 @@
 // Showcase carousel functionality
 document.querySelectorAll('.showcase-gallery').forEach(function(gallery) {
-  var carouselId = gallery.dataset.carousel;
-  var dataScript = document.querySelector('script.carousel-data[data-carousel="' + carouselId + '"]');
+  const carouselId = gallery.dataset.carousel;
+  const dataScript = document.querySelector('script.carousel-data[data-carousel="' + carouselId + '"]');
   if (!dataScript) return;
 
-  var captions = JSON.parse(dataScript.textContent);
-  var currentTheme = 'dark';
-  var currentSlide = 0;
+  const captions = JSON.parse(dataScript.textContent);
+  let currentTheme = 'dark';
+  let currentSlide = 0;
 
-  var themeTabs = gallery.querySelectorAll('.showcase-gallery-tab');
-  var slides = gallery.querySelectorAll('.showcase-carousel-slide');
-  var prevBtn = gallery.querySelector('.showcase-carousel-nav.prev');
-  var nextBtn = gallery.querySelector('.showcase-carousel-nav.next');
-  var dots = gallery.querySelectorAll('.showcase-carousel-dot');
-  var thumbContainers = gallery.querySelectorAll('.showcase-carousel-thumbs');
-  var captionEl = gallery.querySelector('.showcase-carousel-caption');
-  var counterEl = gallery.querySelector('.showcase-carousel-counter');
+  const themeTabs = gallery.querySelectorAll('.showcase-gallery-tab');
+  const slides = gallery.querySelectorAll('.showcase-carousel-slide');
+  const prevBtn = gallery.querySelector('.showcase-carousel-nav.prev');
+  const nextBtn = gallery.querySelector('.showcase-carousel-nav.next');
+  const dots = gallery.querySelectorAll('.showcase-carousel-dot');
+  const thumbContainers = gallery.querySelectorAll('.showcase-carousel-thumbs');
+  const captionEl = gallery.querySelector('.showcase-carousel-caption');
+  const counterEl = gallery.querySelector('.showcase-carousel-counter');
 
   function updateCarousel() {
-    var themeCaptions = captions[currentTheme];
-    var totalSlides = themeCaptions.length;
+    const themeCaptions = captions[currentTheme];
+    const totalSlides = themeCaptions.length;
 
     // Update slides visibility
     slides.forEach(function(slide) {
-      var isCurrentTheme = slide.dataset.theme === currentTheme;
-      var isCurrentSlide = parseInt(slide.dataset.index) === currentSlide;
+      const isCurrentTheme = slide.dataset.theme === currentTheme;
+      const isCurrentSlide = Number.parseInt(slide.dataset.index, 10) === currentSlide;
       slide.style.display = isCurrentTheme ? '' : 'none';
       slide.classList.toggle('active', isCurrentTheme && isCurrentSlide);
     });
@@ -36,7 +36,7 @@ document.querySelectorAll('.showcase-gallery').forEach(function(gallery) {
 
     // Update thumbnails
     thumbContainers.forEach(function(container) {
-      var isCurrentTheme = container.dataset.themeContainer === currentTheme;
+      const isCurrentTheme = container.dataset.themeContainer === currentTheme;
       container.style.display = isCurrentTheme ? '' : 'none';
       if (isCurrentTheme) {
         container.querySelectorAll('.showcase-carousel-thumb').forEach(function(thumb, idx) {
@@ -51,7 +51,7 @@ document.querySelectorAll('.showcase-gallery').forEach(function(gallery) {
   }
 
   function goToSlide(index) {
-    var totalSlides = captions[currentTheme].length;
+    const totalSlides = captions[currentTheme].length;
     currentSlide = ((index % totalSlides) + totalSlides) % totalSlides;
     updateCarousel();
   }
@@ -74,7 +74,7 @@ document.querySelectorAll('.showcase-gallery').forEach(function(gallery) {
   // Dot clicks
   dots.forEach(function(dot) {
     dot.addEventListener('click', function() {
-      goToSlide(parseInt(dot.dataset.index));
+      goToSlide(Number.parseInt(dot.dataset.index, 10));
     });
   });
 
@@ -82,7 +82,7 @@ document.querySelectorAll('.showcase-gallery').forEach(function(gallery) {
   thumbContainers.forEach(function(container) {
     container.querySelectorAll('.showcase-carousel-thumb').forEach(function(thumb) {
       thumb.addEventListener('click', function() {
-        goToSlide(parseInt(thumb.dataset.index));
+        goToSlide(Number.parseInt(thumb.dataset.index, 10));
       });
     });
   });

@@ -515,26 +515,6 @@
             Attempts to decode an Aztec symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options, with cancellation.
             </summary>
         </member>
-        <member name="M:CodeGlyphX.AztecCode.DecodeImageResult(System.Byte[],CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken)">
-            <summary>
-            Decodes an Aztec symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) and returns diagnostics.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.AztecCode.DecodeImageResult(System.ReadOnlySpan{System.Byte},CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken)">
-            <summary>
-            Decodes an Aztec symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) in a span and returns diagnostics.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.AztecCode.DecodeImageResult(System.IO.Stream,CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken)">
-            <summary>
-            Decodes an Aztec symbol from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) and returns diagnostics.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.AztecCode.DecodeImageBatch(System.Collections.Generic.IEnumerable{System.Byte[]},CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken)">
-            <summary>
-            Decodes a batch of Aztec images with shared settings and aggregated diagnostics.
-            </summary>
-        </member>
         <member name="M:CodeGlyphX.AztecCode.TryDecodeImage(System.Byte[],System.String@,CodeGlyphX.AztecDecodeDiagnostics@)">
             <summary>
             Attempts to decode an Aztec symbol from common image formats, with diagnostics.
@@ -585,36 +565,6 @@
             Attempts to decode an Aztec symbol from common image formats in a span with image decode options, cancellation, and diagnostics.
             </summary>
         </member>
-        <member name="M:CodeGlyphX.AztecCode.TryDecodeAllImage(System.Byte[],System.String[]@)">
-            <summary>
-            Attempts to decode all Aztec symbols from common image formats.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.AztecCode.TryDecodeAllImage(System.Byte[],CodeGlyphX.ImageDecodeOptions,System.String[]@)">
-            <summary>
-            Attempts to decode all Aztec symbols from common image formats with image decode options.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.AztecCode.TryDecodeAllImage(System.Byte[],CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken,System.String[]@)">
-            <summary>
-            Attempts to decode all Aztec symbols from common image formats with image decode options, with cancellation.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.AztecCode.TryDecodeAllImage(System.IO.Stream,System.String[]@)">
-            <summary>
-            Attempts to decode all Aztec symbols from an image stream.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.AztecCode.TryDecodeAllImage(System.IO.Stream,CodeGlyphX.ImageDecodeOptions,System.String[]@)">
-            <summary>
-            Attempts to decode all Aztec symbols from an image stream with image decode options.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.AztecCode.TryDecodeAllImage(System.IO.Stream,CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken,System.String[]@)">
-            <summary>
-            Attempts to decode all Aztec symbols from an image stream with image decode options, with cancellation.
-            </summary>
-        </member>
         <member name="M:CodeGlyphX.AztecCode.TryDecodeImage(System.IO.Stream,System.String@)">
             <summary>
             Attempts to decode an Aztec symbol from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).
@@ -648,6 +598,56 @@
         <member name="M:CodeGlyphX.AztecCode.TryDecodeImage(System.IO.Stream,CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken,System.String@,CodeGlyphX.AztecDecodeDiagnostics@)">
             <summary>
             Attempts to decode an Aztec symbol from an image stream with image decode options, cancellation, and diagnostics.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.AztecCode.DecodeImageResult(System.Byte[],CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken)">
+            <summary>
+            Decodes an Aztec symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) and returns diagnostics.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.AztecCode.DecodeImageResult(System.ReadOnlySpan{System.Byte},CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken)">
+            <summary>
+            Decodes an Aztec symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) in a span and returns diagnostics.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.AztecCode.DecodeImageResult(System.IO.Stream,CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken)">
+            <summary>
+            Decodes an Aztec symbol from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) and returns diagnostics.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.AztecCode.DecodeImageBatch(System.Collections.Generic.IEnumerable{System.Byte[]},CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken)">
+            <summary>
+            Decodes a batch of Aztec images with shared settings and aggregated diagnostics.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.AztecCode.TryDecodeAllImage(System.Byte[],System.String[]@)">
+            <summary>
+            Attempts to decode all Aztec symbols from common image formats.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.AztecCode.TryDecodeAllImage(System.Byte[],CodeGlyphX.ImageDecodeOptions,System.String[]@)">
+            <summary>
+            Attempts to decode all Aztec symbols from common image formats with image decode options.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.AztecCode.TryDecodeAllImage(System.Byte[],CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken,System.String[]@)">
+            <summary>
+            Attempts to decode all Aztec symbols from common image formats with image decode options, with cancellation.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.AztecCode.TryDecodeAllImage(System.IO.Stream,System.String[]@)">
+            <summary>
+            Attempts to decode all Aztec symbols from an image stream.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.AztecCode.TryDecodeAllImage(System.IO.Stream,CodeGlyphX.ImageDecodeOptions,System.String[]@)">
+            <summary>
+            Attempts to decode all Aztec symbols from an image stream with image decode options.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.AztecCode.TryDecodeAllImage(System.IO.Stream,CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken,System.String[]@)">
+            <summary>
+            Attempts to decode all Aztec symbols from an image stream with image decode options, with cancellation.
             </summary>
         </member>
         <member name="M:CodeGlyphX.AztecCode.TryDecodePng(System.IO.Stream,System.Threading.CancellationToken,System.String@)">
@@ -1632,26 +1632,6 @@
             Attempts to decode a barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with an optional expected type hint, image decode options, barcode decode options, and cancellation.
             </summary>
         </member>
-        <member name="M:CodeGlyphX.Barcode.DecodeImageResult(System.Byte[],System.Nullable{CodeGlyphX.BarcodeType},CodeGlyphX.ImageDecodeOptions,CodeGlyphX.BarcodeDecodeOptions,System.Threading.CancellationToken)">
-            <summary>
-            Decodes a barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) and returns diagnostics.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.Barcode.DecodeImageResult(System.ReadOnlySpan{System.Byte},System.Nullable{CodeGlyphX.BarcodeType},CodeGlyphX.ImageDecodeOptions,CodeGlyphX.BarcodeDecodeOptions,System.Threading.CancellationToken)">
-            <summary>
-            Decodes a barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) in a span and returns diagnostics.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.Barcode.DecodeImageResult(System.IO.Stream,System.Nullable{CodeGlyphX.BarcodeType},CodeGlyphX.ImageDecodeOptions,CodeGlyphX.BarcodeDecodeOptions,System.Threading.CancellationToken)">
-            <summary>
-            Decodes a barcode from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) and returns diagnostics.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.Barcode.DecodeImageBatch(System.Collections.Generic.IEnumerable{System.Byte[]},System.Nullable{CodeGlyphX.BarcodeType},CodeGlyphX.ImageDecodeOptions,CodeGlyphX.BarcodeDecodeOptions,System.Threading.CancellationToken)">
-            <summary>
-            Decodes a batch of barcode images with shared settings and aggregated diagnostics.
-            </summary>
-        </member>
         <member name="M:CodeGlyphX.Barcode.TryDecodeImage(System.IO.Stream,CodeGlyphX.BarcodeDecoded@)">
             <summary>
             Attempts to decode a barcode from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).
@@ -1690,6 +1670,26 @@
         <member name="M:CodeGlyphX.Barcode.TryDecodeImage(System.IO.Stream,System.Nullable{CodeGlyphX.BarcodeType},CodeGlyphX.ImageDecodeOptions,CodeGlyphX.BarcodeDecodeOptions,System.Threading.CancellationToken,CodeGlyphX.BarcodeDecoded@)">
             <summary>
             Attempts to decode a barcode from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with an optional expected type hint, image decode options, barcode decode options, and cancellation.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Barcode.DecodeImageResult(System.Byte[],System.Nullable{CodeGlyphX.BarcodeType},CodeGlyphX.ImageDecodeOptions,CodeGlyphX.BarcodeDecodeOptions,System.Threading.CancellationToken)">
+            <summary>
+            Decodes a barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) and returns diagnostics.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Barcode.DecodeImageResult(System.ReadOnlySpan{System.Byte},System.Nullable{CodeGlyphX.BarcodeType},CodeGlyphX.ImageDecodeOptions,CodeGlyphX.BarcodeDecodeOptions,System.Threading.CancellationToken)">
+            <summary>
+            Decodes a barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) in a span and returns diagnostics.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Barcode.DecodeImageResult(System.IO.Stream,System.Nullable{CodeGlyphX.BarcodeType},CodeGlyphX.ImageDecodeOptions,CodeGlyphX.BarcodeDecodeOptions,System.Threading.CancellationToken)">
+            <summary>
+            Decodes a barcode from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) and returns diagnostics.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Barcode.DecodeImageBatch(System.Collections.Generic.IEnumerable{System.Byte[]},System.Nullable{CodeGlyphX.BarcodeType},CodeGlyphX.ImageDecodeOptions,CodeGlyphX.BarcodeDecodeOptions,System.Threading.CancellationToken)">
+            <summary>
+            Decodes a batch of barcode images with shared settings and aggregated diagnostics.
             </summary>
         </member>
         <member name="M:CodeGlyphX.Barcode.TryDecodePngFile(System.String,CodeGlyphX.BarcodeDecoded@)">
