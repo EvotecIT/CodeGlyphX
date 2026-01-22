@@ -199,6 +199,24 @@ Benchmarks run on identical hardware with default settings.
 dotnet run -c Release --framework net8.0 --project CodeGlyphX.Benchmarks/CodeGlyphX.Benchmarks.csproj -- --filter "*"
 ```
 
+### Run comparison benchmarks (external libraries)
+
+Comparison benchmarks are opt-in so the default benchmark project stays dependency-free. Enable them with MSBuild properties:
+
+```powershell
+# all external comparisons
+dotnet run -c Release --framework net8.0 --project CodeGlyphX.Benchmarks/CodeGlyphX.Benchmarks.csproj /p:CompareExternal=true -- --filter "*Compare*"
+
+# per-library toggles
+dotnet run -c Release --framework net8.0 --project CodeGlyphX.Benchmarks/CodeGlyphX.Benchmarks.csproj /p:CompareZXing=true -- --filter "*Compare*"
+dotnet run -c Release --framework net8.0 --project CodeGlyphX.Benchmarks/CodeGlyphX.Benchmarks.csproj /p:CompareQRCoder=true -- --filter "*Compare*"
+dotnet run -c Release --framework net8.0 --project CodeGlyphX.Benchmarks/CodeGlyphX.Benchmarks.csproj /p:CompareBarcoder=true -- --filter "*Compare*"
+```
+
+Notes:
+- Comparisons target PNG output and use each library’s ImageSharp-based renderer where applicable.
+- Run the same command on Windows and Linux to compare OS-level differences.
+
 ## Comparison (selected libraries)
 
 Based on public docs as of 2026-01-18. Capabilities depend on optional renderer packages.
