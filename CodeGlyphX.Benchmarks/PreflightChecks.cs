@@ -27,6 +27,7 @@ internal static class PreflightChecks
     public static int Run()
     {
         var failures = new List<string>();
+        var hasFailures = false;
 
         void Check(string name, Action action)
         {
@@ -36,6 +37,7 @@ internal static class PreflightChecks
             }
             catch (Exception ex)
             {
+                hasFailures = true;
                 failures.Add($"{name}: {ex.GetType().Name} - {ex.Message}");
             }
         }
@@ -104,7 +106,7 @@ internal static class PreflightChecks
         });
 #endif
 
-        if (failures.Count == 0)
+        if (!hasFailures)
         {
             Console.WriteLine("Preflight checks passed.");
             return 0;
