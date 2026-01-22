@@ -1,0 +1,38 @@
+{
+  "name": "MicroPdf417Decoder",
+  "fullName": "CodeGlyphX.Pdf417.MicroPdf417Decoder",
+  "namespace": "CodeGlyphX.Pdf417",
+  "kind": "Class",
+  "slug": "codeglyphx-pdf417-micropdf417decoder",
+  "summary": "Decodes MicroPDF417 symbols from a CodeGlyphX.BitMatrix.",
+  "remarks": null,
+  "examples": [],
+  "seeAlso": [],
+  "members": [
+    {
+      "name": "TryDecode",
+      "kind": "Method",
+      "summary": "Attempts to decode a MicroPDF417 symbol from a CodeGlyphX.BitMatrix.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "modules",
+          "type": "BitMatrix",
+          "description": null
+        },
+        {
+          "name": "text",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecode(BitMatrix modules, out string text)",
+      "xmlId": "M:CodeGlyphX.Pdf417.MicroPdf417Decoder.TryDecode(CodeGlyphX.BitMatrix,System.String@)",
+      "anchor": "method-trydecode-static-bool-trydecode-bitmatrix-modules-out-string-text"
+    }
+  ]
+}

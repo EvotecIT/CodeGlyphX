@@ -1,0 +1,247 @@
+{
+  "name": "Geo",
+  "fullName": "CodeGlyphX.Payloads.QrParsedData.Geo",
+  "namespace": "CodeGlyphX.Payloads",
+  "kind": "Class",
+  "slug": "codeglyphx-payloads-qrparseddata-geo",
+  "summary": "Geo payload.",
+  "remarks": null,
+  "examples": [],
+  "seeAlso": [],
+  "members": [
+    {
+      "name": "Geo",
+      "kind": "Constructor",
+      "summary": "Geo payload.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "Latitude",
+          "type": "double",
+          "description": null
+        },
+        {
+          "name": "Longitude",
+          "type": "double",
+          "description": null
+        },
+        {
+          "name": "Altitude",
+          "type": "Nullable\u003Cdouble\u003E",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "Geo(double Latitude, double Longitude, Nullable\u003Cdouble\u003E Altitude)",
+      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.Geo.#ctor(System.Double,System.Double,System.Nullable{System.Double})",
+      "anchor": "constructor-geo-geo-double-latitude-double-longitude-nullable-double-altitude"
+    },
+    {
+      "name": "ToString",
+      "kind": "Method",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "string ToString()",
+      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.Geo.ToString",
+      "anchor": "method-tostring-string-tostring"
+    },
+    {
+      "name": "op_Inequality",
+      "kind": "Method",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "left",
+          "type": "QrParsedData.Geo",
+          "description": null
+        },
+        {
+          "name": "right",
+          "type": "QrParsedData.Geo",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool op_Inequality(QrParsedData.Geo left, QrParsedData.Geo right)",
+      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.Geo.op_Inequality(CodeGlyphX.Payloads.QrParsedData.Geo,CodeGlyphX.Payloads.QrParsedData.Geo)",
+      "anchor": "method-op-inequality-static-bool-op-inequality-qrparseddata-geo-left-qrparseddata-geo-right"
+    },
+    {
+      "name": "op_Equality",
+      "kind": "Method",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "left",
+          "type": "QrParsedData.Geo",
+          "description": null
+        },
+        {
+          "name": "right",
+          "type": "QrParsedData.Geo",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool op_Equality(QrParsedData.Geo left, QrParsedData.Geo right)",
+      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.Geo.op_Equality(CodeGlyphX.Payloads.QrParsedData.Geo,CodeGlyphX.Payloads.QrParsedData.Geo)",
+      "anchor": "method-op-equality-static-bool-op-equality-qrparseddata-geo-left-qrparseddata-geo-right"
+    },
+    {
+      "name": "GetHashCode",
+      "kind": "Method",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "int GetHashCode()",
+      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.Geo.GetHashCode",
+      "anchor": "method-gethashcode-int-gethashcode"
+    },
+    {
+      "name": "Equals",
+      "kind": "Method",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "obj",
+          "type": "object",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "bool Equals(object obj)",
+      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.Geo.Equals(System.Object)",
+      "anchor": "method-equals-bool-equals-object-obj"
+    },
+    {
+      "name": "Equals",
+      "kind": "Method",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "other",
+          "type": "QrParsedData.Geo",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "bool Equals(QrParsedData.Geo other)",
+      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.Geo.Equals(CodeGlyphX.Payloads.QrParsedData.Geo)",
+      "anchor": "method-equals-bool-equals-qrparseddata-geo-other"
+    },
+    {
+      "name": "\u003CClone\u003E$",
+      "kind": "Method",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "QrParsedData.Geo \u003CClone\u003E$()",
+      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.Geo.\u003CClone\u003E$",
+      "anchor": "method-clone-qrparseddata-geo-clone"
+    },
+    {
+      "name": "Deconstruct",
+      "kind": "Method",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "Latitude",
+          "type": "double",
+          "description": null
+        },
+        {
+          "name": "Longitude",
+          "type": "double",
+          "description": null
+        },
+        {
+          "name": "Altitude",
+          "type": "Nullable\u003Cdouble\u003E",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "void Deconstruct(out double Latitude, out double Longitude, out Nullable\u003Cdouble\u003E Altitude)",
+      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.Geo.Deconstruct(System.Double@,System.Double@,System.Nullable{System.Double}@)",
+      "anchor": "method-deconstruct-void-deconstruct-out-double-latitude-out-double-longitude-out-nullable-double-altitude"
+    },
+    {
+      "name": "Latitude",
+      "kind": "Property",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "double Latitude {get; set; }",
+      "xmlId": "P:CodeGlyphX.Payloads.QrParsedData.Geo.Latitude",
+      "anchor": "property-latitude-double-latitude-get-set"
+    },
+    {
+      "name": "Longitude",
+      "kind": "Property",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "double Longitude {get; set; }",
+      "xmlId": "P:CodeGlyphX.Payloads.QrParsedData.Geo.Longitude",
+      "anchor": "property-longitude-double-longitude-get-set"
+    },
+    {
+      "name": "Altitude",
+      "kind": "Property",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "Nullable\u003Cdouble\u003E Altitude {get; set; }",
+      "xmlId": "P:CodeGlyphX.Payloads.QrParsedData.Geo.Altitude",
+      "anchor": "property-altitude-nullable-double-altitude-get-set"
+    }
+  ]
+}

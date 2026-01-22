@@ -1,0 +1,118 @@
+{
+  "name": "Pdf417Encoder",
+  "fullName": "CodeGlyphX.Pdf417.Pdf417Encoder",
+  "namespace": "CodeGlyphX.Pdf417",
+  "kind": "Class",
+  "slug": "codeglyphx-pdf417-pdf417encoder",
+  "summary": "Encodes PDF417 barcodes.",
+  "remarks": null,
+  "examples": [],
+  "seeAlso": [],
+  "members": [
+    {
+      "name": "Encode",
+      "kind": "Method",
+      "summary": "Encodes a text payload as PDF417.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "text",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "Pdf417EncodeOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static BitMatrix Encode(string text, Pdf417EncodeOptions options)",
+      "xmlId": "M:CodeGlyphX.Pdf417.Pdf417Encoder.Encode(System.String,CodeGlyphX.Pdf417.Pdf417EncodeOptions)",
+      "anchor": "method-encode-static-bitmatrix-encode-string-text-pdf417encodeoptions-options"
+    },
+    {
+      "name": "EncodeMacro",
+      "kind": "Method",
+      "summary": "Encodes a Macro PDF417 payload.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "text",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "macro",
+          "type": "Pdf417MacroOptions",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "Pdf417EncodeOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static BitMatrix EncodeMacro(string text, Pdf417MacroOptions macro, Pdf417EncodeOptions options)",
+      "xmlId": "M:CodeGlyphX.Pdf417.Pdf417Encoder.EncodeMacro(System.String,CodeGlyphX.Pdf417.Pdf417MacroOptions,CodeGlyphX.Pdf417.Pdf417EncodeOptions)",
+      "anchor": "method-encodemacro-static-bitmatrix-encodemacro-string-text-pdf417macrooptions-macro-pdf417encodeoptions-options"
+    },
+    {
+      "name": "EncodeBytes",
+      "kind": "Method",
+      "summary": "Encodes a byte payload as PDF417 (byte compaction).",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "data",
+          "type": "byte[]",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "Pdf417EncodeOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static BitMatrix EncodeBytes(byte[] data, Pdf417EncodeOptions options)",
+      "xmlId": "M:CodeGlyphX.Pdf417.Pdf417Encoder.EncodeBytes(System.Byte[],CodeGlyphX.Pdf417.Pdf417EncodeOptions)",
+      "anchor": "method-encodebytes-static-bitmatrix-encodebytes-byte-data-pdf417encodeoptions-options"
+    },
+    {
+      "name": "EncodeBytes",
+      "kind": "Method",
+      "summary": "Encodes a byte payload as PDF417 (byte compaction).",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "data",
+          "type": "ReadOnlySpan\u003Cbyte\u003E",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "Pdf417EncodeOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static BitMatrix EncodeBytes(ReadOnlySpan\u003Cbyte\u003E data, Pdf417EncodeOptions options)",
+      "xmlId": "M:CodeGlyphX.Pdf417.Pdf417Encoder.EncodeBytes(System.ReadOnlySpan{System.Byte},CodeGlyphX.Pdf417.Pdf417EncodeOptions)",
+      "anchor": "method-encodebytes-static-bitmatrix-encodebytes-readonlyspan-byte-data-pdf417encodeoptions-options"
+    }
+  ]
+}

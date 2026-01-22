@@ -1,0 +1,53 @@
+{
+  "name": "PharmacodeEncoder",
+  "fullName": "CodeGlyphX.Pharmacode.PharmacodeEncoder",
+  "namespace": "CodeGlyphX.Pharmacode",
+  "kind": "Class",
+  "slug": "codeglyphx-pharmacode-pharmacodeencoder",
+  "summary": "Encodes Pharmacode (one-track) barcodes.",
+  "remarks": null,
+  "examples": [],
+  "seeAlso": [],
+  "members": [
+    {
+      "name": "Encode",
+      "kind": "Method",
+      "summary": "Encodes a Pharmacode (one-track) barcode value.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "content",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static Barcode1D Encode(string content)",
+      "xmlId": "M:CodeGlyphX.Pharmacode.PharmacodeEncoder.Encode(System.String)",
+      "anchor": "method-encode-static-barcode1d-encode-string-content"
+    },
+    {
+      "name": "Encode",
+      "kind": "Method",
+      "summary": "Encodes a Pharmacode (one-track) barcode value.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "value",
+          "type": "int",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static Barcode1D Encode(int value)",
+      "xmlId": "M:CodeGlyphX.Pharmacode.PharmacodeEncoder.Encode(System.Int32)",
+      "anchor": "method-encode-static-barcode1d-encode-int-value"
+    }
+  ]
+}

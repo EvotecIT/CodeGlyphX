@@ -1,0 +1,33 @@
+{
+  "name": "CodeGlyphBudget",
+  "fullName": "CodeGlyphX.CodeGlyphBudget",
+  "namespace": "CodeGlyphX",
+  "kind": "Class",
+  "slug": "codeglyphx-codeglyphbudget",
+  "summary": "Provides a temporary decode time budget for operations that honor it.",
+  "remarks": null,
+  "examples": [],
+  "seeAlso": [],
+  "members": [
+    {
+      "name": "Begin",
+      "kind": "Method",
+      "summary": "Starts a decode time budget scope. Dispose the returned handle to restore the previous budget.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "maxMilliseconds",
+          "type": "int",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static IDisposable Begin(int maxMilliseconds)",
+      "xmlId": "M:CodeGlyphX.CodeGlyphBudget.Begin(System.Int32)",
+      "anchor": "method-begin-static-idisposable-begin-int-maxmilliseconds"
+    }
+  ]
+}

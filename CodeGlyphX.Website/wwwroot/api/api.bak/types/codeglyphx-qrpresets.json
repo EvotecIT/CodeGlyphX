@@ -1,0 +1,80 @@
+{
+  "name": "QrPresets",
+  "fullName": "CodeGlyphX.QrPresets",
+  "namespace": "CodeGlyphX",
+  "kind": "Class",
+  "slug": "codeglyphx-qrpresets",
+  "summary": "Ready-to-use QR presets with safe defaults for common scenarios.",
+  "remarks": null,
+  "examples": [],
+  "seeAlso": [],
+  "members": [
+    {
+      "name": "Otp",
+      "kind": "Method",
+      "summary": "Preset for OTP payloads (high error correction).",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static QrEasyOptions Otp()",
+      "xmlId": "M:CodeGlyphX.QrPresets.Otp",
+      "anchor": "method-otp-static-qreasyoptions-otp"
+    },
+    {
+      "name": "Wifi",
+      "kind": "Method",
+      "summary": "Preset for Wi-Fi payloads (more correction for noisy camera scans).",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static QrEasyOptions Wifi()",
+      "xmlId": "M:CodeGlyphX.QrPresets.Wifi",
+      "anchor": "method-wifi-static-qreasyoptions-wifi"
+    },
+    {
+      "name": "Contact",
+      "kind": "Method",
+      "summary": "Preset for contact payloads (more correction for dense payloads).",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static QrEasyOptions Contact()",
+      "xmlId": "M:CodeGlyphX.QrPresets.Contact",
+      "anchor": "method-contact-static-qreasyoptions-contact"
+    },
+    {
+      "name": "Logo",
+      "kind": "Method",
+      "summary": "Preset for logo overlays (high correction \u002B safe logo defaults).",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "logoPng",
+          "type": "byte[]",
+          "description": null
+        },
+        {
+          "name": "logoScale",
+          "type": "Nullable\u003Cdouble\u003E",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static QrEasyOptions Logo(byte[] logoPng, Nullable\u003Cdouble\u003E logoScale)",
+      "xmlId": "M:CodeGlyphX.QrPresets.Logo(System.Byte[],System.Nullable{System.Double})",
+      "anchor": "method-logo-static-qreasyoptions-logo-byte-logopng-nullable-double-logoscale"
+    }
+  ]
+}

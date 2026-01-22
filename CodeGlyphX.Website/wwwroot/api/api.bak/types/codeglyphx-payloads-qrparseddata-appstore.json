@@ -1,0 +1,247 @@
+{
+  "name": "AppStore",
+  "fullName": "CodeGlyphX.Payloads.QrParsedData.AppStore",
+  "namespace": "CodeGlyphX.Payloads",
+  "kind": "Class",
+  "slug": "codeglyphx-payloads-qrparseddata-appstore",
+  "summary": "App Store payload.",
+  "remarks": null,
+  "examples": [],
+  "seeAlso": [],
+  "members": [
+    {
+      "name": "AppStore",
+      "kind": "Constructor",
+      "summary": "App Store payload.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "Raw",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "Platform",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "IdOrPackage",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "AppStore(string Raw, string Platform, string IdOrPackage)",
+      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.AppStore.#ctor(System.String,System.String,System.String)",
+      "anchor": "constructor-appstore-appstore-string-raw-string-platform-string-idorpackage"
+    },
+    {
+      "name": "ToString",
+      "kind": "Method",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "string ToString()",
+      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.AppStore.ToString",
+      "anchor": "method-tostring-string-tostring"
+    },
+    {
+      "name": "op_Inequality",
+      "kind": "Method",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "left",
+          "type": "QrParsedData.AppStore",
+          "description": null
+        },
+        {
+          "name": "right",
+          "type": "QrParsedData.AppStore",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool op_Inequality(QrParsedData.AppStore left, QrParsedData.AppStore right)",
+      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.AppStore.op_Inequality(CodeGlyphX.Payloads.QrParsedData.AppStore,CodeGlyphX.Payloads.QrParsedData.AppStore)",
+      "anchor": "method-op-inequality-static-bool-op-inequality-qrparseddata-appstore-left-qrparseddata-appstore-right"
+    },
+    {
+      "name": "op_Equality",
+      "kind": "Method",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "left",
+          "type": "QrParsedData.AppStore",
+          "description": null
+        },
+        {
+          "name": "right",
+          "type": "QrParsedData.AppStore",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool op_Equality(QrParsedData.AppStore left, QrParsedData.AppStore right)",
+      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.AppStore.op_Equality(CodeGlyphX.Payloads.QrParsedData.AppStore,CodeGlyphX.Payloads.QrParsedData.AppStore)",
+      "anchor": "method-op-equality-static-bool-op-equality-qrparseddata-appstore-left-qrparseddata-appstore-right"
+    },
+    {
+      "name": "GetHashCode",
+      "kind": "Method",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "int GetHashCode()",
+      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.AppStore.GetHashCode",
+      "anchor": "method-gethashcode-int-gethashcode"
+    },
+    {
+      "name": "Equals",
+      "kind": "Method",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "obj",
+          "type": "object",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "bool Equals(object obj)",
+      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.AppStore.Equals(System.Object)",
+      "anchor": "method-equals-bool-equals-object-obj"
+    },
+    {
+      "name": "Equals",
+      "kind": "Method",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "other",
+          "type": "QrParsedData.AppStore",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "bool Equals(QrParsedData.AppStore other)",
+      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.AppStore.Equals(CodeGlyphX.Payloads.QrParsedData.AppStore)",
+      "anchor": "method-equals-bool-equals-qrparseddata-appstore-other"
+    },
+    {
+      "name": "\u003CClone\u003E$",
+      "kind": "Method",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "QrParsedData.AppStore \u003CClone\u003E$()",
+      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.AppStore.\u003CClone\u003E$",
+      "anchor": "method-clone-qrparseddata-appstore-clone"
+    },
+    {
+      "name": "Deconstruct",
+      "kind": "Method",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "Raw",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "Platform",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "IdOrPackage",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "void Deconstruct(out string Raw, out string Platform, out string IdOrPackage)",
+      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.AppStore.Deconstruct(System.String@,System.String@,System.String@)",
+      "anchor": "method-deconstruct-void-deconstruct-out-string-raw-out-string-platform-out-string-idorpackage"
+    },
+    {
+      "name": "Raw",
+      "kind": "Property",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "string Raw {get; set; }",
+      "xmlId": "P:CodeGlyphX.Payloads.QrParsedData.AppStore.Raw",
+      "anchor": "property-raw-string-raw-get-set"
+    },
+    {
+      "name": "Platform",
+      "kind": "Property",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "string Platform {get; set; }",
+      "xmlId": "P:CodeGlyphX.Payloads.QrParsedData.AppStore.Platform",
+      "anchor": "property-platform-string-platform-get-set"
+    },
+    {
+      "name": "IdOrPackage",
+      "kind": "Property",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "string IdOrPackage {get; set; }",
+      "xmlId": "P:CodeGlyphX.Payloads.QrParsedData.AppStore.IdOrPackage",
+      "anchor": "property-idorpackage-string-idorpackage-get-set"
+    }
+  ]
+}

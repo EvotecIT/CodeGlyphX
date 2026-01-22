@@ -1,0 +1,88 @@
+{
+  "name": "PbmWriter",
+  "fullName": "CodeGlyphX.Rendering.Pbm.PbmWriter",
+  "namespace": "CodeGlyphX.Rendering.Pbm",
+  "kind": "Class",
+  "slug": "codeglyphx-rendering-pbm-pbmwriter",
+  "summary": "Writes PBM (P4) images from RGBA buffers.",
+  "remarks": null,
+  "examples": [],
+  "seeAlso": [],
+  "members": [
+    {
+      "name": "WriteRgba32",
+      "kind": "Method",
+      "summary": "Writes a PBM byte array from an RGBA buffer.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "width",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "height",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "rgba",
+          "type": "ReadOnlySpan\u003Cbyte\u003E",
+          "description": null
+        },
+        {
+          "name": "stride",
+          "type": "int",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static byte[] WriteRgba32(int width, int height, ReadOnlySpan\u003Cbyte\u003E rgba, int stride)",
+      "xmlId": "M:CodeGlyphX.Rendering.Pbm.PbmWriter.WriteRgba32(System.Int32,System.Int32,System.ReadOnlySpan{System.Byte},System.Int32)",
+      "anchor": "method-writergba32-static-byte-writergba32-int-width-int-height-readonlyspan-byte-rgba-int-stride"
+    },
+    {
+      "name": "WriteRgba32",
+      "kind": "Method",
+      "summary": "Writes a PBM (P4) stream from an RGBA buffer (alpha treated as white).",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "stream",
+          "type": "Stream",
+          "description": null
+        },
+        {
+          "name": "width",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "height",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "rgba",
+          "type": "ReadOnlySpan\u003Cbyte\u003E",
+          "description": null
+        },
+        {
+          "name": "stride",
+          "type": "int",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static void WriteRgba32(Stream stream, int width, int height, ReadOnlySpan\u003Cbyte\u003E rgba, int stride)",
+      "xmlId": "M:CodeGlyphX.Rendering.Pbm.PbmWriter.WriteRgba32(System.IO.Stream,System.Int32,System.Int32,System.ReadOnlySpan{System.Byte},System.Int32)",
+      "anchor": "method-writergba32-static-void-writergba32-stream-stream-int-width-int-height-readonlyspan-byte-rgba-int-stride"
+    }
+  ]
+}

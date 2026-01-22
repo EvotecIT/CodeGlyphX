@@ -1,0 +1,199 @@
+{
+  "name": "Phone",
+  "fullName": "CodeGlyphX.Payloads.QrParsedData.Phone",
+  "namespace": "CodeGlyphX.Payloads",
+  "kind": "Class",
+  "slug": "codeglyphx-payloads-qrparseddata-phone",
+  "summary": "Phone payload.",
+  "remarks": null,
+  "examples": [],
+  "seeAlso": [],
+  "members": [
+    {
+      "name": "Phone",
+      "kind": "Constructor",
+      "summary": "Phone payload.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "Number",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "Phone(string Number)",
+      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.Phone.#ctor(System.String)",
+      "anchor": "constructor-phone-phone-string-number"
+    },
+    {
+      "name": "ToString",
+      "kind": "Method",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "string ToString()",
+      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.Phone.ToString",
+      "anchor": "method-tostring-string-tostring"
+    },
+    {
+      "name": "op_Inequality",
+      "kind": "Method",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "left",
+          "type": "QrParsedData.Phone",
+          "description": null
+        },
+        {
+          "name": "right",
+          "type": "QrParsedData.Phone",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool op_Inequality(QrParsedData.Phone left, QrParsedData.Phone right)",
+      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.Phone.op_Inequality(CodeGlyphX.Payloads.QrParsedData.Phone,CodeGlyphX.Payloads.QrParsedData.Phone)",
+      "anchor": "method-op-inequality-static-bool-op-inequality-qrparseddata-phone-left-qrparseddata-phone-right"
+    },
+    {
+      "name": "op_Equality",
+      "kind": "Method",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "left",
+          "type": "QrParsedData.Phone",
+          "description": null
+        },
+        {
+          "name": "right",
+          "type": "QrParsedData.Phone",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool op_Equality(QrParsedData.Phone left, QrParsedData.Phone right)",
+      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.Phone.op_Equality(CodeGlyphX.Payloads.QrParsedData.Phone,CodeGlyphX.Payloads.QrParsedData.Phone)",
+      "anchor": "method-op-equality-static-bool-op-equality-qrparseddata-phone-left-qrparseddata-phone-right"
+    },
+    {
+      "name": "GetHashCode",
+      "kind": "Method",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "int GetHashCode()",
+      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.Phone.GetHashCode",
+      "anchor": "method-gethashcode-int-gethashcode"
+    },
+    {
+      "name": "Equals",
+      "kind": "Method",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "obj",
+          "type": "object",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "bool Equals(object obj)",
+      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.Phone.Equals(System.Object)",
+      "anchor": "method-equals-bool-equals-object-obj"
+    },
+    {
+      "name": "Equals",
+      "kind": "Method",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "other",
+          "type": "QrParsedData.Phone",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "bool Equals(QrParsedData.Phone other)",
+      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.Phone.Equals(CodeGlyphX.Payloads.QrParsedData.Phone)",
+      "anchor": "method-equals-bool-equals-qrparseddata-phone-other"
+    },
+    {
+      "name": "\u003CClone\u003E$",
+      "kind": "Method",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "QrParsedData.Phone \u003CClone\u003E$()",
+      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.Phone.\u003CClone\u003E$",
+      "anchor": "method-clone-qrparseddata-phone-clone"
+    },
+    {
+      "name": "Deconstruct",
+      "kind": "Method",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "Number",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "void Deconstruct(out string Number)",
+      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.Phone.Deconstruct(System.String@)",
+      "anchor": "method-deconstruct-void-deconstruct-out-string-number"
+    },
+    {
+      "name": "Number",
+      "kind": "Property",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "string Number {get; set; }",
+      "xmlId": "P:CodeGlyphX.Payloads.QrParsedData.Phone.Number",
+      "anchor": "property-number-string-number-get-set"
+    }
+  ]
+}

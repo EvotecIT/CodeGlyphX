@@ -22,7 +22,7 @@
             <nav class="nav @(_navOpen ? "nav-open" : "")">
                 <div class="nav-links">
                     <a href="/" @onclick="GoHome" @onclick:preventDefault="true">Home</a>
-                    <a href="/playground/" @onclick="CloseNav">Playground</a>
+                    <a href="/playground/" @onclick="GoPlayground" @onclick:preventDefault="true">Playground</a>
                     <a href="/docs/" @onclick="GoDocs" @onclick:preventDefault="true">Documentation</a>
                     <a href="/showcase/" @onclick="GoShowcase" @onclick:preventDefault="true">Showcase</a>
                 </div>
@@ -167,30 +167,30 @@
     private void GoHome()
     {
         _navOpen = false;
-        var baseUri = new Uri(Nav.BaseUri);
-        var root = baseUri.GetLeftPart(UriPartial.Authority) + "/";
-        var target = baseUri.IsLoopback ? root + "home" : root;
-        Nav.NavigateTo(target, forceLoad: true);
+        Nav.NavigateTo("/");
     }
 
     private void GoDocs()
     {
         _navOpen = false;
-        var root = new Uri(Nav.BaseUri).GetLeftPart(UriPartial.Authority) + "/";
-        Nav.NavigateTo(root + "docs/", forceLoad: true);
+        Nav.NavigateTo("/docs");
     }
 
     private void GoApi()
     {
         _navOpen = false;
-        var root = new Uri(Nav.BaseUri).GetLeftPart(UriPartial.Authority) + "/";
-        Nav.NavigateTo(root + "docs/api", forceLoad: true);
+        Nav.NavigateTo("/docs/api");
     }
 
     private void GoShowcase()
     {
         _navOpen = false;
-        var root = new Uri(Nav.BaseUri).GetLeftPart(UriPartial.Authority) + "/";
-        Nav.NavigateTo(root + "showcase/", forceLoad: true);
+        Nav.NavigateTo("/showcase");
+    }
+
+    private void GoPlayground()
+    {
+        _navOpen = false;
+        Nav.NavigateTo("/playground");
     }
 }

@@ -1,0 +1,1789 @@
+{
+  "name": "BarcodeEasy",
+  "fullName": "CodeGlyphX.BarcodeEasy",
+  "namespace": "CodeGlyphX",
+  "kind": "Class",
+  "slug": "codeglyphx-barcodeeasy",
+  "summary": "One-line barcode helpers with sane defaults.",
+  "remarks": null,
+  "examples": [
+    {
+      "title": "EXAMPLE 1",
+      "code": "\n            using CodeGlyphX;\n            var png = BarcodeEasy.RenderPng(BarcodeType.Code128, \u0022PRODUCT-12345\u0022);\n            var svg = BarcodeEasy.RenderSvg(BarcodeType.Code128, \u0022PRODUCT-12345\u0022);",
+      "remarks": null
+    }
+  ],
+  "seeAlso": [],
+  "members": [
+    {
+      "name": "Encode",
+      "kind": "Method",
+      "summary": "Encodes a barcode value using the specified CodeGlyphX.BarcodeType.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "type",
+          "type": "BarcodeType",
+          "description": null
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static Barcode1D Encode(BarcodeType type, string content)",
+      "xmlId": "M:CodeGlyphX.BarcodeEasy.Encode(CodeGlyphX.BarcodeType,System.String)",
+      "anchor": "method-encode-static-barcode1d-encode-barcodetype-type-string-content"
+    },
+    {
+      "name": "RenderPng",
+      "kind": "Method",
+      "summary": "Renders a barcode as PNG.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "type",
+          "type": "BarcodeType",
+          "description": null
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "BarcodeOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static byte[] RenderPng(BarcodeType type, string content, BarcodeOptions options)",
+      "xmlId": "M:CodeGlyphX.BarcodeEasy.RenderPng(CodeGlyphX.BarcodeType,System.String,CodeGlyphX.BarcodeOptions)",
+      "anchor": "method-renderpng-static-byte-renderpng-barcodetype-type-string-content-barcodeoptions-options"
+    },
+    {
+      "name": "RenderSvg",
+      "kind": "Method",
+      "summary": "Renders a barcode as SVG.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "type",
+          "type": "BarcodeType",
+          "description": null
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "BarcodeOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string RenderSvg(BarcodeType type, string content, BarcodeOptions options)",
+      "xmlId": "M:CodeGlyphX.BarcodeEasy.RenderSvg(CodeGlyphX.BarcodeType,System.String,CodeGlyphX.BarcodeOptions)",
+      "anchor": "method-rendersvg-static-string-rendersvg-barcodetype-type-string-content-barcodeoptions-options"
+    },
+    {
+      "name": "RenderHtml",
+      "kind": "Method",
+      "summary": "Renders a barcode as HTML.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "type",
+          "type": "BarcodeType",
+          "description": null
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "BarcodeOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string RenderHtml(BarcodeType type, string content, BarcodeOptions options)",
+      "xmlId": "M:CodeGlyphX.BarcodeEasy.RenderHtml(CodeGlyphX.BarcodeType,System.String,CodeGlyphX.BarcodeOptions)",
+      "anchor": "method-renderhtml-static-string-renderhtml-barcodetype-type-string-content-barcodeoptions-options"
+    },
+    {
+      "name": "RenderJpeg",
+      "kind": "Method",
+      "summary": "Renders a barcode as JPEG.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "type",
+          "type": "BarcodeType",
+          "description": null
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "BarcodeOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static byte[] RenderJpeg(BarcodeType type, string content, BarcodeOptions options)",
+      "xmlId": "M:CodeGlyphX.BarcodeEasy.RenderJpeg(CodeGlyphX.BarcodeType,System.String,CodeGlyphX.BarcodeOptions)",
+      "anchor": "method-renderjpeg-static-byte-renderjpeg-barcodetype-type-string-content-barcodeoptions-options"
+    },
+    {
+      "name": "RenderBmp",
+      "kind": "Method",
+      "summary": "Renders a barcode as BMP.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "type",
+          "type": "BarcodeType",
+          "description": null
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "BarcodeOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static byte[] RenderBmp(BarcodeType type, string content, BarcodeOptions options)",
+      "xmlId": "M:CodeGlyphX.BarcodeEasy.RenderBmp(CodeGlyphX.BarcodeType,System.String,CodeGlyphX.BarcodeOptions)",
+      "anchor": "method-renderbmp-static-byte-renderbmp-barcodetype-type-string-content-barcodeoptions-options"
+    },
+    {
+      "name": "RenderPpm",
+      "kind": "Method",
+      "summary": "Renders a barcode as PPM.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "type",
+          "type": "BarcodeType",
+          "description": null
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "BarcodeOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static byte[] RenderPpm(BarcodeType type, string content, BarcodeOptions options)",
+      "xmlId": "M:CodeGlyphX.BarcodeEasy.RenderPpm(CodeGlyphX.BarcodeType,System.String,CodeGlyphX.BarcodeOptions)",
+      "anchor": "method-renderppm-static-byte-renderppm-barcodetype-type-string-content-barcodeoptions-options"
+    },
+    {
+      "name": "RenderPbm",
+      "kind": "Method",
+      "summary": "Renders a barcode as PBM.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "type",
+          "type": "BarcodeType",
+          "description": null
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "BarcodeOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static byte[] RenderPbm(BarcodeType type, string content, BarcodeOptions options)",
+      "xmlId": "M:CodeGlyphX.BarcodeEasy.RenderPbm(CodeGlyphX.BarcodeType,System.String,CodeGlyphX.BarcodeOptions)",
+      "anchor": "method-renderpbm-static-byte-renderpbm-barcodetype-type-string-content-barcodeoptions-options"
+    },
+    {
+      "name": "RenderPgm",
+      "kind": "Method",
+      "summary": "Renders a barcode as PGM.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "type",
+          "type": "BarcodeType",
+          "description": null
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "BarcodeOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static byte[] RenderPgm(BarcodeType type, string content, BarcodeOptions options)",
+      "xmlId": "M:CodeGlyphX.BarcodeEasy.RenderPgm(CodeGlyphX.BarcodeType,System.String,CodeGlyphX.BarcodeOptions)",
+      "anchor": "method-renderpgm-static-byte-renderpgm-barcodetype-type-string-content-barcodeoptions-options"
+    },
+    {
+      "name": "RenderPam",
+      "kind": "Method",
+      "summary": "Renders a barcode as PAM.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "type",
+          "type": "BarcodeType",
+          "description": null
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "BarcodeOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static byte[] RenderPam(BarcodeType type, string content, BarcodeOptions options)",
+      "xmlId": "M:CodeGlyphX.BarcodeEasy.RenderPam(CodeGlyphX.BarcodeType,System.String,CodeGlyphX.BarcodeOptions)",
+      "anchor": "method-renderpam-static-byte-renderpam-barcodetype-type-string-content-barcodeoptions-options"
+    },
+    {
+      "name": "RenderXbm",
+      "kind": "Method",
+      "summary": "Renders a barcode as XBM.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "type",
+          "type": "BarcodeType",
+          "description": null
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "BarcodeOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string RenderXbm(BarcodeType type, string content, BarcodeOptions options)",
+      "xmlId": "M:CodeGlyphX.BarcodeEasy.RenderXbm(CodeGlyphX.BarcodeType,System.String,CodeGlyphX.BarcodeOptions)",
+      "anchor": "method-renderxbm-static-string-renderxbm-barcodetype-type-string-content-barcodeoptions-options"
+    },
+    {
+      "name": "RenderXpm",
+      "kind": "Method",
+      "summary": "Renders a barcode as XPM.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "type",
+          "type": "BarcodeType",
+          "description": null
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "BarcodeOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string RenderXpm(BarcodeType type, string content, BarcodeOptions options)",
+      "xmlId": "M:CodeGlyphX.BarcodeEasy.RenderXpm(CodeGlyphX.BarcodeType,System.String,CodeGlyphX.BarcodeOptions)",
+      "anchor": "method-renderxpm-static-string-renderxpm-barcodetype-type-string-content-barcodeoptions-options"
+    },
+    {
+      "name": "RenderTga",
+      "kind": "Method",
+      "summary": "Renders a barcode as TGA.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "type",
+          "type": "BarcodeType",
+          "description": null
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "BarcodeOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static byte[] RenderTga(BarcodeType type, string content, BarcodeOptions options)",
+      "xmlId": "M:CodeGlyphX.BarcodeEasy.RenderTga(CodeGlyphX.BarcodeType,System.String,CodeGlyphX.BarcodeOptions)",
+      "anchor": "method-rendertga-static-byte-rendertga-barcodetype-type-string-content-barcodeoptions-options"
+    },
+    {
+      "name": "RenderIco",
+      "kind": "Method",
+      "summary": "Renders a barcode as ICO.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "type",
+          "type": "BarcodeType",
+          "description": null
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "BarcodeOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static byte[] RenderIco(BarcodeType type, string content, BarcodeOptions options)",
+      "xmlId": "M:CodeGlyphX.BarcodeEasy.RenderIco(CodeGlyphX.BarcodeType,System.String,CodeGlyphX.BarcodeOptions)",
+      "anchor": "method-renderico-static-byte-renderico-barcodetype-type-string-content-barcodeoptions-options"
+    },
+    {
+      "name": "RenderSvgz",
+      "kind": "Method",
+      "summary": "Renders a barcode as SVGZ.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "type",
+          "type": "BarcodeType",
+          "description": null
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "BarcodeOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static byte[] RenderSvgz(BarcodeType type, string content, BarcodeOptions options)",
+      "xmlId": "M:CodeGlyphX.BarcodeEasy.RenderSvgz(CodeGlyphX.BarcodeType,System.String,CodeGlyphX.BarcodeOptions)",
+      "anchor": "method-rendersvgz-static-byte-rendersvgz-barcodetype-type-string-content-barcodeoptions-options"
+    },
+    {
+      "name": "RenderPdf",
+      "kind": "Method",
+      "summary": "Renders a barcode as PDF.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "type",
+          "type": "BarcodeType",
+          "description": null
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "BarcodeOptions",
+          "description": null
+        },
+        {
+          "name": "mode",
+          "type": "RenderMode",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static byte[] RenderPdf(BarcodeType type, string content, BarcodeOptions options, RenderMode mode)",
+      "xmlId": "M:CodeGlyphX.BarcodeEasy.RenderPdf(CodeGlyphX.BarcodeType,System.String,CodeGlyphX.BarcodeOptions,CodeGlyphX.Rendering.RenderMode)",
+      "anchor": "method-renderpdf-static-byte-renderpdf-barcodetype-type-string-content-barcodeoptions-options-rendermode-mode"
+    },
+    {
+      "name": "RenderEps",
+      "kind": "Method",
+      "summary": "Renders a barcode as EPS.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "type",
+          "type": "BarcodeType",
+          "description": null
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "BarcodeOptions",
+          "description": null
+        },
+        {
+          "name": "mode",
+          "type": "RenderMode",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string RenderEps(BarcodeType type, string content, BarcodeOptions options, RenderMode mode)",
+      "xmlId": "M:CodeGlyphX.BarcodeEasy.RenderEps(CodeGlyphX.BarcodeType,System.String,CodeGlyphX.BarcodeOptions,CodeGlyphX.Rendering.RenderMode)",
+      "anchor": "method-rendereps-static-string-rendereps-barcodetype-type-string-content-barcodeoptions-options-rendermode-mode"
+    },
+    {
+      "name": "RenderAscii",
+      "kind": "Method",
+      "summary": "Renders a barcode as ASCII text.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "type",
+          "type": "BarcodeType",
+          "description": null
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "BarcodeAsciiRenderOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string RenderAscii(BarcodeType type, string content, BarcodeAsciiRenderOptions options)",
+      "xmlId": "M:CodeGlyphX.BarcodeEasy.RenderAscii(CodeGlyphX.BarcodeType,System.String,CodeGlyphX.Rendering.Ascii.BarcodeAsciiRenderOptions)",
+      "anchor": "method-renderascii-static-string-renderascii-barcodetype-type-string-content-barcodeasciirenderoptions-options"
+    },
+    {
+      "name": "RenderPngToStream",
+      "kind": "Method",
+      "summary": "Renders a barcode as PNG to a stream.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "type",
+          "type": "BarcodeType",
+          "description": null
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "stream",
+          "type": "Stream",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "BarcodeOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static void RenderPngToStream(BarcodeType type, string content, Stream stream, BarcodeOptions options)",
+      "xmlId": "M:CodeGlyphX.BarcodeEasy.RenderPngToStream(CodeGlyphX.BarcodeType,System.String,System.IO.Stream,CodeGlyphX.BarcodeOptions)",
+      "anchor": "method-renderpngtostream-static-void-renderpngtostream-barcodetype-type-string-content-stream-stream-barcodeoptions-options"
+    },
+    {
+      "name": "RenderSvgToStream",
+      "kind": "Method",
+      "summary": "Renders a barcode as SVG to a stream.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "type",
+          "type": "BarcodeType",
+          "description": null
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "stream",
+          "type": "Stream",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "BarcodeOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static void RenderSvgToStream(BarcodeType type, string content, Stream stream, BarcodeOptions options)",
+      "xmlId": "M:CodeGlyphX.BarcodeEasy.RenderSvgToStream(CodeGlyphX.BarcodeType,System.String,System.IO.Stream,CodeGlyphX.BarcodeOptions)",
+      "anchor": "method-rendersvgtostream-static-void-rendersvgtostream-barcodetype-type-string-content-stream-stream-barcodeoptions-options"
+    },
+    {
+      "name": "RenderHtmlToStream",
+      "kind": "Method",
+      "summary": "Renders a barcode as HTML to a stream.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "type",
+          "type": "BarcodeType",
+          "description": null
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "stream",
+          "type": "Stream",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "BarcodeOptions",
+          "description": null
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static void RenderHtmlToStream(BarcodeType type, string content, Stream stream, BarcodeOptions options, string title)",
+      "xmlId": "M:CodeGlyphX.BarcodeEasy.RenderHtmlToStream(CodeGlyphX.BarcodeType,System.String,System.IO.Stream,CodeGlyphX.BarcodeOptions,System.String)",
+      "anchor": "method-renderhtmltostream-static-void-renderhtmltostream-barcodetype-type-string-content-stream-stream-barcodeoptions-options-string-title"
+    },
+    {
+      "name": "RenderJpegToStream",
+      "kind": "Method",
+      "summary": "Renders a barcode as JPEG to a stream.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "type",
+          "type": "BarcodeType",
+          "description": null
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "stream",
+          "type": "Stream",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "BarcodeOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static void RenderJpegToStream(BarcodeType type, string content, Stream stream, BarcodeOptions options)",
+      "xmlId": "M:CodeGlyphX.BarcodeEasy.RenderJpegToStream(CodeGlyphX.BarcodeType,System.String,System.IO.Stream,CodeGlyphX.BarcodeOptions)",
+      "anchor": "method-renderjpegtostream-static-void-renderjpegtostream-barcodetype-type-string-content-stream-stream-barcodeoptions-options"
+    },
+    {
+      "name": "RenderBmpToStream",
+      "kind": "Method",
+      "summary": "Renders a barcode as BMP to a stream.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "type",
+          "type": "BarcodeType",
+          "description": null
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "stream",
+          "type": "Stream",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "BarcodeOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static void RenderBmpToStream(BarcodeType type, string content, Stream stream, BarcodeOptions options)",
+      "xmlId": "M:CodeGlyphX.BarcodeEasy.RenderBmpToStream(CodeGlyphX.BarcodeType,System.String,System.IO.Stream,CodeGlyphX.BarcodeOptions)",
+      "anchor": "method-renderbmptostream-static-void-renderbmptostream-barcodetype-type-string-content-stream-stream-barcodeoptions-options"
+    },
+    {
+      "name": "RenderPpmToStream",
+      "kind": "Method",
+      "summary": "Renders a barcode as PPM to a stream.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "type",
+          "type": "BarcodeType",
+          "description": null
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "stream",
+          "type": "Stream",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "BarcodeOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static void RenderPpmToStream(BarcodeType type, string content, Stream stream, BarcodeOptions options)",
+      "xmlId": "M:CodeGlyphX.BarcodeEasy.RenderPpmToStream(CodeGlyphX.BarcodeType,System.String,System.IO.Stream,CodeGlyphX.BarcodeOptions)",
+      "anchor": "method-renderppmtostream-static-void-renderppmtostream-barcodetype-type-string-content-stream-stream-barcodeoptions-options"
+    },
+    {
+      "name": "RenderPbmToStream",
+      "kind": "Method",
+      "summary": "Renders a barcode as PBM to a stream.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "type",
+          "type": "BarcodeType",
+          "description": null
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "stream",
+          "type": "Stream",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "BarcodeOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static void RenderPbmToStream(BarcodeType type, string content, Stream stream, BarcodeOptions options)",
+      "xmlId": "M:CodeGlyphX.BarcodeEasy.RenderPbmToStream(CodeGlyphX.BarcodeType,System.String,System.IO.Stream,CodeGlyphX.BarcodeOptions)",
+      "anchor": "method-renderpbmtostream-static-void-renderpbmtostream-barcodetype-type-string-content-stream-stream-barcodeoptions-options"
+    },
+    {
+      "name": "RenderPgmToStream",
+      "kind": "Method",
+      "summary": "Renders a barcode as PGM to a stream.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "type",
+          "type": "BarcodeType",
+          "description": null
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "stream",
+          "type": "Stream",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "BarcodeOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static void RenderPgmToStream(BarcodeType type, string content, Stream stream, BarcodeOptions options)",
+      "xmlId": "M:CodeGlyphX.BarcodeEasy.RenderPgmToStream(CodeGlyphX.BarcodeType,System.String,System.IO.Stream,CodeGlyphX.BarcodeOptions)",
+      "anchor": "method-renderpgmtostream-static-void-renderpgmtostream-barcodetype-type-string-content-stream-stream-barcodeoptions-options"
+    },
+    {
+      "name": "RenderPamToStream",
+      "kind": "Method",
+      "summary": "Renders a barcode as PAM to a stream.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "type",
+          "type": "BarcodeType",
+          "description": null
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "stream",
+          "type": "Stream",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "BarcodeOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static void RenderPamToStream(BarcodeType type, string content, Stream stream, BarcodeOptions options)",
+      "xmlId": "M:CodeGlyphX.BarcodeEasy.RenderPamToStream(CodeGlyphX.BarcodeType,System.String,System.IO.Stream,CodeGlyphX.BarcodeOptions)",
+      "anchor": "method-renderpamtostream-static-void-renderpamtostream-barcodetype-type-string-content-stream-stream-barcodeoptions-options"
+    },
+    {
+      "name": "RenderXbmToStream",
+      "kind": "Method",
+      "summary": "Renders a barcode as XBM to a stream.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "type",
+          "type": "BarcodeType",
+          "description": null
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "stream",
+          "type": "Stream",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "BarcodeOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static void RenderXbmToStream(BarcodeType type, string content, Stream stream, BarcodeOptions options)",
+      "xmlId": "M:CodeGlyphX.BarcodeEasy.RenderXbmToStream(CodeGlyphX.BarcodeType,System.String,System.IO.Stream,CodeGlyphX.BarcodeOptions)",
+      "anchor": "method-renderxbmtostream-static-void-renderxbmtostream-barcodetype-type-string-content-stream-stream-barcodeoptions-options"
+    },
+    {
+      "name": "RenderXpmToStream",
+      "kind": "Method",
+      "summary": "Renders a barcode as XPM to a stream.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "type",
+          "type": "BarcodeType",
+          "description": null
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "stream",
+          "type": "Stream",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "BarcodeOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static void RenderXpmToStream(BarcodeType type, string content, Stream stream, BarcodeOptions options)",
+      "xmlId": "M:CodeGlyphX.BarcodeEasy.RenderXpmToStream(CodeGlyphX.BarcodeType,System.String,System.IO.Stream,CodeGlyphX.BarcodeOptions)",
+      "anchor": "method-renderxpmtostream-static-void-renderxpmtostream-barcodetype-type-string-content-stream-stream-barcodeoptions-options"
+    },
+    {
+      "name": "RenderTgaToStream",
+      "kind": "Method",
+      "summary": "Renders a barcode as TGA to a stream.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "type",
+          "type": "BarcodeType",
+          "description": null
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "stream",
+          "type": "Stream",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "BarcodeOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static void RenderTgaToStream(BarcodeType type, string content, Stream stream, BarcodeOptions options)",
+      "xmlId": "M:CodeGlyphX.BarcodeEasy.RenderTgaToStream(CodeGlyphX.BarcodeType,System.String,System.IO.Stream,CodeGlyphX.BarcodeOptions)",
+      "anchor": "method-rendertgatostream-static-void-rendertgatostream-barcodetype-type-string-content-stream-stream-barcodeoptions-options"
+    },
+    {
+      "name": "RenderIcoToStream",
+      "kind": "Method",
+      "summary": "Renders a barcode as ICO to a stream.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "type",
+          "type": "BarcodeType",
+          "description": null
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "stream",
+          "type": "Stream",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "BarcodeOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static void RenderIcoToStream(BarcodeType type, string content, Stream stream, BarcodeOptions options)",
+      "xmlId": "M:CodeGlyphX.BarcodeEasy.RenderIcoToStream(CodeGlyphX.BarcodeType,System.String,System.IO.Stream,CodeGlyphX.BarcodeOptions)",
+      "anchor": "method-rendericotostream-static-void-rendericotostream-barcodetype-type-string-content-stream-stream-barcodeoptions-options"
+    },
+    {
+      "name": "RenderSvgzToStream",
+      "kind": "Method",
+      "summary": "Renders a barcode as SVGZ to a stream.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "type",
+          "type": "BarcodeType",
+          "description": null
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "stream",
+          "type": "Stream",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "BarcodeOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static void RenderSvgzToStream(BarcodeType type, string content, Stream stream, BarcodeOptions options)",
+      "xmlId": "M:CodeGlyphX.BarcodeEasy.RenderSvgzToStream(CodeGlyphX.BarcodeType,System.String,System.IO.Stream,CodeGlyphX.BarcodeOptions)",
+      "anchor": "method-rendersvgztostream-static-void-rendersvgztostream-barcodetype-type-string-content-stream-stream-barcodeoptions-options"
+    },
+    {
+      "name": "RenderPdfToStream",
+      "kind": "Method",
+      "summary": "Renders a barcode as PDF to a stream.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "type",
+          "type": "BarcodeType",
+          "description": null
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "stream",
+          "type": "Stream",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "BarcodeOptions",
+          "description": null
+        },
+        {
+          "name": "mode",
+          "type": "RenderMode",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static void RenderPdfToStream(BarcodeType type, string content, Stream stream, BarcodeOptions options, RenderMode mode)",
+      "xmlId": "M:CodeGlyphX.BarcodeEasy.RenderPdfToStream(CodeGlyphX.BarcodeType,System.String,System.IO.Stream,CodeGlyphX.BarcodeOptions,CodeGlyphX.Rendering.RenderMode)",
+      "anchor": "method-renderpdftostream-static-void-renderpdftostream-barcodetype-type-string-content-stream-stream-barcodeoptions-options-rendermode-mode"
+    },
+    {
+      "name": "RenderEpsToStream",
+      "kind": "Method",
+      "summary": "Renders a barcode as EPS to a stream.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "type",
+          "type": "BarcodeType",
+          "description": null
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "stream",
+          "type": "Stream",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "BarcodeOptions",
+          "description": null
+        },
+        {
+          "name": "mode",
+          "type": "RenderMode",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static void RenderEpsToStream(BarcodeType type, string content, Stream stream, BarcodeOptions options, RenderMode mode)",
+      "xmlId": "M:CodeGlyphX.BarcodeEasy.RenderEpsToStream(CodeGlyphX.BarcodeType,System.String,System.IO.Stream,CodeGlyphX.BarcodeOptions,CodeGlyphX.Rendering.RenderMode)",
+      "anchor": "method-renderepstostream-static-void-renderepstostream-barcodetype-type-string-content-stream-stream-barcodeoptions-options-rendermode-mode"
+    },
+    {
+      "name": "RenderPngToFile",
+      "kind": "Method",
+      "summary": "Renders a barcode as PNG to a file.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "type",
+          "type": "BarcodeType",
+          "description": null
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "path",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "BarcodeOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string RenderPngToFile(BarcodeType type, string content, string path, BarcodeOptions options)",
+      "xmlId": "M:CodeGlyphX.BarcodeEasy.RenderPngToFile(CodeGlyphX.BarcodeType,System.String,System.String,CodeGlyphX.BarcodeOptions)",
+      "anchor": "method-renderpngtofile-static-string-renderpngtofile-barcodetype-type-string-content-string-path-barcodeoptions-options"
+    },
+    {
+      "name": "RenderSvgToFile",
+      "kind": "Method",
+      "summary": "Renders a barcode as SVG to a file.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "type",
+          "type": "BarcodeType",
+          "description": null
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "path",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "BarcodeOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string RenderSvgToFile(BarcodeType type, string content, string path, BarcodeOptions options)",
+      "xmlId": "M:CodeGlyphX.BarcodeEasy.RenderSvgToFile(CodeGlyphX.BarcodeType,System.String,System.String,CodeGlyphX.BarcodeOptions)",
+      "anchor": "method-rendersvgtofile-static-string-rendersvgtofile-barcodetype-type-string-content-string-path-barcodeoptions-options"
+    },
+    {
+      "name": "RenderHtmlToFile",
+      "kind": "Method",
+      "summary": "Renders a barcode as HTML to a file.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "type",
+          "type": "BarcodeType",
+          "description": null
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "path",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "BarcodeOptions",
+          "description": null
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string RenderHtmlToFile(BarcodeType type, string content, string path, BarcodeOptions options, string title)",
+      "xmlId": "M:CodeGlyphX.BarcodeEasy.RenderHtmlToFile(CodeGlyphX.BarcodeType,System.String,System.String,CodeGlyphX.BarcodeOptions,System.String)",
+      "anchor": "method-renderhtmltofile-static-string-renderhtmltofile-barcodetype-type-string-content-string-path-barcodeoptions-options-string-title"
+    },
+    {
+      "name": "RenderJpegToFile",
+      "kind": "Method",
+      "summary": "Renders a barcode as JPEG to a file.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "type",
+          "type": "BarcodeType",
+          "description": null
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "path",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "BarcodeOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string RenderJpegToFile(BarcodeType type, string content, string path, BarcodeOptions options)",
+      "xmlId": "M:CodeGlyphX.BarcodeEasy.RenderJpegToFile(CodeGlyphX.BarcodeType,System.String,System.String,CodeGlyphX.BarcodeOptions)",
+      "anchor": "method-renderjpegtofile-static-string-renderjpegtofile-barcodetype-type-string-content-string-path-barcodeoptions-options"
+    },
+    {
+      "name": "RenderBmpToFile",
+      "kind": "Method",
+      "summary": "Renders a barcode as BMP to a file.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "type",
+          "type": "BarcodeType",
+          "description": null
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "path",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "BarcodeOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string RenderBmpToFile(BarcodeType type, string content, string path, BarcodeOptions options)",
+      "xmlId": "M:CodeGlyphX.BarcodeEasy.RenderBmpToFile(CodeGlyphX.BarcodeType,System.String,System.String,CodeGlyphX.BarcodeOptions)",
+      "anchor": "method-renderbmptofile-static-string-renderbmptofile-barcodetype-type-string-content-string-path-barcodeoptions-options"
+    },
+    {
+      "name": "RenderPpmToFile",
+      "kind": "Method",
+      "summary": "Renders a barcode as PPM to a file.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "type",
+          "type": "BarcodeType",
+          "description": null
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "path",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "BarcodeOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string RenderPpmToFile(BarcodeType type, string content, string path, BarcodeOptions options)",
+      "xmlId": "M:CodeGlyphX.BarcodeEasy.RenderPpmToFile(CodeGlyphX.BarcodeType,System.String,System.String,CodeGlyphX.BarcodeOptions)",
+      "anchor": "method-renderppmtofile-static-string-renderppmtofile-barcodetype-type-string-content-string-path-barcodeoptions-options"
+    },
+    {
+      "name": "RenderPbmToFile",
+      "kind": "Method",
+      "summary": "Renders a barcode as PBM to a file.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "type",
+          "type": "BarcodeType",
+          "description": null
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "path",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "BarcodeOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string RenderPbmToFile(BarcodeType type, string content, string path, BarcodeOptions options)",
+      "xmlId": "M:CodeGlyphX.BarcodeEasy.RenderPbmToFile(CodeGlyphX.BarcodeType,System.String,System.String,CodeGlyphX.BarcodeOptions)",
+      "anchor": "method-renderpbmtofile-static-string-renderpbmtofile-barcodetype-type-string-content-string-path-barcodeoptions-options"
+    },
+    {
+      "name": "RenderPgmToFile",
+      "kind": "Method",
+      "summary": "Renders a barcode as PGM to a file.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "type",
+          "type": "BarcodeType",
+          "description": null
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "path",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "BarcodeOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string RenderPgmToFile(BarcodeType type, string content, string path, BarcodeOptions options)",
+      "xmlId": "M:CodeGlyphX.BarcodeEasy.RenderPgmToFile(CodeGlyphX.BarcodeType,System.String,System.String,CodeGlyphX.BarcodeOptions)",
+      "anchor": "method-renderpgmtofile-static-string-renderpgmtofile-barcodetype-type-string-content-string-path-barcodeoptions-options"
+    },
+    {
+      "name": "RenderPamToFile",
+      "kind": "Method",
+      "summary": "Renders a barcode as PAM to a file.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "type",
+          "type": "BarcodeType",
+          "description": null
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "path",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "BarcodeOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string RenderPamToFile(BarcodeType type, string content, string path, BarcodeOptions options)",
+      "xmlId": "M:CodeGlyphX.BarcodeEasy.RenderPamToFile(CodeGlyphX.BarcodeType,System.String,System.String,CodeGlyphX.BarcodeOptions)",
+      "anchor": "method-renderpamtofile-static-string-renderpamtofile-barcodetype-type-string-content-string-path-barcodeoptions-options"
+    },
+    {
+      "name": "RenderXbmToFile",
+      "kind": "Method",
+      "summary": "Renders a barcode as XBM to a file.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "type",
+          "type": "BarcodeType",
+          "description": null
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "path",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "BarcodeOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string RenderXbmToFile(BarcodeType type, string content, string path, BarcodeOptions options)",
+      "xmlId": "M:CodeGlyphX.BarcodeEasy.RenderXbmToFile(CodeGlyphX.BarcodeType,System.String,System.String,CodeGlyphX.BarcodeOptions)",
+      "anchor": "method-renderxbmtofile-static-string-renderxbmtofile-barcodetype-type-string-content-string-path-barcodeoptions-options"
+    },
+    {
+      "name": "RenderXpmToFile",
+      "kind": "Method",
+      "summary": "Renders a barcode as XPM to a file.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "type",
+          "type": "BarcodeType",
+          "description": null
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "path",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "BarcodeOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string RenderXpmToFile(BarcodeType type, string content, string path, BarcodeOptions options)",
+      "xmlId": "M:CodeGlyphX.BarcodeEasy.RenderXpmToFile(CodeGlyphX.BarcodeType,System.String,System.String,CodeGlyphX.BarcodeOptions)",
+      "anchor": "method-renderxpmtofile-static-string-renderxpmtofile-barcodetype-type-string-content-string-path-barcodeoptions-options"
+    },
+    {
+      "name": "RenderTgaToFile",
+      "kind": "Method",
+      "summary": "Renders a barcode as TGA to a file.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "type",
+          "type": "BarcodeType",
+          "description": null
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "path",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "BarcodeOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string RenderTgaToFile(BarcodeType type, string content, string path, BarcodeOptions options)",
+      "xmlId": "M:CodeGlyphX.BarcodeEasy.RenderTgaToFile(CodeGlyphX.BarcodeType,System.String,System.String,CodeGlyphX.BarcodeOptions)",
+      "anchor": "method-rendertgatofile-static-string-rendertgatofile-barcodetype-type-string-content-string-path-barcodeoptions-options"
+    },
+    {
+      "name": "RenderIcoToFile",
+      "kind": "Method",
+      "summary": "Renders a barcode as ICO to a file.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "type",
+          "type": "BarcodeType",
+          "description": null
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "path",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "BarcodeOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string RenderIcoToFile(BarcodeType type, string content, string path, BarcodeOptions options)",
+      "xmlId": "M:CodeGlyphX.BarcodeEasy.RenderIcoToFile(CodeGlyphX.BarcodeType,System.String,System.String,CodeGlyphX.BarcodeOptions)",
+      "anchor": "method-rendericotofile-static-string-rendericotofile-barcodetype-type-string-content-string-path-barcodeoptions-options"
+    },
+    {
+      "name": "RenderSvgzToFile",
+      "kind": "Method",
+      "summary": "Renders a barcode as SVGZ to a file.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "type",
+          "type": "BarcodeType",
+          "description": null
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "path",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "BarcodeOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string RenderSvgzToFile(BarcodeType type, string content, string path, BarcodeOptions options)",
+      "xmlId": "M:CodeGlyphX.BarcodeEasy.RenderSvgzToFile(CodeGlyphX.BarcodeType,System.String,System.String,CodeGlyphX.BarcodeOptions)",
+      "anchor": "method-rendersvgztofile-static-string-rendersvgztofile-barcodetype-type-string-content-string-path-barcodeoptions-options"
+    },
+    {
+      "name": "RenderPdfToFile",
+      "kind": "Method",
+      "summary": "Renders a barcode as PDF to a file.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "type",
+          "type": "BarcodeType",
+          "description": null
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "path",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "BarcodeOptions",
+          "description": null
+        },
+        {
+          "name": "mode",
+          "type": "RenderMode",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string RenderPdfToFile(BarcodeType type, string content, string path, BarcodeOptions options, RenderMode mode)",
+      "xmlId": "M:CodeGlyphX.BarcodeEasy.RenderPdfToFile(CodeGlyphX.BarcodeType,System.String,System.String,CodeGlyphX.BarcodeOptions,CodeGlyphX.Rendering.RenderMode)",
+      "anchor": "method-renderpdftofile-static-string-renderpdftofile-barcodetype-type-string-content-string-path-barcodeoptions-options-rendermode-mode"
+    },
+    {
+      "name": "RenderEpsToFile",
+      "kind": "Method",
+      "summary": "Renders a barcode as EPS to a file.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "type",
+          "type": "BarcodeType",
+          "description": null
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "path",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "BarcodeOptions",
+          "description": null
+        },
+        {
+          "name": "mode",
+          "type": "RenderMode",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string RenderEpsToFile(BarcodeType type, string content, string path, BarcodeOptions options, RenderMode mode)",
+      "xmlId": "M:CodeGlyphX.BarcodeEasy.RenderEpsToFile(CodeGlyphX.BarcodeType,System.String,System.String,CodeGlyphX.BarcodeOptions,CodeGlyphX.Rendering.RenderMode)",
+      "anchor": "method-renderepstofile-static-string-renderepstofile-barcodetype-type-string-content-string-path-barcodeoptions-options-rendermode-mode"
+    },
+    {
+      "name": "RenderAsciiToFile",
+      "kind": "Method",
+      "summary": "Renders a barcode as ASCII text to a file.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "type",
+          "type": "BarcodeType",
+          "description": null
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "path",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "BarcodeAsciiRenderOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string RenderAsciiToFile(BarcodeType type, string content, string path, BarcodeAsciiRenderOptions options)",
+      "xmlId": "M:CodeGlyphX.BarcodeEasy.RenderAsciiToFile(CodeGlyphX.BarcodeType,System.String,System.String,CodeGlyphX.Rendering.Ascii.BarcodeAsciiRenderOptions)",
+      "anchor": "method-renderasciitofile-static-string-renderasciitofile-barcodetype-type-string-content-string-path-barcodeasciirenderoptions-options"
+    },
+    {
+      "name": "RenderToFile",
+      "kind": "Method",
+      "summary": "Saves a barcode to a file based on the output extension.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "type",
+          "type": "BarcodeType",
+          "description": null
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "path",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "BarcodeOptions",
+          "description": null
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string RenderToFile(BarcodeType type, string content, string path, BarcodeOptions options, string title)",
+      "xmlId": "M:CodeGlyphX.BarcodeEasy.RenderToFile(CodeGlyphX.BarcodeType,System.String,System.String,CodeGlyphX.BarcodeOptions,System.String)",
+      "anchor": "method-rendertofile-static-string-rendertofile-barcodetype-type-string-content-string-path-barcodeoptions-options-string-title"
+    }
+  ]
+}

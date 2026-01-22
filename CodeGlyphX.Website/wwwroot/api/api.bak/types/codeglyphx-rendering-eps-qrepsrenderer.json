@@ -1,0 +1,153 @@
+{
+  "name": "QrEpsRenderer",
+  "fullName": "CodeGlyphX.Rendering.Eps.QrEpsRenderer",
+  "namespace": "CodeGlyphX.Rendering.Eps",
+  "kind": "Class",
+  "slug": "codeglyphx-rendering-eps-qrepsrenderer",
+  "summary": "Renders QR modules to an EPS image.",
+  "remarks": null,
+  "examples": [],
+  "seeAlso": [],
+  "members": [
+    {
+      "name": "Render",
+      "kind": "Method",
+      "summary": "Renders the QR module matrix to an EPS string.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "modules",
+          "type": "BitMatrix",
+          "description": null
+        },
+        {
+          "name": "opts",
+          "type": "QrPngRenderOptions",
+          "description": null
+        },
+        {
+          "name": "mode",
+          "type": "RenderMode",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string Render(BitMatrix modules, QrPngRenderOptions opts, RenderMode mode)",
+      "xmlId": "M:CodeGlyphX.Rendering.Eps.QrEpsRenderer.Render(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Png.QrPngRenderOptions,CodeGlyphX.Rendering.RenderMode)",
+      "anchor": "method-render-static-string-render-bitmatrix-modules-qrpngrenderoptions-opts-rendermode-mode"
+    },
+    {
+      "name": "RenderToStream",
+      "kind": "Method",
+      "summary": "Renders the QR module matrix to an EPS stream.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "modules",
+          "type": "BitMatrix",
+          "description": null
+        },
+        {
+          "name": "opts",
+          "type": "QrPngRenderOptions",
+          "description": null
+        },
+        {
+          "name": "stream",
+          "type": "Stream",
+          "description": null
+        },
+        {
+          "name": "mode",
+          "type": "RenderMode",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static void RenderToStream(BitMatrix modules, QrPngRenderOptions opts, Stream stream, RenderMode mode)",
+      "xmlId": "M:CodeGlyphX.Rendering.Eps.QrEpsRenderer.RenderToStream(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Png.QrPngRenderOptions,System.IO.Stream,CodeGlyphX.Rendering.RenderMode)",
+      "anchor": "method-rendertostream-static-void-rendertostream-bitmatrix-modules-qrpngrenderoptions-opts-stream-stream-rendermode-mode"
+    },
+    {
+      "name": "RenderToFile",
+      "kind": "Method",
+      "summary": "Renders the QR module matrix to an EPS file.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "modules",
+          "type": "BitMatrix",
+          "description": null
+        },
+        {
+          "name": "opts",
+          "type": "QrPngRenderOptions",
+          "description": null
+        },
+        {
+          "name": "path",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "mode",
+          "type": "RenderMode",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string RenderToFile(BitMatrix modules, QrPngRenderOptions opts, string path, RenderMode mode)",
+      "xmlId": "M:CodeGlyphX.Rendering.Eps.QrEpsRenderer.RenderToFile(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Png.QrPngRenderOptions,System.String,CodeGlyphX.Rendering.RenderMode)",
+      "anchor": "method-rendertofile-static-string-rendertofile-bitmatrix-modules-qrpngrenderoptions-opts-string-path-rendermode-mode"
+    },
+    {
+      "name": "RenderToFile",
+      "kind": "Method",
+      "summary": "Renders the QR module matrix to an EPS file under the specified directory.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "modules",
+          "type": "BitMatrix",
+          "description": null
+        },
+        {
+          "name": "opts",
+          "type": "QrPngRenderOptions",
+          "description": null
+        },
+        {
+          "name": "directory",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "fileName",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "mode",
+          "type": "RenderMode",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string RenderToFile(BitMatrix modules, QrPngRenderOptions opts, string directory, string fileName, RenderMode mode)",
+      "xmlId": "M:CodeGlyphX.Rendering.Eps.QrEpsRenderer.RenderToFile(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Png.QrPngRenderOptions,System.String,System.String,CodeGlyphX.Rendering.RenderMode)",
+      "anchor": "method-rendertofile-static-string-rendertofile-bitmatrix-modules-qrpngrenderoptions-opts-string-directory-string-filename-rendermode-mode"
+    }
+  ]
+}

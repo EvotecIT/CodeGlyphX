@@ -1,0 +1,33 @@
+{
+  "name": "TelepenEncoder",
+  "fullName": "CodeGlyphX.Telepen.TelepenEncoder",
+  "namespace": "CodeGlyphX.Telepen",
+  "kind": "Class",
+  "slug": "codeglyphx-telepen-telepenencoder",
+  "summary": "Encodes Telepen barcodes (ASCII mode).",
+  "remarks": null,
+  "examples": [],
+  "seeAlso": [],
+  "members": [
+    {
+      "name": "Encode",
+      "kind": "Method",
+      "summary": "Encodes a Telepen barcode. Supports ASCII characters in the 0-127 range.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "content",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static Barcode1D Encode(string content)",
+      "xmlId": "M:CodeGlyphX.Telepen.TelepenEncoder.Encode(System.String)",
+      "anchor": "method-encode-static-barcode1d-encode-string-content"
+    }
+  ]
+}

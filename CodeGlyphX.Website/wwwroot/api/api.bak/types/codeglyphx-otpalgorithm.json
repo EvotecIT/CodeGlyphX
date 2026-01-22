@@ -1,0 +1,69 @@
+{
+  "name": "OtpAlgorithm",
+  "fullName": "CodeGlyphX.OtpAlgorithm",
+  "namespace": "CodeGlyphX",
+  "kind": "Enum",
+  "slug": "codeglyphx-otpalgorithm",
+  "summary": "Hash algorithm identifiers used in otpauth:// URIs.",
+  "remarks": null,
+  "examples": [],
+  "seeAlso": [],
+  "members": [
+    {
+      "name": "value__",
+      "kind": "Field",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "int value__",
+      "xmlId": "F:CodeGlyphX.OtpAlgorithm.value__",
+      "anchor": "field-value-int-value"
+    },
+    {
+      "name": "Sha1",
+      "kind": "Field",
+      "summary": "HMAC-SHA1 (default for TOTP).",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "OtpAlgorithm Sha1",
+      "xmlId": "F:CodeGlyphX.OtpAlgorithm.Sha1",
+      "anchor": "field-sha1-otpalgorithm-sha1"
+    },
+    {
+      "name": "Sha256",
+      "kind": "Field",
+      "summary": "HMAC-SHA256.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "OtpAlgorithm Sha256",
+      "xmlId": "F:CodeGlyphX.OtpAlgorithm.Sha256",
+      "anchor": "field-sha256-otpalgorithm-sha256"
+    },
+    {
+      "name": "Sha512",
+      "kind": "Field",
+      "summary": "HMAC-SHA512.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "OtpAlgorithm Sha512",
+      "xmlId": "F:CodeGlyphX.OtpAlgorithm.Sha512",
+      "anchor": "field-sha512-otpalgorithm-sha512"
+    }
+  ]
+}

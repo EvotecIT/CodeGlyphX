@@ -1,0 +1,1809 @@
+{
+  "name": "QrImageDecoder",
+  "fullName": "CodeGlyphX.QrImageDecoder",
+  "namespace": "CodeGlyphX",
+  "kind": "Class",
+  "slug": "codeglyphx-qrimagedecoder",
+  "summary": "Decodes QR codes from raw pixel buffers.",
+  "remarks": null,
+  "examples": [
+    {
+      "title": "EXAMPLE 1",
+      "code": "\n            using CodeGlyphX;\n            var bytes = File.ReadAllBytes(\u0022qr.png\u0022);\n            if (QrImageDecoder.TryDecodeImage(bytes, out var decoded)) {\n                Console.WriteLine(decoded.Text);\n            }",
+      "remarks": null
+    }
+  ],
+  "seeAlso": [],
+  "members": [
+    {
+      "name": "TryDecode",
+      "kind": "Method",
+      "summary": "Attempts to decode a QR code from a raw pixel buffer.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "pixels",
+          "type": "byte[]",
+          "description": null
+        },
+        {
+          "name": "width",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "height",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "stride",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "format",
+          "type": "PixelFormat",
+          "description": null
+        },
+        {
+          "name": "decoded",
+          "type": "QrDecoded",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecode(byte[] pixels, int width, int height, int stride, PixelFormat format, out QrDecoded decoded)",
+      "xmlId": "M:CodeGlyphX.QrImageDecoder.TryDecode(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded@)",
+      "anchor": "method-trydecode-static-bool-trydecode-byte-pixels-int-width-int-height-int-stride-pixelformat-format-out-qrdecoded-decoded"
+    },
+    {
+      "name": "TryDecode",
+      "kind": "Method",
+      "summary": "Attempts to decode a QR code from a raw pixel buffer.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "pixels",
+          "type": "byte[]",
+          "description": null
+        },
+        {
+          "name": "width",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "height",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "stride",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "format",
+          "type": "PixelFormat",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "QrPixelDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "decoded",
+          "type": "QrDecoded",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecode(byte[] pixels, int width, int height, int stride, PixelFormat format, QrPixelDecodeOptions options, out QrDecoded decoded)",
+      "xmlId": "M:CodeGlyphX.QrImageDecoder.TryDecode(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrPixelDecodeOptions,CodeGlyphX.QrDecoded@)",
+      "anchor": "method-trydecode-static-bool-trydecode-byte-pixels-int-width-int-height-int-stride-pixelformat-format-qrpixeldecodeoptions-options-out-qrdecoded-decoded"
+    },
+    {
+      "name": "TryDecode",
+      "kind": "Method",
+      "summary": "Attempts to decode a QR code from a raw pixel buffer, with cancellation.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "pixels",
+          "type": "byte[]",
+          "description": null
+        },
+        {
+          "name": "width",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "height",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "stride",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "format",
+          "type": "PixelFormat",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "QrPixelDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "cancellationToken",
+          "type": "CancellationToken",
+          "description": null
+        },
+        {
+          "name": "decoded",
+          "type": "QrDecoded",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecode(byte[] pixels, int width, int height, int stride, PixelFormat format, QrPixelDecodeOptions options, CancellationToken cancellationToken, out QrDecoded decoded)",
+      "xmlId": "M:CodeGlyphX.QrImageDecoder.TryDecode(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken,CodeGlyphX.QrDecoded@)",
+      "anchor": "method-trydecode-static-bool-trydecode-byte-pixels-int-width-int-height-int-stride-pixelformat-format-qrpixeldecodeoptions-options-cancellationtoken-cancellationtoken-out-qrdecoded-decoded"
+    },
+    {
+      "name": "TryDecodeAll",
+      "kind": "Method",
+      "summary": "Attempts to decode all QR codes from a raw pixel buffer.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "pixels",
+          "type": "byte[]",
+          "description": null
+        },
+        {
+          "name": "width",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "height",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "stride",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "format",
+          "type": "PixelFormat",
+          "description": null
+        },
+        {
+          "name": "decoded",
+          "type": "QrDecoded[]",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodeAll(byte[] pixels, int width, int height, int stride, PixelFormat format, out QrDecoded[] decoded)",
+      "xmlId": "M:CodeGlyphX.QrImageDecoder.TryDecodeAll(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded[]@)",
+      "anchor": "method-trydecodeall-static-bool-trydecodeall-byte-pixels-int-width-int-height-int-stride-pixelformat-format-out-qrdecoded-decoded"
+    },
+    {
+      "name": "TryDecodeAll",
+      "kind": "Method",
+      "summary": "Attempts to decode all QR codes from a raw pixel buffer.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "pixels",
+          "type": "byte[]",
+          "description": null
+        },
+        {
+          "name": "width",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "height",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "stride",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "format",
+          "type": "PixelFormat",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "QrPixelDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "decoded",
+          "type": "QrDecoded[]",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodeAll(byte[] pixels, int width, int height, int stride, PixelFormat format, QrPixelDecodeOptions options, out QrDecoded[] decoded)",
+      "xmlId": "M:CodeGlyphX.QrImageDecoder.TryDecodeAll(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrPixelDecodeOptions,CodeGlyphX.QrDecoded[]@)",
+      "anchor": "method-trydecodeall-static-bool-trydecodeall-byte-pixels-int-width-int-height-int-stride-pixelformat-format-qrpixeldecodeoptions-options-out-qrdecoded-decoded"
+    },
+    {
+      "name": "TryDecodeAll",
+      "kind": "Method",
+      "summary": "Attempts to decode all QR codes from a raw pixel buffer, with cancellation.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "pixels",
+          "type": "byte[]",
+          "description": null
+        },
+        {
+          "name": "width",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "height",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "stride",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "format",
+          "type": "PixelFormat",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "QrPixelDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "cancellationToken",
+          "type": "CancellationToken",
+          "description": null
+        },
+        {
+          "name": "decoded",
+          "type": "QrDecoded[]",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodeAll(byte[] pixels, int width, int height, int stride, PixelFormat format, QrPixelDecodeOptions options, CancellationToken cancellationToken, out QrDecoded[] decoded)",
+      "xmlId": "M:CodeGlyphX.QrImageDecoder.TryDecodeAll(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken,CodeGlyphX.QrDecoded[]@)",
+      "anchor": "method-trydecodeall-static-bool-trydecodeall-byte-pixels-int-width-int-height-int-stride-pixelformat-format-qrpixeldecodeoptions-options-cancellationtoken-cancellationtoken-out-qrdecoded-decoded"
+    },
+    {
+      "name": "TryDecodeImage",
+      "kind": "Method",
+      "summary": "Attempts to decode a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "image",
+          "type": "byte[]",
+          "description": null
+        },
+        {
+          "name": "decoded",
+          "type": "QrDecoded",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodeImage(byte[] image, out QrDecoded decoded)",
+      "xmlId": "M:CodeGlyphX.QrImageDecoder.TryDecodeImage(System.Byte[],CodeGlyphX.QrDecoded@)",
+      "anchor": "method-trydecodeimage-static-bool-trydecodeimage-byte-image-out-qrdecoded-decoded"
+    },
+    {
+      "name": "TryDecodeImage",
+      "kind": "Method",
+      "summary": "Attempts to decode a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA), with diagnostics and profile options.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "image",
+          "type": "byte[]",
+          "description": null
+        },
+        {
+          "name": "decoded",
+          "type": "QrDecoded",
+          "description": null
+        },
+        {
+          "name": "info",
+          "type": "QrPixelDecodeInfo",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "QrPixelDecodeOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodeImage(byte[] image, out QrDecoded decoded, out QrPixelDecodeInfo info, QrPixelDecodeOptions options)",
+      "xmlId": "M:CodeGlyphX.QrImageDecoder.TryDecodeImage(System.Byte[],CodeGlyphX.QrDecoded@,CodeGlyphX.QrPixelDecodeInfo@,CodeGlyphX.QrPixelDecodeOptions)",
+      "anchor": "method-trydecodeimage-static-bool-trydecodeimage-byte-image-out-qrdecoded-decoded-out-qrpixeldecodeinfo-info-qrpixeldecodeoptions-options"
+    },
+    {
+      "name": "TryDecodeImage",
+      "kind": "Method",
+      "summary": "Attempts to decode a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA), with diagnostics, profile options, and cancellation.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "image",
+          "type": "byte[]",
+          "description": null
+        },
+        {
+          "name": "decoded",
+          "type": "QrDecoded",
+          "description": null
+        },
+        {
+          "name": "info",
+          "type": "QrPixelDecodeInfo",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "QrPixelDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "cancellationToken",
+          "type": "CancellationToken",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodeImage(byte[] image, out QrDecoded decoded, out QrPixelDecodeInfo info, QrPixelDecodeOptions options, CancellationToken cancellationToken)",
+      "xmlId": "M:CodeGlyphX.QrImageDecoder.TryDecodeImage(System.Byte[],CodeGlyphX.QrDecoded@,CodeGlyphX.QrPixelDecodeInfo@,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken)",
+      "anchor": "method-trydecodeimage-static-bool-trydecodeimage-byte-image-out-qrdecoded-decoded-out-qrpixeldecodeinfo-info-qrpixeldecodeoptions-options-cancellationtoken-cancellationtoken"
+    },
+    {
+      "name": "TryDecodeImage",
+      "kind": "Method",
+      "summary": "Attempts to decode a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "image",
+          "type": "byte[]",
+          "description": null
+        },
+        {
+          "name": "imageOptions",
+          "type": "ImageDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "QrPixelDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "decoded",
+          "type": "QrDecoded",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodeImage(byte[] image, ImageDecodeOptions imageOptions, QrPixelDecodeOptions options, out QrDecoded decoded)",
+      "xmlId": "M:CodeGlyphX.QrImageDecoder.TryDecodeImage(System.Byte[],CodeGlyphX.ImageDecodeOptions,CodeGlyphX.QrPixelDecodeOptions,CodeGlyphX.QrDecoded@)",
+      "anchor": "method-trydecodeimage-static-bool-trydecodeimage-byte-image-imagedecodeoptions-imageoptions-qrpixeldecodeoptions-options-out-qrdecoded-decoded"
+    },
+    {
+      "name": "TryDecodeImage",
+      "kind": "Method",
+      "summary": "Attempts to decode a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options and cancellation.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "image",
+          "type": "byte[]",
+          "description": null
+        },
+        {
+          "name": "imageOptions",
+          "type": "ImageDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "QrPixelDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "cancellationToken",
+          "type": "CancellationToken",
+          "description": null
+        },
+        {
+          "name": "decoded",
+          "type": "QrDecoded",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodeImage(byte[] image, ImageDecodeOptions imageOptions, QrPixelDecodeOptions options, CancellationToken cancellationToken, out QrDecoded decoded)",
+      "xmlId": "M:CodeGlyphX.QrImageDecoder.TryDecodeImage(System.Byte[],CodeGlyphX.ImageDecodeOptions,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken,CodeGlyphX.QrDecoded@)",
+      "anchor": "method-trydecodeimage-static-bool-trydecodeimage-byte-image-imagedecodeoptions-imageoptions-qrpixeldecodeoptions-options-cancellationtoken-cancellationtoken-out-qrdecoded-decoded"
+    },
+    {
+      "name": "TryDecodeImage",
+      "kind": "Method",
+      "summary": "Attempts to decode a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options, diagnostics, and profile options.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "image",
+          "type": "byte[]",
+          "description": null
+        },
+        {
+          "name": "imageOptions",
+          "type": "ImageDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "decoded",
+          "type": "QrDecoded",
+          "description": null
+        },
+        {
+          "name": "info",
+          "type": "QrPixelDecodeInfo",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "QrPixelDecodeOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodeImage(byte[] image, ImageDecodeOptions imageOptions, out QrDecoded decoded, out QrPixelDecodeInfo info, QrPixelDecodeOptions options)",
+      "xmlId": "M:CodeGlyphX.QrImageDecoder.TryDecodeImage(System.Byte[],CodeGlyphX.ImageDecodeOptions,CodeGlyphX.QrDecoded@,CodeGlyphX.QrPixelDecodeInfo@,CodeGlyphX.QrPixelDecodeOptions)",
+      "anchor": "method-trydecodeimage-static-bool-trydecodeimage-byte-image-imagedecodeoptions-imageoptions-out-qrdecoded-decoded-out-qrpixeldecodeinfo-info-qrpixeldecodeoptions-options"
+    },
+    {
+      "name": "TryDecodeImage",
+      "kind": "Method",
+      "summary": "Attempts to decode a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options, diagnostics, profile options, and cancellation.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "image",
+          "type": "byte[]",
+          "description": null
+        },
+        {
+          "name": "imageOptions",
+          "type": "ImageDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "decoded",
+          "type": "QrDecoded",
+          "description": null
+        },
+        {
+          "name": "info",
+          "type": "QrPixelDecodeInfo",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "QrPixelDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "cancellationToken",
+          "type": "CancellationToken",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodeImage(byte[] image, ImageDecodeOptions imageOptions, out QrDecoded decoded, out QrPixelDecodeInfo info, QrPixelDecodeOptions options, CancellationToken cancellationToken)",
+      "xmlId": "M:CodeGlyphX.QrImageDecoder.TryDecodeImage(System.Byte[],CodeGlyphX.ImageDecodeOptions,CodeGlyphX.QrDecoded@,CodeGlyphX.QrPixelDecodeInfo@,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken)",
+      "anchor": "method-trydecodeimage-static-bool-trydecodeimage-byte-image-imagedecodeoptions-imageoptions-out-qrdecoded-decoded-out-qrpixeldecodeinfo-info-qrpixeldecodeoptions-options-cancellationtoken-cancellationtoken"
+    },
+    {
+      "name": "TryDecodeImage",
+      "kind": "Method",
+      "summary": "Attempts to decode a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "image",
+          "type": "byte[]",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "QrPixelDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "decoded",
+          "type": "QrDecoded",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodeImage(byte[] image, QrPixelDecodeOptions options, out QrDecoded decoded)",
+      "xmlId": "M:CodeGlyphX.QrImageDecoder.TryDecodeImage(System.Byte[],CodeGlyphX.QrPixelDecodeOptions,CodeGlyphX.QrDecoded@)",
+      "anchor": "method-trydecodeimage-static-bool-trydecodeimage-byte-image-qrpixeldecodeoptions-options-out-qrdecoded-decoded"
+    },
+    {
+      "name": "TryDecodeImage",
+      "kind": "Method",
+      "summary": "Attempts to decode a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA), with cancellation.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "image",
+          "type": "byte[]",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "QrPixelDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "cancellationToken",
+          "type": "CancellationToken",
+          "description": null
+        },
+        {
+          "name": "decoded",
+          "type": "QrDecoded",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodeImage(byte[] image, QrPixelDecodeOptions options, CancellationToken cancellationToken, out QrDecoded decoded)",
+      "xmlId": "M:CodeGlyphX.QrImageDecoder.TryDecodeImage(System.Byte[],CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken,CodeGlyphX.QrDecoded@)",
+      "anchor": "method-trydecodeimage-static-bool-trydecodeimage-byte-image-qrpixeldecodeoptions-options-cancellationtoken-cancellationtoken-out-qrdecoded-decoded"
+    },
+    {
+      "name": "TryDecodeImage",
+      "kind": "Method",
+      "summary": "Attempts to decode a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) from a span.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "image",
+          "type": "ReadOnlySpan\u003Cbyte\u003E",
+          "description": null
+        },
+        {
+          "name": "decoded",
+          "type": "QrDecoded",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodeImage(ReadOnlySpan\u003Cbyte\u003E image, out QrDecoded decoded)",
+      "xmlId": "M:CodeGlyphX.QrImageDecoder.TryDecodeImage(System.ReadOnlySpan{System.Byte},CodeGlyphX.QrDecoded@)",
+      "anchor": "method-trydecodeimage-static-bool-trydecodeimage-readonlyspan-byte-image-out-qrdecoded-decoded"
+    },
+    {
+      "name": "TryDecodeImage",
+      "kind": "Method",
+      "summary": "Attempts to decode a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) from a span, with diagnostics and profile options.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "image",
+          "type": "ReadOnlySpan\u003Cbyte\u003E",
+          "description": null
+        },
+        {
+          "name": "decoded",
+          "type": "QrDecoded",
+          "description": null
+        },
+        {
+          "name": "info",
+          "type": "QrPixelDecodeInfo",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "QrPixelDecodeOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodeImage(ReadOnlySpan\u003Cbyte\u003E image, out QrDecoded decoded, out QrPixelDecodeInfo info, QrPixelDecodeOptions options)",
+      "xmlId": "M:CodeGlyphX.QrImageDecoder.TryDecodeImage(System.ReadOnlySpan{System.Byte},CodeGlyphX.QrDecoded@,CodeGlyphX.QrPixelDecodeInfo@,CodeGlyphX.QrPixelDecodeOptions)",
+      "anchor": "method-trydecodeimage-static-bool-trydecodeimage-readonlyspan-byte-image-out-qrdecoded-decoded-out-qrpixeldecodeinfo-info-qrpixeldecodeoptions-options"
+    },
+    {
+      "name": "TryDecodeImage",
+      "kind": "Method",
+      "summary": "Attempts to decode a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) from a span, with diagnostics, profile options, and cancellation.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "image",
+          "type": "ReadOnlySpan\u003Cbyte\u003E",
+          "description": null
+        },
+        {
+          "name": "decoded",
+          "type": "QrDecoded",
+          "description": null
+        },
+        {
+          "name": "info",
+          "type": "QrPixelDecodeInfo",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "QrPixelDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "cancellationToken",
+          "type": "CancellationToken",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodeImage(ReadOnlySpan\u003Cbyte\u003E image, out QrDecoded decoded, out QrPixelDecodeInfo info, QrPixelDecodeOptions options, CancellationToken cancellationToken)",
+      "xmlId": "M:CodeGlyphX.QrImageDecoder.TryDecodeImage(System.ReadOnlySpan{System.Byte},CodeGlyphX.QrDecoded@,CodeGlyphX.QrPixelDecodeInfo@,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken)",
+      "anchor": "method-trydecodeimage-static-bool-trydecodeimage-readonlyspan-byte-image-out-qrdecoded-decoded-out-qrpixeldecodeinfo-info-qrpixeldecodeoptions-options-cancellationtoken-cancellationtoken"
+    },
+    {
+      "name": "TryDecodeImage",
+      "kind": "Method",
+      "summary": "Attempts to decode a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options from a span.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "image",
+          "type": "ReadOnlySpan\u003Cbyte\u003E",
+          "description": null
+        },
+        {
+          "name": "imageOptions",
+          "type": "ImageDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "QrPixelDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "decoded",
+          "type": "QrDecoded",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodeImage(ReadOnlySpan\u003Cbyte\u003E image, ImageDecodeOptions imageOptions, QrPixelDecodeOptions options, out QrDecoded decoded)",
+      "xmlId": "M:CodeGlyphX.QrImageDecoder.TryDecodeImage(System.ReadOnlySpan{System.Byte},CodeGlyphX.ImageDecodeOptions,CodeGlyphX.QrPixelDecodeOptions,CodeGlyphX.QrDecoded@)",
+      "anchor": "method-trydecodeimage-static-bool-trydecodeimage-readonlyspan-byte-image-imagedecodeoptions-imageoptions-qrpixeldecodeoptions-options-out-qrdecoded-decoded"
+    },
+    {
+      "name": "TryDecodeImage",
+      "kind": "Method",
+      "summary": "Attempts to decode a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options and cancellation from a span.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "image",
+          "type": "ReadOnlySpan\u003Cbyte\u003E",
+          "description": null
+        },
+        {
+          "name": "imageOptions",
+          "type": "ImageDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "QrPixelDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "cancellationToken",
+          "type": "CancellationToken",
+          "description": null
+        },
+        {
+          "name": "decoded",
+          "type": "QrDecoded",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodeImage(ReadOnlySpan\u003Cbyte\u003E image, ImageDecodeOptions imageOptions, QrPixelDecodeOptions options, CancellationToken cancellationToken, out QrDecoded decoded)",
+      "xmlId": "M:CodeGlyphX.QrImageDecoder.TryDecodeImage(System.ReadOnlySpan{System.Byte},CodeGlyphX.ImageDecodeOptions,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken,CodeGlyphX.QrDecoded@)",
+      "anchor": "method-trydecodeimage-static-bool-trydecodeimage-readonlyspan-byte-image-imagedecodeoptions-imageoptions-qrpixeldecodeoptions-options-cancellationtoken-cancellationtoken-out-qrdecoded-decoded"
+    },
+    {
+      "name": "TryDecodeImage",
+      "kind": "Method",
+      "summary": "Attempts to decode a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options, diagnostics, and profile options from a span.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "image",
+          "type": "ReadOnlySpan\u003Cbyte\u003E",
+          "description": null
+        },
+        {
+          "name": "imageOptions",
+          "type": "ImageDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "decoded",
+          "type": "QrDecoded",
+          "description": null
+        },
+        {
+          "name": "info",
+          "type": "QrPixelDecodeInfo",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "QrPixelDecodeOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodeImage(ReadOnlySpan\u003Cbyte\u003E image, ImageDecodeOptions imageOptions, out QrDecoded decoded, out QrPixelDecodeInfo info, QrPixelDecodeOptions options)",
+      "xmlId": "M:CodeGlyphX.QrImageDecoder.TryDecodeImage(System.ReadOnlySpan{System.Byte},CodeGlyphX.ImageDecodeOptions,CodeGlyphX.QrDecoded@,CodeGlyphX.QrPixelDecodeInfo@,CodeGlyphX.QrPixelDecodeOptions)",
+      "anchor": "method-trydecodeimage-static-bool-trydecodeimage-readonlyspan-byte-image-imagedecodeoptions-imageoptions-out-qrdecoded-decoded-out-qrpixeldecodeinfo-info-qrpixeldecodeoptions-options"
+    },
+    {
+      "name": "TryDecodeImage",
+      "kind": "Method",
+      "summary": "Attempts to decode a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options, diagnostics, profile options, and cancellation from a span.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "image",
+          "type": "ReadOnlySpan\u003Cbyte\u003E",
+          "description": null
+        },
+        {
+          "name": "imageOptions",
+          "type": "ImageDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "decoded",
+          "type": "QrDecoded",
+          "description": null
+        },
+        {
+          "name": "info",
+          "type": "QrPixelDecodeInfo",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "QrPixelDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "cancellationToken",
+          "type": "CancellationToken",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodeImage(ReadOnlySpan\u003Cbyte\u003E image, ImageDecodeOptions imageOptions, out QrDecoded decoded, out QrPixelDecodeInfo info, QrPixelDecodeOptions options, CancellationToken cancellationToken)",
+      "xmlId": "M:CodeGlyphX.QrImageDecoder.TryDecodeImage(System.ReadOnlySpan{System.Byte},CodeGlyphX.ImageDecodeOptions,CodeGlyphX.QrDecoded@,CodeGlyphX.QrPixelDecodeInfo@,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken)",
+      "anchor": "method-trydecodeimage-static-bool-trydecodeimage-readonlyspan-byte-image-imagedecodeoptions-imageoptions-out-qrdecoded-decoded-out-qrpixeldecodeinfo-info-qrpixeldecodeoptions-options-cancellationtoken-cancellationtoken"
+    },
+    {
+      "name": "TryDecodeImage",
+      "kind": "Method",
+      "summary": "Attempts to decode a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) from a span with profile options.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "image",
+          "type": "ReadOnlySpan\u003Cbyte\u003E",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "QrPixelDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "decoded",
+          "type": "QrDecoded",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodeImage(ReadOnlySpan\u003Cbyte\u003E image, QrPixelDecodeOptions options, out QrDecoded decoded)",
+      "xmlId": "M:CodeGlyphX.QrImageDecoder.TryDecodeImage(System.ReadOnlySpan{System.Byte},CodeGlyphX.QrPixelDecodeOptions,CodeGlyphX.QrDecoded@)",
+      "anchor": "method-trydecodeimage-static-bool-trydecodeimage-readonlyspan-byte-image-qrpixeldecodeoptions-options-out-qrdecoded-decoded"
+    },
+    {
+      "name": "TryDecodeImage",
+      "kind": "Method",
+      "summary": "Attempts to decode a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) from a span, with cancellation.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "image",
+          "type": "ReadOnlySpan\u003Cbyte\u003E",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "QrPixelDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "cancellationToken",
+          "type": "CancellationToken",
+          "description": null
+        },
+        {
+          "name": "decoded",
+          "type": "QrDecoded",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodeImage(ReadOnlySpan\u003Cbyte\u003E image, QrPixelDecodeOptions options, CancellationToken cancellationToken, out QrDecoded decoded)",
+      "xmlId": "M:CodeGlyphX.QrImageDecoder.TryDecodeImage(System.ReadOnlySpan{System.Byte},CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken,CodeGlyphX.QrDecoded@)",
+      "anchor": "method-trydecodeimage-static-bool-trydecodeimage-readonlyspan-byte-image-qrpixeldecodeoptions-options-cancellationtoken-cancellationtoken-out-qrdecoded-decoded"
+    },
+    {
+      "name": "TryDecodeAllImage",
+      "kind": "Method",
+      "summary": "Attempts to decode all QR codes from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "image",
+          "type": "byte[]",
+          "description": null
+        },
+        {
+          "name": "decoded",
+          "type": "QrDecoded[]",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodeAllImage(byte[] image, out QrDecoded[] decoded)",
+      "xmlId": "M:CodeGlyphX.QrImageDecoder.TryDecodeAllImage(System.Byte[],CodeGlyphX.QrDecoded[]@)",
+      "anchor": "method-trydecodeallimage-static-bool-trydecodeallimage-byte-image-out-qrdecoded-decoded"
+    },
+    {
+      "name": "TryDecodeAllImage",
+      "kind": "Method",
+      "summary": "Attempts to decode all QR codes from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "image",
+          "type": "byte[]",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "QrPixelDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "decoded",
+          "type": "QrDecoded[]",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodeAllImage(byte[] image, QrPixelDecodeOptions options, out QrDecoded[] decoded)",
+      "xmlId": "M:CodeGlyphX.QrImageDecoder.TryDecodeAllImage(System.Byte[],CodeGlyphX.QrPixelDecodeOptions,CodeGlyphX.QrDecoded[]@)",
+      "anchor": "method-trydecodeallimage-static-bool-trydecodeallimage-byte-image-qrpixeldecodeoptions-options-out-qrdecoded-decoded"
+    },
+    {
+      "name": "TryDecodeAllImage",
+      "kind": "Method",
+      "summary": "Attempts to decode all QR codes from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "image",
+          "type": "byte[]",
+          "description": null
+        },
+        {
+          "name": "imageOptions",
+          "type": "ImageDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "QrPixelDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "decoded",
+          "type": "QrDecoded[]",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodeAllImage(byte[] image, ImageDecodeOptions imageOptions, QrPixelDecodeOptions options, out QrDecoded[] decoded)",
+      "xmlId": "M:CodeGlyphX.QrImageDecoder.TryDecodeAllImage(System.Byte[],CodeGlyphX.ImageDecodeOptions,CodeGlyphX.QrPixelDecodeOptions,CodeGlyphX.QrDecoded[]@)",
+      "anchor": "method-trydecodeallimage-static-bool-trydecodeallimage-byte-image-imagedecodeoptions-imageoptions-qrpixeldecodeoptions-options-out-qrdecoded-decoded"
+    },
+    {
+      "name": "TryDecodeAllImage",
+      "kind": "Method",
+      "summary": "Attempts to decode all QR codes from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options and cancellation.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "image",
+          "type": "byte[]",
+          "description": null
+        },
+        {
+          "name": "imageOptions",
+          "type": "ImageDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "QrPixelDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "cancellationToken",
+          "type": "CancellationToken",
+          "description": null
+        },
+        {
+          "name": "decoded",
+          "type": "QrDecoded[]",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodeAllImage(byte[] image, ImageDecodeOptions imageOptions, QrPixelDecodeOptions options, CancellationToken cancellationToken, out QrDecoded[] decoded)",
+      "xmlId": "M:CodeGlyphX.QrImageDecoder.TryDecodeAllImage(System.Byte[],CodeGlyphX.ImageDecodeOptions,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken,CodeGlyphX.QrDecoded[]@)",
+      "anchor": "method-trydecodeallimage-static-bool-trydecodeallimage-byte-image-imagedecodeoptions-imageoptions-qrpixeldecodeoptions-options-cancellationtoken-cancellationtoken-out-qrdecoded-decoded"
+    },
+    {
+      "name": "TryDecodeImage",
+      "kind": "Method",
+      "summary": "Attempts to decode a QR code from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "stream",
+          "type": "Stream",
+          "description": null
+        },
+        {
+          "name": "decoded",
+          "type": "QrDecoded",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodeImage(Stream stream, out QrDecoded decoded)",
+      "xmlId": "M:CodeGlyphX.QrImageDecoder.TryDecodeImage(System.IO.Stream,CodeGlyphX.QrDecoded@)",
+      "anchor": "method-trydecodeimage-static-bool-trydecodeimage-stream-stream-out-qrdecoded-decoded"
+    },
+    {
+      "name": "TryDecodeImage",
+      "kind": "Method",
+      "summary": "Attempts to decode a QR code from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA), with diagnostics and profile options.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "stream",
+          "type": "Stream",
+          "description": null
+        },
+        {
+          "name": "decoded",
+          "type": "QrDecoded",
+          "description": null
+        },
+        {
+          "name": "info",
+          "type": "QrPixelDecodeInfo",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "QrPixelDecodeOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodeImage(Stream stream, out QrDecoded decoded, out QrPixelDecodeInfo info, QrPixelDecodeOptions options)",
+      "xmlId": "M:CodeGlyphX.QrImageDecoder.TryDecodeImage(System.IO.Stream,CodeGlyphX.QrDecoded@,CodeGlyphX.QrPixelDecodeInfo@,CodeGlyphX.QrPixelDecodeOptions)",
+      "anchor": "method-trydecodeimage-static-bool-trydecodeimage-stream-stream-out-qrdecoded-decoded-out-qrpixeldecodeinfo-info-qrpixeldecodeoptions-options"
+    },
+    {
+      "name": "TryDecodeImage",
+      "kind": "Method",
+      "summary": "Attempts to decode a QR code from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "stream",
+          "type": "Stream",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "QrPixelDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "decoded",
+          "type": "QrDecoded",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodeImage(Stream stream, QrPixelDecodeOptions options, out QrDecoded decoded)",
+      "xmlId": "M:CodeGlyphX.QrImageDecoder.TryDecodeImage(System.IO.Stream,CodeGlyphX.QrPixelDecodeOptions,CodeGlyphX.QrDecoded@)",
+      "anchor": "method-trydecodeimage-static-bool-trydecodeimage-stream-stream-qrpixeldecodeoptions-options-out-qrdecoded-decoded"
+    },
+    {
+      "name": "TryDecodeImage",
+      "kind": "Method",
+      "summary": "Attempts to decode a QR code from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "stream",
+          "type": "Stream",
+          "description": null
+        },
+        {
+          "name": "imageOptions",
+          "type": "ImageDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "QrPixelDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "decoded",
+          "type": "QrDecoded",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodeImage(Stream stream, ImageDecodeOptions imageOptions, QrPixelDecodeOptions options, out QrDecoded decoded)",
+      "xmlId": "M:CodeGlyphX.QrImageDecoder.TryDecodeImage(System.IO.Stream,CodeGlyphX.ImageDecodeOptions,CodeGlyphX.QrPixelDecodeOptions,CodeGlyphX.QrDecoded@)",
+      "anchor": "method-trydecodeimage-static-bool-trydecodeimage-stream-stream-imagedecodeoptions-imageoptions-qrpixeldecodeoptions-options-out-qrdecoded-decoded"
+    },
+    {
+      "name": "TryDecodeImage",
+      "kind": "Method",
+      "summary": "Attempts to decode a QR code from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options and cancellation.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "stream",
+          "type": "Stream",
+          "description": null
+        },
+        {
+          "name": "imageOptions",
+          "type": "ImageDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "QrPixelDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "cancellationToken",
+          "type": "CancellationToken",
+          "description": null
+        },
+        {
+          "name": "decoded",
+          "type": "QrDecoded",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodeImage(Stream stream, ImageDecodeOptions imageOptions, QrPixelDecodeOptions options, CancellationToken cancellationToken, out QrDecoded decoded)",
+      "xmlId": "M:CodeGlyphX.QrImageDecoder.TryDecodeImage(System.IO.Stream,CodeGlyphX.ImageDecodeOptions,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken,CodeGlyphX.QrDecoded@)",
+      "anchor": "method-trydecodeimage-static-bool-trydecodeimage-stream-stream-imagedecodeoptions-imageoptions-qrpixeldecodeoptions-options-cancellationtoken-cancellationtoken-out-qrdecoded-decoded"
+    },
+    {
+      "name": "TryDecodeImage",
+      "kind": "Method",
+      "summary": "Attempts to decode a QR code from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options, diagnostics, and profile options.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "stream",
+          "type": "Stream",
+          "description": null
+        },
+        {
+          "name": "imageOptions",
+          "type": "ImageDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "decoded",
+          "type": "QrDecoded",
+          "description": null
+        },
+        {
+          "name": "info",
+          "type": "QrPixelDecodeInfo",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "QrPixelDecodeOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodeImage(Stream stream, ImageDecodeOptions imageOptions, out QrDecoded decoded, out QrPixelDecodeInfo info, QrPixelDecodeOptions options)",
+      "xmlId": "M:CodeGlyphX.QrImageDecoder.TryDecodeImage(System.IO.Stream,CodeGlyphX.ImageDecodeOptions,CodeGlyphX.QrDecoded@,CodeGlyphX.QrPixelDecodeInfo@,CodeGlyphX.QrPixelDecodeOptions)",
+      "anchor": "method-trydecodeimage-static-bool-trydecodeimage-stream-stream-imagedecodeoptions-imageoptions-out-qrdecoded-decoded-out-qrpixeldecodeinfo-info-qrpixeldecodeoptions-options"
+    },
+    {
+      "name": "TryDecodeImage",
+      "kind": "Method",
+      "summary": "Attempts to decode a QR code from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options, diagnostics, profile options, and cancellation.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "stream",
+          "type": "Stream",
+          "description": null
+        },
+        {
+          "name": "imageOptions",
+          "type": "ImageDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "decoded",
+          "type": "QrDecoded",
+          "description": null
+        },
+        {
+          "name": "info",
+          "type": "QrPixelDecodeInfo",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "QrPixelDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "cancellationToken",
+          "type": "CancellationToken",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodeImage(Stream stream, ImageDecodeOptions imageOptions, out QrDecoded decoded, out QrPixelDecodeInfo info, QrPixelDecodeOptions options, CancellationToken cancellationToken)",
+      "xmlId": "M:CodeGlyphX.QrImageDecoder.TryDecodeImage(System.IO.Stream,CodeGlyphX.ImageDecodeOptions,CodeGlyphX.QrDecoded@,CodeGlyphX.QrPixelDecodeInfo@,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken)",
+      "anchor": "method-trydecodeimage-static-bool-trydecodeimage-stream-stream-imagedecodeoptions-imageoptions-out-qrdecoded-decoded-out-qrpixeldecodeinfo-info-qrpixeldecodeoptions-options-cancellationtoken-cancellationtoken"
+    },
+    {
+      "name": "DecodeImageResult",
+      "kind": "Method",
+      "summary": "Decodes a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) and returns diagnostics.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "image",
+          "type": "byte[]",
+          "description": null
+        },
+        {
+          "name": "imageOptions",
+          "type": "ImageDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "QrPixelDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "cancellationToken",
+          "type": "CancellationToken",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static DecodeResult\u003CQrDecoded\u003E DecodeImageResult(byte[] image, ImageDecodeOptions imageOptions, QrPixelDecodeOptions options, CancellationToken cancellationToken)",
+      "xmlId": "M:CodeGlyphX.QrImageDecoder.DecodeImageResult(System.Byte[],CodeGlyphX.ImageDecodeOptions,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken)",
+      "anchor": "method-decodeimageresult-static-decoderesult-qrdecoded-decodeimageresult-byte-image-imagedecodeoptions-imageoptions-qrpixeldecodeoptions-options-cancellationtoken-cancellationtoken"
+    },
+    {
+      "name": "DecodeImageResult",
+      "kind": "Method",
+      "summary": "Decodes a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) in a span and returns diagnostics.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "image",
+          "type": "ReadOnlySpan\u003Cbyte\u003E",
+          "description": null
+        },
+        {
+          "name": "imageOptions",
+          "type": "ImageDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "QrPixelDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "cancellationToken",
+          "type": "CancellationToken",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static DecodeResult\u003CQrDecoded\u003E DecodeImageResult(ReadOnlySpan\u003Cbyte\u003E image, ImageDecodeOptions imageOptions, QrPixelDecodeOptions options, CancellationToken cancellationToken)",
+      "xmlId": "M:CodeGlyphX.QrImageDecoder.DecodeImageResult(System.ReadOnlySpan{System.Byte},CodeGlyphX.ImageDecodeOptions,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken)",
+      "anchor": "method-decodeimageresult-static-decoderesult-qrdecoded-decodeimageresult-readonlyspan-byte-image-imagedecodeoptions-imageoptions-qrpixeldecodeoptions-options-cancellationtoken-cancellationtoken"
+    },
+    {
+      "name": "DecodeImageResult",
+      "kind": "Method",
+      "summary": "Decodes a QR code from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) and returns diagnostics.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "stream",
+          "type": "Stream",
+          "description": null
+        },
+        {
+          "name": "imageOptions",
+          "type": "ImageDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "QrPixelDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "cancellationToken",
+          "type": "CancellationToken",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static DecodeResult\u003CQrDecoded\u003E DecodeImageResult(Stream stream, ImageDecodeOptions imageOptions, QrPixelDecodeOptions options, CancellationToken cancellationToken)",
+      "xmlId": "M:CodeGlyphX.QrImageDecoder.DecodeImageResult(System.IO.Stream,CodeGlyphX.ImageDecodeOptions,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken)",
+      "anchor": "method-decodeimageresult-static-decoderesult-qrdecoded-decodeimageresult-stream-stream-imagedecodeoptions-imageoptions-qrpixeldecodeoptions-options-cancellationtoken-cancellationtoken"
+    },
+    {
+      "name": "DecodeImageBatch",
+      "kind": "Method",
+      "summary": "Decodes a batch of QR images with shared settings and aggregated diagnostics.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "images",
+          "type": "IEnumerable\u003Cbyte[]\u003E",
+          "description": null
+        },
+        {
+          "name": "imageOptions",
+          "type": "ImageDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "QrPixelDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "cancellationToken",
+          "type": "CancellationToken",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static DecodeBatchResult\u003CQrDecoded\u003E DecodeImageBatch(IEnumerable\u003Cbyte[]\u003E images, ImageDecodeOptions imageOptions, QrPixelDecodeOptions options, CancellationToken cancellationToken)",
+      "xmlId": "M:CodeGlyphX.QrImageDecoder.DecodeImageBatch(System.Collections.Generic.IEnumerable{System.Byte[]},CodeGlyphX.ImageDecodeOptions,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken)",
+      "anchor": "method-decodeimagebatch-static-decodebatchresult-qrdecoded-decodeimagebatch-ienumerable-byte-images-imagedecodeoptions-imageoptions-qrpixeldecodeoptions-options-cancellationtoken-cancellationtoken"
+    },
+    {
+      "name": "TryDecodeAllImage",
+      "kind": "Method",
+      "summary": "Attempts to decode all QR codes from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "stream",
+          "type": "Stream",
+          "description": null
+        },
+        {
+          "name": "decoded",
+          "type": "QrDecoded[]",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodeAllImage(Stream stream, out QrDecoded[] decoded)",
+      "xmlId": "M:CodeGlyphX.QrImageDecoder.TryDecodeAllImage(System.IO.Stream,CodeGlyphX.QrDecoded[]@)",
+      "anchor": "method-trydecodeallimage-static-bool-trydecodeallimage-stream-stream-out-qrdecoded-decoded"
+    },
+    {
+      "name": "TryDecodeAllImage",
+      "kind": "Method",
+      "summary": "Attempts to decode all QR codes from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "stream",
+          "type": "Stream",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "QrPixelDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "decoded",
+          "type": "QrDecoded[]",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodeAllImage(Stream stream, QrPixelDecodeOptions options, out QrDecoded[] decoded)",
+      "xmlId": "M:CodeGlyphX.QrImageDecoder.TryDecodeAllImage(System.IO.Stream,CodeGlyphX.QrPixelDecodeOptions,CodeGlyphX.QrDecoded[]@)",
+      "anchor": "method-trydecodeallimage-static-bool-trydecodeallimage-stream-stream-qrpixeldecodeoptions-options-out-qrdecoded-decoded"
+    },
+    {
+      "name": "TryDecodeAllImage",
+      "kind": "Method",
+      "summary": "Attempts to decode all QR codes from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "stream",
+          "type": "Stream",
+          "description": null
+        },
+        {
+          "name": "imageOptions",
+          "type": "ImageDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "QrPixelDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "decoded",
+          "type": "QrDecoded[]",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodeAllImage(Stream stream, ImageDecodeOptions imageOptions, QrPixelDecodeOptions options, out QrDecoded[] decoded)",
+      "xmlId": "M:CodeGlyphX.QrImageDecoder.TryDecodeAllImage(System.IO.Stream,CodeGlyphX.ImageDecodeOptions,CodeGlyphX.QrPixelDecodeOptions,CodeGlyphX.QrDecoded[]@)",
+      "anchor": "method-trydecodeallimage-static-bool-trydecodeallimage-stream-stream-imagedecodeoptions-imageoptions-qrpixeldecodeoptions-options-out-qrdecoded-decoded"
+    },
+    {
+      "name": "TryDecodeAllImage",
+      "kind": "Method",
+      "summary": "Attempts to decode all QR codes from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options and cancellation.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "stream",
+          "type": "Stream",
+          "description": null
+        },
+        {
+          "name": "imageOptions",
+          "type": "ImageDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "QrPixelDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "cancellationToken",
+          "type": "CancellationToken",
+          "description": null
+        },
+        {
+          "name": "decoded",
+          "type": "QrDecoded[]",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodeAllImage(Stream stream, ImageDecodeOptions imageOptions, QrPixelDecodeOptions options, CancellationToken cancellationToken, out QrDecoded[] decoded)",
+      "xmlId": "M:CodeGlyphX.QrImageDecoder.TryDecodeAllImage(System.IO.Stream,CodeGlyphX.ImageDecodeOptions,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken,CodeGlyphX.QrDecoded[]@)",
+      "anchor": "method-trydecodeallimage-static-bool-trydecodeallimage-stream-stream-imagedecodeoptions-imageoptions-qrpixeldecodeoptions-options-cancellationtoken-cancellationtoken-out-qrdecoded-decoded"
+    },
+    {
+      "name": "TryDecode",
+      "kind": "Method",
+      "summary": "Attempts to decode a QR code from a raw pixel buffer.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "pixels",
+          "type": "ReadOnlySpan\u003Cbyte\u003E",
+          "description": null
+        },
+        {
+          "name": "width",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "height",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "stride",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "format",
+          "type": "PixelFormat",
+          "description": null
+        },
+        {
+          "name": "decoded",
+          "type": "QrDecoded",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecode(ReadOnlySpan\u003Cbyte\u003E pixels, int width, int height, int stride, PixelFormat format, out QrDecoded decoded)",
+      "xmlId": "M:CodeGlyphX.QrImageDecoder.TryDecode(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded@)",
+      "anchor": "method-trydecode-static-bool-trydecode-readonlyspan-byte-pixels-int-width-int-height-int-stride-pixelformat-format-out-qrdecoded-decoded"
+    },
+    {
+      "name": "TryDecode",
+      "kind": "Method",
+      "summary": "Attempts to decode a QR code from a raw pixel buffer.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "pixels",
+          "type": "ReadOnlySpan\u003Cbyte\u003E",
+          "description": null
+        },
+        {
+          "name": "width",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "height",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "stride",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "format",
+          "type": "PixelFormat",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "QrPixelDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "decoded",
+          "type": "QrDecoded",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecode(ReadOnlySpan\u003Cbyte\u003E pixels, int width, int height, int stride, PixelFormat format, QrPixelDecodeOptions options, out QrDecoded decoded)",
+      "xmlId": "M:CodeGlyphX.QrImageDecoder.TryDecode(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrPixelDecodeOptions,CodeGlyphX.QrDecoded@)",
+      "anchor": "method-trydecode-static-bool-trydecode-readonlyspan-byte-pixels-int-width-int-height-int-stride-pixelformat-format-qrpixeldecodeoptions-options-out-qrdecoded-decoded"
+    },
+    {
+      "name": "TryDecodeAll",
+      "kind": "Method",
+      "summary": "Attempts to decode all QR codes from a raw pixel buffer.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "pixels",
+          "type": "ReadOnlySpan\u003Cbyte\u003E",
+          "description": null
+        },
+        {
+          "name": "width",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "height",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "stride",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "format",
+          "type": "PixelFormat",
+          "description": null
+        },
+        {
+          "name": "decoded",
+          "type": "QrDecoded[]",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodeAll(ReadOnlySpan\u003Cbyte\u003E pixels, int width, int height, int stride, PixelFormat format, out QrDecoded[] decoded)",
+      "xmlId": "M:CodeGlyphX.QrImageDecoder.TryDecodeAll(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded[]@)",
+      "anchor": "method-trydecodeall-static-bool-trydecodeall-readonlyspan-byte-pixels-int-width-int-height-int-stride-pixelformat-format-out-qrdecoded-decoded"
+    },
+    {
+      "name": "TryDecodeAll",
+      "kind": "Method",
+      "summary": "Attempts to decode all QR codes from a raw pixel buffer.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "pixels",
+          "type": "ReadOnlySpan\u003Cbyte\u003E",
+          "description": null
+        },
+        {
+          "name": "width",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "height",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "stride",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "format",
+          "type": "PixelFormat",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "QrPixelDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "decoded",
+          "type": "QrDecoded[]",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodeAll(ReadOnlySpan\u003Cbyte\u003E pixels, int width, int height, int stride, PixelFormat format, QrPixelDecodeOptions options, out QrDecoded[] decoded)",
+      "xmlId": "M:CodeGlyphX.QrImageDecoder.TryDecodeAll(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrPixelDecodeOptions,CodeGlyphX.QrDecoded[]@)",
+      "anchor": "method-trydecodeall-static-bool-trydecodeall-readonlyspan-byte-pixels-int-width-int-height-int-stride-pixelformat-format-qrpixeldecodeoptions-options-out-qrdecoded-decoded"
+    }
+  ]
+}

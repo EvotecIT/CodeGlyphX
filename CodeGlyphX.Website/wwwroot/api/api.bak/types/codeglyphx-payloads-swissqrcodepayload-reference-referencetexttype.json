@@ -1,0 +1,55 @@
+{
+  "name": "ReferenceTextType",
+  "fullName": "CodeGlyphX.Payloads.SwissQrCodePayload.Reference.ReferenceTextType",
+  "namespace": "CodeGlyphX.Payloads",
+  "kind": "Enum",
+  "slug": "codeglyphx-payloads-swissqrcodepayload-reference-referencetexttype",
+  "summary": "Reference text type.",
+  "remarks": null,
+  "examples": [],
+  "seeAlso": [],
+  "members": [
+    {
+      "name": "value__",
+      "kind": "Field",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "int value__",
+      "xmlId": "F:CodeGlyphX.Payloads.SwissQrCodePayload.Reference.ReferenceTextType.value__",
+      "anchor": "field-value-int-value"
+    },
+    {
+      "name": "QrReference",
+      "kind": "Field",
+      "summary": "QR reference text.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "SwissQrCodePayload.Reference.ReferenceTextType QrReference",
+      "xmlId": "F:CodeGlyphX.Payloads.SwissQrCodePayload.Reference.ReferenceTextType.QrReference",
+      "anchor": "field-qrreference-swissqrcodepayload-reference-referencetexttype-qrreference"
+    },
+    {
+      "name": "CreditorReferenceIso11649",
+      "kind": "Field",
+      "summary": "Creditor reference ISO 11649.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "SwissQrCodePayload.Reference.ReferenceTextType CreditorReferenceIso11649",
+      "xmlId": "F:CodeGlyphX.Payloads.SwissQrCodePayload.Reference.ReferenceTextType.CreditorReferenceIso11649",
+      "anchor": "field-creditorreferenceiso11649-swissqrcodepayload-reference-referencetexttype-creditorreferenceiso11649"
+    }
+  ]
+}

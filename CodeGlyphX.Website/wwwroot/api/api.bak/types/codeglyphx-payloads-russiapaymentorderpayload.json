@@ -1,0 +1,246 @@
+{
+  "name": "RussiaPaymentOrderPayload",
+  "fullName": "CodeGlyphX.Payloads.RussiaPaymentOrderPayload",
+  "namespace": "CodeGlyphX.Payloads",
+  "kind": "Class",
+  "slug": "codeglyphx-payloads-russiapaymentorderpayload",
+  "summary": "Russia payment order payload (ST00012, UTF-8).",
+  "remarks": null,
+  "examples": [],
+  "seeAlso": [],
+  "members": [
+    {
+      "name": "RussiaPaymentOrderPayload",
+      "kind": "Constructor",
+      "summary": "Creates a Russia payment order payload.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "name",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "personalAcc",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "bankName",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "bic",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "correspAcc",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "payeeInn",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "kpp",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "sum",
+          "type": "decimal",
+          "description": null
+        },
+        {
+          "name": "purpose",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "encoding",
+          "type": "QrRussiaPaymentEncoding",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "RussiaPaymentOrderPayload(string name, string personalAcc, string bankName, string bic, string correspAcc, string payeeInn, string kpp, decimal sum, string purpose, QrRussiaPaymentEncoding encoding)",
+      "xmlId": "M:CodeGlyphX.Payloads.RussiaPaymentOrderPayload.#ctor(System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Decimal,System.String,CodeGlyphX.Payloads.QrRussiaPaymentEncoding)",
+      "anchor": "constructor-russiapaymentorderpayload-russiapaymentorderpayload-string-name-string-personalacc-string-bankname-string-bic-string-correspacc-string-payeeinn-string-kpp-decimal-sum-string-purpose-qrrussiapaymentencoding-encoding"
+    },
+    {
+      "name": "ToPayloadString",
+      "kind": "Method",
+      "summary": "Returns the Russia payment order payload string.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "string ToPayloadString()",
+      "xmlId": "M:CodeGlyphX.Payloads.RussiaPaymentOrderPayload.ToPayloadString",
+      "anchor": "method-topayloadstring-string-topayloadstring"
+    },
+    {
+      "name": "ToPayloadData",
+      "kind": "Method",
+      "summary": "Converts the payload to a QR payload wrapper.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "QrPayloadData ToPayloadData()",
+      "xmlId": "M:CodeGlyphX.Payloads.RussiaPaymentOrderPayload.ToPayloadData",
+      "anchor": "method-topayloaddata-qrpayloaddata-topayloaddata"
+    },
+    {
+      "name": "LastName",
+      "kind": "Property",
+      "summary": "Optional payer last name.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "string LastName {get; set; }",
+      "xmlId": "P:CodeGlyphX.Payloads.RussiaPaymentOrderPayload.LastName",
+      "anchor": "property-lastname-string-lastname-get-set"
+    },
+    {
+      "name": "FirstName",
+      "kind": "Property",
+      "summary": "Optional payer first name.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "string FirstName {get; set; }",
+      "xmlId": "P:CodeGlyphX.Payloads.RussiaPaymentOrderPayload.FirstName",
+      "anchor": "property-firstname-string-firstname-get-set"
+    },
+    {
+      "name": "MiddleName",
+      "kind": "Property",
+      "summary": "Optional payer middle name.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "string MiddleName {get; set; }",
+      "xmlId": "P:CodeGlyphX.Payloads.RussiaPaymentOrderPayload.MiddleName",
+      "anchor": "property-middlename-string-middlename-get-set"
+    },
+    {
+      "name": "PayerAddress",
+      "kind": "Property",
+      "summary": "Optional payer address.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "string PayerAddress {get; set; }",
+      "xmlId": "P:CodeGlyphX.Payloads.RussiaPaymentOrderPayload.PayerAddress",
+      "anchor": "property-payeraddress-string-payeraddress-get-set"
+    },
+    {
+      "name": "Kpp",
+      "kind": "Property",
+      "summary": "Optional KPP (tax registration reason code).",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "string Kpp {get; }",
+      "xmlId": "P:CodeGlyphX.Payloads.RussiaPaymentOrderPayload.Kpp",
+      "anchor": "property-kpp-string-kpp-get"
+    },
+    {
+      "name": "Oktmo",
+      "kind": "Property",
+      "summary": "Optional OKTMO code.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "string Oktmo {get; set; }",
+      "xmlId": "P:CodeGlyphX.Payloads.RussiaPaymentOrderPayload.Oktmo",
+      "anchor": "property-oktmo-string-oktmo-get-set"
+    },
+    {
+      "name": "Cbc",
+      "kind": "Property",
+      "summary": "Optional CBC (budget classification code).",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "string Cbc {get; set; }",
+      "xmlId": "P:CodeGlyphX.Payloads.RussiaPaymentOrderPayload.Cbc",
+      "anchor": "property-cbc-string-cbc-get-set"
+    },
+    {
+      "name": "Uin",
+      "kind": "Property",
+      "summary": "Optional UIN (unique accrual identifier).",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "string Uin {get; set; }",
+      "xmlId": "P:CodeGlyphX.Payloads.RussiaPaymentOrderPayload.Uin",
+      "anchor": "property-uin-string-uin-get-set"
+    },
+    {
+      "name": "Aip",
+      "kind": "Property",
+      "summary": "Optional AIP identifier.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "string Aip {get; set; }",
+      "xmlId": "P:CodeGlyphX.Payloads.RussiaPaymentOrderPayload.Aip",
+      "anchor": "property-aip-string-aip-get-set"
+    },
+    {
+      "name": "AdditionalFields",
+      "kind": "Property",
+      "summary": "Additional custom fields appended to the payload.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "IDictionary\u003Cstring, string\u003E AdditionalFields {get; }",
+      "xmlId": "P:CodeGlyphX.Payloads.RussiaPaymentOrderPayload.AdditionalFields",
+      "anchor": "property-additionalfields-idictionary-string-string-additionalfields-get"
+    }
+  ]
+}

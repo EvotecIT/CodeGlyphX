@@ -1,0 +1,163 @@
+{
+  "name": "MatrixPngRenderOptions",
+  "fullName": "CodeGlyphX.Rendering.Png.MatrixPngRenderOptions",
+  "namespace": "CodeGlyphX.Rendering.Png",
+  "kind": "Class",
+  "slug": "codeglyphx-rendering-png-matrixpngrenderoptions",
+  "summary": "Options for rendering generic 2D matrices to PNG.",
+  "remarks": null,
+  "examples": [],
+  "seeAlso": [],
+  "members": [
+    {
+      "name": "MatrixPngRenderOptions",
+      "kind": "Constructor",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "MatrixPngRenderOptions()",
+      "xmlId": "M:CodeGlyphX.Rendering.Png.MatrixPngRenderOptions.#ctor",
+      "anchor": "constructor-matrixpngrenderoptions-matrixpngrenderoptions"
+    },
+    {
+      "name": "WithModuleSize",
+      "kind": "Method",
+      "summary": "Sets the module size in pixels.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "size",
+          "type": "int",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "MatrixPngRenderOptions WithModuleSize(int size)",
+      "xmlId": "M:CodeGlyphX.Rendering.Png.MatrixPngRenderOptions.WithModuleSize(System.Int32)",
+      "anchor": "method-withmodulesize-matrixpngrenderoptions-withmodulesize-int-size"
+    },
+    {
+      "name": "WithQuietZone",
+      "kind": "Method",
+      "summary": "Sets the quiet zone size in modules.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "quietZone",
+          "type": "int",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "MatrixPngRenderOptions WithQuietZone(int quietZone)",
+      "xmlId": "M:CodeGlyphX.Rendering.Png.MatrixPngRenderOptions.WithQuietZone(System.Int32)",
+      "anchor": "method-withquietzone-matrixpngrenderoptions-withquietzone-int-quietzone"
+    },
+    {
+      "name": "WithForeground",
+      "kind": "Method",
+      "summary": "Sets the foreground color.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "color",
+          "type": "Rgba32",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "MatrixPngRenderOptions WithForeground(Rgba32 color)",
+      "xmlId": "M:CodeGlyphX.Rendering.Png.MatrixPngRenderOptions.WithForeground(CodeGlyphX.Rendering.Png.Rgba32)",
+      "anchor": "method-withforeground-matrixpngrenderoptions-withforeground-rgba32-color"
+    },
+    {
+      "name": "WithBackground",
+      "kind": "Method",
+      "summary": "Sets the background color.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "color",
+          "type": "Rgba32",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "MatrixPngRenderOptions WithBackground(Rgba32 color)",
+      "xmlId": "M:CodeGlyphX.Rendering.Png.MatrixPngRenderOptions.WithBackground(CodeGlyphX.Rendering.Png.Rgba32)",
+      "anchor": "method-withbackground-matrixpngrenderoptions-withbackground-rgba32-color"
+    },
+    {
+      "name": "ModuleSize",
+      "kind": "Property",
+      "summary": "Module size in pixels.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "int ModuleSize {get; set; }",
+      "xmlId": "P:CodeGlyphX.Rendering.Png.MatrixPngRenderOptions.ModuleSize",
+      "anchor": "property-modulesize-int-modulesize-get-set"
+    },
+    {
+      "name": "QuietZone",
+      "kind": "Property",
+      "summary": "Quiet zone size in modules.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "int QuietZone {get; set; }",
+      "xmlId": "P:CodeGlyphX.Rendering.Png.MatrixPngRenderOptions.QuietZone",
+      "anchor": "property-quietzone-int-quietzone-get-set"
+    },
+    {
+      "name": "Foreground",
+      "kind": "Property",
+      "summary": "Foreground color.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "Rgba32 Foreground {get; set; }",
+      "xmlId": "P:CodeGlyphX.Rendering.Png.MatrixPngRenderOptions.Foreground",
+      "anchor": "property-foreground-rgba32-foreground-get-set"
+    },
+    {
+      "name": "Background",
+      "kind": "Property",
+      "summary": "Background color.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "Rgba32 Background {get; set; }",
+      "xmlId": "P:CodeGlyphX.Rendering.Png.MatrixPngRenderOptions.Background",
+      "anchor": "property-background-rgba32-background-get-set"
+    }
+  ]
+}

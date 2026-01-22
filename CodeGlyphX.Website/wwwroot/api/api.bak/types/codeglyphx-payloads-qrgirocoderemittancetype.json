@@ -1,0 +1,55 @@
+{
+  "name": "QrGirocodeRemittanceType",
+  "fullName": "CodeGlyphX.Payloads.QrGirocodeRemittanceType",
+  "namespace": "CodeGlyphX.Payloads",
+  "kind": "Enum",
+  "slug": "codeglyphx-payloads-qrgirocoderemittancetype",
+  "summary": "Girocode remittance types.",
+  "remarks": null,
+  "examples": [],
+  "seeAlso": [],
+  "members": [
+    {
+      "name": "value__",
+      "kind": "Field",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "int value__",
+      "xmlId": "F:CodeGlyphX.Payloads.QrGirocodeRemittanceType.value__",
+      "anchor": "field-value-int-value"
+    },
+    {
+      "name": "Structured",
+      "kind": "Field",
+      "summary": "Structured reference.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "QrGirocodeRemittanceType Structured",
+      "xmlId": "F:CodeGlyphX.Payloads.QrGirocodeRemittanceType.Structured",
+      "anchor": "field-structured-qrgirocoderemittancetype-structured"
+    },
+    {
+      "name": "Unstructured",
+      "kind": "Field",
+      "summary": "Unstructured reference.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "QrGirocodeRemittanceType Unstructured",
+      "xmlId": "F:CodeGlyphX.Payloads.QrGirocodeRemittanceType.Unstructured",
+      "anchor": "field-unstructured-qrgirocoderemittancetype-unstructured"
+    }
+  ]
+}

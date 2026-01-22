@@ -1,0 +1,38 @@
+{
+  "name": "MicroQrDecoder",
+  "fullName": "CodeGlyphX.MicroQrDecoder",
+  "namespace": "CodeGlyphX",
+  "kind": "Class",
+  "slug": "codeglyphx-microqrdecoder",
+  "summary": "Decodes Micro QR codes from a module grid.",
+  "remarks": null,
+  "examples": [],
+  "seeAlso": [],
+  "members": [
+    {
+      "name": "TryDecode",
+      "kind": "Method",
+      "summary": "Attempts to decode a Micro QR code from an exact module grid (no quiet zone).",
+      "remarks": null,
+      "returns": "true when decoding succeeded; otherwise false.",
+      "parameters": [
+        {
+          "name": "modules",
+          "type": "BitMatrix",
+          "description": "Square matrix of Micro QR modules (dark = true)."
+        },
+        {
+          "name": "result",
+          "type": "MicroQrDecoded",
+          "description": "Decoded payload."
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecode(BitMatrix modules, out MicroQrDecoded result)",
+      "xmlId": "M:CodeGlyphX.MicroQrDecoder.TryDecode(CodeGlyphX.BitMatrix,CodeGlyphX.MicroQrDecoded@)",
+      "anchor": "method-trydecode-static-bool-trydecode-bitmatrix-modules-out-microqrdecoded-result"
+    }
+  ]
+}

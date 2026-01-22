@@ -1,0 +1,533 @@
+{
+  "name": "DataMatrixDecoder",
+  "fullName": "CodeGlyphX.DataMatrix.DataMatrixDecoder",
+  "namespace": "CodeGlyphX.DataMatrix",
+  "kind": "Class",
+  "slug": "codeglyphx-datamatrix-datamatrixdecoder",
+  "summary": "Decodes Data Matrix (ECC200) symbols.",
+  "remarks": null,
+  "examples": [],
+  "seeAlso": [],
+  "members": [
+    {
+      "name": "TryDecode",
+      "kind": "Method",
+      "summary": "Attempts to decode a Data Matrix symbol from a module matrix.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "modules",
+          "type": "BitMatrix",
+          "description": null
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecode(BitMatrix modules, out string value)",
+      "xmlId": "M:CodeGlyphX.DataMatrix.DataMatrixDecoder.TryDecode(CodeGlyphX.BitMatrix,System.String@)",
+      "anchor": "method-trydecode-static-bool-trydecode-bitmatrix-modules-out-string-value"
+    },
+    {
+      "name": "TryDecode",
+      "kind": "Method",
+      "summary": "Attempts to decode a Data Matrix symbol from a module matrix, with cancellation.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "modules",
+          "type": "BitMatrix",
+          "description": null
+        },
+        {
+          "name": "cancellationToken",
+          "type": "CancellationToken",
+          "description": null
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecode(BitMatrix modules, CancellationToken cancellationToken, out string value)",
+      "xmlId": "M:CodeGlyphX.DataMatrix.DataMatrixDecoder.TryDecode(CodeGlyphX.BitMatrix,System.Threading.CancellationToken,System.String@)",
+      "anchor": "method-trydecode-static-bool-trydecode-bitmatrix-modules-cancellationtoken-cancellationtoken-out-string-value"
+    },
+    {
+      "name": "TryDecode",
+      "kind": "Method",
+      "summary": "Attempts to decode a Data Matrix symbol from a module matrix, with diagnostics.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "modules",
+          "type": "BitMatrix",
+          "description": null
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "diagnostics",
+          "type": "DataMatrixDecodeDiagnostics",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecode(BitMatrix modules, out string value, out DataMatrixDecodeDiagnostics diagnostics)",
+      "xmlId": "M:CodeGlyphX.DataMatrix.DataMatrixDecoder.TryDecode(CodeGlyphX.BitMatrix,System.String@,CodeGlyphX.DataMatrixDecodeDiagnostics@)",
+      "anchor": "method-trydecode-static-bool-trydecode-bitmatrix-modules-out-string-value-out-datamatrixdecodediagnostics-diagnostics"
+    },
+    {
+      "name": "TryDecode",
+      "kind": "Method",
+      "summary": "Attempts to decode a Data Matrix symbol from a module matrix, with cancellation and diagnostics.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "modules",
+          "type": "BitMatrix",
+          "description": null
+        },
+        {
+          "name": "cancellationToken",
+          "type": "CancellationToken",
+          "description": null
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "diagnostics",
+          "type": "DataMatrixDecodeDiagnostics",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecode(BitMatrix modules, CancellationToken cancellationToken, out string value, out DataMatrixDecodeDiagnostics diagnostics)",
+      "xmlId": "M:CodeGlyphX.DataMatrix.DataMatrixDecoder.TryDecode(CodeGlyphX.BitMatrix,System.Threading.CancellationToken,System.String@,CodeGlyphX.DataMatrixDecodeDiagnostics@)",
+      "anchor": "method-trydecode-static-bool-trydecode-bitmatrix-modules-cancellationtoken-cancellationtoken-out-string-value-out-datamatrixdecodediagnostics-diagnostics"
+    },
+    {
+      "name": "TryDecode",
+      "kind": "Method",
+      "summary": "Attempts to decode a Data Matrix symbol from pixels.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "pixels",
+          "type": "ReadOnlySpan\u003Cbyte\u003E",
+          "description": null
+        },
+        {
+          "name": "width",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "height",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "stride",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "format",
+          "type": "PixelFormat",
+          "description": null
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecode(ReadOnlySpan\u003Cbyte\u003E pixels, int width, int height, int stride, PixelFormat format, out string value)",
+      "xmlId": "M:CodeGlyphX.DataMatrix.DataMatrixDecoder.TryDecode(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,System.String@)",
+      "anchor": "method-trydecode-static-bool-trydecode-readonlyspan-byte-pixels-int-width-int-height-int-stride-pixelformat-format-out-string-value"
+    },
+    {
+      "name": "TryDecode",
+      "kind": "Method",
+      "summary": "Attempts to decode a Data Matrix symbol from pixels, with cancellation.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "pixels",
+          "type": "ReadOnlySpan\u003Cbyte\u003E",
+          "description": null
+        },
+        {
+          "name": "width",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "height",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "stride",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "format",
+          "type": "PixelFormat",
+          "description": null
+        },
+        {
+          "name": "cancellationToken",
+          "type": "CancellationToken",
+          "description": null
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecode(ReadOnlySpan\u003Cbyte\u003E pixels, int width, int height, int stride, PixelFormat format, CancellationToken cancellationToken, out string value)",
+      "xmlId": "M:CodeGlyphX.DataMatrix.DataMatrixDecoder.TryDecode(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,System.Threading.CancellationToken,System.String@)",
+      "anchor": "method-trydecode-static-bool-trydecode-readonlyspan-byte-pixels-int-width-int-height-int-stride-pixelformat-format-cancellationtoken-cancellationtoken-out-string-value"
+    },
+    {
+      "name": "TryDecode",
+      "kind": "Method",
+      "summary": "Attempts to decode a Data Matrix symbol from pixels, with diagnostics.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "pixels",
+          "type": "ReadOnlySpan\u003Cbyte\u003E",
+          "description": null
+        },
+        {
+          "name": "width",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "height",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "stride",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "format",
+          "type": "PixelFormat",
+          "description": null
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "diagnostics",
+          "type": "DataMatrixDecodeDiagnostics",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecode(ReadOnlySpan\u003Cbyte\u003E pixels, int width, int height, int stride, PixelFormat format, out string value, out DataMatrixDecodeDiagnostics diagnostics)",
+      "xmlId": "M:CodeGlyphX.DataMatrix.DataMatrixDecoder.TryDecode(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,System.String@,CodeGlyphX.DataMatrixDecodeDiagnostics@)",
+      "anchor": "method-trydecode-static-bool-trydecode-readonlyspan-byte-pixels-int-width-int-height-int-stride-pixelformat-format-out-string-value-out-datamatrixdecodediagnostics-diagnostics"
+    },
+    {
+      "name": "TryDecode",
+      "kind": "Method",
+      "summary": "Attempts to decode a Data Matrix symbol from pixels, with cancellation and diagnostics.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "pixels",
+          "type": "ReadOnlySpan\u003Cbyte\u003E",
+          "description": null
+        },
+        {
+          "name": "width",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "height",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "stride",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "format",
+          "type": "PixelFormat",
+          "description": null
+        },
+        {
+          "name": "cancellationToken",
+          "type": "CancellationToken",
+          "description": null
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "diagnostics",
+          "type": "DataMatrixDecodeDiagnostics",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecode(ReadOnlySpan\u003Cbyte\u003E pixels, int width, int height, int stride, PixelFormat format, CancellationToken cancellationToken, out string value, out DataMatrixDecodeDiagnostics diagnostics)",
+      "xmlId": "M:CodeGlyphX.DataMatrix.DataMatrixDecoder.TryDecode(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,System.Threading.CancellationToken,System.String@,CodeGlyphX.DataMatrixDecodeDiagnostics@)",
+      "anchor": "method-trydecode-static-bool-trydecode-readonlyspan-byte-pixels-int-width-int-height-int-stride-pixelformat-format-cancellationtoken-cancellationtoken-out-string-value-out-datamatrixdecodediagnostics-diagnostics"
+    },
+    {
+      "name": "TryDecode",
+      "kind": "Method",
+      "summary": "Attempts to decode a Data Matrix symbol from pixels.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "pixels",
+          "type": "byte[]",
+          "description": null
+        },
+        {
+          "name": "width",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "height",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "stride",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "format",
+          "type": "PixelFormat",
+          "description": null
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecode(byte[] pixels, int width, int height, int stride, PixelFormat format, out string value)",
+      "xmlId": "M:CodeGlyphX.DataMatrix.DataMatrixDecoder.TryDecode(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,System.String@)",
+      "anchor": "method-trydecode-static-bool-trydecode-byte-pixels-int-width-int-height-int-stride-pixelformat-format-out-string-value"
+    },
+    {
+      "name": "TryDecode",
+      "kind": "Method",
+      "summary": "Attempts to decode a Data Matrix symbol from pixels, with cancellation.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "pixels",
+          "type": "byte[]",
+          "description": null
+        },
+        {
+          "name": "width",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "height",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "stride",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "format",
+          "type": "PixelFormat",
+          "description": null
+        },
+        {
+          "name": "cancellationToken",
+          "type": "CancellationToken",
+          "description": null
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecode(byte[] pixels, int width, int height, int stride, PixelFormat format, CancellationToken cancellationToken, out string value)",
+      "xmlId": "M:CodeGlyphX.DataMatrix.DataMatrixDecoder.TryDecode(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,System.Threading.CancellationToken,System.String@)",
+      "anchor": "method-trydecode-static-bool-trydecode-byte-pixels-int-width-int-height-int-stride-pixelformat-format-cancellationtoken-cancellationtoken-out-string-value"
+    },
+    {
+      "name": "TryDecode",
+      "kind": "Method",
+      "summary": "Attempts to decode a Data Matrix symbol from pixels, with diagnostics.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "pixels",
+          "type": "byte[]",
+          "description": null
+        },
+        {
+          "name": "width",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "height",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "stride",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "format",
+          "type": "PixelFormat",
+          "description": null
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "diagnostics",
+          "type": "DataMatrixDecodeDiagnostics",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecode(byte[] pixels, int width, int height, int stride, PixelFormat format, out string value, out DataMatrixDecodeDiagnostics diagnostics)",
+      "xmlId": "M:CodeGlyphX.DataMatrix.DataMatrixDecoder.TryDecode(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,System.String@,CodeGlyphX.DataMatrixDecodeDiagnostics@)",
+      "anchor": "method-trydecode-static-bool-trydecode-byte-pixels-int-width-int-height-int-stride-pixelformat-format-out-string-value-out-datamatrixdecodediagnostics-diagnostics"
+    },
+    {
+      "name": "TryDecode",
+      "kind": "Method",
+      "summary": "Attempts to decode a Data Matrix symbol from pixels, with cancellation and diagnostics.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "pixels",
+          "type": "byte[]",
+          "description": null
+        },
+        {
+          "name": "width",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "height",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "stride",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "format",
+          "type": "PixelFormat",
+          "description": null
+        },
+        {
+          "name": "cancellationToken",
+          "type": "CancellationToken",
+          "description": null
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "diagnostics",
+          "type": "DataMatrixDecodeDiagnostics",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecode(byte[] pixels, int width, int height, int stride, PixelFormat format, CancellationToken cancellationToken, out string value, out DataMatrixDecodeDiagnostics diagnostics)",
+      "xmlId": "M:CodeGlyphX.DataMatrix.DataMatrixDecoder.TryDecode(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,System.Threading.CancellationToken,System.String@,CodeGlyphX.DataMatrixDecodeDiagnostics@)",
+      "anchor": "method-trydecode-static-bool-trydecode-byte-pixels-int-width-int-height-int-stride-pixelformat-format-cancellationtoken-cancellationtoken-out-string-value-out-datamatrixdecodediagnostics-diagnostics"
+    }
+  ]
+}

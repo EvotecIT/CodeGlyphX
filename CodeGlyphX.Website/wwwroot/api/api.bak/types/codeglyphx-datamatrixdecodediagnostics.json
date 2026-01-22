@@ -1,0 +1,83 @@
+{
+  "name": "DataMatrixDecodeDiagnostics",
+  "fullName": "CodeGlyphX.DataMatrixDecodeDiagnostics",
+  "namespace": "CodeGlyphX",
+  "kind": "Class",
+  "slug": "codeglyphx-datamatrixdecodediagnostics",
+  "summary": "Diagnostics for Data Matrix decoding.",
+  "remarks": null,
+  "examples": [],
+  "seeAlso": [],
+  "members": [
+    {
+      "name": "DataMatrixDecodeDiagnostics",
+      "kind": "Constructor",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "DataMatrixDecodeDiagnostics()",
+      "xmlId": "M:CodeGlyphX.DataMatrixDecodeDiagnostics.#ctor",
+      "anchor": "constructor-datamatrixdecodediagnostics-datamatrixdecodediagnostics"
+    },
+    {
+      "name": "AttemptCount",
+      "kind": "Property",
+      "summary": "Number of decode attempts (rotations \u002B mirror).",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "int AttemptCount {get; }",
+      "xmlId": "P:CodeGlyphX.DataMatrixDecodeDiagnostics.AttemptCount",
+      "anchor": "property-attemptcount-int-attemptcount-get"
+    },
+    {
+      "name": "MirroredTried",
+      "kind": "Property",
+      "summary": "True when mirrored decode was attempted.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "bool MirroredTried {get; }",
+      "xmlId": "P:CodeGlyphX.DataMatrixDecodeDiagnostics.MirroredTried",
+      "anchor": "property-mirroredtried-bool-mirroredtried-get"
+    },
+    {
+      "name": "Success",
+      "kind": "Property",
+      "summary": "True when decode succeeded.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "bool Success {get; }",
+      "xmlId": "P:CodeGlyphX.DataMatrixDecodeDiagnostics.Success",
+      "anchor": "property-success-bool-success-get"
+    },
+    {
+      "name": "Failure",
+      "kind": "Property",
+      "summary": "Optional failure message when decoding fails.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "string Failure {get; }",
+      "xmlId": "P:CodeGlyphX.DataMatrixDecodeDiagnostics.Failure",
+      "anchor": "property-failure-string-failure-get"
+    }
+  ]
+}

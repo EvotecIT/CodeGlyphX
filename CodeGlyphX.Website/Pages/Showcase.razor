@@ -1,0 +1,265 @@
+@page "/showcase"
+@inject HttpClient Http
+@inject IJSRuntime JS
+
+<PageTitle>Showcase - CodeGlyphX</PageTitle>
+
+<div class="showcase-page">
+    <div class="showcase-hero">
+        <span class="section-label">Built with CodeGlyphX</span>
+        <h1>Showcase</h1>
+        <p>See CodeGlyphX in action powering real-world applications.</p>
+    </div>
+
+    @if (_data == null)
+    {
+        <div class="loading">Loading showcase...</div>
+    }
+    else
+    {
+        <div class="showcase-grid">
+            @foreach (var item in _data.Items)
+            {
+                <div class="showcase-card showcase-card-large">
+                    <div class="showcase-header">
+                        <div class="showcase-icon">@GetIcon(item.Icon)</div>
+                        <div class="showcase-title">
+                            <h2>@item.Name</h2>
+                            <span class="showcase-badge">@item.Badge</span>
+                        </div>
+                    </div>
+                    <div class="showcase-meta">
+                        @if (!string.IsNullOrEmpty(item.License))
+                        {
+                            <span class="showcase-license">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                                @item.License
+                            </span>
+                        }
+                        @foreach (var tech in item.Tech)
+                        {
+                            <span class="showcase-tech">@tech</span>
+                        }
+                    </div>
+                    <p class="showcase-description">@item.Description</p>
+                    <div class="showcase-details">
+                        <h4>Key Features</h4>
+                        <ul>
+                            @foreach (var feature in item.Features)
+                            {
+                                <li>@((MarkupString)feature)</li>
+                            }
+                        </ul>
+                    </div>
+                    <div class="showcase-features">
+                        @foreach (var highlight in item.Highlights)
+                        {
+                            <span class="showcase-feature">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M5 13l4 4L19 7"/></svg>
+                                @highlight
+                            </span>
+                        }
+                    </div>
+
+                    @if (item.Images != null)
+                    {
+                        <div class="showcase-gallery" data-carousel="carousel-@item.Id">
+                            <div class="showcase-gallery-tabs">
+                                @{ var itemId = item.Id; }
+                                <button class="showcase-gallery-tab @(GetThemeState(itemId) == "dark" ? "active" : "")" @onclick="@(() => SetThemeDark(itemId))">Dark Theme</button>
+                                <button class="showcase-gallery-tab @(GetThemeState(itemId) == "light" ? "active" : "")" @onclick="@(() => SetThemeLight(itemId))">Light Theme</button>
+                            </div>
+                            <div class="showcase-carousel">
+                                <div class="showcase-carousel-viewport">
+                                    @{
+                                        var currentTheme = GetThemeState(item.Id);
+                                        var images = currentTheme == "dark" ? item.Images.Dark : item.Images.Light;
+                                        var currentIndex = GetSlideIndex(item.Id);
+                                    }
+                                    @for (int i = 0; i < images.Length; i++)
+                                    {
+                                        var img = images[i];
+                                        var idx = i;
+                                        <div class="showcase-carousel-slide @(idx == currentIndex ? "active" : "")" style="@(idx == currentIndex ? "" : "display:none")">
+                                            <img src="@img.Src" alt="@img.Alt" loading="lazy" />
+                                        </div>
+                                    }
+                                </div>
+                                <button class="showcase-carousel-nav prev" @onclick="() => PrevSlide(item.Id, images.Length)">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+                                </button>
+                                <button class="showcase-carousel-nav next" @onclick="() => NextSlide(item.Id, images.Length)">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+                                </button>
+                            </div>
+                            <div class="showcase-carousel-footer">
+                                <div class="showcase-carousel-dots">
+                                    @for (int i = 0; i < images.Length; i++)
+                                    {
+                                        var idx = i;
+                                        <button class="showcase-carousel-dot @(idx == currentIndex ? "active" : "")" @onclick="() => GoToSlide(item.Id, idx)"></button>
+                                    }
+                                </div>
+                                <div class="showcase-carousel-caption">@images[currentIndex].Caption</div>
+                                <div class="showcase-carousel-counter">@(currentIndex + 1) / @images.Length</div>
+                            </div>
+                            <div class="showcase-carousel-thumbs">
+                                @for (int i = 0; i < images.Length; i++)
+                                {
+                                    var img = images[i];
+                                    var idx = i;
+                                    <button class="showcase-carousel-thumb @(idx == currentIndex ? "active" : "")" @onclick="() => GoToSlide(item.Id, idx)">
+                                        <img src="@img.Src" alt="@img.Caption" loading="lazy" />
+                                    </button>
+                                }
+                            </div>
+                        </div>
+                    }
+
+                    <div class="showcase-actions">
+                        @if (item.Status == "development")
+                        {
+                            <span class="showcase-status showcase-status-dev">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                In Development
+                            </span>
+                        }
+                        @if (!string.IsNullOrEmpty(item.Github))
+                        {
+                            <a href="@item.Github" target="_blank" rel="noopener" class="btn btn-secondary">
+                                <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                                View on GitHub
+                            </a>
+                        }
+                        @if (!string.IsNullOrEmpty(item.Download))
+                        {
+                            <a href="@item.Download" target="_blank" rel="noopener" class="btn btn-primary">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+                                Download
+                            </a>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+
+        @if (_data.Submit != null)
+        {
+            <div class="showcase-submit">
+                <h3>@_data.Submit.Title</h3>
+                <p>@_data.Submit.Description</p>
+                <a href="@_data.Submit.Link" target="_blank" rel="noopener" class="btn btn-primary">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M12 4v16m8-8H4"/></svg>
+                    Submit Your Project
+                </a>
+            </div>
+        }
+    }
+</div>
+
+@code {
+    private ShowcaseData? _data;
+    private readonly Dictionary<string, string> _themeStates = new();
+    private readonly Dictionary<string, int> _slideIndexes = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            _data = await Http.GetFromJsonAsync<ShowcaseData>("api/showcase.json");
+            if (_data?.Items != null)
+            {
+                foreach (var item in _data.Items)
+                {
+                    _themeStates[item.Id] = "dark";
+                    _slideIndexes[item.Id] = 0;
+                }
+            }
+        }
+        catch
+        {
+            // Fallback - data may not be available in dev mode
+        }
+    }
+
+    private string GetThemeState(string id) => _themeStates.GetValueOrDefault(id, "dark");
+    private int GetSlideIndex(string id) => _slideIndexes.GetValueOrDefault(id, 0);
+
+    private void SetTheme(string id, string theme)
+    {
+        _themeStates[id] = theme;
+        _slideIndexes[id] = 0;
+    }
+
+    private void SetThemeDark(string id) => SetTheme(id, "dark");
+    private void SetThemeLight(string id) => SetTheme(id, "light");
+
+    private void GoToSlide(string id, int index)
+    {
+        _slideIndexes[id] = index;
+    }
+
+    private void NextSlide(string id, int total)
+    {
+        var current = GetSlideIndex(id);
+        _slideIndexes[id] = (current + 1) % total;
+    }
+
+    private void PrevSlide(string id, int total)
+    {
+        var current = GetSlideIndex(id);
+        _slideIndexes[id] = (current - 1 + total) % total;
+    }
+
+    private MarkupString GetIcon(string icon) => icon switch
+    {
+        "info" => new MarkupString("<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z\"/></svg>"),
+        "lock" => new MarkupString("<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z\"/></svg>"),
+        _ => new MarkupString("<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><circle cx=\"12\" cy=\"12\" r=\"10\"/></svg>")
+    };
+
+    public class ShowcaseData
+    {
+        public string Title { get; set; } = "";
+        public string Description { get; set; } = "";
+        public ShowcaseItem[] Items { get; set; } = Array.Empty<ShowcaseItem>();
+        public SubmitInfo? Submit { get; set; }
+    }
+
+    public class ShowcaseItem
+    {
+        public string Id { get; set; } = "";
+        public string Name { get; set; } = "";
+        public string Badge { get; set; } = "";
+        public string Icon { get; set; } = "";
+        public string? License { get; set; }
+        public string[] Tech { get; set; } = Array.Empty<string>();
+        public string Description { get; set; } = "";
+        public string[] Features { get; set; } = Array.Empty<string>();
+        public string[] Highlights { get; set; } = Array.Empty<string>();
+        public string Status { get; set; } = "";
+        public string? Github { get; set; }
+        public string? Download { get; set; }
+        public ImageSet? Images { get; set; }
+    }
+
+    public class ImageSet
+    {
+        public ImageInfo[] Dark { get; set; } = Array.Empty<ImageInfo>();
+        public ImageInfo[] Light { get; set; } = Array.Empty<ImageInfo>();
+    }
+
+    public class ImageInfo
+    {
+        public string Src { get; set; } = "";
+        public string Alt { get; set; } = "";
+        public string Caption { get; set; } = "";
+    }
+
+    public class SubmitInfo
+    {
+        public string Title { get; set; } = "";
+        public string Description { get; set; } = "";
+        public string Link { get; set; } = "";
+    }
+}

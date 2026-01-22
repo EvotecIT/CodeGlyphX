@@ -1,0 +1,88 @@
+{
+  "name": "TgaWriter",
+  "fullName": "CodeGlyphX.Rendering.Tga.TgaWriter",
+  "namespace": "CodeGlyphX.Rendering.Tga",
+  "kind": "Class",
+  "slug": "codeglyphx-rendering-tga-tgawriter",
+  "summary": "Writes TGA images from RGBA buffers (uncompressed).",
+  "remarks": null,
+  "examples": [],
+  "seeAlso": [],
+  "members": [
+    {
+      "name": "WriteRgba32",
+      "kind": "Method",
+      "summary": "Writes a TGA byte array from an RGBA buffer.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "width",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "height",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "rgba",
+          "type": "ReadOnlySpan\u003Cbyte\u003E",
+          "description": null
+        },
+        {
+          "name": "stride",
+          "type": "int",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static byte[] WriteRgba32(int width, int height, ReadOnlySpan\u003Cbyte\u003E rgba, int stride)",
+      "xmlId": "M:CodeGlyphX.Rendering.Tga.TgaWriter.WriteRgba32(System.Int32,System.Int32,System.ReadOnlySpan{System.Byte},System.Int32)",
+      "anchor": "method-writergba32-static-byte-writergba32-int-width-int-height-readonlyspan-byte-rgba-int-stride"
+    },
+    {
+      "name": "WriteRgba32",
+      "kind": "Method",
+      "summary": "Writes a TGA stream from an RGBA buffer (32-bit BGRA).",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "stream",
+          "type": "Stream",
+          "description": null
+        },
+        {
+          "name": "width",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "height",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "rgba",
+          "type": "ReadOnlySpan\u003Cbyte\u003E",
+          "description": null
+        },
+        {
+          "name": "stride",
+          "type": "int",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static void WriteRgba32(Stream stream, int width, int height, ReadOnlySpan\u003Cbyte\u003E rgba, int stride)",
+      "xmlId": "M:CodeGlyphX.Rendering.Tga.TgaWriter.WriteRgba32(System.IO.Stream,System.Int32,System.Int32,System.ReadOnlySpan{System.Byte},System.Int32)",
+      "anchor": "method-writergba32-static-void-writergba32-stream-stream-int-width-int-height-readonlyspan-byte-rgba-int-stride"
+    }
+  ]
+}

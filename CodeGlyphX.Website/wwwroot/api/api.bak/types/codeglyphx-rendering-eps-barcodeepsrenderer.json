@@ -1,0 +1,153 @@
+{
+  "name": "BarcodeEpsRenderer",
+  "fullName": "CodeGlyphX.Rendering.Eps.BarcodeEpsRenderer",
+  "namespace": "CodeGlyphX.Rendering.Eps",
+  "kind": "Class",
+  "slug": "codeglyphx-rendering-eps-barcodeepsrenderer",
+  "summary": "Renders 1D barcodes to an EPS image.",
+  "remarks": null,
+  "examples": [],
+  "seeAlso": [],
+  "members": [
+    {
+      "name": "Render",
+      "kind": "Method",
+      "summary": "Renders the barcode to an EPS string.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "barcode",
+          "type": "Barcode1D",
+          "description": null
+        },
+        {
+          "name": "opts",
+          "type": "BarcodePngRenderOptions",
+          "description": null
+        },
+        {
+          "name": "mode",
+          "type": "RenderMode",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string Render(Barcode1D barcode, BarcodePngRenderOptions opts, RenderMode mode)",
+      "xmlId": "M:CodeGlyphX.Rendering.Eps.BarcodeEpsRenderer.Render(CodeGlyphX.Barcode1D,CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,CodeGlyphX.Rendering.RenderMode)",
+      "anchor": "method-render-static-string-render-barcode1d-barcode-barcodepngrenderoptions-opts-rendermode-mode"
+    },
+    {
+      "name": "RenderToStream",
+      "kind": "Method",
+      "summary": "Renders the barcode to an EPS stream.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "barcode",
+          "type": "Barcode1D",
+          "description": null
+        },
+        {
+          "name": "opts",
+          "type": "BarcodePngRenderOptions",
+          "description": null
+        },
+        {
+          "name": "stream",
+          "type": "Stream",
+          "description": null
+        },
+        {
+          "name": "mode",
+          "type": "RenderMode",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static void RenderToStream(Barcode1D barcode, BarcodePngRenderOptions opts, Stream stream, RenderMode mode)",
+      "xmlId": "M:CodeGlyphX.Rendering.Eps.BarcodeEpsRenderer.RenderToStream(CodeGlyphX.Barcode1D,CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,System.IO.Stream,CodeGlyphX.Rendering.RenderMode)",
+      "anchor": "method-rendertostream-static-void-rendertostream-barcode1d-barcode-barcodepngrenderoptions-opts-stream-stream-rendermode-mode"
+    },
+    {
+      "name": "RenderToFile",
+      "kind": "Method",
+      "summary": "Renders the barcode to an EPS file.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "barcode",
+          "type": "Barcode1D",
+          "description": null
+        },
+        {
+          "name": "opts",
+          "type": "BarcodePngRenderOptions",
+          "description": null
+        },
+        {
+          "name": "path",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "mode",
+          "type": "RenderMode",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string RenderToFile(Barcode1D barcode, BarcodePngRenderOptions opts, string path, RenderMode mode)",
+      "xmlId": "M:CodeGlyphX.Rendering.Eps.BarcodeEpsRenderer.RenderToFile(CodeGlyphX.Barcode1D,CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,System.String,CodeGlyphX.Rendering.RenderMode)",
+      "anchor": "method-rendertofile-static-string-rendertofile-barcode1d-barcode-barcodepngrenderoptions-opts-string-path-rendermode-mode"
+    },
+    {
+      "name": "RenderToFile",
+      "kind": "Method",
+      "summary": "Renders the barcode to an EPS file under the specified directory.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "barcode",
+          "type": "Barcode1D",
+          "description": null
+        },
+        {
+          "name": "opts",
+          "type": "BarcodePngRenderOptions",
+          "description": null
+        },
+        {
+          "name": "directory",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "fileName",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "mode",
+          "type": "RenderMode",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string RenderToFile(Barcode1D barcode, BarcodePngRenderOptions opts, string directory, string fileName, RenderMode mode)",
+      "xmlId": "M:CodeGlyphX.Rendering.Eps.BarcodeEpsRenderer.RenderToFile(CodeGlyphX.Barcode1D,CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,System.String,System.String,CodeGlyphX.Rendering.RenderMode)",
+      "anchor": "method-rendertofile-static-string-rendertofile-barcode1d-barcode-barcodepngrenderoptions-opts-string-directory-string-filename-rendermode-mode"
+    }
+  ]
+}

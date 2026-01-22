@@ -1,0 +1,318 @@
+{
+  "name": "MatrixBarcodeEncoder",
+  "fullName": "CodeGlyphX.MatrixBarcodeEncoder",
+  "namespace": "CodeGlyphX",
+  "kind": "Class",
+  "slug": "codeglyphx-matrixbarcodeencoder",
+  "summary": "Encodes 2D barcode symbologies into a CodeGlyphX.BitMatrix.",
+  "remarks": null,
+  "examples": [],
+  "seeAlso": [],
+  "members": [
+    {
+      "name": "Encode",
+      "kind": "Method",
+      "summary": "Encodes a 2D barcode using the specified CodeGlyphX.BarcodeType.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "type",
+          "type": "BarcodeType",
+          "description": null
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static BitMatrix Encode(BarcodeType type, string value)",
+      "xmlId": "M:CodeGlyphX.MatrixBarcodeEncoder.Encode(CodeGlyphX.BarcodeType,System.String)",
+      "anchor": "method-encode-static-bitmatrix-encode-barcodetype-type-string-value"
+    },
+    {
+      "name": "EncodeKix",
+      "kind": "Method",
+      "summary": "Encodes a KIX code into a CodeGlyphX.BitMatrix.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "value",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static BitMatrix EncodeKix(string value)",
+      "xmlId": "M:CodeGlyphX.MatrixBarcodeEncoder.EncodeKix(System.String)",
+      "anchor": "method-encodekix-static-bitmatrix-encodekix-string-value"
+    },
+    {
+      "name": "EncodePharmacodeTwoTrack",
+      "kind": "Method",
+      "summary": "Encodes a Pharmacode (two-track) barcode into a CodeGlyphX.BitMatrix.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "value",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static BitMatrix EncodePharmacodeTwoTrack(string value)",
+      "xmlId": "M:CodeGlyphX.MatrixBarcodeEncoder.EncodePharmacodeTwoTrack(System.String)",
+      "anchor": "method-encodepharmacodetwotrack-static-bitmatrix-encodepharmacodetwotrack-string-value"
+    },
+    {
+      "name": "EncodePostnet",
+      "kind": "Method",
+      "summary": "Encodes a POSTNET symbol into a CodeGlyphX.BitMatrix.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "value",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static BitMatrix EncodePostnet(string value)",
+      "xmlId": "M:CodeGlyphX.MatrixBarcodeEncoder.EncodePostnet(System.String)",
+      "anchor": "method-encodepostnet-static-bitmatrix-encodepostnet-string-value"
+    },
+    {
+      "name": "EncodePlanet",
+      "kind": "Method",
+      "summary": "Encodes a PLANET symbol into a CodeGlyphX.BitMatrix.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "value",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static BitMatrix EncodePlanet(string value)",
+      "xmlId": "M:CodeGlyphX.MatrixBarcodeEncoder.EncodePlanet(System.String)",
+      "anchor": "method-encodeplanet-static-bitmatrix-encodeplanet-string-value"
+    },
+    {
+      "name": "EncodeRoyalMail4State",
+      "kind": "Method",
+      "summary": "Encodes a Royal Mail 4-State Customer Code (RM4SCC) symbol into a CodeGlyphX.BitMatrix.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "value",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static BitMatrix EncodeRoyalMail4State(string value)",
+      "xmlId": "M:CodeGlyphX.MatrixBarcodeEncoder.EncodeRoyalMail4State(System.String)",
+      "anchor": "method-encoderoyalmail4state-static-bitmatrix-encoderoyalmail4state-string-value"
+    },
+    {
+      "name": "EncodeAustraliaPost",
+      "kind": "Method",
+      "summary": "Encodes an Australia Post customer barcode into a CodeGlyphX.BitMatrix.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "value",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static BitMatrix EncodeAustraliaPost(string value)",
+      "xmlId": "M:CodeGlyphX.MatrixBarcodeEncoder.EncodeAustraliaPost(System.String)",
+      "anchor": "method-encodeaustraliapost-static-bitmatrix-encodeaustraliapost-string-value"
+    },
+    {
+      "name": "EncodeJapanPost",
+      "kind": "Method",
+      "summary": "Encodes a Japan Post barcode into a CodeGlyphX.BitMatrix.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "value",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static BitMatrix EncodeJapanPost(string value)",
+      "xmlId": "M:CodeGlyphX.MatrixBarcodeEncoder.EncodeJapanPost(System.String)",
+      "anchor": "method-encodejapanpost-static-bitmatrix-encodejapanpost-string-value"
+    },
+    {
+      "name": "EncodeUspsImb",
+      "kind": "Method",
+      "summary": "Encodes a USPS Intelligent Mail Barcode (IMB) into a CodeGlyphX.BitMatrix.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "value",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static BitMatrix EncodeUspsImb(string value)",
+      "xmlId": "M:CodeGlyphX.MatrixBarcodeEncoder.EncodeUspsImb(System.String)",
+      "anchor": "method-encodeuspsimb-static-bitmatrix-encodeuspsimb-string-value"
+    },
+    {
+      "name": "EncodeGs1DataBarOmni",
+      "kind": "Method",
+      "summary": "Encodes a GS1 DataBar-14 Omnidirectional symbol into a CodeGlyphX.BitMatrix.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "value",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static BitMatrix EncodeGs1DataBarOmni(string value)",
+      "xmlId": "M:CodeGlyphX.MatrixBarcodeEncoder.EncodeGs1DataBarOmni(System.String)",
+      "anchor": "method-encodegs1databaromni-static-bitmatrix-encodegs1databaromni-string-value"
+    },
+    {
+      "name": "EncodeGs1DataBarStacked",
+      "kind": "Method",
+      "summary": "Encodes a GS1 DataBar-14 Stacked symbol into a CodeGlyphX.BitMatrix.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "value",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static BitMatrix EncodeGs1DataBarStacked(string value)",
+      "xmlId": "M:CodeGlyphX.MatrixBarcodeEncoder.EncodeGs1DataBarStacked(System.String)",
+      "anchor": "method-encodegs1databarstacked-static-bitmatrix-encodegs1databarstacked-string-value"
+    },
+    {
+      "name": "EncodeGs1DataBarExpandedStacked",
+      "kind": "Method",
+      "summary": "Encodes a GS1 DataBar Expanded Stacked symbol into a CodeGlyphX.BitMatrix.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "value",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static BitMatrix EncodeGs1DataBarExpandedStacked(string value)",
+      "xmlId": "M:CodeGlyphX.MatrixBarcodeEncoder.EncodeGs1DataBarExpandedStacked(System.String)",
+      "anchor": "method-encodegs1databarexpandedstacked-static-bitmatrix-encodegs1databarexpandedstacked-string-value"
+    },
+    {
+      "name": "EncodeDataMatrix",
+      "kind": "Method",
+      "summary": "Encodes a Data Matrix symbol into a CodeGlyphX.BitMatrix.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "value",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static BitMatrix EncodeDataMatrix(string value)",
+      "xmlId": "M:CodeGlyphX.MatrixBarcodeEncoder.EncodeDataMatrix(System.String)",
+      "anchor": "method-encodedatamatrix-static-bitmatrix-encodedatamatrix-string-value"
+    },
+    {
+      "name": "EncodePdf417",
+      "kind": "Method",
+      "summary": "Encodes a PDF417 symbol into a CodeGlyphX.BitMatrix.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "value",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static BitMatrix EncodePdf417(string value)",
+      "xmlId": "M:CodeGlyphX.MatrixBarcodeEncoder.EncodePdf417(System.String)",
+      "anchor": "method-encodepdf417-static-bitmatrix-encodepdf417-string-value"
+    },
+    {
+      "name": "EncodeMicroPdf417",
+      "kind": "Method",
+      "summary": "Encodes a MicroPDF417 symbol into a CodeGlyphX.BitMatrix.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "value",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static BitMatrix EncodeMicroPdf417(string value)",
+      "xmlId": "M:CodeGlyphX.MatrixBarcodeEncoder.EncodeMicroPdf417(System.String)",
+      "anchor": "method-encodemicropdf417-static-bitmatrix-encodemicropdf417-string-value"
+    }
+  ]
+}

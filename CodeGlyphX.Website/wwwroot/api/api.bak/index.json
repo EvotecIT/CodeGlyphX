@@ -1,0 +1,2483 @@
+{
+  "title": "CodeGlyphX API Reference",
+  "generatedAtUtc": "2026-01-22T13:44:50.8820334Z",
+  "assembly": {
+    "assemblyName": "CodeGlyphX",
+    "assemblyVersion": "1.0.0.0"
+  },
+  "typeCount": 309,
+  "types": [
+    {
+      "name": "AztecCode",
+      "fullName": "CodeGlyphX.AztecCode",
+      "namespace": "CodeGlyphX",
+      "kind": "Class",
+      "slug": "codeglyphx-azteccode",
+      "summary": "Aztec code helpers."
+    },
+    {
+      "name": "AztecDecodeDiagnostics",
+      "fullName": "CodeGlyphX.AztecDecodeDiagnostics",
+      "namespace": "CodeGlyphX",
+      "kind": "Class",
+      "slug": "codeglyphx-aztecdecodediagnostics",
+      "summary": "Diagnostics for Aztec decoding."
+    },
+    {
+      "name": "Barcode",
+      "fullName": "CodeGlyphX.Barcode",
+      "namespace": "CodeGlyphX",
+      "kind": "Class",
+      "slug": "codeglyphx-barcode",
+      "summary": "Simple barcode helpers with fluent and static APIs."
+    },
+    {
+      "name": "Barcode1D",
+      "fullName": "CodeGlyphX.Barcode1D",
+      "namespace": "CodeGlyphX",
+      "kind": "Class",
+      "slug": "codeglyphx-barcode1d",
+      "summary": "A simple 1D barcode represented as an alternating sequence of bar/space segments."
+    },
+    {
+      "name": "BarcodeBuilder",
+      "fullName": "CodeGlyphX.Barcode.BarcodeBuilder",
+      "namespace": "CodeGlyphX",
+      "kind": "Class",
+      "slug": "codeglyphx-barcode-barcodebuilder",
+      "summary": "Fluent barcode builder."
+    },
+    {
+      "name": "BarcodeDecoded",
+      "fullName": "CodeGlyphX.BarcodeDecoded",
+      "namespace": "CodeGlyphX",
+      "kind": "Class",
+      "slug": "codeglyphx-barcodedecoded",
+      "summary": "Result of decoding a 1D barcode payload."
+    },
+    {
+      "name": "BarcodeDecodeDiagnostics",
+      "fullName": "CodeGlyphX.BarcodeDecodeDiagnostics",
+      "namespace": "CodeGlyphX",
+      "kind": "Class",
+      "slug": "codeglyphx-barcodedecodediagnostics",
+      "summary": "Diagnostics for 1D barcode decoding."
+    },
+    {
+      "name": "BarcodeDecodeOptions",
+      "fullName": "CodeGlyphX.BarcodeDecodeOptions",
+      "namespace": "CodeGlyphX",
+      "kind": "Class",
+      "slug": "codeglyphx-barcodedecodeoptions",
+      "summary": "Options controlling how 1D barcode decoding behaves."
+    },
+    {
+      "name": "BarcodeDecoder",
+      "fullName": "CodeGlyphX.BarcodeDecoder",
+      "namespace": "CodeGlyphX",
+      "kind": "Class",
+      "slug": "codeglyphx-barcodedecoder",
+      "summary": "Best-effort 1D barcode decoder (scanline-based)."
+    },
+    {
+      "name": "BarcodeEasy",
+      "fullName": "CodeGlyphX.BarcodeEasy",
+      "namespace": "CodeGlyphX",
+      "kind": "Class",
+      "slug": "codeglyphx-barcodeeasy",
+      "summary": "One-line barcode helpers with sane defaults."
+    },
+    {
+      "name": "BarcodeEncoder",
+      "fullName": "CodeGlyphX.BarcodeEncoder",
+      "namespace": "CodeGlyphX",
+      "kind": "Class",
+      "slug": "codeglyphx-barcodeencoder",
+      "summary": "Encodes supported barcode symbologies into a CodeGlyphX.Barcode1D model."
+    },
+    {
+      "name": "BarcodeOptions",
+      "fullName": "CodeGlyphX.BarcodeOptions",
+      "namespace": "CodeGlyphX",
+      "kind": "Class",
+      "slug": "codeglyphx-barcodeoptions",
+      "summary": "Simplified rendering options for 1D barcodes."
+    },
+    {
+      "name": "BarcodeType",
+      "fullName": "CodeGlyphX.BarcodeType",
+      "namespace": "CodeGlyphX",
+      "kind": "Enum",
+      "slug": "codeglyphx-barcodetype",
+      "summary": "Barcode symbologies supported by CodeGlyphX.BarcodeEncoder."
+    },
+    {
+      "name": "BarSegment",
+      "fullName": "CodeGlyphX.BarSegment",
+      "namespace": "CodeGlyphX",
+      "kind": "Struct",
+      "slug": "codeglyphx-barsegment",
+      "summary": "Represents a single run in a 1D barcode, expressed in module units."
+    },
+    {
+      "name": "BitMatrix",
+      "fullName": "CodeGlyphX.BitMatrix",
+      "namespace": "CodeGlyphX",
+      "kind": "Class",
+      "slug": "codeglyphx-bitmatrix",
+      "summary": "A compact, bit-packed 2D boolean grid."
+    },
+    {
+      "name": "Code11ChecksumPolicy",
+      "fullName": "CodeGlyphX.Code11ChecksumPolicy",
+      "namespace": "CodeGlyphX",
+      "kind": "Enum",
+      "slug": "codeglyphx-code11checksumpolicy",
+      "summary": "Policy for handling optional Code 11 checksum characters."
+    },
+    {
+      "name": "Code39ChecksumPolicy",
+      "fullName": "CodeGlyphX.Code39ChecksumPolicy",
+      "namespace": "CodeGlyphX",
+      "kind": "Enum",
+      "slug": "codeglyphx-code39checksumpolicy",
+      "summary": "Policy for handling optional Code39 checksum characters."
+    },
+    {
+      "name": "CodeGlyph",
+      "fullName": "CodeGlyphX.CodeGlyph",
+      "namespace": "CodeGlyphX",
+      "kind": "Class",
+      "slug": "codeglyphx-codeglyph",
+      "summary": "Unified decode helpers (QR \u002B 1D \u002B 2D barcodes)."
+    },
+    {
+      "name": "CodeGlyphBudget",
+      "fullName": "CodeGlyphX.CodeGlyphBudget",
+      "namespace": "CodeGlyphX",
+      "kind": "Class",
+      "slug": "codeglyphx-codeglyphbudget",
+      "summary": "Provides a temporary decode time budget for operations that honor it."
+    },
+    {
+      "name": "CodeGlyphDecoded",
+      "fullName": "CodeGlyphX.CodeGlyphDecoded",
+      "namespace": "CodeGlyphX",
+      "kind": "Class",
+      "slug": "codeglyphx-codeglyphdecoded",
+      "summary": "Result of decoding a QR or barcode symbol."
+    },
+    {
+      "name": "CodeGlyphDecodeDiagnostics",
+      "fullName": "CodeGlyphX.CodeGlyphDecodeDiagnostics",
+      "namespace": "CodeGlyphX",
+      "kind": "Class",
+      "slug": "codeglyphx-codeglyphdecodediagnostics",
+      "summary": "Diagnostics for unified QR/barcode decoding."
+    },
+    {
+      "name": "CodeGlyphDecodeOptions",
+      "fullName": "CodeGlyphX.CodeGlyphDecodeOptions",
+      "namespace": "CodeGlyphX",
+      "kind": "Class",
+      "slug": "codeglyphx-codeglyphdecodeoptions",
+      "summary": "Options for unified QR/barcode decoding."
+    },
+    {
+      "name": "CodeGlyphKind",
+      "fullName": "CodeGlyphX.CodeGlyphKind",
+      "namespace": "CodeGlyphX",
+      "kind": "Enum",
+      "slug": "codeglyphx-codeglyphkind",
+      "summary": "Kind of decoded symbol."
+    },
+    {
+      "name": "DataMatrixBuilder",
+      "fullName": "CodeGlyphX.DataMatrixCode.DataMatrixBuilder",
+      "namespace": "CodeGlyphX",
+      "kind": "Class",
+      "slug": "codeglyphx-datamatrixcode-datamatrixbuilder",
+      "summary": "Fluent Data Matrix builder."
+    },
+    {
+      "name": "DataMatrixCode",
+      "fullName": "CodeGlyphX.DataMatrixCode",
+      "namespace": "CodeGlyphX",
+      "kind": "Class",
+      "slug": "codeglyphx-datamatrixcode",
+      "summary": "Simple Data Matrix helpers with fluent and static APIs."
+    },
+    {
+      "name": "DataMatrixDecodeDiagnostics",
+      "fullName": "CodeGlyphX.DataMatrixDecodeDiagnostics",
+      "namespace": "CodeGlyphX",
+      "kind": "Class",
+      "slug": "codeglyphx-datamatrixdecodediagnostics",
+      "summary": "Diagnostics for Data Matrix decoding."
+    },
+    {
+      "name": "DecodeBatchDiagnostics",
+      "fullName": "CodeGlyphX.DecodeBatchDiagnostics",
+      "namespace": "CodeGlyphX",
+      "kind": "Struct",
+      "slug": "codeglyphx-decodebatchdiagnostics",
+      "summary": "Aggregated diagnostics for a batch decode run."
+    },
+    {
+      "name": "DecodeBatchResult",
+      "fullName": "CodeGlyphX.DecodeBatchResult\u00601",
+      "namespace": "CodeGlyphX",
+      "kind": "Struct",
+      "slug": "codeglyphx-decodebatchresult-1",
+      "summary": null
+    },
+    {
+      "name": "DecodeFailureReason",
+      "fullName": "CodeGlyphX.DecodeFailureReason",
+      "namespace": "CodeGlyphX",
+      "kind": "Enum",
+      "slug": "codeglyphx-decodefailurereason",
+      "summary": "Describes why decoding failed."
+    },
+    {
+      "name": "DecodeResult",
+      "fullName": "CodeGlyphX.DecodeResult\u00601",
+      "namespace": "CodeGlyphX",
+      "kind": "Struct",
+      "slug": "codeglyphx-decoderesult-1",
+      "summary": null
+    },
+    {
+      "name": "Gs1",
+      "fullName": "CodeGlyphX.Gs1",
+      "namespace": "CodeGlyphX",
+      "kind": "Class",
+      "slug": "codeglyphx-gs1",
+      "summary": "Helpers for building and encoding GS1 element strings (GS1-128)."
+    },
+    {
+      "name": "Gs1Element",
+      "fullName": "CodeGlyphX.Gs1Element",
+      "namespace": "CodeGlyphX",
+      "kind": "Struct",
+      "slug": "codeglyphx-gs1element",
+      "summary": "Represents a GS1 element (AI \u002B data) with explicit length semantics."
+    },
+    {
+      "name": "HotpBuilder",
+      "fullName": "CodeGlyphX.Otp.HotpBuilder",
+      "namespace": "CodeGlyphX",
+      "kind": "Class",
+      "slug": "codeglyphx-otp-hotpbuilder",
+      "summary": "Fluent HOTP builder."
+    },
+    {
+      "name": "ImageDecodeOptions",
+      "fullName": "CodeGlyphX.ImageDecodeOptions",
+      "namespace": "CodeGlyphX",
+      "kind": "Class",
+      "slug": "codeglyphx-imagedecodeoptions",
+      "summary": "Options for decoding from image sources (non-QR)."
+    },
+    {
+      "name": "MatrixBarcodeDecoder",
+      "fullName": "CodeGlyphX.MatrixBarcodeDecoder",
+      "namespace": "CodeGlyphX",
+      "kind": "Class",
+      "slug": "codeglyphx-matrixbarcodedecoder",
+      "summary": "Decodes 2D barcode symbologies from a CodeGlyphX.BitMatrix."
+    },
+    {
+      "name": "MatrixBarcodeEncoder",
+      "fullName": "CodeGlyphX.MatrixBarcodeEncoder",
+      "namespace": "CodeGlyphX",
+      "kind": "Class",
+      "slug": "codeglyphx-matrixbarcodeencoder",
+      "summary": "Encodes 2D barcode symbologies into a CodeGlyphX.BitMatrix."
+    },
+    {
+      "name": "MatrixOptions",
+      "fullName": "CodeGlyphX.MatrixOptions",
+      "namespace": "CodeGlyphX",
+      "kind": "Class",
+      "slug": "codeglyphx-matrixoptions",
+      "summary": "Simplified rendering options for 2D matrices (Data Matrix, PDF417)."
+    },
+    {
+      "name": "MicroQrCode",
+      "fullName": "CodeGlyphX.MicroQrCode",
+      "namespace": "CodeGlyphX",
+      "kind": "Class",
+      "slug": "codeglyphx-microqrcode",
+      "summary": "A generated Micro QR code (modules \u002B metadata)."
+    },
+    {
+      "name": "MicroQrCodeEncoder",
+      "fullName": "CodeGlyphX.MicroQrCodeEncoder",
+      "namespace": "CodeGlyphX",
+      "kind": "Class",
+      "slug": "codeglyphx-microqrcodeencoder",
+      "summary": "Encodes Micro QR codes (M1..M4)."
+    },
+    {
+      "name": "MicroQrDecoded",
+      "fullName": "CodeGlyphX.MicroQrDecoded",
+      "namespace": "CodeGlyphX",
+      "kind": "Class",
+      "slug": "codeglyphx-microqrdecoded",
+      "summary": "Result of decoding a Micro QR code payload."
+    },
+    {
+      "name": "MicroQrDecoder",
+      "fullName": "CodeGlyphX.MicroQrDecoder",
+      "namespace": "CodeGlyphX",
+      "kind": "Class",
+      "slug": "codeglyphx-microqrdecoder",
+      "summary": "Decodes Micro QR codes from a module grid."
+    },
+    {
+      "name": "MsiChecksumPolicy",
+      "fullName": "CodeGlyphX.MsiChecksumPolicy",
+      "namespace": "CodeGlyphX",
+      "kind": "Enum",
+      "slug": "codeglyphx-msichecksumpolicy",
+      "summary": "Policy for handling optional MSI checksum digits."
+    },
+    {
+      "name": "MsiChecksumType",
+      "fullName": "CodeGlyphX.MsiChecksumType",
+      "namespace": "CodeGlyphX",
+      "kind": "Enum",
+      "slug": "codeglyphx-msichecksumtype",
+      "summary": "Checksum variants for MSI barcodes."
+    },
+    {
+      "name": "Otp",
+      "fullName": "CodeGlyphX.Otp",
+      "namespace": "CodeGlyphX",
+      "kind": "Class",
+      "slug": "codeglyphx-otp",
+      "summary": "Simple OTP helpers with fluent and static APIs."
+    },
+    {
+      "name": "OtpAlgorithm",
+      "fullName": "CodeGlyphX.OtpAlgorithm",
+      "namespace": "CodeGlyphX",
+      "kind": "Enum",
+      "slug": "codeglyphx-otpalgorithm",
+      "summary": "Hash algorithm identifiers used in otpauth:// URIs."
+    },
+    {
+      "name": "OtpAuthHotp",
+      "fullName": "CodeGlyphX.OtpAuthHotp",
+      "namespace": "CodeGlyphX",
+      "kind": "Class",
+      "slug": "codeglyphx-otpauthhotp",
+      "summary": "Builder for deterministic otpauth://hotp/ URIs."
+    },
+    {
+      "name": "OtpAuthParser",
+      "fullName": "CodeGlyphX.OtpAuthParser",
+      "namespace": "CodeGlyphX",
+      "kind": "Class",
+      "slug": "codeglyphx-otpauthparser",
+      "summary": "Parser for otpauth:// URIs."
+    },
+    {
+      "name": "OtpAuthParseResult",
+      "fullName": "CodeGlyphX.OtpAuthParseResult",
+      "namespace": "CodeGlyphX",
+      "kind": "Class",
+      "slug": "codeglyphx-otpauthparseresult",
+      "summary": "Parsed otpauth:// payload with warnings."
+    },
+    {
+      "name": "OtpAuthPayload",
+      "fullName": "CodeGlyphX.OtpAuthPayload",
+      "namespace": "CodeGlyphX",
+      "kind": "Class",
+      "slug": "codeglyphx-otpauthpayload",
+      "summary": "Parsed contents of an otpauth:// URI."
+    },
+    {
+      "name": "OtpAuthSecret",
+      "fullName": "CodeGlyphX.OtpAuthSecret",
+      "namespace": "CodeGlyphX",
+      "kind": "Class",
+      "slug": "codeglyphx-otpauthsecret",
+      "summary": "Base32 helpers for otpauth:// secrets."
+    },
+    {
+      "name": "OtpAuthTotp",
+      "fullName": "CodeGlyphX.OtpAuthTotp",
+      "namespace": "CodeGlyphX",
+      "kind": "Class",
+      "slug": "codeglyphx-otpauthtotp",
+      "summary": "Builder for deterministic otpauth://totp/ URIs."
+    },
+    {
+      "name": "OtpAuthType",
+      "fullName": "CodeGlyphX.OtpAuthType",
+      "namespace": "CodeGlyphX",
+      "kind": "Enum",
+      "slug": "codeglyphx-otpauthtype",
+      "summary": "OTP token type for otpauth:// URIs."
+    },
+    {
+      "name": "OtpAuthValidationOptions",
+      "fullName": "CodeGlyphX.OtpAuthValidationOptions",
+      "namespace": "CodeGlyphX",
+      "kind": "Class",
+      "slug": "codeglyphx-otpauthvalidationoptions",
+      "summary": "Validation options for otpauth:// payloads."
+    },
+    {
+      "name": "OtpAuthValidator",
+      "fullName": "CodeGlyphX.OtpAuthValidator",
+      "namespace": "CodeGlyphX",
+      "kind": "Class",
+      "slug": "codeglyphx-otpauthvalidator",
+      "summary": "Validation helpers for otpauth:// payloads."
+    },
+    {
+      "name": "OtpQrDecoder",
+      "fullName": "CodeGlyphX.OtpQrDecoder",
+      "namespace": "CodeGlyphX",
+      "kind": "Class",
+      "slug": "codeglyphx-otpqrdecoder",
+      "summary": "Convenience decoder for OTP QR payloads."
+    },
+    {
+      "name": "OtpQrPreset",
+      "fullName": "CodeGlyphX.OtpQrPreset",
+      "namespace": "CodeGlyphX",
+      "kind": "Class",
+      "slug": "codeglyphx-otpqrpreset",
+      "summary": "Opinionated QR presets for OTP URIs."
+    },
+    {
+      "name": "OtpQrSafety",
+      "fullName": "CodeGlyphX.OtpQrSafety",
+      "namespace": "CodeGlyphX",
+      "kind": "Class",
+      "slug": "codeglyphx-otpqrsafety",
+      "summary": "Safety checks for OTP QR rendering parameters."
+    },
+    {
+      "name": "OtpQrSafetyReport",
+      "fullName": "CodeGlyphX.OtpQrSafetyReport",
+      "namespace": "CodeGlyphX",
+      "kind": "Class",
+      "slug": "codeglyphx-otpqrsafetyreport",
+      "summary": "Result of OTP QR scan safety evaluation."
+    },
+    {
+      "name": "Pdf417Builder",
+      "fullName": "CodeGlyphX.Pdf417Code.Pdf417Builder",
+      "namespace": "CodeGlyphX",
+      "kind": "Class",
+      "slug": "codeglyphx-pdf417code-pdf417builder",
+      "summary": "Fluent PDF417 builder."
+    },
+    {
+      "name": "Pdf417Code",
+      "fullName": "CodeGlyphX.Pdf417Code",
+      "namespace": "CodeGlyphX",
+      "kind": "Class",
+      "slug": "codeglyphx-pdf417code",
+      "summary": "Simple PDF417 helpers with fluent and static APIs."
+    },
+    {
+      "name": "Pdf417DecodeDiagnostics",
+      "fullName": "CodeGlyphX.Pdf417DecodeDiagnostics",
+      "namespace": "CodeGlyphX",
+      "kind": "Class",
+      "slug": "codeglyphx-pdf417decodediagnostics",
+      "summary": "Diagnostics for PDF417 decoding."
+    },
+    {
+      "name": "PixelFormat",
+      "fullName": "CodeGlyphX.PixelFormat",
+      "namespace": "CodeGlyphX",
+      "kind": "Enum",
+      "slug": "codeglyphx-pixelformat",
+      "summary": "Supported raw pixel formats for QR decoding."
+    },
+    {
+      "name": "PlesseyChecksumPolicy",
+      "fullName": "CodeGlyphX.PlesseyChecksumPolicy",
+      "namespace": "CodeGlyphX",
+      "kind": "Enum",
+      "slug": "codeglyphx-plesseychecksumpolicy",
+      "summary": "Policy for handling Plessey CRC validation."
+    },
+    {
+      "name": "QR",
+      "fullName": "CodeGlyphX.QR",
+      "namespace": "CodeGlyphX",
+      "kind": "Class",
+      "slug": "codeglyphx-qr",
+      "summary": "Simple QR helpers with fluent and static APIs."
+    },
+    {
+      "name": "QrArtSafety",
+      "fullName": "CodeGlyphX.QrArtSafety",
+      "namespace": "CodeGlyphX",
+      "kind": "Class",
+      "slug": "codeglyphx-qrartsafety",
+      "summary": "Evaluates QR art/render options for scan safety."
+    },
+    {
+      "name": "QrArtSafetyReport",
+      "fullName": "CodeGlyphX.QrArtSafetyReport",
+      "namespace": "CodeGlyphX",
+      "kind": "Class",
+      "slug": "codeglyphx-qrartsafetyreport",
+      "summary": "Safety score and warnings for QR art/custom styling."
+    },
+    {
+      "name": "QrArtWarning",
+      "fullName": "CodeGlyphX.QrArtWarning",
+      "namespace": "CodeGlyphX",
+      "kind": "Struct",
+      "slug": "codeglyphx-qrartwarning",
+      "summary": "QR art warning with a short message."
+    },
+    {
+      "name": "QrArtWarningKind",
+      "fullName": "CodeGlyphX.QrArtWarningKind",
+      "namespace": "CodeGlyphX",
+      "kind": "Enum",
+      "slug": "codeglyphx-qrartwarningkind",
+      "summary": "Warning kinds for QR art safety evaluation."
+    },
+    {
+      "name": "QrBuilder",
+      "fullName": "CodeGlyphX.QR.QrBuilder",
+      "namespace": "CodeGlyphX",
+      "kind": "Class",
+      "slug": "codeglyphx-qr-qrbuilder",
+      "summary": "Fluent QR builder."
+    },
+    {
+      "name": "QrCode",
+      "fullName": "CodeGlyphX.QrCode",
+      "namespace": "CodeGlyphX",
+      "kind": "Class",
+      "slug": "codeglyphx-qrcode",
+      "summary": "A generated QR code (modules \u002B metadata)."
+    },
+    {
+      "name": "QrCodeEncoder",
+      "fullName": "CodeGlyphX.QrCodeEncoder",
+      "namespace": "CodeGlyphX",
+      "kind": "Class",
+      "slug": "codeglyphx-qrcodeencoder",
+      "summary": "Encodes QR codes (byte mode \u002B optional Kanji mode)."
+    },
+    {
+      "name": "QrDecoded",
+      "fullName": "CodeGlyphX.QrDecoded",
+      "namespace": "CodeGlyphX",
+      "kind": "Class",
+      "slug": "codeglyphx-qrdecoded",
+      "summary": "Result of decoding a QR code payload."
+    },
+    {
+      "name": "QrDecodeFailureReason",
+      "fullName": "CodeGlyphX.QrDecodeFailureReason",
+      "namespace": "CodeGlyphX",
+      "kind": "Enum",
+      "slug": "codeglyphx-qrdecodefailurereason",
+      "summary": "High-level failure reasons for QR decoding."
+    },
+    {
+      "name": "QrDecodeInfo",
+      "fullName": "CodeGlyphX.QrDecodeInfo",
+      "namespace": "CodeGlyphX",
+      "kind": "Struct",
+      "slug": "codeglyphx-qrdecodeinfo",
+      "summary": "Diagnostics returned by QR decoding attempts."
+    },
+    {
+      "name": "QrDecodeProfile",
+      "fullName": "CodeGlyphX.QrDecodeProfile",
+      "namespace": "CodeGlyphX",
+      "kind": "Enum",
+      "slug": "codeglyphx-qrdecodeprofile",
+      "summary": "Speed/accuracy profile for pixel-based QR decoding."
+    },
+    {
+      "name": "QrDecoder",
+      "fullName": "CodeGlyphX.QrDecoder",
+      "namespace": "CodeGlyphX",
+      "kind": "Class",
+      "slug": "codeglyphx-qrdecoder",
+      "summary": "Decodes QR codes from a module grid or from raw pixels (clean images)."
+    },
+    {
+      "name": "QrDiagnosticsDump",
+      "fullName": "CodeGlyphX.QrDiagnosticsDump",
+      "namespace": "CodeGlyphX",
+      "kind": "Class",
+      "slug": "codeglyphx-qrdiagnosticsdump",
+      "summary": "Builds and writes diagnostic dumps for QR pixel decoding attempts."
+    },
+    {
+      "name": "QrEasy",
+      "fullName": "CodeGlyphX.QrEasy",
+      "namespace": "CodeGlyphX",
+      "kind": "Class",
+      "slug": "codeglyphx-qreasy",
+      "summary": "One-line QR generation helpers with sane defaults."
+    },
+    {
+      "name": "QrEasyOptions",
+      "fullName": "CodeGlyphX.QrEasyOptions",
+      "namespace": "CodeGlyphX",
+      "kind": "Class",
+      "slug": "codeglyphx-qreasyoptions",
+      "summary": "Simple options for QR rendering."
+    },
+    {
+      "name": "QrErrorCorrectionLevel",
+      "fullName": "CodeGlyphX.QrErrorCorrectionLevel",
+      "namespace": "CodeGlyphX",
+      "kind": "Enum",
+      "slug": "codeglyphx-qrerrorcorrectionlevel",
+      "summary": "QR Code error correction level."
+    },
+    {
+      "name": "QrFnc1Mode",
+      "fullName": "CodeGlyphX.QrFnc1Mode",
+      "namespace": "CodeGlyphX",
+      "kind": "Enum",
+      "slug": "codeglyphx-qrfnc1mode",
+      "summary": "Indicates presence of FNC1 mode in a QR payload."
+    },
+    {
+      "name": "QrImageDecoder",
+      "fullName": "CodeGlyphX.QrImageDecoder",
+      "namespace": "CodeGlyphX",
+      "kind": "Class",
+      "slug": "codeglyphx-qrimagedecoder",
+      "summary": "Decodes QR codes from raw pixel buffers."
+    },
+    {
+      "name": "QrPixelDebug",
+      "fullName": "CodeGlyphX.QrPixelDebug",
+      "namespace": "CodeGlyphX",
+      "kind": "Class",
+      "slug": "codeglyphx-qrpixeldebug",
+      "summary": "Debug visualizations for pixel-based QR decoding."
+    },
+    {
+      "name": "QrPixelDebugMode",
+      "fullName": "CodeGlyphX.QrPixelDebugMode",
+      "namespace": "CodeGlyphX",
+      "kind": "Enum",
+      "slug": "codeglyphx-qrpixeldebugmode",
+      "summary": "Debug visualization modes for pixel-based QR decoding."
+    },
+    {
+      "name": "QrPixelDebugOptions",
+      "fullName": "CodeGlyphX.QrPixelDebugOptions",
+      "namespace": "CodeGlyphX",
+      "kind": "Class",
+      "slug": "codeglyphx-qrpixeldebugoptions",
+      "summary": "Options for QR pixel debug rendering."
+    },
+    {
+      "name": "QrPixelDecodeInfo",
+      "fullName": "CodeGlyphX.QrPixelDecodeInfo",
+      "namespace": "CodeGlyphX",
+      "kind": "Struct",
+      "slug": "codeglyphx-qrpixeldecodeinfo",
+      "summary": "Diagnostics returned by pixel-based QR decoding attempts."
+    },
+    {
+      "name": "QrPixelDecodeOptions",
+      "fullName": "CodeGlyphX.QrPixelDecodeOptions",
+      "namespace": "CodeGlyphX",
+      "kind": "Class",
+      "slug": "codeglyphx-qrpixeldecodeoptions",
+      "summary": "Options for pixel-based QR decoding."
+    },
+    {
+      "name": "QrPresets",
+      "fullName": "CodeGlyphX.QrPresets",
+      "namespace": "CodeGlyphX",
+      "kind": "Class",
+      "slug": "codeglyphx-qrpresets",
+      "summary": "Ready-to-use QR presets with safe defaults for common scenarios."
+    },
+    {
+      "name": "QrRenderStyle",
+      "fullName": "CodeGlyphX.QrRenderStyle",
+      "namespace": "CodeGlyphX",
+      "kind": "Enum",
+      "slug": "codeglyphx-qrrenderstyle",
+      "summary": "Style presets for easy QR rendering."
+    },
+    {
+      "name": "QrStructuredAppend",
+      "fullName": "CodeGlyphX.QrStructuredAppend",
+      "namespace": "CodeGlyphX",
+      "kind": "Struct",
+      "slug": "codeglyphx-qrstructuredappend",
+      "summary": "Structured append metadata for multi-symbol QR payloads."
+    },
+    {
+      "name": "QrTextEncoding",
+      "fullName": "CodeGlyphX.QrTextEncoding",
+      "namespace": "CodeGlyphX",
+      "kind": "Enum",
+      "slug": "codeglyphx-qrtextencoding",
+      "summary": "QR text encodings supported for payloads and ECI."
+    },
+    {
+      "name": "TotpBuilder",
+      "fullName": "CodeGlyphX.Otp.TotpBuilder",
+      "namespace": "CodeGlyphX",
+      "kind": "Class",
+      "slug": "codeglyphx-otp-totpbuilder",
+      "summary": "Fluent TOTP builder."
+    },
+    {
+      "name": "UpcENumberSystem",
+      "fullName": "CodeGlyphX.UpcENumberSystem",
+      "namespace": "CodeGlyphX",
+      "kind": "Enum",
+      "slug": "codeglyphx-upcenumbersystem",
+      "summary": "UPC-E number system (0 or 1)."
+    },
+    {
+      "name": "AustraliaPostCustomerEncodingTable",
+      "fullName": "CodeGlyphX.AustraliaPost.AustraliaPostCustomerEncodingTable",
+      "namespace": "CodeGlyphX.AustraliaPost",
+      "kind": "Enum",
+      "slug": "codeglyphx-australiapost-australiapostcustomerencodingtable",
+      "summary": "Customer information encoding tables for Australia Post customer barcodes."
+    },
+    {
+      "name": "AustraliaPostDecoded",
+      "fullName": "CodeGlyphX.AustraliaPost.AustraliaPostDecoded",
+      "namespace": "CodeGlyphX.AustraliaPost",
+      "kind": "Class",
+      "slug": "codeglyphx-australiapost-australiapostdecoded",
+      "summary": "Decoded Australia Post customer barcode information."
+    },
+    {
+      "name": "AustraliaPostDecoder",
+      "fullName": "CodeGlyphX.AustraliaPost.AustraliaPostDecoder",
+      "namespace": "CodeGlyphX.AustraliaPost",
+      "kind": "Class",
+      "slug": "codeglyphx-australiapost-australiapostdecoder",
+      "summary": "Decodes Australia Post customer barcodes."
+    },
+    {
+      "name": "AustraliaPostEncoder",
+      "fullName": "CodeGlyphX.AustraliaPost.AustraliaPostEncoder",
+      "namespace": "CodeGlyphX.AustraliaPost",
+      "kind": "Class",
+      "slug": "codeglyphx-australiapost-australiapostencoder",
+      "summary": "Encodes Australia Post customer barcodes."
+    },
+    {
+      "name": "AustraliaPostFormat",
+      "fullName": "CodeGlyphX.AustraliaPost.AustraliaPostFormat",
+      "namespace": "CodeGlyphX.AustraliaPost",
+      "kind": "Enum",
+      "slug": "codeglyphx-australiapost-australiapostformat",
+      "summary": "Australia Post customer barcode formats."
+    },
+    {
+      "name": "AztecEncodeOptions",
+      "fullName": "CodeGlyphX.Aztec.AztecEncodeOptions",
+      "namespace": "CodeGlyphX.Aztec",
+      "kind": "Class",
+      "slug": "codeglyphx-aztec-aztecencodeoptions",
+      "summary": "Options for future Aztec encoding support."
+    },
+    {
+      "name": "CodabarEncoder",
+      "fullName": "CodeGlyphX.Codabar.CodabarEncoder",
+      "namespace": "CodeGlyphX.Codabar",
+      "kind": "Class",
+      "slug": "codeglyphx-codabar-codabarencoder",
+      "summary": "Encodes Codabar barcodes."
+    },
+    {
+      "name": "Code11Encoder",
+      "fullName": "CodeGlyphX.Code11.Code11Encoder",
+      "namespace": "CodeGlyphX.Code11",
+      "kind": "Class",
+      "slug": "codeglyphx-code11-code11encoder",
+      "summary": "Encodes Code 11 barcodes."
+    },
+    {
+      "name": "Iata2of5Encoder",
+      "fullName": "CodeGlyphX.Code25.Iata2of5Encoder",
+      "namespace": "CodeGlyphX.Code25",
+      "kind": "Class",
+      "slug": "codeglyphx-code25-iata2of5encoder",
+      "summary": "Encodes IATA 2 of 5 barcodes."
+    },
+    {
+      "name": "Industrial2of5Encoder",
+      "fullName": "CodeGlyphX.Code25.Industrial2of5Encoder",
+      "namespace": "CodeGlyphX.Code25",
+      "kind": "Class",
+      "slug": "codeglyphx-code25-industrial2of5encoder",
+      "summary": "Encodes Industrial (Discrete) 2 of 5 barcodes."
+    },
+    {
+      "name": "Matrix2of5Encoder",
+      "fullName": "CodeGlyphX.Code25.Matrix2of5Encoder",
+      "namespace": "CodeGlyphX.Code25",
+      "kind": "Class",
+      "slug": "codeglyphx-code25-matrix2of5encoder",
+      "summary": "Encodes Matrix (Standard) 2 of 5 barcodes."
+    },
+    {
+      "name": "Code32Encoder",
+      "fullName": "CodeGlyphX.Code32.Code32Encoder",
+      "namespace": "CodeGlyphX.Code32",
+      "kind": "Class",
+      "slug": "codeglyphx-code32-code32encoder",
+      "summary": "Encodes Code 32 (Italian Pharmacode) barcodes."
+    },
+    {
+      "name": "Code39Encoder",
+      "fullName": "CodeGlyphX.Code39.Code39Encoder",
+      "namespace": "CodeGlyphX.Code39",
+      "kind": "Class",
+      "slug": "codeglyphx-code39-code39encoder",
+      "summary": "Encodes Code 39 barcodes."
+    },
+    {
+      "name": "Code93Encoder",
+      "fullName": "CodeGlyphX.Code93.Code93Encoder",
+      "namespace": "CodeGlyphX.Code93",
+      "kind": "Class",
+      "slug": "codeglyphx-code93-code93encoder",
+      "summary": "Encodes Code 93 barcodes."
+    },
+    {
+      "name": "DataBar14Decoder",
+      "fullName": "CodeGlyphX.DataBar.DataBar14Decoder",
+      "namespace": "CodeGlyphX.DataBar",
+      "kind": "Class",
+      "slug": "codeglyphx-databar-databar14decoder",
+      "summary": "Decodes GS1 DataBar-14 symbols (Truncated / Omni / Stacked)."
+    },
+    {
+      "name": "DataBar14Encoder",
+      "fullName": "CodeGlyphX.DataBar.DataBar14Encoder",
+      "namespace": "CodeGlyphX.DataBar",
+      "kind": "Class",
+      "slug": "codeglyphx-databar-databar14encoder",
+      "summary": "Encodes GS1 DataBar-14 symbols (Truncated / Omni / Stacked)."
+    },
+    {
+      "name": "DataBarExpandedDecoder",
+      "fullName": "CodeGlyphX.DataBar.DataBarExpandedDecoder",
+      "namespace": "CodeGlyphX.DataBar",
+      "kind": "Class",
+      "slug": "codeglyphx-databar-databarexpandeddecoder",
+      "summary": "Decodes GS1 DataBar Expanded symbols (linear and stacked)."
+    },
+    {
+      "name": "DataBarExpandedEncoder",
+      "fullName": "CodeGlyphX.DataBar.DataBarExpandedEncoder",
+      "namespace": "CodeGlyphX.DataBar",
+      "kind": "Class",
+      "slug": "codeglyphx-databar-databarexpandedencoder",
+      "summary": "Encodes GS1 DataBar Expanded symbols (linear and stacked)."
+    },
+    {
+      "name": "DataMatrixDecoder",
+      "fullName": "CodeGlyphX.DataMatrix.DataMatrixDecoder",
+      "namespace": "CodeGlyphX.DataMatrix",
+      "kind": "Class",
+      "slug": "codeglyphx-datamatrix-datamatrixdecoder",
+      "summary": "Decodes Data Matrix (ECC200) symbols."
+    },
+    {
+      "name": "DataMatrixEncoder",
+      "fullName": "CodeGlyphX.DataMatrix.DataMatrixEncoder",
+      "namespace": "CodeGlyphX.DataMatrix",
+      "kind": "Class",
+      "slug": "codeglyphx-datamatrix-datamatrixencoder",
+      "summary": "Encodes Data Matrix (ECC200) symbols."
+    },
+    {
+      "name": "DataMatrixEncodingMode",
+      "fullName": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
+      "namespace": "CodeGlyphX.DataMatrix",
+      "kind": "Enum",
+      "slug": "codeglyphx-datamatrix-datamatrixencodingmode",
+      "summary": "High-level data encoding modes for Data Matrix."
+    },
+    {
+      "name": "EanEncoder",
+      "fullName": "CodeGlyphX.Ean.EanEncoder",
+      "namespace": "CodeGlyphX.Ean",
+      "kind": "Class",
+      "slug": "codeglyphx-ean-eanencoder",
+      "summary": "Encodes EAN-8 and EAN-13 barcodes."
+    },
+    {
+      "name": "EncodedNumber",
+      "fullName": "CodeGlyphX.Ean.EanTables.EncodedNumber",
+      "namespace": "CodeGlyphX.Ean",
+      "kind": "Struct",
+      "slug": "codeglyphx-ean-eantables-encodednumber",
+      "summary": null
+    },
+    {
+      "name": "Itf14Encoder",
+      "fullName": "CodeGlyphX.Itf.Itf14Encoder",
+      "namespace": "CodeGlyphX.Itf",
+      "kind": "Class",
+      "slug": "codeglyphx-itf-itf14encoder",
+      "summary": "Encodes ITF-14 (Interleaved 2 of 5) barcodes."
+    },
+    {
+      "name": "ItfEncoder",
+      "fullName": "CodeGlyphX.Itf.ItfEncoder",
+      "namespace": "CodeGlyphX.Itf",
+      "kind": "Class",
+      "slug": "codeglyphx-itf-itfencoder",
+      "summary": "Encodes Interleaved 2 of 5 (ITF) barcodes."
+    },
+    {
+      "name": "JapanPostDecoder",
+      "fullName": "CodeGlyphX.JapanPost.JapanPostDecoder",
+      "namespace": "CodeGlyphX.JapanPost",
+      "kind": "Class",
+      "slug": "codeglyphx-japanpost-japanpostdecoder",
+      "summary": "Decodes Japan Post barcodes."
+    },
+    {
+      "name": "JapanPostEncoder",
+      "fullName": "CodeGlyphX.JapanPost.JapanPostEncoder",
+      "namespace": "CodeGlyphX.JapanPost",
+      "kind": "Class",
+      "slug": "codeglyphx-japanpost-japanpostencoder",
+      "summary": "Encodes Japan Post barcodes."
+    },
+    {
+      "name": "KixDecoder",
+      "fullName": "CodeGlyphX.Kix.KixDecoder",
+      "namespace": "CodeGlyphX.Kix",
+      "kind": "Class",
+      "slug": "codeglyphx-kix-kixdecoder",
+      "summary": "Decodes KIX (Royal Mail 4-state, without headers) barcodes."
+    },
+    {
+      "name": "KixEncoder",
+      "fullName": "CodeGlyphX.Kix.KixEncoder",
+      "namespace": "CodeGlyphX.Kix",
+      "kind": "Class",
+      "slug": "codeglyphx-kix-kixencoder",
+      "summary": "Encodes KIX (Royal Mail 4-state, without headers) barcodes."
+    },
+    {
+      "name": "MsiEncoder",
+      "fullName": "CodeGlyphX.Msi.MsiEncoder",
+      "namespace": "CodeGlyphX.Msi",
+      "kind": "Class",
+      "slug": "codeglyphx-msi-msiencoder",
+      "summary": "Encodes MSI (Modified Plessey) barcodes."
+    },
+    {
+      "name": "PatchCodeEncoder",
+      "fullName": "CodeGlyphX.PatchCode.PatchCodeEncoder",
+      "namespace": "CodeGlyphX.PatchCode",
+      "kind": "Class",
+      "slug": "codeglyphx-patchcode-patchcodeencoder",
+      "summary": "Encodes Patch Code symbols."
+    },
+    {
+      "name": "AdditionalInformation",
+      "fullName": "CodeGlyphX.Payloads.SwissQrCodePayload.AdditionalInformation",
+      "namespace": "CodeGlyphX.Payloads",
+      "kind": "Class",
+      "slug": "codeglyphx-payloads-swissqrcodepayload-additionalinformation",
+      "summary": "Additional information section."
+    },
+    {
+      "name": "AddressType",
+      "fullName": "CodeGlyphX.Payloads.SwissQrCodePayload.Contact.AddressType",
+      "namespace": "CodeGlyphX.Payloads",
+      "kind": "Enum",
+      "slug": "codeglyphx-payloads-swissqrcodepayload-contact-addresstype",
+      "summary": "Contact address type."
+    },
+    {
+      "name": "AppStore",
+      "fullName": "CodeGlyphX.Payloads.QrParsedData.AppStore",
+      "namespace": "CodeGlyphX.Payloads",
+      "kind": "Class",
+      "slug": "codeglyphx-payloads-qrparseddata-appstore",
+      "summary": "App Store payload."
+    },
+    {
+      "name": "Bookmark",
+      "fullName": "CodeGlyphX.Payloads.QrParsedData.Bookmark",
+      "namespace": "CodeGlyphX.Payloads",
+      "kind": "Class",
+      "slug": "codeglyphx-payloads-qrparseddata-bookmark",
+      "summary": "Bookmark payload."
+    },
+    {
+      "name": "Calendar",
+      "fullName": "CodeGlyphX.Payloads.QrParsedData.Calendar",
+      "namespace": "CodeGlyphX.Payloads",
+      "kind": "Class",
+      "slug": "codeglyphx-payloads-qrparseddata-calendar",
+      "summary": "Calendar payload (VEVENT/VCALENDAR)."
+    },
+    {
+      "name": "Contact",
+      "fullName": "CodeGlyphX.Payloads.SwissQrCodePayload.Contact",
+      "namespace": "CodeGlyphX.Payloads",
+      "kind": "Class",
+      "slug": "codeglyphx-payloads-swissqrcodepayload-contact",
+      "summary": "Contact section."
+    },
+    {
+      "name": "Email",
+      "fullName": "CodeGlyphX.Payloads.QrParsedData.Email",
+      "namespace": "CodeGlyphX.Payloads",
+      "kind": "Class",
+      "slug": "codeglyphx-payloads-qrparseddata-email",
+      "summary": "Email payload."
+    },
+    {
+      "name": "Geo",
+      "fullName": "CodeGlyphX.Payloads.QrParsedData.Geo",
+      "namespace": "CodeGlyphX.Payloads",
+      "kind": "Class",
+      "slug": "codeglyphx-payloads-qrparseddata-geo",
+      "summary": "Geo payload."
+    },
+    {
+      "name": "Iban",
+      "fullName": "CodeGlyphX.Payloads.SwissQrCodePayload.Iban",
+      "namespace": "CodeGlyphX.Payloads",
+      "kind": "Class",
+      "slug": "codeglyphx-payloads-swissqrcodepayload-iban",
+      "summary": "IBAN section."
+    },
+    {
+      "name": "IbanType",
+      "fullName": "CodeGlyphX.Payloads.SwissQrCodePayload.Iban.IbanType",
+      "namespace": "CodeGlyphX.Payloads",
+      "kind": "Enum",
+      "slug": "codeglyphx-payloads-swissqrcodepayload-iban-ibantype",
+      "summary": "IBAN type."
+    },
+    {
+      "name": "MeCard",
+      "fullName": "CodeGlyphX.Payloads.QrParsedData.MeCard",
+      "namespace": "CodeGlyphX.Payloads",
+      "kind": "Class",
+      "slug": "codeglyphx-payloads-qrparseddata-mecard",
+      "summary": "MeCard payload."
+    },
+    {
+      "name": "Otp",
+      "fullName": "CodeGlyphX.Payloads.QrParsedData.Otp",
+      "namespace": "CodeGlyphX.Payloads",
+      "kind": "Class",
+      "slug": "codeglyphx-payloads-qrparseddata-otp",
+      "summary": "OTP payload (otpauth://)."
+    },
+    {
+      "name": "PayPal",
+      "fullName": "CodeGlyphX.Payloads.QrParsedData.PayPal",
+      "namespace": "CodeGlyphX.Payloads",
+      "kind": "Class",
+      "slug": "codeglyphx-payloads-qrparseddata-paypal",
+      "summary": "PayPal payment payload (PayPal.Me)."
+    },
+    {
+      "name": "Phone",
+      "fullName": "CodeGlyphX.Payloads.QrParsedData.Phone",
+      "namespace": "CodeGlyphX.Payloads",
+      "kind": "Class",
+      "slug": "codeglyphx-payloads-qrparseddata-phone",
+      "summary": "Phone payload."
+    },
+    {
+      "name": "QrAppStorePlatform",
+      "fullName": "CodeGlyphX.Payloads.QrAppStorePlatform",
+      "namespace": "CodeGlyphX.Payloads",
+      "kind": "Enum",
+      "slug": "codeglyphx-payloads-qrappstoreplatform",
+      "summary": "App store target platform."
+    },
+    {
+      "name": "QrBezahlAuthorityType",
+      "fullName": "CodeGlyphX.Payloads.QrBezahlAuthorityType",
+      "namespace": "CodeGlyphX.Payloads",
+      "kind": "Enum",
+      "slug": "codeglyphx-payloads-qrbezahlauthoritytype",
+      "summary": "BezahlCode authority types."
+    },
+    {
+      "name": "QrBezahlPeriodicUnit",
+      "fullName": "CodeGlyphX.Payloads.QrBezahlPeriodicUnit",
+      "namespace": "CodeGlyphX.Payloads",
+      "kind": "Enum",
+      "slug": "codeglyphx-payloads-qrbezahlperiodicunit",
+      "summary": "BezahlCode periodic time unit."
+    },
+    {
+      "name": "QrBitcoinLikeType",
+      "fullName": "CodeGlyphX.Payloads.QrBitcoinLikeType",
+      "namespace": "CodeGlyphX.Payloads",
+      "kind": "Enum",
+      "slug": "codeglyphx-payloads-qrbitcoinliketype",
+      "summary": "Bitcoin-like URI schemes."
+    },
+    {
+      "name": "QrCalendarEncoding",
+      "fullName": "CodeGlyphX.Payloads.QrCalendarEncoding",
+      "namespace": "CodeGlyphX.Payloads",
+      "kind": "Enum",
+      "slug": "codeglyphx-payloads-qrcalendarencoding",
+      "summary": "Calendar payload output formats."
+    },
+    {
+      "name": "QrContactAddressOrder",
+      "fullName": "CodeGlyphX.Payloads.QrContactAddressOrder",
+      "namespace": "CodeGlyphX.Payloads",
+      "kind": "Enum",
+      "slug": "codeglyphx-payloads-qrcontactaddressorder",
+      "summary": "Address field ordering in contact payloads."
+    },
+    {
+      "name": "QrContactAddressType",
+      "fullName": "CodeGlyphX.Payloads.QrContactAddressType",
+      "namespace": "CodeGlyphX.Payloads",
+      "kind": "Enum",
+      "slug": "codeglyphx-payloads-qrcontactaddresstype",
+      "summary": "Contact address type."
+    },
+    {
+      "name": "QrContactOutputType",
+      "fullName": "CodeGlyphX.Payloads.QrContactOutputType",
+      "namespace": "CodeGlyphX.Payloads",
+      "kind": "Enum",
+      "slug": "codeglyphx-payloads-qrcontactoutputtype",
+      "summary": "Contact payload output formats."
+    },
+    {
+      "name": "QrGeolocationEncoding",
+      "fullName": "CodeGlyphX.Payloads.QrGeolocationEncoding",
+      "namespace": "CodeGlyphX.Payloads",
+      "kind": "Enum",
+      "slug": "codeglyphx-payloads-qrgeolocationencoding",
+      "summary": "Geolocation payload formats."
+    },
+    {
+      "name": "QrGirocodeEncoding",
+      "fullName": "CodeGlyphX.Payloads.QrGirocodeEncoding",
+      "namespace": "CodeGlyphX.Payloads",
+      "kind": "Enum",
+      "slug": "codeglyphx-payloads-qrgirocodeencoding",
+      "summary": "Girocode payload encodings."
+    },
+    {
+      "name": "QrGirocodeRemittanceType",
+      "fullName": "CodeGlyphX.Payloads.QrGirocodeRemittanceType",
+      "namespace": "CodeGlyphX.Payloads",
+      "kind": "Enum",
+      "slug": "codeglyphx-payloads-qrgirocoderemittancetype",
+      "summary": "Girocode remittance types."
+    },
+    {
+      "name": "QrGirocodeVersion",
+      "fullName": "CodeGlyphX.Payloads.QrGirocodeVersion",
+      "namespace": "CodeGlyphX.Payloads",
+      "kind": "Enum",
+      "slug": "codeglyphx-payloads-qrgirocodeversion",
+      "summary": "Girocode versions."
+    },
+    {
+      "name": "QrMailEncoding",
+      "fullName": "CodeGlyphX.Payloads.QrMailEncoding",
+      "namespace": "CodeGlyphX.Payloads",
+      "kind": "Enum",
+      "slug": "codeglyphx-payloads-qrmailencoding",
+      "summary": "Email payload formats."
+    },
+    {
+      "name": "QrMmsEncoding",
+      "fullName": "CodeGlyphX.Payloads.QrMmsEncoding",
+      "namespace": "CodeGlyphX.Payloads",
+      "kind": "Enum",
+      "slug": "codeglyphx-payloads-qrmmsencoding",
+      "summary": "MMS payload formats."
+    },
+    {
+      "name": "QrParsedData",
+      "fullName": "CodeGlyphX.Payloads.QrParsedData",
+      "namespace": "CodeGlyphX.Payloads",
+      "kind": "Class",
+      "slug": "codeglyphx-payloads-qrparseddata",
+      "summary": "Parsed payload data records."
+    },
+    {
+      "name": "QrParsedPayload",
+      "fullName": "CodeGlyphX.Payloads.QrParsedPayload",
+      "namespace": "CodeGlyphX.Payloads",
+      "kind": "Class",
+      "slug": "codeglyphx-payloads-qrparsedpayload",
+      "summary": "Parsed QR payload with detected type and optional raw value."
+    },
+    {
+      "name": "QrPayload",
+      "fullName": "CodeGlyphX.Payloads.QrPayload",
+      "namespace": "CodeGlyphX.Payloads",
+      "kind": "Class",
+      "slug": "codeglyphx-payloads-qrpayload",
+      "summary": "Helpers for building common QR payload strings (URLs, Wi\u2011Fi, vCard, and basic URI schemes)."
+    },
+    {
+      "name": "QrPayloadData",
+      "fullName": "CodeGlyphX.Payloads.QrPayloadData",
+      "namespace": "CodeGlyphX.Payloads",
+      "kind": "Class",
+      "slug": "codeglyphx-payloads-qrpayloaddata",
+      "summary": "QR payload with optional encoding/version defaults."
+    },
+    {
+      "name": "QrPayloadDetectOptions",
+      "fullName": "CodeGlyphX.Payloads.QrPayloadDetectOptions",
+      "namespace": "CodeGlyphX.Payloads",
+      "kind": "Class",
+      "slug": "codeglyphx-payloads-qrpayloaddetectoptions",
+      "summary": "Options that control payload auto-detection heuristics."
+    },
+    {
+      "name": "QrPayloadParseOptions",
+      "fullName": "CodeGlyphX.Payloads.QrPayloadParseOptions",
+      "namespace": "CodeGlyphX.Payloads",
+      "kind": "Class",
+      "slug": "codeglyphx-payloads-qrpayloadparseoptions",
+      "summary": "Options controlling payload parsing and validation."
+    },
+    {
+      "name": "QrPayloadParser",
+      "fullName": "CodeGlyphX.Payloads.QrPayloadParser",
+      "namespace": "CodeGlyphX.Payloads",
+      "kind": "Class",
+      "slug": "codeglyphx-payloads-qrpayloadparser",
+      "summary": "Parses QR payload strings into structured data when possible."
+    },
+    {
+      "name": "QrPayloads",
+      "fullName": "CodeGlyphX.Payloads.QrPayloads",
+      "namespace": "CodeGlyphX.Payloads",
+      "kind": "Class",
+      "slug": "codeglyphx-payloads-qrpayloads",
+      "summary": "Helpers for building common QR payloads with recommended defaults."
+    },
+    {
+      "name": "QrPayloadType",
+      "fullName": "CodeGlyphX.Payloads.QrPayloadType",
+      "namespace": "CodeGlyphX.Payloads",
+      "kind": "Enum",
+      "slug": "codeglyphx-payloads-qrpayloadtype",
+      "summary": "Known QR payload kinds."
+    },
+    {
+      "name": "QrPayloadValidationResult",
+      "fullName": "CodeGlyphX.Payloads.QrPayloadValidationResult",
+      "namespace": "CodeGlyphX.Payloads",
+      "kind": "Class",
+      "slug": "codeglyphx-payloads-qrpayloadvalidationresult",
+      "summary": "Validation result for parsed QR payloads."
+    },
+    {
+      "name": "QrRussiaPaymentEncoding",
+      "fullName": "CodeGlyphX.Payloads.QrRussiaPaymentEncoding",
+      "namespace": "CodeGlyphX.Payloads",
+      "kind": "Enum",
+      "slug": "codeglyphx-payloads-qrrussiapaymentencoding",
+      "summary": "Encoding marker for Russia payment order payloads."
+    },
+    {
+      "name": "QrShadowSocksMethod",
+      "fullName": "CodeGlyphX.Payloads.QrShadowSocksMethod",
+      "namespace": "CodeGlyphX.Payloads",
+      "kind": "Enum",
+      "slug": "codeglyphx-payloads-qrshadowsocksmethod",
+      "summary": "Shadowsocks cipher methods."
+    },
+    {
+      "name": "QrSmsEncoding",
+      "fullName": "CodeGlyphX.Payloads.QrSmsEncoding",
+      "namespace": "CodeGlyphX.Payloads",
+      "kind": "Enum",
+      "slug": "codeglyphx-payloads-qrsmsencoding",
+      "summary": "SMS payload formats."
+    },
+    {
+      "name": "QrSwissCurrency",
+      "fullName": "CodeGlyphX.Payloads.QrSwissCurrency",
+      "namespace": "CodeGlyphX.Payloads",
+      "kind": "Enum",
+      "slug": "codeglyphx-payloads-qrswisscurrency",
+      "summary": "Swiss QR currency codes."
+    },
+    {
+      "name": "Reference",
+      "fullName": "CodeGlyphX.Payloads.SwissQrCodePayload.Reference",
+      "namespace": "CodeGlyphX.Payloads",
+      "kind": "Class",
+      "slug": "codeglyphx-payloads-swissqrcodepayload-reference",
+      "summary": "Reference section."
+    },
+    {
+      "name": "ReferenceTextType",
+      "fullName": "CodeGlyphX.Payloads.SwissQrCodePayload.Reference.ReferenceTextType",
+      "namespace": "CodeGlyphX.Payloads",
+      "kind": "Enum",
+      "slug": "codeglyphx-payloads-swissqrcodepayload-reference-referencetexttype",
+      "summary": "Reference text type."
+    },
+    {
+      "name": "ReferenceType",
+      "fullName": "CodeGlyphX.Payloads.SwissQrCodePayload.Reference.ReferenceType",
+      "namespace": "CodeGlyphX.Payloads",
+      "kind": "Enum",
+      "slug": "codeglyphx-payloads-swissqrcodepayload-reference-referencetype",
+      "summary": "Reference type."
+    },
+    {
+      "name": "RussiaPaymentOrderPayload",
+      "fullName": "CodeGlyphX.Payloads.RussiaPaymentOrderPayload",
+      "namespace": "CodeGlyphX.Payloads",
+      "kind": "Class",
+      "slug": "codeglyphx-payloads-russiapaymentorderpayload",
+      "summary": "Russia payment order payload (ST00012, UTF-8)."
+    },
+    {
+      "name": "SlovenianUpnQrPayload",
+      "fullName": "CodeGlyphX.Payloads.SlovenianUpnQrPayload",
+      "namespace": "CodeGlyphX.Payloads",
+      "kind": "Class",
+      "slug": "codeglyphx-payloads-slovenianupnqrpayload",
+      "summary": "Slovenian UPN QR payment payload."
+    },
+    {
+      "name": "Sms",
+      "fullName": "CodeGlyphX.Payloads.QrParsedData.Sms",
+      "namespace": "CodeGlyphX.Payloads",
+      "kind": "Class",
+      "slug": "codeglyphx-payloads-qrparseddata-sms",
+      "summary": "SMS payload."
+    },
+    {
+      "name": "Social",
+      "fullName": "CodeGlyphX.Payloads.QrParsedData.Social",
+      "namespace": "CodeGlyphX.Payloads",
+      "kind": "Class",
+      "slug": "codeglyphx-payloads-qrparseddata-social",
+      "summary": "Social profile payload."
+    },
+    {
+      "name": "SwissQrCodePayload",
+      "fullName": "CodeGlyphX.Payloads.SwissQrCodePayload",
+      "namespace": "CodeGlyphX.Payloads",
+      "kind": "Class",
+      "slug": "codeglyphx-payloads-swissqrcodepayload",
+      "summary": "Swiss QR bill payload."
+    },
+    {
+      "name": "Upi",
+      "fullName": "CodeGlyphX.Payloads.QrParsedData.Upi",
+      "namespace": "CodeGlyphX.Payloads",
+      "kind": "Class",
+      "slug": "codeglyphx-payloads-qrparseddata-upi",
+      "summary": "UPI payment payload."
+    },
+    {
+      "name": "VCard",
+      "fullName": "CodeGlyphX.Payloads.QrParsedData.VCard",
+      "namespace": "CodeGlyphX.Payloads",
+      "kind": "Class",
+      "slug": "codeglyphx-payloads-qrparseddata-vcard",
+      "summary": "vCard payload."
+    },
+    {
+      "name": "Wifi",
+      "fullName": "CodeGlyphX.Payloads.QrParsedData.Wifi",
+      "namespace": "CodeGlyphX.Payloads",
+      "kind": "Class",
+      "slug": "codeglyphx-payloads-qrparseddata-wifi",
+      "summary": "WiFi payload."
+    },
+    {
+      "name": "MicroPdf417Decoder",
+      "fullName": "CodeGlyphX.Pdf417.MicroPdf417Decoder",
+      "namespace": "CodeGlyphX.Pdf417",
+      "kind": "Class",
+      "slug": "codeglyphx-pdf417-micropdf417decoder",
+      "summary": "Decodes MicroPDF417 symbols from a CodeGlyphX.BitMatrix."
+    },
+    {
+      "name": "MicroPdf417EncodeOptions",
+      "fullName": "CodeGlyphX.Pdf417.MicroPdf417EncodeOptions",
+      "namespace": "CodeGlyphX.Pdf417",
+      "kind": "Class",
+      "slug": "codeglyphx-pdf417-micropdf417encodeoptions",
+      "summary": "Options for MicroPDF417 encoding."
+    },
+    {
+      "name": "MicroPdf417Encoder",
+      "fullName": "CodeGlyphX.Pdf417.MicroPdf417Encoder",
+      "namespace": "CodeGlyphX.Pdf417",
+      "kind": "Class",
+      "slug": "codeglyphx-pdf417-micropdf417encoder",
+      "summary": "Encodes MicroPDF417 symbols into a CodeGlyphX.BitMatrix."
+    },
+    {
+      "name": "Pdf417Compaction",
+      "fullName": "CodeGlyphX.Pdf417.Pdf417Compaction",
+      "namespace": "CodeGlyphX.Pdf417",
+      "kind": "Enum",
+      "slug": "codeglyphx-pdf417-pdf417compaction",
+      "summary": "High-level compaction mode selection for PDF417."
+    },
+    {
+      "name": "Pdf417Decoded",
+      "fullName": "CodeGlyphX.Pdf417.Pdf417Decoded",
+      "namespace": "CodeGlyphX.Pdf417",
+      "kind": "Class",
+      "slug": "codeglyphx-pdf417-pdf417decoded",
+      "summary": "Result of decoding a PDF417 symbol."
+    },
+    {
+      "name": "Pdf417Decoder",
+      "fullName": "CodeGlyphX.Pdf417.Pdf417Decoder",
+      "namespace": "CodeGlyphX.Pdf417",
+      "kind": "Class",
+      "slug": "codeglyphx-pdf417-pdf417decoder",
+      "summary": "Decodes PDF417 barcodes."
+    },
+    {
+      "name": "Pdf417EncodeOptions",
+      "fullName": "CodeGlyphX.Pdf417.Pdf417EncodeOptions",
+      "namespace": "CodeGlyphX.Pdf417",
+      "kind": "Class",
+      "slug": "codeglyphx-pdf417-pdf417encodeoptions",
+      "summary": "Options for PDF417 encoding."
+    },
+    {
+      "name": "Pdf417Encoder",
+      "fullName": "CodeGlyphX.Pdf417.Pdf417Encoder",
+      "namespace": "CodeGlyphX.Pdf417",
+      "kind": "Class",
+      "slug": "codeglyphx-pdf417-pdf417encoder",
+      "summary": "Encodes PDF417 barcodes."
+    },
+    {
+      "name": "Pdf417MacroAssembler",
+      "fullName": "CodeGlyphX.Pdf417.Pdf417MacroAssembler",
+      "namespace": "CodeGlyphX.Pdf417",
+      "kind": "Class",
+      "slug": "codeglyphx-pdf417-pdf417macroassembler",
+      "summary": "Collects Macro PDF417 segments and assembles the original payload when complete."
+    },
+    {
+      "name": "Pdf417MacroMetadata",
+      "fullName": "CodeGlyphX.Pdf417.Pdf417MacroMetadata",
+      "namespace": "CodeGlyphX.Pdf417",
+      "kind": "Class",
+      "slug": "codeglyphx-pdf417-pdf417macrometadata",
+      "summary": "Macro PDF417 metadata payload."
+    },
+    {
+      "name": "Pdf417MacroOptions",
+      "fullName": "CodeGlyphX.Pdf417.Pdf417MacroOptions",
+      "namespace": "CodeGlyphX.Pdf417",
+      "kind": "Class",
+      "slug": "codeglyphx-pdf417-pdf417macrooptions",
+      "summary": "Options for Macro PDF417 encoding."
+    },
+    {
+      "name": "PharmacodeEncoder",
+      "fullName": "CodeGlyphX.Pharmacode.PharmacodeEncoder",
+      "namespace": "CodeGlyphX.Pharmacode",
+      "kind": "Class",
+      "slug": "codeglyphx-pharmacode-pharmacodeencoder",
+      "summary": "Encodes Pharmacode (one-track) barcodes."
+    },
+    {
+      "name": "PharmacodeTwoTrackDecoder",
+      "fullName": "CodeGlyphX.Pharmacode.PharmacodeTwoTrackDecoder",
+      "namespace": "CodeGlyphX.Pharmacode",
+      "kind": "Class",
+      "slug": "codeglyphx-pharmacode-pharmacodetwotrackdecoder",
+      "summary": "Decodes Pharmacode (two-track) barcodes."
+    },
+    {
+      "name": "PharmacodeTwoTrackEncoder",
+      "fullName": "CodeGlyphX.Pharmacode.PharmacodeTwoTrackEncoder",
+      "namespace": "CodeGlyphX.Pharmacode",
+      "kind": "Class",
+      "slug": "codeglyphx-pharmacode-pharmacodetwotrackencoder",
+      "summary": "Encodes Pharmacode (two-track) barcodes."
+    },
+    {
+      "name": "PlesseyEncoder",
+      "fullName": "CodeGlyphX.Plessey.PlesseyEncoder",
+      "namespace": "CodeGlyphX.Plessey",
+      "kind": "Class",
+      "slug": "codeglyphx-plessey-plesseyencoder",
+      "summary": "Encodes Plessey barcodes."
+    },
+    {
+      "name": "PlanetDecoder",
+      "fullName": "CodeGlyphX.Postal.PlanetDecoder",
+      "namespace": "CodeGlyphX.Postal",
+      "kind": "Class",
+      "slug": "codeglyphx-postal-planetdecoder",
+      "summary": "Decodes PLANET barcodes."
+    },
+    {
+      "name": "PlanetEncoder",
+      "fullName": "CodeGlyphX.Postal.PlanetEncoder",
+      "namespace": "CodeGlyphX.Postal",
+      "kind": "Class",
+      "slug": "codeglyphx-postal-planetencoder",
+      "summary": "Encodes PLANET barcodes."
+    },
+    {
+      "name": "PostnetDecoder",
+      "fullName": "CodeGlyphX.Postal.PostnetDecoder",
+      "namespace": "CodeGlyphX.Postal",
+      "kind": "Class",
+      "slug": "codeglyphx-postal-postnetdecoder",
+      "summary": "Decodes POSTNET barcodes."
+    },
+    {
+      "name": "PostnetEncoder",
+      "fullName": "CodeGlyphX.Postal.PostnetEncoder",
+      "namespace": "CodeGlyphX.Postal",
+      "kind": "Class",
+      "slug": "codeglyphx-postal-postnetencoder",
+      "summary": "Encodes POSTNET barcodes."
+    },
+    {
+      "name": "UspsImbDecoder",
+      "fullName": "CodeGlyphX.Postal.UspsImbDecoder",
+      "namespace": "CodeGlyphX.Postal",
+      "kind": "Class",
+      "slug": "codeglyphx-postal-uspsimbdecoder",
+      "summary": "Decodes USPS Intelligent Mail Barcodes (IMB)."
+    },
+    {
+      "name": "UspsImbEncoder",
+      "fullName": "CodeGlyphX.Postal.UspsImbEncoder",
+      "namespace": "CodeGlyphX.Postal",
+      "kind": "Class",
+      "slug": "codeglyphx-postal-uspsimbencoder",
+      "summary": "Encodes USPS Intelligent Mail Barcodes (IMB)."
+    },
+    {
+      "name": "ColorUtils",
+      "fullName": "CodeGlyphX.Rendering.ColorUtils",
+      "namespace": "CodeGlyphX.Rendering",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-colorutils",
+      "summary": "Helpers for converting colors to CSS-friendly strings."
+    },
+    {
+      "name": "ImageFormat",
+      "fullName": "CodeGlyphX.Rendering.ImageFormat",
+      "namespace": "CodeGlyphX.Rendering",
+      "kind": "Enum",
+      "slug": "codeglyphx-rendering-imageformat",
+      "summary": "Known image formats supported by CodeGlyphX.Rendering.ImageReader."
+    },
+    {
+      "name": "ImageInfo",
+      "fullName": "CodeGlyphX.Rendering.ImageInfo",
+      "namespace": "CodeGlyphX.Rendering",
+      "kind": "Struct",
+      "slug": "codeglyphx-rendering-imageinfo",
+      "summary": "Basic image metadata returned by ImageReader.TryReadInfo."
+    },
+    {
+      "name": "ImageReader",
+      "fullName": "CodeGlyphX.Rendering.ImageReader",
+      "namespace": "CodeGlyphX.Rendering",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-imagereader",
+      "summary": "Auto-detects common image formats and decodes to RGBA buffers."
+    },
+    {
+      "name": "LogoBuilder",
+      "fullName": "CodeGlyphX.Rendering.LogoBuilder",
+      "namespace": "CodeGlyphX.Rendering",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-logobuilder",
+      "summary": "Helpers for building simple logo pixels."
+    },
+    {
+      "name": "QrLogoOptions",
+      "fullName": "CodeGlyphX.Rendering.QrLogoOptions",
+      "namespace": "CodeGlyphX.Rendering",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-qrlogooptions",
+      "summary": "Options for embedding a PNG logo inside a QR render (SVG/HTML)."
+    },
+    {
+      "name": "RenderDefaults",
+      "fullName": "CodeGlyphX.Rendering.RenderDefaults",
+      "namespace": "CodeGlyphX.Rendering",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-renderdefaults",
+      "summary": "Shared rendering defaults across formats."
+    },
+    {
+      "name": "RenderExtensions",
+      "fullName": "CodeGlyphX.Rendering.RenderExtensions",
+      "namespace": "CodeGlyphX.Rendering",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-renderextensions",
+      "summary": "Convenience extension methods for rendered outputs."
+    },
+    {
+      "name": "RenderIO",
+      "fullName": "CodeGlyphX.Rendering.RenderIO",
+      "namespace": "CodeGlyphX.Rendering",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-renderio",
+      "summary": "Simple file and stream helpers for rendered assets."
+    },
+    {
+      "name": "RenderMode",
+      "fullName": "CodeGlyphX.Rendering.RenderMode",
+      "namespace": "CodeGlyphX.Rendering",
+      "kind": "Enum",
+      "slug": "codeglyphx-rendering-rendermode",
+      "summary": "Output mode for vector-capable formats."
+    },
+    {
+      "name": "BarcodeAsciiRenderer",
+      "fullName": "CodeGlyphX.Rendering.Ascii.BarcodeAsciiRenderer",
+      "namespace": "CodeGlyphX.Rendering.Ascii",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-ascii-barcodeasciirenderer",
+      "summary": "Renders 1D barcodes as ASCII text."
+    },
+    {
+      "name": "BarcodeAsciiRenderOptions",
+      "fullName": "CodeGlyphX.Rendering.Ascii.BarcodeAsciiRenderOptions",
+      "namespace": "CodeGlyphX.Rendering.Ascii",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-ascii-barcodeasciirenderoptions",
+      "summary": "Rendering options for ASCII 1D barcodes."
+    },
+    {
+      "name": "MatrixAsciiRenderer",
+      "fullName": "CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderer",
+      "namespace": "CodeGlyphX.Rendering.Ascii",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-ascii-matrixasciirenderer",
+      "summary": "Renders 2D matrices as ASCII text."
+    },
+    {
+      "name": "MatrixAsciiRenderOptions",
+      "fullName": "CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions",
+      "namespace": "CodeGlyphX.Rendering.Ascii",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-ascii-matrixasciirenderoptions",
+      "summary": "Rendering options for ASCII matrix output."
+    },
+    {
+      "name": "BarcodeBmpRenderer",
+      "fullName": "CodeGlyphX.Rendering.Bmp.BarcodeBmpRenderer",
+      "namespace": "CodeGlyphX.Rendering.Bmp",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-bmp-barcodebmprenderer",
+      "summary": "Renders 1D barcodes to BMP images (BGRA32)."
+    },
+    {
+      "name": "BmpReader",
+      "fullName": "CodeGlyphX.Rendering.Bmp.BmpReader",
+      "namespace": "CodeGlyphX.Rendering.Bmp",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-bmp-bmpreader",
+      "summary": "Decodes BMP images to RGBA buffers (uncompressed 24/32/8-bit)."
+    },
+    {
+      "name": "BmpWriter",
+      "fullName": "CodeGlyphX.Rendering.Bmp.BmpWriter",
+      "namespace": "CodeGlyphX.Rendering.Bmp",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-bmp-bmpwriter",
+      "summary": "Writes BMP images from RGBA buffers."
+    },
+    {
+      "name": "MatrixBmpRenderer",
+      "fullName": "CodeGlyphX.Rendering.Bmp.MatrixBmpRenderer",
+      "namespace": "CodeGlyphX.Rendering.Bmp",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-bmp-matrixbmprenderer",
+      "summary": "Renders generic 2D matrices to BMP images (BGRA32)."
+    },
+    {
+      "name": "QrBmpRenderer",
+      "fullName": "CodeGlyphX.Rendering.Bmp.QrBmpRenderer",
+      "namespace": "CodeGlyphX.Rendering.Bmp",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-bmp-qrbmprenderer",
+      "summary": "Renders QR modules to a BMP image (BGRA32)."
+    },
+    {
+      "name": "BarcodeEpsRenderer",
+      "fullName": "CodeGlyphX.Rendering.Eps.BarcodeEpsRenderer",
+      "namespace": "CodeGlyphX.Rendering.Eps",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-eps-barcodeepsrenderer",
+      "summary": "Renders 1D barcodes to an EPS image."
+    },
+    {
+      "name": "EpsWriter",
+      "fullName": "CodeGlyphX.Rendering.Eps.EpsWriter",
+      "namespace": "CodeGlyphX.Rendering.Eps",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-eps-epswriter",
+      "summary": "Minimal EPS writer for embedding RGB images."
+    },
+    {
+      "name": "MatrixEpsRenderer",
+      "fullName": "CodeGlyphX.Rendering.Eps.MatrixEpsRenderer",
+      "namespace": "CodeGlyphX.Rendering.Eps",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-eps-matrixepsrenderer",
+      "summary": "Renders generic 2D matrices to an EPS image."
+    },
+    {
+      "name": "QrEpsRenderer",
+      "fullName": "CodeGlyphX.Rendering.Eps.QrEpsRenderer",
+      "namespace": "CodeGlyphX.Rendering.Eps",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-eps-qrepsrenderer",
+      "summary": "Renders QR modules to an EPS image."
+    },
+    {
+      "name": "GifReader",
+      "fullName": "CodeGlyphX.Rendering.Gif.GifReader",
+      "namespace": "CodeGlyphX.Rendering.Gif",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-gif-gifreader",
+      "summary": "Decodes GIF images to RGBA buffers (first frame only)."
+    },
+    {
+      "name": "BarcodeHtmlRenderOptions",
+      "fullName": "CodeGlyphX.Rendering.Html.BarcodeHtmlRenderOptions",
+      "namespace": "CodeGlyphX.Rendering.Html",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-html-barcodehtmlrenderoptions",
+      "summary": "Options for CodeGlyphX.Rendering.Html.HtmlBarcodeRenderer."
+    },
+    {
+      "name": "HtmlBarcodeRenderer",
+      "fullName": "CodeGlyphX.Rendering.Html.HtmlBarcodeRenderer",
+      "namespace": "CodeGlyphX.Rendering.Html",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-html-htmlbarcoderenderer",
+      "summary": "Renders 1D barcodes to HTML (table-based)."
+    },
+    {
+      "name": "HtmlQrRenderer",
+      "fullName": "CodeGlyphX.Rendering.Html.HtmlQrRenderer",
+      "namespace": "CodeGlyphX.Rendering.Html",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-html-htmlqrrenderer",
+      "summary": "Renders QR modules to HTML (table-based)."
+    },
+    {
+      "name": "MatrixHtmlRenderer",
+      "fullName": "CodeGlyphX.Rendering.Html.MatrixHtmlRenderer",
+      "namespace": "CodeGlyphX.Rendering.Html",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-html-matrixhtmlrenderer",
+      "summary": "Renders generic 2D matrices to HTML (table-based)."
+    },
+    {
+      "name": "MatrixHtmlRenderOptions",
+      "fullName": "CodeGlyphX.Rendering.Html.MatrixHtmlRenderOptions",
+      "namespace": "CodeGlyphX.Rendering.Html",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-html-matrixhtmlrenderoptions",
+      "summary": "Options for rendering generic 2D matrices to HTML."
+    },
+    {
+      "name": "QrHtmlRenderOptions",
+      "fullName": "CodeGlyphX.Rendering.Html.QrHtmlRenderOptions",
+      "namespace": "CodeGlyphX.Rendering.Html",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-html-qrhtmlrenderoptions",
+      "summary": "Options for CodeGlyphX.Rendering.Html.HtmlQrRenderer."
+    },
+    {
+      "name": "BarcodeIcoRenderer",
+      "fullName": "CodeGlyphX.Rendering.Ico.BarcodeIcoRenderer",
+      "namespace": "CodeGlyphX.Rendering.Ico",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-ico-barcodeicorenderer",
+      "summary": "Renders 1D barcodes to ICO (PNG-embedded)."
+    },
+    {
+      "name": "IcoReader",
+      "fullName": "CodeGlyphX.Rendering.Ico.IcoReader",
+      "namespace": "CodeGlyphX.Rendering.Ico",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-ico-icoreader",
+      "summary": "Decodes ICO/CUR images to RGBA buffers (embedded PNG or BMP/DIB)."
+    },
+    {
+      "name": "IcoRenderOptions",
+      "fullName": "CodeGlyphX.Rendering.Ico.IcoRenderOptions",
+      "namespace": "CodeGlyphX.Rendering.Ico",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-ico-icorenderoptions",
+      "summary": "Options for ICO rendering (multi-size)."
+    },
+    {
+      "name": "IcoWriter",
+      "fullName": "CodeGlyphX.Rendering.Ico.IcoWriter",
+      "namespace": "CodeGlyphX.Rendering.Ico",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-ico-icowriter",
+      "summary": "Writes ICO files embedding PNG images."
+    },
+    {
+      "name": "MatrixIcoRenderer",
+      "fullName": "CodeGlyphX.Rendering.Ico.MatrixIcoRenderer",
+      "namespace": "CodeGlyphX.Rendering.Ico",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-ico-matrixicorenderer",
+      "summary": "Renders generic 2D matrices to ICO (PNG-embedded)."
+    },
+    {
+      "name": "QrIcoRenderer",
+      "fullName": "CodeGlyphX.Rendering.Ico.QrIcoRenderer",
+      "namespace": "CodeGlyphX.Rendering.Ico",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-ico-qricorenderer",
+      "summary": "Renders QR modules to ICO (PNG-embedded)."
+    },
+    {
+      "name": "BarcodeJpegRenderer",
+      "fullName": "CodeGlyphX.Rendering.Jpeg.BarcodeJpegRenderer",
+      "namespace": "CodeGlyphX.Rendering.Jpeg",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-jpeg-barcodejpegrenderer",
+      "summary": "Renders 1D barcodes to a JPEG image (baseline, 4:4:4)."
+    },
+    {
+      "name": "JpegReader",
+      "fullName": "CodeGlyphX.Rendering.Jpeg.JpegReader",
+      "namespace": "CodeGlyphX.Rendering.Jpeg",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-jpeg-jpegreader",
+      "summary": "Decodes baseline and progressive JPEG images to RGBA buffers (SOF0/SOF2, 8-bit, Huffman)."
+    },
+    {
+      "name": "MatrixJpegRenderer",
+      "fullName": "CodeGlyphX.Rendering.Jpeg.MatrixJpegRenderer",
+      "namespace": "CodeGlyphX.Rendering.Jpeg",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-jpeg-matrixjpegrenderer",
+      "summary": "Renders generic 2D matrices to a JPEG image (baseline, 4:4:4)."
+    },
+    {
+      "name": "QrJpegRenderer",
+      "fullName": "CodeGlyphX.Rendering.Jpeg.QrJpegRenderer",
+      "namespace": "CodeGlyphX.Rendering.Jpeg",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-jpeg-qrjpegrenderer",
+      "summary": "Renders QR modules to a JPEG image (baseline, 4:4:4)."
+    },
+    {
+      "name": "BarcodePamRenderer",
+      "fullName": "CodeGlyphX.Rendering.Pam.BarcodePamRenderer",
+      "namespace": "CodeGlyphX.Rendering.Pam",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-pam-barcodepamrenderer",
+      "summary": "Renders barcodes to PAM (P7)."
+    },
+    {
+      "name": "MatrixPamRenderer",
+      "fullName": "CodeGlyphX.Rendering.Pam.MatrixPamRenderer",
+      "namespace": "CodeGlyphX.Rendering.Pam",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-pam-matrixpamrenderer",
+      "summary": "Renders matrix modules to PAM (P7)."
+    },
+    {
+      "name": "PamReader",
+      "fullName": "CodeGlyphX.Rendering.Pam.PamReader",
+      "namespace": "CodeGlyphX.Rendering.Pam",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-pam-pamreader",
+      "summary": "Decodes PAM (P7) images to RGBA buffers."
+    },
+    {
+      "name": "PamWriter",
+      "fullName": "CodeGlyphX.Rendering.Pam.PamWriter",
+      "namespace": "CodeGlyphX.Rendering.Pam",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-pam-pamwriter",
+      "summary": "Writes PAM (P7) images from RGBA buffers."
+    },
+    {
+      "name": "QrPamRenderer",
+      "fullName": "CodeGlyphX.Rendering.Pam.QrPamRenderer",
+      "namespace": "CodeGlyphX.Rendering.Pam",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-pam-qrpamrenderer",
+      "summary": "Renders QR modules to PAM (P7)."
+    },
+    {
+      "name": "BarcodePbmRenderer",
+      "fullName": "CodeGlyphX.Rendering.Pbm.BarcodePbmRenderer",
+      "namespace": "CodeGlyphX.Rendering.Pbm",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-pbm-barcodepbmrenderer",
+      "summary": "Renders 1D barcodes to PBM (P4)."
+    },
+    {
+      "name": "MatrixPbmRenderer",
+      "fullName": "CodeGlyphX.Rendering.Pbm.MatrixPbmRenderer",
+      "namespace": "CodeGlyphX.Rendering.Pbm",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-pbm-matrixpbmrenderer",
+      "summary": "Renders generic 2D matrices to PBM (P4)."
+    },
+    {
+      "name": "PbmReader",
+      "fullName": "CodeGlyphX.Rendering.Pbm.PbmReader",
+      "namespace": "CodeGlyphX.Rendering.Pbm",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-pbm-pbmreader",
+      "summary": "Decodes PBM (P4/P1) images to RGBA buffers."
+    },
+    {
+      "name": "PbmWriter",
+      "fullName": "CodeGlyphX.Rendering.Pbm.PbmWriter",
+      "namespace": "CodeGlyphX.Rendering.Pbm",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-pbm-pbmwriter",
+      "summary": "Writes PBM (P4) images from RGBA buffers."
+    },
+    {
+      "name": "QrPbmRenderer",
+      "fullName": "CodeGlyphX.Rendering.Pbm.QrPbmRenderer",
+      "namespace": "CodeGlyphX.Rendering.Pbm",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-pbm-qrpbmrenderer",
+      "summary": "Renders QR modules to PBM (P4)."
+    },
+    {
+      "name": "BarcodePdfRenderer",
+      "fullName": "CodeGlyphX.Rendering.Pdf.BarcodePdfRenderer",
+      "namespace": "CodeGlyphX.Rendering.Pdf",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-pdf-barcodepdfrenderer",
+      "summary": "Renders 1D barcodes to a PDF image."
+    },
+    {
+      "name": "MatrixPdfRenderer",
+      "fullName": "CodeGlyphX.Rendering.Pdf.MatrixPdfRenderer",
+      "namespace": "CodeGlyphX.Rendering.Pdf",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-pdf-matrixpdfrenderer",
+      "summary": "Renders generic 2D matrices to a PDF image."
+    },
+    {
+      "name": "PdfWriter",
+      "fullName": "CodeGlyphX.Rendering.Pdf.PdfWriter",
+      "namespace": "CodeGlyphX.Rendering.Pdf",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-pdf-pdfwriter",
+      "summary": "Minimal PDF writer for embedding RGB images."
+    },
+    {
+      "name": "QrPdfRenderer",
+      "fullName": "CodeGlyphX.Rendering.Pdf.QrPdfRenderer",
+      "namespace": "CodeGlyphX.Rendering.Pdf",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-pdf-qrpdfrenderer",
+      "summary": "Renders QR modules to a PDF image."
+    },
+    {
+      "name": "BarcodePgmRenderer",
+      "fullName": "CodeGlyphX.Rendering.Pgm.BarcodePgmRenderer",
+      "namespace": "CodeGlyphX.Rendering.Pgm",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-pgm-barcodepgmrenderer",
+      "summary": "Renders barcodes to PGM (P5)."
+    },
+    {
+      "name": "MatrixPgmRenderer",
+      "fullName": "CodeGlyphX.Rendering.Pgm.MatrixPgmRenderer",
+      "namespace": "CodeGlyphX.Rendering.Pgm",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-pgm-matrixpgmrenderer",
+      "summary": "Renders matrix modules to PGM (P5)."
+    },
+    {
+      "name": "PgmReader",
+      "fullName": "CodeGlyphX.Rendering.Pgm.PgmReader",
+      "namespace": "CodeGlyphX.Rendering.Pgm",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-pgm-pgmreader",
+      "summary": "Decodes PGM (P5/P2) images to RGBA buffers."
+    },
+    {
+      "name": "PgmWriter",
+      "fullName": "CodeGlyphX.Rendering.Pgm.PgmWriter",
+      "namespace": "CodeGlyphX.Rendering.Pgm",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-pgm-pgmwriter",
+      "summary": "Writes PGM (P5) images from RGBA buffers."
+    },
+    {
+      "name": "QrPgmRenderer",
+      "fullName": "CodeGlyphX.Rendering.Pgm.QrPgmRenderer",
+      "namespace": "CodeGlyphX.Rendering.Pgm",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-pgm-qrpgmrenderer",
+      "summary": "Renders QR modules to PGM (P5)."
+    },
+    {
+      "name": "BarcodePngRenderer",
+      "fullName": "CodeGlyphX.Rendering.Png.BarcodePngRenderer",
+      "namespace": "CodeGlyphX.Rendering.Png",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-png-barcodepngrenderer",
+      "summary": "Renders 1D barcodes to a PNG image (RGBA8)."
+    },
+    {
+      "name": "BarcodePngRenderOptions",
+      "fullName": "CodeGlyphX.Rendering.Png.BarcodePngRenderOptions",
+      "namespace": "CodeGlyphX.Rendering.Png",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-png-barcodepngrenderoptions",
+      "summary": "Options for CodeGlyphX.Rendering.Png.BarcodePngRenderer."
+    },
+    {
+      "name": "MatrixPngRenderer",
+      "fullName": "CodeGlyphX.Rendering.Png.MatrixPngRenderer",
+      "namespace": "CodeGlyphX.Rendering.Png",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-png-matrixpngrenderer",
+      "summary": "Renders generic 2D matrices to PNG images (RGBA8)."
+    },
+    {
+      "name": "MatrixPngRenderOptions",
+      "fullName": "CodeGlyphX.Rendering.Png.MatrixPngRenderOptions",
+      "namespace": "CodeGlyphX.Rendering.Png",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-png-matrixpngrenderoptions",
+      "summary": "Options for rendering generic 2D matrices to PNG."
+    },
+    {
+      "name": "PngReader",
+      "fullName": "CodeGlyphX.Rendering.Png.PngReader",
+      "namespace": "CodeGlyphX.Rendering.Png",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-png-pngreader",
+      "summary": "Decodes PNG images to RGBA buffers."
+    },
+    {
+      "name": "QrPngEyeOptions",
+      "fullName": "CodeGlyphX.Rendering.Png.QrPngEyeOptions",
+      "namespace": "CodeGlyphX.Rendering.Png",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-png-qrpngeyeoptions",
+      "summary": "Styling overrides for QR finder (eye) patterns."
+    },
+    {
+      "name": "QrPngGradientOptions",
+      "fullName": "CodeGlyphX.Rendering.Png.QrPngGradientOptions",
+      "namespace": "CodeGlyphX.Rendering.Png",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-png-qrpnggradientoptions",
+      "summary": "Options for a foreground gradient fill."
+    },
+    {
+      "name": "QrPngGradientType",
+      "fullName": "CodeGlyphX.Rendering.Png.QrPngGradientType",
+      "namespace": "CodeGlyphX.Rendering.Png",
+      "kind": "Enum",
+      "slug": "codeglyphx-rendering-png-qrpnggradienttype",
+      "summary": "Gradient types for QR PNG rendering."
+    },
+    {
+      "name": "QrPngLogoOptions",
+      "fullName": "CodeGlyphX.Rendering.Png.QrPngLogoOptions",
+      "namespace": "CodeGlyphX.Rendering.Png",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-png-qrpnglogooptions",
+      "summary": "Options and pixel data for a centered logo overlay in a QR PNG."
+    },
+    {
+      "name": "QrPngModuleShape",
+      "fullName": "CodeGlyphX.Rendering.Png.QrPngModuleShape",
+      "namespace": "CodeGlyphX.Rendering.Png",
+      "kind": "Enum",
+      "slug": "codeglyphx-rendering-png-qrpngmoduleshape",
+      "summary": "Module shape used by CodeGlyphX.Rendering.Png.QrPngRenderer."
+    },
+    {
+      "name": "QrPngRenderer",
+      "fullName": "CodeGlyphX.Rendering.Png.QrPngRenderer",
+      "namespace": "CodeGlyphX.Rendering.Png",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-png-qrpngrenderer",
+      "summary": "Renders QR modules to a PNG image (RGBA8)."
+    },
+    {
+      "name": "QrPngRenderOptions",
+      "fullName": "CodeGlyphX.Rendering.Png.QrPngRenderOptions",
+      "namespace": "CodeGlyphX.Rendering.Png",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-png-qrpngrenderoptions",
+      "summary": "Options for CodeGlyphX.Rendering.Png.QrPngRenderer."
+    },
+    {
+      "name": "Rgba32",
+      "fullName": "CodeGlyphX.Rendering.Png.Rgba32",
+      "namespace": "CodeGlyphX.Rendering.Png",
+      "kind": "Struct",
+      "slug": "codeglyphx-rendering-png-rgba32",
+      "summary": "A simple RGBA color value."
+    },
+    {
+      "name": "BarcodePpmRenderer",
+      "fullName": "CodeGlyphX.Rendering.Ppm.BarcodePpmRenderer",
+      "namespace": "CodeGlyphX.Rendering.Ppm",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-ppm-barcodeppmrenderer",
+      "summary": "Renders 1D barcodes to PPM (P6)."
+    },
+    {
+      "name": "MatrixPpmRenderer",
+      "fullName": "CodeGlyphX.Rendering.Ppm.MatrixPpmRenderer",
+      "namespace": "CodeGlyphX.Rendering.Ppm",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-ppm-matrixppmrenderer",
+      "summary": "Renders generic 2D matrices to PPM (P6)."
+    },
+    {
+      "name": "PpmReader",
+      "fullName": "CodeGlyphX.Rendering.Ppm.PpmReader",
+      "namespace": "CodeGlyphX.Rendering.Ppm",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-ppm-ppmreader",
+      "summary": "Decodes PPM/PGM (P6/P5) images to RGBA buffers."
+    },
+    {
+      "name": "PpmWriter",
+      "fullName": "CodeGlyphX.Rendering.Ppm.PpmWriter",
+      "namespace": "CodeGlyphX.Rendering.Ppm",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-ppm-ppmwriter",
+      "summary": "Writes PPM (P6) images from RGBA buffers."
+    },
+    {
+      "name": "QrPpmRenderer",
+      "fullName": "CodeGlyphX.Rendering.Ppm.QrPpmRenderer",
+      "namespace": "CodeGlyphX.Rendering.Ppm",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-ppm-qrppmrenderer",
+      "summary": "Renders QR modules to PPM (P6)."
+    },
+    {
+      "name": "BarcodeSvgRenderOptions",
+      "fullName": "CodeGlyphX.Rendering.Svg.BarcodeSvgRenderOptions",
+      "namespace": "CodeGlyphX.Rendering.Svg",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-svg-barcodesvgrenderoptions",
+      "summary": "Options for CodeGlyphX.Rendering.Svg.SvgBarcodeRenderer."
+    },
+    {
+      "name": "MatrixSvgRenderer",
+      "fullName": "CodeGlyphX.Rendering.Svg.MatrixSvgRenderer",
+      "namespace": "CodeGlyphX.Rendering.Svg",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-svg-matrixsvgrenderer",
+      "summary": "Renders generic 2D matrices to SVG."
+    },
+    {
+      "name": "MatrixSvgRenderOptions",
+      "fullName": "CodeGlyphX.Rendering.Svg.MatrixSvgRenderOptions",
+      "namespace": "CodeGlyphX.Rendering.Svg",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-svg-matrixsvgrenderoptions",
+      "summary": "Options for rendering generic 2D matrices to SVG."
+    },
+    {
+      "name": "QrSvgRenderOptions",
+      "fullName": "CodeGlyphX.Rendering.Svg.QrSvgRenderOptions",
+      "namespace": "CodeGlyphX.Rendering.Svg",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-svg-qrsvgrenderoptions",
+      "summary": "Options for CodeGlyphX.Rendering.Svg.SvgQrRenderer."
+    },
+    {
+      "name": "SvgBarcodeRenderer",
+      "fullName": "CodeGlyphX.Rendering.Svg.SvgBarcodeRenderer",
+      "namespace": "CodeGlyphX.Rendering.Svg",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-svg-svgbarcoderenderer",
+      "summary": "Renders 1D barcodes to SVG."
+    },
+    {
+      "name": "SvgQrRenderer",
+      "fullName": "CodeGlyphX.Rendering.Svg.SvgQrRenderer",
+      "namespace": "CodeGlyphX.Rendering.Svg",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-svg-svgqrrenderer",
+      "summary": "Renders QR modules to SVG."
+    },
+    {
+      "name": "BarcodeSvgzRenderer",
+      "fullName": "CodeGlyphX.Rendering.Svgz.BarcodeSvgzRenderer",
+      "namespace": "CodeGlyphX.Rendering.Svgz",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-svgz-barcodesvgzrenderer",
+      "summary": "Renders barcodes to SVGZ."
+    },
+    {
+      "name": "MatrixSvgzRenderer",
+      "fullName": "CodeGlyphX.Rendering.Svgz.MatrixSvgzRenderer",
+      "namespace": "CodeGlyphX.Rendering.Svgz",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-svgz-matrixsvgzrenderer",
+      "summary": "Renders matrix modules to SVGZ."
+    },
+    {
+      "name": "QrSvgzRenderer",
+      "fullName": "CodeGlyphX.Rendering.Svgz.QrSvgzRenderer",
+      "namespace": "CodeGlyphX.Rendering.Svgz",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-svgz-qrsvgzrenderer",
+      "summary": "Renders QR modules to SVGZ."
+    },
+    {
+      "name": "SvgzWriter",
+      "fullName": "CodeGlyphX.Rendering.Svgz.SvgzWriter",
+      "namespace": "CodeGlyphX.Rendering.Svgz",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-svgz-svgzwriter",
+      "summary": "Writes SVGZ (gzip-compressed SVG)."
+    },
+    {
+      "name": "BarcodeTgaRenderer",
+      "fullName": "CodeGlyphX.Rendering.Tga.BarcodeTgaRenderer",
+      "namespace": "CodeGlyphX.Rendering.Tga",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-tga-barcodetgarenderer",
+      "summary": "Renders 1D barcodes to TGA."
+    },
+    {
+      "name": "MatrixTgaRenderer",
+      "fullName": "CodeGlyphX.Rendering.Tga.MatrixTgaRenderer",
+      "namespace": "CodeGlyphX.Rendering.Tga",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-tga-matrixtgarenderer",
+      "summary": "Renders generic 2D matrices to TGA."
+    },
+    {
+      "name": "QrTgaRenderer",
+      "fullName": "CodeGlyphX.Rendering.Tga.QrTgaRenderer",
+      "namespace": "CodeGlyphX.Rendering.Tga",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-tga-qrtgarenderer",
+      "summary": "Renders QR modules to TGA."
+    },
+    {
+      "name": "TgaReader",
+      "fullName": "CodeGlyphX.Rendering.Tga.TgaReader",
+      "namespace": "CodeGlyphX.Rendering.Tga",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-tga-tgareader",
+      "summary": "Decodes TGA images to RGBA buffers (uncompressed true-color/grayscale)."
+    },
+    {
+      "name": "TgaWriter",
+      "fullName": "CodeGlyphX.Rendering.Tga.TgaWriter",
+      "namespace": "CodeGlyphX.Rendering.Tga",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-tga-tgawriter",
+      "summary": "Writes TGA images from RGBA buffers (uncompressed)."
+    },
+    {
+      "name": "BarcodeXbmRenderer",
+      "fullName": "CodeGlyphX.Rendering.Xbm.BarcodeXbmRenderer",
+      "namespace": "CodeGlyphX.Rendering.Xbm",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-xbm-barcodexbmrenderer",
+      "summary": "Renders barcodes to XBM."
+    },
+    {
+      "name": "MatrixXbmRenderer",
+      "fullName": "CodeGlyphX.Rendering.Xbm.MatrixXbmRenderer",
+      "namespace": "CodeGlyphX.Rendering.Xbm",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-xbm-matrixxbmrenderer",
+      "summary": "Renders matrix modules to XBM."
+    },
+    {
+      "name": "QrXbmRenderer",
+      "fullName": "CodeGlyphX.Rendering.Xbm.QrXbmRenderer",
+      "namespace": "CodeGlyphX.Rendering.Xbm",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-xbm-qrxbmrenderer",
+      "summary": "Renders QR modules to XBM."
+    },
+    {
+      "name": "XbmReader",
+      "fullName": "CodeGlyphX.Rendering.Xbm.XbmReader",
+      "namespace": "CodeGlyphX.Rendering.Xbm",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-xbm-xbmreader",
+      "summary": "Decodes XBM images to RGBA buffers."
+    },
+    {
+      "name": "XbmWriter",
+      "fullName": "CodeGlyphX.Rendering.Xbm.XbmWriter",
+      "namespace": "CodeGlyphX.Rendering.Xbm",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-xbm-xbmwriter",
+      "summary": "Writes XBM (X Bitmap) images from RGBA buffers."
+    },
+    {
+      "name": "BarcodeXpmRenderer",
+      "fullName": "CodeGlyphX.Rendering.Xpm.BarcodeXpmRenderer",
+      "namespace": "CodeGlyphX.Rendering.Xpm",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-xpm-barcodexpmrenderer",
+      "summary": "Renders barcodes to XPM."
+    },
+    {
+      "name": "MatrixXpmRenderer",
+      "fullName": "CodeGlyphX.Rendering.Xpm.MatrixXpmRenderer",
+      "namespace": "CodeGlyphX.Rendering.Xpm",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-xpm-matrixxpmrenderer",
+      "summary": "Renders matrix modules to XPM."
+    },
+    {
+      "name": "QrXpmRenderer",
+      "fullName": "CodeGlyphX.Rendering.Xpm.QrXpmRenderer",
+      "namespace": "CodeGlyphX.Rendering.Xpm",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-xpm-qrxpmrenderer",
+      "summary": "Renders QR modules to XPM."
+    },
+    {
+      "name": "XpmReader",
+      "fullName": "CodeGlyphX.Rendering.Xpm.XpmReader",
+      "namespace": "CodeGlyphX.Rendering.Xpm",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-xpm-xpmreader",
+      "summary": "Decodes XPM images to RGBA buffers."
+    },
+    {
+      "name": "XpmWriter",
+      "fullName": "CodeGlyphX.Rendering.Xpm.XpmWriter",
+      "namespace": "CodeGlyphX.Rendering.Xpm",
+      "kind": "Class",
+      "slug": "codeglyphx-rendering-xpm-xpmwriter",
+      "summary": "Writes XPM (X Pixmap) images from RGBA buffers."
+    },
+    {
+      "name": "RoyalMailFourStateDecoder",
+      "fullName": "CodeGlyphX.RoyalMail.RoyalMailFourStateDecoder",
+      "namespace": "CodeGlyphX.RoyalMail",
+      "kind": "Class",
+      "slug": "codeglyphx-royalmail-royalmailfourstatedecoder",
+      "summary": "Decodes Royal Mail 4-State Customer Code (RM4SCC) barcodes."
+    },
+    {
+      "name": "RoyalMailFourStateEncoder",
+      "fullName": "CodeGlyphX.RoyalMail.RoyalMailFourStateEncoder",
+      "namespace": "CodeGlyphX.RoyalMail",
+      "kind": "Class",
+      "slug": "codeglyphx-royalmail-royalmailfourstateencoder",
+      "summary": "Encodes Royal Mail 4-State Customer Code (RM4SCC) barcodes."
+    },
+    {
+      "name": "TelepenEncoder",
+      "fullName": "CodeGlyphX.Telepen.TelepenEncoder",
+      "namespace": "CodeGlyphX.Telepen",
+      "kind": "Class",
+      "slug": "codeglyphx-telepen-telepenencoder",
+      "summary": "Encodes Telepen barcodes (ASCII mode)."
+    },
+    {
+      "name": "EncodedNumber",
+      "fullName": "CodeGlyphX.UpcA.UpcATables.EncodedNumber",
+      "namespace": "CodeGlyphX.UpcA",
+      "kind": "Struct",
+      "slug": "codeglyphx-upca-upcatables-encodednumber",
+      "summary": null
+    },
+    {
+      "name": "UpcAEncoder",
+      "fullName": "CodeGlyphX.UpcA.UpcAEncoder",
+      "namespace": "CodeGlyphX.UpcA",
+      "kind": "Class",
+      "slug": "codeglyphx-upca-upcaencoder",
+      "summary": "Encodes UPC-A barcodes."
+    },
+    {
+      "name": "EncodedNumber",
+      "fullName": "CodeGlyphX.UpcE.UpcETables.EncodedNumber",
+      "namespace": "CodeGlyphX.UpcE",
+      "kind": "Struct",
+      "slug": "codeglyphx-upce-upcetables-encodednumber",
+      "summary": null
+    },
+    {
+      "name": "Parity",
+      "fullName": "CodeGlyphX.UpcE.UpcETables.Parity",
+      "namespace": "CodeGlyphX.UpcE",
+      "kind": "Enum",
+      "slug": "codeglyphx-upce-upcetables-parity",
+      "summary": null
+    },
+    {
+      "name": "ParityPatterns",
+      "fullName": "CodeGlyphX.UpcE.UpcETables.ParityPatterns",
+      "namespace": "CodeGlyphX.UpcE",
+      "kind": "Struct",
+      "slug": "codeglyphx-upce-upcetables-paritypatterns",
+      "summary": null
+    },
+    {
+      "name": "UpcEEncoder",
+      "fullName": "CodeGlyphX.UpcE.UpcEEncoder",
+      "namespace": "CodeGlyphX.UpcE",
+      "kind": "Class",
+      "slug": "codeglyphx-upce-upceencoder",
+      "summary": "Encodes UPC-E barcodes."
+    }
+  ]
+}

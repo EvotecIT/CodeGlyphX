@@ -1,0 +1,58 @@
+{
+  "name": "DataBarExpandedEncoder",
+  "fullName": "CodeGlyphX.DataBar.DataBarExpandedEncoder",
+  "namespace": "CodeGlyphX.DataBar",
+  "kind": "Class",
+  "slug": "codeglyphx-databar-databarexpandedencoder",
+  "summary": "Encodes GS1 DataBar Expanded symbols (linear and stacked).",
+  "remarks": null,
+  "examples": [],
+  "seeAlso": [],
+  "members": [
+    {
+      "name": "EncodeExpanded",
+      "kind": "Method",
+      "summary": "Encodes a GS1 DataBar Expanded symbol into a CodeGlyphX.Barcode1D.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "content",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static Barcode1D EncodeExpanded(string content)",
+      "xmlId": "M:CodeGlyphX.DataBar.DataBarExpandedEncoder.EncodeExpanded(System.String)",
+      "anchor": "method-encodeexpanded-static-barcode1d-encodeexpanded-string-content"
+    },
+    {
+      "name": "EncodeExpandedStacked",
+      "kind": "Method",
+      "summary": "Encodes a GS1 DataBar Expanded Stacked symbol into a CodeGlyphX.BitMatrix.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "content",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "columns",
+          "type": "int",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static BitMatrix EncodeExpandedStacked(string content, int columns)",
+      "xmlId": "M:CodeGlyphX.DataBar.DataBarExpandedEncoder.EncodeExpandedStacked(System.String,System.Int32)",
+      "anchor": "method-encodeexpandedstacked-static-bitmatrix-encodeexpandedstacked-string-content-int-columns"
+    }
+  ]
+}

@@ -1,0 +1,153 @@
+{
+  "name": "BarcodeJpegRenderer",
+  "fullName": "CodeGlyphX.Rendering.Jpeg.BarcodeJpegRenderer",
+  "namespace": "CodeGlyphX.Rendering.Jpeg",
+  "kind": "Class",
+  "slug": "codeglyphx-rendering-jpeg-barcodejpegrenderer",
+  "summary": "Renders 1D barcodes to a JPEG image (baseline, 4:4:4).",
+  "remarks": null,
+  "examples": [],
+  "seeAlso": [],
+  "members": [
+    {
+      "name": "Render",
+      "kind": "Method",
+      "summary": "Renders the barcode to a JPEG byte array.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "barcode",
+          "type": "Barcode1D",
+          "description": null
+        },
+        {
+          "name": "opts",
+          "type": "BarcodePngRenderOptions",
+          "description": null
+        },
+        {
+          "name": "quality",
+          "type": "int",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static byte[] Render(Barcode1D barcode, BarcodePngRenderOptions opts, int quality)",
+      "xmlId": "M:CodeGlyphX.Rendering.Jpeg.BarcodeJpegRenderer.Render(CodeGlyphX.Barcode1D,CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,System.Int32)",
+      "anchor": "method-render-static-byte-render-barcode1d-barcode-barcodepngrenderoptions-opts-int-quality"
+    },
+    {
+      "name": "RenderToStream",
+      "kind": "Method",
+      "summary": "Renders the barcode to a JPEG stream.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "barcode",
+          "type": "Barcode1D",
+          "description": "Barcode to render."
+        },
+        {
+          "name": "opts",
+          "type": "BarcodePngRenderOptions",
+          "description": "Rendering options."
+        },
+        {
+          "name": "stream",
+          "type": "Stream",
+          "description": "Target stream."
+        },
+        {
+          "name": "quality",
+          "type": "int",
+          "description": "JPEG quality (1-100)."
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static void RenderToStream(Barcode1D barcode, BarcodePngRenderOptions opts, Stream stream, int quality)",
+      "xmlId": "M:CodeGlyphX.Rendering.Jpeg.BarcodeJpegRenderer.RenderToStream(CodeGlyphX.Barcode1D,CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,System.IO.Stream,System.Int32)",
+      "anchor": "method-rendertostream-static-void-rendertostream-barcode1d-barcode-barcodepngrenderoptions-opts-stream-stream-int-quality"
+    },
+    {
+      "name": "RenderToFile",
+      "kind": "Method",
+      "summary": "Renders the barcode to a JPEG file.",
+      "remarks": null,
+      "returns": "The output file path.",
+      "parameters": [
+        {
+          "name": "barcode",
+          "type": "Barcode1D",
+          "description": "Barcode to render."
+        },
+        {
+          "name": "opts",
+          "type": "BarcodePngRenderOptions",
+          "description": "Rendering options."
+        },
+        {
+          "name": "path",
+          "type": "string",
+          "description": "Output file path."
+        },
+        {
+          "name": "quality",
+          "type": "int",
+          "description": "JPEG quality (1-100)."
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string RenderToFile(Barcode1D barcode, BarcodePngRenderOptions opts, string path, int quality)",
+      "xmlId": "M:CodeGlyphX.Rendering.Jpeg.BarcodeJpegRenderer.RenderToFile(CodeGlyphX.Barcode1D,CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,System.String,System.Int32)",
+      "anchor": "method-rendertofile-static-string-rendertofile-barcode1d-barcode-barcodepngrenderoptions-opts-string-path-int-quality"
+    },
+    {
+      "name": "RenderToFile",
+      "kind": "Method",
+      "summary": "Renders the barcode to a JPEG file under the specified directory.",
+      "remarks": null,
+      "returns": "The output file path.",
+      "parameters": [
+        {
+          "name": "barcode",
+          "type": "Barcode1D",
+          "description": "Barcode to render."
+        },
+        {
+          "name": "opts",
+          "type": "BarcodePngRenderOptions",
+          "description": "Rendering options."
+        },
+        {
+          "name": "directory",
+          "type": "string",
+          "description": "Output directory."
+        },
+        {
+          "name": "fileName",
+          "type": "string",
+          "description": "Output file name."
+        },
+        {
+          "name": "quality",
+          "type": "int",
+          "description": "JPEG quality (1-100)."
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string RenderToFile(Barcode1D barcode, BarcodePngRenderOptions opts, string directory, string fileName, int quality)",
+      "xmlId": "M:CodeGlyphX.Rendering.Jpeg.BarcodeJpegRenderer.RenderToFile(CodeGlyphX.Barcode1D,CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,System.String,System.String,System.Int32)",
+      "anchor": "method-rendertofile-static-string-rendertofile-barcode1d-barcode-barcodepngrenderoptions-opts-string-directory-string-filename-int-quality"
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "name": "RoyalMailFourStateEncoder",
+  "fullName": "CodeGlyphX.RoyalMail.RoyalMailFourStateEncoder",
+  "namespace": "CodeGlyphX.RoyalMail",
+  "kind": "Class",
+  "slug": "codeglyphx-royalmail-royalmailfourstateencoder",
+  "summary": "Encodes Royal Mail 4-State Customer Code (RM4SCC) barcodes.",
+  "remarks": null,
+  "examples": [],
+  "seeAlso": [],
+  "members": [
+    {
+      "name": "Encode",
+      "kind": "Method",
+      "summary": "Encodes a Royal Mail 4-State barcode into a matrix.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "content",
+          "type": "string",
+          "description": "Payload (digits and uppercase A-Z)."
+        },
+        {
+          "name": "includeHeaders",
+          "type": "bool",
+          "description": "When true, includes start/stop bars and checksum (RM4SCC). When false, encodes KIX (headerless)."
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static BitMatrix Encode(string content, bool includeHeaders)",
+      "xmlId": "M:CodeGlyphX.RoyalMail.RoyalMailFourStateEncoder.Encode(System.String,System.Boolean)",
+      "anchor": "method-encode-static-bitmatrix-encode-string-content-bool-includeheaders"
+    }
+  ]
+}

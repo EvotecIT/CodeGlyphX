@@ -1,0 +1,153 @@
+{
+  "name": "MatrixPdfRenderer",
+  "fullName": "CodeGlyphX.Rendering.Pdf.MatrixPdfRenderer",
+  "namespace": "CodeGlyphX.Rendering.Pdf",
+  "kind": "Class",
+  "slug": "codeglyphx-rendering-pdf-matrixpdfrenderer",
+  "summary": "Renders generic 2D matrices to a PDF image.",
+  "remarks": null,
+  "examples": [],
+  "seeAlso": [],
+  "members": [
+    {
+      "name": "Render",
+      "kind": "Method",
+      "summary": "Renders the matrix to a PDF byte array.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "modules",
+          "type": "BitMatrix",
+          "description": null
+        },
+        {
+          "name": "opts",
+          "type": "MatrixPngRenderOptions",
+          "description": null
+        },
+        {
+          "name": "mode",
+          "type": "RenderMode",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static byte[] Render(BitMatrix modules, MatrixPngRenderOptions opts, RenderMode mode)",
+      "xmlId": "M:CodeGlyphX.Rendering.Pdf.MatrixPdfRenderer.Render(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Png.MatrixPngRenderOptions,CodeGlyphX.Rendering.RenderMode)",
+      "anchor": "method-render-static-byte-render-bitmatrix-modules-matrixpngrenderoptions-opts-rendermode-mode"
+    },
+    {
+      "name": "RenderToStream",
+      "kind": "Method",
+      "summary": "Renders the matrix to a PDF stream.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "modules",
+          "type": "BitMatrix",
+          "description": null
+        },
+        {
+          "name": "opts",
+          "type": "MatrixPngRenderOptions",
+          "description": null
+        },
+        {
+          "name": "stream",
+          "type": "Stream",
+          "description": null
+        },
+        {
+          "name": "mode",
+          "type": "RenderMode",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static void RenderToStream(BitMatrix modules, MatrixPngRenderOptions opts, Stream stream, RenderMode mode)",
+      "xmlId": "M:CodeGlyphX.Rendering.Pdf.MatrixPdfRenderer.RenderToStream(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Png.MatrixPngRenderOptions,System.IO.Stream,CodeGlyphX.Rendering.RenderMode)",
+      "anchor": "method-rendertostream-static-void-rendertostream-bitmatrix-modules-matrixpngrenderoptions-opts-stream-stream-rendermode-mode"
+    },
+    {
+      "name": "RenderToFile",
+      "kind": "Method",
+      "summary": "Renders the matrix to a PDF file.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "modules",
+          "type": "BitMatrix",
+          "description": null
+        },
+        {
+          "name": "opts",
+          "type": "MatrixPngRenderOptions",
+          "description": null
+        },
+        {
+          "name": "path",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "mode",
+          "type": "RenderMode",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string RenderToFile(BitMatrix modules, MatrixPngRenderOptions opts, string path, RenderMode mode)",
+      "xmlId": "M:CodeGlyphX.Rendering.Pdf.MatrixPdfRenderer.RenderToFile(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Png.MatrixPngRenderOptions,System.String,CodeGlyphX.Rendering.RenderMode)",
+      "anchor": "method-rendertofile-static-string-rendertofile-bitmatrix-modules-matrixpngrenderoptions-opts-string-path-rendermode-mode"
+    },
+    {
+      "name": "RenderToFile",
+      "kind": "Method",
+      "summary": "Renders the matrix to a PDF file under the specified directory.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "modules",
+          "type": "BitMatrix",
+          "description": null
+        },
+        {
+          "name": "opts",
+          "type": "MatrixPngRenderOptions",
+          "description": null
+        },
+        {
+          "name": "directory",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "fileName",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "mode",
+          "type": "RenderMode",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string RenderToFile(BitMatrix modules, MatrixPngRenderOptions opts, string directory, string fileName, RenderMode mode)",
+      "xmlId": "M:CodeGlyphX.Rendering.Pdf.MatrixPdfRenderer.RenderToFile(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Png.MatrixPngRenderOptions,System.String,System.String,CodeGlyphX.Rendering.RenderMode)",
+      "anchor": "method-rendertofile-static-string-rendertofile-bitmatrix-modules-matrixpngrenderoptions-opts-string-directory-string-filename-rendermode-mode"
+    }
+  ]
+}

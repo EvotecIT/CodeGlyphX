@@ -1,0 +1,198 @@
+{
+  "name": "BarcodeIcoRenderer",
+  "fullName": "CodeGlyphX.Rendering.Ico.BarcodeIcoRenderer",
+  "namespace": "CodeGlyphX.Rendering.Ico",
+  "kind": "Class",
+  "slug": "codeglyphx-rendering-ico-barcodeicorenderer",
+  "summary": "Renders 1D barcodes to ICO (PNG-embedded).",
+  "remarks": null,
+  "examples": [],
+  "seeAlso": [],
+  "members": [
+    {
+      "name": "Render",
+      "kind": "Method",
+      "summary": "Renders the barcode to an ICO byte array.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "barcode",
+          "type": "Barcode1D",
+          "description": null
+        },
+        {
+          "name": "opts",
+          "type": "BarcodePngRenderOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static byte[] Render(Barcode1D barcode, BarcodePngRenderOptions opts)",
+      "xmlId": "M:CodeGlyphX.Rendering.Ico.BarcodeIcoRenderer.Render(CodeGlyphX.Barcode1D,CodeGlyphX.Rendering.Png.BarcodePngRenderOptions)",
+      "anchor": "method-render-static-byte-render-barcode1d-barcode-barcodepngrenderoptions-opts"
+    },
+    {
+      "name": "Render",
+      "kind": "Method",
+      "summary": "Renders the barcode to an ICO byte array (multi-size).",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "barcode",
+          "type": "Barcode1D",
+          "description": null
+        },
+        {
+          "name": "opts",
+          "type": "BarcodePngRenderOptions",
+          "description": null
+        },
+        {
+          "name": "icoOptions",
+          "type": "IcoRenderOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static byte[] Render(Barcode1D barcode, BarcodePngRenderOptions opts, IcoRenderOptions icoOptions)",
+      "xmlId": "M:CodeGlyphX.Rendering.Ico.BarcodeIcoRenderer.Render(CodeGlyphX.Barcode1D,CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,CodeGlyphX.Rendering.Ico.IcoRenderOptions)",
+      "anchor": "method-render-static-byte-render-barcode1d-barcode-barcodepngrenderoptions-opts-icorenderoptions-icooptions"
+    },
+    {
+      "name": "RenderToStream",
+      "kind": "Method",
+      "summary": "Renders the barcode to an ICO stream.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "barcode",
+          "type": "Barcode1D",
+          "description": null
+        },
+        {
+          "name": "opts",
+          "type": "BarcodePngRenderOptions",
+          "description": null
+        },
+        {
+          "name": "stream",
+          "type": "Stream",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static void RenderToStream(Barcode1D barcode, BarcodePngRenderOptions opts, Stream stream)",
+      "xmlId": "M:CodeGlyphX.Rendering.Ico.BarcodeIcoRenderer.RenderToStream(CodeGlyphX.Barcode1D,CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,System.IO.Stream)",
+      "anchor": "method-rendertostream-static-void-rendertostream-barcode1d-barcode-barcodepngrenderoptions-opts-stream-stream"
+    },
+    {
+      "name": "RenderToStream",
+      "kind": "Method",
+      "summary": "Renders the barcode to an ICO stream (multi-size).",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "barcode",
+          "type": "Barcode1D",
+          "description": null
+        },
+        {
+          "name": "opts",
+          "type": "BarcodePngRenderOptions",
+          "description": null
+        },
+        {
+          "name": "stream",
+          "type": "Stream",
+          "description": null
+        },
+        {
+          "name": "icoOptions",
+          "type": "IcoRenderOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static void RenderToStream(Barcode1D barcode, BarcodePngRenderOptions opts, Stream stream, IcoRenderOptions icoOptions)",
+      "xmlId": "M:CodeGlyphX.Rendering.Ico.BarcodeIcoRenderer.RenderToStream(CodeGlyphX.Barcode1D,CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,System.IO.Stream,CodeGlyphX.Rendering.Ico.IcoRenderOptions)",
+      "anchor": "method-rendertostream-static-void-rendertostream-barcode1d-barcode-barcodepngrenderoptions-opts-stream-stream-icorenderoptions-icooptions"
+    },
+    {
+      "name": "RenderToFile",
+      "kind": "Method",
+      "summary": "Renders the barcode to an ICO file.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "barcode",
+          "type": "Barcode1D",
+          "description": null
+        },
+        {
+          "name": "opts",
+          "type": "BarcodePngRenderOptions",
+          "description": null
+        },
+        {
+          "name": "path",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string RenderToFile(Barcode1D barcode, BarcodePngRenderOptions opts, string path)",
+      "xmlId": "M:CodeGlyphX.Rendering.Ico.BarcodeIcoRenderer.RenderToFile(CodeGlyphX.Barcode1D,CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,System.String)",
+      "anchor": "method-rendertofile-static-string-rendertofile-barcode1d-barcode-barcodepngrenderoptions-opts-string-path"
+    },
+    {
+      "name": "RenderToFile",
+      "kind": "Method",
+      "summary": "Renders the barcode to an ICO file under the specified directory.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "barcode",
+          "type": "Barcode1D",
+          "description": null
+        },
+        {
+          "name": "opts",
+          "type": "BarcodePngRenderOptions",
+          "description": null
+        },
+        {
+          "name": "directory",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "fileName",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string RenderToFile(Barcode1D barcode, BarcodePngRenderOptions opts, string directory, string fileName)",
+      "xmlId": "M:CodeGlyphX.Rendering.Ico.BarcodeIcoRenderer.RenderToFile(CodeGlyphX.Barcode1D,CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,System.String,System.String)",
+      "anchor": "method-rendertofile-static-string-rendertofile-barcode1d-barcode-barcodepngrenderoptions-opts-string-directory-string-filename"
+    }
+  ]
+}

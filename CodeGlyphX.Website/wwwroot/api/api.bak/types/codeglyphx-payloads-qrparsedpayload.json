@@ -1,0 +1,75 @@
+{
+  "name": "QrParsedPayload",
+  "fullName": "CodeGlyphX.Payloads.QrParsedPayload",
+  "namespace": "CodeGlyphX.Payloads",
+  "kind": "Class",
+  "slug": "codeglyphx-payloads-qrparsedpayload",
+  "summary": "Parsed QR payload with detected type and optional raw value.",
+  "remarks": null,
+  "examples": [],
+  "seeAlso": [],
+  "members": [
+    {
+      "name": "TryGet",
+      "kind": "Method",
+      "summary": "Attempts to get the parsed payload as a specific type.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "value",
+          "type": "T",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "bool TryGet\u003CT\u003E(out T value)",
+      "xmlId": "M:CodeGlyphX.Payloads.QrParsedPayload.TryGet\u0060\u00601(\u0060\u00600@)",
+      "anchor": "method-tryget-bool-tryget-t-out-t-value"
+    },
+    {
+      "name": "Type",
+      "kind": "Property",
+      "summary": "Detected payload type.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "QrPayloadType Type {get; }",
+      "xmlId": "P:CodeGlyphX.Payloads.QrParsedPayload.Type",
+      "anchor": "property-type-qrpayloadtype-type-get"
+    },
+    {
+      "name": "Raw",
+      "kind": "Property",
+      "summary": "Raw payload text.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "string Raw {get; }",
+      "xmlId": "P:CodeGlyphX.Payloads.QrParsedPayload.Raw",
+      "anchor": "property-raw-string-raw-get"
+    },
+    {
+      "name": "Value",
+      "kind": "Property",
+      "summary": "Gets the parsed payload object (type-specific), when available.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "object Value {get; }",
+      "xmlId": "P:CodeGlyphX.Payloads.QrParsedPayload.Value",
+      "anchor": "property-value-object-value-get"
+    }
+  ]
+}

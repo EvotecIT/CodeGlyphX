@@ -1,0 +1,69 @@
+{
+  "name": "QrDecodeProfile",
+  "fullName": "CodeGlyphX.QrDecodeProfile",
+  "namespace": "CodeGlyphX",
+  "kind": "Enum",
+  "slug": "codeglyphx-qrdecodeprofile",
+  "summary": "Speed/accuracy profile for pixel-based QR decoding.",
+  "remarks": null,
+  "examples": [],
+  "seeAlso": [],
+  "members": [
+    {
+      "name": "value__",
+      "kind": "Field",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "int value__",
+      "xmlId": "F:CodeGlyphX.QrDecodeProfile.value__",
+      "anchor": "field-value-int-value"
+    },
+    {
+      "name": "Fast",
+      "kind": "Field",
+      "summary": "Fastest path (minimal thresholds, no transforms).",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "QrDecodeProfile Fast",
+      "xmlId": "F:CodeGlyphX.QrDecodeProfile.Fast",
+      "anchor": "field-fast-qrdecodeprofile-fast"
+    },
+    {
+      "name": "Balanced",
+      "kind": "Field",
+      "summary": "Balanced speed/robustness.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "QrDecodeProfile Balanced",
+      "xmlId": "F:CodeGlyphX.QrDecodeProfile.Balanced",
+      "anchor": "field-balanced-qrdecodeprofile-balanced"
+    },
+    {
+      "name": "Robust",
+      "kind": "Field",
+      "summary": "Most robust path (more thresholds, transforms, and scales).",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "QrDecodeProfile Robust",
+      "xmlId": "F:CodeGlyphX.QrDecodeProfile.Robust",
+      "anchor": "field-robust-qrdecodeprofile-robust"
+    }
+  ]
+}

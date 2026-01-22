@@ -1,0 +1,38 @@
+{
+  "name": "MatrixAsciiRenderer",
+  "fullName": "CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderer",
+  "namespace": "CodeGlyphX.Rendering.Ascii",
+  "kind": "Class",
+  "slug": "codeglyphx-rendering-ascii-matrixasciirenderer",
+  "summary": "Renders 2D matrices as ASCII text.",
+  "remarks": null,
+  "examples": [],
+  "seeAlso": [],
+  "members": [
+    {
+      "name": "Render",
+      "kind": "Method",
+      "summary": "Renders the matrix to an ASCII string.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "modules",
+          "type": "BitMatrix",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "MatrixAsciiRenderOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static string Render(BitMatrix modules, MatrixAsciiRenderOptions options)",
+      "xmlId": "M:CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderer.Render(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions)",
+      "anchor": "method-render-static-string-render-bitmatrix-modules-matrixasciirenderoptions-options"
+    }
+  ]
+}

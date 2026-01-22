@@ -1,0 +1,43 @@
+{
+  "name": "PamReader",
+  "fullName": "CodeGlyphX.Rendering.Pam.PamReader",
+  "namespace": "CodeGlyphX.Rendering.Pam",
+  "kind": "Class",
+  "slug": "codeglyphx-rendering-pam-pamreader",
+  "summary": "Decodes PAM (P7) images to RGBA buffers.",
+  "remarks": null,
+  "examples": [],
+  "seeAlso": [],
+  "members": [
+    {
+      "name": "DecodeRgba32",
+      "kind": "Method",
+      "summary": "Decodes a PAM image to an RGBA buffer.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "pam",
+          "type": "ReadOnlySpan\u003Cbyte\u003E",
+          "description": null
+        },
+        {
+          "name": "width",
+          "type": "int",
+          "description": null
+        },
+        {
+          "name": "height",
+          "type": "int",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static byte[] DecodeRgba32(ReadOnlySpan\u003Cbyte\u003E pam, out int width, out int height)",
+      "xmlId": "M:CodeGlyphX.Rendering.Pam.PamReader.DecodeRgba32(System.ReadOnlySpan{System.Byte},System.Int32@,System.Int32@)",
+      "anchor": "method-decodergba32-static-byte-decodergba32-readonlyspan-byte-pam-out-int-width-out-int-height"
+    }
+  ]
+}

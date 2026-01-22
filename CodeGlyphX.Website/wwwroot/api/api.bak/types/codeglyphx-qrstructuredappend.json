@@ -1,0 +1,113 @@
+{
+  "name": "QrStructuredAppend",
+  "fullName": "CodeGlyphX.QrStructuredAppend",
+  "namespace": "CodeGlyphX",
+  "kind": "Struct",
+  "slug": "codeglyphx-qrstructuredappend",
+  "summary": "Structured append metadata for multi-symbol QR payloads.",
+  "remarks": null,
+  "examples": [],
+  "seeAlso": [],
+  "members": [
+    {
+      "name": "QrStructuredAppend",
+      "kind": "Constructor",
+      "summary": "Creates structured append metadata.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "index",
+          "type": "int",
+          "description": "Index of this symbol in the sequence (1..16)."
+        },
+        {
+          "name": "total",
+          "type": "int",
+          "description": "Total number of symbols in the sequence (1..16)."
+        },
+        {
+          "name": "parity",
+          "type": "int",
+          "description": "Parity for reassembly (0..255)."
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "QrStructuredAppend(int index, int total, int parity)",
+      "xmlId": "M:CodeGlyphX.QrStructuredAppend.#ctor(System.Int32,System.Int32,System.Int32)",
+      "anchor": "constructor-qrstructuredappend-qrstructuredappend-int-index-int-total-int-parity"
+    },
+    {
+      "name": "ToString",
+      "kind": "Method",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "string ToString()",
+      "xmlId": "M:CodeGlyphX.QrStructuredAppend.ToString",
+      "anchor": "method-tostring-string-tostring"
+    },
+    {
+      "name": "Index",
+      "kind": "Property",
+      "summary": "Index of this symbol in the sequence (1..16).",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "int Index {get; }",
+      "xmlId": "P:CodeGlyphX.QrStructuredAppend.Index",
+      "anchor": "property-index-int-index-get"
+    },
+    {
+      "name": "Total",
+      "kind": "Property",
+      "summary": "Total number of symbols in the sequence (1..16).",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "int Total {get; }",
+      "xmlId": "P:CodeGlyphX.QrStructuredAppend.Total",
+      "anchor": "property-total-int-total-get"
+    },
+    {
+      "name": "Parity",
+      "kind": "Property",
+      "summary": "Parity for reassembly (0..255).",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "int Parity {get; }",
+      "xmlId": "P:CodeGlyphX.QrStructuredAppend.Parity",
+      "anchor": "property-parity-int-parity-get"
+    },
+    {
+      "name": "IsValid",
+      "kind": "Property",
+      "summary": "Returns true when the values are within the QR structured-append range.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "bool IsValid {get; }",
+      "xmlId": "P:CodeGlyphX.QrStructuredAppend.IsValid",
+      "anchor": "property-isvalid-bool-isvalid-get"
+    }
+  ]
+}

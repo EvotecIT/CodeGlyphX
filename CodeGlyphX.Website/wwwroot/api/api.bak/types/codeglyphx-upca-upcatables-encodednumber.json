@@ -1,0 +1,66 @@
+{
+  "name": "EncodedNumber",
+  "fullName": "CodeGlyphX.UpcA.UpcATables.EncodedNumber",
+  "namespace": "CodeGlyphX.UpcA",
+  "kind": "Struct",
+  "slug": "codeglyphx-upca-upcatables-encodednumber",
+  "summary": null,
+  "remarks": null,
+  "examples": [],
+  "seeAlso": [],
+  "members": [
+    {
+      "name": "EncodedNumber",
+      "kind": "Constructor",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "left",
+          "type": "bool[]",
+          "description": null
+        },
+        {
+          "name": "right",
+          "type": "bool[]",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "EncodedNumber(bool[] left, bool[] right)",
+      "xmlId": "M:CodeGlyphX.UpcA.UpcATables.EncodedNumber.#ctor(System.Boolean[],System.Boolean[])",
+      "anchor": "constructor-encodednumber-encodednumber-bool-left-bool-right"
+    },
+    {
+      "name": "Left",
+      "kind": "Property",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "bool[] Left {get; }",
+      "xmlId": "P:CodeGlyphX.UpcA.UpcATables.EncodedNumber.Left",
+      "anchor": "property-left-bool-left-get"
+    },
+    {
+      "name": "Right",
+      "kind": "Property",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "bool[] Right {get; }",
+      "xmlId": "P:CodeGlyphX.UpcA.UpcATables.EncodedNumber.Right",
+      "anchor": "property-right-bool-right-get"
+    }
+  ]
+}

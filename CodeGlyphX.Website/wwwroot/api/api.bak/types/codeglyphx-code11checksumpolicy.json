@@ -1,0 +1,69 @@
+{
+  "name": "Code11ChecksumPolicy",
+  "fullName": "CodeGlyphX.Code11ChecksumPolicy",
+  "namespace": "CodeGlyphX",
+  "kind": "Enum",
+  "slug": "codeglyphx-code11checksumpolicy",
+  "summary": "Policy for handling optional Code 11 checksum characters.",
+  "remarks": null,
+  "examples": [],
+  "seeAlso": [],
+  "members": [
+    {
+      "name": "value__",
+      "kind": "Field",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "int value__",
+      "xmlId": "F:CodeGlyphX.Code11ChecksumPolicy.value__",
+      "anchor": "field-value-int-value"
+    },
+    {
+      "name": "None",
+      "kind": "Field",
+      "summary": "Do not strip checksum characters (default, avoids accidental data loss).",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "Code11ChecksumPolicy None",
+      "xmlId": "F:CodeGlyphX.Code11ChecksumPolicy.None",
+      "anchor": "field-none-code11checksumpolicy-none"
+    },
+    {
+      "name": "StripIfValid",
+      "kind": "Field",
+      "summary": "Strip trailing checksum character(s) when valid.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "Code11ChecksumPolicy StripIfValid",
+      "xmlId": "F:CodeGlyphX.Code11ChecksumPolicy.StripIfValid",
+      "anchor": "field-stripifvalid-code11checksumpolicy-stripifvalid"
+    },
+    {
+      "name": "RequireValid",
+      "kind": "Field",
+      "summary": "Require valid checksum character(s); otherwise decoding fails.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "Code11ChecksumPolicy RequireValid",
+      "xmlId": "F:CodeGlyphX.Code11ChecksumPolicy.RequireValid",
+      "anchor": "field-requirevalid-code11checksumpolicy-requirevalid"
+    }
+  ]
+}
