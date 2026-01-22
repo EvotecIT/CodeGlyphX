@@ -12,6 +12,8 @@ public static partial class QrPngRenderer {
     /// Renders the QR module matrix to a PNG byte array.
     /// </summary>
     public static byte[] Render(BitMatrix modules, QrPngRenderOptions opts) {
+        if (TryRenderGray1(modules, opts, out var gray)) return gray;
+        if (TryRenderIndexed1(modules, opts, out var indexed)) return indexed;
         var scanlines = RenderScanlines(modules, opts, out var widthPx, out var heightPx, out _);
         return PngWriter.WriteRgba8(widthPx, heightPx, scanlines);
     }
@@ -23,6 +25,8 @@ public static partial class QrPngRenderer {
     /// <param name="opts">Rendering options.</param>
     /// <param name="stream">Target stream.</param>
     public static void RenderToStream(BitMatrix modules, QrPngRenderOptions opts, Stream stream) {
+        if (TryRenderGray1ToStream(modules, opts, stream)) return;
+        if (TryRenderIndexed1ToStream(modules, opts, stream)) return;
         var scanlines = RenderScanlines(modules, opts, out var widthPx, out var heightPx, out _);
         PngWriter.WriteRgba8(stream, widthPx, heightPx, scanlines);
     }

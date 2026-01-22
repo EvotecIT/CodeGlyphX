@@ -34,13 +34,13 @@ internal static class QrFinderPatternDetector {
         return FindCandidates(image, invert, aggressive: false, shouldStop: null);
     }
 
-    public static List<FinderPattern> FindCandidates(QrGrayImage image, bool invert, bool aggressive, Func<bool>? shouldStop = null, int rowStepOverride = 0) {
+    public static List<FinderPattern> FindCandidates(QrGrayImage image, bool invert, bool aggressive, Func<bool>? shouldStop = null, int rowStepOverride = 0, int maxCandidates = 0) {
         using var pooled = new PooledList<FinderPattern>(8);
         var step = rowStepOverride > 0 ? rowStepOverride : GetRowStep(image);
-        FindCandidatesWithStep(image, invert, step, pooled, aggressive, shouldStop);
+        FindCandidatesWithStep(image, invert, step, pooled, aggressive, shouldStop, maxCandidates);
         if (step > 1 && pooled.Count < 3) {
             using var full = new PooledList<FinderPattern>(8);
-            FindCandidatesWithStep(image, invert, rowStep: 1, full, aggressive, shouldStop);
+            FindCandidatesWithStep(image, invert, rowStep: 1, full, aggressive, shouldStop, maxCandidates);
             if (full.Count > pooled.Count) {
                 return full.ToList();
             }
@@ -52,16 +52,16 @@ internal static class QrFinderPatternDetector {
         FindCandidates(image, invert, output, aggressive: false, shouldStop: null);
     }
 
-    internal static void FindCandidates(QrGrayImage image, bool invert, List<FinderPattern> output, bool aggressive, Func<bool>? shouldStop = null, int rowStepOverride = 0) {
+    internal static void FindCandidates(QrGrayImage image, bool invert, List<FinderPattern> output, bool aggressive, Func<bool>? shouldStop = null, int rowStepOverride = 0, int maxCandidates = 0) {
         if (output is null) throw new ArgumentNullException(nameof(output));
         output.Clear();
 
         using var pooled = new PooledList<FinderPattern>(8);
         var step = rowStepOverride > 0 ? rowStepOverride : GetRowStep(image);
-        FindCandidatesWithStep(image, invert, step, pooled, aggressive, shouldStop);
+        FindCandidatesWithStep(image, invert, step, pooled, aggressive, shouldStop, maxCandidates);
         if (step > 1 && pooled.Count < 3) {
             using var full = new PooledList<FinderPattern>(8);
-            FindCandidatesWithStep(image, invert, rowStep: 1, full, aggressive, shouldStop);
+            FindCandidatesWithStep(image, invert, rowStep: 1, full, aggressive, shouldStop, maxCandidates);
             if (full.Count > pooled.Count) {
                 full.CopyTo(output);
                 return;
@@ -78,7 +78,7 @@ internal static class QrFinderPatternDetector {
         return 1;
     }
 
-    private static void FindCandidatesWithStep(QrGrayImage image, bool invert, int rowStep, PooledList<FinderPattern> possibleCenters, bool aggressive, Func<bool>? shouldStop) {
+    private static void FindCandidatesWithStep(QrGrayImage image, bool invert, int rowStep, PooledList<FinderPattern> possibleCenters, bool aggressive, Func<bool>? shouldStop, int maxCandidates) {
         // Scan rows for 1:1:3:1:1 run-length patterns and cross-check vertically/horizontally.
         Span<int> stateCount = stackalloc int[5];
 
@@ -86,6 +86,7 @@ internal static class QrFinderPatternDetector {
 
         for (var y = 0; y < image.Height; y += rowStep) {
             if (shouldStop?.Invoke() == true) return;
+            if (maxCandidates > 0 && possibleCenters.Count >= maxCandidates) return;
             stateCount.Clear();
             var currentState = 0;
 
@@ -100,10 +101,11 @@ internal static class QrFinderPatternDetector {
                 } else {
                     if ((currentState & 1) == 0) {
                         if (currentState == 4) {
-                        if (FoundPatternCross(stateCount, aggressive) && HandlePossibleCenter(image, invert, possibleCenters, stateCount, x, y, aggressive)) {
-                            currentState = 0;
-                            stateCount.Clear();
-                        } else {
+                            if (FoundPatternCross(stateCount, aggressive) && HandlePossibleCenter(image, invert, possibleCenters, stateCount, x, y, aggressive)) {
+                                if (maxCandidates > 0 && possibleCenters.Count >= maxCandidates) return;
+                                currentState = 0;
+                                stateCount.Clear();
+                            } else {
                                 ShiftCounts(stateCount);
                                 currentState = 3;
                             }

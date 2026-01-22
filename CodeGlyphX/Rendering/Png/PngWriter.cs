@@ -23,21 +23,74 @@ internal static class PngWriter {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
 
         stream.Write(Signature, 0, Signature.Length);
-        WriteChunk(stream, "IHDR", BuildIHDR(width, height));
+        WriteChunk(stream, "IHDR", BuildIHDR(width, height, bitDepth: 8, colorType: 6));
 
         var idatLength = GetZlibStoredLength(scanlinesWithFilter.Length);
-        WriteChunk(stream, "IDAT", idatLength, (Stream s, ref uint crc) => WriteZlibStored(s, scanlinesWithFilter, ref crc));
+        WriteChunk(stream, "IDAT", idatLength, (Stream s, ref uint crc) => WriteZlibStored(s, scanlinesWithFilter, scanlinesWithFilter.Length, ref crc));
+        WriteChunk(stream, "IEND", Array.Empty<byte>());
+    }
+
+    public static byte[] WriteGray1(int width, int height, byte[] scanlinesWithFilter, int length) {
+        using var ms = new MemoryStream();
+        WriteGray1(ms, width, height, scanlinesWithFilter, length);
+        return ms.ToArray();
+    }
+
+    public static void WriteGray1(Stream stream, int width, int height, byte[] scanlinesWithFilter, int length) {
+        if (width <= 0) throw new ArgumentOutOfRangeException(nameof(width));
+        if (height <= 0) throw new ArgumentOutOfRangeException(nameof(height));
+        if (scanlinesWithFilter is null) throw new ArgumentNullException(nameof(scanlinesWithFilter));
+        if (length < 0 || length > scanlinesWithFilter.Length) throw new ArgumentOutOfRangeException(nameof(length));
+        var rowBytes = (width + 7) / 8;
+        if (length != height * (rowBytes + 1))
+            throw new ArgumentException("Invalid scanline buffer length.", nameof(scanlinesWithFilter));
+
+        if (stream is null) throw new ArgumentNullException(nameof(stream));
+
+        stream.Write(Signature, 0, Signature.Length);
+        WriteChunk(stream, "IHDR", BuildIHDR(width, height, bitDepth: 1, colorType: 0));
+
+        var idatLength = GetZlibStoredLength(length);
+        WriteChunk(stream, "IDAT", idatLength, (Stream s, ref uint crc) => WriteZlibStored(s, scanlinesWithFilter, length, ref crc));
+        WriteChunk(stream, "IEND", Array.Empty<byte>());
+    }
+
+    public static byte[] WriteIndexed1(int width, int height, byte[] scanlinesWithFilter, int length, byte[] palette) {
+        using var ms = new MemoryStream();
+        WriteIndexed1(ms, width, height, scanlinesWithFilter, length, palette);
+        return ms.ToArray();
+    }
+
+    public static void WriteIndexed1(Stream stream, int width, int height, byte[] scanlinesWithFilter, int length, byte[] palette) {
+        if (width <= 0) throw new ArgumentOutOfRangeException(nameof(width));
+        if (height <= 0) throw new ArgumentOutOfRangeException(nameof(height));
+        if (scanlinesWithFilter is null) throw new ArgumentNullException(nameof(scanlinesWithFilter));
+        if (length < 0 || length > scanlinesWithFilter.Length) throw new ArgumentOutOfRangeException(nameof(length));
+        if (palette is null) throw new ArgumentNullException(nameof(palette));
+        if (palette.Length != 6) throw new ArgumentException("Palette must contain exactly two RGB entries (6 bytes).", nameof(palette));
+        var rowBytes = (width + 7) / 8;
+        if (length != height * (rowBytes + 1))
+            throw new ArgumentException("Invalid scanline buffer length.", nameof(scanlinesWithFilter));
+
+        if (stream is null) throw new ArgumentNullException(nameof(stream));
+
+        stream.Write(Signature, 0, Signature.Length);
+        WriteChunk(stream, "IHDR", BuildIHDR(width, height, bitDepth: 1, colorType: 3));
+        WriteChunk(stream, "PLTE", palette);
+
+        var idatLength = GetZlibStoredLength(length);
+        WriteChunk(stream, "IDAT", idatLength, (Stream s, ref uint crc) => WriteZlibStored(s, scanlinesWithFilter, length, ref crc));
         WriteChunk(stream, "IEND", Array.Empty<byte>());
     }
 
     private static readonly byte[] Signature = { 137, 80, 78, 71, 13, 10, 26, 10 };
 
-    private static byte[] BuildIHDR(int width, int height) {
+    private static byte[] BuildIHDR(int width, int height, byte bitDepth, byte colorType) {
         var data = new byte[13];
         WriteUInt32BE(data, 0, (uint)width);
         WriteUInt32BE(data, 4, (uint)height);
-        data[8] = 8;  // bit depth
-        data[9] = 6;  // color type: RGBA
+        data[8] = bitDepth;
+        data[9] = colorType;
         data[10] = 0; // compression
         data[11] = 0; // filter
         data[12] = 0; // interlace
@@ -94,7 +147,7 @@ internal static class PngWriter {
         return 2 + 4 + dataLength + blocks * 5;
     }
 
-    private static void WriteZlibStored(Stream stream, byte[] uncompressed, ref uint crc) {
+    private static void WriteZlibStored(Stream stream, byte[] uncompressed, int length, ref uint crc) {
         const uint mod = 65521;
         uint a = 1;
         uint b = 0;
@@ -103,10 +156,10 @@ internal static class PngWriter {
         WriteByteWithCrc(stream, 0x01, ref crc);
 
         var offset = 0;
-        while (offset < uncompressed.Length) {
-            var remaining = uncompressed.Length - offset;
+        while (offset < length) {
+            var remaining = length - offset;
             var len = Math.Min(65535, remaining);
-            var final = offset + len >= uncompressed.Length;
+            var final = offset + len >= length;
 
             WriteByteWithCrc(stream, final ? (byte)0x01 : (byte)0x00, ref crc);
 

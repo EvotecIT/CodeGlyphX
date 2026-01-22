@@ -33,34 +33,35 @@ internal static partial class QrPixelDecoder {
         PooledList<QrDecoded> list,
         HashSet<string> seen,
         Func<QrDecoded, bool>? accept,
-        DecodeBudget budget) {
+        DecodeBudget budget,
+        QrGrayImagePool? pool) {
         if (budget.IsExpired) return;
         Func<bool>? shouldStop = budget.Enabled ? () => budget.IsNearDeadline(120) : null;
-        if (!QrGrayImage.TryCreate(pixels, width, height, stride, fmt, scale, settings.MinContrast, shouldStop, out var image)) {
+        if (!QrGrayImage.TryCreate(pixels, width, height, stride, fmt, scale, settings.MinContrast, shouldStop, pool, out var image)) {
             return;
         }
 
-        CollectAllFromImage(image, settings, list, seen, accept, budget);
+        CollectAllFromImage(image, settings, list, seen, accept, budget, pool);
         if (budget.IsExpired) return;
 
         if (settings.AllowContrastStretch) {
             var range = image.Max - image.Min;
             if (range < 48) {
-                var stretched = image.WithContrastStretch(48);
+                var stretched = image.WithContrastStretch(48, pool);
                 if (!ReferenceEquals(stretched.Gray, image.Gray)) {
-                    CollectAllFromImage(stretched, settings, list, seen, accept, budget);
+                    CollectAllFromImage(stretched, settings, list, seen, accept, budget, pool);
                 }
             }
         }
     }
 
     private static void AddPercentileThresholds(QrGrayImage image, ref Span<byte> list, ref int count) {
-        var total = image.Gray.Length;
+        var total = image.Width * image.Height;
         if (total == 0) return;
 
         Span<int> histogram = stackalloc int[256];
         var gray = image.Gray;
-        for (var i = 0; i < gray.Length; i++) {
+        for (var i = 0; i < total; i++) {
             histogram[gray[i]]++;
         }
 
@@ -95,7 +96,11 @@ internal static partial class QrPixelDecoder {
         if (budget.IsExpired) return;
         Func<bool>? shouldStop = budget.Enabled ? () => budget.IsExpired : null;
         var rowStepOverride = budget.Enabled && budget.MaxMilliseconds <= 800 ? 2 : 0;
-        QrFinderPatternDetector.FindCandidates(image, invert, candidates, aggressive, shouldStop, rowStepOverride);
+        var maxCandidates = 0;
+        if (budget.Enabled && budget.MaxMilliseconds <= 800) {
+            maxCandidates = aggressive ? 36 : 24;
+        }
+        QrFinderPatternDetector.FindCandidates(image, invert, candidates, aggressive, shouldStop, rowStepOverride, maxCandidates);
         if (budget.Enabled && candidates.Count > 64) {
             candidates.Sort(static (a, b) => b.Count.CompareTo(a.Count));
             candidates.RemoveRange(64, candidates.Count - 64);
