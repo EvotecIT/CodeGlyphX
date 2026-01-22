@@ -15,6 +15,7 @@ public static partial class QrPngRenderer {
     public static byte[] Render(BitMatrix modules, QrPngRenderOptions opts) {
         if (TryRenderGray1(modules, opts, out var gray)) return gray;
         if (TryRenderIndexed1(modules, opts, out var indexed)) return indexed;
+        if (CanRenderSimpleRgba(opts)) return RenderSimpleRgba(modules, opts);
         var length = GetScanlineLength(modules, opts, out var widthPx, out var heightPx, out var stride);
         var scanlines = ArrayPool<byte>.Shared.Rent(length);
         try {
@@ -34,7 +35,15 @@ public static partial class QrPngRenderer {
     public static void RenderToStream(BitMatrix modules, QrPngRenderOptions opts, Stream stream) {
         if (TryRenderGray1ToStream(modules, opts, stream)) return;
         if (TryRenderIndexed1ToStream(modules, opts, stream)) return;
-        var length = GetScanlineLength(modules, opts, out var widthPx, out var heightPx, out var stride);
+        int widthPx;
+        int heightPx;
+        int stride;
+        if (CanRenderSimpleRgba(opts)) {
+            GetScanlineLength(modules, opts, out widthPx, out heightPx, out stride);
+            PngWriter.WriteRgba8(stream, widthPx, heightPx, (y, rowBuffer, rowLength) => FillRowSimple(modules, opts, y, rowBuffer, rowLength));
+            return;
+        }
+        var length = GetScanlineLength(modules, opts, out widthPx, out heightPx, out stride);
         var scanlines = ArrayPool<byte>.Shared.Rent(length);
         try {
             RenderScanlines(modules, opts, out widthPx, out heightPx, out stride, scanlines);

@@ -1,10 +1,12 @@
 using System;
+using System.Buffers;
 using System.IO;
 
 namespace CodeGlyphX.Rendering.Png;
 
 internal static class PngWriter {
     private static readonly uint[] CrcTable = BuildCrcTable();
+    internal delegate void RowWriter(int y, byte[] rowBuffer, int rowLength);
 
     public static byte[] WriteRgba8(int width, int height, byte[] scanlinesWithFilter) {
         using var ms = new MemoryStream();
@@ -38,6 +40,23 @@ internal static class PngWriter {
 
         var idatLength = GetZlibStoredLength(length);
         WriteChunk(stream, "IDAT", idatLength, (Stream s, ref uint crc) => WriteZlibStored(s, scanlinesWithFilter, length, ref crc));
+        WriteChunk(stream, "IEND", Array.Empty<byte>());
+    }
+
+    public static void WriteRgba8(Stream stream, int width, int height, RowWriter fillRow) {
+        if (width <= 0) throw new ArgumentOutOfRangeException(nameof(width));
+        if (height <= 0) throw new ArgumentOutOfRangeException(nameof(height));
+        if (fillRow is null) throw new ArgumentNullException(nameof(fillRow));
+        if (stream is null) throw new ArgumentNullException(nameof(stream));
+        var stride = width * 4;
+        var rowLength = stride + 1;
+        var length = height * rowLength;
+
+        stream.Write(Signature, 0, Signature.Length);
+        WriteChunk(stream, "IHDR", BuildIHDR(width, height, bitDepth: 8, colorType: 6));
+
+        var idatLength = GetZlibStoredLength(length);
+        WriteChunk(stream, "IDAT", idatLength, (Stream s, ref uint crc) => WriteZlibStoredRows(s, height, rowLength, fillRow, ref crc));
         WriteChunk(stream, "IEND", Array.Empty<byte>());
     }
 
@@ -191,6 +210,51 @@ internal static class PngWriter {
             }
 
             offset += len;
+        }
+
+        var adler = (b << 16) | a;
+        WriteUInt32BEWithCrc(stream, adler, ref crc);
+    }
+
+    private static void WriteZlibStoredRows(Stream stream, int height, int rowLength, RowWriter fillRow, ref uint crc) {
+        const uint mod = 65521;
+        uint a = 1;
+        uint b = 0;
+
+        WriteByteWithCrc(stream, 0x78, ref crc);
+        WriteByteWithCrc(stream, 0x01, ref crc);
+
+        var rowBuffer = ArrayPool<byte>.Shared.Rent(rowLength);
+        try {
+            for (var y = 0; y < height; y++) {
+                fillRow(y, rowBuffer, rowLength);
+                var offset = 0;
+                while (offset < rowLength) {
+                    var remaining = rowLength - offset;
+                    var len = Math.Min(65535, remaining);
+                    var final = y == height - 1 && offset + len >= rowLength;
+
+                    WriteByteWithCrc(stream, final ? (byte)0x01 : (byte)0x00, ref crc);
+                    WriteByteWithCrc(stream, (byte)(len & 0xFF), ref crc);
+                    WriteByteWithCrc(stream, (byte)((len >> 8) & 0xFF), ref crc);
+                    var nlen = (~len) & 0xFFFF;
+                    WriteByteWithCrc(stream, (byte)(nlen & 0xFF), ref crc);
+                    WriteByteWithCrc(stream, (byte)((nlen >> 8) & 0xFF), ref crc);
+
+                    stream.Write(rowBuffer, offset, len);
+                    for (var i = 0; i < len; i++) {
+                        var value = rowBuffer[offset + i];
+                        crc = (crc >> 8) ^ CrcTable[(crc ^ value) & 0xFF];
+                        a += value;
+                        if (a >= mod) a -= mod;
+                        b += a;
+                        b %= mod;
+                    }
+                    offset += len;
+                }
+            }
+        } finally {
+            ArrayPool<byte>.Shared.Return(rowBuffer);
         }
 
         var adler = (b << 16) | a;
