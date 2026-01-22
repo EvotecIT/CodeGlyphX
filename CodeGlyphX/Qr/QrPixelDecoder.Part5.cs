@@ -243,6 +243,11 @@ internal static partial class QrPixelDecoder {
             return false;
         }
 
+        if (budget.Enabled && budget.MaxMilliseconds <= 800) {
+            moduleDiagnostics = moduleDiag;
+            return false;
+        }
+
         var inv = bm.Clone();
         Invert(inv);
         if (budget.IsNearDeadline(120)) return false;
@@ -532,6 +537,11 @@ internal static partial class QrPixelDecoder {
         if (ok && (accept == null || accept(result))) {
             diagnostics = moduleDiag;
             return true;
+        }
+
+        if (budget.Enabled && budget.MaxMilliseconds <= 800) {
+            diagnostics = best;
+            return false;
         }
 
         var inv = matrix.Clone();

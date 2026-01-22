@@ -13,43 +13,27 @@ public static class JapanPostEncoder {
     public static BitMatrix Encode(string content) {
         if (content is null) throw new ArgumentNullException(nameof(content));
         content = content.Trim().ToUpperInvariant();
+        ValidateContent(content);
+
+        var inter = BuildInter(content);
+        PadInter(inter);
+
+        var dest = new StringBuilder(67);
+        dest.Append("FD");
+        AppendPatternsAndChecksum(dest, inter, out var sum);
+        AppendCheckDigitAndStop(dest, sum);
+
+        return BuildMatrix(dest.ToString());
+    }
+
+    private static void ValidateContent(string content) {
         if (content.Length == 0) throw new InvalidOperationException("Japan Post content cannot be empty.");
         if (content.Length > 20) throw new InvalidOperationException("Japan Post content must be 20 characters or fewer.");
-
         for (var i = 0; i < content.Length; i++) {
             var ch = content[i];
             var ok = (ch >= '0' && ch <= '9') || (ch >= 'A' && ch <= 'Z') || ch == '-';
             if (!ok) throw new InvalidOperationException("Japan Post expects digits, A-Z, and '-' only.");
         }
-
-        var inter = BuildInter(content);
-        if (inter.Length > 20) throw new InvalidOperationException("Japan Post content expands beyond 20 codewords.");
-        while (inter.Length < 20) inter.Append('d');
-
-        var sum = 0;
-        var dest = new StringBuilder(67);
-        dest.Append("FD");
-
-        for (var i = 0; i < inter.Length; i++) {
-            var ch = inter[i];
-            if (!JapanPostTables.KasutIndex.TryGetValue(ch, out var idx)) {
-                throw new InvalidOperationException("Japan Post input contains unsupported characters.");
-            }
-            dest.Append(JapanPostTables.Patterns[idx]);
-
-            if (!JapanPostTables.CheckIndex.TryGetValue(ch, out var checkIdx)) {
-                throw new InvalidOperationException("Japan Post input contains unsupported characters.");
-            }
-            sum += checkIdx;
-        }
-
-        var check = 19 - (sum % 19);
-        if (check == 19) check = 0;
-        var checkChar = JapanPostTables.CheckSet[check];
-        dest.Append(JapanPostTables.Patterns[JapanPostTables.KasutIndex[checkChar]]);
-        dest.Append("DF");
-
-        return BuildMatrix(dest.ToString());
     }
 
     private static StringBuilder BuildInter(string content) {
@@ -73,6 +57,35 @@ public static class JapanPostEncoder {
             }
         }
         return inter;
+    }
+
+    private static void PadInter(StringBuilder inter) {
+        if (inter.Length > 20) throw new InvalidOperationException("Japan Post content expands beyond 20 codewords.");
+        while (inter.Length < 20) inter.Append('d');
+    }
+
+    private static void AppendPatternsAndChecksum(StringBuilder dest, StringBuilder inter, out int sum) {
+        sum = 0;
+        for (var i = 0; i < inter.Length; i++) {
+            var ch = inter[i];
+            if (!JapanPostTables.KasutIndex.TryGetValue(ch, out var idx)) {
+                throw new InvalidOperationException("Japan Post input contains unsupported characters.");
+            }
+            dest.Append(JapanPostTables.Patterns[idx]);
+
+            if (!JapanPostTables.CheckIndex.TryGetValue(ch, out var checkIdx)) {
+                throw new InvalidOperationException("Japan Post input contains unsupported characters.");
+            }
+            sum += checkIdx;
+        }
+    }
+
+    private static void AppendCheckDigitAndStop(StringBuilder dest, int sum) {
+        var check = 19 - (sum % 19);
+        if (check == 19) check = 0;
+        var checkChar = JapanPostTables.CheckSet[check];
+        dest.Append(JapanPostTables.Patterns[JapanPostTables.KasutIndex[checkChar]]);
+        dest.Append("DF");
     }
 
     private static BitMatrix BuildMatrix(string pattern) {

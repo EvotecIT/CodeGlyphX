@@ -188,7 +188,7 @@ internal static partial class QrPixelDecoder {
                     allowAdaptiveThreshold = false;
                     allowBlur = false;
                 }
-                if (options.MaxMilliseconds <= 800) {
+                if (options.MaxMilliseconds <= 800 && !options.AggressiveSampling) {
                     aggressiveSampling = false;
                 }
             }
@@ -228,7 +228,10 @@ internal static partial class QrPixelDecoder {
         var targetMax = options.MaxDimension > 0 ? options.MaxDimension : int.MaxValue;
         if (options.MaxMilliseconds > 0) {
             if (options.MaxMilliseconds <= 400) targetMax = Math.Min(targetMax, 400);
-            else if (options.MaxMilliseconds <= 800) targetMax = Math.Min(targetMax, 600);
+            else if (options.MaxMilliseconds <= 800) {
+                var budgetMax = options.AggressiveSampling || options.Profile == QrDecodeProfile.Robust ? 1000 : 600;
+                targetMax = Math.Min(targetMax, budgetMax);
+            }
         }
         if (targetMax == int.MaxValue) return 1;
         if (maxDim <= targetMax) return 1;

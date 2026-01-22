@@ -44,6 +44,40 @@ internal static partial class QrPixelDecoder {
                 return false;
             }
 
+        var candidates = new List<QrFinderPatternDetector.FinderPattern>(8);
+
+            if (budget.Enabled && budget.MaxMilliseconds <= 800) {
+                var tightSettings = new QrProfileSettings(
+                    settings.MaxScale,
+                    settings.CollectMaxScale,
+                    settings.AllowTransforms,
+                    allowContrastStretch: false,
+                    allowNormalize: false,
+                    allowAdaptiveThreshold: false,
+                    allowBlur: false,
+                    allowExtraThresholds: settings.AggressiveSampling,
+                    settings.MinContrast,
+                    settings.AggressiveSampling);
+
+                if (TryDecodeWithImage(scale, baseImage, tightSettings, candidates, budget, accept, pool, out result, out var diagTight)) {
+                    diagnostics = diagTight;
+                    return true;
+                }
+
+                var bestTight = diagTight;
+                if (settings.AggressiveSampling && !budget.IsNearDeadline(150)) {
+                    var adaptive = baseImage.WithAdaptiveThreshold(windowSize: 15, offset: 8, pool);
+                    if (TryDecodeFromGray(scale, baseImage.Threshold, adaptive, invert: false, candidates, accept, settings.AggressiveSampling, budget, out result, out var diagAdaptive)) {
+                        diagnostics = diagAdaptive;
+                        return true;
+                    }
+                    bestTight = Better(bestTight, diagAdaptive);
+                }
+
+                diagnostics = bestTight;
+                return false;
+            }
+
         var fastSettings = new QrProfileSettings(
             settings.MaxScale,
             settings.CollectMaxScale,
@@ -55,8 +89,6 @@ internal static partial class QrPixelDecoder {
             allowExtraThresholds: false,
             settings.MinContrast,
             settings.AggressiveSampling);
-
-        var candidates = new List<QrFinderPatternDetector.FinderPattern>(8);
 
             if (TryDecodeWithImage(scale, baseImage, fastSettings, candidates, budget, accept, pool, out result, out var diagFast)) {
                 diagnostics = diagFast;
@@ -158,8 +190,11 @@ internal static partial class QrPixelDecoder {
         if (thresholdCount > thresholdLimit) {
             thresholdCount = thresholdLimit;
         }
-        if (tightBudget && thresholdCount > 1) {
-            thresholdCount = 1;
+        if (tightBudget) {
+            var tightLimit = settings.AggressiveSampling ? 2 : 1;
+            if (thresholdCount > tightLimit) {
+                thresholdCount = tightLimit;
+            }
         }
 
         var noisyThreshold = settings.AggressiveSampling ? 48 : 64;
@@ -178,10 +213,6 @@ internal static partial class QrPixelDecoder {
 
             if (budget.Enabled && diagN.CandidateCount >= noisyThreshold) {
                 skipHeavyPasses = true;
-                if (tightBudget) {
-                    diagnostics = best;
-                    return false;
-                }
             }
 
             if (!tightBudget && !skipHeavyPasses) {
@@ -192,8 +223,11 @@ internal static partial class QrPixelDecoder {
                 best = Better(best, diagI);
             }
             if (tightBudget) {
-                diagnostics = best;
-                return false;
+                if (i + 1 >= thresholdCount || budget.IsNearDeadline(150)) {
+                    diagnostics = best;
+                    return false;
+                }
+                continue;
             }
             if (skipHeavyPasses) {
                 diagnostics = best;

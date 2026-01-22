@@ -70,6 +70,21 @@ internal static class QrPixelSampling {
         }
     }
 
+    public static void RefinePhase(
+        QrGrayImage image,
+        bool invert,
+        double tlX,
+        double tlY,
+        double vxX,
+        double vxY,
+        double vyX,
+        double vyY,
+        int dimension,
+        out double bestPhaseX,
+        out double bestPhaseY) {
+        FindBestPhase(image, invert, tlX, tlY, vxX, vxY, vyX, vyY, dimension, out bestPhaseX, out bestPhaseY, out _, out _);
+    }
+
     public static bool SampleModule9(QrGrayImage image, double sx, double sy, double oxX, double oxY, double oyX, double oyY, bool invert) {
         var black = 0;
 

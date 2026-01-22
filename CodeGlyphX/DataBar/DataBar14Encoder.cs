@@ -54,6 +54,25 @@ public static class DataBar14Encoder {
         return totalWidths;
     }
 
+    private static int[] BuildTotalWidths(int[][] dataWidths, out int cLeft, out int cRight) {
+        var checksum = ComputeChecksum(dataWidths);
+        cLeft = checksum / 9;
+        cRight = checksum % 9;
+
+        var totalWidths = new int[46];
+        totalWidths[0] = 1;
+        totalWidths[1] = 1;
+        totalWidths[44] = 1;
+        totalWidths[45] = 1;
+        for (var i = 0; i < 8; i++) {
+            totalWidths[i + 2] = dataWidths[i][0];
+            totalWidths[i + 15] = dataWidths[7 - i][1];
+            totalWidths[i + 23] = dataWidths[i][3];
+            totalWidths[i + 36] = dataWidths[7 - i][2];
+        }
+        return totalWidths;
+    }
+
     private static int GetGroup0or2(int value) {
         if (value <= 160) return 0;
         if (value <= 960) return 1;
@@ -192,25 +211,6 @@ public static class DataBar14Encoder {
         dataWidths[rowStart + 2][index] = widths[1];
         dataWidths[rowStart + 4][index] = widths[2];
         dataWidths[rowStart + 6][index] = widths[3];
-    }
-
-    private static int[] BuildTotalWidths(int[][] dataWidths, out int cLeft, out int cRight) {
-        var checksum = ComputeChecksum(dataWidths);
-        cLeft = checksum / 9;
-        cRight = checksum % 9;
-
-        var totalWidths = new int[46];
-        totalWidths[0] = 1;
-        totalWidths[1] = 1;
-        totalWidths[44] = 1;
-        totalWidths[45] = 1;
-        for (var i = 0; i < 8; i++) {
-            totalWidths[i + 2] = dataWidths[i][0];
-            totalWidths[i + 15] = dataWidths[7 - i][1];
-            totalWidths[i + 23] = dataWidths[i][3];
-            totalWidths[i + 36] = dataWidths[7 - i][2];
-        }
-        return totalWidths;
     }
 
     private static int ComputeChecksum(int[][] dataWidths) {

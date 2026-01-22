@@ -10,6 +10,7 @@ namespace CodeGlyphX.DataBar;
 /// Encodes GS1 DataBar Expanded symbols (linear and stacked).
 /// </summary>
 public static class DataBarExpandedEncoder {
+    private const string PadPattern = "00100";
     /// <summary>
     /// Encodes a GS1 DataBar Expanded symbol into a <see cref="Barcode1D"/>.
     /// </summary>
@@ -167,68 +168,94 @@ public static class DataBarExpandedEncoder {
     private static BitMatrix BuildStackedMatrix(int[] elements, int dataChars, int preferredColumns) {
         var totalChars = dataChars + 1;
         var codeblocks = (totalChars / 2) + (totalChars & 1);
-        var blocksPerRow = preferredColumns;
-        if (blocksPerRow < 1) blocksPerRow = 1;
-
-        var stackRows = codeblocks / blocksPerRow;
-        if (codeblocks % blocksPerRow > 0) stackRows++;
-
-        var rowCount = (stackRows * 4) - 3;
-        var rows = new List<bool[]>(rowCount);
+        var blocksPerRow = Math.Max(preferredColumns, 1);
+        var stackRows = (codeblocks + blocksPerRow - 1) / blocksPerRow;
+        var rows = new List<bool[]>((stackRows * 4) - 3);
 
         var currentBlock = 0;
         var v2 = false;
 
         for (var currentRow = 1; currentRow <= stackRows; currentRow++) {
-            var numColumns = currentRow < stackRows ? blocksPerRow : codeblocks - currentBlock;
-            var leftToRight = (currentRow % 2 == 1) || (blocksPerRow % 2 == 1);
-            var specialCaseRow = false;
-
-            var subElements = new int[2 + (numColumns * 21) + 2];
-            subElements[0] = 1;
-            subElements[1] = 1;
-
-            if (!leftToRight && currentRow == stackRows && numColumns != blocksPerRow && (numColumns % 2 == 1)) {
-                specialCaseRow = true;
-                leftToRight = true;
-                subElements[0] = 2;
-            }
-
-            var reader = 0;
-            do {
-                var i = 2 + (currentBlock * 21);
-                for (var j = 0; j < 21; j++) {
-                    if (i + j < elements.Length) {
-                        if (leftToRight) {
-                            subElements[j + (reader * 21) + 2] = elements[i + j];
-                        } else {
-                            subElements[(20 - j) + (numColumns - 1 - reader) * 21 + 2] = elements[i + j];
-                        }
-                    }
-                }
-                reader++;
-                currentBlock++;
-            } while (reader < blocksPerRow && currentBlock < codeblocks);
-
-            var stopIndex = 2 + (numColumns * 21);
-            subElements[stopIndex] = 1;
-            subElements[stopIndex + 1] = 1;
-
+            var subElements = BuildStackedSubElements(elements, codeblocks, blocksPerRow, currentRow, stackRows, ref currentBlock, out var reader, out var leftToRight, out var specialCaseRow);
             var dataPattern = BuildPatternString(subElements, (currentRow % 2 == 1) || specialCaseRow);
             rows.Add(PatternToModules(dataPattern));
 
-            if (currentRow != 1) {
-                var middleSep = BuildMiddleSeparator(blocksPerRow);
-                rows.Insert(rows.Count - 1, PatternToModules(middleSep));
-                var oddLastRow = (currentRow == stackRows) && (dataChars % 2 == 0);
-                rows.Insert(rows.Count - 1, PatternToModules(BuildSeparator(dataPattern, reader, below: false, specialCaseRow, leftToRight, oddLastRow, ref v2)));
-            }
-
-            if (currentRow != stackRows) {
-                rows.Add(PatternToModules(BuildSeparator(dataPattern, reader, below: true, specialCaseRow: false, leftToRight, oddLastRow: false, ref v2)));
-            }
+            AddStackedSeparators(rows, dataPattern, reader, currentRow, stackRows, dataChars, blocksPerRow, leftToRight, specialCaseRow, ref v2);
         }
 
+        return BuildMatrix(rows);
+    }
+
+    private static int[] BuildStackedSubElements(
+        int[] elements,
+        int codeblocks,
+        int blocksPerRow,
+        int currentRow,
+        int stackRows,
+        ref int currentBlock,
+        out int reader,
+        out bool leftToRight,
+        out bool specialCaseRow) {
+        var numColumns = currentRow < stackRows ? blocksPerRow : codeblocks - currentBlock;
+        leftToRight = (currentRow % 2 == 1) || (blocksPerRow % 2 == 1);
+        specialCaseRow = false;
+
+        var subElements = new int[2 + (numColumns * 21) + 2];
+        subElements[0] = 1;
+        subElements[1] = 1;
+
+        if (!leftToRight && currentRow == stackRows && numColumns != blocksPerRow && (numColumns % 2 == 1)) {
+            specialCaseRow = true;
+            leftToRight = true;
+            subElements[0] = 2;
+        }
+
+        reader = 0;
+        do {
+            var i = 2 + (currentBlock * 21);
+            for (var j = 0; j < 21; j++) {
+                if (i + j < elements.Length) {
+                    if (leftToRight) {
+                        subElements[j + (reader * 21) + 2] = elements[i + j];
+                    } else {
+                        subElements[(20 - j) + (numColumns - 1 - reader) * 21 + 2] = elements[i + j];
+                    }
+                }
+            }
+            reader++;
+            currentBlock++;
+        } while (reader < blocksPerRow && currentBlock < codeblocks);
+
+        var stopIndex = 2 + (numColumns * 21);
+        subElements[stopIndex] = 1;
+        subElements[stopIndex + 1] = 1;
+        return subElements;
+    }
+
+    private static void AddStackedSeparators(
+        List<bool[]> rows,
+        string dataPattern,
+        int reader,
+        int currentRow,
+        int stackRows,
+        int dataChars,
+        int blocksPerRow,
+        bool leftToRight,
+        bool specialCaseRow,
+        ref bool v2) {
+        if (currentRow != 1) {
+            var middleSep = BuildMiddleSeparator(blocksPerRow);
+            rows.Insert(rows.Count - 1, PatternToModules(middleSep));
+            var oddLastRow = (currentRow == stackRows) && (dataChars % 2 == 0);
+            rows.Insert(rows.Count - 1, PatternToModules(BuildSeparator(dataPattern, reader, below: false, specialCaseRow, leftToRight, oddLastRow, ref v2)));
+        }
+
+        if (currentRow != stackRows) {
+            rows.Add(PatternToModules(BuildSeparator(dataPattern, reader, below: true, specialCaseRow: false, leftToRight, oddLastRow: false, ref v2)));
+        }
+    }
+
+    private static BitMatrix BuildMatrix(List<bool[]> rows) {
         var width = 0;
         for (var i = 0; i < rows.Count; i++) {
             if (rows[i].Length > width) width = rows[i].Length;
@@ -263,62 +290,19 @@ public static class DataBarExpandedEncoder {
     }
 
     private static string BuildSeparator(string pattern, int cols, bool below, bool specialCaseRow, bool leftToRight, bool oddLastRow, ref bool v2State) {
-        var linearBin = new StringBuilder();
-        var separator = new StringBuilder();
-        var black = true;
-        for (var i = 0; i < pattern.Length; i++) {
-            var c = pattern[i] - '0';
-            for (var j = 0; j < c; j++) {
-                linearBin.Append(black ? '1' : '0');
-                separator.Append(black ? '0' : '1');
-            }
-            black = !black;
-        }
-
-        for (var i = 0; i < 4; i++) {
-            if (i < separator.Length) separator[i] = '0';
-            var idx = separator.Length - 1 - i;
-            if (idx >= 0) separator[idx] = '0';
-        }
+        var linearBin = new StringBuilder(pattern.Length * 4);
+        var separator = new StringBuilder(pattern.Length * 4);
+        BuildLinearAndSeparator(pattern, linearBin, separator);
+        ZeroSeparatorEdges(separator);
 
         var space = false;
         var v2 = v2State;
         for (var j = 0; j < cols; j++) {
             var k = (49 * j) + 19 + (specialCaseRow ? 1 : 0);
-            if (leftToRight) {
-                var start = v2 ? 2 : 0;
-                var end = v2 ? 15 : 13;
-                for (var i = start; i < end; i++) {
-                    var idx = i + k;
-                    if (idx >= 0 && idx < linearBin.Length) {
-                        if (linearBin[idx] == '1') {
-                            separator[idx] = '0';
-                            space = false;
-                        } else {
-                            separator[idx] = space ? '0' : '1';
-                            space = !space;
-                        }
-                    }
-                }
-            } else {
-                if (oddLastRow) {
-                    k -= 17;
-                }
-                var start = v2 ? 14 : 12;
-                var end = v2 ? 2 : 0;
-                for (var i = start; i >= end; i--) {
-                    var idx = i + k;
-                    if (idx >= 0 && idx < linearBin.Length) {
-                        if (linearBin[idx] == '1') {
-                            separator[idx] = '0';
-                            space = false;
-                        } else {
-                            separator[idx] = space ? '0' : '1';
-                            space = !space;
-                        }
-                    }
-                }
+            if (!leftToRight && oddLastRow) {
+                k -= 17;
             }
+            ApplySeparatorColumn(linearBin, separator, k, v2, leftToRight, ref space);
             v2 = !v2;
         }
 
@@ -327,6 +311,54 @@ public static class DataBarExpandedEncoder {
         }
 
         return BinToPattern(separator.ToString());
+    }
+
+    private static void BuildLinearAndSeparator(string pattern, StringBuilder linearBin, StringBuilder separator) {
+        var black = true;
+        for (var i = 0; i < pattern.Length; i++) {
+            var count = pattern[i] - '0';
+            for (var j = 0; j < count; j++) {
+                linearBin.Append(black ? '1' : '0');
+                separator.Append(black ? '0' : '1');
+            }
+            black = !black;
+        }
+    }
+
+    private static void ZeroSeparatorEdges(StringBuilder separator) {
+        for (var i = 0; i < 4; i++) {
+            if (i < separator.Length) separator[i] = '0';
+            var idx = separator.Length - 1 - i;
+            if (idx >= 0) separator[idx] = '0';
+        }
+    }
+
+    private static void ApplySeparatorColumn(StringBuilder linearBin, StringBuilder separator, int k, bool v2, bool leftToRight, ref bool space) {
+        if (leftToRight) {
+            var start = v2 ? 2 : 0;
+            var end = v2 ? 15 : 13;
+            for (var i = start; i < end; i++) {
+                UpdateSeparatorAt(linearBin, separator, i + k, ref space);
+            }
+            return;
+        }
+
+        var startRev = v2 ? 14 : 12;
+        var endRev = v2 ? 2 : 0;
+        for (var i = startRev; i >= endRev; i--) {
+            UpdateSeparatorAt(linearBin, separator, i + k, ref space);
+        }
+    }
+
+    private static void UpdateSeparatorAt(StringBuilder linearBin, StringBuilder separator, int idx, ref bool space) {
+        if ((uint)idx >= (uint)linearBin.Length) return;
+        if (linearBin[idx] == '1') {
+            separator[idx] = '0';
+            space = false;
+        } else {
+            separator[idx] = space ? '0' : '1';
+            space = !space;
+        }
     }
 
     private static string BinToPattern(string bin) {
@@ -383,60 +415,66 @@ public static class DataBarExpandedEncoder {
     }
 
     private static int CalculateBinaryString(bool stacked, int blocksPerRow, int[] inputData, StringBuilder binaryString) {
-        var lastMode = EncodeMode.Numeric;
-        int remainder;
+        var encodingMethod = SelectEncodingMethod(inputData);
+        var readPosn = AppendEncodingHeader(binaryString, encodingMethod, inputData.Length);
 
+        ValidateCompressedDigits(inputData, readPosn);
+        AppendCompressedFields(binaryString, encodingMethod, inputData);
+
+        var lastMode = AppendGeneralField(binaryString, inputData, readPosn, stacked, blocksPerRow);
+        ApplyPaddingAndPatch(binaryString, encodingMethod, lastMode, stacked, blocksPerRow);
+
+        return encodingMethod;
+    }
+
+    private static int SelectEncodingMethod(int[] inputData) {
         var encodingMethod = 2;
         if (inputData.Length >= 16 && inputData[0] == '0' && inputData[1] == '1') {
             encodingMethod = 1;
         }
 
         if (inputData.Length >= 20 && encodingMethod == 1 && inputData[2] == '9' && inputData[16] == '3') {
-            if (inputData.Length >= 26 && inputData[17] == '1') {
-                if (inputData[18] == '0') {
-                    double weight = 0;
-                    for (var i = 0; i < 6; i++) {
-                        weight *= 10;
-                        weight += (inputData[20 + i] - '0');
+            if (inputData.Length >= 26 && inputData[17] == '1' && inputData[18] == '0') {
+                var weight = 0.0;
+                for (var i = 0; i < 6; i++) {
+                    weight *= 10;
+                    weight += (inputData[20 + i] - '0');
+                }
+                if (weight < 99999) {
+                    if (inputData[19] == '3' && inputData.Length == 26) {
+                        weight /= 1000.0;
+                        if (weight <= 32.767) encodingMethod = 3;
                     }
-                    if (weight < 99999) {
-                        if (inputData[19] == '3' && inputData.Length == 26) {
-                            weight /= 1000.0;
-                            if (weight <= 32.767) encodingMethod = 3;
-                        }
-                        if (inputData.Length == 34) {
-                            if (inputData[26] == '1' && inputData[27] == '1') encodingMethod = 7;
-                            if (inputData[26] == '1' && inputData[27] == '3') encodingMethod = 9;
-                            if (inputData[26] == '1' && inputData[27] == '5') encodingMethod = 11;
-                            if (inputData[26] == '1' && inputData[27] == '7') encodingMethod = 13;
-                        }
+                    if (inputData.Length == 34) {
+                        if (inputData[26] == '1' && inputData[27] == '1') encodingMethod = 7;
+                        if (inputData[26] == '1' && inputData[27] == '3') encodingMethod = 9;
+                        if (inputData[26] == '1' && inputData[27] == '5') encodingMethod = 11;
+                        if (inputData[26] == '1' && inputData[27] == '7') encodingMethod = 13;
                     }
                 }
             }
 
-            if (inputData.Length >= 26 && inputData[17] == '2') {
-                if (inputData[18] == '0') {
-                    double weight = 0;
-                    for (var i = 0; i < 6; i++) {
-                        weight *= 10;
-                        weight += (inputData[20 + i] - '0');
+            if (inputData.Length >= 26 && inputData[17] == '2' && inputData[18] == '0') {
+                var weight = 0.0;
+                for (var i = 0; i < 6; i++) {
+                    weight *= 10;
+                    weight += (inputData[20 + i] - '0');
+                }
+                if (weight < 99999) {
+                    if ((inputData[19] == '2' || inputData[19] == '3') && inputData.Length == 26) {
+                        if (inputData[19] == '3') {
+                            weight /= 1000.0;
+                            if (weight <= 22.767) encodingMethod = 4;
+                        } else {
+                            weight /= 100.0;
+                            if (weight <= 99.99) encodingMethod = 4;
+                        }
                     }
-                    if (weight < 99999) {
-                        if ((inputData[19] == '2' || inputData[19] == '3') && inputData.Length == 26) {
-                            if (inputData[19] == '3') {
-                                weight /= 1000.0;
-                                if (weight <= 22.767) encodingMethod = 4;
-                            } else {
-                                weight /= 100.0;
-                                if (weight <= 99.99) encodingMethod = 4;
-                            }
-                        }
-                        if (inputData.Length == 34) {
-                            if (inputData[26] == '1' && inputData[27] == '1') encodingMethod = 8;
-                            if (inputData[26] == '1' && inputData[27] == '3') encodingMethod = 10;
-                            if (inputData[26] == '1' && inputData[27] == '5') encodingMethod = 12;
-                            if (inputData[26] == '1' && inputData[27] == '7') encodingMethod = 14;
-                        }
+                    if (inputData.Length == 34) {
+                        if (inputData[26] == '1' && inputData[27] == '1') encodingMethod = 8;
+                        if (inputData[26] == '1' && inputData[27] == '3') encodingMethod = 10;
+                        if (inputData[26] == '1' && inputData[27] == '5') encodingMethod = 12;
+                        if (inputData[26] == '1' && inputData[27] == '7') encodingMethod = 14;
                     }
                 }
             }
@@ -447,51 +485,52 @@ public static class DataBarExpandedEncoder {
             }
         }
 
-        int readPosn;
+        return encodingMethod;
+    }
+
+    private static int AppendEncodingHeader(StringBuilder binaryString, int encodingMethod, int inputLength) {
         switch (encodingMethod) {
             case 1:
                 binaryString.Append("1XX");
-                readPosn = 16;
-                break;
+                return 16;
             case 2:
                 binaryString.Append("00XX");
-                readPosn = 0;
-                break;
+                return 0;
             case 3:
                 binaryString.Append("0100");
-                readPosn = inputData.Length;
-                break;
+                return inputLength;
             case 4:
                 binaryString.Append("0101");
-                readPosn = inputData.Length;
-                break;
+                return inputLength;
             case 5:
                 binaryString.Append("01100XX");
-                readPosn = 20;
-                break;
+                return 20;
             case 6:
                 binaryString.Append("01101XX");
-                readPosn = 23;
-                break;
+                return 23;
             default:
                 binaryString.Append('0');
                 binaryAppend(binaryString, 56 + encodingMethod - 7, 6);
-                readPosn = inputData.Length;
-                break;
+                return inputLength;
         }
+    }
 
+    private static void ValidateCompressedDigits(int[] inputData, int readPosn) {
         for (var i = 0; i < readPosn; i++) {
             if (inputData[i] < '0' || inputData[i] > '9') {
                 throw new InvalidOperationException("GS1 DataBar Expanded requires numeric data for compressed fields.");
             }
         }
+    }
 
+    private static void AppendCompressedFields(StringBuilder binaryString, int encodingMethod, int[] inputData) {
         if (encodingMethod == 1) {
             binaryAppend(binaryString, inputData[2] - '0', 4);
             for (var i = 1; i < 5; i++) {
                 var group = ParseInt(inputData, i * 3, 3);
                 binaryAppend(binaryString, group, 10);
             }
+            return;
         }
 
         if (encodingMethod == 3 || encodingMethod == 4) {
@@ -502,6 +541,7 @@ public static class DataBarExpandedEncoder {
             var weight = ParseInt(inputData, 20, 6);
             if (encodingMethod == 4 && inputData[19] == '3') weight += 10000;
             binaryAppend(binaryString, weight, 15);
+            return;
         }
 
         if (encodingMethod == 5 || encodingMethod == 6) {
@@ -514,6 +554,7 @@ public static class DataBarExpandedEncoder {
                 var currency = ParseInt(inputData, 20, 3);
                 binaryAppend(binaryString, currency, 10);
             }
+            return;
         }
 
         if (encodingMethod >= 7 && encodingMethod <= 14) {
@@ -535,47 +576,58 @@ public static class DataBarExpandedEncoder {
             }
             binaryAppend(binaryString, date, 16);
         }
+    }
 
+    private static EncodeMode AppendGeneralField(StringBuilder binaryString, int[] inputData, int readPosn, bool stacked, int blocksPerRow) {
+        var lastMode = EncodeMode.Numeric;
         var generalField = new int[inputData.Length - readPosn];
         Array.Copy(inputData, readPosn, generalField, 0, generalField.Length);
-        if (generalField.Length != 0) {
-            var generalFieldType = GetInitialEncodeModes(generalField);
-            var trailingDigit = ApplyGeneralFieldRules(generalFieldType);
-            lastMode = AppendToBinaryString(generalField, generalFieldType, trailingDigit, false, binaryString);
-            remainder = CalculateRemainder(binaryString.Length, stacked, blocksPerRow);
+        if (generalField.Length == 0) return lastMode;
 
-            if (trailingDigit) {
-                var i = generalField.Length - 1;
-                if (lastMode == EncodeMode.Numeric) {
-                    if (remainder >= 4 && remainder <= 6) {
-                        var value = generalField[i] - '0';
-                        value++;
-                        binaryAppend(binaryString, value, 4);
-                    } else {
-                        var d1 = generalField[i] - '0';
-                        var d2 = 10;
-                        var value = (11 * d1) + d2 + 8;
-                        binaryAppend(binaryString, value, 7);
-                    }
+        var generalFieldType = GetInitialEncodeModes(generalField);
+        var trailingDigit = ApplyGeneralFieldRules(generalFieldType);
+        lastMode = AppendToBinaryString(generalField, generalFieldType, trailingDigit, false, binaryString);
+        var remainder = CalculateRemainder(binaryString.Length, stacked, blocksPerRow);
+
+        if (trailingDigit) {
+            var i = generalField.Length - 1;
+            if (lastMode == EncodeMode.Numeric) {
+                if (remainder >= 4 && remainder <= 6) {
+                    var value = generalField[i] - '0';
+                    value++;
+                    binaryAppend(binaryString, value, 4);
                 } else {
-                    var value = generalField[i] - 43;
-                    binaryAppend(binaryString, value, 5);
+                    var d1 = generalField[i] - '0';
+                    var d2 = 10;
+                    var value = (11 * d1) + d2 + 8;
+                    binaryAppend(binaryString, value, 7);
                 }
+            } else {
+                var value = generalField[i] - 43;
+                binaryAppend(binaryString, value, 5);
             }
         }
 
+        return lastMode;
+    }
+
+    private static void ApplyPaddingAndPatch(StringBuilder binaryString, int encodingMethod, EncodeMode lastMode, bool stacked, int blocksPerRow) {
         if (binaryString.Length > 252) {
             throw new InvalidOperationException("GS1 DataBar Expanded content is too long.");
         }
 
-        remainder = CalculateRemainder(binaryString.Length, stacked, blocksPerRow);
-        var padstring = lastMode == EncodeMode.Numeric ? "0000" : string.Empty;
+        var remainder = CalculateRemainder(binaryString.Length, stacked, blocksPerRow);
+        var padBuilder = new StringBuilder();
         var remaining = remainder;
-        if (lastMode == EncodeMode.Numeric) remaining -= 4;
-        for (var i = remaining; i > 0; i -= 5) {
-            padstring += "00100";
+        if (lastMode == EncodeMode.Numeric) {
+            padBuilder.Append("0000");
+            remaining -= 4;
         }
-        binaryString.Append(padstring.Substring(0, remainder));
+        for (var i = remaining; i > 0; i -= 5) {
+            padBuilder.Append(PadPattern);
+        }
+        var padstring = padBuilder.ToString();
+        binaryString.Append(padstring, 0, remainder);
 
         var patchEvenOdd = (((binaryString.Length / 12) + 1) & 1) == 0 ? '0' : '1';
         var patchSize = binaryString.Length <= 156 ? '0' : '1';
@@ -592,8 +644,6 @@ public static class DataBarExpandedEncoder {
             binaryString[6] = patchEvenOdd;
             binaryString[7] = patchSize;
         }
-
-        return encodingMethod;
     }
 
     private static int CalculateRemainder(int binaryStringLength, bool stacked, int blocksPerRow) {
@@ -647,8 +697,18 @@ public static class DataBarExpandedEncoder {
     private static bool ApplyGeneralFieldRules(EncodeMode[] generalFieldType) {
         var blockLength = new int[200];
         var blockType = new EncodeMode[200];
-        var blockCount = 0;
+        var blockCount = BuildGeneralFieldBlocks(generalFieldType, blockLength, blockType);
 
+        ApplyBlockTransitionRules(blockLength, blockType, blockCount);
+        blockCount = MergeAdjacentBlocks(blockLength, blockType, blockCount);
+        AdjustNumericBlocks(blockLength, blockType, blockCount);
+        WriteBlocksToField(generalFieldType, blockLength, blockType, blockCount);
+
+        return blockType[blockCount - 1] == EncodeMode.Numeric && (blockLength[blockCount - 1] & 1) != 0;
+    }
+
+    private static int BuildGeneralFieldBlocks(EncodeMode[] generalFieldType, int[] blockLength, EncodeMode[] blockType) {
+        var blockCount = 0;
         blockLength[blockCount] = 1;
         blockType[blockCount] = generalFieldType[0];
 
@@ -661,12 +721,14 @@ public static class DataBarExpandedEncoder {
             } else {
                 blockCount++;
                 blockLength[blockCount] = 1;
-                blockType[blockCount] = generalFieldType[i];
+                blockType[blockCount] = current;
             }
         }
 
-        blockCount++;
+        return blockCount + 1;
+    }
 
+    private static void ApplyBlockTransitionRules(int[] blockLength, EncodeMode[] blockType, int blockCount) {
         for (var i = 0; i < blockCount; i++) {
             var current = blockType[i];
             var next = blockType[i + 1];
@@ -696,32 +758,36 @@ public static class DataBarExpandedEncoder {
 
             if (current == EncodeMode.AnyEnc) blockType[i] = EncodeMode.Numeric;
         }
+    }
 
-        if (blockCount > 1) {
-            var i = 1;
-            while (i < blockCount) {
-                if (blockType[i - 1] == blockType[i]) {
-                    blockLength[i - 1] = blockLength[i - 1] + blockLength[i];
-                    var j = i + 1;
-                    while (j < blockCount) {
-                        blockLength[j - 1] = blockLength[j];
-                        blockType[j - 1] = blockType[j];
-                        j++;
-                    }
-                    blockCount--;
-                    i--;
+    private static int MergeAdjacentBlocks(int[] blockLength, EncodeMode[] blockType, int blockCount) {
+        if (blockCount <= 1) return blockCount;
+        var i = 1;
+        while (i < blockCount) {
+            if (blockType[i - 1] == blockType[i]) {
+                blockLength[i - 1] = blockLength[i - 1] + blockLength[i];
+                for (var j = i + 1; j < blockCount; j++) {
+                    blockLength[j - 1] = blockLength[j];
+                    blockType[j - 1] = blockType[j];
                 }
-                i++;
+                blockCount--;
+                i--;
             }
+            i++;
         }
+        return blockCount;
+    }
 
+    private static void AdjustNumericBlocks(int[] blockLength, EncodeMode[] blockType, int blockCount) {
         for (var i = 0; i < blockCount - 1; i++) {
             if (blockType[i] == EncodeMode.Numeric && (blockLength[i] & 1) != 0) {
                 blockLength[i] = blockLength[i] - 1;
                 blockLength[i + 1] = blockLength[i + 1] + 1;
             }
         }
+    }
 
+    private static void WriteBlocksToField(EncodeMode[] generalFieldType, int[] blockLength, EncodeMode[] blockType, int blockCount) {
         var index = 0;
         for (var i = 0; i < blockCount; i++) {
             for (var k = 0; k < blockLength[i]; k++) {
@@ -729,8 +795,6 @@ public static class DataBarExpandedEncoder {
                 index++;
             }
         }
-
-        return blockType[blockCount - 1] == EncodeMode.Numeric && (blockLength[blockCount - 1] & 1) != 0;
     }
 
     private static EncodeMode AppendToBinaryString(int[] generalField, EncodeMode[] generalFieldType, bool trailingDigit, bool treatFnc1AsNumericLatch, StringBuilder binaryString) {
@@ -751,91 +815,15 @@ public static class DataBarExpandedEncoder {
 
         while (currentLength < generalField.Length) {
             switch (generalFieldType[i]) {
-                case EncodeMode.Numeric: {
-                    if (lastMode != EncodeMode.Numeric) binaryString.Append("000");
-                    var d1 = generalField[i] == Gs1.GroupSeparator ? 10 : generalField[i] - '0';
-                    var d2 = generalField[i + 1] == Gs1.GroupSeparator ? 10 : generalField[i + 1] - '0';
-                    var value = (11 * d1) + d2 + 8;
-                    binaryAppend(binaryString, value, 7);
-                    i += 2;
-                    lastMode = EncodeMode.Numeric;
+                case EncodeMode.Numeric:
+                    i = AppendNumericToken(binaryString, generalField, i, ref lastMode);
                     break;
-                }
-                case EncodeMode.Alpha: {
-                    if (i != 0) {
-                        if (lastMode == EncodeMode.Numeric) binaryString.Append("0000");
-                        if (lastMode == EncodeMode.IsoIec) binaryString.Append("00100");
-                    }
-                    if (generalField[i] >= '0' && generalField[i] <= '9') {
-                        var value = generalField[i] - 43;
-                        binaryAppend(binaryString, value, 5);
-                    }
-                    if (generalField[i] >= 'A' && generalField[i] <= 'Z') {
-                        var value = generalField[i] - 33;
-                        binaryAppend(binaryString, value, 6);
-                    }
-                    lastMode = EncodeMode.Alpha;
-                    if (generalField[i] == Gs1.GroupSeparator) {
-                        binaryString.Append("01111");
-                        if (treatFnc1AsNumericLatch) lastMode = EncodeMode.Numeric;
-                    }
-                    if (generalField[i] == '*') binaryString.Append("111010");
-                    if (generalField[i] == ',') binaryString.Append("111011");
-                    if (generalField[i] == '-') binaryString.Append("111100");
-                    if (generalField[i] == '.') binaryString.Append("111101");
-                    if (generalField[i] == '/') binaryString.Append("111110");
-                    i++;
+                case EncodeMode.Alpha:
+                    i = AppendAlphaToken(binaryString, generalField, i, ref lastMode, treatFnc1AsNumericLatch);
                     break;
-                }
-                case EncodeMode.IsoIec: {
-                    if (i != 0) {
-                        if (lastMode == EncodeMode.Numeric) {
-                            binaryString.Append("0000");
-                            binaryString.Append("00100");
-                        }
-                        if (lastMode == EncodeMode.Alpha) binaryString.Append("00100");
-                    }
-                    if (generalField[i] >= '0' && generalField[i] <= '9') {
-                        var value = generalField[i] - 43;
-                        binaryAppend(binaryString, value, 5);
-                    }
-                    if (generalField[i] >= 'A' && generalField[i] <= 'Z') {
-                        var value = generalField[i] - 1;
-                        binaryAppend(binaryString, value, 7);
-                    }
-                    if (generalField[i] >= 'a' && generalField[i] <= 'z') {
-                        var value = generalField[i] - 7;
-                        binaryAppend(binaryString, value, 7);
-                    }
-                    lastMode = EncodeMode.IsoIec;
-                    if (generalField[i] == Gs1.GroupSeparator) {
-                        binaryString.Append("01111");
-                        if (treatFnc1AsNumericLatch) lastMode = EncodeMode.Numeric;
-                    }
-                    if (generalField[i] == '!') binaryString.Append("11101000");
-                    if (generalField[i] == '"') binaryString.Append("11101001");
-                    if (generalField[i] == '%') binaryString.Append("11101010");
-                    if (generalField[i] == '&') binaryString.Append("11101011");
-                    if (generalField[i] == '\'') binaryString.Append("11101100");
-                    if (generalField[i] == '(') binaryString.Append("11101101");
-                    if (generalField[i] == ')') binaryString.Append("11101110");
-                    if (generalField[i] == '*') binaryString.Append("11101111");
-                    if (generalField[i] == '+') binaryString.Append("11110000");
-                    if (generalField[i] == ',') binaryString.Append("11110001");
-                    if (generalField[i] == '-') binaryString.Append("11110010");
-                    if (generalField[i] == '.') binaryString.Append("11110011");
-                    if (generalField[i] == '/') binaryString.Append("11110100");
-                    if (generalField[i] == ':') binaryString.Append("11110101");
-                    if (generalField[i] == ';') binaryString.Append("11110110");
-                    if (generalField[i] == '<') binaryString.Append("11110111");
-                    if (generalField[i] == '=') binaryString.Append("11111000");
-                    if (generalField[i] == '>') binaryString.Append("11111001");
-                    if (generalField[i] == '?') binaryString.Append("11111010");
-                    if (generalField[i] == '_') binaryString.Append("11111011");
-                    if (generalField[i] == ' ') binaryString.Append("11111100");
-                    i++;
+                case EncodeMode.IsoIec:
+                    i = AppendIsoToken(binaryString, generalField, i, ref lastMode, treatFnc1AsNumericLatch);
                     break;
-                }
             }
 
             currentLength = i;
@@ -843,6 +831,159 @@ public static class DataBarExpandedEncoder {
         }
 
         return lastMode;
+    }
+
+    private static int AppendNumericToken(StringBuilder binaryString, int[] generalField, int index, ref EncodeMode lastMode) {
+        if (lastMode != EncodeMode.Numeric) binaryString.Append("000");
+        var d1 = generalField[index] == Gs1.GroupSeparator ? 10 : generalField[index] - '0';
+        var d2 = generalField[index + 1] == Gs1.GroupSeparator ? 10 : generalField[index + 1] - '0';
+        var value = (11 * d1) + d2 + 8;
+        binaryAppend(binaryString, value, 7);
+        lastMode = EncodeMode.Numeric;
+        return index + 2;
+    }
+
+    private static int AppendAlphaToken(StringBuilder binaryString, int[] generalField, int index, ref EncodeMode lastMode, bool treatFnc1AsNumericLatch) {
+        if (index != 0) {
+            if (lastMode == EncodeMode.Numeric) binaryString.Append("0000");
+            if (lastMode == EncodeMode.IsoIec) binaryString.Append("00100");
+        }
+        AppendAlphaChar(binaryString, generalField[index]);
+        lastMode = EncodeMode.Alpha;
+        if (generalField[index] == Gs1.GroupSeparator) {
+            binaryString.Append("01111");
+            if (treatFnc1AsNumericLatch) lastMode = EncodeMode.Numeric;
+        }
+        return index + 1;
+    }
+
+    private static int AppendIsoToken(StringBuilder binaryString, int[] generalField, int index, ref EncodeMode lastMode, bool treatFnc1AsNumericLatch) {
+        if (index != 0) {
+            if (lastMode == EncodeMode.Numeric) {
+                binaryString.Append("0000");
+                binaryString.Append("00100");
+            }
+            if (lastMode == EncodeMode.Alpha) binaryString.Append("00100");
+        }
+        AppendIsoChar(binaryString, generalField[index]);
+        lastMode = EncodeMode.IsoIec;
+        if (generalField[index] == Gs1.GroupSeparator) {
+            binaryString.Append("01111");
+            if (treatFnc1AsNumericLatch) lastMode = EncodeMode.Numeric;
+        }
+        return index + 1;
+    }
+
+    private static void AppendAlphaChar(StringBuilder binaryString, int value) {
+        if (value >= '0' && value <= '9') {
+            binaryAppend(binaryString, value - 43, 5);
+            return;
+        }
+        if (value >= 'A' && value <= 'Z') {
+            binaryAppend(binaryString, value - 33, 6);
+            return;
+        }
+        switch (value) {
+            case Gs1.GroupSeparator:
+                return;
+            case '*':
+                binaryString.Append("111010");
+                return;
+            case ',':
+                binaryString.Append("111011");
+                return;
+            case '-':
+                binaryString.Append("111100");
+                return;
+            case '.':
+                binaryString.Append("111101");
+                return;
+            case '/':
+                binaryString.Append("111110");
+                return;
+        }
+    }
+
+    private static void AppendIsoChar(StringBuilder binaryString, int value) {
+        if (value >= '0' && value <= '9') {
+            binaryAppend(binaryString, value - 43, 5);
+            return;
+        }
+        if (value >= 'A' && value <= 'Z') {
+            binaryAppend(binaryString, value - 1, 7);
+            return;
+        }
+        if (value >= 'a' && value <= 'z') {
+            binaryAppend(binaryString, value - 7, 7);
+            return;
+        }
+        switch (value) {
+            case Gs1.GroupSeparator:
+                return;
+            case '!':
+                binaryString.Append("11101000");
+                return;
+            case '"':
+                binaryString.Append("11101001");
+                return;
+            case '%':
+                binaryString.Append("11101010");
+                return;
+            case '&':
+                binaryString.Append("11101011");
+                return;
+            case '\'':
+                binaryString.Append("11101100");
+                return;
+            case '(':
+                binaryString.Append("11101101");
+                return;
+            case ')':
+                binaryString.Append("11101110");
+                return;
+            case '*':
+                binaryString.Append("11101111");
+                return;
+            case '+':
+                binaryString.Append("11110000");
+                return;
+            case ',':
+                binaryString.Append("11110001");
+                return;
+            case '-':
+                binaryString.Append("11110010");
+                return;
+            case '.':
+                binaryString.Append("11110011");
+                return;
+            case '/':
+                binaryString.Append("11110100");
+                return;
+            case ':':
+                binaryString.Append("11110101");
+                return;
+            case ';':
+                binaryString.Append("11110110");
+                return;
+            case '<':
+                binaryString.Append("11110111");
+                return;
+            case '=':
+                binaryString.Append("11111000");
+                return;
+            case '>':
+                binaryString.Append("11111001");
+                return;
+            case '?':
+                binaryString.Append("11111010");
+                return;
+            case '_':
+                binaryString.Append("11111011");
+                return;
+            case ' ':
+                binaryString.Append("11111100");
+                return;
+        }
     }
 
     private static int ParseInt(int[] chars, int index, int length) {

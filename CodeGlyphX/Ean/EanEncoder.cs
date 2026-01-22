@@ -13,48 +13,49 @@ public static class EanEncoder {
     /// </summary>
     public static Barcode1D Encode(string content) {
         if (content is null) throw new ArgumentNullException(nameof(content));
-        var addOn = (string?)null;
-        var plusIndex = content.IndexOf('+');
-        if (plusIndex >= 0) {
-            if (content.IndexOf('+', plusIndex + 1) >= 0) throw new InvalidOperationException("Only one add-on separator '+' is supported.");
-            addOn = content.Substring(plusIndex + 1);
-            content = content.Substring(0, plusIndex);
-            if (addOn.Length == 0) throw new InvalidOperationException("Add-on digits are required after '+'.");
-        }
+        SplitAddOn(content, out content, out var addOn);
 
         if (!RegexCache.DigitsOptional().IsMatch(content)) throw new InvalidOperationException("Can only encode numerical digits (0-9)");
 
-        var checksum = 0;
+        content = NormalizeContent(content);
+
+        var baseCode = content.Length == 8 ? EncodeEan8(content) : EncodeEan13(content);
+        return AppendAddOn(baseCode, addOn);
+    }
+
+    private static void SplitAddOn(string content, out string core, out string? addOn) {
+        addOn = null;
+        var plusIndex = content.IndexOf('+');
+        if (plusIndex < 0) {
+            core = content;
+            return;
+        }
+        if (content.IndexOf('+', plusIndex + 1) >= 0) throw new InvalidOperationException("Only one add-on separator '+' is supported.");
+        addOn = content.Substring(plusIndex + 1);
+        if (addOn.Length == 0) throw new InvalidOperationException("Add-on digits are required after '+'.");
+        core = content.Substring(0, plusIndex);
+    }
+
+    private static string NormalizeContent(string content) {
         if (content.Length == 7 || content.Length == 12) {
             var c = CalcChecksum(content);
-            content += c;
-            checksum = c - '0';
-        } else if (content.Length == 8 || content.Length == 13) {
-            var c = CalcChecksum(content.Substring(0, content.Length - 1));
-            if (content[content.Length - 1] != c) throw new InvalidOperationException("Checksum mismatch");
-            checksum = c - '0';
+            return content + c;
         }
 
-        if (content.Length == 8) {
-            var baseCode = EncodeEan8(content);
-            if (!string.IsNullOrEmpty(addOn)) {
-                var segments = new List<BarSegment>(baseCode.Segments);
-                EanAddOn.AppendAddOn(segments, addOn!);
-                return new Barcode1D(segments);
-            }
-            return baseCode;
-        }
-        if (content.Length == 13) {
-            var baseCode = EncodeEan13(content);
-            if (!string.IsNullOrEmpty(addOn)) {
-                var segments = new List<BarSegment>(baseCode.Segments);
-                EanAddOn.AppendAddOn(segments, addOn!);
-                return new Barcode1D(segments);
-            }
-            return baseCode;
+        if (content.Length == 8 || content.Length == 13) {
+            var c = CalcChecksum(content.Substring(0, content.Length - 1));
+            if (content[content.Length - 1] != c) throw new InvalidOperationException("Checksum mismatch");
+            return content;
         }
 
         throw new InvalidOperationException("Invalid content length. Should be 7 or 12 if the code does not include a checksum, 8 or 13 if the code already includes a checksum");
+    }
+
+    private static Barcode1D AppendAddOn(Barcode1D baseCode, string? addOn) {
+        if (string.IsNullOrEmpty(addOn)) return baseCode;
+        var segments = new List<BarSegment>(baseCode.Segments);
+        EanAddOn.AppendAddOn(segments, addOn!);
+        return new Barcode1D(segments);
     }
 
     private static Barcode1D EncodeEan8(string content) {

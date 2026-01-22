@@ -95,12 +95,15 @@ internal static partial class QrPixelDecoder {
         bool aggressive) {
         if (budget.IsExpired) return;
         Func<bool>? shouldStop = budget.Enabled ? () => budget.IsExpired : null;
-        var rowStepOverride = budget.Enabled && budget.MaxMilliseconds <= 800 ? 2 : 0;
+        var tightBudget = budget.Enabled && budget.MaxMilliseconds <= 800;
+        var rowStepOverride = 0;
         var maxCandidates = 0;
-        if (budget.Enabled && budget.MaxMilliseconds <= 800) {
+        if (tightBudget) {
+            var minDim = image.Width < image.Height ? image.Width : image.Height;
+            rowStepOverride = minDim >= 720 ? 3 : 2;
             maxCandidates = aggressive ? 36 : 24;
         }
-        QrFinderPatternDetector.FindCandidates(image, invert, candidates, aggressive, shouldStop, rowStepOverride, maxCandidates);
+        QrFinderPatternDetector.FindCandidates(image, invert, candidates, aggressive, shouldStop, rowStepOverride, maxCandidates, allowFullScan: !tightBudget, requireDiagonalCheck: !tightBudget);
         if (budget.Enabled && candidates.Count > 64) {
             candidates.Sort(static (a, b) => b.Count.CompareTo(a.Count));
             candidates.RemoveRange(64, candidates.Count - 64);
@@ -265,23 +268,36 @@ internal static partial class QrPixelDecoder {
 
         // Finder-based sampling (robust to extra background/noise). Try multiple triples when the region contains UI/text.
         Func<bool>? shouldStop = budget.Enabled ? () => budget.IsExpired : null;
-        var rowStepOverride = budget.Enabled && budget.MaxMilliseconds <= 800 ? 2 : 0;
+        var tightBudget = budget.Enabled && budget.MaxMilliseconds <= 800;
+        var rowStepOverride = 0;
+        if (tightBudget) {
+            var minDim = image.Width < image.Height ? image.Width : image.Height;
+            rowStepOverride = minDim >= 720 ? 3 : 2;
+        }
         var maxCandidates = 0;
-        if (budget.Enabled && budget.MaxMilliseconds <= 800) {
+        if (tightBudget) {
             maxCandidates = aggressive ? 36 : 24;
         }
-        QrFinderPatternDetector.FindCandidates(image, invert, candidates, aggressive, shouldStop, rowStepOverride, maxCandidates);
+        QrFinderPatternDetector.FindCandidates(image, invert, candidates, aggressive, shouldStop, rowStepOverride, maxCandidates, allowFullScan: !tightBudget, requireDiagonalCheck: !tightBudget);
         if (budget.Enabled && candidates.Count > 64) {
             candidates.Sort(static (a, b) => b.Count.CompareTo(a.Count));
             candidates.RemoveRange(64, candidates.Count - 64);
         }
-        if (budget.Enabled && budget.MaxMilliseconds <= 800 && candidates.Count > 30) {
+        if (tightBudget && candidates.Count > 30) {
             diagnostics = new QrPixelDecodeDiagnostics(scale, threshold, invert, candidates.Count, candidateTriplesTried: 0, dimension: 0,
                 moduleDiagnostics: new global::CodeGlyphX.QrDecodeDiagnostics(global::CodeGlyphX.QrDecodeFailure.Payload));
             return false;
         }
 
         if (candidates.Count >= 3) {
+            if (tightBudget && candidates.Count > 16) {
+                if (TryDecodeByCandidateBounds(scale, threshold, image, invert, candidates, accept, aggressive, budget, out result, out var diagBounds)) {
+                    diagnostics = diagBounds;
+                    return true;
+                }
+                diagnostics = Better(diagnostics, diagBounds);
+                return false;
+            }
             if (TryDecodeFromFinderCandidates(scale, threshold, image, invert, candidates, accept, aggressive, budget, out result, out var diagF)) {
                 diagnostics = diagF;
                 return true;

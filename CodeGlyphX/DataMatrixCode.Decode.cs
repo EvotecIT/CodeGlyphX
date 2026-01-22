@@ -27,6 +27,9 @@ using CodeGlyphX.Rendering.Xpm;
 namespace CodeGlyphX;
 
 public static partial class DataMatrixCode {
+    private const string FailureCancelled = "Cancelled.";
+    private const string FailureDownscale = "Image downscale failed.";
+    private const string FailureNoDataMatrix = "No Data Matrix decoded.";
     /// <summary>
     /// Attempts to decode a Data Matrix symbol from PNG bytes.
     /// </summary>
@@ -144,11 +147,11 @@ public static partial class DataMatrixCode {
         diagnostics = new DataMatrixDecodeDiagnostics();
         var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
         try {
-            if (token.IsCancellationRequested) { text = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
+            if (token.IsCancellationRequested) { text = string.Empty; diagnostics.Failure = FailureCancelled; return false; }
             var rgba = PngReader.DecodeRgba32(png, out var width, out var height);
             if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) {
                 text = string.Empty;
-                diagnostics.Failure ??= token.IsCancellationRequested ? "Cancelled." : "Image downscale failed.";
+                diagnostics.Failure ??= token.IsCancellationRequested ? FailureCancelled : FailureDownscale;
                 return false;
             }
             if (DataMatrixDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out text, out var dmDiag)) {
@@ -156,7 +159,7 @@ public static partial class DataMatrixCode {
                 return true;
             }
             diagnostics = dmDiag;
-            diagnostics.Failure ??= "No Data Matrix decoded.";
+            diagnostics.Failure ??= FailureNoDataMatrix;
             text = string.Empty;
             return false;
         } finally {
@@ -208,7 +211,7 @@ public static partial class DataMatrixCode {
     /// </summary>
     public static bool TryDecodePngFile(string path, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text, out DataMatrixDecodeDiagnostics diagnostics) {
         if (path is null) throw new ArgumentNullException(nameof(path));
-        if (cancellationToken.IsCancellationRequested) { text = string.Empty; diagnostics = new DataMatrixDecodeDiagnostics { Failure = "Cancelled." }; return false; }
+        if (cancellationToken.IsCancellationRequested) { text = string.Empty; diagnostics = new DataMatrixDecodeDiagnostics { Failure = FailureCancelled }; return false; }
         var png = RenderIO.ReadBinary(path);
         return TryDecodePngCore(png, options, cancellationToken, out text, out diagnostics);
     }
@@ -256,7 +259,7 @@ public static partial class DataMatrixCode {
     /// </summary>
     public static bool TryDecodePng(Stream stream, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text, out DataMatrixDecodeDiagnostics diagnostics) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        if (cancellationToken.IsCancellationRequested) { text = string.Empty; diagnostics = new DataMatrixDecodeDiagnostics { Failure = "Cancelled." }; return false; }
+        if (cancellationToken.IsCancellationRequested) { text = string.Empty; diagnostics = new DataMatrixDecodeDiagnostics { Failure = FailureCancelled }; return false; }
         var png = RenderIO.ReadBinary(stream);
         return TryDecodePngCore(png, options, cancellationToken, out text, out diagnostics);
     }
@@ -304,6 +307,173 @@ public static partial class DataMatrixCode {
             budgetCts?.Dispose();
             budgetScope?.Dispose();
         }
+    }
+
+    /// <summary>
+    /// Attempts to decode a Data Matrix symbol from common image formats, with diagnostics.
+    /// </summary>
+    public static bool TryDecodeImage(byte[] image, out string text, out DataMatrixDecodeDiagnostics diagnostics) {
+        return TryDecodeImage(image, null, CancellationToken.None, out text, out diagnostics);
+    }
+
+    /// <summary>
+    /// Attempts to decode a Data Matrix symbol from common image formats with image decode options, with diagnostics.
+    /// </summary>
+    public static bool TryDecodeImage(byte[] image, ImageDecodeOptions? options, out string text, out DataMatrixDecodeDiagnostics diagnostics) {
+        return TryDecodeImage(image, options, CancellationToken.None, out text, out diagnostics);
+    }
+
+    /// <summary>
+    /// Attempts to decode a Data Matrix symbol from common image formats with image decode options, cancellation, and diagnostics.
+    /// </summary>
+    public static bool TryDecodeImage(byte[] image, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text, out DataMatrixDecodeDiagnostics diagnostics) {
+        return TryDecodeImageCore(image, options, cancellationToken, out text, out diagnostics);
+    }
+
+    /// <summary>
+    /// Attempts to decode a Data Matrix symbol from common image formats in a span, with diagnostics.
+    /// </summary>
+    public static bool TryDecodeImage(ReadOnlySpan<byte> image, out string text, out DataMatrixDecodeDiagnostics diagnostics) {
+        return TryDecodeImage(image, null, CancellationToken.None, out text, out diagnostics);
+    }
+
+    /// <summary>
+    /// Attempts to decode a Data Matrix symbol from common image formats in a span with image decode options, with diagnostics.
+    /// </summary>
+    public static bool TryDecodeImage(ReadOnlySpan<byte> image, ImageDecodeOptions? options, out string text, out DataMatrixDecodeDiagnostics diagnostics) {
+        return TryDecodeImage(image, options, CancellationToken.None, out text, out diagnostics);
+    }
+
+    /// <summary>
+    /// Attempts to decode a Data Matrix symbol from common image formats in a span with image decode options, cancellation, and diagnostics.
+    /// </summary>
+    public static bool TryDecodeImage(ReadOnlySpan<byte> image, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text, out DataMatrixDecodeDiagnostics diagnostics) {
+        diagnostics = new DataMatrixDecodeDiagnostics();
+        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
+        try {
+            if (token.IsCancellationRequested) { text = string.Empty; diagnostics.Failure = FailureCancelled; return false; }
+            if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) {
+                text = string.Empty;
+                diagnostics.Failure ??= "Unsupported image format.";
+                return false;
+            }
+            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) {
+                text = string.Empty;
+                diagnostics.Failure ??= token.IsCancellationRequested ? FailureCancelled : FailureDownscale;
+                return false;
+            }
+            if (DataMatrixDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out text, out var dmDiag)) {
+                diagnostics = dmDiag;
+                return true;
+            }
+            diagnostics = dmDiag;
+            diagnostics.Failure ??= FailureNoDataMatrix;
+            text = string.Empty;
+            return false;
+        } finally {
+            budgetCts?.Dispose();
+            budgetScope?.Dispose();
+        }
+    }
+
+    /// <summary>
+    /// Attempts to decode a Data Matrix symbol from common image formats in a span.
+    /// </summary>
+    public static bool TryDecodeImage(ReadOnlySpan<byte> image, out string text) {
+        return TryDecodeImage(image, null, CancellationToken.None, out text);
+    }
+
+    /// <summary>
+    /// Attempts to decode a Data Matrix symbol from common image formats in a span, with cancellation.
+    /// </summary>
+    public static bool TryDecodeImage(ReadOnlySpan<byte> image, CancellationToken cancellationToken, out string text) {
+        return TryDecodeImage(image, null, cancellationToken, out text);
+    }
+
+    /// <summary>
+    /// Attempts to decode a Data Matrix symbol from common image formats in a span with image decode options.
+    /// </summary>
+    public static bool TryDecodeImage(ReadOnlySpan<byte> image, ImageDecodeOptions? options, out string text) {
+        return TryDecodeImage(image, options, CancellationToken.None, out text);
+    }
+
+    /// <summary>
+    /// Attempts to decode a Data Matrix symbol from common image formats in a span with image decode options, with cancellation.
+    /// </summary>
+    public static bool TryDecodeImage(ReadOnlySpan<byte> image, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text) {
+        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
+        try {
+            if (token.IsCancellationRequested) { text = string.Empty; return false; }
+            if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) { text = string.Empty; return false; }
+            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) { text = string.Empty; return false; }
+            return DataMatrixDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out text);
+        } finally {
+            budgetCts?.Dispose();
+            budgetScope?.Dispose();
+        }
+    }
+
+    /// <summary>
+    /// Attempts to decode a Data Matrix symbol from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).
+    /// </summary>
+    public static bool TryDecodeImage(Stream stream, out string text) {
+        return TryDecodeImage(stream, null, CancellationToken.None, out text);
+    }
+
+    /// <summary>
+    /// Attempts to decode a Data Matrix symbol from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA), with cancellation.
+    /// </summary>
+    public static bool TryDecodeImage(Stream stream, CancellationToken cancellationToken, out string text) {
+        return TryDecodeImage(stream, null, cancellationToken, out text);
+    }
+
+    /// <summary>
+    /// Attempts to decode a Data Matrix symbol from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options.
+    /// </summary>
+    public static bool TryDecodeImage(Stream stream, ImageDecodeOptions? options, out string text) {
+        return TryDecodeImage(stream, options, CancellationToken.None, out text);
+    }
+
+    /// <summary>
+    /// Attempts to decode a Data Matrix symbol from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options, with cancellation.
+    /// </summary>
+    public static bool TryDecodeImage(Stream stream, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text) {
+        if (stream is null) throw new ArgumentNullException(nameof(stream));
+        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
+        try {
+            if (token.IsCancellationRequested) { text = string.Empty; return false; }
+            var data = RenderIO.ReadBinary(stream);
+            if (!ImageReader.TryDecodeRgba32(data, out var rgba, out var width, out var height)) { text = string.Empty; return false; }
+            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) { text = string.Empty; return false; }
+            return DataMatrixDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out text);
+        } finally {
+            budgetCts?.Dispose();
+            budgetScope?.Dispose();
+        }
+    }
+
+    /// <summary>
+    /// Attempts to decode a Data Matrix symbol from an image stream, with diagnostics.
+    /// </summary>
+    public static bool TryDecodeImage(Stream stream, out string text, out DataMatrixDecodeDiagnostics diagnostics) {
+        return TryDecodeImage(stream, null, CancellationToken.None, out text, out diagnostics);
+    }
+
+    /// <summary>
+    /// Attempts to decode a Data Matrix symbol from an image stream with image decode options, with diagnostics.
+    /// </summary>
+    public static bool TryDecodeImage(Stream stream, ImageDecodeOptions? options, out string text, out DataMatrixDecodeDiagnostics diagnostics) {
+        return TryDecodeImage(stream, options, CancellationToken.None, out text, out diagnostics);
+    }
+
+    /// <summary>
+    /// Attempts to decode a Data Matrix symbol from an image stream with image decode options, cancellation, and diagnostics.
+    /// </summary>
+    public static bool TryDecodeImage(Stream stream, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text, out DataMatrixDecodeDiagnostics diagnostics) {
+        if (stream is null) throw new ArgumentNullException(nameof(stream));
+        if (cancellationToken.IsCancellationRequested) { text = string.Empty; diagnostics = new DataMatrixDecodeDiagnostics { Failure = FailureCancelled }; return false; }
+        var data = RenderIO.ReadBinary(stream);
+        return TryDecodeImageCore(data, options, cancellationToken, out text, out diagnostics);
     }
 
     /// <summary>
@@ -368,110 +538,6 @@ public static partial class DataMatrixCode {
     }
 
     /// <summary>
-    /// Attempts to decode a Data Matrix symbol from common image formats, with diagnostics.
-    /// </summary>
-    public static bool TryDecodeImage(byte[] image, out string text, out DataMatrixDecodeDiagnostics diagnostics) {
-        return TryDecodeImage(image, null, CancellationToken.None, out text, out diagnostics);
-    }
-
-    /// <summary>
-    /// Attempts to decode a Data Matrix symbol from common image formats with image decode options, with diagnostics.
-    /// </summary>
-    public static bool TryDecodeImage(byte[] image, ImageDecodeOptions? options, out string text, out DataMatrixDecodeDiagnostics diagnostics) {
-        return TryDecodeImage(image, options, CancellationToken.None, out text, out diagnostics);
-    }
-
-    /// <summary>
-    /// Attempts to decode a Data Matrix symbol from common image formats with image decode options, cancellation, and diagnostics.
-    /// </summary>
-    public static bool TryDecodeImage(byte[] image, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text, out DataMatrixDecodeDiagnostics diagnostics) {
-        return TryDecodeImageCore(image, options, cancellationToken, out text, out diagnostics);
-    }
-
-    /// <summary>
-    /// Attempts to decode a Data Matrix symbol from common image formats in a span, with diagnostics.
-    /// </summary>
-    public static bool TryDecodeImage(ReadOnlySpan<byte> image, out string text, out DataMatrixDecodeDiagnostics diagnostics) {
-        return TryDecodeImage(image, null, CancellationToken.None, out text, out diagnostics);
-    }
-
-    /// <summary>
-    /// Attempts to decode a Data Matrix symbol from common image formats in a span with image decode options, with diagnostics.
-    /// </summary>
-    public static bool TryDecodeImage(ReadOnlySpan<byte> image, ImageDecodeOptions? options, out string text, out DataMatrixDecodeDiagnostics diagnostics) {
-        return TryDecodeImage(image, options, CancellationToken.None, out text, out diagnostics);
-    }
-
-    /// <summary>
-    /// Attempts to decode a Data Matrix symbol from common image formats in a span with image decode options, cancellation, and diagnostics.
-    /// </summary>
-    public static bool TryDecodeImage(ReadOnlySpan<byte> image, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text, out DataMatrixDecodeDiagnostics diagnostics) {
-        diagnostics = new DataMatrixDecodeDiagnostics();
-        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
-        try {
-            if (token.IsCancellationRequested) { text = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
-            if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) {
-                text = string.Empty;
-                diagnostics.Failure ??= "Unsupported image format.";
-                return false;
-            }
-            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) {
-                text = string.Empty;
-                diagnostics.Failure ??= token.IsCancellationRequested ? "Cancelled." : "Image downscale failed.";
-                return false;
-            }
-            if (DataMatrixDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out text, out var dmDiag)) {
-                diagnostics = dmDiag;
-                return true;
-            }
-            diagnostics = dmDiag;
-            diagnostics.Failure ??= "No Data Matrix decoded.";
-            text = string.Empty;
-            return false;
-        } finally {
-            budgetCts?.Dispose();
-            budgetScope?.Dispose();
-        }
-    }
-
-    /// <summary>
-    /// Attempts to decode a Data Matrix symbol from common image formats in a span.
-    /// </summary>
-    public static bool TryDecodeImage(ReadOnlySpan<byte> image, out string text) {
-        return TryDecodeImage(image, null, CancellationToken.None, out text);
-    }
-
-    /// <summary>
-    /// Attempts to decode a Data Matrix symbol from common image formats in a span, with cancellation.
-    /// </summary>
-    public static bool TryDecodeImage(ReadOnlySpan<byte> image, CancellationToken cancellationToken, out string text) {
-        return TryDecodeImage(image, null, cancellationToken, out text);
-    }
-
-    /// <summary>
-    /// Attempts to decode a Data Matrix symbol from common image formats in a span with image decode options.
-    /// </summary>
-    public static bool TryDecodeImage(ReadOnlySpan<byte> image, ImageDecodeOptions? options, out string text) {
-        return TryDecodeImage(image, options, CancellationToken.None, out text);
-    }
-
-    /// <summary>
-    /// Attempts to decode a Data Matrix symbol from common image formats in a span with image decode options, with cancellation.
-    /// </summary>
-    public static bool TryDecodeImage(ReadOnlySpan<byte> image, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text) {
-        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
-        try {
-            if (token.IsCancellationRequested) { text = string.Empty; return false; }
-            if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) { text = string.Empty; return false; }
-            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) { text = string.Empty; return false; }
-            return DataMatrixDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out text);
-        } finally {
-            budgetCts?.Dispose();
-            budgetScope?.Dispose();
-        }
-    }
-
-    /// <summary>
     /// Attempts to decode all Data Matrix symbols from common image formats.
     /// </summary>
     public static bool TryDecodeAllImage(byte[] image, out string[] texts) {
@@ -516,79 +582,16 @@ public static partial class DataMatrixCode {
         return TryDecodeAllImageCore(data, options, cancellationToken, out texts);
     }
 
-    /// <summary>
-    /// Attempts to decode a Data Matrix symbol from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).
-    /// </summary>
-    public static bool TryDecodeImage(Stream stream, out string text) {
-        return TryDecodeImage(stream, null, CancellationToken.None, out text);
-    }
-
-    /// <summary>
-    /// Attempts to decode a Data Matrix symbol from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA), with cancellation.
-    /// </summary>
-    public static bool TryDecodeImage(Stream stream, CancellationToken cancellationToken, out string text) {
-        return TryDecodeImage(stream, null, cancellationToken, out text);
-    }
-
-    /// <summary>
-    /// Attempts to decode a Data Matrix symbol from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options.
-    /// </summary>
-    public static bool TryDecodeImage(Stream stream, ImageDecodeOptions? options, out string text) {
-        return TryDecodeImage(stream, options, CancellationToken.None, out text);
-    }
-
-    /// <summary>
-    /// Attempts to decode a Data Matrix symbol from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options, with cancellation.
-    /// </summary>
-    public static bool TryDecodeImage(Stream stream, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text) {
-        if (stream is null) throw new ArgumentNullException(nameof(stream));
-        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
-        try {
-            if (token.IsCancellationRequested) { text = string.Empty; return false; }
-            var data = RenderIO.ReadBinary(stream);
-            if (!ImageReader.TryDecodeRgba32(data, out var rgba, out var width, out var height)) { text = string.Empty; return false; }
-            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) { text = string.Empty; return false; }
-            return DataMatrixDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out text);
-        } finally {
-            budgetCts?.Dispose();
-            budgetScope?.Dispose();
-        }
-    }
-
-    /// <summary>
-    /// Attempts to decode a Data Matrix symbol from an image stream, with diagnostics.
-    /// </summary>
-    public static bool TryDecodeImage(Stream stream, out string text, out DataMatrixDecodeDiagnostics diagnostics) {
-        return TryDecodeImage(stream, null, CancellationToken.None, out text, out diagnostics);
-    }
-
-    /// <summary>
-    /// Attempts to decode a Data Matrix symbol from an image stream with image decode options, with diagnostics.
-    /// </summary>
-    public static bool TryDecodeImage(Stream stream, ImageDecodeOptions? options, out string text, out DataMatrixDecodeDiagnostics diagnostics) {
-        return TryDecodeImage(stream, options, CancellationToken.None, out text, out diagnostics);
-    }
-
-    /// <summary>
-    /// Attempts to decode a Data Matrix symbol from an image stream with image decode options, cancellation, and diagnostics.
-    /// </summary>
-    public static bool TryDecodeImage(Stream stream, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text, out DataMatrixDecodeDiagnostics diagnostics) {
-        if (stream is null) throw new ArgumentNullException(nameof(stream));
-        if (cancellationToken.IsCancellationRequested) { text = string.Empty; diagnostics = new DataMatrixDecodeDiagnostics { Failure = "Cancelled." }; return false; }
-        var data = RenderIO.ReadBinary(stream);
-        return TryDecodeImageCore(data, options, cancellationToken, out text, out diagnostics);
-    }
-
     private static bool TryDecodePngCore(byte[] png, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text, out DataMatrixDecodeDiagnostics diagnostics) {
         diagnostics = new DataMatrixDecodeDiagnostics();
         if (png is null) throw new ArgumentNullException(nameof(png));
         var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
         try {
-            if (token.IsCancellationRequested) { text = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
+            if (token.IsCancellationRequested) { text = string.Empty; diagnostics.Failure = FailureCancelled; return false; }
             var rgba = PngReader.DecodeRgba32(png, out var width, out var height);
             if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) {
                 text = string.Empty;
-                diagnostics.Failure ??= token.IsCancellationRequested ? "Cancelled." : "Image downscale failed.";
+                diagnostics.Failure ??= token.IsCancellationRequested ? FailureCancelled : FailureDownscale;
                 return false;
             }
             if (DataMatrixDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out text, out var dmDiag)) {
@@ -596,7 +599,7 @@ public static partial class DataMatrixCode {
                 return true;
             }
             diagnostics = dmDiag;
-            diagnostics.Failure ??= "No Data Matrix decoded.";
+            diagnostics.Failure ??= FailureNoDataMatrix;
             text = string.Empty;
             return false;
         } finally {
@@ -610,7 +613,7 @@ public static partial class DataMatrixCode {
         if (image is null) throw new ArgumentNullException(nameof(image));
         var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
         try {
-            if (token.IsCancellationRequested) { text = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
+            if (token.IsCancellationRequested) { text = string.Empty; diagnostics.Failure = FailureCancelled; return false; }
             if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) {
                 text = string.Empty;
                 diagnostics.Failure ??= "Unsupported image format.";
@@ -618,7 +621,7 @@ public static partial class DataMatrixCode {
             }
             if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) {
                 text = string.Empty;
-                diagnostics.Failure ??= token.IsCancellationRequested ? "Cancelled." : "Image downscale failed.";
+                diagnostics.Failure ??= token.IsCancellationRequested ? FailureCancelled : FailureDownscale;
                 return false;
             }
             if (DataMatrixDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out text, out var dmDiag)) {
@@ -626,7 +629,7 @@ public static partial class DataMatrixCode {
                 return true;
             }
             diagnostics = dmDiag;
-            diagnostics.Failure ??= "No Data Matrix decoded.";
+            diagnostics.Failure ??= FailureNoDataMatrix;
             text = string.Empty;
             return false;
         } finally {

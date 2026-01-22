@@ -38,9 +38,9 @@ public static class BarcodeEncoder {
             BarcodeType.UPCE => UpcEEncoder.Encode(value, UpcENumberSystem.Zero),
             BarcodeType.ITF14 => Itf14Encoder.Encode(value),
             BarcodeType.ITF => ItfEncoder.Encode(value),
-            BarcodeType.Industrial2of5 => Industrial2of5Encoder.Encode(value),
-            BarcodeType.Matrix2of5 => Matrix2of5Encoder.Encode(value),
-            BarcodeType.IATA2of5 => Iata2of5Encoder.Encode(value),
+            BarcodeType.Industrial2of5 => Industrial2Of5Encoder.Encode(value),
+            BarcodeType.Matrix2of5 => Matrix2Of5Encoder.Encode(value),
+            BarcodeType.IATA2of5 => Iata2Of5Encoder.Encode(value),
             BarcodeType.PatchCode => PatchCodeEncoder.Encode(value),
             BarcodeType.Codabar => CodabarEncoder.Encode(value),
             BarcodeType.MSI => MsiEncoder.Encode(value, MsiChecksumType.Mod10),
@@ -111,17 +111,17 @@ public static class BarcodeEncoder {
     /// <summary>
     /// Encodes an Industrial (Discrete) 2 of 5 barcode.
     /// </summary>
-    public static Barcode1D EncodeIndustrial2of5(string value, bool includeChecksum = false) => Industrial2of5Encoder.Encode(value, includeChecksum);
+    public static Barcode1D EncodeIndustrial2of5(string value, bool includeChecksum = false) => Industrial2Of5Encoder.Encode(value, includeChecksum);
 
     /// <summary>
     /// Encodes a Matrix (Standard) 2 of 5 barcode.
     /// </summary>
-    public static Barcode1D EncodeMatrix2of5(string value, bool includeChecksum = false) => Matrix2of5Encoder.Encode(value, includeChecksum);
+    public static Barcode1D EncodeMatrix2of5(string value, bool includeChecksum = false) => Matrix2Of5Encoder.Encode(value, includeChecksum);
 
     /// <summary>
     /// Encodes an IATA 2 of 5 barcode.
     /// </summary>
-    public static Barcode1D EncodeIata2of5(string value, bool includeChecksum = false) => Iata2of5Encoder.Encode(value, includeChecksum);
+    public static Barcode1D EncodeIata2of5(string value, bool includeChecksum = false) => Iata2Of5Encoder.Encode(value, includeChecksum);
 
     /// <summary>
     /// Encodes a Patch Code symbol.

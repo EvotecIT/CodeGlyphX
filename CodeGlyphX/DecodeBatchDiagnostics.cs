@@ -56,22 +56,24 @@ public readonly struct DecodeBatchDiagnostics {
     /// </summary>
     public TimeSpan AverageElapsed => Total > 0 ? TimeSpan.FromTicks(TotalElapsed.Ticks / Total) : TimeSpan.Zero;
 
-    internal DecodeBatchDiagnostics(
-        int total,
-        int success,
-        int invalidInput,
-        int unsupportedFormat,
-        int cancelled,
-        int noResult,
-        int error,
-        TimeSpan totalElapsed) {
-        Total = total;
-        Success = success;
-        InvalidInput = invalidInput;
-        UnsupportedFormat = unsupportedFormat;
-        Cancelled = cancelled;
-        NoResult = noResult;
-        Error = error;
+    internal DecodeBatchDiagnostics(DecodeBatchCounts counts, TimeSpan totalElapsed) {
+        Total = counts.Total;
+        Success = counts.Success;
+        InvalidInput = counts.InvalidInput;
+        UnsupportedFormat = counts.UnsupportedFormat;
+        Cancelled = counts.Cancelled;
+        NoResult = counts.NoResult;
+        Error = counts.Error;
         TotalElapsed = totalElapsed;
     }
+}
+
+internal readonly struct DecodeBatchCounts {
+    public int Total { get; init; }
+    public int Success { get; init; }
+    public int InvalidInput { get; init; }
+    public int UnsupportedFormat { get; init; }
+    public int Cancelled { get; init; }
+    public int NoResult { get; init; }
+    public int Error { get; init; }
 }

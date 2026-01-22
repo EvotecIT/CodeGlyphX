@@ -1,12 +1,9 @@
-using System;
-using CodeGlyphX.Internal;
-
 namespace CodeGlyphX.Code25;
 
 /// <summary>
 /// Encodes Matrix (Standard) 2 of 5 barcodes.
 /// </summary>
-public static class Matrix2of5Encoder {
+public static class Matrix2Of5Encoder {
     private static readonly int[] StartBars = { 3, 1, 1, 1, 1 };
     private static readonly int[] StopBars = { 3, 1, 1, 1, 1 };
 
@@ -15,6 +12,6 @@ public static class Matrix2of5Encoder {
     /// a Mod-10 check digit is appended.
     /// </summary>
     public static Barcode1D Encode(string content, bool includeChecksum = false) {
-        return Discrete2of5Encoder.Encode(content, includeChecksum, StartBars, StopBars);
+        return Discrete2Of5Encoder.Encode(content, includeChecksum, StartBars, StopBars);
     }
 }

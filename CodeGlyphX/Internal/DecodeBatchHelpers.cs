@@ -53,14 +53,18 @@ internal static class DecodeBatchHelpers {
             }
         }
 
+        var counts = new DecodeBatchCounts {
+            Total = results.Count,
+            Success = success,
+            InvalidInput = invalidInput,
+            UnsupportedFormat = unsupportedFormat,
+            Cancelled = cancelled,
+            NoResult = noResult,
+            Error = error
+        };
+
         var diagnostics = new DecodeBatchDiagnostics(
-            results.Count,
-            success,
-            invalidInput,
-            unsupportedFormat,
-            cancelled,
-            noResult,
-            error,
+            counts,
             TimeSpan.FromTicks(elapsedTicks));
 
         return new DecodeBatchResult<T>(results.ToArray(), diagnostics);

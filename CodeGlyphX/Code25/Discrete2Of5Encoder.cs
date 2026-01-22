@@ -5,7 +5,7 @@ using CodeGlyphX.Itf;
 
 namespace CodeGlyphX.Code25;
 
-internal static class Discrete2of5Encoder {
+internal static class Discrete2Of5Encoder {
     public static Barcode1D Encode(string content, bool includeChecksum, int[] startBars, int[] stopBars) {
         if (content is null) throw new ArgumentNullException(nameof(content));
         if (!RegexCache.DigitsOptional().IsMatch(content)) throw new InvalidOperationException("Can only encode numerical digits (0-9)");

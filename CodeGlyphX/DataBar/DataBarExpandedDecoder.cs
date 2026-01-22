@@ -505,6 +505,13 @@ public static class DataBarExpandedDecoder {
     }
 
     private static bool TryDecodeAlpha(bool[] bits, ref int pos, StringBuilder sb, int size, ref GeneralFieldMode mode) {
+        if (TryDecodeAlphaModeSwitch(bits, ref pos, size, ref mode)) return true;
+        if (!TryDecodeAlpha5(bits, ref pos, size, sb, out var handled)) return false;
+        if (handled) return true;
+        return TryDecodeAlpha6(bits, ref pos, size, sb);
+    }
+
+    private static bool TryDecodeAlphaModeSwitch(bool[] bits, ref int pos, int size, ref GeneralFieldMode mode) {
         if (Match(bits, pos, "000")) {
             if (pos + 3 >= size) {
                 pos = size;
@@ -523,23 +530,33 @@ public static class DataBarExpandedDecoder {
             pos += 5;
             return true;
         }
+        return false;
+    }
 
+    private static bool TryDecodeAlpha5(bool[] bits, ref int pos, int size, StringBuilder sb, out bool handled) {
+        handled = false;
         if (size - pos < 5) {
             pos = size;
+            handled = true;
             return true;
         }
         var v5 = ReadBits(bits, pos, 5);
         if (v5 == 15) {
             sb.Append(GroupSeparator);
             pos += 5;
+            handled = true;
             return true;
         }
         if (v5 >= 5 && v5 <= 14) {
             sb.Append((char)('0' + (v5 - 5)));
             pos += 5;
+            handled = true;
             return true;
         }
+        return true;
+    }
 
+    private static bool TryDecodeAlpha6(bool[] bits, ref int pos, int size, StringBuilder sb) {
         if (size - pos < 6) {
             pos = size;
             return true;
@@ -568,6 +585,15 @@ public static class DataBarExpandedDecoder {
     }
 
     private static bool TryDecodeIso(bool[] bits, ref int pos, StringBuilder sb, int size, ref GeneralFieldMode mode) {
+        if (TryDecodeIsoModeSwitch(bits, ref pos, size, ref mode)) return true;
+        if (!TryDecodeIso5(bits, ref pos, size, sb, out var handled)) return false;
+        if (handled) return true;
+        if (!TryDecodeIso7(bits, ref pos, size, sb, out handled)) return false;
+        if (handled) return true;
+        return TryDecodeIso8(bits, ref pos, size, sb);
+    }
+
+    private static bool TryDecodeIsoModeSwitch(bool[] bits, ref int pos, int size, ref GeneralFieldMode mode) {
         if (Match(bits, pos, "000")) {
             if (pos + 3 >= size) {
                 pos = size;
@@ -586,37 +612,54 @@ public static class DataBarExpandedDecoder {
             pos += 5;
             return true;
         }
+        return false;
+    }
 
+    private static bool TryDecodeIso5(bool[] bits, ref int pos, int size, StringBuilder sb, out bool handled) {
+        handled = false;
         if (size - pos < 5) {
             pos = size;
+            handled = true;
             return true;
         }
         var iso5 = ReadBits(bits, pos, 5);
         if (iso5 == 15) {
             sb.Append(GroupSeparator);
             pos += 5;
+            handled = true;
             return true;
         }
         if (iso5 >= 5 && iso5 <= 14) {
             sb.Append((char)('0' + (iso5 - 5)));
             pos += 5;
+            handled = true;
             return true;
         }
+        return true;
+    }
 
-        if (size - pos >= 7) {
-            var v7 = ReadBits(bits, pos, 7);
-            if (v7 >= 64 && v7 <= 89) {
-                sb.Append((char)(v7 + 1));
-                pos += 7;
-                return true;
-            }
-            if (v7 >= 90 && v7 <= 115) {
-                sb.Append((char)(v7 + 7));
-                pos += 7;
-                return true;
-            }
+    private static bool TryDecodeIso7(bool[] bits, ref int pos, int size, StringBuilder sb, out bool handled) {
+        handled = false;
+        if (size - pos < 7) {
+            return true;
         }
+        var v7 = ReadBits(bits, pos, 7);
+        if (v7 >= 64 && v7 <= 89) {
+            sb.Append((char)(v7 + 1));
+            pos += 7;
+            handled = true;
+            return true;
+        }
+        if (v7 >= 90 && v7 <= 115) {
+            sb.Append((char)(v7 + 7));
+            pos += 7;
+            handled = true;
+            return true;
+        }
+        return true;
+    }
 
+    private static bool TryDecodeIso8(bool[] bits, ref int pos, int size, StringBuilder sb) {
         if (size - pos < 8) {
             pos = size;
             return true;

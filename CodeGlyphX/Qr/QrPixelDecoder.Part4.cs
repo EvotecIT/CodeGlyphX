@@ -132,12 +132,16 @@ internal static partial class QrPixelDecoder {
         diagnostics = default;
 
         candidates.Sort(static (a, b) => b.Count.CompareTo(a.Count));
-        var n = Math.Min(candidates.Count, budget.Enabled ? 8 : 12);
+        var tightBudget = budget.Enabled && budget.MaxMilliseconds <= 800;
+        var n = Math.Min(candidates.Count, tightBudget ? 5 : (budget.Enabled ? 8 : 12));
         var triedTriples = 0;
         var bboxAttempts = 0;
         var maxTriples = aggressive ? 80 : 40;
         if (budget.Enabled) {
             maxTriples = Math.Min(maxTriples, aggressive ? 40 : 20);
+        }
+        if (tightBudget && candidates.Count > 12) {
+            maxTriples = Math.Min(maxTriples, aggressive ? 16 : 12);
         }
 
         for (var i = 0; i < n - 2; i++) {
@@ -266,6 +270,7 @@ internal static partial class QrPixelDecoder {
         var moduleSize = (tl.ModuleSize + tr.ModuleSize + bl.ModuleSize) / 3.0;
         if (moduleSize <= 0) return false;
 
+        var tightBudget = budget.Enabled && budget.MaxMilliseconds <= 800;
         var distX = Distance(tl.X, tl.Y, tr.X, tr.Y);
         var distY = Distance(tl.X, tl.Y, bl.X, bl.Y);
         if (distX <= 0 || distY <= 0) return false;
@@ -278,14 +283,25 @@ internal static partial class QrPixelDecoder {
         Span<int> candidates = stackalloc int[10];
         var candidatesCount = 0;
         AddDimensionCandidate(ref candidates, ref candidatesCount, baseDim);
-        AddDimensionCandidate(ref candidates, ref candidatesCount, NearestValidDimension(dimH));
-        AddDimensionCandidate(ref candidates, ref candidatesCount, NearestValidDimension(dimV));
-        AddDimensionCandidate(ref candidates, ref candidatesCount, baseDim - 4);
-        AddDimensionCandidate(ref candidates, ref candidatesCount, baseDim - 8);
-        AddDimensionCandidate(ref candidates, ref candidatesCount, baseDim - 12);
-        AddDimensionCandidate(ref candidates, ref candidatesCount, baseDim + 4);
-        AddDimensionCandidate(ref candidates, ref candidatesCount, baseDim + 8);
-        AddDimensionCandidate(ref candidates, ref candidatesCount, baseDim + 12);
+        var dimHc = NearestValidDimension(dimH);
+        var dimVc = NearestValidDimension(dimV);
+        if (tightBudget) {
+            if (Math.Abs(dimHc - baseDim) >= 4) {
+                AddDimensionCandidate(ref candidates, ref candidatesCount, dimHc);
+            }
+            if (Math.Abs(dimVc - baseDim) >= 4) {
+                AddDimensionCandidate(ref candidates, ref candidatesCount, dimVc);
+            }
+        } else {
+            AddDimensionCandidate(ref candidates, ref candidatesCount, dimHc);
+            AddDimensionCandidate(ref candidates, ref candidatesCount, dimVc);
+            AddDimensionCandidate(ref candidates, ref candidatesCount, baseDim - 4);
+            AddDimensionCandidate(ref candidates, ref candidatesCount, baseDim - 8);
+            AddDimensionCandidate(ref candidates, ref candidatesCount, baseDim - 12);
+            AddDimensionCandidate(ref candidates, ref candidatesCount, baseDim + 4);
+            AddDimensionCandidate(ref candidates, ref candidatesCount, baseDim + 8);
+            AddDimensionCandidate(ref candidates, ref candidatesCount, baseDim + 12);
+        }
 
         for (var i = 0; i < candidatesCount; i++) {
             if (budget.IsExpired) return false;
@@ -344,10 +360,17 @@ internal static partial class QrPixelDecoder {
         }
 
         var best = moduleDiag0;
+        var tightBudget = budget.Enabled && budget.MaxMilliseconds <= 800;
 
         // Refine sampling using format/timing patterns as a score:
         // - phase (sub-module offsets) + small scale adjustment of vx/vy (finder centers can be slightly off).
-        QrPixelSampling.RefineTransform(image, invert, tl.X, tl.Y, vxX, vxY, vyX, vyY, dimension, out vxX, out vxY, out vyX, out vyY, out var phaseX, out var phaseY);
+        double phaseX;
+        double phaseY;
+        if (tightBudget) {
+            QrPixelSampling.RefinePhase(image, invert, tl.X, tl.Y, vxX, vxY, vyX, vyY, dimension, out phaseX, out phaseY);
+        } else {
+            QrPixelSampling.RefineTransform(image, invert, tl.X, tl.Y, vxX, vxY, vyX, vyY, dimension, out vxX, out vxY, out vyX, out vyY, out phaseX, out phaseY);
+        }
 
         var moduleSize = (Math.Sqrt(vxX * vxX + vxY * vxY) + Math.Sqrt(vyX * vyX + vyY * vyY)) / 2.0;
 
@@ -372,6 +395,63 @@ internal static partial class QrPixelDecoder {
         }
 
         best = Better(best, moduleDiagR);
+        if (tightBudget) {
+            if (aggressive &&
+                moduleDiagR.Failure is global::CodeGlyphX.QrDecodeFailure.ReedSolomon or global::CodeGlyphX.QrDecodeFailure.Payload &&
+                !budget.IsNearDeadline(150)) {
+                QrPixelSampling.RefineTransform(image, invert, tl.X, tl.Y, vxX, vxY, vyX, vyY, dimension, out var rvxX, out var rvxY, out var rvyX, out var rvyY, out var rPhaseX, out var rPhaseY);
+
+                var rModuleSize = (Math.Sqrt(rvxX * rvxX + rvxY * rvxY) + Math.Sqrt(rvyX * rvyX + rvyY * rvyY)) / 2.0;
+                var rCornerTlX = tl.X - (rvxX + rvyX) * finderCenterToCorner;
+                var rCornerTlY = tl.Y - (rvxY + rvyY) * finderCenterToCorner;
+                var rCornerTrX = rCornerTlX + rvxX * dimension;
+                var rCornerTrY = rCornerTlY + rvxY * dimension;
+                var rCornerBlX = rCornerTlX + rvyX * dimension;
+                var rCornerBlY = rCornerTlY + rvyY * dimension;
+                var rCornerBrX = rCornerTlX + (rvxX + rvyX) * dimension;
+                var rCornerBrY = rCornerTlY + (rvxY + rvyY) * dimension;
+
+                if (TrySampleWithCorners(image, invert, rPhaseX, rPhaseY, dimension, rCornerTlX, rCornerTlY, rCornerTrX, rCornerTrY, rCornerBrX, rCornerBrY, rCornerBlX, rCornerBlY, rModuleSize, accept, aggressive, budget, out result, out var moduleDiagT)) {
+                    diagnostics = new QrPixelDecodeDiagnostics(scale, threshold, invert, candidateCount, candidateTriplesTried, dimension, moduleDiagT);
+                    return true;
+                }
+
+                best = Better(best, moduleDiagT);
+            }
+
+            if (aggressive &&
+                moduleDiagR.Failure is global::CodeGlyphX.QrDecodeFailure.ReedSolomon or global::CodeGlyphX.QrDecodeFailure.Payload &&
+                !budget.IsNearDeadline(150)) {
+                if (TrySampleWithPhaseJitterLite(
+                        image,
+                        invert,
+                        phaseX,
+                        phaseY,
+                        dimension,
+                        cornerTlX,
+                        cornerTlY,
+                        cornerTrX,
+                        cornerTrY,
+                        cornerBrXr0,
+                        cornerBrYr0,
+                        cornerBlX,
+                        cornerBlY,
+                        moduleSize,
+                        accept,
+                        aggressive,
+                        budget,
+                        out result,
+                        out var moduleDiagLite)) {
+                    diagnostics = new QrPixelDecodeDiagnostics(scale, threshold, invert, candidateCount, candidateTriplesTried, dimension, moduleDiagLite);
+                    return true;
+                }
+
+                best = Better(best, moduleDiagLite);
+            }
+
+            diagnostics = new QrPixelDecodeDiagnostics(scale, threshold, invert, candidateCount, candidateTriplesTried, dimension, best);
+            return false;
+        }
 
         // Small perspective tuning: jitter the bottom-right corner in module-space to handle mild skew.
         if (TrySampleWithCornerJitter(
@@ -520,6 +600,101 @@ internal static partial class QrPixelDecoder {
 
                 best = Better(best, diag);
             }
+        }
+
+        moduleDiagnostics = best;
+        return false;
+    }
+
+    private static bool TrySampleWithPhaseJitterLite(
+        QrGrayImage image,
+        bool invert,
+        double phaseX,
+        double phaseY,
+        int dimension,
+        double cornerTlX,
+        double cornerTlY,
+        double cornerTrX,
+        double cornerTrY,
+        double cornerBrX,
+        double cornerBrY,
+        double cornerBlX,
+        double cornerBlY,
+        double moduleSizePx,
+        Func<QrDecoded, bool>? accept,
+        bool aggressive,
+        DecodeBudget budget,
+        out QrDecoded result,
+        out global::CodeGlyphX.QrDecodeDiagnostics moduleDiagnostics) {
+        result = null!;
+        moduleDiagnostics = default;
+
+        if (budget.IsExpired) return false;
+
+        Span<double> offsets = stackalloc double[2];
+        offsets[0] = -0.25;
+        offsets[1] = 0.25;
+
+        var best = default(global::CodeGlyphX.QrDecodeDiagnostics);
+
+        for (var i = 0; i < offsets.Length; i++) {
+            if (budget.IsExpired) return false;
+            var ox = phaseX + offsets[i];
+            if (TrySampleWithCorners(
+                    image,
+                    invert,
+                    ox,
+                    phaseY,
+                    dimension,
+                    cornerTlX,
+                    cornerTlY,
+                    cornerTrX,
+                    cornerTrY,
+                    cornerBrX,
+                    cornerBrY,
+                    cornerBlX,
+                    cornerBlY,
+                    moduleSizePx,
+                    accept,
+                    aggressive,
+                    budget,
+                    out result,
+                    out var diag)) {
+                moduleDiagnostics = diag;
+                return true;
+            }
+
+            best = Better(best, diag);
+        }
+
+        for (var i = 0; i < offsets.Length; i++) {
+            if (budget.IsExpired) return false;
+            var oy = phaseY + offsets[i];
+            if (TrySampleWithCorners(
+                    image,
+                    invert,
+                    phaseX,
+                    oy,
+                    dimension,
+                    cornerTlX,
+                    cornerTlY,
+                    cornerTrX,
+                    cornerTrY,
+                    cornerBrX,
+                    cornerBrY,
+                    cornerBlX,
+                    cornerBlY,
+                    moduleSizePx,
+                    accept,
+                    aggressive,
+                    budget,
+                    out result,
+                    out var diag)) {
+                moduleDiagnostics = diag;
+                return true;
+            }
+
+            best = Better(best, diag);
         }
 
         moduleDiagnostics = best;

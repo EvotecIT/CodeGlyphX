@@ -35,17 +35,32 @@ public static class KixDecoder {
         var bars = new List<RoyalMailBarTypes>(modules.Width / 2);
         var height = modules.Height;
 
-        var firstBar = -1;
-        var lastBar = -1;
+        if (!TryFindBarBounds(modules, out var firstBar, out var lastBar)) return bars;
+
+        var runs = BuildRuns(modules, firstBar, lastBar);
+        foreach (var run in runs) {
+            if (!run.isBar) continue;
+            if (TryClassifyRun(modules, height, run, out var bar)) {
+                bars.Add(bar);
+            }
+        }
+
+        return bars;
+    }
+
+    private static bool TryFindBarBounds(BitMatrix modules, out int firstBar, out int lastBar) {
+        firstBar = -1;
+        lastBar = -1;
         for (var x = 0; x < modules.Width; x++) {
             if (HasBar(modules, x)) {
                 if (firstBar < 0) firstBar = x;
                 lastBar = x;
             }
         }
+        return firstBar >= 0 && lastBar >= 0;
+    }
 
-        if (firstBar < 0 || lastBar < 0) return bars;
-
+    private static List<(bool isBar, int start, int length)> BuildRuns(BitMatrix modules, int firstBar, int lastBar) {
         var runs = new List<(bool isBar, int start, int length)>(modules.Width / 2);
         var current = HasBar(modules, firstBar);
         var runStart = firstBar;
@@ -57,27 +72,28 @@ public static class KixDecoder {
             runStart = x;
         }
         runs.Add((current, runStart, lastBar - runStart + 1));
+        return runs;
+    }
 
-        foreach (var run in runs) {
-            if (!run.isBar) continue;
-            var asc = false;
-            var desc = false;
-            var tracker = false;
-            for (var x = run.start; x < run.start + run.length; x++) {
-                if (!tracker && (modules[x, 3] || modules[x, 4])) tracker = true;
-                if (!asc && (modules[x, 0] || modules[x, 1] || modules[x, 2])) asc = true;
-                if (!desc && (modules[x, height - 1] || modules[x, height - 2] || modules[x, height - 3])) desc = true;
-            }
-
-            if (!tracker) continue;
-
-            var bar = RoyalMailBarTypes.Tracker;
-            if (asc) bar |= RoyalMailBarTypes.Ascender;
-            if (desc) bar |= RoyalMailBarTypes.Descender;
-            bars.Add(bar);
+    private static bool TryClassifyRun(BitMatrix modules, int height, (bool isBar, int start, int length) run, out RoyalMailBarTypes bar) {
+        var asc = false;
+        var desc = false;
+        var tracker = false;
+        for (var x = run.start; x < run.start + run.length; x++) {
+            if (!tracker && (modules[x, 3] || modules[x, 4])) tracker = true;
+            if (!asc && (modules[x, 0] || modules[x, 1] || modules[x, 2])) asc = true;
+            if (!desc && (modules[x, height - 1] || modules[x, height - 2] || modules[x, height - 3])) desc = true;
         }
 
-        return bars;
+        if (!tracker) {
+            bar = default;
+            return false;
+        }
+
+        bar = RoyalMailBarTypes.Tracker;
+        if (asc) bar |= RoyalMailBarTypes.Ascender;
+        if (desc) bar |= RoyalMailBarTypes.Descender;
+        return true;
     }
 
     private static bool HasBar(BitMatrix modules, int x) {

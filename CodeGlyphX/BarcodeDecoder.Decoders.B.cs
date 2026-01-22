@@ -21,55 +21,21 @@ namespace CodeGlyphX;
 public static partial class BarcodeDecoder {
     private static bool TryDecodeEan13(bool[] modules, out string text) {
         text = string.Empty;
-        var source = modules;
-        if (TryExtractBaseModules(source, 95, GuardStart, out var baseModules)) {
-            modules = baseModules;
-        }
-        if (!TryNormalizeModules(modules, 95, out var normalized)) return false;
-        modules = normalized;
-        if (!MatchPattern(modules, 0, GuardStart) || !MatchPattern(modules, 92, GuardStart)) return false;
-        if (!MatchPattern(modules, 45, GuardCenter)) return false;
-
-        var leftDigits = new char[6];
-        var parity = new bool[6];
-        var offset = 3;
-        for (var i = 0; i < 6; i++) {
-            if (TryMatchEanDigit(modules, offset + i * 7, EanDigitKind.LeftOdd, out var digit)) {
-                leftDigits[i] = digit;
-                parity[i] = false;
-            } else if (TryMatchEanDigit(modules, offset + i * 7, EanDigitKind.LeftEven, out digit)) {
-                leftDigits[i] = digit;
-                parity[i] = true;
-            } else {
-                return false;
-            }
-        }
-
-        var rightDigits = new char[6];
-        offset = 3 + 6 * 7 + 5;
-        for (var i = 0; i < 6; i++) {
-            if (!TryMatchEanDigit(modules, offset + i * 7, EanDigitKind.Right, out var digit)) return false;
-            rightDigits[i] = digit;
-        }
+        if (!TryPrepareModules(modules, 95, GuardStart, out var normalized, out var source)) return false;
+        if (!TryMatchEan13Guards(normalized)) return false;
+        if (!TryDecodeEanLeftDigits(normalized, out var leftDigits, out var parity)) return false;
+        if (!TryDecodeEanRightDigits(normalized, out var rightDigits)) return false;
 
         var firstDigit = EanParityMap.Value[ParityKey(parity)];
         var raw = firstDigit + new string(leftDigits) + new string(rightDigits);
         if (!IsValidEanChecksum(raw)) return false;
-        if (TryDecodeAddOn(source, 95, GuardStart, out var addOn)) {
-            text = raw + "+" + addOn;
-        } else {
-            text = raw;
-        }
+        SetTextWithAddOn(raw, source, 95, GuardStart, out text);
         return true;
     }
 
     private static bool TryDecodeUpcA(bool[] modules, out string text) {
         text = string.Empty;
-        var source = modules;
-        if (TryExtractBaseModules(source, 95, GuardStart, out var baseModules)) {
-            modules = baseModules;
-        }
-        if (!TryNormalizeModules(modules, 95, out var normalized)) return false;
+        if (!TryPrepareModules(modules, 95, GuardStart, out var normalized, out var source)) return false;
         modules = normalized;
         if (!MatchPattern(modules, 0, GuardStart) || !MatchPattern(modules, 92, GuardStart)) return false;
         if (!MatchPattern(modules, 45, GuardCenter)) return false;
@@ -87,21 +53,13 @@ public static partial class BarcodeDecoder {
         }
         var raw = new string(digits);
         if (!IsValidUpcAChecksum(raw)) return false;
-        if (TryDecodeAddOn(source, 95, GuardStart, out var addOn)) {
-            text = raw + "+" + addOn;
-        } else {
-            text = raw;
-        }
+        SetTextWithAddOn(raw, source, 95, GuardStart, out text);
         return true;
     }
 
     private static bool TryDecodeUpcE(bool[] modules, out string text) {
         text = string.Empty;
-        var source = modules;
-        if (TryExtractBaseModules(source, 51, GuardUpcEEnd, out var baseModules)) {
-            modules = baseModules;
-        }
-        if (!TryNormalizeModules(modules, 51, out var normalized)) return false;
+        if (!TryPrepareModules(modules, 51, GuardUpcEEnd, out var normalized, out var source)) return false;
         modules = normalized;
         if (!MatchPattern(modules, 0, GuardStart)) return false;
         if (!MatchPattern(modules, 45, GuardUpcEEnd)) return false;
@@ -127,22 +85,14 @@ public static partial class BarcodeDecoder {
             if (ParityKey(pattern.NumberSystemZero) == parityKey) {
                 var candidate = "0" + new string(digits) + kvp.Key;
                 if (IsValidUpcE(candidate)) {
-                    if (TryDecodeAddOn(source, 51, GuardUpcEEnd, out var addOn)) {
-                        text = candidate + "+" + addOn;
-                    } else {
-                        text = candidate;
-                    }
+                    SetTextWithAddOn(candidate, source, 51, GuardUpcEEnd, out text);
                     return true;
                 }
             }
             if (ParityKey(pattern.NumberSystemOne) == parityKey) {
                 var candidate = "1" + new string(digits) + kvp.Key;
                 if (IsValidUpcE(candidate)) {
-                    if (TryDecodeAddOn(source, 51, GuardUpcEEnd, out var addOn)) {
-                        text = candidate + "+" + addOn;
-                    } else {
-                        text = candidate;
-                    }
+                    SetTextWithAddOn(candidate, source, 51, GuardUpcEEnd, out text);
                     return true;
                 }
             }
@@ -206,6 +156,57 @@ public static partial class BarcodeDecoder {
             }
         }
         return false;
+    }
+
+    private static bool TryPrepareModules(bool[] modules, int expectedLength, bool[] endGuardPattern, out bool[] normalized, out bool[] source) {
+        source = modules;
+        if (TryExtractBaseModules(source, expectedLength, endGuardPattern, out var baseModules)) {
+            modules = baseModules;
+        }
+        return TryNormalizeModules(modules, expectedLength, out normalized);
+    }
+
+    private static bool TryMatchEan13Guards(bool[] modules) {
+        if (!MatchPattern(modules, 0, GuardStart) || !MatchPattern(modules, 92, GuardStart)) return false;
+        return MatchPattern(modules, 45, GuardCenter);
+    }
+
+    private static bool TryDecodeEanLeftDigits(bool[] modules, out char[] digits, out bool[] parity) {
+        digits = new char[6];
+        parity = new bool[6];
+        var offset = 3;
+        for (var i = 0; i < 6; i++) {
+            if (TryMatchEanDigit(modules, offset + i * 7, EanDigitKind.LeftOdd, out var digit)) {
+                digits[i] = digit;
+                parity[i] = false;
+                continue;
+            }
+            if (TryMatchEanDigit(modules, offset + i * 7, EanDigitKind.LeftEven, out digit)) {
+                digits[i] = digit;
+                parity[i] = true;
+                continue;
+            }
+            return false;
+        }
+        return true;
+    }
+
+    private static bool TryDecodeEanRightDigits(bool[] modules, out char[] digits) {
+        digits = new char[6];
+        var offset = 3 + 6 * 7 + 5;
+        for (var i = 0; i < 6; i++) {
+            if (!TryMatchEanDigit(modules, offset + i * 7, EanDigitKind.Right, out var digit)) return false;
+            digits[i] = digit;
+        }
+        return true;
+    }
+
+    private static void SetTextWithAddOn(string raw, bool[] source, int expectedLength, bool[] endGuardPattern, out string text) {
+        if (TryDecodeAddOn(source, expectedLength, endGuardPattern, out var addOn)) {
+            text = raw + "+" + addOn;
+        } else {
+            text = raw;
+        }
     }
 
     private static bool TryExtractBaseModules(bool[] modules, int expectedLength, bool[] endGuardPattern, out bool[] baseModules) {

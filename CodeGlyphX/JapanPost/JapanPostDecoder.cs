@@ -17,32 +17,52 @@ public static class JapanPostDecoder {
         if (modules.Width <= 0 || modules.Height != JapanPostTables.BarcodeHeight) return false;
 
         var bars = ExtractBars(modules);
+        if (!TryParseBars(bars, out var inter)) return false;
+        if (!TryTrimInter(inter, out var trimmed)) return false;
+        return TryDecodeInter(trimmed, out text);
+    }
+
+    private static bool TryParseBars(List<char> bars, out char[] inter) {
+        inter = Array.Empty<char>();
         if (bars.Count != 67) return false;
         if (bars[0] != 'F' || bars[1] != 'D') return false;
         if (bars[65] != 'D' || bars[66] != 'F') return false;
 
-        var inter = new char[20];
-        var sum = 0;
+        var decoded = new char[20];
+        if (!TryFillInter(bars, decoded, out var sum)) return false;
+        if (!TryValidateChecksum(bars, sum)) return false;
+
+        inter = decoded;
+        return true;
+    }
+
+    private static bool TryFillInter(List<char> bars, char[] inter, out int sum) {
+        sum = 0;
         var offset = 2;
-        for (var i = 0; i < 20; i++) {
-            var pattern = new string(new[] { bars[offset], bars[offset + 1], bars[offset + 2] });
-            if (!JapanPostTables.PatternIndex.TryGetValue(pattern, out var value)) return false;
-            var ch = JapanPostTables.KasutSet[value];
+        for (var i = 0; i < inter.Length; i++) {
+            if (!TryDecodePattern(bars, offset, out var ch, out var checkIdx)) return false;
             inter[i] = ch;
-            if (!JapanPostTables.CheckIndex.TryGetValue(ch, out var checkIdx)) return false;
             sum += checkIdx;
             offset += 3;
         }
+        return true;
+    }
 
-        var checkPattern = new string(new[] { bars[offset], bars[offset + 1], bars[offset + 2] });
-        if (!JapanPostTables.PatternIndex.TryGetValue(checkPattern, out var checkValue)) return false;
-        var checkChar = JapanPostTables.KasutSet[checkValue];
+    private static bool TryValidateChecksum(List<char> bars, int sum) {
+        var offset = 2 + 20 * 3;
+        if (!TryDecodePattern(bars, offset, out var checkChar, out _)) return false;
         var expected = 19 - (sum % 19);
         if (expected == 19) expected = 0;
-        if (JapanPostTables.CheckSet[expected] != checkChar) return false;
+        return JapanPostTables.CheckSet[expected] == checkChar;
+    }
 
-        if (!TryTrimInter(inter, out var trimmed)) return false;
-        if (!TryDecodeInter(trimmed, out text)) return false;
+    private static bool TryDecodePattern(List<char> bars, int offset, out char ch, out int checkIdx) {
+        ch = default;
+        checkIdx = 0;
+        var pattern = new string(new[] { bars[offset], bars[offset + 1], bars[offset + 2] });
+        if (!JapanPostTables.PatternIndex.TryGetValue(pattern, out var value)) return false;
+        ch = JapanPostTables.KasutSet[value];
+        if (!JapanPostTables.CheckIndex.TryGetValue(ch, out checkIdx)) return false;
         return true;
     }
 
@@ -58,53 +78,80 @@ public static class JapanPostDecoder {
 
     private static bool TryDecodeInter(string inter, out string text) {
         var output = new StringBuilder(inter.Length);
-        for (var i = 0; i < inter.Length; i++) {
+        var i = 0;
+        while (i < inter.Length) {
             var ch = inter[i];
-            if ((ch >= '0' && ch <= '9') || ch == '-') {
+            if (IsDigitOrDash(ch)) {
                 output.Append(ch);
+                i++;
                 continue;
             }
 
-            if (ch == 'a' || ch == 'b' || ch == 'c') {
-                if (i + 1 >= inter.Length) { text = string.Empty; return false; }
-                var next = inter[++i];
-                if (!JapanPostTables.CheckIndex.TryGetValue(next, out var value)) { text = string.Empty; return false; }
-                if (value < 0 || value > 9) { text = string.Empty; return false; }
-                char decoded;
-                if (ch == 'a') {
-                    decoded = (char)('A' + value);
-                } else if (ch == 'b') {
-                    decoded = (char)('K' + value);
-                } else {
-                    if (value > 5) { text = string.Empty; return false; }
-                    decoded = (char)('U' + value);
-                }
-                output.Append(decoded);
-                continue;
-            }
+            if (!TryDecodeAlphaSequence(inter, ref i, out var decoded)) { text = string.Empty; return false; }
+            output.Append(decoded);
+            continue;
 
-            text = string.Empty;
-            return false;
         }
 
         text = output.ToString();
         return true;
     }
 
+    private static bool IsDigitOrDash(char ch) {
+        return (ch >= '0' && ch <= '9') || ch == '-';
+    }
+
+    private static bool TryDecodeAlphaSequence(string inter, ref int index, out char decoded) {
+        decoded = default;
+        var prefix = inter[index];
+        if (prefix != 'a' && prefix != 'b' && prefix != 'c') return false;
+        if (index + 1 >= inter.Length) return false;
+        var next = inter[index + 1];
+        if (!JapanPostTables.CheckIndex.TryGetValue(next, out var value)) return false;
+        if (value > 9) return false;
+
+        if (prefix == 'a') {
+            decoded = (char)('A' + value);
+        } else if (prefix == 'b') {
+            decoded = (char)('K' + value);
+        } else {
+            if (value > 5) return false;
+            decoded = (char)('U' + value);
+        }
+
+        index += 2;
+        return true;
+    }
+
     private static List<char> ExtractBars(BitMatrix modules) {
         var bars = new List<char>(modules.Width / 2);
 
-        var firstBar = -1;
-        var lastBar = -1;
+        if (!TryFindBarBounds(modules, out var firstBar, out var lastBar)) return bars;
+
+        var runs = BuildRuns(modules, firstBar, lastBar);
+        foreach (var run in runs) {
+            if (!run.isBar) continue;
+            if (TryClassifyRun(modules, run, out var symbol)) {
+                bars.Add(symbol);
+            }
+        }
+
+        return bars;
+    }
+
+    private static bool TryFindBarBounds(BitMatrix modules, out int firstBar, out int lastBar) {
+        firstBar = -1;
+        lastBar = -1;
         for (var x = 0; x < modules.Width; x++) {
             if (HasBar(modules, x)) {
                 if (firstBar < 0) firstBar = x;
                 lastBar = x;
             }
         }
+        return firstBar >= 0 && lastBar >= 0;
+    }
 
-        if (firstBar < 0 || lastBar < 0) return bars;
-
+    private static List<(bool isBar, int start, int length)> BuildRuns(BitMatrix modules, int firstBar, int lastBar) {
         var runs = new List<(bool isBar, int start, int length)>(modules.Width / 2);
         var current = HasBar(modules, firstBar);
         var runStart = firstBar;
@@ -116,32 +163,29 @@ public static class JapanPostDecoder {
             runStart = x;
         }
         runs.Add((current, runStart, lastBar - runStart + 1));
+        return runs;
+    }
 
-        foreach (var run in runs) {
-            if (!run.isBar) continue;
-            var asc = false;
-            var desc = false;
-            var tracker = false;
-            for (var x = run.start; x < run.start + run.length; x++) {
-                if (!tracker && (modules[x, 3] || modules[x, 4])) tracker = true;
-                if (!asc && (modules[x, 0] || modules[x, 1] || modules[x, 2])) asc = true;
-                if (!desc && (modules[x, 5] || modules[x, 6] || modules[x, 7])) desc = true;
-            }
-
-            if (!tracker) continue;
-
-            if (asc && desc) {
-                bars.Add('F');
-            } else if (asc) {
-                bars.Add('A');
-            } else if (desc) {
-                bars.Add('D');
-            } else {
-                bars.Add('T');
-            }
+    private static bool TryClassifyRun(BitMatrix modules, (bool isBar, int start, int length) run, out char symbol) {
+        var asc = false;
+        var desc = false;
+        var tracker = false;
+        for (var x = run.start; x < run.start + run.length; x++) {
+            if (!tracker && (modules[x, 3] || modules[x, 4])) tracker = true;
+            if (!asc && (modules[x, 0] || modules[x, 1] || modules[x, 2])) asc = true;
+            if (!desc && (modules[x, 5] || modules[x, 6] || modules[x, 7])) desc = true;
         }
 
-        return bars;
+        if (!tracker) {
+            symbol = default;
+            return false;
+        }
+
+        if (asc && desc) symbol = 'F';
+        else if (asc) symbol = 'A';
+        else if (desc) symbol = 'D';
+        else symbol = 'T';
+        return true;
     }
 
     private static bool HasBar(BitMatrix modules, int x) {

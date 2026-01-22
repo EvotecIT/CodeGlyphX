@@ -348,34 +348,42 @@ public static partial class BarcodeDecoder {
         if (!modules[0]) return false;
 
         var runs = GetRuns(modules);
-        if ((runs.Length & 1) != 0) {
-            // Telepen ends with a space; TrimModules removes trailing spaces, so pad with a narrow space run.
-            var min = int.MaxValue;
-            var max = 0;
-            for (var i = 0; i < runs.Length; i++) {
-                if (runs[i] < min) min = runs[i];
-                if (runs[i] > max) max = runs[i];
-            }
-            if (min <= 0) return false;
+        if (!TryNormalizeTelepenRuns(runs, out var normalized)) return false;
+        if (!TryGetRunThreshold(normalized, startIndex: 0, step: 1, out var threshold)) return false;
 
-            var padded = new int[runs.Length + 1];
-            Array.Copy(runs, padded, runs.Length);
-            padded[padded.Length - 1] = min;
-            runs = padded;
+        var pairKinds = BuildTelepenPairKinds(normalized, threshold);
+        if (!TryBuildTelepenBits(pairKinds, out var bits)) return false;
+        if (!TryBuildTelepenValues(bits, out var values)) return false;
+        if (!TryValidateTelepenValues(values, out var dataLen)) return false;
+
+        var chars = new char[dataLen];
+        for (var i = 0; i < dataLen; i++) {
+            chars[i] = (char)values[i + 1];
         }
 
-        if ((runs.Length & 1) != 0) return false;
+        text = new string(chars);
+        return true;
+    }
 
-        var minRun = int.MaxValue;
-        var maxRun = 0;
+    private static bool TryNormalizeTelepenRuns(int[] runs, out int[] normalized) {
+        normalized = runs;
+        if ((runs.Length & 1) == 0) return true;
+
+        // Telepen ends with a space; TrimModules removes trailing spaces, so pad with a narrow space run.
+        var min = int.MaxValue;
         for (var i = 0; i < runs.Length; i++) {
-            if (runs[i] < minRun) minRun = runs[i];
-            if (runs[i] > maxRun) maxRun = runs[i];
+            if (runs[i] < min) min = runs[i];
         }
+        if (min <= 0) return false;
 
-        if (minRun <= 0 || (long)maxRun < (long)minRun * 2) return false;
-        var threshold = ((long)minRun + maxRun) / 2.0;
+        var padded = new int[runs.Length + 1];
+        Array.Copy(runs, padded, runs.Length);
+        padded[padded.Length - 1] = min;
+        normalized = padded;
+        return (normalized.Length & 1) == 0;
+    }
 
+    private static TelepenPairKind[] BuildTelepenPairKinds(int[] runs, double threshold) {
         var pairs = runs.Length / 2;
         var pairKinds = new TelepenPairKind[pairs];
         for (var i = 0; i < pairs; i++) {
@@ -383,49 +391,55 @@ public static partial class BarcodeDecoder {
             var spaceWide = runs[i * 2 + 1] > threshold;
             pairKinds[i] = GetTelepenPairKind(barWide, spaceWide);
         }
+        return pairKinds;
+    }
 
-        var bits = new List<bool>(pairs * 2);
-        for (var i = 0; i < pairs;) {
+    private static bool TryBuildTelepenBits(TelepenPairKind[] pairKinds, out List<bool> bits) {
+        bits = new List<bool>(pairKinds.Length * 2);
+        var skipUntil = 0;
+        for (var i = 0; i < pairKinds.Length; i++) {
+            if (i < skipUntil) continue;
             switch (pairKinds[i]) {
                 case TelepenPairKind.NarrowNarrow:
                     bits.Add(true);
-                    i++;
                     break;
                 case TelepenPairKind.WideNarrow:
                     bits.Add(false);
                     bits.Add(false);
-                    i++;
                     break;
                 case TelepenPairKind.WideWide:
                     bits.Add(false);
                     bits.Add(true);
                     bits.Add(false);
-                    i++;
                     break;
                 case TelepenPairKind.NarrowWide: {
                     var j = i + 1;
                     var middle = 0;
-                    while (j < pairs && pairKinds[j] == TelepenPairKind.NarrowNarrow) {
+                    while (j < pairKinds.Length && pairKinds[j] == TelepenPairKind.NarrowNarrow) {
                         middle++;
                         j++;
                     }
-                    if (j >= pairs || pairKinds[j] != TelepenPairKind.NarrowWide) return false;
+                    if (j >= pairKinds.Length || pairKinds[j] != TelepenPairKind.NarrowWide) return false;
                     bits.Add(false);
                     for (var k = 0; k < middle + 2; k++) bits.Add(true);
                     bits.Add(false);
-                    i = j + 1;
+                    skipUntil = j + 1;
                     break;
                 }
                 default:
                     return false;
             }
         }
+        return true;
+    }
 
+    private static bool TryBuildTelepenValues(List<bool> bits, out byte[] values) {
+        values = Array.Empty<byte>();
         if ((bits.Count & 7) != 0) return false;
         var byteCount = bits.Count / 8;
         if (byteCount < 3) return false;
 
-        var values = new byte[byteCount];
+        var result = new byte[byteCount];
         var bitIndex = 0;
         for (var i = 0; i < byteCount; i++) {
             var value = 0;
@@ -434,9 +448,15 @@ public static partial class BarcodeDecoder {
             }
             var full = (byte)value;
             if (!TelepenTables.HasEvenParity(full)) return false;
-            values[i] = (byte)(full & 0x7F);
+            result[i] = (byte)(full & 0x7F);
         }
 
+        values = result;
+        return true;
+    }
+
+    private static bool TryValidateTelepenValues(byte[] values, out int dataLen) {
+        dataLen = 0;
         if (values[0] != TelepenTables.StartValue) return false;
         if (values[values.Length - 1] != TelepenTables.StopValue) return false;
 
@@ -446,13 +466,7 @@ public static partial class BarcodeDecoder {
         var checksum = TelepenTables.CalcChecksum(values, 1, checkIndex - 1);
         if (values[checkIndex] != checksum) return false;
 
-        var dataLen = checkIndex - 1;
-        var chars = new char[dataLen];
-        for (var i = 0; i < dataLen; i++) {
-            chars[i] = (char)values[i + 1];
-        }
-
-        text = new string(chars);
+        dataLen = checkIndex - 1;
         return true;
     }
 
@@ -686,47 +700,10 @@ public static partial class BarcodeDecoder {
 
         var runs = GetRuns(modules);
         if (runs.Length < 7) return false;
-
-        var minRun = int.MaxValue;
-        var maxRun = 0;
-        for (var i = 0; i < runs.Length; i++) {
-            if (runs[i] < minRun) minRun = runs[i];
-            if (runs[i] > maxRun) maxRun = runs[i];
-        }
-
-        if (minRun <= 0 || (long)maxRun < (long)minRun * 2) return false;
-        var threshold = ((long)minRun + maxRun) / 2.0;
-
-        // Start pattern: narrow bar/space/bar/space.
-        if (runs.Length < 4) return false;
-        for (var i = 0; i < 4; i++) {
-            if (runs[i] > threshold) return false;
-        }
-
-        var pos = 4;
-        var remaining = runs.Length - pos;
-        if (remaining < 3) return false;
-        if ((remaining - 3) % 10 != 0) return false;
-
-        var pairs = (remaining - 3) / 10;
-        if (pairs <= 0) return false;
-
-        var digits = new char[pairs * 2];
-        for (var pair = 0; pair < pairs; pair++) {
-            var barKey = PatternKey(runs, pos, threshold);
-            var spaceKey = PatternKey(runs, pos + 1, threshold);
-            if (!Itf14PatternMap.Value.TryGetValue(barKey, out var leftDigit)) return false;
-            if (!Itf14PatternMap.Value.TryGetValue(spaceKey, out var rightDigit)) return false;
-            digits[pair * 2] = (char)('0' + leftDigit);
-            digits[pair * 2 + 1] = (char)('0' + rightDigit);
-            pos += 10;
-        }
-
-        // Stop pattern: wide bar, narrow space, narrow bar.
-        if (pos + 2 >= runs.Length) return false;
-        if (runs[pos] <= threshold) return false;
-        if (runs[pos + 1] > threshold) return false;
-        if (runs[pos + 2] > threshold) return false;
+        if (!TryGetRunThreshold(runs, startIndex: 0, step: 1, out var threshold)) return false;
+        if (!TryValidateItfStart(runs, threshold)) return false;
+        if (!TryDecodeItfPairs(runs, threshold, startIndex: 4, out var digits, out var stopPos)) return false;
+        if (!TryValidateItfStop(runs, threshold, stopPos)) return false;
 
         text = new string(digits);
         return true;
@@ -751,54 +728,110 @@ public static partial class BarcodeDecoder {
 
         var runs = GetRuns(modules);
         if (runs.Length < startBars.Length * 2 + stopBars.Length * 2) return false;
+        if (!TryGetRunThreshold(runs, startIndex: 0, step: 1, out var threshold)) return false;
+        if (!AreRunsBelowThreshold(runs, startIndex: 1, step: 2, threshold)) return false;
+        if (!TryBuildDiscrete2of5Bars(runs, threshold, startBars, stopBars, out var barWide, out var startIndex, out var endIndex)) return false;
+        if (!TryDecodeDiscrete2of5Digits(barWide, startIndex, endIndex, out var digits)) return false;
 
-        var minRun = int.MaxValue;
-        var maxRun = 0;
-        for (var i = 0; i < runs.Length; i++) {
-            if (runs[i] < minRun) minRun = runs[i];
-            if (runs[i] > maxRun) maxRun = runs[i];
-        }
+        text = new string(digits);
+        return true;
+    }
 
-        if (minRun <= 0 || (long)maxRun < (long)minRun * 2) return false;
-        var threshold = ((long)minRun + maxRun) / 2.0;
-
-        for (var i = 1; i < runs.Length; i += 2) {
+    private static bool TryValidateItfStart(int[] runs, double threshold) {
+        if (runs.Length < 4) return false;
+        for (var i = 0; i < 4; i++) {
             if (runs[i] > threshold) return false;
         }
+        return true;
+    }
+
+    private static bool TryValidateItfStop(int[] runs, double threshold, int pos) {
+        if (pos + 2 >= runs.Length) return false;
+        if (runs[pos] <= threshold) return false;
+        if (runs[pos + 1] > threshold) return false;
+        if (runs[pos + 2] > threshold) return false;
+        return true;
+    }
+
+    private static bool TryDecodeItfPairs(int[] runs, double threshold, int startIndex, out char[] digits, out int stopPos) {
+        digits = Array.Empty<char>();
+        stopPos = 0;
+
+        var remaining = runs.Length - startIndex;
+        if (remaining < 3) return false;
+        if ((remaining - 3) % 10 != 0) return false;
+
+        var pairs = (remaining - 3) / 10;
+        if (pairs <= 0) return false;
+
+        var decoded = new char[pairs * 2];
+        var pos = startIndex;
+        for (var pair = 0; pair < pairs; pair++) {
+            var barKey = PatternKey(runs, pos, threshold);
+            var spaceKey = PatternKey(runs, pos + 1, threshold);
+            if (!Itf14PatternMap.Value.TryGetValue(barKey, out var leftDigit)) return false;
+            if (!Itf14PatternMap.Value.TryGetValue(spaceKey, out var rightDigit)) return false;
+            decoded[pair * 2] = (char)('0' + leftDigit);
+            decoded[pair * 2 + 1] = (char)('0' + rightDigit);
+            pos += 10;
+        }
+
+        digits = decoded;
+        stopPos = pos;
+        return true;
+    }
+
+    private static bool TryBuildDiscrete2of5Bars(
+        int[] runs,
+        double threshold,
+        int[] startBars,
+        int[] stopBars,
+        out bool[] barWide,
+        out int startIndex,
+        out int endIndex) {
+        barWide = Array.Empty<bool>();
+        startIndex = 0;
+        endIndex = 0;
 
         var barCount = (runs.Length + 1) / 2;
         if (barCount < startBars.Length + stopBars.Length + 5) return false;
 
-        var barWide = new bool[barCount];
+        var bars = new bool[barCount];
         for (var i = 0; i < barCount; i++) {
-            barWide[i] = runs[i * 2] > threshold;
+            bars[i] = runs[i * 2] > threshold;
         }
 
         for (var i = 0; i < startBars.Length; i++) {
-            if (barWide[i] != (startBars[i] > 1)) return false;
+            if (bars[i] != (startBars[i] > 1)) return false;
         }
 
         for (var i = 0; i < stopBars.Length; i++) {
-            if (barWide[barCount - stopBars.Length + i] != (stopBars[i] > 1)) return false;
+            if (bars[barCount - stopBars.Length + i] != (stopBars[i] > 1)) return false;
         }
 
-        var startIndex = startBars.Length;
-        var endIndex = barCount - stopBars.Length;
+        barWide = bars;
+        startIndex = startBars.Length;
+        endIndex = barCount - stopBars.Length;
+        return true;
+    }
+
+    private static bool TryDecodeDiscrete2of5Digits(bool[] barWide, int startIndex, int endIndex, out char[] digits) {
+        digits = Array.Empty<char>();
         var barDigits = endIndex - startIndex;
         if (barDigits <= 0 || (barDigits % 5) != 0) return false;
 
         var digitCount = barDigits / 5;
-        var digits = new char[digitCount];
+        var decoded = new char[digitCount];
         for (var d = 0; d < digitCount; d++) {
             var key = 0;
             for (var i = 0; i < 5; i++) {
                 if (barWide[startIndex + d * 5 + i]) key |= 1 << (4 - i);
             }
             if (!Itf14PatternMap.Value.TryGetValue(key, out var digit)) return false;
-            digits[d] = (char)('0' + digit);
+            decoded[d] = (char)('0' + digit);
         }
 
-        text = new string(digits);
+        digits = decoded;
         return true;
     }
 

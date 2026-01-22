@@ -783,9 +783,11 @@ public static partial class AztecCode {
         var tileW = width / grid;
         var tileH = height / grid;
 
+        var ctx = new TileScanContext(rgba, width, height, stride, token, onTile, grid, pad, tileW, tileH);
+
         for (var ty = 0; ty < grid; ty++) {
             for (var tx = 0; tx < grid; tx++) {
-                if (!ProcessTile(rgba, width, height, stride, token, onTile, grid, pad, tileW, tileH, tx, ty)) return;
+                if (!ProcessTile(ctx, tx, ty)) return;
             }
         }
     }
@@ -794,62 +796,74 @@ public static partial class AztecCode {
         return width > 0 && height > 0 && stride >= width * 4;
     }
 
-    private static bool ProcessTile(
-        byte[] rgba,
-        int width,
-        int height,
-        int stride,
-        CancellationToken token,
-        Action<byte[], int, int, int> onTile,
-        int grid,
-        int pad,
-        int tileW,
-        int tileH,
-        int tx,
-        int ty) {
-        if (token.IsCancellationRequested) return false;
-        if (!TryGetTileBounds(width, height, grid, pad, tileW, tileH, tx, ty, out var x0, out var y0, out var tw, out var th)) return true;
-        if (!TryExtractTile(rgba, stride, token, x0, y0, tw, th, out var tile, out var tileStride)) return false;
-        onTile(tile, tw, th, tileStride);
+    private static bool ProcessTile(TileScanContext ctx, int tx, int ty) {
+        if (ctx.Token.IsCancellationRequested) return false;
+        if (!TryGetTileBounds(ctx, tx, ty, out var x0, out var y0, out var tw, out var th)) return true;
+        if (!TryExtractTile(ctx, x0, y0, tw, th, out var tile, out var tileStride)) return false;
+        ctx.OnTile(tile, tw, th, tileStride);
         return true;
     }
 
-    private static bool TryGetTileBounds(
-        int width,
-        int height,
-        int grid,
-        int pad,
-        int tileW,
-        int tileH,
-        int tx,
-        int ty,
-        out int x0,
-        out int y0,
-        out int tw,
-        out int th) {
-        x0 = tx * tileW;
-        y0 = ty * tileH;
-        var x1 = (tx == grid - 1) ? width : (tx + 1) * tileW;
-        var y1 = (ty == grid - 1) ? height : (ty + 1) * tileH;
+    private static bool TryGetTileBounds(TileScanContext ctx, int tx, int ty, out int x0, out int y0, out int tw, out int th) {
+        x0 = tx * ctx.TileW;
+        y0 = ty * ctx.TileH;
+        var x1 = (tx == ctx.Grid - 1) ? ctx.Width : (tx + 1) * ctx.TileW;
+        var y1 = (ty == ctx.Grid - 1) ? ctx.Height : (ty + 1) * ctx.TileH;
 
-        x0 = Math.Max(0, x0 - pad);
-        y0 = Math.Max(0, y0 - pad);
-        x1 = Math.Min(width, x1 + pad);
-        y1 = Math.Min(height, y1 + pad);
+        x0 = Math.Max(0, x0 - ctx.Pad);
+        y0 = Math.Max(0, y0 - ctx.Pad);
+        x1 = Math.Min(ctx.Width, x1 + ctx.Pad);
+        y1 = Math.Min(ctx.Height, y1 + ctx.Pad);
 
         tw = x1 - x0;
         th = y1 - y0;
         return tw >= 48 && th >= 48;
     }
 
-    private static bool TryExtractTile(byte[] rgba, int stride, CancellationToken token, int x0, int y0, int tw, int th, out byte[] tile, out int tileStride) {
+    private static bool TryExtractTile(TileScanContext ctx, int x0, int y0, int tw, int th, out byte[] tile, out int tileStride) {
         tileStride = tw * 4;
         tile = new byte[tileStride * th];
         for (var y = 0; y < th; y++) {
-            if (token.IsCancellationRequested) return false;
-            Buffer.BlockCopy(rgba, (y0 + y) * stride + x0 * 4, tile, y * tileStride, tileStride);
+            if (ctx.Token.IsCancellationRequested) return false;
+            Buffer.BlockCopy(ctx.Rgba, (y0 + y) * ctx.Stride + x0 * 4, tile, y * tileStride, tileStride);
         }
         return true;
+    }
+
+    private readonly struct TileScanContext {
+        public byte[] Rgba { get; }
+        public int Width { get; }
+        public int Height { get; }
+        public int Stride { get; }
+        public CancellationToken Token { get; }
+        public Action<byte[], int, int, int> OnTile { get; }
+        public int Grid { get; }
+        public int Pad { get; }
+        public int TileW { get; }
+        public int TileH { get; }
+
+        public TileScanContext(
+            byte[] rgba,
+            int width,
+            int height,
+            int stride,
+            CancellationToken token,
+            Action<byte[], int, int, int> onTile,
+            int grid,
+            int pad,
+            int tileW,
+            int tileH) {
+            Rgba = rgba;
+            Width = width;
+            Height = height;
+            Stride = stride;
+            Token = token;
+            OnTile = onTile;
+            Grid = grid;
+            Pad = pad;
+            TileW = tileW;
+            TileH = tileH;
+        }
     }
 
     /// <summary>
