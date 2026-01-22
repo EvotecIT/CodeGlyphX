@@ -99,6 +99,9 @@ public partial class Playground {
         return SelectedBarcodeType switch
         {
             "GS1128" => "GS1_128",
+            "Code32" => "Code32",
+            "ITF" => "ITF",
+            "Telepen" => "Telepen",
             _ => SelectedBarcodeType
         };
     }
