@@ -117,6 +117,25 @@ function Normalize-MeanText([string]$value) {
     return $normalized
 }
 
+function Get-RowValue([object]$row, [string]$name) {
+    if (-not $row) { return $null }
+    foreach ($prop in $row.PSObject.Properties.Name) {
+        $clean = $prop -replace "^\uFEFF", ""
+        if ($clean -eq $name) { return $row.$prop }
+    }
+    return $null
+}
+
+function Import-BenchmarkCsv([string]$path) {
+    $delimiter = Get-CsvDelimiter $path
+    $rows = Import-Csv -Path $path -Delimiter $delimiter -Encoding UTF8
+    if ($rows.Count -gt 0 -and -not (Get-RowValue $rows[0] "Method")) {
+        $alt = if ($delimiter -eq ";") { "," } else { ";" }
+        $rows = Import-Csv -Path $path -Delimiter $alt -Encoding UTF8
+    }
+    return $rows
+}
+
 function Parse-AllocatedBytes([string]$value) {
     if ([string]::IsNullOrWhiteSpace($value)) { return $null }
     $clean = $value.Trim().Replace(",", "")
@@ -271,16 +290,12 @@ if ($missingCompare.Count -gt 0) {
 }
 $lines.Add("")
 
-if ($FailOnMissingCompare -and $missingCompare.Count -gt 0) {
-    throw "Missing compare results: $($missingCompare -join ', ')."
-}
-
+$compareParseFailures = @()
 if ($compareFiles.Count -gt 0) {
     $summaryRows = New-Object System.Collections.Generic.List[string]
     $summaryItems = New-Object System.Collections.Generic.List[object]
     foreach ($file in $compareFiles | Sort-Object Name) {
-        $delimiter = Get-CsvDelimiter $file.FullName
-        $rows = Import-Csv -Path $file.FullName -Delimiter $delimiter -Encoding UTF8
+        $rows = Import-BenchmarkCsv $file.FullName
         if ($rows.Count -eq 0) { continue }
 
         $className = Get-ClassName $file.Name
@@ -289,8 +304,9 @@ if ($compareFiles.Count -gt 0) {
 
         $scenarioMap = @{}
         foreach ($row in $rows) {
-            if ([string]::IsNullOrWhiteSpace($row.Method)) { continue }
-            $method = Normalize-Method $row.Method
+            $method = Get-RowValue $row "Method"
+            if ([string]::IsNullOrWhiteSpace($method)) { continue }
+            $method = Normalize-Method $method
             $vendor = "Unknown"
             $scenario = $method
             if ($method -match "^(CodeGlyphX|ZXing\.Net|QRCoder|Barcoder)\s+(.*)$") {
@@ -301,14 +317,21 @@ if ($compareFiles.Count -gt 0) {
             if (-not $scenarioMap.ContainsKey($scenario)) {
                 $scenarioMap[$scenario] = @{}
             }
-            $meanText = Normalize-MeanText $row.Mean
+            $meanText = Normalize-MeanText (Get-RowValue $row "Mean")
             $meanNs = $null
             [void](Try-Parse-Mean $meanText ([ref]$meanNs))
             $scenarioMap[$scenario][$vendor] = @{
                 mean = $meanText
                 meanNs = $meanNs
-                allocated = $row.Allocated
+                allocated = (Get-RowValue $row "Allocated")
             }
+        }
+
+        if ($scenarioMap.Count -eq 0) {
+            $compareParseFailures += $title
+            if ($missingCompare -notcontains $title) { $missingCompare += $title }
+            if ($missingCompareIds -notcontains $className) { $missingCompareIds += $className }
+            continue
         }
 
         foreach ($scenario in ($scenarioMap.Keys | Sort-Object)) {
@@ -374,12 +397,21 @@ if ($compareFiles.Count -gt 0) {
     }
 }
 
+if ($compareParseFailures.Count -gt 0) {
+    $lines.Add("Warnings:")
+    $lines.Add("- Compare results could not be parsed: $($compareParseFailures -join ', ').")
+    $lines.Add("")
+}
+
+if ($FailOnMissingCompare -and $missingCompare.Count -gt 0) {
+    throw "Missing compare results: $($missingCompare -join ', ')."
+}
+
 if ($baselineFiles.Count -gt 0) {
     $lines.Add("### Baseline")
     $lines.Add("")
     foreach ($file in $baselineFiles | Sort-Object Name) {
-        $delimiter = Get-CsvDelimiter $file.FullName
-        $rows = Import-Csv -Path $file.FullName -Delimiter $delimiter -Encoding UTF8
+        $rows = Import-BenchmarkCsv $file.FullName
         if ($rows.Count -eq 0) { continue }
         $className = Get-ClassName $file.Name
         $title = $titleMap[$className]
@@ -389,10 +421,12 @@ if ($baselineFiles.Count -gt 0) {
         $lines.Add("| Scenario | Mean | Allocated |")
         $lines.Add("| --- | --- | --- |")
         foreach ($row in $rows) {
-            if ([string]::IsNullOrWhiteSpace($row.Method)) { continue }
-            $scenario = Normalize-Method $row.Method
-            $mean = Normalize-MeanText $row.Mean
-            $lines.Add("| $scenario | $mean | $($row.Allocated) |")
+            $method = Get-RowValue $row "Method"
+            if ([string]::IsNullOrWhiteSpace($method)) { continue }
+            $scenario = Normalize-Method $method
+            $mean = Normalize-MeanText (Get-RowValue $row "Mean")
+            $allocated = Get-RowValue $row "Allocated"
+            $lines.Add("| $scenario | $mean | $allocated |")
         }
         $lines.Add("")
     }
@@ -402,8 +436,7 @@ if ($compareFiles.Count -gt 0) {
     $lines.Add("### Comparisons")
     $lines.Add("")
     foreach ($file in $compareFiles | Sort-Object Name) {
-        $delimiter = Get-CsvDelimiter $file.FullName
-        $rows = Import-Csv -Path $file.FullName -Delimiter $delimiter -Encoding UTF8
+        $rows = Import-BenchmarkCsv $file.FullName
         if ($rows.Count -eq 0) { continue }
 
         $className = Get-ClassName $file.Name
@@ -416,8 +449,9 @@ if ($compareFiles.Count -gt 0) {
 
         $scenarios = @{}
         foreach ($row in $rows) {
-            if ([string]::IsNullOrWhiteSpace($row.Method)) { continue }
-            $method = Normalize-Method $row.Method
+            $method = Get-RowValue $row "Method"
+            if ([string]::IsNullOrWhiteSpace($method)) { continue }
+            $method = Normalize-Method $method
             $vendor = "Unknown"
             $scenario = $method
             if ($method -match "^(CodeGlyphX|ZXing\.Net|QRCoder|Barcoder)\s+(.*)$") {
@@ -437,10 +471,10 @@ if ($compareFiles.Count -gt 0) {
             $qrc = $scenarios[$scenario]["QRCoder"]
             $bar = $scenarios[$scenario]["Barcoder"]
 
-            $cgxCell = if ($cgx) { "$(Normalize-MeanText $cgx.Mean)<br>$($cgx.Allocated)" } else { "" }
-            $zxCell = if ($zx) { "$(Normalize-MeanText $zx.Mean)<br>$($zx.Allocated)" } else { "" }
-            $qrcCell = if ($qrc) { "$(Normalize-MeanText $qrc.Mean)<br>$($qrc.Allocated)" } else { "" }
-            $barCell = if ($bar) { "$(Normalize-MeanText $bar.Mean)<br>$($bar.Allocated)" } else { "" }
+            $cgxCell = if ($cgx) { "$(Normalize-MeanText (Get-RowValue $cgx 'Mean'))<br>$(Get-RowValue $cgx 'Allocated')" } else { "" }
+            $zxCell = if ($zx) { "$(Normalize-MeanText (Get-RowValue $zx 'Mean'))<br>$(Get-RowValue $zx 'Allocated')" } else { "" }
+            $qrcCell = if ($qrc) { "$(Normalize-MeanText (Get-RowValue $qrc 'Mean'))<br>$(Get-RowValue $qrc 'Allocated')" } else { "" }
+            $barCell = if ($bar) { "$(Normalize-MeanText (Get-RowValue $bar 'Mean'))<br>$(Get-RowValue $bar 'Allocated')" } else { "" }
             $lines.Add("| $scenario | $cgxCell | $zxCell | $qrcCell | $barCell |")
         }
         $lines.Add("")
@@ -454,8 +488,7 @@ if (-not (Test-Path $jsonDir)) {
 }
 
 function Read-CsvResults([string]$path) {
-    $delimiter = Get-CsvDelimiter $path
-    return Import-Csv -Path $path -Delimiter $delimiter -Encoding UTF8
+    return Import-BenchmarkCsv $path
 }
 
 $jsonSections = New-Object System.Collections.Generic.List[object]
@@ -469,8 +502,9 @@ foreach ($file in $compareFiles | Sort-Object Name) {
 
     $scenarioMap = @{}
     foreach ($row in $rows) {
-        if ([string]::IsNullOrWhiteSpace($row.Method)) { continue }
-        $method = Normalize-Method $row.Method
+        $method = Get-RowValue $row "Method"
+        if ([string]::IsNullOrWhiteSpace($method)) { continue }
+        $method = Normalize-Method $method
         $vendor = "Unknown"
         $scenario = $method
         if ($method -match "^(CodeGlyphX|ZXing\.Net|QRCoder|Barcoder)\s+(.*)$") {
@@ -479,13 +513,13 @@ foreach ($file in $compareFiles | Sort-Object Name) {
         }
         $scenario = Normalize-CompareScenario $scenario
         if (-not $scenarioMap.ContainsKey($scenario)) { $scenarioMap[$scenario] = @{} }
-        $meanText = Normalize-MeanText $row.Mean
+        $meanText = Normalize-MeanText (Get-RowValue $row "Mean")
         $meanNs = $null
         [void](Try-Parse-Mean $meanText ([ref]$meanNs))
         $scenarioMap[$scenario][$vendor] = @{
             mean = $meanText
             meanNs = $meanNs
-            allocated = $row.Allocated
+            allocated = (Get-RowValue $row "Allocated")
         }
     }
 
@@ -527,15 +561,16 @@ foreach ($file in $baselineFiles | Sort-Object Name) {
     if (-not $title) { $title = $className }
     $items = @()
     foreach ($row in $rows) {
-        if ([string]::IsNullOrWhiteSpace($row.Method)) { continue }
-        $meanText = Normalize-MeanText $row.Mean
+        $method = Get-RowValue $row "Method"
+        if ([string]::IsNullOrWhiteSpace($method)) { continue }
+        $meanText = Normalize-MeanText (Get-RowValue $row "Mean")
         $meanNs = $null
         [void](Try-Parse-Mean $meanText ([ref]$meanNs))
         $items += @{
-            name = (Normalize-Method $row.Method)
+            name = (Normalize-Method $method)
             mean = $meanText
             meanNs = $meanNs
-            allocated = $row.Allocated
+            allocated = (Get-RowValue $row "Allocated")
         }
     }
     $jsonBaseline.Add(@{
@@ -588,7 +623,7 @@ $jsonSkeleton = @{
 }
 
 if (-not (Test-Path $jsonOutput)) {
-    $jsonSkeleton | ConvertTo-Json -Depth 8 | Set-Content -Path $jsonOutput -NoNewline -Encoding UTF8
+    $jsonSkeleton | ConvertTo-Json -Depth 8 | Set-Content -Path $jsonOutput -NoNewline -Encoding utf8NoBOM
 }
 
 $jsonText = Get-Content -Path $jsonOutput -Raw -Encoding UTF8
@@ -611,11 +646,11 @@ foreach ($os in @("windows", "linux", "macos")) {
 
 $jsonAll.$osName.$runModeNormalized = $jsonDoc
 $jsonOut = $jsonAll | ConvertTo-Json -Depth 8
-Set-Content -Path $jsonOutput -Value $jsonOut -NoNewline -Encoding UTF8
+Set-Content -Path $jsonOutput -Value $jsonOut -NoNewline -Encoding utf8NoBOM
 
 $summaryOutput = Join-Path $PSScriptRoot "..\Assets\Data\benchmark-summary.json"
 if (-not (Test-Path $summaryOutput)) {
-    $jsonSkeleton | ConvertTo-Json -Depth 8 | Set-Content -Path $summaryOutput -NoNewline -Encoding UTF8
+    $jsonSkeleton | ConvertTo-Json -Depth 8 | Set-Content -Path $summaryOutput -NoNewline -Encoding utf8NoBOM
 }
 $summaryText = Get-Content -Path $summaryOutput -Raw -Encoding UTF8
 $summaryAll = $summaryText | ConvertFrom-Json
@@ -651,7 +686,7 @@ $summaryAll.$osName.$runModeNormalized = [pscustomobject]@{
     summary = $jsonDoc.summary
 }
 $summaryOut = $summaryAll | ConvertTo-Json -Depth 8
-Set-Content -Path $summaryOutput -Value $summaryOut -NoNewline -Encoding UTF8
+Set-Content -Path $summaryOutput -Value $summaryOut -NoNewline -Encoding utf8NoBOM
 
 # Summary output is already stored under Assets/Data for website ingestion.
 
@@ -661,7 +696,7 @@ if (-not (Test-Path $indexOutput)) {
         schemaVersion = 1
         entries = @()
     } | ConvertTo-Json -Depth 6
-    Set-Content -Path $indexOutput -Value $indexSkeleton -NoNewline -Encoding UTF8
+    Set-Content -Path $indexOutput -Value $indexSkeleton -NoNewline -Encoding utf8NoBOM
 }
 
 $indexText = Get-Content -Path $indexOutput -Raw -Encoding UTF8
@@ -689,7 +724,7 @@ $entries += $newEntry
 $indexDoc.entries = $entries
 
 $indexOut = $indexDoc | ConvertTo-Json -Depth 6
-Set-Content -Path $indexOutput -Value $indexOut -NoNewline -Encoding UTF8
+Set-Content -Path $indexOutput -Value $indexOut -NoNewline -Encoding utf8NoBOM
 
 $sectionContent = ($lines -join "`n").TrimEnd()
 $marker = "BENCHMARK:$($osName.ToUpperInvariant()):$($runModeNormalized.ToUpperInvariant())"
@@ -728,6 +763,18 @@ elseif ($osName -eq "macos" -and $runModeNormalized -eq "full") { $blocks["macos
 $template = @(
     "# Benchmarks",
     "",
+    "**Data locations**",
+    "- Generated files are overwritten on each run (do not edit by hand).",
+    "- Human-readable report: `BENCHMARK.md`",
+    "- Website JSON: `Assets/Data/benchmark.json`",
+    "- Summary JSON: `Assets/Data/benchmark-summary.json`",
+    "- Index JSON: `Assets/Data/benchmark-index.json`",
+    "",
+    "**Publish flag**",
+    "- Quick runs default to `publish=false` (draft).",
+    "- Full runs default to `publish=true`.",
+    "- Override with `-Publish` or `-NoPublish` on the report generator.",
+    "",
     $blocks["windowsQuick"],
     "",
     $blocks["windowsFull"],
@@ -742,4 +789,4 @@ $template = @(
     ""
 ) -join "`n"
 
-Set-Content -Path $OutputPath -Value $template -NoNewline -Encoding UTF8
+Set-Content -Path $OutputPath -Value $template -NoNewline -Encoding utf8NoBOM

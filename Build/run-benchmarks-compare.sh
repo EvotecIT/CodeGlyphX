@@ -35,6 +35,7 @@ Options:
   --skip-preflight           Skip dependency preflight checks
   -h, --help                 Show this help
 EOF
+  return 0
 }
 
 while [[ $# -gt 0 ]]; do
@@ -69,6 +70,7 @@ case "$(uname -s)" in
   Linux) OS_NAME="linux" ;;
   Darwin) OS_NAME="macos" ;;
   MINGW*|MSYS*|CYGWIN*) OS_NAME="windows" ;;
+  *) OS_NAME="unknown" ;;
 esac
 
 TIMESTAMP="$(date +"%Y%m%d-%H%M%S")"
@@ -94,6 +96,7 @@ run_bench() {
   else
     dotnet "${args[@]}"
   fi
+  return 0
 }
 
 run_preflight() {
@@ -113,6 +116,7 @@ run_preflight() {
   else
     dotnet "${args[@]}"
   fi
+  return 0
 }
 
 if [[ $NO_BASE -eq 0 ]]; then

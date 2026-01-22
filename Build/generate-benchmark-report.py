@@ -8,6 +8,10 @@ import re
 from pathlib import Path
 
 
+BENCH_PREFIX = "CodeGlyphX.Benchmarks."
+REPORT_GLOB = "*-report.csv"
+COMPARE_REGEX = re.compile(r"^(CodeGlyphX|ZXing\.Net|QRCoder|Barcoder)\s+(.*)$")
+
 TITLE_MAP = {
     "QrCodeBenchmarks": "QR (Encode)",
     "QrDecodeBenchmarks": "QR (Decode)",
@@ -51,7 +55,7 @@ def parse_allocated_bytes(value: str):
     cleaned = value.strip().replace(",", "")
     if cleaned == "NA":
         return None
-    match = re.match(r"^([0-9]+(?:\.[0-9]+)?)\s*(B|KB|MB)$", cleaned)
+    match = re.match(r"^(\d+(?:\.\d+)?)\s*(B|KB|MB)$", cleaned)
     if not match:
         return None
     number = float(match.group(1))
@@ -104,7 +108,11 @@ def build_meta(commit: str | None, branch: str | None, dotnet_sdk: str | None, r
 
 
 def get_compare_class_name(path: Path) -> str:
-    return path.stem.replace("CodeGlyphX.Benchmarks.", "").replace("-report", "")
+    return strip_benchmark_prefix(path.stem)
+
+
+def strip_benchmark_prefix(name: str) -> str:
+    return name.replace(BENCH_PREFIX, "").replace("-report", "")
 
 
 def normalize_compare_scenario(value: str) -> str:
@@ -139,7 +147,7 @@ def resolve_os_name(artifacts_path: Path, override: str | None) -> str:
 
 
 def load_csv_rows(path: Path):
-    with path.open(newline="", encoding="utf-8") as f:
+    with path.open(newline="", encoding="utf-8-sig") as f:
         sample = f.read(2048)
         f.seek(0)
         try:
@@ -148,6 +156,238 @@ def load_csv_rows(path: Path):
             dialect = csv.get_dialect("excel")
         reader = csv.DictReader(f, dialect=dialect)
         return list(reader)
+
+
+def list_report_files(results_path: Path):
+    files = sorted(results_path.glob(REPORT_GLOB))
+    baseline_files = [p for p in files if "Compare" not in p.name]
+    compare_files = [p for p in files if "Compare" in p.name]
+    return baseline_files, compare_files
+
+
+def expected_compare_ids():
+    return sorted([key for key in TITLE_MAP.keys() if key.endswith("CompareBenchmarks")])
+
+
+def compute_missing_compare(compare_files):
+    expected = expected_compare_ids()
+    actual = sorted([get_compare_class_name(p) for p in compare_files])
+    missing_titles = [TITLE_MAP.get(name, name) for name in expected if name not in actual]
+    missing_ids = [name for name in expected if name not in actual]
+    return expected, actual, missing_titles, missing_ids
+
+
+def parse_vendor_scenario(method: str):
+    match = COMPARE_REGEX.match(method)
+    if match:
+        return match.group(1), match.group(2)
+    return "Unknown", method
+
+
+def build_summary(compare_files):
+    summary_rows = []
+    summary_items = []
+    for path in compare_files:
+        rows = load_csv_rows(path)
+        if not rows:
+            continue
+        base_name = strip_benchmark_prefix(path.stem)
+        title = TITLE_MAP.get(base_name, base_name)
+
+        scenario_map = {}
+        for row in rows:
+            method = normalize_method(row.get("Method", ""))
+            if not method:
+                continue
+            vendor, scenario = parse_vendor_scenario(method)
+            scenario = normalize_compare_scenario(scenario)
+            mean_text = normalize_mean_text(row.get("Mean", ""))
+            scenario_map.setdefault(scenario, {})[vendor] = {
+                "mean": mean_text,
+                "meanNs": parse_mean_to_ns(mean_text),
+                "allocated": row.get("Allocated", ""),
+            }
+
+        for scenario in sorted(scenario_map.keys()):
+            vendors = scenario_map[scenario]
+            fastest_vendor = None
+            fastest = None
+            for vendor, entry in vendors.items():
+                mean_ns = entry.get("meanNs")
+                if not mean_ns:
+                    continue
+                if fastest is None or mean_ns < fastest["meanNs"]:
+                    fastest = entry
+                    fastest_vendor = vendor
+            if not fastest_vendor:
+                continue
+            cgx = vendors.get("CodeGlyphX")
+            ratio_value = None
+            ratio_text = ""
+            alloc_ratio_value = None
+            alloc_ratio_text = ""
+            cgx_mean = ""
+            cgx_alloc = ""
+            if cgx and cgx.get("meanNs"):
+                ratio_value = round(cgx["meanNs"] / fastest["meanNs"], 2)
+                ratio_text = f"{ratio_value} x"
+                cgx_mean = cgx.get("mean", "")
+                cgx_alloc = cgx.get("allocated", "")
+                fastest_alloc_bytes = parse_allocated_bytes(fastest.get("allocated", ""))
+                cgx_alloc_bytes = parse_allocated_bytes(cgx.get("allocated", ""))
+                if fastest_alloc_bytes and cgx_alloc_bytes:
+                    alloc_ratio_value = round(cgx_alloc_bytes / fastest_alloc_bytes, 2)
+                    alloc_ratio_text = f"{alloc_ratio_value} x"
+            rating = rate_performance(ratio_value, alloc_ratio_value)
+            summary_rows.append(
+                f"| {title} | {scenario} | {fastest_vendor} {fastest.get('mean','')} | {ratio_text} | {alloc_ratio_text} | {rating} | {cgx_mean} | {cgx_alloc} |"
+            )
+            summary_items.append(
+                {
+                    "benchmark": title,
+                    "scenario": scenario,
+                    "fastestVendor": fastest_vendor,
+                    "fastestMean": fastest.get("mean", ""),
+                    "codeGlyphXMean": cgx_mean,
+                    "codeGlyphXAlloc": cgx_alloc,
+                    "codeGlyphXVsFastest": ratio_value,
+                    "codeGlyphXVsFastestText": ratio_text,
+                    "codeGlyphXAllocVsFastest": alloc_ratio_value,
+                    "codeGlyphXAllocVsFastestText": alloc_ratio_text,
+                    "rating": rating,
+                }
+            )
+    return summary_rows, summary_items
+
+
+def build_baseline_section(lines, baseline_files):
+    if not baseline_files:
+        return
+    lines.append("### Baseline")
+    lines.append("")
+    for path in baseline_files:
+        rows = load_csv_rows(path)
+        if not rows:
+            continue
+        base_name = strip_benchmark_prefix(path.stem)
+        title = TITLE_MAP.get(base_name, base_name)
+        lines.append(f"#### {title}")
+        lines.append("")
+        lines.append("| Scenario | Mean | Allocated |")
+        lines.append("| --- | --- | --- |")
+        for row in rows:
+            scenario = normalize_method(row.get("Method", ""))
+            mean_text = normalize_mean_text(row.get("Mean", ""))
+            lines.append(f"| {scenario} | {mean_text} | {row.get('Allocated','')} |")
+        lines.append("")
+
+
+def build_comparison_section(lines, compare_files):
+    if not compare_files:
+        return
+    lines.append("### Comparisons")
+    lines.append("")
+    for path in compare_files:
+        rows = load_csv_rows(path)
+        if not rows:
+            continue
+        base_name = strip_benchmark_prefix(path.stem)
+        title = TITLE_MAP.get(base_name, base_name)
+        lines.append(f"#### {title}")
+        lines.append("")
+
+
+def build_baseline_payload(baseline_files):
+    baseline = []
+    for file in baseline_files:
+        rows = load_csv_rows(file)
+        if not rows:
+            continue
+        base_name = strip_benchmark_prefix(file.stem)
+        title = TITLE_MAP.get(base_name, base_name)
+        items = []
+        for row in rows:
+            mean = row.get("Mean", "")
+            items.append(
+                {
+                    "name": normalize_method(row.get("Method", "")),
+                    "mean": mean,
+                    "meanNs": parse_mean_to_ns(mean),
+                    "allocated": row.get("Allocated", ""),
+                }
+            )
+        baseline.append({"id": base_name, "title": title, "scenarios": items})
+    return baseline
+
+
+def build_comparisons_payload(compare_files):
+    comparisons = []
+    for file in compare_files:
+        rows = load_csv_rows(file)
+        if not rows:
+            continue
+        base_name = strip_benchmark_prefix(file.stem)
+        title = TITLE_MAP.get(base_name, base_name)
+        scenario_map = {}
+        for row in rows:
+            method = normalize_method(row.get("Method", ""))
+            if not method:
+                continue
+            vendor, scenario = parse_vendor_scenario(method)
+            scenario = normalize_compare_scenario(scenario)
+            mean_text = normalize_mean_text(row.get("Mean", ""))
+            scenario_map.setdefault(scenario, {})[vendor] = {
+                "mean": mean_text,
+                "meanNs": parse_mean_to_ns(mean_text),
+                "allocated": row.get("Allocated", ""),
+            }
+
+        scenarios = []
+        for scenario in sorted(scenario_map.keys()):
+            vendors = scenario_map[scenario]
+            entry = {"name": scenario, "vendors": vendors}
+            cgx = vendors.get("CodeGlyphX")
+            if cgx and cgx.get("meanNs"):
+                ratios = {}
+                for key, value in vendors.items():
+                    if key == "CodeGlyphX":
+                        continue
+                    mean_ns = value.get("meanNs")
+                    if mean_ns:
+                        ratios[key] = round(mean_ns / cgx["meanNs"], 3)
+                entry["ratios"] = ratios
+            scenarios.append(entry)
+        comparisons.append({"id": base_name, "title": title, "scenarios": scenarios})
+    return comparisons
+        lines.append(
+            "| Scenario | CodeGlyphX (Mean / Alloc) | ZXing.Net (Mean / Alloc) | QRCoder (Mean / Alloc) | Barcoder (Mean / Alloc) |"
+        )
+        lines.append("| --- | --- | --- | --- | --- |")
+
+        scenarios = {}
+        for row in rows:
+            method = normalize_method(row.get("Method", ""))
+            if not method:
+                continue
+            vendor, scenario = parse_vendor_scenario(method)
+            scenario = normalize_compare_scenario(scenario)
+            scenarios.setdefault(scenario, {})[vendor] = row
+
+        for scenario in sorted(scenarios.keys()):
+            group = scenarios[scenario]
+
+            def cell(vendor):
+                item = group.get(vendor)
+                if not item:
+                    return ""
+                mean = normalize_mean_text(item.get("Mean", ""))
+                allocated = item.get("Allocated", "")
+                return f"{mean}<br>{allocated}"
+
+            lines.append(
+                f"| {scenario} | {cell('CodeGlyphX')} | {cell('ZXing.Net')} | {cell('QRCoder')} | {cell('Barcoder')} |"
+            )
+        lines.append("")
 
 
 def format_run_mode(run_mode: str) -> str:
@@ -167,16 +407,8 @@ def build_section(artifacts_path: Path, framework: str, configuration: str, run_
     if not results_path.exists():
         raise SystemExit(f"Results folder not found: {results_path}")
 
-    baseline_files = sorted(results_path.glob("*-report.csv"))
-    baseline_files = [p for p in baseline_files if "Compare" not in p.name]
-    compare_files = sorted(results_path.glob("*-report.csv"))
-    compare_files = [p for p in compare_files if "Compare" in p.name]
-    expected_compare = sorted([key for key in TITLE_MAP.keys() if key.endswith("CompareBenchmarks")])
-    actual_compare = sorted([get_compare_class_name(p) for p in compare_files])
-    missing_compare = [TITLE_MAP.get(name, name) for name in expected_compare if name not in actual_compare]
-    expected_compare = sorted([key for key in TITLE_MAP.keys() if key.endswith("CompareBenchmarks")])
-    actual_compare = sorted([get_compare_class_name(p) for p in compare_files])
-    missing_compare = [TITLE_MAP.get(name, name) for name in expected_compare if name not in actual_compare]
+    baseline_files, compare_files = list_report_files(results_path)
+    _, _, missing_compare, _ = compute_missing_compare(compare_files)
 
     os_name = detect_os_name()
     timestamp = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
@@ -209,85 +441,10 @@ def build_section(artifacts_path: Path, framework: str, configuration: str, run_
         lines.append(f"- Missing compare results: {', '.join(missing_compare)}.")
     lines.append("")
 
+    summary_rows = []
+    summary_items = []
     if compare_files:
-        summary_rows = []
-        summary_items = []
-        for path in compare_files:
-            rows = load_csv_rows(path)
-            if not rows:
-                continue
-            base_name = path.stem.replace("CodeGlyphX.Benchmarks.", "").replace("-report", "")
-            title = TITLE_MAP.get(base_name, base_name)
-
-            scenario_map = {}
-            for row in rows:
-                method = normalize_method(row.get("Method", ""))
-                if not method:
-                    continue
-                vendor = "Unknown"
-                scenario = method
-                match = re.match(r"^(CodeGlyphX|ZXing\.Net|QRCoder|Barcoder)\s+(.*)$", method)
-                if match:
-                    vendor = match.group(1)
-                    scenario = match.group(2)
-                scenario = normalize_compare_scenario(scenario)
-                mean_text = normalize_mean_text(row.get("Mean", ""))
-                scenario_map.setdefault(scenario, {})[vendor] = {
-                    "mean": mean_text,
-                    "meanNs": parse_mean_to_ns(mean_text),
-                    "allocated": row.get("Allocated", ""),
-                }
-
-            for scenario in sorted(scenario_map.keys()):
-                vendors = scenario_map[scenario]
-                fastest_vendor = None
-                fastest = None
-                for vendor, entry in vendors.items():
-                    mean_ns = entry.get("meanNs")
-                    if not mean_ns:
-                        continue
-                    if fastest is None or mean_ns < fastest["meanNs"]:
-                        fastest = entry
-                        fastest_vendor = vendor
-                if not fastest_vendor:
-                    continue
-                cgx = vendors.get("CodeGlyphX")
-                ratio_value = None
-                ratio_text = ""
-                alloc_ratio_value = None
-                alloc_ratio_text = ""
-                cgx_mean = ""
-                cgx_alloc = ""
-                if cgx and cgx.get("meanNs"):
-                    ratio_value = round(cgx["meanNs"] / fastest["meanNs"], 2)
-                    ratio_text = f"{ratio_value} x"
-                    cgx_mean = cgx.get("mean", "")
-                    cgx_alloc = cgx.get("allocated", "")
-                    fastest_alloc_bytes = parse_allocated_bytes(fastest.get("allocated", ""))
-                    cgx_alloc_bytes = parse_allocated_bytes(cgx.get("allocated", ""))
-                    if fastest_alloc_bytes and cgx_alloc_bytes:
-                        alloc_ratio_value = round(cgx_alloc_bytes / fastest_alloc_bytes, 2)
-                        alloc_ratio_text = f"{alloc_ratio_value} x"
-                rating = rate_performance(ratio_value, alloc_ratio_value)
-                summary_rows.append(
-                    f"| {title} | {scenario} | {fastest_vendor} {fastest.get('mean','')} | {ratio_text} | {alloc_ratio_text} | {rating} | {cgx_mean} | {cgx_alloc} |"
-                )
-                summary_items.append(
-                    {
-                        "benchmark": title,
-                        "scenario": scenario,
-                        "fastestVendor": fastest_vendor,
-                        "fastestMean": fastest.get("mean", ""),
-                        "codeGlyphXMean": cgx_mean,
-                        "codeGlyphXAlloc": cgx_alloc,
-                        "codeGlyphXVsFastest": ratio_value,
-                        "codeGlyphXVsFastestText": ratio_text,
-                        "codeGlyphXAllocVsFastest": alloc_ratio_value,
-                        "codeGlyphXAllocVsFastestText": alloc_ratio_text,
-                        "rating": rating,
-                    }
-                )
-
+        summary_rows, summary_items = build_summary(compare_files)
         if summary_rows:
             lines.append("### Summary (Comparisons)")
             lines.append("")
@@ -298,66 +455,8 @@ def build_section(artifacts_path: Path, framework: str, configuration: str, run_
         else:
             summary_items = []
 
-    if baseline_files:
-        lines.append("### Baseline")
-        lines.append("")
-        for path in baseline_files:
-            rows = load_csv_rows(path)
-            if not rows:
-                continue
-            base_name = path.stem.replace("CodeGlyphX.Benchmarks.", "").replace("-report", "")
-            title = TITLE_MAP.get(base_name, base_name)
-            lines.append(f"#### {title}")
-            lines.append("")
-            lines.append("| Scenario | Mean | Allocated |")
-            lines.append("| --- | --- | --- |")
-            for row in rows:
-                scenario = normalize_method(row.get("Method", ""))
-                mean_text = normalize_mean_text(row.get("Mean", ""))
-                lines.append(f"| {scenario} | {mean_text} | {row.get('Allocated','')} |")
-            lines.append("")
-
-    if compare_files:
-        lines.append("### Comparisons")
-        lines.append("")
-        for path in compare_files:
-            rows = load_csv_rows(path)
-            if not rows:
-                continue
-            base_name = path.stem.replace("CodeGlyphX.Benchmarks.", "").replace("-report", "")
-            title = TITLE_MAP.get(base_name, base_name)
-            lines.append(f"#### {title}")
-            lines.append("")
-            lines.append(
-                "| Scenario | CodeGlyphX (Mean / Alloc) | ZXing.Net (Mean / Alloc) | QRCoder (Mean / Alloc) | Barcoder (Mean / Alloc) |"
-            )
-            lines.append("| --- | --- | --- | --- | --- |")
-
-            scenarios = {}
-            for row in rows:
-                method = normalize_method(row.get("Method", ""))
-                vendor = "Unknown"
-                scenario = method
-                match = re.match(r"^(CodeGlyphX|ZXing\.Net|QRCoder|Barcoder)\s+(.*)$", method)
-                if match:
-                    vendor = match.group(1)
-                    scenario = match.group(2)
-                scenario = normalize_compare_scenario(scenario)
-                scenarios.setdefault(scenario, {})[vendor] = row
-
-            for scenario in sorted(scenarios.keys()):
-                group = scenarios[scenario]
-                def cell(vendor):
-                    item = group.get(vendor)
-                    if not item:
-                        return ""
-                    mean = normalize_mean_text(item.get("Mean", ""))
-                    allocated = item.get("Allocated", "")
-                    return f"{mean}<br>{allocated}"
-                lines.append(
-                    f"| {scenario} | {cell('CodeGlyphX')} | {cell('ZXing.Net')} | {cell('QRCoder')} | {cell('Barcoder')} |"
-                )
-            lines.append("")
+    build_baseline_section(lines, baseline_files)
+    build_comparison_section(lines, compare_files)
 
     return "\n".join(lines).rstrip()
 
@@ -366,6 +465,18 @@ def build_template(blocks):
     return "\n".join(
         [
             "# Benchmarks",
+            "",
+            "**Data locations**",
+            "- Generated files are overwritten on each run (do not edit by hand).",
+            "- Human-readable report: `BENCHMARK.md`",
+            "- Website JSON: `Assets/Data/benchmark.json`",
+            "- Summary JSON: `Assets/Data/benchmark-summary.json`",
+            "- Index JSON: `Assets/Data/benchmark-index.json`",
+            "",
+            "**Publish flag**",
+            "- Quick runs default to `publish=false` (draft).",
+            "- Full runs default to `publish=true`.",
+            "- Override with `-Publish` or `-NoPublish` on the report generator.",
             "",
             blocks["windows_quick"],
             "",
@@ -399,7 +510,7 @@ def update_section(path: Path, section: str, os_name: str, run_mode: str):
     start = f"<!-- {marker}:START -->"
     end = f"<!-- {marker}:END -->"
     block = f"{start}\n{section}\n{end}"
-    text = path.read_text(encoding="utf-8") if path.exists() else ""
+    text = path.read_text(encoding="utf-8-sig") if path.exists() else ""
     blocks = {
         "windows_quick": extract_block(text, "windows", "quick"),
         "windows_full": extract_block(text, "windows", "full"),
@@ -453,7 +564,6 @@ def main():
         meta,
         args.fail_on_missing_compare,
     )
-    repo_root = Path(__file__).resolve().parent.parent
     # JSON output is already stored under Assets/Data for website ingestion.
 
 
@@ -463,7 +573,7 @@ def parse_mean_to_ns(value: str):
     cleaned = value.strip().replace(",", "")
     if cleaned == "NA":
         return None
-    match = re.match(r"^([0-9]+(?:\\.[0-9]+)?)\\s*(ns|us|μs|ms|s)$", cleaned)
+    match = re.match(r"^(\\d+(?:\\.\\d+)?)\\s*(ns|us|μs|ms|s)$", cleaned)
     if not match:
         return None
     number = float(match.group(1))
@@ -493,71 +603,11 @@ def write_json(
     if not results_path.exists():
         raise SystemExit(f"Results folder not found: {results_path}")
 
-    baseline_files = sorted(results_path.glob("*-report.csv"))
-    baseline_files = [p for p in baseline_files if "Compare" not in p.name]
-    compare_files = sorted(results_path.glob("*-report.csv"))
-    compare_files = [p for p in compare_files if "Compare" in p.name]
+    baseline_files, compare_files = list_report_files(results_path)
+    _, _, missing_compare, missing_compare_ids = compute_missing_compare(compare_files)
 
-    baseline = []
-    for file in baseline_files:
-        rows = load_csv_rows(file)
-        if not rows:
-            continue
-        base_name = file.stem.replace("CodeGlyphX.Benchmarks.", "").replace("-report", "")
-        title = TITLE_MAP.get(base_name, base_name)
-        items = []
-        for row in rows:
-            mean = row.get("Mean", "")
-            items.append(
-                {
-                    "name": normalize_method(row.get("Method", "")),
-                    "mean": mean,
-                    "meanNs": parse_mean_to_ns(mean),
-                    "allocated": row.get("Allocated", ""),
-                }
-            )
-        baseline.append({"id": base_name, "title": title, "scenarios": items})
-
-    comparisons = []
-    for file in compare_files:
-        rows = load_csv_rows(file)
-        if not rows:
-            continue
-        base_name = file.stem.replace("CodeGlyphX.Benchmarks.", "").replace("-report", "")
-        title = TITLE_MAP.get(base_name, base_name)
-        scenario_map = {}
-        for row in rows:
-            method = normalize_method(row.get("Method", ""))
-            vendor = "Unknown"
-            scenario = method
-            match = re.match(r"^(CodeGlyphX|ZXing\.Net|QRCoder|Barcoder)\s+(.*)$", method)
-            if match:
-                vendor = match.group(1)
-                scenario = match.group(2)
-            scenario = normalize_compare_scenario(scenario)
-            mean_text = normalize_mean_text(row.get("Mean", ""))
-            scenario_map.setdefault(scenario, {})[vendor] = {
-                "mean": mean_text,
-                "meanNs": parse_mean_to_ns(mean_text),
-                "allocated": row.get("Allocated", ""),
-            }
-
-        scenarios = []
-        for scenario in sorted(scenario_map.keys()):
-            vendors = scenario_map[scenario]
-            entry = {"name": scenario, "vendors": vendors}
-            cgx = vendors.get("CodeGlyphX")
-            if cgx and cgx.get("meanNs"):
-                ratios = {}
-                for key, value in vendors.items():
-                    if key == "CodeGlyphX":
-                        continue
-                    mean_ns = value.get("meanNs")
-                    if mean_ns:
-                        ratios[key] = round(mean_ns / cgx["meanNs"], 3)
-                entry["ratios"] = ratios
-            scenarios.append(entry)
-        comparisons.append({"id": base_name, "title": title, "scenarios": scenarios})
+    baseline = build_baseline_payload(baseline_files)
+    comparisons = build_comparisons_payload(compare_files)
 
     notes = [
         format_run_mode(run_mode),
@@ -582,7 +632,7 @@ def write_json(
         "artifacts": str(artifacts_path),
         "meta": meta,
         "missingComparisons": missing_compare,
-        "missingComparisonIds": [name for name in expected_compare if name not in actual_compare],
+        "missingComparisonIds": missing_compare_ids,
         "howToRead": [
             "Mean: average time per operation. Lower is better.",
             "Allocated: managed memory allocated per operation. Lower is better.",
@@ -605,7 +655,7 @@ def write_json(
         }
         path.write_text(__import__("json").dumps(skeleton, indent=2), encoding="utf-8")
 
-    data = __import__("json").loads(path.read_text(encoding="utf-8"))
+    data = __import__("json").loads(path.read_text(encoding="utf-8-sig"))
     for os_key in ("windows", "linux", "macos"):
         if data.get(os_key) is None:
             data[os_key] = {"quick": None, "full": None}
@@ -625,7 +675,7 @@ def write_json(
         }
         summary_path.write_text(__import__("json").dumps(skeleton, indent=2), encoding="utf-8")
 
-    summary_data = __import__("json").loads(summary_path.read_text(encoding="utf-8"))
+    summary_data = __import__("json").loads(summary_path.read_text(encoding="utf-8-sig"))
     for os_key in ("windows", "linux", "macos"):
         if summary_data.get(os_key) is None:
             summary_data[os_key] = {"quick": None, "full": None}
@@ -656,7 +706,7 @@ def write_json(
     if not index_path.exists():
         index_path.write_text(__import__("json").dumps({"schemaVersion": 1, "entries": []}, indent=2), encoding="utf-8")
 
-    index_data = __import__("json").loads(index_path.read_text(encoding="utf-8"))
+    index_data = __import__("json").loads(index_path.read_text(encoding="utf-8-sig"))
     if index_data.get("entries") is None:
         index_data["entries"] = []
     index_data["entries"] = [
