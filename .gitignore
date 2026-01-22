@@ -382,7 +382,10 @@ binarized-*.png
 site/
 temp-playground/
 temp-hash/
+temp-docs/
 Build/BenchmarkResults/
 nul
 temp-check/
 docfx/
+*.bak/
+api.bak/
