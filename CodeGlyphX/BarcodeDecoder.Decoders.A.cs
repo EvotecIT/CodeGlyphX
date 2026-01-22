@@ -331,24 +331,10 @@ public static partial class BarcodeDecoder {
         var runs = GetRuns(modules);
         if (runs.Length != 7) return false;
 
-        var minRun = int.MaxValue;
-        var maxRun = 0;
-        for (var i = 0; i < runs.Length; i++) {
-            if (runs[i] < minRun) minRun = runs[i];
-            if (runs[i] > maxRun) maxRun = runs[i];
-        }
+        if (!TryGetRunThreshold(runs, startIndex: 0, step: 1, out var threshold)) return false;
+        if (!AreRunsBelowThreshold(runs, startIndex: 1, step: 2, threshold)) return false;
 
-        if (minRun <= 0 || (long)maxRun < (long)minRun * 2) return false;
-        var threshold = ((long)minRun + maxRun) / 2.0;
-
-        for (var i = 1; i < runs.Length; i += 2) {
-            if (runs[i] > threshold) return false;
-        }
-
-        var key = 0;
-        for (var i = 0; i < 4; i++) {
-            if (runs[i * 2] > threshold) key |= 1 << (3 - i);
-        }
+        var key = BuildPatchKey(runs, threshold);
 
         if (!PatchCodeTables.PatternMap.TryGetValue(key, out var symbol)) return false;
 
@@ -395,25 +381,26 @@ public static partial class BarcodeDecoder {
         for (var i = 0; i < pairs; i++) {
             var barWide = runs[i * 2] > threshold;
             var spaceWide = runs[i * 2 + 1] > threshold;
-            pairKinds[i] = barWide
-                ? (spaceWide ? TelepenPairKind.WideWide : TelepenPairKind.WideNarrow)
-                : (spaceWide ? TelepenPairKind.NarrowWide : TelepenPairKind.NarrowNarrow);
+            pairKinds[i] = GetTelepenPairKind(barWide, spaceWide);
         }
 
         var bits = new List<bool>(pairs * 2);
-        for (var i = 0; i < pairs; i++) {
+        for (var i = 0; i < pairs;) {
             switch (pairKinds[i]) {
                 case TelepenPairKind.NarrowNarrow:
                     bits.Add(true);
+                    i++;
                     break;
                 case TelepenPairKind.WideNarrow:
                     bits.Add(false);
                     bits.Add(false);
+                    i++;
                     break;
                 case TelepenPairKind.WideWide:
                     bits.Add(false);
                     bits.Add(true);
                     bits.Add(false);
+                    i++;
                     break;
                 case TelepenPairKind.NarrowWide: {
                     var j = i + 1;
@@ -426,7 +413,7 @@ public static partial class BarcodeDecoder {
                     bits.Add(false);
                     for (var k = 0; k < middle + 2; k++) bits.Add(true);
                     bits.Add(false);
-                    i = j;
+                    i = j + 1;
                     break;
                 }
                 default:
@@ -480,19 +467,9 @@ public static partial class BarcodeDecoder {
         var barCount = (runs.Length + 1) / 2;
         if (barCount < PharmacodeEncoder.MinBars || barCount > PharmacodeEncoder.MaxBars) return false;
 
-        var minBar = int.MaxValue;
-        var maxBar = 0;
-        for (var i = 0; i < runs.Length; i += 2) {
-            if (runs[i] < minBar) minBar = runs[i];
-            if (runs[i] > maxBar) maxBar = runs[i];
-        }
+        if (!TryGetRunThreshold(runs, startIndex: 0, step: 2, out var threshold)) return false;
 
-        if (minBar <= 0 || (long)maxBar < (long)minBar * 2) return false;
-        var threshold = ((long)minBar + maxBar) / 2.0;
-
-        for (var i = 1; i < runs.Length; i += 2) {
-            if (runs[i] > threshold) return false;
-        }
+        if (!AreRunsBelowThreshold(runs, startIndex: 1, step: 2, threshold)) return false;
 
         var value = 0;
         for (var i = 0; i < barCount; i++) {
@@ -513,6 +490,11 @@ public static partial class BarcodeDecoder {
         WideNarrow,
         WideWide,
         NarrowWide
+    }
+
+    private static TelepenPairKind GetTelepenPairKind(bool barWide, bool spaceWide) {
+        if (barWide) return spaceWide ? TelepenPairKind.WideWide : TelepenPairKind.WideNarrow;
+        return spaceWide ? TelepenPairKind.NarrowWide : TelepenPairKind.NarrowNarrow;
     }
 
     private static bool TryDecodeCode128(bool[] modules, out string text, out bool isGs1) {
@@ -827,6 +809,36 @@ public static partial class BarcodeDecoder {
             if (idx >= runs.Length) return -1;
             if (runs[idx] > threshold) key |= 1 << (4 - i);
             idx += 2;
+        }
+        return key;
+    }
+
+    private static bool TryGetRunThreshold(int[] runs, int startIndex, int step, out double threshold) {
+        threshold = 0;
+        if (runs.Length == 0 || step <= 0 || startIndex < 0 || startIndex >= runs.Length) return false;
+        var min = int.MaxValue;
+        var max = 0;
+        for (var i = startIndex; i < runs.Length; i += step) {
+            var value = runs[i];
+            if (value < min) min = value;
+            if (value > max) max = value;
+        }
+        if (min <= 0 || (long)max < (long)min * 2) return false;
+        threshold = ((long)min + max) / 2.0;
+        return true;
+    }
+
+    private static bool AreRunsBelowThreshold(int[] runs, int startIndex, int step, double threshold) {
+        for (var i = startIndex; i < runs.Length; i += step) {
+            if (runs[i] > threshold) return false;
+        }
+        return true;
+    }
+
+    private static int BuildPatchKey(int[] runs, double threshold) {
+        var key = 0;
+        for (var i = 0; i < 4; i++) {
+            if (runs[i * 2] > threshold) key |= 1 << (3 - i);
         }
         return key;
     }

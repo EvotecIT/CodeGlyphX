@@ -25,7 +25,7 @@ public static class AustraliaPostEncoder {
             throw new InvalidOperationException("Australia Post expects 8, 13, 16, 18, or 23 characters (see documentation).");
         }
 
-        var infoBars = new List<int>(format == AustraliaPostFormat.Standard ? 21 : (format == AustraliaPostFormat.Customer2 ? 36 : 51));
+        var infoBars = new List<int>(GetInfoBarsCapacity(format));
 
         AppendFcc(infoBars, fcc);
         AppendDigits(infoBars, dpid);
@@ -159,6 +159,11 @@ public static class AustraliaPostEncoder {
         if (bars.Count - start != fieldLength) {
             throw new InvalidOperationException("Australia Post customer field length does not match expected format.");
         }
+    }
+
+    private static int GetInfoBarsCapacity(AustraliaPostFormat format) {
+        if (format == AustraliaPostFormat.Standard) return 21;
+        return format == AustraliaPostFormat.Customer2 ? 36 : 51;
     }
 
     private static List<int> BuildParityBars(List<int> infoBars) {

@@ -49,44 +49,16 @@ public static class DataBar14Decoder {
 
     private static bool TryDecodeFromWidths(int[] totalWidths, out string content) {
         content = string.Empty;
-        if (totalWidths.Length != 46) return false;
-        if (totalWidths[0] != 1 || totalWidths[1] != 1 || totalWidths[44] != 1 || totalWidths[45] != 1) return false;
+        if (!HasValidGuards(totalWidths)) return false;
 
         if (!TryFindFinder(totalWidths, out var cLeft, out var cRight)) return false;
 
-        var dataWidths = new int[8][];
-        for (var i = 0; i < dataWidths.Length; i++) dataWidths[i] = new int[4];
+        var dataWidths = BuildDataWidths(totalWidths);
+        if (!HasValidChecksum(dataWidths, cLeft, cRight)) return false;
 
-        for (var i = 0; i < 8; i++) {
-            dataWidths[i][0] = totalWidths[i + 2];
-            dataWidths[i][1] = totalWidths[15 + (7 - i)];
-            dataWidths[i][3] = totalWidths[i + 23];
-            dataWidths[i][2] = totalWidths[36 + (7 - i)];
-        }
+        if (!TryDecodeDataCharacters(dataWidths, out var dataCharacters)) return false;
 
-        var checksum = 0;
-        for (var i = 0; i < 8; i++) {
-            checksum += DataBar14Tables.CHECKSUM_WEIGHT[i] * dataWidths[i][0];
-            checksum += DataBar14Tables.CHECKSUM_WEIGHT[i + 8] * dataWidths[i][1];
-            checksum += DataBar14Tables.CHECKSUM_WEIGHT[i + 16] * dataWidths[i][2];
-            checksum += DataBar14Tables.CHECKSUM_WEIGHT[i + 24] * dataWidths[i][3];
-        }
-        checksum %= 79;
-        if (checksum >= 8) checksum++;
-        if (checksum >= 72) checksum++;
-        if (checksum / 9 != cLeft || checksum % 9 != cRight) return false;
-
-        var dataCharacters = new int[4];
-        for (var i = 0; i < 4; i++) {
-            if (!TryDecodeDataCharacter(i, dataWidths, out dataCharacters[i])) return false;
-        }
-
-        var leftReg = dataCharacters[0] * 1597 + dataCharacters[1];
-        var rightReg = dataCharacters[2] * 1597 + dataCharacters[3];
-        var accum = leftReg * 4537077L + rightReg;
-
-        if (accum < 0 || accum > 9999999999999L) return false;
-        content = accum.ToString().PadLeft(13, '0');
+        if (!TryBuildContent(dataCharacters, out content)) return false;
         return true;
     }
 
@@ -104,30 +76,10 @@ public static class DataBar14Decoder {
         even[3] = dataWidths[7][index];
 
         if (index == 0 || index == 2) {
-            for (var group = 0; group <= 4; group++) {
-                var vOdd = DataBarCommon.GetValue(odd, DataBar14Tables.MODULES_ODD[group], 4, DataBar14Tables.WIDEST_ODD[group], 1);
-                var vEven = DataBarCommon.GetValue(even, DataBar14Tables.MODULES_EVEN[group], 4, DataBar14Tables.WIDEST_EVEN[group], 0);
-                if (vOdd < 0 || vEven < 0) continue;
-                var candidate = vOdd * DataBar14Tables.T_TABLE[group] + vEven + DataBar14Tables.G_SUM_TABLE[group];
-                if (candidate >= GroupMin(group) && candidate <= GroupMax(group)) {
-                    dataCharacter = candidate;
-                    return true;
-                }
-            }
-        } else {
-            for (var group = 5; group <= 8; group++) {
-                var vOdd = DataBarCommon.GetValue(odd, DataBar14Tables.MODULES_ODD[group], 4, DataBar14Tables.WIDEST_ODD[group], 0);
-                var vEven = DataBarCommon.GetValue(even, DataBar14Tables.MODULES_EVEN[group], 4, DataBar14Tables.WIDEST_EVEN[group], 1);
-                if (vOdd < 0 || vEven < 0) continue;
-                var candidate = vEven * DataBar14Tables.T_TABLE[group] + vOdd + DataBar14Tables.G_SUM_TABLE[group];
-                if (candidate >= GroupMin(group) && candidate <= GroupMax(group)) {
-                    dataCharacter = candidate;
-                    return true;
-                }
-            }
+            return TryDecodeDataCharacterGroups(odd, even, 0, 4, swapEvenOdd: false, out dataCharacter);
         }
 
-        return false;
+        return TryDecodeDataCharacterGroups(odd, even, 5, 8, swapEvenOdd: true, out dataCharacter);
     }
 
     private static int GroupMin(int group) => group switch {
@@ -157,25 +109,99 @@ public static class DataBar14Decoder {
     };
 
     private static bool TryFindFinder(int[] totalWidths, out int cLeft, out int cRight) {
-        cLeft = -1;
-        cRight = -1;
-        for (var c = 0; c < 9; c++) {
-            var match = true;
-            for (var i = 0; i < 5; i++) {
-                if (totalWidths[10 + i] != DataBar14Tables.FINDER_PATTERN[(5 * c) + i]) { match = false; break; }
-            }
-            if (match) { cLeft = c; break; }
-        }
-
-        for (var c = 0; c < 9; c++) {
-            var match = true;
-            for (var i = 0; i < 5; i++) {
-                if (totalWidths[31 + i] != DataBar14Tables.FINDER_PATTERN[(5 * c) + (4 - i)]) { match = false; break; }
-            }
-            if (match) { cRight = c; break; }
-        }
-
+        cLeft = FindFinder(totalWidths, offset: 10, reverse: false);
+        cRight = FindFinder(totalWidths, offset: 31, reverse: true);
         return cLeft >= 0 && cRight >= 0;
+    }
+
+    private static bool HasValidGuards(int[] totalWidths) {
+        return totalWidths.Length == 46
+            && totalWidths[0] == 1
+            && totalWidths[1] == 1
+            && totalWidths[44] == 1
+            && totalWidths[45] == 1;
+    }
+
+    private static int[][] BuildDataWidths(int[] totalWidths) {
+        var dataWidths = new int[8][];
+        for (var i = 0; i < dataWidths.Length; i++) dataWidths[i] = new int[4];
+
+        for (var i = 0; i < 8; i++) {
+            dataWidths[i][0] = totalWidths[i + 2];
+            dataWidths[i][1] = totalWidths[15 + (7 - i)];
+            dataWidths[i][3] = totalWidths[i + 23];
+            dataWidths[i][2] = totalWidths[36 + (7 - i)];
+        }
+        return dataWidths;
+    }
+
+    private static bool HasValidChecksum(int[][] dataWidths, int cLeft, int cRight) {
+        var checksum = ComputeChecksum(dataWidths);
+        return checksum / 9 == cLeft && checksum % 9 == cRight;
+    }
+
+    private static int ComputeChecksum(int[][] dataWidths) {
+        var checksum = 0;
+        for (var i = 0; i < 8; i++) {
+            checksum += DataBar14Tables.CHECKSUM_WEIGHT[i] * dataWidths[i][0];
+            checksum += DataBar14Tables.CHECKSUM_WEIGHT[i + 8] * dataWidths[i][1];
+            checksum += DataBar14Tables.CHECKSUM_WEIGHT[i + 16] * dataWidths[i][2];
+            checksum += DataBar14Tables.CHECKSUM_WEIGHT[i + 24] * dataWidths[i][3];
+        }
+        checksum %= 79;
+        if (checksum >= 8) checksum++;
+        if (checksum >= 72) checksum++;
+        return checksum;
+    }
+
+    private static bool TryDecodeDataCharacters(int[][] dataWidths, out int[] dataCharacters) {
+        dataCharacters = new int[4];
+        for (var i = 0; i < 4; i++) {
+            if (!TryDecodeDataCharacter(i, dataWidths, out dataCharacters[i])) return false;
+        }
+        return true;
+    }
+
+    private static bool TryBuildContent(int[] dataCharacters, out string content) {
+        content = string.Empty;
+        var leftReg = dataCharacters[0] * 1597 + dataCharacters[1];
+        var rightReg = dataCharacters[2] * 1597 + dataCharacters[3];
+        var accum = leftReg * 4537077L + rightReg;
+        if (accum < 0 || accum > 9999999999999L) return false;
+        content = accum.ToString().PadLeft(13, '0');
+        return true;
+    }
+
+    private static bool TryDecodeDataCharacterGroups(Span<int> odd, Span<int> even, int startGroup, int endGroup, bool swapEvenOdd, out int dataCharacter) {
+        dataCharacter = 0;
+        for (var group = startGroup; group <= endGroup; group++) {
+            var vOdd = DataBarCommon.GetValue(odd, DataBar14Tables.MODULES_ODD[group], 4, DataBar14Tables.WIDEST_ODD[group], swapEvenOdd ? 0 : 1);
+            var vEven = DataBarCommon.GetValue(even, DataBar14Tables.MODULES_EVEN[group], 4, DataBar14Tables.WIDEST_EVEN[group], swapEvenOdd ? 1 : 0);
+            if (vOdd < 0 || vEven < 0) continue;
+            var candidate = swapEvenOdd
+                ? vEven * DataBar14Tables.T_TABLE[group] + vOdd + DataBar14Tables.G_SUM_TABLE[group]
+                : vOdd * DataBar14Tables.T_TABLE[group] + vEven + DataBar14Tables.G_SUM_TABLE[group];
+            if (candidate < GroupMin(group) || candidate > GroupMax(group)) continue;
+            dataCharacter = candidate;
+            return true;
+        }
+        return false;
+    }
+
+    private static int FindFinder(int[] totalWidths, int offset, bool reverse) {
+        for (var c = 0; c < 9; c++) {
+            if (FinderMatches(totalWidths, offset, c, reverse)) return c;
+        }
+        return -1;
+    }
+
+    private static bool FinderMatches(int[] totalWidths, int offset, int c, bool reverse) {
+        var baseIndex = 5 * c;
+        for (var i = 0; i < 5; i++) {
+            var idx = reverse ? baseIndex + (4 - i) : baseIndex + i;
+            if (totalWidths[offset + i] != DataBar14Tables.FINDER_PATTERN[idx]) return false;
+        }
+        return true;
     }
 
     private static bool TryExtractWidths(Barcode1D barcode, out int[] widths) {

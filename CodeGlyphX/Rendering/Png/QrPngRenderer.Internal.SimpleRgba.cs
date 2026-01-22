@@ -5,14 +5,20 @@ using CodeGlyphX.Rendering;
 namespace CodeGlyphX.Rendering.Png;
 
 public static partial class QrPngRenderer {
+    private const double UnitScaleEpsilon = 1e-9;
+
     private static bool CanRenderSimpleRgba(QrPngRenderOptions opts) {
         if (opts is null) throw new ArgumentNullException(nameof(opts));
         return opts.ForegroundGradient is null
             && opts.Eyes is null
             && opts.Logo is null
             && opts.ModuleShape == QrPngModuleShape.Square
-            && opts.ModuleScale == 1.0
+            && IsUnitScale(opts.ModuleScale)
             && opts.ModuleCornerRadiusPx == 0;
+    }
+
+    private static bool IsUnitScale(double scale) {
+        return Math.Abs(scale - 1.0) <= UnitScaleEpsilon;
     }
 
     private static byte[] RenderSimpleRgba(BitMatrix modules, QrPngRenderOptions opts) {

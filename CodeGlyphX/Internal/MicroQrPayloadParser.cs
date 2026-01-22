@@ -4,16 +4,6 @@ using CodeGlyphX;
 
 namespace CodeGlyphX.Internal;
 
-internal readonly struct MicroQrSegment {
-    public QrTextEncoding Encoding { get; }
-    public byte[] Bytes { get; }
-
-    public MicroQrSegment(QrTextEncoding encoding, byte[] bytes) {
-        Encoding = encoding;
-        Bytes = bytes ?? throw new ArgumentNullException(nameof(bytes));
-    }
-}
-
 internal static class MicroQrPayloadParser {
     private const string AlphanumericTable = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ $%*+-./:";
 
@@ -42,8 +32,8 @@ internal static class MicroQrPayloadParser {
 
         var bytes = new List<byte>(64);
         var segmentBytes = new List<byte>(64);
-        var segments = new List<MicroQrSegment>(4);
         var encoding = QrTextEncoding.Latin1;
+        var sb = new System.Text.StringBuilder();
         var modeBits = MicroQrTables.GetModeIndicatorBits(version);
         var terminatorBits = MicroQrTables.GetTerminatorBits(version);
 
@@ -54,7 +44,7 @@ internal static class MicroQrPayloadParser {
 
         void FlushSegment() {
             if (segmentBytes.Count == 0) return;
-            segments.Add(new MicroQrSegment(encoding, segmentBytes.ToArray()));
+            sb.Append(QrEncoding.Decode(encoding, segmentBytes.ToArray()));
             segmentBytes.Clear();
         }
 
@@ -161,10 +151,6 @@ internal static class MicroQrPayloadParser {
         FlushSegment();
         payload = bytes.Count == 0 ? Array.Empty<byte>() : bytes.ToArray();
 
-        var sb = new System.Text.StringBuilder();
-        foreach (var segment in segments) {
-            sb.Append(QrEncoding.Decode(segment.Encoding, segment.Bytes));
-        }
         text = sb.ToString();
         return true;
     }

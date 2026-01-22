@@ -149,7 +149,7 @@ public static partial class QrPngRenderer {
         if (opts.Eyes is not null) return false;
         if (opts.Logo is not null) return false;
         if (opts.ModuleShape != QrPngModuleShape.Square) return false;
-        if (opts.ModuleScale != 1.0) return false;
+        if (!IsUnitScale(opts.ModuleScale)) return false;
         if (opts.ModuleCornerRadiusPx != 0) return false;
         return true;
     }

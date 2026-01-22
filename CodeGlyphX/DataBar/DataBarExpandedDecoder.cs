@@ -38,69 +38,9 @@ public static class DataBarExpandedDecoder {
         if (modules is null || modules.Width <= 0 || modules.Height <= 0) return false;
         if ((modules.Height - 1) % 4 != 0) return false;
 
-        var dataRows = new List<int>();
-        for (var row = 0; row < modules.Height; row += 4) dataRows.Add(row);
-        if (dataRows.Count == 0) return false;
-
-        var rowRuns = new List<int[]>(dataRows.Count);
-        var maxBlocks = 0;
-        foreach (var rowIndex in dataRows) {
-            if (!TryExtractWidths(GetRow(modules, rowIndex), out var widths)) return false;
-            if (widths.Length < 4) return false;
-            var blocks = (widths.Length - 4) / 21;
-            if ((widths.Length - 4) % 21 != 0) return false;
-            if (blocks > maxBlocks) maxBlocks = blocks;
-            rowRuns.Add(widths);
-        }
-
-        if (maxBlocks == 0) return false;
-        var elements = new int[2 + (maxBlocks * rowRuns.Count * 21) + 2];
-        Array.Clear(elements, 0, elements.Length);
-
-        var currentBlock = 0;
-        for (var rowIndex = 0; rowIndex < rowRuns.Count; rowIndex++) {
-            var runs = rowRuns[rowIndex];
-            var blocks = (runs.Length - 4) / 21;
-            var currentRow = rowIndex + 1;
-            var leftToRight = (currentRow % 2 == 1) || (maxBlocks % 2 == 1);
-            var specialCaseRow = runs[0] == 2;
-            if (specialCaseRow) leftToRight = true;
-
-            for (var blockIndex = 0; blockIndex < blocks; blockIndex++) {
-                var blockStart = 2 + (blockIndex * 21);
-                var targetBlock = leftToRight ? currentBlock + blockIndex : currentBlock + (blocks - 1 - blockIndex);
-                var targetStart = 2 + (targetBlock * 21);
-                if (targetStart + 20 >= elements.Length) return false;
-
-                if (leftToRight) {
-                    for (var j = 0; j < 21; j++) {
-                        elements[targetStart + j] = runs[blockStart + j];
-                    }
-                } else {
-                    for (var j = 0; j < 21; j++) {
-                        elements[targetStart + j] = runs[blockStart + (20 - j)];
-                    }
-                }
-            }
-
-            currentBlock += blocks;
-        }
-
-        var lastDataIndex = -1;
-        for (var i = elements.Length - 1; i >= 0; i--) {
-            if (elements[i] != 0) { lastDataIndex = i; break; }
-        }
-        if (lastDataIndex < 0) return false;
-
-        var patternWidth = lastDataIndex + 3;
-        if (patternWidth < 4) return false;
-        var trimmed = new int[patternWidth];
-        Array.Copy(elements, trimmed, Math.Min(elements.Length, trimmed.Length));
-        trimmed[0] = 1;
-        trimmed[1] = 1;
-        trimmed[trimmed.Length - 2] = 1;
-        trimmed[trimmed.Length - 1] = 1;
-
+        if (!TryExtractStackedRows(modules, out var rowRuns, out var maxBlocks)) return false;
+        if (!TryBuildStackedElements(rowRuns, maxBlocks, out var elements)) return false;
+        if (!TryTrimElements(elements, out var trimmed)) return false;
         return TryDecodeFromWidths(trimmed, out content);
     }
 
@@ -132,60 +72,12 @@ public static class DataBarExpandedDecoder {
         var dataChars = totalChars - 1;
         if (dataChars <= 0) return false;
 
-        if (elements.Length < 10) return false;
-        if (elements[0] != 1 || elements[1] != 1 || elements[elements.Length - 1] != 1 || elements[elements.Length - 2] != 1) {
-            return false;
-        }
-
-        var checkWidths = new int[8];
-        for (var i = 0; i < 8; i++) checkWidths[i] = elements[i + 2];
-
-        var dataWidths = new int[dataChars][];
-        for (var i = 0; i < dataChars; i++) dataWidths[i] = new int[8];
-
-        for (var i = 1; i < dataChars; i += 2) {
-            var baseIndex = (((i - 1) / 2) * 21) + 23;
-            if (baseIndex + 7 >= elements.Length) return false;
-            for (var j = 0; j < 8; j++) {
-                dataWidths[i][j] = elements[baseIndex + j];
-            }
-        }
-
-        for (var i = 0; i < dataChars; i += 2) {
-            var baseIndex = ((i / 2) * 21) + 15;
-            if (baseIndex + 7 >= elements.Length) return false;
-            for (var j = 0; j < 8; j++) {
-                dataWidths[i][j] = elements[baseIndex + (7 - j)];
-            }
-        }
-
-        var dataValues = new int[dataChars];
-        for (var i = 0; i < dataChars; i++) {
-            if (!TryDecodeDataCharacter(dataWidths[i], out var value)) return false;
-            dataValues[i] = value;
-        }
-
+        if (!HasValidGuards(elements)) return false;
+        if (!TryBuildDataWidths(elements, dataChars, out var dataWidths, out var checkWidths)) return false;
+        if (!TryDecodeDataValues(dataWidths, out var dataValues)) return false;
         if (!TryDecodeDataCharacter(checkWidths, out var checkChar)) return false;
-
-        var checksum = 0;
-        for (var i = 0; i < dataChars; i++) {
-            var row = DataBarExpandedTables.WEIGHT_ROWS[(((dataChars - 2) / 2) * 21) + i];
-            for (var j = 0; j < 8; j++) {
-                checksum += dataWidths[i][j] * DataBarExpandedTables.CHECKSUM_WEIGHT_EXP[(row * 8) + j];
-            }
-        }
-        var expectedCheck = (211 * ((dataChars + 1) - 4)) + (checksum % 211);
-        if (checkChar != expectedCheck) return false;
-
-        var bits = new bool[dataChars * 12];
-        var pos = 0;
-        for (var i = 0; i < dataChars; i++) {
-            var value = dataValues[i];
-            for (var bit = 11; bit >= 0; bit--) {
-                bits[pos++] = ((value >> bit) & 1) == 1;
-            }
-        }
-
+        if (!HasValidChecksum(dataWidths, dataChars, checkChar)) return false;
+        var bits = BuildDataBits(dataValues);
         return TryDecodePayload(bits, out content);
     }
 
@@ -193,76 +85,14 @@ public static class DataBarExpandedDecoder {
         content = string.Empty;
         if (bits.Length < 4) return false;
 
-        var encodingMethod = 0;
-        var headerSize = 0;
-
-        if (bits.Length > 1 && bits[1]) {
-            encodingMethod = 1;
-            headerSize = 4;
-        } else if (bits.Length > 2 && !bits[2]) {
-            encodingMethod = 2;
-            headerSize = 5;
-        } else if (bits.Length > 3 && !bits[3]) {
-            var value = ReadBits(bits, 1, 4);
-            encodingMethod = value == 4 ? 3 : 4;
-            headerSize = 5;
-        } else {
-            var five = ReadBits(bits, 1, 5);
-            if (five == 12) {
-                encodingMethod = 5;
-                headerSize = 8;
-            } else if (five == 13) {
-                encodingMethod = 6;
-                headerSize = 8;
-            } else {
-                var seven = ReadBits(bits, 1, 7);
-                if (seven < 56 || seven > 63) return false;
-                encodingMethod = 7 + (seven - 56);
-                headerSize = 8;
-            }
-        }
+        if (!TryGetEncodingMethod(bits, out var encodingMethod, out var headerSize)) return false;
 
         var sb = new StringBuilder();
         var pos = headerSize;
 
-        switch (encodingMethod) {
-            case 1:
-                if (!TryDecodeGtinWithFirstDigit(bits, ref pos, sb, includeAi: true)) return false;
-                if (!TryDecodeGeneralField(bits, pos, sb)) return false;
-                content = sb.ToString();
-                return true;
-            case 2:
-                if (!TryDecodeGeneralField(bits, pos, sb)) return false;
-                content = sb.ToString();
-                return true;
-            case 3:
-                if (!TryDecodeGtinConstantNine(bits, ref pos, sb, includeAi: true)) return false;
-                if (!TryDecodeWeight3103(bits, ref pos, sb)) return false;
-                content = sb.ToString();
-                return true;
-            case 4:
-                if (!TryDecodeGtinConstantNine(bits, ref pos, sb, includeAi: true)) return false;
-                if (!TryDecodeWeight320x(bits, ref pos, sb)) return false;
-                content = sb.ToString();
-                return true;
-            case 5:
-                if (!TryDecodeGtinConstantNine(bits, ref pos, sb, includeAi: true)) return false;
-                if (!TryDecodeAi392x(bits, ref pos, sb)) return false;
-                if (!TryDecodeGeneralField(bits, pos, sb)) return false;
-                content = sb.ToString();
-                return true;
-            case 6:
-                if (!TryDecodeGtinConstantNine(bits, ref pos, sb, includeAi: true)) return false;
-                if (!TryDecodeAi393x(bits, ref pos, sb)) return false;
-                if (!TryDecodeGeneralField(bits, pos, sb)) return false;
-                content = sb.ToString();
-                return true;
-            default:
-                if (!TryDecodeGtinConstantNine(bits, ref pos, sb, includeAi: true)) return false;
-                if (!TryDecodeWeightAndDate(bits, ref pos, sb, encodingMethod)) return false;
-                content = sb.ToString();
-                return true;
-        }
+        if (!TryDecodeByMethod(bits, encodingMethod, ref pos, sb)) return false;
+        content = sb.ToString();
+        return true;
     }
 
     private static bool TryDecodeGtinWithFirstDigit(bool[] bits, ref int pos, StringBuilder sb, bool includeAi) {
@@ -413,153 +243,376 @@ public static class DataBarExpandedDecoder {
         var size = bits.Length;
 
         while (pos < size) {
-            if (mode == GeneralFieldMode.Numeric) {
-                if (Match(bits, pos, "0000")) {
-                    if (pos + 4 >= size) break;
-                    mode = GeneralFieldMode.Alpha;
-                    pos += 4;
-                    continue;
-                }
-
-                var remaining = size - pos;
-                if (remaining < 7) {
-                    if (remaining >= 4) {
-                        var v4 = ReadBits(bits, pos, 4);
-                        if (v4 == 0) break;
-                        sb.Append(v4 == 10 ? GroupSeparator : (char)('0' + v4 - 1));
-                    }
+            switch (mode) {
+                case GeneralFieldMode.Numeric:
+                    if (!TryDecodeNumeric(bits, ref pos, sb, size, ref mode)) return false;
                     break;
-                }
-
-                var v7 = ReadBits(bits, pos, 7);
-                var value = v7 - 8;
-                if (value < 0) break;
-                var d1 = value / 11;
-                var d2 = value % 11;
-                sb.Append(d1 == 10 ? GroupSeparator : (char)('0' + d1));
-                sb.Append(d2 == 10 ? GroupSeparator : (char)('0' + d2));
-                pos += 7;
-                continue;
+                case GeneralFieldMode.Alpha:
+                    if (!TryDecodeAlpha(bits, ref pos, sb, size, ref mode)) return false;
+                    break;
+                default:
+                    if (!TryDecodeIso(bits, ref pos, sb, size, ref mode)) return false;
+                    break;
             }
-
-            if (mode == GeneralFieldMode.Alpha) {
-                if (Match(bits, pos, "000")) {
-                    if (pos + 3 >= size) break;
-                    mode = GeneralFieldMode.Numeric;
-                    pos += 3;
-                    continue;
-                }
-                if (Match(bits, pos, "00100")) {
-                    if (pos + 5 >= size) break;
-                    mode = GeneralFieldMode.Iso;
-                    pos += 5;
-                    continue;
-                }
-
-                if (size - pos < 5) break;
-                var v5 = ReadBits(bits, pos, 5);
-                if (v5 == 15) {
-                    sb.Append(GroupSeparator);
-                    pos += 5;
-                    continue;
-                }
-                if (v5 >= 5 && v5 <= 14) {
-                    sb.Append((char)('0' + (v5 - 5)));
-                    pos += 5;
-                    continue;
-                }
-
-                if (size - pos < 6) break;
-                var v6 = ReadBits(bits, pos, 6);
-                if (v6 >= 32 && v6 <= 57) {
-                    sb.Append((char)('A' + (v6 - 32)));
-                    pos += 6;
-                    continue;
-                }
-                sb.Append(v6 switch {
-                    58 => '*',
-                    59 => ',',
-                    60 => '-',
-                    61 => '.',
-                    62 => '/',
-                    _ => '\0'
-                });
-                if (sb[sb.Length - 1] == '\0') break;
-                pos += 6;
-                continue;
-            }
-
-            if (Match(bits, pos, "000")) {
-                if (pos + 3 >= size) break;
-                mode = GeneralFieldMode.Numeric;
-                pos += 3;
-                continue;
-            }
-            if (Match(bits, pos, "00100")) {
-                if (pos + 5 >= size) break;
-                mode = GeneralFieldMode.Alpha;
-                pos += 5;
-                continue;
-            }
-
-            if (size - pos < 5) break;
-            var iso5 = ReadBits(bits, pos, 5);
-            if (iso5 == 15) {
-                sb.Append(GroupSeparator);
-                pos += 5;
-                continue;
-            }
-            if (iso5 >= 5 && iso5 <= 14) {
-                sb.Append((char)('0' + (iso5 - 5)));
-                pos += 5;
-                continue;
-            }
-
-            if (size - pos >= 7) {
-                var v7 = ReadBits(bits, pos, 7);
-                if (v7 >= 64 && v7 <= 89) {
-                    sb.Append((char)(v7 + 1));
-                    pos += 7;
-                    continue;
-                }
-                if (v7 >= 90 && v7 <= 115) {
-                    sb.Append((char)(v7 + 7));
-                    pos += 7;
-                    continue;
-                }
-            }
-
-            if (size - pos < 8) break;
-            var v8 = ReadBits(bits, pos, 8);
-            var isoChar = v8 switch {
-                232 => '!',
-                233 => '"',
-                234 => '%',
-                235 => '&',
-                236 => '\'',
-                237 => '(',
-                238 => ')',
-                239 => '*',
-                240 => '+',
-                241 => ',',
-                242 => '-',
-                243 => '.',
-                244 => '/',
-                245 => ':',
-                246 => ';',
-                247 => '<',
-                248 => '=',
-                249 => '>',
-                250 => '?',
-                251 => '_',
-                252 => ' ',
-                _ => '\0'
-            };
-            if (isoChar == '\0') break;
-            sb.Append(isoChar);
-            pos += 8;
         }
 
+        return true;
+    }
+
+    private static bool TryExtractStackedRows(BitMatrix modules, out List<int[]> rowRuns, out int maxBlocks) {
+        rowRuns = new List<int[]>();
+        maxBlocks = 0;
+        var dataRows = new List<int>();
+        for (var row = 0; row < modules.Height; row += 4) dataRows.Add(row);
+        if (dataRows.Count == 0) return false;
+
+        rowRuns = new List<int[]>(dataRows.Count);
+        foreach (var rowIndex in dataRows) {
+            if (!TryExtractWidths(GetRow(modules, rowIndex), out var widths)) return false;
+            if (widths.Length < 4) return false;
+            var blocks = (widths.Length - 4) / 21;
+            if ((widths.Length - 4) % 21 != 0) return false;
+            if (blocks > maxBlocks) maxBlocks = blocks;
+            rowRuns.Add(widths);
+        }
+        return maxBlocks > 0;
+    }
+
+    private static bool TryBuildStackedElements(List<int[]> rowRuns, int maxBlocks, out int[] elements) {
+        elements = new int[2 + (maxBlocks * rowRuns.Count * 21) + 2];
+        Array.Clear(elements, 0, elements.Length);
+
+        var currentBlock = 0;
+        for (var rowIndex = 0; rowIndex < rowRuns.Count; rowIndex++) {
+            var runs = rowRuns[rowIndex];
+            var blocks = (runs.Length - 4) / 21;
+            var currentRow = rowIndex + 1;
+            var leftToRight = (currentRow % 2 == 1) || (maxBlocks % 2 == 1);
+            if (runs[0] == 2) leftToRight = true;
+
+            for (var blockIndex = 0; blockIndex < blocks; blockIndex++) {
+                var blockStart = 2 + (blockIndex * 21);
+                var targetBlock = leftToRight ? currentBlock + blockIndex : currentBlock + (blocks - 1 - blockIndex);
+                var targetStart = 2 + (targetBlock * 21);
+                if (targetStart + 20 >= elements.Length) return false;
+                CopyBlock(elements, runs, blockStart, targetStart, leftToRight);
+            }
+            currentBlock += blocks;
+        }
+        return true;
+    }
+
+    private static void CopyBlock(int[] elements, int[] runs, int blockStart, int targetStart, bool leftToRight) {
+        if (leftToRight) {
+            for (var j = 0; j < 21; j++) {
+                elements[targetStart + j] = runs[blockStart + j];
+            }
+        } else {
+            for (var j = 0; j < 21; j++) {
+                elements[targetStart + j] = runs[blockStart + (20 - j)];
+            }
+        }
+    }
+
+    private static bool TryTrimElements(int[] elements, out int[] trimmed) {
+        trimmed = Array.Empty<int>();
+        var lastDataIndex = FindLastNonZeroIndex(elements);
+        if (lastDataIndex < 0) return false;
+        var patternWidth = lastDataIndex + 3;
+        if (patternWidth < 4) return false;
+        trimmed = new int[patternWidth];
+        Array.Copy(elements, trimmed, Math.Min(elements.Length, trimmed.Length));
+        trimmed[0] = 1;
+        trimmed[1] = 1;
+        trimmed[trimmed.Length - 2] = 1;
+        trimmed[trimmed.Length - 1] = 1;
+        return true;
+    }
+
+    private static int FindLastNonZeroIndex(int[] elements) {
+        for (var i = elements.Length - 1; i >= 0; i--) {
+            if (elements[i] != 0) return i;
+        }
+        return -1;
+    }
+
+    private static bool HasValidGuards(int[] elements) {
+        return elements.Length >= 10
+            && elements[0] == 1
+            && elements[1] == 1
+            && elements[elements.Length - 1] == 1
+            && elements[elements.Length - 2] == 1;
+    }
+
+    private static bool TryBuildDataWidths(int[] elements, int dataChars, out int[][] dataWidths, out int[] checkWidths) {
+        dataWidths = new int[dataChars][];
+        for (var i = 0; i < dataChars; i++) dataWidths[i] = new int[8];
+        checkWidths = new int[8];
+        for (var i = 0; i < 8; i++) checkWidths[i] = elements[i + 2];
+
+        for (var i = 1; i < dataChars; i += 2) {
+            var baseIndex = (((i - 1) / 2) * 21) + 23;
+            if (baseIndex + 7 >= elements.Length) return false;
+            for (var j = 0; j < 8; j++) {
+                dataWidths[i][j] = elements[baseIndex + j];
+            }
+        }
+
+        for (var i = 0; i < dataChars; i += 2) {
+            var baseIndex = ((i / 2) * 21) + 15;
+            if (baseIndex + 7 >= elements.Length) return false;
+            for (var j = 0; j < 8; j++) {
+                dataWidths[i][j] = elements[baseIndex + (7 - j)];
+            }
+        }
+        return true;
+    }
+
+    private static bool TryDecodeDataValues(int[][] dataWidths, out int[] dataValues) {
+        dataValues = new int[dataWidths.Length];
+        for (var i = 0; i < dataWidths.Length; i++) {
+            if (!TryDecodeDataCharacter(dataWidths[i], out var value)) return false;
+            dataValues[i] = value;
+        }
+        return true;
+    }
+
+    private static bool HasValidChecksum(int[][] dataWidths, int dataChars, int checkChar) {
+        var checksum = 0;
+        for (var i = 0; i < dataChars; i++) {
+            var row = DataBarExpandedTables.WEIGHT_ROWS[(((dataChars - 2) / 2) * 21) + i];
+            for (var j = 0; j < 8; j++) {
+                checksum += dataWidths[i][j] * DataBarExpandedTables.CHECKSUM_WEIGHT_EXP[(row * 8) + j];
+            }
+        }
+        var expectedCheck = (211 * ((dataChars + 1) - 4)) + (checksum % 211);
+        return checkChar == expectedCheck;
+    }
+
+    private static bool[] BuildDataBits(int[] dataValues) {
+        var bits = new bool[dataValues.Length * 12];
+        var pos = 0;
+        for (var i = 0; i < dataValues.Length; i++) {
+            var value = dataValues[i];
+            for (var bit = 11; bit >= 0; bit--) {
+                bits[pos++] = ((value >> bit) & 1) == 1;
+            }
+        }
+        return bits;
+    }
+
+    private static bool TryGetEncodingMethod(bool[] bits, out int encodingMethod, out int headerSize) {
+        encodingMethod = 0;
+        headerSize = 0;
+        if (bits.Length > 1 && bits[1]) {
+            encodingMethod = 1;
+            headerSize = 4;
+            return true;
+        }
+        if (bits.Length > 2 && !bits[2]) {
+            encodingMethod = 2;
+            headerSize = 5;
+            return true;
+        }
+        if (bits.Length > 3 && !bits[3]) {
+            var value = ReadBits(bits, 1, 4);
+            encodingMethod = value == 4 ? 3 : 4;
+            headerSize = 5;
+            return true;
+        }
+        var five = ReadBits(bits, 1, 5);
+        if (five == 12) {
+            encodingMethod = 5;
+            headerSize = 8;
+            return true;
+        }
+        if (five == 13) {
+            encodingMethod = 6;
+            headerSize = 8;
+            return true;
+        }
+        var seven = ReadBits(bits, 1, 7);
+        if (seven < 56 || seven > 63) return false;
+        encodingMethod = 7 + (seven - 56);
+        headerSize = 8;
+        return true;
+    }
+
+    private static bool TryDecodeByMethod(bool[] bits, int encodingMethod, ref int pos, StringBuilder sb) {
+        switch (encodingMethod) {
+            case 1:
+                return TryDecodeGtinWithFirstDigit(bits, ref pos, sb, includeAi: true)
+                    && TryDecodeGeneralField(bits, pos, sb);
+            case 2:
+                return TryDecodeGeneralField(bits, pos, sb);
+            case 3:
+                return TryDecodeGtinConstantNine(bits, ref pos, sb, includeAi: true)
+                    && TryDecodeWeight3103(bits, ref pos, sb);
+            case 4:
+                return TryDecodeGtinConstantNine(bits, ref pos, sb, includeAi: true)
+                    && TryDecodeWeight320x(bits, ref pos, sb);
+            case 5:
+                return TryDecodeGtinConstantNine(bits, ref pos, sb, includeAi: true)
+                    && TryDecodeAi392x(bits, ref pos, sb)
+                    && TryDecodeGeneralField(bits, pos, sb);
+            case 6:
+                return TryDecodeGtinConstantNine(bits, ref pos, sb, includeAi: true)
+                    && TryDecodeAi393x(bits, ref pos, sb)
+                    && TryDecodeGeneralField(bits, pos, sb);
+            default:
+                return TryDecodeGtinConstantNine(bits, ref pos, sb, includeAi: true)
+                    && TryDecodeWeightAndDate(bits, ref pos, sb, encodingMethod);
+        }
+    }
+
+    private static bool TryDecodeNumeric(bool[] bits, ref int pos, StringBuilder sb, int size, ref GeneralFieldMode mode) {
+        if (Match(bits, pos, "0000")) {
+            if (pos + 4 >= size) return false;
+            mode = GeneralFieldMode.Alpha;
+            pos += 4;
+            return true;
+        }
+
+        var remaining = size - pos;
+        if (remaining < 7) {
+            if (remaining >= 4) {
+                var v4 = ReadBits(bits, pos, 4);
+                if (v4 == 0) return false;
+                sb.Append(v4 == 10 ? GroupSeparator : (char)('0' + v4 - 1));
+            }
+            pos = size;
+            return true;
+        }
+
+        var v7 = ReadBits(bits, pos, 7);
+        var value = v7 - 8;
+        if (value < 0) return false;
+        var d1 = value / 11;
+        var d2 = value % 11;
+        sb.Append(d1 == 10 ? GroupSeparator : (char)('0' + d1));
+        sb.Append(d2 == 10 ? GroupSeparator : (char)('0' + d2));
+        pos += 7;
+        return true;
+    }
+
+    private static bool TryDecodeAlpha(bool[] bits, ref int pos, StringBuilder sb, int size, ref GeneralFieldMode mode) {
+        if (Match(bits, pos, "000")) {
+            if (pos + 3 >= size) return false;
+            mode = GeneralFieldMode.Numeric;
+            pos += 3;
+            return true;
+        }
+        if (Match(bits, pos, "00100")) {
+            if (pos + 5 >= size) return false;
+            mode = GeneralFieldMode.Iso;
+            pos += 5;
+            return true;
+        }
+
+        if (size - pos < 5) return false;
+        var v5 = ReadBits(bits, pos, 5);
+        if (v5 == 15) {
+            sb.Append(GroupSeparator);
+            pos += 5;
+            return true;
+        }
+        if (v5 >= 5 && v5 <= 14) {
+            sb.Append((char)('0' + (v5 - 5)));
+            pos += 5;
+            return true;
+        }
+
+        if (size - pos < 6) return false;
+        var v6 = ReadBits(bits, pos, 6);
+        if (v6 >= 32 && v6 <= 57) {
+            sb.Append((char)('A' + (v6 - 32)));
+            pos += 6;
+            return true;
+        }
+        var alphaChar = v6 switch {
+            58 => '*',
+            59 => ',',
+            60 => '-',
+            61 => '.',
+            62 => '/',
+            _ => '\0'
+        };
+        if (alphaChar == '\0') return false;
+        sb.Append(alphaChar);
+        pos += 6;
+        return true;
+    }
+
+    private static bool TryDecodeIso(bool[] bits, ref int pos, StringBuilder sb, int size, ref GeneralFieldMode mode) {
+        if (Match(bits, pos, "000")) {
+            if (pos + 3 >= size) return false;
+            mode = GeneralFieldMode.Numeric;
+            pos += 3;
+            return true;
+        }
+        if (Match(bits, pos, "00100")) {
+            if (pos + 5 >= size) return false;
+            mode = GeneralFieldMode.Alpha;
+            pos += 5;
+            return true;
+        }
+
+        if (size - pos < 5) return false;
+        var iso5 = ReadBits(bits, pos, 5);
+        if (iso5 == 15) {
+            sb.Append(GroupSeparator);
+            pos += 5;
+            return true;
+        }
+        if (iso5 >= 5 && iso5 <= 14) {
+            sb.Append((char)('0' + (iso5 - 5)));
+            pos += 5;
+            return true;
+        }
+
+        if (size - pos >= 7) {
+            var v7 = ReadBits(bits, pos, 7);
+            if (v7 >= 64 && v7 <= 89) {
+                sb.Append((char)(v7 + 1));
+                pos += 7;
+                return true;
+            }
+            if (v7 >= 90 && v7 <= 115) {
+                sb.Append((char)(v7 + 7));
+                pos += 7;
+                return true;
+            }
+        }
+
+        if (size - pos < 8) return false;
+        var v8 = ReadBits(bits, pos, 8);
+        var isoChar = v8 switch {
+            232 => '!',
+            233 => '"',
+            234 => '%',
+            235 => '&',
+            236 => '\'',
+            237 => '(',
+            238 => ')',
+            239 => '*',
+            240 => '+',
+            241 => ',',
+            242 => '-',
+            243 => '.',
+            244 => '/',
+            245 => ':',
+            246 => ';',
+            247 => '<',
+            248 => '=',
+            249 => '>',
+            250 => '?',
+            251 => '_',
+            252 => ' ',
+            _ => '\0'
+        };
+        if (isoChar == '\0') return false;
+        sb.Append(isoChar);
+        pos += 8;
         return true;
     }
 

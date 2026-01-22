@@ -11,28 +11,16 @@ internal static class DataBarCommon {
         for (bar = 0; bar < elements - 1; bar++) {
             var elmWidth = 1;
             var mask = narrowMask | (1 << bar);
-            for (;; elmWidth++, mask &= ~(1 << bar)) {
-                var subVal = GetCombinations(n - elmWidth - 1, elements - bar - 2);
-                if ((noNarrow == 0) && (mask == 0)
-                    && (n - elmWidth - (elements - bar - 1) >= elements - bar - 1)) {
-                    subVal -= GetCombinations(n - elmWidth - (elements - bar), elements - bar - 2);
-                }
-                if (elements - bar - 1 > 1) {
-                    var lessVal = 0;
-                    for (var mxwElement = n - elmWidth - (elements - bar - 2);
-                         mxwElement > maxWidth; mxwElement--) {
-                        lessVal += GetCombinations(n - elmWidth - mxwElement - 1, elements - bar - 3);
-                    }
-                    subVal -= lessVal * (elements - 1 - bar);
-                } else if (n - elmWidth > maxWidth) {
-                    subVal--;
-                }
-
+            var clearMask = ~(1 << bar);
+            while (true) {
+                var subVal = ComputeSubValue(n, elements, bar, elmWidth, maxWidth, noNarrow, mask);
                 value -= subVal;
                 if (value < 0) {
                     value += subVal;
                     break;
                 }
+                elmWidth++;
+                mask &= clearMask;
             }
             widths[bar] = elmWidth;
             n -= elmWidth;
@@ -60,23 +48,8 @@ internal static class DataBarCommon {
         for (var bar = 0; bar < elements - 1; bar++) {
             var current = widths[bar];
             for (var elmWidth = 1; elmWidth < current; elmWidth++) {
-                var mask = elmWidth == 1 ? (narrowMask | (1 << bar)) : narrowMask;
-                var subVal = GetCombinations(remaining - elmWidth - 1, elements - bar - 2);
-                if ((noNarrow == 0) && (mask == 0)
-                    && (remaining - elmWidth - (elements - bar - 1) >= elements - bar - 1)) {
-                    subVal -= GetCombinations(remaining - elmWidth - (elements - bar), elements - bar - 2);
-                }
-                if (elements - bar - 1 > 1) {
-                    var lessVal = 0;
-                    for (var mxwElement = remaining - elmWidth - (elements - bar - 2);
-                         mxwElement > maxWidth;
-                         mxwElement--) {
-                        lessVal += GetCombinations(remaining - elmWidth - mxwElement - 1, elements - bar - 3);
-                    }
-                    subVal -= lessVal * (elements - 1 - bar);
-                } else if (remaining - elmWidth > maxWidth) {
-                    subVal--;
-                }
+                var mask = GetMaskForWidth(narrowMask, bar, elmWidth);
+                var subVal = ComputeSubValue(remaining, elements, bar, elmWidth, maxWidth, noNarrow, mask);
                 value += subVal;
             }
 
@@ -89,6 +62,35 @@ internal static class DataBarCommon {
         }
 
         return value;
+    }
+
+    private static int GetMaskForWidth(int narrowMask, int bar, int elmWidth) {
+        return elmWidth == 1 ? (narrowMask | (1 << bar)) : narrowMask;
+    }
+
+    private static int ComputeSubValue(int remaining, int elements, int bar, int elmWidth, int maxWidth, int noNarrow, int mask) {
+        var subVal = GetCombinations(remaining - elmWidth - 1, elements - bar - 2);
+        if ((noNarrow == 0) && (mask == 0)
+            && (remaining - elmWidth - (elements - bar - 1) >= elements - bar - 1)) {
+            subVal -= GetCombinations(remaining - elmWidth - (elements - bar), elements - bar - 2);
+        }
+        if (elements - bar - 1 > 1) {
+            var lessVal = GetLessValue(remaining, elements, bar, elmWidth, maxWidth);
+            subVal -= lessVal * (elements - 1 - bar);
+        } else if (remaining - elmWidth > maxWidth) {
+            subVal--;
+        }
+        return subVal;
+    }
+
+    private static int GetLessValue(int remaining, int elements, int bar, int elmWidth, int maxWidth) {
+        var lessVal = 0;
+        for (var mxwElement = remaining - elmWidth - (elements - bar - 2);
+             mxwElement > maxWidth;
+             mxwElement--) {
+            lessVal += GetCombinations(remaining - elmWidth - mxwElement - 1, elements - bar - 3);
+        }
+        return lessVal;
     }
 
     internal static int GetCombinations(int n, int r) {

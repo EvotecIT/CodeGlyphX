@@ -201,11 +201,6 @@ internal static partial class QrPixelDecoder {
             }
         }
 
-        if (skipHeavyPasses) {
-            diagnostics = best;
-            return false;
-        }
-
         if (settings.AllowAdaptiveThreshold) {
             if (budget.IsNearDeadline(150)) {
                 diagnostics = best;
