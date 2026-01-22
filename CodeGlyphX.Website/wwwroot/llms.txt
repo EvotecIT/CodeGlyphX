@@ -30,3 +30,5 @@ Machine-friendly API data (no HTML parsing required):
 
 Slug rule: lower-case, dots and symbols become dashes. Example: CodeGlyphX.QR -> codeglyphx-qr
 Generated from XML docs during the website build (Build/Build-Website.ps1).
+
+For comprehensive AI context including FAQ and examples, see: /llms-full.txt
