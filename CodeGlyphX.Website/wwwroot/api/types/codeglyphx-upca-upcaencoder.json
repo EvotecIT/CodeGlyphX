@@ -12,7 +12,7 @@
     {
       "name": "Encode",
       "kind": "Method",
-      "summary": "Encodes a UPC-A barcode.",
+      "summary": "Encodes a UPC-A barcode. Use \u0022\u002BNN\u0022 or \u0022\u002BNNNNN\u0022 to append add-ons.",
       "remarks": null,
       "returns": null,
       "parameters": [

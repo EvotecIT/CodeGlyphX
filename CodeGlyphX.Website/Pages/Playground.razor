@@ -12,7 +12,7 @@
             <p>@_loadError</p>
         </div>
     }
-    else if (!_isReady)
+    else if (_playgroundType == null)
     {
         <div class="card">
             <h2>Loading playground...</h2>
@@ -21,13 +21,12 @@
     }
     else
     {
-        <CodeGlyphX.Playground.Playground @key="_componentKey" />
+        <DynamicComponent Type="_playgroundType" @key="_componentKey" />
     }
 </div>
 
 @code {
-    private bool _assembliesLoaded;
-    private bool _isReady;
+    private Type? _playgroundType;
     private string? _loadError;
     private int _componentKey;
 
@@ -35,23 +34,31 @@
     {
         try
         {
-            // Only need to lazy load CodeGlyphX.wasm - Playground component is bundled with main app
-            foreach (var candidate in new[] { "CodeGlyphX.wasm", "CodeGlyphX.dll" })
+            Exception? lastError = null;
+
+            foreach (var candidates in new[]
+                     {
+                         new[] { "CodeGlyphX.Playground.wasm", "CodeGlyphX.wasm" },
+                         new[] { "CodeGlyphX.Playground.dll", "CodeGlyphX.dll" }
+                     })
             {
                 try
                 {
-                    await AssemblyLoader.LoadAssembliesAsync(new[] { candidate });
-                    _assembliesLoaded = true;
-                    break;
+                    var assemblies = await AssemblyLoader.LoadAssembliesAsync(candidates);
+                    _playgroundType = assemblies
+                        .Select(assembly => assembly.GetType("CodeGlyphX.Playground.Playground"))
+                        .FirstOrDefault(type => type != null);
+                    if (_playgroundType != null)
+                        break;
                 }
-                catch
+                catch (Exception ex)
                 {
-                    // Try next candidate
+                    lastError = ex;
                 }
             }
 
-            if (!_assembliesLoaded)
-                _loadError = "CodeGlyphX engine failed to load.";
+            if (_playgroundType is null)
+                _loadError = lastError?.Message ?? "Playground component failed to load.";
         }
         catch (Exception ex)
         {
@@ -61,11 +68,10 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (_assembliesLoaded && !_isReady)
+        if (_playgroundType != null && _componentKey == 0)
         {
             // Wait a tick to ensure assemblies are fully initialized
             await Task.Yield();
-            _isReady = true;
             _componentKey++; // Force fresh component instance
             StateHasChanged();
         }

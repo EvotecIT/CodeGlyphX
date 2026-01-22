@@ -56,6 +56,13 @@ public static partial class Pdf417Code {
     }
 
     /// <summary>
+    /// Encodes a Macro PDF417 payload.
+    /// </summary>
+    public static BitMatrix EncodeMacro(string text, Pdf417MacroOptions macro, Pdf417EncodeOptions? options = null) {
+        return Pdf417Encoder.EncodeMacro(text, macro, options);
+    }
+
+    /// <summary>
     /// Encodes a byte payload as PDF417.
     /// </summary>
     public static BitMatrix EncodeBytes(byte[] data, Pdf417EncodeOptions? options = null) {

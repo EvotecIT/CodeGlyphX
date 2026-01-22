@@ -27,7 +27,6 @@ public static class PgmReader {
         SkipWhitespaceAndComments(pgm, ref pos);
 
         var pixelCount = (long)width * height;
-        if (pixelCount > int.MaxValue / 4) throw new FormatException("PGM dimensions are too large.");
         var rgba = new byte[(int)pixelCount * 4];
 
         if (format == (byte)'2') {

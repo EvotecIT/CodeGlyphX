@@ -327,6 +327,30 @@
     {
       "title": "AztecCode.TryDecodePng",
       "kind": "Method",
+      "href": "types/codeglyphx-azteccode.html#method-trydecodepng-static-bool-trydecodepng-readonlyspan-byte-png-out-string-text",
+      "summary": "Attempts to decode an Aztec symbol from PNG bytes in a span."
+    },
+    {
+      "title": "AztecCode.TryDecodePng",
+      "kind": "Method",
+      "href": "types/codeglyphx-azteccode.html#method-trydecodepng-static-bool-trydecodepng-readonlyspan-byte-png-cancellationtoken-cancellationtoken-out-string-text",
+      "summary": "Attempts to decode an Aztec symbol from PNG bytes in a span, with cancellation."
+    },
+    {
+      "title": "AztecCode.TryDecodePng",
+      "kind": "Method",
+      "href": "types/codeglyphx-azteccode.html#method-trydecodepng-static-bool-trydecodepng-readonlyspan-byte-png-imagedecodeoptions-options-out-string-text",
+      "summary": "Attempts to decode an Aztec symbol from PNG bytes in a span with image decode options."
+    },
+    {
+      "title": "AztecCode.TryDecodePng",
+      "kind": "Method",
+      "href": "types/codeglyphx-azteccode.html#method-trydecodepng-static-bool-trydecodepng-readonlyspan-byte-png-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-string-text",
+      "summary": "Attempts to decode an Aztec symbol from PNG bytes in a span with image decode options, with cancellation."
+    },
+    {
+      "title": "AztecCode.TryDecodePng",
+      "kind": "Method",
       "href": "types/codeglyphx-azteccode.html#method-trydecodepng-static-bool-trydecodepng-byte-png-out-string-text-out-aztecdecodediagnostics-diagnostics",
       "summary": "Attempts to decode an Aztec symbol from PNG bytes, with diagnostics."
     },
@@ -341,6 +365,24 @@
       "kind": "Method",
       "href": "types/codeglyphx-azteccode.html#method-trydecodepng-static-bool-trydecodepng-byte-png-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-string-text-out-aztecdecodediagnostics-diagnostics",
       "summary": "Attempts to decode an Aztec symbol from PNG bytes with image decode options, cancellation, and diagnostics."
+    },
+    {
+      "title": "AztecCode.TryDecodePng",
+      "kind": "Method",
+      "href": "types/codeglyphx-azteccode.html#method-trydecodepng-static-bool-trydecodepng-readonlyspan-byte-png-out-string-text-out-aztecdecodediagnostics-diagnostics",
+      "summary": "Attempts to decode an Aztec symbol from PNG bytes in a span, with diagnostics."
+    },
+    {
+      "title": "AztecCode.TryDecodePng",
+      "kind": "Method",
+      "href": "types/codeglyphx-azteccode.html#method-trydecodepng-static-bool-trydecodepng-readonlyspan-byte-png-imagedecodeoptions-options-out-string-text-out-aztecdecodediagnostics-diagnostics",
+      "summary": "Attempts to decode an Aztec symbol from PNG bytes in a span with image decode options, with diagnostics."
+    },
+    {
+      "title": "AztecCode.TryDecodePng",
+      "kind": "Method",
+      "href": "types/codeglyphx-azteccode.html#method-trydecodepng-static-bool-trydecodepng-readonlyspan-byte-png-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-string-text-out-aztecdecodediagnostics-diagnostics",
+      "summary": "Attempts to decode an Aztec symbol from PNG bytes in a span with image decode options, cancellation, and diagnostics."
     },
     {
       "title": "AztecCode.TryDecodePngFile",
@@ -453,6 +495,48 @@
     {
       "title": "AztecCode.TryDecodeImage",
       "kind": "Method",
+      "href": "types/codeglyphx-azteccode.html#method-trydecodeimage-static-bool-trydecodeimage-readonlyspan-byte-image-out-string-text",
+      "summary": "Attempts to decode an Aztec symbol from common image formats in a span."
+    },
+    {
+      "title": "AztecCode.TryDecodeImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-azteccode.html#method-trydecodeimage-static-bool-trydecodeimage-readonlyspan-byte-image-cancellationtoken-cancellationtoken-out-string-text",
+      "summary": "Attempts to decode an Aztec symbol from common image formats in a span, with cancellation."
+    },
+    {
+      "title": "AztecCode.TryDecodeImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-azteccode.html#method-trydecodeimage-static-bool-trydecodeimage-readonlyspan-byte-image-imagedecodeoptions-options-out-string-text",
+      "summary": "Attempts to decode an Aztec symbol from common image formats in a span with image decode options."
+    },
+    {
+      "title": "AztecCode.TryDecodeImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-azteccode.html#method-trydecodeimage-static-bool-trydecodeimage-readonlyspan-byte-image-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-string-text",
+      "summary": "Attempts to decode an Aztec symbol from common image formats in a span with image decode options, with cancellation."
+    },
+    {
+      "title": "AztecCode.TryDecodeImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-azteccode.html#method-trydecodeimage-static-bool-trydecodeimage-readonlyspan-byte-image-out-string-text-out-aztecdecodediagnostics-diagnostics",
+      "summary": "Attempts to decode an Aztec symbol from common image formats in a span, with diagnostics."
+    },
+    {
+      "title": "AztecCode.TryDecodeImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-azteccode.html#method-trydecodeimage-static-bool-trydecodeimage-readonlyspan-byte-image-imagedecodeoptions-options-out-string-text-out-aztecdecodediagnostics-diagnostics",
+      "summary": "Attempts to decode an Aztec symbol from common image formats in a span with image decode options, with diagnostics."
+    },
+    {
+      "title": "AztecCode.TryDecodeImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-azteccode.html#method-trydecodeimage-static-bool-trydecodeimage-readonlyspan-byte-image-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-string-text-out-aztecdecodediagnostics-diagnostics",
+      "summary": "Attempts to decode an Aztec symbol from common image formats in a span with image decode options, cancellation, and diagnostics."
+    },
+    {
+      "title": "AztecCode.TryDecodeImage",
+      "kind": "Method",
       "href": "types/codeglyphx-azteccode.html#method-trydecodeimage-static-bool-trydecodeimage-stream-stream-out-string-text",
       "summary": "Attempts to decode an Aztec symbol from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA)."
     },
@@ -491,6 +575,66 @@
       "kind": "Method",
       "href": "types/codeglyphx-azteccode.html#method-trydecodeimage-static-bool-trydecodeimage-stream-stream-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-string-text-out-aztecdecodediagnostics-diagnostics",
       "summary": "Attempts to decode an Aztec symbol from an image stream with image decode options, cancellation, and diagnostics."
+    },
+    {
+      "title": "AztecCode.DecodeImageResult",
+      "kind": "Method",
+      "href": "types/codeglyphx-azteccode.html#method-decodeimageresult-static-decoderesult-string-decodeimageresult-byte-image-imagedecodeoptions-options-cancellationtoken-cancellationtoken",
+      "summary": "Decodes an Aztec symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) and returns diagnostics."
+    },
+    {
+      "title": "AztecCode.DecodeImageResult",
+      "kind": "Method",
+      "href": "types/codeglyphx-azteccode.html#method-decodeimageresult-static-decoderesult-string-decodeimageresult-readonlyspan-byte-image-imagedecodeoptions-options-cancellationtoken-cancellationtoken",
+      "summary": "Decodes an Aztec symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) in a span and returns diagnostics."
+    },
+    {
+      "title": "AztecCode.DecodeImageResult",
+      "kind": "Method",
+      "href": "types/codeglyphx-azteccode.html#method-decodeimageresult-static-decoderesult-string-decodeimageresult-stream-stream-imagedecodeoptions-options-cancellationtoken-cancellationtoken",
+      "summary": "Decodes an Aztec symbol from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) and returns diagnostics."
+    },
+    {
+      "title": "AztecCode.DecodeImageBatch",
+      "kind": "Method",
+      "href": "types/codeglyphx-azteccode.html#method-decodeimagebatch-static-decodebatchresult-string-decodeimagebatch-ienumerable-byte-images-imagedecodeoptions-options-cancellationtoken-cancellationtoken",
+      "summary": "Decodes a batch of Aztec images with shared settings and aggregated diagnostics."
+    },
+    {
+      "title": "AztecCode.TryDecodeAllImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-azteccode.html#method-trydecodeallimage-static-bool-trydecodeallimage-byte-image-out-string-texts",
+      "summary": "Attempts to decode all Aztec symbols from common image formats."
+    },
+    {
+      "title": "AztecCode.TryDecodeAllImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-azteccode.html#method-trydecodeallimage-static-bool-trydecodeallimage-byte-image-imagedecodeoptions-options-out-string-texts",
+      "summary": "Attempts to decode all Aztec symbols from common image formats with image decode options."
+    },
+    {
+      "title": "AztecCode.TryDecodeAllImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-azteccode.html#method-trydecodeallimage-static-bool-trydecodeallimage-byte-image-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-string-texts",
+      "summary": "Attempts to decode all Aztec symbols from common image formats with image decode options, with cancellation."
+    },
+    {
+      "title": "AztecCode.TryDecodeAllImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-azteccode.html#method-trydecodeallimage-static-bool-trydecodeallimage-stream-stream-out-string-texts",
+      "summary": "Attempts to decode all Aztec symbols from an image stream."
+    },
+    {
+      "title": "AztecCode.TryDecodeAllImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-azteccode.html#method-trydecodeallimage-static-bool-trydecodeallimage-stream-stream-imagedecodeoptions-options-out-string-texts",
+      "summary": "Attempts to decode all Aztec symbols from an image stream with image decode options."
+    },
+    {
+      "title": "AztecCode.TryDecodeAllImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-azteccode.html#method-trydecodeallimage-static-bool-trydecodeallimage-stream-stream-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-string-texts",
+      "summary": "Attempts to decode all Aztec symbols from an image stream with image decode options, with cancellation."
     },
     {
       "title": "AztecCode.TryDecodePng",
@@ -1101,6 +1245,12 @@
     {
       "title": "Barcode.TryDecodePng",
       "kind": "Method",
+      "href": "types/codeglyphx-barcode.html#method-trydecodepng-static-bool-trydecodepng-byte-png-nullable-barcodetype-expectedtype-imagedecodeoptions-options-barcodedecodeoptions-decodeoptions-out-barcodedecoded-decoded",
+      "summary": "Attempts to decode a barcode from PNG bytes with an optional expected type hint, image decode options, and barcode decode options."
+    },
+    {
+      "title": "Barcode.TryDecodePng",
+      "kind": "Method",
       "href": "types/codeglyphx-barcode.html#method-trydecodepng-static-bool-trydecodepng-byte-png-nullable-barcodetype-expectedtype-cancellationtoken-cancellationtoken-out-barcodedecoded-decoded",
       "summary": "Attempts to decode a barcode from PNG bytes with an optional expected type hint, with cancellation."
     },
@@ -1109,6 +1259,12 @@
       "kind": "Method",
       "href": "types/codeglyphx-barcode.html#method-trydecodepng-static-bool-trydecodepng-byte-png-nullable-barcodetype-expectedtype-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-barcodedecoded-decoded",
       "summary": "Attempts to decode a barcode from PNG bytes with an optional expected type hint and image decode options, with cancellation."
+    },
+    {
+      "title": "Barcode.TryDecodePng",
+      "kind": "Method",
+      "href": "types/codeglyphx-barcode.html#method-trydecodepng-static-bool-trydecodepng-byte-png-nullable-barcodetype-expectedtype-imagedecodeoptions-options-barcodedecodeoptions-decodeoptions-cancellationtoken-cancellationtoken-out-barcodedecoded-decoded",
+      "summary": "Attempts to decode a barcode from PNG bytes with an optional expected type hint, image decode options, barcode decode options, and cancellation."
     },
     {
       "title": "Barcode.TryDecodeImage",
@@ -1137,6 +1293,12 @@
     {
       "title": "Barcode.TryDecodeImage",
       "kind": "Method",
+      "href": "types/codeglyphx-barcode.html#method-trydecodeimage-static-bool-trydecodeimage-byte-image-nullable-barcodetype-expectedtype-imagedecodeoptions-options-barcodedecodeoptions-decodeoptions-out-barcodedecoded-decoded",
+      "summary": "Attempts to decode a barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with an optional expected type hint, image decode options, and barcode decode options."
+    },
+    {
+      "title": "Barcode.TryDecodeImage",
+      "kind": "Method",
       "href": "types/codeglyphx-barcode.html#method-trydecodeimage-static-bool-trydecodeimage-byte-image-nullable-barcodetype-expectedtype-cancellationtoken-cancellationtoken-out-barcodedecoded-decoded",
       "summary": "Attempts to decode a barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with an optional expected type hint, with cancellation."
     },
@@ -1145,6 +1307,42 @@
       "kind": "Method",
       "href": "types/codeglyphx-barcode.html#method-trydecodeimage-static-bool-trydecodeimage-byte-image-nullable-barcodetype-expectedtype-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-barcodedecoded-decoded",
       "summary": "Attempts to decode a barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with an optional expected type hint and image decode options, with cancellation."
+    },
+    {
+      "title": "Barcode.TryDecodeImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-barcode.html#method-trydecodeimage-static-bool-trydecodeimage-byte-image-nullable-barcodetype-expectedtype-imagedecodeoptions-options-barcodedecodeoptions-decodeoptions-cancellationtoken-cancellationtoken-out-barcodedecoded-decoded",
+      "summary": "Attempts to decode a barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with an optional expected type hint, image decode options, barcode decode options, and cancellation."
+    },
+    {
+      "title": "Barcode.TryDecodeImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-barcode.html#method-trydecodeimage-static-bool-trydecodeimage-readonlyspan-byte-image-out-barcodedecoded-decoded",
+      "summary": "Attempts to decode a barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA)."
+    },
+    {
+      "title": "Barcode.TryDecodeImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-barcode.html#method-trydecodeimage-static-bool-trydecodeimage-readonlyspan-byte-image-cancellationtoken-cancellationtoken-out-barcodedecoded-decoded",
+      "summary": "Attempts to decode a barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA), with cancellation."
+    },
+    {
+      "title": "Barcode.TryDecodeImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-barcode.html#method-trydecodeimage-static-bool-trydecodeimage-readonlyspan-byte-image-nullable-barcodetype-expectedtype-out-barcodedecoded-decoded",
+      "summary": "Attempts to decode a barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with an optional expected type hint."
+    },
+    {
+      "title": "Barcode.TryDecodeImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-barcode.html#method-trydecodeimage-static-bool-trydecodeimage-readonlyspan-byte-image-nullable-barcodetype-expectedtype-imagedecodeoptions-options-barcodedecodeoptions-decodeoptions-out-barcodedecoded-decoded",
+      "summary": "Attempts to decode a barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with an optional expected type hint and image decode options."
+    },
+    {
+      "title": "Barcode.TryDecodeImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-barcode.html#method-trydecodeimage-static-bool-trydecodeimage-readonlyspan-byte-image-nullable-barcodetype-expectedtype-imagedecodeoptions-options-barcodedecodeoptions-decodeoptions-cancellationtoken-cancellationtoken-out-barcodedecoded-decoded",
+      "summary": "Attempts to decode a barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with an optional expected type hint, image decode options, barcode decode options, and cancellation."
     },
     {
       "title": "Barcode.TryDecodeImage",
@@ -1173,6 +1371,12 @@
     {
       "title": "Barcode.TryDecodeImage",
       "kind": "Method",
+      "href": "types/codeglyphx-barcode.html#method-trydecodeimage-static-bool-trydecodeimage-stream-stream-nullable-barcodetype-expectedtype-imagedecodeoptions-options-barcodedecodeoptions-decodeoptions-out-barcodedecoded-decoded",
+      "summary": "Attempts to decode a barcode from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with an optional expected type hint, image decode options, and barcode decode options."
+    },
+    {
+      "title": "Barcode.TryDecodeImage",
+      "kind": "Method",
       "href": "types/codeglyphx-barcode.html#method-trydecodeimage-static-bool-trydecodeimage-stream-stream-nullable-barcodetype-expectedtype-cancellationtoken-cancellationtoken-out-barcodedecoded-decoded",
       "summary": "Attempts to decode a barcode from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with an optional expected type hint, with cancellation."
     },
@@ -1181,6 +1385,36 @@
       "kind": "Method",
       "href": "types/codeglyphx-barcode.html#method-trydecodeimage-static-bool-trydecodeimage-stream-stream-nullable-barcodetype-expectedtype-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-barcodedecoded-decoded",
       "summary": "Attempts to decode a barcode from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with an optional expected type hint and image decode options, with cancellation."
+    },
+    {
+      "title": "Barcode.TryDecodeImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-barcode.html#method-trydecodeimage-static-bool-trydecodeimage-stream-stream-nullable-barcodetype-expectedtype-imagedecodeoptions-options-barcodedecodeoptions-decodeoptions-cancellationtoken-cancellationtoken-out-barcodedecoded-decoded",
+      "summary": "Attempts to decode a barcode from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with an optional expected type hint, image decode options, barcode decode options, and cancellation."
+    },
+    {
+      "title": "Barcode.DecodeImageResult",
+      "kind": "Method",
+      "href": "types/codeglyphx-barcode.html#method-decodeimageresult-static-decoderesult-barcodedecoded-decodeimageresult-byte-image-nullable-barcodetype-expectedtype-imagedecodeoptions-options-barcodedecodeoptions-decodeoptions-cancellationtoken-cancellationtoken",
+      "summary": "Decodes a barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) and returns diagnostics."
+    },
+    {
+      "title": "Barcode.DecodeImageResult",
+      "kind": "Method",
+      "href": "types/codeglyphx-barcode.html#method-decodeimageresult-static-decoderesult-barcodedecoded-decodeimageresult-readonlyspan-byte-image-nullable-barcodetype-expectedtype-imagedecodeoptions-options-barcodedecodeoptions-decodeoptions-cancellationtoken-cancellationtoken",
+      "summary": "Decodes a barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) in a span and returns diagnostics."
+    },
+    {
+      "title": "Barcode.DecodeImageResult",
+      "kind": "Method",
+      "href": "types/codeglyphx-barcode.html#method-decodeimageresult-static-decoderesult-barcodedecoded-decodeimageresult-stream-stream-nullable-barcodetype-expectedtype-imagedecodeoptions-options-barcodedecodeoptions-decodeoptions-cancellationtoken-cancellationtoken",
+      "summary": "Decodes a barcode from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) and returns diagnostics."
+    },
+    {
+      "title": "Barcode.DecodeImageBatch",
+      "kind": "Method",
+      "href": "types/codeglyphx-barcode.html#method-decodeimagebatch-static-decodebatchresult-barcodedecoded-decodeimagebatch-ienumerable-byte-images-nullable-barcodetype-expectedtype-imagedecodeoptions-options-barcodedecodeoptions-decodeoptions-cancellationtoken-cancellationtoken",
+      "summary": "Decodes a batch of barcode images with shared settings and aggregated diagnostics."
     },
     {
       "title": "Barcode.TryDecodePngFile",
@@ -1203,8 +1437,20 @@
     {
       "title": "Barcode.TryDecodePngFile",
       "kind": "Method",
+      "href": "types/codeglyphx-barcode.html#method-trydecodepngfile-static-bool-trydecodepngfile-string-path-imagedecodeoptions-options-barcodedecodeoptions-decodeoptions-out-barcodedecoded-decoded",
+      "summary": "Attempts to decode a barcode from a PNG file with image decode options and barcode decode options."
+    },
+    {
+      "title": "Barcode.TryDecodePngFile",
+      "kind": "Method",
       "href": "types/codeglyphx-barcode.html#method-trydecodepngfile-static-bool-trydecodepngfile-string-path-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-barcodedecoded-decoded",
       "summary": "Attempts to decode a barcode from a PNG file with image decode options, with cancellation."
+    },
+    {
+      "title": "Barcode.TryDecodePngFile",
+      "kind": "Method",
+      "href": "types/codeglyphx-barcode.html#method-trydecodepngfile-static-bool-trydecodepngfile-string-path-imagedecodeoptions-options-barcodedecodeoptions-decodeoptions-cancellationtoken-cancellationtoken-out-barcodedecoded-decoded",
+      "summary": "Attempts to decode a barcode from a PNG file with image decode options, barcode decode options, and cancellation."
     },
     {
       "title": "Barcode.TryDecodePng",
@@ -1227,8 +1473,20 @@
     {
       "title": "Barcode.TryDecodePng",
       "kind": "Method",
+      "href": "types/codeglyphx-barcode.html#method-trydecodepng-static-bool-trydecodepng-stream-stream-imagedecodeoptions-options-barcodedecodeoptions-decodeoptions-out-barcodedecoded-decoded",
+      "summary": "Attempts to decode a barcode from a PNG stream with image decode options and barcode decode options."
+    },
+    {
+      "title": "Barcode.TryDecodePng",
+      "kind": "Method",
       "href": "types/codeglyphx-barcode.html#method-trydecodepng-static-bool-trydecodepng-stream-stream-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-barcodedecoded-decoded",
       "summary": "Attempts to decode a barcode from a PNG stream with image decode options, with cancellation."
+    },
+    {
+      "title": "Barcode.TryDecodePng",
+      "kind": "Method",
+      "href": "types/codeglyphx-barcode.html#method-trydecodepng-static-bool-trydecodepng-stream-stream-imagedecodeoptions-options-barcodedecodeoptions-decodeoptions-cancellationtoken-cancellationtoken-out-barcodedecoded-decoded",
+      "summary": "Attempts to decode a barcode from a PNG stream with image decode options, barcode decode options, and cancellation."
     },
     {
       "title": "Barcode.DecodePng",
@@ -1912,7 +2170,7 @@
       "title": "BarcodeDecoded.Text",
       "kind": "Property",
       "href": "types/codeglyphx-barcodedecoded.html#property-text-string-text-get",
-      "summary": "Gets the decoded text."
+      "summary": "Gets the decoded text (for EAN/UPC add-ons this includes a \u0027\u002B\u0027 suffix, e.g. \u0022123456789012\u002B12\u0022)."
     },
     {
       "title": "CodeGlyphX.BarcodeDecodeDiagnostics",
@@ -2527,6 +2785,36 @@
       "summary": "Encodes an ITF-14 barcode."
     },
     {
+      "title": "BarcodeEncoder.EncodeItf",
+      "kind": "Method",
+      "href": "types/codeglyphx-barcodeencoder.html#method-encodeitf-static-barcode1d-encodeitf-string-value-bool-includechecksum",
+      "summary": "Encodes an Interleaved 2 of 5 (ITF) barcode."
+    },
+    {
+      "title": "BarcodeEncoder.EncodeIndustrial2of5",
+      "kind": "Method",
+      "href": "types/codeglyphx-barcodeencoder.html#method-encodeindustrial2of5-static-barcode1d-encodeindustrial2of5-string-value-bool-includechecksum",
+      "summary": "Encodes an Industrial (Discrete) 2 of 5 barcode."
+    },
+    {
+      "title": "BarcodeEncoder.EncodeMatrix2of5",
+      "kind": "Method",
+      "href": "types/codeglyphx-barcodeencoder.html#method-encodematrix2of5-static-barcode1d-encodematrix2of5-string-value-bool-includechecksum",
+      "summary": "Encodes a Matrix (Standard) 2 of 5 barcode."
+    },
+    {
+      "title": "BarcodeEncoder.EncodeIata2of5",
+      "kind": "Method",
+      "href": "types/codeglyphx-barcodeencoder.html#method-encodeiata2of5-static-barcode1d-encodeiata2of5-string-value-bool-includechecksum",
+      "summary": "Encodes an IATA 2 of 5 barcode."
+    },
+    {
+      "title": "BarcodeEncoder.EncodePatchCode",
+      "kind": "Method",
+      "href": "types/codeglyphx-barcodeencoder.html#method-encodepatchcode-static-barcode1d-encodepatchcode-string-value",
+      "summary": "Encodes a Patch Code symbol."
+    },
+    {
       "title": "BarcodeEncoder.EncodeCodabar",
       "kind": "Method",
       "href": "types/codeglyphx-barcodeencoder.html#method-encodecodabar-static-barcode1d-encodecodabar-string-value-char-start-char-stop",
@@ -2549,6 +2837,24 @@
       "kind": "Method",
       "href": "types/codeglyphx-barcodeencoder.html#method-encodeplessey-static-barcode1d-encodeplessey-string-value",
       "summary": "Encodes a Plessey barcode."
+    },
+    {
+      "title": "BarcodeEncoder.EncodeTelepen",
+      "kind": "Method",
+      "href": "types/codeglyphx-barcodeencoder.html#method-encodetelepen-static-barcode1d-encodetelepen-string-value",
+      "summary": "Encodes a Telepen barcode (ASCII mode)."
+    },
+    {
+      "title": "BarcodeEncoder.EncodePharmacode",
+      "kind": "Method",
+      "href": "types/codeglyphx-barcodeencoder.html#method-encodepharmacode-static-barcode1d-encodepharmacode-string-value",
+      "summary": "Encodes a Pharmacode (one-track) barcode value."
+    },
+    {
+      "title": "BarcodeEncoder.EncodeCode32",
+      "kind": "Method",
+      "href": "types/codeglyphx-barcodeencoder.html#method-encodecode32-static-barcode1d-encodecode32-string-value",
+      "summary": "Encodes a Code 32 (Italian Pharmacode) barcode value."
     },
     {
       "title": "CodeGlyphX.BarcodeOptions",
@@ -2707,6 +3013,36 @@
       "summary": "ITF-14."
     },
     {
+      "title": "BarcodeType.ITF",
+      "kind": "Field",
+      "href": "types/codeglyphx-barcodetype.html#field-itf-barcodetype-itf",
+      "summary": "Interleaved 2 of 5 (ITF)."
+    },
+    {
+      "title": "BarcodeType.Industrial2of5",
+      "kind": "Field",
+      "href": "types/codeglyphx-barcodetype.html#field-industrial2of5-barcodetype-industrial2of5",
+      "summary": "Industrial (Discrete) 2 of 5."
+    },
+    {
+      "title": "BarcodeType.Matrix2of5",
+      "kind": "Field",
+      "href": "types/codeglyphx-barcodetype.html#field-matrix2of5-barcodetype-matrix2of5",
+      "summary": "Matrix (Standard) 2 of 5."
+    },
+    {
+      "title": "BarcodeType.IATA2of5",
+      "kind": "Field",
+      "href": "types/codeglyphx-barcodetype.html#field-iata2of5-barcodetype-iata2of5",
+      "summary": "IATA 2 of 5."
+    },
+    {
+      "title": "BarcodeType.PatchCode",
+      "kind": "Field",
+      "href": "types/codeglyphx-barcodetype.html#field-patchcode-barcodetype-patchcode",
+      "summary": "Patch Code."
+    },
+    {
       "title": "BarcodeType.Codabar",
       "kind": "Field",
       "href": "types/codeglyphx-barcodetype.html#field-codabar-barcodetype-codabar",
@@ -2731,6 +3067,96 @@
       "summary": "Plessey."
     },
     {
+      "title": "BarcodeType.Telepen",
+      "kind": "Field",
+      "href": "types/codeglyphx-barcodetype.html#field-telepen-barcodetype-telepen",
+      "summary": "Telepen."
+    },
+    {
+      "title": "BarcodeType.Pharmacode",
+      "kind": "Field",
+      "href": "types/codeglyphx-barcodetype.html#field-pharmacode-barcodetype-pharmacode",
+      "summary": "Pharmacode (one-track)."
+    },
+    {
+      "title": "BarcodeType.PharmacodeTwoTrack",
+      "kind": "Field",
+      "href": "types/codeglyphx-barcodetype.html#field-pharmacodetwotrack-barcodetype-pharmacodetwotrack",
+      "summary": "Pharmacode (two-track)."
+    },
+    {
+      "title": "BarcodeType.Code32",
+      "kind": "Field",
+      "href": "types/codeglyphx-barcodetype.html#field-code32-barcodetype-code32",
+      "summary": "Code 32 (Italian Pharmacode)."
+    },
+    {
+      "title": "BarcodeType.Postnet",
+      "kind": "Field",
+      "href": "types/codeglyphx-barcodetype.html#field-postnet-barcodetype-postnet",
+      "summary": "POSTNET."
+    },
+    {
+      "title": "BarcodeType.Planet",
+      "kind": "Field",
+      "href": "types/codeglyphx-barcodetype.html#field-planet-barcodetype-planet",
+      "summary": "PLANET."
+    },
+    {
+      "title": "BarcodeType.RoyalMail4State",
+      "kind": "Field",
+      "href": "types/codeglyphx-barcodetype.html#field-royalmail4state-barcodetype-royalmail4state",
+      "summary": "Royal Mail 4-State Customer Code (RM4SCC)."
+    },
+    {
+      "title": "BarcodeType.AustraliaPost",
+      "kind": "Field",
+      "href": "types/codeglyphx-barcodetype.html#field-australiapost-barcodetype-australiapost",
+      "summary": "Australia Post customer barcode."
+    },
+    {
+      "title": "BarcodeType.JapanPost",
+      "kind": "Field",
+      "href": "types/codeglyphx-barcodetype.html#field-japanpost-barcodetype-japanpost",
+      "summary": "Japan Post barcode."
+    },
+    {
+      "title": "BarcodeType.GS1DataBarTruncated",
+      "kind": "Field",
+      "href": "types/codeglyphx-barcodetype.html#field-gs1databartruncated-barcodetype-gs1databartruncated",
+      "summary": "GS1 DataBar-14 Truncated."
+    },
+    {
+      "title": "BarcodeType.GS1DataBarOmni",
+      "kind": "Field",
+      "href": "types/codeglyphx-barcodetype.html#field-gs1databaromni-barcodetype-gs1databaromni",
+      "summary": "GS1 DataBar-14 Omnidirectional."
+    },
+    {
+      "title": "BarcodeType.GS1DataBarStacked",
+      "kind": "Field",
+      "href": "types/codeglyphx-barcodetype.html#field-gs1databarstacked-barcodetype-gs1databarstacked",
+      "summary": "GS1 DataBar-14 Stacked."
+    },
+    {
+      "title": "BarcodeType.GS1DataBarExpanded",
+      "kind": "Field",
+      "href": "types/codeglyphx-barcodetype.html#field-gs1databarexpanded-barcodetype-gs1databarexpanded",
+      "summary": "GS1 DataBar Expanded."
+    },
+    {
+      "title": "BarcodeType.GS1DataBarExpandedStacked",
+      "kind": "Field",
+      "href": "types/codeglyphx-barcodetype.html#field-gs1databarexpandedstacked-barcodetype-gs1databarexpandedstacked",
+      "summary": "GS1 DataBar Expanded Stacked."
+    },
+    {
+      "title": "BarcodeType.UspsImb",
+      "kind": "Field",
+      "href": "types/codeglyphx-barcodetype.html#field-uspsimb-barcodetype-uspsimb",
+      "summary": "USPS Intelligent Mail Barcode (IMB)."
+    },
+    {
       "title": "BarcodeType.KixCode",
       "kind": "Field",
       "href": "types/codeglyphx-barcodetype.html#field-kixcode-barcodetype-kixcode",
@@ -2747,6 +3173,12 @@
       "kind": "Field",
       "href": "types/codeglyphx-barcodetype.html#field-pdf417-barcodetype-pdf417",
       "summary": "PDF417 (not supported in 1D encoder)."
+    },
+    {
+      "title": "BarcodeType.MicroPDF417",
+      "kind": "Field",
+      "href": "types/codeglyphx-barcodetype.html#field-micropdf417-barcodetype-micropdf417",
+      "summary": "MicroPDF417 (not supported in 1D encoder)."
     },
     {
       "title": "CodeGlyphX.BarSegment",
@@ -3217,6 +3649,24 @@
       "summary": "Attempts to decode a QR or barcode from common image formats using a single options object, with diagnostics."
     },
     {
+      "title": "CodeGlyph.DecodeImageResult",
+      "kind": "Method",
+      "href": "types/codeglyphx-codeglyph.html#method-decodeimageresult-static-decoderesult-codeglyphdecoded-decodeimageresult-byte-image-codeglyphdecodeoptions-options",
+      "summary": "Decodes a QR or barcode from common image formats using a single options object and returns diagnostics."
+    },
+    {
+      "title": "CodeGlyph.DecodeImageResult",
+      "kind": "Method",
+      "href": "types/codeglyphx-codeglyph.html#method-decodeimageresult-static-decoderesult-codeglyphdecoded-decodeimageresult-stream-stream-codeglyphdecodeoptions-options",
+      "summary": "Decodes a QR or barcode from an image stream using a single options object and returns diagnostics."
+    },
+    {
+      "title": "CodeGlyph.DecodeImageBatch",
+      "kind": "Method",
+      "href": "types/codeglyphx-codeglyph.html#method-decodeimagebatch-static-decodebatchresult-codeglyphdecoded-decodeimagebatch-ienumerable-byte-images-codeglyphdecodeoptions-options",
+      "summary": "Decodes a batch of QR/barcode images using a single options object and returns aggregated diagnostics."
+    },
+    {
       "title": "CodeGlyph.TryDecodeAllPng",
       "kind": "Method",
       "href": "types/codeglyphx-codeglyph.html#method-trydecodeallpng-static-bool-trydecodeallpng-byte-png-out-codeglyphdecoded-decoded-codeglyphdecodeoptions-options",
@@ -3265,6 +3715,12 @@
       "summary": "Attempts to decode all symbols from a PNG stream using a single options object."
     },
     {
+      "title": "CodeGlyph.TryDecode",
+      "kind": "Method",
+      "href": "types/codeglyphx-codeglyph.html#method-trydecode-static-bool-trydecode-bitmatrix-modules-out-codeglyphdecoded-decoded-nullable-barcodetype-expectedbarcode-bool-preferbarcode",
+      "summary": "Attempts to decode a QR or barcode from a module matrix."
+    },
+    {
       "title": "CodeGlyphX.CodeGlyphBudget",
       "kind": "Type",
       "href": "types/codeglyphx-codeglyphbudget.html",
@@ -3311,6 +3767,18 @@
       "kind": "Property",
       "href": "types/codeglyphx-codeglyphdecoded.html#property-pdf417text-string-pdf417text-get",
       "summary": "Gets the decoded PDF417 text when CodeGlyphX.CodeGlyphDecoded.Kind is CodeGlyphX.CodeGlyphKind.Pdf417."
+    },
+    {
+      "title": "CodeGlyphDecoded.Pdf417",
+      "kind": "Property",
+      "href": "types/codeglyphx-codeglyphdecoded.html#property-pdf417-pdf417decoded-pdf417-get",
+      "summary": "Gets the decoded PDF417 payload when CodeGlyphX.CodeGlyphDecoded.Kind is CodeGlyphX.CodeGlyphKind.Pdf417."
+    },
+    {
+      "title": "CodeGlyphDecoded.Pdf417Macro",
+      "kind": "Property",
+      "href": "types/codeglyphx-codeglyphdecoded.html#property-pdf417macro-pdf417macrometadata-pdf417macro-get",
+      "summary": "Gets the Macro PDF417 metadata when present."
     },
     {
       "title": "CodeGlyphDecoded.AztecText",
@@ -4191,6 +4659,30 @@
     {
       "title": "DataMatrixCode.TryDecodePng",
       "kind": "Method",
+      "href": "types/codeglyphx-datamatrixcode.html#method-trydecodepng-static-bool-trydecodepng-readonlyspan-byte-png-out-string-text",
+      "summary": "Attempts to decode a Data Matrix symbol from PNG bytes in a span."
+    },
+    {
+      "title": "DataMatrixCode.TryDecodePng",
+      "kind": "Method",
+      "href": "types/codeglyphx-datamatrixcode.html#method-trydecodepng-static-bool-trydecodepng-readonlyspan-byte-png-cancellationtoken-cancellationtoken-out-string-text",
+      "summary": "Attempts to decode a Data Matrix symbol from PNG bytes in a span, with cancellation."
+    },
+    {
+      "title": "DataMatrixCode.TryDecodePng",
+      "kind": "Method",
+      "href": "types/codeglyphx-datamatrixcode.html#method-trydecodepng-static-bool-trydecodepng-readonlyspan-byte-png-imagedecodeoptions-options-out-string-text",
+      "summary": "Attempts to decode a Data Matrix symbol from PNG bytes in a span with image decode options."
+    },
+    {
+      "title": "DataMatrixCode.TryDecodePng",
+      "kind": "Method",
+      "href": "types/codeglyphx-datamatrixcode.html#method-trydecodepng-static-bool-trydecodepng-readonlyspan-byte-png-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-string-text",
+      "summary": "Attempts to decode a Data Matrix symbol from PNG bytes in a span with image decode options, with cancellation."
+    },
+    {
+      "title": "DataMatrixCode.TryDecodePng",
+      "kind": "Method",
       "href": "types/codeglyphx-datamatrixcode.html#method-trydecodepng-static-bool-trydecodepng-byte-png-out-string-text-out-datamatrixdecodediagnostics-diagnostics",
       "summary": "Attempts to decode a Data Matrix symbol from PNG bytes, with diagnostics."
     },
@@ -4205,6 +4697,24 @@
       "kind": "Method",
       "href": "types/codeglyphx-datamatrixcode.html#method-trydecodepng-static-bool-trydecodepng-byte-png-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-string-text-out-datamatrixdecodediagnostics-diagnostics",
       "summary": "Attempts to decode a Data Matrix symbol from PNG bytes with image decode options, cancellation, and diagnostics."
+    },
+    {
+      "title": "DataMatrixCode.TryDecodePng",
+      "kind": "Method",
+      "href": "types/codeglyphx-datamatrixcode.html#method-trydecodepng-static-bool-trydecodepng-readonlyspan-byte-png-out-string-text-out-datamatrixdecodediagnostics-diagnostics",
+      "summary": "Attempts to decode a Data Matrix symbol from PNG bytes in a span, with diagnostics."
+    },
+    {
+      "title": "DataMatrixCode.TryDecodePng",
+      "kind": "Method",
+      "href": "types/codeglyphx-datamatrixcode.html#method-trydecodepng-static-bool-trydecodepng-readonlyspan-byte-png-imagedecodeoptions-options-out-string-text-out-datamatrixdecodediagnostics-diagnostics",
+      "summary": "Attempts to decode a Data Matrix symbol from PNG bytes in a span with image decode options, with diagnostics."
+    },
+    {
+      "title": "DataMatrixCode.TryDecodePng",
+      "kind": "Method",
+      "href": "types/codeglyphx-datamatrixcode.html#method-trydecodepng-static-bool-trydecodepng-readonlyspan-byte-png-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-string-text-out-datamatrixdecodediagnostics-diagnostics",
+      "summary": "Attempts to decode a Data Matrix symbol from PNG bytes in a span with image decode options, cancellation, and diagnostics."
     },
     {
       "title": "DataMatrixCode.TryDecodePngFile",
@@ -4329,6 +4839,48 @@
     {
       "title": "DataMatrixCode.TryDecodeImage",
       "kind": "Method",
+      "href": "types/codeglyphx-datamatrixcode.html#method-trydecodeimage-static-bool-trydecodeimage-readonlyspan-byte-image-out-string-text-out-datamatrixdecodediagnostics-diagnostics",
+      "summary": "Attempts to decode a Data Matrix symbol from common image formats in a span, with diagnostics."
+    },
+    {
+      "title": "DataMatrixCode.TryDecodeImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-datamatrixcode.html#method-trydecodeimage-static-bool-trydecodeimage-readonlyspan-byte-image-imagedecodeoptions-options-out-string-text-out-datamatrixdecodediagnostics-diagnostics",
+      "summary": "Attempts to decode a Data Matrix symbol from common image formats in a span with image decode options, with diagnostics."
+    },
+    {
+      "title": "DataMatrixCode.TryDecodeImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-datamatrixcode.html#method-trydecodeimage-static-bool-trydecodeimage-readonlyspan-byte-image-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-string-text-out-datamatrixdecodediagnostics-diagnostics",
+      "summary": "Attempts to decode a Data Matrix symbol from common image formats in a span with image decode options, cancellation, and diagnostics."
+    },
+    {
+      "title": "DataMatrixCode.TryDecodeImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-datamatrixcode.html#method-trydecodeimage-static-bool-trydecodeimage-readonlyspan-byte-image-out-string-text",
+      "summary": "Attempts to decode a Data Matrix symbol from common image formats in a span."
+    },
+    {
+      "title": "DataMatrixCode.TryDecodeImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-datamatrixcode.html#method-trydecodeimage-static-bool-trydecodeimage-readonlyspan-byte-image-cancellationtoken-cancellationtoken-out-string-text",
+      "summary": "Attempts to decode a Data Matrix symbol from common image formats in a span, with cancellation."
+    },
+    {
+      "title": "DataMatrixCode.TryDecodeImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-datamatrixcode.html#method-trydecodeimage-static-bool-trydecodeimage-readonlyspan-byte-image-imagedecodeoptions-options-out-string-text",
+      "summary": "Attempts to decode a Data Matrix symbol from common image formats in a span with image decode options."
+    },
+    {
+      "title": "DataMatrixCode.TryDecodeImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-datamatrixcode.html#method-trydecodeimage-static-bool-trydecodeimage-readonlyspan-byte-image-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-string-text",
+      "summary": "Attempts to decode a Data Matrix symbol from common image formats in a span with image decode options, with cancellation."
+    },
+    {
+      "title": "DataMatrixCode.TryDecodeImage",
+      "kind": "Method",
       "href": "types/codeglyphx-datamatrixcode.html#method-trydecodeimage-static-bool-trydecodeimage-stream-stream-out-string-text",
       "summary": "Attempts to decode a Data Matrix symbol from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA)."
     },
@@ -4367,6 +4919,66 @@
       "kind": "Method",
       "href": "types/codeglyphx-datamatrixcode.html#method-trydecodeimage-static-bool-trydecodeimage-stream-stream-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-string-text-out-datamatrixdecodediagnostics-diagnostics",
       "summary": "Attempts to decode a Data Matrix symbol from an image stream with image decode options, cancellation, and diagnostics."
+    },
+    {
+      "title": "DataMatrixCode.DecodeImageResult",
+      "kind": "Method",
+      "href": "types/codeglyphx-datamatrixcode.html#method-decodeimageresult-static-decoderesult-string-decodeimageresult-byte-image-imagedecodeoptions-options-cancellationtoken-cancellationtoken",
+      "summary": "Decodes a Data Matrix symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) and returns diagnostics."
+    },
+    {
+      "title": "DataMatrixCode.DecodeImageResult",
+      "kind": "Method",
+      "href": "types/codeglyphx-datamatrixcode.html#method-decodeimageresult-static-decoderesult-string-decodeimageresult-readonlyspan-byte-image-imagedecodeoptions-options-cancellationtoken-cancellationtoken",
+      "summary": "Decodes a Data Matrix symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) in a span and returns diagnostics."
+    },
+    {
+      "title": "DataMatrixCode.DecodeImageResult",
+      "kind": "Method",
+      "href": "types/codeglyphx-datamatrixcode.html#method-decodeimageresult-static-decoderesult-string-decodeimageresult-stream-stream-imagedecodeoptions-options-cancellationtoken-cancellationtoken",
+      "summary": "Decodes a Data Matrix symbol from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) and returns diagnostics."
+    },
+    {
+      "title": "DataMatrixCode.DecodeImageBatch",
+      "kind": "Method",
+      "href": "types/codeglyphx-datamatrixcode.html#method-decodeimagebatch-static-decodebatchresult-string-decodeimagebatch-ienumerable-byte-images-imagedecodeoptions-options-cancellationtoken-cancellationtoken",
+      "summary": "Decodes a batch of Data Matrix images with shared settings and aggregated diagnostics."
+    },
+    {
+      "title": "DataMatrixCode.TryDecodeAllImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-datamatrixcode.html#method-trydecodeallimage-static-bool-trydecodeallimage-byte-image-out-string-texts",
+      "summary": "Attempts to decode all Data Matrix symbols from common image formats."
+    },
+    {
+      "title": "DataMatrixCode.TryDecodeAllImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-datamatrixcode.html#method-trydecodeallimage-static-bool-trydecodeallimage-byte-image-imagedecodeoptions-options-out-string-texts",
+      "summary": "Attempts to decode all Data Matrix symbols from common image formats with image decode options."
+    },
+    {
+      "title": "DataMatrixCode.TryDecodeAllImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-datamatrixcode.html#method-trydecodeallimage-static-bool-trydecodeallimage-byte-image-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-string-texts",
+      "summary": "Attempts to decode all Data Matrix symbols from common image formats with image decode options, with cancellation."
+    },
+    {
+      "title": "DataMatrixCode.TryDecodeAllImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-datamatrixcode.html#method-trydecodeallimage-static-bool-trydecodeallimage-stream-stream-out-string-texts",
+      "summary": "Attempts to decode all Data Matrix symbols from an image stream."
+    },
+    {
+      "title": "DataMatrixCode.TryDecodeAllImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-datamatrixcode.html#method-trydecodeallimage-static-bool-trydecodeallimage-stream-stream-imagedecodeoptions-options-out-string-texts",
+      "summary": "Attempts to decode all Data Matrix symbols from an image stream with image decode options."
+    },
+    {
+      "title": "DataMatrixCode.TryDecodeAllImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-datamatrixcode.html#method-trydecodeallimage-static-bool-trydecodeallimage-stream-stream-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-string-texts",
+      "summary": "Attempts to decode all Data Matrix symbols from an image stream with image decode options, with cancellation."
     },
     {
       "title": "DataMatrixCode.DecodePng",
@@ -5017,6 +5629,216 @@
       "summary": "Optional failure message when decoding fails."
     },
     {
+      "title": "CodeGlyphX.DecodeBatchDiagnostics",
+      "kind": "Type",
+      "href": "types/codeglyphx-decodebatchdiagnostics.html",
+      "summary": "Aggregated diagnostics for a batch decode run."
+    },
+    {
+      "title": "DecodeBatchDiagnostics.Total",
+      "kind": "Property",
+      "href": "types/codeglyphx-decodebatchdiagnostics.html#property-total-int-total-get",
+      "summary": "Gets total number of inputs processed."
+    },
+    {
+      "title": "DecodeBatchDiagnostics.Success",
+      "kind": "Property",
+      "href": "types/codeglyphx-decodebatchdiagnostics.html#property-success-int-success-get",
+      "summary": "Gets the number of successful decodes."
+    },
+    {
+      "title": "DecodeBatchDiagnostics.InvalidInput",
+      "kind": "Property",
+      "href": "types/codeglyphx-decodebatchdiagnostics.html#property-invalidinput-int-invalidinput-get",
+      "summary": "Gets the number of invalid input failures."
+    },
+    {
+      "title": "DecodeBatchDiagnostics.UnsupportedFormat",
+      "kind": "Property",
+      "href": "types/codeglyphx-decodebatchdiagnostics.html#property-unsupportedformat-int-unsupportedformat-get",
+      "summary": "Gets the number of unsupported format failures."
+    },
+    {
+      "title": "DecodeBatchDiagnostics.Cancelled",
+      "kind": "Property",
+      "href": "types/codeglyphx-decodebatchdiagnostics.html#property-cancelled-int-cancelled-get",
+      "summary": "Gets the number of cancelled decodes."
+    },
+    {
+      "title": "DecodeBatchDiagnostics.NoResult",
+      "kind": "Property",
+      "href": "types/codeglyphx-decodebatchdiagnostics.html#property-noresult-int-noresult-get",
+      "summary": "Gets the number of no-result decodes."
+    },
+    {
+      "title": "DecodeBatchDiagnostics.Error",
+      "kind": "Property",
+      "href": "types/codeglyphx-decodebatchdiagnostics.html#property-error-int-error-get",
+      "summary": "Gets the number of unexpected errors."
+    },
+    {
+      "title": "DecodeBatchDiagnostics.TotalElapsed",
+      "kind": "Property",
+      "href": "types/codeglyphx-decodebatchdiagnostics.html#property-totalelapsed-timespan-totalelapsed-get",
+      "summary": "Gets the total elapsed time across all items."
+    },
+    {
+      "title": "DecodeBatchDiagnostics.FailureCount",
+      "kind": "Property",
+      "href": "types/codeglyphx-decodebatchdiagnostics.html#property-failurecount-int-failurecount-get",
+      "summary": "Gets the number of failed decodes."
+    },
+    {
+      "title": "DecodeBatchDiagnostics.AverageElapsed",
+      "kind": "Property",
+      "href": "types/codeglyphx-decodebatchdiagnostics.html#property-averageelapsed-timespan-averageelapsed-get",
+      "summary": "Gets the average elapsed time per item."
+    },
+    {
+      "title": "CodeGlyphX.DecodeBatchResult\u00601",
+      "kind": "Type",
+      "href": "types/codeglyphx-decodebatchresult-1.html",
+      "summary": null
+    },
+    {
+      "title": "DecodeBatchResult.Results",
+      "kind": "Property",
+      "href": "types/codeglyphx-decodebatchresult-1.html#property-results-decoderesult-t-results-get",
+      "summary": null
+    },
+    {
+      "title": "DecodeBatchResult.Diagnostics",
+      "kind": "Property",
+      "href": "types/codeglyphx-decodebatchresult-1.html#property-diagnostics-decodebatchdiagnostics-diagnostics-get",
+      "summary": null
+    },
+    {
+      "title": "DecodeBatchResult.Count",
+      "kind": "Property",
+      "href": "types/codeglyphx-decodebatchresult-1.html#property-count-int-count-get",
+      "summary": null
+    },
+    {
+      "title": "CodeGlyphX.DecodeFailureReason",
+      "kind": "Type",
+      "href": "types/codeglyphx-decodefailurereason.html",
+      "summary": "Describes why decoding failed."
+    },
+    {
+      "title": "DecodeFailureReason.value__",
+      "kind": "Field",
+      "href": "types/codeglyphx-decodefailurereason.html#field-value-int-value",
+      "summary": null
+    },
+    {
+      "title": "DecodeFailureReason.None",
+      "kind": "Field",
+      "href": "types/codeglyphx-decodefailurereason.html#field-none-decodefailurereason-none",
+      "summary": "No failure (success)."
+    },
+    {
+      "title": "DecodeFailureReason.InvalidInput",
+      "kind": "Field",
+      "href": "types/codeglyphx-decodefailurereason.html#field-invalidinput-decodefailurereason-invalidinput",
+      "summary": "Input was invalid."
+    },
+    {
+      "title": "DecodeFailureReason.UnsupportedFormat",
+      "kind": "Field",
+      "href": "types/codeglyphx-decodefailurereason.html#field-unsupportedformat-decodefailurereason-unsupportedformat",
+      "summary": "Image format or data was not supported."
+    },
+    {
+      "title": "DecodeFailureReason.Cancelled",
+      "kind": "Field",
+      "href": "types/codeglyphx-decodefailurereason.html#field-cancelled-decodefailurereason-cancelled",
+      "summary": "Operation was cancelled."
+    },
+    {
+      "title": "DecodeFailureReason.NoResult",
+      "kind": "Field",
+      "href": "types/codeglyphx-decodefailurereason.html#field-noresult-decodefailurereason-noresult",
+      "summary": "Decoding completed but no symbols were found."
+    },
+    {
+      "title": "DecodeFailureReason.Error",
+      "kind": "Field",
+      "href": "types/codeglyphx-decodefailurereason.html#field-error-decodefailurereason-error",
+      "summary": "An unexpected error occurred."
+    },
+    {
+      "title": "CodeGlyphX.DecodeResult\u00601",
+      "kind": "Type",
+      "href": "types/codeglyphx-decoderesult-1.html",
+      "summary": null
+    },
+    {
+      "title": "DecodeResult.DecodeResult",
+      "kind": "Constructor",
+      "href": "types/codeglyphx-decoderesult-1.html#constructor-decoderesult-decoderesult-t-value-imageinfo-image-timespan-elapsed",
+      "summary": null
+    },
+    {
+      "title": "DecodeResult.DecodeResult",
+      "kind": "Constructor",
+      "href": "types/codeglyphx-decoderesult-1.html#constructor-decoderesult-decoderesult-decodefailurereason-failure-imageinfo-image-timespan-elapsed-string-message",
+      "summary": null
+    },
+    {
+      "title": "DecodeResult.Value",
+      "kind": "Property",
+      "href": "types/codeglyphx-decoderesult-1.html#property-value-t-value-get",
+      "summary": null
+    },
+    {
+      "title": "DecodeResult.Failure",
+      "kind": "Property",
+      "href": "types/codeglyphx-decoderesult-1.html#property-failure-decodefailurereason-failure-get",
+      "summary": null
+    },
+    {
+      "title": "DecodeResult.Image",
+      "kind": "Property",
+      "href": "types/codeglyphx-decoderesult-1.html#property-image-imageinfo-image-get",
+      "summary": null
+    },
+    {
+      "title": "DecodeResult.Elapsed",
+      "kind": "Property",
+      "href": "types/codeglyphx-decoderesult-1.html#property-elapsed-timespan-elapsed-get",
+      "summary": null
+    },
+    {
+      "title": "DecodeResult.Message",
+      "kind": "Property",
+      "href": "types/codeglyphx-decoderesult-1.html#property-message-string-message-get",
+      "summary": null
+    },
+    {
+      "title": "DecodeResult.IsSuccess",
+      "kind": "Property",
+      "href": "types/codeglyphx-decoderesult-1.html#property-issuccess-bool-issuccess-get",
+      "summary": null
+    },
+    {
+      "title": "DecodeResult.Format",
+      "kind": "Property",
+      "href": "types/codeglyphx-decoderesult-1.html#property-format-imageformat-format-get",
+      "summary": null
+    },
+    {
+      "title": "DecodeResult.Width",
+      "kind": "Property",
+      "href": "types/codeglyphx-decoderesult-1.html#property-width-int-width-get",
+      "summary": null
+    },
+    {
+      "title": "DecodeResult.Height",
+      "kind": "Property",
+      "href": "types/codeglyphx-decoderesult-1.html#property-height-int-height-get",
+      "summary": null
+    },
+    {
       "title": "CodeGlyphX.Gs1",
       "kind": "Type",
       "href": "types/codeglyphx-gs1.html",
@@ -5269,6 +6091,60 @@
       "summary": "Maximum milliseconds to spend decoding (best effort). Set to 0 to disable."
     },
     {
+      "title": "CodeGlyphX.MatrixBarcodeDecoder",
+      "kind": "Type",
+      "href": "types/codeglyphx-matrixbarcodedecoder.html",
+      "summary": "Decodes 2D barcode symbologies from a CodeGlyphX.BitMatrix."
+    },
+    {
+      "title": "MatrixBarcodeDecoder.TryDecodeAny",
+      "kind": "Method",
+      "href": "types/codeglyphx-matrixbarcodedecoder.html#method-trydecodeany-static-bool-trydecodeany-bitmatrix-modules-out-barcodedecoded-decoded-nullable-barcodetype-expectedtype",
+      "summary": "Attempts to decode any supported matrix barcode from a CodeGlyphX.BitMatrix."
+    },
+    {
+      "title": "MatrixBarcodeDecoder.TryDecode",
+      "kind": "Method",
+      "href": "types/codeglyphx-matrixbarcodedecoder.html#method-trydecode-static-bool-trydecode-barcodetype-type-bitmatrix-modules-out-string-text",
+      "summary": "Attempts to decode a 2D barcode using the specified CodeGlyphX.BarcodeType."
+    },
+    {
+      "title": "MatrixBarcodeDecoder.TryDecodeGs1DataBarOmni",
+      "kind": "Method",
+      "href": "types/codeglyphx-matrixbarcodedecoder.html#method-trydecodegs1databaromni-static-bool-trydecodegs1databaromni-bitmatrix-modules-out-string-text",
+      "summary": "Attempts to decode a GS1 DataBar-14 Omnidirectional symbol from a CodeGlyphX.BitMatrix."
+    },
+    {
+      "title": "MatrixBarcodeDecoder.TryDecodeGs1DataBarStacked",
+      "kind": "Method",
+      "href": "types/codeglyphx-matrixbarcodedecoder.html#method-trydecodegs1databarstacked-static-bool-trydecodegs1databarstacked-bitmatrix-modules-out-string-text",
+      "summary": "Attempts to decode a GS1 DataBar-14 Stacked symbol from a CodeGlyphX.BitMatrix."
+    },
+    {
+      "title": "MatrixBarcodeDecoder.TryDecodeGs1DataBarExpandedStacked",
+      "kind": "Method",
+      "href": "types/codeglyphx-matrixbarcodedecoder.html#method-trydecodegs1databarexpandedstacked-static-bool-trydecodegs1databarexpandedstacked-bitmatrix-modules-out-string-text",
+      "summary": "Attempts to decode a GS1 DataBar Expanded Stacked symbol from a CodeGlyphX.BitMatrix."
+    },
+    {
+      "title": "MatrixBarcodeDecoder.TryDecodeDataMatrix",
+      "kind": "Method",
+      "href": "types/codeglyphx-matrixbarcodedecoder.html#method-trydecodedatamatrix-static-bool-trydecodedatamatrix-bitmatrix-modules-out-string-text",
+      "summary": "Attempts to decode a Data Matrix symbol from a CodeGlyphX.BitMatrix."
+    },
+    {
+      "title": "MatrixBarcodeDecoder.TryDecodePdf417",
+      "kind": "Method",
+      "href": "types/codeglyphx-matrixbarcodedecoder.html#method-trydecodepdf417-static-bool-trydecodepdf417-bitmatrix-modules-out-string-text",
+      "summary": "Attempts to decode a PDF417 symbol from a CodeGlyphX.BitMatrix."
+    },
+    {
+      "title": "MatrixBarcodeDecoder.TryDecodeMicroPdf417",
+      "kind": "Method",
+      "href": "types/codeglyphx-matrixbarcodedecoder.html#method-trydecodemicropdf417-static-bool-trydecodemicropdf417-bitmatrix-modules-out-string-text",
+      "summary": "Attempts to decode a MicroPDF417 symbol from a CodeGlyphX.BitMatrix."
+    },
+    {
       "title": "CodeGlyphX.MatrixBarcodeEncoder",
       "kind": "Type",
       "href": "types/codeglyphx-matrixbarcodeencoder.html",
@@ -5287,6 +6163,66 @@
       "summary": "Encodes a KIX code into a CodeGlyphX.BitMatrix."
     },
     {
+      "title": "MatrixBarcodeEncoder.EncodePharmacodeTwoTrack",
+      "kind": "Method",
+      "href": "types/codeglyphx-matrixbarcodeencoder.html#method-encodepharmacodetwotrack-static-bitmatrix-encodepharmacodetwotrack-string-value",
+      "summary": "Encodes a Pharmacode (two-track) barcode into a CodeGlyphX.BitMatrix."
+    },
+    {
+      "title": "MatrixBarcodeEncoder.EncodePostnet",
+      "kind": "Method",
+      "href": "types/codeglyphx-matrixbarcodeencoder.html#method-encodepostnet-static-bitmatrix-encodepostnet-string-value",
+      "summary": "Encodes a POSTNET symbol into a CodeGlyphX.BitMatrix."
+    },
+    {
+      "title": "MatrixBarcodeEncoder.EncodePlanet",
+      "kind": "Method",
+      "href": "types/codeglyphx-matrixbarcodeencoder.html#method-encodeplanet-static-bitmatrix-encodeplanet-string-value",
+      "summary": "Encodes a PLANET symbol into a CodeGlyphX.BitMatrix."
+    },
+    {
+      "title": "MatrixBarcodeEncoder.EncodeRoyalMail4State",
+      "kind": "Method",
+      "href": "types/codeglyphx-matrixbarcodeencoder.html#method-encoderoyalmail4state-static-bitmatrix-encoderoyalmail4state-string-value",
+      "summary": "Encodes a Royal Mail 4-State Customer Code (RM4SCC) symbol into a CodeGlyphX.BitMatrix."
+    },
+    {
+      "title": "MatrixBarcodeEncoder.EncodeAustraliaPost",
+      "kind": "Method",
+      "href": "types/codeglyphx-matrixbarcodeencoder.html#method-encodeaustraliapost-static-bitmatrix-encodeaustraliapost-string-value",
+      "summary": "Encodes an Australia Post customer barcode into a CodeGlyphX.BitMatrix."
+    },
+    {
+      "title": "MatrixBarcodeEncoder.EncodeJapanPost",
+      "kind": "Method",
+      "href": "types/codeglyphx-matrixbarcodeencoder.html#method-encodejapanpost-static-bitmatrix-encodejapanpost-string-value",
+      "summary": "Encodes a Japan Post barcode into a CodeGlyphX.BitMatrix."
+    },
+    {
+      "title": "MatrixBarcodeEncoder.EncodeUspsImb",
+      "kind": "Method",
+      "href": "types/codeglyphx-matrixbarcodeencoder.html#method-encodeuspsimb-static-bitmatrix-encodeuspsimb-string-value",
+      "summary": "Encodes a USPS Intelligent Mail Barcode (IMB) into a CodeGlyphX.BitMatrix."
+    },
+    {
+      "title": "MatrixBarcodeEncoder.EncodeGs1DataBarOmni",
+      "kind": "Method",
+      "href": "types/codeglyphx-matrixbarcodeencoder.html#method-encodegs1databaromni-static-bitmatrix-encodegs1databaromni-string-value",
+      "summary": "Encodes a GS1 DataBar-14 Omnidirectional symbol into a CodeGlyphX.BitMatrix."
+    },
+    {
+      "title": "MatrixBarcodeEncoder.EncodeGs1DataBarStacked",
+      "kind": "Method",
+      "href": "types/codeglyphx-matrixbarcodeencoder.html#method-encodegs1databarstacked-static-bitmatrix-encodegs1databarstacked-string-value",
+      "summary": "Encodes a GS1 DataBar-14 Stacked symbol into a CodeGlyphX.BitMatrix."
+    },
+    {
+      "title": "MatrixBarcodeEncoder.EncodeGs1DataBarExpandedStacked",
+      "kind": "Method",
+      "href": "types/codeglyphx-matrixbarcodeencoder.html#method-encodegs1databarexpandedstacked-static-bitmatrix-encodegs1databarexpandedstacked-string-value",
+      "summary": "Encodes a GS1 DataBar Expanded Stacked symbol into a CodeGlyphX.BitMatrix."
+    },
+    {
       "title": "MatrixBarcodeEncoder.EncodeDataMatrix",
       "kind": "Method",
       "href": "types/codeglyphx-matrixbarcodeencoder.html#method-encodedatamatrix-static-bitmatrix-encodedatamatrix-string-value",
@@ -5297,6 +6233,12 @@
       "kind": "Method",
       "href": "types/codeglyphx-matrixbarcodeencoder.html#method-encodepdf417-static-bitmatrix-encodepdf417-string-value",
       "summary": "Encodes a PDF417 symbol into a CodeGlyphX.BitMatrix."
+    },
+    {
+      "title": "MatrixBarcodeEncoder.EncodeMicroPdf417",
+      "kind": "Method",
+      "href": "types/codeglyphx-matrixbarcodeencoder.html#method-encodemicropdf417-static-bitmatrix-encodemicropdf417-string-value",
+      "summary": "Encodes a MicroPDF417 symbol into a CodeGlyphX.BitMatrix."
     },
     {
       "title": "CodeGlyphX.MatrixOptions",
@@ -6505,6 +7447,12 @@
       "summary": "Encodes a text payload as PDF417."
     },
     {
+      "title": "Pdf417Code.EncodeMacro",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-encodemacro-static-bitmatrix-encodemacro-string-text-pdf417macrooptions-macro-pdf417encodeoptions-options",
+      "summary": "Encodes a Macro PDF417 payload."
+    },
+    {
       "title": "Pdf417Code.EncodeBytes",
       "kind": "Method",
       "href": "types/codeglyphx-pdf417code.html#method-encodebytes-static-bitmatrix-encodebytes-byte-data-pdf417encodeoptions-options",
@@ -6849,6 +7797,30 @@
     {
       "title": "Pdf417Code.TryDecodePng",
       "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-trydecodepng-static-bool-trydecodepng-readonlyspan-byte-png-out-string-text",
+      "summary": "Attempts to decode a PDF417 symbol from PNG bytes in a span."
+    },
+    {
+      "title": "Pdf417Code.TryDecodePng",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-trydecodepng-static-bool-trydecodepng-readonlyspan-byte-png-cancellationtoken-cancellationtoken-out-string-text",
+      "summary": "Attempts to decode a PDF417 symbol from PNG bytes in a span, with cancellation."
+    },
+    {
+      "title": "Pdf417Code.TryDecodePng",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-trydecodepng-static-bool-trydecodepng-readonlyspan-byte-png-imagedecodeoptions-options-out-string-text",
+      "summary": "Attempts to decode a PDF417 symbol from PNG bytes in a span with image decode options."
+    },
+    {
+      "title": "Pdf417Code.TryDecodePng",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-trydecodepng-static-bool-trydecodepng-readonlyspan-byte-png-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-string-text",
+      "summary": "Attempts to decode a PDF417 symbol from PNG bytes in a span with image decode options, with cancellation."
+    },
+    {
+      "title": "Pdf417Code.TryDecodePng",
+      "kind": "Method",
       "href": "types/codeglyphx-pdf417code.html#method-trydecodepng-static-bool-trydecodepng-byte-png-out-string-text-out-pdf417decodediagnostics-diagnostics",
       "summary": "Attempts to decode a PDF417 symbol from PNG bytes, with diagnostics."
     },
@@ -6863,6 +7835,24 @@
       "kind": "Method",
       "href": "types/codeglyphx-pdf417code.html#method-trydecodepng-static-bool-trydecodepng-byte-png-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-string-text-out-pdf417decodediagnostics-diagnostics",
       "summary": "Attempts to decode a PDF417 symbol from PNG bytes with image decode options, cancellation, and diagnostics."
+    },
+    {
+      "title": "Pdf417Code.TryDecodePng",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-trydecodepng-static-bool-trydecodepng-readonlyspan-byte-png-out-string-text-out-pdf417decodediagnostics-diagnostics",
+      "summary": "Attempts to decode a PDF417 symbol from PNG bytes in a span, with diagnostics."
+    },
+    {
+      "title": "Pdf417Code.TryDecodePng",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-trydecodepng-static-bool-trydecodepng-readonlyspan-byte-png-imagedecodeoptions-options-out-string-text-out-pdf417decodediagnostics-diagnostics",
+      "summary": "Attempts to decode a PDF417 symbol from PNG bytes in a span with image decode options, with diagnostics."
+    },
+    {
+      "title": "Pdf417Code.TryDecodePng",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-trydecodepng-static-bool-trydecodepng-readonlyspan-byte-png-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-string-text-out-pdf417decodediagnostics-diagnostics",
+      "summary": "Attempts to decode a PDF417 symbol from PNG bytes in a span with image decode options, cancellation, and diagnostics."
     },
     {
       "title": "Pdf417Code.TryDecodePngFile",
@@ -6967,6 +7957,30 @@
       "summary": "Attempts to decode a PDF417 symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options, with cancellation."
     },
     {
+      "title": "Pdf417Code.DecodeImageResult",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-decodeimageresult-static-decoderesult-string-decodeimageresult-byte-image-imagedecodeoptions-options-cancellationtoken-cancellationtoken",
+      "summary": "Decodes a PDF417 symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) and returns diagnostics."
+    },
+    {
+      "title": "Pdf417Code.DecodeImageResult",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-decodeimageresult-static-decoderesult-string-decodeimageresult-readonlyspan-byte-image-imagedecodeoptions-options-cancellationtoken-cancellationtoken",
+      "summary": "Decodes a PDF417 symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) in a span and returns diagnostics."
+    },
+    {
+      "title": "Pdf417Code.DecodeImageResult",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-decodeimageresult-static-decoderesult-string-decodeimageresult-stream-stream-imagedecodeoptions-options-cancellationtoken-cancellationtoken",
+      "summary": "Decodes a PDF417 symbol from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) and returns diagnostics."
+    },
+    {
+      "title": "Pdf417Code.DecodeImageBatch",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-decodeimagebatch-static-decodebatchresult-string-decodeimagebatch-ienumerable-byte-images-imagedecodeoptions-options-cancellationtoken-cancellationtoken",
+      "summary": "Decodes a batch of PDF417 images with shared settings and aggregated diagnostics."
+    },
+    {
       "title": "Pdf417Code.TryDecodeImage",
       "kind": "Method",
       "href": "types/codeglyphx-pdf417code.html#method-trydecodeimage-static-bool-trydecodeimage-byte-image-out-string-text-out-pdf417decodediagnostics-diagnostics",
@@ -6983,6 +7997,84 @@
       "kind": "Method",
       "href": "types/codeglyphx-pdf417code.html#method-trydecodeimage-static-bool-trydecodeimage-byte-image-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-string-text-out-pdf417decodediagnostics-diagnostics",
       "summary": "Attempts to decode a PDF417 symbol from common image formats with image decode options, cancellation, and diagnostics."
+    },
+    {
+      "title": "Pdf417Code.TryDecodeImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-trydecodeimage-static-bool-trydecodeimage-readonlyspan-byte-image-out-string-text-out-pdf417decodediagnostics-diagnostics",
+      "summary": "Attempts to decode a PDF417 symbol from common image formats in a span, with diagnostics."
+    },
+    {
+      "title": "Pdf417Code.TryDecodeImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-trydecodeimage-static-bool-trydecodeimage-readonlyspan-byte-image-imagedecodeoptions-options-out-string-text-out-pdf417decodediagnostics-diagnostics",
+      "summary": "Attempts to decode a PDF417 symbol from common image formats in a span with image decode options, with diagnostics."
+    },
+    {
+      "title": "Pdf417Code.TryDecodeImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-trydecodeimage-static-bool-trydecodeimage-readonlyspan-byte-image-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-string-text-out-pdf417decodediagnostics-diagnostics",
+      "summary": "Attempts to decode a PDF417 symbol from common image formats in a span with image decode options, cancellation, and diagnostics."
+    },
+    {
+      "title": "Pdf417Code.TryDecodeImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-trydecodeimage-static-bool-trydecodeimage-readonlyspan-byte-image-out-string-text",
+      "summary": "Attempts to decode a PDF417 symbol from common image formats in a span."
+    },
+    {
+      "title": "Pdf417Code.TryDecodeImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-trydecodeimage-static-bool-trydecodeimage-readonlyspan-byte-image-cancellationtoken-cancellationtoken-out-string-text",
+      "summary": "Attempts to decode a PDF417 symbol from common image formats in a span, with cancellation."
+    },
+    {
+      "title": "Pdf417Code.TryDecodeImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-trydecodeimage-static-bool-trydecodeimage-readonlyspan-byte-image-imagedecodeoptions-options-out-string-text",
+      "summary": "Attempts to decode a PDF417 symbol from common image formats in a span with image decode options."
+    },
+    {
+      "title": "Pdf417Code.TryDecodeImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-trydecodeimage-static-bool-trydecodeimage-readonlyspan-byte-image-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-string-text",
+      "summary": "Attempts to decode a PDF417 symbol from common image formats in a span with image decode options, with cancellation."
+    },
+    {
+      "title": "Pdf417Code.TryDecodeAllImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-trydecodeallimage-static-bool-trydecodeallimage-byte-image-out-string-texts",
+      "summary": "Attempts to decode all PDF417 symbols from common image formats."
+    },
+    {
+      "title": "Pdf417Code.TryDecodeAllImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-trydecodeallimage-static-bool-trydecodeallimage-byte-image-imagedecodeoptions-options-out-string-texts",
+      "summary": "Attempts to decode all PDF417 symbols from common image formats with image decode options."
+    },
+    {
+      "title": "Pdf417Code.TryDecodeAllImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-trydecodeallimage-static-bool-trydecodeallimage-byte-image-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-string-texts",
+      "summary": "Attempts to decode all PDF417 symbols from common image formats with image decode options, with cancellation."
+    },
+    {
+      "title": "Pdf417Code.TryDecodeAllImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-trydecodeallimage-static-bool-trydecodeallimage-stream-stream-out-string-texts",
+      "summary": "Attempts to decode all PDF417 symbols from an image stream."
+    },
+    {
+      "title": "Pdf417Code.TryDecodeAllImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-trydecodeallimage-static-bool-trydecodeallimage-stream-stream-imagedecodeoptions-options-out-string-texts",
+      "summary": "Attempts to decode all PDF417 symbols from an image stream with image decode options."
+    },
+    {
+      "title": "Pdf417Code.TryDecodeAllImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-trydecodeallimage-static-bool-trydecodeallimage-stream-stream-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-string-texts",
+      "summary": "Attempts to decode all PDF417 symbols from an image stream with image decode options, with cancellation."
     },
     {
       "title": "Pdf417Code.TryDecodeImage",
@@ -7049,6 +8141,252 @@
       "kind": "Method",
       "href": "types/codeglyphx-pdf417code.html#method-decodepng-static-string-decodepng-stream-stream",
       "summary": "Decodes a PDF417 symbol from a PNG stream."
+    },
+    {
+      "title": "Pdf417Code.PngMacro",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-pngmacro-static-byte-pngmacro-string-text-pdf417macrooptions-macro-pdf417encodeoptions-encodeoptions-matrixoptions-renderoptions",
+      "summary": "Renders Macro PDF417 as PNG."
+    },
+    {
+      "title": "Pdf417Code.SvgMacro",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-svgmacro-static-string-svgmacro-string-text-pdf417macrooptions-macro-pdf417encodeoptions-encodeoptions-matrixoptions-renderoptions",
+      "summary": "Renders Macro PDF417 as SVG."
+    },
+    {
+      "title": "Pdf417Code.SvgzMacro",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-svgzmacro-static-byte-svgzmacro-string-text-pdf417macrooptions-macro-pdf417encodeoptions-encodeoptions-matrixoptions-renderoptions",
+      "summary": "Renders Macro PDF417 as SVGZ."
+    },
+    {
+      "title": "Pdf417Code.HtmlMacro",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-htmlmacro-static-string-htmlmacro-string-text-pdf417macrooptions-macro-pdf417encodeoptions-encodeoptions-matrixoptions-renderoptions",
+      "summary": "Renders Macro PDF417 as HTML."
+    },
+    {
+      "title": "Pdf417Code.JpegMacro",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-jpegmacro-static-byte-jpegmacro-string-text-pdf417macrooptions-macro-pdf417encodeoptions-encodeoptions-matrixoptions-renderoptions",
+      "summary": "Renders Macro PDF417 as JPEG."
+    },
+    {
+      "title": "Pdf417Code.BmpMacro",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-bmpmacro-static-byte-bmpmacro-string-text-pdf417macrooptions-macro-pdf417encodeoptions-encodeoptions-matrixoptions-renderoptions",
+      "summary": "Renders Macro PDF417 as BMP."
+    },
+    {
+      "title": "Pdf417Code.PpmMacro",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-ppmmacro-static-byte-ppmmacro-string-text-pdf417macrooptions-macro-pdf417encodeoptions-encodeoptions-matrixoptions-renderoptions",
+      "summary": "Renders Macro PDF417 as PPM."
+    },
+    {
+      "title": "Pdf417Code.PbmMacro",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-pbmmacro-static-byte-pbmmacro-string-text-pdf417macrooptions-macro-pdf417encodeoptions-encodeoptions-matrixoptions-renderoptions",
+      "summary": "Renders Macro PDF417 as PBM."
+    },
+    {
+      "title": "Pdf417Code.PgmMacro",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-pgmmacro-static-byte-pgmmacro-string-text-pdf417macrooptions-macro-pdf417encodeoptions-encodeoptions-matrixoptions-renderoptions",
+      "summary": "Renders Macro PDF417 as PGM."
+    },
+    {
+      "title": "Pdf417Code.PamMacro",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-pammacro-static-byte-pammacro-string-text-pdf417macrooptions-macro-pdf417encodeoptions-encodeoptions-matrixoptions-renderoptions",
+      "summary": "Renders Macro PDF417 as PAM."
+    },
+    {
+      "title": "Pdf417Code.XbmMacro",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-xbmmacro-static-string-xbmmacro-string-text-pdf417macrooptions-macro-pdf417encodeoptions-encodeoptions-matrixoptions-renderoptions",
+      "summary": "Renders Macro PDF417 as XBM."
+    },
+    {
+      "title": "Pdf417Code.XpmMacro",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-xpmmacro-static-string-xpmmacro-string-text-pdf417macrooptions-macro-pdf417encodeoptions-encodeoptions-matrixoptions-renderoptions",
+      "summary": "Renders Macro PDF417 as XPM."
+    },
+    {
+      "title": "Pdf417Code.TgaMacro",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-tgamacro-static-byte-tgamacro-string-text-pdf417macrooptions-macro-pdf417encodeoptions-encodeoptions-matrixoptions-renderoptions",
+      "summary": "Renders Macro PDF417 as TGA."
+    },
+    {
+      "title": "Pdf417Code.IcoMacro",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-icomacro-static-byte-icomacro-string-text-pdf417macrooptions-macro-pdf417encodeoptions-encodeoptions-matrixoptions-renderoptions",
+      "summary": "Renders Macro PDF417 as ICO."
+    },
+    {
+      "title": "Pdf417Code.PdfMacro",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-pdfmacro-static-byte-pdfmacro-string-text-pdf417macrooptions-macro-pdf417encodeoptions-encodeoptions-matrixoptions-renderoptions-rendermode-rendermode",
+      "summary": "Renders Macro PDF417 as PDF."
+    },
+    {
+      "title": "Pdf417Code.EpsMacro",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-epsmacro-static-string-epsmacro-string-text-pdf417macrooptions-macro-pdf417encodeoptions-encodeoptions-matrixoptions-renderoptions-rendermode-rendermode",
+      "summary": "Renders Macro PDF417 as EPS."
+    },
+    {
+      "title": "Pdf417Code.AsciiMacro",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-asciimacro-static-string-asciimacro-string-text-pdf417macrooptions-macro-pdf417encodeoptions-encodeoptions-matrixasciirenderoptions-options",
+      "summary": "Renders Macro PDF417 as ASCII."
+    },
+    {
+      "title": "Pdf417Code.TryDecodePng",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-trydecodepng-static-bool-trydecodepng-byte-png-out-pdf417decoded-decoded",
+      "summary": "Attempts to decode a Macro PDF417 symbol from PNG bytes."
+    },
+    {
+      "title": "Pdf417Code.TryDecodePng",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-trydecodepng-static-bool-trydecodepng-byte-png-cancellationtoken-cancellationtoken-out-pdf417decoded-decoded",
+      "summary": "Attempts to decode a Macro PDF417 symbol from PNG bytes, with cancellation."
+    },
+    {
+      "title": "Pdf417Code.TryDecodePng",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-trydecodepng-static-bool-trydecodepng-byte-png-imagedecodeoptions-options-out-pdf417decoded-decoded",
+      "summary": "Attempts to decode a Macro PDF417 symbol from PNG bytes with image decode options."
+    },
+    {
+      "title": "Pdf417Code.TryDecodePng",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-trydecodepng-static-bool-trydecodepng-byte-png-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-pdf417decoded-decoded",
+      "summary": "Attempts to decode a Macro PDF417 symbol from PNG bytes with image decode options, with cancellation."
+    },
+    {
+      "title": "Pdf417Code.TryDecodePng",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-trydecodepng-static-bool-trydecodepng-readonlyspan-byte-png-out-pdf417decoded-decoded",
+      "summary": "Attempts to decode a Macro PDF417 symbol from PNG bytes in a span."
+    },
+    {
+      "title": "Pdf417Code.TryDecodePng",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-trydecodepng-static-bool-trydecodepng-readonlyspan-byte-png-cancellationtoken-cancellationtoken-out-pdf417decoded-decoded",
+      "summary": "Attempts to decode a Macro PDF417 symbol from PNG bytes in a span, with cancellation."
+    },
+    {
+      "title": "Pdf417Code.TryDecodePng",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-trydecodepng-static-bool-trydecodepng-readonlyspan-byte-png-imagedecodeoptions-options-out-pdf417decoded-decoded",
+      "summary": "Attempts to decode a Macro PDF417 symbol from PNG bytes in a span with image decode options."
+    },
+    {
+      "title": "Pdf417Code.TryDecodePng",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-trydecodepng-static-bool-trydecodepng-readonlyspan-byte-png-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-pdf417decoded-decoded",
+      "summary": "Attempts to decode a Macro PDF417 symbol from PNG bytes in a span with image decode options, with cancellation."
+    },
+    {
+      "title": "Pdf417Code.TryDecodePngFile",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-trydecodepngfile-static-bool-trydecodepngfile-string-path-out-pdf417decoded-decoded",
+      "summary": "Attempts to decode a Macro PDF417 symbol from a PNG file."
+    },
+    {
+      "title": "Pdf417Code.TryDecodePngFile",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-trydecodepngfile-static-bool-trydecodepngfile-string-path-cancellationtoken-cancellationtoken-out-pdf417decoded-decoded",
+      "summary": "Attempts to decode a Macro PDF417 symbol from a PNG file, with cancellation."
+    },
+    {
+      "title": "Pdf417Code.TryDecodePngFile",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-trydecodepngfile-static-bool-trydecodepngfile-string-path-imagedecodeoptions-options-out-pdf417decoded-decoded",
+      "summary": "Attempts to decode a Macro PDF417 symbol from a PNG file with image decode options."
+    },
+    {
+      "title": "Pdf417Code.TryDecodePngFile",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-trydecodepngfile-static-bool-trydecodepngfile-string-path-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-pdf417decoded-decoded",
+      "summary": "Attempts to decode a Macro PDF417 symbol from a PNG file with image decode options, with cancellation."
+    },
+    {
+      "title": "Pdf417Code.TryDecodePng",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-trydecodepng-static-bool-trydecodepng-stream-stream-out-pdf417decoded-decoded",
+      "summary": "Attempts to decode a Macro PDF417 symbol from a PNG stream."
+    },
+    {
+      "title": "Pdf417Code.TryDecodePng",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-trydecodepng-static-bool-trydecodepng-stream-stream-imagedecodeoptions-options-out-pdf417decoded-decoded",
+      "summary": "Attempts to decode a Macro PDF417 symbol from a PNG stream with image decode options."
+    },
+    {
+      "title": "Pdf417Code.TryDecodePng",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-trydecodepng-static-bool-trydecodepng-stream-stream-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-pdf417decoded-decoded",
+      "summary": "Attempts to decode a Macro PDF417 symbol from a PNG stream with image decode options, with cancellation."
+    },
+    {
+      "title": "Pdf417Code.TryDecodeImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-trydecodeimage-static-bool-trydecodeimage-byte-image-out-pdf417decoded-decoded",
+      "summary": "Attempts to decode a Macro PDF417 symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA)."
+    },
+    {
+      "title": "Pdf417Code.TryDecodeImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-trydecodeimage-static-bool-trydecodeimage-byte-image-cancellationtoken-cancellationtoken-out-pdf417decoded-decoded",
+      "summary": "Attempts to decode a Macro PDF417 symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA), with cancellation."
+    },
+    {
+      "title": "Pdf417Code.TryDecodeImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-trydecodeimage-static-bool-trydecodeimage-byte-image-imagedecodeoptions-options-out-pdf417decoded-decoded",
+      "summary": "Attempts to decode a Macro PDF417 symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options."
+    },
+    {
+      "title": "Pdf417Code.TryDecodeImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-trydecodeimage-static-bool-trydecodeimage-byte-image-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-pdf417decoded-decoded",
+      "summary": "Attempts to decode a Macro PDF417 symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options, with cancellation."
+    },
+    {
+      "title": "Pdf417Code.TryDecodeImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-trydecodeimage-static-bool-trydecodeimage-readonlyspan-byte-image-out-pdf417decoded-decoded",
+      "summary": "Attempts to decode a Macro PDF417 symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) in a span."
+    },
+    {
+      "title": "Pdf417Code.TryDecodeImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-trydecodeimage-static-bool-trydecodeimage-readonlyspan-byte-image-cancellationtoken-cancellationtoken-out-pdf417decoded-decoded",
+      "summary": "Attempts to decode a Macro PDF417 symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) in a span, with cancellation."
+    },
+    {
+      "title": "Pdf417Code.TryDecodeImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-trydecodeimage-static-bool-trydecodeimage-readonlyspan-byte-image-imagedecodeoptions-options-out-pdf417decoded-decoded",
+      "summary": "Attempts to decode a Macro PDF417 symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) in a span with image decode options."
+    },
+    {
+      "title": "Pdf417Code.TryDecodeImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-trydecodeimage-static-bool-trydecodeimage-readonlyspan-byte-image-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-pdf417decoded-decoded",
+      "summary": "Attempts to decode a Macro PDF417 symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) in a span with image decode options, with cancellation."
+    },
+    {
+      "title": "Pdf417Code.SaveMacro",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417code.html#method-savemacro-static-string-savemacro-string-text-pdf417macrooptions-macro-string-path-pdf417encodeoptions-encodeoptions-matrixoptions-renderoptions-string-title-rendermode-rendermode",
+      "summary": "Saves Macro PDF417 to a file based on extension (.png/.svg/.svgz/.html/.jpg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps).\n Defaults to PNG when no extension is provided."
     },
     {
       "title": "Pdf417Code.SavePng",
@@ -10981,6 +12319,60 @@
       "summary": "Attempts to decode a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA), with cancellation."
     },
     {
+      "title": "QrImageDecoder.TryDecodeImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-qrimagedecoder.html#method-trydecodeimage-static-bool-trydecodeimage-readonlyspan-byte-image-out-qrdecoded-decoded",
+      "summary": "Attempts to decode a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) from a span."
+    },
+    {
+      "title": "QrImageDecoder.TryDecodeImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-qrimagedecoder.html#method-trydecodeimage-static-bool-trydecodeimage-readonlyspan-byte-image-out-qrdecoded-decoded-out-qrpixeldecodeinfo-info-qrpixeldecodeoptions-options",
+      "summary": "Attempts to decode a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) from a span, with diagnostics and profile options."
+    },
+    {
+      "title": "QrImageDecoder.TryDecodeImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-qrimagedecoder.html#method-trydecodeimage-static-bool-trydecodeimage-readonlyspan-byte-image-out-qrdecoded-decoded-out-qrpixeldecodeinfo-info-qrpixeldecodeoptions-options-cancellationtoken-cancellationtoken",
+      "summary": "Attempts to decode a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) from a span, with diagnostics, profile options, and cancellation."
+    },
+    {
+      "title": "QrImageDecoder.TryDecodeImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-qrimagedecoder.html#method-trydecodeimage-static-bool-trydecodeimage-readonlyspan-byte-image-imagedecodeoptions-imageoptions-qrpixeldecodeoptions-options-out-qrdecoded-decoded",
+      "summary": "Attempts to decode a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options from a span."
+    },
+    {
+      "title": "QrImageDecoder.TryDecodeImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-qrimagedecoder.html#method-trydecodeimage-static-bool-trydecodeimage-readonlyspan-byte-image-imagedecodeoptions-imageoptions-qrpixeldecodeoptions-options-cancellationtoken-cancellationtoken-out-qrdecoded-decoded",
+      "summary": "Attempts to decode a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options and cancellation from a span."
+    },
+    {
+      "title": "QrImageDecoder.TryDecodeImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-qrimagedecoder.html#method-trydecodeimage-static-bool-trydecodeimage-readonlyspan-byte-image-imagedecodeoptions-imageoptions-out-qrdecoded-decoded-out-qrpixeldecodeinfo-info-qrpixeldecodeoptions-options",
+      "summary": "Attempts to decode a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options, diagnostics, and profile options from a span."
+    },
+    {
+      "title": "QrImageDecoder.TryDecodeImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-qrimagedecoder.html#method-trydecodeimage-static-bool-trydecodeimage-readonlyspan-byte-image-imagedecodeoptions-imageoptions-out-qrdecoded-decoded-out-qrpixeldecodeinfo-info-qrpixeldecodeoptions-options-cancellationtoken-cancellationtoken",
+      "summary": "Attempts to decode a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options, diagnostics, profile options, and cancellation from a span."
+    },
+    {
+      "title": "QrImageDecoder.TryDecodeImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-qrimagedecoder.html#method-trydecodeimage-static-bool-trydecodeimage-readonlyspan-byte-image-qrpixeldecodeoptions-options-out-qrdecoded-decoded",
+      "summary": "Attempts to decode a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) from a span with profile options."
+    },
+    {
+      "title": "QrImageDecoder.TryDecodeImage",
+      "kind": "Method",
+      "href": "types/codeglyphx-qrimagedecoder.html#method-trydecodeimage-static-bool-trydecodeimage-readonlyspan-byte-image-qrpixeldecodeoptions-options-cancellationtoken-cancellationtoken-out-qrdecoded-decoded",
+      "summary": "Attempts to decode a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) from a span, with cancellation."
+    },
+    {
       "title": "QrImageDecoder.TryDecodeAllImage",
       "kind": "Method",
       "href": "types/codeglyphx-qrimagedecoder.html#method-trydecodeallimage-static-bool-trydecodeallimage-byte-image-out-qrdecoded-decoded",
@@ -11045,6 +12437,30 @@
       "kind": "Method",
       "href": "types/codeglyphx-qrimagedecoder.html#method-trydecodeimage-static-bool-trydecodeimage-stream-stream-imagedecodeoptions-imageoptions-out-qrdecoded-decoded-out-qrpixeldecodeinfo-info-qrpixeldecodeoptions-options-cancellationtoken-cancellationtoken",
       "summary": "Attempts to decode a QR code from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options, diagnostics, profile options, and cancellation."
+    },
+    {
+      "title": "QrImageDecoder.DecodeImageResult",
+      "kind": "Method",
+      "href": "types/codeglyphx-qrimagedecoder.html#method-decodeimageresult-static-decoderesult-qrdecoded-decodeimageresult-byte-image-imagedecodeoptions-imageoptions-qrpixeldecodeoptions-options-cancellationtoken-cancellationtoken",
+      "summary": "Decodes a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) and returns diagnostics."
+    },
+    {
+      "title": "QrImageDecoder.DecodeImageResult",
+      "kind": "Method",
+      "href": "types/codeglyphx-qrimagedecoder.html#method-decodeimageresult-static-decoderesult-qrdecoded-decodeimageresult-readonlyspan-byte-image-imagedecodeoptions-imageoptions-qrpixeldecodeoptions-options-cancellationtoken-cancellationtoken",
+      "summary": "Decodes a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) in a span and returns diagnostics."
+    },
+    {
+      "title": "QrImageDecoder.DecodeImageResult",
+      "kind": "Method",
+      "href": "types/codeglyphx-qrimagedecoder.html#method-decodeimageresult-static-decoderesult-qrdecoded-decodeimageresult-stream-stream-imagedecodeoptions-imageoptions-qrpixeldecodeoptions-options-cancellationtoken-cancellationtoken",
+      "summary": "Decodes a QR code from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) and returns diagnostics."
+    },
+    {
+      "title": "QrImageDecoder.DecodeImageBatch",
+      "kind": "Method",
+      "href": "types/codeglyphx-qrimagedecoder.html#method-decodeimagebatch-static-decodebatchresult-qrdecoded-decodeimagebatch-ienumerable-byte-images-imagedecodeoptions-imageoptions-qrpixeldecodeoptions-options-cancellationtoken-cancellationtoken",
+      "summary": "Decodes a batch of QR images with shared settings and aggregated diagnostics."
     },
     {
       "title": "QrImageDecoder.TryDecodeAllImage",
@@ -11419,6 +12835,12 @@
       "summary": "Enables or disables aggressive sampling."
     },
     {
+      "title": "QrPixelDecodeOptions.WithTileScan",
+      "kind": "Method",
+      "href": "types/codeglyphx-qrpixeldecodeoptions.html#method-withtilescan-qrpixeldecodeoptions-withtilescan-bool-enabled-int-tilegrid",
+      "summary": "Enables tile-based scanning for multiple QR codes."
+    },
+    {
       "title": "QrPixelDecodeOptions.Profile",
       "kind": "Property",
       "href": "types/codeglyphx-qrpixeldecodeoptions.html#property-profile-qrdecodeprofile-profile-get-set",
@@ -11453,6 +12875,18 @@
       "kind": "Property",
       "href": "types/codeglyphx-qrpixeldecodeoptions.html#property-autocrop-bool-autocrop-get-set",
       "summary": "Attempts to auto-crop likely QR regions before decoding (useful for screenshots)."
+    },
+    {
+      "title": "QrPixelDecodeOptions.EnableTileScan",
+      "kind": "Property",
+      "href": "types/codeglyphx-qrpixeldecodeoptions.html#property-enabletilescan-bool-enabletilescan-get-set",
+      "summary": "Enables tile-based scanning for multiple QR codes in one image."
+    },
+    {
+      "title": "QrPixelDecodeOptions.TileGrid",
+      "kind": "Property",
+      "href": "types/codeglyphx-qrpixeldecodeoptions.html#property-tilegrid-int-tilegrid-get-set",
+      "summary": "Tile grid size for multi-scan (0 = auto, 2..4 recommended)."
     },
     {
       "title": "QrPixelDecodeOptions.DisableTransforms",
@@ -11797,6 +13231,138 @@
       "summary": "Number system 1."
     },
     {
+      "title": "CodeGlyphX.AustraliaPost.AustraliaPostCustomerEncodingTable",
+      "kind": "Type",
+      "href": "types/codeglyphx-australiapost-australiapostcustomerencodingtable.html",
+      "summary": "Customer information encoding tables for Australia Post customer barcodes."
+    },
+    {
+      "title": "AustraliaPostCustomerEncodingTable.value__",
+      "kind": "Field",
+      "href": "types/codeglyphx-australiapost-australiapostcustomerencodingtable.html#field-value-int-value",
+      "summary": null
+    },
+    {
+      "title": "AustraliaPostCustomerEncodingTable.N",
+      "kind": "Field",
+      "href": "types/codeglyphx-australiapost-australiapostcustomerencodingtable.html#field-n-australiapostcustomerencodingtable-n",
+      "summary": "N Encoding Table (numeric digits)."
+    },
+    {
+      "title": "AustraliaPostCustomerEncodingTable.C",
+      "kind": "Field",
+      "href": "types/codeglyphx-australiapost-australiapostcustomerencodingtable.html#field-c-australiapostcustomerencodingtable-c",
+      "summary": "C Encoding Table (alphanumeric \u002B space/#)."
+    },
+    {
+      "title": "CodeGlyphX.AustraliaPost.AustraliaPostDecoded",
+      "kind": "Type",
+      "href": "types/codeglyphx-australiapost-australiapostdecoded.html",
+      "summary": "Decoded Australia Post customer barcode information."
+    },
+    {
+      "title": "AustraliaPostDecoded.Format",
+      "kind": "Property",
+      "href": "types/codeglyphx-australiapost-australiapostdecoded.html#property-format-australiapostformat-format-get",
+      "summary": "Gets the decoded barcode format."
+    },
+    {
+      "title": "AustraliaPostDecoded.FormatControlCode",
+      "kind": "Property",
+      "href": "types/codeglyphx-australiapost-australiapostdecoded.html#property-formatcontrolcode-int-formatcontrolcode-get",
+      "summary": "Gets the format control code (FCC)."
+    },
+    {
+      "title": "AustraliaPostDecoded.Dpid",
+      "kind": "Property",
+      "href": "types/codeglyphx-australiapost-australiapostdecoded.html#property-dpid-string-dpid-get",
+      "summary": "Gets the Delivery Point Identifier (DPID)."
+    },
+    {
+      "title": "AustraliaPostDecoded.CustomerInfo",
+      "kind": "Property",
+      "href": "types/codeglyphx-australiapost-australiapostdecoded.html#property-customerinfo-string-customerinfo-get",
+      "summary": "Gets the customer information field (may be empty for Standard format)."
+    },
+    {
+      "title": "AustraliaPostDecoded.CustomerInfoEncoding",
+      "kind": "Property",
+      "href": "types/codeglyphx-australiapost-australiapostdecoded.html#property-customerinfoencoding-nullable-australiapostcustomerencodingtable-customerinfoencoding-get",
+      "summary": "Gets the customer information encoding table, if present."
+    },
+    {
+      "title": "AustraliaPostDecoded.IsCustomerInfoAmbiguous",
+      "kind": "Property",
+      "href": "types/codeglyphx-australiapost-australiapostdecoded.html#property-iscustomerinfoambiguous-bool-iscustomerinfoambiguous-get",
+      "summary": "Gets whether the customer information encoding was ambiguous."
+    },
+    {
+      "title": "AustraliaPostDecoded.Value",
+      "kind": "Property",
+      "href": "types/codeglyphx-australiapost-australiapostdecoded.html#property-value-string-value-get",
+      "summary": "Gets the concatenated payload (DPID \u002B customer info)."
+    },
+    {
+      "title": "CodeGlyphX.AustraliaPost.AustraliaPostDecoder",
+      "kind": "Type",
+      "href": "types/codeglyphx-australiapost-australiapostdecoder.html",
+      "summary": "Decodes Australia Post customer barcodes."
+    },
+    {
+      "title": "AustraliaPostDecoder.TryDecode",
+      "kind": "Method",
+      "href": "types/codeglyphx-australiapost-australiapostdecoder.html#method-trydecode-static-bool-trydecode-bitmatrix-modules-out-string-text",
+      "summary": "Attempts to decode an Australia Post customer barcode from a CodeGlyphX.BitMatrix."
+    },
+    {
+      "title": "AustraliaPostDecoder.TryDecode",
+      "kind": "Method",
+      "href": "types/codeglyphx-australiapost-australiapostdecoder.html#method-trydecode-static-bool-trydecode-bitmatrix-modules-nullable-australiapostcustomerencodingtable-preferredcustomertable-out-australiapostdecoded-decoded",
+      "summary": "Attempts to decode an Australia Post customer barcode from a CodeGlyphX.BitMatrix."
+    },
+    {
+      "title": "CodeGlyphX.AustraliaPost.AustraliaPostEncoder",
+      "kind": "Type",
+      "href": "types/codeglyphx-australiapost-australiapostencoder.html",
+      "summary": "Encodes Australia Post customer barcodes."
+    },
+    {
+      "title": "AustraliaPostEncoder.Encode",
+      "kind": "Method",
+      "href": "types/codeglyphx-australiapost-australiapostencoder.html#method-encode-static-bitmatrix-encode-string-content",
+      "summary": "Encodes an Australia Post customer barcode into a CodeGlyphX.BitMatrix."
+    },
+    {
+      "title": "CodeGlyphX.AustraliaPost.AustraliaPostFormat",
+      "kind": "Type",
+      "href": "types/codeglyphx-australiapost-australiapostformat.html",
+      "summary": "Australia Post customer barcode formats."
+    },
+    {
+      "title": "AustraliaPostFormat.value__",
+      "kind": "Field",
+      "href": "types/codeglyphx-australiapost-australiapostformat.html#field-value-int-value",
+      "summary": null
+    },
+    {
+      "title": "AustraliaPostFormat.Standard",
+      "kind": "Field",
+      "href": "types/codeglyphx-australiapost-australiapostformat.html#field-standard-australiapostformat-standard",
+      "summary": "Standard Customer Barcode (37 bars)."
+    },
+    {
+      "title": "AustraliaPostFormat.Customer2",
+      "kind": "Field",
+      "href": "types/codeglyphx-australiapost-australiapostformat.html#field-customer2-australiapostformat-customer2",
+      "summary": "Customer Barcode 2 (52 bars)."
+    },
+    {
+      "title": "AustraliaPostFormat.Customer3",
+      "kind": "Field",
+      "href": "types/codeglyphx-australiapost-australiapostformat.html#field-customer3-australiapostformat-customer3",
+      "summary": "Customer Barcode 3 (67 bars)."
+    },
+    {
       "title": "CodeGlyphX.Aztec.AztecEncodeOptions",
       "kind": "Type",
       "href": "types/codeglyphx-aztec-aztecencodeoptions.html",
@@ -11851,6 +13417,54 @@
       "summary": "Encodes a Code 11 barcode."
     },
     {
+      "title": "CodeGlyphX.Code25.Iata2Of5Encoder",
+      "kind": "Type",
+      "href": "types/codeglyphx-code25-iata2of5encoder.html",
+      "summary": "Encodes IATA 2 of 5 barcodes."
+    },
+    {
+      "title": "Iata2Of5Encoder.Encode",
+      "kind": "Method",
+      "href": "types/codeglyphx-code25-iata2of5encoder.html#method-encode-static-barcode1d-encode-string-content-bool-includechecksum",
+      "summary": "Encodes an IATA 2 of 5 barcode. When is true,\n a Mod-10 check digit is appended."
+    },
+    {
+      "title": "CodeGlyphX.Code25.Industrial2Of5Encoder",
+      "kind": "Type",
+      "href": "types/codeglyphx-code25-industrial2of5encoder.html",
+      "summary": "Encodes Industrial (Discrete) 2 of 5 barcodes."
+    },
+    {
+      "title": "Industrial2Of5Encoder.Encode",
+      "kind": "Method",
+      "href": "types/codeglyphx-code25-industrial2of5encoder.html#method-encode-static-barcode1d-encode-string-content-bool-includechecksum",
+      "summary": "Encodes an Industrial 2 of 5 barcode. When is true,\n a Mod-10 check digit is appended."
+    },
+    {
+      "title": "CodeGlyphX.Code25.Matrix2Of5Encoder",
+      "kind": "Type",
+      "href": "types/codeglyphx-code25-matrix2of5encoder.html",
+      "summary": "Encodes Matrix (Standard) 2 of 5 barcodes."
+    },
+    {
+      "title": "Matrix2Of5Encoder.Encode",
+      "kind": "Method",
+      "href": "types/codeglyphx-code25-matrix2of5encoder.html#method-encode-static-barcode1d-encode-string-content-bool-includechecksum",
+      "summary": "Encodes a Matrix 2 of 5 barcode. When is true,\n a Mod-10 check digit is appended."
+    },
+    {
+      "title": "CodeGlyphX.Code32.Code32Encoder",
+      "kind": "Type",
+      "href": "types/codeglyphx-code32-code32encoder.html",
+      "summary": "Encodes Code 32 (Italian Pharmacode) barcodes."
+    },
+    {
+      "title": "Code32Encoder.Encode",
+      "kind": "Method",
+      "href": "types/codeglyphx-code32-code32encoder.html#method-encode-static-barcode1d-encode-string-content",
+      "summary": "Encodes a Code 32 barcode from 1-8 digits (left-padded to 8, checksum appended) or 9 digits (checksum validated).\n A leading \u0027A\u0027 is allowed and ignored."
+    },
+    {
       "title": "CodeGlyphX.Code39.Code39Encoder",
       "kind": "Type",
       "href": "types/codeglyphx-code39-code39encoder.html",
@@ -11873,6 +13487,102 @@
       "kind": "Method",
       "href": "types/codeglyphx-code93-code93encoder.html#method-encode-static-barcode1d-encode-string-content-bool-includechecksum-bool-fullasciimode",
       "summary": "Encodes a Code 93 barcode."
+    },
+    {
+      "title": "CodeGlyphX.DataBar.DataBar14Decoder",
+      "kind": "Type",
+      "href": "types/codeglyphx-databar-databar14decoder.html",
+      "summary": "Decodes GS1 DataBar-14 symbols (Truncated / Omni / Stacked)."
+    },
+    {
+      "title": "DataBar14Decoder.TryDecodeTruncated",
+      "kind": "Method",
+      "href": "types/codeglyphx-databar-databar14decoder.html#method-trydecodetruncated-static-bool-trydecodetruncated-barcode1d-barcode-out-string-content",
+      "summary": "Attempts to decode a GS1 DataBar-14 Truncated symbol from a CodeGlyphX.Barcode1D."
+    },
+    {
+      "title": "DataBar14Decoder.TryDecodeTruncated",
+      "kind": "Method",
+      "href": "types/codeglyphx-databar-databar14decoder.html#method-trydecodetruncated-static-bool-trydecodetruncated-bool-modules-out-string-content",
+      "summary": "Attempts to decode a GS1 DataBar-14 Truncated symbol from a module array."
+    },
+    {
+      "title": "DataBar14Decoder.TryDecodeOmni",
+      "kind": "Method",
+      "href": "types/codeglyphx-databar-databar14decoder.html#method-trydecodeomni-static-bool-trydecodeomni-bitmatrix-modules-out-string-content",
+      "summary": "Attempts to decode a GS1 DataBar-14 Omnidirectional symbol from a CodeGlyphX.BitMatrix."
+    },
+    {
+      "title": "DataBar14Decoder.TryDecodeStacked",
+      "kind": "Method",
+      "href": "types/codeglyphx-databar-databar14decoder.html#method-trydecodestacked-static-bool-trydecodestacked-bitmatrix-modules-out-string-content",
+      "summary": "Attempts to decode a GS1 DataBar-14 Stacked symbol from a CodeGlyphX.BitMatrix."
+    },
+    {
+      "title": "CodeGlyphX.DataBar.DataBar14Encoder",
+      "kind": "Type",
+      "href": "types/codeglyphx-databar-databar14encoder.html",
+      "summary": "Encodes GS1 DataBar-14 symbols (Truncated / Omni / Stacked)."
+    },
+    {
+      "title": "DataBar14Encoder.EncodeTruncated",
+      "kind": "Method",
+      "href": "types/codeglyphx-databar-databar14encoder.html#method-encodetruncated-static-barcode1d-encodetruncated-string-content",
+      "summary": "Encodes a GS1 DataBar-14 Truncated symbol into a CodeGlyphX.Barcode1D."
+    },
+    {
+      "title": "DataBar14Encoder.EncodeOmni",
+      "kind": "Method",
+      "href": "types/codeglyphx-databar-databar14encoder.html#method-encodeomni-static-bitmatrix-encodeomni-string-content",
+      "summary": "Encodes a GS1 DataBar-14 Omnidirectional symbol into a CodeGlyphX.BitMatrix."
+    },
+    {
+      "title": "DataBar14Encoder.EncodeStacked",
+      "kind": "Method",
+      "href": "types/codeglyphx-databar-databar14encoder.html#method-encodestacked-static-bitmatrix-encodestacked-string-content",
+      "summary": "Encodes a GS1 DataBar-14 Stacked symbol into a CodeGlyphX.BitMatrix."
+    },
+    {
+      "title": "CodeGlyphX.DataBar.DataBarExpandedDecoder",
+      "kind": "Type",
+      "href": "types/codeglyphx-databar-databarexpandeddecoder.html",
+      "summary": "Decodes GS1 DataBar Expanded symbols (linear and stacked)."
+    },
+    {
+      "title": "DataBarExpandedDecoder.TryDecodeExpanded",
+      "kind": "Method",
+      "href": "types/codeglyphx-databar-databarexpandeddecoder.html#method-trydecodeexpanded-static-bool-trydecodeexpanded-barcode1d-barcode-out-string-content",
+      "summary": "Attempts to decode a GS1 DataBar Expanded symbol from a CodeGlyphX.Barcode1D."
+    },
+    {
+      "title": "DataBarExpandedDecoder.TryDecodeExpanded",
+      "kind": "Method",
+      "href": "types/codeglyphx-databar-databarexpandeddecoder.html#method-trydecodeexpanded-static-bool-trydecodeexpanded-bool-modules-out-string-content",
+      "summary": "Attempts to decode a GS1 DataBar Expanded symbol from module data."
+    },
+    {
+      "title": "DataBarExpandedDecoder.TryDecodeExpandedStacked",
+      "kind": "Method",
+      "href": "types/codeglyphx-databar-databarexpandeddecoder.html#method-trydecodeexpandedstacked-static-bool-trydecodeexpandedstacked-bitmatrix-modules-out-string-content",
+      "summary": "Attempts to decode a GS1 DataBar Expanded Stacked symbol from a CodeGlyphX.BitMatrix."
+    },
+    {
+      "title": "CodeGlyphX.DataBar.DataBarExpandedEncoder",
+      "kind": "Type",
+      "href": "types/codeglyphx-databar-databarexpandedencoder.html",
+      "summary": "Encodes GS1 DataBar Expanded symbols (linear and stacked)."
+    },
+    {
+      "title": "DataBarExpandedEncoder.EncodeExpanded",
+      "kind": "Method",
+      "href": "types/codeglyphx-databar-databarexpandedencoder.html#method-encodeexpanded-static-barcode1d-encodeexpanded-string-content",
+      "summary": "Encodes a GS1 DataBar Expanded symbol into a CodeGlyphX.Barcode1D."
+    },
+    {
+      "title": "DataBarExpandedEncoder.EncodeExpandedStacked",
+      "kind": "Method",
+      "href": "types/codeglyphx-databar-databarexpandedencoder.html#method-encodeexpandedstacked-static-bitmatrix-encodeexpandedstacked-string-content-int-columns",
+      "summary": "Encodes a GS1 DataBar Expanded Stacked symbol into a CodeGlyphX.BitMatrix."
     },
     {
       "title": "CodeGlyphX.DataMatrix.DataMatrixDecoder",
@@ -12040,7 +13750,7 @@
       "title": "EanEncoder.Encode",
       "kind": "Method",
       "href": "types/codeglyphx-ean-eanencoder.html#method-encode-static-barcode1d-encode-string-content",
-      "summary": "Encodes an EAN barcode (EAN-8 or EAN-13, depending on input length)."
+      "summary": "Encodes an EAN barcode (EAN-8 or EAN-13, depending on input length). Use \u0022\u002BNN\u0022 or \u0022\u002BNNNNN\u0022 to append add-ons."
     },
     {
       "title": "CodeGlyphX.Ean.EanTables.EncodedNumber",
@@ -12091,6 +13801,54 @@
       "summary": "Encodes an ITF-14 barcode. Accepts 13 digits (checksum calculated) or 14 digits (checksum verified)."
     },
     {
+      "title": "CodeGlyphX.Itf.ItfEncoder",
+      "kind": "Type",
+      "href": "types/codeglyphx-itf-itfencoder.html",
+      "summary": "Encodes Interleaved 2 of 5 (ITF) barcodes."
+    },
+    {
+      "title": "ItfEncoder.Encode",
+      "kind": "Method",
+      "href": "types/codeglyphx-itf-itfencoder.html#method-encode-static-barcode1d-encode-string-content-bool-includechecksum",
+      "summary": "Encodes an ITF barcode. The input length must be even.\n If is true, odd-length inputs get a checksum appended and even-length inputs are validated."
+    },
+    {
+      "title": "CodeGlyphX.JapanPost.JapanPostDecoder",
+      "kind": "Type",
+      "href": "types/codeglyphx-japanpost-japanpostdecoder.html",
+      "summary": "Decodes Japan Post barcodes."
+    },
+    {
+      "title": "JapanPostDecoder.TryDecode",
+      "kind": "Method",
+      "href": "types/codeglyphx-japanpost-japanpostdecoder.html#method-trydecode-static-bool-trydecode-bitmatrix-modules-out-string-text",
+      "summary": "Attempts to decode a Japan Post barcode from a CodeGlyphX.BitMatrix."
+    },
+    {
+      "title": "CodeGlyphX.JapanPost.JapanPostEncoder",
+      "kind": "Type",
+      "href": "types/codeglyphx-japanpost-japanpostencoder.html",
+      "summary": "Encodes Japan Post barcodes."
+    },
+    {
+      "title": "JapanPostEncoder.Encode",
+      "kind": "Method",
+      "href": "types/codeglyphx-japanpost-japanpostencoder.html#method-encode-static-bitmatrix-encode-string-content",
+      "summary": "Encodes a Japan Post barcode into a CodeGlyphX.BitMatrix."
+    },
+    {
+      "title": "CodeGlyphX.Kix.KixDecoder",
+      "kind": "Type",
+      "href": "types/codeglyphx-kix-kixdecoder.html",
+      "summary": "Decodes KIX (Royal Mail 4-state, without headers) barcodes."
+    },
+    {
+      "title": "KixDecoder.TryDecode",
+      "kind": "Method",
+      "href": "types/codeglyphx-kix-kixdecoder.html#method-trydecode-static-bool-trydecode-bitmatrix-modules-out-string-text",
+      "summary": "Attempts to decode a KIX barcode from a CodeGlyphX.BitMatrix."
+    },
+    {
       "title": "CodeGlyphX.Kix.KixEncoder",
       "kind": "Type",
       "href": "types/codeglyphx-kix-kixencoder.html",
@@ -12113,6 +13871,18 @@
       "kind": "Method",
       "href": "types/codeglyphx-msi-msiencoder.html#method-encode-static-barcode1d-encode-string-content-msichecksumtype-checksum",
       "summary": "Encodes an MSI barcode."
+    },
+    {
+      "title": "CodeGlyphX.PatchCode.PatchCodeEncoder",
+      "kind": "Type",
+      "href": "types/codeglyphx-patchcode-patchcodeencoder.html",
+      "summary": "Encodes Patch Code symbols."
+    },
+    {
+      "title": "PatchCodeEncoder.Encode",
+      "kind": "Method",
+      "href": "types/codeglyphx-patchcode-patchcodeencoder.html#method-encode-static-barcode1d-encode-string-content",
+      "summary": "Encodes a Patch Code symbol. Valid values are: 1, 2, 3, 4, 6, T."
     },
     {
       "title": "CodeGlyphX.Payloads.SwissQrCodePayload.AdditionalInformation",
@@ -15073,6 +16843,78 @@
       "summary": null
     },
     {
+      "title": "CodeGlyphX.Pdf417.MicroPdf417Decoder",
+      "kind": "Type",
+      "href": "types/codeglyphx-pdf417-micropdf417decoder.html",
+      "summary": "Decodes MicroPDF417 symbols from a CodeGlyphX.BitMatrix."
+    },
+    {
+      "title": "MicroPdf417Decoder.TryDecode",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417-micropdf417decoder.html#method-trydecode-static-bool-trydecode-bitmatrix-modules-out-string-text",
+      "summary": "Attempts to decode a MicroPDF417 symbol from a CodeGlyphX.BitMatrix."
+    },
+    {
+      "title": "CodeGlyphX.Pdf417.MicroPdf417EncodeOptions",
+      "kind": "Type",
+      "href": "types/codeglyphx-pdf417-micropdf417encodeoptions.html",
+      "summary": "Options for MicroPDF417 encoding."
+    },
+    {
+      "title": "MicroPdf417EncodeOptions.MicroPdf417EncodeOptions",
+      "kind": "Constructor",
+      "href": "types/codeglyphx-pdf417-micropdf417encodeoptions.html#constructor-micropdf417encodeoptions-micropdf417encodeoptions",
+      "summary": null
+    },
+    {
+      "title": "MicroPdf417EncodeOptions.Columns",
+      "kind": "Property",
+      "href": "types/codeglyphx-pdf417-micropdf417encodeoptions.html#property-columns-nullable-int-columns-get-set",
+      "summary": "Fixed number of data columns (1..4). Leave null to auto-select."
+    },
+    {
+      "title": "MicroPdf417EncodeOptions.Rows",
+      "kind": "Property",
+      "href": "types/codeglyphx-pdf417-micropdf417encodeoptions.html#property-rows-nullable-int-rows-get-set",
+      "summary": "Fixed number of rows (4..44). Leave null to auto-select."
+    },
+    {
+      "title": "MicroPdf417EncodeOptions.Compaction",
+      "kind": "Property",
+      "href": "types/codeglyphx-pdf417-micropdf417encodeoptions.html#property-compaction-pdf417compaction-compaction-get-set",
+      "summary": "High-level compaction mode."
+    },
+    {
+      "title": "MicroPdf417EncodeOptions.TextEncoding",
+      "kind": "Property",
+      "href": "types/codeglyphx-pdf417-micropdf417encodeoptions.html#property-textencoding-encoding-textencoding-get-set",
+      "summary": "Text encoding used for byte compaction."
+    },
+    {
+      "title": "CodeGlyphX.Pdf417.MicroPdf417Encoder",
+      "kind": "Type",
+      "href": "types/codeglyphx-pdf417-micropdf417encoder.html",
+      "summary": "Encodes MicroPDF417 symbols into a CodeGlyphX.BitMatrix."
+    },
+    {
+      "title": "MicroPdf417Encoder.Encode",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417-micropdf417encoder.html#method-encode-static-bitmatrix-encode-string-text-micropdf417encodeoptions-options",
+      "summary": "Encodes a text payload as MicroPDF417."
+    },
+    {
+      "title": "MicroPdf417Encoder.EncodeBytes",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417-micropdf417encoder.html#method-encodebytes-static-bitmatrix-encodebytes-byte-data-micropdf417encodeoptions-options",
+      "summary": "Encodes a byte payload as MicroPDF417."
+    },
+    {
+      "title": "MicroPdf417Encoder.EncodeBytes",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417-micropdf417encoder.html#method-encodebytes-static-bitmatrix-encodebytes-readonlyspan-byte-data-micropdf417encodeoptions-options",
+      "summary": "Encodes a byte payload as MicroPDF417."
+    },
+    {
       "title": "CodeGlyphX.Pdf417.Pdf417Compaction",
       "kind": "Type",
       "href": "types/codeglyphx-pdf417-pdf417compaction.html",
@@ -15109,6 +16951,24 @@
       "summary": "Use numeric compaction."
     },
     {
+      "title": "CodeGlyphX.Pdf417.Pdf417Decoded",
+      "kind": "Type",
+      "href": "types/codeglyphx-pdf417-pdf417decoded.html",
+      "summary": "Result of decoding a PDF417 symbol."
+    },
+    {
+      "title": "Pdf417Decoded.Text",
+      "kind": "Property",
+      "href": "types/codeglyphx-pdf417-pdf417decoded.html#property-text-string-text-get",
+      "summary": "Gets the decoded payload text."
+    },
+    {
+      "title": "Pdf417Decoded.Macro",
+      "kind": "Property",
+      "href": "types/codeglyphx-pdf417-pdf417decoded.html#property-macro-pdf417macrometadata-macro-get",
+      "summary": "Gets Macro PDF417 metadata when present."
+    },
+    {
       "title": "CodeGlyphX.Pdf417.Pdf417Decoder",
       "kind": "Type",
       "href": "types/codeglyphx-pdf417-pdf417decoder.html",
@@ -15123,8 +16983,20 @@
     {
       "title": "Pdf417Decoder.TryDecode",
       "kind": "Method",
+      "href": "types/codeglyphx-pdf417-pdf417decoder.html#method-trydecode-static-bool-trydecode-bitmatrix-modules-out-pdf417decoded-decoded",
+      "summary": "Attempts to decode a PDF417 symbol from a module matrix, including Macro metadata when present."
+    },
+    {
+      "title": "Pdf417Decoder.TryDecode",
+      "kind": "Method",
       "href": "types/codeglyphx-pdf417-pdf417decoder.html#method-trydecode-static-bool-trydecode-bitmatrix-modules-cancellationtoken-cancellationtoken-out-string-value",
       "summary": "Attempts to decode a PDF417 symbol from a module matrix, with cancellation."
+    },
+    {
+      "title": "Pdf417Decoder.TryDecode",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417-pdf417decoder.html#method-trydecode-static-bool-trydecode-bitmatrix-modules-cancellationtoken-cancellationtoken-out-pdf417decoded-decoded",
+      "summary": "Attempts to decode a PDF417 symbol from a module matrix, with cancellation and Macro metadata when present."
     },
     {
       "title": "Pdf417Decoder.TryDecode",
@@ -15165,6 +17037,18 @@
     {
       "title": "Pdf417Decoder.TryDecode",
       "kind": "Method",
+      "href": "types/codeglyphx-pdf417-pdf417decoder.html#method-trydecode-static-bool-trydecode-readonlyspan-byte-pixels-int-width-int-height-int-stride-pixelformat-format-out-pdf417decoded-decoded",
+      "summary": "Attempts to decode a PDF417 symbol from pixels, including Macro metadata when present."
+    },
+    {
+      "title": "Pdf417Decoder.TryDecode",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417-pdf417decoder.html#method-trydecode-static-bool-trydecode-readonlyspan-byte-pixels-int-width-int-height-int-stride-pixelformat-format-cancellationtoken-cancellationtoken-out-pdf417decoded-decoded",
+      "summary": "Attempts to decode a PDF417 symbol from pixels, with cancellation and Macro metadata when present."
+    },
+    {
+      "title": "Pdf417Decoder.TryDecode",
+      "kind": "Method",
       "href": "types/codeglyphx-pdf417-pdf417decoder.html#method-trydecode-static-bool-trydecode-byte-pixels-int-width-int-height-int-stride-pixelformat-format-out-string-value",
       "summary": "Attempts to decode a PDF417 symbol from pixels."
     },
@@ -15185,6 +17069,18 @@
       "kind": "Method",
       "href": "types/codeglyphx-pdf417-pdf417decoder.html#method-trydecode-static-bool-trydecode-byte-pixels-int-width-int-height-int-stride-pixelformat-format-cancellationtoken-cancellationtoken-out-string-value-out-pdf417decodediagnostics-diagnostics",
       "summary": "Attempts to decode a PDF417 symbol from pixels, with cancellation and diagnostics."
+    },
+    {
+      "title": "Pdf417Decoder.TryDecode",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417-pdf417decoder.html#method-trydecode-static-bool-trydecode-byte-pixels-int-width-int-height-int-stride-pixelformat-format-out-pdf417decoded-decoded",
+      "summary": "Attempts to decode a PDF417 symbol from pixels, including Macro metadata when present."
+    },
+    {
+      "title": "Pdf417Decoder.TryDecode",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417-pdf417decoder.html#method-trydecode-static-bool-trydecode-byte-pixels-int-width-int-height-int-stride-pixelformat-format-cancellationtoken-cancellationtoken-out-pdf417decoded-decoded",
+      "summary": "Attempts to decode a PDF417 symbol from pixels, with cancellation and Macro metadata when present."
     },
     {
       "title": "CodeGlyphX.Pdf417.Pdf417EncodeOptions",
@@ -15265,6 +17161,12 @@
       "summary": "Encodes a text payload as PDF417."
     },
     {
+      "title": "Pdf417Encoder.EncodeMacro",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417-pdf417encoder.html#method-encodemacro-static-bitmatrix-encodemacro-string-text-pdf417macrooptions-macro-pdf417encodeoptions-options",
+      "summary": "Encodes a Macro PDF417 payload."
+    },
+    {
       "title": "Pdf417Encoder.EncodeBytes",
       "kind": "Method",
       "href": "types/codeglyphx-pdf417-pdf417encoder.html#method-encodebytes-static-bitmatrix-encodebytes-byte-data-pdf417encodeoptions-options",
@@ -15277,6 +17179,318 @@
       "summary": "Encodes a byte payload as PDF417 (byte compaction)."
     },
     {
+      "title": "CodeGlyphX.Pdf417.Pdf417MacroAssembler",
+      "kind": "Type",
+      "href": "types/codeglyphx-pdf417-pdf417macroassembler.html",
+      "summary": "Collects Macro PDF417 segments and assembles the original payload when complete."
+    },
+    {
+      "title": "Pdf417MacroAssembler.Pdf417MacroAssembler",
+      "kind": "Constructor",
+      "href": "types/codeglyphx-pdf417-pdf417macroassembler.html#constructor-pdf417macroassembler-pdf417macroassembler",
+      "summary": null
+    },
+    {
+      "title": "Pdf417MacroAssembler.TryAdd",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417-pdf417macroassembler.html#method-tryadd-bool-tryadd-pdf417decoded-decoded",
+      "summary": "Attempts to add a decoded Macro PDF417 segment."
+    },
+    {
+      "title": "Pdf417MacroAssembler.TryAdd",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417-pdf417macroassembler.html#method-tryadd-bool-tryadd-codeglyphdecoded-decoded",
+      "summary": "Attempts to add a decoded Macro PDF417 segment from a CodeGlyphX.CodeGlyphDecoded wrapper."
+    },
+    {
+      "title": "Pdf417MacroAssembler.Add",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417-pdf417macroassembler.html#method-add-void-add-pdf417decoded-decoded",
+      "summary": "Adds a decoded Macro PDF417 segment."
+    },
+    {
+      "title": "Pdf417MacroAssembler.Add",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417-pdf417macroassembler.html#method-add-void-add-codeglyphdecoded-decoded",
+      "summary": "Adds a decoded Macro PDF417 segment from a CodeGlyphX.CodeGlyphDecoded wrapper."
+    },
+    {
+      "title": "Pdf417MacroAssembler.TryAdd",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417-pdf417macroassembler.html#method-tryadd-bool-tryadd-string-text-pdf417macrometadata-macro",
+      "summary": "Attempts to add a Macro PDF417 segment with explicit metadata."
+    },
+    {
+      "title": "Pdf417MacroAssembler.TryAssemble",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417-pdf417macroassembler.html#method-tryassemble-bool-tryassemble-out-string-text",
+      "summary": "Attempts to assemble the full payload when all segments are present."
+    },
+    {
+      "title": "Pdf417MacroAssembler.Assemble",
+      "kind": "Method",
+      "href": "types/codeglyphx-pdf417-pdf417macroassembler.html#method-assemble-string-assemble",
+      "summary": "Assembles the full payload when all segments are present."
+    },
+    {
+      "title": "Pdf417MacroAssembler.FileId",
+      "kind": "Property",
+      "href": "types/codeglyphx-pdf417-pdf417macroassembler.html#property-fileid-string-fileid-get",
+      "summary": "Gets the Macro PDF417 file identifier when known."
+    },
+    {
+      "title": "Pdf417MacroAssembler.SegmentCount",
+      "kind": "Property",
+      "href": "types/codeglyphx-pdf417-pdf417macroassembler.html#property-segmentcount-nullable-int-segmentcount-get",
+      "summary": "Gets the expected segment count when present in metadata."
+    },
+    {
+      "title": "Pdf417MacroAssembler.HasLastSegment",
+      "kind": "Property",
+      "href": "types/codeglyphx-pdf417-pdf417macroassembler.html#property-haslastsegment-bool-haslastsegment-get",
+      "summary": "Gets whether a segment flagged as the last segment was received."
+    },
+    {
+      "title": "Pdf417MacroAssembler.LastSegmentIndex",
+      "kind": "Property",
+      "href": "types/codeglyphx-pdf417-pdf417macroassembler.html#property-lastsegmentindex-nullable-int-lastsegmentindex-get",
+      "summary": "Gets the index of the last segment when known."
+    },
+    {
+      "title": "Pdf417MacroAssembler.ReceivedCount",
+      "kind": "Property",
+      "href": "types/codeglyphx-pdf417-pdf417macroassembler.html#property-receivedcount-int-receivedcount-get",
+      "summary": "Gets the number of segments collected."
+    },
+    {
+      "title": "Pdf417MacroAssembler.FileName",
+      "kind": "Property",
+      "href": "types/codeglyphx-pdf417-pdf417macroassembler.html#property-filename-string-filename-get",
+      "summary": "Gets the file name when present."
+    },
+    {
+      "title": "Pdf417MacroAssembler.Timestamp",
+      "kind": "Property",
+      "href": "types/codeglyphx-pdf417-pdf417macroassembler.html#property-timestamp-nullable-long-timestamp-get",
+      "summary": "Gets the timestamp when present."
+    },
+    {
+      "title": "Pdf417MacroAssembler.Sender",
+      "kind": "Property",
+      "href": "types/codeglyphx-pdf417-pdf417macroassembler.html#property-sender-string-sender-get",
+      "summary": "Gets the sender when present."
+    },
+    {
+      "title": "Pdf417MacroAssembler.Addressee",
+      "kind": "Property",
+      "href": "types/codeglyphx-pdf417-pdf417macroassembler.html#property-addressee-string-addressee-get",
+      "summary": "Gets the addressee when present."
+    },
+    {
+      "title": "Pdf417MacroAssembler.FileSize",
+      "kind": "Property",
+      "href": "types/codeglyphx-pdf417-pdf417macroassembler.html#property-filesize-nullable-long-filesize-get",
+      "summary": "Gets the file size when present."
+    },
+    {
+      "title": "Pdf417MacroAssembler.Checksum",
+      "kind": "Property",
+      "href": "types/codeglyphx-pdf417-pdf417macroassembler.html#property-checksum-nullable-int-checksum-get",
+      "summary": "Gets the checksum when present."
+    },
+    {
+      "title": "Pdf417MacroAssembler.IsComplete",
+      "kind": "Property",
+      "href": "types/codeglyphx-pdf417-pdf417macroassembler.html#property-iscomplete-bool-iscomplete-get",
+      "summary": "Gets whether all expected segments have been collected."
+    },
+    {
+      "title": "CodeGlyphX.Pdf417.Pdf417MacroMetadata",
+      "kind": "Type",
+      "href": "types/codeglyphx-pdf417-pdf417macrometadata.html",
+      "summary": "Macro PDF417 metadata payload."
+    },
+    {
+      "title": "Pdf417MacroMetadata.SegmentIndex",
+      "kind": "Property",
+      "href": "types/codeglyphx-pdf417-pdf417macrometadata.html#property-segmentindex-int-segmentindex-get",
+      "summary": "Gets the segment index."
+    },
+    {
+      "title": "Pdf417MacroMetadata.FileId",
+      "kind": "Property",
+      "href": "types/codeglyphx-pdf417-pdf417macrometadata.html#property-fileid-string-fileid-get",
+      "summary": "Gets the file identifier."
+    },
+    {
+      "title": "Pdf417MacroMetadata.IsLastSegment",
+      "kind": "Property",
+      "href": "types/codeglyphx-pdf417-pdf417macrometadata.html#property-islastsegment-bool-islastsegment-get",
+      "summary": "Gets whether this segment is marked as the last segment."
+    },
+    {
+      "title": "Pdf417MacroMetadata.SegmentCount",
+      "kind": "Property",
+      "href": "types/codeglyphx-pdf417-pdf417macrometadata.html#property-segmentcount-nullable-int-segmentcount-get",
+      "summary": "Gets the total number of segments, if present."
+    },
+    {
+      "title": "Pdf417MacroMetadata.FileName",
+      "kind": "Property",
+      "href": "types/codeglyphx-pdf417-pdf417macrometadata.html#property-filename-string-filename-get",
+      "summary": "Gets the file name, if present."
+    },
+    {
+      "title": "Pdf417MacroMetadata.Timestamp",
+      "kind": "Property",
+      "href": "types/codeglyphx-pdf417-pdf417macrometadata.html#property-timestamp-nullable-long-timestamp-get",
+      "summary": "Gets the timestamp, if present."
+    },
+    {
+      "title": "Pdf417MacroMetadata.Sender",
+      "kind": "Property",
+      "href": "types/codeglyphx-pdf417-pdf417macrometadata.html#property-sender-string-sender-get",
+      "summary": "Gets the sender, if present."
+    },
+    {
+      "title": "Pdf417MacroMetadata.Addressee",
+      "kind": "Property",
+      "href": "types/codeglyphx-pdf417-pdf417macrometadata.html#property-addressee-string-addressee-get",
+      "summary": "Gets the addressee, if present."
+    },
+    {
+      "title": "Pdf417MacroMetadata.FileSize",
+      "kind": "Property",
+      "href": "types/codeglyphx-pdf417-pdf417macrometadata.html#property-filesize-nullable-long-filesize-get",
+      "summary": "Gets the file size, if present."
+    },
+    {
+      "title": "Pdf417MacroMetadata.Checksum",
+      "kind": "Property",
+      "href": "types/codeglyphx-pdf417-pdf417macrometadata.html#property-checksum-nullable-int-checksum-get",
+      "summary": "Gets the checksum, if present."
+    },
+    {
+      "title": "CodeGlyphX.Pdf417.Pdf417MacroOptions",
+      "kind": "Type",
+      "href": "types/codeglyphx-pdf417-pdf417macrooptions.html",
+      "summary": "Options for Macro PDF417 encoding."
+    },
+    {
+      "title": "Pdf417MacroOptions.Pdf417MacroOptions",
+      "kind": "Constructor",
+      "href": "types/codeglyphx-pdf417-pdf417macrooptions.html#constructor-pdf417macrooptions-pdf417macrooptions",
+      "summary": null
+    },
+    {
+      "title": "Pdf417MacroOptions.SegmentIndex",
+      "kind": "Property",
+      "href": "types/codeglyphx-pdf417-pdf417macrooptions.html#property-segmentindex-int-segmentindex-get-set",
+      "summary": "Segment index (0..809999)."
+    },
+    {
+      "title": "Pdf417MacroOptions.FileId",
+      "kind": "Property",
+      "href": "types/codeglyphx-pdf417-pdf417macrooptions.html#property-fileid-string-fileid-get-set",
+      "summary": "File identifier as a numeric string (length must be a multiple of 3)."
+    },
+    {
+      "title": "Pdf417MacroOptions.IsLastSegment",
+      "kind": "Property",
+      "href": "types/codeglyphx-pdf417-pdf417macrooptions.html#property-islastsegment-bool-islastsegment-get-set",
+      "summary": "Indicates whether this segment is the last segment."
+    },
+    {
+      "title": "Pdf417MacroOptions.SegmentCount",
+      "kind": "Property",
+      "href": "types/codeglyphx-pdf417-pdf417macrooptions.html#property-segmentcount-nullable-int-segmentcount-get-set",
+      "summary": "Optional total segment count (last segment only)."
+    },
+    {
+      "title": "Pdf417MacroOptions.FileName",
+      "kind": "Property",
+      "href": "types/codeglyphx-pdf417-pdf417macrooptions.html#property-filename-string-filename-get-set",
+      "summary": "Optional file name (last segment only)."
+    },
+    {
+      "title": "Pdf417MacroOptions.Timestamp",
+      "kind": "Property",
+      "href": "types/codeglyphx-pdf417-pdf417macrooptions.html#property-timestamp-nullable-long-timestamp-get-set",
+      "summary": "Optional timestamp (last segment only)."
+    },
+    {
+      "title": "Pdf417MacroOptions.Sender",
+      "kind": "Property",
+      "href": "types/codeglyphx-pdf417-pdf417macrooptions.html#property-sender-string-sender-get-set",
+      "summary": "Optional sender (last segment only)."
+    },
+    {
+      "title": "Pdf417MacroOptions.Addressee",
+      "kind": "Property",
+      "href": "types/codeglyphx-pdf417-pdf417macrooptions.html#property-addressee-string-addressee-get-set",
+      "summary": "Optional addressee (last segment only)."
+    },
+    {
+      "title": "Pdf417MacroOptions.FileSize",
+      "kind": "Property",
+      "href": "types/codeglyphx-pdf417-pdf417macrooptions.html#property-filesize-nullable-long-filesize-get-set",
+      "summary": "Optional file size (last segment only)."
+    },
+    {
+      "title": "Pdf417MacroOptions.Checksum",
+      "kind": "Property",
+      "href": "types/codeglyphx-pdf417-pdf417macrooptions.html#property-checksum-nullable-int-checksum-get-set",
+      "summary": "Optional checksum (last segment only)."
+    },
+    {
+      "title": "CodeGlyphX.Pharmacode.PharmacodeEncoder",
+      "kind": "Type",
+      "href": "types/codeglyphx-pharmacode-pharmacodeencoder.html",
+      "summary": "Encodes Pharmacode (one-track) barcodes."
+    },
+    {
+      "title": "PharmacodeEncoder.Encode",
+      "kind": "Method",
+      "href": "types/codeglyphx-pharmacode-pharmacodeencoder.html#method-encode-static-barcode1d-encode-string-content",
+      "summary": "Encodes a Pharmacode (one-track) barcode value."
+    },
+    {
+      "title": "PharmacodeEncoder.Encode",
+      "kind": "Method",
+      "href": "types/codeglyphx-pharmacode-pharmacodeencoder.html#method-encode-static-barcode1d-encode-int-value",
+      "summary": "Encodes a Pharmacode (one-track) barcode value."
+    },
+    {
+      "title": "CodeGlyphX.Pharmacode.PharmacodeTwoTrackDecoder",
+      "kind": "Type",
+      "href": "types/codeglyphx-pharmacode-pharmacodetwotrackdecoder.html",
+      "summary": "Decodes Pharmacode (two-track) barcodes."
+    },
+    {
+      "title": "PharmacodeTwoTrackDecoder.TryDecode",
+      "kind": "Method",
+      "href": "types/codeglyphx-pharmacode-pharmacodetwotrackdecoder.html#method-trydecode-static-bool-trydecode-bitmatrix-modules-out-string-text",
+      "summary": "Attempts to decode a Pharmacode (two-track) barcode from a CodeGlyphX.BitMatrix."
+    },
+    {
+      "title": "CodeGlyphX.Pharmacode.PharmacodeTwoTrackEncoder",
+      "kind": "Type",
+      "href": "types/codeglyphx-pharmacode-pharmacodetwotrackencoder.html",
+      "summary": "Encodes Pharmacode (two-track) barcodes."
+    },
+    {
+      "title": "PharmacodeTwoTrackEncoder.Encode",
+      "kind": "Method",
+      "href": "types/codeglyphx-pharmacode-pharmacodetwotrackencoder.html#method-encode-static-bitmatrix-encode-string-content",
+      "summary": "Encodes a Pharmacode (two-track) barcode value into a CodeGlyphX.BitMatrix."
+    },
+    {
+      "title": "PharmacodeTwoTrackEncoder.Encode",
+      "kind": "Method",
+      "href": "types/codeglyphx-pharmacode-pharmacodetwotrackencoder.html#method-encode-static-bitmatrix-encode-int-value",
+      "summary": "Encodes a Pharmacode (two-track) barcode value into a CodeGlyphX.BitMatrix."
+    },
+    {
       "title": "CodeGlyphX.Plessey.PlesseyEncoder",
       "kind": "Type",
       "href": "types/codeglyphx-plessey-plesseyencoder.html",
@@ -15287,6 +17501,78 @@
       "kind": "Method",
       "href": "types/codeglyphx-plessey-plesseyencoder.html#method-encode-static-barcode1d-encode-string-content",
       "summary": "Encodes a Plessey barcode (hex digits only)."
+    },
+    {
+      "title": "CodeGlyphX.Postal.PlanetDecoder",
+      "kind": "Type",
+      "href": "types/codeglyphx-postal-planetdecoder.html",
+      "summary": "Decodes PLANET barcodes."
+    },
+    {
+      "title": "PlanetDecoder.TryDecode",
+      "kind": "Method",
+      "href": "types/codeglyphx-postal-planetdecoder.html#method-trydecode-static-bool-trydecode-bitmatrix-modules-out-string-text",
+      "summary": "Attempts to decode a PLANET barcode from a CodeGlyphX.BitMatrix."
+    },
+    {
+      "title": "CodeGlyphX.Postal.PlanetEncoder",
+      "kind": "Type",
+      "href": "types/codeglyphx-postal-planetencoder.html",
+      "summary": "Encodes PLANET barcodes."
+    },
+    {
+      "title": "PlanetEncoder.Encode",
+      "kind": "Method",
+      "href": "types/codeglyphx-postal-planetencoder.html#method-encode-static-bitmatrix-encode-string-content",
+      "summary": "Encodes a PLANET barcode into a CodeGlyphX.BitMatrix."
+    },
+    {
+      "title": "CodeGlyphX.Postal.PostnetDecoder",
+      "kind": "Type",
+      "href": "types/codeglyphx-postal-postnetdecoder.html",
+      "summary": "Decodes POSTNET barcodes."
+    },
+    {
+      "title": "PostnetDecoder.TryDecode",
+      "kind": "Method",
+      "href": "types/codeglyphx-postal-postnetdecoder.html#method-trydecode-static-bool-trydecode-bitmatrix-modules-out-string-text",
+      "summary": "Attempts to decode a POSTNET barcode from a CodeGlyphX.BitMatrix."
+    },
+    {
+      "title": "CodeGlyphX.Postal.PostnetEncoder",
+      "kind": "Type",
+      "href": "types/codeglyphx-postal-postnetencoder.html",
+      "summary": "Encodes POSTNET barcodes."
+    },
+    {
+      "title": "PostnetEncoder.Encode",
+      "kind": "Method",
+      "href": "types/codeglyphx-postal-postnetencoder.html#method-encode-static-bitmatrix-encode-string-content",
+      "summary": "Encodes a POSTNET barcode into a CodeGlyphX.BitMatrix."
+    },
+    {
+      "title": "CodeGlyphX.Postal.UspsImbDecoder",
+      "kind": "Type",
+      "href": "types/codeglyphx-postal-uspsimbdecoder.html",
+      "summary": "Decodes USPS Intelligent Mail Barcodes (IMB)."
+    },
+    {
+      "title": "UspsImbDecoder.TryDecode",
+      "kind": "Method",
+      "href": "types/codeglyphx-postal-uspsimbdecoder.html#method-trydecode-static-bool-trydecode-bitmatrix-modules-out-string-text",
+      "summary": "Attempts to decode a USPS IMB symbol from a CodeGlyphX.BitMatrix."
+    },
+    {
+      "title": "CodeGlyphX.Postal.UspsImbEncoder",
+      "kind": "Type",
+      "href": "types/codeglyphx-postal-uspsimbencoder.html",
+      "summary": "Encodes USPS Intelligent Mail Barcodes (IMB)."
+    },
+    {
+      "title": "UspsImbEncoder.Encode",
+      "kind": "Method",
+      "href": "types/codeglyphx-postal-uspsimbencoder.html#method-encode-static-bitmatrix-encode-string-content",
+      "summary": "Encodes a USPS IMB payload into a CodeGlyphX.BitMatrix."
     },
     {
       "title": "CodeGlyphX.Rendering.ColorUtils",
@@ -15397,6 +17683,42 @@
       "summary": "ICO image (embedded PNG/BMP)."
     },
     {
+      "title": "CodeGlyphX.Rendering.ImageInfo",
+      "kind": "Type",
+      "href": "types/codeglyphx-rendering-imageinfo.html",
+      "summary": "Basic image metadata returned by ImageReader.TryReadInfo."
+    },
+    {
+      "title": "ImageInfo.ImageInfo",
+      "kind": "Constructor",
+      "href": "types/codeglyphx-rendering-imageinfo.html#constructor-imageinfo-imageinfo-imageformat-format-int-width-int-height",
+      "summary": "Creates a new CodeGlyphX.Rendering.ImageInfo."
+    },
+    {
+      "title": "ImageInfo.Format",
+      "kind": "Property",
+      "href": "types/codeglyphx-rendering-imageinfo.html#property-format-imageformat-format-get",
+      "summary": "Image format."
+    },
+    {
+      "title": "ImageInfo.Width",
+      "kind": "Property",
+      "href": "types/codeglyphx-rendering-imageinfo.html#property-width-int-width-get",
+      "summary": "Image width in pixels."
+    },
+    {
+      "title": "ImageInfo.Height",
+      "kind": "Property",
+      "href": "types/codeglyphx-rendering-imageinfo.html#property-height-int-height-get",
+      "summary": "Image height in pixels."
+    },
+    {
+      "title": "ImageInfo.IsValid",
+      "kind": "Property",
+      "href": "types/codeglyphx-rendering-imageinfo.html#property-isvalid-bool-isvalid-get",
+      "summary": "Indicates whether the info looks valid."
+    },
+    {
       "title": "CodeGlyphX.Rendering.ImageReader",
       "kind": "Type",
       "href": "types/codeglyphx-rendering-imagereader.html",
@@ -15437,6 +17759,24 @@
       "kind": "Method",
       "href": "types/codeglyphx-rendering-imagereader.html#method-trydetectformat-static-bool-trydetectformat-readonlyspan-byte-data-out-imageformat-format",
       "summary": "Attempts to detect the image format from a byte buffer."
+    },
+    {
+      "title": "ImageReader.TryReadInfo",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-imagereader.html#method-tryreadinfo-static-bool-tryreadinfo-byte-data-out-imageinfo-info",
+      "summary": "Attempts to read image format and dimensions without decoding pixels."
+    },
+    {
+      "title": "ImageReader.TryReadInfo",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-imagereader.html#method-tryreadinfo-static-bool-tryreadinfo-readonlyspan-byte-data-out-imageinfo-info",
+      "summary": "Attempts to read image format and dimensions without decoding pixels."
+    },
+    {
+      "title": "ImageReader.TryReadInfo",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-imagereader.html#method-tryreadinfo-static-bool-tryreadinfo-stream-stream-out-imageinfo-info",
+      "summary": "Attempts to read image format and dimensions from a stream without decoding pixels."
     },
     {
       "title": "CodeGlyphX.Rendering.LogoBuilder",
@@ -15925,6 +18265,42 @@
       "summary": null
     },
     {
+      "title": "BarcodeAsciiRenderOptions.WithModuleWidth",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-ascii-barcodeasciirenderoptions.html#method-withmodulewidth-barcodeasciirenderoptions-withmodulewidth-int-width",
+      "summary": "Sets the module width in characters."
+    },
+    {
+      "title": "BarcodeAsciiRenderOptions.WithQuietZone",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-ascii-barcodeasciirenderoptions.html#method-withquietzone-barcodeasciirenderoptions-withquietzone-int-quietzone",
+      "summary": "Sets the quiet zone size in modules."
+    },
+    {
+      "title": "BarcodeAsciiRenderOptions.WithHeight",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-ascii-barcodeasciirenderoptions.html#method-withheight-barcodeasciirenderoptions-withheight-int-height",
+      "summary": "Sets the height in text rows."
+    },
+    {
+      "title": "BarcodeAsciiRenderOptions.WithDark",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-ascii-barcodeasciirenderoptions.html#method-withdark-barcodeasciirenderoptions-withdark-string-dark",
+      "summary": "Sets the character(s) used for bars."
+    },
+    {
+      "title": "BarcodeAsciiRenderOptions.WithLight",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-ascii-barcodeasciirenderoptions.html#method-withlight-barcodeasciirenderoptions-withlight-string-light",
+      "summary": "Sets the character(s) used for spaces."
+    },
+    {
+      "title": "BarcodeAsciiRenderOptions.WithNewLine",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-ascii-barcodeasciirenderoptions.html#method-withnewline-barcodeasciirenderoptions-withnewline-string-newline",
+      "summary": "Sets the line separator."
+    },
+    {
       "title": "BarcodeAsciiRenderOptions.ModuleWidth",
       "kind": "Property",
       "href": "types/codeglyphx-rendering-ascii-barcodeasciirenderoptions.html#property-modulewidth-int-modulewidth-get-set",
@@ -15983,6 +18359,42 @@
       "kind": "Constructor",
       "href": "types/codeglyphx-rendering-ascii-matrixasciirenderoptions.html#constructor-matrixasciirenderoptions-matrixasciirenderoptions",
       "summary": null
+    },
+    {
+      "title": "MatrixAsciiRenderOptions.WithQuietZone",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-ascii-matrixasciirenderoptions.html#method-withquietzone-matrixasciirenderoptions-withquietzone-int-quietzone",
+      "summary": "Sets the quiet zone size in modules."
+    },
+    {
+      "title": "MatrixAsciiRenderOptions.WithModuleWidth",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-ascii-matrixasciirenderoptions.html#method-withmodulewidth-matrixasciirenderoptions-withmodulewidth-int-width",
+      "summary": "Sets the module width in characters."
+    },
+    {
+      "title": "MatrixAsciiRenderOptions.WithModuleHeight",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-ascii-matrixasciirenderoptions.html#method-withmoduleheight-matrixasciirenderoptions-withmoduleheight-int-height",
+      "summary": "Sets the module height in rows."
+    },
+    {
+      "title": "MatrixAsciiRenderOptions.WithDark",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-ascii-matrixasciirenderoptions.html#method-withdark-matrixasciirenderoptions-withdark-string-dark",
+      "summary": "Sets the character(s) used for dark modules."
+    },
+    {
+      "title": "MatrixAsciiRenderOptions.WithLight",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-ascii-matrixasciirenderoptions.html#method-withlight-matrixasciirenderoptions-withlight-string-light",
+      "summary": "Sets the character(s) used for light modules."
+    },
+    {
+      "title": "MatrixAsciiRenderOptions.WithNewLine",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-ascii-matrixasciirenderoptions.html#method-withnewline-matrixasciirenderoptions-withnewline-string-newline",
+      "summary": "Sets the line separator."
     },
     {
       "title": "MatrixAsciiRenderOptions.QuietZone",
@@ -16297,6 +18709,72 @@
       "summary": null
     },
     {
+      "title": "BarcodeHtmlRenderOptions.WithModuleSize",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-html-barcodehtmlrenderoptions.html#method-withmodulesize-barcodehtmlrenderoptions-withmodulesize-int-size",
+      "summary": "Sets the module size in pixels."
+    },
+    {
+      "title": "BarcodeHtmlRenderOptions.WithQuietZone",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-html-barcodehtmlrenderoptions.html#method-withquietzone-barcodehtmlrenderoptions-withquietzone-int-quietzone",
+      "summary": "Sets the quiet zone size in modules."
+    },
+    {
+      "title": "BarcodeHtmlRenderOptions.WithHeightModules",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-html-barcodehtmlrenderoptions.html#method-withheightmodules-barcodehtmlrenderoptions-withheightmodules-int-heightmodules",
+      "summary": "Sets the barcode height in modules."
+    },
+    {
+      "title": "BarcodeHtmlRenderOptions.WithBarColor",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-html-barcodehtmlrenderoptions.html#method-withbarcolor-barcodehtmlrenderoptions-withbarcolor-string-color",
+      "summary": "Sets the bar color (CSS value)."
+    },
+    {
+      "title": "BarcodeHtmlRenderOptions.WithBackgroundColor",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-html-barcodehtmlrenderoptions.html#method-withbackgroundcolor-barcodehtmlrenderoptions-withbackgroundcolor-string-color",
+      "summary": "Sets the background color (CSS value)."
+    },
+    {
+      "title": "BarcodeHtmlRenderOptions.WithEmailSafeTable",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-html-barcodehtmlrenderoptions.html#method-withemailsafetable-barcodehtmlrenderoptions-withemailsafetable-bool-enabled",
+      "summary": "Enables or disables email-safe HTML output."
+    },
+    {
+      "title": "BarcodeHtmlRenderOptions.WithLabelText",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-html-barcodehtmlrenderoptions.html#method-withlabeltext-barcodehtmlrenderoptions-withlabeltext-string-text",
+      "summary": "Sets the label text."
+    },
+    {
+      "title": "BarcodeHtmlRenderOptions.WithLabelFontSize",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-html-barcodehtmlrenderoptions.html#method-withlabelfontsize-barcodehtmlrenderoptions-withlabelfontsize-int-size",
+      "summary": "Sets the label font size in pixels."
+    },
+    {
+      "title": "BarcodeHtmlRenderOptions.WithLabelMargin",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-html-barcodehtmlrenderoptions.html#method-withlabelmargin-barcodehtmlrenderoptions-withlabelmargin-int-margin",
+      "summary": "Sets the label margin in pixels."
+    },
+    {
+      "title": "BarcodeHtmlRenderOptions.WithLabelColor",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-html-barcodehtmlrenderoptions.html#method-withlabelcolor-barcodehtmlrenderoptions-withlabelcolor-string-color",
+      "summary": "Sets the label color (CSS value)."
+    },
+    {
+      "title": "BarcodeHtmlRenderOptions.WithLabelFontFamily",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-html-barcodehtmlrenderoptions.html#method-withlabelfontfamily-barcodehtmlrenderoptions-withlabelfontfamily-string-family",
+      "summary": "Sets the label font family."
+    },
+    {
       "title": "BarcodeHtmlRenderOptions.ModuleSize",
       "kind": "Property",
       "href": "types/codeglyphx-rendering-html-barcodehtmlrenderoptions.html#property-modulesize-int-modulesize-get-set",
@@ -16465,6 +18943,36 @@
       "summary": null
     },
     {
+      "title": "MatrixHtmlRenderOptions.WithModuleSize",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-html-matrixhtmlrenderoptions.html#method-withmodulesize-matrixhtmlrenderoptions-withmodulesize-int-size",
+      "summary": "Sets the module size in pixels."
+    },
+    {
+      "title": "MatrixHtmlRenderOptions.WithQuietZone",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-html-matrixhtmlrenderoptions.html#method-withquietzone-matrixhtmlrenderoptions-withquietzone-int-quietzone",
+      "summary": "Sets the quiet zone size in modules."
+    },
+    {
+      "title": "MatrixHtmlRenderOptions.WithDarkColor",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-html-matrixhtmlrenderoptions.html#method-withdarkcolor-matrixhtmlrenderoptions-withdarkcolor-string-color",
+      "summary": "Sets the dark color (CSS value)."
+    },
+    {
+      "title": "MatrixHtmlRenderOptions.WithLightColor",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-html-matrixhtmlrenderoptions.html#method-withlightcolor-matrixhtmlrenderoptions-withlightcolor-string-color",
+      "summary": "Sets the light color (CSS value)."
+    },
+    {
+      "title": "MatrixHtmlRenderOptions.WithEmailSafeTable",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-html-matrixhtmlrenderoptions.html#method-withemailsafetable-matrixhtmlrenderoptions-withemailsafetable-bool-enabled",
+      "summary": "Enables or disables email-safe HTML output."
+    },
+    {
       "title": "MatrixHtmlRenderOptions.ModuleSize",
       "kind": "Property",
       "href": "types/codeglyphx-rendering-html-matrixhtmlrenderoptions.html#property-modulesize-int-modulesize-get-set",
@@ -16505,6 +19013,72 @@
       "kind": "Constructor",
       "href": "types/codeglyphx-rendering-html-qrhtmlrenderoptions.html#constructor-qrhtmlrenderoptions-qrhtmlrenderoptions",
       "summary": null
+    },
+    {
+      "title": "QrHtmlRenderOptions.WithModuleSize",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-html-qrhtmlrenderoptions.html#method-withmodulesize-qrhtmlrenderoptions-withmodulesize-int-size",
+      "summary": "Sets the module size in pixels."
+    },
+    {
+      "title": "QrHtmlRenderOptions.WithQuietZone",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-html-qrhtmlrenderoptions.html#method-withquietzone-qrhtmlrenderoptions-withquietzone-int-quietzone",
+      "summary": "Sets the quiet zone size in modules."
+    },
+    {
+      "title": "QrHtmlRenderOptions.WithDarkColor",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-html-qrhtmlrenderoptions.html#method-withdarkcolor-qrhtmlrenderoptions-withdarkcolor-string-color",
+      "summary": "Sets the dark color (CSS value)."
+    },
+    {
+      "title": "QrHtmlRenderOptions.WithLightColor",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-html-qrhtmlrenderoptions.html#method-withlightcolor-qrhtmlrenderoptions-withlightcolor-string-color",
+      "summary": "Sets the light color (CSS value)."
+    },
+    {
+      "title": "QrHtmlRenderOptions.WithEmailSafeTable",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-html-qrhtmlrenderoptions.html#method-withemailsafetable-qrhtmlrenderoptions-withemailsafetable-bool-enabled",
+      "summary": "Enables or disables email-safe HTML output."
+    },
+    {
+      "title": "QrHtmlRenderOptions.WithLogo",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-html-qrhtmlrenderoptions.html#method-withlogo-qrhtmlrenderoptions-withlogo-qrlogooptions-logo",
+      "summary": "Sets the logo overlay options."
+    },
+    {
+      "title": "QrHtmlRenderOptions.WithModuleShape",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-html-qrhtmlrenderoptions.html#method-withmoduleshape-qrhtmlrenderoptions-withmoduleshape-qrpngmoduleshape-shape",
+      "summary": "Sets the module shape."
+    },
+    {
+      "title": "QrHtmlRenderOptions.WithModuleScale",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-html-qrhtmlrenderoptions.html#method-withmodulescale-qrhtmlrenderoptions-withmodulescale-double-scale",
+      "summary": "Sets the module scale."
+    },
+    {
+      "title": "QrHtmlRenderOptions.WithModuleCornerRadiusPx",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-html-qrhtmlrenderoptions.html#method-withmodulecornerradiuspx-qrhtmlrenderoptions-withmodulecornerradiuspx-int-radiuspx",
+      "summary": "Sets the module corner radius in pixels."
+    },
+    {
+      "title": "QrHtmlRenderOptions.WithForegroundGradient",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-html-qrhtmlrenderoptions.html#method-withforegroundgradient-qrhtmlrenderoptions-withforegroundgradient-qrpnggradientoptions-gradient",
+      "summary": "Sets the foreground gradient."
+    },
+    {
+      "title": "QrHtmlRenderOptions.WithEyes",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-html-qrhtmlrenderoptions.html#method-witheyes-qrhtmlrenderoptions-witheyes-qrpngeyeoptions-eyes",
+      "summary": "Sets custom eye (finder) options."
     },
     {
       "title": "QrHtmlRenderOptions.ModuleSize",
@@ -16643,6 +19217,18 @@
       "kind": "Constructor",
       "href": "types/codeglyphx-rendering-ico-icorenderoptions.html#constructor-icorenderoptions-icorenderoptions",
       "summary": null
+    },
+    {
+      "title": "IcoRenderOptions.WithSizes",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-ico-icorenderoptions.html#method-withsizes-icorenderoptions-withsizes-int-sizes",
+      "summary": "Sets the output icon sizes in pixels."
+    },
+    {
+      "title": "IcoRenderOptions.WithPreserveAspectRatio",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-ico-icorenderoptions.html#method-withpreserveaspectratio-icorenderoptions-withpreserveaspectratio-bool-preserveaspectratio",
+      "summary": "Sets whether to preserve aspect ratio when rendering icons."
     },
     {
       "title": "IcoRenderOptions.Sizes",
@@ -17407,6 +19993,60 @@
       "summary": null
     },
     {
+      "title": "BarcodePngRenderOptions.WithModuleSize",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-png-barcodepngrenderoptions.html#method-withmodulesize-barcodepngrenderoptions-withmodulesize-int-size",
+      "summary": "Sets the module size in pixels."
+    },
+    {
+      "title": "BarcodePngRenderOptions.WithQuietZone",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-png-barcodepngrenderoptions.html#method-withquietzone-barcodepngrenderoptions-withquietzone-int-quietzone",
+      "summary": "Sets the quiet zone size in modules."
+    },
+    {
+      "title": "BarcodePngRenderOptions.WithHeightModules",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-png-barcodepngrenderoptions.html#method-withheightmodules-barcodepngrenderoptions-withheightmodules-int-heightmodules",
+      "summary": "Sets the barcode height in modules."
+    },
+    {
+      "title": "BarcodePngRenderOptions.WithForeground",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-png-barcodepngrenderoptions.html#method-withforeground-barcodepngrenderoptions-withforeground-rgba32-color",
+      "summary": "Sets the bar (foreground) color."
+    },
+    {
+      "title": "BarcodePngRenderOptions.WithBackground",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-png-barcodepngrenderoptions.html#method-withbackground-barcodepngrenderoptions-withbackground-rgba32-color",
+      "summary": "Sets the background color."
+    },
+    {
+      "title": "BarcodePngRenderOptions.WithLabelText",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-png-barcodepngrenderoptions.html#method-withlabeltext-barcodepngrenderoptions-withlabeltext-string-text",
+      "summary": "Sets the label text."
+    },
+    {
+      "title": "BarcodePngRenderOptions.WithLabelFontSize",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-png-barcodepngrenderoptions.html#method-withlabelfontsize-barcodepngrenderoptions-withlabelfontsize-int-size",
+      "summary": "Sets the label font size in pixels."
+    },
+    {
+      "title": "BarcodePngRenderOptions.WithLabelMargin",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-png-barcodepngrenderoptions.html#method-withlabelmargin-barcodepngrenderoptions-withlabelmargin-int-margin",
+      "summary": "Sets the label margin in pixels."
+    },
+    {
+      "title": "BarcodePngRenderOptions.WithLabelColor",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-png-barcodepngrenderoptions.html#method-withlabelcolor-barcodepngrenderoptions-withlabelcolor-rgba32-color",
+      "summary": "Sets the label color."
+    },
+    {
       "title": "BarcodePngRenderOptions.ModuleSize",
       "kind": "Property",
       "href": "types/codeglyphx-rendering-png-barcodepngrenderoptions.html#property-modulesize-int-modulesize-get-set",
@@ -17507,6 +20147,30 @@
       "kind": "Constructor",
       "href": "types/codeglyphx-rendering-png-matrixpngrenderoptions.html#constructor-matrixpngrenderoptions-matrixpngrenderoptions",
       "summary": null
+    },
+    {
+      "title": "MatrixPngRenderOptions.WithModuleSize",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-png-matrixpngrenderoptions.html#method-withmodulesize-matrixpngrenderoptions-withmodulesize-int-size",
+      "summary": "Sets the module size in pixels."
+    },
+    {
+      "title": "MatrixPngRenderOptions.WithQuietZone",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-png-matrixpngrenderoptions.html#method-withquietzone-matrixpngrenderoptions-withquietzone-int-quietzone",
+      "summary": "Sets the quiet zone size in modules."
+    },
+    {
+      "title": "MatrixPngRenderOptions.WithForeground",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-png-matrixpngrenderoptions.html#method-withforeground-matrixpngrenderoptions-withforeground-rgba32-color",
+      "summary": "Sets the foreground color."
+    },
+    {
+      "title": "MatrixPngRenderOptions.WithBackground",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-png-matrixpngrenderoptions.html#method-withbackground-matrixpngrenderoptions-withbackground-rgba32-color",
+      "summary": "Sets the background color."
     },
     {
       "title": "MatrixPngRenderOptions.ModuleSize",
@@ -17905,6 +20569,66 @@
       "summary": null
     },
     {
+      "title": "QrPngRenderOptions.WithModuleSize",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-png-qrpngrenderoptions.html#method-withmodulesize-qrpngrenderoptions-withmodulesize-int-size",
+      "summary": "Sets the module size in pixels."
+    },
+    {
+      "title": "QrPngRenderOptions.WithQuietZone",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-png-qrpngrenderoptions.html#method-withquietzone-qrpngrenderoptions-withquietzone-int-quietzone",
+      "summary": "Sets the quiet zone size in modules."
+    },
+    {
+      "title": "QrPngRenderOptions.WithForeground",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-png-qrpngrenderoptions.html#method-withforeground-qrpngrenderoptions-withforeground-rgba32-color",
+      "summary": "Sets the foreground color."
+    },
+    {
+      "title": "QrPngRenderOptions.WithBackground",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-png-qrpngrenderoptions.html#method-withbackground-qrpngrenderoptions-withbackground-rgba32-color",
+      "summary": "Sets the background color."
+    },
+    {
+      "title": "QrPngRenderOptions.WithForegroundGradient",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-png-qrpngrenderoptions.html#method-withforegroundgradient-qrpngrenderoptions-withforegroundgradient-qrpnggradientoptions-gradient",
+      "summary": "Sets the foreground gradient."
+    },
+    {
+      "title": "QrPngRenderOptions.WithEyes",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-png-qrpngrenderoptions.html#method-witheyes-qrpngrenderoptions-witheyes-qrpngeyeoptions-eyes",
+      "summary": "Sets custom eye (finder) options."
+    },
+    {
+      "title": "QrPngRenderOptions.WithModuleShape",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-png-qrpngrenderoptions.html#method-withmoduleshape-qrpngrenderoptions-withmoduleshape-qrpngmoduleshape-shape",
+      "summary": "Sets the module shape."
+    },
+    {
+      "title": "QrPngRenderOptions.WithModuleScale",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-png-qrpngrenderoptions.html#method-withmodulescale-qrpngrenderoptions-withmodulescale-double-scale",
+      "summary": "Sets the module scale."
+    },
+    {
+      "title": "QrPngRenderOptions.WithModuleCornerRadiusPx",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-png-qrpngrenderoptions.html#method-withmodulecornerradiuspx-qrpngrenderoptions-withmodulecornerradiuspx-int-radiuspx",
+      "summary": "Sets the module corner radius in pixels."
+    },
+    {
+      "title": "QrPngRenderOptions.WithLogo",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-png-qrpngrenderoptions.html#method-withlogo-qrpngrenderoptions-withlogo-qrpnglogooptions-logo",
+      "summary": "Sets the logo overlay options."
+    },
+    {
       "title": "QrPngRenderOptions.ModuleSize",
       "kind": "Property",
       "href": "types/codeglyphx-rendering-png-qrpngrenderoptions.html#property-modulesize-int-modulesize-get-set",
@@ -18151,6 +20875,66 @@
       "summary": null
     },
     {
+      "title": "BarcodeSvgRenderOptions.WithModuleSize",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-svg-barcodesvgrenderoptions.html#method-withmodulesize-barcodesvgrenderoptions-withmodulesize-int-size",
+      "summary": "Sets the module size in pixels."
+    },
+    {
+      "title": "BarcodeSvgRenderOptions.WithQuietZone",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-svg-barcodesvgrenderoptions.html#method-withquietzone-barcodesvgrenderoptions-withquietzone-int-quietzone",
+      "summary": "Sets the quiet zone size in modules."
+    },
+    {
+      "title": "BarcodeSvgRenderOptions.WithHeightModules",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-svg-barcodesvgrenderoptions.html#method-withheightmodules-barcodesvgrenderoptions-withheightmodules-int-heightmodules",
+      "summary": "Sets the barcode height in modules."
+    },
+    {
+      "title": "BarcodeSvgRenderOptions.WithBarColor",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-svg-barcodesvgrenderoptions.html#method-withbarcolor-barcodesvgrenderoptions-withbarcolor-string-color",
+      "summary": "Sets the bar color (CSS value)."
+    },
+    {
+      "title": "BarcodeSvgRenderOptions.WithBackgroundColor",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-svg-barcodesvgrenderoptions.html#method-withbackgroundcolor-barcodesvgrenderoptions-withbackgroundcolor-string-color",
+      "summary": "Sets the background color (CSS value)."
+    },
+    {
+      "title": "BarcodeSvgRenderOptions.WithLabelText",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-svg-barcodesvgrenderoptions.html#method-withlabeltext-barcodesvgrenderoptions-withlabeltext-string-text",
+      "summary": "Sets the label text."
+    },
+    {
+      "title": "BarcodeSvgRenderOptions.WithLabelFontSize",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-svg-barcodesvgrenderoptions.html#method-withlabelfontsize-barcodesvgrenderoptions-withlabelfontsize-int-size",
+      "summary": "Sets the label font size in pixels."
+    },
+    {
+      "title": "BarcodeSvgRenderOptions.WithLabelMargin",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-svg-barcodesvgrenderoptions.html#method-withlabelmargin-barcodesvgrenderoptions-withlabelmargin-int-margin",
+      "summary": "Sets the label margin in pixels."
+    },
+    {
+      "title": "BarcodeSvgRenderOptions.WithLabelColor",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-svg-barcodesvgrenderoptions.html#method-withlabelcolor-barcodesvgrenderoptions-withlabelcolor-string-color",
+      "summary": "Sets the label color (CSS value)."
+    },
+    {
+      "title": "BarcodeSvgRenderOptions.WithLabelFontFamily",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-svg-barcodesvgrenderoptions.html#method-withlabelfontfamily-barcodesvgrenderoptions-withlabelfontfamily-string-family",
+      "summary": "Sets the label font family."
+    },
+    {
       "title": "BarcodeSvgRenderOptions.ModuleSize",
       "kind": "Property",
       "href": "types/codeglyphx-rendering-svg-barcodesvgrenderoptions.html#property-modulesize-int-modulesize-get-set",
@@ -18253,6 +21037,30 @@
       "summary": null
     },
     {
+      "title": "MatrixSvgRenderOptions.WithModuleSize",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-svg-matrixsvgrenderoptions.html#method-withmodulesize-matrixsvgrenderoptions-withmodulesize-int-size",
+      "summary": "Sets the module size in pixels."
+    },
+    {
+      "title": "MatrixSvgRenderOptions.WithQuietZone",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-svg-matrixsvgrenderoptions.html#method-withquietzone-matrixsvgrenderoptions-withquietzone-int-quietzone",
+      "summary": "Sets the quiet zone size in modules."
+    },
+    {
+      "title": "MatrixSvgRenderOptions.WithDarkColor",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-svg-matrixsvgrenderoptions.html#method-withdarkcolor-matrixsvgrenderoptions-withdarkcolor-string-color",
+      "summary": "Sets the dark color (CSS value)."
+    },
+    {
+      "title": "MatrixSvgRenderOptions.WithLightColor",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-svg-matrixsvgrenderoptions.html#method-withlightcolor-matrixsvgrenderoptions-withlightcolor-string-color",
+      "summary": "Sets the light color (CSS value)."
+    },
+    {
       "title": "MatrixSvgRenderOptions.ModuleSize",
       "kind": "Property",
       "href": "types/codeglyphx-rendering-svg-matrixsvgrenderoptions.html#property-modulesize-int-modulesize-get-set",
@@ -18287,6 +21095,66 @@
       "kind": "Constructor",
       "href": "types/codeglyphx-rendering-svg-qrsvgrenderoptions.html#constructor-qrsvgrenderoptions-qrsvgrenderoptions",
       "summary": null
+    },
+    {
+      "title": "QrSvgRenderOptions.WithModuleSize",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-svg-qrsvgrenderoptions.html#method-withmodulesize-qrsvgrenderoptions-withmodulesize-int-size",
+      "summary": "Sets the module size in pixels."
+    },
+    {
+      "title": "QrSvgRenderOptions.WithQuietZone",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-svg-qrsvgrenderoptions.html#method-withquietzone-qrsvgrenderoptions-withquietzone-int-quietzone",
+      "summary": "Sets the quiet zone size in modules."
+    },
+    {
+      "title": "QrSvgRenderOptions.WithDarkColor",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-svg-qrsvgrenderoptions.html#method-withdarkcolor-qrsvgrenderoptions-withdarkcolor-string-color",
+      "summary": "Sets the dark color (CSS value)."
+    },
+    {
+      "title": "QrSvgRenderOptions.WithLightColor",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-svg-qrsvgrenderoptions.html#method-withlightcolor-qrsvgrenderoptions-withlightcolor-string-color",
+      "summary": "Sets the light color (CSS value)."
+    },
+    {
+      "title": "QrSvgRenderOptions.WithLogo",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-svg-qrsvgrenderoptions.html#method-withlogo-qrsvgrenderoptions-withlogo-qrlogooptions-logo",
+      "summary": "Sets the logo overlay options."
+    },
+    {
+      "title": "QrSvgRenderOptions.WithModuleShape",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-svg-qrsvgrenderoptions.html#method-withmoduleshape-qrsvgrenderoptions-withmoduleshape-qrpngmoduleshape-shape",
+      "summary": "Sets the module shape."
+    },
+    {
+      "title": "QrSvgRenderOptions.WithModuleScale",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-svg-qrsvgrenderoptions.html#method-withmodulescale-qrsvgrenderoptions-withmodulescale-double-scale",
+      "summary": "Sets the module scale."
+    },
+    {
+      "title": "QrSvgRenderOptions.WithModuleCornerRadiusPx",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-svg-qrsvgrenderoptions.html#method-withmodulecornerradiuspx-qrsvgrenderoptions-withmodulecornerradiuspx-int-radiuspx",
+      "summary": "Sets the module corner radius in pixels."
+    },
+    {
+      "title": "QrSvgRenderOptions.WithForegroundGradient",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-svg-qrsvgrenderoptions.html#method-withforegroundgradient-qrsvgrenderoptions-withforegroundgradient-qrpnggradientoptions-gradient",
+      "summary": "Sets the foreground gradient."
+    },
+    {
+      "title": "QrSvgRenderOptions.WithEyes",
+      "kind": "Method",
+      "href": "types/codeglyphx-rendering-svg-qrsvgrenderoptions.html#method-witheyes-qrsvgrenderoptions-witheyes-qrpngeyeoptions-eyes",
+      "summary": "Sets custom eye (finder) options."
     },
     {
       "title": "QrSvgRenderOptions.ModuleSize",
@@ -18865,6 +21733,42 @@
       "summary": "Writes an XPM string from an RGBA buffer."
     },
     {
+      "title": "CodeGlyphX.RoyalMail.RoyalMailFourStateDecoder",
+      "kind": "Type",
+      "href": "types/codeglyphx-royalmail-royalmailfourstatedecoder.html",
+      "summary": "Decodes Royal Mail 4-State Customer Code (RM4SCC) barcodes."
+    },
+    {
+      "title": "RoyalMailFourStateDecoder.TryDecode",
+      "kind": "Method",
+      "href": "types/codeglyphx-royalmail-royalmailfourstatedecoder.html#method-trydecode-static-bool-trydecode-bitmatrix-modules-out-string-text",
+      "summary": "Attempts to decode a Royal Mail 4-State barcode from a CodeGlyphX.BitMatrix."
+    },
+    {
+      "title": "CodeGlyphX.RoyalMail.RoyalMailFourStateEncoder",
+      "kind": "Type",
+      "href": "types/codeglyphx-royalmail-royalmailfourstateencoder.html",
+      "summary": "Encodes Royal Mail 4-State Customer Code (RM4SCC) barcodes."
+    },
+    {
+      "title": "RoyalMailFourStateEncoder.Encode",
+      "kind": "Method",
+      "href": "types/codeglyphx-royalmail-royalmailfourstateencoder.html#method-encode-static-bitmatrix-encode-string-content-bool-includeheaders",
+      "summary": "Encodes a Royal Mail 4-State barcode into a matrix."
+    },
+    {
+      "title": "CodeGlyphX.Telepen.TelepenEncoder",
+      "kind": "Type",
+      "href": "types/codeglyphx-telepen-telepenencoder.html",
+      "summary": "Encodes Telepen barcodes (ASCII mode)."
+    },
+    {
+      "title": "TelepenEncoder.Encode",
+      "kind": "Method",
+      "href": "types/codeglyphx-telepen-telepenencoder.html#method-encode-static-barcode1d-encode-string-content",
+      "summary": "Encodes a Telepen barcode. Supports ASCII characters in the 0-127 range."
+    },
+    {
       "title": "CodeGlyphX.UpcA.UpcATables.EncodedNumber",
       "kind": "Type",
       "href": "types/codeglyphx-upca-upcatables-encodednumber.html",
@@ -18898,7 +21802,7 @@
       "title": "UpcAEncoder.Encode",
       "kind": "Method",
       "href": "types/codeglyphx-upca-upcaencoder.html#method-encode-static-barcode1d-encode-string-content",
-      "summary": "Encodes a UPC-A barcode."
+      "summary": "Encodes a UPC-A barcode. Use \u0022\u002BNN\u0022 or \u0022\u002BNNNNN\u0022 to append add-ons."
     },
     {
       "title": "CodeGlyphX.UpcE.UpcETables.EncodedNumber",
@@ -18982,7 +21886,7 @@
       "title": "UpcEEncoder.Encode",
       "kind": "Method",
       "href": "types/codeglyphx-upce-upceencoder.html#method-encode-static-barcode1d-encode-string-content-upcenumbersystem-numbersystem",
-      "summary": "Encodes a UPC-E barcode."
+      "summary": "Encodes a UPC-E barcode. Use \u0022\u002BNN\u0022 or \u0022\u002BNNNNN\u0022 to append add-ons."
     }
   ]
 }

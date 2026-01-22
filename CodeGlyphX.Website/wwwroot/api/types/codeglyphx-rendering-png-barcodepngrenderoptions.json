@@ -24,6 +24,186 @@
       "anchor": "constructor-barcodepngrenderoptions-barcodepngrenderoptions"
     },
     {
+      "name": "WithModuleSize",
+      "kind": "Method",
+      "summary": "Sets the module size in pixels.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "size",
+          "type": "int",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "BarcodePngRenderOptions WithModuleSize(int size)",
+      "xmlId": "M:CodeGlyphX.Rendering.Png.BarcodePngRenderOptions.WithModuleSize(System.Int32)",
+      "anchor": "method-withmodulesize-barcodepngrenderoptions-withmodulesize-int-size"
+    },
+    {
+      "name": "WithQuietZone",
+      "kind": "Method",
+      "summary": "Sets the quiet zone size in modules.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "quietZone",
+          "type": "int",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "BarcodePngRenderOptions WithQuietZone(int quietZone)",
+      "xmlId": "M:CodeGlyphX.Rendering.Png.BarcodePngRenderOptions.WithQuietZone(System.Int32)",
+      "anchor": "method-withquietzone-barcodepngrenderoptions-withquietzone-int-quietzone"
+    },
+    {
+      "name": "WithHeightModules",
+      "kind": "Method",
+      "summary": "Sets the barcode height in modules.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "heightModules",
+          "type": "int",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "BarcodePngRenderOptions WithHeightModules(int heightModules)",
+      "xmlId": "M:CodeGlyphX.Rendering.Png.BarcodePngRenderOptions.WithHeightModules(System.Int32)",
+      "anchor": "method-withheightmodules-barcodepngrenderoptions-withheightmodules-int-heightmodules"
+    },
+    {
+      "name": "WithForeground",
+      "kind": "Method",
+      "summary": "Sets the bar (foreground) color.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "color",
+          "type": "Rgba32",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "BarcodePngRenderOptions WithForeground(Rgba32 color)",
+      "xmlId": "M:CodeGlyphX.Rendering.Png.BarcodePngRenderOptions.WithForeground(CodeGlyphX.Rendering.Png.Rgba32)",
+      "anchor": "method-withforeground-barcodepngrenderoptions-withforeground-rgba32-color"
+    },
+    {
+      "name": "WithBackground",
+      "kind": "Method",
+      "summary": "Sets the background color.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "color",
+          "type": "Rgba32",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "BarcodePngRenderOptions WithBackground(Rgba32 color)",
+      "xmlId": "M:CodeGlyphX.Rendering.Png.BarcodePngRenderOptions.WithBackground(CodeGlyphX.Rendering.Png.Rgba32)",
+      "anchor": "method-withbackground-barcodepngrenderoptions-withbackground-rgba32-color"
+    },
+    {
+      "name": "WithLabelText",
+      "kind": "Method",
+      "summary": "Sets the label text.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "text",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "BarcodePngRenderOptions WithLabelText(string text)",
+      "xmlId": "M:CodeGlyphX.Rendering.Png.BarcodePngRenderOptions.WithLabelText(System.String)",
+      "anchor": "method-withlabeltext-barcodepngrenderoptions-withlabeltext-string-text"
+    },
+    {
+      "name": "WithLabelFontSize",
+      "kind": "Method",
+      "summary": "Sets the label font size in pixels.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "size",
+          "type": "int",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "BarcodePngRenderOptions WithLabelFontSize(int size)",
+      "xmlId": "M:CodeGlyphX.Rendering.Png.BarcodePngRenderOptions.WithLabelFontSize(System.Int32)",
+      "anchor": "method-withlabelfontsize-barcodepngrenderoptions-withlabelfontsize-int-size"
+    },
+    {
+      "name": "WithLabelMargin",
+      "kind": "Method",
+      "summary": "Sets the label margin in pixels.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "margin",
+          "type": "int",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "BarcodePngRenderOptions WithLabelMargin(int margin)",
+      "xmlId": "M:CodeGlyphX.Rendering.Png.BarcodePngRenderOptions.WithLabelMargin(System.Int32)",
+      "anchor": "method-withlabelmargin-barcodepngrenderoptions-withlabelmargin-int-margin"
+    },
+    {
+      "name": "WithLabelColor",
+      "kind": "Method",
+      "summary": "Sets the label color.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "color",
+          "type": "Rgba32",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "BarcodePngRenderOptions WithLabelColor(Rgba32 color)",
+      "xmlId": "M:CodeGlyphX.Rendering.Png.BarcodePngRenderOptions.WithLabelColor(CodeGlyphX.Rendering.Png.Rgba32)",
+      "anchor": "method-withlabelcolor-barcodepngrenderoptions-withlabelcolor-rgba32-color"
+    },
+    {
       "name": "ModuleSize",
       "kind": "Property",
       "summary": "Gets or sets the size of a single module in pixels.",

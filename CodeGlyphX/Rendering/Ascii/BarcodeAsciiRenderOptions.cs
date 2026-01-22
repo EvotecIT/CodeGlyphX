@@ -5,7 +5,7 @@ namespace CodeGlyphX.Rendering.Ascii;
 /// <summary>
 /// Rendering options for ASCII 1D barcodes.
 /// </summary>
-public sealed class BarcodeAsciiRenderOptions {
+public sealed partial class BarcodeAsciiRenderOptions {
     /// <summary>
     /// Module width in characters.
     /// </summary>

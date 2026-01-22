@@ -6,7 +6,7 @@ namespace CodeGlyphX.Rendering.Svg;
 /// <summary>
 /// Options for <see cref="SvgQrRenderer"/>.
 /// </summary>
-public sealed class QrSvgRenderOptions {
+public sealed partial class QrSvgRenderOptions {
     /// <summary>
     /// Gets or sets the size of a single QR module in pixels.
     /// </summary>

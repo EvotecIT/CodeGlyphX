@@ -6,7 +6,7 @@
   <title>DataMatrixCode - CodeGlyphX API Reference</title>
   <meta name="description" content="Simple Data Matrix helpers with fluent and static APIs." />
   <link rel="stylesheet" href="../style.css" />
-  <script>(function(){var theme=localStorage.getItem('theme')||'dark';document.documentElement.setAttribute('data-theme',theme);})();</script>
+  <script>(function(){const theme=localStorage.getItem('theme')||'dark';document.documentElement.dataset.theme=theme;})();</script>
 </head>
 <body>
   <div class="page">
@@ -27,12 +27,12 @@
             <span></span>
         </label>
 
-        <nav class="nav">
+        <nav class="nav" aria-label="Main navigation">
             <div class="nav-links">
                 <a href="/">Home</a>
                 <a href="/playground/">Playground</a>
                 <a href="/docs/">Documentation</a>
-                <a href="/api/">API Reference</a>
+                <a href="/showcase/">Showcase</a>
             </div>
             <div class="nav-actions">
                 <button class="theme-toggle" title="Toggle theme" aria-label="Toggle theme">
@@ -44,7 +44,7 @@
                         <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
                     </svg>
                 </button>
-                <a href="https://github.com/EvotecIT/CodeGlyphX" target="_blank" rel="noopener" class="nav-icon" title="GitHub">
+                <a href="https://github.com/EvotecIT/CodeGlyphX" target="_blank" rel="noopener" class="nav-icon" title="GitHub" aria-label="GitHub">
                     <svg viewBox="0 0 24 24" fill="currentColor">
                         <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
                     </svg>
@@ -61,7 +61,7 @@
 </header>
 
 <main class="type-detail">
-  <nav class="breadcrumb">
+  <nav class="breadcrumb" aria-label="Breadcrumb">
     <a href="../index.html">API Reference</a>
     <span class="sep">/</span><span>CodeGlyphX</span>
   </nav>
@@ -706,6 +706,46 @@
         <dt>text <span class="param-type">string</span></dt>
       </dl>
     </div>
+    <div class="member" id="method-trydecodepng-static-bool-trydecodepng-readonlyspan-byte-png-out-string-text">
+      <code class="signature">static bool TryDecodePng(ReadOnlySpan&lt;byte&gt; png, out string text)</code>
+      <p class="member-summary">Attempts to decode a Data Matrix symbol from PNG bytes in a span.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>png <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
+        <dt>text <span class="param-type">string</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-trydecodepng-static-bool-trydecodepng-readonlyspan-byte-png-cancellationtoken-cancellationtoken-out-string-text">
+      <code class="signature">static bool TryDecodePng(ReadOnlySpan&lt;byte&gt; png, CancellationToken cancellationToken, out string text)</code>
+      <p class="member-summary">Attempts to decode a Data Matrix symbol from PNG bytes in a span, with cancellation.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>png <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
+        <dt>cancellationToken <span class="param-type">CancellationToken</span></dt>
+        <dt>text <span class="param-type">string</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-trydecodepng-static-bool-trydecodepng-readonlyspan-byte-png-imagedecodeoptions-options-out-string-text">
+      <code class="signature">static bool TryDecodePng(ReadOnlySpan&lt;byte&gt; png, ImageDecodeOptions options, out string text)</code>
+      <p class="member-summary">Attempts to decode a Data Matrix symbol from PNG bytes in a span with image decode options.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>png <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
+        <dt>options <span class="param-type">ImageDecodeOptions</span></dt>
+        <dt>text <span class="param-type">string</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-trydecodepng-static-bool-trydecodepng-readonlyspan-byte-png-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-string-text">
+      <code class="signature">static bool TryDecodePng(ReadOnlySpan&lt;byte&gt; png, ImageDecodeOptions options, CancellationToken cancellationToken, out string text)</code>
+      <p class="member-summary">Attempts to decode a Data Matrix symbol from PNG bytes in a span with image decode options, with cancellation.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>png <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
+        <dt>options <span class="param-type">ImageDecodeOptions</span></dt>
+        <dt>cancellationToken <span class="param-type">CancellationToken</span></dt>
+        <dt>text <span class="param-type">string</span></dt>
+      </dl>
+    </div>
     <div class="member" id="method-trydecodepng-static-bool-trydecodepng-byte-png-out-string-text-out-datamatrixdecodediagnostics-diagnostics">
       <code class="signature">static bool TryDecodePng(byte[] png, out string text, out DataMatrixDecodeDiagnostics diagnostics)</code>
       <p class="member-summary">Attempts to decode a Data Matrix symbol from PNG bytes, with diagnostics.</p>
@@ -733,6 +773,39 @@
       <h4>Parameters</h4>
       <dl class="param-list">
         <dt>png <span class="param-type">byte[]</span></dt>
+        <dt>options <span class="param-type">ImageDecodeOptions</span></dt>
+        <dt>cancellationToken <span class="param-type">CancellationToken</span></dt>
+        <dt>text <span class="param-type">string</span></dt>
+        <dt>diagnostics <span class="param-type">DataMatrixDecodeDiagnostics</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-trydecodepng-static-bool-trydecodepng-readonlyspan-byte-png-out-string-text-out-datamatrixdecodediagnostics-diagnostics">
+      <code class="signature">static bool TryDecodePng(ReadOnlySpan&lt;byte&gt; png, out string text, out DataMatrixDecodeDiagnostics diagnostics)</code>
+      <p class="member-summary">Attempts to decode a Data Matrix symbol from PNG bytes in a span, with diagnostics.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>png <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
+        <dt>text <span class="param-type">string</span></dt>
+        <dt>diagnostics <span class="param-type">DataMatrixDecodeDiagnostics</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-trydecodepng-static-bool-trydecodepng-readonlyspan-byte-png-imagedecodeoptions-options-out-string-text-out-datamatrixdecodediagnostics-diagnostics">
+      <code class="signature">static bool TryDecodePng(ReadOnlySpan&lt;byte&gt; png, ImageDecodeOptions options, out string text, out DataMatrixDecodeDiagnostics diagnostics)</code>
+      <p class="member-summary">Attempts to decode a Data Matrix symbol from PNG bytes in a span with image decode options, with diagnostics.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>png <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
+        <dt>options <span class="param-type">ImageDecodeOptions</span></dt>
+        <dt>text <span class="param-type">string</span></dt>
+        <dt>diagnostics <span class="param-type">DataMatrixDecodeDiagnostics</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-trydecodepng-static-bool-trydecodepng-readonlyspan-byte-png-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-string-text-out-datamatrixdecodediagnostics-diagnostics">
+      <code class="signature">static bool TryDecodePng(ReadOnlySpan&lt;byte&gt; png, ImageDecodeOptions options, CancellationToken cancellationToken, out string text, out DataMatrixDecodeDiagnostics diagnostics)</code>
+      <p class="member-summary">Attempts to decode a Data Matrix symbol from PNG bytes in a span with image decode options, cancellation, and diagnostics.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>png <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
         <dt>options <span class="param-type">ImageDecodeOptions</span></dt>
         <dt>cancellationToken <span class="param-type">CancellationToken</span></dt>
         <dt>text <span class="param-type">string</span></dt>
@@ -948,6 +1021,79 @@
         <dt>diagnostics <span class="param-type">DataMatrixDecodeDiagnostics</span></dt>
       </dl>
     </div>
+    <div class="member" id="method-trydecodeimage-static-bool-trydecodeimage-readonlyspan-byte-image-out-string-text-out-datamatrixdecodediagnostics-diagnostics">
+      <code class="signature">static bool TryDecodeImage(ReadOnlySpan&lt;byte&gt; image, out string text, out DataMatrixDecodeDiagnostics diagnostics)</code>
+      <p class="member-summary">Attempts to decode a Data Matrix symbol from common image formats in a span, with diagnostics.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>image <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
+        <dt>text <span class="param-type">string</span></dt>
+        <dt>diagnostics <span class="param-type">DataMatrixDecodeDiagnostics</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-trydecodeimage-static-bool-trydecodeimage-readonlyspan-byte-image-imagedecodeoptions-options-out-string-text-out-datamatrixdecodediagnostics-diagnostics">
+      <code class="signature">static bool TryDecodeImage(ReadOnlySpan&lt;byte&gt; image, ImageDecodeOptions options, out string text, out DataMatrixDecodeDiagnostics diagnostics)</code>
+      <p class="member-summary">Attempts to decode a Data Matrix symbol from common image formats in a span with image decode options, with diagnostics.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>image <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
+        <dt>options <span class="param-type">ImageDecodeOptions</span></dt>
+        <dt>text <span class="param-type">string</span></dt>
+        <dt>diagnostics <span class="param-type">DataMatrixDecodeDiagnostics</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-trydecodeimage-static-bool-trydecodeimage-readonlyspan-byte-image-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-string-text-out-datamatrixdecodediagnostics-diagnostics">
+      <code class="signature">static bool TryDecodeImage(ReadOnlySpan&lt;byte&gt; image, ImageDecodeOptions options, CancellationToken cancellationToken, out string text, out DataMatrixDecodeDiagnostics diagnostics)</code>
+      <p class="member-summary">Attempts to decode a Data Matrix symbol from common image formats in a span with image decode options, cancellation, and diagnostics.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>image <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
+        <dt>options <span class="param-type">ImageDecodeOptions</span></dt>
+        <dt>cancellationToken <span class="param-type">CancellationToken</span></dt>
+        <dt>text <span class="param-type">string</span></dt>
+        <dt>diagnostics <span class="param-type">DataMatrixDecodeDiagnostics</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-trydecodeimage-static-bool-trydecodeimage-readonlyspan-byte-image-out-string-text">
+      <code class="signature">static bool TryDecodeImage(ReadOnlySpan&lt;byte&gt; image, out string text)</code>
+      <p class="member-summary">Attempts to decode a Data Matrix symbol from common image formats in a span.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>image <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
+        <dt>text <span class="param-type">string</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-trydecodeimage-static-bool-trydecodeimage-readonlyspan-byte-image-cancellationtoken-cancellationtoken-out-string-text">
+      <code class="signature">static bool TryDecodeImage(ReadOnlySpan&lt;byte&gt; image, CancellationToken cancellationToken, out string text)</code>
+      <p class="member-summary">Attempts to decode a Data Matrix symbol from common image formats in a span, with cancellation.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>image <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
+        <dt>cancellationToken <span class="param-type">CancellationToken</span></dt>
+        <dt>text <span class="param-type">string</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-trydecodeimage-static-bool-trydecodeimage-readonlyspan-byte-image-imagedecodeoptions-options-out-string-text">
+      <code class="signature">static bool TryDecodeImage(ReadOnlySpan&lt;byte&gt; image, ImageDecodeOptions options, out string text)</code>
+      <p class="member-summary">Attempts to decode a Data Matrix symbol from common image formats in a span with image decode options.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>image <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
+        <dt>options <span class="param-type">ImageDecodeOptions</span></dt>
+        <dt>text <span class="param-type">string</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-trydecodeimage-static-bool-trydecodeimage-readonlyspan-byte-image-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-string-text">
+      <code class="signature">static bool TryDecodeImage(ReadOnlySpan&lt;byte&gt; image, ImageDecodeOptions options, CancellationToken cancellationToken, out string text)</code>
+      <p class="member-summary">Attempts to decode a Data Matrix symbol from common image formats in a span with image decode options, with cancellation.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>image <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
+        <dt>options <span class="param-type">ImageDecodeOptions</span></dt>
+        <dt>cancellationToken <span class="param-type">CancellationToken</span></dt>
+        <dt>text <span class="param-type">string</span></dt>
+      </dl>
+    </div>
     <div class="member" id="method-trydecodeimage-static-bool-trydecodeimage-stream-stream-out-string-text">
       <code class="signature">static bool TryDecodeImage(Stream stream, out string text)</code>
       <p class="member-summary">Attempts to decode a Data Matrix symbol from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).</p>
@@ -1019,6 +1165,106 @@
         <dt>cancellationToken <span class="param-type">CancellationToken</span></dt>
         <dt>text <span class="param-type">string</span></dt>
         <dt>diagnostics <span class="param-type">DataMatrixDecodeDiagnostics</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-decodeimageresult-static-decoderesult-string-decodeimageresult-byte-image-imagedecodeoptions-options-cancellationtoken-cancellationtoken">
+      <code class="signature">static DecodeResult&lt;string&gt; DecodeImageResult(byte[] image, ImageDecodeOptions options, CancellationToken cancellationToken)</code>
+      <p class="member-summary">Decodes a Data Matrix symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) and returns diagnostics.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>image <span class="param-type">byte[]</span></dt>
+        <dt>options <span class="param-type">ImageDecodeOptions</span></dt>
+        <dt>cancellationToken <span class="param-type">CancellationToken</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-decodeimageresult-static-decoderesult-string-decodeimageresult-readonlyspan-byte-image-imagedecodeoptions-options-cancellationtoken-cancellationtoken">
+      <code class="signature">static DecodeResult&lt;string&gt; DecodeImageResult(ReadOnlySpan&lt;byte&gt; image, ImageDecodeOptions options, CancellationToken cancellationToken)</code>
+      <p class="member-summary">Decodes a Data Matrix symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) in a span and returns diagnostics.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>image <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
+        <dt>options <span class="param-type">ImageDecodeOptions</span></dt>
+        <dt>cancellationToken <span class="param-type">CancellationToken</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-decodeimageresult-static-decoderesult-string-decodeimageresult-stream-stream-imagedecodeoptions-options-cancellationtoken-cancellationtoken">
+      <code class="signature">static DecodeResult&lt;string&gt; DecodeImageResult(Stream stream, ImageDecodeOptions options, CancellationToken cancellationToken)</code>
+      <p class="member-summary">Decodes a Data Matrix symbol from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) and returns diagnostics.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>stream <span class="param-type">Stream</span></dt>
+        <dt>options <span class="param-type">ImageDecodeOptions</span></dt>
+        <dt>cancellationToken <span class="param-type">CancellationToken</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-decodeimagebatch-static-decodebatchresult-string-decodeimagebatch-ienumerable-byte-images-imagedecodeoptions-options-cancellationtoken-cancellationtoken">
+      <code class="signature">static DecodeBatchResult&lt;string&gt; DecodeImageBatch(IEnumerable&lt;byte[]&gt; images, ImageDecodeOptions options, CancellationToken cancellationToken)</code>
+      <p class="member-summary">Decodes a batch of Data Matrix images with shared settings and aggregated diagnostics.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>images <span class="param-type">IEnumerable&lt;byte[]&gt;</span></dt>
+        <dt>options <span class="param-type">ImageDecodeOptions</span></dt>
+        <dt>cancellationToken <span class="param-type">CancellationToken</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-trydecodeallimage-static-bool-trydecodeallimage-byte-image-out-string-texts">
+      <code class="signature">static bool TryDecodeAllImage(byte[] image, out string[] texts)</code>
+      <p class="member-summary">Attempts to decode all Data Matrix symbols from common image formats.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>image <span class="param-type">byte[]</span></dt>
+        <dt>texts <span class="param-type">string[]</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-trydecodeallimage-static-bool-trydecodeallimage-byte-image-imagedecodeoptions-options-out-string-texts">
+      <code class="signature">static bool TryDecodeAllImage(byte[] image, ImageDecodeOptions options, out string[] texts)</code>
+      <p class="member-summary">Attempts to decode all Data Matrix symbols from common image formats with image decode options.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>image <span class="param-type">byte[]</span></dt>
+        <dt>options <span class="param-type">ImageDecodeOptions</span></dt>
+        <dt>texts <span class="param-type">string[]</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-trydecodeallimage-static-bool-trydecodeallimage-byte-image-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-string-texts">
+      <code class="signature">static bool TryDecodeAllImage(byte[] image, ImageDecodeOptions options, CancellationToken cancellationToken, out string[] texts)</code>
+      <p class="member-summary">Attempts to decode all Data Matrix symbols from common image formats with image decode options, with cancellation.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>image <span class="param-type">byte[]</span></dt>
+        <dt>options <span class="param-type">ImageDecodeOptions</span></dt>
+        <dt>cancellationToken <span class="param-type">CancellationToken</span></dt>
+        <dt>texts <span class="param-type">string[]</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-trydecodeallimage-static-bool-trydecodeallimage-stream-stream-out-string-texts">
+      <code class="signature">static bool TryDecodeAllImage(Stream stream, out string[] texts)</code>
+      <p class="member-summary">Attempts to decode all Data Matrix symbols from an image stream.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>stream <span class="param-type">Stream</span></dt>
+        <dt>texts <span class="param-type">string[]</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-trydecodeallimage-static-bool-trydecodeallimage-stream-stream-imagedecodeoptions-options-out-string-texts">
+      <code class="signature">static bool TryDecodeAllImage(Stream stream, ImageDecodeOptions options, out string[] texts)</code>
+      <p class="member-summary">Attempts to decode all Data Matrix symbols from an image stream with image decode options.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>stream <span class="param-type">Stream</span></dt>
+        <dt>options <span class="param-type">ImageDecodeOptions</span></dt>
+        <dt>texts <span class="param-type">string[]</span></dt>
+      </dl>
+    </div>
+    <div class="member" id="method-trydecodeallimage-static-bool-trydecodeallimage-stream-stream-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-string-texts">
+      <code class="signature">static bool TryDecodeAllImage(Stream stream, ImageDecodeOptions options, CancellationToken cancellationToken, out string[] texts)</code>
+      <p class="member-summary">Attempts to decode all Data Matrix symbols from an image stream with image decode options, with cancellation.</p>
+      <h4>Parameters</h4>
+      <dl class="param-list">
+        <dt>stream <span class="param-type">Stream</span></dt>
+        <dt>options <span class="param-type">ImageDecodeOptions</span></dt>
+        <dt>cancellationToken <span class="param-type">CancellationToken</span></dt>
+        <dt>texts <span class="param-type">string[]</span></dt>
       </dl>
     </div>
     <div class="member" id="method-decodepng-static-string-decodepng-byte-png">
@@ -2231,19 +2477,21 @@
         </div>
         <div class="footer-links">
             <div class="footer-section">
-                <h4>Product</h4>
+                <h3>Product</h3>
                 <a href="/">Home</a>
-                <a href="/playground">Playground</a>
-                <a href="/docs">Documentation</a>
+                <a href="/playground/">Playground</a>
+                <a href="/docs/">Documentation</a>
+                <a href="/showcase/">Showcase</a>
             </div>
             <div class="footer-section">
-                <h4>Resources</h4>
+                <h3>Resources</h3>
+                <a href="/faq/">FAQ</a>
                 <a href="https://www.nuget.org/packages/CodeGlyphX" target="_blank" rel="noopener">NuGet Package</a>
                 <a href="https://github.com/EvotecIT/CodeGlyphX" target="_blank" rel="noopener">GitHub Repository</a>
                 <a href="https://github.com/EvotecIT/CodeGlyphX/issues" target="_blank" rel="noopener">Report Issue</a>
             </div>
             <div class="footer-section">
-                <h4>Company</h4>
+                <h3>Company</h3>
                 <a href="https://evotec.xyz" target="_blank" rel="noopener">Evotec Services</a>
                 <a href="https://evotec.xyz/hub" target="_blank" rel="noopener">Blog</a>
             </div>
@@ -2251,16 +2499,17 @@
         <div class="footer-bottom">
             <div class="footer-badges">
                 <a href="https://github.com/EvotecIT/CodeGlyphX" target="_blank" rel="noopener">
-                    <img src="https://img.shields.io/github/stars/EvotecIT/CodeGlyphX?style=social" alt="GitHub stars" height="20" loading="lazy" />
+                    <img src="https://img.shields.io/github/stars/EvotecIT/CodeGlyphX?style=social" alt="GitHub stars" width="100" height="20" loading="lazy" />
                 </a>
                 <a href="https://www.nuget.org/packages/CodeGlyphX" target="_blank" rel="noopener">
-                    <img src="https://img.shields.io/nuget/dt/CodeGlyphX" alt="NuGet downloads" height="20" loading="lazy" />
+                    <img src="https://img.shields.io/nuget/dt/CodeGlyphX" alt="NuGet downloads" width="100" height="20" loading="lazy" />
                 </a>
             </div>
             <p>Apache 2.0 License &bull; &copy; 2026 Evotec Services sp. z o.o.</p>
         </div>
     </div>
 </footer>
+<script src="/js/site.js"></script>
 
   </div>
 </body>

@@ -15,4 +15,52 @@
     <ProjectReference Include="..\CodeGlyphX\CodeGlyphX.csproj" />
   </ItemGroup>
 
+  <PropertyGroup>
+    <CompareExternal Condition="'$(CompareExternal)' == '' and '$(COMPARE_EXTERNAL)' != ''">$(COMPARE_EXTERNAL)</CompareExternal>
+    <CompareExternal Condition="'$(CompareExternal)' == ''">false</CompareExternal>
+
+    <CompareZXing Condition="'$(CompareZXing)' == '' and '$(COMPARE_ZXING)' != ''">$(COMPARE_ZXING)</CompareZXing>
+    <CompareZXing Condition="'$(CompareZXing)' == ''">$(CompareExternal)</CompareZXing>
+
+    <CompareQRCoder Condition="'$(CompareQRCoder)' == '' and '$(COMPARE_QRCODER)' != ''">$(COMPARE_QRCODER)</CompareQRCoder>
+    <CompareQRCoder Condition="'$(CompareQRCoder)' == ''">$(CompareExternal)</CompareQRCoder>
+
+    <CompareBarcoder Condition="'$(CompareBarcoder)' == '' and '$(COMPARE_BARCODER)' != ''">$(COMPARE_BARCODER)</CompareBarcoder>
+    <CompareBarcoder Condition="'$(CompareBarcoder)' == ''">$(CompareExternal)</CompareBarcoder>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <BenchQuick Condition="'$(BenchQuick)' == '' and '$(BENCH_QUICK)' != ''">$(BENCH_QUICK)</BenchQuick>
+    <BenchQuick Condition="'$(BenchQuick)' == ''">false</BenchQuick>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(BenchQuick)' == 'true'">
+    <DefineConstants>$(DefineConstants);BENCH_QUICK</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(CompareZXing)' == 'true'">
+    <DefineConstants>$(DefineConstants);COMPARE_ZXING</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(CompareQRCoder)' == 'true'">
+    <DefineConstants>$(DefineConstants);COMPARE_QRCODER</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(CompareBarcoder)' == 'true'">
+    <DefineConstants>$(DefineConstants);COMPARE_BARCODER</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(CompareZXing)' == 'true'">
+    <PackageReference Include="ZXing.Net.Bindings.ImageSharp.V3" Version="0.16.18" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(CompareQRCoder)' == 'true'">
+    <PackageReference Include="QRCoder" Version="1.7.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(CompareBarcoder)' == 'true'">
+    <PackageReference Include="Barcoder" Version="3.0.0" />
+    <PackageReference Include="Barcoder.Renderer.Image" Version="3.0.0" />
+  </ItemGroup>
+
 </Project>

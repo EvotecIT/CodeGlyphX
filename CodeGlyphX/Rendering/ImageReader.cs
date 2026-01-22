@@ -19,7 +19,7 @@ namespace CodeGlyphX.Rendering;
 /// <summary>
 /// Auto-detects common image formats and decodes to RGBA buffers.
 /// </summary>
-public static class ImageReader {
+public static partial class ImageReader {
     private static readonly byte[] PngSignature = { 137, 80, 78, 71, 13, 10, 26, 10 };
 
     /// <summary>

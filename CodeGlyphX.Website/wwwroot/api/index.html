@@ -6,7 +6,7 @@
   <title>CodeGlyphX API Reference</title>
   <meta name="description" content="CodeGlyphX API Reference" />
   <link rel="stylesheet" href="style.css" />
-  <script>(function(){var theme=localStorage.getItem('theme')||'dark';document.documentElement.setAttribute('data-theme',theme);})();</script>
+  <script>(function(){const theme=localStorage.getItem('theme')||'dark';document.documentElement.dataset.theme=theme;})();</script>
 </head>
 <body>
   <div class="page">
@@ -27,12 +27,12 @@
             <span></span>
         </label>
 
-        <nav class="nav">
+        <nav class="nav" aria-label="Main navigation">
             <div class="nav-links">
                 <a href="/">Home</a>
                 <a href="/playground/">Playground</a>
                 <a href="/docs/">Documentation</a>
-                <a href="/api/">API Reference</a>
+                <a href="/showcase/">Showcase</a>
             </div>
             <div class="nav-actions">
                 <button class="theme-toggle" title="Toggle theme" aria-label="Toggle theme">
@@ -44,7 +44,7 @@
                         <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
                     </svg>
                 </button>
-                <a href="https://github.com/EvotecIT/CodeGlyphX" target="_blank" rel="noopener" class="nav-icon" title="GitHub">
+                <a href="https://github.com/EvotecIT/CodeGlyphX" target="_blank" rel="noopener" class="nav-icon" title="GitHub" aria-label="GitHub">
                     <svg viewBox="0 0 24 24" fill="currentColor">
                         <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
                     </svg>
@@ -197,6 +197,24 @@
         <span class="summary">Diagnostics for Data Matrix decoding.</span>
       </li>
       <li>
+        <a href="types/codeglyphx-decodebatchdiagnostics.html">DecodeBatchDiagnostics</a>
+        <span class="kind">Struct</span>
+        <span class="summary">Aggregated diagnostics for a batch decode run.</span>
+      </li>
+      <li>
+        <a href="types/codeglyphx-decodebatchresult-1.html">DecodeBatchResult</a>
+        <span class="kind">Struct</span>
+      </li>
+      <li>
+        <a href="types/codeglyphx-decodefailurereason.html">DecodeFailureReason</a>
+        <span class="kind">Enum</span>
+        <span class="summary">Describes why decoding failed.</span>
+      </li>
+      <li>
+        <a href="types/codeglyphx-decoderesult-1.html">DecodeResult</a>
+        <span class="kind">Struct</span>
+      </li>
+      <li>
         <a href="types/codeglyphx-gs1.html">Gs1</a>
         <span class="kind">Class</span>
         <span class="summary">Helpers for building and encoding GS1 element strings (GS1-128).</span>
@@ -215,6 +233,11 @@
         <a href="types/codeglyphx-imagedecodeoptions.html">ImageDecodeOptions</a>
         <span class="kind">Class</span>
         <span class="summary">Options for decoding from image sources (non-QR).</span>
+      </li>
+      <li>
+        <a href="types/codeglyphx-matrixbarcodedecoder.html">MatrixBarcodeDecoder</a>
+        <span class="kind">Class</span>
+        <span class="summary">Decodes 2D barcode symbologies from a CodeGlyphX.BitMatrix.</span>
       </li>
       <li>
         <a href="types/codeglyphx-matrixbarcodeencoder.html">MatrixBarcodeEncoder</a>
@@ -509,6 +532,36 @@
     </ul>
   </section>
   <section class="namespace-group">
+    <h2>CodeGlyphX.AustraliaPost</h2>
+    <ul class="type-list">
+      <li>
+        <a href="types/codeglyphx-australiapost-australiapostcustomerencodingtable.html">AustraliaPostCustomerEncodingTable</a>
+        <span class="kind">Enum</span>
+        <span class="summary">Customer information encoding tables for Australia Post customer barcodes.</span>
+      </li>
+      <li>
+        <a href="types/codeglyphx-australiapost-australiapostdecoded.html">AustraliaPostDecoded</a>
+        <span class="kind">Class</span>
+        <span class="summary">Decoded Australia Post customer barcode information.</span>
+      </li>
+      <li>
+        <a href="types/codeglyphx-australiapost-australiapostdecoder.html">AustraliaPostDecoder</a>
+        <span class="kind">Class</span>
+        <span class="summary">Decodes Australia Post customer barcodes.</span>
+      </li>
+      <li>
+        <a href="types/codeglyphx-australiapost-australiapostencoder.html">AustraliaPostEncoder</a>
+        <span class="kind">Class</span>
+        <span class="summary">Encodes Australia Post customer barcodes.</span>
+      </li>
+      <li>
+        <a href="types/codeglyphx-australiapost-australiapostformat.html">AustraliaPostFormat</a>
+        <span class="kind">Enum</span>
+        <span class="summary">Australia Post customer barcode formats.</span>
+      </li>
+    </ul>
+  </section>
+  <section class="namespace-group">
     <h2>CodeGlyphX.Aztec</h2>
     <ul class="type-list">
       <li>
@@ -539,6 +592,36 @@
     </ul>
   </section>
   <section class="namespace-group">
+    <h2>CodeGlyphX.Code25</h2>
+    <ul class="type-list">
+      <li>
+        <a href="types/codeglyphx-code25-iata2of5encoder.html">Iata2Of5Encoder</a>
+        <span class="kind">Class</span>
+        <span class="summary">Encodes IATA 2 of 5 barcodes.</span>
+      </li>
+      <li>
+        <a href="types/codeglyphx-code25-industrial2of5encoder.html">Industrial2Of5Encoder</a>
+        <span class="kind">Class</span>
+        <span class="summary">Encodes Industrial (Discrete) 2 of 5 barcodes.</span>
+      </li>
+      <li>
+        <a href="types/codeglyphx-code25-matrix2of5encoder.html">Matrix2Of5Encoder</a>
+        <span class="kind">Class</span>
+        <span class="summary">Encodes Matrix (Standard) 2 of 5 barcodes.</span>
+      </li>
+    </ul>
+  </section>
+  <section class="namespace-group">
+    <h2>CodeGlyphX.Code32</h2>
+    <ul class="type-list">
+      <li>
+        <a href="types/codeglyphx-code32-code32encoder.html">Code32Encoder</a>
+        <span class="kind">Class</span>
+        <span class="summary">Encodes Code 32 (Italian Pharmacode) barcodes.</span>
+      </li>
+    </ul>
+  </section>
+  <section class="namespace-group">
     <h2>CodeGlyphX.Code39</h2>
     <ul class="type-list">
       <li>
@@ -555,6 +638,31 @@
         <a href="types/codeglyphx-code93-code93encoder.html">Code93Encoder</a>
         <span class="kind">Class</span>
         <span class="summary">Encodes Code 93 barcodes.</span>
+      </li>
+    </ul>
+  </section>
+  <section class="namespace-group">
+    <h2>CodeGlyphX.DataBar</h2>
+    <ul class="type-list">
+      <li>
+        <a href="types/codeglyphx-databar-databar14decoder.html">DataBar14Decoder</a>
+        <span class="kind">Class</span>
+        <span class="summary">Decodes GS1 DataBar-14 symbols (Truncated / Omni / Stacked).</span>
+      </li>
+      <li>
+        <a href="types/codeglyphx-databar-databar14encoder.html">DataBar14Encoder</a>
+        <span class="kind">Class</span>
+        <span class="summary">Encodes GS1 DataBar-14 symbols (Truncated / Omni / Stacked).</span>
+      </li>
+      <li>
+        <a href="types/codeglyphx-databar-databarexpandeddecoder.html">DataBarExpandedDecoder</a>
+        <span class="kind">Class</span>
+        <span class="summary">Decodes GS1 DataBar Expanded symbols (linear and stacked).</span>
+      </li>
+      <li>
+        <a href="types/codeglyphx-databar-databarexpandedencoder.html">DataBarExpandedEncoder</a>
+        <span class="kind">Class</span>
+        <span class="summary">Encodes GS1 DataBar Expanded symbols (linear and stacked).</span>
       </li>
     </ul>
   </section>
@@ -600,11 +708,36 @@
         <span class="kind">Class</span>
         <span class="summary">Encodes ITF-14 (Interleaved 2 of 5) barcodes.</span>
       </li>
+      <li>
+        <a href="types/codeglyphx-itf-itfencoder.html">ItfEncoder</a>
+        <span class="kind">Class</span>
+        <span class="summary">Encodes Interleaved 2 of 5 (ITF) barcodes.</span>
+      </li>
+    </ul>
+  </section>
+  <section class="namespace-group">
+    <h2>CodeGlyphX.JapanPost</h2>
+    <ul class="type-list">
+      <li>
+        <a href="types/codeglyphx-japanpost-japanpostdecoder.html">JapanPostDecoder</a>
+        <span class="kind">Class</span>
+        <span class="summary">Decodes Japan Post barcodes.</span>
+      </li>
+      <li>
+        <a href="types/codeglyphx-japanpost-japanpostencoder.html">JapanPostEncoder</a>
+        <span class="kind">Class</span>
+        <span class="summary">Encodes Japan Post barcodes.</span>
+      </li>
     </ul>
   </section>
   <section class="namespace-group">
     <h2>CodeGlyphX.Kix</h2>
     <ul class="type-list">
+      <li>
+        <a href="types/codeglyphx-kix-kixdecoder.html">KixDecoder</a>
+        <span class="kind">Class</span>
+        <span class="summary">Decodes KIX (Royal Mail 4-state, without headers) barcodes.</span>
+      </li>
       <li>
         <a href="types/codeglyphx-kix-kixencoder.html">KixEncoder</a>
         <span class="kind">Class</span>
@@ -619,6 +752,16 @@
         <a href="types/codeglyphx-msi-msiencoder.html">MsiEncoder</a>
         <span class="kind">Class</span>
         <span class="summary">Encodes MSI (Modified Plessey) barcodes.</span>
+      </li>
+    </ul>
+  </section>
+  <section class="namespace-group">
+    <h2>CodeGlyphX.PatchCode</h2>
+    <ul class="type-list">
+      <li>
+        <a href="types/codeglyphx-patchcode-patchcodeencoder.html">PatchCodeEncoder</a>
+        <span class="kind">Class</span>
+        <span class="summary">Encodes Patch Code symbols.</span>
       </li>
     </ul>
   </section>
@@ -896,9 +1039,29 @@
     <h2>CodeGlyphX.Pdf417</h2>
     <ul class="type-list">
       <li>
+        <a href="types/codeglyphx-pdf417-micropdf417decoder.html">MicroPdf417Decoder</a>
+        <span class="kind">Class</span>
+        <span class="summary">Decodes MicroPDF417 symbols from a CodeGlyphX.BitMatrix.</span>
+      </li>
+      <li>
+        <a href="types/codeglyphx-pdf417-micropdf417encodeoptions.html">MicroPdf417EncodeOptions</a>
+        <span class="kind">Class</span>
+        <span class="summary">Options for MicroPDF417 encoding.</span>
+      </li>
+      <li>
+        <a href="types/codeglyphx-pdf417-micropdf417encoder.html">MicroPdf417Encoder</a>
+        <span class="kind">Class</span>
+        <span class="summary">Encodes MicroPDF417 symbols into a CodeGlyphX.BitMatrix.</span>
+      </li>
+      <li>
         <a href="types/codeglyphx-pdf417-pdf417compaction.html">Pdf417Compaction</a>
         <span class="kind">Enum</span>
         <span class="summary">High-level compaction mode selection for PDF417.</span>
+      </li>
+      <li>
+        <a href="types/codeglyphx-pdf417-pdf417decoded.html">Pdf417Decoded</a>
+        <span class="kind">Class</span>
+        <span class="summary">Result of decoding a PDF417 symbol.</span>
       </li>
       <li>
         <a href="types/codeglyphx-pdf417-pdf417decoder.html">Pdf417Decoder</a>
@@ -915,6 +1078,41 @@
         <span class="kind">Class</span>
         <span class="summary">Encodes PDF417 barcodes.</span>
       </li>
+      <li>
+        <a href="types/codeglyphx-pdf417-pdf417macroassembler.html">Pdf417MacroAssembler</a>
+        <span class="kind">Class</span>
+        <span class="summary">Collects Macro PDF417 segments and assembles the original payload when complete.</span>
+      </li>
+      <li>
+        <a href="types/codeglyphx-pdf417-pdf417macrometadata.html">Pdf417MacroMetadata</a>
+        <span class="kind">Class</span>
+        <span class="summary">Macro PDF417 metadata payload.</span>
+      </li>
+      <li>
+        <a href="types/codeglyphx-pdf417-pdf417macrooptions.html">Pdf417MacroOptions</a>
+        <span class="kind">Class</span>
+        <span class="summary">Options for Macro PDF417 encoding.</span>
+      </li>
+    </ul>
+  </section>
+  <section class="namespace-group">
+    <h2>CodeGlyphX.Pharmacode</h2>
+    <ul class="type-list">
+      <li>
+        <a href="types/codeglyphx-pharmacode-pharmacodeencoder.html">PharmacodeEncoder</a>
+        <span class="kind">Class</span>
+        <span class="summary">Encodes Pharmacode (one-track) barcodes.</span>
+      </li>
+      <li>
+        <a href="types/codeglyphx-pharmacode-pharmacodetwotrackdecoder.html">PharmacodeTwoTrackDecoder</a>
+        <span class="kind">Class</span>
+        <span class="summary">Decodes Pharmacode (two-track) barcodes.</span>
+      </li>
+      <li>
+        <a href="types/codeglyphx-pharmacode-pharmacodetwotrackencoder.html">PharmacodeTwoTrackEncoder</a>
+        <span class="kind">Class</span>
+        <span class="summary">Encodes Pharmacode (two-track) barcodes.</span>
+      </li>
     </ul>
   </section>
   <section class="namespace-group">
@@ -924,6 +1122,41 @@
         <a href="types/codeglyphx-plessey-plesseyencoder.html">PlesseyEncoder</a>
         <span class="kind">Class</span>
         <span class="summary">Encodes Plessey barcodes.</span>
+      </li>
+    </ul>
+  </section>
+  <section class="namespace-group">
+    <h2>CodeGlyphX.Postal</h2>
+    <ul class="type-list">
+      <li>
+        <a href="types/codeglyphx-postal-planetdecoder.html">PlanetDecoder</a>
+        <span class="kind">Class</span>
+        <span class="summary">Decodes PLANET barcodes.</span>
+      </li>
+      <li>
+        <a href="types/codeglyphx-postal-planetencoder.html">PlanetEncoder</a>
+        <span class="kind">Class</span>
+        <span class="summary">Encodes PLANET barcodes.</span>
+      </li>
+      <li>
+        <a href="types/codeglyphx-postal-postnetdecoder.html">PostnetDecoder</a>
+        <span class="kind">Class</span>
+        <span class="summary">Decodes POSTNET barcodes.</span>
+      </li>
+      <li>
+        <a href="types/codeglyphx-postal-postnetencoder.html">PostnetEncoder</a>
+        <span class="kind">Class</span>
+        <span class="summary">Encodes POSTNET barcodes.</span>
+      </li>
+      <li>
+        <a href="types/codeglyphx-postal-uspsimbdecoder.html">UspsImbDecoder</a>
+        <span class="kind">Class</span>
+        <span class="summary">Decodes USPS Intelligent Mail Barcodes (IMB).</span>
+      </li>
+      <li>
+        <a href="types/codeglyphx-postal-uspsimbencoder.html">UspsImbEncoder</a>
+        <span class="kind">Class</span>
+        <span class="summary">Encodes USPS Intelligent Mail Barcodes (IMB).</span>
       </li>
     </ul>
   </section>
@@ -939,6 +1172,11 @@
         <a href="types/codeglyphx-rendering-imageformat.html">ImageFormat</a>
         <span class="kind">Enum</span>
         <span class="summary">Known image formats supported by CodeGlyphX.Rendering.ImageReader.</span>
+      </li>
+      <li>
+        <a href="types/codeglyphx-rendering-imageinfo.html">ImageInfo</a>
+        <span class="kind">Struct</span>
+        <span class="summary">Basic image metadata returned by ImageReader.TryReadInfo.</span>
       </li>
       <li>
         <a href="types/codeglyphx-rendering-imagereader.html">ImageReader</a>
@@ -1528,6 +1766,31 @@
     </ul>
   </section>
   <section class="namespace-group">
+    <h2>CodeGlyphX.RoyalMail</h2>
+    <ul class="type-list">
+      <li>
+        <a href="types/codeglyphx-royalmail-royalmailfourstatedecoder.html">RoyalMailFourStateDecoder</a>
+        <span class="kind">Class</span>
+        <span class="summary">Decodes Royal Mail 4-State Customer Code (RM4SCC) barcodes.</span>
+      </li>
+      <li>
+        <a href="types/codeglyphx-royalmail-royalmailfourstateencoder.html">RoyalMailFourStateEncoder</a>
+        <span class="kind">Class</span>
+        <span class="summary">Encodes Royal Mail 4-State Customer Code (RM4SCC) barcodes.</span>
+      </li>
+    </ul>
+  </section>
+  <section class="namespace-group">
+    <h2>CodeGlyphX.Telepen</h2>
+    <ul class="type-list">
+      <li>
+        <a href="types/codeglyphx-telepen-telepenencoder.html">TelepenEncoder</a>
+        <span class="kind">Class</span>
+        <span class="summary">Encodes Telepen barcodes (ASCII mode).</span>
+      </li>
+    </ul>
+  </section>
+  <section class="namespace-group">
     <h2>CodeGlyphX.UpcA</h2>
     <ul class="type-list">
       <li>
@@ -1575,19 +1838,21 @@
         </div>
         <div class="footer-links">
             <div class="footer-section">
-                <h4>Product</h4>
+                <h3>Product</h3>
                 <a href="/">Home</a>
-                <a href="/playground">Playground</a>
-                <a href="/docs">Documentation</a>
+                <a href="/playground/">Playground</a>
+                <a href="/docs/">Documentation</a>
+                <a href="/showcase/">Showcase</a>
             </div>
             <div class="footer-section">
-                <h4>Resources</h4>
+                <h3>Resources</h3>
+                <a href="/faq/">FAQ</a>
                 <a href="https://www.nuget.org/packages/CodeGlyphX" target="_blank" rel="noopener">NuGet Package</a>
                 <a href="https://github.com/EvotecIT/CodeGlyphX" target="_blank" rel="noopener">GitHub Repository</a>
                 <a href="https://github.com/EvotecIT/CodeGlyphX/issues" target="_blank" rel="noopener">Report Issue</a>
             </div>
             <div class="footer-section">
-                <h4>Company</h4>
+                <h3>Company</h3>
                 <a href="https://evotec.xyz" target="_blank" rel="noopener">Evotec Services</a>
                 <a href="https://evotec.xyz/hub" target="_blank" rel="noopener">Blog</a>
             </div>
@@ -1595,16 +1860,17 @@
         <div class="footer-bottom">
             <div class="footer-badges">
                 <a href="https://github.com/EvotecIT/CodeGlyphX" target="_blank" rel="noopener">
-                    <img src="https://img.shields.io/github/stars/EvotecIT/CodeGlyphX?style=social" alt="GitHub stars" height="20" loading="lazy" />
+                    <img src="https://img.shields.io/github/stars/EvotecIT/CodeGlyphX?style=social" alt="GitHub stars" width="100" height="20" loading="lazy" />
                 </a>
                 <a href="https://www.nuget.org/packages/CodeGlyphX" target="_blank" rel="noopener">
-                    <img src="https://img.shields.io/nuget/dt/CodeGlyphX" alt="NuGet downloads" height="20" loading="lazy" />
+                    <img src="https://img.shields.io/nuget/dt/CodeGlyphX" alt="NuGet downloads" width="100" height="20" loading="lazy" />
                 </a>
             </div>
             <p>Apache 2.0 License &bull; &copy; 2026 Evotec Services sp. z o.o.</p>
         </div>
     </div>
 </footer>
+<script src="/js/site.js"></script>
 
   </div>
 </body>

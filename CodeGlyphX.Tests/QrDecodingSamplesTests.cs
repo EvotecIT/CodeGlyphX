@@ -113,6 +113,22 @@ public sealed class QrDecodingSamplesTests {
     }
 
     [Fact]
+    public void QrDecode_NoisyUiSample_DecodesUnderBudget() {
+        var bytes = ReadRepoFile("Assets/DecodingSamples/qr-noisy-ui.png");
+        Assert.True(ImageReader.TryDecodeRgba32(bytes, out var rgba, out var width, out var height));
+
+        var options = new QrPixelDecodeOptions {
+            Profile = QrDecodeProfile.Robust,
+            MaxMilliseconds = 800,
+            MaxDimension = 1600,
+            AggressiveSampling = true
+        };
+
+        Assert.True(QrDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out var decoded, options));
+        Assert.Contains("otpauth://", decoded.Text, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
     public void QrDecode_PixelDecode_RespectsCancellation() {
         var qr = QrCodeEncoder.EncodeText("cancel");
         var png = QrPngRenderer.Render(qr.Modules, new QrPngRenderOptions {

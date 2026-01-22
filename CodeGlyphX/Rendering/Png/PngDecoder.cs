@@ -31,6 +31,7 @@ internal static class PngDecoder {
         var interlace = 0;
 
         var idat = new MemoryStream();
+        byte[]? palette = null;
         var localOffset = Signature.Length;
         var end = length;
 
@@ -54,6 +55,9 @@ internal static class PngDecoder {
                 compression = png[dataOffset + 10];
                 filter = png[dataOffset + 11];
                 interlace = png[dataOffset + 12];
+            } else if (MatchType(png, typeOffset, "PLTE")) {
+                palette = new byte[len];
+                Buffer.BlockCopy(png, dataOffset, palette, 0, (int)len);
             } else if (MatchType(png, typeOffset, "IDAT")) {
                 idat.Write(png, dataOffset, (int)len);
             } else if (MatchType(png, typeOffset, "IEND")) {
@@ -62,17 +66,23 @@ internal static class PngDecoder {
         }
 
         if (width <= 0 || height <= 0) throw new FormatException("Missing IHDR.");
-        if (bitDepth != 8) throw new FormatException("Only 8-bit PNGs are supported.");
+        if (bitDepth != 8 && bitDepth != 1) throw new FormatException("Only 1-bit or 8-bit PNGs are supported.");
         if (compression != 0 || filter != 0) throw new FormatException("Unsupported PNG compression/filter method.");
         if (interlace != 0) throw new FormatException("Interlaced PNGs are not supported.");
 
         var channels = colorType switch {
+            0 => 1,
             2 => 3,
+            3 => 1,
             6 => 4,
             _ => throw new FormatException("Unsupported PNG color type."),
         };
+        if (colorType == 3 && (palette is null || palette.Length < 3)) {
+            throw new FormatException("Missing PNG palette.");
+        }
 
-        var rowBytes = checked(width * channels);
+        var rowBytes = bitDepth == 1 ? (width + 7) / 8 : checked(width * channels);
+        var bytesPerPixel = (bitDepth * channels + 7) / 8;
         var expected = checked(height * (rowBytes + 1));
         var scanlines = ArrayPool<byte>.Shared.Rent(expected);
 
@@ -85,21 +95,9 @@ internal static class PngDecoder {
             }
 
             var raw = new byte[checked(height * rowBytes)];
-            Unfilter(scanlines.AsSpan(0, expected), raw, width, height, channels);
+            Unfilter(scanlines.AsSpan(0, expected), raw, rowBytes, height, bytesPerPixel);
 
-            if (channels == 4) return raw;
-
-            var rgba = new byte[checked(width * height * 4)];
-            for (var i = 0; i < width * height; i++) {
-                var src = i * 3;
-                var dst = i * 4;
-                rgba[dst + 0] = raw[src + 0];
-                rgba[dst + 1] = raw[src + 1];
-                rgba[dst + 2] = raw[src + 2];
-                rgba[dst + 3] = 255;
-            }
-
-            return rgba;
+            return ExpandToRgba(raw, width, height, colorType, bitDepth, palette);
         } finally {
             ArrayPool<byte>.Shared.Return(scanlines);
         }
@@ -114,8 +112,7 @@ internal static class PngDecoder {
         }
     }
 
-    private static void Unfilter(ReadOnlySpan<byte> scanlines, byte[] raw, int width, int height, int bpp) {
-        var rowBytes = width * bpp;
+    private static void Unfilter(ReadOnlySpan<byte> scanlines, byte[] raw, int rowBytes, int height, int bpp) {
         var src = 0;
         var dst = 0;
 
@@ -138,6 +135,88 @@ internal static class PngDecoder {
             }
             dst += rowBytes;
         }
+    }
+
+    private static byte[] ExpandToRgba(byte[] raw, int width, int height, int colorType, int bitDepth, byte[]? palette) {
+        if (colorType == 6 && bitDepth == 8) return raw;
+
+        var rgba = new byte[checked(width * height * 4)];
+        if (colorType == 2 && bitDepth == 8) {
+            for (var i = 0; i < width * height; i++) {
+                var src = i * 3;
+                var dst = i * 4;
+                rgba[dst + 0] = raw[src + 0];
+                rgba[dst + 1] = raw[src + 1];
+                rgba[dst + 2] = raw[src + 2];
+                rgba[dst + 3] = 255;
+            }
+            return rgba;
+        }
+
+        if (colorType == 0 && bitDepth == 8) {
+            for (var i = 0; i < width * height; i++) {
+                var v = raw[i];
+                var dst = i * 4;
+                rgba[dst + 0] = v;
+                rgba[dst + 1] = v;
+                rgba[dst + 2] = v;
+                rgba[dst + 3] = 255;
+            }
+            return rgba;
+        }
+
+        if (colorType == 0 && bitDepth == 1) {
+            for (var y = 0; y < height; y++) {
+                var rowStart = y * ((width + 7) / 8);
+                for (var x = 0; x < width; x++) {
+                    var b = raw[rowStart + (x >> 3)];
+                    var bit = (b >> (7 - (x & 7))) & 1;
+                    var v = (byte)(bit == 0 ? 0 : 255);
+                    var dst = (y * width + x) * 4;
+                    rgba[dst + 0] = v;
+                    rgba[dst + 1] = v;
+                    rgba[dst + 2] = v;
+                    rgba[dst + 3] = 255;
+                }
+            }
+            return rgba;
+        }
+
+        if (colorType == 3 && palette is not null) {
+            var entryCount = palette.Length / 3;
+            if (bitDepth == 8) {
+                for (var i = 0; i < width * height; i++) {
+                    var idx = raw[i];
+                    if (idx >= entryCount) throw new FormatException("Palette index out of range.");
+                    var p = idx * 3;
+                    var dst = i * 4;
+                    rgba[dst + 0] = palette[p + 0];
+                    rgba[dst + 1] = palette[p + 1];
+                    rgba[dst + 2] = palette[p + 2];
+                    rgba[dst + 3] = 255;
+                }
+                return rgba;
+            }
+            if (bitDepth == 1) {
+                for (var y = 0; y < height; y++) {
+                    var rowStart = y * ((width + 7) / 8);
+                    for (var x = 0; x < width; x++) {
+                        var b = raw[rowStart + (x >> 3)];
+                        var idx = (b >> (7 - (x & 7))) & 1;
+                        if (idx >= entryCount) throw new FormatException("Palette index out of range.");
+                        var p = idx * 3;
+                        var dst = (y * width + x) * 4;
+                        rgba[dst + 0] = palette[p + 0];
+                        rgba[dst + 1] = palette[p + 1];
+                        rgba[dst + 2] = palette[p + 2];
+                        rgba[dst + 3] = 255;
+                    }
+                }
+                return rgba;
+            }
+        }
+
+        throw new FormatException("Unsupported PNG color type.");
     }
 
     private static int Paeth(int a, int b, int c) {

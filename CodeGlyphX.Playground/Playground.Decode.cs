@@ -31,8 +31,11 @@ public partial class Playground {
 
         try
         {
-            _decodeCts?.Cancel();
-            _decodeCts?.Dispose();
+            if (_decodeCts is not null)
+            {
+                await _decodeCts.CancelAsync();
+                _decodeCts.Dispose();
+            }
             _decodeCts = new CancellationTokenSource();
             if (DecodeMaxMilliseconds > 0)
             {
@@ -229,7 +232,7 @@ public partial class Playground {
                 {
                     using (var pdfCts = CreateStageCts(stageCts.Token, sliceBudget))
                     {
-                        if (CodeGlyphX.Pdf417.Pdf417Decoder.TryDecode(matrixRgba, matrixWidth, matrixHeight, matrixStride, PixelFormat.Rgba32, pdfCts.Token, out var pdf417))
+                        if (CodeGlyphX.Pdf417.Pdf417Decoder.TryDecode(matrixRgba, matrixWidth, matrixHeight, matrixStride, PixelFormat.Rgba32, pdfCts.Token, out string pdf417))
                         {
                             AddDecodeResult("PDF417", pdf417);
                             found = true;
@@ -246,7 +249,7 @@ public partial class Playground {
                         using var tileCts = CreateStageCts(stageCts.Token, tileBudget);
                         ScanTiles(matrixRgba, matrixWidth, matrixHeight, matrixStride, tileCts.Token, (tile, tw, th, tstride) =>
                         {
-                            if (CodeGlyphX.Pdf417.Pdf417Decoder.TryDecode(tile, tw, th, tstride, PixelFormat.Rgba32, tileCts.Token, out var text))
+                            if (CodeGlyphX.Pdf417.Pdf417Decoder.TryDecode(tile, tw, th, tstride, PixelFormat.Rgba32, tileCts.Token, out string text))
                             {
                                 AddDecodeResult("PDF417", text);
                                 found = true;
@@ -344,9 +347,12 @@ public partial class Playground {
         }
     }
 
-    internal void CancelDecode()
+    internal async Task CancelDecode()
     {
-        _decodeCts?.Cancel();
+        if (_decodeCts is not null)
+        {
+            await _decodeCts.CancelAsync();
+        }
         DecodeStatus = "Cancelling...";
     }
 

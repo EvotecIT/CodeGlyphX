@@ -185,6 +185,126 @@
       "anchor": "method-encodeitf14-static-barcode1d-encodeitf14-string-value"
     },
     {
+      "name": "EncodeItf",
+      "kind": "Method",
+      "summary": "Encodes an Interleaved 2 of 5 (ITF) barcode.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "value",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "includeChecksum",
+          "type": "bool",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static Barcode1D EncodeItf(string value, bool includeChecksum)",
+      "xmlId": "M:CodeGlyphX.BarcodeEncoder.EncodeItf(System.String,System.Boolean)",
+      "anchor": "method-encodeitf-static-barcode1d-encodeitf-string-value-bool-includechecksum"
+    },
+    {
+      "name": "EncodeIndustrial2of5",
+      "kind": "Method",
+      "summary": "Encodes an Industrial (Discrete) 2 of 5 barcode.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "value",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "includeChecksum",
+          "type": "bool",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static Barcode1D EncodeIndustrial2of5(string value, bool includeChecksum)",
+      "xmlId": "M:CodeGlyphX.BarcodeEncoder.EncodeIndustrial2of5(System.String,System.Boolean)",
+      "anchor": "method-encodeindustrial2of5-static-barcode1d-encodeindustrial2of5-string-value-bool-includechecksum"
+    },
+    {
+      "name": "EncodeMatrix2of5",
+      "kind": "Method",
+      "summary": "Encodes a Matrix (Standard) 2 of 5 barcode.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "value",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "includeChecksum",
+          "type": "bool",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static Barcode1D EncodeMatrix2of5(string value, bool includeChecksum)",
+      "xmlId": "M:CodeGlyphX.BarcodeEncoder.EncodeMatrix2of5(System.String,System.Boolean)",
+      "anchor": "method-encodematrix2of5-static-barcode1d-encodematrix2of5-string-value-bool-includechecksum"
+    },
+    {
+      "name": "EncodeIata2of5",
+      "kind": "Method",
+      "summary": "Encodes an IATA 2 of 5 barcode.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "value",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "includeChecksum",
+          "type": "bool",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static Barcode1D EncodeIata2of5(string value, bool includeChecksum)",
+      "xmlId": "M:CodeGlyphX.BarcodeEncoder.EncodeIata2of5(System.String,System.Boolean)",
+      "anchor": "method-encodeiata2of5-static-barcode1d-encodeiata2of5-string-value-bool-includechecksum"
+    },
+    {
+      "name": "EncodePatchCode",
+      "kind": "Method",
+      "summary": "Encodes a Patch Code symbol.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "value",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static Barcode1D EncodePatchCode(string value)",
+      "xmlId": "M:CodeGlyphX.BarcodeEncoder.EncodePatchCode(System.String)",
+      "anchor": "method-encodepatchcode-static-barcode1d-encodepatchcode-string-value"
+    },
+    {
       "name": "EncodeCodabar",
       "kind": "Method",
       "summary": "Encodes a Codabar barcode.",
@@ -283,6 +403,66 @@
       "signature": "static Barcode1D EncodePlessey(string value)",
       "xmlId": "M:CodeGlyphX.BarcodeEncoder.EncodePlessey(System.String)",
       "anchor": "method-encodeplessey-static-barcode1d-encodeplessey-string-value"
+    },
+    {
+      "name": "EncodeTelepen",
+      "kind": "Method",
+      "summary": "Encodes a Telepen barcode (ASCII mode).",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "value",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static Barcode1D EncodeTelepen(string value)",
+      "xmlId": "M:CodeGlyphX.BarcodeEncoder.EncodeTelepen(System.String)",
+      "anchor": "method-encodetelepen-static-barcode1d-encodetelepen-string-value"
+    },
+    {
+      "name": "EncodePharmacode",
+      "kind": "Method",
+      "summary": "Encodes a Pharmacode (one-track) barcode value.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "value",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static Barcode1D EncodePharmacode(string value)",
+      "xmlId": "M:CodeGlyphX.BarcodeEncoder.EncodePharmacode(System.String)",
+      "anchor": "method-encodepharmacode-static-barcode1d-encodepharmacode-string-value"
+    },
+    {
+      "name": "EncodeCode32",
+      "kind": "Method",
+      "summary": "Encodes a Code 32 (Italian Pharmacode) barcode value.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "value",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static Barcode1D EncodeCode32(string value)",
+      "xmlId": "M:CodeGlyphX.BarcodeEncoder.EncodeCode32(System.String)",
+      "anchor": "method-encodecode32-static-barcode1d-encodecode32-string-value"
     }
   ]
 }

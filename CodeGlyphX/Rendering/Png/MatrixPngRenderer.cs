@@ -1,4 +1,5 @@
 using System;
+using System.Buffers;
 using System.IO;
 using CodeGlyphX.Rendering;
 
@@ -7,13 +8,21 @@ namespace CodeGlyphX.Rendering.Png;
 /// <summary>
 /// Renders generic 2D matrices to PNG images (RGBA8).
 /// </summary>
-public static class MatrixPngRenderer {
+public static partial class MatrixPngRenderer {
     /// <summary>
     /// Renders the matrix to a PNG byte array.
     /// </summary>
     public static byte[] Render(BitMatrix modules, MatrixPngRenderOptions opts) {
-        var scanlines = RenderScanlines(modules, opts, out var widthPx, out var heightPx, out _);
-        return PngWriter.WriteRgba8(widthPx, heightPx, scanlines);
+        if (TryRenderGray1(modules, opts, out var gray)) return gray;
+        if (TryRenderIndexed1(modules, opts, out var indexed)) return indexed;
+        var length = GetScanlineLength(modules, opts, out var widthPx, out var heightPx, out var stride);
+        var scanlines = ArrayPool<byte>.Shared.Rent(length);
+        try {
+            RenderScanlines(modules, opts, out widthPx, out heightPx, out stride, scanlines);
+            return PngWriter.WriteRgba8(widthPx, heightPx, scanlines, length);
+        } finally {
+            ArrayPool<byte>.Shared.Return(scanlines);
+        }
     }
 
     /// <summary>
@@ -23,8 +32,16 @@ public static class MatrixPngRenderer {
     /// <param name="opts">Rendering options.</param>
     /// <param name="stream">Target stream.</param>
     public static void RenderToStream(BitMatrix modules, MatrixPngRenderOptions opts, Stream stream) {
-        var scanlines = RenderScanlines(modules, opts, out var widthPx, out var heightPx, out _);
-        PngWriter.WriteRgba8(stream, widthPx, heightPx, scanlines);
+        if (TryRenderGray1ToStream(modules, opts, stream)) return;
+        if (TryRenderIndexed1ToStream(modules, opts, stream)) return;
+        var length = GetScanlineLength(modules, opts, out var widthPx, out var heightPx, out var stride);
+        var scanlines = ArrayPool<byte>.Shared.Rent(length);
+        try {
+            RenderScanlines(modules, opts, out widthPx, out heightPx, out stride, scanlines);
+            PngWriter.WriteRgba8(stream, widthPx, heightPx, scanlines, length);
+        } finally {
+            ArrayPool<byte>.Shared.Return(scanlines);
+        }
     }
 
     /// <summary>
@@ -64,7 +81,7 @@ public static class MatrixPngRenderer {
         return pixels;
     }
 
-    internal static byte[] RenderScanlines(BitMatrix modules, MatrixPngRenderOptions opts, out int widthPx, out int heightPx, out int stride) {
+    internal static int GetScanlineLength(BitMatrix modules, MatrixPngRenderOptions opts, out int widthPx, out int heightPx, out int stride) {
         if (modules is null) throw new ArgumentNullException(nameof(modules));
         if (opts is null) throw new ArgumentNullException(nameof(opts));
         if (opts.ModuleSize <= 0) throw new ArgumentOutOfRangeException(nameof(opts.ModuleSize));
@@ -75,19 +92,28 @@ public static class MatrixPngRenderer {
         widthPx = outWidthModules * opts.ModuleSize;
         heightPx = outHeightModules * opts.ModuleSize;
         stride = widthPx * 4;
+        return heightPx * (stride + 1);
+    }
 
-        var scanlines = new byte[heightPx * (stride + 1)];
+    internal static byte[] RenderScanlines(BitMatrix modules, MatrixPngRenderOptions opts, out int widthPx, out int heightPx, out int stride) {
+        return RenderScanlines(modules, opts, out widthPx, out heightPx, out stride, scanlines: null);
+    }
+
+    internal static byte[] RenderScanlines(BitMatrix modules, MatrixPngRenderOptions opts, out int widthPx, out int heightPx, out int stride, byte[]? scanlines) {
+        var length = GetScanlineLength(modules, opts, out widthPx, out heightPx, out stride);
+        var buffer = scanlines ?? new byte[length];
+        if (buffer.Length < length) throw new ArgumentException("Invalid scanline buffer length.", nameof(scanlines));
 
         // Fill background.
         for (var y = 0; y < heightPx; y++) {
             var rowStart = y * (stride + 1);
-            scanlines[rowStart] = 0;
+            buffer[rowStart] = 0;
             var p = rowStart + 1;
             for (var x = 0; x < widthPx; x++) {
-                scanlines[p++] = opts.Background.R;
-                scanlines[p++] = opts.Background.G;
-                scanlines[p++] = opts.Background.B;
-                scanlines[p++] = opts.Background.A;
+                buffer[p++] = opts.Background.R;
+                buffer[p++] = opts.Background.G;
+                buffer[p++] = opts.Background.B;
+                buffer[p++] = opts.Background.A;
             }
         }
 
@@ -100,16 +126,16 @@ public static class MatrixPngRenderer {
                 for (var sy = 0; sy < opts.ModuleSize; sy++) {
                     var rowStart = (y0 + sy) * (stride + 1) + 1 + x0 * 4;
                     for (var sx = 0; sx < opts.ModuleSize; sx++) {
-                        scanlines[rowStart + 0] = opts.Foreground.R;
-                        scanlines[rowStart + 1] = opts.Foreground.G;
-                        scanlines[rowStart + 2] = opts.Foreground.B;
-                        scanlines[rowStart + 3] = opts.Foreground.A;
+                        buffer[rowStart + 0] = opts.Foreground.R;
+                        buffer[rowStart + 1] = opts.Foreground.G;
+                        buffer[rowStart + 2] = opts.Foreground.B;
+                        buffer[rowStart + 3] = opts.Foreground.A;
                         rowStart += 4;
                     }
                 }
             }
         }
 
-        return scanlines;
+        return buffer;
     }
 }

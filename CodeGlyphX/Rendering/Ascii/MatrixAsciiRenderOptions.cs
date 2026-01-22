@@ -5,7 +5,7 @@ namespace CodeGlyphX.Rendering.Ascii;
 /// <summary>
 /// Rendering options for ASCII matrix output.
 /// </summary>
-public sealed class MatrixAsciiRenderOptions {
+public sealed partial class MatrixAsciiRenderOptions {
     /// <summary>
     /// Quiet zone size in modules.
     /// </summary>

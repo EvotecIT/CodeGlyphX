@@ -5,7 +5,7 @@ namespace CodeGlyphX.Rendering.Ico;
 /// <summary>
 /// Options for ICO rendering (multi-size).
 /// </summary>
-public sealed class IcoRenderOptions {
+public sealed partial class IcoRenderOptions {
     /// <summary>
     /// Output sizes in pixels (1..256). Defaults to common icon sizes.
     /// </summary>

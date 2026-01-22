@@ -33,6 +33,7 @@ internal static class QrPixelSampling {
         var bestDist = int.MaxValue;
         var bestTiming = int.MinValue;
         var bestScalePenalty = double.PositiveInfinity;
+        const double scaleEpsilon = 1e-6;
 
         for (var sy = 0; sy < ScaleFactors.Length; sy++) {
             var scaleY = ScaleFactors[sy];
@@ -63,10 +64,25 @@ internal static class QrPixelSampling {
                     bestPhaseX = phX;
                     bestPhaseY = phY;
 
-                    if (bestDist == 0 && bestTiming > (dimension - 16) * 2 - 4 && bestScalePenalty == 0) return;
+                    if (bestDist == 0 && bestTiming > (dimension - 16) * 2 - 4 && bestScalePenalty <= scaleEpsilon) return;
                 }
             }
         }
+    }
+
+    public static void RefinePhase(
+        QrGrayImage image,
+        bool invert,
+        double tlX,
+        double tlY,
+        double vxX,
+        double vxY,
+        double vyX,
+        double vyY,
+        int dimension,
+        out double bestPhaseX,
+        out double bestPhaseY) {
+        FindBestPhase(image, invert, tlX, tlY, vxX, vxY, vyX, vyY, dimension, out bestPhaseX, out bestPhaseY, out _, out _);
     }
 
     public static bool SampleModule9(QrGrayImage image, double sx, double sy, double oxX, double oxY, double oyX, double oyY, bool invert) {

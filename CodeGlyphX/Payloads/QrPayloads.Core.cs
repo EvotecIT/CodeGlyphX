@@ -65,8 +65,8 @@ public static partial class QrPayloads {
     public static QrPayloadData Wifi(string ssid, string password, string authType = "WPA", bool hidden = false, bool escapeHexStrings = true) {
         if (string.IsNullOrWhiteSpace(ssid)) throw new ArgumentException("SSID must not be empty.", nameof(ssid));
         if (!QrPayloadValidation.IsValidWifiAuth(authType)) throw new ArgumentException("WiFi auth type is invalid.", nameof(authType));
-        var safeSsid = EscapeInput(ssid ?? string.Empty);
-        var safePassword = EscapeInput(password ?? string.Empty);
+        var safeSsid = EscapeInput(ssid);
+        var safePassword = EscapeInput(password);
         if (escapeHexStrings && IsHexStyle(safeSsid)) safeSsid = "\"" + safeSsid + "\"";
         if (escapeHexStrings && IsHexStyle(safePassword)) safePassword = "\"" + safePassword + "\"";
         var payload = "WIFI:T:" + EscapeInput(authType ?? string.Empty) + ";S:" + safeSsid + ";P:" + safePassword + ";" + (hidden ? "H:true" : string.Empty) + ";";
@@ -410,10 +410,10 @@ public static partial class QrPayloads {
     private static string BuildMailto(string address, string? subject, string? message) {
         var sb = new StringBuilder();
         sb.Append("mailto:");
-        sb.Append(address ?? string.Empty);
+        sb.Append(address);
         var hasQuery = false;
         if (!string.IsNullOrEmpty(subject)) {
-            sb.Append(hasQuery ? '&' : '?');
+            sb.Append('?');
             sb.Append("subject=");
             sb.Append(Uri.EscapeDataString(subject));
             hasQuery = true;

@@ -364,8 +364,6 @@ FodyWeavers.xsd
 
 .vscode/*
 
-build/*
-
 /.idea/
 
 /Ignore/*
@@ -381,3 +379,13 @@ binarized-*.png
 # Website generated artifacts
 .playwright-mcp/*
 .claude/*
+site/
+temp-playground/
+temp-hash/
+temp-docs/
+Build/BenchmarkResults/
+nul
+temp-check/
+docfx/
+*.bak/
+api.bak/

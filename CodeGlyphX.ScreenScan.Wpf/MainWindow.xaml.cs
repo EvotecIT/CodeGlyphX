@@ -38,7 +38,7 @@ public partial class MainWindow : Window {
 
     private async void StartStop_Click(object sender, RoutedEventArgs e) {
         if (_cts is not null) {
-            _cts.Cancel();
+            await _cts.CancelAsync();
             return;
         }
 

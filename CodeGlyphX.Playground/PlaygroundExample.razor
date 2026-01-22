@@ -1,4 +1,5 @@
 @using CodeGlyphX
+@inject IJSRuntime JS
 
 @if (Host is null)
 {
@@ -14,11 +15,214 @@ else
         <p style="color: var(--text-muted); margin-bottom: 1rem; font-size: 0.9rem;">
             Here's how to generate this exact code in your .NET application:
         </p>
-        <pre class="code-block">@Host.GetCodeExample()</pre>
+
+        <div class="code-tabs">
+            <button class="code-tab @(SelectedPlatform == "Console" ? "active" : "")" @onclick="@(() => SetPlatform("Console"))">Console</button>
+            <button class="code-tab @(SelectedPlatform == "AspNet" ? "active" : "")" @onclick="@(() => SetPlatform("AspNet"))">ASP.NET</button>
+            <button class="code-tab @(SelectedPlatform == "Blazor" ? "active" : "")" @onclick="@(() => SetPlatform("Blazor"))">Blazor</button>
+            <button class="code-tab @(SelectedPlatform == "Maui" ? "active" : "")" @onclick="@(() => SetPlatform("Maui"))">MAUI</button>
+        </div>
+
+        <pre class="code-block">@GetPlatformExample()</pre>
     </div>
 }
 
 @code {
     [CascadingParameter]
     public Playground? Host { get; set; }
+
+    private string SelectedPlatform { get; set; } = "Console";
+
+    private void SetPlatform(string platform)
+    {
+        SelectedPlatform = platform;
+        StateHasChanged();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await JS.InvokeVoidAsync("CodeGlyphX.initCodeBlocks");
+    }
+
+    private string GetPlatformExample()
+    {
+        if (Host is null) return "";
+
+        var baseCode = Host.GetCodeExample();
+
+        return SelectedPlatform switch
+        {
+            "AspNet" => GetAspNetExample(baseCode),
+            "Blazor" => GetBlazorExample(baseCode),
+            "Maui" => GetMauiExample(baseCode),
+            _ => baseCode
+        };
+    }
+
+    private string GetAspNetExample(string baseCode)
+    {
+        if (Host?.SelectedMode == "Decode") return baseCode;
+
+        var nl = "\n";
+        var category = Host?.SelectedCategory ?? "QR";
+
+        if (category == "QR" || category == "SpecialQR")
+        {
+            return "// ASP.NET Core Minimal API endpoint" + nl
+                + "app.MapGet(\"/qr\", () =>" + nl
+                + "{" + nl
+                + "    var png = QR.ToPng(\"" + EscapeForComment(Host?.Content ?? "https://example.com") + "\");" + nl
+                + "    return Results.File(png, \"image/png\", \"qrcode.png\");" + nl
+                + "});" + nl + nl
+                + "// Or in a Controller" + nl
+                + "[HttpGet(\"qr/{text}\")]" + nl
+                + "public IActionResult GetQrCode(string text)" + nl
+                + "{" + nl
+                + "    var png = QR.ToPng(text);" + nl
+                + "    return File(png, \"image/png\");" + nl
+                + "}";
+        }
+        else if (category == "Barcode")
+        {
+            return "// ASP.NET Core Minimal API endpoint" + nl
+                + "app.MapGet(\"/barcode/{text}\", (string text) =>" + nl
+                + "{" + nl
+                + "    var png = Barcode.Png(BarcodeType." + (Host?.GetBarcodeTypeEnumName() ?? "Code128") + ", text);" + nl
+                + "    return Results.File(png, \"image/png\", \"barcode.png\");" + nl
+                + "});" + nl + nl
+                + "// Or in a Controller" + nl
+                + "[HttpGet(\"barcode/{text}\")]" + nl
+                + "public IActionResult GetBarcode(string text)" + nl
+                + "{" + nl
+                + "    var png = Barcode.Png(BarcodeType." + (Host?.GetBarcodeTypeEnumName() ?? "Code128") + ", text);" + nl
+                + "    return File(png, \"image/png\");" + nl
+                + "}";
+        }
+        else
+        {
+            var method = Host?.SelectedMatrixType switch
+            {
+                "Pdf417" => "Pdf417Code",
+                "Aztec" => "AztecCode",
+                _ => "DataMatrixCode"
+            };
+            return "// ASP.NET Core Minimal API endpoint" + nl
+                + "app.MapGet(\"/matrix/{text}\", (string text) =>" + nl
+                + "{" + nl
+                + "    var png = " + method + ".ToPng(text);" + nl
+                + "    return Results.File(png, \"image/png\", \"matrix.png\");" + nl
+                + "});" + nl + nl
+                + "// Or in a Controller" + nl
+                + "[HttpGet(\"matrix/{text}\")]" + nl
+                + "public IActionResult GetMatrix(string text)" + nl
+                + "{" + nl
+                + "    var png = " + method + ".ToPng(text);" + nl
+                + "    return File(png, \"image/png\");" + nl
+                + "}";
+        }
+    }
+
+    private string GetBlazorExample(string baseCode)
+    {
+        if (Host?.SelectedMode == "Decode") return baseCode;
+
+        var nl = "\n";
+        var category = Host?.SelectedCategory ?? "QR";
+
+        if (category == "QR" || category == "SpecialQR")
+        {
+            return "// Blazor component with dynamic QR code" + nl
+                + "@using CodeGlyphX" + nl + nl
+                + "<img src=\"@_qrDataUri\" alt=\"QR Code\" />" + nl + nl
+                + "@code {" + nl
+                + "    private string _qrDataUri = \"\";" + nl + nl
+                + "    protected override void OnInitialized()" + nl
+                + "    {" + nl
+                + "        var png = QR.ToPng(\"" + EscapeForComment(Host?.Content ?? "https://example.com") + "\");" + nl
+                + "        _qrDataUri = $\"data:image/png;base64,{Convert.ToBase64String(png)}\";" + nl
+                + "    }" + nl
+                + "}";
+        }
+        else if (category == "Barcode")
+        {
+            return "// Blazor component with dynamic barcode" + nl
+                + "@using CodeGlyphX" + nl + nl
+                + "<img src=\"@_barcodeDataUri\" alt=\"Barcode\" />" + nl + nl
+                + "@code {" + nl
+                + "    private string _barcodeDataUri = \"\";" + nl + nl
+                + "    protected override void OnInitialized()" + nl
+                + "    {" + nl
+                + "        var png = Barcode.Png(BarcodeType." + (Host?.GetBarcodeTypeEnumName() ?? "Code128") + ", \"" + EscapeForComment(Host?.BarcodeContent ?? "12345") + "\");" + nl
+                + "        _barcodeDataUri = $\"data:image/png;base64,{Convert.ToBase64String(png)}\";" + nl
+                + "    }" + nl
+                + "}";
+        }
+        else
+        {
+            var method = Host?.SelectedMatrixType switch
+            {
+                "Pdf417" => "Pdf417Code",
+                "Aztec" => "AztecCode",
+                _ => "DataMatrixCode"
+            };
+            return "// Blazor component with dynamic matrix code" + nl
+                + "@using CodeGlyphX" + nl + nl
+                + "<img src=\"@_matrixDataUri\" alt=\"Matrix Code\" />" + nl + nl
+                + "@code {" + nl
+                + "    private string _matrixDataUri = \"\";" + nl + nl
+                + "    protected override void OnInitialized()" + nl
+                + "    {" + nl
+                + "        var png = " + method + ".ToPng(\"" + EscapeForComment(Host?.MatrixContent ?? "Data") + "\");" + nl
+                + "        _matrixDataUri = $\"data:image/png;base64,{Convert.ToBase64String(png)}\";" + nl
+                + "    }" + nl
+                + "}";
+        }
+    }
+
+    private string GetMauiExample(string baseCode)
+    {
+        if (Host?.SelectedMode == "Decode") return baseCode;
+
+        var nl = "\n";
+        var category = Host?.SelectedCategory ?? "QR";
+
+        if (category == "QR" || category == "SpecialQR")
+        {
+            return "// .NET MAUI - Display QR code in Image control" + nl
+                + "using CodeGlyphX;" + nl + nl
+                + "// In your ViewModel or code-behind:" + nl
+                + "var png = QR.ToPng(\"" + EscapeForComment(Host?.Content ?? "https://example.com") + "\");" + nl
+                + "QrImage.Source = ImageSource.FromStream(() => new MemoryStream(png));" + nl + nl
+                + "// XAML:" + nl
+                + "// <Image x:Name=\"QrImage\" WidthRequest=\"200\" HeightRequest=\"200\" />";
+        }
+        else if (category == "Barcode")
+        {
+            return "// .NET MAUI - Display barcode in Image control" + nl
+                + "using CodeGlyphX;" + nl + nl
+                + "// In your ViewModel or code-behind:" + nl
+                + "var png = Barcode.Png(BarcodeType." + (Host?.GetBarcodeTypeEnumName() ?? "Code128") + ", \"" + EscapeForComment(Host?.BarcodeContent ?? "12345") + "\");" + nl
+                + "BarcodeImage.Source = ImageSource.FromStream(() => new MemoryStream(png));" + nl + nl
+                + "// XAML:" + nl
+                + "// <Image x:Name=\"BarcodeImage\" WidthRequest=\"300\" HeightRequest=\"100\" />";
+        }
+        else
+        {
+            var method = Host?.SelectedMatrixType switch
+            {
+                "Pdf417" => "Pdf417Code",
+                "Aztec" => "AztecCode",
+                _ => "DataMatrixCode"
+            };
+            return "// .NET MAUI - Display matrix code in Image control" + nl
+                + "using CodeGlyphX;" + nl + nl
+                + "// In your ViewModel or code-behind:" + nl
+                + "var png = " + method + ".ToPng(\"" + EscapeForComment(Host?.MatrixContent ?? "Data") + "\");" + nl
+                + "MatrixImage.Source = ImageSource.FromStream(() => new MemoryStream(png));" + nl + nl
+                + "// XAML:" + nl
+                + "// <Image x:Name=\"MatrixImage\" WidthRequest=\"200\" HeightRequest=\"200\" />";
+        }
+    }
+
+    private static string EscapeForComment(string s) => s.Replace("\\", "\\\\").Replace("\"", "\\\"");
 }

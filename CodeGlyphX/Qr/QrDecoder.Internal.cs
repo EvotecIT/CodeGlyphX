@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using CodeGlyphX.Internal;
@@ -67,10 +68,12 @@ public static partial class QrDecoder {
         QrErrorCorrectionLevel.Q,
         QrErrorCorrectionLevel.H
     };
+    private static readonly IComparer<QrFormatCandidate> FormatCandidateComparer = new QrFormatCandidateComparer();
 
     private static bool TryDecodeFormatBits(int bitsA, int bitsB, out QrFormatCandidate[] candidates, out int bestDistance) {
         bestDistance = int.MaxValue;
-        var list = new System.Collections.Generic.List<QrFormatCandidate>(4);
+        Span<QrFormatCandidate> buffer = stackalloc QrFormatCandidate[FormatPatterns.Length];
+        var count = 0;
 
         for (var i = 0; i < FormatPatterns.Length; i++) {
             var pattern = FormatPatterns[i];
@@ -83,11 +86,11 @@ public static partial class QrDecoder {
                 var ecc = FormatEccOrder[i / 8];
                 var mask = i % 8;
                 var maxDist = Math.Max(distA, distB);
-                list.Add(new QrFormatCandidate(i, ecc, mask, minDist, maxDist, distA + distB));
+                buffer[count++] = new QrFormatCandidate(i, ecc, mask, minDist, maxDist, distA + distB);
             }
         }
 
-        if (list.Count == 0) {
+        if (count == 0) {
             // No candidates within the spec-recommended distance. For degraded images, try the closest
             // patterns anyway and rely on RS + payload validation to reject wrong masks.
             if (bestDistance > 5) {
@@ -105,19 +108,24 @@ public static partial class QrDecoder {
                 var ecc = FormatEccOrder[i / 8];
                 var mask = i % 8;
                 var maxDist = Math.Max(distA, distB);
-                list.Add(new QrFormatCandidate(i, ecc, mask, minDist, maxDist, distA + distB));
+                buffer[count++] = new QrFormatCandidate(i, ecc, mask, minDist, maxDist, distA + distB);
             }
 
-            if (list.Count == 0) {
+            if (count == 0) {
                 candidates = Array.Empty<QrFormatCandidate>();
                 return false;
             }
         }
 
-        list.Sort(CompareCandidates);
-
-        candidates = list.ToArray();
+        var result = new QrFormatCandidate[count];
+        for (var i = 0; i < count; i++) result[i] = buffer[i];
+        Array.Sort(result, FormatCandidateComparer);
+        candidates = result;
         return true;
+    }
+
+    private sealed class QrFormatCandidateComparer : IComparer<QrFormatCandidate> {
+        public int Compare(QrFormatCandidate x, QrFormatCandidate y) => CompareCandidates(x, y);
     }
 
     private static int CompareCandidates(QrFormatCandidate a, QrFormatCandidate b) {
@@ -130,7 +138,8 @@ public static partial class QrDecoder {
     }
 
     private static QrFormatCandidate[] BuildAllFormatCandidates(int bitsA, int bitsB) {
-        var list = new System.Collections.Generic.List<QrFormatCandidate>(FormatPatterns.Length);
+        var list = new QrFormatCandidate[FormatPatterns.Length];
+        var count = 0;
         for (var i = 0; i < FormatPatterns.Length; i++) {
             var pattern = FormatPatterns[i];
             var distA = CountBits(bitsA ^ pattern);
@@ -139,11 +148,14 @@ public static partial class QrDecoder {
             var ecc = FormatEccOrder[i / 8];
             var mask = i % 8;
             var maxDist = Math.Max(distA, distB);
-            list.Add(new QrFormatCandidate(i, ecc, mask, minDist, maxDist, distA + distB));
+            list[count++] = new QrFormatCandidate(i, ecc, mask, minDist, maxDist, distA + distB);
         }
 
-        list.Sort(CompareCandidates);
-        return list.ToArray();
+        Array.Sort(list, 0, count, FormatCandidateComparer);
+        if (count == list.Length) return list;
+        var result = new QrFormatCandidate[count];
+        Array.Copy(list, result, count);
+        return result;
     }
 
     private static bool TryDecodeWithCandidates(BitMatrix modules, int version, QrFormatCandidate[] candidates, int formatBestDistance, bool requireBothWithin, Func<bool>? shouldStop, out QrDecoded result, out QrDecodeDiagnostics diagnostics) {

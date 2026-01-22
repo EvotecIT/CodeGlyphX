@@ -24,6 +24,86 @@
       "anchor": "constructor-matrixpngrenderoptions-matrixpngrenderoptions"
     },
     {
+      "name": "WithModuleSize",
+      "kind": "Method",
+      "summary": "Sets the module size in pixels.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "size",
+          "type": "int",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "MatrixPngRenderOptions WithModuleSize(int size)",
+      "xmlId": "M:CodeGlyphX.Rendering.Png.MatrixPngRenderOptions.WithModuleSize(System.Int32)",
+      "anchor": "method-withmodulesize-matrixpngrenderoptions-withmodulesize-int-size"
+    },
+    {
+      "name": "WithQuietZone",
+      "kind": "Method",
+      "summary": "Sets the quiet zone size in modules.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "quietZone",
+          "type": "int",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "MatrixPngRenderOptions WithQuietZone(int quietZone)",
+      "xmlId": "M:CodeGlyphX.Rendering.Png.MatrixPngRenderOptions.WithQuietZone(System.Int32)",
+      "anchor": "method-withquietzone-matrixpngrenderoptions-withquietzone-int-quietzone"
+    },
+    {
+      "name": "WithForeground",
+      "kind": "Method",
+      "summary": "Sets the foreground color.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "color",
+          "type": "Rgba32",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "MatrixPngRenderOptions WithForeground(Rgba32 color)",
+      "xmlId": "M:CodeGlyphX.Rendering.Png.MatrixPngRenderOptions.WithForeground(CodeGlyphX.Rendering.Png.Rgba32)",
+      "anchor": "method-withforeground-matrixpngrenderoptions-withforeground-rgba32-color"
+    },
+    {
+      "name": "WithBackground",
+      "kind": "Method",
+      "summary": "Sets the background color.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "color",
+          "type": "Rgba32",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "MatrixPngRenderOptions WithBackground(Rgba32 color)",
+      "xmlId": "M:CodeGlyphX.Rendering.Png.MatrixPngRenderOptions.WithBackground(CodeGlyphX.Rendering.Png.Rgba32)",
+      "anchor": "method-withbackground-matrixpngrenderoptions-withbackground-rgba32-color"
+    },
+    {
       "name": "ModuleSize",
       "kind": "Property",
       "summary": "Module size in pixels.",

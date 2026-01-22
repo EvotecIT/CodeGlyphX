@@ -33,6 +33,13 @@ public static partial class Pdf417Decoder {
     }
 
     /// <summary>
+    /// Attempts to decode a PDF417 symbol from a module matrix, including Macro metadata when present.
+    /// </summary>
+    public static bool TryDecode(BitMatrix modules, out Pdf417Decoded decoded) {
+        return TryDecode(modules, CancellationToken.None, out decoded);
+    }
+
+    /// <summary>
     /// Attempts to decode a PDF417 symbol from a module matrix, with cancellation.
     /// </summary>
     public static bool TryDecode(BitMatrix modules, CancellationToken cancellationToken, out string value) {
@@ -49,6 +56,38 @@ public static partial class Pdf417Decoder {
         if (TryDecodeWithStartPattern(mirror, cancellationToken, out value)) return true;
 
         value = string.Empty;
+        return false;
+    }
+
+    /// <summary>
+    /// Attempts to decode a PDF417 symbol from a module matrix, with cancellation and Macro metadata when present.
+    /// </summary>
+    public static bool TryDecode(BitMatrix modules, CancellationToken cancellationToken, out Pdf417Decoded decoded) {
+        if (modules is null) throw new ArgumentNullException(nameof(modules));
+        if (cancellationToken.IsCancellationRequested) { decoded = null!; return false; }
+
+        if (TryDecodeCore(modules, cancellationToken, out var value, out var macro)) {
+            decoded = new Pdf417Decoded(value, macro);
+            return true;
+        }
+        if (cancellationToken.IsCancellationRequested) { decoded = null!; return false; }
+        if (TryDecodeWithStartPattern(modules, cancellationToken, out value, out macro)) {
+            decoded = new Pdf417Decoded(value, macro);
+            return true;
+        }
+        if (cancellationToken.IsCancellationRequested) { decoded = null!; return false; }
+        var mirror = MirrorX(modules);
+        if (TryDecodeCore(mirror, cancellationToken, out value, out macro)) {
+            decoded = new Pdf417Decoded(value, macro);
+            return true;
+        }
+        if (cancellationToken.IsCancellationRequested) { decoded = null!; return false; }
+        if (TryDecodeWithStartPattern(mirror, cancellationToken, out value, out macro)) {
+            decoded = new Pdf417Decoded(value, macro);
+            return true;
+        }
+
+        decoded = null!;
         return false;
     }
 

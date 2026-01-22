@@ -12,7 +12,7 @@
     {
       "name": "Encode",
       "kind": "Method",
-      "summary": "Encodes an EAN barcode (EAN-8 or EAN-13, depending on input length).",
+      "summary": "Encodes an EAN barcode (EAN-8 or EAN-13, depending on input length). Use \u0022\u002BNN\u0022 or \u0022\u002BNNNNN\u0022 to append add-ons.",
       "remarks": null,
       "returns": null,
       "parameters": [

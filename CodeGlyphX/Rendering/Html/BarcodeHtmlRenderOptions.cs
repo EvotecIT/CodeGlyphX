@@ -5,7 +5,7 @@ namespace CodeGlyphX.Rendering.Html;
 /// <summary>
 /// Options for <see cref="HtmlBarcodeRenderer"/>.
 /// </summary>
-public sealed class BarcodeHtmlRenderOptions {
+public sealed partial class BarcodeHtmlRenderOptions {
     /// <summary>
     /// Gets or sets the size of a single module in pixels.
     /// </summary>

@@ -5,7 +5,7 @@ namespace CodeGlyphX.Rendering.Svg;
 /// <summary>
 /// Options for rendering generic 2D matrices to SVG.
 /// </summary>
-public sealed class MatrixSvgRenderOptions {
+public sealed partial class MatrixSvgRenderOptions {
     /// <summary>
     /// Module size in pixels.
     /// </summary>

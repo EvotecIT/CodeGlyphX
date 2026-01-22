@@ -1,0 +1,33 @@
+{
+  "name": "PatchCodeEncoder",
+  "fullName": "CodeGlyphX.PatchCode.PatchCodeEncoder",
+  "namespace": "CodeGlyphX.PatchCode",
+  "kind": "Class",
+  "slug": "codeglyphx-patchcode-patchcodeencoder",
+  "summary": "Encodes Patch Code symbols.",
+  "remarks": null,
+  "examples": [],
+  "seeAlso": [],
+  "members": [
+    {
+      "name": "Encode",
+      "kind": "Method",
+      "summary": "Encodes a Patch Code symbol. Valid values are: 1, 2, 3, 4, 6, T.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "content",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static Barcode1D Encode(string content)",
+      "xmlId": "M:CodeGlyphX.PatchCode.PatchCodeEncoder.Encode(System.String)",
+      "anchor": "method-encode-static-barcode1d-encode-string-content"
+    }
+  ]
+}

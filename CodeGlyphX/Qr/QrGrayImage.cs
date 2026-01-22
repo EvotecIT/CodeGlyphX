@@ -33,19 +33,22 @@ internal readonly struct QrGrayImage {
 
     public QrGrayImage WithThreshold(byte threshold) => new(Width, Height, Gray, Min, Max, threshold, null);
 
-    public QrGrayImage WithBinaryBoost(int delta) {
+    public QrGrayImage WithBinaryBoost(int delta) => WithBinaryBoost(delta, pool: null);
+
+    public QrGrayImage WithBinaryBoost(int delta, QrGrayImagePool? pool) {
         if (delta <= 0) return this;
 
         var w = Width;
         var h = Height;
-        var boosted = new byte[w * h];
+        var total = w * h;
+        var boosted = RentBuffer(total, pool);
         Span<int> histogram = stackalloc int[256];
 
         byte min = 255;
         byte max = 0;
 
         var t = Threshold;
-        for (var i = 0; i < Gray.Length; i++) {
+        for (var i = 0; i < total; i++) {
             var v = Gray[i];
             var b = v <= t ? v - delta : v + delta;
             if (b < 0) b = 0;
@@ -57,24 +60,27 @@ internal readonly struct QrGrayImage {
             if (bv > max) max = bv;
         }
 
-        var threshold = ComputeOtsuThreshold(histogram, boosted.Length);
+        var threshold = ComputeOtsuThreshold(histogram, total);
         return new QrGrayImage(w, h, boosted, min, max, threshold, null);
     }
 
-    public QrGrayImage WithContrastStretch(int minRange = 40) {
+    public QrGrayImage WithContrastStretch(int minRange = 40) => WithContrastStretch(minRange, pool: null);
+
+    public QrGrayImage WithContrastStretch(int minRange, QrGrayImagePool? pool) {
         var range = Max - Min;
         if (range <= 0 || range >= minRange) return this;
 
         var w = Width;
         var h = Height;
-        var stretched = new byte[w * h];
+        var total = w * h;
+        var stretched = RentBuffer(total, pool);
         Span<int> histogram = stackalloc int[256];
 
         byte min = 255;
         byte max = 0;
 
         var scale = 255.0 / range;
-        for (var i = 0; i < Gray.Length; i++) {
+        for (var i = 0; i < total; i++) {
             var v = (int)((Gray[i] - Min) * scale + 0.5);
             if (v < 0) v = 0;
             else if (v > 255) v = 255;
@@ -85,15 +91,18 @@ internal readonly struct QrGrayImage {
             if (b > max) max = b;
         }
 
-        var threshold = ComputeOtsuThreshold(histogram, stretched.Length);
+        var threshold = ComputeOtsuThreshold(histogram, total);
         return new QrGrayImage(w, h, stretched, min, max, threshold, null);
     }
 
-    public QrGrayImage WithBoxBlur(int radius) {
+    public QrGrayImage WithBoxBlur(int radius) => WithBoxBlur(radius, pool: null);
+
+    public QrGrayImage WithBoxBlur(int radius, QrGrayImagePool? pool) {
         if (radius <= 0) return this;
 
         var w = Width;
         var h = Height;
+        var total = w * h;
         var stride = w + 1;
         var integral = ArrayPool<int>.Shared.Rent(stride * (h + 1));
         Array.Clear(integral, 0, stride * (h + 1));
@@ -110,7 +119,7 @@ internal readonly struct QrGrayImage {
                 }
             }
 
-            var blurred = new byte[w * h];
+            var blurred = RentBuffer(total, pool);
             Span<int> histogram = stackalloc int[256];
             byte min = 255;
             byte max = 0;
@@ -147,14 +156,16 @@ internal readonly struct QrGrayImage {
                 }
             }
 
-            var threshold = ComputeOtsuThreshold(histogram, blurred.Length);
+            var threshold = ComputeOtsuThreshold(histogram, total);
             return new QrGrayImage(w, h, blurred, min, max, threshold, null);
         } finally {
             ArrayPool<int>.Shared.Return(integral);
         }
     }
 
-    public QrGrayImage WithAdaptiveThreshold(int windowSize, int offset) {
+    public QrGrayImage WithAdaptiveThreshold(int windowSize, int offset) => WithAdaptiveThreshold(windowSize, offset, pool: null);
+
+    public QrGrayImage WithAdaptiveThreshold(int windowSize, int offset, QrGrayImagePool? pool) {
         if (windowSize < 3) windowSize = 3;
         if ((windowSize & 1) == 0) windowSize++;
         if (offset < 0) offset = 0;
@@ -178,7 +189,8 @@ internal readonly struct QrGrayImage {
                 }
             }
 
-            var thresholds = new byte[w * h];
+            var total = w * h;
+            var thresholds = RentBuffer(total, pool);
             var radius = windowSize / 2;
 
             for (var y = 0; y < h; y++) {
@@ -214,12 +226,14 @@ internal readonly struct QrGrayImage {
         }
     }
 
-    public QrGrayImage Rotate90() {
+    public QrGrayImage Rotate90() => Rotate90(pool: null);
+
+    public QrGrayImage Rotate90(QrGrayImagePool? pool) {
         var w = Width;
         var h = Height;
         var rotW = h;
         var rotH = w;
-        var rotated = new byte[rotW * rotH];
+        var rotated = RentBuffer(rotW * rotH, pool);
 
         for (var y = 0; y < h; y++) {
             var row = y * w;
@@ -233,10 +247,12 @@ internal readonly struct QrGrayImage {
         return new QrGrayImage(rotW, rotH, rotated, Min, Max, Threshold, null);
     }
 
-    public QrGrayImage Rotate180() {
+    public QrGrayImage Rotate180() => Rotate180(pool: null);
+
+    public QrGrayImage Rotate180(QrGrayImagePool? pool) {
         var w = Width;
         var h = Height;
-        var rotated = new byte[w * h];
+        var rotated = RentBuffer(w * h, pool);
 
         for (var y = 0; y < h; y++) {
             var row = y * w;
@@ -251,12 +267,14 @@ internal readonly struct QrGrayImage {
         return new QrGrayImage(w, h, rotated, Min, Max, Threshold, null);
     }
 
-    public QrGrayImage Rotate270() {
+    public QrGrayImage Rotate270() => Rotate270(pool: null);
+
+    public QrGrayImage Rotate270(QrGrayImagePool? pool) {
         var w = Width;
         var h = Height;
         var rotW = h;
         var rotH = w;
-        var rotated = new byte[rotW * rotH];
+        var rotated = RentBuffer(rotW * rotH, pool);
 
         for (var y = 0; y < h; y++) {
             var row = y * w;
@@ -270,10 +288,12 @@ internal readonly struct QrGrayImage {
         return new QrGrayImage(rotW, rotH, rotated, Min, Max, Threshold, null);
     }
 
-    public QrGrayImage MirrorX() {
+    public QrGrayImage MirrorX() => MirrorX(pool: null);
+
+    public QrGrayImage MirrorX(QrGrayImagePool? pool) {
         var w = Width;
         var h = Height;
-        var mirrored = new byte[w * h];
+        var mirrored = RentBuffer(w * h, pool);
 
         for (var y = 0; y < h; y++) {
             var row = y * w;
@@ -287,14 +307,18 @@ internal readonly struct QrGrayImage {
     }
 
     public static bool TryCreate(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat fmt, int scale, out QrGrayImage image) {
-        return TryCreate(pixels, width, height, stride, fmt, scale, minContrast: 24, shouldStop: null, out image);
+        return TryCreate(pixels, width, height, stride, fmt, scale, minContrast: 24, shouldStop: null, pool: null, out image);
     }
 
     public static bool TryCreate(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat fmt, int scale, int minContrast, out QrGrayImage image) {
-        return TryCreate(pixels, width, height, stride, fmt, scale, minContrast, shouldStop: null, out image);
+        return TryCreate(pixels, width, height, stride, fmt, scale, minContrast, shouldStop: null, pool: null, out image);
     }
 
     public static bool TryCreate(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat fmt, int scale, int minContrast, Func<bool>? shouldStop, out QrGrayImage image) {
+        return TryCreate(pixels, width, height, stride, fmt, scale, minContrast, shouldStop, pool: null, out image);
+    }
+
+    public static bool TryCreate(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat fmt, int scale, int minContrast, Func<bool>? shouldStop, QrGrayImagePool? pool, out QrGrayImage image) {
         image = default;
 
         if (width <= 0 || height <= 0) return false;
@@ -307,7 +331,8 @@ internal readonly struct QrGrayImage {
         var outH = height / scale;
         if (outW <= 0 || outH <= 0) return false;
 
-        var gray = new byte[outW * outH];
+        var total = outW * outH;
+        var gray = RentBuffer(total, pool);
         Span<int> histogram = stackalloc int[256];
 
         byte min = 255;
@@ -433,17 +458,20 @@ internal readonly struct QrGrayImage {
 
         if (minContrast > 0 && max - min < minContrast) return false;
 
-        var threshold = ComputeOtsuThreshold(histogram, gray.Length);
+        var threshold = ComputeOtsuThreshold(histogram, total);
         image = new QrGrayImage(outW, outH, gray, min, max, threshold, null);
         return true;
     }
 
-    public QrGrayImage WithLocalNormalize(int windowSize) {
+    public QrGrayImage WithLocalNormalize(int windowSize) => WithLocalNormalize(windowSize, pool: null);
+
+    public QrGrayImage WithLocalNormalize(int windowSize, QrGrayImagePool? pool) {
         if (windowSize < 3) windowSize = 3;
         if ((windowSize & 1) == 0) windowSize++;
 
         var w = Width;
         var h = Height;
+        var total = w * h;
         var stride = w + 1;
         var integral = ArrayPool<int>.Shared.Rent(stride * (h + 1));
         Array.Clear(integral, 0, stride * (h + 1));
@@ -460,7 +488,7 @@ internal readonly struct QrGrayImage {
                 }
             }
 
-            var normalized = new byte[w * h];
+            var normalized = RentBuffer(total, pool);
             Span<int> histogram = stackalloc int[256];
             byte min = 255;
             byte max = 0;
@@ -499,11 +527,15 @@ internal readonly struct QrGrayImage {
                 }
             }
 
-            var threshold = ComputeOtsuThreshold(histogram, normalized.Length);
+            var threshold = ComputeOtsuThreshold(histogram, total);
             return new QrGrayImage(w, h, normalized, min, max, threshold, null);
         } finally {
             ArrayPool<int>.Shared.Return(integral);
         }
+    }
+
+    private static byte[] RentBuffer(int size, QrGrayImagePool? pool) {
+        return pool is null ? new byte[size] : pool.Rent(size);
     }
 
     private static byte ComputeOtsuThreshold(ReadOnlySpan<int> hist, int total) {

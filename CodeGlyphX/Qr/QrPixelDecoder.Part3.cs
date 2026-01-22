@@ -33,34 +33,35 @@ internal static partial class QrPixelDecoder {
         PooledList<QrDecoded> list,
         HashSet<string> seen,
         Func<QrDecoded, bool>? accept,
-        DecodeBudget budget) {
+        DecodeBudget budget,
+        QrGrayImagePool? pool) {
         if (budget.IsExpired) return;
         Func<bool>? shouldStop = budget.Enabled ? () => budget.IsNearDeadline(120) : null;
-        if (!QrGrayImage.TryCreate(pixels, width, height, stride, fmt, scale, settings.MinContrast, shouldStop, out var image)) {
+        if (!QrGrayImage.TryCreate(pixels, width, height, stride, fmt, scale, settings.MinContrast, shouldStop, pool, out var image)) {
             return;
         }
 
-        CollectAllFromImage(image, settings, list, seen, accept, budget);
+        CollectAllFromImage(image, settings, list, seen, accept, budget, pool);
         if (budget.IsExpired) return;
 
         if (settings.AllowContrastStretch) {
             var range = image.Max - image.Min;
             if (range < 48) {
-                var stretched = image.WithContrastStretch(48);
+                var stretched = image.WithContrastStretch(48, pool);
                 if (!ReferenceEquals(stretched.Gray, image.Gray)) {
-                    CollectAllFromImage(stretched, settings, list, seen, accept, budget);
+                    CollectAllFromImage(stretched, settings, list, seen, accept, budget, pool);
                 }
             }
         }
     }
 
     private static void AddPercentileThresholds(QrGrayImage image, ref Span<byte> list, ref int count) {
-        var total = image.Gray.Length;
+        var total = image.Width * image.Height;
         if (total == 0) return;
 
         Span<int> histogram = stackalloc int[256];
         var gray = image.Gray;
-        for (var i = 0; i < gray.Length; i++) {
+        for (var i = 0; i < total; i++) {
             histogram[gray[i]]++;
         }
 
@@ -94,15 +95,24 @@ internal static partial class QrPixelDecoder {
         bool aggressive) {
         if (budget.IsExpired) return;
         Func<bool>? shouldStop = budget.Enabled ? () => budget.IsExpired : null;
-        var rowStepOverride = budget.Enabled && budget.MaxMilliseconds <= 800 ? 2 : 0;
-        QrFinderPatternDetector.FindCandidates(image, invert, candidates, aggressive, shouldStop, rowStepOverride);
+        var tightBudget = budget.Enabled && budget.MaxMilliseconds <= 800;
+        var rowStepOverride = 0;
+        var maxCandidates = 0;
+        if (tightBudget) {
+            var minDim = image.Width < image.Height ? image.Width : image.Height;
+            rowStepOverride = minDim >= 720 ? 3 : 2;
+            maxCandidates = aggressive ? 36 : 24;
+        }
+        QrFinderPatternDetector.FindCandidates(image, invert, candidates, aggressive, shouldStop, rowStepOverride, maxCandidates, allowFullScan: !tightBudget, requireDiagonalCheck: !tightBudget);
+        var candidatesSorted = false;
         if (budget.Enabled && candidates.Count > 64) {
             candidates.Sort(static (a, b) => b.Count.CompareTo(a.Count));
             candidates.RemoveRange(64, candidates.Count - 64);
+            candidatesSorted = true;
         }
         if (budget.IsExpired) return;
         if (candidates.Count >= 3) {
-            CollectFromFinderCandidates(image, invert, candidates, results, seen, accept, budget, aggressive);
+            CollectFromFinderCandidates(image, invert, candidates, results, seen, accept, budget, aggressive, candidatesSorted);
         }
 
         if (!budget.IsExpired && (!budget.Enabled || !budget.IsNearDeadline(200))) {
@@ -118,9 +128,14 @@ internal static partial class QrPixelDecoder {
         HashSet<string> seen,
         Func<QrDecoded, bool>? accept,
         DecodeBudget budget,
-        bool aggressive) {
-        candidates.Sort(static (a, b) => b.Count.CompareTo(a.Count));
-        var n = Math.Min(candidates.Count, 10);
+        bool aggressive,
+        bool candidatesSorted) {
+        if (!candidatesSorted) {
+            candidates.Sort(static (a, b) => b.Count.CompareTo(a.Count));
+        }
+        var candidateSpan = CollectionsMarshal.AsSpan(candidates);
+        var candidateCount = candidateSpan.Length;
+        var n = Math.Min(candidateCount, 10);
         var triedTriples = 0;
         var maxTriples = 48;
         if (budget.Enabled) {
@@ -134,9 +149,9 @@ internal static partial class QrPixelDecoder {
                     if (budget.IsExpired) return;
                     if (triedTriples++ >= maxTriples) { stop = true; break; }
 
-                    var a = candidates[i];
-                    var b = candidates[j];
-                    var c = candidates[k];
+                    var a = candidateSpan[i];
+                    var b = candidateSpan[j];
+                    var c = candidateSpan[k];
 
                     var msMin = Math.Min(a.ModuleSize, Math.Min(b.ModuleSize, c.ModuleSize));
                     var msMax = Math.Max(a.ModuleSize, Math.Max(b.ModuleSize, c.ModuleSize));
@@ -152,7 +167,7 @@ internal static partial class QrPixelDecoder {
                             tl,
                             tr,
                             bl,
-                            candidates.Count,
+                            candidateCount,
                             triedTriples,
                             accept,
                             aggressive,
@@ -260,19 +275,36 @@ internal static partial class QrPixelDecoder {
 
         // Finder-based sampling (robust to extra background/noise). Try multiple triples when the region contains UI/text.
         Func<bool>? shouldStop = budget.Enabled ? () => budget.IsExpired : null;
-        var rowStepOverride = budget.Enabled && budget.MaxMilliseconds <= 800 ? 2 : 0;
-        QrFinderPatternDetector.FindCandidates(image, invert, candidates, aggressive, shouldStop, rowStepOverride);
+        var tightBudget = budget.Enabled && budget.MaxMilliseconds <= 800;
+        var rowStepOverride = 0;
+        if (tightBudget) {
+            var minDim = image.Width < image.Height ? image.Width : image.Height;
+            rowStepOverride = minDim >= 720 ? 3 : 2;
+        }
+        var maxCandidates = 0;
+        if (tightBudget) {
+            maxCandidates = aggressive ? 36 : 24;
+        }
+        QrFinderPatternDetector.FindCandidates(image, invert, candidates, aggressive, shouldStop, rowStepOverride, maxCandidates, allowFullScan: !tightBudget, requireDiagonalCheck: !tightBudget);
         if (budget.Enabled && candidates.Count > 64) {
             candidates.Sort(static (a, b) => b.Count.CompareTo(a.Count));
             candidates.RemoveRange(64, candidates.Count - 64);
         }
-        if (budget.Enabled && budget.MaxMilliseconds <= 800 && candidates.Count > 30) {
+        if (tightBudget && candidates.Count > 30) {
             diagnostics = new QrPixelDecodeDiagnostics(scale, threshold, invert, candidates.Count, candidateTriplesTried: 0, dimension: 0,
                 moduleDiagnostics: new global::CodeGlyphX.QrDecodeDiagnostics(global::CodeGlyphX.QrDecodeFailure.Payload));
             return false;
         }
 
         if (candidates.Count >= 3) {
+            if (tightBudget && candidates.Count > 16) {
+                if (TryDecodeByCandidateBounds(scale, threshold, image, invert, candidates, accept, aggressive, budget, out result, out var diagBounds)) {
+                    diagnostics = diagBounds;
+                    return true;
+                }
+                diagnostics = Better(diagnostics, diagBounds);
+                return false;
+            }
             if (TryDecodeFromFinderCandidates(scale, threshold, image, invert, candidates, accept, aggressive, budget, out result, out var diagF)) {
                 diagnostics = diagF;
                 return true;
@@ -290,14 +322,22 @@ internal static partial class QrPixelDecoder {
             if (budget.Enabled && budget.MaxMilliseconds <= 800) {
                 return false;
             }
-            if (TryDecodeBySingleFinder(scale, threshold, image, invert, candidates, accept, aggressive, budget, out result, out var diagS)) {
-                diagnostics = diagS;
-                return true;
+            var maxSingleFinder = aggressive ? 20 : 30;
+            if (candidates.Count <= maxSingleFinder) {
+                if (TryDecodeBySingleFinder(scale, threshold, image, invert, candidates, accept, aggressive, budget, out result, out var diagS)) {
+                    diagnostics = diagS;
+                    return true;
+                }
+                diagnostics = Better(diagnostics, diagS);
             }
-            diagnostics = Better(diagnostics, diagS);
         }
 
         if (budget.Enabled && budget.MaxMilliseconds <= 800) {
+            return false;
+        }
+
+        var skipFallbacks = candidates.Count >= (aggressive ? 48 : 64);
+        if (skipFallbacks) {
             return false;
         }
 
@@ -388,15 +428,15 @@ internal static partial class QrPixelDecoder {
         candidates.Sort(static (a, b) => b.Count.CompareTo(a.Count));
         var n = Math.Min(candidates.Count, 4);
 
-        var orientationsBuf = new SingleFinderOrientation[3];
-        var dimsBuf = new int[8];
+        Span<SingleFinderOrientation> orientationsBuf = stackalloc SingleFinderOrientation[3];
+        Span<int> dimsBuf = stackalloc int[8];
 
         for (var i = 0; i < n; i++) {
             var c = candidates[i];
             var moduleSize = c.ModuleSize;
             if (moduleSize <= 0) continue;
 
-            var orientations = orientationsBuf.AsSpan();
+            var orientations = orientationsBuf;
             var oCount = 0;
             var fx = c.X / image.Width;
             var fy = c.Y / image.Height;
@@ -414,7 +454,7 @@ internal static partial class QrPixelDecoder {
                 var orientation = orientations[oi];
                 if (!TryGetMaxDimension(image, c, moduleSize, orientation, out var maxDim)) continue;
 
-                var dims = dimsBuf.AsSpan();
+                var dims = dimsBuf;
                 var dimsCount = 0;
                 var baseDim = NearestValidDimension(maxDim);
                 AddDimensionCandidate(ref dims, ref dimsCount, baseDim);

@@ -3,7 +3,15 @@ using System.Collections.Generic;
 
 namespace CodeGlyphX.RoyalMail;
 
-internal static class RoyalMailFourStateEncoder {
+/// <summary>
+/// Encodes Royal Mail 4-State Customer Code (RM4SCC) barcodes.
+/// </summary>
+public static class RoyalMailFourStateEncoder {
+    /// <summary>
+    /// Encodes a Royal Mail 4-State barcode into a matrix.
+    /// </summary>
+    /// <param name="content">Payload (digits and uppercase A-Z).</param>
+    /// <param name="includeHeaders">When true, includes start/stop bars and checksum (RM4SCC). When false, encodes KIX (headerless).</param>
     public static BitMatrix Encode(string content, bool includeHeaders) {
         if (content is null) throw new ArgumentNullException(nameof(content));
 

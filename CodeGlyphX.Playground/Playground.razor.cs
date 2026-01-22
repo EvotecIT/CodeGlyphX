@@ -186,6 +186,18 @@ public partial class Playground {
                 BarcodeHint = "Enter 14 digits";
                 BarcodeContent = "10012345678902";
                 break;
+            case "ITF":
+                BarcodeHint = "Even number of digits only";
+                BarcodeContent = "123456";
+                break;
+            case "Telepen":
+                BarcodeHint = "Full ASCII support";
+                BarcodeContent = "Hello-123";
+                break;
+            case "Code32":
+                BarcodeHint = "9 digits for Italian pharmaceutical codes";
+                BarcodeContent = "123456789";
+                break;
             case "GS1128":
                 BarcodeHint = "GS1 AI format, e.g. (01)09506000134352(10)ABC123";
                 BarcodeContent = "(01)09506000134352(10)ABC123";

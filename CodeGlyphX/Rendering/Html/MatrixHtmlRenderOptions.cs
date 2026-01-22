@@ -5,7 +5,7 @@ namespace CodeGlyphX.Rendering.Html;
 /// <summary>
 /// Options for rendering generic 2D matrices to HTML.
 /// </summary>
-public sealed class MatrixHtmlRenderOptions {
+public sealed partial class MatrixHtmlRenderOptions {
     /// <summary>
     /// Module size in pixels.
     /// </summary>

@@ -1,0 +1,55 @@
+{
+  "name": "AustraliaPostCustomerEncodingTable",
+  "fullName": "CodeGlyphX.AustraliaPost.AustraliaPostCustomerEncodingTable",
+  "namespace": "CodeGlyphX.AustraliaPost",
+  "kind": "Enum",
+  "slug": "codeglyphx-australiapost-australiapostcustomerencodingtable",
+  "summary": "Customer information encoding tables for Australia Post customer barcodes.",
+  "remarks": null,
+  "examples": [],
+  "seeAlso": [],
+  "members": [
+    {
+      "name": "value__",
+      "kind": "Field",
+      "summary": null,
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "int value__",
+      "xmlId": "F:CodeGlyphX.AustraliaPost.AustraliaPostCustomerEncodingTable.value__",
+      "anchor": "field-value-int-value"
+    },
+    {
+      "name": "N",
+      "kind": "Field",
+      "summary": "N Encoding Table (numeric digits).",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "AustraliaPostCustomerEncodingTable N",
+      "xmlId": "F:CodeGlyphX.AustraliaPost.AustraliaPostCustomerEncodingTable.N",
+      "anchor": "field-n-australiapostcustomerencodingtable-n"
+    },
+    {
+      "name": "C",
+      "kind": "Field",
+      "summary": "C Encoding Table (alphanumeric \u002B space/#).",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "AustraliaPostCustomerEncodingTable C",
+      "xmlId": "F:CodeGlyphX.AustraliaPost.AustraliaPostCustomerEncodingTable.C",
+      "anchor": "field-c-australiapostcustomerencodingtable-c"
+    }
+  ]
+}

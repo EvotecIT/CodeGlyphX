@@ -24,6 +24,126 @@
       "anchor": "constructor-matrixasciirenderoptions-matrixasciirenderoptions"
     },
     {
+      "name": "WithQuietZone",
+      "kind": "Method",
+      "summary": "Sets the quiet zone size in modules.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "quietZone",
+          "type": "int",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "MatrixAsciiRenderOptions WithQuietZone(int quietZone)",
+      "xmlId": "M:CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions.WithQuietZone(System.Int32)",
+      "anchor": "method-withquietzone-matrixasciirenderoptions-withquietzone-int-quietzone"
+    },
+    {
+      "name": "WithModuleWidth",
+      "kind": "Method",
+      "summary": "Sets the module width in characters.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "width",
+          "type": "int",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "MatrixAsciiRenderOptions WithModuleWidth(int width)",
+      "xmlId": "M:CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions.WithModuleWidth(System.Int32)",
+      "anchor": "method-withmodulewidth-matrixasciirenderoptions-withmodulewidth-int-width"
+    },
+    {
+      "name": "WithModuleHeight",
+      "kind": "Method",
+      "summary": "Sets the module height in rows.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "height",
+          "type": "int",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "MatrixAsciiRenderOptions WithModuleHeight(int height)",
+      "xmlId": "M:CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions.WithModuleHeight(System.Int32)",
+      "anchor": "method-withmoduleheight-matrixasciirenderoptions-withmoduleheight-int-height"
+    },
+    {
+      "name": "WithDark",
+      "kind": "Method",
+      "summary": "Sets the character(s) used for dark modules.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "dark",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "MatrixAsciiRenderOptions WithDark(string dark)",
+      "xmlId": "M:CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions.WithDark(System.String)",
+      "anchor": "method-withdark-matrixasciirenderoptions-withdark-string-dark"
+    },
+    {
+      "name": "WithLight",
+      "kind": "Method",
+      "summary": "Sets the character(s) used for light modules.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "light",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "MatrixAsciiRenderOptions WithLight(string light)",
+      "xmlId": "M:CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions.WithLight(System.String)",
+      "anchor": "method-withlight-matrixasciirenderoptions-withlight-string-light"
+    },
+    {
+      "name": "WithNewLine",
+      "kind": "Method",
+      "summary": "Sets the line separator.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "newLine",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "MatrixAsciiRenderOptions WithNewLine(string newLine)",
+      "xmlId": "M:CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions.WithNewLine(System.String)",
+      "anchor": "method-withnewline-matrixasciirenderoptions-withnewline-string-newline"
+    },
+    {
       "name": "QuietZone",
       "kind": "Property",
       "summary": "Quiet zone size in modules.",

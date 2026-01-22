@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using CodeGlyphX.Ean;
 using CodeGlyphX.Internal;
 
 namespace CodeGlyphX.UpcA;
@@ -9,10 +10,19 @@ namespace CodeGlyphX.UpcA;
 /// </summary>
 public static class UpcAEncoder {
     /// <summary>
-    /// Encodes a UPC-A barcode.
+    /// Encodes a UPC-A barcode. Use "+NN" or "+NNNNN" to append add-ons.
     /// </summary>
     public static Barcode1D Encode(string content) {
         if (content is null) throw new ArgumentNullException(nameof(content));
+        var addOn = (string?)null;
+        var plusIndex = content.IndexOf('+');
+        if (plusIndex >= 0) {
+            if (content.IndexOf('+', plusIndex + 1) >= 0) throw new InvalidOperationException("Only one add-on separator '+' is supported.");
+            addOn = content.Substring(plusIndex + 1);
+            content = content.Substring(0, plusIndex);
+            if (addOn.Length == 0) throw new InvalidOperationException("Add-on digits are required after '+'.");
+        }
+
         if (!RegexCache.DigitsOptional().IsMatch(content)) throw new InvalidOperationException("Can only encode numerical digits (0-9)");
 
         if (content.Length == 11) {
@@ -40,6 +50,9 @@ public static class UpcAEncoder {
             index++;
         }
         BarcodeSegments.AppendBits(segments, new[] { true, false, true });
+        if (!string.IsNullOrEmpty(addOn)) {
+            EanAddOn.AppendAddOn(segments, addOn!);
+        }
         return new Barcode1D(segments);
     }
 

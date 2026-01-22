@@ -21,11 +21,9 @@ public static class XbmReader {
         if (width <= 0 || height <= 0) throw new FormatException("Invalid XBM dimensions.");
         if (width > MaxDimension || height > MaxDimension) throw new FormatException("XBM dimensions are too large.");
         var pixelCount = (long)width * height;
-        if (pixelCount > int.MaxValue / 4) throw new FormatException("XBM dimensions are too large.");
 
         var bytes = ExtractByteArray(text);
         var rowBytes = (width + 7) / 8;
-        if ((long)rowBytes * height > int.MaxValue) throw new FormatException("XBM dimensions are too large.");
         if (bytes.Count < rowBytes * height) throw new FormatException("Truncated XBM data.");
 
         var rgba = new byte[width * height * 4];

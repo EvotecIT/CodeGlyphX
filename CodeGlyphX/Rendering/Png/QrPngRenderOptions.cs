@@ -5,7 +5,7 @@ namespace CodeGlyphX.Rendering.Png;
 /// <summary>
 /// Options for <see cref="QrPngRenderer"/>.
 /// </summary>
-public sealed class QrPngRenderOptions {
+public sealed partial class QrPngRenderOptions {
     /// <summary>
     /// Gets or sets the size of a single QR module in pixels.
     /// </summary>

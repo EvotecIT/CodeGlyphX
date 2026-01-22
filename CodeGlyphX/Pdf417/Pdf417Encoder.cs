@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Numerics;
 using System.Text;
 
 namespace CodeGlyphX.Pdf417;
@@ -19,6 +21,23 @@ public static class Pdf417Encoder {
         options ??= new Pdf417EncodeOptions();
         var dataCodewords = Pdf417HighLevelEncoder.Encode(text, options.Compaction, options.TextEncoding);
         return EncodeCodewords(dataCodewords, options);
+    }
+
+    /// <summary>
+    /// Encodes a Macro PDF417 payload.
+    /// </summary>
+    public static BitMatrix EncodeMacro(string text, Pdf417MacroOptions macro, Pdf417EncodeOptions? options = null) {
+        if (text is null) throw new ArgumentNullException(nameof(text));
+        if (macro is null) throw new ArgumentNullException(nameof(macro));
+        options ??= new Pdf417EncodeOptions();
+
+        var macroCodewords = EncodeMacroBlock(macro);
+        var dataCodewords = Pdf417HighLevelEncoder.Encode(text, options.Compaction, options.TextEncoding);
+        if (dataCodewords.Count > 0 && dataCodewords[0] < 900) {
+            dataCodewords.Insert(0, 900);
+        }
+        macroCodewords.AddRange(dataCodewords);
+        return EncodeCodewords(macroCodewords, options);
     }
 
     /// <summary>
@@ -148,6 +167,105 @@ public static class Pdf417Encoder {
         return codewords;
     }
 #endif
+
+    private static List<int> EncodeMacroBlock(Pdf417MacroOptions macro) {
+        var fileId = macro.FileId?.Trim() ?? string.Empty;
+        if (fileId.Length == 0) throw new InvalidOperationException("Macro PDF417 requires a file identifier.");
+        if (!IsDigitsOnly(fileId)) throw new InvalidOperationException("Macro PDF417 file identifier must be numeric.");
+        if (fileId.Length % 3 != 0) throw new InvalidOperationException("Macro PDF417 file identifier length must be a multiple of 3.");
+
+        if (macro.SegmentIndex < 0 || macro.SegmentIndex > 809999) {
+            throw new InvalidOperationException("Macro PDF417 segment index must be in range 0-809999.");
+        }
+        if (!macro.IsLastSegment &&
+            (macro.SegmentCount.HasValue ||
+             macro.FileName is not null ||
+             macro.Timestamp.HasValue ||
+             macro.Sender is not null ||
+             macro.Addressee is not null ||
+             macro.FileSize.HasValue ||
+             macro.Checksum.HasValue)) {
+            throw new InvalidOperationException("Macro PDF417 optional fields are only allowed on the last segment.");
+        }
+
+        var codewords = new List<int>(64) { 928 };
+        var segmentCodewords = EncodeMacroSegmentIndex(macro.SegmentIndex);
+        codewords.AddRange(segmentCodewords);
+
+        for (var i = 0; i < fileId.Length; i += 3) {
+            var chunk = fileId.Substring(i, 3);
+            if (!int.TryParse(chunk, NumberStyles.None, CultureInfo.InvariantCulture, out var value) || value > 899) {
+                throw new InvalidOperationException("Macro PDF417 file identifier chunks must be 000-899.");
+            }
+            codewords.Add(value);
+        }
+
+        AppendOptionalField(codewords, 0, macro.FileName, numeric: false);
+        AppendOptionalField(codewords, 1, macro.SegmentCount?.ToString(CultureInfo.InvariantCulture), numeric: true);
+        AppendOptionalField(codewords, 2, macro.Timestamp?.ToString(CultureInfo.InvariantCulture), numeric: true);
+        AppendOptionalField(codewords, 3, macro.Sender, numeric: false);
+        AppendOptionalField(codewords, 4, macro.Addressee, numeric: false);
+        AppendOptionalField(codewords, 5, macro.FileSize?.ToString(CultureInfo.InvariantCulture), numeric: true);
+        AppendOptionalField(codewords, 6, macro.Checksum?.ToString(CultureInfo.InvariantCulture), numeric: true);
+
+        if (macro.IsLastSegment) {
+            codewords.Add(922);
+        }
+
+        return codewords;
+    }
+
+    private static List<int> EncodeMacroSegmentIndex(int segmentIndex) {
+        var digits = segmentIndex.ToString("00000", CultureInfo.InvariantCulture);
+        var codewords = EncodeNumericField(digits);
+        if (codewords.Count != 2) {
+            throw new InvalidOperationException("Macro PDF417 segment index encoding failed.");
+        }
+        return codewords;
+    }
+
+    private static void AppendOptionalField(List<int> codewords, int field, string? value, bool numeric) {
+        if (string.IsNullOrEmpty(value)) return;
+        codewords.Add(923);
+        codewords.Add(field);
+        var safe = value!;
+        if (numeric) {
+            codewords.AddRange(EncodeNumericField(safe));
+        } else {
+            codewords.AddRange(Pdf417HighLevelEncoder.Encode(safe, Pdf417Compaction.Text, null));
+        }
+    }
+
+    private static List<int> EncodeNumericField(string digits) {
+        if (digits.Length == 0) return new List<int>();
+        for (var i = 0; i < digits.Length; i++) {
+            if (!char.IsDigit(digits[i])) throw new InvalidOperationException("Macro PDF417 numeric fields must contain digits only.");
+        }
+
+        var result = new List<int>((digits.Length / 3) + 2);
+        var idx = 0;
+        while (idx < digits.Length) {
+            var length = Math.Min(44, digits.Length - idx);
+            var part = digits.Substring(idx, length);
+            var value = BigInteger.Parse("1" + part, CultureInfo.InvariantCulture);
+            var tmp = new List<int>();
+            while (value > 0) {
+                value = BigInteger.DivRem(value, 900, out var rem);
+                tmp.Add((int)rem);
+            }
+            for (var i = tmp.Count - 1; i >= 0; i--) result.Add(tmp[i]);
+            idx += length;
+        }
+        return result;
+    }
+
+    private static bool IsDigitsOnly(string value) {
+        for (var i = 0; i < value.Length; i++) {
+            var ch = value[i];
+            if (ch < '0' || ch > '9') return false;
+        }
+        return true;
+    }
 
     private static Pdf417BarcodeMatrix EncodeLowLevel(int[] fullCodewords, int columns, int rows, int errorCorrectionLevel, bool compact) {
         var matrix = new Pdf417BarcodeMatrix(rows, columns, compact);

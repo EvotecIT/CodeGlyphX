@@ -5,7 +5,7 @@ namespace CodeGlyphX.Rendering.Png;
 /// <summary>
 /// Options for <see cref="BarcodePngRenderer"/>.
 /// </summary>
-public sealed class BarcodePngRenderOptions {
+public sealed partial class BarcodePngRenderOptions {
     /// <summary>
     /// Gets or sets the size of a single module in pixels.
     /// </summary>

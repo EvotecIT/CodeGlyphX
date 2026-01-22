@@ -35,6 +35,11 @@ public static partial class Pdf417Decoder {
     }
 
     private static bool TryDecodeCore(BitMatrix modules, CancellationToken cancellationToken, out string value) {
+        return TryDecodeCore(modules, cancellationToken, out value, out _);
+    }
+
+    private static bool TryDecodeCore(BitMatrix modules, CancellationToken cancellationToken, out string value, out Pdf417MacroMetadata? macro) {
+        macro = null;
         if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; return false; }
         var width = modules.Width;
         var height = modules.Height;
@@ -134,7 +139,7 @@ public static partial class Pdf417Decoder {
 
             var dataCodewords = new int[lengthDescriptor - 1];
             Array.Copy(received, 1, dataCodewords, 0, dataCodewords.Length);
-            var decoded = Pdf417DecodedBitStreamParser.Decode(dataCodewords);
+            var decoded = Pdf417DecodedBitStreamParser.Decode(dataCodewords, out macro);
             if (decoded is null) {
                 return FailDecode(out value);
             }
@@ -186,6 +191,20 @@ public static partial class Pdf417Decoder {
         diagnostics = new Pdf417DecodeDiagnostics();
         return TryDecodePixels(pixels, width, height, stride, format, cancellationToken, out value, diagnostics);
     }
+
+    /// <summary>
+    /// Attempts to decode a PDF417 symbol from pixels, including Macro metadata when present.
+    /// </summary>
+    public static bool TryDecode(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat format, out Pdf417Decoded decoded) {
+        return TryDecodePixels(pixels, width, height, stride, format, CancellationToken.None, out decoded);
+    }
+
+    /// <summary>
+    /// Attempts to decode a PDF417 symbol from pixels, with cancellation and Macro metadata when present.
+    /// </summary>
+    public static bool TryDecode(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat format, CancellationToken cancellationToken, out Pdf417Decoded decoded) {
+        return TryDecodePixels(pixels, width, height, stride, format, cancellationToken, out decoded);
+    }
 #endif
 
     /// <summary>
@@ -219,6 +238,21 @@ public static partial class Pdf417Decoder {
         return TryDecodePixels(pixels, width, height, stride, format, cancellationToken, out value, diagnostics);
     }
 
+    /// <summary>
+    /// Attempts to decode a PDF417 symbol from pixels, including Macro metadata when present.
+    /// </summary>
+    public static bool TryDecode(byte[] pixels, int width, int height, int stride, PixelFormat format, out Pdf417Decoded decoded) {
+        return TryDecode(pixels, width, height, stride, format, CancellationToken.None, out decoded);
+    }
+
+    /// <summary>
+    /// Attempts to decode a PDF417 symbol from pixels, with cancellation and Macro metadata when present.
+    /// </summary>
+    public static bool TryDecode(byte[] pixels, int width, int height, int stride, PixelFormat format, CancellationToken cancellationToken, out Pdf417Decoded decoded) {
+        if (pixels is null) throw new ArgumentNullException(nameof(pixels));
+        return TryDecodePixels(pixels, width, height, stride, format, cancellationToken, out decoded);
+    }
+
     private static bool TryDecodePixels(PixelSpan pixels, int width, int height, int stride, PixelFormat format, CancellationToken cancellationToken, out string value) {
         foreach (var threshold in BuildThresholds(pixels, width, height, stride, format)) {
             if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; return false; }
@@ -238,6 +272,15 @@ public static partial class Pdf417Decoder {
         }
         value = string.Empty;
         diagnostics.Failure ??= "No PDF417 decoded.";
+        return false;
+    }
+
+    private static bool TryDecodePixels(PixelSpan pixels, int width, int height, int stride, PixelFormat format, CancellationToken cancellationToken, out Pdf417Decoded decoded) {
+        foreach (var threshold in BuildThresholds(pixels, width, height, stride, format)) {
+            if (DecodeBudget.ShouldAbort(cancellationToken)) { decoded = null!; return false; }
+            if (TryDecodeFromPixels(pixels, width, height, stride, format, threshold, cancellationToken, out decoded)) return true;
+        }
+        decoded = null!;
         return false;
     }
 
@@ -296,6 +339,33 @@ public static partial class Pdf417Decoder {
         return false;
     }
 
+    private static bool TryDecodeFromPixels(PixelSpan pixels, int width, int height, int stride, PixelFormat format, int threshold, CancellationToken cancellationToken, out Pdf417Decoded decoded) {
+        if (width <= 0 || height <= 0 || stride <= 0) {
+            decoded = null!;
+            return false;
+        }
+
+        if (DecodeBudget.ShouldAbort(cancellationToken)) { decoded = null!; return false; }
+        if (TryFindBoundingBox(pixels, width, height, stride, format, threshold, invert: false, out var box)) {
+            if (TryDecodeFromBox(pixels, width, height, stride, format, box, threshold, invert: false, cancellationToken, out decoded)) return true;
+        }
+
+        if (DecodeBudget.ShouldAbort(cancellationToken)) { decoded = null!; return false; }
+        if (TryFindBoundingBox(pixels, width, height, stride, format, threshold, invert: true, out box)) {
+            if (TryDecodeFromBox(pixels, width, height, stride, format, box, threshold, invert: true, cancellationToken, out decoded)) return true;
+        }
+
+        // Fallback to legacy extractor.
+        if (TryExtractModules(pixels, width, height, stride, format, threshold, out var modules)) {
+            if (TryDecodeWithRotations(modules, cancellationToken, out decoded)) return true;
+            var trimmed = TrimModuleBorder(modules);
+            if (!ReferenceEquals(trimmed, modules) && TryDecodeWithRotations(trimmed, cancellationToken, out decoded)) return true;
+        }
+
+        decoded = null!;
+        return false;
+    }
+
     private static bool TryDecodeFromBox(PixelSpan pixels, int width, int height, int stride, PixelFormat format, BoundingBox box, int threshold, bool invert, CancellationToken cancellationToken, out string value) {
         foreach (var candidate in BuildCandidates(pixels, width, height, stride, format, threshold, box, invert)) {
             if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; return false; }
@@ -314,6 +384,27 @@ public static partial class Pdf417Decoder {
         }
 
         value = string.Empty;
+        return false;
+    }
+
+    private static bool TryDecodeFromBox(PixelSpan pixels, int width, int height, int stride, PixelFormat format, BoundingBox box, int threshold, bool invert, CancellationToken cancellationToken, out Pdf417Decoded decoded) {
+        foreach (var candidate in BuildCandidates(pixels, width, height, stride, format, threshold, box, invert)) {
+            if (DecodeBudget.ShouldAbort(cancellationToken)) { decoded = null!; return false; }
+            var modules = SampleModules(pixels, width, height, stride, format, box, candidate.WidthModules, candidate.HeightModules, candidate.ModuleSize, threshold, invert, cancellationToken);
+            if (DecodeBudget.ShouldAbort(cancellationToken)) { decoded = null!; return false; }
+            if (TryDecodeWithRotations(modules, cancellationToken, out decoded)) return true;
+
+            var trimmed = TrimModuleBorder(modules);
+            if (!ReferenceEquals(trimmed, modules) && TryDecodeWithRotations(trimmed, cancellationToken, out decoded)) return true;
+
+            if (TryDecodeWithShear(pixels, width, height, stride, format, box, candidate, threshold, invert, cancellationToken, out decoded)) return true;
+
+#if NET8_0_OR_GREATER
+            if (TryDecodeWithPerspective(pixels, width, height, stride, format, box, candidate, threshold, invert, cancellationToken, out decoded)) return true;
+#endif
+        }
+
+        decoded = null!;
         return false;
     }
 
@@ -447,6 +538,40 @@ public static partial class Pdf417Decoder {
         return false;
     }
 
+    private static bool TryDecodeWithShear(PixelSpan pixels, int width, int height, int stride, PixelFormat format, BoundingBox box, Candidate candidate, int threshold, bool invert, CancellationToken cancellationToken, out Pdf417Decoded decoded) {
+        if (DecodeBudget.ShouldAbort(cancellationToken)) { decoded = null!; return false; }
+        if (TryDecodeWithRowAligned(pixels, width, height, stride, format, box, candidate, threshold, invert, cancellationToken, out decoded)) return true;
+
+        var shearList = new List<double>(12);
+        int? leftEdgeMid = null;
+        var midRow = box.Top + box.Height / 2;
+        if (TryFindLeftEdge(pixels, width, height, stride, format, box.Left, box.Right, midRow, threshold, invert, cancellationToken, out var leftEdge)) {
+            leftEdgeMid = leftEdge;
+        }
+        if (TryEstimateShear(pixels, width, height, stride, format, box, candidate, threshold, invert, cancellationToken, out var estimated)) {
+            shearList.Add(estimated);
+            shearList.Add(estimated - 0.12);
+            shearList.Add(estimated + 0.12);
+            shearList.Add(estimated - 0.24);
+            shearList.Add(estimated + 0.24);
+        }
+
+        var defaults = new[] { -0.6, -0.4, -0.25, -0.15, -0.08, 0.08, 0.15, 0.25, 0.4, 0.6 };
+        for (var i = 0; i < defaults.Length; i++) shearList.Add(defaults[i]);
+
+        for (var i = 0; i < shearList.Count; i++) {
+            if (DecodeBudget.ShouldAbort(cancellationToken)) { decoded = null!; return false; }
+            var modules = SampleModulesSheared(pixels, width, height, stride, format, box, candidate.WidthModules, candidate.HeightModules, candidate.ModuleSize, threshold, invert, shearList[i], leftEdgeMid, cancellationToken);
+            if (DecodeBudget.ShouldAbort(cancellationToken)) { decoded = null!; return false; }
+            if (TryDecodeWithRotations(modules, cancellationToken, out decoded)) return true;
+            var trimmed = TrimModuleBorder(modules);
+            if (!ReferenceEquals(trimmed, modules) && TryDecodeWithRotations(trimmed, cancellationToken, out decoded)) return true;
+        }
+
+        decoded = null!;
+        return false;
+    }
+
     private static bool TryDecodeWithShear(PixelSpan pixels, int width, int height, int stride, PixelFormat format, BoundingBox box, Candidate candidate, int threshold, bool invert, CancellationToken cancellationToken, Pdf417DecodeDiagnostics diagnostics, out string value) {
         if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
         if (TryDecodeWithRowAligned(pixels, width, height, stride, format, box, candidate, threshold, invert, cancellationToken, diagnostics, out value)) return true;
@@ -489,6 +614,17 @@ public static partial class Pdf417Decoder {
         var trimmed = TrimModuleBorder(modules);
         if (!ReferenceEquals(trimmed, modules) && TryDecodeWithRotations(trimmed, cancellationToken, out value)) return true;
         value = string.Empty;
+        return false;
+    }
+
+    private static bool TryDecodeWithRowAligned(PixelSpan pixels, int width, int height, int stride, PixelFormat format, BoundingBox box, Candidate candidate, int threshold, bool invert, CancellationToken cancellationToken, out Pdf417Decoded decoded) {
+        if (DecodeBudget.ShouldAbort(cancellationToken)) { decoded = null!; return false; }
+        var modules = SampleModulesRowAligned(pixels, width, height, stride, format, box, candidate.WidthModules, candidate.HeightModules, candidate.ModuleSize, threshold, invert, cancellationToken);
+        if (DecodeBudget.ShouldAbort(cancellationToken)) { decoded = null!; return false; }
+        if (TryDecodeWithRotations(modules, cancellationToken, out decoded)) return true;
+        var trimmed = TrimModuleBorder(modules);
+        if (!ReferenceEquals(trimmed, modules) && TryDecodeWithRotations(trimmed, cancellationToken, out decoded)) return true;
+        decoded = null!;
         return false;
     }
 

@@ -1,4 +1,5 @@
 using System;
+using CodeGlyphX.Pdf417;
 
 namespace CodeGlyphX;
 
@@ -32,6 +33,16 @@ public sealed class CodeGlyphDecoded {
     public string? Pdf417Text { get; }
 
     /// <summary>
+    /// Gets the decoded PDF417 payload when <see cref="Kind"/> is <see cref="CodeGlyphKind.Pdf417"/>.
+    /// </summary>
+    public Pdf417Decoded? Pdf417 { get; }
+
+    /// <summary>
+    /// Gets the Macro PDF417 metadata when present.
+    /// </summary>
+    public Pdf417MacroMetadata? Pdf417Macro => Pdf417?.Macro;
+
+    /// <summary>
     /// Gets the decoded Aztec text when <see cref="Kind"/> is <see cref="CodeGlyphKind.Aztec"/>.
     /// </summary>
     public string? AztecText { get; }
@@ -54,6 +65,12 @@ public sealed class CodeGlyphDecoded {
     internal CodeGlyphDecoded(BarcodeDecoded barcode) {
         Barcode = barcode ?? throw new ArgumentNullException(nameof(barcode));
         Kind = CodeGlyphKind.Barcode1D;
+    }
+
+    internal CodeGlyphDecoded(Pdf417Decoded pdf417) {
+        Pdf417 = pdf417 ?? throw new ArgumentNullException(nameof(pdf417));
+        Pdf417Text = pdf417.Text;
+        Kind = CodeGlyphKind.Pdf417;
     }
 
     internal CodeGlyphDecoded(CodeGlyphKind kind, string text) {

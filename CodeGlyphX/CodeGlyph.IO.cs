@@ -1,8 +1,11 @@
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using CodeGlyphX.Aztec;
 using CodeGlyphX.DataMatrix;
+using CodeGlyphX.Internal;
 using CodeGlyphX.Pdf417;
 using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Png;
@@ -431,6 +434,58 @@ public static partial class CodeGlyph {
     }
 
     /// <summary>
+    /// Decodes a QR or barcode from common image formats using a single options object and returns diagnostics.
+    /// </summary>
+    public static DecodeResult<CodeGlyphDecoded> DecodeImageResult(byte[] image, CodeGlyphDecodeOptions? options = null) {
+        if (image is null) throw new ArgumentNullException(nameof(image));
+        return DecodeImageResult(image.AsSpan(), options);
+    }
+
+    /// <summary>
+    /// Decodes a QR or barcode from an image stream using a single options object and returns diagnostics.
+    /// </summary>
+    public static DecodeResult<CodeGlyphDecoded> DecodeImageResult(Stream stream, CodeGlyphDecodeOptions? options = null) {
+        if (stream is null) throw new ArgumentNullException(nameof(stream));
+        if (stream is MemoryStream memory && memory.TryGetBuffer(out var buffer)) {
+            return DecodeImageResult(buffer.AsSpan(), options);
+        }
+        var data = RenderIO.ReadBinary(stream);
+        return DecodeImageResult(data, options);
+    }
+
+    /// <summary>
+    /// Decodes a batch of QR/barcode images using a single options object and returns aggregated diagnostics.
+    /// </summary>
+    public static DecodeBatchResult<CodeGlyphDecoded> DecodeImageBatch(IEnumerable<byte[]> images, CodeGlyphDecodeOptions? options = null) {
+        return DecodeBatchHelpers.Run(images, image => DecodeImageResult(image, options), options?.CancellationToken ?? default);
+    }
+
+    private static DecodeResult<CodeGlyphDecoded> DecodeImageResult(ReadOnlySpan<byte> image, CodeGlyphDecodeOptions? options) {
+        var stopwatch = Stopwatch.StartNew();
+        _ = DecodeResultHelpers.TryGetImageInfo(image, out var info, out var formatKnown);
+        var token = options?.CancellationToken ?? default;
+        try {
+            if (token.IsCancellationRequested) {
+                return new DecodeResult<CodeGlyphDecoded>(DecodeFailureReason.Cancelled, info, stopwatch.Elapsed);
+            }
+            if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) {
+                var imageFailure = DecodeResultHelpers.FailureForImageRead(image, formatKnown, token);
+                return new DecodeResult<CodeGlyphDecoded>(imageFailure, info, stopwatch.Elapsed);
+            }
+
+            info = DecodeResultHelpers.EnsureDimensions(info, formatKnown, width, height);
+
+            if (TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out var decoded, options)) {
+                return new DecodeResult<CodeGlyphDecoded>(decoded, info, stopwatch.Elapsed);
+            }
+            var failure = DecodeResultHelpers.FailureForDecode(token);
+            return new DecodeResult<CodeGlyphDecoded>(failure, info, stopwatch.Elapsed);
+        } catch (Exception ex) {
+            return new DecodeResult<CodeGlyphDecoded>(DecodeFailureReason.Error, info, stopwatch.Elapsed, ex.Message);
+        }
+    }
+
+    /// <summary>
     /// Attempts to decode all symbols from PNG bytes using a single options object.
     /// </summary>
     public static bool TryDecodeAllPng(byte[] png, out CodeGlyphDecoded[] decoded, CodeGlyphDecodeOptions? options) {
@@ -558,9 +613,9 @@ public static partial class CodeGlyph {
                 return true;
             }
             if (cancellationToken.IsCancellationRequested) return false;
-            var pdf417 = string.Empty;
+            Pdf417Decoded pdf417 = null!;
             if (TryWithImageBudget(imageOptions, cancellationToken, token => Pdf417Decoder.TryDecode(pixels, width, height, stride, format, token, out pdf417))) {
-                decoded = new CodeGlyphDecoded(CodeGlyphKind.Pdf417, pdf417);
+                decoded = new CodeGlyphDecoded(pdf417);
                 return true;
             }
             return false;
@@ -583,9 +638,9 @@ public static partial class CodeGlyph {
             return true;
         }
         if (cancellationToken.IsCancellationRequested) return false;
-        var pdf417Decoded = string.Empty;
+        Pdf417Decoded pdf417Decoded = null!;
         if (TryWithImageBudget(imageOptions, cancellationToken, token => Pdf417Decoder.TryDecode(pixels, width, height, stride, format, token, out pdf417Decoded))) {
-            decoded = new CodeGlyphDecoded(CodeGlyphKind.Pdf417, pdf417Decoded);
+            decoded = new CodeGlyphDecoded(pdf417Decoded);
             return true;
         }
         if (cancellationToken.IsCancellationRequested) return false;
@@ -783,9 +838,9 @@ public static partial class CodeGlyph {
         }
 
         if (cancellationToken.IsCancellationRequested) return false;
-        var pdf417 = string.Empty;
+        Pdf417Decoded pdf417 = null!;
         if (TryWithImageBudget(imageOptions, cancellationToken, token => Pdf417Decoder.TryDecode(pixels, width, height, stride, format, token, out pdf417))) {
-            list.Add(new CodeGlyphDecoded(CodeGlyphKind.Pdf417, pdf417));
+            list.Add(new CodeGlyphDecoded(pdf417));
         }
 
         if (includeBarcode && !preferBarcode) {

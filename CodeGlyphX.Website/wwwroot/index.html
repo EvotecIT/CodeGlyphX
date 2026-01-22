@@ -4,41 +4,20 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CodeGlyphX - No-deps QR & Barcode Toolkit for .NET</title>
+    <title>CodeGlyphX - Zero-Dependency QR & Barcode Toolkit for .NET</title>
     <base href="/" />
 
     <!-- Fonts -->
-    <link rel="stylesheet" href="css/fonts.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="css/app.css" />
-    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
     <link rel="icon" type="image/png" href="codeglyphx-qr-icon.png" />
     <link rel="apple-touch-icon" href="codeglyphx-qr-icon.png" />
 
-    <!-- PrismJS CSS loaded lazily only when needed -->
-
     <!-- SEO -->
-    <meta name="description" content="CodeGlyphX is a fast, dependency-free toolkit for QR codes and barcodes in .NET. Generate and decode QR, Data Matrix, PDF417, Aztec, and 1D barcodes." />
-    <meta name="keywords" content="QR code, barcode, .NET, C#, Code128, Data Matrix, PDF417, Aztec, encoding, decoding, no dependencies" />
-
-    <!-- Open Graph -->
-    <meta property="og:title" content="CodeGlyphX - QR & Barcode Toolkit for .NET" />
-    <meta property="og:description" content="Zero-dependency QR and barcode generation for .NET" />
-    <meta property="og:type" content="website" />
-
-    <!-- SPA redirect for GitHub Pages -->
-    <script>
-        (function(l) {
-            if (l.search[1] === '/') {
-                var decoded = l.search.slice(1).split('&').map(function(s) {
-                    return s.replace(/~and~/g, '&')
-                }).join('?');
-                window.history.replaceState(null, null,
-                    l.pathname.slice(0, -1) + decoded + l.hash
-                );
-            }
-        }(window.location))
-    </script>
+    <meta name="description" content="CodeGlyphX is a blazing-fast, zero-dependency .NET library for generating and decoding QR codes, barcodes, Data Matrix, PDF417, and Aztec codes." />
 
     <!-- Theme initialization (prevent flash) -->
     <script>
@@ -62,13 +41,13 @@
     <div id="blazor-error-ui">
         An unhandled error has occurred.
         <a href="" class="reload">Reload</a>
-        <a class="dismiss">🗙</a>
+        <a class="dismiss">X</a>
     </div>
 
+    <script src="js/site.js"></script>
     <script src="_framework/blazor.webassembly.js"></script>
-    <script>navigator.serviceWorker.register('service-worker.js');</script>
 
-    <!-- Theme and utility functions for Blazor -->
+    <!-- Theme functions for Blazor -->
     <script>
         function getTheme() {
             return localStorage.getItem('theme') || 'dark';
@@ -78,95 +57,6 @@
             localStorage.setItem('theme', theme);
             document.documentElement.setAttribute('data-theme', theme);
         }
-
-        function copyToClipboard(text) {
-            navigator.clipboard.writeText(text).then(function() {
-                return true;
-            }).catch(function(err) {
-                console.error('Could not copy text: ', err);
-                return false;
-            });
-        }
-
-        // Lazy load Prism only when code blocks are present
-        var prismLoaded = false;
-        function loadPrism(callback) {
-            if (prismLoaded) { callback && callback(); return; }
-            var css = document.createElement('link');
-            css.rel = 'stylesheet';
-            css.href = 'vendor/prism/prism-tomorrow.min.css';
-            document.head.appendChild(css);
-
-            var script = document.createElement('script');
-            script.src = 'vendor/prism/prism.min.js';
-            script.onload = function() {
-                var csharp = document.createElement('script');
-                csharp.src = 'vendor/prism/prism-csharp.min.js';
-                csharp.onload = function() { prismLoaded = true; callback && callback(); };
-                document.head.appendChild(csharp);
-            };
-            document.head.appendChild(script);
-        }
-
-        // Initialize code blocks (copy buttons + optional highlighting)
-        function initCodeBlocks() {
-            var blocks = document.querySelectorAll('pre.code-block:not(.initialized)');
-            if (blocks.length === 0) return;
-
-            blocks.forEach(function(block) {
-                block.classList.add('initialized');
-                block.style.position = 'relative';
-
-                // Add copy button
-                var btn = document.createElement('button');
-                btn.className = 'copy-btn';
-                btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>';
-                btn.title = 'Copy to clipboard';
-                btn.onclick = function() {
-                    var code = block.textContent;
-                    navigator.clipboard.writeText(code).then(function() {
-                        btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>';
-                        btn.classList.add('copied');
-                        setTimeout(function() {
-                            btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>';
-                            btn.classList.remove('copied');
-                        }, 2000);
-                    });
-                };
-                block.appendChild(btn);
-            });
-
-            // Check if syntax highlighting is needed (no pre-highlighted spans)
-            var needsHighlighting = Array.from(blocks).some(function(b) {
-                return !b.querySelector('.keyword, .string, .comment');
-            });
-
-            if (needsHighlighting) {
-                loadPrism(function() {
-                    blocks.forEach(function(block) {
-                        if (!block.classList.contains('prism-highlighted') && !block.querySelector('.keyword')) {
-                            if (!block.querySelector('code')) {
-                                var code = document.createElement('code');
-                                code.className = 'language-csharp';
-                                code.textContent = block.textContent;
-                                block.textContent = '';
-                                block.appendChild(code);
-                            }
-                            Prism.highlightElement(block.querySelector('code'));
-                            block.classList.add('prism-highlighted');
-                        }
-                    });
-                });
-            }
-        }
-
-        // Throttled observer - only check periodically, not on every mutation
-        var initTimeout;
-        var observer = new MutationObserver(function() {
-            clearTimeout(initTimeout);
-            initTimeout = setTimeout(initCodeBlocks, 100);
-        });
-        observer.observe(document.body, { childList: true, subtree: true });
     </script>
 </body>
 

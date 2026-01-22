@@ -6,17 +6,27 @@ using CodeGlyphX.Rendering;
 
 namespace CodeGlyphX.Benchmarks;
 
+#if BENCH_QUICK
 [SimpleJob(RuntimeMoniker.Net80, warmupCount: 1, iterationCount: 3, invocationCount: 1)]
+#else
+[SimpleJob(RuntimeMoniker.Net80)]
+#endif
 [MemoryDiagnoser]
 [RankColumn]
 public class QrDecodeBenchmarks
 {
     private byte[] _cleanRgba = Array.Empty<byte>();
     private byte[] _noisyRgba = Array.Empty<byte>();
+    private byte[] _screenshotRgba = Array.Empty<byte>();
+    private byte[] _antialiasRgba = Array.Empty<byte>();
     private int _cleanWidth;
     private int _cleanHeight;
     private int _noisyWidth;
     private int _noisyHeight;
+    private int _screenshotWidth;
+    private int _screenshotHeight;
+    private int _antialiasWidth;
+    private int _antialiasHeight;
     private readonly QrPixelDecodeOptions _fast = new() { Profile = QrDecodeProfile.Fast };
     private readonly QrPixelDecodeOptions _balanced = new() { Profile = QrDecodeProfile.Balanced };
     private readonly QrPixelDecodeOptions _robust = new() {
@@ -35,6 +45,8 @@ public class QrDecodeBenchmarks
     {
         LoadRgba("Assets/DecodingSamples/qr-clean-small.png", out _cleanRgba, out _cleanWidth, out _cleanHeight);
         LoadRgba("Assets/DecodingSamples/qr-noisy-ui.png", out _noisyRgba, out _noisyWidth, out _noisyHeight);
+        LoadRgba("Assets/DecodingSamples/qr-screenshot-1.png", out _screenshotRgba, out _screenshotWidth, out _screenshotHeight);
+        LoadRgba("Assets/DecodingSamples/qr-dot-aa.png", out _antialiasRgba, out _antialiasWidth, out _antialiasHeight);
     }
 
     [Benchmark(Description = "QR Decode (clean, fast)")]
@@ -59,6 +71,18 @@ public class QrDecodeBenchmarks
     public bool DecodeNoisyRobust()
     {
         return QrDecoder.TryDecode(_noisyRgba, _noisyWidth, _noisyHeight, _noisyWidth * 4, PixelFormat.Rgba32, out _, _robustNoisy);
+    }
+
+    [Benchmark(Description = "QR Decode (screenshot, balanced)")]
+    public bool DecodeScreenshotBalanced()
+    {
+        return QrDecoder.TryDecode(_screenshotRgba, _screenshotWidth, _screenshotHeight, _screenshotWidth * 4, PixelFormat.Rgba32, out _, _balanced);
+    }
+
+    [Benchmark(Description = "QR Decode (antialias, robust)")]
+    public bool DecodeAntialiasRobust()
+    {
+        return QrDecoder.TryDecode(_antialiasRgba, _antialiasWidth, _antialiasHeight, _antialiasWidth * 4, PixelFormat.Rgba32, out _, _robust);
     }
 
     private static void LoadRgba(string relativePath, out byte[] rgba, out int width, out int height)

@@ -1788,6 +1788,126 @@
     {
       "name": "TryDecodePng",
       "kind": "Method",
+      "summary": "Attempts to decode an Aztec symbol from PNG bytes in a span.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "png",
+          "type": "ReadOnlySpan\u003Cbyte\u003E",
+          "description": null
+        },
+        {
+          "name": "text",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodePng(ReadOnlySpan\u003Cbyte\u003E png, out string text)",
+      "xmlId": "M:CodeGlyphX.AztecCode.TryDecodePng(System.ReadOnlySpan{System.Byte},System.String@)",
+      "anchor": "method-trydecodepng-static-bool-trydecodepng-readonlyspan-byte-png-out-string-text"
+    },
+    {
+      "name": "TryDecodePng",
+      "kind": "Method",
+      "summary": "Attempts to decode an Aztec symbol from PNG bytes in a span, with cancellation.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "png",
+          "type": "ReadOnlySpan\u003Cbyte\u003E",
+          "description": null
+        },
+        {
+          "name": "cancellationToken",
+          "type": "CancellationToken",
+          "description": null
+        },
+        {
+          "name": "text",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodePng(ReadOnlySpan\u003Cbyte\u003E png, CancellationToken cancellationToken, out string text)",
+      "xmlId": "M:CodeGlyphX.AztecCode.TryDecodePng(System.ReadOnlySpan{System.Byte},System.Threading.CancellationToken,System.String@)",
+      "anchor": "method-trydecodepng-static-bool-trydecodepng-readonlyspan-byte-png-cancellationtoken-cancellationtoken-out-string-text"
+    },
+    {
+      "name": "TryDecodePng",
+      "kind": "Method",
+      "summary": "Attempts to decode an Aztec symbol from PNG bytes in a span with image decode options.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "png",
+          "type": "ReadOnlySpan\u003Cbyte\u003E",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "ImageDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "text",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodePng(ReadOnlySpan\u003Cbyte\u003E png, ImageDecodeOptions options, out string text)",
+      "xmlId": "M:CodeGlyphX.AztecCode.TryDecodePng(System.ReadOnlySpan{System.Byte},CodeGlyphX.ImageDecodeOptions,System.String@)",
+      "anchor": "method-trydecodepng-static-bool-trydecodepng-readonlyspan-byte-png-imagedecodeoptions-options-out-string-text"
+    },
+    {
+      "name": "TryDecodePng",
+      "kind": "Method",
+      "summary": "Attempts to decode an Aztec symbol from PNG bytes in a span with image decode options, with cancellation.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "png",
+          "type": "ReadOnlySpan\u003Cbyte\u003E",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "ImageDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "cancellationToken",
+          "type": "CancellationToken",
+          "description": null
+        },
+        {
+          "name": "text",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodePng(ReadOnlySpan\u003Cbyte\u003E png, ImageDecodeOptions options, CancellationToken cancellationToken, out string text)",
+      "xmlId": "M:CodeGlyphX.AztecCode.TryDecodePng(System.ReadOnlySpan{System.Byte},CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken,System.String@)",
+      "anchor": "method-trydecodepng-static-bool-trydecodepng-readonlyspan-byte-png-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-string-text"
+    },
+    {
+      "name": "TryDecodePng",
+      "kind": "Method",
       "summary": "Attempts to decode an Aztec symbol from PNG bytes, with diagnostics.",
       "remarks": null,
       "returns": null,
@@ -1889,6 +2009,111 @@
       "signature": "static bool TryDecodePng(byte[] png, ImageDecodeOptions options, CancellationToken cancellationToken, out string text, out AztecDecodeDiagnostics diagnostics)",
       "xmlId": "M:CodeGlyphX.AztecCode.TryDecodePng(System.Byte[],CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken,System.String@,CodeGlyphX.AztecDecodeDiagnostics@)",
       "anchor": "method-trydecodepng-static-bool-trydecodepng-byte-png-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-string-text-out-aztecdecodediagnostics-diagnostics"
+    },
+    {
+      "name": "TryDecodePng",
+      "kind": "Method",
+      "summary": "Attempts to decode an Aztec symbol from PNG bytes in a span, with diagnostics.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "png",
+          "type": "ReadOnlySpan\u003Cbyte\u003E",
+          "description": null
+        },
+        {
+          "name": "text",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "diagnostics",
+          "type": "AztecDecodeDiagnostics",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodePng(ReadOnlySpan\u003Cbyte\u003E png, out string text, out AztecDecodeDiagnostics diagnostics)",
+      "xmlId": "M:CodeGlyphX.AztecCode.TryDecodePng(System.ReadOnlySpan{System.Byte},System.String@,CodeGlyphX.AztecDecodeDiagnostics@)",
+      "anchor": "method-trydecodepng-static-bool-trydecodepng-readonlyspan-byte-png-out-string-text-out-aztecdecodediagnostics-diagnostics"
+    },
+    {
+      "name": "TryDecodePng",
+      "kind": "Method",
+      "summary": "Attempts to decode an Aztec symbol from PNG bytes in a span with image decode options, with diagnostics.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "png",
+          "type": "ReadOnlySpan\u003Cbyte\u003E",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "ImageDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "text",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "diagnostics",
+          "type": "AztecDecodeDiagnostics",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodePng(ReadOnlySpan\u003Cbyte\u003E png, ImageDecodeOptions options, out string text, out AztecDecodeDiagnostics diagnostics)",
+      "xmlId": "M:CodeGlyphX.AztecCode.TryDecodePng(System.ReadOnlySpan{System.Byte},CodeGlyphX.ImageDecodeOptions,System.String@,CodeGlyphX.AztecDecodeDiagnostics@)",
+      "anchor": "method-trydecodepng-static-bool-trydecodepng-readonlyspan-byte-png-imagedecodeoptions-options-out-string-text-out-aztecdecodediagnostics-diagnostics"
+    },
+    {
+      "name": "TryDecodePng",
+      "kind": "Method",
+      "summary": "Attempts to decode an Aztec symbol from PNG bytes in a span with image decode options, cancellation, and diagnostics.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "png",
+          "type": "ReadOnlySpan\u003Cbyte\u003E",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "ImageDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "cancellationToken",
+          "type": "CancellationToken",
+          "description": null
+        },
+        {
+          "name": "text",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "diagnostics",
+          "type": "AztecDecodeDiagnostics",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodePng(ReadOnlySpan\u003Cbyte\u003E png, ImageDecodeOptions options, CancellationToken cancellationToken, out string text, out AztecDecodeDiagnostics diagnostics)",
+      "xmlId": "M:CodeGlyphX.AztecCode.TryDecodePng(System.ReadOnlySpan{System.Byte},CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken,System.String@,CodeGlyphX.AztecDecodeDiagnostics@)",
+      "anchor": "method-trydecodepng-static-bool-trydecodepng-readonlyspan-byte-png-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-string-text-out-aztecdecodediagnostics-diagnostics"
     },
     {
       "name": "TryDecodePngFile",
@@ -2463,6 +2688,231 @@
     {
       "name": "TryDecodeImage",
       "kind": "Method",
+      "summary": "Attempts to decode an Aztec symbol from common image formats in a span.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "image",
+          "type": "ReadOnlySpan\u003Cbyte\u003E",
+          "description": null
+        },
+        {
+          "name": "text",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodeImage(ReadOnlySpan\u003Cbyte\u003E image, out string text)",
+      "xmlId": "M:CodeGlyphX.AztecCode.TryDecodeImage(System.ReadOnlySpan{System.Byte},System.String@)",
+      "anchor": "method-trydecodeimage-static-bool-trydecodeimage-readonlyspan-byte-image-out-string-text"
+    },
+    {
+      "name": "TryDecodeImage",
+      "kind": "Method",
+      "summary": "Attempts to decode an Aztec symbol from common image formats in a span, with cancellation.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "image",
+          "type": "ReadOnlySpan\u003Cbyte\u003E",
+          "description": null
+        },
+        {
+          "name": "cancellationToken",
+          "type": "CancellationToken",
+          "description": null
+        },
+        {
+          "name": "text",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodeImage(ReadOnlySpan\u003Cbyte\u003E image, CancellationToken cancellationToken, out string text)",
+      "xmlId": "M:CodeGlyphX.AztecCode.TryDecodeImage(System.ReadOnlySpan{System.Byte},System.Threading.CancellationToken,System.String@)",
+      "anchor": "method-trydecodeimage-static-bool-trydecodeimage-readonlyspan-byte-image-cancellationtoken-cancellationtoken-out-string-text"
+    },
+    {
+      "name": "TryDecodeImage",
+      "kind": "Method",
+      "summary": "Attempts to decode an Aztec symbol from common image formats in a span with image decode options.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "image",
+          "type": "ReadOnlySpan\u003Cbyte\u003E",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "ImageDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "text",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodeImage(ReadOnlySpan\u003Cbyte\u003E image, ImageDecodeOptions options, out string text)",
+      "xmlId": "M:CodeGlyphX.AztecCode.TryDecodeImage(System.ReadOnlySpan{System.Byte},CodeGlyphX.ImageDecodeOptions,System.String@)",
+      "anchor": "method-trydecodeimage-static-bool-trydecodeimage-readonlyspan-byte-image-imagedecodeoptions-options-out-string-text"
+    },
+    {
+      "name": "TryDecodeImage",
+      "kind": "Method",
+      "summary": "Attempts to decode an Aztec symbol from common image formats in a span with image decode options, with cancellation.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "image",
+          "type": "ReadOnlySpan\u003Cbyte\u003E",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "ImageDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "cancellationToken",
+          "type": "CancellationToken",
+          "description": null
+        },
+        {
+          "name": "text",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodeImage(ReadOnlySpan\u003Cbyte\u003E image, ImageDecodeOptions options, CancellationToken cancellationToken, out string text)",
+      "xmlId": "M:CodeGlyphX.AztecCode.TryDecodeImage(System.ReadOnlySpan{System.Byte},CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken,System.String@)",
+      "anchor": "method-trydecodeimage-static-bool-trydecodeimage-readonlyspan-byte-image-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-string-text"
+    },
+    {
+      "name": "TryDecodeImage",
+      "kind": "Method",
+      "summary": "Attempts to decode an Aztec symbol from common image formats in a span, with diagnostics.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "image",
+          "type": "ReadOnlySpan\u003Cbyte\u003E",
+          "description": null
+        },
+        {
+          "name": "text",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "diagnostics",
+          "type": "AztecDecodeDiagnostics",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodeImage(ReadOnlySpan\u003Cbyte\u003E image, out string text, out AztecDecodeDiagnostics diagnostics)",
+      "xmlId": "M:CodeGlyphX.AztecCode.TryDecodeImage(System.ReadOnlySpan{System.Byte},System.String@,CodeGlyphX.AztecDecodeDiagnostics@)",
+      "anchor": "method-trydecodeimage-static-bool-trydecodeimage-readonlyspan-byte-image-out-string-text-out-aztecdecodediagnostics-diagnostics"
+    },
+    {
+      "name": "TryDecodeImage",
+      "kind": "Method",
+      "summary": "Attempts to decode an Aztec symbol from common image formats in a span with image decode options, with diagnostics.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "image",
+          "type": "ReadOnlySpan\u003Cbyte\u003E",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "ImageDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "text",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "diagnostics",
+          "type": "AztecDecodeDiagnostics",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodeImage(ReadOnlySpan\u003Cbyte\u003E image, ImageDecodeOptions options, out string text, out AztecDecodeDiagnostics diagnostics)",
+      "xmlId": "M:CodeGlyphX.AztecCode.TryDecodeImage(System.ReadOnlySpan{System.Byte},CodeGlyphX.ImageDecodeOptions,System.String@,CodeGlyphX.AztecDecodeDiagnostics@)",
+      "anchor": "method-trydecodeimage-static-bool-trydecodeimage-readonlyspan-byte-image-imagedecodeoptions-options-out-string-text-out-aztecdecodediagnostics-diagnostics"
+    },
+    {
+      "name": "TryDecodeImage",
+      "kind": "Method",
+      "summary": "Attempts to decode an Aztec symbol from common image formats in a span with image decode options, cancellation, and diagnostics.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "image",
+          "type": "ReadOnlySpan\u003Cbyte\u003E",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "ImageDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "cancellationToken",
+          "type": "CancellationToken",
+          "description": null
+        },
+        {
+          "name": "text",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "diagnostics",
+          "type": "AztecDecodeDiagnostics",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodeImage(ReadOnlySpan\u003Cbyte\u003E image, ImageDecodeOptions options, CancellationToken cancellationToken, out string text, out AztecDecodeDiagnostics diagnostics)",
+      "xmlId": "M:CodeGlyphX.AztecCode.TryDecodeImage(System.ReadOnlySpan{System.Byte},CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken,System.String@,CodeGlyphX.AztecDecodeDiagnostics@)",
+      "anchor": "method-trydecodeimage-static-bool-trydecodeimage-readonlyspan-byte-image-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-string-text-out-aztecdecodediagnostics-diagnostics"
+    },
+    {
+      "name": "TryDecodeImage",
+      "kind": "Method",
       "summary": "Attempts to decode an Aztec symbol from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).",
       "remarks": null,
       "returns": null,
@@ -2684,6 +3134,306 @@
       "signature": "static bool TryDecodeImage(Stream stream, ImageDecodeOptions options, CancellationToken cancellationToken, out string text, out AztecDecodeDiagnostics diagnostics)",
       "xmlId": "M:CodeGlyphX.AztecCode.TryDecodeImage(System.IO.Stream,CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken,System.String@,CodeGlyphX.AztecDecodeDiagnostics@)",
       "anchor": "method-trydecodeimage-static-bool-trydecodeimage-stream-stream-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-string-text-out-aztecdecodediagnostics-diagnostics"
+    },
+    {
+      "name": "DecodeImageResult",
+      "kind": "Method",
+      "summary": "Decodes an Aztec symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) and returns diagnostics.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "image",
+          "type": "byte[]",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "ImageDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "cancellationToken",
+          "type": "CancellationToken",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static DecodeResult\u003Cstring\u003E DecodeImageResult(byte[] image, ImageDecodeOptions options, CancellationToken cancellationToken)",
+      "xmlId": "M:CodeGlyphX.AztecCode.DecodeImageResult(System.Byte[],CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken)",
+      "anchor": "method-decodeimageresult-static-decoderesult-string-decodeimageresult-byte-image-imagedecodeoptions-options-cancellationtoken-cancellationtoken"
+    },
+    {
+      "name": "DecodeImageResult",
+      "kind": "Method",
+      "summary": "Decodes an Aztec symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) in a span and returns diagnostics.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "image",
+          "type": "ReadOnlySpan\u003Cbyte\u003E",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "ImageDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "cancellationToken",
+          "type": "CancellationToken",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static DecodeResult\u003Cstring\u003E DecodeImageResult(ReadOnlySpan\u003Cbyte\u003E image, ImageDecodeOptions options, CancellationToken cancellationToken)",
+      "xmlId": "M:CodeGlyphX.AztecCode.DecodeImageResult(System.ReadOnlySpan{System.Byte},CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken)",
+      "anchor": "method-decodeimageresult-static-decoderesult-string-decodeimageresult-readonlyspan-byte-image-imagedecodeoptions-options-cancellationtoken-cancellationtoken"
+    },
+    {
+      "name": "DecodeImageResult",
+      "kind": "Method",
+      "summary": "Decodes an Aztec symbol from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) and returns diagnostics.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "stream",
+          "type": "Stream",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "ImageDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "cancellationToken",
+          "type": "CancellationToken",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static DecodeResult\u003Cstring\u003E DecodeImageResult(Stream stream, ImageDecodeOptions options, CancellationToken cancellationToken)",
+      "xmlId": "M:CodeGlyphX.AztecCode.DecodeImageResult(System.IO.Stream,CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken)",
+      "anchor": "method-decodeimageresult-static-decoderesult-string-decodeimageresult-stream-stream-imagedecodeoptions-options-cancellationtoken-cancellationtoken"
+    },
+    {
+      "name": "DecodeImageBatch",
+      "kind": "Method",
+      "summary": "Decodes a batch of Aztec images with shared settings and aggregated diagnostics.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "images",
+          "type": "IEnumerable\u003Cbyte[]\u003E",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "ImageDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "cancellationToken",
+          "type": "CancellationToken",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static DecodeBatchResult\u003Cstring\u003E DecodeImageBatch(IEnumerable\u003Cbyte[]\u003E images, ImageDecodeOptions options, CancellationToken cancellationToken)",
+      "xmlId": "M:CodeGlyphX.AztecCode.DecodeImageBatch(System.Collections.Generic.IEnumerable{System.Byte[]},CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken)",
+      "anchor": "method-decodeimagebatch-static-decodebatchresult-string-decodeimagebatch-ienumerable-byte-images-imagedecodeoptions-options-cancellationtoken-cancellationtoken"
+    },
+    {
+      "name": "TryDecodeAllImage",
+      "kind": "Method",
+      "summary": "Attempts to decode all Aztec symbols from common image formats.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "image",
+          "type": "byte[]",
+          "description": null
+        },
+        {
+          "name": "texts",
+          "type": "string[]",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodeAllImage(byte[] image, out string[] texts)",
+      "xmlId": "M:CodeGlyphX.AztecCode.TryDecodeAllImage(System.Byte[],System.String[]@)",
+      "anchor": "method-trydecodeallimage-static-bool-trydecodeallimage-byte-image-out-string-texts"
+    },
+    {
+      "name": "TryDecodeAllImage",
+      "kind": "Method",
+      "summary": "Attempts to decode all Aztec symbols from common image formats with image decode options.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "image",
+          "type": "byte[]",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "ImageDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "texts",
+          "type": "string[]",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodeAllImage(byte[] image, ImageDecodeOptions options, out string[] texts)",
+      "xmlId": "M:CodeGlyphX.AztecCode.TryDecodeAllImage(System.Byte[],CodeGlyphX.ImageDecodeOptions,System.String[]@)",
+      "anchor": "method-trydecodeallimage-static-bool-trydecodeallimage-byte-image-imagedecodeoptions-options-out-string-texts"
+    },
+    {
+      "name": "TryDecodeAllImage",
+      "kind": "Method",
+      "summary": "Attempts to decode all Aztec symbols from common image formats with image decode options, with cancellation.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "image",
+          "type": "byte[]",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "ImageDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "cancellationToken",
+          "type": "CancellationToken",
+          "description": null
+        },
+        {
+          "name": "texts",
+          "type": "string[]",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodeAllImage(byte[] image, ImageDecodeOptions options, CancellationToken cancellationToken, out string[] texts)",
+      "xmlId": "M:CodeGlyphX.AztecCode.TryDecodeAllImage(System.Byte[],CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken,System.String[]@)",
+      "anchor": "method-trydecodeallimage-static-bool-trydecodeallimage-byte-image-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-string-texts"
+    },
+    {
+      "name": "TryDecodeAllImage",
+      "kind": "Method",
+      "summary": "Attempts to decode all Aztec symbols from an image stream.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "stream",
+          "type": "Stream",
+          "description": null
+        },
+        {
+          "name": "texts",
+          "type": "string[]",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodeAllImage(Stream stream, out string[] texts)",
+      "xmlId": "M:CodeGlyphX.AztecCode.TryDecodeAllImage(System.IO.Stream,System.String[]@)",
+      "anchor": "method-trydecodeallimage-static-bool-trydecodeallimage-stream-stream-out-string-texts"
+    },
+    {
+      "name": "TryDecodeAllImage",
+      "kind": "Method",
+      "summary": "Attempts to decode all Aztec symbols from an image stream with image decode options.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "stream",
+          "type": "Stream",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "ImageDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "texts",
+          "type": "string[]",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodeAllImage(Stream stream, ImageDecodeOptions options, out string[] texts)",
+      "xmlId": "M:CodeGlyphX.AztecCode.TryDecodeAllImage(System.IO.Stream,CodeGlyphX.ImageDecodeOptions,System.String[]@)",
+      "anchor": "method-trydecodeallimage-static-bool-trydecodeallimage-stream-stream-imagedecodeoptions-options-out-string-texts"
+    },
+    {
+      "name": "TryDecodeAllImage",
+      "kind": "Method",
+      "summary": "Attempts to decode all Aztec symbols from an image stream with image decode options, with cancellation.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "stream",
+          "type": "Stream",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "ImageDecodeOptions",
+          "description": null
+        },
+        {
+          "name": "cancellationToken",
+          "type": "CancellationToken",
+          "description": null
+        },
+        {
+          "name": "texts",
+          "type": "string[]",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static bool TryDecodeAllImage(Stream stream, ImageDecodeOptions options, CancellationToken cancellationToken, out string[] texts)",
+      "xmlId": "M:CodeGlyphX.AztecCode.TryDecodeAllImage(System.IO.Stream,CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken,System.String[]@)",
+      "anchor": "method-trydecodeallimage-static-bool-trydecodeallimage-stream-stream-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-string-texts"
     },
     {
       "name": "TryDecodePng",

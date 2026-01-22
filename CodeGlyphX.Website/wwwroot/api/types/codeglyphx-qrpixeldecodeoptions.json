@@ -284,6 +284,31 @@
       "anchor": "method-withaggressivesampling-qrpixeldecodeoptions-withaggressivesampling-bool-enabled"
     },
     {
+      "name": "WithTileScan",
+      "kind": "Method",
+      "summary": "Enables tile-based scanning for multiple QR codes.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "enabled",
+          "type": "bool",
+          "description": null
+        },
+        {
+          "name": "tileGrid",
+          "type": "int",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "QrPixelDecodeOptions WithTileScan(bool enabled, int tileGrid)",
+      "xmlId": "M:CodeGlyphX.QrPixelDecodeOptions.WithTileScan(System.Boolean,System.Int32)",
+      "anchor": "method-withtilescan-qrpixeldecodeoptions-withtilescan-bool-enabled-int-tilegrid"
+    },
+    {
       "name": "Profile",
       "kind": "Property",
       "summary": "Speed/accuracy profile (default: Robust).",
@@ -366,6 +391,34 @@
       "signature": "bool AutoCrop {get; set; }",
       "xmlId": "P:CodeGlyphX.QrPixelDecodeOptions.AutoCrop",
       "anchor": "property-autocrop-bool-autocrop-get-set"
+    },
+    {
+      "name": "EnableTileScan",
+      "kind": "Property",
+      "summary": "Enables tile-based scanning for multiple QR codes in one image.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "bool EnableTileScan {get; set; }",
+      "xmlId": "P:CodeGlyphX.QrPixelDecodeOptions.EnableTileScan",
+      "anchor": "property-enabletilescan-bool-enabletilescan-get-set"
+    },
+    {
+      "name": "TileGrid",
+      "kind": "Property",
+      "summary": "Tile grid size for multi-scan (0 = auto, 2..4 recommended).",
+      "remarks": null,
+      "returns": null,
+      "parameters": [],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "int TileGrid {get; set; }",
+      "xmlId": "P:CodeGlyphX.QrPixelDecodeOptions.TileGrid",
+      "anchor": "property-tilegrid-int-tilegrid-get-set"
     },
     {
       "name": "DisableTransforms",

@@ -5,11 +5,6 @@ on:
     branches: [ master ]
   workflow_dispatch:
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
 concurrency:
   group: pages
   cancel-in-progress: true
@@ -17,6 +12,8 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -29,13 +26,13 @@ jobs:
       - name: Restore
         run: dotnet restore CodeGlyphX.Website/CodeGlyphX.Website.csproj
 
-      - name: Publish
-        run: dotnet publish CodeGlyphX.Website/CodeGlyphX.Website.csproj -c Release -o site
+      - name: Build website (static + playground)
+        run: pwsh Build/Publish-WebsitePages.ps1 -Configuration Release -Framework net8.0 -OutputPath site
 
       - name: Upload Pages Artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: site/wwwroot
+          path: site
 
   deploy:
     runs-on: ubuntu-latest
@@ -43,6 +40,9 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+    permissions:
+      pages: write
+      id-token: write
     steps:
       - name: Deploy to GitHub Pages
         id: deployment

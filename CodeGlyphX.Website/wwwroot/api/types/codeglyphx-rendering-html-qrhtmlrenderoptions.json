@@ -24,6 +24,226 @@
       "anchor": "constructor-qrhtmlrenderoptions-qrhtmlrenderoptions"
     },
     {
+      "name": "WithModuleSize",
+      "kind": "Method",
+      "summary": "Sets the module size in pixels.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "size",
+          "type": "int",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "QrHtmlRenderOptions WithModuleSize(int size)",
+      "xmlId": "M:CodeGlyphX.Rendering.Html.QrHtmlRenderOptions.WithModuleSize(System.Int32)",
+      "anchor": "method-withmodulesize-qrhtmlrenderoptions-withmodulesize-int-size"
+    },
+    {
+      "name": "WithQuietZone",
+      "kind": "Method",
+      "summary": "Sets the quiet zone size in modules.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "quietZone",
+          "type": "int",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "QrHtmlRenderOptions WithQuietZone(int quietZone)",
+      "xmlId": "M:CodeGlyphX.Rendering.Html.QrHtmlRenderOptions.WithQuietZone(System.Int32)",
+      "anchor": "method-withquietzone-qrhtmlrenderoptions-withquietzone-int-quietzone"
+    },
+    {
+      "name": "WithDarkColor",
+      "kind": "Method",
+      "summary": "Sets the dark color (CSS value).",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "color",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "QrHtmlRenderOptions WithDarkColor(string color)",
+      "xmlId": "M:CodeGlyphX.Rendering.Html.QrHtmlRenderOptions.WithDarkColor(System.String)",
+      "anchor": "method-withdarkcolor-qrhtmlrenderoptions-withdarkcolor-string-color"
+    },
+    {
+      "name": "WithLightColor",
+      "kind": "Method",
+      "summary": "Sets the light color (CSS value).",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "color",
+          "type": "string",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "QrHtmlRenderOptions WithLightColor(string color)",
+      "xmlId": "M:CodeGlyphX.Rendering.Html.QrHtmlRenderOptions.WithLightColor(System.String)",
+      "anchor": "method-withlightcolor-qrhtmlrenderoptions-withlightcolor-string-color"
+    },
+    {
+      "name": "WithEmailSafeTable",
+      "kind": "Method",
+      "summary": "Enables or disables email-safe HTML output.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "enabled",
+          "type": "bool",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "QrHtmlRenderOptions WithEmailSafeTable(bool enabled)",
+      "xmlId": "M:CodeGlyphX.Rendering.Html.QrHtmlRenderOptions.WithEmailSafeTable(System.Boolean)",
+      "anchor": "method-withemailsafetable-qrhtmlrenderoptions-withemailsafetable-bool-enabled"
+    },
+    {
+      "name": "WithLogo",
+      "kind": "Method",
+      "summary": "Sets the logo overlay options.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "logo",
+          "type": "QrLogoOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "QrHtmlRenderOptions WithLogo(QrLogoOptions logo)",
+      "xmlId": "M:CodeGlyphX.Rendering.Html.QrHtmlRenderOptions.WithLogo(CodeGlyphX.Rendering.QrLogoOptions)",
+      "anchor": "method-withlogo-qrhtmlrenderoptions-withlogo-qrlogooptions-logo"
+    },
+    {
+      "name": "WithModuleShape",
+      "kind": "Method",
+      "summary": "Sets the module shape.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "shape",
+          "type": "QrPngModuleShape",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "QrHtmlRenderOptions WithModuleShape(QrPngModuleShape shape)",
+      "xmlId": "M:CodeGlyphX.Rendering.Html.QrHtmlRenderOptions.WithModuleShape(CodeGlyphX.Rendering.Png.QrPngModuleShape)",
+      "anchor": "method-withmoduleshape-qrhtmlrenderoptions-withmoduleshape-qrpngmoduleshape-shape"
+    },
+    {
+      "name": "WithModuleScale",
+      "kind": "Method",
+      "summary": "Sets the module scale.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "scale",
+          "type": "double",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "QrHtmlRenderOptions WithModuleScale(double scale)",
+      "xmlId": "M:CodeGlyphX.Rendering.Html.QrHtmlRenderOptions.WithModuleScale(System.Double)",
+      "anchor": "method-withmodulescale-qrhtmlrenderoptions-withmodulescale-double-scale"
+    },
+    {
+      "name": "WithModuleCornerRadiusPx",
+      "kind": "Method",
+      "summary": "Sets the module corner radius in pixels.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "radiusPx",
+          "type": "int",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "QrHtmlRenderOptions WithModuleCornerRadiusPx(int radiusPx)",
+      "xmlId": "M:CodeGlyphX.Rendering.Html.QrHtmlRenderOptions.WithModuleCornerRadiusPx(System.Int32)",
+      "anchor": "method-withmodulecornerradiuspx-qrhtmlrenderoptions-withmodulecornerradiuspx-int-radiuspx"
+    },
+    {
+      "name": "WithForegroundGradient",
+      "kind": "Method",
+      "summary": "Sets the foreground gradient.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "gradient",
+          "type": "QrPngGradientOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "QrHtmlRenderOptions WithForegroundGradient(QrPngGradientOptions gradient)",
+      "xmlId": "M:CodeGlyphX.Rendering.Html.QrHtmlRenderOptions.WithForegroundGradient(CodeGlyphX.Rendering.Png.QrPngGradientOptions)",
+      "anchor": "method-withforegroundgradient-qrhtmlrenderoptions-withforegroundgradient-qrpnggradientoptions-gradient"
+    },
+    {
+      "name": "WithEyes",
+      "kind": "Method",
+      "summary": "Sets custom eye (finder) options.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "eyes",
+          "type": "QrPngEyeOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "QrHtmlRenderOptions WithEyes(QrPngEyeOptions eyes)",
+      "xmlId": "M:CodeGlyphX.Rendering.Html.QrHtmlRenderOptions.WithEyes(CodeGlyphX.Rendering.Png.QrPngEyeOptions)",
+      "anchor": "method-witheyes-qrhtmlrenderoptions-witheyes-qrpngeyeoptions-eyes"
+    },
+    {
       "name": "ModuleSize",
       "kind": "Property",
       "summary": "Gets or sets the size of a single QR module in pixels.",

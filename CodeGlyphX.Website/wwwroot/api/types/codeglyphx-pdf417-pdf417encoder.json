@@ -35,6 +35,36 @@
       "anchor": "method-encode-static-bitmatrix-encode-string-text-pdf417encodeoptions-options"
     },
     {
+      "name": "EncodeMacro",
+      "kind": "Method",
+      "summary": "Encodes a Macro PDF417 payload.",
+      "remarks": null,
+      "returns": null,
+      "parameters": [
+        {
+          "name": "text",
+          "type": "string",
+          "description": null
+        },
+        {
+          "name": "macro",
+          "type": "Pdf417MacroOptions",
+          "description": null
+        },
+        {
+          "name": "options",
+          "type": "Pdf417EncodeOptions",
+          "description": null
+        }
+      ],
+      "exceptions": [],
+      "examples": [],
+      "seeAlso": [],
+      "signature": "static BitMatrix EncodeMacro(string text, Pdf417MacroOptions macro, Pdf417EncodeOptions options)",
+      "xmlId": "M:CodeGlyphX.Pdf417.Pdf417Encoder.EncodeMacro(System.String,CodeGlyphX.Pdf417.Pdf417MacroOptions,CodeGlyphX.Pdf417.Pdf417EncodeOptions)",
+      "anchor": "method-encodemacro-static-bitmatrix-encodemacro-string-text-pdf417macrooptions-macro-pdf417encodeoptions-options"
+    },
+    {
       "name": "EncodeBytes",
       "kind": "Method",
       "summary": "Encodes a byte payload as PDF417 (byte compaction).",
