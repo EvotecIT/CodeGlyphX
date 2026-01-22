@@ -383,3 +383,6 @@ site/
 temp-playground/
 temp-hash/
 Build/BenchmarkResults/
+nul
+temp-check/
+docfx/
