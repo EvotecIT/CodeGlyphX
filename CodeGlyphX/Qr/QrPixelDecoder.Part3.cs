@@ -133,7 +133,9 @@ internal static partial class QrPixelDecoder {
         if (!candidatesSorted) {
             candidates.Sort(static (a, b) => b.Count.CompareTo(a.Count));
         }
-        var n = Math.Min(candidates.Count, 10);
+        var candidateSpan = CollectionsMarshal.AsSpan(candidates);
+        var candidateCount = candidateSpan.Length;
+        var n = Math.Min(candidateCount, 10);
         var triedTriples = 0;
         var maxTriples = 48;
         if (budget.Enabled) {
@@ -147,9 +149,9 @@ internal static partial class QrPixelDecoder {
                     if (budget.IsExpired) return;
                     if (triedTriples++ >= maxTriples) { stop = true; break; }
 
-                    var a = candidates[i];
-                    var b = candidates[j];
-                    var c = candidates[k];
+                    var a = candidateSpan[i];
+                    var b = candidateSpan[j];
+                    var c = candidateSpan[k];
 
                     var msMin = Math.Min(a.ModuleSize, Math.Min(b.ModuleSize, c.ModuleSize));
                     var msMax = Math.Max(a.ModuleSize, Math.Max(b.ModuleSize, c.ModuleSize));
@@ -165,7 +167,7 @@ internal static partial class QrPixelDecoder {
                             tl,
                             tr,
                             bl,
-                            candidates.Count,
+                            candidateCount,
                             triedTriples,
                             accept,
                             aggressive,

@@ -10,7 +10,7 @@ from pathlib import Path
 
 BENCH_PREFIX = "CodeGlyphX.Benchmarks."
 REPORT_GLOB = "*-report.csv"
-COMPARE_REGEX = re.compile(r"^(CodeGlyphX|ZXing\.Net|QRCoder|Barcoder)\s+(.*)$")
+COMPARE_VENDORS = {"CodeGlyphX", "ZXing.Net", "QRCoder", "Barcoder"}
 
 TITLE_MAP = {
     "QrCodeBenchmarks": "QR (Encode)",
@@ -178,9 +178,12 @@ def compute_missing_compare(compare_files):
 
 
 def parse_vendor_scenario(method: str):
-    match = COMPARE_REGEX.match(method)
-    if match:
-        return match.group(1), match.group(2)
+    method = (method or "").strip()
+    if not method:
+        return "Unknown", method
+    parts = method.split(None, 1)
+    if len(parts) == 2 and parts[0] in COMPARE_VENDORS:
+        return parts[0], parts[1]
     return "Unknown", method
 
 

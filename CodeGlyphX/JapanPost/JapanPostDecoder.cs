@@ -78,8 +78,7 @@ public static class JapanPostDecoder {
 
     private static bool TryDecodeInter(string inter, out string text) {
         var output = new StringBuilder(inter.Length);
-        var i = 0;
-        while (i < inter.Length) {
+        for (var i = 0; i < inter.Length; ) {
             var ch = inter[i];
             if (IsDigitOrDash(ch)) {
                 output.Append(ch);
@@ -89,8 +88,6 @@ public static class JapanPostDecoder {
 
             if (!TryDecodeAlphaSequence(inter, ref i, out var decoded)) { text = string.Empty; return false; }
             output.Append(decoded);
-            continue;
-
         }
 
         text = output.ToString();

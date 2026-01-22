@@ -18,18 +18,29 @@ public static class PharmacodeTwoTrackDecoder {
 
         var topRow = 0;
         var bottomRow = modules.Height - 1;
+        if (!TryFindBarBounds(modules, topRow, bottomRow, out var firstBar, out var lastBar)) return false;
 
-        var firstBar = -1;
-        var lastBar = -1;
+        var runs = BuildRuns(modules, topRow, bottomRow, firstBar, lastBar);
+        if (!TryExtractDigits(modules, topRow, bottomRow, runs, out var digits)) return false;
+        if (!TryComputeValue(digits, out var value)) return false;
+
+        text = value.ToString(CultureInfo.InvariantCulture);
+        return true;
+    }
+
+    private static bool TryFindBarBounds(BitMatrix modules, int topRow, int bottomRow, out int firstBar, out int lastBar) {
+        firstBar = -1;
+        lastBar = -1;
         for (var x = 0; x < modules.Width; x++) {
             if (HasBar(modules, x, topRow, bottomRow)) {
                 if (firstBar < 0) firstBar = x;
                 lastBar = x;
             }
         }
+        return firstBar >= 0 && lastBar >= 0;
+    }
 
-        if (firstBar < 0 || lastBar < 0) return false;
-
+    private static List<(bool isBar, int start, int length)> BuildRuns(BitMatrix modules, int topRow, int bottomRow, int firstBar, int lastBar) {
         var runs = new List<(bool isBar, int start, int length)>(modules.Width / 2);
         var current = HasBar(modules, firstBar, topRow, bottomRow);
         var runStart = firstBar;
@@ -41,8 +52,11 @@ public static class PharmacodeTwoTrackDecoder {
             runStart = x;
         }
         runs.Add((current, runStart, lastBar - runStart + 1));
+        return runs;
+    }
 
-        var digits = new List<int>(runs.Count / 2 + 1);
+    private static bool TryExtractDigits(BitMatrix modules, int topRow, int bottomRow, List<(bool isBar, int start, int length)> runs, out List<int> digits) {
+        digits = new List<int>(runs.Count / 2 + 1);
         foreach (var run in runs) {
             if (!run.isBar) continue;
             var top = false;
@@ -53,13 +67,14 @@ public static class PharmacodeTwoTrackDecoder {
             }
 
             var digit = (bottom ? 1 : 0) + (top ? 2 : 0);
-            if (digit == 0) return false;
             digits.Add(digit);
         }
 
-        if (digits.Count < PharmacodeTwoTrackEncoder.MinBars || digits.Count > PharmacodeTwoTrackEncoder.MaxBars) return false;
+        return digits.Count >= PharmacodeTwoTrackEncoder.MinBars && digits.Count <= PharmacodeTwoTrackEncoder.MaxBars;
+    }
 
-        var value = 0;
+    private static bool TryComputeValue(List<int> digits, out int value) {
+        value = 0;
         var power = 1;
         for (var i = digits.Count - 1; i >= 0; i--) {
             value += digits[i] * power;
@@ -67,10 +82,7 @@ public static class PharmacodeTwoTrackDecoder {
             if (i > 0) power *= 3;
         }
 
-        if (value < PharmacodeTwoTrackEncoder.MinValue || value > PharmacodeTwoTrackEncoder.MaxValue) return false;
-
-        text = value.ToString(CultureInfo.InvariantCulture);
-        return true;
+        return value >= PharmacodeTwoTrackEncoder.MinValue && value <= PharmacodeTwoTrackEncoder.MaxValue;
     }
 
     private static bool HasBar(BitMatrix modules, int x, int topRow, int bottomRow) {

@@ -91,36 +91,62 @@ public static partial class ImageReader {
         width = 0;
         height = 0;
         if (!Rendering.Jpeg.JpegReader.IsJpeg(data)) return false;
+        return TryFindJpegFrameSize(data, out width, out height);
+    }
 
+    private static bool TryFindJpegFrameSize(ReadOnlySpan<byte> data, out int width, out int height) {
+        width = 0;
+        height = 0;
         var offset = 2;
+        while (TryReadNextJpegMarker(data, ref offset, out var marker)) {
+            if (marker == 0xD9 || marker == 0xDA) return false;
+            if (IsRestartMarker(marker)) continue;
+            if (!TryReadJpegSegmentLength(data, offset, out var length)) return false;
+            if (IsStartOfFrame(marker)) return TryReadJpegFrameDimensions(data, offset, length, out width, out height);
+            offset += length;
+        }
+        return false;
+    }
+
+    private static bool TryReadNextJpegMarker(ReadOnlySpan<byte> data, ref int offset, out byte marker) {
+        marker = 0;
         while (offset + 1 < data.Length) {
             if (data[offset] != 0xFF) {
                 offset++;
                 continue;
             }
             while (offset < data.Length && data[offset] == 0xFF) offset++;
-            if (offset >= data.Length) break;
-            var marker = data[offset++];
-
-            if (marker == 0xD9 || marker == 0xDA) break;
-            if (marker >= 0xD0 && marker <= 0xD7) continue;
-
-            if (offset + 1 >= data.Length) return false;
-            var length = ReadUInt16BE(data, offset);
-            if (length < 2) return false;
-            if (offset + length > data.Length) return false;
-
-            if (marker >= 0xC0 && marker <= 0xCF && marker != 0xC4 && marker != 0xC8 && marker != 0xCC) {
-                if (length < 7) return false;
-                height = ReadUInt16BE(data, offset + 3);
-                width = ReadUInt16BE(data, offset + 5);
-                return width > 0 && height > 0;
-            }
-
-            offset += length;
+            if (offset >= data.Length) return false;
+            marker = data[offset++];
+            return true;
         }
-
         return false;
+    }
+
+    private static bool TryReadJpegSegmentLength(ReadOnlySpan<byte> data, int offset, out ushort length) {
+        length = 0;
+        if (offset + 1 >= data.Length) return false;
+        length = ReadUInt16BE(data, offset);
+        if (length < 2) return false;
+        if (offset + length > data.Length) return false;
+        return true;
+    }
+
+    private static bool TryReadJpegFrameDimensions(ReadOnlySpan<byte> data, int offset, ushort length, out int width, out int height) {
+        width = 0;
+        height = 0;
+        if (length < 7) return false;
+        height = ReadUInt16BE(data, offset + 3);
+        width = ReadUInt16BE(data, offset + 5);
+        return width > 0 && height > 0;
+    }
+
+    private static bool IsStartOfFrame(byte marker) {
+        return marker >= 0xC0 && marker <= 0xCF && marker != 0xC4 && marker != 0xC8 && marker != 0xCC;
+    }
+
+    private static bool IsRestartMarker(byte marker) {
+        return marker >= 0xD0 && marker <= 0xD7;
     }
 
     private static bool TryReadGifSize(ReadOnlySpan<byte> data, out int width, out int height) {
@@ -216,8 +242,7 @@ public static partial class ImageReader {
         var pos = 2;
         if (!TryReadIntToken(data, ref pos, out width)) return false;
         if (!TryReadIntToken(data, ref pos, out height)) return false;
-        if (width <= 0 || height <= 0) return false;
-        if (width > MaxNetpbmDimension || height > MaxNetpbmDimension) return false;
+        if (!IsValidNetpbmDimensions(width, height)) return false;
         if (includeMaxVal) {
             if (!TryReadIntToken(data, ref pos, out var maxVal)) return false;
             if (maxVal <= 0) return false;
@@ -228,31 +253,10 @@ public static partial class ImageReader {
     private static bool TryReadPamSize(ReadOnlySpan<byte> data, out int width, out int height) {
         width = 0;
         height = 0;
-        if (data.Length < 2) return false;
-        if (data[0] != (byte)'P' || data[1] != (byte)'7') return false;
-
+        if (data.Length < 2 || data[0] != (byte)'P' || data[1] != (byte)'7') return false;
         var pos = 2;
-        while (true) {
-            SkipWhitespaceAndComments(data, ref pos);
-            if (pos >= data.Length) return false;
-            if (IsToken(data, pos, "ENDHDR")) {
-                pos += 6;
-                break;
-            }
-            var key = ReadToken(data, ref pos);
-            if (key.Length == 0) return false;
-            if (key.Equals("WIDTH", StringComparison.OrdinalIgnoreCase)) {
-                if (!TryReadIntToken(data, ref pos, out width)) return false;
-            } else if (key.Equals("HEIGHT", StringComparison.OrdinalIgnoreCase)) {
-                if (!TryReadIntToken(data, ref pos, out height)) return false;
-            } else {
-                _ = ReadToken(data, ref pos);
-            }
-        }
-
-        if (width <= 0 || height <= 0) return false;
-        if (width > MaxNetpbmDimension || height > MaxNetpbmDimension) return false;
-        return true;
+        if (!TryReadPamHeader(data, ref pos, out width, out height)) return false;
+        return IsValidNetpbmDimensions(width, height);
     }
 
     private static bool TryReadXbmSize(ReadOnlySpan<byte> data, out int width, out int height) {
@@ -305,16 +309,20 @@ public static partial class ImageReader {
         return width > 0 && height > 0;
     }
 
-    private static uint ReadUInt32BE(ReadOnlySpan<byte> data, int offset) {
-        return (uint)(data[offset] << 24 | data[offset + 1] << 16 | data[offset + 2] << 8 | data[offset + 3]);
-    }
-
     private static ushort ReadUInt16BE(ReadOnlySpan<byte> data, int offset) {
         return (ushort)((data[offset] << 8) | data[offset + 1]);
     }
 
     private static ushort ReadUInt16LE(ReadOnlySpan<byte> data, int offset) {
         return (ushort)(data[offset] | (data[offset + 1] << 8));
+    }
+
+    private static ushort ReadUInt16LE(ReadOnlySpan<byte> data, int offset, bool little) {
+        return little ? ReadUInt16LE(data, offset) : ReadUInt16BE(data, offset);
+    }
+
+    private static uint ReadUInt32BE(ReadOnlySpan<byte> data, int offset) {
+        return (uint)(data[offset] << 24 | data[offset + 1] << 16 | data[offset + 2] << 8 | data[offset + 3]);
     }
 
     private static uint ReadUInt32LE(ReadOnlySpan<byte> data, int offset) {
@@ -330,10 +338,6 @@ public static partial class ImageReader {
 
     private static int ReadInt32LE(ReadOnlySpan<byte> data, int offset) {
         return unchecked((int)ReadUInt32LE(data, offset));
-    }
-
-    private static ushort ReadUInt16LE(ReadOnlySpan<byte> data, int offset, bool little) {
-        return little ? ReadUInt16LE(data, offset) : ReadUInt16BE(data, offset);
     }
 
     private static bool TryReadIntToken(ReadOnlySpan<byte> data, ref int pos, out int value) {
@@ -405,10 +409,10 @@ public static partial class ImageReader {
             if (lineEnd < 0) lineEnd = text.Length;
             var line = text.Substring(lineStart, lineEnd - lineStart);
             var parts = line.Split(new[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
-            if (parts.Length >= 3 && parts[0].Equals("#define", StringComparison.OrdinalIgnoreCase)) {
-                if (int.TryParse(parts[2], out var value)) {
-                    return value;
-                }
+            if (parts.Length >= 3
+                && parts[0].Equals("#define", StringComparison.OrdinalIgnoreCase)
+                && int.TryParse(parts[2], out var value)) {
+                return value;
             }
             idx = text.IndexOf(suffix, idx + suffix.Length, StringComparison.OrdinalIgnoreCase);
         }
@@ -419,6 +423,7 @@ public static partial class ImageReader {
         var list = new System.Collections.Generic.List<string>();
         var sb = new System.Text.StringBuilder();
         var inString = false;
+        var escape = false;
         for (var i = 0; i < text.Length; i++) {
             var c = text[i];
             if (!inString) {
@@ -429,9 +434,14 @@ public static partial class ImageReader {
                 continue;
             }
 
+            if (escape) {
+                sb.Append(c);
+                escape = false;
+                continue;
+            }
+
             if (c == '\\' && i + 1 < text.Length) {
-                sb.Append(text[i + 1]);
-                i++;
+                escape = true;
                 continue;
             }
             if (c == '"') {
@@ -442,6 +452,44 @@ public static partial class ImageReader {
             sb.Append(c);
         }
         return list;
+    }
+
+    private static bool IsValidNetpbmDimensions(int width, int height) {
+        if (width <= 0 || height <= 0) return false;
+        return width <= MaxNetpbmDimension && height <= MaxNetpbmDimension;
+    }
+
+    private static bool TryReadPamHeader(ReadOnlySpan<byte> data, ref int pos, out int width, out int height) {
+        width = 0;
+        height = 0;
+        while (true) {
+            SkipWhitespaceAndComments(data, ref pos);
+            if (pos >= data.Length) return false;
+            if (IsToken(data, pos, "ENDHDR")) return true;
+            var key = ReadToken(data, ref pos);
+            if (key.Length == 0) return false;
+            if (key.Equals("WIDTH", StringComparison.OrdinalIgnoreCase)) {
+                if (!TryReadIntToken(data, ref pos, out width)) return false;
+                continue;
+            }
+            if (key.Equals("HEIGHT", StringComparison.OrdinalIgnoreCase)) {
+                if (!TryReadIntToken(data, ref pos, out height)) return false;
+                continue;
+            }
+            if (!SkipToken(data, ref pos)) return false;
+        }
+    }
+
+    private static bool SkipToken(ReadOnlySpan<byte> data, ref int pos) {
+        SkipWhitespaceAndComments(data, ref pos);
+        if (pos >= data.Length) return false;
+        var start = pos;
+        while (pos < data.Length) {
+            var c = data[pos];
+            if (c <= 32) break;
+            pos++;
+        }
+        return pos > start;
     }
 
     private static bool TryGetTiffValueSpan(ReadOnlySpan<byte> data, int entryOffset, bool little, ushort type, uint count, out ReadOnlySpan<byte> valueSpan) {

@@ -111,6 +111,19 @@ public sealed class Pdf417MacroAssembler {
     }
 
     /// <summary>
+    /// Attempts to add a Macro PDF417 segment with explicit metadata.
+    /// </summary>
+    public bool TryAdd(string text, Pdf417MacroMetadata macro) {
+        if (macro is null) throw new ArgumentNullException(nameof(macro));
+        if (!TryAcceptFileId(macro.FileId)) return false;
+        if (_segments.ContainsKey(macro.SegmentIndex)) return false;
+
+        _segments[macro.SegmentIndex] = text ?? string.Empty;
+        MergeOptionalFields(macro);
+        return true;
+    }
+
+    /// <summary>
     /// Adds a decoded Macro PDF417 segment.
     /// </summary>
     public void Add(Pdf417Decoded decoded) {
@@ -126,19 +139,6 @@ public sealed class Pdf417MacroAssembler {
         if (!TryAdd(decoded)) {
             throw new InvalidOperationException("Segment does not contain Macro PDF417 metadata or does not match the current file.");
         }
-    }
-
-    /// <summary>
-    /// Attempts to add a Macro PDF417 segment with explicit metadata.
-    /// </summary>
-    public bool TryAdd(string text, Pdf417MacroMetadata macro) {
-        if (macro is null) throw new ArgumentNullException(nameof(macro));
-        if (!TryAcceptFileId(macro.FileId)) return false;
-        if (_segments.ContainsKey(macro.SegmentIndex)) return false;
-
-        _segments[macro.SegmentIndex] = text ?? string.Empty;
-        MergeOptionalFields(macro);
-        return true;
     }
 
     /// <summary>

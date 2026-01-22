@@ -28,6 +28,10 @@ using CodeGlyphX.Rendering.Xpm;
 namespace CodeGlyphX;
 
 public static partial class Pdf417Code {
+    private const string FailureCancelled = "Cancelled.";
+    private const string FailureDownscale = "Image downscale failed.";
+    private const string FailureNoPdf417 = "No PDF417 decoded.";
+    private const int MinTileSize = 48;
     /// <summary>
     /// Attempts to decode a PDF417 symbol from PNG bytes.
     /// </summary>
@@ -145,11 +149,11 @@ public static partial class Pdf417Code {
         diagnostics = new Pdf417DecodeDiagnostics();
         var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
         try {
-            if (token.IsCancellationRequested) { text = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
+            if (token.IsCancellationRequested) { text = string.Empty; diagnostics.Failure = FailureCancelled; return false; }
             var rgba = PngReader.DecodeRgba32(png, out var width, out var height);
             if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) {
                 text = string.Empty;
-                diagnostics.Failure ??= token.IsCancellationRequested ? "Cancelled." : "Image downscale failed.";
+                diagnostics.Failure ??= token.IsCancellationRequested ? FailureCancelled : FailureDownscale;
                 return false;
             }
             if (Pdf417Decoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out text, out var pdfDiag)) {
@@ -157,7 +161,7 @@ public static partial class Pdf417Code {
                 return true;
             }
             diagnostics = pdfDiag;
-            diagnostics.Failure ??= "No PDF417 decoded.";
+            diagnostics.Failure ??= FailureNoPdf417;
             text = string.Empty;
             return false;
         } finally {
@@ -216,7 +220,7 @@ public static partial class Pdf417Code {
     /// </summary>
     public static bool TryDecodePngFile(string path, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text, out Pdf417DecodeDiagnostics diagnostics) {
         if (path is null) throw new ArgumentNullException(nameof(path));
-        if (cancellationToken.IsCancellationRequested) { text = string.Empty; diagnostics = new Pdf417DecodeDiagnostics { Failure = "Cancelled." }; return false; }
+        if (cancellationToken.IsCancellationRequested) { text = string.Empty; diagnostics = new Pdf417DecodeDiagnostics { Failure = FailureCancelled }; return false; }
         var png = RenderIO.ReadBinary(path);
         return TryDecodePngCore(png, options, cancellationToken, out text, out diagnostics);
     }
@@ -264,7 +268,7 @@ public static partial class Pdf417Code {
     /// </summary>
     public static bool TryDecodePng(Stream stream, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text, out Pdf417DecodeDiagnostics diagnostics) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        if (cancellationToken.IsCancellationRequested) { text = string.Empty; diagnostics = new Pdf417DecodeDiagnostics { Failure = "Cancelled." }; return false; }
+        if (cancellationToken.IsCancellationRequested) { text = string.Empty; diagnostics = new Pdf417DecodeDiagnostics { Failure = FailureCancelled }; return false; }
         var png = RenderIO.ReadBinary(stream);
         return TryDecodePngCore(png, options, cancellationToken, out text, out diagnostics);
     }
@@ -305,67 +309,6 @@ public static partial class Pdf417Code {
             budgetCts?.Dispose();
             budgetScope?.Dispose();
         }
-    }
-
-    /// <summary>
-    /// Decodes a PDF417 symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) and returns diagnostics.
-    /// </summary>
-    public static DecodeResult<string> DecodeImageResult(byte[] image, ImageDecodeOptions? options = null, CancellationToken cancellationToken = default) {
-        if (image is null) throw new ArgumentNullException(nameof(image));
-        return DecodeImageResult((ReadOnlySpan<byte>)image, options, cancellationToken);
-    }
-
-    /// <summary>
-    /// Decodes a PDF417 symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) in a span and returns diagnostics.
-    /// </summary>
-    public static DecodeResult<string> DecodeImageResult(ReadOnlySpan<byte> image, ImageDecodeOptions? options = null, CancellationToken cancellationToken = default) {
-        var stopwatch = Stopwatch.StartNew();
-        _ = DecodeResultHelpers.TryGetImageInfo(image, out var info, out var formatKnown);
-        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
-        try {
-            if (token.IsCancellationRequested) {
-                return new DecodeResult<string>(DecodeFailureReason.Cancelled, info, stopwatch.Elapsed);
-            }
-            if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) {
-                var imageFailure = DecodeResultHelpers.FailureForImageRead(image, formatKnown, token);
-                return new DecodeResult<string>(imageFailure, info, stopwatch.Elapsed);
-            }
-
-            info = DecodeResultHelpers.EnsureDimensions(info, formatKnown, width, height);
-
-            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) {
-                return new DecodeResult<string>(DecodeFailureReason.Cancelled, info, stopwatch.Elapsed);
-            }
-            if (Pdf417Decoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out string text)) {
-                return new DecodeResult<string>(text, info, stopwatch.Elapsed);
-            }
-            var failure = DecodeResultHelpers.FailureForDecode(token);
-            return new DecodeResult<string>(failure, info, stopwatch.Elapsed);
-        } catch (Exception ex) {
-            return new DecodeResult<string>(DecodeFailureReason.Error, info, stopwatch.Elapsed, ex.Message);
-        } finally {
-            budgetCts?.Dispose();
-            budgetScope?.Dispose();
-        }
-    }
-
-    /// <summary>
-    /// Decodes a PDF417 symbol from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) and returns diagnostics.
-    /// </summary>
-    public static DecodeResult<string> DecodeImageResult(Stream stream, ImageDecodeOptions? options = null, CancellationToken cancellationToken = default) {
-        if (stream is null) throw new ArgumentNullException(nameof(stream));
-        if (stream is MemoryStream memory && memory.TryGetBuffer(out var buffer)) {
-            return DecodeImageResult(buffer.AsSpan(), options, cancellationToken);
-        }
-        var data = RenderIO.ReadBinary(stream);
-        return DecodeImageResult(data, options, cancellationToken);
-    }
-
-    /// <summary>
-    /// Decodes a batch of PDF417 images with shared settings and aggregated diagnostics.
-    /// </summary>
-    public static DecodeBatchResult<string> DecodeImageBatch(IEnumerable<byte[]> images, ImageDecodeOptions? options = null, CancellationToken cancellationToken = default) {
-        return DecodeBatchHelpers.Run(images, image => DecodeImageResult(image, options, cancellationToken), cancellationToken);
     }
 
     /// <summary>
@@ -410,7 +353,7 @@ public static partial class Pdf417Code {
         diagnostics = new Pdf417DecodeDiagnostics();
         var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
         try {
-            if (token.IsCancellationRequested) { text = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
+            if (token.IsCancellationRequested) { text = string.Empty; diagnostics.Failure = FailureCancelled; return false; }
             if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) {
                 text = string.Empty;
                 diagnostics.Failure ??= "Unsupported image format.";
@@ -418,7 +361,7 @@ public static partial class Pdf417Code {
             }
             if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) {
                 text = string.Empty;
-                diagnostics.Failure ??= token.IsCancellationRequested ? "Cancelled." : "Image downscale failed.";
+                diagnostics.Failure ??= token.IsCancellationRequested ? FailureCancelled : FailureDownscale;
                 return false;
             }
             if (Pdf417Decoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out text, out var pdfDiag)) {
@@ -426,7 +369,7 @@ public static partial class Pdf417Code {
                 return true;
             }
             diagnostics = pdfDiag;
-            diagnostics.Failure ??= "No PDF417 decoded.";
+            diagnostics.Failure ??= FailureNoPdf417;
             text = string.Empty;
             return false;
         } finally {
@@ -575,9 +518,70 @@ public static partial class Pdf417Code {
     /// </summary>
     public static bool TryDecodeImage(Stream stream, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text, out Pdf417DecodeDiagnostics diagnostics) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        if (cancellationToken.IsCancellationRequested) { text = string.Empty; diagnostics = new Pdf417DecodeDiagnostics { Failure = "Cancelled." }; return false; }
+        if (cancellationToken.IsCancellationRequested) { text = string.Empty; diagnostics = new Pdf417DecodeDiagnostics { Failure = FailureCancelled }; return false; }
         var data = RenderIO.ReadBinary(stream);
         return TryDecodeImageCore(data, options, cancellationToken, out text, out diagnostics);
+    }
+
+    /// <summary>
+    /// Decodes a PDF417 symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) and returns diagnostics.
+    /// </summary>
+    public static DecodeResult<string> DecodeImageResult(byte[] image, ImageDecodeOptions? options = null, CancellationToken cancellationToken = default) {
+        if (image is null) throw new ArgumentNullException(nameof(image));
+        return DecodeImageResult((ReadOnlySpan<byte>)image, options, cancellationToken);
+    }
+
+    /// <summary>
+    /// Decodes a PDF417 symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) in a span and returns diagnostics.
+    /// </summary>
+    public static DecodeResult<string> DecodeImageResult(ReadOnlySpan<byte> image, ImageDecodeOptions? options = null, CancellationToken cancellationToken = default) {
+        var stopwatch = Stopwatch.StartNew();
+        _ = DecodeResultHelpers.TryGetImageInfo(image, out var info, out var formatKnown);
+        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
+        try {
+            if (token.IsCancellationRequested) {
+                return new DecodeResult<string>(DecodeFailureReason.Cancelled, info, stopwatch.Elapsed);
+            }
+            if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) {
+                var imageFailure = DecodeResultHelpers.FailureForImageRead(image, formatKnown, token);
+                return new DecodeResult<string>(imageFailure, info, stopwatch.Elapsed);
+            }
+
+            info = DecodeResultHelpers.EnsureDimensions(info, formatKnown, width, height);
+
+            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) {
+                return new DecodeResult<string>(DecodeFailureReason.Cancelled, info, stopwatch.Elapsed);
+            }
+            if (Pdf417Decoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out string text)) {
+                return new DecodeResult<string>(text, info, stopwatch.Elapsed);
+            }
+            var failure = DecodeResultHelpers.FailureForDecode(token);
+            return new DecodeResult<string>(failure, info, stopwatch.Elapsed);
+        } catch (Exception ex) {
+            return new DecodeResult<string>(DecodeFailureReason.Error, info, stopwatch.Elapsed, ex.Message);
+        } finally {
+            budgetCts?.Dispose();
+            budgetScope?.Dispose();
+        }
+    }
+
+    /// <summary>
+    /// Decodes a PDF417 symbol from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) and returns diagnostics.
+    /// </summary>
+    public static DecodeResult<string> DecodeImageResult(Stream stream, ImageDecodeOptions? options = null, CancellationToken cancellationToken = default) {
+        if (stream is null) throw new ArgumentNullException(nameof(stream));
+        if (stream is MemoryStream memory && memory.TryGetBuffer(out var buffer)) {
+            return DecodeImageResult(buffer.AsSpan(), options, cancellationToken);
+        }
+        var data = RenderIO.ReadBinary(stream);
+        return DecodeImageResult(data, options, cancellationToken);
+    }
+
+    /// <summary>
+    /// Decodes a batch of PDF417 images with shared settings and aggregated diagnostics.
+    /// </summary>
+    public static DecodeBatchResult<string> DecodeImageBatch(IEnumerable<byte[]> images, ImageDecodeOptions? options = null, CancellationToken cancellationToken = default) {
+        return DecodeBatchHelpers.Run(images, image => DecodeImageResult(image, options, cancellationToken), cancellationToken);
     }
 
     private static bool TryDecodePngCore(byte[] png, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text, out Pdf417DecodeDiagnostics diagnostics) {
@@ -585,11 +589,11 @@ public static partial class Pdf417Code {
         if (png is null) throw new ArgumentNullException(nameof(png));
         var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
         try {
-            if (token.IsCancellationRequested) { text = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
+            if (token.IsCancellationRequested) { text = string.Empty; diagnostics.Failure = FailureCancelled; return false; }
             var rgba = PngReader.DecodeRgba32(png, out var width, out var height);
             if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) {
                 text = string.Empty;
-                diagnostics.Failure ??= token.IsCancellationRequested ? "Cancelled." : "Image downscale failed.";
+                diagnostics.Failure ??= token.IsCancellationRequested ? FailureCancelled : FailureDownscale;
                 return false;
             }
             if (Pdf417Decoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out text, out var pdfDiag)) {
@@ -597,7 +601,7 @@ public static partial class Pdf417Code {
                 return true;
             }
             diagnostics = pdfDiag;
-            diagnostics.Failure ??= "No PDF417 decoded.";
+            diagnostics.Failure ??= FailureNoPdf417;
             text = string.Empty;
             return false;
         } finally {
@@ -611,7 +615,7 @@ public static partial class Pdf417Code {
         if (image is null) throw new ArgumentNullException(nameof(image));
         var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
         try {
-            if (token.IsCancellationRequested) { text = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
+            if (token.IsCancellationRequested) { text = string.Empty; diagnostics.Failure = FailureCancelled; return false; }
             if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) {
                 text = string.Empty;
                 diagnostics.Failure ??= "Unsupported image format.";
@@ -619,7 +623,7 @@ public static partial class Pdf417Code {
             }
             if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) {
                 text = string.Empty;
-                diagnostics.Failure ??= token.IsCancellationRequested ? "Cancelled." : "Image downscale failed.";
+                diagnostics.Failure ??= token.IsCancellationRequested ? FailureCancelled : FailureDownscale;
                 return false;
             }
             if (Pdf417Decoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out text, out var pdfDiag)) {
@@ -627,7 +631,7 @@ public static partial class Pdf417Code {
                 return true;
             }
             diagnostics = pdfDiag;
-            diagnostics.Failure ??= "No PDF417 decoded.";
+            diagnostics.Failure ??= FailureNoPdf417;
             text = string.Empty;
             return false;
         } finally {
@@ -687,34 +691,47 @@ public static partial class Pdf417Code {
         var pad = Math.Max(8, Math.Min(width, height) / 40);
         var tileW = width / grid;
         var tileH = height / grid;
-
         for (var ty = 0; ty < grid; ty++) {
-            for (var tx = 0; tx < grid; tx++) {
-                if (token.IsCancellationRequested) return;
-                var x0 = tx * tileW;
-                var y0 = ty * tileH;
-                var x1 = (tx == grid - 1) ? width : (tx + 1) * tileW;
-                var y1 = (ty == grid - 1) ? height : (ty + 1) * tileH;
-
-                x0 = Math.Max(0, x0 - pad);
-                y0 = Math.Max(0, y0 - pad);
-                x1 = Math.Min(width, x1 + pad);
-                y1 = Math.Min(height, y1 + pad);
-
-                var tw = x1 - x0;
-                var th = y1 - y0;
-                if (tw < 48 || th < 48) continue;
-
-                var tileStride = tw * 4;
-                var tile = new byte[tileStride * th];
-                for (var y = 0; y < th; y++) {
-                    if (token.IsCancellationRequested) return;
-                    Buffer.BlockCopy(rgba, (y0 + y) * stride + x0 * 4, tile, y * tileStride, tileStride);
-                }
-
-                onTile(tile, tw, th, tileStride);
-            }
+            if (!ProcessTileRow(rgba, width, height, stride, token, onTile, grid, pad, tileW, tileH, ty)) return;
         }
+    }
+
+    private static bool ProcessTileRow(byte[] rgba, int width, int height, int stride, CancellationToken token, Action<byte[], int, int, int> onTile, int grid, int pad, int tileW, int tileH, int ty) {
+        for (var tx = 0; tx < grid; tx++) {
+            if (token.IsCancellationRequested) return false;
+            if (!TryGetTileBounds(width, height, grid, pad, tileW, tileH, tx, ty, out var x0, out var y0, out var tw, out var th)) {
+                continue;
+            }
+            if (!TryCopyTile(rgba, stride, x0, y0, tw, th, token, out var tile, out var tileStride)) return false;
+            onTile(tile, tw, th, tileStride);
+        }
+        return true;
+    }
+
+    private static bool TryGetTileBounds(int width, int height, int grid, int pad, int tileW, int tileH, int tx, int ty, out int x0, out int y0, out int tw, out int th) {
+        x0 = tx * tileW;
+        y0 = ty * tileH;
+        var x1 = (tx == grid - 1) ? width : (tx + 1) * tileW;
+        var y1 = (ty == grid - 1) ? height : (ty + 1) * tileH;
+
+        x0 = Math.Max(0, x0 - pad);
+        y0 = Math.Max(0, y0 - pad);
+        x1 = Math.Min(width, x1 + pad);
+        y1 = Math.Min(height, y1 + pad);
+
+        tw = x1 - x0;
+        th = y1 - y0;
+        return tw >= MinTileSize && th >= MinTileSize;
+    }
+
+    private static bool TryCopyTile(byte[] rgba, int stride, int x0, int y0, int tw, int th, CancellationToken token, out byte[] tile, out int tileStride) {
+        tileStride = tw * 4;
+        tile = new byte[tileStride * th];
+        for (var y = 0; y < th; y++) {
+            if (token.IsCancellationRequested) return false;
+            Buffer.BlockCopy(rgba, (y0 + y) * stride + x0 * 4, tile, y * tileStride, tileStride);
+        }
+        return true;
     }
 
     /// <summary>

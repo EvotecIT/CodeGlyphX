@@ -85,6 +85,29 @@ public static partial class Pdf417Code {
     }
 
     /// <summary>
+    /// Attempts to decode a Macro PDF417 symbol from a PNG stream.
+    /// </summary>
+    public static bool TryDecodePng(Stream stream, out Pdf417Decoded decoded) {
+        return TryDecodePng(stream, null, CancellationToken.None, out decoded);
+    }
+
+    /// <summary>
+    /// Attempts to decode a Macro PDF417 symbol from a PNG stream with image decode options.
+    /// </summary>
+    public static bool TryDecodePng(Stream stream, ImageDecodeOptions? options, out Pdf417Decoded decoded) {
+        return TryDecodePng(stream, options, CancellationToken.None, out decoded);
+    }
+
+    /// <summary>
+    /// Attempts to decode a Macro PDF417 symbol from a PNG stream with image decode options, with cancellation.
+    /// </summary>
+    public static bool TryDecodePng(Stream stream, ImageDecodeOptions? options, CancellationToken cancellationToken, out Pdf417Decoded decoded) {
+        if (stream is null) throw new ArgumentNullException(nameof(stream));
+        var png = RenderIO.ReadBinary(stream);
+        return TryDecodePng(png, options, cancellationToken, out decoded);
+    }
+
+    /// <summary>
     /// Attempts to decode a Macro PDF417 symbol from a PNG file.
     /// </summary>
     public static bool TryDecodePngFile(string path, out Pdf417Decoded decoded) {
@@ -112,29 +135,6 @@ public static partial class Pdf417Code {
         if (path is null) throw new ArgumentNullException(nameof(path));
         if (cancellationToken.IsCancellationRequested) { decoded = null!; return false; }
         var png = RenderIO.ReadBinary(path);
-        return TryDecodePng(png, options, cancellationToken, out decoded);
-    }
-
-    /// <summary>
-    /// Attempts to decode a Macro PDF417 symbol from a PNG stream.
-    /// </summary>
-    public static bool TryDecodePng(Stream stream, out Pdf417Decoded decoded) {
-        return TryDecodePng(stream, null, CancellationToken.None, out decoded);
-    }
-
-    /// <summary>
-    /// Attempts to decode a Macro PDF417 symbol from a PNG stream with image decode options.
-    /// </summary>
-    public static bool TryDecodePng(Stream stream, ImageDecodeOptions? options, out Pdf417Decoded decoded) {
-        return TryDecodePng(stream, options, CancellationToken.None, out decoded);
-    }
-
-    /// <summary>
-    /// Attempts to decode a Macro PDF417 symbol from a PNG stream with image decode options, with cancellation.
-    /// </summary>
-    public static bool TryDecodePng(Stream stream, ImageDecodeOptions? options, CancellationToken cancellationToken, out Pdf417Decoded decoded) {
-        if (stream is null) throw new ArgumentNullException(nameof(stream));
-        var png = RenderIO.ReadBinary(stream);
         return TryDecodePng(png, options, cancellationToken, out decoded);
     }
 

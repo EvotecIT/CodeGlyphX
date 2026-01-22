@@ -28,32 +28,35 @@ internal static class PreflightChecks
     {
         var failures = new List<string>();
 
-        void Check(string name, Action action)
+        bool Check(string name, Action action)
         {
             try
             {
                 action();
+                return true;
             }
             catch (Exception ex)
             {
                 failures.Add($"{name}: {ex.GetType().Name} - {ex.Message}");
+                return false;
             }
         }
 
-        Check("CodeGlyphX QR PNG", () =>
+        var ok = true;
+        ok &= Check("CodeGlyphX QR PNG", () =>
         {
             var png = QrEasy.RenderPng(QrText);
             if (png.Length == 0) throw new InvalidOperationException("Empty PNG output.");
         });
 
-        Check("CodeGlyphX Barcode PNG", () =>
+        ok &= Check("CodeGlyphX Barcode PNG", () =>
         {
             var png = BarcodeEasy.RenderPng(BarcodeType.EAN, EanText, new BarcodeOptions());
             if (png.Length == 0) throw new InvalidOperationException("Empty PNG output.");
         });
 
 #if COMPARE_QRCODER
-        Check("QRCoder QR PNG", () =>
+        ok &= Check("QRCoder QR PNG", () =>
         {
             using var generator = new QRCodeGenerator();
             using var data = generator.CreateQrCode(QrText, QRCodeGenerator.ECCLevel.M);
@@ -64,7 +67,7 @@ internal static class PreflightChecks
 #endif
 
 #if COMPARE_ZXING
-        Check("ZXing QR PNG", () =>
+        ok &= Check("ZXing QR PNG", () =>
         {
             var options = new EncodingOptions { Width = 128, Height = 128, Margin = 2 };
             var writer = new BarcodeWriterGeneric
@@ -77,7 +80,7 @@ internal static class PreflightChecks
             if (bytes.Length == 0) throw new InvalidOperationException("Empty PNG output.");
         });
 
-        Check("ZXing QR Decode", () =>
+        ok &= Check("ZXing QR Decode", () =>
         {
             DecodeSampleHelper.LoadRgba("Assets/DecodingSamples/qr-clean-small.png", out var rgba, out var width, out var height);
             var reader = new BarcodeReaderGeneric
@@ -92,7 +95,7 @@ internal static class PreflightChecks
 #endif
 
 #if COMPARE_BARCODER
-        Check("Barcoder EAN PNG", () =>
+        ok &= Check("Barcoder EAN PNG", () =>
         {
             var options = new BarcodeOptions();
             var barcoderOptions = CompareBenchmarkHelpers.CreateBarcoderBarcodeOptions(options);
@@ -104,7 +107,7 @@ internal static class PreflightChecks
         });
 #endif
 
-        if (failures.Count == 0)
+        if (ok)
         {
             Console.WriteLine("Preflight checks passed.");
             return 0;
