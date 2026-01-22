@@ -45,14 +45,14 @@ public class QrDecodeNoisyCompareBenchmarks
         DecodeSampleHelper.LoadRgba("Assets/DecodingSamples/qr-noisy-ui.png", out _noisyRgba, out _noisyWidth, out _noisyHeight);
     }
 
-    [Benchmark(Baseline = true, Description = "CodeGlyphX QR Decode (noisy, robust)")]
+    [Benchmark(Baseline = true, Description = "CodeGlyphX QR Decode (noisy)")]
     public bool CodeGlyphX_DecodeNoisyRobust()
     {
         return QrDecoder.TryDecode(_noisyRgba, _noisyWidth, _noisyHeight, _noisyWidth * 4, PixelFormat.Rgba32, out _, _robust);
     }
 
 #if COMPARE_ZXING
-    [Benchmark(Description = "ZXing.Net QR Decode (noisy, try harder)")]
+    [Benchmark(Description = "ZXing.Net QR Decode (noisy)")]
     public bool ZXing_DecodeNoisyTryHarder()
     {
         return _zxingReader.Decode(_noisyRgba, _noisyWidth, _noisyHeight, RGBLuminanceSource.BitmapFormat.RGBA32) is not null;

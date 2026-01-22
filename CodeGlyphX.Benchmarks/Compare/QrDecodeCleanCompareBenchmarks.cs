@@ -35,7 +35,7 @@ public class QrDecodeCleanCompareBenchmarks
         DecodeSampleHelper.LoadRgba("Assets/DecodingSamples/qr-clean-small.png", out _cleanRgba, out _cleanWidth, out _cleanHeight);
     }
 
-    [Benchmark(Baseline = true, Description = "CodeGlyphX QR Decode (clean, balanced)")]
+    [Benchmark(Baseline = true, Description = "CodeGlyphX QR Decode (clean)")]
     public bool CodeGlyphX_DecodeCleanBalanced()
     {
         return QrDecoder.TryDecode(_cleanRgba, _cleanWidth, _cleanHeight, _cleanWidth * 4, PixelFormat.Rgba32, out _, _balanced);

@@ -1,409 +1,1082 @@
 {
-    "windows":  {
-                    "framework":  "net8.0",
-                    "runMode":  "quick",
-                    "runModeDetails":  "Run mode: Quick (warmupCount=1, iterationCount=3, invocationCount=1).",
-                    "generatedUtc":  "2026-01-22T11:50:34.2660212Z",
-                    "notes":  [
-                                  "Run mode: Quick (warmupCount=1, iterationCount=3, invocationCount=1).",
-                                  "Comparisons target PNG output and include encode+render (not encode-only).",
-                                  "Module size and quiet zone are matched to CodeGlyphX defaults where possible; image size is derived from CodeGlyphX modules.",
-                                  "ZXing.Net uses ZXing.Net.Bindings.ImageSharp.V3 (ImageSharp 3.x renderer).",
-                                  "Barcoder uses Barcoder.Renderer.Image (ImageSharp renderer).",
-                                  "QRCoder uses PngByteQRCode (managed PNG output, no external renderer).",
-                                  "QR decode comparisons use raw RGBA32 bytes (ZXing via RGBLuminanceSource)."
-                              ],
-                    "os":  "windows",
-                    "comparisons":  [
-                                        {
-                                            "title":  "CodeGlyphX.Benchmarks.AztecCompareBenchmarks",
-                                            "id":  "CodeGlyphX.Benchmarks.AztecCompareBenchmarks",
-                                            "scenarios":  [
-                                                              {
-                                                                  "vendors":  {
-                                                                                  "Unknown":  {
-                                                                                                  "allocated":  null,
-                                                                                                  "mean":  null,
-                                                                                                  "meanNs":  null
-                                                                                              }
-                                                                              },
-                                                                  "name":  ""
-                                                              }
-                                                          ]
-                                        },
-                                        {
-                                            "title":  "CodeGlyphX.Benchmarks.Code128CompareBenchmarks",
-                                            "id":  "CodeGlyphX.Benchmarks.Code128CompareBenchmarks",
-                                            "scenarios":  [
-                                                              {
-                                                                  "vendors":  {
-                                                                                  "Unknown":  {
-                                                                                                  "allocated":  null,
-                                                                                                  "mean":  null,
-                                                                                                  "meanNs":  null
-                                                                                              }
-                                                                              },
-                                                                  "name":  ""
-                                                              }
-                                                          ]
-                                        },
-                                        {
-                                            "title":  "CodeGlyphX.Benchmarks.Code39CompareBenchmarks",
-                                            "id":  "CodeGlyphX.Benchmarks.Code39CompareBenchmarks",
-                                            "scenarios":  [
-                                                              {
-                                                                  "vendors":  {
-                                                                                  "Unknown":  {
-                                                                                                  "allocated":  null,
-                                                                                                  "mean":  null,
-                                                                                                  "meanNs":  null
-                                                                                              }
-                                                                              },
-                                                                  "name":  ""
-                                                              }
-                                                          ]
-                                        },
-                                        {
-                                            "title":  "CodeGlyphX.Benchmarks.Code93CompareBenchmarks",
-                                            "id":  "CodeGlyphX.Benchmarks.Code93CompareBenchmarks",
-                                            "scenarios":  [
-                                                              {
-                                                                  "vendors":  {
-                                                                                  "Unknown":  {
-                                                                                                  "allocated":  null,
-                                                                                                  "mean":  null,
-                                                                                                  "meanNs":  null
-                                                                                              }
-                                                                              },
-                                                                  "name":  ""
-                                                              }
-                                                          ]
-                                        },
-                                        {
-                                            "title":  "CodeGlyphX.Benchmarks.DataMatrixCompareBenchmarks",
-                                            "id":  "CodeGlyphX.Benchmarks.DataMatrixCompareBenchmarks",
-                                            "scenarios":  [
-                                                              {
-                                                                  "vendors":  {
-                                                                                  "Unknown":  {
-                                                                                                  "allocated":  null,
-                                                                                                  "mean":  null,
-                                                                                                  "meanNs":  null
-                                                                                              }
-                                                                              },
-                                                                  "name":  ""
-                                                              }
-                                                          ]
-                                        },
-                                        {
-                                            "title":  "CodeGlyphX.Benchmarks.EanCompareBenchmarks",
-                                            "id":  "CodeGlyphX.Benchmarks.EanCompareBenchmarks",
-                                            "scenarios":  [
-                                                              {
-                                                                  "vendors":  {
-                                                                                  "Unknown":  {
-                                                                                                  "allocated":  null,
-                                                                                                  "mean":  null,
-                                                                                                  "meanNs":  null
-                                                                                              }
-                                                                              },
-                                                                  "name":  ""
-                                                              }
-                                                          ]
-                                        },
-                                        {
-                                            "title":  "CodeGlyphX.Benchmarks.Pdf417CompareBenchmarks",
-                                            "id":  "CodeGlyphX.Benchmarks.Pdf417CompareBenchmarks",
-                                            "scenarios":  [
-                                                              {
-                                                                  "vendors":  {
-                                                                                  "Unknown":  {
-                                                                                                  "allocated":  null,
-                                                                                                  "mean":  null,
-                                                                                                  "meanNs":  null
-                                                                                              }
-                                                                              },
-                                                                  "name":  ""
-                                                              }
-                                                          ]
-                                        },
-                                        {
-                                            "title":  "CodeGlyphX.Benchmarks.QrCompareBenchmarks",
-                                            "id":  "CodeGlyphX.Benchmarks.QrCompareBenchmarks",
-                                            "scenarios":  [
-                                                              {
-                                                                  "vendors":  {
-                                                                                  "Unknown":  {
-                                                                                                  "allocated":  null,
-                                                                                                  "mean":  null,
-                                                                                                  "meanNs":  null
-                                                                                              }
-                                                                              },
-                                                                  "name":  ""
-                                                              }
-                                                          ]
-                                        },
-                                        {
-                                            "title":  "CodeGlyphX.Benchmarks.QrDecodeCleanCompareBenchmarks",
-                                            "id":  "CodeGlyphX.Benchmarks.QrDecodeCleanCompareBenchmarks",
-                                            "scenarios":  [
-                                                              {
-                                                                  "vendors":  {
-                                                                                  "Unknown":  {
-                                                                                                  "allocated":  null,
-                                                                                                  "mean":  null,
-                                                                                                  "meanNs":  null
-                                                                                              }
-                                                                              },
-                                                                  "name":  ""
-                                                              }
-                                                          ]
-                                        },
-                                        {
-                                            "title":  "CodeGlyphX.Benchmarks.QrDecodeNoisyCompareBenchmarks",
-                                            "id":  "CodeGlyphX.Benchmarks.QrDecodeNoisyCompareBenchmarks",
-                                            "scenarios":  [
-                                                              {
-                                                                  "vendors":  {
-                                                                                  "Unknown":  {
-                                                                                                  "allocated":  null,
-                                                                                                  "mean":  null,
-                                                                                                  "meanNs":  null
-                                                                                              }
-                                                                              },
-                                                                  "name":  ""
-                                                              }
-                                                          ]
-                                        },
-                                        {
-                                            "title":  "CodeGlyphX.Benchmarks.UpcACompareBenchmarks",
-                                            "id":  "CodeGlyphX.Benchmarks.UpcACompareBenchmarks",
-                                            "scenarios":  [
-                                                              {
-                                                                  "vendors":  {
-                                                                                  "Unknown":  {
-                                                                                                  "allocated":  null,
-                                                                                                  "mean":  null,
-                                                                                                  "meanNs":  null
-                                                                                              }
-                                                                              },
-                                                                  "name":  ""
-                                                              }
-                                                          ]
-                                        }
-                                    ],
-                    "baseline":  [
-                                     {
-                                         "title":  "CodeGlyphX.Benchmarks.BarcodeBenchmarks",
-                                         "id":  "CodeGlyphX.Benchmarks.BarcodeBenchmarks",
-                                         "scenarios":  [
-                                                           {
-                                                               "allocated":  null,
-                                                               "name":  "",
-                                                               "mean":  null,
-                                                               "meanNs":  null
-                                                           },
-                                                           {
-                                                               "allocated":  null,
-                                                               "name":  "",
-                                                               "mean":  null,
-                                                               "meanNs":  null
-                                                           },
-                                                           {
-                                                               "allocated":  null,
-                                                               "name":  "",
-                                                               "mean":  null,
-                                                               "meanNs":  null
-                                                           },
-                                                           {
-                                                               "allocated":  null,
-                                                               "name":  "",
-                                                               "mean":  null,
-                                                               "meanNs":  null
-                                                           },
-                                                           {
-                                                               "allocated":  null,
-                                                               "name":  "",
-                                                               "mean":  null,
-                                                               "meanNs":  null
-                                                           },
-                                                           {
-                                                               "allocated":  null,
-                                                               "name":  "",
-                                                               "mean":  null,
-                                                               "meanNs":  null
-                                                           }
-                                                       ]
-                                     },
-                                     {
-                                         "title":  "CodeGlyphX.Benchmarks.MatrixCodeBenchmarks",
-                                         "id":  "CodeGlyphX.Benchmarks.MatrixCodeBenchmarks",
-                                         "scenarios":  [
-                                                           {
-                                                               "allocated":  null,
-                                                               "name":  "",
-                                                               "mean":  null,
-                                                               "meanNs":  null
-                                                           },
-                                                           {
-                                                               "allocated":  null,
-                                                               "name":  "",
-                                                               "mean":  null,
-                                                               "meanNs":  null
-                                                           },
-                                                           {
-                                                               "allocated":  null,
-                                                               "name":  "",
-                                                               "mean":  null,
-                                                               "meanNs":  null
-                                                           },
-                                                           {
-                                                               "allocated":  null,
-                                                               "name":  "",
-                                                               "mean":  null,
-                                                               "meanNs":  null
-                                                           },
-                                                           {
-                                                               "allocated":  null,
-                                                               "name":  "",
-                                                               "mean":  null,
-                                                               "meanNs":  null
-                                                           },
-                                                           {
-                                                               "allocated":  null,
-                                                               "name":  "",
-                                                               "mean":  null,
-                                                               "meanNs":  null
-                                                           },
-                                                           {
-                                                               "allocated":  null,
-                                                               "name":  "",
-                                                               "mean":  null,
-                                                               "meanNs":  null
-                                                           }
-                                                       ]
-                                     },
-                                     {
-                                         "title":  "CodeGlyphX.Benchmarks.QrCodeBenchmarks",
-                                         "id":  "CodeGlyphX.Benchmarks.QrCodeBenchmarks",
-                                         "scenarios":  [
-                                                           {
-                                                               "allocated":  null,
-                                                               "name":  "",
-                                                               "mean":  null,
-                                                               "meanNs":  null
-                                                           },
-                                                           {
-                                                               "allocated":  null,
-                                                               "name":  "",
-                                                               "mean":  null,
-                                                               "meanNs":  null
-                                                           },
-                                                           {
-                                                               "allocated":  null,
-                                                               "name":  "",
-                                                               "mean":  null,
-                                                               "meanNs":  null
-                                                           },
-                                                           {
-                                                               "allocated":  null,
-                                                               "name":  "",
-                                                               "mean":  null,
-                                                               "meanNs":  null
-                                                           },
-                                                           {
-                                                               "allocated":  null,
-                                                               "name":  "",
-                                                               "mean":  null,
-                                                               "meanNs":  null
-                                                           },
-                                                           {
-                                                               "allocated":  null,
-                                                               "name":  "",
-                                                               "mean":  null,
-                                                               "meanNs":  null
-                                                           }
-                                                       ]
-                                     },
-                                     {
-                                         "title":  "CodeGlyphX.Benchmarks.QrDecodeBenchmarks",
-                                         "id":  "CodeGlyphX.Benchmarks.QrDecodeBenchmarks",
-                                         "scenarios":  [
-                                                           {
-                                                               "allocated":  null,
-                                                               "name":  "",
-                                                               "mean":  null,
-                                                               "meanNs":  null
-                                                           },
-                                                           {
-                                                               "allocated":  null,
-                                                               "name":  "",
-                                                               "mean":  null,
-                                                               "meanNs":  null
-                                                           },
-                                                           {
-                                                               "allocated":  null,
-                                                               "name":  "",
-                                                               "mean":  null,
-                                                               "meanNs":  null
-                                                           },
-                                                           {
-                                                               "allocated":  null,
-                                                               "name":  "",
-                                                               "mean":  null,
-                                                               "meanNs":  null
-                                                           }
-                                                       ]
-                                     }
-                                 ],
-                    "artifacts":  "C:\\Support\\GitHub\\CodeMatrix\\Build\\BenchmarkResults\\windows-20260122-124936",
-                    "configuration":  "Release"
-                },
-    "linux":  {
-                  "generatedUtc":  "2026-01-22T11:21:31.563445+00:00",
-                  "os":  "linux",
-                  "framework":  "net8.0",
-                  "configuration":  "Release",
-                  "artifacts":  "/mnt/c/Support/GitHub/CodeMatrix/Build/BenchmarkResults/linux-20260122-114323",
-                  "notes":  [
-                                "Comparisons target PNG output and include encode+render (not encode-only).",
-                                "Module size and quiet zone are matched to CodeGlyphX defaults where possible; image size is derived from CodeGlyphX modules.",
-                                "ZXing.Net uses ZXing.Net.Bindings.ImageSharp.V3 (ImageSharp 3.x renderer).",
-                                "Barcoder uses Barcoder.Renderer.Image (ImageSharp renderer).",
-                                "QRCoder uses PngByteQRCode (managed PNG output, no external renderer).",
-                                "QR decode comparisons use raw RGBA32 bytes (ZXing via RGBLuminanceSource)."
-                            ],
-                  "baseline":  [
-
-                               ],
-                  "comparisons":  [
-                                      {
-                                          "id":  "AztecCompareBenchmarks",
-                                          "title":  "Aztec (Encode)",
-                                          "scenarios":  [
-                                                            {
-                                                                "name":  "Aztec PNG",
-                                                                "vendors":  {
-                                                                                "CodeGlyphX":  {
-                                                                                                   "mean":  "266.8 �s",
-                                                                                                   "meanNs":  null,
-                                                                                                   "allocated":  "452.25 KB"
-                                                                                               },
-                                                                                "ZXing.Net":  {
-                                                                                                  "mean":  "409.8 �s",
-                                                                                                  "meanNs":  null,
-                                                                                                  "allocated":  "61.38 KB"
-                                                                                              },
-                                                                                "Barcoder":  {
-                                                                                                 "mean":  "1,109.4 �s",
-                                                                                                 "meanNs":  null,
-                                                                                                 "allocated":  "642.44 KB"
-                                                                                             }
-                                                                            }
-                                                            }
-                                                        ]
-                                      }
-                                  ]
+  "windows": {
+    "runMode": "quick",
+    "framework": "net8.0",
+    "os": "windows",
+    "configuration": "Release",
+    "comparisons": [
+      {
+        "title": "Aztec (Encode)",
+        "scenarios": [
+          {
+            "vendors": {
+              "Barcoder": {
+                "meanNs": 6036600.0,
+                "allocated": "642.58 KB",
+                "mean": "6,036.6 μs"
               },
-    "macos":  null
+              "CodeGlyphX": {
+                "meanNs": 324200.0,
+                "allocated": "452.22 KB",
+                "mean": "324.2 μs"
+              },
+              "ZXing.Net": {
+                "meanNs": 1348200.0,
+                "allocated": "61.42 KB",
+                "mean": "1,348.2 μs"
+              }
+            },
+            "ratios": {
+              "Barcoder": 18.62,
+              "ZXing.Net": 4.159
+            },
+            "name": "Aztec PNG"
+          }
+        ],
+        "id": "AztecCompareBenchmarks"
+      },
+      {
+        "title": "Code 128 (Encode)",
+        "scenarios": [
+          {
+            "vendors": {
+              "Barcoder": {
+                "meanNs": 42068900.0,
+                "allocated": "2035.01 KB",
+                "mean": "42,068.9 μs"
+              },
+              "CodeGlyphX": {
+                "meanNs": 435200.0,
+                "allocated": "756.09 KB",
+                "mean": "435.2 μs"
+              },
+              "ZXing.Net": {
+                "meanNs": 1312900.0,
+                "allocated": "15.74 KB",
+                "mean": "1,312.9 μs"
+              }
+            },
+            "ratios": {
+              "Barcoder": 96.666,
+              "ZXing.Net": 3.017
+            },
+            "name": "Code128 PNG"
+          }
+        ],
+        "id": "Code128CompareBenchmarks"
+      },
+      {
+        "title": "Code 39 (Encode)",
+        "scenarios": [
+          {
+            "vendors": {
+              "Barcoder": {
+                "meanNs": 30737300.0,
+                "allocated": "1448.61 KB",
+                "mean": "30,737.3 μs"
+              },
+              "CodeGlyphX": {
+                "meanNs": 288300.0,
+                "allocated": "414.38 KB",
+                "mean": "288.3 μs"
+              },
+              "ZXing.Net": {
+                "meanNs": 1112700.0,
+                "allocated": "12.28 KB",
+                "mean": "1,112.7 μs"
+              }
+            },
+            "ratios": {
+              "Barcoder": 106.616,
+              "ZXing.Net": 3.86
+            },
+            "name": "Code39 PNG"
+          }
+        ],
+        "id": "Code39CompareBenchmarks"
+      },
+      {
+        "title": "Code 93 (Encode)",
+        "scenarios": [
+          {
+            "vendors": {
+              "Barcoder": {
+                "meanNs": 21576400.0,
+                "allocated": "957.46 KB",
+                "mean": "21,576.4 μs"
+              },
+              "CodeGlyphX": {
+                "meanNs": 221800.0,
+                "allocated": "367.65 KB",
+                "mean": "221.8 μs"
+              },
+              "ZXing.Net": {
+                "meanNs": 969900.0,
+                "allocated": "11.7 KB",
+                "mean": "969.9 μs"
+              }
+            },
+            "ratios": {
+              "Barcoder": 97.279,
+              "ZXing.Net": 4.373
+            },
+            "name": "Code93 PNG"
+          }
+        ],
+        "id": "Code93CompareBenchmarks"
+      },
+      {
+        "title": "Data Matrix (Encode)",
+        "scenarios": [
+          {
+            "vendors": {
+              "Barcoder": {
+                "meanNs": 6186800.0,
+                "allocated": "645.2 KB",
+                "mean": "6,186.8 μs"
+              },
+              "CodeGlyphX": {
+                "meanNs": 343500.0,
+                "allocated": "421.62 KB",
+                "mean": "343.5 μs"
+              },
+              "ZXing.Net": {
+                "meanNs": 1405200.0,
+                "allocated": "22.31 KB",
+                "mean": "1,405.2 μs"
+              }
+            },
+            "ratios": {
+              "Barcoder": 18.011,
+              "ZXing.Net": 4.091
+            },
+            "name": "Data Matrix PNG (medium)"
+          }
+        ],
+        "id": "DataMatrixCompareBenchmarks"
+      },
+      {
+        "title": "EAN-13 (Encode)",
+        "scenarios": [
+          {
+            "vendors": {
+              "Barcoder": {
+                "meanNs": 17852800.0,
+                "allocated": "850.83 KB",
+                "mean": "17,852.8 μs"
+              },
+              "CodeGlyphX": {
+                "meanNs": 213900.0,
+                "allocated": "338.55 KB",
+                "mean": "213.9 μs"
+              },
+              "ZXing.Net": {
+                "meanNs": 884400.0,
+                "allocated": "11.68 KB",
+                "mean": "884.4 μs"
+              }
+            },
+            "ratios": {
+              "Barcoder": 83.463,
+              "ZXing.Net": 4.135
+            },
+            "name": "EAN-13 PNG"
+          }
+        ],
+        "id": "EanCompareBenchmarks"
+      },
+      {
+        "title": "PDF417 (Encode)",
+        "scenarios": [
+          {
+            "vendors": {
+              "Barcoder": {
+                "meanNs": 39022000.0,
+                "allocated": "5004.04 KB",
+                "mean": "39.022 ms"
+              },
+              "CodeGlyphX": {
+                "meanNs": 1828000.0,
+                "allocated": "3154.45 KB",
+                "mean": "1.828 ms"
+              },
+              "ZXing.Net": {
+                "meanNs": 5209000.0,
+                "allocated": "207.63 KB",
+                "mean": "5.209 ms"
+              }
+            },
+            "ratios": {
+              "Barcoder": 21.347,
+              "ZXing.Net": 2.85
+            },
+            "name": "PDF417 PNG"
+          }
+        ],
+        "id": "Pdf417CompareBenchmarks"
+      },
+      {
+        "title": "QR (Encode)",
+        "scenarios": [
+          {
+            "vendors": {
+              "Barcoder": {
+                "meanNs": 11558500.0,
+                "allocated": "1547.36 KB",
+                "mean": "11,558.5 μs"
+              },
+              "QRCoder": {
+                "meanNs": 831500.0,
+                "allocated": "7.31 KB",
+                "mean": "831.5 μs"
+              },
+              "CodeGlyphX": {
+                "meanNs": 1476000.0,
+                "allocated": "837.5 KB",
+                "mean": "1,476.0 μs"
+              },
+              "ZXing.Net": {
+                "meanNs": 3004000.0,
+                "allocated": "79.41 KB",
+                "mean": "3,004.0 μs"
+              }
+            },
+            "ratios": {
+              "Barcoder": 7.831,
+              "QRCoder": 0.563,
+              "ZXing.Net": 2.035
+            },
+            "name": "QR PNG (medium)"
+          }
+        ],
+        "id": "QrCompareBenchmarks"
+      },
+      {
+        "title": "QR Decode (Clean)",
+        "scenarios": [
+          {
+            "vendors": {
+              "ZXing.Net": {
+                "meanNs": 1672000.0,
+                "allocated": "127.67 KB",
+                "mean": "1.672 ms"
+              },
+              "CodeGlyphX": {
+                "meanNs": 2350000.0,
+                "allocated": "103.9 KB",
+                "mean": "2.350 ms"
+              }
+            },
+            "ratios": {
+              "ZXing.Net": 0.711
+            },
+            "name": "QR Decode (clean)"
+          }
+        ],
+        "id": "QrDecodeCleanCompareBenchmarks"
+      },
+      {
+        "title": "QR Decode (Noisy)",
+        "scenarios": [
+          {
+            "vendors": {
+              "ZXing.Net": {
+                "meanNs": 3322000.0,
+                "allocated": "706.89 KB",
+                "mean": "3.322 ms"
+              },
+              "CodeGlyphX": {
+                "meanNs": 153310000.0,
+                "allocated": "8507.11 KB",
+                "mean": "153.310 ms"
+              }
+            },
+            "ratios": {
+              "ZXing.Net": 0.022
+            },
+            "name": "QR Decode (noisy)"
+          }
+        ],
+        "id": "QrDecodeNoisyCompareBenchmarks"
+      },
+      {
+        "title": "UPC-A (Encode)",
+        "scenarios": [
+          {
+            "vendors": {
+              "Barcoder": {
+                "meanNs": 17499400.0,
+                "allocated": "765.89 KB",
+                "mean": "17,499.4 μs"
+              },
+              "CodeGlyphX": {
+                "meanNs": 197300.0,
+                "allocated": "338.85 KB",
+                "mean": "197.3 μs"
+              },
+              "ZXing.Net": {
+                "meanNs": 943500.0,
+                "allocated": "11.75 KB",
+                "mean": "943.5 μs"
+              }
+            },
+            "ratios": {
+              "Barcoder": 88.694,
+              "ZXing.Net": 4.782
+            },
+            "name": "UPC-A PNG"
+          }
+        ],
+        "id": "UpcACompareBenchmarks"
+      }
+    ],
+    "baseline": [
+      {
+        "title": "1D Barcodes (Encode)",
+        "scenarios": [
+          {
+            "meanNs": 437370.0,
+            "allocated": "756.17 KB",
+            "mean": "437.37 μs",
+            "name": "Code 128 PNG"
+          },
+          {
+            "meanNs": 19100.0,
+            "allocated": "17.61 KB",
+            "mean": "19.10 μs",
+            "name": "Code 128 SVG"
+          },
+          {
+            "meanNs": 204400.0,
+            "allocated": "338.63 KB",
+            "mean": "204.40 μs",
+            "name": "EAN PNG"
+          },
+          {
+            "meanNs": 287630.0,
+            "allocated": "414.45 KB",
+            "mean": "287.63 μs",
+            "name": "Code 39 PNG"
+          },
+          {
+            "meanNs": 223780.0,
+            "allocated": "367.73 KB",
+            "mean": "223.78 μs",
+            "name": "Code 93 PNG"
+          },
+          {
+            "meanNs": 205430.0,
+            "allocated": "338.93 KB",
+            "mean": "205.43 μs",
+            "name": "UPC-A PNG"
+          }
+        ],
+        "id": "BarcodeBenchmarks"
+      },
+      {
+        "title": "2D Matrix Codes (Encode)",
+        "scenarios": [
+          {
+            "meanNs": 338980.0,
+            "allocated": "447.69 KB",
+            "mean": "338.98 μs",
+            "name": "Data Matrix PNG (medium)"
+          },
+          {
+            "meanNs": 1145130.0,
+            "allocated": "1508.91 KB",
+            "mean": "1,145.13 μs",
+            "name": "Data Matrix PNG (long)"
+          },
+          {
+            "meanNs": 54430.0,
+            "allocated": "12.29 KB",
+            "mean": "54.43 μs",
+            "name": "Data Matrix SVG"
+          },
+          {
+            "meanNs": 1799230.0,
+            "allocated": "3154.54 KB",
+            "mean": "1,799.23 μs",
+            "name": "PDF417 PNG"
+          },
+          {
+            "meanNs": 2186350.0,
+            "allocated": "64.53 KB",
+            "mean": "2,186.35 μs",
+            "name": "PDF417 SVG"
+          },
+          {
+            "meanNs": 322380.0,
+            "allocated": "452.27 KB",
+            "mean": "322.38 μs",
+            "name": "Aztec PNG"
+          },
+          {
+            "meanNs": 85070.0,
+            "allocated": "59.88 KB",
+            "mean": "85.07 μs",
+            "name": "Aztec SVG"
+          }
+        ],
+        "id": "MatrixCodeBenchmarks"
+      },
+      {
+        "title": "QR (Encode)",
+        "scenarios": [
+          {
+            "meanNs": 799600.0,
+            "allocated": "431.91 KB",
+            "mean": "799.6 μs",
+            "name": "QR PNG (short text)"
+          },
+          {
+            "meanNs": 1430700.0,
+            "allocated": "837.67 KB",
+            "mean": "1,430.7 μs",
+            "name": "QR PNG (medium text)"
+          },
+          {
+            "meanNs": 4951700.0,
+            "allocated": "3040.78 KB",
+            "mean": "4,951.7 μs",
+            "name": "QR PNG (long text)"
+          },
+          {
+            "meanNs": 748200.0,
+            "allocated": "20.04 KB",
+            "mean": "748.2 μs",
+            "name": "QR SVG (medium text)"
+          },
+          {
+            "meanNs": 2194600.0,
+            "allocated": "1535.74 KB",
+            "mean": "2,194.6 μs",
+            "name": "QR PNG High Error Correction"
+          },
+          {
+            "meanNs": 779200.0,
+            "allocated": "137.44 KB",
+            "mean": "779.2 μs",
+            "name": "QR HTML (medium text)"
+          }
+        ],
+        "id": "QrCodeBenchmarks"
+      },
+      {
+        "title": "QR (Decode)",
+        "scenarios": [
+          {
+            "meanNs": 2233000.0,
+            "allocated": "103.9 KB",
+            "mean": "2.233 ms",
+            "name": "QR Decode (clean, fast)"
+          },
+          {
+            "meanNs": 2249000.0,
+            "allocated": "103.9 KB",
+            "mean": "2.249 ms",
+            "name": "QR Decode (clean, balanced)"
+          },
+          {
+            "meanNs": 2363000.0,
+            "allocated": "103.9 KB",
+            "mean": "2.363 ms",
+            "name": "QR Decode (clean, robust)"
+          },
+          {
+            "meanNs": 157051000.0,
+            "allocated": "8507.11 KB",
+            "mean": "157.051 ms",
+            "name": "QR Decode (noisy, robust)"
+          }
+        ],
+        "id": "QrDecodeBenchmarks"
+      }
+    ],
+    "runModeDetails": "Run mode: Quick (warmupCount=1, iterationCount=3, invocationCount=1).",
+    "generatedUtc": "2026-01-22T12:20:41.1105281Z",
+    "artifacts": "/mnt/c/Support/GitHub/CodeMatrix/Build/BenchmarkResults/windows-20260122-124936",
+    "notes": [
+      "Run mode: Quick (warmupCount=1, iterationCount=3, invocationCount=1).",
+      "Comparisons target PNG output and include encode+render (not encode-only).",
+      "Module size and quiet zone are matched to CodeGlyphX defaults where possible; image size is derived from CodeGlyphX modules.",
+      "ZXing.Net uses ZXing.Net.Bindings.ImageSharp.V3 (ImageSharp 3.x renderer).",
+      "Barcoder uses Barcoder.Renderer.Image (ImageSharp renderer).",
+      "QRCoder uses PngByteQRCode (managed PNG output, no external renderer).",
+      "QR decode comparisons use raw RGBA32 bytes (ZXing via RGBLuminanceSource).",
+      "QR decode clean uses CodeGlyphX Balanced; noisy uses CodeGlyphX Robust with aggressive sampling/limits; ZXing uses default (clean) and TryHarder (noisy)."
+    ]
+  },
+  "linux": {
+    "configuration": "Release",
+    "os": "linux",
+    "comparisons": [
+      {
+        "scenarios": [
+          {
+            "name": "Barcoder Aztec PNG",
+            "vendors": {
+              "Unknown": {
+                "meanNs": null,
+                "allocated": "642.58 KB",
+                "mean": "6,036.6 us"
+              }
+            }
+          },
+          {
+            "name": "CodeGlyphX Aztec PNG",
+            "vendors": {
+              "Unknown": {
+                "meanNs": null,
+                "allocated": "452.22 KB",
+                "mean": "324.2 us"
+              }
+            }
+          },
+          {
+            "name": "ZXing.Net Aztec PNG",
+            "vendors": {
+              "Unknown": {
+                "meanNs": null,
+                "allocated": "61.42 KB",
+                "mean": "1,348.2 us"
+              }
+            }
+          }
+        ],
+        "id": "AztecCompareBenchmarks",
+        "title": "Aztec (Encode)"
+      },
+      {
+        "scenarios": [
+          {
+            "name": "Barcoder Code128 PNG",
+            "vendors": {
+              "Unknown": {
+                "meanNs": null,
+                "allocated": "2035.01 KB",
+                "mean": "42,068.9 us"
+              }
+            }
+          },
+          {
+            "name": "CodeGlyphX Code128 PNG",
+            "vendors": {
+              "Unknown": {
+                "meanNs": null,
+                "allocated": "756.09 KB",
+                "mean": "435.2 us"
+              }
+            }
+          },
+          {
+            "name": "ZXing.Net Code128 PNG",
+            "vendors": {
+              "Unknown": {
+                "meanNs": null,
+                "allocated": "15.74 KB",
+                "mean": "1,312.9 us"
+              }
+            }
+          }
+        ],
+        "id": "Code128CompareBenchmarks",
+        "title": "Code 128 (Encode)"
+      },
+      {
+        "scenarios": [
+          {
+            "name": "Barcoder Code39 PNG",
+            "vendors": {
+              "Unknown": {
+                "meanNs": null,
+                "allocated": "1448.61 KB",
+                "mean": "30,737.3 us"
+              }
+            }
+          },
+          {
+            "name": "CodeGlyphX Code39 PNG",
+            "vendors": {
+              "Unknown": {
+                "meanNs": null,
+                "allocated": "414.38 KB",
+                "mean": "288.3 us"
+              }
+            }
+          },
+          {
+            "name": "ZXing.Net Code39 PNG",
+            "vendors": {
+              "Unknown": {
+                "meanNs": null,
+                "allocated": "12.28 KB",
+                "mean": "1,112.7 us"
+              }
+            }
+          }
+        ],
+        "id": "Code39CompareBenchmarks",
+        "title": "Code 39 (Encode)"
+      },
+      {
+        "scenarios": [
+          {
+            "name": "Barcoder Code93 PNG",
+            "vendors": {
+              "Unknown": {
+                "meanNs": null,
+                "allocated": "957.46 KB",
+                "mean": "21,576.4 us"
+              }
+            }
+          },
+          {
+            "name": "CodeGlyphX Code93 PNG",
+            "vendors": {
+              "Unknown": {
+                "meanNs": null,
+                "allocated": "367.65 KB",
+                "mean": "221.8 us"
+              }
+            }
+          },
+          {
+            "name": "ZXing.Net Code93 PNG",
+            "vendors": {
+              "Unknown": {
+                "meanNs": null,
+                "allocated": "11.7 KB",
+                "mean": "969.9 us"
+              }
+            }
+          }
+        ],
+        "id": "Code93CompareBenchmarks",
+        "title": "Code 93 (Encode)"
+      },
+      {
+        "scenarios": [
+          {
+            "name": "Barcoder Data Matrix PNG (medium)",
+            "vendors": {
+              "Unknown": {
+                "meanNs": null,
+                "allocated": "645.2 KB",
+                "mean": "6,186.8 us"
+              }
+            }
+          },
+          {
+            "name": "CodeGlyphX Data Matrix PNG (medium)",
+            "vendors": {
+              "Unknown": {
+                "meanNs": null,
+                "allocated": "421.62 KB",
+                "mean": "343.5 us"
+              }
+            }
+          },
+          {
+            "name": "ZXing.Net Data Matrix PNG (medium)",
+            "vendors": {
+              "Unknown": {
+                "meanNs": null,
+                "allocated": "22.31 KB",
+                "mean": "1,405.2 us"
+              }
+            }
+          }
+        ],
+        "id": "DataMatrixCompareBenchmarks",
+        "title": "Data Matrix (Encode)"
+      },
+      {
+        "scenarios": [
+          {
+            "name": "Barcoder EAN-13 PNG",
+            "vendors": {
+              "Unknown": {
+                "meanNs": null,
+                "allocated": "850.83 KB",
+                "mean": "17,852.8 us"
+              }
+            }
+          },
+          {
+            "name": "CodeGlyphX EAN PNG",
+            "vendors": {
+              "Unknown": {
+                "meanNs": null,
+                "allocated": "338.55 KB",
+                "mean": "213.9 us"
+              }
+            }
+          },
+          {
+            "name": "ZXing.Net EAN-13 PNG",
+            "vendors": {
+              "Unknown": {
+                "meanNs": null,
+                "allocated": "11.68 KB",
+                "mean": "884.4 us"
+              }
+            }
+          }
+        ],
+        "id": "EanCompareBenchmarks",
+        "title": "EAN-13 (Encode)"
+      },
+      {
+        "scenarios": [
+          {
+            "name": "Barcoder PDF417 PNG",
+            "vendors": {
+              "Unknown": {
+                "meanNs": null,
+                "allocated": "5004.04 KB",
+                "mean": "39.022 ms"
+              }
+            }
+          },
+          {
+            "name": "CodeGlyphX PDF417 PNG",
+            "vendors": {
+              "Unknown": {
+                "meanNs": null,
+                "allocated": "3154.45 KB",
+                "mean": "1.828 ms"
+              }
+            }
+          },
+          {
+            "name": "ZXing.Net PDF417 PNG",
+            "vendors": {
+              "Unknown": {
+                "meanNs": null,
+                "allocated": "207.63 KB",
+                "mean": "5.209 ms"
+              }
+            }
+          }
+        ],
+        "id": "Pdf417CompareBenchmarks",
+        "title": "PDF417 (Encode)"
+      },
+      {
+        "scenarios": [
+          {
+            "name": "Barcoder QR PNG (medium)",
+            "vendors": {
+              "Unknown": {
+                "meanNs": null,
+                "allocated": "1547.36 KB",
+                "mean": "11,558.5 us"
+              }
+            }
+          },
+          {
+            "name": "CodeGlyphX QR PNG (medium)",
+            "vendors": {
+              "Unknown": {
+                "meanNs": null,
+                "allocated": "837.5 KB",
+                "mean": "1,476.0 us"
+              }
+            }
+          },
+          {
+            "name": "QRCoder QR PNG (medium)",
+            "vendors": {
+              "Unknown": {
+                "meanNs": null,
+                "allocated": "7.31 KB",
+                "mean": "831.5 us"
+              }
+            }
+          },
+          {
+            "name": "ZXing.Net QR PNG (medium)",
+            "vendors": {
+              "Unknown": {
+                "meanNs": null,
+                "allocated": "79.41 KB",
+                "mean": "3,004.0 us"
+              }
+            }
+          }
+        ],
+        "id": "QrCompareBenchmarks",
+        "title": "QR (Encode)"
+      },
+      {
+        "scenarios": [
+          {
+            "name": "CodeGlyphX QR Decode (clean, balanced)",
+            "vendors": {
+              "Unknown": {
+                "meanNs": null,
+                "allocated": "103.9 KB",
+                "mean": "2.350 ms"
+              }
+            }
+          },
+          {
+            "name": "ZXing.Net QR Decode (clean)",
+            "vendors": {
+              "Unknown": {
+                "meanNs": null,
+                "allocated": "127.67 KB",
+                "mean": "1.672 ms"
+              }
+            }
+          }
+        ],
+        "id": "QrDecodeCleanCompareBenchmarks",
+        "title": "QR Decode (Clean)"
+      },
+      {
+        "scenarios": [
+          {
+            "name": "CodeGlyphX QR Decode (noisy, robust)",
+            "vendors": {
+              "Unknown": {
+                "meanNs": null,
+                "allocated": "8507.11 KB",
+                "mean": "153.310 ms"
+              }
+            }
+          },
+          {
+            "name": "ZXing.Net QR Decode (noisy, try harder)",
+            "vendors": {
+              "Unknown": {
+                "meanNs": null,
+                "allocated": "706.89 KB",
+                "mean": "3.322 ms"
+              }
+            }
+          }
+        ],
+        "id": "QrDecodeNoisyCompareBenchmarks",
+        "title": "QR Decode (Noisy)"
+      },
+      {
+        "scenarios": [
+          {
+            "name": "Barcoder UPC-A PNG",
+            "vendors": {
+              "Unknown": {
+                "meanNs": null,
+                "allocated": "765.89 KB",
+                "mean": "17,499.4 us"
+              }
+            }
+          },
+          {
+            "name": "CodeGlyphX UPC-A PNG",
+            "vendors": {
+              "Unknown": {
+                "meanNs": null,
+                "allocated": "338.85 KB",
+                "mean": "197.3 us"
+              }
+            }
+          },
+          {
+            "name": "ZXing.Net UPC-A PNG",
+            "vendors": {
+              "Unknown": {
+                "meanNs": null,
+                "allocated": "11.75 KB",
+                "mean": "943.5 us"
+              }
+            }
+          }
+        ],
+        "id": "UpcACompareBenchmarks",
+        "title": "UPC-A (Encode)"
+      }
+    ],
+    "runModeDetails": "Run mode: Quick (warmupCount=1, iterationCount=3, invocationCount=1).",
+    "framework": "net8.0",
+    "artifacts": "/mnt/c/Support/GitHub/CodeMatrix/Build/BenchmarkResults/windows-20260122-124936",
+    "generatedUtc": "2026-01-22T12:07:04.8197828Z",
+    "baseline": [
+      {
+        "scenarios": [
+          {
+            "meanNs": null,
+            "name": "Code 128 PNG",
+            "allocated": "756.17 KB",
+            "mean": "437.37 us"
+          },
+          {
+            "meanNs": null,
+            "name": "Code 128 SVG",
+            "allocated": "17.61 KB",
+            "mean": "19.10 us"
+          },
+          {
+            "meanNs": null,
+            "name": "EAN PNG",
+            "allocated": "338.63 KB",
+            "mean": "204.40 us"
+          },
+          {
+            "meanNs": null,
+            "name": "Code 39 PNG",
+            "allocated": "414.45 KB",
+            "mean": "287.63 us"
+          },
+          {
+            "meanNs": null,
+            "name": "Code 93 PNG",
+            "allocated": "367.73 KB",
+            "mean": "223.78 us"
+          },
+          {
+            "meanNs": null,
+            "name": "UPC-A PNG",
+            "allocated": "338.93 KB",
+            "mean": "205.43 us"
+          }
+        ],
+        "id": "BarcodeBenchmarks",
+        "title": "1D Barcodes (Encode)"
+      },
+      {
+        "scenarios": [
+          {
+            "meanNs": null,
+            "name": "Data Matrix PNG (medium)",
+            "allocated": "447.69 KB",
+            "mean": "338.98 us"
+          },
+          {
+            "meanNs": null,
+            "name": "Data Matrix PNG (long)",
+            "allocated": "1508.91 KB",
+            "mean": "1,145.13 us"
+          },
+          {
+            "meanNs": null,
+            "name": "Data Matrix SVG",
+            "allocated": "12.29 KB",
+            "mean": "54.43 us"
+          },
+          {
+            "meanNs": null,
+            "name": "PDF417 PNG",
+            "allocated": "3154.54 KB",
+            "mean": "1,799.23 us"
+          },
+          {
+            "meanNs": null,
+            "name": "PDF417 SVG",
+            "allocated": "64.53 KB",
+            "mean": "2,186.35 us"
+          },
+          {
+            "meanNs": null,
+            "name": "Aztec PNG",
+            "allocated": "452.27 KB",
+            "mean": "322.38 us"
+          },
+          {
+            "meanNs": null,
+            "name": "Aztec SVG",
+            "allocated": "59.88 KB",
+            "mean": "85.07 us"
+          }
+        ],
+        "id": "MatrixCodeBenchmarks",
+        "title": "2D Matrix Codes (Encode)"
+      },
+      {
+        "scenarios": [
+          {
+            "meanNs": null,
+            "name": "QR PNG (short text)",
+            "allocated": "431.91 KB",
+            "mean": "799.6 us"
+          },
+          {
+            "meanNs": null,
+            "name": "QR PNG (medium text)",
+            "allocated": "837.67 KB",
+            "mean": "1,430.7 us"
+          },
+          {
+            "meanNs": null,
+            "name": "QR PNG (long text)",
+            "allocated": "3040.78 KB",
+            "mean": "4,951.7 us"
+          },
+          {
+            "meanNs": null,
+            "name": "QR SVG (medium text)",
+            "allocated": "20.04 KB",
+            "mean": "748.2 us"
+          },
+          {
+            "meanNs": null,
+            "name": "QR PNG High Error Correction",
+            "allocated": "1535.74 KB",
+            "mean": "2,194.6 us"
+          },
+          {
+            "meanNs": null,
+            "name": "QR HTML (medium text)",
+            "allocated": "137.44 KB",
+            "mean": "779.2 us"
+          }
+        ],
+        "id": "QrCodeBenchmarks",
+        "title": "QR (Encode)"
+      },
+      {
+        "scenarios": [
+          {
+            "meanNs": null,
+            "name": "QR Decode (clean, fast)",
+            "allocated": "103.9 KB",
+            "mean": "2.233 ms"
+          },
+          {
+            "meanNs": null,
+            "name": "QR Decode (clean, balanced)",
+            "allocated": "103.9 KB",
+            "mean": "2.249 ms"
+          },
+          {
+            "meanNs": null,
+            "name": "QR Decode (clean, robust)",
+            "allocated": "103.9 KB",
+            "mean": "2.363 ms"
+          },
+          {
+            "meanNs": null,
+            "name": "QR Decode (noisy, robust)",
+            "allocated": "8507.11 KB",
+            "mean": "157.051 ms"
+          }
+        ],
+        "id": "QrDecodeBenchmarks",
+        "title": "QR (Decode)"
+      }
+    ],
+    "runMode": "quick",
+    "notes": [
+      "Run mode: Quick (warmupCount=1, iterationCount=3, invocationCount=1).",
+      "Comparisons target PNG output and include encode+render (not encode-only).",
+      "Module size and quiet zone are matched to CodeGlyphX defaults where possible; image size is derived from CodeGlyphX modules.",
+      "ZXing.Net uses ZXing.Net.Bindings.ImageSharp.V3 (ImageSharp 3.x renderer).",
+      "Barcoder uses Barcoder.Renderer.Image (ImageSharp renderer).",
+      "QRCoder uses PngByteQRCode (managed PNG output, no external renderer).",
+      "QR decode comparisons use raw RGBA32 bytes (ZXing via RGBLuminanceSource)."
+    ]
+  },
+  "macos": null
 }
