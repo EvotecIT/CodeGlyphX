@@ -6,11 +6,11 @@ param(
 $ErrorActionPreference = "Stop"
 
 if (-not $SiteRoot) {
-    $SiteRoot = Join-Path $PSScriptRoot ".." "CodeGlyphX.Website" "wwwroot"
+    $SiteRoot = [IO.Path]::Combine($PSScriptRoot, "..", "CodeGlyphX.Website", "wwwroot")
 }
 
 $SiteBase = $SiteBase.TrimEnd('/')
-$apiSitemap = Join-Path $SiteRoot "api" "sitemap.xml"
+$apiSitemap = [IO.Path]::Combine($SiteRoot, "api", "sitemap.xml")
 $target = Join-Path $SiteRoot "sitemap.xml"
 
 # Get current date for lastmod

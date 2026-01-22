@@ -34,17 +34,17 @@ if ($IsLinux -or $IsMacOS) {
 
 $repoRoot = Resolve-Path (Join-Path $PSScriptRoot "..")
 if (-not $PowerForgeCliProject) {
-    $PowerForgeCliProject = Join-Path $repoRoot ".." "PSPublishModule" "PowerForge.Cli" "PowerForge.Cli.csproj"
+    $PowerForgeCliProject = [IO.Path]::Combine($repoRoot, "..", "PSPublishModule", "PowerForge.Cli", "PowerForge.Cli.csproj")
 }
 
-$codeGlyphProject = Join-Path $repoRoot "CodeGlyphX" "CodeGlyphX.csproj"
+$codeGlyphProject = [IO.Path]::Combine($repoRoot, "CodeGlyphX", "CodeGlyphX.csproj")
 $websiteProjectPath = Join-Path $repoRoot $WebsiteProject
-$assemblyPath = Join-Path $repoRoot "CodeGlyphX" "bin" $Configuration $Framework "CodeGlyphX.dll"
-$xmlPath = Join-Path $repoRoot "CodeGlyphX" "bin" $Configuration $Framework "CodeGlyphX.xml"
-$apiOutput = Join-Path $repoRoot "CodeGlyphX.Website" "wwwroot" "api"
-$apiCss = Join-Path $repoRoot "CodeGlyphX.Website" "wwwroot" "css" "api-docs.css"
-$apiHeader = Join-Path $repoRoot "CodeGlyphX.Website" "wwwroot" "api-fragments" "header.html"
-$apiFooter = Join-Path $repoRoot "CodeGlyphX.Website" "wwwroot" "api-fragments" "footer.html"
+$assemblyPath = [IO.Path]::Combine($repoRoot, "CodeGlyphX", "bin", $Configuration, $Framework, "CodeGlyphX.dll")
+$xmlPath = [IO.Path]::Combine($repoRoot, "CodeGlyphX", "bin", $Configuration, $Framework, "CodeGlyphX.xml")
+$apiOutput = [IO.Path]::Combine($repoRoot, "CodeGlyphX.Website", "wwwroot", "api")
+$apiCss = [IO.Path]::Combine($repoRoot, "CodeGlyphX.Website", "wwwroot", "css", "api-docs.css")
+$apiHeader = [IO.Path]::Combine($repoRoot, "CodeGlyphX.Website", "wwwroot", "api-fragments", "header.html")
+$apiFooter = [IO.Path]::Combine($repoRoot, "CodeGlyphX.Website", "wwwroot", "api-fragments", "footer.html")
 
 if (-not (Test-Path $codeGlyphProject)) { throw "Missing CodeGlyphX.csproj at $codeGlyphProject" }
 if (-not (Test-Path $websiteProjectPath)) { throw "Missing website project at $websiteProjectPath" }
@@ -89,12 +89,23 @@ if ($Publish) {
 
     # Generate static pages for production (overwrites Blazor's index.html with static home)
     $staticPagesScript = Join-Path $PSScriptRoot "Generate-StaticPages.ps1"
-    $wwwrootPath = Join-Path $repoRoot "CodeGlyphX.Website" "wwwroot"
+    $wwwrootPath = [IO.Path]::Combine($repoRoot, "CodeGlyphX.Website", "wwwroot")
     Invoke-Step "Generating static pages for production..." @("pwsh",$staticPagesScript,"-OutputPath",$wwwrootPath)
 
     # Publish (includes the static pages)
     Invoke-Step "Publishing website..." @("dotnet","publish",$websiteProjectPath,"-c",$Configuration,"-f",$Framework)
 } else {
     # Development build - no static pages, keep Blazor for all routes
+    # Clean up any existing static HTML files that would conflict with SPA routing
+    $wwwrootPath = [IO.Path]::Combine($repoRoot, "CodeGlyphX.Website", "wwwroot")
+    $staticFolders = @("docs", "playground", "showcase", "faq")
+    foreach ($folder in $staticFolders) {
+        $indexFile = Join-Path $wwwrootPath "$folder\index.html"
+        if (Test-Path $indexFile) {
+            Write-Host "  Removing static $folder/index.html for SPA mode..." -ForegroundColor DarkGray
+            Remove-Item $indexFile -Force
+        }
+    }
+
     Invoke-Step "Building website..." @("dotnet","build",$websiteProjectPath,"-c",$Configuration,"-f",$Framework)
 }

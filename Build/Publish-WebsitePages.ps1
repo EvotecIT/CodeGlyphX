@@ -66,7 +66,7 @@ function Update-BootIntegrity {
 
 $repoRoot = Resolve-Path (Join-Path $PSScriptRoot "..")
 $websiteProjectPath = Join-Path $repoRoot $WebsiteProject
-$wwwrootSource = Join-Path $repoRoot "CodeGlyphX.Website" "wwwroot"
+$wwwrootSource = [IO.Path]::Combine($repoRoot, "CodeGlyphX.Website", "wwwroot")
 $publishRoot = Join-Path $repoRoot $OutputPath
 $tempPublish = Join-Path $repoRoot "temp-playground"
 $tempDocs = Join-Path $repoRoot "temp-docs"
@@ -107,7 +107,7 @@ if (Test-Path $docsRoot) {
     Remove-Item -Recurse -Force $docsRoot
 }
 New-Item -ItemType Directory -Path $docsRoot -Force | Out-Null
-Copy-Item -Path (Join-Path $tempDocs "wwwroot" "*") -Destination $docsRoot -Recurse -Force
+Copy-Item -Path ([IO.Path]::Combine($tempDocs, "wwwroot", "*")) -Destination $docsRoot -Recurse -Force
 
 $docsIndex = Join-Path $docsRoot "index.html"
 $docs404 = Join-Path $docsRoot "404.html"
@@ -133,7 +133,7 @@ Invoke-Step "Publishing playground (Blazor WASM)..." @(
 )
 
 New-Item -ItemType Directory -Path $playgroundRoot -Force | Out-Null
-Copy-Item -Path (Join-Path $tempPublish "wwwroot" "*") -Destination $playgroundRoot -Recurse -Force
+Copy-Item -Path ([IO.Path]::Combine($tempPublish, "wwwroot", "*")) -Destination $playgroundRoot -Recurse -Force
 
 $playgroundIndex = Join-Path $playgroundRoot "index.html"
 $playground404 = Join-Path $playgroundRoot "404.html"

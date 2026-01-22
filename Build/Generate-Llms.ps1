@@ -9,13 +9,13 @@ param(
 $ErrorActionPreference = "Stop"
 
 if (-not $SiteRoot) {
-    $SiteRoot = Join-Path $PSScriptRoot ".." "CodeGlyphX.Website" "wwwroot"
+    $SiteRoot = [IO.Path]::Combine($PSScriptRoot, "..", "CodeGlyphX.Website", "wwwroot")
 }
 if (-not $ApiIndex) {
-    $ApiIndex = Join-Path $SiteRoot "api" "index.json"
+    $ApiIndex = [IO.Path]::Combine($SiteRoot, "api", "index.json")
 }
 if (-not $ProjectFile) {
-    $ProjectFile = Join-Path $PSScriptRoot ".." "CodeGlyphX" "CodeGlyphX.csproj"
+    $ProjectFile = [IO.Path]::Combine($PSScriptRoot, "..", "CodeGlyphX", "CodeGlyphX.csproj")
 }
 
 $version = "unknown"
@@ -113,7 +113,7 @@ $llmsJson | ConvertTo-Json -Depth 6 | Set-Content -Path $llmsJsonPath -Encoding 
 # GENERATE llms-full.txt (Comprehensive AI context)
 # ============================================================================
 $llmsFullPath = Join-Path $SiteRoot "llms-full.txt"
-$faqJsonPath = Join-Path $PSScriptRoot ".." "Assets" "Data" "faq.json"
+$faqJsonPath = [IO.Path]::Combine($PSScriptRoot, "..", "Assets", "Data", "faq.json")
 
 $fullLines = @()
 $fullLines += "# CodeGlyphX - Complete AI Context"

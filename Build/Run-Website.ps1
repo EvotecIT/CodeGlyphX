@@ -15,7 +15,7 @@ $ErrorActionPreference = "Stop"
 $repoRoot = Resolve-Path (Join-Path $PSScriptRoot "..")
 $buildScript = Join-Path $PSScriptRoot "Build-Website.ps1"
 $publishScript = Join-Path $PSScriptRoot "Publish-WebsitePages.ps1"
-$websiteProject = Join-Path $repoRoot "CodeGlyphX.Website" "CodeGlyphX.Website.csproj"
+$websiteProject = Join-Path (Join-Path $repoRoot "CodeGlyphX.Website") "CodeGlyphX.Website.csproj"
 
 $BaseUrl = "http://localhost:$Port/api/"
 $env:ASPNETCORE_URLS = "http://localhost:$Port"
@@ -34,6 +34,30 @@ function Test-PortAvailable {
     }
 }
 
+function Stop-ProcessOnPort {
+    param([int]$PortNumber)
+
+    # Get process IDs using the port
+    $connections = netstat -ano | Select-String ":$PortNumber\s" | ForEach-Object {
+        if ($_ -match '\s(\d+)$') {
+            [int]$matches[1]
+        }
+    } | Where-Object { $_ -gt 0 } | Select-Object -Unique
+
+    foreach ($pid in $connections) {
+        try {
+            $proc = Get-Process -Id $pid -ErrorAction SilentlyContinue
+            if ($proc) {
+                Write-Host "Stopping process $($proc.ProcessName) (PID: $pid) using port $PortNumber..." -ForegroundColor Yellow
+                Stop-Process -Id $pid -Force -ErrorAction SilentlyContinue
+                Start-Sleep -Milliseconds 500
+            }
+        } catch {
+            # Process may have already exited
+        }
+    }
+}
+
 function Get-FreePort {
     param([int]$StartPort, [int]$Attempts = 25)
     for ($offset = 0; $offset -lt $Attempts; $offset++) {
@@ -46,12 +70,29 @@ function Get-FreePort {
 }
 
 if ($Spa) {
+    # Kill any existing process using the port
+    if (-not (Test-PortAvailable -PortNumber $Port)) {
+        Write-Host "Port $Port is in use. Attempting to free it..." -ForegroundColor Yellow
+        Stop-ProcessOnPort -PortNumber $Port
+        Start-Sleep -Seconds 1
+        if (-not (Test-PortAvailable -PortNumber $Port)) {
+            throw "Failed to free port $Port. Please manually stop the process using it."
+        }
+        Write-Host "Port $Port is now available." -ForegroundColor Green
+    }
+
+    # Restore NuGet packages to ensure all dependencies are available
+    Write-Host "Restoring packages..." -ForegroundColor Cyan
+    & dotnet restore $websiteProject --verbosity quiet
+
     & $buildScript -Configuration $Configuration -Framework $Framework -BaseUrl $BaseUrl -SkipApiDocs:$SkipApiDocs -SkipLlms:$SkipLlms
 
     Write-Host "Website dev routes:" -ForegroundColor Cyan
+    Write-Host "  Home:       http://localhost:$Port/" -ForegroundColor DarkGray
     Write-Host "  Playground: http://localhost:$Port/playground" -ForegroundColor DarkGray
-    Write-Host "  Home (SPA): http://localhost:$Port/home" -ForegroundColor DarkGray
-    Write-Host "  Docs (SPA): http://localhost:$Port/docs" -ForegroundColor DarkGray
+    Write-Host "  Docs:       http://localhost:$Port/docs" -ForegroundColor DarkGray
+    Write-Host "  Showcase:   http://localhost:$Port/showcase" -ForegroundColor DarkGray
+    Write-Host "  FAQ:        http://localhost:$Port/faq" -ForegroundColor DarkGray
 
     if ($Watch) {
         Write-Host "Starting website (watch mode)..." -ForegroundColor Cyan
@@ -72,6 +113,13 @@ if (-not (Test-Path $siteRoot)) {
 }
 
 Write-Host "Static site root: $siteRoot" -ForegroundColor DarkGray
+
+# Kill any existing process using the port
+if (-not (Test-PortAvailable -PortNumber $Port)) {
+    Write-Host "Port $Port is in use. Attempting to free it..." -ForegroundColor Yellow
+    Stop-ProcessOnPort -PortNumber $Port
+    Start-Sleep -Seconds 1
+}
 
 $serverPort = Get-FreePort -StartPort $Port
 Write-Host "Serving on http://localhost:$serverPort/" -ForegroundColor Cyan

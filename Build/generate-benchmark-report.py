@@ -45,6 +45,64 @@ def normalize_mean_text(value: str) -> str:
     )
 
 
+def parse_allocated_bytes(value: str):
+    if not value:
+        return None
+    cleaned = value.strip().replace(",", "")
+    if cleaned == "NA":
+        return None
+    match = re.match(r"^([0-9]+(?:\.[0-9]+)?)\s*(B|KB|MB)$", cleaned)
+    if not match:
+        return None
+    number = float(match.group(1))
+    unit = match.group(2)
+    if unit == "B":
+        return number
+    if unit == "KB":
+        return number * 1024.0
+    if unit == "MB":
+        return number * 1024.0 * 1024.0
+    return None
+
+
+def rate_performance(time_ratio: float | None, alloc_ratio: float | None) -> str:
+    if time_ratio is None:
+        return "unknown"
+    if alloc_ratio is not None:
+        if time_ratio <= 1.1 and alloc_ratio <= 1.25:
+            return "good"
+        if time_ratio <= 1.5 and alloc_ratio <= 2.0:
+            return "ok"
+        return "bad"
+    if time_ratio <= 1.1:
+        return "good"
+    if time_ratio <= 1.5:
+        return "ok"
+    return "bad"
+
+
+def resolve_publish_flag(run_mode: str, publish: bool, no_publish: bool) -> bool:
+    if publish:
+        return True
+    if no_publish:
+        return False
+    return run_mode == "full"
+
+
+def build_meta(commit: str | None, branch: str | None, dotnet_sdk: str | None, runtime: str | None):
+    return {
+        "commit": commit or os.environ.get("GIT_COMMIT") or os.environ.get("BUILD_SOURCEVERSION"),
+        "branch": branch or os.environ.get("GIT_BRANCH") or os.environ.get("BUILD_SOURCEBRANCH"),
+        "dotnetSdk": dotnet_sdk or os.environ.get("DOTNET_SDK"),
+        "runtime": runtime,
+        "osDescription": platform.platform(),
+        "osArchitecture": platform.machine(),
+        "processArchitecture": platform.machine(),
+        "machineName": platform.node(),
+        "processorCount": os.cpu_count(),
+    }
+
+
 def normalize_compare_scenario(value: str) -> str:
     mapping = {
         "EAN PNG": "EAN-13 PNG",
@@ -120,6 +178,13 @@ def build_section(artifacts_path: Path, framework: str, configuration: str, run_
     lines.append(f"Framework: {framework}")
     lines.append(f"Configuration: {configuration}")
     lines.append(f"Artifacts: {artifacts_path}")
+    lines.append("How to read:")
+    lines.append("- Mean: average time per operation. Lower is better.")
+    lines.append("- Allocated: managed memory allocated per operation. Lower is better.")
+    lines.append("- CodeGlyphX vs Fastest: CodeGlyphX mean divided by the fastest mean for that scenario. 1 x means CodeGlyphX is fastest; 1.5 x means ~50% slower.")
+    lines.append("- CodeGlyphX Alloc vs Fastest: CodeGlyphX allocated divided by the fastest allocation for that scenario. 1 x means CodeGlyphX allocates the least; higher is more allocations.")
+    lines.append("- Rating: good/ok/bad based on time + allocation ratios (good <=1.1x and <=1.25x alloc, ok <=1.5x and <=2.0x alloc).")
+    lines.append("- Quick runs use fewer iterations for fast feedback; Full runs use BenchmarkDotNet defaults and are recommended for publishing.")
     lines.append("Notes:")
     lines.append(f"- {format_run_mode(run_mode)}")
     lines.append("- Comparisons target PNG output and include encode+render (not encode-only).")
@@ -133,6 +198,7 @@ def build_section(artifacts_path: Path, framework: str, configuration: str, run_
 
     if compare_files:
         summary_rows = []
+        summary_items = []
         for path in compare_files:
             rows = load_csv_rows(path)
             if not rows:
@@ -173,24 +239,51 @@ def build_section(artifacts_path: Path, framework: str, configuration: str, run_
                 if not fastest_vendor:
                     continue
                 cgx = vendors.get("CodeGlyphX")
+                ratio_value = None
                 ratio_text = ""
+                alloc_ratio_value = None
+                alloc_ratio_text = ""
                 cgx_mean = ""
                 cgx_alloc = ""
                 if cgx and cgx.get("meanNs"):
-                    ratio_text = f"{round(cgx['meanNs'] / fastest['meanNs'], 2)} x"
+                    ratio_value = round(cgx["meanNs"] / fastest["meanNs"], 2)
+                    ratio_text = f"{ratio_value} x"
                     cgx_mean = cgx.get("mean", "")
                     cgx_alloc = cgx.get("allocated", "")
+                    fastest_alloc_bytes = parse_allocated_bytes(fastest.get("allocated", ""))
+                    cgx_alloc_bytes = parse_allocated_bytes(cgx.get("allocated", ""))
+                    if fastest_alloc_bytes and cgx_alloc_bytes:
+                        alloc_ratio_value = round(cgx_alloc_bytes / fastest_alloc_bytes, 2)
+                        alloc_ratio_text = f"{alloc_ratio_value} x"
+                rating = rate_performance(ratio_value, alloc_ratio_value)
                 summary_rows.append(
-                    f"| {title} | {scenario} | {fastest_vendor} {fastest.get('mean','')} | {ratio_text} | {cgx_mean} | {cgx_alloc} |"
+                    f"| {title} | {scenario} | {fastest_vendor} {fastest.get('mean','')} | {ratio_text} | {alloc_ratio_text} | {rating} | {cgx_mean} | {cgx_alloc} |"
+                )
+                summary_items.append(
+                    {
+                        "benchmark": title,
+                        "scenario": scenario,
+                        "fastestVendor": fastest_vendor,
+                        "fastestMean": fastest.get("mean", ""),
+                        "codeGlyphXMean": cgx_mean,
+                        "codeGlyphXAlloc": cgx_alloc,
+                        "codeGlyphXVsFastest": ratio_value,
+                        "codeGlyphXVsFastestText": ratio_text,
+                        "codeGlyphXAllocVsFastest": alloc_ratio_value,
+                        "codeGlyphXAllocVsFastestText": alloc_ratio_text,
+                        "rating": rating,
+                    }
                 )
 
         if summary_rows:
             lines.append("### Summary (Comparisons)")
             lines.append("")
-            lines.append("| Benchmark | Scenario | Fastest | CodeGlyphX vs Fastest | CodeGlyphX Mean | CodeGlyphX Alloc |")
-            lines.append("| --- | --- | --- | --- | --- | --- |")
+            lines.append("| Benchmark | Scenario | Fastest | CodeGlyphX vs Fastest | CodeGlyphX Alloc vs Fastest | Rating | CodeGlyphX Mean | CodeGlyphX Alloc |")
+            lines.append("| --- | --- | --- | --- | --- | --- | --- | --- |")
             lines.extend(summary_rows)
             lines.append("")
+        else:
+            summary_items = []
 
     if baseline_files:
         lines.append("### Baseline")
@@ -261,18 +354,24 @@ def build_template(blocks):
         [
             "# Benchmarks",
             "",
-            blocks["windows"],
+            blocks["windows_quick"],
             "",
-            blocks["linux"],
+            blocks["windows_full"],
             "",
-            blocks["macos"],
+            blocks["linux_quick"],
+            "",
+            blocks["linux_full"],
+            "",
+            blocks["macos_quick"],
+            "",
+            blocks["macos_full"],
             "",
         ]
     )
 
 
-def extract_block(text: str, os_name: str):
-    marker = f"BENCHMARK:{os_name.upper()}"
+def extract_block(text: str, os_name: str, run_mode: str):
+    marker = f"BENCHMARK:{os_name.upper()}:{run_mode.upper()}"
     start = f"<!-- {marker}:START -->"
     end = f"<!-- {marker}:END -->"
     pattern = re.compile(re.escape(start) + r"[\s\S]*?" + re.escape(end))
@@ -282,18 +381,21 @@ def extract_block(text: str, os_name: str):
     return f"{start}\n_no results yet_\n{end}"
 
 
-def update_section(path: Path, section: str, os_name: str):
-    marker = f"BENCHMARK:{os_name.upper()}"
+def update_section(path: Path, section: str, os_name: str, run_mode: str):
+    marker = f"BENCHMARK:{os_name.upper()}:{run_mode.upper()}"
     start = f"<!-- {marker}:START -->"
     end = f"<!-- {marker}:END -->"
     block = f"{start}\n{section}\n{end}"
     text = path.read_text(encoding="utf-8") if path.exists() else ""
     blocks = {
-        "windows": extract_block(text, "windows"),
-        "linux": extract_block(text, "linux"),
-        "macos": extract_block(text, "macos"),
+        "windows_quick": extract_block(text, "windows", "quick"),
+        "windows_full": extract_block(text, "windows", "full"),
+        "linux_quick": extract_block(text, "linux", "quick"),
+        "linux_full": extract_block(text, "linux", "full"),
+        "macos_quick": extract_block(text, "macos", "quick"),
+        "macos_full": extract_block(text, "macos", "full"),
     }
-    blocks[os_name] = block
+    blocks[f"{os_name}_{run_mode}"] = block
     path.write_text(build_template(blocks), encoding="utf-8")
 
 
@@ -305,6 +407,12 @@ def main():
     parser.add_argument("--configuration", default="Release")
     parser.add_argument("--run-mode", default=None, choices=["quick", "full"])
     parser.add_argument("--os-name", default=None, choices=["windows", "linux", "macos"])
+    parser.add_argument("--commit", default=None)
+    parser.add_argument("--branch", default=None)
+    parser.add_argument("--dotnet-sdk", default=None)
+    parser.add_argument("--runtime", default=None)
+    parser.add_argument("--publish", action="store_true")
+    parser.add_argument("--no-publish", action="store_true")
     args = parser.parse_args()
 
     artifacts_path = Path(args.artifacts_path).resolve()
@@ -312,15 +420,26 @@ def main():
 
     os_name = resolve_os_name(artifacts_path, args.os_name)
     run_mode = resolve_run_mode(args.run_mode)
+    publish_flag = resolve_publish_flag(run_mode, args.publish, args.no_publish)
+    meta = build_meta(args.commit, args.branch, args.dotnet_sdk, args.runtime)
     section = build_section(artifacts_path, args.framework, args.configuration, run_mode)
-    update_section(output_path, section, os_name)
+    update_section(output_path, section, os_name, run_mode)
 
-    json_path = output_path.parent / "BENCHMARK.json"
-    write_json(json_path, artifacts_path, args.framework, args.configuration, os_name, run_mode)
     repo_root = Path(__file__).resolve().parent.parent
-    assets_json = repo_root / "Assets" / "Data" / "benchmark.json"
-    assets_json.parent.mkdir(parents=True, exist_ok=True)
-    assets_json.write_text(json_path.read_text(encoding="utf-8"), encoding="utf-8")
+    json_path = repo_root / "Assets" / "Data" / "benchmark.json"
+    json_path.parent.mkdir(parents=True, exist_ok=True)
+    write_json(
+        json_path,
+        artifacts_path,
+        args.framework,
+        args.configuration,
+        os_name,
+        run_mode,
+        publish_flag,
+        meta,
+    )
+    repo_root = Path(__file__).resolve().parent.parent
+    # JSON output is already stored under Assets/Data for website ingestion.
 
 
 def parse_mean_to_ns(value: str):
@@ -351,6 +470,8 @@ def write_json(
     configuration: str,
     os_name: str,
     run_mode: str,
+    publish: bool,
+    meta: dict,
 ):
     results_path = artifacts_path / "results"
     if not results_path.exists():
@@ -435,27 +556,107 @@ def write_json(
 
     payload = {
         "generatedUtc": dt.datetime.now(dt.timezone.utc).isoformat(),
+        "schemaVersion": 1,
         "os": os_name,
         "framework": framework,
         "configuration": configuration,
         "runMode": run_mode,
         "runModeDetails": format_run_mode(run_mode),
+        "publish": publish,
         "artifacts": str(artifacts_path),
+        "meta": meta,
+        "howToRead": [
+            "Mean: average time per operation. Lower is better.",
+            "Allocated: managed memory allocated per operation. Lower is better.",
+            "CodeGlyphX vs Fastest: CodeGlyphX mean divided by the fastest mean for that scenario. 1 x means CodeGlyphX is fastest; 1.5 x means ~50% slower.",
+            "CodeGlyphX Alloc vs Fastest: CodeGlyphX allocated divided by the fastest allocation for that scenario. 1 x means CodeGlyphX allocates the least; higher is more allocations.",
+            "Rating: good/ok/bad based on time + allocation ratios (good <=1.1x and <=1.25x alloc, ok <=1.5x and <=2.0x alloc).",
+            "Quick runs use fewer iterations for fast feedback; Full runs use BenchmarkDotNet defaults and are recommended for publishing.",
+        ],
         "notes": notes,
+        "summary": summary_items,
         "baseline": baseline,
         "comparisons": comparisons,
     }
 
     if not path.exists():
-        skeleton = {"windows": None, "linux": None, "macos": None}
-        path.write_text(
-            __import__("json").dumps(skeleton, indent=2),
-            encoding="utf-8",
-        )
+        skeleton = {
+            "windows": {"quick": None, "full": None},
+            "linux": {"quick": None, "full": None},
+            "macos": {"quick": None, "full": None},
+        }
+        path.write_text(__import__("json").dumps(skeleton, indent=2), encoding="utf-8")
 
     data = __import__("json").loads(path.read_text(encoding="utf-8"))
-    data[os_name] = payload
+    for os_key in ("windows", "linux", "macos"):
+        if data.get(os_key) is None:
+            data[os_key] = {"quick": None, "full": None}
+        elif "quick" not in data[os_key]:
+            data[os_key] = {"quick": data[os_key], "full": None}
+
+    data[os_name][run_mode] = payload
     path.write_text(__import__("json").dumps(data, indent=2), encoding="utf-8")
+
+    summary_path = Path(__file__).resolve().parent.parent / "Assets" / "Data" / "benchmark-summary.json"
+    summary_path.parent.mkdir(parents=True, exist_ok=True)
+    if not summary_path.exists():
+        skeleton = {
+            "windows": {"quick": None, "full": None},
+            "linux": {"quick": None, "full": None},
+            "macos": {"quick": None, "full": None},
+        }
+        summary_path.write_text(__import__("json").dumps(skeleton, indent=2), encoding="utf-8")
+
+    summary_data = __import__("json").loads(summary_path.read_text(encoding="utf-8"))
+    for os_key in ("windows", "linux", "macos"):
+        if summary_data.get(os_key) is None:
+            summary_data[os_key] = {"quick": None, "full": None}
+        elif "quick" not in summary_data[os_key]:
+            summary_data[os_key] = {"quick": summary_data[os_key], "full": None}
+
+    summary_payload = {
+        "generatedUtc": payload["generatedUtc"],
+        "schemaVersion": payload["schemaVersion"],
+        "os": payload["os"],
+        "framework": payload["framework"],
+        "configuration": payload["configuration"],
+        "runMode": payload["runMode"],
+        "runModeDetails": payload["runModeDetails"],
+        "publish": payload["publish"],
+        "artifacts": payload["artifacts"],
+        "meta": payload["meta"],
+        "howToRead": payload["howToRead"],
+        "notes": payload["notes"],
+        "summary": payload["summary"],
+    }
+    summary_data[os_name][run_mode] = summary_payload
+    summary_path.write_text(__import__("json").dumps(summary_data, indent=2), encoding="utf-8")
+
+    index_path = Path(__file__).resolve().parent.parent / "Assets" / "Data" / "benchmark-index.json"
+    if not index_path.exists():
+        index_path.write_text(__import__("json").dumps({"schemaVersion": 1, "entries": []}, indent=2), encoding="utf-8")
+
+    index_data = __import__("json").loads(index_path.read_text(encoding="utf-8"))
+    if index_data.get("entries") is None:
+        index_data["entries"] = []
+    index_data["entries"] = [
+        entry
+        for entry in index_data["entries"]
+        if not (entry.get("os") == payload["os"] and entry.get("runMode") == payload["runMode"])
+    ]
+    index_data["entries"].append(
+        {
+            "os": payload["os"],
+            "runMode": payload["runMode"],
+            "generatedUtc": payload["generatedUtc"],
+            "publish": payload["publish"],
+            "framework": payload["framework"],
+            "configuration": payload["configuration"],
+            "artifacts": payload["artifacts"],
+            "meta": payload["meta"],
+        }
+    )
+    index_path.write_text(__import__("json").dumps(index_data, indent=2), encoding="utf-8")
 
 
 if __name__ == "__main__":

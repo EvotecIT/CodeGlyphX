@@ -13,7 +13,7 @@ $ErrorActionPreference = "Stop"
 
 $repoRoot = Resolve-Path (Join-Path $PSScriptRoot "..")
 if (-not $OutputPath) {
-    $OutputPath = Join-Path $repoRoot "CodeGlyphX.Website" "wwwroot"
+    $OutputPath = [IO.Path]::Combine($repoRoot, "CodeGlyphX.Website", "wwwroot")
 }
 
 # Paths
@@ -21,7 +21,7 @@ $assetsPath = Join-Path $repoRoot "Assets"
 $templatesPath = Join-Path $assetsPath "Templates"
 $scriptsPath = Join-Path $assetsPath "Scripts"
 $dataPath = Join-Path $assetsPath "Data"
-$fragmentsPath = Join-Path $repoRoot "CodeGlyphX.Website" "wwwroot" "api-fragments"
+$fragmentsPath = [IO.Path]::Combine($repoRoot, "CodeGlyphX.Website", "wwwroot", "api-fragments")
 
 # Load templates and fragments
 $baseTemplate = Get-Content (Join-Path $templatesPath "base.html") -Raw
@@ -103,7 +103,7 @@ $commonJs
 # ============================================================================
 Write-Host "Generating Home page..." -ForegroundColor Cyan
 
-$homeContent = Get-Content (Join-Path $templatesPath "pages" "home.html") -Raw
+$homeContent = Get-Content ([IO.Path]::Combine($templatesPath, "pages", "home.html")) -Raw
 
 New-StaticPage `
     -Title "CodeGlyphX - Zero-Dependency QR & Barcode Toolkit for .NET" `
@@ -116,7 +116,7 @@ New-StaticPage `
 # ============================================================================
 Write-Host "Generating Docs page..." -ForegroundColor Cyan
 
-$docsContent = Get-Content (Join-Path $templatesPath "pages" "docs.html") -Raw
+$docsContent = Get-Content ([IO.Path]::Combine($templatesPath, "pages", "docs.html")) -Raw
 $docsDir = Join-Path $OutputPath "docs"
 if (-not (Test-Path $docsDir)) {
     New-Item -ItemType Directory -Path $docsDir -Force | Out-Null

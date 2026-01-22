@@ -4,7 +4,13 @@ param(
     [string]$Framework = "net8.0",
     [string]$Configuration = "Release",
     [string]$RunMode,
-    [string]$OsName
+    [string]$OsName,
+    [string]$Commit,
+    [string]$Branch,
+    [string]$DotnetSdk,
+    [string]$RuntimeVersion,
+    [switch]$Publish,
+    [switch]$NoPublish
 )
 
 $ErrorActionPreference = "Stop"
@@ -42,6 +48,39 @@ $runModeLabel = if ($runModeNormalized -eq "quick") {
     "Run mode: Full (BenchmarkDotNet default job settings)."
 }
 
+$publishFlag = if ($Publish) {
+    $true
+} elseif ($NoPublish) {
+    $false
+} else {
+    $runModeNormalized -eq "full"
+}
+
+function Try-Get-DotnetSdk {
+    if (-not [string]::IsNullOrWhiteSpace($DotnetSdk)) { return $DotnetSdk }
+    if (Get-Command dotnet -ErrorAction SilentlyContinue) {
+        try {
+            $version = & dotnet --version
+            if (-not [string]::IsNullOrWhiteSpace($version)) { return $version.Trim() }
+        } catch {
+        }
+    }
+    return $null
+}
+
+$runtimeInfo = [System.Runtime.InteropServices.RuntimeInformation]
+$meta = [ordered]@{
+    commit = if ($Commit) { $Commit } elseif ($env:GIT_COMMIT) { $env:GIT_COMMIT } elseif ($env:BUILD_SOURCEVERSION) { $env:BUILD_SOURCEVERSION } else { $null }
+    branch = if ($Branch) { $Branch } elseif ($env:GIT_BRANCH) { $env:GIT_BRANCH } elseif ($env:BUILD_SOURCEBRANCH) { $env:BUILD_SOURCEBRANCH } else { $null }
+    dotnetSdk = Try-Get-DotnetSdk
+    runtime = if ($RuntimeVersion) { $RuntimeVersion } else { $runtimeInfo::FrameworkDescription }
+    osDescription = $runtimeInfo::OSDescription
+    osArchitecture = $runtimeInfo::OSArchitecture.ToString()
+    processArchitecture = $runtimeInfo::ProcessArchitecture.ToString()
+    machineName = [Environment]::MachineName
+    processorCount = [Environment]::ProcessorCount
+}
+
 function Normalize-Method([string]$value) {
     if ([string]::IsNullOrWhiteSpace($value)) { return $value }
     $trimmed = $value.Trim()
@@ -57,6 +96,32 @@ function Normalize-MeanText([string]$value) {
     $normalized = $normalized -replace "µs", "μs"
     $normalized = $normalized -replace "�s", "μs"
     return $normalized
+}
+
+function Parse-AllocatedBytes([string]$value) {
+    if ([string]::IsNullOrWhiteSpace($value)) { return $null }
+    $clean = $value.Trim().Replace(",", "")
+    if ($clean -eq "NA") { return $null }
+    if ($clean -match "^([0-9]+(?:\.[0-9]+)?)\s*(B|KB|MB)$") {
+        $number = [double]$Matches[1]
+        $unit = $Matches[2]
+        if ($unit -eq "B") { return $number }
+        if ($unit -eq "KB") { return $number * 1024.0 }
+        if ($unit -eq "MB") { return $number * 1024.0 * 1024.0 }
+    }
+    return $null
+}
+
+function Get-Rating([Nullable[double]]$timeRatio, [Nullable[double]]$allocRatio) {
+    if (-not $timeRatio) { return "unknown" }
+    if ($allocRatio) {
+        if ($timeRatio -le 1.1 -and $allocRatio -le 1.25) { return "good" }
+        if ($timeRatio -le 1.5 -and $allocRatio -le 2.0) { return "ok" }
+        return "bad"
+    }
+    if ($timeRatio -le 1.1) { return "good" }
+    if ($timeRatio -le 1.5) { return "ok" }
+    return "bad"
 }
 
 function Normalize-CompareScenario([string]$scenario) {
@@ -140,6 +205,13 @@ $lines.Add("Updated: $timestamp")
 $lines.Add("Framework: $Framework")
 $lines.Add("Configuration: $Configuration")
 $lines.Add("Artifacts: $ArtifactsPath")
+$lines.Add("How to read:")
+$lines.Add("- Mean: average time per operation. Lower is better.")
+$lines.Add("- Allocated: managed memory allocated per operation. Lower is better.")
+$lines.Add("- CodeGlyphX vs Fastest: CodeGlyphX mean divided by the fastest mean for that scenario. 1 x means CodeGlyphX is fastest; 1.5 x means ~50% slower.")
+$lines.Add("- CodeGlyphX Alloc vs Fastest: CodeGlyphX allocated divided by the fastest allocation for that scenario. 1 x means CodeGlyphX allocates the least; higher is more allocations.")
+$lines.Add("- Rating: good/ok/bad based on time + allocation ratios (good <=1.1x and <=1.25x alloc, ok <=1.5x and <=2.0x alloc).")
+$lines.Add("- Quick runs use fewer iterations for fast feedback; Full runs use BenchmarkDotNet defaults and are recommended for publishing.")
 $lines.Add("Notes:")
 $lines.Add("- $runModeLabel")
 $lines.Add("- Comparisons target PNG output and include encode+render (not encode-only).")
@@ -153,6 +225,7 @@ $lines.Add("")
 
 if ($compareFiles.Count -gt 0) {
     $summaryRows = New-Object System.Collections.Generic.List[string]
+    $summaryItems = New-Object System.Collections.Generic.List[object]
     foreach ($file in $compareFiles | Sort-Object Name) {
         $delimiter = Get-CsvDelimiter $file.FullName
         $rows = Import-Csv -Path $file.FullName -Delimiter $delimiter -Encoding UTF8
@@ -205,24 +278,47 @@ if ($compareFiles.Count -gt 0) {
             if (-not $fastestVendor) { continue }
             $cgx = $vendors["CodeGlyphX"]
             $ratioText = ""
+            $ratioValue = $null
+            $allocRatioText = ""
+            $allocRatioValue = $null
             $cgxMean = ""
             $cgxAlloc = ""
             if ($cgx -and $cgx.meanNs) {
-                $ratio = [math]::Round(($cgx.meanNs / $fastest.meanNs), 2)
-                $ratioText = "$ratio x"
+                $ratioValue = [math]::Round(($cgx.meanNs / $fastest.meanNs), 2)
+                $ratioText = "$ratioValue x"
                 $cgxMean = $cgx.mean
                 $cgxAlloc = $cgx.allocated
+                $fastestAllocBytes = Parse-AllocatedBytes $fastest.allocated
+                $cgxAllocBytes = Parse-AllocatedBytes $cgx.allocated
+                if ($fastestAllocBytes -and $cgxAllocBytes) {
+                    $allocRatioValue = [math]::Round(($cgxAllocBytes / $fastestAllocBytes), 2)
+                    $allocRatioText = "$allocRatioValue x"
+                }
             }
             $fastestText = "$fastestVendor $($fastest.mean)"
-            $summaryRows.Add("| $title | $scenario | $fastestText | $ratioText | $cgxMean | $cgxAlloc |")
+            $rating = Get-Rating $ratioValue $allocRatioValue
+            $summaryRows.Add("| $title | $scenario | $fastestText | $ratioText | $allocRatioText | $rating | $cgxMean | $cgxAlloc |")
+            $summaryItems.Add(@{
+                benchmark = $title
+                scenario = $scenario
+                fastestVendor = $fastestVendor
+                fastestMean = $fastest.mean
+                codeGlyphXMean = $cgxMean
+                codeGlyphXAlloc = $cgxAlloc
+                codeGlyphXVsFastest = $ratioValue
+                codeGlyphXVsFastestText = $ratioText
+                codeGlyphXAllocVsFastest = $allocRatioValue
+                codeGlyphXAllocVsFastestText = $allocRatioText
+                rating = $rating
+            })
         }
     }
 
     if ($summaryRows.Count -gt 0) {
         $lines.Add("### Summary (Comparisons)")
         $lines.Add("")
-        $lines.Add("| Benchmark | Scenario | Fastest | CodeGlyphX vs Fastest | CodeGlyphX Mean | CodeGlyphX Alloc |")
-        $lines.Add("| --- | --- | --- | --- | --- | --- |")
+        $lines.Add("| Benchmark | Scenario | Fastest | CodeGlyphX vs Fastest | CodeGlyphX Alloc vs Fastest | Rating | CodeGlyphX Mean | CodeGlyphX Alloc |")
+        $lines.Add("| --- | --- | --- | --- | --- | --- | --- | --- |")
         foreach ($row in $summaryRows) {
             $lines.Add($row)
         }
@@ -311,7 +407,11 @@ if ($compareFiles.Count -gt 0) {
     }
 }
 
-$jsonOutput = Join-Path (Split-Path -Parent $OutputPath) "BENCHMARK.json"
+$jsonOutput = Join-Path $PSScriptRoot "..\Assets\Data\benchmark.json"
+$jsonDir = Split-Path -Parent $jsonOutput
+if (-not (Test-Path $jsonDir)) {
+    New-Item -ItemType Directory -Force -Path $jsonDir | Out-Null
+}
 
 function Read-CsvResults([string]$path) {
     $delimiter = Get-CsvDelimiter $path
@@ -415,12 +515,23 @@ foreach ($file in $baselineFiles | Sort-Object Name) {
 
 $jsonDoc = @{
     generatedUtc = (Get-Date).ToUniversalTime().ToString("o")
+    schemaVersion = 1
     os = $osName
     framework = $Framework
     configuration = $Configuration
     runMode = $runModeNormalized
     runModeDetails = $runModeLabel
+    publish = $publishFlag
     artifacts = $ArtifactsPath
+    meta = $meta
+    howToRead = @(
+        "Mean: average time per operation. Lower is better.",
+        "Allocated: managed memory allocated per operation. Lower is better.",
+        "CodeGlyphX vs Fastest: CodeGlyphX mean divided by the fastest mean for that scenario. 1 x means CodeGlyphX is fastest; 1.5 x means ~50% slower.",
+        "CodeGlyphX Alloc vs Fastest: CodeGlyphX allocated divided by the fastest allocation for that scenario. 1 x means CodeGlyphX allocates the least; higher is more allocations.",
+        "Rating: good/ok/bad based on time + allocation ratios (good <=1.1x and <=1.25x alloc, ok <=1.5x and <=2.0x alloc).",
+        "Quick runs use fewer iterations for fast feedback; Full runs use BenchmarkDotNet defaults and are recommended for publishing."
+    )
     notes = @(
         $runModeLabel,
         "Comparisons target PNG output and include encode+render (not encode-only).",
@@ -431,40 +542,127 @@ $jsonDoc = @{
         "QR decode comparisons use raw RGBA32 bytes (ZXing via RGBLuminanceSource).",
         "QR decode clean uses CodeGlyphX Balanced; noisy uses CodeGlyphX Robust with aggressive sampling/limits; ZXing uses default (clean) and TryHarder (noisy)."
     )
+    summary = $summaryItems
     baseline = $jsonBaseline
     comparisons = $jsonSections
 }
 
+$jsonSkeleton = @{
+    windows = @{ quick = $null; full = $null }
+    linux = @{ quick = $null; full = $null }
+    macos = @{ quick = $null; full = $null }
+}
+
 if (-not (Test-Path $jsonOutput)) {
-    $jsonSkeleton = @{
-        windows = $null
-        linux = $null
-        macos = $null
-    } | ConvertTo-Json -Depth 8
-    Set-Content -Path $jsonOutput -Value $jsonSkeleton -NoNewline -Encoding UTF8
+    $jsonSkeleton | ConvertTo-Json -Depth 8 | Set-Content -Path $jsonOutput -NoNewline -Encoding UTF8
 }
 
 $jsonText = Get-Content -Path $jsonOutput -Raw -Encoding UTF8
 $jsonAll = $jsonText | ConvertFrom-Json
-$jsonAll.$osName = $jsonDoc
+
+foreach ($os in @("windows", "linux", "macos")) {
+    if ($jsonAll.$os -and -not ($jsonAll.$os.PSObject.Properties.Name -contains "quick")) {
+        $existing = $jsonAll.$os
+        $jsonAll.$os = [pscustomobject]@{
+            quick = $existing
+            full = $null
+        }
+    } elseif (-not $jsonAll.$os) {
+        $jsonAll.$os = [pscustomobject]@{
+            quick = $null
+            full = $null
+        }
+    }
+}
+
+$jsonAll.$osName.$runModeNormalized = $jsonDoc
 $jsonOut = $jsonAll | ConvertTo-Json -Depth 8
 Set-Content -Path $jsonOutput -Value $jsonOut -NoNewline -Encoding UTF8
 
-$assetsJsonOutput = Join-Path $PSScriptRoot "..\Assets\Data\benchmark.json"
-$assetsDir = Split-Path -Parent $assetsJsonOutput
-if (-not (Test-Path $assetsDir)) {
-    New-Item -ItemType Directory -Force -Path $assetsDir | Out-Null
+$summaryOutput = Join-Path $PSScriptRoot "..\Assets\Data\benchmark-summary.json"
+if (-not (Test-Path $summaryOutput)) {
+    $jsonSkeleton | ConvertTo-Json -Depth 8 | Set-Content -Path $summaryOutput -NoNewline -Encoding UTF8
 }
-Copy-Item -Path $jsonOutput -Destination $assetsJsonOutput -Force
+$summaryText = Get-Content -Path $summaryOutput -Raw -Encoding UTF8
+$summaryAll = $summaryText | ConvertFrom-Json
+foreach ($os in @("windows", "linux", "macos")) {
+    if ($summaryAll.$os -and -not ($summaryAll.$os.PSObject.Properties.Name -contains "quick")) {
+        $existing = $summaryAll.$os
+        $summaryAll.$os = [pscustomobject]@{
+            quick = $existing
+            full = $null
+        }
+    } elseif (-not $summaryAll.$os) {
+        $summaryAll.$os = [pscustomobject]@{
+            quick = $null
+            full = $null
+        }
+    }
+}
+$summaryAll.$osName.$runModeNormalized = [pscustomobject]@{
+    generatedUtc = $jsonDoc.generatedUtc
+    schemaVersion = $jsonDoc.schemaVersion
+    os = $jsonDoc.os
+    framework = $jsonDoc.framework
+    configuration = $jsonDoc.configuration
+    runMode = $jsonDoc.runMode
+    runModeDetails = $jsonDoc.runModeDetails
+    publish = $jsonDoc.publish
+    artifacts = $jsonDoc.artifacts
+    meta = $jsonDoc.meta
+    howToRead = $jsonDoc.howToRead
+    notes = $jsonDoc.notes
+    summary = $jsonDoc.summary
+}
+$summaryOut = $summaryAll | ConvertTo-Json -Depth 8
+Set-Content -Path $summaryOutput -Value $summaryOut -NoNewline -Encoding UTF8
+
+# Summary output is already stored under Assets/Data for website ingestion.
+
+$indexOutput = Join-Path $PSScriptRoot "..\Assets\Data\benchmark-index.json"
+if (-not (Test-Path $indexOutput)) {
+    $indexSkeleton = @{
+        schemaVersion = 1
+        entries = @()
+    } | ConvertTo-Json -Depth 6
+    Set-Content -Path $indexOutput -Value $indexSkeleton -NoNewline -Encoding UTF8
+}
+
+$indexText = Get-Content -Path $indexOutput -Raw -Encoding UTF8
+$indexDoc = $indexText | ConvertFrom-Json
+if (-not $indexDoc.schemaVersion) { $indexDoc | Add-Member -NotePropertyName schemaVersion -NotePropertyValue 1 }
+if (-not $indexDoc.entries) { $indexDoc.entries = @() }
+
+$newEntry = [pscustomobject]@{
+    os = $jsonDoc.os
+    runMode = $jsonDoc.runMode
+    generatedUtc = $jsonDoc.generatedUtc
+    publish = $jsonDoc.publish
+    framework = $jsonDoc.framework
+    configuration = $jsonDoc.configuration
+    artifacts = $jsonDoc.artifacts
+    meta = $jsonDoc.meta
+}
+
+$entries = @()
+foreach ($entry in $indexDoc.entries) {
+    if ($entry.os -eq $newEntry.os -and $entry.runMode -eq $newEntry.runMode) { continue }
+    $entries += $entry
+}
+$entries += $newEntry
+$indexDoc.entries = $entries
+
+$indexOut = $indexDoc | ConvertTo-Json -Depth 6
+Set-Content -Path $indexOutput -Value $indexOut -NoNewline -Encoding UTF8
 
 $sectionContent = ($lines -join "`n").TrimEnd()
-$marker = "BENCHMARK:$($osName.ToUpperInvariant())"
+$marker = "BENCHMARK:$($osName.ToUpperInvariant()):$($runModeNormalized.ToUpperInvariant())"
 $startMarker = "<!-- ${marker}:START -->"
 $endMarker = "<!-- ${marker}:END -->"
 $sectionBlock = "$startMarker`n$sectionContent`n$endMarker"
 
-function Get-Block([string]$text, [string]$osName) {
-    $marker = "BENCHMARK:$($osName.ToUpperInvariant())"
+function Get-Block([string]$text, [string]$osName, [string]$runMode) {
+    $marker = "BENCHMARK:$($osName.ToUpperInvariant()):$($runMode.ToUpperInvariant())"
     $start = "<!-- ${marker}:START -->"
     $end = "<!-- ${marker}:END -->"
     $pattern = [regex]::Escape($start) + "[\s\S]*?" + [regex]::Escape($end)
@@ -476,20 +674,35 @@ function Get-Block([string]$text, [string]$osName) {
 
 $text = if (Test-Path $OutputPath) { Get-Content -Path $OutputPath -Raw -Encoding UTF8 } else { "" }
 $blocks = @{
-    windows = Get-Block $text "windows"
-    linux = Get-Block $text "linux"
-    macos = Get-Block $text "macos"
+    windowsQuick = Get-Block $text "windows" "quick"
+    windowsFull = Get-Block $text "windows" "full"
+    linuxQuick = Get-Block $text "linux" "quick"
+    linuxFull = Get-Block $text "linux" "full"
+    macosQuick = Get-Block $text "macos" "quick"
+    macosFull = Get-Block $text "macos" "full"
 }
-$blocks[$osName] = $sectionBlock
+
+if ($osName -eq "windows" -and $runModeNormalized -eq "quick") { $blocks["windowsQuick"] = $sectionBlock }
+elseif ($osName -eq "windows" -and $runModeNormalized -eq "full") { $blocks["windowsFull"] = $sectionBlock }
+elseif ($osName -eq "linux" -and $runModeNormalized -eq "quick") { $blocks["linuxQuick"] = $sectionBlock }
+elseif ($osName -eq "linux" -and $runModeNormalized -eq "full") { $blocks["linuxFull"] = $sectionBlock }
+elseif ($osName -eq "macos" -and $runModeNormalized -eq "quick") { $blocks["macosQuick"] = $sectionBlock }
+elseif ($osName -eq "macos" -and $runModeNormalized -eq "full") { $blocks["macosFull"] = $sectionBlock }
 
 $template = @(
     "# Benchmarks",
     "",
-    $blocks["windows"],
+    $blocks["windowsQuick"],
     "",
-    $blocks["linux"],
+    $blocks["windowsFull"],
     "",
-    $blocks["macos"],
+    $blocks["linuxQuick"],
+    "",
+    $blocks["linuxFull"],
+    "",
+    $blocks["macosQuick"],
+    "",
+    $blocks["macosFull"],
     ""
 ) -join "`n"
 
