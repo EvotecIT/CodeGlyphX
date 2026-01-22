@@ -24,6 +24,7 @@
                     <a href="/" @onclick="GoHome" @onclick:preventDefault="true">Home</a>
                     <a href="/playground/" @onclick="CloseNav">Playground</a>
                     <a href="/docs/" @onclick="GoDocs" @onclick:preventDefault="true">Documentation</a>
+                    <a href="/showcase/" @onclick="GoShowcase" @onclick:preventDefault="true">Showcase</a>
                 </div>
                 <div class="nav-actions">
                     <a href="https://github.com/EvotecIT/CodeGlyphX" target="_blank" rel="noopener" class="nav-icon" title="GitHub" aria-label="GitHub">
@@ -81,6 +82,8 @@
                     <a href="/">Home</a>
                     <a href="/playground/">Playground</a>
                     <a href="/docs/">Documentation</a>
+                    <a href="/showcase/">Showcase</a>
+                    <a href="/faq/">FAQ</a>
                 </div>
                 <div class="footer-section">
                     <h3>Resources</h3>
@@ -182,5 +185,12 @@
         _navOpen = false;
         var root = new Uri(Nav.BaseUri).GetLeftPart(UriPartial.Authority) + "/";
         Nav.NavigateTo(root + "docs/api", forceLoad: true);
+    }
+
+    private void GoShowcase()
+    {
+        _navOpen = false;
+        var root = new Uri(Nav.BaseUri).GetLeftPart(UriPartial.Authority) + "/";
+        Nav.NavigateTo(root + "showcase/", forceLoad: true);
     }
 }
