@@ -24,10 +24,9 @@ public class AztecCompareBenchmarks
 {
     private const string MediumText = "Serial: ABC123-XYZ789";
     private readonly MatrixOptions _options = new();
+#if COMPARE_ZXING
     private int _widthPx;
     private int _heightPx;
-
-#if COMPARE_ZXING
     private BarcodeWriterGeneric _zxingWriter = null!;
 #endif
 
@@ -38,11 +37,10 @@ public class AztecCompareBenchmarks
     [GlobalSetup]
     public void Setup()
     {
+#if COMPARE_ZXING
         var modules = AztecCode.Encode(MediumText);
         _widthPx = CompareBenchmarkHelpers.MatrixWidthPx(modules, _options);
         _heightPx = CompareBenchmarkHelpers.MatrixHeightPx(modules, _options);
-
-#if COMPARE_ZXING
         var zxingOptions = new AztecEncodingOptions
         {
             Width = _widthPx,

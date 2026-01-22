@@ -23,10 +23,9 @@ public class EanCompareBenchmarks
 {
     private const string EanText = "5901234123457";
     private readonly BarcodeOptions _options = new();
+#if COMPARE_ZXING
     private int _widthPx;
     private int _heightPx;
-
-#if COMPARE_ZXING
     private BarcodeWriterGeneric _zxingWriter = null!;
 #endif
 
@@ -37,10 +36,9 @@ public class EanCompareBenchmarks
     [GlobalSetup]
     public void Setup()
     {
+#if COMPARE_ZXING
         _widthPx = CompareBenchmarkHelpers.BarcodeWidthPx(BarcodeType.EAN, EanText, _options);
         _heightPx = CompareBenchmarkHelpers.BarcodeHeightPx(_options);
-
-#if COMPARE_ZXING
         _zxingWriter = new BarcodeWriterGeneric
         {
             Format = BarcodeFormat.EAN_13,

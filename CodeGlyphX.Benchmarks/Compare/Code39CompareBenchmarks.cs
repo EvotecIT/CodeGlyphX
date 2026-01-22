@@ -23,10 +23,9 @@ public class Code39CompareBenchmarks
 {
     private const string Code39Text = "HELLO-123";
     private readonly BarcodeOptions _options = new();
+#if COMPARE_ZXING
     private int _widthPx;
     private int _heightPx;
-
-#if COMPARE_ZXING
     private BarcodeWriterGeneric _zxingWriter = null!;
 #endif
 
@@ -37,10 +36,9 @@ public class Code39CompareBenchmarks
     [GlobalSetup]
     public void Setup()
     {
+#if COMPARE_ZXING
         _widthPx = CompareBenchmarkHelpers.BarcodeWidthPx(BarcodeType.Code39, Code39Text, _options);
         _heightPx = CompareBenchmarkHelpers.BarcodeHeightPx(_options);
-
-#if COMPARE_ZXING
         _zxingWriter = new BarcodeWriterGeneric
         {
             Format = BarcodeFormat.CODE_39,

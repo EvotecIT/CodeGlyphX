@@ -24,10 +24,9 @@ public class Pdf417CompareBenchmarks
 {
     private const string LongText = "Document ID: 98765 | Invoice: INV-2024-001234 | Amount: $1,234.56";
     private readonly MatrixOptions _options = new();
+#if COMPARE_ZXING
     private int _widthPx;
     private int _heightPx;
-
-#if COMPARE_ZXING
     private BarcodeWriterGeneric _zxingWriter = null!;
 #endif
 
@@ -38,11 +37,10 @@ public class Pdf417CompareBenchmarks
     [GlobalSetup]
     public void Setup()
     {
+#if COMPARE_ZXING
         var modules = Pdf417Code.Encode(LongText);
         _widthPx = CompareBenchmarkHelpers.MatrixWidthPx(modules, _options);
         _heightPx = CompareBenchmarkHelpers.MatrixHeightPx(modules, _options);
-
-#if COMPARE_ZXING
         var zxingOptions = new PDF417EncodingOptions
         {
             Width = _widthPx,

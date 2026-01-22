@@ -467,7 +467,10 @@ public static class DataBarExpandedDecoder {
 
     private static bool TryDecodeNumeric(bool[] bits, ref int pos, StringBuilder sb, int size, ref GeneralFieldMode mode) {
         if (Match(bits, pos, "0000")) {
-            if (pos + 4 >= size) return false;
+            if (pos + 4 >= size) {
+                pos = size;
+                return true;
+            }
             mode = GeneralFieldMode.Alpha;
             pos += 4;
             return true;
@@ -477,7 +480,10 @@ public static class DataBarExpandedDecoder {
         if (remaining < 7) {
             if (remaining >= 4) {
                 var v4 = ReadBits(bits, pos, 4);
-                if (v4 == 0) return false;
+                if (v4 == 0) {
+                    pos = size;
+                    return true;
+                }
                 sb.Append(v4 == 10 ? GroupSeparator : (char)('0' + v4 - 1));
             }
             pos = size;
@@ -486,7 +492,10 @@ public static class DataBarExpandedDecoder {
 
         var v7 = ReadBits(bits, pos, 7);
         var value = v7 - 8;
-        if (value < 0) return false;
+        if (value < 0) {
+            pos = size;
+            return true;
+        }
         var d1 = value / 11;
         var d2 = value % 11;
         sb.Append(d1 == 10 ? GroupSeparator : (char)('0' + d1));
@@ -497,19 +506,28 @@ public static class DataBarExpandedDecoder {
 
     private static bool TryDecodeAlpha(bool[] bits, ref int pos, StringBuilder sb, int size, ref GeneralFieldMode mode) {
         if (Match(bits, pos, "000")) {
-            if (pos + 3 >= size) return false;
+            if (pos + 3 >= size) {
+                pos = size;
+                return true;
+            }
             mode = GeneralFieldMode.Numeric;
             pos += 3;
             return true;
         }
         if (Match(bits, pos, "00100")) {
-            if (pos + 5 >= size) return false;
+            if (pos + 5 >= size) {
+                pos = size;
+                return true;
+            }
             mode = GeneralFieldMode.Iso;
             pos += 5;
             return true;
         }
 
-        if (size - pos < 5) return false;
+        if (size - pos < 5) {
+            pos = size;
+            return true;
+        }
         var v5 = ReadBits(bits, pos, 5);
         if (v5 == 15) {
             sb.Append(GroupSeparator);
@@ -522,7 +540,10 @@ public static class DataBarExpandedDecoder {
             return true;
         }
 
-        if (size - pos < 6) return false;
+        if (size - pos < 6) {
+            pos = size;
+            return true;
+        }
         var v6 = ReadBits(bits, pos, 6);
         if (v6 >= 32 && v6 <= 57) {
             sb.Append((char)('A' + (v6 - 32)));
@@ -537,7 +558,10 @@ public static class DataBarExpandedDecoder {
             62 => '/',
             _ => '\0'
         };
-        if (alphaChar == '\0') return false;
+        if (alphaChar == '\0') {
+            pos = size;
+            return true;
+        }
         sb.Append(alphaChar);
         pos += 6;
         return true;
@@ -545,19 +569,28 @@ public static class DataBarExpandedDecoder {
 
     private static bool TryDecodeIso(bool[] bits, ref int pos, StringBuilder sb, int size, ref GeneralFieldMode mode) {
         if (Match(bits, pos, "000")) {
-            if (pos + 3 >= size) return false;
+            if (pos + 3 >= size) {
+                pos = size;
+                return true;
+            }
             mode = GeneralFieldMode.Numeric;
             pos += 3;
             return true;
         }
         if (Match(bits, pos, "00100")) {
-            if (pos + 5 >= size) return false;
+            if (pos + 5 >= size) {
+                pos = size;
+                return true;
+            }
             mode = GeneralFieldMode.Alpha;
             pos += 5;
             return true;
         }
 
-        if (size - pos < 5) return false;
+        if (size - pos < 5) {
+            pos = size;
+            return true;
+        }
         var iso5 = ReadBits(bits, pos, 5);
         if (iso5 == 15) {
             sb.Append(GroupSeparator);
@@ -584,7 +617,10 @@ public static class DataBarExpandedDecoder {
             }
         }
 
-        if (size - pos < 8) return false;
+        if (size - pos < 8) {
+            pos = size;
+            return true;
+        }
         var v8 = ReadBits(bits, pos, 8);
         var isoChar = v8 switch {
             232 => '!',
@@ -610,7 +646,10 @@ public static class DataBarExpandedDecoder {
             252 => ' ',
             _ => '\0'
         };
-        if (isoChar == '\0') return false;
+        if (isoChar == '\0') {
+            pos = size;
+            return true;
+        }
         sb.Append(isoChar);
         pos += 8;
         return true;
