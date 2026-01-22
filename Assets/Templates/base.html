@@ -14,7 +14,7 @@
   {{EXTRA_CSS}}
   {{OPENGRAPH}}
   {{STRUCTURED_DATA}}
-  <script>(function(){var theme=localStorage.getItem('theme')||'dark';document.documentElement.setAttribute('data-theme',theme);})();</script>
+  <script>(function(){const t=localStorage.getItem('theme')||'dark';document.documentElement.dataset.theme=t;})();</script>
 </head>
 <body{{BODY_CLASS}}>
   <div class="page">
