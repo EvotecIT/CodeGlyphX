@@ -147,7 +147,8 @@ Runs wherever .NET runs (Windows, Linux, macOS). WPF controls are Windows-only.
 
 ## Benchmarks (local run)
 
-Benchmarks were run on 2026-01-19 (Linux Ubuntu 24.04, Ryzen 9 9950X, .NET 8.0.22). Your results will vary.
+Latest benchmark tables are generated into `BENCHMARK.md` (and `Assets/Data/benchmark*.json`).
+Benchmarks below were run on 2026-01-19 (Linux Ubuntu 24.04, Ryzen 9 9950X, .NET 8.0.22). Your results will vary.
 Benchmarks run on identical hardware with default settings.
 
 ### QR (Encode)
@@ -192,6 +193,38 @@ Benchmarks run on identical hardware with default settings.
 | PDF417 SVG | 28.79 | 64.53 KB |
 | Aztec PNG | 260.70 | 452.30 KB |
 | Aztec SVG | 12.76 | 59.74 KB |
+
+### Performance checklist
+
+Environment
+- Close heavy apps (indexers, browsers, video calls).
+- Use AC power and High Performance plan; avoid battery saver.
+- Reboot if the system has been running for a long time.
+
+Build & preflight
+- `dotnet --info` (record SDK + runtime versions).
+- `dotnet build CodeGlyphX.sln`
+- `dotnet run -c Release --project CodeGlyphX.Benchmarks -- --preflight`
+
+Quick run (sanity)
+- `bash Build/run-benchmarks-compare.sh --no-compare --base-filter '*QrDecode*'`
+- Generate report:
+  - `python3 Build/generate-benchmark-report.py --artifacts-path <artifacts> --framework net8.0 --configuration Release --run-mode quick`
+
+Full run (publishable)
+- `bash Build/run-benchmarks-compare.sh`
+- Generate report:
+  - `python3 Build/generate-benchmark-report.py --artifacts-path <artifacts> --framework net8.0 --configuration Release --run-mode full`
+
+Regression triage
+- Re-run the same filter twice to confirm regressions.
+- Use QR diagnostics knobs if needed:
+  - `CODEGLYPHX_DIAG_QR_MAXMS`, `CODEGLYPHX_DIAG_QR_AGG`, `CODEGLYPHX_DIAG_QR_DISABLE_TRANSFORMS`
+- Capture before/after benchmark tables in the PR summary.
+
+Docs/artifacts
+- Update `BENCHMARK.md` and `Assets/Data/benchmark*.json`.
+- If public API docs changed, regenerate website docs: `pwsh Build/Build-Website.ps1`.
 
 ### Run benchmarks
 
