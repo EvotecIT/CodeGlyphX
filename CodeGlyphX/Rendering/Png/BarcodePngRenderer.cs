@@ -7,11 +7,13 @@ namespace CodeGlyphX.Rendering.Png;
 /// <summary>
 /// Renders 1D barcodes to a PNG image (RGBA8).
 /// </summary>
-public static class BarcodePngRenderer {
+public static partial class BarcodePngRenderer {
     /// <summary>
     /// Renders the barcode to a PNG byte array.
     /// </summary>
     public static byte[] Render(Barcode1D barcode, BarcodePngRenderOptions opts) {
+        if (TryRenderGray1(barcode, opts, out var gray)) return gray;
+        if (TryRenderIndexed1(barcode, opts, out var indexed)) return indexed;
         var scanlines = RenderScanlines(barcode, opts, out var widthPx, out var heightPx, out _);
         return PngWriter.WriteRgba8(widthPx, heightPx, scanlines);
     }
@@ -23,6 +25,8 @@ public static class BarcodePngRenderer {
     /// <param name="opts">Rendering options.</param>
     /// <param name="stream">Target stream.</param>
     public static void RenderToStream(Barcode1D barcode, BarcodePngRenderOptions opts, Stream stream) {
+        if (TryRenderGray1ToStream(barcode, opts, stream)) return;
+        if (TryRenderIndexed1ToStream(barcode, opts, stream)) return;
         var scanlines = RenderScanlines(barcode, opts, out var widthPx, out var heightPx, out _);
         PngWriter.WriteRgba8(stream, widthPx, heightPx, scanlines);
     }

@@ -162,6 +162,8 @@ internal static partial class QrPixelDecoder {
             thresholdCount = 1;
         }
 
+        var noisyThreshold = settings.AggressiveSampling ? 48 : 64;
+        var skipHeavyPasses = false;
         for (var i = 0; i < thresholdCount; i++) {
             if (budget.IsExpired) {
                 diagnostics = best;
@@ -174,7 +176,15 @@ internal static partial class QrPixelDecoder {
             }
             best = Better(best, diagN);
 
-            if (!tightBudget) {
+            if (budget.Enabled && diagN.CandidateCount >= noisyThreshold) {
+                skipHeavyPasses = true;
+                if (tightBudget) {
+                    diagnostics = best;
+                    return false;
+                }
+            }
+
+            if (!tightBudget && !skipHeavyPasses) {
                 if (TryDecodeFromGray(scale, thresholds[i], image, invert: true, candidates, accept, settings.AggressiveSampling, budget, out result, out var diagI)) {
                     diagnostics = diagI;
                     return true;
@@ -185,6 +195,15 @@ internal static partial class QrPixelDecoder {
                 diagnostics = best;
                 return false;
             }
+            if (skipHeavyPasses) {
+                diagnostics = best;
+                return false;
+            }
+        }
+
+        if (skipHeavyPasses) {
+            diagnostics = best;
+            return false;
         }
 
         if (settings.AllowAdaptiveThreshold) {

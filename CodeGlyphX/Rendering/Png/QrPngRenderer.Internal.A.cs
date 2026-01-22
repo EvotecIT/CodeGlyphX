@@ -5,7 +5,7 @@ using CodeGlyphX.Rendering;
 namespace CodeGlyphX.Rendering.Png;
 
 public static partial class QrPngRenderer {
-    internal static byte[] RenderScanlines(BitMatrix modules, QrPngRenderOptions opts, out int widthPx, out int heightPx, out int stride) {
+    internal static int GetScanlineLength(BitMatrix modules, QrPngRenderOptions opts, out int widthPx, out int heightPx, out int stride) {
         if (modules is null) throw new ArgumentNullException(nameof(modules));
         if (opts is null) throw new ArgumentNullException(nameof(opts));
         if (modules.Width != modules.Height) throw new ArgumentException("Matrix must be square.", nameof(modules));
@@ -20,10 +20,20 @@ public static partial class QrPngRenderer {
         widthPx = outModules * opts.ModuleSize;
         heightPx = widthPx;
         stride = widthPx * 4;
+        return heightPx * (stride + 1);
+    }
 
-        var scanlines = new byte[heightPx * (stride + 1)];
-        FillBackground(scanlines, widthPx, heightPx, stride, opts.Background);
+    internal static byte[] RenderScanlines(BitMatrix modules, QrPngRenderOptions opts, out int widthPx, out int heightPx, out int stride) {
+        return RenderScanlines(modules, opts, out widthPx, out heightPx, out stride, scanlines: null);
+    }
 
+    internal static byte[] RenderScanlines(BitMatrix modules, QrPngRenderOptions opts, out int widthPx, out int heightPx, out int stride, byte[]? scanlines) {
+        var length = GetScanlineLength(modules, opts, out widthPx, out heightPx, out stride);
+        var buffer = scanlines ?? new byte[length];
+        if (buffer.Length < length) throw new ArgumentException("Invalid scanline buffer length.", nameof(scanlines));
+        FillBackground(buffer, widthPx, heightPx, stride, opts.Background);
+
+        var size = modules.Width;
         var mask = BuildModuleMask(opts.ModuleSize, opts.ModuleShape, opts.ModuleScale, opts.ModuleCornerRadiusPx);
         var eyeOuterMask = opts.Eyes is null
             ? mask
@@ -62,7 +72,7 @@ public static partial class QrPngRenderer {
                         var boxY = (eyeY + opts.QuietZone) * opts.ModuleSize;
                         var boxSize = eyeSizeModules * opts.ModuleSize;
                         DrawModuleInBox(
-                            scanlines,
+                            buffer,
                             stride,
                             opts.ModuleSize,
                             mx,
@@ -80,7 +90,7 @@ public static partial class QrPngRenderer {
                 var useGradient = eyeKind == EyeKind.None ? opts.ForegroundGradient : null;
 
                 DrawModule(
-                    scanlines,
+                    buffer,
                     stride,
                     opts.ModuleSize,
                     mx,
@@ -95,16 +105,16 @@ public static partial class QrPngRenderer {
         }
 
         if (useFrame && opts.Eyes is not null) {
-            DrawEyeFrame(scanlines, widthPx, heightPx, stride, opts, 0, 0);
-            DrawEyeFrame(scanlines, widthPx, heightPx, stride, opts, size - 7, 0);
-            DrawEyeFrame(scanlines, widthPx, heightPx, stride, opts, 0, size - 7);
+            DrawEyeFrame(buffer, widthPx, heightPx, stride, opts, 0, 0);
+            DrawEyeFrame(buffer, widthPx, heightPx, stride, opts, size - 7, 0);
+            DrawEyeFrame(buffer, widthPx, heightPx, stride, opts, 0, size - 7);
         }
 
         if (opts.Logo is not null) {
-            ApplyLogo(scanlines, widthPx, heightPx, stride, size * opts.ModuleSize, opts.Logo);
+            ApplyLogo(buffer, widthPx, heightPx, stride, size * opts.ModuleSize, opts.Logo);
         }
 
-        return scanlines;
+        return buffer;
     }
 
     private static void FillBackground(byte[] scanlines, int widthPx, int heightPx, int stride, Rgba32 color) {

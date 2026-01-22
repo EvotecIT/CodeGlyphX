@@ -8,16 +8,27 @@ internal static class PngWriter {
 
     public static byte[] WriteRgba8(int width, int height, byte[] scanlinesWithFilter) {
         using var ms = new MemoryStream();
-        WriteRgba8(ms, width, height, scanlinesWithFilter);
+        WriteRgba8(ms, width, height, scanlinesWithFilter, scanlinesWithFilter.Length);
+        return ms.ToArray();
+    }
+
+    public static byte[] WriteRgba8(int width, int height, byte[] scanlinesWithFilter, int length) {
+        using var ms = new MemoryStream();
+        WriteRgba8(ms, width, height, scanlinesWithFilter, length);
         return ms.ToArray();
     }
 
     public static void WriteRgba8(Stream stream, int width, int height, byte[] scanlinesWithFilter) {
+        WriteRgba8(stream, width, height, scanlinesWithFilter, scanlinesWithFilter.Length);
+    }
+
+    public static void WriteRgba8(Stream stream, int width, int height, byte[] scanlinesWithFilter, int length) {
         if (width <= 0) throw new ArgumentOutOfRangeException(nameof(width));
         if (height <= 0) throw new ArgumentOutOfRangeException(nameof(height));
         if (scanlinesWithFilter is null) throw new ArgumentNullException(nameof(scanlinesWithFilter));
+        if (length < 0 || length > scanlinesWithFilter.Length) throw new ArgumentOutOfRangeException(nameof(length));
         var stride = width * 4;
-        if (scanlinesWithFilter.Length != height * (stride + 1))
+        if (length != height * (stride + 1))
             throw new ArgumentException("Invalid scanline buffer length.", nameof(scanlinesWithFilter));
 
         if (stream is null) throw new ArgumentNullException(nameof(stream));
@@ -25,8 +36,8 @@ internal static class PngWriter {
         stream.Write(Signature, 0, Signature.Length);
         WriteChunk(stream, "IHDR", BuildIHDR(width, height, bitDepth: 8, colorType: 6));
 
-        var idatLength = GetZlibStoredLength(scanlinesWithFilter.Length);
-        WriteChunk(stream, "IDAT", idatLength, (Stream s, ref uint crc) => WriteZlibStored(s, scanlinesWithFilter, scanlinesWithFilter.Length, ref crc));
+        var idatLength = GetZlibStoredLength(length);
+        WriteChunk(stream, "IDAT", idatLength, (Stream s, ref uint crc) => WriteZlibStored(s, scanlinesWithFilter, length, ref crc));
         WriteChunk(stream, "IEND", Array.Empty<byte>());
     }
 
