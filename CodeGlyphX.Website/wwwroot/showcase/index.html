@@ -5,13 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Showcase - CodeGlyphX</title>
   <meta name="description" content="See CodeGlyphX in action powering real-world applications." />
+  
   <link rel="canonical" href="https://codeglyphx.com/showcase/" />
   <link rel="icon" type="image/png" href="/codeglyphx-qr-icon.png" />
   <link rel="apple-touch-icon" href="/codeglyphx-qr-icon.png" />
   <link rel="preconnect" href="https://img.shields.io" crossorigin />
   <link rel="preload" href="/codeglyphx-qr-icon.png" as="image" type="image/png" />
   <link rel="stylesheet" href="/css/api-docs.css" />
-
+  
+  
   <!-- Open Graph -->
   <meta property="og:title" content="Showcase - CodeGlyphX" />
   <meta property="og:description" content="See CodeGlyphX in action powering real-world applications." />
@@ -25,27 +27,17 @@
   <meta name="twitter:title" content="Showcase - CodeGlyphX" />
   <meta name="twitter:description" content="See CodeGlyphX in action powering real-world applications." />
   <meta name="twitter:image" content="https://codeglyphx.com/codeglyphx-qr-icon.png" />
-
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "BreadcrumbList",
-        "itemListElement": [
-            {
-                "@type": "ListItem",
-                "position": 1,
-                "name": "Home",
-                "item": "https://codeglyphx.com/"
-            },
-            {
-                "@type": "ListItem",
-                "position": 2,
-                "name": "Showcase",
-                "item": "https://codeglyphx.com/showcase/"
-            }
-        ]
-    }
-    </script>
+  
+  <script type="application/ld+json">
+  {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://codeglyphx.com/" },
+          { "@type": "ListItem", "position": 2, "name": "Showcase", "item": "https://codeglyphx.com/showcase/" }
+      ]
+  }
+  </script>
   <script>(function(){var theme=localStorage.getItem('theme')||'dark';document.documentElement.setAttribute('data-theme',theme);})();</script>
 </head>
 <body>
@@ -405,120 +397,129 @@
 
   </div>
   <script src="/js/site.js"></script>
+    <script>
+// Theme toggle
+document.querySelectorAll('.theme-toggle').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    var current = document.documentElement.getAttribute('data-theme') || 'dark';
+    var next = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+  });
+});
+
+// Keyboard focus visibility (show focus ring only for keyboard navigation)
+function enableKeyboardFocus() { document.body.classList.add('using-keyboard'); }
+function disableKeyboardFocus() { document.body.classList.remove('using-keyboard'); }
+window.addEventListener('keydown', function(e) {
+  if (e.key === 'Tab' || e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+    enableKeyboardFocus();
+  }
+});
+window.addEventListener('mousedown', disableKeyboardFocus, true);
+window.addEventListener('touchstart', disableKeyboardFocus, true);
+
+// Mobile nav toggle
+var navToggle = document.getElementById('nav-toggle');
+if (navToggle) {
+  navToggle.addEventListener('change', function() {
+    document.body.classList.toggle('nav-open', this.checked);
+  });
+}
+
+  </script>
   <script>
-    // Theme toggle
-    document.querySelectorAll('.theme-toggle').forEach(function(btn) {
-      btn.addEventListener('click', function() {
-        var current = document.documentElement.getAttribute('data-theme') || 'dark';
-        var next = current === 'dark' ? 'light' : 'dark';
-        document.documentElement.setAttribute('data-theme', next);
-        localStorage.setItem('theme', next);
-      });
+// Showcase carousel functionality
+document.querySelectorAll('.showcase-gallery').forEach(function(gallery) {
+  var carouselId = gallery.dataset.carousel;
+  var dataScript = document.querySelector('script.carousel-data[data-carousel="' + carouselId + '"]');
+  if (!dataScript) return;
+
+  var captions = JSON.parse(dataScript.textContent);
+  var currentTheme = 'dark';
+  var currentSlide = 0;
+
+  var themeTabs = gallery.querySelectorAll('.showcase-gallery-tab');
+  var slides = gallery.querySelectorAll('.showcase-carousel-slide');
+  var prevBtn = gallery.querySelector('.showcase-carousel-nav.prev');
+  var nextBtn = gallery.querySelector('.showcase-carousel-nav.next');
+  var dots = gallery.querySelectorAll('.showcase-carousel-dot');
+  var thumbContainers = gallery.querySelectorAll('.showcase-carousel-thumbs');
+  var captionEl = gallery.querySelector('.showcase-carousel-caption');
+  var counterEl = gallery.querySelector('.showcase-carousel-counter');
+
+  function updateCarousel() {
+    var themeCaptions = captions[currentTheme];
+    var totalSlides = themeCaptions.length;
+
+    // Update slides visibility
+    slides.forEach(function(slide) {
+      var isCurrentTheme = slide.dataset.theme === currentTheme;
+      var isCurrentSlide = parseInt(slide.dataset.index) === currentSlide;
+      slide.style.display = isCurrentTheme ? '' : 'none';
+      slide.classList.toggle('active', isCurrentTheme && isCurrentSlide);
     });
-    // Keyboard focus visibility
-    function enableKeyboardFocus() { document.body.classList.add('using-keyboard'); }
-    function disableKeyboardFocus() { document.body.classList.remove('using-keyboard'); }
-    window.addEventListener('keydown', function(e) {
-      if (e.key === 'Tab' || e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
-        enableKeyboardFocus();
+
+    // Update dots
+    dots.forEach(function(dot, idx) {
+      dot.classList.toggle('active', idx === currentSlide);
+    });
+
+    // Update thumbnails
+    thumbContainers.forEach(function(container) {
+      var isCurrentTheme = container.dataset.themeContainer === currentTheme;
+      container.style.display = isCurrentTheme ? '' : 'none';
+      if (isCurrentTheme) {
+        container.querySelectorAll('.showcase-carousel-thumb').forEach(function(thumb, idx) {
+          thumb.classList.toggle('active', idx === currentSlide);
+        });
       }
     });
-    window.addEventListener('mousedown', disableKeyboardFocus, true);
-    window.addEventListener('touchstart', disableKeyboardFocus, true);
-    // Mobile nav toggle
-    var navToggle = document.getElementById('nav-toggle');
-    if (navToggle) {
-      navToggle.addEventListener('change', function() {
-        document.body.classList.toggle('nav-open', this.checked);
-      });
-    }
-    // Showcase carousel functionality
-    document.querySelectorAll('.showcase-gallery').forEach(function(gallery) {
-        var carouselId = gallery.dataset.carousel;
-        var dataScript = document.querySelector('script.carousel-data[data-carousel="' + carouselId + '"]');
-        var captions = JSON.parse(dataScript.textContent);
-        var currentTheme = 'dark';
-        var currentSlide = 0;
 
-        var themeTabs = gallery.querySelectorAll('.showcase-gallery-tab');
-        var slides = gallery.querySelectorAll('.showcase-carousel-slide');
-        var prevBtn = gallery.querySelector('.showcase-carousel-nav.prev');
-        var nextBtn = gallery.querySelector('.showcase-carousel-nav.next');
-        var dots = gallery.querySelectorAll('.showcase-carousel-dot');
-        var thumbContainers = gallery.querySelectorAll('.showcase-carousel-thumbs');
-        var captionEl = gallery.querySelector('.showcase-carousel-caption');
-        var counterEl = gallery.querySelector('.showcase-carousel-counter');
+    // Update caption and counter
+    if (captionEl) captionEl.textContent = themeCaptions[currentSlide];
+    if (counterEl) counterEl.textContent = (currentSlide + 1) + ' / ' + totalSlides;
+  }
 
-        function updateCarousel() {
-            var themeCaptions = captions[currentTheme];
-            var totalSlides = themeCaptions.length;
+  function goToSlide(index) {
+    var totalSlides = captions[currentTheme].length;
+    currentSlide = ((index % totalSlides) + totalSlides) % totalSlides;
+    updateCarousel();
+  }
 
-            // Update slides visibility
-            slides.forEach(function(slide) {
-                var isCurrentTheme = slide.dataset.theme === currentTheme;
-                var isCurrentSlide = parseInt(slide.dataset.index) === currentSlide;
-                slide.style.display = isCurrentTheme ? '' : 'none';
-                slide.classList.toggle('active', isCurrentTheme && isCurrentSlide);
-            });
-
-            // Update dots
-            dots.forEach(function(dot, idx) {
-                dot.classList.toggle('active', idx === currentSlide);
-            });
-
-            // Update thumbnails
-            thumbContainers.forEach(function(container) {
-                var isCurrentTheme = container.dataset.themeContainer === currentTheme;
-                container.style.display = isCurrentTheme ? '' : 'none';
-                if (isCurrentTheme) {
-                    container.querySelectorAll('.showcase-carousel-thumb').forEach(function(thumb, idx) {
-                        thumb.classList.toggle('active', idx === currentSlide);
-                    });
-                }
-            });
-
-            // Update caption and counter
-            captionEl.textContent = themeCaptions[currentSlide];
-            counterEl.textContent = (currentSlide + 1) + ' / ' + totalSlides;
-        }
-
-        function goToSlide(index) {
-            var totalSlides = captions[currentTheme].length;
-            currentSlide = ((index % totalSlides) + totalSlides) % totalSlides;
-            updateCarousel();
-        }
-
-        // Theme tab clicks
-        themeTabs.forEach(function(tab) {
-            tab.addEventListener('click', function() {
-                currentTheme = tab.dataset.theme;
-                currentSlide = 0;
-                themeTabs.forEach(function(t) { t.classList.remove('active'); });
-                tab.classList.add('active');
-                updateCarousel();
-            });
-        });
-
-        // Navigation buttons
-        prevBtn.addEventListener('click', function() { goToSlide(currentSlide - 1); });
-        nextBtn.addEventListener('click', function() { goToSlide(currentSlide + 1); });
-
-        // Dot clicks
-        dots.forEach(function(dot) {
-            dot.addEventListener('click', function() {
-                goToSlide(parseInt(dot.dataset.index));
-            });
-        });
-
-        // Thumbnail clicks
-        thumbContainers.forEach(function(container) {
-            container.querySelectorAll('.showcase-carousel-thumb').forEach(function(thumb) {
-                thumb.addEventListener('click', function() {
-                    goToSlide(parseInt(thumb.dataset.index));
-                });
-            });
-        });
+  // Theme tab clicks
+  themeTabs.forEach(function(tab) {
+    tab.addEventListener('click', function() {
+      currentTheme = tab.dataset.theme;
+      currentSlide = 0;
+      themeTabs.forEach(function(t) { t.classList.remove('active'); });
+      tab.classList.add('active');
+      updateCarousel();
     });
+  });
+
+  // Navigation buttons
+  if (prevBtn) prevBtn.addEventListener('click', function() { goToSlide(currentSlide - 1); });
+  if (nextBtn) nextBtn.addEventListener('click', function() { goToSlide(currentSlide + 1); });
+
+  // Dot clicks
+  dots.forEach(function(dot) {
+    dot.addEventListener('click', function() {
+      goToSlide(parseInt(dot.dataset.index));
+    });
+  });
+
+  // Thumbnail clicks
+  thumbContainers.forEach(function(container) {
+    container.querySelectorAll('.showcase-carousel-thumb').forEach(function(thumb) {
+      thumb.addEventListener('click', function() {
+        goToSlide(parseInt(thumb.dataset.index));
+      });
+    });
+  });
+});
+
   </script>
 </body>
 </html>
+

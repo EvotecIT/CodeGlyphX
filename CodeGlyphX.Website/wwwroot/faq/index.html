@@ -5,13 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>FAQ - CodeGlyphX</title>
   <meta name="description" content="Common questions about CodeGlyphX and QR/barcode generation in .NET." />
+  
   <link rel="canonical" href="https://codeglyphx.com/faq/" />
   <link rel="icon" type="image/png" href="/codeglyphx-qr-icon.png" />
   <link rel="apple-touch-icon" href="/codeglyphx-qr-icon.png" />
   <link rel="preconnect" href="https://img.shields.io" crossorigin />
   <link rel="preload" href="/codeglyphx-qr-icon.png" as="image" type="image/png" />
   <link rel="stylesheet" href="/css/api-docs.css" />
-
+  
+  
   <!-- Open Graph -->
   <meta property="og:title" content="FAQ - CodeGlyphX" />
   <meta property="og:description" content="Common questions about CodeGlyphX and QR/barcode generation in .NET." />
@@ -25,12 +27,12 @@
   <meta name="twitter:title" content="FAQ - CodeGlyphX" />
   <meta name="twitter:description" content="Common questions about CodeGlyphX and QR/barcode generation in .NET." />
   <meta name="twitter:image" content="https://codeglyphx.com/codeglyphx-qr-icon.png" />
-
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "FAQPage",
-        "mainEntity": [
+  
+  <script type="application/ld+json">
+  {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
         {
             "@type": "Question",
             "name": "What is CodeGlyphX?",
@@ -199,29 +201,19 @@
                 "text": "For questions, bug reports, or feature requests, please open an issue on the GitHub repository . For documentation and examples, see the Documentation section."
             }
         }
-        ]
-    }
-    </script>
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "BreadcrumbList",
-        "itemListElement": [
-            {
-                "@type": "ListItem",
-                "position": 1,
-                "name": "Home",
-                "item": "https://codeglyphx.com/"
-            },
-            {
-                "@type": "ListItem",
-                "position": 2,
-                "name": "FAQ",
-                "item": "https://codeglyphx.com/faq/"
-            }
-        ]
-    }
-    </script>
+      ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://codeglyphx.com/" },
+          { "@type": "ListItem", "position": 2, "name": "FAQ", "item": "https://codeglyphx.com/faq/" }
+      ]
+  }
+  </script>
   <script>(function(){var theme=localStorage.getItem('theme')||'dark';document.documentElement.setAttribute('data-theme',theme);})();</script>
 </head>
 <body>
@@ -436,33 +428,37 @@
 
   </div>
   <script src="/js/site.js"></script>
-  <script>
-    // Theme toggle
-    document.querySelectorAll('.theme-toggle').forEach(function(btn) {
-      btn.addEventListener('click', function() {
-        var current = document.documentElement.getAttribute('data-theme') || 'dark';
-        var next = current === 'dark' ? 'light' : 'dark';
-        document.documentElement.setAttribute('data-theme', next);
-        localStorage.setItem('theme', next);
-      });
-    });
-    // Keyboard focus visibility
-    function enableKeyboardFocus() { document.body.classList.add('using-keyboard'); }
-    function disableKeyboardFocus() { document.body.classList.remove('using-keyboard'); }
-    window.addEventListener('keydown', function(e) {
-      if (e.key === 'Tab' || e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
-        enableKeyboardFocus();
-      }
-    });
-    window.addEventListener('mousedown', disableKeyboardFocus, true);
-    window.addEventListener('touchstart', disableKeyboardFocus, true);
-    // Mobile nav toggle
-    var navToggle = document.getElementById('nav-toggle');
-    if (navToggle) {
-      navToggle.addEventListener('change', function() {
-        document.body.classList.toggle('nav-open', this.checked);
-      });
-    }
+    <script>
+// Theme toggle
+document.querySelectorAll('.theme-toggle').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    var current = document.documentElement.getAttribute('data-theme') || 'dark';
+    var next = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+  });
+});
+
+// Keyboard focus visibility (show focus ring only for keyboard navigation)
+function enableKeyboardFocus() { document.body.classList.add('using-keyboard'); }
+function disableKeyboardFocus() { document.body.classList.remove('using-keyboard'); }
+window.addEventListener('keydown', function(e) {
+  if (e.key === 'Tab' || e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+    enableKeyboardFocus();
+  }
+});
+window.addEventListener('mousedown', disableKeyboardFocus, true);
+window.addEventListener('touchstart', disableKeyboardFocus, true);
+
+// Mobile nav toggle
+var navToggle = document.getElementById('nav-toggle');
+if (navToggle) {
+  navToggle.addEventListener('change', function() {
+    document.body.classList.toggle('nav-open', this.checked);
+  });
+}
+
   </script>
 </body>
 </html>
+
