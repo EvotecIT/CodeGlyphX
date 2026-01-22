@@ -85,86 +85,85 @@ internal static class MicroQrPayloadParser {
             var count = ReadBits(countBits);
             if (count < 0) return false;
 
-            if ((MicroQrMode)mode == MicroQrMode.Numeric) {
-                var remainingDigits = count;
-                while (remainingDigits >= 3) {
-                    var v = ReadBits(10);
-                    if (v < 0 || v > 999) return false;
-                    AddByte((byte)('0' + (v / 100)));
-                    AddByte((byte)('0' + ((v / 10) % 10)));
-                    AddByte((byte)('0' + (v % 10)));
-                    remainingDigits -= 3;
+            switch ((MicroQrMode)mode) {
+                case MicroQrMode.Numeric: {
+                    var remainingDigits = count;
+                    while (remainingDigits >= 3) {
+                        var v = ReadBits(10);
+                        if (v < 0 || v > 999) return false;
+                        AddByte((byte)('0' + (v / 100)));
+                        AddByte((byte)('0' + ((v / 10) % 10)));
+                        AddByte((byte)('0' + (v % 10)));
+                        remainingDigits -= 3;
+                    }
+                    if (remainingDigits == 2) {
+                        var v = ReadBits(7);
+                        if (v < 0 || v > 99) return false;
+                        AddByte((byte)('0' + (v / 10)));
+                        AddByte((byte)('0' + (v % 10)));
+                    } else if (remainingDigits == 1) {
+                        var v = ReadBits(4);
+                        if (v < 0 || v > 9) return false;
+                        AddByte((byte)('0' + v));
+                    }
+                    continue;
                 }
-                if (remainingDigits == 2) {
-                    var v = ReadBits(7);
-                    if (v < 0 || v > 99) return false;
-                    AddByte((byte)('0' + (v / 10)));
-                    AddByte((byte)('0' + (v % 10)));
-                } else if (remainingDigits == 1) {
-                    var v = ReadBits(4);
-                    if (v < 0 || v > 9) return false;
-                    AddByte((byte)('0' + v));
+                case MicroQrMode.Alphanumeric: {
+                    var remainingChars = count;
+                    while (remainingChars >= 2) {
+                        var v = ReadBits(11);
+                        if (v < 0 || v >= 45 * 45) return false;
+                        AddByte((byte)AlphanumericTable[v / 45]);
+                        AddByte((byte)AlphanumericTable[v % 45]);
+                        remainingChars -= 2;
+                    }
+                    if (remainingChars == 1) {
+                        var v = ReadBits(6);
+                        if (v < 0 || v >= 45) return false;
+                        AddByte((byte)AlphanumericTable[v]);
+                    }
+                    continue;
                 }
-                continue;
+                case MicroQrMode.Byte: {
+                    var previous = encoding;
+                    encoding = QrTextEncoding.Latin1;
+                    FlushSegment();
+                    for (var i = 0; i < count; i++) {
+                        var b = ReadBits(8);
+                        if (b < 0) return false;
+                        AddByte((byte)b);
+                    }
+                    FlushSegment();
+                    encoding = previous;
+                    continue;
+                }
+                case MicroQrMode.Kanji: {
+                    var previous = encoding;
+                    encoding = QrTextEncoding.ShiftJis;
+                    FlushSegment();
+                    for (var i = 0; i < count; i++) {
+                        var v = ReadBits(13);
+                        if (v < 0) return false;
+                        var assembled = ((v / 0xC0) << 8) | (v % 0xC0);
+                        var sjis = assembled < 0x1F00 ? assembled + 0x8140 : assembled + 0xC140;
+                        AddByte((byte)(sjis >> 8));
+                        AddByte((byte)sjis);
+                    }
+                    FlushSegment();
+                    encoding = previous;
+                    continue;
+                }
+                default:
+                    return false;
             }
-
-            if ((MicroQrMode)mode == MicroQrMode.Alphanumeric) {
-                var remainingChars = count;
-                while (remainingChars >= 2) {
-                    var v = ReadBits(11);
-                    if (v < 0 || v >= 45 * 45) return false;
-                    AddByte((byte)AlphanumericTable[v / 45]);
-                    AddByte((byte)AlphanumericTable[v % 45]);
-                    remainingChars -= 2;
-                }
-                if (remainingChars == 1) {
-                    var v = ReadBits(6);
-                    if (v < 0 || v >= 45) return false;
-                    AddByte((byte)AlphanumericTable[v]);
-                }
-                continue;
-            }
-
-            if ((MicroQrMode)mode == MicroQrMode.Byte) {
-                var previous = encoding;
-                encoding = QrTextEncoding.Latin1;
-                FlushSegment();
-                for (var i = 0; i < count; i++) {
-                    var b = ReadBits(8);
-                    if (b < 0) return false;
-                    AddByte((byte)b);
-                }
-                FlushSegment();
-                encoding = previous;
-                continue;
-            }
-
-            if ((MicroQrMode)mode == MicroQrMode.Kanji) {
-                var previous = encoding;
-                encoding = QrTextEncoding.ShiftJis;
-                FlushSegment();
-                for (var i = 0; i < count; i++) {
-                    var v = ReadBits(13);
-                    if (v < 0) return false;
-                    var assembled = ((v / 0xC0) << 8) | (v % 0xC0);
-                    var sjis = assembled < 0x1F00 ? assembled + 0x8140 : assembled + 0xC140;
-                    AddByte((byte)(sjis >> 8));
-                    AddByte((byte)sjis);
-                }
-                FlushSegment();
-                encoding = previous;
-                continue;
-            }
-
-            return false;
         }
 
         FlushSegment();
         payload = bytes.Count == 0 ? Array.Empty<byte>() : bytes.ToArray();
 
         var sb = new System.Text.StringBuilder();
-        for (var i = 0; i < segments.Count; i++) {
-            sb.Append(QrEncoding.Decode(segments[i].Encoding, segments[i].Bytes));
+        foreach (var segment in segments) {
+            sb.Append(QrEncoding.Decode(segment.Encoding, segment.Bytes));
         }
         text = sb.ToString();
         return true;
