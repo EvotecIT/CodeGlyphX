@@ -31,6 +31,7 @@ jobs:
 
       - name: Verify website output
         run: |
+          test -f site/.nojekyll
           test -f site/index.html
           test -f site/docs/index.html
           test -f site/playground/index.html

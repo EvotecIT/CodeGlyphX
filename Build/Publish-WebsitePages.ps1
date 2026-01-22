@@ -112,6 +112,8 @@ New-Item -ItemType Directory -Path $publishRoot -Force | Out-Null
 Write-Host "Copying static assets..." -ForegroundColor Cyan
 Copy-Item -Path (Join-Path $wwwrootSource "*") -Destination $publishRoot -Recurse -Force
 
+New-Item -ItemType File -Path (Join-Path $publishRoot ".nojekyll") -Force | Out-Null
+
 $staticPagesScript = Join-Path $PSScriptRoot "Generate-StaticPages.ps1"
 Invoke-Step "Generating static pages..." @("pwsh",$staticPagesScript,"-OutputPath",$publishRoot)
 

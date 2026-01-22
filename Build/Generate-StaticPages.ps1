@@ -381,11 +381,12 @@ if (-not (Test-Path $showcaseJsonPath)) {
         [void]$showcaseHtml.AppendLine('            </div>')
 
         # Carousel data
+        $carouselJson = @{
+            dark  = @($item.images.dark | ForEach-Object { $_.caption })
+            light = @($item.images.light | ForEach-Object { $_.caption })
+        } | ConvertTo-Json -Compress -Depth 4
         [void]$showcaseHtml.AppendLine("            <script type=`"application/json`" class=`"carousel-data`" data-carousel=`"$carouselId`">")
-        [void]$showcaseHtml.AppendLine('            {')
-        [void]$showcaseHtml.AppendLine("                `"dark`": [$(($item.images.dark | ForEach-Object { '\"' + $_.caption + '\"' }) -join ', ')],")
-        [void]$showcaseHtml.AppendLine("                `"light`": [$(($item.images.light | ForEach-Object { '\"' + $_.caption + '\"' }) -join ', ')]")
-        [void]$showcaseHtml.AppendLine('            }')
+        [void]$showcaseHtml.AppendLine("            $carouselJson")
         [void]$showcaseHtml.AppendLine('            </script>')
 
         # Actions
