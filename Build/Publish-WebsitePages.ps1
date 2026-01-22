@@ -35,6 +35,24 @@ function Set-BaseHref {
     }
 }
 
+function Get-ProjectFrameworks {
+    param([string]$ProjectPath)
+    if (-not (Test-Path $ProjectPath)) { return @() }
+    $content = Get-Content -Path $ProjectPath -Raw
+    if (-not $content) { return @() }
+    [xml]$proj = $content
+    $frameworks = @()
+    foreach ($group in $proj.Project.PropertyGroup) {
+        if ($group.TargetFrameworks) {
+            $frameworks += $group.TargetFrameworks -split ';'
+        }
+        if ($group.TargetFramework) {
+            $frameworks += $group.TargetFramework
+        }
+    }
+    return $frameworks | Where-Object { $_ -and $_.Trim().Length -gt 0 } | ForEach-Object { $_.Trim() } | Select-Object -Unique
+}
+
 function Update-BootIntegrity {
     param(
         [string]$FrameworkPath
@@ -78,6 +96,13 @@ $playgroundConstants = "$baseConstants;PLAYGROUND_BUILD"
 
 if (-not (Test-Path $websiteProjectPath)) { throw "Missing website project at $websiteProjectPath" }
 if (-not (Test-Path $wwwrootSource)) { throw "Missing wwwroot at $wwwrootSource" }
+
+$projectFrameworks = Get-ProjectFrameworks -ProjectPath $websiteProjectPath
+if ($projectFrameworks.Count -gt 0 -and -not ($projectFrameworks -contains $Framework)) {
+    $requested = $Framework
+    $Framework = $projectFrameworks[0]
+    Write-Host "Requested framework '$requested' not found in project. Using '$Framework' instead." -ForegroundColor Yellow
+}
 
 if (Test-Path $publishRoot) {
     Remove-Item -Recurse -Force $publishRoot

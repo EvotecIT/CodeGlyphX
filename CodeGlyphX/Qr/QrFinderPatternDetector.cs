@@ -53,16 +53,15 @@ internal static class QrFinderPatternDetector {
         using var pooled = new PooledList<FinderPattern>(8);
         var step = rowStepOverride > 0 ? rowStepOverride : GetRowStep(image);
         FindCandidatesWithStep(image, invert, step, pooled, aggressive, shouldStop, maxCandidates, requireDiagonalCheck);
-        if (allowFullScan && step > 1 && pooled.Count < 3) {
-            using var full = new PooledList<FinderPattern>(8);
-            FindCandidatesWithStep(image, invert, rowStep: 1, full, aggressive, shouldStop, maxCandidates, requireDiagonalCheck);
-            if (full.Count > pooled.Count) {
-                output.Clear();
-                output.EnsureCapacity(full.Count);
-                full.CopyTo(output);
-                return;
+            if (allowFullScan && step > 1 && pooled.Count < 3) {
+                using var full = new PooledList<FinderPattern>(8);
+                FindCandidatesWithStep(image, invert, rowStep: 1, full, aggressive, shouldStop, maxCandidates, requireDiagonalCheck);
+                if (full.Count > pooled.Count) {
+                    output.EnsureCapacity(full.Count);
+                    full.CopyTo(output);
+                    return;
+                }
             }
-        }
 
         pooled.CopyTo(output);
     }

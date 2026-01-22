@@ -18,16 +18,22 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup .NET 8
+      - name: Setup .NET 10
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: '10.0.x'
 
       - name: Restore
         run: dotnet restore CodeGlyphX.Website/CodeGlyphX.Website.csproj
 
       - name: Build website (static + playground)
-        run: pwsh Build/Publish-WebsitePages.ps1 -Configuration Release -Framework net8.0 -OutputPath site
+        run: pwsh Build/Publish-WebsitePages.ps1 -Configuration Release -Framework net10.0 -OutputPath site
+
+      - name: Verify website output
+        run: |
+          test -f site/index.html
+          test -f site/docs/index.html
+          test -f site/playground/index.html
 
       - name: Upload Pages Artifact
         uses: actions/upload-pages-artifact@v3
