@@ -1,0 +1,409 @@
+{
+    "windows":  {
+                    "framework":  "net8.0",
+                    "runMode":  "quick",
+                    "runModeDetails":  "Run mode: Quick (warmupCount=1, iterationCount=3, invocationCount=1).",
+                    "generatedUtc":  "2026-01-22T11:50:34.2660212Z",
+                    "notes":  [
+                                  "Run mode: Quick (warmupCount=1, iterationCount=3, invocationCount=1).",
+                                  "Comparisons target PNG output and include encode+render (not encode-only).",
+                                  "Module size and quiet zone are matched to CodeGlyphX defaults where possible; image size is derived from CodeGlyphX modules.",
+                                  "ZXing.Net uses ZXing.Net.Bindings.ImageSharp.V3 (ImageSharp 3.x renderer).",
+                                  "Barcoder uses Barcoder.Renderer.Image (ImageSharp renderer).",
+                                  "QRCoder uses PngByteQRCode (managed PNG output, no external renderer).",
+                                  "QR decode comparisons use raw RGBA32 bytes (ZXing via RGBLuminanceSource)."
+                              ],
+                    "os":  "windows",
+                    "comparisons":  [
+                                        {
+                                            "title":  "CodeGlyphX.Benchmarks.AztecCompareBenchmarks",
+                                            "id":  "CodeGlyphX.Benchmarks.AztecCompareBenchmarks",
+                                            "scenarios":  [
+                                                              {
+                                                                  "vendors":  {
+                                                                                  "Unknown":  {
+                                                                                                  "allocated":  null,
+                                                                                                  "mean":  null,
+                                                                                                  "meanNs":  null
+                                                                                              }
+                                                                              },
+                                                                  "name":  ""
+                                                              }
+                                                          ]
+                                        },
+                                        {
+                                            "title":  "CodeGlyphX.Benchmarks.Code128CompareBenchmarks",
+                                            "id":  "CodeGlyphX.Benchmarks.Code128CompareBenchmarks",
+                                            "scenarios":  [
+                                                              {
+                                                                  "vendors":  {
+                                                                                  "Unknown":  {
+                                                                                                  "allocated":  null,
+                                                                                                  "mean":  null,
+                                                                                                  "meanNs":  null
+                                                                                              }
+                                                                              },
+                                                                  "name":  ""
+                                                              }
+                                                          ]
+                                        },
+                                        {
+                                            "title":  "CodeGlyphX.Benchmarks.Code39CompareBenchmarks",
+                                            "id":  "CodeGlyphX.Benchmarks.Code39CompareBenchmarks",
+                                            "scenarios":  [
+                                                              {
+                                                                  "vendors":  {
+                                                                                  "Unknown":  {
+                                                                                                  "allocated":  null,
+                                                                                                  "mean":  null,
+                                                                                                  "meanNs":  null
+                                                                                              }
+                                                                              },
+                                                                  "name":  ""
+                                                              }
+                                                          ]
+                                        },
+                                        {
+                                            "title":  "CodeGlyphX.Benchmarks.Code93CompareBenchmarks",
+                                            "id":  "CodeGlyphX.Benchmarks.Code93CompareBenchmarks",
+                                            "scenarios":  [
+                                                              {
+                                                                  "vendors":  {
+                                                                                  "Unknown":  {
+                                                                                                  "allocated":  null,
+                                                                                                  "mean":  null,
+                                                                                                  "meanNs":  null
+                                                                                              }
+                                                                              },
+                                                                  "name":  ""
+                                                              }
+                                                          ]
+                                        },
+                                        {
+                                            "title":  "CodeGlyphX.Benchmarks.DataMatrixCompareBenchmarks",
+                                            "id":  "CodeGlyphX.Benchmarks.DataMatrixCompareBenchmarks",
+                                            "scenarios":  [
+                                                              {
+                                                                  "vendors":  {
+                                                                                  "Unknown":  {
+                                                                                                  "allocated":  null,
+                                                                                                  "mean":  null,
+                                                                                                  "meanNs":  null
+                                                                                              }
+                                                                              },
+                                                                  "name":  ""
+                                                              }
+                                                          ]
+                                        },
+                                        {
+                                            "title":  "CodeGlyphX.Benchmarks.EanCompareBenchmarks",
+                                            "id":  "CodeGlyphX.Benchmarks.EanCompareBenchmarks",
+                                            "scenarios":  [
+                                                              {
+                                                                  "vendors":  {
+                                                                                  "Unknown":  {
+                                                                                                  "allocated":  null,
+                                                                                                  "mean":  null,
+                                                                                                  "meanNs":  null
+                                                                                              }
+                                                                              },
+                                                                  "name":  ""
+                                                              }
+                                                          ]
+                                        },
+                                        {
+                                            "title":  "CodeGlyphX.Benchmarks.Pdf417CompareBenchmarks",
+                                            "id":  "CodeGlyphX.Benchmarks.Pdf417CompareBenchmarks",
+                                            "scenarios":  [
+                                                              {
+                                                                  "vendors":  {
+                                                                                  "Unknown":  {
+                                                                                                  "allocated":  null,
+                                                                                                  "mean":  null,
+                                                                                                  "meanNs":  null
+                                                                                              }
+                                                                              },
+                                                                  "name":  ""
+                                                              }
+                                                          ]
+                                        },
+                                        {
+                                            "title":  "CodeGlyphX.Benchmarks.QrCompareBenchmarks",
+                                            "id":  "CodeGlyphX.Benchmarks.QrCompareBenchmarks",
+                                            "scenarios":  [
+                                                              {
+                                                                  "vendors":  {
+                                                                                  "Unknown":  {
+                                                                                                  "allocated":  null,
+                                                                                                  "mean":  null,
+                                                                                                  "meanNs":  null
+                                                                                              }
+                                                                              },
+                                                                  "name":  ""
+                                                              }
+                                                          ]
+                                        },
+                                        {
+                                            "title":  "CodeGlyphX.Benchmarks.QrDecodeCleanCompareBenchmarks",
+                                            "id":  "CodeGlyphX.Benchmarks.QrDecodeCleanCompareBenchmarks",
+                                            "scenarios":  [
+                                                              {
+                                                                  "vendors":  {
+                                                                                  "Unknown":  {
+                                                                                                  "allocated":  null,
+                                                                                                  "mean":  null,
+                                                                                                  "meanNs":  null
+                                                                                              }
+                                                                              },
+                                                                  "name":  ""
+                                                              }
+                                                          ]
+                                        },
+                                        {
+                                            "title":  "CodeGlyphX.Benchmarks.QrDecodeNoisyCompareBenchmarks",
+                                            "id":  "CodeGlyphX.Benchmarks.QrDecodeNoisyCompareBenchmarks",
+                                            "scenarios":  [
+                                                              {
+                                                                  "vendors":  {
+                                                                                  "Unknown":  {
+                                                                                                  "allocated":  null,
+                                                                                                  "mean":  null,
+                                                                                                  "meanNs":  null
+                                                                                              }
+                                                                              },
+                                                                  "name":  ""
+                                                              }
+                                                          ]
+                                        },
+                                        {
+                                            "title":  "CodeGlyphX.Benchmarks.UpcACompareBenchmarks",
+                                            "id":  "CodeGlyphX.Benchmarks.UpcACompareBenchmarks",
+                                            "scenarios":  [
+                                                              {
+                                                                  "vendors":  {
+                                                                                  "Unknown":  {
+                                                                                                  "allocated":  null,
+                                                                                                  "mean":  null,
+                                                                                                  "meanNs":  null
+                                                                                              }
+                                                                              },
+                                                                  "name":  ""
+                                                              }
+                                                          ]
+                                        }
+                                    ],
+                    "baseline":  [
+                                     {
+                                         "title":  "CodeGlyphX.Benchmarks.BarcodeBenchmarks",
+                                         "id":  "CodeGlyphX.Benchmarks.BarcodeBenchmarks",
+                                         "scenarios":  [
+                                                           {
+                                                               "allocated":  null,
+                                                               "name":  "",
+                                                               "mean":  null,
+                                                               "meanNs":  null
+                                                           },
+                                                           {
+                                                               "allocated":  null,
+                                                               "name":  "",
+                                                               "mean":  null,
+                                                               "meanNs":  null
+                                                           },
+                                                           {
+                                                               "allocated":  null,
+                                                               "name":  "",
+                                                               "mean":  null,
+                                                               "meanNs":  null
+                                                           },
+                                                           {
+                                                               "allocated":  null,
+                                                               "name":  "",
+                                                               "mean":  null,
+                                                               "meanNs":  null
+                                                           },
+                                                           {
+                                                               "allocated":  null,
+                                                               "name":  "",
+                                                               "mean":  null,
+                                                               "meanNs":  null
+                                                           },
+                                                           {
+                                                               "allocated":  null,
+                                                               "name":  "",
+                                                               "mean":  null,
+                                                               "meanNs":  null
+                                                           }
+                                                       ]
+                                     },
+                                     {
+                                         "title":  "CodeGlyphX.Benchmarks.MatrixCodeBenchmarks",
+                                         "id":  "CodeGlyphX.Benchmarks.MatrixCodeBenchmarks",
+                                         "scenarios":  [
+                                                           {
+                                                               "allocated":  null,
+                                                               "name":  "",
+                                                               "mean":  null,
+                                                               "meanNs":  null
+                                                           },
+                                                           {
+                                                               "allocated":  null,
+                                                               "name":  "",
+                                                               "mean":  null,
+                                                               "meanNs":  null
+                                                           },
+                                                           {
+                                                               "allocated":  null,
+                                                               "name":  "",
+                                                               "mean":  null,
+                                                               "meanNs":  null
+                                                           },
+                                                           {
+                                                               "allocated":  null,
+                                                               "name":  "",
+                                                               "mean":  null,
+                                                               "meanNs":  null
+                                                           },
+                                                           {
+                                                               "allocated":  null,
+                                                               "name":  "",
+                                                               "mean":  null,
+                                                               "meanNs":  null
+                                                           },
+                                                           {
+                                                               "allocated":  null,
+                                                               "name":  "",
+                                                               "mean":  null,
+                                                               "meanNs":  null
+                                                           },
+                                                           {
+                                                               "allocated":  null,
+                                                               "name":  "",
+                                                               "mean":  null,
+                                                               "meanNs":  null
+                                                           }
+                                                       ]
+                                     },
+                                     {
+                                         "title":  "CodeGlyphX.Benchmarks.QrCodeBenchmarks",
+                                         "id":  "CodeGlyphX.Benchmarks.QrCodeBenchmarks",
+                                         "scenarios":  [
+                                                           {
+                                                               "allocated":  null,
+                                                               "name":  "",
+                                                               "mean":  null,
+                                                               "meanNs":  null
+                                                           },
+                                                           {
+                                                               "allocated":  null,
+                                                               "name":  "",
+                                                               "mean":  null,
+                                                               "meanNs":  null
+                                                           },
+                                                           {
+                                                               "allocated":  null,
+                                                               "name":  "",
+                                                               "mean":  null,
+                                                               "meanNs":  null
+                                                           },
+                                                           {
+                                                               "allocated":  null,
+                                                               "name":  "",
+                                                               "mean":  null,
+                                                               "meanNs":  null
+                                                           },
+                                                           {
+                                                               "allocated":  null,
+                                                               "name":  "",
+                                                               "mean":  null,
+                                                               "meanNs":  null
+                                                           },
+                                                           {
+                                                               "allocated":  null,
+                                                               "name":  "",
+                                                               "mean":  null,
+                                                               "meanNs":  null
+                                                           }
+                                                       ]
+                                     },
+                                     {
+                                         "title":  "CodeGlyphX.Benchmarks.QrDecodeBenchmarks",
+                                         "id":  "CodeGlyphX.Benchmarks.QrDecodeBenchmarks",
+                                         "scenarios":  [
+                                                           {
+                                                               "allocated":  null,
+                                                               "name":  "",
+                                                               "mean":  null,
+                                                               "meanNs":  null
+                                                           },
+                                                           {
+                                                               "allocated":  null,
+                                                               "name":  "",
+                                                               "mean":  null,
+                                                               "meanNs":  null
+                                                           },
+                                                           {
+                                                               "allocated":  null,
+                                                               "name":  "",
+                                                               "mean":  null,
+                                                               "meanNs":  null
+                                                           },
+                                                           {
+                                                               "allocated":  null,
+                                                               "name":  "",
+                                                               "mean":  null,
+                                                               "meanNs":  null
+                                                           }
+                                                       ]
+                                     }
+                                 ],
+                    "artifacts":  "C:\\Support\\GitHub\\CodeMatrix\\Build\\BenchmarkResults\\windows-20260122-124936",
+                    "configuration":  "Release"
+                },
+    "linux":  {
+                  "generatedUtc":  "2026-01-22T11:21:31.563445+00:00",
+                  "os":  "linux",
+                  "framework":  "net8.0",
+                  "configuration":  "Release",
+                  "artifacts":  "/mnt/c/Support/GitHub/CodeMatrix/Build/BenchmarkResults/linux-20260122-114323",
+                  "notes":  [
+                                "Comparisons target PNG output and include encode+render (not encode-only).",
+                                "Module size and quiet zone are matched to CodeGlyphX defaults where possible; image size is derived from CodeGlyphX modules.",
+                                "ZXing.Net uses ZXing.Net.Bindings.ImageSharp.V3 (ImageSharp 3.x renderer).",
+                                "Barcoder uses Barcoder.Renderer.Image (ImageSharp renderer).",
+                                "QRCoder uses PngByteQRCode (managed PNG output, no external renderer).",
+                                "QR decode comparisons use raw RGBA32 bytes (ZXing via RGBLuminanceSource)."
+                            ],
+                  "baseline":  [
+
+                               ],
+                  "comparisons":  [
+                                      {
+                                          "id":  "AztecCompareBenchmarks",
+                                          "title":  "Aztec (Encode)",
+                                          "scenarios":  [
+                                                            {
+                                                                "name":  "Aztec PNG",
+                                                                "vendors":  {
+                                                                                "CodeGlyphX":  {
+                                                                                                   "mean":  "266.8 µs",
+                                                                                                   "meanNs":  null,
+                                                                                                   "allocated":  "452.25 KB"
+                                                                                               },
+                                                                                "ZXing.Net":  {
+                                                                                                  "mean":  "409.8 µs",
+                                                                                                  "meanNs":  null,
+                                                                                                  "allocated":  "61.38 KB"
+                                                                                              },
+                                                                                "Barcoder":  {
+                                                                                                 "mean":  "1,109.4 µs",
+                                                                                                 "meanNs":  null,
+                                                                                                 "allocated":  "642.44 KB"
+                                                                                             }
+                                                                            }
+                                                            }
+                                                        ]
+                                      }
+                                  ]
+              },
+    "macos":  null
+}
