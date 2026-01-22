@@ -31,21 +31,15 @@ internal static class QrFinderPatternDetector {
     }
 
     public static List<FinderPattern> FindCandidates(QrGrayImage image, bool invert) {
-        return FindCandidates(image, invert, aggressive: false, shouldStop: null);
+        var output = new List<FinderPattern>(8);
+        FindCandidates(image, invert, output, aggressive: false, shouldStop: null);
+        return output;
     }
 
     public static List<FinderPattern> FindCandidates(QrGrayImage image, bool invert, bool aggressive, Func<bool>? shouldStop = null, int rowStepOverride = 0, int maxCandidates = 0, bool allowFullScan = true, bool requireDiagonalCheck = true) {
-        using var pooled = new PooledList<FinderPattern>(8);
-        var step = rowStepOverride > 0 ? rowStepOverride : GetRowStep(image);
-        FindCandidatesWithStep(image, invert, step, pooled, aggressive, shouldStop, maxCandidates, requireDiagonalCheck);
-        if (allowFullScan && step > 1 && pooled.Count < 3) {
-            using var full = new PooledList<FinderPattern>(8);
-            FindCandidatesWithStep(image, invert, rowStep: 1, full, aggressive, shouldStop, maxCandidates, requireDiagonalCheck);
-            if (full.Count > pooled.Count) {
-                return full.ToList();
-            }
-        }
-        return pooled.ToList();
+        var output = new List<FinderPattern>(8);
+        FindCandidates(image, invert, output, aggressive, shouldStop, rowStepOverride, maxCandidates, allowFullScan, requireDiagonalCheck);
+        return output;
     }
 
     internal static void FindCandidates(QrGrayImage image, bool invert, List<FinderPattern> output) {
@@ -63,6 +57,8 @@ internal static class QrFinderPatternDetector {
             using var full = new PooledList<FinderPattern>(8);
             FindCandidatesWithStep(image, invert, rowStep: 1, full, aggressive, shouldStop, maxCandidates, requireDiagonalCheck);
             if (full.Count > pooled.Count) {
+                output.Clear();
+                output.EnsureCapacity(full.Count);
                 full.CopyTo(output);
                 return;
             }

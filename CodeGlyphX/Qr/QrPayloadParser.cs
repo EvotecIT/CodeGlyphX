@@ -26,6 +26,63 @@ internal readonly struct QrPayloadSegment {
 
 internal static class QrPayloadParser {
     private const string AlphanumericTable = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ $%*+-./:";
+    private readonly struct SegmentInfo {
+        public QrTextEncoding Encoding { get; }
+        public int Start { get; }
+        public int Length { get; }
+
+        public SegmentInfo(QrTextEncoding encoding, int start, int length) {
+            Encoding = encoding;
+            Start = start;
+            Length = length;
+        }
+    }
+
+    private ref struct SegmentBuilder {
+        private Span<SegmentInfo> _buffer;
+        private int _count;
+        private List<SegmentInfo>? _overflow;
+
+        public SegmentBuilder(Span<SegmentInfo> buffer) {
+            _buffer = buffer;
+            _count = 0;
+            _overflow = null;
+        }
+
+        public void Add(QrTextEncoding encoding, int start, int length) {
+            if (_overflow is not null) {
+                _overflow.Add(new SegmentInfo(encoding, start, length));
+                return;
+            }
+            if (_count < _buffer.Length) {
+                _buffer[_count++] = new SegmentInfo(encoding, start, length);
+                return;
+            }
+            _overflow = new List<SegmentInfo>(_buffer.Length * 2);
+            for (var i = 0; i < _count; i++) _overflow.Add(_buffer[i]);
+            _overflow.Add(new SegmentInfo(encoding, start, length));
+        }
+
+        public void BuildSegments(byte[] payload, out QrPayloadSegment[] segments) {
+            var total = _overflow?.Count ?? _count;
+            if (total == 0) {
+                segments = Array.Empty<QrPayloadSegment>();
+                return;
+            }
+            segments = new QrPayloadSegment[total];
+            if (_overflow is not null) {
+                for (var i = 0; i < _overflow.Count; i++) {
+                    var seg = _overflow[i];
+                    segments[i] = new QrPayloadSegment(seg.Encoding, payload, seg.Start, seg.Length);
+                }
+                return;
+            }
+            for (var i = 0; i < _count; i++) {
+                var seg = _buffer[i];
+                segments[i] = new QrPayloadSegment(seg.Encoding, payload, seg.Start, seg.Length);
+            }
+        }
+    }
 
     public static bool TryParse(byte[] dataCodewords, int version, Func<bool>? shouldStop, out byte[] payload, out QrPayloadSegment[] segments, out QrStructuredAppend? structuredAppend, out QrFnc1Mode fnc1Mode) {
         payload = null!;
@@ -54,7 +111,7 @@ internal static class QrPayloadParser {
             return val;
         }
 
-        var segmentList = new List<(QrTextEncoding encoding, int start, int length)>(4);
+        var segmentBuilder = new SegmentBuilder(stackalloc SegmentInfo[4]);
         var encoding = QrTextEncoding.Latin1;
         var segmentStart = 0;
         var segmentLength = 0;
@@ -72,13 +129,6 @@ internal static class QrPayloadParser {
             segmentLength++;
         }
 
-        void FlushSegment() {
-            if (segmentLength == 0) return;
-            segmentList.Add((encoding, segmentStart, segmentLength));
-            segmentStart = count;
-            segmentLength = 0;
-        }
-
         try {
             while (true) {
                 if (shouldStop?.Invoke() == true) return false;
@@ -93,17 +143,9 @@ internal static class QrPayloadParser {
                 }
 
                 if (mode == 0) {
-                    FlushSegment();
+                    FlushSegment(ref segmentBuilder, encoding, ref segmentStart, ref segmentLength, count);
                     payload = count == 0 ? Array.Empty<byte>() : SliceBuffer(buffer, count);
-                    if (segmentList.Count == 0) {
-                        segments = Array.Empty<QrPayloadSegment>();
-                    } else {
-                        segments = new QrPayloadSegment[segmentList.Count];
-                        for (var i = 0; i < segmentList.Count; i++) {
-                            var seg = segmentList[i];
-                            segments[i] = new QrPayloadSegment(seg.encoding, payload, seg.start, seg.length);
-                        }
-                    }
+                    segmentBuilder.BuildSegments(payload, out segments);
                     return true;
                 }
 
@@ -140,7 +182,7 @@ internal static class QrPayloadParser {
                     var charCount = ReadBits(countBits);
                     if (charCount < 0) return false;
 
-                    FlushSegment();
+                    FlushSegment(ref segmentBuilder, encoding, ref segmentStart, ref segmentLength, count);
                     var previousEncoding = encoding;
                     encoding = QrTextEncoding.ShiftJis;
 
@@ -154,7 +196,7 @@ internal static class QrPayloadParser {
                         AddByte((byte)sjis);
                     }
 
-                    FlushSegment();
+                    FlushSegment(ref segmentBuilder, encoding, ref segmentStart, ref segmentLength, count);
                     encoding = previousEncoding;
                     continue;
                 }
@@ -211,17 +253,15 @@ internal static class QrPayloadParser {
                     if (charCount < 0) return false;
 
                     var remaining = charCount;
-                    var raw = ArrayPool<byte>.Shared.Rent(charCount > 0 ? charCount : 1);
-                    var rawLen = 0;
-                    try {
+                    if (fnc1Mode == QrFnc1Mode.None) {
                         while (remaining >= 2) {
                             if (shouldStop?.Invoke() == true) return false;
                             var v = ReadBits(11);
                             if (v < 0 || v >= 45 * 45) return false;
                             var a = v / 45;
                             var b = v % 45;
-                            raw[rawLen++] = (byte)AlphanumericTable[a];
-                            raw[rawLen++] = (byte)AlphanumericTable[b];
+                            AddByte((byte)AlphanumericTable[a]);
+                            AddByte((byte)AlphanumericTable[b]);
                             remaining -= 2;
                         }
 
@@ -229,30 +269,48 @@ internal static class QrPayloadParser {
                             if (shouldStop?.Invoke() == true) return false;
                             var v = ReadBits(6);
                             if (v < 0 || v >= 45) return false;
-                            raw[rawLen++] = (byte)AlphanumericTable[v];
+                            AddByte((byte)AlphanumericTable[v]);
+                        }
+                    } else {
+                        var pendingPercent = false;
+                        void AppendAlpha(byte b) {
+                            if (b == (byte)'%') {
+                                if (pendingPercent) {
+                                    AddByte((byte)'%');
+                                    pendingPercent = false;
+                                } else {
+                                    pendingPercent = true;
+                                }
+                                return;
+                            }
+                            if (pendingPercent) {
+                                AddByte(0x1D);
+                                pendingPercent = false;
+                            }
+                            AddByte(b);
                         }
 
-                        if (fnc1Mode != QrFnc1Mode.None) {
-                            for (var i = 0; i < rawLen; i++) {
-                                var b = raw[i];
-                                if (b == (byte)'%') {
-                                    if (i + 1 < rawLen && raw[i + 1] == (byte)'%') {
-                                        AddByte((byte)'%');
-                                        i++;
-                                        continue;
-                                    }
-                                    AddByte(0x1D); // GS separator
-                                    continue;
-                                }
-                                AddByte(b);
-                            }
-                        } else {
-                            for (var i = 0; i < rawLen; i++) {
-                                AddByte(raw[i]);
-                            }
+                        while (remaining >= 2) {
+                            if (shouldStop?.Invoke() == true) return false;
+                            var v = ReadBits(11);
+                            if (v < 0 || v >= 45 * 45) return false;
+                            var a = v / 45;
+                            var b = v % 45;
+                            AppendAlpha((byte)AlphanumericTable[a]);
+                            AppendAlpha((byte)AlphanumericTable[b]);
+                            remaining -= 2;
                         }
-                    } finally {
-                        ArrayPool<byte>.Shared.Return(raw);
+
+                        if (remaining == 1) {
+                            if (shouldStop?.Invoke() == true) return false;
+                            var v = ReadBits(6);
+                            if (v < 0 || v >= 45) return false;
+                            AppendAlpha((byte)AlphanumericTable[v]);
+                        }
+
+                        if (pendingPercent) {
+                            AddByte(0x1D);
+                        }
                     }
 
                     continue;
@@ -277,7 +335,7 @@ internal static class QrPayloadParser {
                     };
 
                     if (newEncoding != encoding) {
-                        FlushSegment();
+                        FlushSegment(ref segmentBuilder, encoding, ref segmentStart, ref segmentLength, count);
                         encoding = newEncoding;
                     }
 
@@ -288,21 +346,20 @@ internal static class QrPayloadParser {
                 return false;
             }
 
-            FlushSegment();
+            FlushSegment(ref segmentBuilder, encoding, ref segmentStart, ref segmentLength, count);
             payload = count == 0 ? Array.Empty<byte>() : SliceBuffer(buffer, count);
-            if (segmentList.Count == 0) {
-                segments = Array.Empty<QrPayloadSegment>();
-            } else {
-                segments = new QrPayloadSegment[segmentList.Count];
-                for (var i = 0; i < segmentList.Count; i++) {
-                    var seg = segmentList[i];
-                    segments[i] = new QrPayloadSegment(seg.encoding, payload, seg.start, seg.length);
-                }
-            }
+            segmentBuilder.BuildSegments(payload, out segments);
             return true;
         } finally {
             ArrayPool<byte>.Shared.Return(buffer);
         }
+    }
+
+    private static void FlushSegment(ref SegmentBuilder builder, QrTextEncoding encoding, ref int segmentStart, ref int segmentLength, int count) {
+        if (segmentLength == 0) return;
+        builder.Add(encoding, segmentStart, segmentLength);
+        segmentStart = count;
+        segmentLength = 0;
     }
 
     private static byte[] SliceBuffer(byte[] buffer, int count) {

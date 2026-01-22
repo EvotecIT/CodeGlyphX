@@ -13,6 +13,24 @@ using CodeGlyphX;
 namespace CodeGlyphX.Qr;
 
 internal static partial class QrPixelDecoder {
+    [ThreadStatic]
+    private static List<QrFinderPatternDetector.FinderPattern>? t_candidateList;
+
+    private static List<QrFinderPatternDetector.FinderPattern> RentCandidateList() {
+        var list = t_candidateList;
+        if (list is null) return new List<QrFinderPatternDetector.FinderPattern>(8);
+        t_candidateList = null;
+        list.Clear();
+        return list;
+    }
+
+    private static void ReturnCandidateList(List<QrFinderPatternDetector.FinderPattern> list) {
+        list.Clear();
+        if (t_candidateList is null) {
+            t_candidateList = list;
+        }
+    }
+
     private static bool TryDecodeAtScale(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat fmt, int scale, QrProfileSettings settings, DecodeBudget budget, Func<QrDecoded, bool>? accept, out QrDecoded result, out QrPixelDecodeDiagnostics diagnostics) {
         result = null!;
         diagnostics = default;
@@ -31,6 +49,7 @@ internal static partial class QrPixelDecoder {
 
         Func<bool>? shouldStop = budget.Enabled ? () => budget.IsNearDeadline(120) : null;
         var pool = new QrGrayImagePool();
+        var candidates = RentCandidateList();
         try {
             if (!QrGrayImage.TryCreate(pixels, width, height, stride, fmt, scale, settings.MinContrast, shouldStop, pool, out var baseImage)) {
                 diagnostics = new QrPixelDecodeDiagnostics(
@@ -43,8 +62,6 @@ internal static partial class QrPixelDecoder {
                     moduleDiagnostics: new global::CodeGlyphX.QrDecodeDiagnostics(global::CodeGlyphX.QrDecodeFailure.InvalidInput));
                 return false;
             }
-
-        var candidates = new List<QrFinderPatternDetector.FinderPattern>(8);
 
             if (budget.Enabled && budget.MaxMilliseconds <= 800) {
                 var tightSettings = new QrProfileSettings(
@@ -124,6 +141,7 @@ internal static partial class QrPixelDecoder {
             diagnostics = best;
             return false;
         } finally {
+            ReturnCandidateList(candidates);
             pool.ReturnAll();
         }
     }
@@ -629,14 +647,18 @@ internal static partial class QrPixelDecoder {
 
     private static void CollectAllFromImage(QrGrayImage baseImage, QrProfileSettings settings, PooledList<QrDecoded> list, HashSet<string> seen, Func<QrDecoded, bool>? accept, DecodeBudget budget, QrGrayImagePool? pool) {
         if (budget.IsExpired) return;
-        var candidates = new List<QrFinderPatternDetector.FinderPattern>(8);
-        CollectAllFromImageCore(baseImage, settings, list, seen, accept, budget, candidates, pool);
-        if (settings.AllowNormalize) {
-            if (budget.IsNearDeadline(150)) return;
-            var normalized = baseImage.WithLocalNormalize(GetNormalizeWindow(baseImage), pool);
-            if (!budget.IsExpired) {
-                CollectAllFromImageCore(normalized, settings, list, seen, accept, budget, candidates, pool);
+        var candidates = RentCandidateList();
+        try {
+            CollectAllFromImageCore(baseImage, settings, list, seen, accept, budget, candidates, pool);
+            if (settings.AllowNormalize) {
+                if (budget.IsNearDeadline(150)) return;
+                var normalized = baseImage.WithLocalNormalize(GetNormalizeWindow(baseImage), pool);
+                if (!budget.IsExpired) {
+                    CollectAllFromImageCore(normalized, settings, list, seen, accept, budget, candidates, pool);
+                }
             }
+        } finally {
+            ReturnCandidateList(candidates);
         }
     }
 

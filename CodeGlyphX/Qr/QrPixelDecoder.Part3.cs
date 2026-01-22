@@ -104,13 +104,15 @@ internal static partial class QrPixelDecoder {
             maxCandidates = aggressive ? 36 : 24;
         }
         QrFinderPatternDetector.FindCandidates(image, invert, candidates, aggressive, shouldStop, rowStepOverride, maxCandidates, allowFullScan: !tightBudget, requireDiagonalCheck: !tightBudget);
+        var candidatesSorted = false;
         if (budget.Enabled && candidates.Count > 64) {
             candidates.Sort(static (a, b) => b.Count.CompareTo(a.Count));
             candidates.RemoveRange(64, candidates.Count - 64);
+            candidatesSorted = true;
         }
         if (budget.IsExpired) return;
         if (candidates.Count >= 3) {
-            CollectFromFinderCandidates(image, invert, candidates, results, seen, accept, budget, aggressive);
+            CollectFromFinderCandidates(image, invert, candidates, results, seen, accept, budget, aggressive, candidatesSorted);
         }
 
         if (!budget.IsExpired && (!budget.Enabled || !budget.IsNearDeadline(200))) {
@@ -126,8 +128,11 @@ internal static partial class QrPixelDecoder {
         HashSet<string> seen,
         Func<QrDecoded, bool>? accept,
         DecodeBudget budget,
-        bool aggressive) {
-        candidates.Sort(static (a, b) => b.Count.CompareTo(a.Count));
+        bool aggressive,
+        bool candidatesSorted) {
+        if (!candidatesSorted) {
+            candidates.Sort(static (a, b) => b.Count.CompareTo(a.Count));
+        }
         var n = Math.Min(candidates.Count, 10);
         var triedTriples = 0;
         var maxTriples = 48;

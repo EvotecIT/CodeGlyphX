@@ -68,6 +68,7 @@ public static partial class QrDecoder {
         QrErrorCorrectionLevel.Q,
         QrErrorCorrectionLevel.H
     };
+    private static readonly IComparer<QrFormatCandidate> FormatCandidateComparer = new QrFormatCandidateComparer();
 
     private static bool TryDecodeFormatBits(int bitsA, int bitsB, out QrFormatCandidate[] candidates, out int bestDistance) {
         bestDistance = int.MaxValue;
@@ -118,9 +119,13 @@ public static partial class QrDecoder {
 
         var result = new QrFormatCandidate[count];
         for (var i = 0; i < count; i++) result[i] = buffer[i];
-        Array.Sort(result, CompareCandidates);
+        Array.Sort(result, FormatCandidateComparer);
         candidates = result;
         return true;
+    }
+
+    private sealed class QrFormatCandidateComparer : IComparer<QrFormatCandidate> {
+        public int Compare(QrFormatCandidate x, QrFormatCandidate y) => CompareCandidates(x, y);
     }
 
     private static int CompareCandidates(QrFormatCandidate a, QrFormatCandidate b) {
@@ -146,7 +151,7 @@ public static partial class QrDecoder {
             list[count++] = new QrFormatCandidate(i, ecc, mask, minDist, maxDist, distA + distB);
         }
 
-        Array.Sort(list, 0, count, Comparer<QrFormatCandidate>.Create(CompareCandidates));
+        Array.Sort(list, 0, count, FormatCandidateComparer);
         if (count == list.Length) return list;
         var result = new QrFormatCandidate[count];
         Array.Copy(list, result, count);
