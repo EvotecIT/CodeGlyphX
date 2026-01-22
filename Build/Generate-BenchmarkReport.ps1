@@ -10,7 +10,8 @@ param(
     [string]$DotnetSdk,
     [string]$RuntimeVersion,
     [switch]$Publish,
-    [switch]$NoPublish
+    [switch]$NoPublish,
+    [switch]$FailOnMissingCompare
 )
 
 $ErrorActionPreference = "Stop"
@@ -22,9 +23,17 @@ if ([string]::IsNullOrWhiteSpace($OutputPath)) {
 if ([string]::IsNullOrWhiteSpace($ArtifactsPath)) {
     $resultsRoot = Join-Path $PSScriptRoot "BenchmarkResults"
     if (Test-Path $resultsRoot) {
-        $latest = Get-ChildItem -Path $resultsRoot -Directory | Sort-Object LastWriteTime -Descending | Select-Object -First 1
-        if ($latest) {
-            $ArtifactsPath = $latest.FullName
+        $candidates = Get-ChildItem -Path $resultsRoot -Directory | Sort-Object LastWriteTime -Descending
+        $preferred = $null
+        foreach ($candidate in $candidates) {
+            $resultsCandidate = Join-Path $candidate.FullName "results"
+            if (-not (Test-Path $resultsCandidate)) { continue }
+            $compareExists = Get-ChildItem -Path $resultsCandidate -Filter "*Compare*-report.csv" -ErrorAction SilentlyContinue | Select-Object -First 1
+            if ($compareExists) { $preferred = $candidate; break }
+        }
+        if (-not $preferred) { $preferred = $candidates | Select-Object -First 1 }
+        if ($preferred) {
+            $ArtifactsPath = $preferred.FullName
         }
     }
 }
@@ -68,15 +77,25 @@ function Try-Get-DotnetSdk {
     return $null
 }
 
-$runtimeInfo = [System.Runtime.InteropServices.RuntimeInformation]
+$metaRuntime = if ($RuntimeVersion) { $RuntimeVersion } else { $null }
+if (-not $metaRuntime) {
+    try { $metaRuntime = [System.Runtime.InteropServices.RuntimeInformation]::FrameworkDescription } catch { $metaRuntime = $null }
+}
+$metaOsDescription = $null
+$metaOsArch = $null
+$metaProcessArch = $null
+try { $metaOsDescription = [System.Runtime.InteropServices.RuntimeInformation]::OSDescription } catch { $metaOsDescription = $null }
+try { $metaOsArch = [System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture.ToString() } catch { $metaOsArch = $null }
+try { $metaProcessArch = [System.Runtime.InteropServices.RuntimeInformation]::ProcessArchitecture.ToString() } catch { $metaProcessArch = $null }
+
 $meta = [ordered]@{
     commit = if ($Commit) { $Commit } elseif ($env:GIT_COMMIT) { $env:GIT_COMMIT } elseif ($env:BUILD_SOURCEVERSION) { $env:BUILD_SOURCEVERSION } else { $null }
     branch = if ($Branch) { $Branch } elseif ($env:GIT_BRANCH) { $env:GIT_BRANCH } elseif ($env:BUILD_SOURCEBRANCH) { $env:BUILD_SOURCEBRANCH } else { $null }
     dotnetSdk = Try-Get-DotnetSdk
-    runtime = if ($RuntimeVersion) { $RuntimeVersion } else { $runtimeInfo::FrameworkDescription }
-    osDescription = $runtimeInfo::OSDescription
-    osArchitecture = $runtimeInfo::OSArchitecture.ToString()
-    processArchitecture = $runtimeInfo::ProcessArchitecture.ToString()
+    runtime = $metaRuntime
+    osDescription = $metaOsDescription
+    osArchitecture = $metaOsArch
+    processArchitecture = $metaProcessArch
     machineName = [Environment]::MachineName
     processorCount = [Environment]::ProcessorCount
 }
@@ -122,6 +141,15 @@ function Get-Rating([Nullable[double]]$timeRatio, [Nullable[double]]$allocRatio)
     if ($timeRatio -le 1.1) { return "good" }
     if ($timeRatio -le 1.5) { return "ok" }
     return "bad"
+}
+
+function Get-ClassName([string]$fileName) {
+    $baseName = [System.IO.Path]::GetFileNameWithoutExtension($fileName)
+    $className = $baseName -replace "^CodeGlyphX\\.Benchmarks\\.", "" -replace "-report$", ""
+    if ($className.StartsWith("CodeGlyphX.Benchmarks.")) {
+        $className = $className.Substring("CodeGlyphX.Benchmarks.".Length)
+    }
+    return $className
 }
 
 function Normalize-CompareScenario([string]$scenario) {
@@ -195,6 +223,22 @@ $titleMap = @{
 $baselineFiles = Get-ChildItem $resultsPath -Filter "*-report.csv" | Where-Object { $_.Name -notmatch "Compare" }
 $compareFiles = Get-ChildItem $resultsPath -Filter "*-report.csv" | Where-Object { $_.Name -match "Compare" }
 
+$expectedCompare = $titleMap.Keys | Where-Object { $_ -match "CompareBenchmarks$" } | Sort-Object
+$actualCompare = @()
+foreach ($file in $compareFiles) {
+    $actualCompare += (Get-ClassName $file.Name)
+}
+$missingCompare = @()
+$missingCompareIds = @()
+foreach ($expected in $expectedCompare) {
+    if ($actualCompare -notcontains $expected) {
+        $title = $titleMap[$expected]
+        if (-not $title) { $title = $expected }
+        $missingCompare += $title
+        $missingCompareIds += $expected
+    }
+}
+
 $lines = New-Object System.Collections.Generic.List[string]
 $osName = Resolve-OsName $ArtifactsPath $OsName
 $timestamp = (Get-Date).ToUniversalTime().ToString("yyyy-MM-dd HH:mm:ss 'UTC'")
@@ -221,7 +265,15 @@ $lines.Add("- Barcoder uses Barcoder.Renderer.Image (ImageSharp renderer).")
 $lines.Add("- QRCoder uses PngByteQRCode (managed PNG output, no external renderer).")
 $lines.Add("- QR decode comparisons use raw RGBA32 bytes (ZXing via RGBLuminanceSource).")
 $lines.Add("- QR decode clean uses CodeGlyphX Balanced; noisy uses CodeGlyphX Robust with aggressive sampling/limits; ZXing uses default (clean) and TryHarder (noisy).")
+if ($missingCompare.Count -gt 0) {
+    $lines.Add("Warnings:")
+    $lines.Add("- Missing compare results: $($missingCompare -join ', ').")
+}
 $lines.Add("")
+
+if ($FailOnMissingCompare -and $missingCompare.Count -gt 0) {
+    throw "Missing compare results: $($missingCompare -join ', ')."
+}
 
 if ($compareFiles.Count -gt 0) {
     $summaryRows = New-Object System.Collections.Generic.List[string]
@@ -231,11 +283,7 @@ if ($compareFiles.Count -gt 0) {
         $rows = Import-Csv -Path $file.FullName -Delimiter $delimiter -Encoding UTF8
         if ($rows.Count -eq 0) { continue }
 
-        $baseName = [System.IO.Path]::GetFileNameWithoutExtension($file.Name)
-        $className = $baseName -replace "^CodeGlyphX\\.Benchmarks\\.", "" -replace "-report$", ""
-        if ($className.StartsWith("CodeGlyphX.Benchmarks.")) {
-            $className = $className.Substring("CodeGlyphX.Benchmarks.".Length)
-        }
+        $className = Get-ClassName $file.Name
         $title = $titleMap[$className]
         if (-not $title) { $title = $className }
 
@@ -333,11 +381,7 @@ if ($baselineFiles.Count -gt 0) {
         $delimiter = Get-CsvDelimiter $file.FullName
         $rows = Import-Csv -Path $file.FullName -Delimiter $delimiter -Encoding UTF8
         if ($rows.Count -eq 0) { continue }
-        $baseName = [System.IO.Path]::GetFileNameWithoutExtension($file.Name)
-        $className = $baseName -replace "^CodeGlyphX\\.Benchmarks\\.", "" -replace "-report$", ""
-        if ($className.StartsWith("CodeGlyphX.Benchmarks.")) {
-            $className = $className.Substring("CodeGlyphX.Benchmarks.".Length)
-        }
+        $className = Get-ClassName $file.Name
         $title = $titleMap[$className]
         if (-not $title) { $title = $className }
         $lines.Add("#### $title")
@@ -359,14 +403,10 @@ if ($compareFiles.Count -gt 0) {
     $lines.Add("")
     foreach ($file in $compareFiles | Sort-Object Name) {
         $delimiter = Get-CsvDelimiter $file.FullName
-        $rows = Import-Csv -Path $file.FullName -Delimiter $delimiter
+        $rows = Import-Csv -Path $file.FullName -Delimiter $delimiter -Encoding UTF8
         if ($rows.Count -eq 0) { continue }
 
-        $baseName = [System.IO.Path]::GetFileNameWithoutExtension($file.Name)
-        $className = $baseName -replace "^CodeGlyphX\\.Benchmarks\\.", "" -replace "-report$", ""
-        if ($className.StartsWith("CodeGlyphX.Benchmarks.")) {
-            $className = $className.Substring("CodeGlyphX.Benchmarks.".Length)
-        }
+        $className = Get-ClassName $file.Name
         $title = $titleMap[$className]
         if (-not $title) { $title = $className }
         $lines.Add("#### $title")
@@ -423,11 +463,7 @@ $jsonSections = New-Object System.Collections.Generic.List[object]
 foreach ($file in $compareFiles | Sort-Object Name) {
     $rows = Read-CsvResults $file.FullName
     if ($rows.Count -eq 0) { continue }
-    $baseName = [System.IO.Path]::GetFileNameWithoutExtension($file.Name)
-    $className = $baseName -replace "^CodeGlyphX\\.Benchmarks\\.", "" -replace "-report$", ""
-    if ($className.StartsWith("CodeGlyphX.Benchmarks.")) {
-        $className = $className.Substring("CodeGlyphX.Benchmarks.".Length)
-    }
+    $className = Get-ClassName $file.Name
     $title = $titleMap[$className]
     if (-not $title) { $title = $className }
 
@@ -486,11 +522,7 @@ $jsonBaseline = New-Object System.Collections.Generic.List[object]
 foreach ($file in $baselineFiles | Sort-Object Name) {
     $rows = Read-CsvResults $file.FullName
     if ($rows.Count -eq 0) { continue }
-    $baseName = [System.IO.Path]::GetFileNameWithoutExtension($file.Name)
-    $className = $baseName -replace "^CodeGlyphX\\.Benchmarks\\.", "" -replace "-report$", ""
-    if ($className.StartsWith("CodeGlyphX.Benchmarks.")) {
-        $className = $className.Substring("CodeGlyphX.Benchmarks.".Length)
-    }
+    $className = Get-ClassName $file.Name
     $title = $titleMap[$className]
     if (-not $title) { $title = $className }
     $items = @()
@@ -524,6 +556,8 @@ $jsonDoc = @{
     publish = $publishFlag
     artifacts = $ArtifactsPath
     meta = $meta
+    missingComparisons = $missingCompare
+    missingComparisonIds = $missingCompareIds
     howToRead = @(
         "Mean: average time per operation. Lower is better.",
         "Allocated: managed memory allocated per operation. Lower is better.",
@@ -610,6 +644,8 @@ $summaryAll.$osName.$runModeNormalized = [pscustomobject]@{
     publish = $jsonDoc.publish
     artifacts = $jsonDoc.artifacts
     meta = $jsonDoc.meta
+    missingComparisons = $jsonDoc.missingComparisons
+    missingComparisonIds = $jsonDoc.missingComparisonIds
     howToRead = $jsonDoc.howToRead
     notes = $jsonDoc.notes
     summary = $jsonDoc.summary

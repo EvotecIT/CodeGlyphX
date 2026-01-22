@@ -8,6 +8,8 @@ param(
     [switch]$CompareQRCoder,
     [switch]$CompareBarcoder,
     [switch]$Full,
+    [switch]$AllowPartial,
+    [switch]$SkipPreflight,
     [string]$BaseFilter = "*",
     [string]$CompareFilter = "*Compare*"
 )
@@ -83,6 +85,46 @@ function Invoke-Benchmark {
     }
 }
 
+function Invoke-Preflight {
+    param(
+        [string[]]$MsBuildProps,
+        [hashtable]$EnvVars
+    )
+
+    Write-Host ""
+    Write-Host "== Preflight (Compare dependencies) =="
+    $previous = @{}
+    if ($EnvVars) {
+        foreach ($key in $EnvVars.Keys) {
+            $previous[$key] = [System.Environment]::GetEnvironmentVariable($key)
+            [System.Environment]::SetEnvironmentVariable($key, $EnvVars[$key])
+        }
+    }
+
+    $args = @(
+        "run",
+        "-c", $Configuration,
+        "--framework", $Framework,
+        "--project", $projectPath
+    )
+
+    if ($MsBuildProps) {
+        $args += $MsBuildProps
+    }
+
+    $args += @("--", "--preflight")
+    & dotnet @args
+
+    if ($EnvVars) {
+        foreach ($key in $EnvVars.Keys) {
+            [System.Environment]::SetEnvironmentVariable($key, $previous[$key])
+        }
+    }
+    if ($LASTEXITCODE -ne 0) {
+        throw "Preflight failed."
+    }
+}
+
 Push-Location $repoRoot
 try {
     if (-not $NoBase) {
@@ -109,6 +151,10 @@ try {
             $envVars[$key] = $quickEnv[$key]
         }
 
+        if (-not $SkipPreflight) {
+            Invoke-Preflight -MsBuildProps $props -EnvVars $envVars
+        }
+
         Invoke-Benchmark -MsBuildProps $props -Filter $CompareFilter -Label "External comparisons" -EnvVars $envVars
     }
 } finally {
@@ -117,5 +163,9 @@ try {
 
 $reportScript = Join-Path $PSScriptRoot "Generate-BenchmarkReport.ps1"
 if (Test-Path $reportScript) {
-    & $reportScript -ArtifactsPath $artifactsPath -Framework $Framework -Configuration $Configuration -RunMode $runMode
+    if ($AllowPartial) {
+        & $reportScript -ArtifactsPath $artifactsPath -Framework $Framework -Configuration $Configuration -RunMode $runMode
+    } else {
+        & $reportScript -ArtifactsPath $artifactsPath -Framework $Framework -Configuration $Configuration -RunMode $runMode -FailOnMissingCompare
+    }
 }

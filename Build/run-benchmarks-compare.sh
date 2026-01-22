@@ -12,6 +12,8 @@ COMPARE_BARCODER=0
 BASE_FILTER="*"
 COMPARE_FILTER="*Compare*"
 BENCH_QUICK=1
+ALLOW_PARTIAL=0
+SKIP_PREFLIGHT=0
 
 usage() {
   cat <<EOF
@@ -29,6 +31,8 @@ Options:
   --base-filter <filter>     Benchmark filter for baseline (default: *)
   --compare-filter <filter>  Benchmark filter for compare (default: *Compare*)
   --full                     Run full BenchmarkDotNet settings (default: quick)
+  --allow-partial            Allow incomplete compare results in report
+  --skip-preflight           Skip dependency preflight checks
   -h, --help                 Show this help
 EOF
 }
@@ -46,6 +50,8 @@ while [[ $# -gt 0 ]]; do
     --base-filter) BASE_FILTER="$2"; shift 2 ;;
     --compare-filter) COMPARE_FILTER="$2"; shift 2 ;;
     --full) BENCH_QUICK=0; shift ;;
+    --allow-partial) ALLOW_PARTIAL=1; shift ;;
+    --skip-preflight) SKIP_PREFLIGHT=1; shift ;;
     -h|--help) usage; exit 0 ;;
     *) echo "Unknown option: $1"; usage; exit 1 ;;
   esac
@@ -90,6 +96,25 @@ run_bench() {
   fi
 }
 
+run_preflight() {
+  local env_prefix="$1"
+  shift
+  local props=("$@")
+
+  echo ""
+  echo "== Preflight (Compare dependencies) =="
+  local args=(run -c "$CONFIGURATION" --framework "$FRAMEWORK" --project "$PROJECT_PATH")
+  if [[ ${#props[@]} -gt 0 ]]; then
+    args+=("${props[@]}")
+  fi
+  args+=(-- --preflight)
+  if [[ -n "$env_prefix" ]]; then
+    eval "$env_prefix dotnet \"\${args[@]}\""
+  else
+    dotnet "${args[@]}"
+  fi
+}
+
 if [[ $NO_BASE -eq 0 ]]; then
   base_props=()
   base_env=""
@@ -118,15 +143,26 @@ if [[ $NO_COMPARE -eq 0 ]]; then
     props+=("/p:CompareExternal=true")
     env_prefix="COMPARE_EXTERNAL=true "
   fi
+  if [[ $SKIP_PREFLIGHT -eq 0 ]]; then
+    run_preflight "$env_prefix" "${props[@]}"
+  fi
   run_bench "External comparisons" "$COMPARE_FILTER" "$env_prefix" "${props[@]}"
 fi
 
 REPORT_SCRIPT="$SCRIPT_DIR/generate-benchmark-report.py"
 if command -v python3 >/dev/null 2>&1 && [[ -f "$REPORT_SCRIPT" ]]; then
   if [[ $BENCH_QUICK -eq 1 ]]; then
-    python3 "$REPORT_SCRIPT" --artifacts-path "$ARTIFACTS_PATH" --framework "$FRAMEWORK" --configuration "$CONFIGURATION" --run-mode quick
+    if [[ $ALLOW_PARTIAL -eq 1 ]]; then
+      python3 "$REPORT_SCRIPT" --artifacts-path "$ARTIFACTS_PATH" --framework "$FRAMEWORK" --configuration "$CONFIGURATION" --run-mode quick
+    else
+      python3 "$REPORT_SCRIPT" --artifacts-path "$ARTIFACTS_PATH" --framework "$FRAMEWORK" --configuration "$CONFIGURATION" --run-mode quick --fail-on-missing-compare
+    fi
   else
-    python3 "$REPORT_SCRIPT" --artifacts-path "$ARTIFACTS_PATH" --framework "$FRAMEWORK" --configuration "$CONFIGURATION" --run-mode full
+    if [[ $ALLOW_PARTIAL -eq 1 ]]; then
+      python3 "$REPORT_SCRIPT" --artifacts-path "$ARTIFACTS_PATH" --framework "$FRAMEWORK" --configuration "$CONFIGURATION" --run-mode full
+    else
+      python3 "$REPORT_SCRIPT" --artifacts-path "$ARTIFACTS_PATH" --framework "$FRAMEWORK" --configuration "$CONFIGURATION" --run-mode full --fail-on-missing-compare
+    fi
   fi
 else
   echo ""

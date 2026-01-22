@@ -103,6 +103,10 @@ def build_meta(commit: str | None, branch: str | None, dotnet_sdk: str | None, r
     }
 
 
+def get_compare_class_name(path: Path) -> str:
+    return path.stem.replace("CodeGlyphX.Benchmarks.", "").replace("-report", "")
+
+
 def normalize_compare_scenario(value: str) -> str:
     mapping = {
         "EAN PNG": "EAN-13 PNG",
@@ -167,6 +171,12 @@ def build_section(artifacts_path: Path, framework: str, configuration: str, run_
     baseline_files = [p for p in baseline_files if "Compare" not in p.name]
     compare_files = sorted(results_path.glob("*-report.csv"))
     compare_files = [p for p in compare_files if "Compare" in p.name]
+    expected_compare = sorted([key for key in TITLE_MAP.keys() if key.endswith("CompareBenchmarks")])
+    actual_compare = sorted([get_compare_class_name(p) for p in compare_files])
+    missing_compare = [TITLE_MAP.get(name, name) for name in expected_compare if name not in actual_compare]
+    expected_compare = sorted([key for key in TITLE_MAP.keys() if key.endswith("CompareBenchmarks")])
+    actual_compare = sorted([get_compare_class_name(p) for p in compare_files])
+    missing_compare = [TITLE_MAP.get(name, name) for name in expected_compare if name not in actual_compare]
 
     os_name = detect_os_name()
     timestamp = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
@@ -194,6 +204,9 @@ def build_section(artifacts_path: Path, framework: str, configuration: str, run_
     lines.append("- QRCoder uses PngByteQRCode (managed PNG output, no external renderer).")
     lines.append("- QR decode comparisons use raw RGBA32 bytes (ZXing via RGBLuminanceSource).")
     lines.append("- QR decode clean uses CodeGlyphX Balanced; noisy uses CodeGlyphX Robust with aggressive sampling/limits; ZXing uses default (clean) and TryHarder (noisy).")
+    if missing_compare:
+        lines.append("Warnings:")
+        lines.append(f"- Missing compare results: {', '.join(missing_compare)}.")
     lines.append("")
 
     if compare_files:
@@ -413,6 +426,7 @@ def main():
     parser.add_argument("--runtime", default=None)
     parser.add_argument("--publish", action="store_true")
     parser.add_argument("--no-publish", action="store_true")
+    parser.add_argument("--fail-on-missing-compare", action="store_true")
     args = parser.parse_args()
 
     artifacts_path = Path(args.artifacts_path).resolve()
@@ -437,6 +451,7 @@ def main():
         run_mode,
         publish_flag,
         meta,
+        args.fail_on_missing_compare,
     )
     repo_root = Path(__file__).resolve().parent.parent
     # JSON output is already stored under Assets/Data for website ingestion.
@@ -472,6 +487,7 @@ def write_json(
     run_mode: str,
     publish: bool,
     meta: dict,
+    fail_on_missing_compare: bool,
 ):
     results_path = artifacts_path / "results"
     if not results_path.exists():
@@ -565,6 +581,8 @@ def write_json(
         "publish": publish,
         "artifacts": str(artifacts_path),
         "meta": meta,
+        "missingComparisons": missing_compare,
+        "missingComparisonIds": [name for name in expected_compare if name not in actual_compare],
         "howToRead": [
             "Mean: average time per operation. Lower is better.",
             "Allocated: managed memory allocated per operation. Lower is better.",
@@ -625,6 +643,8 @@ def write_json(
         "publish": payload["publish"],
         "artifacts": payload["artifacts"],
         "meta": payload["meta"],
+        "missingComparisons": payload["missingComparisons"],
+        "missingComparisonIds": payload["missingComparisonIds"],
         "howToRead": payload["howToRead"],
         "notes": payload["notes"],
         "summary": payload["summary"],
@@ -657,6 +677,9 @@ def write_json(
         }
     )
     index_path.write_text(__import__("json").dumps(index_data, indent=2), encoding="utf-8")
+
+    if fail_on_missing_compare and payload["missingComparisons"]:
+        raise SystemExit(f"Missing compare results: {', '.join(payload['missingComparisons'])}.")
 
 
 if __name__ == "__main__":

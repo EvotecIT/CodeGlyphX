@@ -107,5 +107,22 @@ if ($Publish) {
         }
     }
 
+    # Restore Blazor index.html if it was overwritten by static page generation
+    $blazorIndexPath = Join-Path $wwwrootPath "index.html"
+    $hasBlazorScript = $false
+    if (Test-Path $blazorIndexPath) {
+        $content = Get-Content $blazorIndexPath -Raw
+        $hasBlazorScript = $content -match 'blazor\.webassembly\.js'
+    }
+    if (-not $hasBlazorScript) {
+        Write-Host "  Restoring Blazor index.html for SPA mode..." -ForegroundColor DarkGray
+        Push-Location $repoRoot
+        try {
+            & git checkout HEAD -- "CodeGlyphX.Website/wwwroot/index.html" 2>$null
+        } finally {
+            Pop-Location
+        }
+    }
+
     Invoke-Step "Building website..." @("dotnet","build",$websiteProjectPath,"-c",$Configuration,"-f",$Framework)
 }
