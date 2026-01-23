@@ -6,6 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <ServiceWorkerAssetsManifest>service-worker-assets.js</ServiceWorkerAssetsManifest>
     <WasmEnableWebcil>true</WasmEnableWebcil>
+    <WasmFingerprintDotNetJs>false</WasmFingerprintDotNetJs>
     <OverrideHtmlAssetPlaceholders>true</OverrideHtmlAssetPlaceholders>
 
     <!-- Publish optimizations -->
