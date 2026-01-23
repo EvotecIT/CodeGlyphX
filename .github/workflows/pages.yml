@@ -66,10 +66,10 @@ jobs:
                       console.log('Testing layout:', url, 'at', vw + 'px');
                       try {
                           await page.goto(url, { waitUntil: 'networkidle', timeout: 30000 });
-                          const overflow = await page.evaluate((vw, max) => {
+                          const overflow = await page.evaluate(({vw, max}) => {
                               const docWidth = document.documentElement.scrollWidth;
                               return docWidth - vw > max ? docWidth - vw : 0;
-                          }, vw, maxOverflow);
+                          }, {vw, max: maxOverflow});
                           if (overflow > 0) {
                               failures.push({ test: 'mobile-layout', page: path, viewport: vw, overflow });
                           }
