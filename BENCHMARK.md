@@ -15,10 +15,10 @@
 <!-- BENCHMARK:WINDOWS:QUICK:START -->
 ## WINDOWS
 
-Updated: 2026-01-23 18:16:07 UTC
+Updated: 2026-01-23 18:57:42 UTC
 Framework: net8.0
 Configuration: Release
-Artifacts: Build\BenchmarkResults\windows-20260123-172458
+Artifacts: C:\Support\GitHub\CodeMatrix\Build\BenchmarkResults\windows-20260123-195637
 How to read:
 - Mean: average time per operation. Lower is better.
 - Allocated: managed memory allocated per operation. Lower is better.
@@ -42,17 +42,17 @@ Notes:
 
 | Benchmark | Scenario | Fastest | CodeGlyphX (Mean / Alloc) | ZXing.Net (Mean / Alloc) | QRCoder (Mean / Alloc) | Barcoder (Mean / Alloc) | CodeGlyphX vs Fastest | CodeGlyphX Alloc vs Fastest | Rating |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Aztec (Encode) | Aztec PNG | CodeGlyphX 316.9 μs | 316.9 μs<br>61.34 KB | 1,987.3 μs<br>61.42 KB<br>Δ 6.27 x / 1 x |  | 8,130.1 μs<br>642.42 KB<br>Δ 25.66 x / 10.47 x | 1 x (fastest) | 1 x | good |
-| Code 128 (Encode) | Code128 PNG | CodeGlyphX 155.3 μs | 155.3 μs<br>14.43 KB | 2,057.6 μs<br>15.74 KB<br>Δ 13.25 x / 1.09 x |  | 63,298.4 μs<br>2035.01 KB<br>Δ 407.59 x / 141.03 x | 1 x (fastest) | 1 x | good |
-| Code 39 (Encode) | Code39 PNG | CodeGlyphX 163.7 μs | 163.7 μs<br>10.02 KB | 1,730.2 μs<br>12.28 KB<br>Δ 10.57 x / 1.23 x |  | 46,126.9 μs<br>1448.61 KB<br>Δ 281.78 x / 144.57 x | 1 x (fastest) | 1 x | good |
-| Code 93 (Encode) | Code93 PNG | CodeGlyphX 177.0 μs | 177.0 μs<br>8.13 KB | 1,361.6 μs<br>11.7 KB<br>Δ 7.69 x / 1.44 x |  | 28,990.8 μs<br>957.26 KB<br>Δ 163.79 x / 117.74 x | 1 x (fastest) | 1 x | good |
-| Data Matrix (Encode) | Data Matrix PNG (medium) | CodeGlyphX 313.2 μs | 313.2 μs<br>15.52 KB | 2,197.3 μs<br>22.31 KB<br>Δ 7.02 x / 1.44 x |  | 9,232.4 μs<br>645.05 KB<br>Δ 29.48 x / 41.56 x | 1 x (fastest) | 1 x | good |
-| EAN-13 (Encode) | EAN-13 PNG | CodeGlyphX 230.7 μs | 230.7 μs<br>6.84 KB | 1,314.9 μs<br>11.68 KB<br>Δ 5.7 x / 1.71 x |  | 26,800.3 μs<br>850.83 KB<br>Δ 116.17 x / 124.39 x | 1 x (fastest) | 1 x | good |
-| PDF417 (Encode) | PDF417 PNG | CodeGlyphX 1.345 ms | 1.345 ms<br>49.9 KB | 8.177 ms<br>207.63 KB<br>Δ 6.08 x / 4.16 x |  | 57.396 ms<br>5004.02 KB<br>Δ 42.67 x / 100.28 x | 1 x (fastest) | 1 x | good |
-| QR (Encode) | QR PNG (medium) | QRCoder 893.6 μs | 1,108.6 μs<br>14.86 KB | 4,357.7 μs<br>79.41 KB<br>Δ 3.93 x / 5.34 x | 893.6 μs<br>7.31 KB<br>Δ 0.81 x / 0.49 x | 17,099.8 μs<br>1547.52 KB<br>Δ 15.42 x / 104.14 x | 1.24 x | 2.03 x | bad |
-| QR Decode (Clean) | QR Decode (clean) | ZXing.Net 1.992 ms | 2.406 ms<br>5.26 KB | 1.992 ms<br>127.67 KB<br>Δ 0.83 x / 24.27 x |  |  | 1.21 x | 0.04 x | ok |
-| QR Decode (Noisy) | QR Decode (noisy) | ZXing.Net 4.456 ms | 6.177 ms<br>5.45 KB | 4.456 ms<br>706.89 KB<br>Δ 0.72 x / 129.7 x |  |  | 1.39 x | 0.01 x | ok |
-| UPC-A (Encode) | UPC-A PNG | CodeGlyphX 207.4 μs | 207.4 μs<br>7.15 KB | 1,235.0 μs<br>11.75 KB<br>Δ 5.95 x / 1.64 x |  | 23,452.9 μs<br>765.94 KB<br>Δ 113.08 x / 107.12 x | 1 x (fastest) | 1 x | good |
+| Aztec (Encode) | Aztec PNG | CodeGlyphX 294.2 μs | 294.2 μs<br>61.34 KB | 2,089.4 μs<br>61.42 KB<br>Δ 7.1 x / 1 x |  | 6,735.0 μs<br>642.58 KB<br>Δ 22.89 x / 10.48 x | 1 x (fastest) | 1 x | good |
+| Code 128 (Encode) | Code128 PNG | CodeGlyphX 117.7 μs | 117.7 μs<br>14.43 KB | 1,540.7 μs<br>15.74 KB<br>Δ 13.09 x / 1.09 x |  | 53,838.6 μs<br>2035.16 KB<br>Δ 457.42 x / 141.04 x | 1 x (fastest) | 1 x | good |
+| Code 39 (Encode) | Code39 PNG | CodeGlyphX 122.4 μs | 122.4 μs<br>10.02 KB | 1,596.1 μs<br>12.28 KB<br>Δ 13.04 x / 1.23 x |  | 38,646.2 μs<br>1448.61 KB<br>Δ 315.74 x / 144.57 x | 1 x (fastest) | 1 x | good |
+| Code 93 (Encode) | Code93 PNG | CodeGlyphX 163.4 μs | 163.4 μs<br>8.13 KB | 1,163.0 μs<br>11.7 KB<br>Δ 7.12 x / 1.44 x |  | 28,295.0 μs<br>957.26 KB<br>Δ 173.16 x / 117.74 x | 1 x (fastest) | 1 x | good |
+| Data Matrix (Encode) | Data Matrix PNG (medium) | CodeGlyphX 178.5 μs | 178.5 μs<br>15.52 KB | 1,729.0 μs<br>22.31 KB<br>Δ 9.69 x / 1.44 x |  | 8,132.1 μs<br>645.05 KB<br>Δ 45.56 x / 41.56 x | 1 x (fastest) | 1 x | good |
+| EAN-13 (Encode) | EAN-13 PNG | CodeGlyphX 200.0 μs | 200.0 μs<br>6.84 KB | 1,119.5 μs<br>11.68 KB<br>Δ 5.6 x / 1.71 x |  | 23,877.1 μs<br>850.67 KB<br>Δ 119.39 x / 124.37 x | 1 x (fastest) | 1 x | good |
+| PDF417 (Encode) | PDF417 PNG | CodeGlyphX 1.084 ms | 1.084 ms<br>49.9 KB | 5.787 ms<br>207.63 KB<br>Δ 5.34 x / 4.16 x |  | 49.655 ms<br>5003.84 KB<br>Δ 45.81 x / 100.28 x | 1 x (fastest) | 1 x | good |
+| QR (Encode) | QR PNG (medium) | QRCoder 783.3 μs | 954.9 μs<br>14.86 KB | 3,712.8 μs<br>79.41 KB<br>Δ 3.89 x / 5.34 x | 783.3 μs<br>7.31 KB<br>Δ 0.82 x / 0.49 x | 13,039.5 μs<br>1547.36 KB<br>Δ 13.66 x / 104.13 x | 1.22 x | 2.03 x | bad |
+| QR Decode (Clean) | QR Decode (clean) | ZXing.Net 1.882 ms | 2.491 ms<br>5.27 KB | 1.882 ms<br>127.67 KB<br>Δ 0.76 x / 24.23 x |  |  | 1.32 x | 0.04 x | ok |
+| QR Decode (Noisy) | QR Decode (noisy) | ZXing.Net 3.679 ms | 5.942 ms<br>5.45 KB | 3.679 ms<br>706.89 KB<br>Δ 0.62 x / 129.7 x |  |  | 1.62 x | 0.01 x | bad |
+| UPC-A (Encode) | UPC-A PNG | CodeGlyphX 138.3 μs | 138.3 μs<br>7.15 KB | 948.9 μs<br>11.75 KB<br>Δ 6.86 x / 1.64 x |  | 19,106.6 μs<br>765.73 KB<br>Δ 138.15 x / 107.1 x | 1 x (fastest) | 1 x | good |
 
 ### Baseline
 
@@ -60,60 +60,60 @@ Notes:
 
 | Scenario | Mean | Allocated |
 | --- | --- | --- |
-| Code 128 PNG | 231.77 μs | 14.51 KB |
-| Code 128 SVG | 29.33 μs | 17.61 KB |
-| EAN PNG | 275.20 μs | 6.92 KB |
-| Code 39 PNG | 170.70 μs | 10.09 KB |
-| Code 93 PNG | 220.03 μs | 8.21 KB |
-| UPC-A PNG | 180.93 μs | 7.23 KB |
+| Code 128 PNG | 129.50 μs | 14.51 KB |
+| Code 128 SVG | 19.47 μs | 17.61 KB |
+| EAN PNG | 132.47 μs | 6.92 KB |
+| Code 39 PNG | 150.30 μs | 10.09 KB |
+| Code 93 PNG | 130.70 μs | 8.21 KB |
+| UPC-A PNG | 149.03 μs | 7.23 KB |
 
 #### 2D Matrix Codes (Encode)
 
 | Scenario | Mean | Allocated |
 | --- | --- | --- |
-| Data Matrix PNG (medium) | 201.90 μs | 10.16 KB |
-| Data Matrix PNG (long) | 416.73 μs | 20.34 KB |
-| Data Matrix SVG | 85.10 μs | 12.29 KB |
-| PDF417 PNG | 1,185.00 μs | 49.99 KB |
-| PDF417 SVG | 3,266.67 μs | 64.53 KB |
-| Aztec PNG | 297.43 μs | 61.38 KB |
-| Aztec SVG | 108.03 μs | 59.88 KB |
+| Data Matrix PNG (medium) | 255.73 μs | 10.16 KB |
+| Data Matrix PNG (long) | 324.67 μs | 20.34 KB |
+| Data Matrix SVG | 47.93 μs | 12.29 KB |
+| PDF417 PNG | 1,035.00 μs | 49.99 KB |
+| PDF417 SVG | 2,280.07 μs | 64.53 KB |
+| Aztec PNG | 212.50 μs | 61.38 KB |
+| Aztec SVG | 69.97 μs | 59.88 KB |
 
 #### QR (Encode)
 
 | Scenario | Mean | Allocated |
 | --- | --- | --- |
-| QR PNG (short text) | 591.5 μs | 9.66 KB |
-| QR PNG (medium text) | 897.4 μs | 15.03 KB |
-| QR PNG (long text) | 4,195.3 μs | 38.8 KB |
-| QR SVG (medium text) | 1,016.7 μs | 19.05 KB |
-| QR PNG High Error Correction | 1,383.1 μs | 21.62 KB |
-| QR HTML (medium text) | 1,196.2 μs | 136.45 KB |
+| QR PNG (short text) | 503.2 μs | 9.66 KB |
+| QR PNG (medium text) | 818.9 μs | 15.03 KB |
+| QR PNG (long text) | 2,804.6 μs | 38.8 KB |
+| QR SVG (medium text) | 741.6 μs | 19.05 KB |
+| QR PNG High Error Correction | 1,146.4 μs | 21.62 KB |
+| QR HTML (medium text) | 791.2 μs | 136.45 KB |
 
 #### QR (Decode)
 
 | Scenario | Mean | Allocated |
 | --- | --- | --- |
-| QR Decode (clean, fast) | 2,568.9 μs | 5.26 KB |
-| QR Decode (clean, balanced) | 2,882.4 μs | 5.26 KB |
-| QR Decode (clean, robust) | 3,029.5 μs | 5.26 KB |
-| QR Decode (noisy, robust) | 5,785.0 μs | 5.45 KB |
-| QR Decode (screenshot, balanced) | 9,390.0 μs | 5.26 KB |
-| QR Decode (antialias, robust) | 515.7 μs | 1.31 KB |
+| QR Decode (clean, fast) | 2,204.1 μs | 5.27 KB |
+| QR Decode (clean, balanced) | 2,263.4 μs | 5.27 KB |
+| QR Decode (clean, robust) | 2,296.5 μs | 5.27 KB |
+| QR Decode (noisy, robust) | 5,295.6 μs | 5.45 KB |
+| QR Decode (screenshot, balanced) | 10,646.9 μs | 5.27 KB |
+| QR Decode (antialias, robust) | 443.2 μs | 1.32 KB |
 
 #### QrPipelineBenchmarks
 
 | Scenario | Mean | Allocated |
 | --- | --- | --- |
-| QR Encode (short text) | 445.93 μs | 1.22 KB |
-| QR Encode (medium text) | 1,302.13 μs | 1.83 KB |
-| QR Encode (long text) | 3,057.97 μs | 4.58 KB |
-| QR Render PNG (short, pre-encoded) | 133.90 μs | 8.37 KB |
-| QR Render PNG (medium, pre-encoded) | 52.13 μs | 13.13 KB |
-| QR Render PNG (long, pre-encoded) | 664.33 μs | 34.15 KB |
-| QR Render Pixels (short, pre-encoded) | 32.07 μs | 118.29 KB |
-| QR Render Pixels (medium, pre-encoded) | 45.40 μs | 192.54 KB |
-| QR Render Pixels (long, pre-encoded) | 1,271.80 μs | 523.29 KB |
+| QR Encode (short text) | 387.97 μs | 1.22 KB |
+| QR Encode (medium text) | 900.60 μs | 1.83 KB |
+| QR Encode (long text) | 2,027.30 μs | 4.58 KB |
+| QR Render PNG (short, pre-encoded) | 137.90 μs | 8.37 KB |
+| QR Render PNG (medium, pre-encoded) | 42.53 μs | 13.13 KB |
+| QR Render PNG (long, pre-encoded) | 559.90 μs | 34.15 KB |
+| QR Render Pixels (short, pre-encoded) | 26.42 μs | 118.29 KB |
+| QR Render Pixels (medium, pre-encoded) | 35.53 μs | 192.54 KB |
+| QR Render Pixels (long, pre-encoded) | 668.50 μs | 523.29 KB |
 
 ### Comparisons
 
@@ -121,67 +121,67 @@ Notes:
 
 | Scenario | CodeGlyphX (Mean / Alloc) | ZXing.Net (Mean / Alloc) | QRCoder (Mean / Alloc) | Barcoder (Mean / Alloc) |
 | --- | --- | --- | --- | --- |
-| Aztec PNG | 316.9 μs<br>61.34 KB | 1,987.3 μs<br>61.42 KB<br>Δ 6.27 x / 1 x |  | 8,130.1 μs<br>642.42 KB<br>Δ 25.66 x / 10.47 x |
+| Aztec PNG | 294.2 μs<br>61.34 KB | 2,089.4 μs<br>61.42 KB<br>Δ 7.1 x / 1 x |  | 6,735.0 μs<br>642.58 KB<br>Δ 22.89 x / 10.48 x |
 
 #### Code 128 (Encode)
 
 | Scenario | CodeGlyphX (Mean / Alloc) | ZXing.Net (Mean / Alloc) | QRCoder (Mean / Alloc) | Barcoder (Mean / Alloc) |
 | --- | --- | --- | --- | --- |
-| Code128 PNG | 155.3 μs<br>14.43 KB | 2,057.6 μs<br>15.74 KB<br>Δ 13.25 x / 1.09 x |  | 63,298.4 μs<br>2035.01 KB<br>Δ 407.59 x / 141.03 x |
+| Code128 PNG | 117.7 μs<br>14.43 KB | 1,540.7 μs<br>15.74 KB<br>Δ 13.09 x / 1.09 x |  | 53,838.6 μs<br>2035.16 KB<br>Δ 457.42 x / 141.04 x |
 
 #### Code 39 (Encode)
 
 | Scenario | CodeGlyphX (Mean / Alloc) | ZXing.Net (Mean / Alloc) | QRCoder (Mean / Alloc) | Barcoder (Mean / Alloc) |
 | --- | --- | --- | --- | --- |
-| Code39 PNG | 163.7 μs<br>10.02 KB | 1,730.2 μs<br>12.28 KB<br>Δ 10.57 x / 1.23 x |  | 46,126.9 μs<br>1448.61 KB<br>Δ 281.78 x / 144.57 x |
+| Code39 PNG | 122.4 μs<br>10.02 KB | 1,596.1 μs<br>12.28 KB<br>Δ 13.04 x / 1.23 x |  | 38,646.2 μs<br>1448.61 KB<br>Δ 315.74 x / 144.57 x |
 
 #### Code 93 (Encode)
 
 | Scenario | CodeGlyphX (Mean / Alloc) | ZXing.Net (Mean / Alloc) | QRCoder (Mean / Alloc) | Barcoder (Mean / Alloc) |
 | --- | --- | --- | --- | --- |
-| Code93 PNG | 177.0 μs<br>8.13 KB | 1,361.6 μs<br>11.7 KB<br>Δ 7.69 x / 1.44 x |  | 28,990.8 μs<br>957.26 KB<br>Δ 163.79 x / 117.74 x |
+| Code93 PNG | 163.4 μs<br>8.13 KB | 1,163.0 μs<br>11.7 KB<br>Δ 7.12 x / 1.44 x |  | 28,295.0 μs<br>957.26 KB<br>Δ 173.16 x / 117.74 x |
 
 #### Data Matrix (Encode)
 
 | Scenario | CodeGlyphX (Mean / Alloc) | ZXing.Net (Mean / Alloc) | QRCoder (Mean / Alloc) | Barcoder (Mean / Alloc) |
 | --- | --- | --- | --- | --- |
-| Data Matrix PNG (medium) | 313.2 μs<br>15.52 KB | 2,197.3 μs<br>22.31 KB<br>Δ 7.02 x / 1.44 x |  | 9,232.4 μs<br>645.05 KB<br>Δ 29.48 x / 41.56 x |
+| Data Matrix PNG (medium) | 178.5 μs<br>15.52 KB | 1,729.0 μs<br>22.31 KB<br>Δ 9.69 x / 1.44 x |  | 8,132.1 μs<br>645.05 KB<br>Δ 45.56 x / 41.56 x |
 
 #### EAN-13 (Encode)
 
 | Scenario | CodeGlyphX (Mean / Alloc) | ZXing.Net (Mean / Alloc) | QRCoder (Mean / Alloc) | Barcoder (Mean / Alloc) |
 | --- | --- | --- | --- | --- |
-| EAN-13 PNG | 230.7 μs<br>6.84 KB | 1,314.9 μs<br>11.68 KB<br>Δ 5.7 x / 1.71 x |  | 26,800.3 μs<br>850.83 KB<br>Δ 116.17 x / 124.39 x |
+| EAN-13 PNG | 200.0 μs<br>6.84 KB | 1,119.5 μs<br>11.68 KB<br>Δ 5.6 x / 1.71 x |  | 23,877.1 μs<br>850.67 KB<br>Δ 119.39 x / 124.37 x |
 
 #### PDF417 (Encode)
 
 | Scenario | CodeGlyphX (Mean / Alloc) | ZXing.Net (Mean / Alloc) | QRCoder (Mean / Alloc) | Barcoder (Mean / Alloc) |
 | --- | --- | --- | --- | --- |
-| PDF417 PNG | 1.345 ms<br>49.9 KB | 8.177 ms<br>207.63 KB<br>Δ 6.08 x / 4.16 x |  | 57.396 ms<br>5004.02 KB<br>Δ 42.67 x / 100.28 x |
+| PDF417 PNG | 1.084 ms<br>49.9 KB | 5.787 ms<br>207.63 KB<br>Δ 5.34 x / 4.16 x |  | 49.655 ms<br>5003.84 KB<br>Δ 45.81 x / 100.28 x |
 
 #### QR (Encode)
 
 | Scenario | CodeGlyphX (Mean / Alloc) | ZXing.Net (Mean / Alloc) | QRCoder (Mean / Alloc) | Barcoder (Mean / Alloc) |
 | --- | --- | --- | --- | --- |
-| QR PNG (medium) | 1,108.6 μs<br>14.86 KB | 4,357.7 μs<br>79.41 KB<br>Δ 3.93 x / 5.34 x | 893.6 μs<br>7.31 KB<br>Δ 0.81 x / 0.49 x | 17,099.8 μs<br>1547.52 KB<br>Δ 15.42 x / 104.14 x |
+| QR PNG (medium) | 954.9 μs<br>14.86 KB | 3,712.8 μs<br>79.41 KB<br>Δ 3.89 x / 5.34 x | 783.3 μs<br>7.31 KB<br>Δ 0.82 x / 0.49 x | 13,039.5 μs<br>1547.36 KB<br>Δ 13.66 x / 104.13 x |
 
 #### QR Decode (Clean)
 
 | Scenario | CodeGlyphX (Mean / Alloc) | ZXing.Net (Mean / Alloc) | QRCoder (Mean / Alloc) | Barcoder (Mean / Alloc) |
 | --- | --- | --- | --- | --- |
-| QR Decode (clean) | 2.406 ms<br>5.26 KB | 1.992 ms<br>127.67 KB<br>Δ 0.83 x / 24.27 x |  |  |
+| QR Decode (clean) | 2.491 ms<br>5.27 KB | 1.882 ms<br>127.67 KB<br>Δ 0.76 x / 24.23 x |  |  |
 
 #### QR Decode (Noisy)
 
 | Scenario | CodeGlyphX (Mean / Alloc) | ZXing.Net (Mean / Alloc) | QRCoder (Mean / Alloc) | Barcoder (Mean / Alloc) |
 | --- | --- | --- | --- | --- |
-| QR Decode (noisy) | 6.177 ms<br>5.45 KB | 4.456 ms<br>706.89 KB<br>Δ 0.72 x / 129.7 x |  |  |
+| QR Decode (noisy) | 5.942 ms<br>5.45 KB | 3.679 ms<br>706.89 KB<br>Δ 0.62 x / 129.7 x |  |  |
 
 #### UPC-A (Encode)
 
 | Scenario | CodeGlyphX (Mean / Alloc) | ZXing.Net (Mean / Alloc) | QRCoder (Mean / Alloc) | Barcoder (Mean / Alloc) |
 | --- | --- | --- | --- | --- |
-| UPC-A PNG | 207.4 μs<br>7.15 KB | 1,235.0 μs<br>11.75 KB<br>Δ 5.95 x / 1.64 x |  | 23,452.9 μs<br>765.94 KB<br>Δ 113.08 x / 107.12 x |
+| UPC-A PNG | 138.3 μs<br>7.15 KB | 948.9 μs<br>11.75 KB<br>Δ 6.86 x / 1.64 x |  | 19,106.6 μs<br>765.73 KB<br>Δ 138.15 x / 107.1 x |
 <!-- BENCHMARK:WINDOWS:QUICK:END -->
 
 <!-- BENCHMARK:WINDOWS:FULL:START -->
