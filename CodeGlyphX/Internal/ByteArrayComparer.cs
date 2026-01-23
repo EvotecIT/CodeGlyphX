@@ -16,12 +16,14 @@ internal sealed class ByteArrayComparer : IEqualityComparer<byte[]> {
     public int GetHashCode(byte[] obj) {
         if (obj is null) return 0;
         unchecked {
-            uint hash = 2166136261;
+            ulong hash = 14695981039346656037UL;
             for (var i = 0; i < obj.Length; i++) {
                 hash ^= obj[i];
-                hash *= 16777619;
+                hash *= 1099511628211UL;
             }
-            return (int)hash;
+            hash ^= (ulong)obj.Length;
+            hash *= 1099511628211UL;
+            return (int)(hash ^ (hash >> 32));
         }
     }
 }
