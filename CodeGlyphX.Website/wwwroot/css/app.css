@@ -3213,3 +3213,357 @@ body.using-keyboard .faq-hero h1:focus-visible {
         font-size: 1rem;
     }
 }
+
+/* ==========================================================================
+   Benchmark Page
+   ========================================================================== */
+
+.benchmark-page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 4rem;
+}
+
+.benchmark-hero {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.benchmark-hero h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.benchmark-intro {
+    color: var(--text-muted);
+    max-width: 700px;
+    margin: 0 auto 1.5rem;
+    line-height: 1.7;
+}
+
+.benchmark-meta-grid {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.meta-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.meta-value {
+    font-weight: 600;
+    color: var(--text);
+}
+
+.benchmark-section {
+    margin-bottom: 3rem;
+}
+
+.benchmark-section h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.section-description {
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+}
+
+/* Info cards grid */
+.benchmark-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+.benchmark-info-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+}
+
+.benchmark-info-card h3 {
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
+    color: var(--text);
+}
+
+.benchmark-info-card p {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    line-height: 1.6;
+    margin-bottom: 0.75rem;
+}
+
+.benchmark-info-card p:last-child {
+    margin-bottom: 0;
+}
+
+.benchmark-info-card ul {
+    margin: 0;
+    padding-left: 1.25rem;
+    color: var(--text-muted);
+    font-size: 0.875rem;
+}
+
+.benchmark-info-card li {
+    margin-bottom: 0.5rem;
+    line-height: 1.5;
+}
+
+.benchmark-info-card li:last-child {
+    margin-bottom: 0;
+}
+
+/* Mode selector */
+.benchmark-mode-selector {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.benchmark-mode-btn {
+    padding: 0.5rem 1.5rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.benchmark-mode-btn:hover:not(:disabled) {
+    border-color: var(--primary);
+    color: var(--text);
+}
+
+.benchmark-mode-btn.active {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: white;
+}
+
+.benchmark-mode-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.benchmark-mode-note {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    font-style: italic;
+}
+
+/* Tables */
+.table-scroll {
+    overflow-x: auto;
+    margin: 0 -0.5rem;
+    padding: 0 0.5rem;
+}
+
+.bench-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+}
+
+.bench-table th,
+.bench-table td {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+}
+
+.bench-table th {
+    background: var(--bg-card);
+    font-weight: 600;
+    color: var(--text);
+    white-space: nowrap;
+}
+
+.bench-table td {
+    color: var(--text);
+}
+
+.bench-table tbody tr:hover {
+    background: var(--bg-card);
+}
+
+.bench-dim {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.bench-na {
+    color: var(--text-muted);
+    text-align: center;
+}
+
+.bench-winner {
+    background: rgba(34, 197, 94, 0.1);
+}
+
+.bench-fastest {
+    font-weight: 500;
+    color: var(--success);
+}
+
+/* Rating badges */
+.bench-rating-good {
+    color: var(--success);
+    font-weight: 600;
+}
+
+.bench-rating-ok {
+    color: var(--warning, #f59e0b);
+    font-weight: 600;
+}
+
+.bench-rating-bad {
+    color: var(--error);
+    font-weight: 600;
+}
+
+.bench-rating-unknown {
+    color: var(--text-muted);
+}
+
+/* Legend */
+.bench-legend {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+    padding: 0.75rem 1rem;
+    background: var(--bg-card);
+    border-radius: 8px;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.bench-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Detail sections */
+.benchmark-detail-section {
+    margin-bottom: 2rem;
+}
+
+.benchmark-detail-section h3 {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    color: var(--text);
+}
+
+/* Environment grid */
+.benchmark-env-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.env-item {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+.env-label {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.25rem;
+}
+
+.env-value {
+    color: var(--text);
+    font-size: 0.875rem;
+    word-break: break-word;
+}
+
+/* Notes section */
+.benchmark-notes ul {
+    margin: 0;
+    padding-left: 1.5rem;
+    color: var(--text-muted);
+}
+
+.benchmark-notes li {
+    margin-bottom: 0.5rem;
+    line-height: 1.6;
+}
+
+/* Status messages */
+.benchmark-no-data,
+.benchmark-warning {
+    padding: 1.5rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text-muted);
+    text-align: center;
+}
+
+.benchmark-warning {
+    border-color: var(--warning, #f59e0b);
+    color: var(--warning, #f59e0b);
+}
+
+.loading-text {
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .benchmark-page {
+        padding: 1.5rem 1rem 3rem;
+    }
+
+    .benchmark-hero h1 {
+        font-size: 1.75rem;
+    }
+
+    .benchmark-meta-grid {
+        gap: 1rem;
+    }
+
+    .bench-table {
+        font-size: 0.8rem;
+    }
+
+    .bench-table th,
+    .bench-table td {
+        padding: 0.5rem 0.75rem;
+    }
+
+    .bench-legend {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+}
