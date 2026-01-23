@@ -15,7 +15,7 @@
   {{EXTRA_CSS}}
   {{OPENGRAPH}}
   {{STRUCTURED_DATA}}
-  <script>(function(){const t=localStorage.getItem('theme')||'dark';document.documentElement.dataset.theme=t;})();</script>
+  <script>(function(){const t=localStorage.getItem('theme')||'auto';document.documentElement.dataset.theme=t;})();</script>
 </head>
 <body{{BODY_CLASS}}>
   <div class="page">
@@ -25,7 +25,7 @@
 </main>
 {{FOOTER}}
   </div>
-  <script src="/js/site.js"></script>
+  <script src="/js/site.js" defer></script>
   {{EXTRA_SCRIPTS}}
 </body>
 </html>

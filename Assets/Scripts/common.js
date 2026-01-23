@@ -1,12 +1,25 @@
-// Theme toggle
-document.querySelectorAll('.theme-toggle').forEach(function(btn) {
-  btn.addEventListener('click', function() {
-    const current = document.documentElement.dataset.theme || 'dark';
-    const next = current === 'dark' ? 'light' : 'dark';
-    document.documentElement.dataset.theme = next;
-    localStorage.setItem('theme', next);
+// Theme toggle (Auto/Light/Dark)
+(function() {
+  function updateActiveTheme(theme) {
+    document.querySelectorAll('.theme-toggle button').forEach(function(btn) {
+      btn.classList.toggle('active', btn.dataset.theme === theme);
+    });
+  }
+
+  // Set initial active state
+  var currentTheme = document.documentElement.dataset.theme || 'auto';
+  updateActiveTheme(currentTheme);
+
+  // Handle theme button clicks
+  document.querySelectorAll('.theme-toggle button[data-theme]').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var theme = this.dataset.theme;
+      document.documentElement.dataset.theme = theme;
+      localStorage.setItem('theme', theme);
+      updateActiveTheme(theme);
+    });
   });
-});
+})();
 
 // Keyboard focus visibility (show focus ring only for keyboard navigation)
 function enableKeyboardFocus() { document.body.classList.add('using-keyboard'); }

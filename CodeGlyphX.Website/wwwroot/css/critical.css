@@ -131,29 +131,39 @@ svg {
     gap: 0.5rem;
 }
 
-/* Theme toggle button - prevent invisible button flash */
+/* Theme toggle - 3-button group */
 .theme-toggle {
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    padding: 0.5rem;
     display: flex;
     align-items: center;
-    justify-content: center;
-    color: var(--text-muted);
+    gap: 0.25rem;
+    padding: 0.25rem;
+    background: var(--bg-card);
     border-radius: 8px;
 }
 
-.theme-toggle svg {
-    width: 20px;
-    height: 20px;
+.theme-toggle button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    background: transparent;
+    border: none;
+    border-radius: 6px;
+    color: var(--text-muted);
+    cursor: pointer;
 }
 
-/* Show correct icon based on theme - prevent double icon flash */
-[data-theme="dark"] .sun-icon { display: block; }
-[data-theme="dark"] .moon-icon { display: none; }
-[data-theme="light"] .sun-icon { display: none; }
-[data-theme="light"] .moon-icon { display: block; }
+.theme-toggle button.active {
+    background: var(--primary);
+    color: white;
+}
+
+.theme-toggle button svg {
+    width: 18px;
+    height: 18px;
+}
 
 /* Blazor error UI - hidden by default */
 #blazor-error-ui {
