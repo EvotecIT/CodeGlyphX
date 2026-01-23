@@ -98,6 +98,22 @@ function Copy-FingerprintedBlazorJs {
     }
 }
 
+function Add-BlazorScriptCacheBuster {
+    param(
+        [string]$HtmlPath
+    )
+    if (-not (Test-Path $HtmlPath)) { return }
+    $version = [DateTimeOffset]::UtcNow.ToUnixTimeSeconds()
+    $content = Get-Content -Path $HtmlPath -Raw
+    $pattern = 'src="_framework/blazor\.webassembly\.js"'
+    $replacement = "src=`"_framework/blazor.webassembly.js?v=$version`""
+    $updated = [System.Text.RegularExpressions.Regex]::Replace($content, $pattern, $replacement)
+    if ($updated -ne $content) {
+        Set-Content -Path $HtmlPath -Value $updated -Encoding UTF8
+        Write-Host "  Added cache buster to Blazor script reference" -ForegroundColor Gray
+    }
+}
+
 $repoRoot = Resolve-Path (Join-Path $PSScriptRoot "..")
 $websiteProjectPath = Join-Path $repoRoot $WebsiteProject
 $wwwrootSource = [IO.Path]::Combine($repoRoot, "CodeGlyphX.Website", "wwwroot")
@@ -162,6 +178,8 @@ Set-BaseHref -FilePath $docsIndex -BaseHref "/docs/"
 Set-BaseHref -FilePath $docs404 -BaseHref "/docs/"
 Copy-FingerprintedBlazorJs -FrameworkPath (Join-Path $docsRoot "_framework")
 Update-BootIntegrity -FrameworkPath (Join-Path $docsRoot "_framework")
+Add-BlazorScriptCacheBuster -HtmlPath $docsIndex
+Add-BlazorScriptCacheBuster -HtmlPath $docs404
 
 if (Test-Path $tempDocs) {
     Remove-Item -Recurse -Force $tempDocs
@@ -189,6 +207,8 @@ Set-BaseHref -FilePath $playgroundIndex -BaseHref "/playground/"
 Set-BaseHref -FilePath $playground404 -BaseHref "/playground/"
 Copy-FingerprintedBlazorJs -FrameworkPath (Join-Path $playgroundRoot "_framework")
 Update-BootIntegrity -FrameworkPath (Join-Path $playgroundRoot "_framework")
+Add-BlazorScriptCacheBuster -HtmlPath $playgroundIndex
+Add-BlazorScriptCacheBuster -HtmlPath $playground404
 
 if (Test-Path $tempPublish) {
     Remove-Item -Recurse -Force $tempPublish
