@@ -722,6 +722,21 @@ body.using-keyboard .hero h1:focus-visible {
     margin-bottom: 1rem;
 }
 
+/* Light mode: use darker purple for sufficient contrast (WCAG AA) */
+[data-theme="light"] .section-label {
+    color: #5b21b6;
+    background: rgba(91, 33, 182, 0.1);
+    border-color: rgba(91, 33, 182, 0.2);
+}
+
+@media (prefers-color-scheme: light) {
+    [data-theme="auto"] .section-label {
+        color: #5b21b6;
+        background: rgba(91, 33, 182, 0.1);
+        border-color: rgba(91, 33, 182, 0.2);
+    }
+}
+
 .section-header h2 {
     font-size: clamp(2rem, 4vw, 3rem);
     margin-bottom: 1rem;
@@ -971,13 +986,30 @@ body.using-keyboard .hero h1:focus-visible {
 [data-theme="light"] .token.important,
 [data-theme="light"] .token.variable { color: #e36209; }
 
-/* Legacy manual highlighting (fallback) */
+/* Legacy manual highlighting (fallback) - dark mode */
 .code-block .keyword { color: #c678dd; }
 .code-block .string { color: #98c379; }
 .code-block .comment { color: #9aa4b2; }
 .code-block .token.comment { color: #9aa4b2; }
 .code-block .type { color: #e5c07b; }
 .code-block .method { color: #61afef; }
+
+/* Legacy manual highlighting - light mode (WCAG AA compliant) */
+[data-theme="light"] .code-block .keyword { color: #d73a49; }
+[data-theme="light"] .code-block .string { color: #22863a; }
+[data-theme="light"] .code-block .comment { color: #5a6270; }
+[data-theme="light"] .code-block .token.comment { color: #5a6270; }
+[data-theme="light"] .code-block .type { color: #b76b01; }
+[data-theme="light"] .code-block .method { color: #005cc5; }
+
+@media (prefers-color-scheme: light) {
+    [data-theme="auto"] .code-block .keyword { color: #d73a49; }
+    [data-theme="auto"] .code-block .string { color: #22863a; }
+    [data-theme="auto"] .code-block .comment { color: #5a6270; }
+    [data-theme="auto"] .code-block .token.comment { color: #5a6270; }
+    [data-theme="auto"] .code-block .type { color: #b76b01; }
+    [data-theme="auto"] .code-block .method { color: #005cc5; }
+}
 
 /* Copy button for code blocks */
 .copy-btn {
