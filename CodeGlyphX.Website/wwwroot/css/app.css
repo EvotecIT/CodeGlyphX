@@ -646,13 +646,16 @@ body.using-keyboard .hero h1:focus-visible {
     }
 }
 
-.stat-item .stat-value {
+.stat-item .stat-value,
+.stat-item .stat-number {
     font-size: 2.5rem;
+    font-weight: 600;
     background: linear-gradient(135deg, var(--primary-light), var(--secondary));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     margin-bottom: 0.5rem;
+    display: block;
 }
 
 .stat-item p {
@@ -1699,6 +1702,41 @@ body.using-keyboard .showcase-hero h1:focus-visible {
     color: var(--text-muted);
     font-size: 1.1rem;
     margin-bottom: 2rem;
+}
+
+/* ============================================
+   About Section
+   ============================================ */
+
+.about-section {
+    padding: 4rem 2rem;
+    text-align: center;
+}
+
+.about-content {
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.about-text {
+    color: var(--text-muted);
+    font-size: 1rem;
+    line-height: 1.8;
+}
+
+.about-text strong {
+    color: var(--text);
+}
+
+/* Ensure links are distinguishable (not just by color) */
+.about-text a {
+    color: var(--primary-light);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.about-text a:hover {
+    color: var(--secondary);
 }
 
 /* ============================================
