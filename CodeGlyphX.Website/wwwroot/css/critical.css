@@ -83,6 +83,31 @@ svg {
     flex-shrink: 0;
 }
 
+/* Feature icons - prevent flash */
+.feature-icon {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.feature-icon svg {
+    width: 24px;
+    height: 24px;
+}
+
+/* Hero badge icons */
+.hero-badge svg, .hero-badges svg {
+    width: 20px;
+    height: 20px;
+}
+
+.hero-preview svg {
+    max-width: 100%;
+    height: auto;
+}
+
 /* Basic header layout to prevent content flash */
 .header {
     position: sticky;
