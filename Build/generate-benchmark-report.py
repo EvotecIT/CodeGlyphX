@@ -5,6 +5,7 @@ import datetime as dt
 import os
 import platform
 import re
+import sys
 from pathlib import Path
 
 
@@ -393,19 +394,78 @@ def build_comparisons_payload(compare_files):
     return comparisons
 
 
-def format_run_mode(run_mode: str) -> str:
+def format_run_mode(run_mode: str, source: str | None = None, requested: str | None = None) -> str:
     if run_mode == "quick":
-        return "Run mode: Quick (warmupCount=1, iterationCount=3, invocationCount=1)."
-    return "Run mode: Full (BenchmarkDotNet default job settings)."
+        label = "Run mode: Quick (warmupCount=1, iterationCount=3, invocationCount=1)."
+    else:
+        label = "Run mode: Full (BenchmarkDotNet default job settings)."
+    if source in ("inferred", "inferred-mismatch"):
+        if requested and requested != run_mode:
+            return f"{label} (inferred from artifacts; requested {requested})."
+        return f"{label} (inferred from artifacts)."
+    return label
 
 
-def resolve_run_mode(run_mode: str | None) -> str:
-    if run_mode:
-        return run_mode
-    return "quick" if os.environ.get("BENCH_QUICK") == "true" else "full"
+def infer_run_mode_from_reports(results_path: Path) -> str | None:
+    candidates = list(results_path.glob("*-report-github.md"))
+    if not candidates:
+        candidates = list(results_path.glob("*-report.md"))
+    if not candidates:
+        return None
+
+    count_re = re.compile(r"(IterationCount|WarmupCount|InvocationCount)\\s*=\\s*(\\d+)")
+    for path in sorted(candidates):
+        try:
+            text = path.read_text(encoding="utf-8", errors="ignore")
+        except OSError:
+            continue
+        counts = {}
+        for match in count_re.finditer(text):
+            counts[match.group(1).lower()] = int(match.group(2))
+        iteration = counts.get("iterationcount")
+        warmup = counts.get("warmupcount")
+        invocation = counts.get("invocationcount")
+        if iteration is None or warmup is None:
+            continue
+        if iteration == 3 and warmup == 1 and (invocation is None or invocation == 1):
+            return "quick"
+        return "full"
+    return None
 
 
-def build_section(artifacts_path: Path, framework: str, configuration: str, run_mode: str) -> str:
+def resolve_run_mode(run_mode: str | None, results_path: Path):
+    inferred = infer_run_mode_from_reports(results_path)
+    requested = run_mode
+    warning = None
+    source = "explicit" if run_mode else None
+
+    if inferred:
+        if run_mode and inferred != run_mode:
+            warning = f"Run mode mismatch: requested {run_mode}, inferred {inferred} from artifacts."
+            run_mode = inferred
+            source = "inferred-mismatch"
+        elif not run_mode:
+            run_mode = inferred
+            source = "inferred"
+    if not run_mode:
+        run_mode = "quick" if os.environ.get("BENCH_QUICK") == "true" else "full"
+        source = "env-default"
+
+    if warning:
+        print(f"WARNING: {warning}", file=sys.stderr)
+
+    details = format_run_mode(run_mode, source=source, requested=requested)
+    return run_mode, details, warning, source
+
+
+def build_section(
+    artifacts_path: Path,
+    framework: str,
+    configuration: str,
+    run_mode: str,
+    run_mode_details: str,
+    run_mode_warning: str | None,
+) -> str:
     results_path = artifacts_path / "results"
     if not results_path.exists():
         raise SystemExit(f"Results folder not found: {results_path}")
@@ -431,7 +491,7 @@ def build_section(artifacts_path: Path, framework: str, configuration: str, run_
     lines.append("- Rating: good/ok/bad based on time + allocation ratios (good <=1.1x and <=1.25x alloc, ok <=1.5x and <=2.0x alloc).")
     lines.append("- Quick runs use fewer iterations for fast feedback; Full runs use BenchmarkDotNet defaults and are recommended for publishing.")
     lines.append("Notes:")
-    lines.append(f"- {format_run_mode(run_mode)}")
+    lines.append(f"- {run_mode_details}")
     lines.append("- Comparisons target PNG output and include encode+render (not encode-only).")
     lines.append("- Module size and quiet zone are matched to CodeGlyphX defaults where possible; image size is derived from CodeGlyphX modules.")
     lines.append("- ZXing.Net uses ZXing.Net.Bindings.ImageSharp.V3 (ImageSharp 3.x renderer).")
@@ -439,9 +499,14 @@ def build_section(artifacts_path: Path, framework: str, configuration: str, run_
     lines.append("- QRCoder uses PngByteQRCode (managed PNG output, no external renderer).")
     lines.append("- QR decode comparisons use raw RGBA32 bytes (ZXing via RGBLuminanceSource).")
     lines.append("- QR decode clean uses CodeGlyphX Balanced; noisy uses CodeGlyphX Robust with aggressive sampling/limits; ZXing uses default (clean) and TryHarder (noisy).")
+    warnings = []
+    if run_mode_warning:
+        warnings.append(run_mode_warning)
     if missing_compare:
+        warnings.append(f"Missing compare results: {', '.join(missing_compare)}.")
+    if warnings:
         lines.append("Warnings:")
-        lines.append(f"- Missing compare results: {', '.join(missing_compare)}.")
+        lines.extend(f"- {warning}" for warning in warnings)
     lines.append("")
 
     summary_rows = []
@@ -538,6 +603,7 @@ def main():
     parser.add_argument("--branch", default=None)
     parser.add_argument("--dotnet-sdk", default=None)
     parser.add_argument("--runtime", default=None)
+    parser.add_argument("--allow-partial", action="store_true")
     parser.add_argument("--publish", action="store_true")
     parser.add_argument("--no-publish", action="store_true")
     parser.add_argument("--fail-on-missing-compare", action="store_true")
@@ -547,10 +613,12 @@ def main():
     output_path = Path(args.output).resolve() if args.output else Path(__file__).resolve().parent.parent / "BENCHMARK.md"
 
     os_name = resolve_os_name(artifacts_path, args.os_name)
-    run_mode = resolve_run_mode(args.run_mode)
+    results_path = artifacts_path / "results"
+    run_mode, run_mode_details, run_mode_warning, run_mode_source = resolve_run_mode(args.run_mode, results_path)
+    fail_on_missing_compare = args.fail_on_missing_compare or not args.allow_partial
     publish_flag = resolve_publish_flag(run_mode, args.publish, args.no_publish)
     meta = build_meta(args.commit, args.branch, args.dotnet_sdk, args.runtime)
-    section = build_section(artifacts_path, args.framework, args.configuration, run_mode)
+    section = build_section(artifacts_path, args.framework, args.configuration, run_mode, run_mode_details, run_mode_warning)
     update_section(output_path, section, os_name, run_mode)
 
     repo_root = Path(__file__).resolve().parent.parent
@@ -563,9 +631,11 @@ def main():
         args.configuration,
         os_name,
         run_mode,
+        run_mode_details,
+        run_mode_source,
         publish_flag,
         meta,
-        args.fail_on_missing_compare,
+        fail_on_missing_compare,
     )
     # JSON output is already stored under Assets/Data for website ingestion.
 
@@ -598,6 +668,8 @@ def write_json(
     configuration: str,
     os_name: str,
     run_mode: str,
+    run_mode_details: str,
+    run_mode_source: str,
     publish: bool,
     meta: dict,
     fail_on_missing_compare: bool,
@@ -614,7 +686,7 @@ def write_json(
     summary_rows, summary_items = build_summary(compare_files) if compare_files else ([], [])
 
     notes = [
-        format_run_mode(run_mode),
+        run_mode_details,
         "Comparisons target PNG output and include encode+render (not encode-only).",
         "Module size and quiet zone are matched to CodeGlyphX defaults where possible; image size is derived from CodeGlyphX modules.",
         "ZXing.Net uses ZXing.Net.Bindings.ImageSharp.V3 (ImageSharp 3.x renderer).",
@@ -631,7 +703,8 @@ def write_json(
         "framework": framework,
         "configuration": configuration,
         "runMode": run_mode,
-        "runModeDetails": format_run_mode(run_mode),
+        "runModeDetails": run_mode_details,
+        "runModeSource": run_mode_source,
         "publish": publish,
         "artifacts": str(artifacts_path),
         "meta": meta,
@@ -694,6 +767,7 @@ def write_json(
         "configuration": payload["configuration"],
         "runMode": payload["runMode"],
         "runModeDetails": payload["runModeDetails"],
+        "runModeSource": payload["runModeSource"],
         "publish": payload["publish"],
         "artifacts": payload["artifacts"],
         "meta": payload["meta"],
@@ -722,6 +796,7 @@ def write_json(
         {
             "os": payload["os"],
             "runMode": payload["runMode"],
+            "runModeSource": payload["runModeSource"],
             "generatedUtc": payload["generatedUtc"],
             "publish": payload["publish"],
             "framework": payload["framework"],

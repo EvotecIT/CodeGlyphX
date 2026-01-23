@@ -9,6 +9,7 @@ param(
     [string]$Branch,
     [string]$DotnetSdk,
     [string]$RuntimeVersion,
+    [switch]$AllowPartial,
     [switch]$Publish,
     [switch]$NoPublish,
     [switch]$FailOnMissingCompare
@@ -16,54 +17,56 @@ param(
 
 $ErrorActionPreference = "Stop"
 
+function Write-TextUtf8NoBom([string]$path, [string]$value) {
+    $encoding = New-Object System.Text.UTF8Encoding($false)
+    [System.IO.File]::WriteAllText($path, $value, $encoding)
+}
+
 if ([string]::IsNullOrWhiteSpace($OutputPath)) {
     $OutputPath = Join-Path $PSScriptRoot "..\BENCHMARK.md"
 }
 
-if ([string]::IsNullOrWhiteSpace($ArtifactsPath)) {
-    $resultsRoot = Join-Path $PSScriptRoot "BenchmarkResults"
-    if (Test-Path $resultsRoot) {
-        $candidates = Get-ChildItem -Path $resultsRoot -Directory | Sort-Object LastWriteTime -Descending
-        $preferred = $null
-        foreach ($candidate in $candidates) {
-            $resultsCandidate = Join-Path $candidate.FullName "results"
-            if (-not (Test-Path $resultsCandidate)) { continue }
-            $compareExists = Get-ChildItem -Path $resultsCandidate -Filter "*Compare*-report.csv" -ErrorAction SilentlyContinue | Select-Object -First 1
-            if ($compareExists) { $preferred = $candidate; break }
-        }
-        if (-not $preferred) { $preferred = $candidates | Select-Object -First 1 }
-        if ($preferred) {
-            $ArtifactsPath = $preferred.FullName
-        }
+$artifactsPathProvided = -not [string]::IsNullOrWhiteSpace($ArtifactsPath)
+
+function Format-RunModeLabel([string]$runMode, [string]$source, [string]$requested) {
+    $label = if ($runMode -eq "quick") {
+        "Run mode: Quick (warmupCount=1, iterationCount=3, invocationCount=1)."
+    } else {
+        "Run mode: Full (BenchmarkDotNet default job settings)."
     }
+    if ($source -eq "inferred" -or $source -eq "inferred-mismatch") {
+        if (-not [string]::IsNullOrWhiteSpace($requested) -and $requested -ne $runMode) {
+            return "$label (inferred from artifacts; requested $requested)."
+        }
+        return "$label (inferred from artifacts)."
+    }
+    return $label
 }
 
-if ([string]::IsNullOrWhiteSpace($ArtifactsPath)) {
-    throw "ArtifactsPath is required. Provide -ArtifactsPath or run from Build/Run-Benchmarks-Compare.ps1 first."
+function Get-RunModeFromReports([string]$resultsPath) {
+    if (-not (Test-Path $resultsPath)) { return $null }
+    $candidates = Get-ChildItem -Path $resultsPath -Filter "*-report-github.md" -ErrorAction SilentlyContinue
+    if (-not $candidates -or $candidates.Count -eq 0) {
+        $candidates = Get-ChildItem -Path $resultsPath -Filter "*-report.md" -ErrorAction SilentlyContinue
+    }
+    foreach ($file in $candidates | Sort-Object Name) {
+        $content = Get-Content -Path $file.FullName -Raw -ErrorAction SilentlyContinue
+        if ([string]::IsNullOrWhiteSpace($content)) { continue }
+        $iteration = [regex]::Match($content, "IterationCount\\s*=\\s*(\\d+)")
+        $warmup = [regex]::Match($content, "WarmupCount\\s*=\\s*(\\d+)")
+        $invocation = [regex]::Match($content, "InvocationCount\\s*=\\s*(\\d+)")
+        if (-not $iteration.Success -or -not $warmup.Success) { continue }
+        $iterationCount = [int]$iteration.Groups[1].Value
+        $warmupCount = [int]$warmup.Groups[1].Value
+        $invocationCount = if ($invocation.Success) { [int]$invocation.Groups[1].Value } else { $null }
+        if ($iterationCount -eq 3 -and $warmupCount -eq 1 -and ($invocationCount -eq $null -or $invocationCount -eq 1)) {
+            return "quick"
+        }
+        return "full"
+    }
+    return $null
 }
 
-$resultsPath = Join-Path $ArtifactsPath "results"
-if (-not (Test-Path $resultsPath)) {
-    throw "Results folder not found: $resultsPath"
-}
-
-$runModeNormalized = $RunMode
-if ([string]::IsNullOrWhiteSpace($runModeNormalized)) {
-    $runModeNormalized = if ($env:BENCH_QUICK -eq "true") { "quick" } else { "full" }
-}
-$runModeLabel = if ($runModeNormalized -eq "quick") {
-    "Run mode: Quick (warmupCount=1, iterationCount=3, invocationCount=1)."
-} else {
-    "Run mode: Full (BenchmarkDotNet default job settings)."
-}
-
-$publishFlag = if ($Publish) {
-    $true
-} elseif ($NoPublish) {
-    $false
-} else {
-    $runModeNormalized -eq "full"
-}
 
 function Try-Get-DotnetSdk {
     if (-not [string]::IsNullOrWhiteSpace($DotnetSdk)) { return $DotnetSdk }
@@ -239,10 +242,94 @@ $titleMap = @{
     "AztecCompareBenchmarks" = "Aztec (Encode)"
 }
 
+$expectedCompare = $titleMap.Keys | Where-Object { $_ -match "CompareBenchmarks$" } | Sort-Object
+
+if (-not $artifactsPathProvided) {
+    $resultsRoot = Join-Path $PSScriptRoot "BenchmarkResults"
+    if (Test-Path $resultsRoot) {
+        $candidates = Get-ChildItem -Path $resultsRoot -Directory | Sort-Object LastWriteTime -Descending
+        $preferred = $null
+        $firstCandidate = $null
+        foreach ($candidate in $candidates) {
+            if (-not $firstCandidate) { $firstCandidate = $candidate }
+            $resultsCandidate = Join-Path $candidate.FullName "results"
+            if (-not (Test-Path $resultsCandidate)) { continue }
+            $compareFiles = Get-ChildItem -Path $resultsCandidate -Filter "*Compare*-report.csv" -ErrorAction SilentlyContinue
+            if (-not $compareFiles -or $compareFiles.Count -eq 0) { continue }
+            if (-not $AllowPartial) {
+                $actualCompare = @()
+                foreach ($file in $compareFiles) {
+                    $actualCompare += (Get-ClassName $file.Name)
+                }
+                $missing = @()
+                foreach ($expected in $expectedCompare) {
+                    if ($actualCompare -notcontains $expected) { $missing += $expected }
+                }
+                if ($missing.Count -gt 0) { continue }
+            }
+            $preferred = $candidate
+            break
+        }
+        if (-not $preferred) {
+            if ($AllowPartial -and $firstCandidate) {
+                $preferred = $firstCandidate
+            } else {
+                throw "No artifacts folder with a full compare set was found. Run the full benchmark suite or pass -AllowPartial or -ArtifactsPath."
+            }
+        }
+        if ($preferred) {
+            $ArtifactsPath = $preferred.FullName
+        }
+    }
+}
+
+if ([string]::IsNullOrWhiteSpace($ArtifactsPath)) {
+    throw "ArtifactsPath is required. Provide -ArtifactsPath or run from Build/Run-Benchmarks-Compare.ps1 first."
+}
+
+$resultsPath = Join-Path $ArtifactsPath "results"
+if (-not (Test-Path $resultsPath)) {
+    throw "Results folder not found: $resultsPath"
+}
+
+$requestedRunMode = $RunMode
+$runModeNormalized = $requestedRunMode
+$runModeSource = if ([string]::IsNullOrWhiteSpace($runModeNormalized)) { $null } else { "explicit" }
+$runModeWarning = $null
+
+$inferredRunMode = Get-RunModeFromReports $resultsPath
+if ($inferredRunMode) {
+    if (-not [string]::IsNullOrWhiteSpace($runModeNormalized) -and $runModeNormalized -ne $inferredRunMode) {
+        $runModeWarning = "Run mode mismatch: requested $runModeNormalized, inferred $inferredRunMode from artifacts."
+        $runModeNormalized = $inferredRunMode
+        $runModeSource = "inferred-mismatch"
+    } elseif ([string]::IsNullOrWhiteSpace($runModeNormalized)) {
+        $runModeNormalized = $inferredRunMode
+        $runModeSource = "inferred"
+    }
+}
+
+if ([string]::IsNullOrWhiteSpace($runModeNormalized)) {
+    $runModeNormalized = if ($env:BENCH_QUICK -eq "true") { "quick" } else { "full" }
+    $runModeSource = "env-default"
+}
+
+if (-not [string]::IsNullOrWhiteSpace($runModeWarning)) {
+    Write-Warning $runModeWarning
+}
+
+$runModeLabel = Format-RunModeLabel $runModeNormalized $runModeSource $requestedRunMode
+
+$publishFlag = if ($Publish) {
+    $true
+} elseif ($NoPublish) {
+    $false
+} else {
+    $runModeNormalized -eq "full"
+}
+
 $baselineFiles = Get-ChildItem $resultsPath -Filter "*-report.csv" | Where-Object { $_.Name -notmatch "Compare" }
 $compareFiles = Get-ChildItem $resultsPath -Filter "*-report.csv" | Where-Object { $_.Name -match "Compare" }
-
-$expectedCompare = $titleMap.Keys | Where-Object { $_ -match "CompareBenchmarks$" } | Sort-Object
 $actualCompare = @()
 foreach ($file in $compareFiles) {
     $actualCompare += (Get-ClassName $file.Name)
@@ -284,9 +371,12 @@ $lines.Add("- Barcoder uses Barcoder.Renderer.Image (ImageSharp renderer).")
 $lines.Add("- QRCoder uses PngByteQRCode (managed PNG output, no external renderer).")
 $lines.Add("- QR decode comparisons use raw RGBA32 bytes (ZXing via RGBLuminanceSource).")
 $lines.Add("- QR decode clean uses CodeGlyphX Balanced; noisy uses CodeGlyphX Robust with aggressive sampling/limits; ZXing uses default (clean) and TryHarder (noisy).")
-if ($missingCompare.Count -gt 0) {
+$warnings = New-Object System.Collections.Generic.List[string]
+if (-not [string]::IsNullOrWhiteSpace($runModeWarning)) { $warnings.Add($runModeWarning) }
+if ($missingCompare.Count -gt 0) { $warnings.Add("Missing compare results: $($missingCompare -join ', ').") }
+if ($warnings.Count -gt 0) {
     $lines.Add("Warnings:")
-    $lines.Add("- Missing compare results: $($missingCompare -join ', ').")
+    foreach ($warning in $warnings) { $lines.Add("- $warning") }
 }
 $lines.Add("")
 
@@ -403,7 +493,8 @@ if ($compareParseFailures.Count -gt 0) {
     $lines.Add("")
 }
 
-if ($FailOnMissingCompare -and $missingCompare.Count -gt 0) {
+$enforceMissingCompare = $FailOnMissingCompare -or (-not $AllowPartial)
+if ($enforceMissingCompare -and $missingCompare.Count -gt 0) {
     throw "Missing compare results: $($missingCompare -join ', ')."
 }
 
@@ -588,6 +679,7 @@ $jsonDoc = @{
     configuration = $Configuration
     runMode = $runModeNormalized
     runModeDetails = $runModeLabel
+    runModeSource = $runModeSource
     publish = $publishFlag
     artifacts = $ArtifactsPath
     meta = $meta
@@ -623,7 +715,7 @@ $jsonSkeleton = @{
 }
 
 if (-not (Test-Path $jsonOutput)) {
-    $jsonSkeleton | ConvertTo-Json -Depth 8 | Set-Content -Path $jsonOutput -NoNewline -Encoding utf8NoBOM
+    Write-TextUtf8NoBom $jsonOutput ($jsonSkeleton | ConvertTo-Json -Depth 8)
 }
 
 $jsonText = Get-Content -Path $jsonOutput -Raw -Encoding UTF8
@@ -646,11 +738,11 @@ foreach ($os in @("windows", "linux", "macos")) {
 
 $jsonAll.$osName.$runModeNormalized = $jsonDoc
 $jsonOut = $jsonAll | ConvertTo-Json -Depth 8
-Set-Content -Path $jsonOutput -Value $jsonOut -NoNewline -Encoding utf8NoBOM
+Write-TextUtf8NoBom $jsonOutput $jsonOut
 
 $summaryOutput = Join-Path $PSScriptRoot "..\Assets\Data\benchmark-summary.json"
 if (-not (Test-Path $summaryOutput)) {
-    $jsonSkeleton | ConvertTo-Json -Depth 8 | Set-Content -Path $summaryOutput -NoNewline -Encoding utf8NoBOM
+    Write-TextUtf8NoBom $summaryOutput ($jsonSkeleton | ConvertTo-Json -Depth 8)
 }
 $summaryText = Get-Content -Path $summaryOutput -Raw -Encoding UTF8
 $summaryAll = $summaryText | ConvertFrom-Json
@@ -676,6 +768,7 @@ $summaryAll.$osName.$runModeNormalized = [pscustomobject]@{
     configuration = $jsonDoc.configuration
     runMode = $jsonDoc.runMode
     runModeDetails = $jsonDoc.runModeDetails
+    runModeSource = $jsonDoc.runModeSource
     publish = $jsonDoc.publish
     artifacts = $jsonDoc.artifacts
     meta = $jsonDoc.meta
@@ -686,7 +779,7 @@ $summaryAll.$osName.$runModeNormalized = [pscustomobject]@{
     summary = $jsonDoc.summary
 }
 $summaryOut = $summaryAll | ConvertTo-Json -Depth 8
-Set-Content -Path $summaryOutput -Value $summaryOut -NoNewline -Encoding utf8NoBOM
+Write-TextUtf8NoBom $summaryOutput $summaryOut
 
 # Summary output is already stored under Assets/Data for website ingestion.
 
@@ -696,7 +789,7 @@ if (-not (Test-Path $indexOutput)) {
         schemaVersion = 1
         entries = @()
     } | ConvertTo-Json -Depth 6
-    Set-Content -Path $indexOutput -Value $indexSkeleton -NoNewline -Encoding utf8NoBOM
+    Write-TextUtf8NoBom $indexOutput $indexSkeleton
 }
 
 $indexText = Get-Content -Path $indexOutput -Raw -Encoding UTF8
@@ -713,6 +806,7 @@ $newEntry = [pscustomobject]@{
     configuration = $jsonDoc.configuration
     artifacts = $jsonDoc.artifacts
     meta = $jsonDoc.meta
+    runModeSource = $jsonDoc.runModeSource
 }
 
 $entries = @()
@@ -724,7 +818,7 @@ $entries += $newEntry
 $indexDoc.entries = $entries
 
 $indexOut = $indexDoc | ConvertTo-Json -Depth 6
-Set-Content -Path $indexOutput -Value $indexOut -NoNewline -Encoding utf8NoBOM
+Write-TextUtf8NoBom $indexOutput $indexOut
 
 $sectionContent = ($lines -join "`n").TrimEnd()
 $marker = "BENCHMARK:$($osName.ToUpperInvariant()):$($runModeNormalized.ToUpperInvariant())"
@@ -789,4 +883,4 @@ $template = @(
     ""
 ) -join "`n"
 
-Set-Content -Path $OutputPath -Value $template -NoNewline -Encoding utf8NoBOM
+Write-TextUtf8NoBom $OutputPath $template

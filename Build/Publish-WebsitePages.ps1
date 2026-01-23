@@ -2,7 +2,8 @@ param(
     [string]$Configuration = "Release",
     [string]$Framework = "net10.0",
     [string]$WebsiteProject = "CodeGlyphX.Website/CodeGlyphX.Website.csproj",
-    [string]$OutputPath = "site"
+    [string]$OutputPath = "site",
+    [switch]$MinifyAssets
 )
 
 $ErrorActionPreference = "Stop"
@@ -213,4 +214,53 @@ Add-BlazorScriptCacheBuster -HtmlPath $playground404
 if (Test-Path $tempPublish) {
     Remove-Item -Recurse -Force $tempPublish
 }
+
+# Minify CSS and JS assets if requested
+if ($MinifyAssets) {
+    Write-Host "Minifying CSS and JavaScript assets..." -ForegroundColor Cyan
+
+    # Check if PSParseHTML module is available
+    $psParseHtml = Get-Module -ListAvailable -Name PSParseHTML | Select-Object -First 1
+    if (-not $psParseHtml) {
+        Write-Warning "PSParseHTML module not found. Skipping minification."
+        Write-Warning "Install with: Install-Module PSParseHTML -Force"
+    } else {
+        Import-Module PSParseHTML -Force
+
+        # Minify CSS files
+        $cssFiles = Get-ChildItem -Path $publishRoot -Filter "*.css" -Recurse -File
+        foreach ($css in $cssFiles) {
+            # Skip already minified files
+            if ($css.Name -match '\.min\.css$') { continue }
+
+            $originalSize = $css.Length
+            try {
+                Optimize-CSS -Path $css.FullName -OutputFile $css.FullName
+                $newSize = (Get-Item $css.FullName).Length
+                $saved = $originalSize - $newSize
+                $percent = if ($originalSize -gt 0) { [math]::Round(($saved / $originalSize) * 100, 1) } else { 0 }
+                Write-Host "  $($css.Name): $originalSize -> $newSize bytes (saved $saved bytes, $percent%)" -ForegroundColor Gray
+            } catch {
+                Write-Warning "  Failed to minify $($css.Name): $_"
+            }
+        }
+
+        # Minify JS files (skip framework files)
+        $jsFiles = Get-ChildItem -Path $publishRoot -Filter "*.js" -Recurse -File |
+            Where-Object { $_.FullName -notmatch '_framework' -and $_.Name -notmatch '\.min\.js$' }
+        foreach ($js in $jsFiles) {
+            $originalSize = $js.Length
+            try {
+                Optimize-JavaScript -Path $js.FullName -OutputFile $js.FullName
+                $newSize = (Get-Item $js.FullName).Length
+                $saved = $originalSize - $newSize
+                $percent = if ($originalSize -gt 0) { [math]::Round(($saved / $originalSize) * 100, 1) } else { 0 }
+                Write-Host "  $($js.Name): $originalSize -> $newSize bytes (saved $saved bytes, $percent%)" -ForegroundColor Gray
+            } catch {
+                Write-Warning "  Failed to minify $($js.Name): $_"
+            }
+        }
+    }
+}
+
 Write-Host "Website output ready at $publishRoot" -ForegroundColor Green

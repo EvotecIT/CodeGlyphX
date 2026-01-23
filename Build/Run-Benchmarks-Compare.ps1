@@ -164,7 +164,7 @@ try {
 $reportScript = Join-Path $PSScriptRoot "Generate-BenchmarkReport.ps1"
 if (Test-Path $reportScript) {
     if ($AllowPartial) {
-        & $reportScript -ArtifactsPath $artifactsPath -Framework $Framework -Configuration $Configuration -RunMode $runMode
+        & $reportScript -ArtifactsPath $artifactsPath -Framework $Framework -Configuration $Configuration -RunMode $runMode -AllowPartial
     } else {
         & $reportScript -ArtifactsPath $artifactsPath -Framework $Framework -Configuration $Configuration -RunMode $runMode -FailOnMissingCompare
     }

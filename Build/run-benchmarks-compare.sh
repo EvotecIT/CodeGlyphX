@@ -157,13 +157,13 @@ REPORT_SCRIPT="$SCRIPT_DIR/generate-benchmark-report.py"
 if command -v python3 >/dev/null 2>&1 && [[ -f "$REPORT_SCRIPT" ]]; then
   if [[ $BENCH_QUICK -eq 1 ]]; then
     if [[ $ALLOW_PARTIAL -eq 1 ]]; then
-      python3 "$REPORT_SCRIPT" --artifacts-path "$ARTIFACTS_PATH" --framework "$FRAMEWORK" --configuration "$CONFIGURATION" --run-mode quick
+      python3 "$REPORT_SCRIPT" --artifacts-path "$ARTIFACTS_PATH" --framework "$FRAMEWORK" --configuration "$CONFIGURATION" --run-mode quick --allow-partial
     else
       python3 "$REPORT_SCRIPT" --artifacts-path "$ARTIFACTS_PATH" --framework "$FRAMEWORK" --configuration "$CONFIGURATION" --run-mode quick --fail-on-missing-compare
     fi
   else
     if [[ $ALLOW_PARTIAL -eq 1 ]]; then
-      python3 "$REPORT_SCRIPT" --artifacts-path "$ARTIFACTS_PATH" --framework "$FRAMEWORK" --configuration "$CONFIGURATION" --run-mode full
+      python3 "$REPORT_SCRIPT" --artifacts-path "$ARTIFACTS_PATH" --framework "$FRAMEWORK" --configuration "$CONFIGURATION" --run-mode full --allow-partial
     else
       python3 "$REPORT_SCRIPT" --artifacts-path "$ARTIFACTS_PATH" --framework "$FRAMEWORK" --configuration "$CONFIGURATION" --run-mode full --fail-on-missing-compare
     fi
