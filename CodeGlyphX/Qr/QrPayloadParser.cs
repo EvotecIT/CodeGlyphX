@@ -118,13 +118,21 @@ internal static class QrPayloadParser {
         var buffer = ArrayPool<byte>.Shared.Rent(64);
         var count = 0;
 
-        void AddByte(byte b) {
-            if (count == buffer.Length) {
-                var next = ArrayPool<byte>.Shared.Rent(buffer.Length * 2);
-                Buffer.BlockCopy(buffer, 0, next, 0, count);
-                ArrayPool<byte>.Shared.Return(buffer);
-                buffer = next;
+        void EnsureCapacity(int required) {
+            if (required <= buffer.Length) return;
+            var nextSize = buffer.Length;
+            if (nextSize == 0) nextSize = 64;
+            while (nextSize < required) {
+                nextSize *= 2;
             }
+            var next = ArrayPool<byte>.Shared.Rent(nextSize);
+            Buffer.BlockCopy(buffer, 0, next, 0, count);
+            ArrayPool<byte>.Shared.Return(buffer);
+            buffer = next;
+        }
+
+        void AddByte(byte b) {
+            if (count == buffer.Length) EnsureCapacity(count + 1);
             buffer[count++] = b;
             segmentLength++;
         }
@@ -165,6 +173,7 @@ internal static class QrPayloadParser {
                     var countBits = QrTables.GetByteModeCharCountBits(version);
                     var charCount = ReadBits(countBits);
                     if (charCount < 0) return false;
+                    EnsureCapacity(count + charCount);
 
                     for (var i = 0; i < charCount; i++) {
                         if (shouldStop?.Invoke() == true) return false;
@@ -181,6 +190,7 @@ internal static class QrPayloadParser {
                     var countBits = QrTables.GetKanjiModeCharCountBits(version);
                     var charCount = ReadBits(countBits);
                     if (charCount < 0) return false;
+                    EnsureCapacity(count + (charCount * 2));
 
                     FlushSegment(ref segmentBuilder, encoding, ref segmentStart, ref segmentLength, count);
                     var previousEncoding = encoding;
@@ -218,6 +228,7 @@ internal static class QrPayloadParser {
                     var countBits = QrTables.GetNumericModeCharCountBits(version);
                     var charCount = ReadBits(countBits);
                     if (charCount < 0) return false;
+                    EnsureCapacity(count + charCount);
 
                     var remaining = charCount;
                     while (remaining >= 3) {
@@ -251,6 +262,7 @@ internal static class QrPayloadParser {
                     var countBits = QrTables.GetAlphanumericModeCharCountBits(version);
                     var charCount = ReadBits(countBits);
                     if (charCount < 0) return false;
+                    EnsureCapacity(count + charCount);
 
                     var remaining = charCount;
                     if (fnc1Mode == QrFnc1Mode.None) {
