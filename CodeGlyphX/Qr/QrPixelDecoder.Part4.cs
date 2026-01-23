@@ -45,6 +45,7 @@ internal static partial class QrPixelDecoder {
                         visited[idx] = true;
                         continue;
                     }
+                    visited[idx] = true;
 
                     var minX = x;
                     var maxX = x;
@@ -57,13 +58,6 @@ internal static partial class QrPixelDecoder {
 
                     while (sp > 0) {
                         var cur = stack[--sp];
-                        if (visited[cur]) continue;
-                        visited[cur] = true;
-
-                        var curLum = gray[cur];
-                        var curT = useMap ? thresholdMap![cur] : compareThreshold;
-                        var curBlack = invertSense == 0 ? curLum <= curT : curLum > curT;
-                        if (!curBlack) continue;
 
                         var cy = cur / w;
                         var cx = cur - cy * w;
@@ -77,37 +71,61 @@ internal static partial class QrPixelDecoder {
                         if (cx > 0) {
                             var ni = cur - 1;
                             if (!visited[ni]) {
-                                if (sp >= stack.Length) {
-                                    GrowStack(ref stack, sp);
+                                visited[ni] = true;
+                                var nLum = gray[ni];
+                                var nT = useMap ? thresholdMap![ni] : compareThreshold;
+                                var nBlack = invertSense == 0 ? nLum <= nT : nLum > nT;
+                                if (nBlack) {
+                                    if (sp >= stack.Length) {
+                                        GrowStack(ref stack, sp);
+                                    }
+                                    stack[sp++] = ni;
                                 }
-                                stack[sp++] = ni;
                             }
                         }
                         if (cx + 1 < w) {
                             var ni = cur + 1;
                             if (!visited[ni]) {
-                                if (sp >= stack.Length) {
-                                    GrowStack(ref stack, sp);
+                                visited[ni] = true;
+                                var nLum = gray[ni];
+                                var nT = useMap ? thresholdMap![ni] : compareThreshold;
+                                var nBlack = invertSense == 0 ? nLum <= nT : nLum > nT;
+                                if (nBlack) {
+                                    if (sp >= stack.Length) {
+                                        GrowStack(ref stack, sp);
+                                    }
+                                    stack[sp++] = ni;
                                 }
-                                stack[sp++] = ni;
                             }
                         }
                         if (cy > 0) {
                             var ni = cur - w;
                             if (!visited[ni]) {
-                                if (sp >= stack.Length) {
-                                    GrowStack(ref stack, sp);
+                                visited[ni] = true;
+                                var nLum = gray[ni];
+                                var nT = useMap ? thresholdMap![ni] : compareThreshold;
+                                var nBlack = invertSense == 0 ? nLum <= nT : nLum > nT;
+                                if (nBlack) {
+                                    if (sp >= stack.Length) {
+                                        GrowStack(ref stack, sp);
+                                    }
+                                    stack[sp++] = ni;
                                 }
-                                stack[sp++] = ni;
                             }
                         }
                         if (cy + 1 < h) {
                             var ni = cur + w;
                             if (!visited[ni]) {
-                                if (sp >= stack.Length) {
-                                    GrowStack(ref stack, sp);
+                                visited[ni] = true;
+                                var nLum = gray[ni];
+                                var nT = useMap ? thresholdMap![ni] : compareThreshold;
+                                var nBlack = invertSense == 0 ? nLum <= nT : nLum > nT;
+                                if (nBlack) {
+                                    if (sp >= stack.Length) {
+                                        GrowStack(ref stack, sp);
+                                    }
+                                    stack[sp++] = ni;
                                 }
-                                stack[sp++] = ni;
                             }
                         }
                     }
