@@ -44,11 +44,11 @@
     {
       "os": "windows",
       "runMode": "quick",
-      "generatedUtc": "2026-01-23T18:16:08.0908579Z",
+      "generatedUtc": "2026-01-23T18:57:42.7791832Z",
       "publish": false,
       "framework": "net8.0",
       "configuration": "Release",
-      "artifacts": "Build\\BenchmarkResults\\windows-20260123-172458",
+      "artifacts": "C:\\Support\\GitHub\\CodeMatrix\\Build\\BenchmarkResults\\windows-20260123-195637",
       "meta": {
         "commit": null,
         "branch": null,
