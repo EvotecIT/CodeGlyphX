@@ -2353,7 +2353,7 @@ body.using-keyboard .docs-static h1:focus-visible {
         left: 0;
         right: 0;
         height: calc(100vh - 60px);
-        display: none;
+        display: flex;
         flex-direction: column;
         align-items: stretch;
         justify-content: flex-start;
@@ -2363,10 +2363,13 @@ body.using-keyboard .docs-static h1:focus-visible {
         z-index: 900; /* Below header's 1000 */
         overflow-y: auto;
         border-top: 1px solid var(--border);
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
     }
 
-    .nav.nav-open {
-        display: flex;
+    /* Show nav when checkbox is checked (CSS-only approach) */
+    .nav-toggle-checkbox:checked ~ .nav {
+        transform: translateX(0);
     }
 
     .nav-links {
