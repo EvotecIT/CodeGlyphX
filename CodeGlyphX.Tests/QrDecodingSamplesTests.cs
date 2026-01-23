@@ -39,6 +39,31 @@ public sealed class QrDecodingSamplesTests {
         Assert.True(results.Length >= minCount);
     }
 
+    [Theory]
+    [InlineData("Assets/DecodingSamples/qr-clean-small.png", "otpauth://totp/Evotec+Services+sp.+z+o.o.%3aprzemyslaw.klys%40evotec.pl?secret=jnll6mrqknd57pmn&issuer=Microsoft")]
+    [InlineData("Assets/DecodingSamples/qr-clean-large.png", "This is a quick test! 123#?")]
+    [InlineData("Assets/DecodingSamples/qr-dot-aa.png", "DOT-AA")]
+    [InlineData("Assets/DecodingSamples/qr-dot-aa-soft.png", "DOT-AA-SOFT")]
+    [InlineData("Assets/DecodingSamples/qr-dot-antialiasing-twitter.png", "This is a quick test! 123#?")]
+    [InlineData("Assets/DecodingSamples/qr-generator-ui.png", "https://qrstud.io/qrmnky")]
+    [InlineData("Assets/DecodingSamples/qr-noisy-ui.png", "otpauth://totp/Evotec+Services+sp.+z+o.o.%3aprzemyslaw.klys%40evotec.pl?secret=pqhjwcgzncvzykhd&issuer=Microsoft")]
+    public void QrDecode_SampleImages_ReturnExpectedText(string relativePath, string expectedText) {
+        var bytes = ReadRepoFile(relativePath);
+        Assert.True(ImageReader.TryDecodeRgba32(bytes, out var rgba, out var width, out var height));
+
+        var options = new QrPixelDecodeOptions {
+            Profile = QrDecodeProfile.Robust,
+            MaxDimension = 1600,
+            MaxMilliseconds = 800,
+            BudgetMilliseconds = 2000,
+            AggressiveSampling = true,
+            EnableTileScan = true
+        };
+
+        var texts = DecodeTexts(rgba, width, height, width * 4, options);
+        Assert.Contains(expectedText, texts);
+    }
+
     [Fact]
     public void QrDecode_MultiCodeComposite_FindsAll() {
         var texts = new[] { "HELLO-ONE", "HELLO-TWO", "HELLO-THREE", "HELLO-FOUR" };
@@ -198,5 +223,20 @@ public sealed class QrDecodingSamplesTests {
         }
 
         throw new FileNotFoundException($"Could not locate sample file '{relativePath}'.");
+    }
+
+    private static string[] DecodeTexts(byte[] rgba, int width, int height, int stride, QrPixelDecodeOptions options) {
+        if (!QrDecoder.TryDecodeAll(rgba, width, height, stride, PixelFormat.Rgba32, out var results, options)) {
+            if (QrDecoder.TryDecode(rgba, width, height, stride, PixelFormat.Rgba32, out var decoded, out var info, options)) {
+                return new[] { decoded.Text };
+            }
+            Assert.Fail(info.ToString());
+        }
+
+        return results
+            .Select(result => result.Text)
+            .Where(text => !string.IsNullOrWhiteSpace(text))
+            .Distinct(StringComparer.Ordinal)
+            .ToArray();
     }
 }
