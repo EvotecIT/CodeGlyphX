@@ -1,3 +1,17 @@
+// Theme management functions for Blazor interop
+function getTheme() {
+    return localStorage.getItem('theme') || 'dark';
+}
+
+function setTheme(theme) {
+    localStorage.setItem('theme', theme);
+    document.documentElement.dataset.theme = theme;
+}
+
+// Expose to global scope for Blazor JS interop
+globalThis.getTheme = getTheme;
+globalThis.setTheme = setTheme;
+
 (() => {
     function copyText(text) {
         if (!text) return;
