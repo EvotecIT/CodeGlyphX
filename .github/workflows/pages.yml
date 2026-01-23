@@ -26,8 +26,14 @@ jobs:
       - name: Restore
         run: dotnet restore CodeGlyphX.Website/CodeGlyphX.Website.csproj
 
+      - name: Install PSParseHTML module
+        shell: pwsh
+        run: |
+          Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
+          Install-Module PSParseHTML -Force -Scope CurrentUser
+
       - name: Build website (static + playground)
-        run: pwsh Build/Publish-WebsitePages.ps1 -Configuration Release -Framework net10.0 -OutputPath site
+        run: pwsh Build/Publish-WebsitePages.ps1 -Configuration Release -Framework net10.0 -OutputPath site -MinifyAssets
 
       - name: Verify website output
         run: |
