@@ -83,6 +83,7 @@ internal static class QrFinderPatternDetector {
         var gray = image.Gray;
         var thresholds = image.ThresholdMap;
         var threshold = image.Threshold;
+        var maxCandidatesLimit = maxCandidates > 0 ? maxCandidates : int.MaxValue;
 
         if (rowStep < 1) rowStep = 1;
 
@@ -90,7 +91,7 @@ internal static class QrFinderPatternDetector {
             if (!invert) {
                 for (var y = 0; y < height; y += rowStep) {
                     if (shouldStop?.Invoke() == true) return;
-                    if (maxCandidates > 0 && possibleCenters.Count >= maxCandidates) return;
+                    if (possibleCenters.Count >= maxCandidatesLimit) return;
                     stateCount.Clear();
                     var currentState = 0;
                     var rowOffset = y * width;
@@ -107,11 +108,11 @@ internal static class QrFinderPatternDetector {
                         } else {
                             if ((currentState & 1) == 0) {
                                 if (currentState == 4) {
-                                    if (FoundPatternCross(stateCount, aggressive) && HandlePossibleCenter(image, invert, possibleCenters, stateCount, x, y, aggressive, requireDiagonalCheck)) {
-                                        if (maxCandidates > 0 && possibleCenters.Count >= maxCandidates) return;
-                                        currentState = 0;
-                                        stateCount.Clear();
-                                    } else {
+                                if (FoundPatternCross(stateCount, aggressive) && HandlePossibleCenter(image, invert, possibleCenters, stateCount, x, y, aggressive, requireDiagonalCheck)) {
+                                    if (possibleCenters.Count >= maxCandidatesLimit) return;
+                                    currentState = 0;
+                                    stateCount.Clear();
+                                } else {
                                         ShiftCounts(stateCount);
                                         currentState = 3;
                                     }
@@ -133,7 +134,7 @@ internal static class QrFinderPatternDetector {
             } else {
                 for (var y = 0; y < height; y += rowStep) {
                     if (shouldStop?.Invoke() == true) return;
-                    if (maxCandidates > 0 && possibleCenters.Count >= maxCandidates) return;
+                    if (possibleCenters.Count >= maxCandidatesLimit) return;
                     stateCount.Clear();
                     var currentState = 0;
                     var rowOffset = y * width;
@@ -150,11 +151,11 @@ internal static class QrFinderPatternDetector {
                         } else {
                             if ((currentState & 1) == 0) {
                                 if (currentState == 4) {
-                                    if (FoundPatternCross(stateCount, aggressive) && HandlePossibleCenter(image, invert, possibleCenters, stateCount, x, y, aggressive, requireDiagonalCheck)) {
-                                        if (maxCandidates > 0 && possibleCenters.Count >= maxCandidates) return;
-                                        currentState = 0;
-                                        stateCount.Clear();
-                                    } else {
+                                if (FoundPatternCross(stateCount, aggressive) && HandlePossibleCenter(image, invert, possibleCenters, stateCount, x, y, aggressive, requireDiagonalCheck)) {
+                                    if (possibleCenters.Count >= maxCandidatesLimit) return;
+                                    currentState = 0;
+                                    stateCount.Clear();
+                                } else {
                                         ShiftCounts(stateCount);
                                         currentState = 3;
                                     }
@@ -178,7 +179,7 @@ internal static class QrFinderPatternDetector {
             if (!invert) {
                 for (var y = 0; y < height; y += rowStep) {
                     if (shouldStop?.Invoke() == true) return;
-                    if (maxCandidates > 0 && possibleCenters.Count >= maxCandidates) return;
+                    if (possibleCenters.Count >= maxCandidatesLimit) return;
                     stateCount.Clear();
                     var currentState = 0;
                     var rowOffset = y * width;
@@ -195,11 +196,11 @@ internal static class QrFinderPatternDetector {
                         } else {
                             if ((currentState & 1) == 0) {
                                 if (currentState == 4) {
-                                    if (FoundPatternCross(stateCount, aggressive) && HandlePossibleCenter(image, invert, possibleCenters, stateCount, x, y, aggressive, requireDiagonalCheck)) {
-                                        if (maxCandidates > 0 && possibleCenters.Count >= maxCandidates) return;
-                                        currentState = 0;
-                                        stateCount.Clear();
-                                    } else {
+                                if (FoundPatternCross(stateCount, aggressive) && HandlePossibleCenter(image, invert, possibleCenters, stateCount, x, y, aggressive, requireDiagonalCheck)) {
+                                    if (possibleCenters.Count >= maxCandidatesLimit) return;
+                                    currentState = 0;
+                                    stateCount.Clear();
+                                } else {
                                         ShiftCounts(stateCount);
                                         currentState = 3;
                                     }
@@ -221,7 +222,7 @@ internal static class QrFinderPatternDetector {
             } else {
                 for (var y = 0; y < height; y += rowStep) {
                     if (shouldStop?.Invoke() == true) return;
-                    if (maxCandidates > 0 && possibleCenters.Count >= maxCandidates) return;
+                    if (possibleCenters.Count >= maxCandidatesLimit) return;
                     stateCount.Clear();
                     var currentState = 0;
                     var rowOffset = y * width;
@@ -238,11 +239,11 @@ internal static class QrFinderPatternDetector {
                         } else {
                             if ((currentState & 1) == 0) {
                                 if (currentState == 4) {
-                                    if (FoundPatternCross(stateCount, aggressive) && HandlePossibleCenter(image, invert, possibleCenters, stateCount, x, y, aggressive, requireDiagonalCheck)) {
-                                        if (maxCandidates > 0 && possibleCenters.Count >= maxCandidates) return;
-                                        currentState = 0;
-                                        stateCount.Clear();
-                                    } else {
+                                if (FoundPatternCross(stateCount, aggressive) && HandlePossibleCenter(image, invert, possibleCenters, stateCount, x, y, aggressive, requireDiagonalCheck)) {
+                                    if (possibleCenters.Count >= maxCandidatesLimit) return;
+                                    currentState = 0;
+                                    stateCount.Clear();
+                                } else {
                                         ShiftCounts(stateCount);
                                         currentState = 3;
                                     }
