@@ -95,6 +95,9 @@ public partial class Playground {
     internal int AztecEccPercent { get; set; } = 23;
     internal int AztecLayers { get; set; } = 0;
 
+    // Component keys for forcing re-render
+    internal int _exampleKey = 0;
+
     // Output
     internal string? ImageDataUri { get; set; }
     internal string? SvgDataUri { get; set; }
@@ -126,6 +129,7 @@ public partial class Playground {
         {
             GenerateCode();
         }
+        _exampleKey++;
         StateHasChanged();
     }
 
@@ -136,6 +140,7 @@ public partial class Playground {
         {
             GenerateCode();
         }
+        _exampleKey++;
         StateHasChanged();
     }
 
@@ -213,6 +218,7 @@ public partial class Playground {
             GenerateCode();
         }
 
+        _exampleKey++;
         StateHasChanged();
     }
 
@@ -223,6 +229,8 @@ public partial class Playground {
         {
             GenerateCode();
         }
+        _exampleKey++;
+        StateHasChanged();
     }
 
     internal void ApplyPreset(string preset)
@@ -287,6 +295,7 @@ public partial class Playground {
         }
 
         GenerateCode();
+        _exampleKey++;
         StateHasChanged();
     }
 
