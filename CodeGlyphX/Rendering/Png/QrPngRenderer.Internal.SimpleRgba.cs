@@ -23,10 +23,14 @@ public static partial class QrPngRenderer {
     }
 
     private static byte[] RenderSimpleRgba(BitMatrix modules, QrPngRenderOptions opts) {
-        GetScanlineLength(modules, opts, out var widthPx, out var heightPx, out _);
-        using var ms = new MemoryStream();
-        PngWriter.WriteRgba8(ms, widthPx, heightPx, (y, rowBuffer, rowLength) => FillRowSimple(modules, opts, y, rowBuffer, rowLength));
-        return ms.ToArray();
+        var length = GetScanlineLength(modules, opts, out var widthPx, out var heightPx, out var stride);
+        var scanlines = ArrayPool<byte>.Shared.Rent(length);
+        try {
+            RenderSimpleScanlines(modules, opts, widthPx, heightPx, stride, scanlines);
+            return PngWriter.WriteRgba8(widthPx, heightPx, scanlines, length);
+        } finally {
+            ArrayPool<byte>.Shared.Return(scanlines);
+        }
     }
 
     private static void RenderSimplePixels(BitMatrix modules, QrPngRenderOptions opts, byte[] pixels, int widthPx, int heightPx, int stride) {
@@ -65,6 +69,51 @@ public static partial class QrPngRenderer {
                 var y0 = (my + quiet) * moduleSize;
                 for (var sy = 0; sy < moduleSize; sy++) {
                     Buffer.BlockCopy(rowBuffer, 0, pixels, (y0 + sy) * rowLength, rowLength);
+                }
+            }
+        } finally {
+            ArrayPool<byte>.Shared.Return(rowBuffer);
+            ArrayPool<byte>.Shared.Return(backgroundRow);
+        }
+    }
+
+    private static void RenderSimpleScanlines(BitMatrix modules, QrPngRenderOptions opts, int widthPx, int heightPx, int stride, byte[] scanlines) {
+        if (scanlines is null) throw new ArgumentNullException(nameof(scanlines));
+
+        var rowLength = stride + 1;
+        PngRenderHelpers.FillBackground(scanlines, widthPx, heightPx, stride, opts.Background);
+
+        var size = modules.Width;
+        var moduleSize = opts.ModuleSize;
+        var quiet = opts.QuietZone;
+        var foreground = CompositeForeground(opts.Foreground, opts.Background);
+
+        var backgroundRow = ArrayPool<byte>.Shared.Rent(rowLength);
+        var rowBuffer = ArrayPool<byte>.Shared.Rent(rowLength);
+        try {
+            Buffer.BlockCopy(scanlines, 0, backgroundRow, 0, rowLength);
+
+            for (var my = 0; my < size; my++) {
+                Buffer.BlockCopy(backgroundRow, 0, rowBuffer, 0, rowLength);
+                var rowHasDark = false;
+                var px = quiet * moduleSize;
+
+                for (var mx = 0; mx < size; mx++) {
+                    if (!modules[mx, my]) {
+                        px += moduleSize;
+                        continue;
+                    }
+                    rowHasDark = true;
+                    PngRenderHelpers.FillRowPixels(rowBuffer, 1 + px * 4, moduleSize, foreground);
+                    px += moduleSize;
+                }
+
+                if (!rowHasDark) continue;
+
+                var y0 = (my + quiet) * moduleSize;
+                var rowStart = y0 * rowLength;
+                for (var sy = 0; sy < moduleSize; sy++) {
+                    Buffer.BlockCopy(rowBuffer, 0, scanlines, rowStart + sy * rowLength, rowLength);
                 }
             }
         } finally {
