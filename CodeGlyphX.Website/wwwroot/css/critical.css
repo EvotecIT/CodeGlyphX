@@ -64,6 +64,73 @@ body {
     to { transform: rotate(360deg); }
 }
 
+/* Prevent unstyled SVG flash - constrain icons */
+svg {
+    max-width: 100%;
+    height: auto;
+}
+
+.header svg, .nav svg, .nav-icon svg, .nav-cta svg {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+}
+
+/* Basic header layout to prevent content flash */
+.header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--bg-dark);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0.75rem 1.5rem;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    color: var(--text);
+    font-weight: 600;
+}
+
+.brand-icon img {
+    width: 28px;
+    height: 28px;
+}
+
+.nav {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.nav-links {
+    display: flex;
+    gap: 0.25rem;
+}
+
+.nav-links a {
+    padding: 0.5rem 1rem;
+    color: var(--text-muted);
+    text-decoration: none;
+}
+
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
 /* Blazor error UI - hidden by default */
 #blazor-error-ui {
     display: none;
