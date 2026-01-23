@@ -194,12 +194,27 @@ internal static partial class QrPixelDecoder {
         using var comps = FindComponents(image, invert, shouldStop);
         if (comps.Count == 0) return;
 
-        comps.Sort(static (a, b) => b.Area.CompareTo(a.Area));
-        var maxTry = Math.Min(comps.Count, 12);
+        const int maxTry = 12;
+        Span<Component> top = stackalloc Component[maxTry];
+        var topCount = 0;
+        for (var i = 0; i < comps.Count; i++) {
+            var comp = comps[i];
+            var area = comp.Area;
+            if (topCount == maxTry && area <= top[topCount - 1].Area) continue;
+            var insertPos = topCount < maxTry ? topCount : maxTry - 1;
+            while (insertPos > 0 && area > top[insertPos - 1].Area) {
+                if (insertPos < maxTry) {
+                    top[insertPos] = top[insertPos - 1];
+                }
+                insertPos--;
+            }
+            top[insertPos] = comp;
+            if (topCount < maxTry) topCount++;
+        }
 
-        for (var i = 0; i < maxTry; i++) {
+        for (var i = 0; i < topCount; i++) {
             if (budget.IsExpired || budget.IsNearDeadline(120)) return;
-            var c = comps[i];
+            var c = top[i];
             var pad = Math.Max(2, (int)Math.Round(Math.Min(c.Width, c.Height) * 0.05));
             var bminX = c.MinX - pad;
             var bminY = c.MinY - pad;
