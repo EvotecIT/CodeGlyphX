@@ -119,36 +119,43 @@
       return;
     }
 
-    var vendors = ['CodeGlyphX', 'ZXing.Net', 'QRCoder', 'Barcoder'];
     var html = '<div class="table-scroll"><table class="bench-table">';
     html += '<thead><tr>';
     html += '<th>Scenario</th>';
+    html += '<th>CodeGlyphX</th>';
     html += '<th>Fastest</th>';
-    vendors.forEach(function(v) {
-      html += '<th>' + escapeHtml(v) + '</th>';
-    });
+    html += '<th>vs Fastest</th>';
+    html += '<th>Alloc vs Fastest</th>';
     html += '<th>Rating</th>';
     html += '</tr></thead><tbody>';
 
     entry.summary.forEach(function(item) {
       html += '<tr>';
       html += '<td>' + escapeHtml(item.scenario || item.benchmark || '') + '</td>';
-      html += '<td class="bench-fastest">' + escapeHtml(item.fastestVendor || '') + '</td>';
 
-      vendors.forEach(function(v) {
-        var vendor = item.vendors && item.vendors[v];
-        if (vendor && vendor.mean) {
-          var isFastest = item.fastestVendor === v;
-          html += '<td class="' + (isFastest ? 'bench-winner' : '') + '">';
-          html += '<div>' + escapeHtml(vendor.mean) + '</div>';
-          if (vendor.allocated) {
-            html += '<div class="bench-dim">' + escapeHtml(vendor.allocated) + '</div>';
-          }
-          html += '</td>';
-        } else {
-          html += '<td class="bench-na">-</td>';
-        }
-      });
+      // CodeGlyphX column - try vendors object first, fall back to direct fields
+      var cgxMean = (item.vendors && item.vendors['CodeGlyphX'] && item.vendors['CodeGlyphX'].mean) || item.codeGlyphXMean || '';
+      var cgxAlloc = (item.vendors && item.vendors['CodeGlyphX'] && item.vendors['CodeGlyphX'].allocated) || item.codeGlyphXAlloc || '';
+      var isCgxFastest = item.fastestVendor === 'CodeGlyphX';
+
+      html += '<td class="' + (isCgxFastest ? 'bench-winner' : '') + '">';
+      if (cgxMean) {
+        html += '<div>' + escapeHtml(cgxMean) + '</div>';
+        if (cgxAlloc) html += '<div class="bench-dim">' + escapeHtml(cgxAlloc) + '</div>';
+      } else {
+        html += '-';
+      }
+      html += '</td>';
+
+      // Fastest column
+      html += '<td class="bench-fastest">';
+      html += '<div>' + escapeHtml(item.fastestVendor || '') + '</div>';
+      if (item.fastestMean) html += '<div class="bench-dim">' + escapeHtml(item.fastestMean) + '</div>';
+      html += '</td>';
+
+      // vs Fastest columns
+      html += '<td>' + escapeHtml(item.codeGlyphXVsFastestText || (item.codeGlyphXVsFastest ? item.codeGlyphXVsFastest + ' x' : '-')) + '</td>';
+      html += '<td>' + escapeHtml(item.codeGlyphXAllocVsFastestText || (item.codeGlyphXAllocVsFastest ? item.codeGlyphXAllocVsFastest + ' x' : '-')) + '</td>';
 
       var ratingClass = 'bench-rating-' + (item.rating || 'unknown');
       html += '<td class="' + ratingClass + '">' + escapeHtml(item.rating || '-') + '</td>';
