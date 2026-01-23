@@ -1150,6 +1150,32 @@ code.signature:focus-within .copy-btn {
     border-bottom: none;
 }
 
+.bench-summary {
+    margin-top: 1.5rem;
+    overflow-x: auto;
+}
+
+.bench-summary-loading {
+    color: var(--text-dim);
+    font-size: 0.9rem;
+    padding: 0.5rem 0;
+}
+
+.bench-summary-table td {
+    vertical-align: top;
+}
+
+.bench-delta {
+    color: var(--text-dim);
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
+}
+
+.bench-dim {
+    color: var(--text-dim);
+    font-size: 0.75rem;
+}
+
 .comparison {
     padding: 4rem 2rem;
 }

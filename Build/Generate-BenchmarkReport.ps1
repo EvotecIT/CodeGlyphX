@@ -250,6 +250,45 @@ function Try-Parse-Mean([string]$value, [ref]$nanoseconds) {
     return $false
 }
 
+function Format-MeanAllocCell([object]$entry, [string]$deltaText = $null) {
+    if (-not $entry) { return "" }
+    $mean = Normalize-MeanText $entry["mean"]
+    $alloc = $entry["allocated"]
+    if ([string]::IsNullOrWhiteSpace($mean) -and [string]::IsNullOrWhiteSpace($alloc)) { return "" }
+    if ([string]::IsNullOrWhiteSpace($mean)) {
+        return if ([string]::IsNullOrWhiteSpace($deltaText)) { "$alloc" } else { "$alloc<br>$deltaText" }
+    }
+    if ([string]::IsNullOrWhiteSpace($alloc)) {
+        return if ([string]::IsNullOrWhiteSpace($deltaText)) { "$mean" } else { "$mean<br>$deltaText" }
+    }
+    if ([string]::IsNullOrWhiteSpace($deltaText)) { return "$mean<br>$alloc" }
+    return "$mean<br>$alloc<br>$deltaText"
+}
+
+function Format-DeltaText([object]$vendorRow, [object]$cgxRow) {
+    if (-not $vendorRow -or -not $cgxRow) { return "" }
+    $vendorMean = Normalize-MeanText (Get-RowValue $vendorRow "Mean")
+    $cgxMean = Normalize-MeanText (Get-RowValue $cgxRow "Mean")
+    $vendorNs = $null
+    $cgxNs = $null
+    [void](Try-Parse-Mean $vendorMean ([ref]$vendorNs))
+    [void](Try-Parse-Mean $cgxMean ([ref]$cgxNs))
+    $timeRatio = $null
+    if ($vendorNs -and $cgxNs) {
+        $timeRatio = [math]::Round(($vendorNs / $cgxNs), 2)
+    }
+    $vendorAlloc = Parse-AllocatedBytes (Get-RowValue $vendorRow "Allocated")
+    $cgxAlloc = Parse-AllocatedBytes (Get-RowValue $cgxRow "Allocated")
+    $allocRatio = $null
+    if ($vendorAlloc -and $cgxAlloc) {
+        $allocRatio = [math]::Round(($vendorAlloc / $cgxAlloc), 2)
+    }
+    if ($timeRatio -and $allocRatio) { return "Δ $timeRatio x / $allocRatio x" }
+    if ($timeRatio) { return "Δ $timeRatio x" }
+    if ($allocRatio) { return "Δ $allocRatio x alloc" }
+    return ""
+}
+
 function Get-OsName {
     if ([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform([System.Runtime.InteropServices.OSPlatform]::Windows)) { return "windows" }
     if ([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform([System.Runtime.InteropServices.OSPlatform]::Linux)) { return "linux" }
@@ -412,6 +451,7 @@ $lines.Add("- Allocated: managed memory allocated per operation. Lower is better
 $lines.Add("- CodeGlyphX vs Fastest: CodeGlyphX mean divided by the fastest mean for that scenario. 1 x means CodeGlyphX is fastest; 1.5 x means ~50% slower.")
 $lines.Add("- CodeGlyphX Alloc vs Fastest: CodeGlyphX allocated divided by the fastest allocation for that scenario. 1 x means CodeGlyphX allocates the least; higher is more allocations.")
 $lines.Add("- Rating: good/ok/bad based on time + allocation ratios (good <=1.1x and <=1.25x alloc, ok <=1.5x and <=2.0x alloc).")
+$lines.Add("- Δ lines in comparison tables show vendor ratios vs CodeGlyphX (time / alloc).")
 $lines.Add("- Quick runs use fewer iterations for fast feedback; Full runs use BenchmarkDotNet defaults and are recommended for publishing.")
 $lines.Add("Notes:")
 $lines.Add("- $runModeLabel")
@@ -509,7 +549,14 @@ if ($compareFiles.Count -gt 0) {
             }
             $fastestText = "$fastestVendor $($fastest.mean)"
             $rating = Get-Rating $ratioValue $allocRatioValue
-            $summaryRows.Add("| $title | $scenario | $fastestText | $ratioText | $allocRatioText | $rating | $cgxMean | $cgxAlloc |")
+            $cgxCell = Format-MeanAllocCell $vendors["CodeGlyphX"]
+            $zxDelta = Format-DeltaText $vendors["ZXing.Net"] $vendors["CodeGlyphX"]
+            $qrcDelta = Format-DeltaText $vendors["QRCoder"] $vendors["CodeGlyphX"]
+            $barDelta = Format-DeltaText $vendors["Barcoder"] $vendors["CodeGlyphX"]
+            $zxCell = Format-MeanAllocCell $vendors["ZXing.Net"] $zxDelta
+            $qrcCell = Format-MeanAllocCell $vendors["QRCoder"] $qrcDelta
+            $barCell = Format-MeanAllocCell $vendors["Barcoder"] $barDelta
+            $summaryRows.Add("| $title | $scenario | $fastestText | $cgxCell | $zxCell | $qrcCell | $barCell | $ratioText | $allocRatioText | $rating |")
             $summaryItems.Add(@{
                 benchmark = $title
                 scenario = $scenario
@@ -522,6 +569,12 @@ if ($compareFiles.Count -gt 0) {
                 codeGlyphXAllocVsFastest = $allocRatioValue
                 codeGlyphXAllocVsFastestText = $allocRatioText
                 rating = $rating
+                vendors = $vendors
+                deltas = @{
+                    "ZXing.Net" = $zxDelta
+                    "QRCoder" = $qrcDelta
+                    "Barcoder" = $barDelta
+                }
             })
         }
     }
@@ -529,8 +582,8 @@ if ($compareFiles.Count -gt 0) {
     if ($summaryRows.Count -gt 0) {
         $lines.Add("### Summary (Comparisons)")
         $lines.Add("")
-        $lines.Add("| Benchmark | Scenario | Fastest | CodeGlyphX vs Fastest | CodeGlyphX Alloc vs Fastest | Rating | CodeGlyphX Mean | CodeGlyphX Alloc |")
-        $lines.Add("| --- | --- | --- | --- | --- | --- | --- | --- |")
+        $lines.Add("| Benchmark | Scenario | Fastest | CodeGlyphX (Mean / Alloc) | ZXing.Net (Mean / Alloc) | QRCoder (Mean / Alloc) | Barcoder (Mean / Alloc) | CodeGlyphX vs Fastest | CodeGlyphX Alloc vs Fastest | Rating |")
+        $lines.Add("| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |")
         foreach ($row in $summaryRows) {
             $lines.Add($row)
         }
@@ -612,10 +665,21 @@ if ($compareFiles.Count -gt 0) {
             $qrc = $scenarios[$scenario]["QRCoder"]
             $bar = $scenarios[$scenario]["Barcoder"]
 
-            $cgxCell = if ($cgx) { "$(Normalize-MeanText (Get-RowValue $cgx 'Mean'))<br>$(Get-RowValue $cgx 'Allocated')" } else { "" }
-            $zxCell = if ($zx) { "$(Normalize-MeanText (Get-RowValue $zx 'Mean'))<br>$(Get-RowValue $zx 'Allocated')" } else { "" }
-            $qrcCell = if ($qrc) { "$(Normalize-MeanText (Get-RowValue $qrc 'Mean'))<br>$(Get-RowValue $qrc 'Allocated')" } else { "" }
-            $barCell = if ($bar) { "$(Normalize-MeanText (Get-RowValue $bar 'Mean'))<br>$(Get-RowValue $bar 'Allocated')" } else { "" }
+            $cgxCell = if ($cgx) {
+                Format-MeanAllocCell @{ mean = (Normalize-MeanText (Get-RowValue $cgx 'Mean')); allocated = (Get-RowValue $cgx 'Allocated') }
+            } else { "" }
+            $zxDelta = Format-DeltaText $zx $cgx
+            $qrcDelta = Format-DeltaText $qrc $cgx
+            $barDelta = Format-DeltaText $bar $cgx
+            $zxCell = if ($zx) {
+                Format-MeanAllocCell @{ mean = (Normalize-MeanText (Get-RowValue $zx 'Mean')); allocated = (Get-RowValue $zx 'Allocated') } $zxDelta
+            } else { "" }
+            $qrcCell = if ($qrc) {
+                Format-MeanAllocCell @{ mean = (Normalize-MeanText (Get-RowValue $qrc 'Mean')); allocated = (Get-RowValue $qrc 'Allocated') } $qrcDelta
+            } else { "" }
+            $barCell = if ($bar) {
+                Format-MeanAllocCell @{ mean = (Normalize-MeanText (Get-RowValue $bar 'Mean')); allocated = (Get-RowValue $bar 'Allocated') } $barDelta
+            } else { "" }
             $lines.Add("| $scenario | $cgxCell | $zxCell | $qrcCell | $barCell |")
         }
         $lines.Add("")
@@ -741,6 +805,7 @@ $jsonDoc = @{
         "CodeGlyphX vs Fastest: CodeGlyphX mean divided by the fastest mean for that scenario. 1 x means CodeGlyphX is fastest; 1.5 x means ~50% slower.",
         "CodeGlyphX Alloc vs Fastest: CodeGlyphX allocated divided by the fastest allocation for that scenario. 1 x means CodeGlyphX allocates the least; higher is more allocations.",
         "Rating: good/ok/bad based on time + allocation ratios (good <=1.1x and <=1.25x alloc, ok <=1.5x and <=2.0x alloc).",
+        "Δ lines in comparison tables show vendor ratios vs CodeGlyphX (time / alloc).",
         "Quick runs use fewer iterations for fast feedback; Full runs use BenchmarkDotNet defaults and are recommended for publishing."
     )
     notes = @(
@@ -869,6 +934,16 @@ $indexDoc.entries = $entries
 
 $indexOut = $indexDoc | ConvertTo-Json -Depth 6
 Write-TextUtf8NoBom $indexOutput $indexOut
+
+$websiteDataPath = Join-Path $PSScriptRoot "..\CodeGlyphX.Website\wwwroot\data"
+if (Test-Path (Join-Path $PSScriptRoot "..\CodeGlyphX.Website")) {
+    if (-not (Test-Path $websiteDataPath)) {
+        New-Item -ItemType Directory -Force -Path $websiteDataPath | Out-Null
+    }
+    Copy-Item -Path $jsonOutput -Destination $websiteDataPath -Force
+    Copy-Item -Path $summaryOutput -Destination $websiteDataPath -Force
+    Copy-Item -Path $indexOutput -Destination $websiteDataPath -Force
+}
 
 $sectionContent = ($lines -join "`n").TrimEnd()
 $marker = "BENCHMARK:$($osName.ToUpperInvariant()):$($runModeNormalized.ToUpperInvariant())"

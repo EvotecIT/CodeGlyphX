@@ -137,6 +137,147 @@ globalThis.setTheme = setTheme;
         }
     }
 
+    let benchSummaryPromise = null;
+    function loadBenchmarkSummary() {
+        if (!benchSummaryPromise) {
+            benchSummaryPromise = fetch('/data/benchmark-summary.json', { cache: 'no-store' })
+                .then((res) => (res.ok ? res.json() : null))
+                .catch(() => null);
+        }
+        return benchSummaryPromise;
+    }
+
+    function pickBenchmarkSummary(data) {
+        if (!data) return null;
+        const order = [
+            ['windows', 'quick'],
+            ['windows', 'full'],
+            ['linux', 'quick'],
+            ['linux', 'full'],
+            ['macos', 'quick'],
+            ['macos', 'full'],
+        ];
+        for (const [os, mode] of order) {
+            const entry = data?.[os]?.[mode];
+            if (entry?.summary?.length) return entry;
+        }
+        for (const osKey of Object.keys(data)) {
+            const osEntry = data[osKey];
+            for (const modeKey of Object.keys(osEntry || {})) {
+                const entry = osEntry?.[modeKey];
+                if (entry?.summary?.length) return entry;
+            }
+        }
+        return null;
+    }
+
+    function appendVendorCell(td, vendor, delta) {
+        if (!vendor) return;
+        if (vendor.mean) {
+            const mean = document.createElement('div');
+            mean.textContent = vendor.mean;
+            td.appendChild(mean);
+        }
+        if (vendor.allocated) {
+            const alloc = document.createElement('div');
+            alloc.className = 'bench-dim';
+            alloc.textContent = vendor.allocated;
+            td.appendChild(alloc);
+        }
+        if (delta) {
+            const d = document.createElement('div');
+            d.className = 'bench-delta';
+            d.textContent = delta;
+            td.appendChild(d);
+        }
+    }
+
+    function renderBenchmarkSummary() {
+        const container = document.querySelector('[data-benchmark-summary]');
+        if (!container || container.dataset.loaded === 'true') return;
+
+        loadBenchmarkSummary().then((data) => {
+            const entry = pickBenchmarkSummary(data);
+            if (!entry || !entry.summary?.length) {
+                container.textContent = 'Benchmark summary unavailable.';
+                container.dataset.loaded = 'true';
+                return;
+            }
+
+            const table = document.createElement('table');
+            table.className = 'bench-table bench-summary-table';
+
+            const thead = document.createElement('thead');
+            thead.innerHTML = '<tr>' +
+                '<th>Benchmark</th>' +
+                '<th>Scenario</th>' +
+                '<th>Fastest</th>' +
+                '<th>CodeGlyphX</th>' +
+                '<th>ZXing.Net</th>' +
+                '<th>QRCoder</th>' +
+                '<th>Barcoder</th>' +
+                '<th>CodeGlyphX vs Fastest</th>' +
+                '<th>Alloc vs Fastest</th>' +
+                '<th>Rating</th>' +
+                '</tr>';
+            table.appendChild(thead);
+
+            const tbody = document.createElement('tbody');
+            entry.summary.forEach((item) => {
+                const row = document.createElement('tr');
+                const vendors = item.vendors || {};
+                const deltas = item.deltas || {};
+
+                const cells = [
+                    item.benchmark || '',
+                    item.scenario || '',
+                    item.fastestVendor ? `${item.fastestVendor} ${item.fastestMean || ''}`.trim() : (item.fastestMean || ''),
+                ];
+
+                cells.forEach((text) => {
+                    const td = document.createElement('td');
+                    td.textContent = text;
+                    row.appendChild(td);
+                });
+
+                const cgxTd = document.createElement('td');
+                appendVendorCell(cgxTd, vendors['CodeGlyphX'], '');
+                row.appendChild(cgxTd);
+
+                const zxTd = document.createElement('td');
+                appendVendorCell(zxTd, vendors['ZXing.Net'], deltas['ZXing.Net']);
+                row.appendChild(zxTd);
+
+                const qrcTd = document.createElement('td');
+                appendVendorCell(qrcTd, vendors['QRCoder'], deltas['QRCoder']);
+                row.appendChild(qrcTd);
+
+                const barTd = document.createElement('td');
+                appendVendorCell(barTd, vendors['Barcoder'], deltas['Barcoder']);
+                row.appendChild(barTd);
+
+                const ratioTd = document.createElement('td');
+                ratioTd.textContent = item.codeGlyphXVsFastestText || '';
+                row.appendChild(ratioTd);
+
+                const allocTd = document.createElement('td');
+                allocTd.textContent = item.codeGlyphXAllocVsFastestText || '';
+                row.appendChild(allocTd);
+
+                const ratingTd = document.createElement('td');
+                ratingTd.textContent = item.rating || '';
+                row.appendChild(ratingTd);
+
+                tbody.appendChild(row);
+            });
+            table.appendChild(tbody);
+
+            container.innerHTML = '';
+            container.appendChild(table);
+            container.dataset.loaded = 'true';
+        });
+    }
+
     document.addEventListener('click', (event) => {
         const target = event.target;
         if (!(target instanceof Element)) return;
@@ -153,6 +294,7 @@ globalThis.setTheme = setTheme;
         initTimer = globalThis.setTimeout(() => {
             initTimer = 0;
             initCodeBlocks();
+            renderBenchmarkSummary();
         }, 100);
     }
 
@@ -167,4 +309,5 @@ globalThis.setTheme = setTheme;
 
     globalThis.CodeGlyphX = globalThis.CodeGlyphX || {};
     globalThis.CodeGlyphX.initCodeBlocks = initCodeBlocks;
+    globalThis.CodeGlyphX.renderBenchmarkSummary = renderBenchmarkSummary;
 })();

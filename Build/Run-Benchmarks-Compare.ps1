@@ -45,6 +45,43 @@ if ($benchQuick) {
     $quickEnv["BENCH_QUICK"] = "true"
 }
 
+$expectedCompare = @(
+    "QrCompareBenchmarks",
+    "QrDecodeCleanCompareBenchmarks",
+    "QrDecodeNoisyCompareBenchmarks",
+    "Code128CompareBenchmarks",
+    "Code39CompareBenchmarks",
+    "Code93CompareBenchmarks",
+    "EanCompareBenchmarks",
+    "UpcACompareBenchmarks",
+    "DataMatrixCompareBenchmarks",
+    "Pdf417CompareBenchmarks",
+    "AztecCompareBenchmarks"
+)
+
+function Test-ResultFileReady([string]$path) {
+    if (-not (Test-Path $path)) { return $false }
+    try {
+        $lines = Get-Content -Path $path -TotalCount 2 -Encoding UTF8
+        if (-not $lines -or $lines.Count -lt 2) { return $false }
+        return $true
+    } catch {
+        return $false
+    }
+}
+
+function Get-MissingCompareClasses([string]$resultsPath, [string[]]$expectedClasses) {
+    $missing = @()
+    foreach ($className in $expectedClasses) {
+        $fileName = "CodeGlyphX.Benchmarks.$className-report.csv"
+        $fullPath = Join-Path $resultsPath $fileName
+        if (-not (Test-ResultFileReady $fullPath)) {
+            $missing += $className
+        }
+    }
+    return $missing
+}
+
 function Invoke-Benchmark {
     param(
         [string[]]$MsBuildProps,
@@ -156,6 +193,22 @@ try {
         }
 
         Invoke-Benchmark -MsBuildProps $props -Filter $CompareFilter -Label "External comparisons" -EnvVars $envVars
+
+        $resultsPath = Join-Path $artifactsPath "results"
+        $shouldEnforceCompare = -not $AllowPartial -and $CompareFilter -eq "*Compare*"
+        if ($shouldEnforceCompare) {
+            $missing = Get-MissingCompareClasses -resultsPath $resultsPath -expectedClasses $expectedCompare
+            if ($missing.Count -gt 0) {
+                Write-Warning "Missing compare results after initial run: $($missing -join ', '). Re-running missing benchmarks..."
+                foreach ($className in $missing) {
+                    Invoke-Benchmark -MsBuildProps $props -Filter "*$className*" -Label "Compare (retry $className)" -EnvVars $envVars
+                }
+                $missing = Get-MissingCompareClasses -resultsPath $resultsPath -expectedClasses $expectedCompare
+                if ($missing.Count -gt 0) {
+                    throw "Missing compare results after retry: $($missing -join ', ')."
+                }
+            }
+        }
     }
 } finally {
     Pop-Location
