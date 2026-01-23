@@ -13,7 +13,9 @@ $ErrorActionPreference = "Stop"
 
 $repoRoot = Resolve-Path (Join-Path $PSScriptRoot "..")
 if (-not $OutputPath) {
-    $OutputPath = [IO.Path]::Combine($repoRoot, "CodeGlyphX.Website", "wwwroot")
+    # Default to 'site' folder to avoid overwriting Blazor's wwwroot/index.html
+    $OutputPath = Join-Path $repoRoot "site"
+    Write-Warning "No -OutputPath specified. Using default: $OutputPath"
 }
 
 # Paths
