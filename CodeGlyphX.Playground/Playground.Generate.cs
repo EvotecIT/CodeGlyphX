@@ -241,6 +241,7 @@ public partial class Playground {
             ErrorMessage = ex.Message;
         }
 
+        _exampleKey++;
         StateHasChanged();
     }
 }
