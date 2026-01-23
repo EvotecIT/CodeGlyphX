@@ -1,13 +1,11 @@
 #if NET8_0_OR_GREATER
 using System;
 using System.Buffers;
+using CodeGlyphX.Rendering;
 
 namespace CodeGlyphX.Qr;
 
 internal readonly struct QrGrayImage {
-    private static readonly int[] LumaR = BuildLumaTable(299);
-    private static readonly int[] LumaG = BuildLumaTable(587);
-    private static readonly int[] LumaB = BuildLumaTable(114);
     public readonly int Width;
     public readonly int Height;
     public readonly byte[] Gray;
@@ -24,14 +22,6 @@ internal readonly struct QrGrayImage {
         Max = max;
         Threshold = threshold;
         ThresholdMap = thresholdMap;
-    }
-
-    private static int[] BuildLumaTable(int factor) {
-        var table = new int[256];
-        for (var i = 0; i < 256; i++) {
-            table[i] = i * factor;
-        }
-        return table;
     }
 
     public bool IsBlack(int x, int y, bool invert) {
@@ -363,7 +353,7 @@ internal readonly struct QrGrayImage {
                         var r = pixels[p + 2];
                         p += 4;
 
-                        var lum = (LumaR[r] + LumaG[g] + LumaB[b] + 500) / 1000;
+                        var lum = LumaTables.Luma(r, g, b);
                         var l = (byte)lum;
 
                         gray[idx++] = l;
@@ -384,7 +374,7 @@ internal readonly struct QrGrayImage {
                         var b = pixels[p + 2];
                         p += 4;
 
-                        var lum = (LumaR[r] + LumaG[g] + LumaB[b] + 500) / 1000;
+                        var lum = LumaTables.Luma(r, g, b);
                         var l = (byte)lum;
 
                         gray[idx++] = l;

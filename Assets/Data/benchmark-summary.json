@@ -1,321 +1,596 @@
 {
-    "windows":  {
-                    "quick":  {
-                                  "generatedUtc":  "2026-01-23T16:27:37.1081965Z",
-                                  "schemaVersion":  1,
-                                  "os":  "windows",
-                                  "framework":  "net8.0",
-                                  "configuration":  "Release",
-                                  "runMode":  "quick",
-                                  "runModeDetails":  "Run mode: Quick (warmupCount=1, iterationCount=3, invocationCount=1).",
-                                  "runModeSource":  "explicit",
-                                  "publish":  false,
-                                  "artifacts":  "Build\\BenchmarkResults\\windows-20260123-172458",
-                                  "meta":  {
-                                               "commit":  null,
-                                               "branch":  null,
-                                               "dotnetSdk":  "10.0.102",
-                                               "runtime":  ".NET Framework 4.8.9221.0",
-                                               "osDescription":  "Microsoft Windows 10.0.26200 ",
-                                               "osArchitecture":  "X64",
-                                               "processArchitecture":  "X64",
-                                               "machineName":  "EVOMONSTER",
-                                               "processorCount":  32
-                                           },
-                                  "missingComparisons":  [
-
-                                                         ],
-                                  "missingComparisonIds":  [
-
-                                                           ],
-                                  "howToRead":  [
-                                                    "Mean: average time per operation. Lower is better.",
-                                                    "Allocated: managed memory allocated per operation. Lower is better.",
-                                                    "CodeGlyphX vs Fastest: CodeGlyphX mean divided by the fastest mean for that scenario. 1 x means CodeGlyphX is fastest; 1.5 x means ~50% slower.",
-                                                    "CodeGlyphX Alloc vs Fastest: CodeGlyphX allocated divided by the fastest allocation for that scenario. 1 x means CodeGlyphX allocates the least; higher is more allocations.",
-                                                    "Rating: good/ok/bad based on time + allocation ratios (good \u003c=1.1x and \u003c=1.25x alloc, ok \u003c=1.5x and \u003c=2.0x alloc).",
-                                                    "Δ lines in comparison tables show vendor ratios vs CodeGlyphX (time / alloc).",
-                                                    "Quick runs use fewer iterations for fast feedback; Full runs use BenchmarkDotNet defaults and are recommended for publishing."
-                                                ],
-                                  "notes":  [
-                                                "Run mode: Quick (warmupCount=1, iterationCount=3, invocationCount=1).",
-                                                "Comparisons target PNG output and include encode+render (not encode-only).",
-                                                "Module size and quiet zone are matched to CodeGlyphX defaults where possible; image size is derived from CodeGlyphX modules.",
-                                                "ZXing.Net uses ZXing.Net.Bindings.ImageSharp.V3 (ImageSharp 3.x renderer).",
-                                                "Barcoder uses Barcoder.Renderer.Image (ImageSharp renderer).",
-                                                "QRCoder uses PngByteQRCode (managed PNG output, no external renderer).",
-                                                "QR decode comparisons use raw RGBA32 bytes (ZXing via RGBLuminanceSource).",
-                                                "QR decode clean uses CodeGlyphX Balanced; noisy uses CodeGlyphX Robust with aggressive sampling/limits; ZXing uses default (clean) and TryHarder (noisy)."
-                                            ],
-                                  "summary":  [
-                                                  {
-                                                      "rating":  "good",
-                                                      "codeGlyphXAlloc":  "49.9 KB",
-                                                      "deltas":  {
-                                                                     "Barcoder":  "",
-                                                                     "ZXing.Net":  "",
-                                                                     "QRCoder":  ""
-                                                                 },
-                                                      "codeGlyphXAllocVsFastest":  1,
-                                                      "fastestVendor":  "CodeGlyphX",
-                                                      "benchmark":  "PDF417 (Encode)",
-                                                      "codeGlyphXVsFastestText":  "1 x",
-                                                      "codeGlyphXMean":  "1.345 ms",
-                                                      "scenario":  "PDF417 PNG",
-                                                      "fastestMean":  "1.345 ms",
-                                                      "codeGlyphXAllocVsFastestText":  "1 x",
-                                                      "codeGlyphXVsFastest":  1,
-                                                      "vendors":  {
-                                                                      "Barcoder":  {
-                                                                                       "allocated":  "5004.02 KB",
-                                                                                       "mean":  "57.396 ms",
-                                                                                       "meanNs":  57396000
-                                                                                   },
-                                                                      "CodeGlyphX":  {
-                                                                                         "allocated":  "49.9 KB",
-                                                                                         "mean":  "1.345 ms",
-                                                                                         "meanNs":  1345000
-                                                                                     },
-                                                                      "ZXing.Net":  {
-                                                                                        "allocated":  "207.63 KB",
-                                                                                        "mean":  "8.177 ms",
-                                                                                        "meanNs":  8177000
-                                                                                    }
-                                                                  }
-                                                  },
-                                                  {
-                                                      "rating":  "ok",
-                                                      "codeGlyphXAlloc":  "5.26 KB",
-                                                      "deltas":  {
-                                                                     "Barcoder":  "",
-                                                                     "ZXing.Net":  "",
-                                                                     "QRCoder":  ""
-                                                                 },
-                                                      "codeGlyphXAllocVsFastest":  0.04,
-                                                      "fastestVendor":  "ZXing.Net",
-                                                      "benchmark":  "QR Decode (Clean)",
-                                                      "codeGlyphXVsFastestText":  "1.21 x",
-                                                      "codeGlyphXMean":  "2.406 ms",
-                                                      "scenario":  "QR Decode (clean)",
-                                                      "fastestMean":  "1.992 ms",
-                                                      "codeGlyphXAllocVsFastestText":  "0.04 x",
-                                                      "codeGlyphXVsFastest":  1.21,
-                                                      "vendors":  {
-                                                                      "ZXing.Net":  {
-                                                                                        "allocated":  "127.67 KB",
-                                                                                        "mean":  "1.992 ms",
-                                                                                        "meanNs":  1992000
-                                                                                    },
-                                                                      "CodeGlyphX":  {
-                                                                                         "allocated":  "5.26 KB",
-                                                                                         "mean":  "2.406 ms",
-                                                                                         "meanNs":  2406000
-                                                                                     }
-                                                                  }
-                                                  },
-                                                  {
-                                                      "rating":  "ok",
-                                                      "codeGlyphXAlloc":  "5.45 KB",
-                                                      "deltas":  {
-                                                                     "Barcoder":  "",
-                                                                     "ZXing.Net":  "",
-                                                                     "QRCoder":  ""
-                                                                 },
-                                                      "codeGlyphXAllocVsFastest":  0.01,
-                                                      "fastestVendor":  "ZXing.Net",
-                                                      "benchmark":  "QR Decode (Noisy)",
-                                                      "codeGlyphXVsFastestText":  "1.39 x",
-                                                      "codeGlyphXMean":  "6.177 ms",
-                                                      "scenario":  "QR Decode (noisy)",
-                                                      "fastestMean":  "4.456 ms",
-                                                      "codeGlyphXAllocVsFastestText":  "0.01 x",
-                                                      "codeGlyphXVsFastest":  1.39,
-                                                      "vendors":  {
-                                                                      "ZXing.Net":  {
-                                                                                        "allocated":  "706.89 KB",
-                                                                                        "mean":  "4.456 ms",
-                                                                                        "meanNs":  4456000
-                                                                                    },
-                                                                      "CodeGlyphX":  {
-                                                                                         "allocated":  "5.45 KB",
-                                                                                         "mean":  "6.177 ms",
-                                                                                         "meanNs":  6177000
-                                                                                     }
-                                                                  }
-                                                  }
-                                              ]
-                              },
-                    "full":  {
-                                 "generatedUtc":  "2026-01-22T15:35:36.4149651Z",
-                                 "schemaVersion":  1,
-                                 "os":  "windows",
-                                 "framework":  "net8.0",
-                                 "configuration":  "Release",
-                                 "runMode":  "full",
-                                 "runModeDetails":  "Run mode: Full (BenchmarkDotNet default job settings).",
-                                 "publish":  true,
-                                 "artifacts":  "C:\\Support\\GitHub\\CodeMatrix\\Build\\BenchmarkResults\\windows-20260122-155044",
-                                 "meta":  {
-                                              "commit":  null,
-                                              "branch":  null,
-                                              "dotnetSdk":  "10.0.102",
-                                              "runtime":  null,
-                                              "osDescription":  "Microsoft Windows 10.0.26200",
-                                              "osArchitecture":  null,
-                                              "processArchitecture":  null,
-                                              "machineName":  "EVOMONSTER",
-                                              "processorCount":  32
-                                          },
-                                 "missingComparisons":  [
-
-                                                        ],
-                                 "missingComparisonIds":  [
-
-                                                          ],
-                                 "howToRead":  [
-                                                   "Mean: average time per operation. Lower is better.",
-                                                   "Allocated: managed memory allocated per operation. Lower is better.",
-                                                   "CodeGlyphX vs Fastest: CodeGlyphX mean divided by the fastest mean for that scenario. 1 x means CodeGlyphX is fastest; 1.5 x means ~50% slower.",
-                                                   "CodeGlyphX Alloc vs Fastest: CodeGlyphX allocated divided by the fastest allocation for that scenario. 1 x means CodeGlyphX allocates the least; higher is more allocations.",
-                                                   "Rating: good/ok/bad based on time + allocation ratios (good \u003c=1.1x and \u003c=1.25x alloc, ok \u003c=1.5x and \u003c=2.0x alloc).",
-                                                   "Quick runs use fewer iterations for fast feedback; Full runs use BenchmarkDotNet defaults and are recommended for publishing."
-                                               ],
-                                 "notes":  [
-                                               "Run mode: Full (BenchmarkDotNet default job settings).",
-                                               "Comparisons target PNG output and include encode+render (not encode-only).",
-                                               "Module size and quiet zone are matched to CodeGlyphX defaults where possible; image size is derived from CodeGlyphX modules.",
-                                               "ZXing.Net uses ZXing.Net.Bindings.ImageSharp.V3 (ImageSharp 3.x renderer).",
-                                               "Barcoder uses Barcoder.Renderer.Image (ImageSharp renderer).",
-                                               "QRCoder uses PngByteQRCode (managed PNG output, no external renderer).",
-                                               "QR decode comparisons use raw RGBA32 bytes (ZXing via RGBLuminanceSource).",
-                                               "QR decode clean uses CodeGlyphX Balanced; noisy uses CodeGlyphX Robust with aggressive sampling/limits; ZXing uses default (clean) and TryHarder (noisy)."
-                                           ],
-                                 "summary":  [
-                                                 {
-                                                     "scenario":  "PDF417 PNG",
-                                                     "rating":  "good",
-                                                     "codeGlyphXVsFastest":  1,
-                                                     "codeGlyphXMean":  "1.639 ms",
-                                                     "codeGlyphXAllocVsFastest":  1,
-                                                     "codeGlyphXAllocVsFastestText":  "1 x",
-                                                     "fastestMean":  "1.639 ms",
-                                                     "benchmark":  "PDF417 (Encode)",
-                                                     "codeGlyphXVsFastestText":  "1 x",
-                                                     "codeGlyphXAlloc":  "87.22 KB",
-                                                     "fastestVendor":  "CodeGlyphX"
-                                                 },
-                                                 {
-                                                     "scenario":  "QR PNG (medium)",
-                                                     "rating":  "bad",
-                                                     "codeGlyphXVsFastest":  1.22,
-                                                     "codeGlyphXMean":  "1.224 ms",
-                                                     "codeGlyphXAllocVsFastest":  3.95,
-                                                     "codeGlyphXAllocVsFastestText":  "3.95 x",
-                                                     "fastestMean":  "1.007 ms",
-                                                     "benchmark":  "QR (Encode)",
-                                                     "codeGlyphXVsFastestText":  "1.22 x",
-                                                     "codeGlyphXAlloc":  "28.88 KB",
-                                                     "fastestVendor":  "QRCoder"
-                                                 },
-                                                 {
-                                                     "scenario":  "QR Decode (clean)",
-                                                     "rating":  "ok",
-                                                     "codeGlyphXVsFastest":  1.34,
-                                                     "codeGlyphXMean":  "2.833 ms",
-                                                     "codeGlyphXAllocVsFastest":  0.05,
-                                                     "codeGlyphXAllocVsFastestText":  "0.05 x",
-                                                     "fastestMean":  "2.107 ms",
-                                                     "benchmark":  "QR Decode (Clean)",
-                                                     "codeGlyphXVsFastestText":  "1.34 x",
-                                                     "codeGlyphXAlloc":  "6.23 KB",
-                                                     "fastestVendor":  "ZXing.Net"
-                                                 },
-                                                 {
-                                                     "scenario":  "QR Decode (noisy)",
-                                                     "rating":  "bad",
-                                                     "codeGlyphXVsFastest":  56.92,
-                                                     "codeGlyphXMean":  "235.230 ms",
-                                                     "codeGlyphXAllocVsFastest":  11.83,
-                                                     "codeGlyphXAllocVsFastestText":  "11.83 x",
-                                                     "fastestMean":  "4.133 ms",
-                                                     "benchmark":  "QR Decode (Noisy)",
-                                                     "codeGlyphXVsFastestText":  "56.92 x",
-                                                     "codeGlyphXAlloc":  "8362.01 KB",
-                                                     "fastestVendor":  "ZXing.Net"
-                                                 }
-                                             ]
-                             }
-                },
-    "linux":  {
-                  "quick":  {
-                                "generatedUtc":  "2026-01-22T23:04:32.829577+01:00",
-                                "schemaVersion":  1,
-                                "os":  "linux",
-                                "framework":  "net8.0",
-                                "configuration":  "Release",
-                                "runMode":  "quick",
-                                "runModeDetails":  "Run mode: Quick (warmupCount=1, iterationCount=3, invocationCount=1).",
-                                "publish":  false,
-                                "artifacts":  "/mnt/c/Support/GitHub/CodeMatrix/Build/BenchmarkResults/linux-20260122-230352",
-                                "meta":  {
-                                             "commit":  null,
-                                             "branch":  null,
-                                             "dotnetSdk":  null,
-                                             "runtime":  null,
-                                             "osDescription":  "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
-                                             "osArchitecture":  "x86_64",
-                                             "processArchitecture":  "x86_64",
-                                             "machineName":  "EVOMONSTER",
-                                             "processorCount":  32
-                                         },
-                                "missingComparisons":  [
-                                                           "Aztec (Encode)",
-                                                           "Code 128 (Encode)",
-                                                           "Code 39 (Encode)",
-                                                           "Code 93 (Encode)",
-                                                           "Data Matrix (Encode)",
-                                                           "EAN-13 (Encode)",
-                                                           "PDF417 (Encode)",
-                                                           "QR (Encode)",
-                                                           "UPC-A (Encode)"
-                                                       ],
-                                "missingComparisonIds":  [
-                                                             "AztecCompareBenchmarks",
-                                                             "Code128CompareBenchmarks",
-                                                             "Code39CompareBenchmarks",
-                                                             "Code93CompareBenchmarks",
-                                                             "DataMatrixCompareBenchmarks",
-                                                             "EanCompareBenchmarks",
-                                                             "Pdf417CompareBenchmarks",
-                                                             "QrCompareBenchmarks",
-                                                             "UpcACompareBenchmarks"
-                                                         ],
-                                "howToRead":  [
-                                                  "Mean: average time per operation. Lower is better.",
-                                                  "Allocated: managed memory allocated per operation. Lower is better.",
-                                                  "CodeGlyphX vs Fastest: CodeGlyphX mean divided by the fastest mean for that scenario. 1 x means CodeGlyphX is fastest; 1.5 x means ~50% slower.",
-                                                  "CodeGlyphX Alloc vs Fastest: CodeGlyphX allocated divided by the fastest allocation for that scenario. 1 x means CodeGlyphX allocates the least; higher is more allocations.",
-                                                  "Rating: good/ok/bad based on time + allocation ratios (good \u003c=1.1x and \u003c=1.25x alloc, ok \u003c=1.5x and \u003c=2.0x alloc).",
-                                                  "Quick runs use fewer iterations for fast feedback; Full runs use BenchmarkDotNet defaults and are recommended for publishing."
-                                              ],
-                                "notes":  [
-                                              "Run mode: Quick (warmupCount=1, iterationCount=3, invocationCount=1).",
-                                              "Comparisons target PNG output and include encode+render (not encode-only).",
-                                              "Module size and quiet zone are matched to CodeGlyphX defaults where possible; image size is derived from CodeGlyphX modules.",
-                                              "ZXing.Net uses ZXing.Net.Bindings.ImageSharp.V3 (ImageSharp 3.x renderer).",
-                                              "Barcoder uses Barcoder.Renderer.Image (ImageSharp renderer).",
-                                              "QRCoder uses PngByteQRCode (managed PNG output, no external renderer).",
-                                              "QR decode comparisons use raw RGBA32 bytes (ZXing via RGBLuminanceSource).",
-                                              "QR decode clean uses CodeGlyphX Balanced; noisy uses CodeGlyphX Robust with aggressive sampling/limits; ZXing uses default (clean) and TryHarder (noisy)."
-                                          ],
-                                "summary":  [
-
-                                            ]
-                            },
-                  "full":  null
-              },
-    "macos":  {
-                  "quick":  null,
-                  "full":  null
-              }
+  "windows": {
+    "quick": {
+      "generatedUtc": "2026-01-23T16:44:21.4413818Z",
+      "schemaVersion": 1,
+      "os": "windows",
+      "framework": "net8.0",
+      "configuration": "Release",
+      "runMode": "quick",
+      "runModeDetails": "Run mode: Quick (warmupCount=1, iterationCount=3, invocationCount=1).",
+      "runModeSource": "explicit",
+      "publish": false,
+      "artifacts": "Build\\BenchmarkResults\\windows-20260123-172458",
+      "meta": {
+        "commit": null,
+        "branch": null,
+        "dotnetSdk": "10.0.102",
+        "runtime": ".NET 9.0.10",
+        "osDescription": "Microsoft Windows 10.0.26200",
+        "osArchitecture": "X64",
+        "processArchitecture": "X64",
+        "machineName": "EVOMONSTER",
+        "processorCount": 32
+      },
+      "missingComparisons": [],
+      "missingComparisonIds": [],
+      "howToRead": [
+        "Mean: average time per operation. Lower is better.",
+        "Allocated: managed memory allocated per operation. Lower is better.",
+        "CodeGlyphX vs Fastest: CodeGlyphX mean divided by the fastest mean for that scenario. 1 x means CodeGlyphX is fastest; 1.5 x means ~50% slower.",
+        "CodeGlyphX Alloc vs Fastest: CodeGlyphX allocated divided by the fastest allocation for that scenario. 1 x means CodeGlyphX allocates the least; higher is more allocations.",
+        "Rating: good/ok/bad based on time + allocation ratios (good <=1.1x and <=1.25x alloc, ok <=1.5x and <=2.0x alloc).",
+        "Δ lines in comparison tables show vendor ratios vs CodeGlyphX (time / alloc).",
+        "Quick runs use fewer iterations for fast feedback; Full runs use BenchmarkDotNet defaults and are recommended for publishing."
+      ],
+      "notes": [
+        "Run mode: Quick (warmupCount=1, iterationCount=3, invocationCount=1).",
+        "Comparisons target PNG output and include encode+render (not encode-only).",
+        "Module size and quiet zone are matched to CodeGlyphX defaults where possible; image size is derived from CodeGlyphX modules.",
+        "ZXing.Net uses ZXing.Net.Bindings.ImageSharp.V3 (ImageSharp 3.x renderer).",
+        "Barcoder uses Barcoder.Renderer.Image (ImageSharp renderer).",
+        "QRCoder uses PngByteQRCode (managed PNG output, no external renderer).",
+        "QR decode comparisons use raw RGBA32 bytes (ZXing via RGBLuminanceSource).",
+        "QR decode clean uses CodeGlyphX Balanced; noisy uses CodeGlyphX Robust with aggressive sampling/limits; ZXing uses default (clean) and TryHarder (noisy)."
+      ],
+      "summary": [
+        {
+          "codeGlyphXVsFastest": 1.0,
+          "codeGlyphXVsFastestText": "1 x",
+          "fastestMean": "316.9 μs",
+          "benchmark": "Aztec (Encode)",
+          "scenario": "Aztec PNG",
+          "fastestVendor": "CodeGlyphX",
+          "codeGlyphXAlloc": "61.34 KB",
+          "codeGlyphXMean": "316.9 μs",
+          "vendors": {
+            "ZXing.Net": {
+              "meanNs": 1987300.0,
+              "mean": "1,987.3 μs",
+              "allocated": "61.42 KB"
+            },
+            "CodeGlyphX": {
+              "meanNs": 316900.0,
+              "mean": "316.9 μs",
+              "allocated": "61.34 KB"
+            },
+            "Barcoder": {
+              "meanNs": 8130100.0,
+              "mean": "8,130.1 μs",
+              "allocated": "642.42 KB"
+            }
+          },
+          "deltas": {
+            "Barcoder": "",
+            "ZXing.Net": "",
+            "QRCoder": ""
+          },
+          "codeGlyphXAllocVsFastest": 1.0,
+          "rating": "good",
+          "codeGlyphXAllocVsFastestText": "1 x"
+        },
+        {
+          "codeGlyphXVsFastest": 1.0,
+          "codeGlyphXVsFastestText": "1 x",
+          "fastestMean": "155.3 μs",
+          "benchmark": "Code 128 (Encode)",
+          "scenario": "Code128 PNG",
+          "fastestVendor": "CodeGlyphX",
+          "codeGlyphXAlloc": "14.43 KB",
+          "codeGlyphXMean": "155.3 μs",
+          "vendors": {
+            "ZXing.Net": {
+              "meanNs": 2057600.0,
+              "mean": "2,057.6 μs",
+              "allocated": "15.74 KB"
+            },
+            "CodeGlyphX": {
+              "meanNs": 155300.0,
+              "mean": "155.3 μs",
+              "allocated": "14.43 KB"
+            },
+            "Barcoder": {
+              "meanNs": 63298400.0,
+              "mean": "63,298.4 μs",
+              "allocated": "2035.01 KB"
+            }
+          },
+          "deltas": {
+            "Barcoder": "",
+            "ZXing.Net": "",
+            "QRCoder": ""
+          },
+          "codeGlyphXAllocVsFastest": 1.0,
+          "rating": "good",
+          "codeGlyphXAllocVsFastestText": "1 x"
+        },
+        {
+          "codeGlyphXVsFastest": 1.0,
+          "codeGlyphXVsFastestText": "1 x",
+          "fastestMean": "163.7 μs",
+          "benchmark": "Code 39 (Encode)",
+          "scenario": "Code39 PNG",
+          "fastestVendor": "CodeGlyphX",
+          "codeGlyphXAlloc": "10.02 KB",
+          "codeGlyphXMean": "163.7 μs",
+          "vendors": {
+            "ZXing.Net": {
+              "meanNs": 1730200.0,
+              "mean": "1,730.2 μs",
+              "allocated": "12.28 KB"
+            },
+            "CodeGlyphX": {
+              "meanNs": 163700.0,
+              "mean": "163.7 μs",
+              "allocated": "10.02 KB"
+            },
+            "Barcoder": {
+              "meanNs": 46126900.0,
+              "mean": "46,126.9 μs",
+              "allocated": "1448.61 KB"
+            }
+          },
+          "deltas": {
+            "Barcoder": "",
+            "ZXing.Net": "",
+            "QRCoder": ""
+          },
+          "codeGlyphXAllocVsFastest": 1.0,
+          "rating": "good",
+          "codeGlyphXAllocVsFastestText": "1 x"
+        },
+        {
+          "codeGlyphXVsFastest": 1.0,
+          "codeGlyphXVsFastestText": "1 x",
+          "fastestMean": "177.0 μs",
+          "benchmark": "Code 93 (Encode)",
+          "scenario": "Code93 PNG",
+          "fastestVendor": "CodeGlyphX",
+          "codeGlyphXAlloc": "8.13 KB",
+          "codeGlyphXMean": "177.0 μs",
+          "vendors": {
+            "ZXing.Net": {
+              "meanNs": 1361600.0,
+              "mean": "1,361.6 μs",
+              "allocated": "11.7 KB"
+            },
+            "CodeGlyphX": {
+              "meanNs": 177000.0,
+              "mean": "177.0 μs",
+              "allocated": "8.13 KB"
+            },
+            "Barcoder": {
+              "meanNs": 28990800.0,
+              "mean": "28,990.8 μs",
+              "allocated": "957.26 KB"
+            }
+          },
+          "deltas": {
+            "Barcoder": "",
+            "ZXing.Net": "",
+            "QRCoder": ""
+          },
+          "codeGlyphXAllocVsFastest": 1.0,
+          "rating": "good",
+          "codeGlyphXAllocVsFastestText": "1 x"
+        },
+        {
+          "codeGlyphXVsFastest": 1.0,
+          "codeGlyphXVsFastestText": "1 x",
+          "fastestMean": "313.2 μs",
+          "benchmark": "Data Matrix (Encode)",
+          "scenario": "Data Matrix PNG (medium)",
+          "fastestVendor": "CodeGlyphX",
+          "codeGlyphXAlloc": "15.52 KB",
+          "codeGlyphXMean": "313.2 μs",
+          "vendors": {
+            "ZXing.Net": {
+              "meanNs": 2197300.0,
+              "mean": "2,197.3 μs",
+              "allocated": "22.31 KB"
+            },
+            "CodeGlyphX": {
+              "meanNs": 313200.0,
+              "mean": "313.2 μs",
+              "allocated": "15.52 KB"
+            },
+            "Barcoder": {
+              "meanNs": 9232400.0,
+              "mean": "9,232.4 μs",
+              "allocated": "645.05 KB"
+            }
+          },
+          "deltas": {
+            "Barcoder": "",
+            "ZXing.Net": "",
+            "QRCoder": ""
+          },
+          "codeGlyphXAllocVsFastest": 1.0,
+          "rating": "good",
+          "codeGlyphXAllocVsFastestText": "1 x"
+        },
+        {
+          "codeGlyphXVsFastest": 1.0,
+          "codeGlyphXVsFastestText": "1 x",
+          "fastestMean": "230.7 μs",
+          "benchmark": "EAN-13 (Encode)",
+          "scenario": "EAN-13 PNG",
+          "fastestVendor": "CodeGlyphX",
+          "codeGlyphXAlloc": "6.84 KB",
+          "codeGlyphXMean": "230.7 μs",
+          "vendors": {
+            "ZXing.Net": {
+              "meanNs": 1314900.0,
+              "mean": "1,314.9 μs",
+              "allocated": "11.68 KB"
+            },
+            "CodeGlyphX": {
+              "meanNs": 230700.0,
+              "mean": "230.7 μs",
+              "allocated": "6.84 KB"
+            },
+            "Barcoder": {
+              "meanNs": 26800300.0,
+              "mean": "26,800.3 μs",
+              "allocated": "850.83 KB"
+            }
+          },
+          "deltas": {
+            "Barcoder": "",
+            "ZXing.Net": "",
+            "QRCoder": ""
+          },
+          "codeGlyphXAllocVsFastest": 1.0,
+          "rating": "good",
+          "codeGlyphXAllocVsFastestText": "1 x"
+        },
+        {
+          "codeGlyphXVsFastest": 1.0,
+          "codeGlyphXVsFastestText": "1 x",
+          "fastestMean": "1.345 ms",
+          "benchmark": "PDF417 (Encode)",
+          "scenario": "PDF417 PNG",
+          "fastestVendor": "CodeGlyphX",
+          "codeGlyphXAlloc": "49.9 KB",
+          "codeGlyphXMean": "1.345 ms",
+          "vendors": {
+            "ZXing.Net": {
+              "meanNs": 8177000.0,
+              "mean": "8.177 ms",
+              "allocated": "207.63 KB"
+            },
+            "CodeGlyphX": {
+              "meanNs": 1345000.0,
+              "mean": "1.345 ms",
+              "allocated": "49.9 KB"
+            },
+            "Barcoder": {
+              "meanNs": 57396000.0,
+              "mean": "57.396 ms",
+              "allocated": "5004.02 KB"
+            }
+          },
+          "deltas": {
+            "Barcoder": "",
+            "ZXing.Net": "",
+            "QRCoder": ""
+          },
+          "codeGlyphXAllocVsFastest": 1.0,
+          "rating": "good",
+          "codeGlyphXAllocVsFastestText": "1 x"
+        },
+        {
+          "codeGlyphXVsFastest": 1.24,
+          "codeGlyphXVsFastestText": "1.24 x",
+          "fastestMean": "893.6 μs",
+          "benchmark": "QR (Encode)",
+          "scenario": "QR PNG (medium)",
+          "fastestVendor": "QRCoder",
+          "codeGlyphXAlloc": "14.86 KB",
+          "codeGlyphXMean": "1,108.6 μs",
+          "vendors": {
+            "ZXing.Net": {
+              "meanNs": 4357700.0,
+              "mean": "4,357.7 μs",
+              "allocated": "79.41 KB"
+            },
+            "Barcoder": {
+              "meanNs": 17099800.0,
+              "mean": "17,099.8 μs",
+              "allocated": "1547.52 KB"
+            },
+            "CodeGlyphX": {
+              "meanNs": 1108600.0,
+              "mean": "1,108.6 μs",
+              "allocated": "14.86 KB"
+            },
+            "QRCoder": {
+              "meanNs": 893600.0,
+              "mean": "893.6 μs",
+              "allocated": "7.31 KB"
+            }
+          },
+          "deltas": {
+            "Barcoder": "",
+            "ZXing.Net": "",
+            "QRCoder": ""
+          },
+          "codeGlyphXAllocVsFastest": 2.03,
+          "rating": "bad",
+          "codeGlyphXAllocVsFastestText": "2.03 x"
+        },
+        {
+          "codeGlyphXVsFastest": 1.21,
+          "codeGlyphXVsFastestText": "1.21 x",
+          "fastestMean": "1.992 ms",
+          "benchmark": "QR Decode (Clean)",
+          "scenario": "QR Decode (clean)",
+          "fastestVendor": "ZXing.Net",
+          "codeGlyphXAlloc": "5.26 KB",
+          "codeGlyphXMean": "2.406 ms",
+          "vendors": {
+            "ZXing.Net": {
+              "meanNs": 1992000.0,
+              "mean": "1.992 ms",
+              "allocated": "127.67 KB"
+            },
+            "CodeGlyphX": {
+              "meanNs": 2406000.0,
+              "mean": "2.406 ms",
+              "allocated": "5.26 KB"
+            }
+          },
+          "deltas": {
+            "Barcoder": "",
+            "ZXing.Net": "",
+            "QRCoder": ""
+          },
+          "codeGlyphXAllocVsFastest": 0.04,
+          "rating": "ok",
+          "codeGlyphXAllocVsFastestText": "0.04 x"
+        },
+        {
+          "codeGlyphXVsFastest": 1.39,
+          "codeGlyphXVsFastestText": "1.39 x",
+          "fastestMean": "4.456 ms",
+          "benchmark": "QR Decode (Noisy)",
+          "scenario": "QR Decode (noisy)",
+          "fastestVendor": "ZXing.Net",
+          "codeGlyphXAlloc": "5.45 KB",
+          "codeGlyphXMean": "6.177 ms",
+          "vendors": {
+            "ZXing.Net": {
+              "meanNs": 4456000.0,
+              "mean": "4.456 ms",
+              "allocated": "706.89 KB"
+            },
+            "CodeGlyphX": {
+              "meanNs": 6177000.0,
+              "mean": "6.177 ms",
+              "allocated": "5.45 KB"
+            }
+          },
+          "deltas": {
+            "Barcoder": "",
+            "ZXing.Net": "",
+            "QRCoder": ""
+          },
+          "codeGlyphXAllocVsFastest": 0.01,
+          "rating": "ok",
+          "codeGlyphXAllocVsFastestText": "0.01 x"
+        },
+        {
+          "codeGlyphXVsFastest": 1.0,
+          "codeGlyphXVsFastestText": "1 x",
+          "fastestMean": "207.4 μs",
+          "benchmark": "UPC-A (Encode)",
+          "scenario": "UPC-A PNG",
+          "fastestVendor": "CodeGlyphX",
+          "codeGlyphXAlloc": "7.15 KB",
+          "codeGlyphXMean": "207.4 μs",
+          "vendors": {
+            "ZXing.Net": {
+              "meanNs": 1235000.0,
+              "mean": "1,235.0 μs",
+              "allocated": "11.75 KB"
+            },
+            "CodeGlyphX": {
+              "meanNs": 207400.0,
+              "mean": "207.4 μs",
+              "allocated": "7.15 KB"
+            },
+            "Barcoder": {
+              "meanNs": 23452900.0,
+              "mean": "23,452.9 μs",
+              "allocated": "765.94 KB"
+            }
+          },
+          "deltas": {
+            "Barcoder": "",
+            "ZXing.Net": "",
+            "QRCoder": ""
+          },
+          "codeGlyphXAllocVsFastest": 1.0,
+          "rating": "good",
+          "codeGlyphXAllocVsFastestText": "1 x"
+        }
+      ]
+    },
+    "full": {
+      "generatedUtc": "2026-01-22T15:35:36.4149651Z",
+      "schemaVersion": 1,
+      "os": "windows",
+      "framework": "net8.0",
+      "configuration": "Release",
+      "runMode": "full",
+      "runModeDetails": "Run mode: Full (BenchmarkDotNet default job settings).",
+      "publish": true,
+      "artifacts": "C:\\Support\\GitHub\\CodeMatrix\\Build\\BenchmarkResults\\windows-20260122-155044",
+      "meta": {
+        "commit": null,
+        "branch": null,
+        "dotnetSdk": "10.0.102",
+        "runtime": null,
+        "osDescription": "Microsoft Windows 10.0.26200",
+        "osArchitecture": null,
+        "processArchitecture": null,
+        "machineName": "EVOMONSTER",
+        "processorCount": 32
+      },
+      "missingComparisons": [],
+      "missingComparisonIds": [],
+      "howToRead": [
+        "Mean: average time per operation. Lower is better.",
+        "Allocated: managed memory allocated per operation. Lower is better.",
+        "CodeGlyphX vs Fastest: CodeGlyphX mean divided by the fastest mean for that scenario. 1 x means CodeGlyphX is fastest; 1.5 x means ~50% slower.",
+        "CodeGlyphX Alloc vs Fastest: CodeGlyphX allocated divided by the fastest allocation for that scenario. 1 x means CodeGlyphX allocates the least; higher is more allocations.",
+        "Rating: good/ok/bad based on time + allocation ratios (good <=1.1x and <=1.25x alloc, ok <=1.5x and <=2.0x alloc).",
+        "Quick runs use fewer iterations for fast feedback; Full runs use BenchmarkDotNet defaults and are recommended for publishing."
+      ],
+      "notes": [
+        "Run mode: Full (BenchmarkDotNet default job settings).",
+        "Comparisons target PNG output and include encode+render (not encode-only).",
+        "Module size and quiet zone are matched to CodeGlyphX defaults where possible; image size is derived from CodeGlyphX modules.",
+        "ZXing.Net uses ZXing.Net.Bindings.ImageSharp.V3 (ImageSharp 3.x renderer).",
+        "Barcoder uses Barcoder.Renderer.Image (ImageSharp renderer).",
+        "QRCoder uses PngByteQRCode (managed PNG output, no external renderer).",
+        "QR decode comparisons use raw RGBA32 bytes (ZXing via RGBLuminanceSource).",
+        "QR decode clean uses CodeGlyphX Balanced; noisy uses CodeGlyphX Robust with aggressive sampling/limits; ZXing uses default (clean) and TryHarder (noisy)."
+      ],
+      "summary": [
+        {
+          "scenario": "PDF417 PNG",
+          "rating": "good",
+          "codeGlyphXVsFastest": 1,
+          "codeGlyphXMean": "1.639 ms",
+          "codeGlyphXAllocVsFastest": 1,
+          "codeGlyphXAllocVsFastestText": "1 x",
+          "fastestMean": "1.639 ms",
+          "benchmark": "PDF417 (Encode)",
+          "codeGlyphXVsFastestText": "1 x",
+          "codeGlyphXAlloc": "87.22 KB",
+          "fastestVendor": "CodeGlyphX"
+        },
+        {
+          "scenario": "QR PNG (medium)",
+          "rating": "bad",
+          "codeGlyphXVsFastest": 1.22,
+          "codeGlyphXMean": "1.224 ms",
+          "codeGlyphXAllocVsFastest": 3.95,
+          "codeGlyphXAllocVsFastestText": "3.95 x",
+          "fastestMean": "1.007 ms",
+          "benchmark": "QR (Encode)",
+          "codeGlyphXVsFastestText": "1.22 x",
+          "codeGlyphXAlloc": "28.88 KB",
+          "fastestVendor": "QRCoder"
+        },
+        {
+          "scenario": "QR Decode (clean)",
+          "rating": "ok",
+          "codeGlyphXVsFastest": 1.34,
+          "codeGlyphXMean": "2.833 ms",
+          "codeGlyphXAllocVsFastest": 0.05,
+          "codeGlyphXAllocVsFastestText": "0.05 x",
+          "fastestMean": "2.107 ms",
+          "benchmark": "QR Decode (Clean)",
+          "codeGlyphXVsFastestText": "1.34 x",
+          "codeGlyphXAlloc": "6.23 KB",
+          "fastestVendor": "ZXing.Net"
+        },
+        {
+          "scenario": "QR Decode (noisy)",
+          "rating": "bad",
+          "codeGlyphXVsFastest": 56.92,
+          "codeGlyphXMean": "235.230 ms",
+          "codeGlyphXAllocVsFastest": 11.83,
+          "codeGlyphXAllocVsFastestText": "11.83 x",
+          "fastestMean": "4.133 ms",
+          "benchmark": "QR Decode (Noisy)",
+          "codeGlyphXVsFastestText": "56.92 x",
+          "codeGlyphXAlloc": "8362.01 KB",
+          "fastestVendor": "ZXing.Net"
+        }
+      ]
+    }
+  },
+  "linux": {
+    "quick": {
+      "generatedUtc": "2026-01-22T23:04:32.829577+01:00",
+      "schemaVersion": 1,
+      "os": "linux",
+      "framework": "net8.0",
+      "configuration": "Release",
+      "runMode": "quick",
+      "runModeDetails": "Run mode: Quick (warmupCount=1, iterationCount=3, invocationCount=1).",
+      "publish": false,
+      "artifacts": "/mnt/c/Support/GitHub/CodeMatrix/Build/BenchmarkResults/linux-20260122-230352",
+      "meta": {
+        "commit": null,
+        "branch": null,
+        "dotnetSdk": null,
+        "runtime": null,
+        "osDescription": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+        "osArchitecture": "x86_64",
+        "processArchitecture": "x86_64",
+        "machineName": "EVOMONSTER",
+        "processorCount": 32
+      },
+      "missingComparisons": [
+        "Aztec (Encode)",
+        "Code 128 (Encode)",
+        "Code 39 (Encode)",
+        "Code 93 (Encode)",
+        "Data Matrix (Encode)",
+        "EAN-13 (Encode)",
+        "PDF417 (Encode)",
+        "QR (Encode)",
+        "UPC-A (Encode)"
+      ],
+      "missingComparisonIds": [
+        "AztecCompareBenchmarks",
+        "Code128CompareBenchmarks",
+        "Code39CompareBenchmarks",
+        "Code93CompareBenchmarks",
+        "DataMatrixCompareBenchmarks",
+        "EanCompareBenchmarks",
+        "Pdf417CompareBenchmarks",
+        "QrCompareBenchmarks",
+        "UpcACompareBenchmarks"
+      ],
+      "howToRead": [
+        "Mean: average time per operation. Lower is better.",
+        "Allocated: managed memory allocated per operation. Lower is better.",
+        "CodeGlyphX vs Fastest: CodeGlyphX mean divided by the fastest mean for that scenario. 1 x means CodeGlyphX is fastest; 1.5 x means ~50% slower.",
+        "CodeGlyphX Alloc vs Fastest: CodeGlyphX allocated divided by the fastest allocation for that scenario. 1 x means CodeGlyphX allocates the least; higher is more allocations.",
+        "Rating: good/ok/bad based on time + allocation ratios (good <=1.1x and <=1.25x alloc, ok <=1.5x and <=2.0x alloc).",
+        "Quick runs use fewer iterations for fast feedback; Full runs use BenchmarkDotNet defaults and are recommended for publishing."
+      ],
+      "notes": [
+        "Run mode: Quick (warmupCount=1, iterationCount=3, invocationCount=1).",
+        "Comparisons target PNG output and include encode+render (not encode-only).",
+        "Module size and quiet zone are matched to CodeGlyphX defaults where possible; image size is derived from CodeGlyphX modules.",
+        "ZXing.Net uses ZXing.Net.Bindings.ImageSharp.V3 (ImageSharp 3.x renderer).",
+        "Barcoder uses Barcoder.Renderer.Image (ImageSharp renderer).",
+        "QRCoder uses PngByteQRCode (managed PNG output, no external renderer).",
+        "QR decode comparisons use raw RGBA32 bytes (ZXing via RGBLuminanceSource).",
+        "QR decode clean uses CodeGlyphX Balanced; noisy uses CodeGlyphX Robust with aggressive sampling/limits; ZXing uses default (clean) and TryHarder (noisy)."
+      ],
+      "summary": []
+    },
+    "full": null
+  },
+  "macos": {
+    "quick": null,
+    "full": null
+  }
 }

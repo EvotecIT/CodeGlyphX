@@ -155,10 +155,12 @@ function Normalize-Method([string]$value) {
 function Normalize-MeanText([string]$value) {
     if ([string]::IsNullOrWhiteSpace($value)) { return $value }
     $normalized = $value
-    $normalized = $normalized -replace "Âµs", "Î¼s"
-    $normalized = $normalized -replace "ï¿½s", "Î¼s"
-    $normalized = $normalized -replace "Ã‚Âµs", "Î¼s"
-    $normalized = $normalized -replace "Ã‚Î¼s", "Î¼s"
+    $normalized = $normalized -replace "Âµs", "μs"
+    $normalized = $normalized -replace "ï¿½s", "μs"
+    $normalized = $normalized -replace "Ã‚Âµs", "μs"
+    $normalized = $normalized -replace "Ã‚Î¼s", "μs"
+    $normalized = $normalized -replace "Î¼s", "μs"
+    $normalized = $normalized -replace "µs", "μs"
     return $normalized
 }
 
@@ -236,12 +238,12 @@ function Try-Parse-Mean([string]$value, [ref]$nanoseconds) {
     if ([string]::IsNullOrWhiteSpace($value)) { return $false }
     $clean = (Normalize-MeanText $value).Trim().Replace(",", "")
     if ($clean -eq "NA") { return $false }
-    if ($clean -match "^([0-9]+(?:\.[0-9]+)?)\s*(ns|us|Î¼s|Âµs|ms|s)$") {
+    if ($clean -match "^([0-9]+(?:\.[0-9]+)?)\s*(ns|us|μs|µs|Î¼s|Âµs|ms|s)$") {
         $number = [double]$Matches[1]
         $unit = $Matches[2]
         $scale = 1.0
         if ($unit -eq "ns") { $scale = 1.0 }
-        elseif ($unit -eq "us" -or $unit -eq "Î¼s" -or $unit -eq "Âµs") { $scale = 1000.0 }
+        elseif ($unit -eq "us" -or $unit -eq "μs" -or $unit -eq "µs" -or $unit -eq "Î¼s" -or $unit -eq "Âµs") { $scale = 1000.0 }
         elseif ($unit -eq "ms") { $scale = 1000000.0 }
         elseif ($unit -eq "s") { $scale = 1000000000.0 }
         $nanoseconds.Value = $number * $scale
