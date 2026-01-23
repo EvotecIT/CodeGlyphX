@@ -130,10 +130,20 @@ public static partial class QrPngRenderer {
                 }
 
                 if (moduleY >= 0 && moduleY < size) {
-                    for (var moduleX = 0; moduleX < size; moduleX++) {
-                        if (!modules[moduleX, moduleY]) continue;
-                        var x0 = (moduleX + quiet) * moduleSize;
-                        ApplyRun(rowBuffer, 0, x0, x0 + moduleSize, invert);
+                    var moduleX = 0;
+                    while (moduleX < size) {
+                        if (!modules[moduleX, moduleY]) {
+                            moduleX++;
+                            continue;
+                        }
+
+                        var runStart = moduleX;
+                        moduleX++;
+                        while (moduleX < size && modules[moduleX, moduleY]) moduleX++;
+
+                        var x0 = (runStart + quiet) * moduleSize;
+                        var x1 = (moduleX + quiet) * moduleSize;
+                        ApplyRun(rowBuffer, 0, x0, x1, invert);
                     }
                 }
 

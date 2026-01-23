@@ -54,14 +54,21 @@ public static partial class QrPngRenderer {
                 var rowHasDark = false;
                 var px = quiet * moduleSize;
 
-                for (var mx = 0; mx < size; mx++) {
+                var mx = 0;
+                while (mx < size) {
                     if (!modules[mx, my]) {
+                        mx++;
                         px += moduleSize;
                         continue;
                     }
+
                     rowHasDark = true;
-                    PngRenderHelpers.FillRowPixels(rowBuffer, px * 4, moduleSize, foreground);
-                    px += moduleSize;
+                    var runStart = mx;
+                    mx++;
+                    while (mx < size && modules[mx, my]) mx++;
+                    var runSize = mx - runStart;
+                    PngRenderHelpers.FillRowPixels(rowBuffer, px * 4, runSize * moduleSize, foreground);
+                    px += runSize * moduleSize;
                 }
 
                 if (!rowHasDark) continue;
@@ -98,14 +105,21 @@ public static partial class QrPngRenderer {
                 var rowHasDark = false;
                 var px = quiet * moduleSize;
 
-                for (var mx = 0; mx < size; mx++) {
+                var mx = 0;
+                while (mx < size) {
                     if (!modules[mx, my]) {
+                        mx++;
                         px += moduleSize;
                         continue;
                     }
+
                     rowHasDark = true;
-                    PngRenderHelpers.FillRowPixels(rowBuffer, 1 + px * 4, moduleSize, foreground);
-                    px += moduleSize;
+                    var runStart = mx;
+                    mx++;
+                    while (mx < size && modules[mx, my]) mx++;
+                    var runSize = mx - runStart;
+                    PngRenderHelpers.FillRowPixels(rowBuffer, 1 + px * 4, runSize * moduleSize, foreground);
+                    px += runSize * moduleSize;
                 }
 
                 if (!rowHasDark) continue;
@@ -147,11 +161,20 @@ public static partial class QrPngRenderer {
 
         var my = yIn / moduleSize;
         var px = originPx;
-        for (var mx = 0; mx < size; mx++) {
-            if (modules[mx, my]) {
-                PngRenderHelpers.FillRowPixels(rowBuffer, 1 + px * 4, moduleSize, foreground);
+        var mx = 0;
+        while (mx < size) {
+            if (!modules[mx, my]) {
+                mx++;
+                px += moduleSize;
+                continue;
             }
-            px += moduleSize;
+
+            var runStart = mx;
+            mx++;
+            while (mx < size && modules[mx, my]) mx++;
+            var runSize = mx - runStart;
+            PngRenderHelpers.FillRowPixels(rowBuffer, 1 + px * 4, runSize * moduleSize, foreground);
+            px += runSize * moduleSize;
         }
     }
 

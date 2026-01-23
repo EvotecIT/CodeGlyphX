@@ -95,9 +95,9 @@ internal static class QrFinderPatternDetector {
                     stateCount.Clear();
                     var currentState = 0;
                     var rowOffset = y * width;
+                    var idx = rowOffset;
 
-                    for (var x = 0; x < width; x++) {
-                        var idx = rowOffset + x;
+                    for (var x = 0; x < width; x++, idx++) {
                         if (gray[idx] <= threshold) {
                             if ((currentState & 1) == 1) currentState++;
                             if (currentState > 4) {
@@ -138,9 +138,9 @@ internal static class QrFinderPatternDetector {
                     stateCount.Clear();
                     var currentState = 0;
                     var rowOffset = y * width;
+                    var idx = rowOffset;
 
-                    for (var x = 0; x < width; x++) {
-                        var idx = rowOffset + x;
+                    for (var x = 0; x < width; x++, idx++) {
                         if (gray[idx] > threshold) {
                             if ((currentState & 1) == 1) currentState++;
                             if (currentState > 4) {
@@ -183,9 +183,9 @@ internal static class QrFinderPatternDetector {
                     stateCount.Clear();
                     var currentState = 0;
                     var rowOffset = y * width;
+                    var idx = rowOffset;
 
-                    for (var x = 0; x < width; x++) {
-                        var idx = rowOffset + x;
+                    for (var x = 0; x < width; x++, idx++) {
                         if (gray[idx] <= thresholds[idx]) {
                             if ((currentState & 1) == 1) currentState++;
                             if (currentState > 4) {
@@ -226,9 +226,9 @@ internal static class QrFinderPatternDetector {
                     stateCount.Clear();
                     var currentState = 0;
                     var rowOffset = y * width;
+                    var idx = rowOffset;
 
-                    for (var x = 0; x < width; x++) {
-                        var idx = rowOffset + x;
+                    for (var x = 0; x < width; x++, idx++) {
                         if (gray[idx] > thresholds[idx]) {
                             if ((currentState & 1) == 1) currentState++;
                             if (currentState > 4) {
@@ -496,16 +496,28 @@ internal static class QrFinderPatternDetector {
         var total = stateCount[0] + stateCount[1] + stateCount[2] + stateCount[3] + stateCount[4];
         if (total < 7) return false;
         if (stateCount[0] == 0 || stateCount[1] == 0 || stateCount[2] == 0 || stateCount[3] == 0 || stateCount[4] == 0) return false;
+        var outerLimit = aggressive ? 8 : 5;   // 0.8x or 0.5x, scaled by 10.
+        var centerLimit = aggressive ? 28 : 15; // 2.8x or 1.5x, scaled by 10.
 
-        var moduleSize = total / 7.0;
-        var maxVariance = moduleSize * (aggressive ? 0.8 : 0.5);
-        var centerVariance = aggressive ? 3.5 * maxVariance : 3.0 * maxVariance;
+        var diff0 = 7 * stateCount[0] - total;
+        if (diff0 < 0) diff0 = -diff0;
+        if (diff0 * 10 > total * outerLimit) return false;
 
-        return Math.Abs(moduleSize - stateCount[0]) <= maxVariance &&
-               Math.Abs(moduleSize - stateCount[1]) <= maxVariance &&
-               Math.Abs(3.0 * moduleSize - stateCount[2]) <= centerVariance &&
-               Math.Abs(moduleSize - stateCount[3]) <= maxVariance &&
-               Math.Abs(moduleSize - stateCount[4]) <= maxVariance;
+        var diff1 = 7 * stateCount[1] - total;
+        if (diff1 < 0) diff1 = -diff1;
+        if (diff1 * 10 > total * outerLimit) return false;
+
+        var diff2 = 7 * stateCount[2] - (3 * total);
+        if (diff2 < 0) diff2 = -diff2;
+        if (diff2 * 10 > total * centerLimit) return false;
+
+        var diff3 = 7 * stateCount[3] - total;
+        if (diff3 < 0) diff3 = -diff3;
+        if (diff3 * 10 > total * outerLimit) return false;
+
+        var diff4 = 7 * stateCount[4] - total;
+        if (diff4 < 0) diff4 = -diff4;
+        return diff4 * 10 <= total * outerLimit;
     }
 
     private static double CenterFromEnd(ReadOnlySpan<int> stateCount, int end) {

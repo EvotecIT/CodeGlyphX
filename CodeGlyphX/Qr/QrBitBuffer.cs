@@ -4,9 +4,13 @@ using System.Collections.Generic;
 namespace CodeGlyphX.Qr;
 
 internal sealed class QrBitBuffer {
-    private readonly List<byte> _bytes = new();
+    private readonly List<byte> _bytes;
 
     public int LengthBits { get; private set; }
+
+    public QrBitBuffer(int capacityBytes = 0) {
+        _bytes = capacityBytes > 0 ? new List<byte>(capacityBytes) : new List<byte>();
+    }
 
     public void AppendBits(int value, int bitCount) {
         if (bitCount is < 0 or > 31) throw new ArgumentOutOfRangeException(nameof(bitCount));

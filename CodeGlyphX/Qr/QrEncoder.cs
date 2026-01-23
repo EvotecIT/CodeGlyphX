@@ -35,15 +35,17 @@ internal static class QrEncoder {
         DrawFunctionPatterns(version, ecc, modules, isFunction);
         DrawCodewords(allCodewords, modules, isFunction);
 
-        var bestMask = 0;
+        if (forceMask is not null) {
+            ApplyMask(forceMask.Value, modules, isFunction);
+            DrawFormatBits(ecc, forceMask.Value, modules, isFunction);
+            return new CodeGlyphX.QrCode(version, ecc, forceMask.Value, modules);
+        }
+
+        var bestMask = -1;
         var scratch = modules.Clone();
-        var bestModules = modules.Clone();
-        var hasBest = false;
         var bestPenalty = int.MaxValue;
 
-        var startMask = forceMask ?? 0;
-        var endMask = forceMask ?? 7;
-        for (var mask = startMask; mask <= endMask; mask++) {
+        for (var mask = 0; mask <= 7; mask++) {
             scratch.CopyFrom(modules);
             ApplyMask(mask, scratch, isFunction);
             DrawFormatBits(ecc, mask, scratch, isFunction);
@@ -51,13 +53,13 @@ internal static class QrEncoder {
             if (penalty < bestPenalty) {
                 bestPenalty = penalty;
                 bestMask = mask;
-                bestModules.CopyFrom(scratch);
-                hasBest = true;
             }
         }
 
-        if (!hasBest) throw new InvalidOperationException("Failed to choose mask.");
-        return new CodeGlyphX.QrCode(version, ecc, bestMask, bestModules);
+        if (bestMask < 0) throw new InvalidOperationException("Failed to choose mask.");
+        ApplyMask(bestMask, modules, isFunction);
+        DrawFormatBits(ecc, bestMask, modules, isFunction);
+        return new CodeGlyphX.QrCode(version, ecc, bestMask, modules);
     }
 
     public static CodeGlyphX.QrCode EncodeKanjiMode(string text, QrErrorCorrectionLevel ecc, int minVersion, int maxVersion, int? forceMask) {
@@ -100,15 +102,17 @@ internal static class QrEncoder {
         DrawFunctionPatterns(version, ecc, modules, isFunction);
         DrawCodewords(allCodewords, modules, isFunction);
 
-        var bestMask = 0;
+        if (forceMask is not null) {
+            ApplyMask(forceMask.Value, modules, isFunction);
+            DrawFormatBits(ecc, forceMask.Value, modules, isFunction);
+            return new CodeGlyphX.QrCode(version, ecc, forceMask.Value, modules);
+        }
+
+        var bestMask = -1;
         var scratch = modules.Clone();
-        var bestModules = modules.Clone();
-        var hasBest = false;
         var bestPenalty = int.MaxValue;
 
-        var startMask = forceMask ?? 0;
-        var endMask = forceMask ?? 7;
-        for (var mask = startMask; mask <= endMask; mask++) {
+        for (var mask = 0; mask <= 7; mask++) {
             scratch.CopyFrom(modules);
             ApplyMask(mask, scratch, isFunction);
             DrawFormatBits(ecc, mask, scratch, isFunction);
@@ -116,18 +120,18 @@ internal static class QrEncoder {
             if (penalty < bestPenalty) {
                 bestPenalty = penalty;
                 bestMask = mask;
-                bestModules.CopyFrom(scratch);
-                hasBest = true;
             }
         }
 
-        if (!hasBest) throw new InvalidOperationException("Failed to choose mask.");
-        return new CodeGlyphX.QrCode(version, ecc, bestMask, bestModules);
+        if (bestMask < 0) throw new InvalidOperationException("Failed to choose mask.");
+        ApplyMask(bestMask, modules, isFunction);
+        DrawFormatBits(ecc, bestMask, modules, isFunction);
+        return new CodeGlyphX.QrCode(version, ecc, bestMask, modules);
     }
 
     private static byte[] EncodeByteModeData(byte[] data, int version, QrErrorCorrectionLevel ecc, int? eciAssignmentNumber) {
         var dataCapacityBits = QrTables.GetNumDataCodewords(version, ecc) * 8;
-        var bb = new QrBitBuffer();
+        var bb = new QrBitBuffer((dataCapacityBits + 7) / 8);
 
         if (eciAssignmentNumber is not null) {
             // ECI mode indicator (0111)
@@ -170,7 +174,7 @@ internal static class QrEncoder {
 
     private static byte[] EncodeKanjiModeData(ushort[] values, int version, QrErrorCorrectionLevel ecc) {
         var dataCapacityBits = QrTables.GetNumDataCodewords(version, ecc) * 8;
-        var bb = new QrBitBuffer();
+        var bb = new QrBitBuffer((dataCapacityBits + 7) / 8);
 
         // Mode indicator: Kanji (1000)
         bb.AppendBits(0b1000, 4);
@@ -241,22 +245,19 @@ internal static class QrEncoder {
 
         var rsDiv = QrReedSolomon.ComputeDivisor(blockEccLen);
 
-        var blocks = new byte[numBlocks][];
-        var dataLens = new int[numBlocks];
-        var k = 0;
+        var useStack = numBlocks <= 128;
+        Span<int> dataLens = useStack ? stackalloc int[numBlocks] : new int[numBlocks];
+        Span<int> dataOffsets = useStack ? stackalloc int[numBlocks] : new int[numBlocks];
+
+        var dataOffset = 0;
         for (var i = 0; i < numBlocks; i++) {
             var dataLen = i < numShortBlocks ? shortDataLen : longDataLen;
             dataLens[i] = dataLen;
-            var dat = new byte[dataLen];
-            Array.Copy(data, k, dat, 0, dat.Length);
-            k += dat.Length;
-
-            var eccBytes = QrReedSolomon.ComputeRemainder(dat, rsDiv);
-            var block = new byte[dataLen + eccBytes.Length];
-            Array.Copy(dat, 0, block, 0, dat.Length);
-            Array.Copy(eccBytes, 0, block, dat.Length, eccBytes.Length);
-            blocks[i] = block;
+            dataOffsets[i] = dataOffset;
+            dataOffset += dataLen;
         }
+
+        if (dataOffset != data.Length) throw new InvalidOperationException("Data block sizing error.");
 
         var result = new byte[rawCodewords];
         var pos = 0;
@@ -265,20 +266,25 @@ internal static class QrEncoder {
         // 1) data codewords across all blocks
         // 2) error-correction codewords across all blocks
         // This matters when blocks have different data lengths (short/long blocks).
-        var maxDataLen = dataLens[numBlocks - 1];
+        var maxDataLen = numShortBlocks == numBlocks ? shortDataLen : longDataLen;
         for (var i = 0; i < maxDataLen; i++) {
-            for (var j = 0; j < blocks.Length; j++) {
-                if (i < dataLens[j]) result[pos++] = blocks[j][i];
+            for (var j = 0; j < numBlocks; j++) {
+                if (i < dataLens[j]) result[pos++] = data[dataOffsets[j] + i];
             }
         }
 
-        for (var i = 0; i < blockEccLen; i++) {
-            for (var j = 0; j < blocks.Length; j++) {
-                result[pos++] = blocks[j][dataLens[j] + i];
+        var eccStart = pos;
+        Span<byte> eccBuffer = blockEccLen <= 256 ? stackalloc byte[blockEccLen] : new byte[blockEccLen];
+        for (var j = 0; j < numBlocks; j++) {
+            var dataLen = dataLens[j];
+            var dataStart = dataOffsets[j];
+            QrReedSolomon.ComputeRemainder(data.AsSpan(dataStart, dataLen), rsDiv, eccBuffer);
+            for (var i = 0; i < blockEccLen; i++) {
+                result[eccStart + i * numBlocks + j] = eccBuffer[i];
             }
         }
 
-        if (pos != result.Length) throw new InvalidOperationException("Interleave error.");
+        if (eccStart + blockEccLen * numBlocks != result.Length) throw new InvalidOperationException("Interleave error.");
         return result;
     }
 
@@ -383,7 +389,10 @@ internal static class QrEncoder {
 
     private static void DrawCodewords(byte[] codewords, BitMatrix modules, BitMatrix isFunction) {
         var size = modules.Width;
-        var bitIndex = 0;
+        var modulesWords = modules.Words;
+        var functionWords = isFunction.Words;
+        var dataBitIndex = 0;
+        var dataBitCount = codewords.Length << 3;
         var upward = true;
 
         for (var right = size - 1; right >= 1; right -= 2) {
@@ -391,16 +400,21 @@ internal static class QrEncoder {
 
             for (var vert = 0; vert < size; vert++) {
                 var y = upward ? size - 1 - vert : vert;
+                var rowBase = y * size;
                 for (var j = 0; j < 2; j++) {
                     var x = right - j;
-                    if (isFunction[x, y]) continue;
+                    var bitIndex = rowBase + x;
+                    var wordIndex = bitIndex >> 5;
+                    var bitMask = 1u << (bitIndex & 31);
+                    if ((functionWords[wordIndex] & bitMask) != 0) continue;
 
                     var bit = false;
-                    if (bitIndex < codewords.Length * 8) {
-                        bit = ((codewords[bitIndex >> 3] >> (7 - (bitIndex & 7))) & 1) != 0;
+                    if (dataBitIndex < dataBitCount) {
+                        bit = ((codewords[dataBitIndex >> 3] >> (7 - (dataBitIndex & 7))) & 1) != 0;
                     }
-                    modules[x, y] = bit;
-                    bitIndex++;
+                    if (bit) modulesWords[wordIndex] |= bitMask;
+                    else modulesWords[wordIndex] &= ~bitMask;
+                    dataBitIndex++;
                 }
             }
 
@@ -410,10 +424,16 @@ internal static class QrEncoder {
 
     private static void ApplyMask(int mask, BitMatrix modules, BitMatrix isFunction) {
         var size = modules.Width;
+        var modulesWords = modules.Words;
+        var functionWords = isFunction.Words;
         for (var y = 0; y < size; y++) {
+            var rowBase = y * size;
             for (var x = 0; x < size; x++) {
-                if (isFunction[x, y]) continue;
-                if (QrMask.ShouldInvert(mask, x, y)) modules[x, y] = !modules[x, y];
+                var bitIndex = rowBase + x;
+                var wordIndex = bitIndex >> 5;
+                var bitMask = 1u << (bitIndex & 31);
+                if ((functionWords[wordIndex] & bitMask) != 0) continue;
+                if (QrMask.ShouldInvert(mask, x, y)) modulesWords[wordIndex] ^= bitMask;
             }
         }
     }

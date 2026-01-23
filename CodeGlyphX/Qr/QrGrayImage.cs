@@ -353,7 +353,7 @@ internal readonly struct QrGrayImage {
                         var r = pixels[p + 2];
                         p += 4;
 
-                        var lum = LumaTables.Luma(r, g, b);
+                        var lum = (299 * r + 587 * g + 114 * b + 500) / 1000;
                         var l = (byte)lum;
 
                         gray[idx++] = l;
@@ -374,7 +374,7 @@ internal readonly struct QrGrayImage {
                         var b = pixels[p + 2];
                         p += 4;
 
-                        var lum = LumaTables.Luma(r, g, b);
+                        var lum = (299 * r + 587 * g + 114 * b + 500) / 1000;
                         var l = (byte)lum;
 
                         gray[idx++] = l;

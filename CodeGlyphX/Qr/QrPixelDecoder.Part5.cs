@@ -196,16 +196,6 @@ internal static partial class QrPixelDecoder {
 
         var bm = scratch;
         bm.Clear();
-        var bmWords = bm.Words;
-        var bmWidth = dimension;
-
-        var clamped = 0;
-        var width = image.Width;
-        var height = image.Height;
-        var maxX = width - 1;
-        var maxY = height - 1;
-        var checkBudget = budget.Enabled || budget.IsCancelled;
-        var budgetCounter = 0;
         var clampedLimit = dimension * 2;
         var mode = (centerSampling && moduleSizePx >= 1.25)
             ? 0
@@ -214,86 +204,28 @@ internal static partial class QrPixelDecoder {
                 : moduleSizePx >= 1.25
                     ? 2
                     : 3;
+        var delta = mode switch {
+            0 => QrPixelSampling.GetSampleDeltaCenterForModule(moduleSizePx),
+            1 => QrPixelSampling.GetSampleDelta5x5ForModule(moduleSizePx),
+            _ => QrPixelSampling.GetSampleDeltaForModule(moduleSizePx)
+        };
 
-        var xStart = 0.5 + phaseX;
-        for (var my = 0; my < dimension; my++) {
-            if (checkBudget && budget.IsExpired) return false;
-            var myc = my + 0.5 + phaseY;
-            transform.GetRowParameters(
-                xStart,
-                myc,
-                out var numX,
-                out var numY,
-                out var denom,
-                out var stepNumX,
-                out var stepNumY,
-                out var stepDenom);
+        var sampledOk = mode switch {
+            0 => loose
+                ? SampleModules<Center3x3LooseSampler>(image, invert, transform, dimension, phaseX, phaseY, bm, budget, clampedLimit, delta, out _)
+                : SampleModules<Center3x3Sampler>(image, invert, transform, dimension, phaseX, phaseY, bm, budget, clampedLimit, delta, out _),
+            1 => loose
+                ? SampleModules<Nearest25LooseSampler>(image, invert, transform, dimension, phaseX, phaseY, bm, budget, clampedLimit, delta, out _)
+                : SampleModules<Nearest25Sampler>(image, invert, transform, dimension, phaseX, phaseY, bm, budget, clampedLimit, delta, out _),
+            2 => loose
+                ? SampleModules<Nearest9LooseSampler>(image, invert, transform, dimension, phaseX, phaseY, bm, budget, clampedLimit, delta, out _)
+                : SampleModules<Nearest9Sampler>(image, invert, transform, dimension, phaseX, phaseY, bm, budget, clampedLimit, delta, out _),
+            _ => loose
+                ? SampleModules<NinePxLooseSampler>(image, invert, transform, dimension, phaseX, phaseY, bm, budget, clampedLimit, delta, out _)
+                : SampleModules<NinePxSampler>(image, invert, transform, dimension, phaseX, phaseY, bm, budget, clampedLimit, delta, out _)
+        };
 
-            for (var mx = 0; mx < dimension; mx++) {
-                if (checkBudget && ((budgetCounter++ & 63) == 0) && budget.IsExpired) return false;
-                if (Math.Abs(denom) < 1e-12) return false;
-
-                var sx = numX / denom;
-                var sy = numY / denom;
-                if (double.IsNaN(sx) || double.IsNaN(sy)) return false;
-
-                if (sx < 0) { sx = 0; clamped++; }
-                else if (sx > maxX) { sx = maxX; clamped++; }
-
-                if (sy < 0) { sy = 0; clamped++; }
-                else if (sy > maxY) { sy = maxY; clamped++; }
-
-                // When modules are reasonably large, nearest-neighbor majority sampling is more stable than bilinear
-                // (bilinear can blur binary UI edges into mid-gray values around the threshold).
-                // Prefer a tighter sampling pattern for typical UI-rendered QRs (3-6 px/module).
-                // 5x5 sampling is more sensitive to small transform errors; use it only when modules are large.
-                bool black;
-                if (loose) {
-                    switch (mode) {
-                        case 0:
-                            black = QrPixelSampling.SampleModuleCenter3x3Loose(image, sx, sy, invert, moduleSizePx);
-                            break;
-                        case 1:
-                            black = QrPixelSampling.SampleModule25NearestLoose(image, sx, sy, invert, moduleSizePx);
-                            break;
-                        case 2:
-                            black = QrPixelSampling.SampleModule9NearestLoose(image, sx, sy, invert, moduleSizePx);
-                            break;
-                        default:
-                            black = QrPixelSampling.SampleModule9PxLoose(image, sx, sy, invert, moduleSizePx);
-                            break;
-                    }
-                } else {
-                    switch (mode) {
-                        case 0:
-                            black = QrPixelSampling.SampleModuleCenter3x3(image, sx, sy, invert, moduleSizePx);
-                            break;
-                        case 1:
-                            black = QrPixelSampling.SampleModule25Nearest(image, sx, sy, invert, moduleSizePx);
-                            break;
-                        case 2:
-                            black = QrPixelSampling.SampleModule9Nearest(image, sx, sy, invert, moduleSizePx);
-                            break;
-                        default:
-                            black = QrPixelSampling.SampleModule9Px(image, sx, sy, invert, moduleSizePx);
-                            break;
-                    }
-                }
-                if (black) {
-                    var bitIndex = my * bmWidth + mx;
-                    bmWords[bitIndex >> 5] |= 1u << (bitIndex & 31);
-                }
-
-                numX += stepNumX;
-                numY += stepNumY;
-                denom += stepDenom;
-            }
-
-            if (clamped > clampedLimit) return false;
-        }
-
-        // If we had to clamp too many samples, the region is likely cropped too tight or the estimate is wrong.
-        if (clamped > clampedLimit) return false;
+        if (!sampledOk) return false;
 
         if (budget.IsNearDeadline(120)) return false;
         Func<bool>? shouldStop = budget.Enabled || budget.IsCancelled ? () => budget.IsExpired : null;
@@ -323,6 +255,158 @@ internal static partial class QrPixelDecoder {
 
         moduleDiagnostics = Better(moduleDiag, moduleDiagInv);
         return false;
+    }
+
+    private interface IModuleSampler {
+        static abstract bool Sample(QrGrayImage image, double sx, double sy, bool invert, double delta);
+    }
+
+    private readonly struct Center3x3Sampler : IModuleSampler {
+        public static bool Sample(QrGrayImage image, double sx, double sy, bool invert, double delta) =>
+            QrPixelSampling.SampleModuleCenter3x3WithDelta(image, sx, sy, invert, delta);
+    }
+
+    private readonly struct Center3x3LooseSampler : IModuleSampler {
+        public static bool Sample(QrGrayImage image, double sx, double sy, bool invert, double delta) =>
+            QrPixelSampling.SampleModuleCenter3x3LooseWithDelta(image, sx, sy, invert, delta);
+    }
+
+    private readonly struct Nearest25Sampler : IModuleSampler {
+        public static bool Sample(QrGrayImage image, double sx, double sy, bool invert, double delta) =>
+            QrPixelSampling.SampleModule25NearestWithDelta(image, sx, sy, invert, delta);
+    }
+
+    private readonly struct Nearest25LooseSampler : IModuleSampler {
+        public static bool Sample(QrGrayImage image, double sx, double sy, bool invert, double delta) =>
+            QrPixelSampling.SampleModule25NearestLooseWithDelta(image, sx, sy, invert, delta);
+    }
+
+    private readonly struct Nearest9Sampler : IModuleSampler {
+        public static bool Sample(QrGrayImage image, double sx, double sy, bool invert, double delta) =>
+            QrPixelSampling.SampleModule9NearestWithDelta(image, sx, sy, invert, delta);
+    }
+
+    private readonly struct Nearest9LooseSampler : IModuleSampler {
+        public static bool Sample(QrGrayImage image, double sx, double sy, bool invert, double delta) =>
+            QrPixelSampling.SampleModule9NearestLooseWithDelta(image, sx, sy, invert, delta);
+    }
+
+    private readonly struct NinePxSampler : IModuleSampler {
+        public static bool Sample(QrGrayImage image, double sx, double sy, bool invert, double delta) =>
+            QrPixelSampling.SampleModule9PxWithDelta(image, sx, sy, invert, delta);
+    }
+
+    private readonly struct NinePxLooseSampler : IModuleSampler {
+        public static bool Sample(QrGrayImage image, double sx, double sy, bool invert, double delta) =>
+            QrPixelSampling.SampleModule9PxLooseWithDelta(image, sx, sy, invert, delta);
+    }
+
+    private static bool SampleModules<TSampler>(
+        QrGrayImage image,
+        bool invert,
+        in QrPerspectiveTransform transform,
+        int dimension,
+        double phaseX,
+        double phaseY,
+        global::CodeGlyphX.BitMatrix bm,
+        DecodeBudget budget,
+        int clampedLimit,
+        double delta,
+        out int clamped)
+        where TSampler : struct, IModuleSampler {
+        clamped = 0;
+
+        var bmWords = bm.Words;
+        var bmWidth = dimension;
+        var width = image.Width;
+        var height = image.Height;
+        var maxX = width - 1;
+        var maxY = height - 1;
+        var checkBudget = budget.Enabled || budget.IsCancelled;
+        var budgetCounter = 0;
+        var xStart = 0.5 + phaseX;
+
+        for (var my = 0; my < dimension; my++) {
+            if (checkBudget && budget.IsExpired) return false;
+            var myc = my + 0.5 + phaseY;
+            transform.GetRowParameters(
+                xStart,
+                myc,
+                out var numX,
+                out var numY,
+                out var denom,
+                out var stepNumX,
+                out var stepNumY,
+                out var stepDenom);
+
+            if (double.IsNaN(numX) || double.IsNaN(numY) || double.IsNaN(denom) ||
+                double.IsNaN(stepNumX) || double.IsNaN(stepNumY) || double.IsNaN(stepDenom) ||
+                double.IsInfinity(numX) || double.IsInfinity(numY) || double.IsInfinity(denom) ||
+                double.IsInfinity(stepNumX) || double.IsInfinity(stepNumY) || double.IsInfinity(stepDenom)) {
+                return false;
+            }
+
+            var denomEnd = denom + stepDenom * (dimension - 1);
+            if (double.IsNaN(denomEnd) || double.IsInfinity(denomEnd)) return false;
+            if (Math.Abs(denom) < 1e-12 || Math.Abs(denomEnd) < 1e-12) return false;
+            if (denom * denomEnd < 0) return false;
+
+            var rowOffset = my * bmWidth;
+            if (Math.Abs(stepDenom) < 1e-12) {
+                var inv = 1.0 / denom;
+                var sx = numX * inv;
+                var sy = numY * inv;
+                var sxStep = stepNumX * inv;
+                var syStep = stepNumY * inv;
+
+                for (var mx = 0; mx < dimension; mx++) {
+                    if (checkBudget && ((budgetCounter++ & 63) == 0) && budget.IsExpired) return false;
+
+                    var sampleX = sx;
+                    var sampleY = sy;
+                    if (sampleX < 0) { sampleX = 0; clamped++; }
+                    else if (sampleX > maxX) { sampleX = maxX; clamped++; }
+
+                    if (sampleY < 0) { sampleY = 0; clamped++; }
+                    else if (sampleY > maxY) { sampleY = maxY; clamped++; }
+
+                    if (TSampler.Sample(image, sampleX, sampleY, invert, delta)) {
+                        var bitIndex = rowOffset + mx;
+                        bmWords[bitIndex >> 5] |= 1u << (bitIndex & 31);
+                    }
+
+                    sx += sxStep;
+                    sy += syStep;
+                }
+            } else {
+                for (var mx = 0; mx < dimension; mx++) {
+                    if (checkBudget && ((budgetCounter++ & 63) == 0) && budget.IsExpired) return false;
+
+                    var inv = 1.0 / denom;
+                    var sx = numX * inv;
+                    var sy = numY * inv;
+
+                    if (sx < 0) { sx = 0; clamped++; }
+                    else if (sx > maxX) { sx = maxX; clamped++; }
+
+                    if (sy < 0) { sy = 0; clamped++; }
+                    else if (sy > maxY) { sy = maxY; clamped++; }
+
+                    if (TSampler.Sample(image, sx, sy, invert, delta)) {
+                        var bitIndex = rowOffset + mx;
+                        bmWords[bitIndex >> 5] |= 1u << (bitIndex & 31);
+                    }
+
+                    numX += stepNumX;
+                    numY += stepNumY;
+                    denom += stepDenom;
+                }
+            }
+
+            if (clamped > clampedLimit) return false;
+        }
+
+        return clamped <= clampedLimit;
     }
 
     private static bool ShouldTryLooseSampling(global::CodeGlyphX.QrDecodeDiagnostics diag, double moduleSizePx) {
