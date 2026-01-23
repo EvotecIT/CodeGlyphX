@@ -103,9 +103,30 @@ svg {
     height: 20px;
 }
 
-.hero-preview svg {
-    max-width: 100%;
-    height: auto;
+/* Hero code preview - QR, barcode, matrix icons */
+.hero-code-preview {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+}
+
+.code-preview-item {
+    width: 80px;
+    height: 80px;
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.code-preview-item svg {
+    width: 100%;
+    height: 100%;
+}
+
+.barcode-preview {
+    width: 120px;
+    height: 60px;
 }
 
 /* Basic header layout to prevent content flash */
