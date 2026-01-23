@@ -141,7 +141,15 @@ html {
     scroll-behavior: smooth;
     overflow-x: hidden;
     overflow-y: scroll; /* Prevent layout shift from scrollbar */
-    scrollbar-gutter: stable; /* Reserve space for scrollbar */
+    scrollbar-gutter: stable; /* Reserve space for scrollbar - desktop only */
+    max-width: 100%;
+}
+
+/* Disable scrollbar-gutter on mobile - no visible scrollbar there */
+@media (max-width: 900px) {
+    html {
+        scrollbar-gutter: auto;
+    }
 }
 
 body {
@@ -151,6 +159,8 @@ body {
     line-height: 1.7;
     overflow-x: hidden;
     min-height: 100vh;
+    max-width: 100%;
+    width: 100%;
 }
 
 /* Typography */
@@ -179,6 +189,8 @@ a:hover {
     display: flex;
     flex-direction: column;
     overflow-x: hidden;
+    max-width: 100%;
+    width: 100%;
 }
 
 .container {
@@ -310,6 +322,10 @@ a:hover {
     padding: 8rem 2rem 4rem;
     position: relative;
     overflow: hidden;
+    max-width: 100%;
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
 }
 
 .hero::before {
@@ -327,9 +343,13 @@ a:hover {
 
 .hero-content {
     max-width: 900px;
+    width: 100%;
+    min-width: 0;
     text-align: center;
     position: relative;
     z-index: 1;
+    box-sizing: border-box;
+    padding: 0 1rem;
 }
 
 .hero-badge {
@@ -359,12 +379,16 @@ a:hover {
 }
 
 .hero h1 {
-    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    font-size: clamp(1.75rem, 6vw, 4.5rem);
     margin-bottom: 1.5rem;
     background: linear-gradient(135deg, var(--text) 0%, var(--primary-light) 50%, var(--secondary) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    max-width: 100%;
+    min-width: 0;
 }
 
 .hero h1:focus,
@@ -2274,9 +2298,22 @@ body.using-keyboard .docs-static h1:focus-visible {
    Main content wrapper
    ============================================ */
 
-.main {
+main, .main {
     flex: 1;
     padding: 2rem;
+    width: 100%;
+    max-width: 100vw;
+    min-width: 0;
+    overflow-x: hidden;
+    box-sizing: border-box;
+}
+
+/* Ensure all sections constrain their content */
+section {
+    width: 100%;
+    max-width: 100vw;
+    overflow-x: hidden;
+    box-sizing: border-box;
 }
 
 .main a:not(.btn):not(.nav-icon):not(.nav-cta):not(.copy-btn):not(.hero-badge-link) {
@@ -2470,6 +2507,35 @@ body.using-keyboard .docs-static h1:focus-visible {
         order: -1;
         width: 100%;
         margin-bottom: 0.5rem;
+    }
+
+    /* Mobile hero typography - force smaller text and natural wrapping */
+    .hero {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    .hero-content {
+        max-width: calc(100vw - 2rem);
+        padding: 0;
+    }
+
+    .hero h1 {
+        font-size: clamp(1.4rem, 7vw, 2rem);
+        max-width: 100%;
+    }
+
+    .hero h1 br {
+        display: none;
+    }
+
+    .hero-tagline {
+        font-size: 0.95rem;
+    }
+
+    .hero-badge {
+        font-size: 0.75rem;
+        padding: 0.4rem 0.8rem;
     }
 }
 
