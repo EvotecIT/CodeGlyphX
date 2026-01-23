@@ -314,6 +314,10 @@ if ($MinifyAssets) {
     }
 }
 
+# Generate sitemap.xml
+$sitemapScript = Join-Path $PSScriptRoot "Generate-Sitemap.ps1"
+Invoke-Step "Generating sitemap.xml..." @("pwsh", $sitemapScript, "-SiteRoot", $publishRoot, "-SiteBase", "https://codeglyphx.com")
+
 # Inline critical CSS for faster initial render
 Write-Host "Inlining critical CSS..." -ForegroundColor Cyan
 $criticalCssPath = Join-Path $wwwrootSource "css" "critical.css"
