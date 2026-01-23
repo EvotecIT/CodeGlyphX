@@ -36,6 +36,63 @@ jobs:
           test -f site/docs/index.html
           test -f site/playground/index.html
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Playwright
+        run: npx playwright install chromium --with-deps
+
+      - name: Test mobile layout
+        run: |
+          # Start local server in background
+          npx serve site -l 5051 &
+          SERVER_PID=$!
+          sleep 3
+
+          # Run mobile layout tests
+          node -e "
+          const { chromium } = require('playwright');
+          (async () => {
+              const pages = ['/', '/showcase/', '/faq/'];
+              const viewports = [375, 390, 414];
+              const maxOverflow = 5;
+              const browser = await chromium.launch();
+              const context = await browser.newContext();
+              const page = await context.newPage();
+              let failures = [];
+              for (const vw of viewports) {
+                  await page.setViewportSize({ width: vw, height: 667 });
+                  for (const path of pages) {
+                      const url = 'http://localhost:5051' + path;
+                      console.log('Testing:', url, 'at', vw + 'px');
+                      try {
+                          await page.goto(url, { waitUntil: 'networkidle', timeout: 30000 });
+                          const overflow = await page.evaluate((vw, max) => {
+                              const docWidth = document.documentElement.scrollWidth;
+                              return docWidth - vw > max ? docWidth - vw : 0;
+                          }, vw, maxOverflow);
+                          if (overflow > 0) {
+                              failures.push({ page: path, viewport: vw, overflow });
+                          }
+                      } catch (err) {
+                          failures.push({ page: path, viewport: vw, error: err.message });
+                      }
+                  }
+              }
+              await browser.close();
+              if (failures.length > 0) {
+                  console.error('FAILURES:', JSON.stringify(failures, null, 2));
+                  process.exit(1);
+              }
+              console.log('All pages passed mobile layout checks!');
+          })();
+          "
+
+          # Cleanup
+          kill $SERVER_PID 2>/dev/null || true
+
       - name: Upload Pages Artifact
         uses: actions/upload-pages-artifact@v3
         with:
