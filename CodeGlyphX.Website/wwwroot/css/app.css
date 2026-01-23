@@ -2915,44 +2915,33 @@ section {
    ============================================ */
 
 .theme-toggle {
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-    padding: 0.25rem;
-    background: var(--bg-input);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-}
-
-.theme-toggle button {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 32px;
-    height: 32px;
-    padding: 0;
-    background: transparent;
-    border: none;
-    border-radius: 6px;
     color: var(--text-muted);
-    cursor: pointer;
-    transition: all 0.2s;
+    border-radius: 8px;
+    transition: color 0.2s, background 0.2s;
 }
 
-.theme-toggle button:hover {
-    background: var(--bg-card-hover);
+.theme-toggle:hover {
     color: var(--text);
+    background: var(--bg-input);
 }
 
-.theme-toggle button.active {
-    background: var(--primary);
-    color: white;
+.theme-toggle svg {
+    width: 20px;
+    height: 20px;
 }
 
-.theme-toggle button svg {
-    width: 18px;
-    height: 18px;
-}
+/* Show sun icon in dark mode, moon icon in light mode */
+[data-theme="dark"] .sun-icon { display: block; }
+[data-theme="dark"] .moon-icon { display: none; }
+[data-theme="light"] .sun-icon { display: none; }
+[data-theme="light"] .moon-icon { display: block; }
 
 /* Light theme specific adjustments */
 [data-theme="light"] .hero::before,

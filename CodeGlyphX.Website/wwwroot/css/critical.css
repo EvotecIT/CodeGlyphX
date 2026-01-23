@@ -131,6 +131,30 @@ svg {
     gap: 0.5rem;
 }
 
+/* Theme toggle button - prevent invisible button flash */
+.theme-toggle {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    border-radius: 8px;
+}
+
+.theme-toggle svg {
+    width: 20px;
+    height: 20px;
+}
+
+/* Show correct icon based on theme - prevent double icon flash */
+[data-theme="dark"] .sun-icon { display: block; }
+[data-theme="dark"] .moon-icon { display: none; }
+[data-theme="light"] .sun-icon { display: none; }
+[data-theme="light"] .moon-icon { display: block; }
+
 /* Blazor error UI - hidden by default */
 #blazor-error-ui {
     display: none;
