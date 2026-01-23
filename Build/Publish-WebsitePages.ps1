@@ -82,6 +82,22 @@ function Update-BootIntegrity {
     $boot | ConvertTo-Json -Depth 20 | Set-Content -Path $bootPath -Encoding UTF8
 }
 
+function Copy-FingerprintedBlazorJs {
+    param(
+        [string]$FrameworkPath
+    )
+    # Find the fingerprinted blazor.webassembly.*.js file and copy it to blazor.webassembly.js
+    $fingerprintedFile = Get-ChildItem -Path $FrameworkPath -Filter "blazor.webassembly.*.js" |
+        Where-Object { $_.Name -notmatch '\.(gz|br)$' } |
+        Select-Object -First 1
+
+    if ($fingerprintedFile) {
+        $targetPath = Join-Path $FrameworkPath "blazor.webassembly.js"
+        Copy-Item -Path $fingerprintedFile.FullName -Destination $targetPath -Force
+        Write-Host "  Copied $($fingerprintedFile.Name) -> blazor.webassembly.js" -ForegroundColor Gray
+    }
+}
+
 $repoRoot = Resolve-Path (Join-Path $PSScriptRoot "..")
 $websiteProjectPath = Join-Path $repoRoot $WebsiteProject
 $wwwrootSource = [IO.Path]::Combine($repoRoot, "CodeGlyphX.Website", "wwwroot")
@@ -144,6 +160,7 @@ if (Test-Path $docsIndex) {
 
 Set-BaseHref -FilePath $docsIndex -BaseHref "/docs/"
 Set-BaseHref -FilePath $docs404 -BaseHref "/docs/"
+Copy-FingerprintedBlazorJs -FrameworkPath (Join-Path $docsRoot "_framework")
 Update-BootIntegrity -FrameworkPath (Join-Path $docsRoot "_framework")
 
 if (Test-Path $tempDocs) {
@@ -170,6 +187,7 @@ if (Test-Path $playgroundIndex) {
 
 Set-BaseHref -FilePath $playgroundIndex -BaseHref "/playground/"
 Set-BaseHref -FilePath $playground404 -BaseHref "/playground/"
+Copy-FingerprintedBlazorJs -FrameworkPath (Join-Path $playgroundRoot "_framework")
 Update-BootIntegrity -FrameworkPath (Join-Path $playgroundRoot "_framework")
 
 if (Test-Path $tempPublish) {
