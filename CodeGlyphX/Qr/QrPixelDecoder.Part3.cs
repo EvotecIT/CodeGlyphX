@@ -66,23 +66,27 @@ internal static partial class QrPixelDecoder {
             histogram[gray[i]]++;
         }
 
-        var q25 = FindQuantile(histogram, total * 25 / 100);
-        var q50 = FindQuantile(histogram, total / 2);
-        var q75 = FindQuantile(histogram, total * 75 / 100);
+        var target25 = total * 25 / 100;
+        var target50 = total / 2;
+        var target75 = total * 75 / 100;
+        var q25 = (byte)0;
+        var q50 = (byte)0;
+        var q75 = (byte)0;
+        var got25 = target25 <= 0;
+        var got50 = target50 <= 0;
+        var got75 = target75 <= 0;
+        var sum = 0;
+        for (var i = 0; i < histogram.Length; i++) {
+            sum += histogram[i];
+            if (!got25 && sum >= target25) { q25 = (byte)i; got25 = true; }
+            if (!got50 && sum >= target50) { q50 = (byte)i; got50 = true; }
+            if (!got75 && sum >= target75) { q75 = (byte)i; got75 = true; }
+            if (got25 && got50 && got75) break;
+        }
 
         AddThresholdCandidate(ref list, ref count, q25);
         AddThresholdCandidate(ref list, ref count, q50);
         AddThresholdCandidate(ref list, ref count, q75);
-    }
-
-    private static byte FindQuantile(Span<int> histogram, int target) {
-        if (target <= 0) return 0;
-        var sum = 0;
-        for (var i = 0; i < histogram.Length; i++) {
-            sum += histogram[i];
-            if (sum >= target) return (byte)i;
-        }
-        return 255;
     }
 
     private static void CollectFromImage(
