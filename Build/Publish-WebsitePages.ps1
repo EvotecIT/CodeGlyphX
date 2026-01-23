@@ -115,6 +115,57 @@ function Add-BlazorScriptCacheBuster {
     }
 }
 
+function Invoke-InlineCriticalCss {
+    param(
+        [string]$SiteRoot,
+        [string]$CriticalCssPath
+    )
+
+    if (-not (Test-Path $CriticalCssPath)) {
+        Write-Warning "Critical CSS not found at $CriticalCssPath - skipping inline optimization"
+        return
+    }
+
+    $criticalCss = Get-Content -Path $CriticalCssPath -Raw
+    # Minify critical CSS (remove comments, extra whitespace)
+    $criticalCss = $criticalCss -replace '/\*[\s\S]*?\*/', ''
+    $criticalCss = $criticalCss -replace '\s+', ' '
+    $criticalCss = $criticalCss -replace '\s*([{};:,])\s*', '$1'
+    $criticalCss = $criticalCss.Trim()
+
+    $htmlFiles = Get-ChildItem -Path $SiteRoot -Filter "*.html" -Recurse -File
+
+    foreach ($html in $htmlFiles) {
+        $content = Get-Content -Path $html.FullName -Raw
+        if (-not $content) { continue }
+
+        # Skip if already has inlined critical CSS
+        if ($content -match '<!--\s*critical-css\s*-->') { continue }
+
+        # Find the CSS link and make it async
+        # Pattern matches: <link rel="stylesheet" href="...app.css..." />
+        $cssPattern = '(<link\s+rel="stylesheet"\s+href="([^"]*(?:app|api-docs)\.css[^"]*)"\s*/?>)'
+
+        if ($content -match $cssPattern) {
+            $originalLink = $Matches[1]
+            $cssHref = $Matches[2]
+
+            # Create async CSS loading with noscript fallback
+            $asyncCss = @"
+<!-- critical-css -->
+    <style>$criticalCss</style>
+    <link rel="preload" href="$cssHref" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="$cssHref"></noscript>
+"@
+            $updated = $content -replace [regex]::Escape($originalLink), $asyncCss
+            if ($updated -ne $content) {
+                Set-Content -Path $html.FullName -Value $updated -Encoding UTF8
+                Write-Host "  Inlined critical CSS: $($html.Name)" -ForegroundColor Gray
+            }
+        }
+    }
+}
+
 $repoRoot = Resolve-Path (Join-Path $PSScriptRoot "..")
 $websiteProjectPath = Join-Path $repoRoot $WebsiteProject
 $wwwrootSource = [IO.Path]::Combine($repoRoot, "CodeGlyphX.Website", "wwwroot")
@@ -262,5 +313,10 @@ if ($MinifyAssets) {
         }
     }
 }
+
+# Inline critical CSS for faster initial render
+Write-Host "Inlining critical CSS..." -ForegroundColor Cyan
+$criticalCssPath = Join-Path $wwwrootSource "css" "critical.css"
+Invoke-InlineCriticalCss -SiteRoot $publishRoot -CriticalCssPath $criticalCssPath
 
 Write-Host "Website output ready at $publishRoot" -ForegroundColor Green
