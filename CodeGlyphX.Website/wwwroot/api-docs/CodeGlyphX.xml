@@ -15357,6 +15357,16 @@
             Writes a PAM (P7) stream from an RGBA buffer.
             </summary>
         </member>
+        <member name="M:CodeGlyphX.Rendering.Pam.PamWriter.WriteRgba32Scanlines(System.Int32,System.Int32,System.ReadOnlySpan{System.Byte},System.Int32)">
+            <summary>
+            Writes a PAM byte array from a PNG scanline buffer (filter byte per row).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Pam.PamWriter.WriteRgba32Scanlines(System.IO.Stream,System.Int32,System.Int32,System.ReadOnlySpan{System.Byte},System.Int32)">
+            <summary>
+            Writes a PAM (P7) stream from a PNG scanline buffer (filter byte per row).
+            </summary>
+        </member>
         <member name="T:CodeGlyphX.Rendering.Pam.QrPamRenderer">
             <summary>
             Renders QR modules to PAM (P7).
@@ -15455,6 +15465,16 @@
         <member name="M:CodeGlyphX.Rendering.Pbm.PbmWriter.WriteRgba32(System.IO.Stream,System.Int32,System.Int32,System.ReadOnlySpan{System.Byte},System.Int32)">
             <summary>
             Writes a PBM (P4) stream from an RGBA buffer (alpha treated as white).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Pbm.PbmWriter.WriteRgba32Scanlines(System.Int32,System.Int32,System.ReadOnlySpan{System.Byte},System.Int32)">
+            <summary>
+            Writes a PBM byte array from a PNG scanline buffer (filter byte per row).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Pbm.PbmWriter.WriteRgba32Scanlines(System.IO.Stream,System.Int32,System.Int32,System.ReadOnlySpan{System.Byte},System.Int32)">
+            <summary>
+            Writes a PBM (P4) stream from a PNG scanline buffer (filter byte per row).
             </summary>
         </member>
         <member name="T:CodeGlyphX.Rendering.Pbm.QrPbmRenderer">
@@ -15660,6 +15680,16 @@
         <member name="M:CodeGlyphX.Rendering.Pgm.PgmWriter.WriteRgba32(System.IO.Stream,System.Int32,System.Int32,System.ReadOnlySpan{System.Byte},System.Int32)">
             <summary>
             Writes a PGM (P5) stream from an RGBA buffer (alpha blended over white).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Pgm.PgmWriter.WriteRgba32Scanlines(System.Int32,System.Int32,System.ReadOnlySpan{System.Byte},System.Int32)">
+            <summary>
+            Writes a PGM byte array from a PNG scanline buffer (filter byte per row).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Pgm.PgmWriter.WriteRgba32Scanlines(System.IO.Stream,System.Int32,System.Int32,System.ReadOnlySpan{System.Byte},System.Int32)">
+            <summary>
+            Writes a PGM (P5) stream from a PNG scanline buffer (filter byte per row).
             </summary>
         </member>
         <member name="T:CodeGlyphX.Rendering.Pgm.QrPgmRenderer">
@@ -16436,6 +16466,16 @@
         <member name="M:CodeGlyphX.Rendering.Ppm.PpmWriter.WriteRgba32(System.IO.Stream,System.Int32,System.Int32,System.ReadOnlySpan{System.Byte},System.Int32)">
             <summary>
             Writes a PPM (P6) stream from an RGBA buffer (alpha blended over white).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Ppm.PpmWriter.WriteRgba32Scanlines(System.Int32,System.Int32,System.ReadOnlySpan{System.Byte},System.Int32)">
+            <summary>
+            Writes a PPM byte array from a PNG scanline buffer (filter byte per row).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Ppm.PpmWriter.WriteRgba32Scanlines(System.IO.Stream,System.Int32,System.Int32,System.ReadOnlySpan{System.Byte},System.Int32)">
+            <summary>
+            Writes a PPM (P6) stream from a PNG scanline buffer (filter byte per row).
             </summary>
         </member>
         <member name="T:CodeGlyphX.Rendering.Ppm.QrPpmRenderer">
@@ -17569,6 +17609,11 @@
             Writes an XBM string from an RGBA buffer.
             </summary>
         </member>
+        <member name="M:CodeGlyphX.Rendering.Xbm.XbmWriter.WriteRgba32Scanlines(System.Int32,System.Int32,System.ReadOnlySpan{System.Byte},System.Int32,System.String)">
+            <summary>
+            Writes an XBM string from a PNG scanline buffer (filter byte per row).
+            </summary>
+        </member>
         <member name="T:CodeGlyphX.Rendering.Xpm.BarcodeXpmRenderer">
             <summary>
             Renders barcodes to XPM.
@@ -17662,6 +17707,11 @@
         <member name="M:CodeGlyphX.Rendering.Xpm.XpmWriter.WriteRgba32(System.Int32,System.Int32,System.ReadOnlySpan{System.Byte},System.Int32,System.String,System.Nullable{CodeGlyphX.Rendering.Png.Rgba32},System.Nullable{CodeGlyphX.Rendering.Png.Rgba32})">
             <summary>
             Writes an XPM string from an RGBA buffer.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Xpm.XpmWriter.WriteRgba32Scanlines(System.Int32,System.Int32,System.ReadOnlySpan{System.Byte},System.Int32,System.String,System.Nullable{CodeGlyphX.Rendering.Png.Rgba32},System.Nullable{CodeGlyphX.Rendering.Png.Rgba32})">
+            <summary>
+            Writes an XPM string from a PNG scanline buffer (filter byte per row).
             </summary>
         </member>
         <member name="T:CodeGlyphX.RoyalMail.RoyalMailFourStateDecoder">
