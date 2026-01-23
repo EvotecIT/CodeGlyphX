@@ -67,6 +67,46 @@ function Get-RunModeFromReports([string]$resultsPath) {
     return $null
 }
 
+function Test-ResultFileReady([string]$path) {
+    if (-not (Test-Path $path)) { return $false }
+    try {
+        $lines = Get-Content -Path $path -TotalCount 2 -Encoding UTF8
+        if (-not $lines -or $lines.Count -lt 2) { return $false }
+        return $true
+    } catch {
+        return $false
+    }
+}
+
+function Wait-For-CompareResults([string]$resultsPath, [string[]]$expectedFiles, [int]$timeoutSeconds = 15, [int]$pollMs = 250) {
+    if (-not $expectedFiles -or $expectedFiles.Count -eq 0) { return $true }
+    $deadline = (Get-Date).AddSeconds($timeoutSeconds)
+    $lastMissing = @()
+    $lastEmpty = @()
+    while ($true) {
+        $missing = @()
+        $empty = @()
+        foreach ($file in $expectedFiles) {
+            $fullPath = Join-Path $resultsPath $file
+            if (-not (Test-ResultFileReady $fullPath)) {
+                if (-not (Test-Path $fullPath)) {
+                    $missing += $file
+                } else {
+                    $empty += $file
+                }
+            }
+        }
+        if ($missing.Count -eq 0 -and $empty.Count -eq 0) { return $true }
+        $lastMissing = $missing
+        $lastEmpty = $empty
+        if ((Get-Date) -ge $deadline) { break }
+        Start-Sleep -Milliseconds $pollMs
+    }
+    if ($lastMissing.Count -gt 0) { Write-Warning "Compare results still missing after wait: $($lastMissing -join ', ')." }
+    if ($lastEmpty.Count -gt 0) { Write-Warning "Compare results still empty after wait: $($lastEmpty -join ', ')." }
+    return $false
+}
+
 
 function Try-Get-DotnetSdk {
     if (-not [string]::IsNullOrWhiteSpace($DotnetSdk)) { return $DotnetSdk }
@@ -117,6 +157,8 @@ function Normalize-MeanText([string]$value) {
     $normalized = $value
     $normalized = $normalized -replace "µs", "μs"
     $normalized = $normalized -replace "�s", "μs"
+    $normalized = $normalized -replace "Âµs", "μs"
+    $normalized = $normalized -replace "Âμs", "μs"
     return $normalized
 }
 
@@ -290,6 +332,15 @@ if ([string]::IsNullOrWhiteSpace($ArtifactsPath)) {
 $resultsPath = Join-Path $ArtifactsPath "results"
 if (-not (Test-Path $resultsPath)) {
     throw "Results folder not found: $resultsPath"
+}
+
+$enforceMissingCompare = $FailOnMissingCompare -or (-not $AllowPartial)
+$expectedCompareFiles = @()
+foreach ($expected in $expectedCompare) {
+    $expectedCompareFiles += "CodeGlyphX.Benchmarks.$expected-report.csv"
+}
+if ($enforceMissingCompare) {
+    [void](Wait-For-CompareResults -resultsPath $resultsPath -expectedFiles $expectedCompareFiles)
 }
 
 $requestedRunMode = $RunMode
@@ -493,7 +544,6 @@ if ($compareParseFailures.Count -gt 0) {
     $lines.Add("")
 }
 
-$enforceMissingCompare = $FailOnMissingCompare -or (-not $AllowPartial)
 if ($enforceMissingCompare -and $missingCompare.Count -gt 0) {
     throw "Missing compare results: $($missingCompare -join ', ')."
 }

@@ -47,6 +47,8 @@ def normalize_mean_text(value: str) -> str:
     return (
         value.replace("µs", "μs")
         .replace("�s", "μs")
+        .replace("Âµs", "μs")
+        .replace("Âμs", "μs")
     )
 
 
