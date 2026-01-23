@@ -102,11 +102,18 @@ internal static class QrPayloadParser {
             if (n == 0) return 0;
             if (n < 0 || n > 31) throw new ArgumentOutOfRangeException(nameof(n));
             if (bitPos + n > bitLen) return -1;
-            var val = 0;
-            for (var i = 0; i < n; i++) {
-                var b = (dataCodewords[(bitPos + i) >> 3] >> (7 - ((bitPos + i) & 7))) & 1;
-                val = (val << 1) | b;
+            var byteIndex = bitPos >> 3;
+            var bitOffset = bitPos & 7;
+            var totalBits = bitOffset + n;
+            var bytesNeeded = (totalBits + 7) >> 3;
+            ulong acc = 0;
+            for (var i = 0; i < bytesNeeded; i++) {
+                acc = (acc << 8) | dataCodewords[byteIndex + i];
             }
+            var extraBits = (bytesNeeded * 8) - totalBits;
+            acc >>= extraBits;
+            var mask = (1UL << n) - 1UL;
+            var val = (int)(acc & mask);
             bitPos += n;
             return val;
         }
