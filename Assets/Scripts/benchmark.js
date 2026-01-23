@@ -1,9 +1,9 @@
 // Benchmark page renderer
 (function() {
-  var currentMode = 'quick';
-  var currentOs = 'windows';
-  var summaryData = null;
-  var detailData = null;
+  let currentMode = 'quick';
+  let currentOs = 'windows';
+  let summaryData = null;
+  let detailData = null;
 
   function loadJson(url) {
     return fetch(url, { cache: 'no-store' })
@@ -18,20 +18,33 @@
     });
   }
 
+  function getRatingIcon(rating) {
+    switch (rating) {
+      case 'good':
+        return '<span class="rating-icon rating-good" aria-label="Good">●</span>';
+      case 'ok':
+        return '<span class="rating-icon rating-ok" aria-label="Okay">●</span>';
+      case 'bad':
+        return '<span class="rating-icon rating-bad" aria-label="Needs improvement">●</span>';
+      default:
+        return '<span class="rating-icon">-</span>';
+    }
+  }
+
   function getEntry(data, os, mode) {
-    return data && data[os] && data[os][mode] ? data[os][mode] : null;
+    return data?.[os]?.[mode] ?? null;
   }
 
   function findBestEntry(data) {
     // Priority: windows full > windows quick > linux full > linux quick > macos
-    var order = [
+    const order = [
       ['windows', 'full'], ['windows', 'quick'],
       ['linux', 'full'], ['linux', 'quick'],
       ['macos', 'full'], ['macos', 'quick']
     ];
-    for (var i = 0; i < order.length; i++) {
-      var entry = getEntry(data, order[i][0], order[i][1]);
-      if (entry && (entry.summary && entry.summary.length || entry.comparisons && entry.comparisons.length)) {
+    for (let i = 0; i < order.length; i++) {
+      const entry = getEntry(data, order[i][0], order[i][1]);
+      if (entry && (entry.summary?.length || entry.comparisons?.length)) {
         currentOs = order[i][0];
         currentMode = order[i][1];
         return entry;
@@ -43,15 +56,15 @@
   function formatDate(isoString) {
     if (!isoString) return 'Unknown';
     try {
-      var d = new Date(isoString);
+      const d = new Date(isoString);
       return d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
-    } catch (e) {
+    } catch {
       return isoString;
     }
   }
 
   function renderMeta(entry) {
-    var container = document.querySelector('[data-benchmark-meta]');
+    const container = document.querySelector('[data-benchmark-meta]');
     if (!container) return;
 
     if (!entry) {
@@ -59,8 +72,8 @@
       return;
     }
 
-    var meta = entry.meta || {};
-    var html = '<div class="benchmark-meta-grid">';
+    const meta = entry.meta || {};
+    let html = '<div class="benchmark-meta-grid">';
     html += '<div class="meta-item"><span class="meta-label">Last Updated</span><span class="meta-value">' + escapeHtml(formatDate(entry.generatedUtc)) + '</span></div>';
     html += '<div class="meta-item"><span class="meta-label">Mode</span><span class="meta-value">' + escapeHtml(entry.runMode || 'unknown') + '</span></div>';
     html += '<div class="meta-item"><span class="meta-label">OS</span><span class="meta-value">' + escapeHtml(entry.os || 'unknown') + '</span></div>';
@@ -70,15 +83,14 @@
   }
 
   function renderModeSelector(summaryData, detailData) {
-    var buttons = document.querySelectorAll('.benchmark-mode-btn');
-    var noteEl = document.querySelector('[data-mode-note]');
+    const buttons = document.querySelectorAll('.benchmark-mode-btn');
+    const noteEl = document.querySelector('[data-mode-note]');
 
     buttons.forEach(function(btn) {
-      var mode = btn.dataset.mode;
-      var summaryEntry = getEntry(summaryData, currentOs, mode);
-      var detailEntry = getEntry(detailData, currentOs, mode);
-      var hasData = (summaryEntry && summaryEntry.summary && summaryEntry.summary.length) ||
-                    (detailEntry && detailEntry.comparisons && detailEntry.comparisons.length);
+      const mode = btn.dataset.mode;
+      const summaryEntry = getEntry(summaryData, currentOs, mode);
+      const detailEntry = getEntry(detailData, currentOs, mode);
+      const hasData = summaryEntry?.summary?.length || detailEntry?.comparisons?.length;
 
       btn.disabled = !hasData;
       btn.classList.toggle('active', mode === currentMode);
@@ -99,7 +111,7 @@
 
     // Update note
     if (noteEl) {
-      var entry = getEntry(summaryData, currentOs, currentMode);
+      const entry = getEntry(summaryData, currentOs, currentMode);
       if (entry && entry.runModeDetails) {
         noteEl.textContent = entry.runModeDetails;
       } else if (currentMode === 'quick') {
@@ -111,7 +123,7 @@
   }
 
   function renderSummaryTable(entry) {
-    var container = document.querySelector('[data-benchmark-summary]');
+    const container = document.querySelector('[data-benchmark-summary]');
     if (!container) return;
 
     if (!entry || !entry.summary || !entry.summary.length) {
@@ -119,7 +131,7 @@
       return;
     }
 
-    var html = '<div class="table-scroll"><table class="bench-table">';
+    let html = '<div class="table-scroll"><table class="bench-table">';
     html += '<thead><tr>';
     html += '<th>Scenario</th>';
     html += '<th>CodeGlyphX</th>';
@@ -134,9 +146,9 @@
       html += '<td>' + escapeHtml(item.scenario || item.benchmark || '') + '</td>';
 
       // CodeGlyphX column - try vendors object first, fall back to direct fields
-      var cgxMean = (item.vendors && item.vendors['CodeGlyphX'] && item.vendors['CodeGlyphX'].mean) || item.codeGlyphXMean || '';
-      var cgxAlloc = (item.vendors && item.vendors['CodeGlyphX'] && item.vendors['CodeGlyphX'].allocated) || item.codeGlyphXAlloc || '';
-      var isCgxFastest = item.fastestVendor === 'CodeGlyphX';
+      const cgxMean = item.vendors?.['CodeGlyphX']?.mean || item.codeGlyphXMean || '';
+      const cgxAlloc = item.vendors?.['CodeGlyphX']?.allocated || item.codeGlyphXAlloc || '';
+      const isCgxFastest = item.fastestVendor === 'CodeGlyphX';
 
       html += '<td class="' + (isCgxFastest ? 'bench-winner' : '') + '">';
       if (cgxMean) {
@@ -157,8 +169,9 @@
       html += '<td>' + escapeHtml(item.codeGlyphXVsFastestText || (item.codeGlyphXVsFastest ? item.codeGlyphXVsFastest + ' x' : '-')) + '</td>';
       html += '<td>' + escapeHtml(item.codeGlyphXAllocVsFastestText || (item.codeGlyphXAllocVsFastest ? item.codeGlyphXAllocVsFastest + ' x' : '-')) + '</td>';
 
-      var ratingClass = 'bench-rating-' + (item.rating || 'unknown');
-      html += '<td class="' + ratingClass + '">' + escapeHtml(item.rating || '-') + '</td>';
+      const ratingClass = 'bench-rating-' + (item.rating || 'unknown');
+      const ratingIcon = getRatingIcon(item.rating);
+      html += '<td class="' + ratingClass + '" title="' + escapeHtml(item.rating || '') + '">' + ratingIcon + '</td>';
       html += '</tr>';
     });
 
@@ -166,16 +179,16 @@
 
     // Add legend
     html += '<div class="bench-legend">';
-    html += '<span class="bench-legend-item"><span class="bench-rating-good">good</span> = within 10% time, 25% allocation</span>';
-    html += '<span class="bench-legend-item"><span class="bench-rating-ok">ok</span> = within 50% time, 100% allocation</span>';
-    html += '<span class="bench-legend-item"><span class="bench-rating-bad">bad</span> = outside these bounds</span>';
+    html += '<span class="bench-legend-item">' + getRatingIcon('good') + ' within 10% time, 25% allocation</span>';
+    html += '<span class="bench-legend-item">' + getRatingIcon('ok') + ' within 50% time, 100% allocation</span>';
+    html += '<span class="bench-legend-item">' + getRatingIcon('bad') + ' outside these bounds</span>';
     html += '</div>';
 
     container.innerHTML = html;
   }
 
   function renderDetails(entry) {
-    var container = document.querySelector('[data-benchmark-details]');
+    const container = document.querySelector('[data-benchmark-details]');
     if (!container) return;
 
     if (!entry || !entry.comparisons || !entry.comparisons.length) {
@@ -183,7 +196,7 @@
       return;
     }
 
-    var html = '';
+    let html = '';
     entry.comparisons.forEach(function(comp) {
       html += '<div class="benchmark-detail-section">';
       html += '<h3>' + escapeHtml(comp.title) + '</h3>';
@@ -198,13 +211,13 @@
       html += '<thead><tr><th>Scenario</th>';
 
       // Collect all vendors from all scenarios
-      var allVendors = {};
+      const allVendors = {};
       comp.scenarios.forEach(function(s) {
         if (s.vendors) {
           Object.keys(s.vendors).forEach(function(v) { allVendors[v] = true; });
         }
       });
-      var vendorList = Object.keys(allVendors).sort(function(a, b) {
+      const vendorList = Object.keys(allVendors).sort(function(a, b) {
         if (a === 'CodeGlyphX') return -1;
         if (b === 'CodeGlyphX') return 1;
         return a.localeCompare(b);
@@ -220,7 +233,7 @@
         html += '<td>' + escapeHtml(scenario.name) + '</td>';
 
         vendorList.forEach(function(v) {
-          var vendor = scenario.vendors && scenario.vendors[v];
+          const vendor = scenario.vendors?.[v];
           if (vendor && vendor.mean) {
             html += '<td>';
             html += '<div>' + escapeHtml(vendor.mean) + '</div>';
@@ -243,7 +256,7 @@
   }
 
   function renderBaseline(entry) {
-    var container = document.querySelector('[data-benchmark-baseline]');
+    const container = document.querySelector('[data-benchmark-baseline]');
     if (!container) return;
 
     if (!entry || !entry.baselines || !entry.baselines.length) {
@@ -251,7 +264,7 @@
       return;
     }
 
-    var html = '';
+    let html = '';
     entry.baselines.forEach(function(baseline) {
       html += '<div class="benchmark-detail-section">';
       html += '<h3>' + escapeHtml(baseline.title) + '</h3>';
@@ -282,7 +295,7 @@
   }
 
   function renderEnvironment(entry) {
-    var container = document.querySelector('[data-benchmark-environment]');
+    const container = document.querySelector('[data-benchmark-environment]');
     if (!container) return;
 
     if (!entry || !entry.meta) {
@@ -290,11 +303,10 @@
       return;
     }
 
-    var meta = entry.meta;
-    var html = '<div class="benchmark-env-grid">';
+    const meta = entry.meta;
+    let html = '<div class="benchmark-env-grid">';
 
-    var items = [
-      ['Machine', meta.machineName],
+    const items = [
       ['OS', meta.osDescription],
       ['Architecture', meta.osArchitecture || meta.processArchitecture],
       ['.NET SDK', meta.dotnetSdk],
@@ -314,10 +326,10 @@
   }
 
   function renderNotes(entry) {
-    var container = document.querySelector('[data-benchmark-notes]');
+    const container = document.querySelector('[data-benchmark-notes]');
     if (!container || !entry || !entry.notes || !entry.notes.length) return;
 
-    var html = '<ul>';
+    let html = '<ul>';
     entry.notes.forEach(function(note) {
       html += '<li>' + escapeHtml(note) + '</li>';
     });
@@ -325,14 +337,118 @@
     container.innerHTML = html;
   }
 
+  function parseTimeValue(str) {
+    if (!str) return null;
+    // Parse values like "1.234 ms", "567.8 μs", "12.3 ns"
+    const match = str.match(/^([\d.]+)\s*(ms|μs|us|ns)/i);
+    if (!match) return null;
+    const value = parseFloat(match[1]);
+    const unit = match[2].toLowerCase();
+    // Convert to microseconds for comparison
+    if (unit === 'ms') return value * 1000;
+    if (unit === 'μs' || unit === 'us') return value;
+    if (unit === 'ns') return value / 1000;
+    return value;
+  }
+
+  function renderCharts(entry) {
+    const container = document.querySelector('[data-benchmark-charts]');
+    if (!container) return;
+
+    if (!entry || !entry.summary || !entry.summary.length) {
+      container.innerHTML = '<p class="benchmark-no-data">No chart data available for this mode.</p>';
+      return;
+    }
+
+    // Collect chart data from summary
+    const chartData = [];
+    entry.summary.forEach(function(item) {
+      const scenario = item.scenario || item.benchmark || '';
+      const cgxMean = item.vendors?.['CodeGlyphX']?.mean || item.codeGlyphXMean;
+      const fastestMean = item.fastestMean;
+      const fastestVendor = item.fastestVendor;
+
+      if (cgxMean && fastestMean) {
+        const cgxValue = parseTimeValue(cgxMean);
+        const fastestValue = parseTimeValue(fastestMean);
+        if (cgxValue && fastestValue) {
+          chartData.push({
+            scenario: scenario,
+            cgxValue: cgxValue,
+            cgxLabel: cgxMean,
+            fastestValue: fastestValue,
+            fastestLabel: fastestMean,
+            fastestVendor: fastestVendor,
+            isCgxFastest: fastestVendor === 'CodeGlyphX',
+            rating: item.rating
+          });
+        }
+      }
+    });
+
+    if (!chartData.length) {
+      container.innerHTML = '<p class="benchmark-no-data">No chart data available for this mode.</p>';
+      return;
+    }
+
+    // Find max value for scaling
+    let maxValue = 0;
+    chartData.forEach(function(d) {
+      maxValue = Math.max(maxValue, d.cgxValue, d.fastestValue);
+    });
+
+    let html = '<div class="benchmark-charts-container">';
+
+    chartData.forEach(function(d) {
+      const cgxPct = (d.cgxValue / maxValue) * 100;
+      const fastestPct = (d.fastestValue / maxValue) * 100;
+
+      html += '<div class="chart-row">';
+      html += '<div class="chart-scenario">' + escapeHtml(d.scenario) + '</div>';
+      html += '<div class="chart-bars">';
+
+      // CodeGlyphX bar
+      html += '<div class="chart-bar-row">';
+      html += '<span class="chart-bar-label">CodeGlyphX</span>';
+      html += '<div class="chart-bar-container">';
+      html += '<div class="chart-bar chart-bar-cgx' + (d.isCgxFastest ? ' chart-bar-winner' : '') + '" style="width: ' + cgxPct + '%"></div>';
+      html += '<span class="chart-bar-value">' + escapeHtml(d.cgxLabel) + '</span>';
+      html += '</div></div>';
+
+      // Fastest competitor bar (only if different from CodeGlyphX)
+      if (!d.isCgxFastest) {
+        html += '<div class="chart-bar-row">';
+        html += '<span class="chart-bar-label">' + escapeHtml(d.fastestVendor) + '</span>';
+        html += '<div class="chart-bar-container">';
+        html += '<div class="chart-bar chart-bar-fastest" style="width: ' + fastestPct + '%"></div>';
+        html += '<span class="chart-bar-value">' + escapeHtml(d.fastestLabel) + '</span>';
+        html += '</div></div>';
+      }
+
+      html += '</div></div>';
+    });
+
+    html += '</div>';
+
+    // Add chart legend
+    html += '<div class="chart-legend">';
+    html += '<span class="chart-legend-item"><span class="chart-legend-color chart-legend-cgx"></span> CodeGlyphX</span>';
+    html += '<span class="chart-legend-item"><span class="chart-legend-color chart-legend-fastest"></span> Fastest Competitor</span>';
+    html += '<span class="chart-legend-item"><span class="chart-legend-color chart-legend-winner"></span> Winner (fastest overall)</span>';
+    html += '</div>';
+
+    container.innerHTML = html;
+  }
+
   function renderAll() {
-    var summaryEntry = getEntry(summaryData, currentOs, currentMode);
-    var detailEntry = getEntry(detailData, currentOs, currentMode);
-    var entry = summaryEntry || detailEntry;
+    const summaryEntry = getEntry(summaryData, currentOs, currentMode);
+    const detailEntry = getEntry(detailData, currentOs, currentMode);
+    const entry = summaryEntry || detailEntry;
 
     renderMeta(entry);
     renderModeSelector(summaryData, detailData);
     renderSummaryTable(summaryEntry);
+    renderCharts(summaryEntry);
     renderDetails(detailEntry);
     renderBaseline(detailEntry);
     renderEnvironment(entry);
