@@ -100,7 +100,7 @@ jobs:
         run: dotnet build CodeGlyphX.Tests/CodeGlyphX.Tests.csproj -c Release -f net8.0 --no-restore
 
       - name: Test (net8.0 + coverage)
-        run: dotnet test CodeGlyphX.Tests/CodeGlyphX.Tests.csproj -c Release -f net8.0 --no-restore --no-build --collect:"XPlat Code Coverage"
+        run: dotnet test CodeGlyphX.Tests/CodeGlyphX.Tests.csproj -c Release -f net8.0 --no-restore --no-build --collect:"XPlat Code Coverage" --settings Build/coverage.runsettings
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v5
