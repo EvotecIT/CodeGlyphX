@@ -63,6 +63,63 @@ jobs:
           node -e "
           const { chromium } = require('playwright');
 
+          async function testNavigation(page, baseUrl) {
+              console.log('\\n=== Testing Navigation ===');
+              let failures = [];
+
+              // Navigation links to test: [linkText, expectedPath, expectedContent]
+              const navTests = [
+                  ['Home', '/', 'Generate QR Codes'],
+                  ['Playground', '/playground/', 'Interactive Playground'],
+                  ['Documentation', '/docs/', 'CodeGlyphX'],
+                  ['Showcase', '/showcase/', 'Showcase'],
+              ];
+
+              // Start from home page
+              await page.goto(baseUrl, { waitUntil: 'networkidle', timeout: 30000 });
+
+              for (const [linkText, expectedPath, expectedContent] of navTests) {
+                  try {
+                      console.log('Testing navigation to:', linkText);
+
+                      // Find and click the nav link
+                      const link = await page.locator('.nav-links a', { hasText: linkText }).first();
+                      if (!await link.isVisible()) {
+                          failures.push({ test: 'navigation', link: linkText, error: 'Link not visible' });
+                          continue;
+                      }
+
+                      await link.click();
+                      await page.waitForURL('**' + expectedPath + '**', { timeout: 10000 });
+
+                      // For Blazor apps, wait for content to load
+                      if (expectedPath === '/playground/' || expectedPath === '/docs/') {
+                          await page.waitForTimeout(3000); // Wait for Blazor to initialize
+                      }
+
+                      // Verify we're on the right page
+                      const url = page.url();
+                      if (!url.includes(expectedPath)) {
+                          failures.push({ test: 'navigation', link: linkText, error: 'Wrong URL: ' + url });
+                          continue;
+                      }
+
+                      // Verify page has expected content
+                      const content = await page.textContent('body');
+                      if (!content.includes(expectedContent)) {
+                          failures.push({ test: 'navigation', link: linkText, error: 'Missing content: ' + expectedContent });
+                          continue;
+                      }
+
+                      console.log('  ✓', linkText, 'navigation works');
+                  } catch (err) {
+                      failures.push({ test: 'navigation', link: linkText, error: err.message });
+                  }
+              }
+
+              return failures;
+          }
+
           async function testMobileLayout(page, pages, viewports, maxOverflow) {
               let failures = [];
               for (const vw of viewports) {
@@ -157,6 +214,11 @@ jobs:
               const context = await browser.newContext();
               const page = await context.newPage();
               let allFailures = [];
+
+              // Test 0: Navigation between pages (CRITICAL - catches broken links)
+              await page.setViewportSize({ width: 1280, height: 800 });
+              const navFailures = await testNavigation(page, 'http://localhost:5051');
+              allFailures.push(...navFailures);
 
               // Test 1: Mobile layout for static pages
               console.log('\\n=== Testing Mobile Layout ===');

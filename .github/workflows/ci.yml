@@ -10,7 +10,7 @@ jobs:
   build-test:
     name: Build & Test (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 10
+    timeout-minutes: 20
     strategy:
       fail-fast: false
       matrix:
@@ -51,17 +51,20 @@ jobs:
       - name: Build Core (net10.0)
         run: dotnet build CodeGlyphX/CodeGlyphX.csproj -c Release -f net10.0 --no-restore
 
+      - name: Build Tests (net8.0)
+        run: dotnet build CodeGlyphX.Tests/CodeGlyphX.Tests.csproj -c Release -f net8.0 --no-restore
+
       - name: Test (net8.0)
         if: runner.os != 'Linux'
-        run: dotnet test CodeGlyphX.Tests/CodeGlyphX.Tests.csproj -c Release -f net8.0 --no-restore
+        run: dotnet test CodeGlyphX.Tests/CodeGlyphX.Tests.csproj -c Release -f net8.0 --no-restore --no-build
 
       - name: Test (net8.0)
         if: runner.os == 'Linux' && github.event_name == 'pull_request'
-        run: dotnet test CodeGlyphX.Tests/CodeGlyphX.Tests.csproj -c Release -f net8.0 --no-restore
+        run: dotnet test CodeGlyphX.Tests/CodeGlyphX.Tests.csproj -c Release -f net8.0 --no-restore --no-build
 
       - name: Test (net8.0 + coverage)
         if: runner.os == 'Linux' && github.event_name != 'pull_request'
-        run: dotnet test CodeGlyphX.Tests/CodeGlyphX.Tests.csproj -c Release -f net8.0 --no-restore --collect:"XPlat Code Coverage"
+        run: dotnet test CodeGlyphX.Tests/CodeGlyphX.Tests.csproj -c Release -f net8.0 --no-restore --no-build --collect:"XPlat Code Coverage"
 
       - name: Upload coverage to Codecov
         if: runner.os == 'Linux' && github.event_name != 'pull_request'
