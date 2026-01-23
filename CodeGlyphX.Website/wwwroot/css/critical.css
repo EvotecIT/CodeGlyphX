@@ -76,6 +76,13 @@ svg {
     flex-shrink: 0;
 }
 
+/* Button icons - prevent large icon flash on page load */
+.btn-icon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+}
+
 /* Basic header layout to prevent content flash */
 .header {
     position: sticky;
