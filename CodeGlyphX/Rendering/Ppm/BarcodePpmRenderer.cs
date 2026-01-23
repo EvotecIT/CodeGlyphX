@@ -14,8 +14,7 @@ public static class BarcodePpmRenderer {
     /// </summary>
     public static byte[] Render(Barcode1D barcode, BarcodePngRenderOptions opts) {
         var scanlines = BarcodePngRenderer.RenderScanlines(barcode, opts, out var width, out var height, out var stride);
-        var rgba = ExtractRgba(scanlines, height, stride);
-        return PpmWriter.WriteRgba32(width, height, rgba, stride);
+        return PpmWriter.WriteRgba32Scanlines(width, height, scanlines, stride);
     }
 
     /// <summary>
@@ -23,8 +22,7 @@ public static class BarcodePpmRenderer {
     /// </summary>
     public static void RenderToStream(Barcode1D barcode, BarcodePngRenderOptions opts, Stream stream) {
         var scanlines = BarcodePngRenderer.RenderScanlines(barcode, opts, out var width, out var height, out var stride);
-        var rgba = ExtractRgba(scanlines, height, stride);
-        PpmWriter.WriteRgba32(stream, width, height, rgba, stride);
+        PpmWriter.WriteRgba32Scanlines(stream, width, height, scanlines, stride);
     }
 
     /// <summary>
@@ -43,11 +41,4 @@ public static class BarcodePpmRenderer {
         return RenderIO.WriteBinary(directory, fileName, ppm);
     }
 
-    private static byte[] ExtractRgba(byte[] scanlines, int height, int stride) {
-        var rgba = new byte[height * stride];
-        for (var y = 0; y < height; y++) {
-            Buffer.BlockCopy(scanlines, y * (stride + 1) + 1, rgba, y * stride, stride);
-        }
-        return rgba;
-    }
 }

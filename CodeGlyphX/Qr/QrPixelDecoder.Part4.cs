@@ -24,15 +24,25 @@ internal static partial class QrPixelDecoder {
         var visited = ArrayPool<bool>.Shared.Rent(total);
         Array.Clear(visited, 0, total);
         var stack = ArrayPool<int>.Shared.Rent(Math.Max(64, total / 16));
+        var gray = image.Gray;
+        var thresholdMap = image.ThresholdMap;
+        var threshold = image.Threshold;
 
         try {
+            bool IsBlackAt(int idx) {
+                if (thresholdMap is null) {
+                    return invert ? gray[idx] > threshold : gray[idx] <= threshold;
+                }
+                return invert ? gray[idx] > thresholdMap[idx] : gray[idx] <= thresholdMap[idx];
+            }
+
             for (var y = 0; y < h; y++) {
                 if (shouldStop?.Invoke() == true) break;
                 var row = y * w;
                 for (var x = 0; x < w; x++) {
                     var idx = row + x;
                     if (visited[idx]) continue;
-                    if (!image.IsBlack(x, y, invert)) {
+                    if (!IsBlackAt(idx)) {
                         visited[idx] = true;
                         continue;
                     }
@@ -51,9 +61,10 @@ internal static partial class QrPixelDecoder {
                         if (visited[cur]) continue;
                         visited[cur] = true;
 
+                        if (!IsBlackAt(cur)) continue;
+
                         var cy = cur / w;
                         var cx = cur - cy * w;
-                        if (!image.IsBlack(cx, cy, invert)) continue;
 
                         area++;
                         if (cx < minX) minX = cx;
@@ -127,11 +138,13 @@ internal static partial class QrPixelDecoder {
         stack = next;
     }
 
-    private static bool TryDecodeFromFinderCandidates(int scale, byte threshold, QrGrayImage image, bool invert, List<QrFinderPatternDetector.FinderPattern> candidates, Func<QrDecoded, bool>? accept, bool aggressive, DecodeBudget budget, out QrDecoded result, out QrPixelDecodeDiagnostics diagnostics) {
+    private static bool TryDecodeFromFinderCandidates(int scale, byte threshold, QrGrayImage image, bool invert, List<QrFinderPatternDetector.FinderPattern> candidates, bool candidatesSorted, Func<QrDecoded, bool>? accept, bool aggressive, DecodeBudget budget, out QrDecoded result, out QrPixelDecodeDiagnostics diagnostics) {
         result = null!;
         diagnostics = default;
 
-        candidates.Sort(static (a, b) => b.Count.CompareTo(a.Count));
+        if (!candidatesSorted) {
+            candidates.Sort(static (a, b) => b.Count.CompareTo(a.Count));
+        }
         var tightBudget = budget.Enabled && budget.MaxMilliseconds <= 800;
         var n = Math.Min(candidates.Count, tightBudget ? 5 : (budget.Enabled ? 8 : 12));
         var triedTriples = 0;
@@ -328,6 +341,7 @@ internal static partial class QrPixelDecoder {
 
         if (budget.IsExpired) return false;
 
+        var scratch = new global::CodeGlyphX.BitMatrix(dimension, dimension);
         var modulesBetweenCenters = dimension - 7;
         if (modulesBetweenCenters <= 0) return false;
 
@@ -354,7 +368,7 @@ internal static partial class QrPixelDecoder {
         var cornerBrX0 = cornerTlX0 + (vxX + vyX) * dimension;
         var cornerBrY0 = cornerTlY0 + (vxY + vyY) * dimension;
 
-        if (TrySampleWithCorners(image, invert, phaseX: 0, phaseY: 0, dimension, cornerTlX0, cornerTlY0, cornerTrX0, cornerTrY0, cornerBrX0, cornerBrY0, cornerBlX0, cornerBlY0, moduleSize0, accept, aggressive, budget, out result, out var moduleDiag0)) {
+        if (TrySampleWithCorners(image, invert, phaseX: 0, phaseY: 0, dimension, scratch, cornerTlX0, cornerTlY0, cornerTrX0, cornerTrY0, cornerBrX0, cornerBrY0, cornerBlX0, cornerBlY0, moduleSize0, accept, aggressive, budget, out result, out var moduleDiag0)) {
             diagnostics = new QrPixelDecodeDiagnostics(scale, threshold, invert, candidateCount, candidateTriplesTried, dimension, moduleDiag0);
             return true;
         }
@@ -389,7 +403,7 @@ internal static partial class QrPixelDecoder {
 
         // Then try with refined phase/scale. Alignment pattern detection can produce false positives on busy UI regions;
         // use it as a fallback only.
-        if (TrySampleWithCorners(image, invert, phaseX, phaseY, dimension, cornerTlX, cornerTlY, cornerTrX, cornerTrY, cornerBrXr0, cornerBrYr0, cornerBlX, cornerBlY, moduleSize, accept, aggressive, budget, out result, out var moduleDiagR)) {
+        if (TrySampleWithCorners(image, invert, phaseX, phaseY, dimension, scratch, cornerTlX, cornerTlY, cornerTrX, cornerTrY, cornerBrXr0, cornerBrYr0, cornerBlX, cornerBlY, moduleSize, accept, aggressive, budget, out result, out var moduleDiagR)) {
             diagnostics = new QrPixelDecodeDiagnostics(scale, threshold, invert, candidateCount, candidateTriplesTried, dimension, moduleDiagR);
             return true;
         }
@@ -411,7 +425,7 @@ internal static partial class QrPixelDecoder {
                 var rCornerBrX = rCornerTlX + (rvxX + rvyX) * dimension;
                 var rCornerBrY = rCornerTlY + (rvxY + rvyY) * dimension;
 
-                if (TrySampleWithCorners(image, invert, rPhaseX, rPhaseY, dimension, rCornerTlX, rCornerTlY, rCornerTrX, rCornerTrY, rCornerBrX, rCornerBrY, rCornerBlX, rCornerBlY, rModuleSize, accept, aggressive, budget, out result, out var moduleDiagT)) {
+                if (TrySampleWithCorners(image, invert, rPhaseX, rPhaseY, dimension, scratch, rCornerTlX, rCornerTlY, rCornerTrX, rCornerTrY, rCornerBrX, rCornerBrY, rCornerBlX, rCornerBlY, rModuleSize, accept, aggressive, budget, out result, out var moduleDiagT)) {
                     diagnostics = new QrPixelDecodeDiagnostics(scale, threshold, invert, candidateCount, candidateTriplesTried, dimension, moduleDiagT);
                     return true;
                 }
@@ -428,6 +442,7 @@ internal static partial class QrPixelDecoder {
                         phaseX,
                         phaseY,
                         dimension,
+                        scratch,
                         cornerTlX,
                         cornerTlY,
                         cornerTrX,
@@ -460,6 +475,7 @@ internal static partial class QrPixelDecoder {
                 phaseX,
                 phaseY,
                 dimension,
+                scratch,
                 cornerTlX,
                 cornerTlY,
                 cornerTrX,
@@ -502,7 +518,7 @@ internal static partial class QrPixelDecoder {
                     var cornerBrXA = ax + (vxX + vyX) * 6.5;
                     var cornerBrYA = ay + (vxY + vyY) * 6.5;
 
-                    if (TrySampleWithCorners(image, invert, phaseX, phaseY, dimension, cornerTlX, cornerTlY, cornerTrX, cornerTrY, cornerBrXA, cornerBrYA, cornerBlX, cornerBlY, moduleSize, accept, aggressive, budget, out result, out var moduleDiagA)) {
+                    if (TrySampleWithCorners(image, invert, phaseX, phaseY, dimension, scratch, cornerTlX, cornerTlY, cornerTrX, cornerTrY, cornerBrXA, cornerBrYA, cornerBlX, cornerBlY, moduleSize, accept, aggressive, budget, out result, out var moduleDiagA)) {
                         diagnostics = new QrPixelDecodeDiagnostics(scale, threshold, invert, candidateCount, candidateTriplesTried, dimension, moduleDiagA);
                         return true;
                     }
@@ -519,6 +535,7 @@ internal static partial class QrPixelDecoder {
                 phaseX,
                 phaseY,
                 dimension,
+                scratch,
                 cornerTlX,
                 cornerTlY,
                 cornerTrX,
@@ -551,6 +568,7 @@ internal static partial class QrPixelDecoder {
         double phaseX,
         double phaseY,
         int dimension,
+        global::CodeGlyphX.BitMatrix scratch,
         double cornerTlX,
         double cornerTlY,
         double cornerTrX,
@@ -593,7 +611,7 @@ internal static partial class QrPixelDecoder {
                 var jx = cornerBrX + vxX * ox + vyX * oy;
                 var jy = cornerBrY + vxY * ox + vyY * oy;
 
-                if (TrySampleWithCorners(image, invert, phaseX, phaseY, dimension, cornerTlX, cornerTlY, cornerTrX, cornerTrY, jx, jy, cornerBlX, cornerBlY, moduleSizePx, accept, aggressive, budget, out result, out var diag)) {
+                if (TrySampleWithCorners(image, invert, phaseX, phaseY, dimension, scratch, cornerTlX, cornerTlY, cornerTrX, cornerTrY, jx, jy, cornerBlX, cornerBlY, moduleSizePx, accept, aggressive, budget, out result, out var diag)) {
                     moduleDiagnostics = diag;
                     return true;
                 }
@@ -612,6 +630,7 @@ internal static partial class QrPixelDecoder {
         double phaseX,
         double phaseY,
         int dimension,
+        global::CodeGlyphX.BitMatrix scratch,
         double cornerTlX,
         double cornerTlY,
         double cornerTrX,
@@ -646,6 +665,7 @@ internal static partial class QrPixelDecoder {
                     ox,
                     phaseY,
                     dimension,
+                    scratch,
                     cornerTlX,
                     cornerTlY,
                     cornerTrX,
@@ -676,6 +696,7 @@ internal static partial class QrPixelDecoder {
                     phaseX,
                     oy,
                     dimension,
+                    scratch,
                     cornerTlX,
                     cornerTlY,
                     cornerTrX,
@@ -707,6 +728,7 @@ internal static partial class QrPixelDecoder {
         double phaseX,
         double phaseY,
         int dimension,
+        global::CodeGlyphX.BitMatrix scratch,
         double cornerTlX,
         double cornerTlY,
         double cornerTrX,
@@ -748,6 +770,7 @@ internal static partial class QrPixelDecoder {
                         ox,
                         oy,
                         dimension,
+                        scratch,
                         cornerTlX,
                         cornerTlY,
                         cornerTrX,

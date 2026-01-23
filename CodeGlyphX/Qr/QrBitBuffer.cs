@@ -12,7 +12,22 @@ internal sealed class QrBitBuffer {
         if (bitCount is < 0 or > 31) throw new ArgumentOutOfRangeException(nameof(bitCount));
         if ((value >> bitCount) != 0) throw new ArgumentOutOfRangeException(nameof(value));
 
-        for (var i = bitCount - 1; i >= 0; i--) AppendBit(((value >> i) & 1) != 0);
+        if (bitCount == 0) return;
+
+        while (bitCount > 0) {
+            var byteIndex = LengthBits >> 3;
+            var bitOffset = LengthBits & 7;
+            if (byteIndex == _bytes.Count) _bytes.Add(0);
+            var space = 8 - bitOffset;
+            var take = bitCount < space ? bitCount : space;
+            var shift = bitCount - take;
+            var mask = (1 << take) - 1;
+            var chunk = (value >> shift) & mask;
+            var shiftInto = space - take;
+            _bytes[byteIndex] |= (byte)(chunk << shiftInto);
+            LengthBits += take;
+            bitCount -= take;
+        }
     }
 
     public void AppendBit(bool bit) {
@@ -32,4 +47,3 @@ internal sealed class QrBitBuffer {
         return _bytes.ToArray();
     }
 }
-

@@ -73,6 +73,10 @@ internal static class JpegWriter {
     };
 
     private static readonly double[,] CosTable = BuildCosTable();
+    private static readonly HuffmanTable DcLumaTable = BuildHuffmanTable(DcLumaBits, DcValues);
+    private static readonly HuffmanTable AcLumaTable = BuildHuffmanTable(AcLumaBits, AcLumaValues);
+    private static readonly HuffmanTable DcChromaTable = BuildHuffmanTable(DcChromaBits, DcValues);
+    private static readonly HuffmanTable AcChromaTable = BuildHuffmanTable(AcChromaBits, AcChromaValues);
 
     public static byte[] WriteRgba(int width, int height, byte[] rgba, int stride, int quality) {
         using var ms = new MemoryStream();
@@ -80,22 +84,37 @@ internal static class JpegWriter {
         return ms.ToArray();
     }
 
+    public static byte[] WriteRgbaScanlines(int width, int height, byte[] scanlines, int stride, int quality) {
+        using var ms = new MemoryStream();
+        WriteRgbaScanlines(ms, width, height, scanlines, stride, quality);
+        return ms.ToArray();
+    }
+
     public static void WriteRgba(Stream stream, int width, int height, byte[] rgba, int stride, int quality) {
+        WriteRgbaCore(stream, width, height, rgba, stride, rowOffset: 0, rowStride: stride, quality, nameof(rgba), "RGBA buffer too small.");
+    }
+
+    public static void WriteRgbaScanlines(Stream stream, int width, int height, byte[] scanlines, int stride, int quality) {
+        WriteRgbaCore(stream, width, height, scanlines, stride, rowOffset: 1, rowStride: stride + 1, quality, nameof(scanlines), "Scanline buffer too small.");
+    }
+
+    private static void WriteRgbaCore(Stream stream, int width, int height, byte[] rgba, int stride, int rowOffset, int rowStride, int quality, string bufferName, string bufferMessage) {
         if (width <= 0) throw new ArgumentOutOfRangeException(nameof(width));
         if (height <= 0) throw new ArgumentOutOfRangeException(nameof(height));
-        if (rgba is null) throw new ArgumentNullException(nameof(rgba));
+        if (rgba is null) throw new ArgumentNullException(bufferName);
         if (stride < width * 4) throw new ArgumentOutOfRangeException(nameof(stride));
-        if (rgba.Length < height * stride) throw new ArgumentException("RGBA buffer too small.", nameof(rgba));
+        if (rowStride < rowOffset + stride) throw new ArgumentOutOfRangeException(nameof(rowStride));
+        if (rgba.Length < height * rowStride) throw new ArgumentException(bufferMessage, bufferName);
         if (quality is < 1 or > 100) throw new ArgumentOutOfRangeException(nameof(quality));
         if (stream is null) throw new ArgumentNullException(nameof(stream));
 
         var qY = ScaleQuantTable(StdLumaQuant, quality);
         var qC = ScaleQuantTable(StdChromaQuant, quality);
 
-        var dcLuma = BuildHuffmanTable(DcLumaBits, DcValues);
-        var acLuma = BuildHuffmanTable(AcLumaBits, AcLumaValues);
-        var dcChroma = BuildHuffmanTable(DcChromaBits, DcValues);
-        var acChroma = BuildHuffmanTable(AcChromaBits, AcChromaValues);
+        var dcLuma = DcLumaTable;
+        var acLuma = AcLumaTable;
+        var dcChroma = DcChromaTable;
+        var acChroma = AcChromaTable;
 
         WriteMarker(stream, 0xFFD8);
         WriteApp0(stream);
@@ -109,7 +128,7 @@ internal static class JpegWriter {
         WriteSos(stream);
 
         var bw = new BitWriter(stream);
-        EncodeImage(bw, width, height, rgba, stride, qY, qC, dcLuma, acLuma, dcChroma, acChroma);
+        EncodeImage(bw, width, height, rgba, stride, rowOffset, rowStride, qY, qC, dcLuma, acLuma, dcChroma, acChroma);
         bw.Flush();
 
         WriteMarker(stream, 0xFFD9);
@@ -121,6 +140,8 @@ internal static class JpegWriter {
         int height,
         byte[] rgba,
         int stride,
+        int rowOffset,
+        int rowStride,
         int[] qY,
         int[] qC,
         HuffmanTable dcY,
@@ -138,7 +159,7 @@ internal static class JpegWriter {
 
         for (var by = 0; by < height; by += 8) {
             for (var bx = 0; bx < width; bx += 8) {
-                LoadBlock(rgba, stride, width, height, bx, by, blockY, blockCb, blockCr);
+                LoadBlock(rgba, stride, rowOffset, rowStride, width, height, bx, by, blockY, blockCb, blockCr);
 
                 EncodeBlock(bw, blockY, qY, dcY, acY, ref prevY, temp);
                 EncodeBlock(bw, blockCb, qC, dcC, acC, ref prevCb, temp);
@@ -150,6 +171,8 @@ internal static class JpegWriter {
     private static void LoadBlock(
         byte[] rgba,
         int stride,
+        int rowOffset,
+        int rowStride,
         int width,
         int height,
         int bx,
@@ -161,7 +184,7 @@ internal static class JpegWriter {
         for (var y = 0; y < 8; y++) {
             var py = by + y;
             if (py >= height) py = height - 1;
-            var row = py * stride;
+            var row = py * rowStride + rowOffset;
             for (var x = 0; x < 8; x++) {
                 var px = bx + x;
                 if (px >= width) px = width - 1;

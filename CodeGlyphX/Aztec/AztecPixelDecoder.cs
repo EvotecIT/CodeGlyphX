@@ -304,23 +304,31 @@ internal static class AztecPixelDecoder {
     }
 
     private static bool TryEstimateCenter(AztecGrayImage image, bool invert, CancellationToken cancellationToken, out int centerX, out int centerY) {
-        centerX = image.Width / 2;
-        centerY = image.Height / 2;
+        var width = image.Width;
+        var height = image.Height;
+        var gray = image.Gray;
+        var threshold = image.Threshold;
 
-        if (image.IsBlack(centerX, centerY, invert)) return true;
+        centerX = width / 2;
+        centerY = height / 2;
 
-        var maxRadius = Math.Min(12, Math.Min(image.Width, image.Height) / 10);
+        var centerIdx = centerY * width + centerX;
+        if (invert ? gray[centerIdx] > threshold : gray[centerIdx] <= threshold) return true;
+
+        var maxRadius = Math.Min(12, Math.Min(width, height) / 10);
         if (maxRadius < 4) maxRadius = 4;
         for (var r = 1; r <= maxRadius; r++) {
             for (var dy = -r; dy <= r; dy++) {
                 if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
                 var y = centerY + dy;
-                if (y < 0 || y >= image.Height) continue;
+                if (y < 0 || y >= height) continue;
+                var row = y * width;
                 for (var dx = -r; dx <= r; dx++) {
                     if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
                     var x = centerX + dx;
-                    if (x < 0 || x >= image.Width) continue;
-                    if (image.IsBlack(x, y, invert)) {
+                    if (x < 0 || x >= width) continue;
+                    var idx = row + x;
+                    if (invert ? gray[idx] > threshold : gray[idx] <= threshold) {
                         centerX = x;
                         centerY = y;
                         return true;
@@ -355,16 +363,25 @@ internal static class AztecPixelDecoder {
     }
 
     private static int MeasureRun(AztecGrayImage image, bool invert, int startX, int startY, int dx, int dy) {
-        var color = image.IsBlack(startX, startY, invert);
+        var width = image.Width;
+        var height = image.Height;
+        var gray = image.Gray;
+        var threshold = image.Threshold;
+
         var x = startX;
         var y = startY;
+        var idx = y * width + x;
+        var color = invert ? gray[idx] > threshold : gray[idx] <= threshold;
+        var step = dy * width + dx;
         var len = 0;
 
-        while (x >= 0 && x < image.Width && y >= 0 && y < image.Height) {
-            if (image.IsBlack(x, y, invert) != color) break;
+        while (x >= 0 && x < width && y >= 0 && y < height) {
+            var black = invert ? gray[idx] > threshold : gray[idx] <= threshold;
+            if (black != color) break;
             len++;
             x += dx;
             y += dy;
+            idx += step;
         }
 
         return len;
@@ -405,19 +422,41 @@ internal static class AztecPixelDecoder {
     }
 
     private static bool SampleMajority3x3(AztecGrayImage image, int px, int py, bool invert) {
+        var width = image.Width;
+        var height = image.Height;
+        var gray = image.Gray;
+        var threshold = image.Threshold;
+
         var black = 0;
+        if (!invert) {
+            for (var dy = -1; dy <= 1; dy++) {
+                var y = py + dy;
+                if (y < 0) y = 0;
+                else if (y >= height) y = height - 1;
+                var row = y * width;
 
-        for (var dy = -1; dy <= 1; dy++) {
-            var y = py + dy;
-            if (y < 0) y = 0;
-            else if (y >= image.Height) y = image.Height - 1;
+                for (var dx = -1; dx <= 1; dx++) {
+                    var x = px + dx;
+                    if (x < 0) x = 0;
+                    else if (x >= width) x = width - 1;
 
-            for (var dx = -1; dx <= 1; dx++) {
-                var x = px + dx;
-                if (x < 0) x = 0;
-                else if (x >= image.Width) x = image.Width - 1;
+                    if (gray[row + x] <= threshold) black++;
+                }
+            }
+        } else {
+            for (var dy = -1; dy <= 1; dy++) {
+                var y = py + dy;
+                if (y < 0) y = 0;
+                else if (y >= height) y = height - 1;
+                var row = y * width;
 
-                if (image.IsBlack(x, y, invert)) black++;
+                for (var dx = -1; dx <= 1; dx++) {
+                    var x = px + dx;
+                    if (x < 0) x = 0;
+                    else if (x >= width) x = width - 1;
+
+                    if (gray[row + x] > threshold) black++;
+                }
             }
         }
 
@@ -425,20 +464,41 @@ internal static class AztecPixelDecoder {
     }
 
     private static bool TryFindBoundingBox(AztecGrayImage image, bool invert, CancellationToken cancellationToken, out int minX, out int minY, out int maxX, out int maxY) {
-        minX = image.Width;
-        minY = image.Height;
+        var width = image.Width;
+        var height = image.Height;
+        var gray = image.Gray;
+        var threshold = image.Threshold;
+
+        minX = width;
+        minY = height;
         maxX = -1;
         maxY = -1;
 
-        for (var y = 0; y < image.Height; y++) {
-            if ((y & 63) == 0 && DecodeBudget.ShouldAbort(cancellationToken)) return false;
-            for (var x = 0; x < image.Width; x++) {
-                if ((x & 255) == 0 && DecodeBudget.ShouldAbort(cancellationToken)) return false;
-                if (!image.IsBlack(x, y, invert)) continue;
-                if (x < minX) minX = x;
-                if (x > maxX) maxX = x;
-                if (y < minY) minY = y;
-                if (y > maxY) maxY = y;
+        if (!invert) {
+            for (var y = 0; y < height; y++) {
+                if ((y & 63) == 0 && DecodeBudget.ShouldAbort(cancellationToken)) return false;
+                var row = y * width;
+                for (var x = 0; x < width; x++) {
+                    if ((x & 255) == 0 && DecodeBudget.ShouldAbort(cancellationToken)) return false;
+                    if (gray[row + x] > threshold) continue;
+                    if (x < minX) minX = x;
+                    if (x > maxX) maxX = x;
+                    if (y < minY) minY = y;
+                    if (y > maxY) maxY = y;
+                }
+            }
+        } else {
+            for (var y = 0; y < height; y++) {
+                if ((y & 63) == 0 && DecodeBudget.ShouldAbort(cancellationToken)) return false;
+                var row = y * width;
+                for (var x = 0; x < width; x++) {
+                    if ((x & 255) == 0 && DecodeBudget.ShouldAbort(cancellationToken)) return false;
+                    if (gray[row + x] <= threshold) continue;
+                    if (x < minX) minX = x;
+                    if (x > maxX) maxX = x;
+                    if (y < minY) minY = y;
+                    if (y > maxY) maxY = y;
+                }
             }
         }
 
@@ -524,6 +584,8 @@ internal static class AztecPixelDecoder {
             var black = lum <= _threshold;
             return invert ? !black : black;
         }
+
+        public byte[] Gray => _gray;
 
         public byte Threshold => _threshold;
 

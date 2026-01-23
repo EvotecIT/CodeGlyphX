@@ -1,4 +1,5 @@
 using System;
+using System.Buffers;
 using System.IO;
 using CodeGlyphX.Rendering;
 
@@ -28,6 +29,50 @@ public static partial class QrPngRenderer {
         return ms.ToArray();
     }
 
+    private static void RenderSimplePixels(BitMatrix modules, QrPngRenderOptions opts, byte[] pixels, int widthPx, int heightPx, int stride) {
+        if (pixels is null) throw new ArgumentNullException(nameof(pixels));
+
+        PngRenderHelpers.FillBackgroundPixels(pixels, widthPx, heightPx, stride, opts.Background);
+
+        var size = modules.Width;
+        var moduleSize = opts.ModuleSize;
+        var quiet = opts.QuietZone;
+        var foreground = CompositeForeground(opts.Foreground, opts.Background);
+        var rowLength = stride;
+
+        var backgroundRow = ArrayPool<byte>.Shared.Rent(rowLength);
+        var rowBuffer = ArrayPool<byte>.Shared.Rent(rowLength);
+        try {
+            PngRenderHelpers.FillRowPixels(backgroundRow, 0, widthPx, opts.Background);
+
+            for (var my = 0; my < size; my++) {
+                Buffer.BlockCopy(backgroundRow, 0, rowBuffer, 0, rowLength);
+                var rowHasDark = false;
+                var px = quiet * moduleSize;
+
+                for (var mx = 0; mx < size; mx++) {
+                    if (!modules[mx, my]) {
+                        px += moduleSize;
+                        continue;
+                    }
+                    rowHasDark = true;
+                    PngRenderHelpers.FillRowPixels(rowBuffer, px * 4, moduleSize, foreground);
+                    px += moduleSize;
+                }
+
+                if (!rowHasDark) continue;
+
+                var y0 = (my + quiet) * moduleSize;
+                for (var sy = 0; sy < moduleSize; sy++) {
+                    Buffer.BlockCopy(rowBuffer, 0, pixels, (y0 + sy) * rowLength, rowLength);
+                }
+            }
+        } finally {
+            ArrayPool<byte>.Shared.Return(rowBuffer);
+            ArrayPool<byte>.Shared.Return(backgroundRow);
+        }
+    }
+
     private static void FillRowSimple(BitMatrix modules, QrPngRenderOptions opts, int y, byte[] rowBuffer, int rowLength) {
         if (modules is null) throw new ArgumentNullException(nameof(modules));
         if (opts is null) throw new ArgumentNullException(nameof(opts));
@@ -44,7 +89,7 @@ public static partial class QrPngRenderer {
         var background = opts.Background;
         var foreground = CompositeForeground(opts.Foreground, background);
 
-        FillRowPixels(rowBuffer, 1, widthPx, background);
+        PngRenderHelpers.FillRowPixels(rowBuffer, 1, widthPx, background);
 
         var originPx = quiet * moduleSize;
         var qrSizePx = size * moduleSize;
@@ -55,7 +100,7 @@ public static partial class QrPngRenderer {
         var px = originPx;
         for (var mx = 0; mx < size; mx++) {
             if (modules[mx, my]) {
-                FillRowPixels(rowBuffer, 1 + px * 4, moduleSize, foreground);
+                PngRenderHelpers.FillRowPixels(rowBuffer, 1 + px * 4, moduleSize, foreground);
             }
             px += moduleSize;
         }
@@ -72,13 +117,4 @@ public static partial class QrPngRenderer {
         return new Rgba32(r, g, b, a);
     }
 
-    private static void FillRowPixels(byte[] rowBuffer, int offset, int pixelCount, Rgba32 color) {
-        var p = offset;
-        for (var i = 0; i < pixelCount; i++) {
-            rowBuffer[p++] = color.R;
-            rowBuffer[p++] = color.G;
-            rowBuffer[p++] = color.B;
-            rowBuffer[p++] = color.A;
-        }
-    }
 }

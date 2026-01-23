@@ -102,34 +102,74 @@ public static partial class MatrixPngRenderer {
         var moduleSize = opts.ModuleSize;
         var quiet = opts.QuietZone;
         var rowBytes = (widthPx + 7) / 8;
+        var rowStride = rowBytes + 1;
+        var fillByte = invert ? (byte)0xFF : (byte)0x00;
 
-        var offset = 0;
-        for (var y = 0; y < heightPx; y++) {
-            scanlines[offset++] = 0;
-            var moduleY = y / moduleSize - quiet;
-            var inMatrixY = moduleY >= 0 && moduleY < modules.Height;
-            var bitPos = 7;
-            var current = (byte)0;
-
-            for (var x = 0; x < widthPx; x++) {
-                var moduleX = x / moduleSize - quiet;
-                var isDark = inMatrixY && moduleX >= 0 && moduleX < modules.Width && modules[moduleX, moduleY];
-                var bit = invert ? !isDark : isDark;
-                if (bit) current |= (byte)(1 << bitPos);
-                bitPos--;
-                if (bitPos < 0) {
-                    scanlines[offset++] = current;
-                    current = 0;
-                    bitPos = 7;
+        var rowBuffer = ArrayPool<byte>.Shared.Rent(rowBytes);
+        try {
+            var offset = 0;
+            var y = 0;
+            while (y < heightPx) {
+                var moduleY = y / moduleSize - quiet;
+                var rowSpan = rowBuffer.AsSpan(0, rowBytes);
+                if (fillByte == 0) {
+                    rowSpan.Clear();
+                } else {
+                    rowSpan.Fill(fillByte);
                 }
-            }
 
-            if (bitPos != 7) {
-                if (invert) {
-                    current |= (byte)((1 << (bitPos + 1)) - 1);
+                if (moduleY >= 0 && moduleY < modules.Height) {
+                    for (var moduleX = 0; moduleX < modules.Width; moduleX++) {
+                        if (!modules[moduleX, moduleY]) continue;
+                        var x0 = (moduleX + quiet) * moduleSize;
+                        ApplyRun(rowBuffer, 0, x0, x0 + moduleSize, invert);
+                    }
                 }
-                scanlines[offset++] = current;
+
+                var repeat = Math.Min(moduleSize - (y % moduleSize), heightPx - y);
+                for (var r = 0; r < repeat; r++) {
+                    scanlines[offset] = 0;
+                    Buffer.BlockCopy(rowBuffer, 0, scanlines, offset + 1, rowBytes);
+                    offset += rowStride;
+                }
+                y += repeat;
             }
+        } finally {
+            ArrayPool<byte>.Shared.Return(rowBuffer);
+        }
+    }
+
+    private static void ApplyRun(byte[] scanlines, int rowStart, int x0, int x1, bool invert) {
+        if (x1 <= x0) return;
+
+        var startByte = x0 >> 3;
+        var endByte = (x1 - 1) >> 3;
+        var startBit = x0 & 7;
+        var endBit = (x1 - 1) & 7;
+
+        if (startByte == endByte) {
+            var mask = (byte)((0xFF >> startBit) & (0xFF << (7 - endBit)));
+            if (invert) {
+                scanlines[rowStart + startByte] &= (byte)~mask;
+            } else {
+                scanlines[rowStart + startByte] |= mask;
+            }
+            return;
+        }
+
+        var startMask = (byte)(0xFF >> startBit);
+        var endMask = (byte)(0xFF << (7 - endBit));
+        if (invert) {
+            scanlines[rowStart + startByte] &= (byte)~startMask;
+            scanlines[rowStart + endByte] &= (byte)~endMask;
+        } else {
+            scanlines[rowStart + startByte] |= startMask;
+            scanlines[rowStart + endByte] |= endMask;
+        }
+
+        var fill = invert ? (byte)0x00 : (byte)0xFF;
+        for (var i = startByte + 1; i < endByte; i++) {
+            scanlines[rowStart + i] = fill;
         }
     }
 

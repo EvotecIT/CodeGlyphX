@@ -14,8 +14,7 @@ public static class MatrixPamRenderer {
     /// </summary>
     public static byte[] Render(BitMatrix modules, MatrixPngRenderOptions opts) {
         var scanlines = MatrixPngRenderer.RenderScanlines(modules, opts, out var width, out var height, out var stride);
-        var rgba = ExtractRgba(scanlines, height, stride);
-        return PamWriter.WriteRgba32(width, height, rgba, stride);
+        return PamWriter.WriteRgba32Scanlines(width, height, scanlines, stride);
     }
 
     /// <summary>
@@ -23,8 +22,7 @@ public static class MatrixPamRenderer {
     /// </summary>
     public static void RenderToStream(BitMatrix modules, MatrixPngRenderOptions opts, Stream stream) {
         var scanlines = MatrixPngRenderer.RenderScanlines(modules, opts, out var width, out var height, out var stride);
-        var rgba = ExtractRgba(scanlines, height, stride);
-        PamWriter.WriteRgba32(stream, width, height, rgba, stride);
+        PamWriter.WriteRgba32Scanlines(stream, width, height, scanlines, stride);
     }
 
     /// <summary>
@@ -43,11 +41,4 @@ public static class MatrixPamRenderer {
         return RenderIO.WriteBinary(directory, fileName, pam);
     }
 
-    private static byte[] ExtractRgba(byte[] scanlines, int height, int stride) {
-        var rgba = new byte[height * stride];
-        for (var y = 0; y < height; y++) {
-            Buffer.BlockCopy(scanlines, y * (stride + 1) + 1, rgba, y * stride, stride);
-        }
-        return rgba;
-    }
 }

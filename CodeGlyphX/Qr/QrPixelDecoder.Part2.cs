@@ -190,7 +190,9 @@ internal static partial class QrPixelDecoder {
                 AddThresholdCandidate(ref thresholds, ref thresholdCount, baseImage.Threshold - 32);
                 AddThresholdCandidate(ref thresholds, ref thresholdCount, baseImage.Threshold + 32);
             }
-            AddPercentileThresholds(baseImage, ref thresholds, ref thresholdCount);
+            if (thresholdCount < thresholds.Length) {
+                AddPercentileThresholds(baseImage, ref thresholds, ref thresholdCount);
+            }
 
             if (range > 0) {
                 AddThresholdCandidate(ref thresholds, ref thresholdCount, baseImage.Min + range / 3);
@@ -645,7 +647,7 @@ internal static partial class QrPixelDecoder {
         return false;
     }
 
-    private static void CollectAllFromImage(QrGrayImage baseImage, QrProfileSettings settings, PooledList<QrDecoded> list, HashSet<string> seen, Func<QrDecoded, bool>? accept, DecodeBudget budget, QrGrayImagePool? pool) {
+    private static void CollectAllFromImage(QrGrayImage baseImage, QrProfileSettings settings, PooledList<QrDecoded> list, HashSet<byte[]> seen, Func<QrDecoded, bool>? accept, DecodeBudget budget, QrGrayImagePool? pool) {
         if (budget.IsExpired) return;
         var candidates = RentCandidateList();
         try {
@@ -662,7 +664,7 @@ internal static partial class QrPixelDecoder {
         }
     }
 
-    private static void CollectAllFromImageCore(QrGrayImage baseImage, QrProfileSettings settings, PooledList<QrDecoded> list, HashSet<string> seen, Func<QrDecoded, bool>? accept, DecodeBudget budget, List<QrFinderPatternDetector.FinderPattern> candidates, QrGrayImagePool? pool) {
+    private static void CollectAllFromImageCore(QrGrayImage baseImage, QrProfileSettings settings, PooledList<QrDecoded> list, HashSet<byte[]> seen, Func<QrDecoded, bool>? accept, DecodeBudget budget, List<QrFinderPatternDetector.FinderPattern> candidates, QrGrayImagePool? pool) {
         Span<byte> thresholds = stackalloc byte[12];
         var thresholdCount = 0;
         if (settings.AllowExtraThresholds) {
@@ -677,7 +679,9 @@ internal static partial class QrPixelDecoder {
                 AddThresholdCandidate(ref thresholds, ref thresholdCount, mid - 32);
                 AddThresholdCandidate(ref thresholds, ref thresholdCount, mid + 32);
             }
-            AddPercentileThresholds(baseImage, ref thresholds, ref thresholdCount);
+            if (thresholdCount < thresholds.Length) {
+                AddPercentileThresholds(baseImage, ref thresholds, ref thresholdCount);
+            }
             if (range > 0) {
                 AddThresholdCandidate(ref thresholds, ref thresholdCount, baseImage.Min + range / 3);
                 AddThresholdCandidate(ref thresholds, ref thresholdCount, baseImage.Min + (range * 2) / 3);

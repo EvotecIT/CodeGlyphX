@@ -5,6 +5,9 @@ using System.Buffers;
 namespace CodeGlyphX.Qr;
 
 internal readonly struct QrGrayImage {
+    private static readonly int[] LumaR = BuildLumaTable(299);
+    private static readonly int[] LumaG = BuildLumaTable(587);
+    private static readonly int[] LumaB = BuildLumaTable(114);
     public readonly int Width;
     public readonly int Height;
     public readonly byte[] Gray;
@@ -21,6 +24,14 @@ internal readonly struct QrGrayImage {
         Max = max;
         Threshold = threshold;
         ThresholdMap = thresholdMap;
+    }
+
+    private static int[] BuildLumaTable(int factor) {
+        var table = new int[256];
+        for (var i = 0; i < 256; i++) {
+            table[i] = i * factor;
+        }
+        return table;
     }
 
     public bool IsBlack(int x, int y, bool invert) {
@@ -105,7 +116,7 @@ internal readonly struct QrGrayImage {
         var total = w * h;
         var stride = w + 1;
         var integral = ArrayPool<int>.Shared.Rent(stride * (h + 1));
-        Array.Clear(integral, 0, stride * (h + 1));
+        Array.Clear(integral, 0, stride);
 
         try {
             for (var y = 1; y <= h; y++) {
@@ -113,6 +124,7 @@ internal readonly struct QrGrayImage {
                 var row = (y - 1) * w;
                 var baseIdx = y * stride;
                 var prevIdx = (y - 1) * stride;
+                integral[baseIdx] = 0;
                 for (var x = 1; x <= w; x++) {
                     rowSum += Gray[row + (x - 1)];
                     integral[baseIdx + x] = integral[prevIdx + x] + rowSum;
@@ -175,7 +187,7 @@ internal readonly struct QrGrayImage {
         var h = Height;
         var stride = w + 1;
         var integral = ArrayPool<int>.Shared.Rent(stride * (h + 1));
-        Array.Clear(integral, 0, stride * (h + 1));
+        Array.Clear(integral, 0, stride);
 
         try {
             for (var y = 1; y <= h; y++) {
@@ -183,6 +195,7 @@ internal readonly struct QrGrayImage {
                 var row = (y - 1) * w;
                 var baseIdx = y * stride;
                 var prevIdx = (y - 1) * stride;
+                integral[baseIdx] = 0;
                 for (var x = 1; x <= w; x++) {
                     rowSum += Gray[row + (x - 1)];
                     integral[baseIdx + x] = integral[prevIdx + x] + rowSum;
@@ -342,18 +355,18 @@ internal readonly struct QrGrayImage {
             if (fmt == PixelFormat.Bgra32) {
                 for (var y = 0; y < outH; y++) {
                     if (shouldStop?.Invoke() == true) return false;
-                    var row = y * stride;
+                    var p = y * stride;
+                    var idx = y * outW;
                     for (var x = 0; x < outW; x++) {
-                        var p = row + x * 4;
                         var b = pixels[p + 0];
                         var g = pixels[p + 1];
                         var r = pixels[p + 2];
+                        p += 4;
 
-                        var lum = (r * 299 + g * 587 + b * 114 + 500) / 1000;
+                        var lum = (LumaR[r] + LumaG[g] + LumaB[b] + 500) / 1000;
                         var l = (byte)lum;
 
-                        var idx = y * outW + x;
-                        gray[idx] = l;
+                        gray[idx++] = l;
                         histogram[l]++;
 
                         if (l < min) min = l;
@@ -363,18 +376,18 @@ internal readonly struct QrGrayImage {
             } else {
                 for (var y = 0; y < outH; y++) {
                     if (shouldStop?.Invoke() == true) return false;
-                    var row = y * stride;
+                    var p = y * stride;
+                    var idx = y * outW;
                     for (var x = 0; x < outW; x++) {
-                        var p = row + x * 4;
                         var r = pixels[p + 0];
                         var g = pixels[p + 1];
                         var b = pixels[p + 2];
+                        p += 4;
 
-                        var lum = (r * 299 + g * 587 + b * 114 + 500) / 1000;
+                        var lum = (LumaR[r] + LumaG[g] + LumaB[b] + 500) / 1000;
                         var l = (byte)lum;
 
-                        var idx = y * outW + x;
-                        gray[idx] = l;
+                        gray[idx++] = l;
                         histogram[l]++;
 
                         if (l < min) min = l;
@@ -389,16 +402,18 @@ internal readonly struct QrGrayImage {
                 for (var y = 0; y < outH; y++) {
                     if (shouldStop?.Invoke() == true) return false;
                     var baseY = y * scale;
+                    var baseRow = baseY * stride;
+                    var rowIdx = y * outW;
                     for (var x = 0; x < outW; x++) {
                         var baseX = x * scale;
+                        var pBase = baseRow + baseX * 4;
 
                         var sumR = 0;
                         var sumG = 0;
                         var sumB = 0;
 
                         for (var dy = 0; dy < scale; dy++) {
-                            var row = (baseY + dy) * stride;
-                            var p = row + baseX * 4;
+                            var p = pBase + dy * stride;
 
                             for (var dx = 0; dx < scale; dx++) {
                                 sumB += pixels[p + 0];
@@ -411,8 +426,7 @@ internal readonly struct QrGrayImage {
                         var lum = (299 * sumR + 587 * sumG + 114 * sumB + 500 * blockCount) / (1000 * blockCount);
                         var l = (byte)lum;
 
-                        var idx = y * outW + x;
-                        gray[idx] = l;
+                        gray[rowIdx + x] = l;
                         histogram[l]++;
 
                         if (l < min) min = l;
@@ -423,16 +437,18 @@ internal readonly struct QrGrayImage {
                 for (var y = 0; y < outH; y++) {
                     if (shouldStop?.Invoke() == true) return false;
                     var baseY = y * scale;
+                    var baseRow = baseY * stride;
+                    var rowIdx = y * outW;
                     for (var x = 0; x < outW; x++) {
                         var baseX = x * scale;
+                        var pBase = baseRow + baseX * 4;
 
                         var sumR = 0;
                         var sumG = 0;
                         var sumB = 0;
 
                         for (var dy = 0; dy < scale; dy++) {
-                            var row = (baseY + dy) * stride;
-                            var p = row + baseX * 4;
+                            var p = pBase + dy * stride;
 
                             for (var dx = 0; dx < scale; dx++) {
                                 sumR += pixels[p + 0];
@@ -445,8 +461,7 @@ internal readonly struct QrGrayImage {
                         var lum = (299 * sumR + 587 * sumG + 114 * sumB + 500 * blockCount) / (1000 * blockCount);
                         var l = (byte)lum;
 
-                        var idx = y * outW + x;
-                        gray[idx] = l;
+                        gray[rowIdx + x] = l;
                         histogram[l]++;
 
                         if (l < min) min = l;
@@ -474,7 +489,7 @@ internal readonly struct QrGrayImage {
         var total = w * h;
         var stride = w + 1;
         var integral = ArrayPool<int>.Shared.Rent(stride * (h + 1));
-        Array.Clear(integral, 0, stride * (h + 1));
+        Array.Clear(integral, 0, stride);
 
         try {
             for (var y = 1; y <= h; y++) {
@@ -482,6 +497,7 @@ internal readonly struct QrGrayImage {
                 var row = (y - 1) * w;
                 var baseIdx = y * stride;
                 var prevIdx = (y - 1) * stride;
+                integral[baseIdx] = 0;
                 for (var x = 1; x <= w; x++) {
                     rowSum += Gray[row + (x - 1)];
                     integral[baseIdx + x] = integral[prevIdx + x] + rowSum;

@@ -9,6 +9,7 @@ using System.Runtime.Intrinsics;
 using System.Runtime.Intrinsics.X86;
 using System.Threading;
 using CodeGlyphX;
+using CodeGlyphX.Internal;
 
 namespace CodeGlyphX.Qr;
 
@@ -556,7 +557,7 @@ internal static partial class QrPixelDecoder {
             if (!QrGrayImage.TryCreate(pixels, width, height, stride, fmt, scale: scaleStart, settings.MinContrast, shouldStop, pool, out var baseImage)) {
                 return false;
             }
-            var seen = new HashSet<string>(StringComparer.Ordinal);
+            var seen = new HashSet<byte[]>(ByteArrayComparer.Instance);
             using var list = new PooledList<QrDecoded>(4);
 
             CollectAllFromImage(baseImage, settings, list, seen, accept, budget, pool);
@@ -621,24 +622,15 @@ internal static partial class QrPixelDecoder {
                         var th = y1 - y0;
                         if (tw < 48 || th < 48) continue;
 
-                        var tileStride = tw * 4;
-                        var len = tileStride * th;
-                        var buffer = ArrayPool<byte>.Shared.Rent(len);
-                        try {
-                            var tileSpan = buffer.AsSpan(0, len);
-                            for (var y = 0; y < th; y++) {
-                                if (tileBudget.IsExpired) break;
-                                var srcIndex = (y0 + y) * stride + x0 * 4;
-                                pixels.Slice(srcIndex, tileStride).CopyTo(tileSpan.Slice(y * tileStride, tileStride));
-                            }
-                            if (tileBudget.IsExpired) break;
+                        var startIndex = (long)y0 * stride + x0 * 4L;
+                        var requiredLen = (long)(th - 1) * stride + tw * 4L;
+                        if (startIndex < 0 || requiredLen <= 0) continue;
+                        if (startIndex + requiredLen > pixels.Length) continue;
+                        if (tileBudget.IsNearDeadline(120)) break;
 
-                            if (tileBudget.IsNearDeadline(120)) break;
-                            if (TryDecode(tileSpan, tw, th, tileStride, fmt, options, accept, cancellationToken, out var decoded, out _)) {
-                                AddResult(list, seen, decoded, accept);
-                            }
-                        } finally {
-                            ArrayPool<byte>.Shared.Return(buffer);
+                        var tileSpan = pixels.Slice((int)startIndex, (int)requiredLen);
+                        if (TryDecode(tileSpan, tw, th, stride, fmt, options, accept, cancellationToken, out var decoded, out _)) {
+                            AddResult(list, seen, decoded, accept);
                         }
                     }
                     if (tileBudget.IsExpired) break;

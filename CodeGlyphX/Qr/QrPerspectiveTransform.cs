@@ -58,6 +58,28 @@ internal readonly struct QrPerspectiveTransform {
         outY = (_a12 * x + _a22 * y + _a32) / denominator;
     }
 
+    public void GetRowParameters(
+        double xStart,
+        double y,
+        out double numX,
+        out double numY,
+        out double denom,
+        out double stepNumX,
+        out double stepNumY,
+        out double stepDenom) {
+        stepNumX = _a11;
+        stepNumY = _a12;
+        stepDenom = _a13;
+
+        var baseNumX = _a21 * y + _a31;
+        var baseNumY = _a22 * y + _a32;
+        var baseDenom = _a23 * y + _a33;
+
+        numX = _a11 * xStart + baseNumX;
+        numY = _a12 * xStart + baseNumY;
+        denom = _a13 * xStart + baseDenom;
+    }
+
     private QrPerspectiveTransform Times(QrPerspectiveTransform other) {
         return new QrPerspectiveTransform(
             _a11 * other._a11 + _a21 * other._a12 + _a31 * other._a13,
@@ -133,4 +155,3 @@ internal readonly struct QrPerspectiveTransform {
     }
 }
 #endif
-

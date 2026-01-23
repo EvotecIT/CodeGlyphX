@@ -36,24 +36,27 @@ internal static class QrEncoder {
         DrawCodewords(allCodewords, modules, isFunction);
 
         var bestMask = 0;
-        BitMatrix? bestModules = null;
+        var scratch = modules.Clone();
+        var bestModules = modules.Clone();
+        var hasBest = false;
         var bestPenalty = int.MaxValue;
 
         var startMask = forceMask ?? 0;
         var endMask = forceMask ?? 7;
         for (var mask = startMask; mask <= endMask; mask++) {
-            var temp = modules.Clone();
-            ApplyMask(mask, temp, isFunction);
-            DrawFormatBits(ecc, mask, temp, isFunction);
-            var penalty = QrMask.ComputePenalty(temp);
+            scratch.CopyFrom(modules);
+            ApplyMask(mask, scratch, isFunction);
+            DrawFormatBits(ecc, mask, scratch, isFunction);
+            var penalty = QrMask.ComputePenalty(scratch);
             if (penalty < bestPenalty) {
                 bestPenalty = penalty;
                 bestMask = mask;
-                bestModules = temp;
+                bestModules.CopyFrom(scratch);
+                hasBest = true;
             }
         }
 
-        if (bestModules is null) throw new InvalidOperationException("Failed to choose mask.");
+        if (!hasBest) throw new InvalidOperationException("Failed to choose mask.");
         return new CodeGlyphX.QrCode(version, ecc, bestMask, bestModules);
     }
 
@@ -98,24 +101,27 @@ internal static class QrEncoder {
         DrawCodewords(allCodewords, modules, isFunction);
 
         var bestMask = 0;
-        BitMatrix? bestModules = null;
+        var scratch = modules.Clone();
+        var bestModules = modules.Clone();
+        var hasBest = false;
         var bestPenalty = int.MaxValue;
 
         var startMask = forceMask ?? 0;
         var endMask = forceMask ?? 7;
         for (var mask = startMask; mask <= endMask; mask++) {
-            var temp = modules.Clone();
-            ApplyMask(mask, temp, isFunction);
-            DrawFormatBits(ecc, mask, temp, isFunction);
-            var penalty = QrMask.ComputePenalty(temp);
+            scratch.CopyFrom(modules);
+            ApplyMask(mask, scratch, isFunction);
+            DrawFormatBits(ecc, mask, scratch, isFunction);
+            var penalty = QrMask.ComputePenalty(scratch);
             if (penalty < bestPenalty) {
                 bestPenalty = penalty;
                 bestMask = mask;
-                bestModules = temp;
+                bestModules.CopyFrom(scratch);
+                hasBest = true;
             }
         }
 
-        if (bestModules is null) throw new InvalidOperationException("Failed to choose mask.");
+        if (!hasBest) throw new InvalidOperationException("Failed to choose mask.");
         return new CodeGlyphX.QrCode(version, ecc, bestMask, bestModules);
     }
 

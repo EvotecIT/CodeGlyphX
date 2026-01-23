@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using CodeGlyphX.Rendering;
 
 namespace CodeGlyphX.Rendering.Xbm;
 
@@ -11,10 +12,31 @@ public static class XbmWriter {
     /// Writes an XBM string from an RGBA buffer.
     /// </summary>
     public static string WriteRgba32(int width, int height, ReadOnlySpan<byte> rgba, int stride, string? name = null) {
+        return WriteRgba32Core(width, height, rgba, stride, rowOffset: 0, rowStride: stride, name, nameof(rgba), "RGBA buffer is too small.");
+    }
+
+    /// <summary>
+    /// Writes an XBM string from a PNG scanline buffer (filter byte per row).
+    /// </summary>
+    public static string WriteRgba32Scanlines(int width, int height, ReadOnlySpan<byte> scanlines, int stride, string? name = null) {
+        return WriteRgba32Core(width, height, scanlines, stride, rowOffset: 1, rowStride: stride + 1, name, nameof(scanlines), "Scanline buffer is too small.");
+    }
+
+    private static string WriteRgba32Core(
+        int width,
+        int height,
+        ReadOnlySpan<byte> rgba,
+        int stride,
+        int rowOffset,
+        int rowStride,
+        string? name,
+        string bufferName,
+        string bufferMessage) {
         if (width <= 0) throw new ArgumentOutOfRangeException(nameof(width));
         if (height <= 0) throw new ArgumentOutOfRangeException(nameof(height));
         if (stride < width * 4) throw new ArgumentOutOfRangeException(nameof(stride));
-        if (rgba.Length < (height - 1) * stride + width * 4) throw new ArgumentException("RGBA buffer is too small.", nameof(rgba));
+        if (rowStride < rowOffset + stride) throw new ArgumentOutOfRangeException(nameof(rowStride));
+        if (rgba.Length < (height - 1) * rowStride + rowOffset + width * 4) throw new ArgumentException(bufferMessage, bufferName);
 
         var safeName = SanitizeName(string.IsNullOrWhiteSpace(name) ? "codeglyphx" : name!);
         var rowBytes = (width + 7) / 8;
@@ -26,7 +48,7 @@ public static class XbmWriter {
         var totalBytes = rowBytes * height;
         var count = 0;
         for (var y = 0; y < height; y++) {
-            var srcRow = y * stride;
+            var srcRow = y * rowStride + rowOffset;
             for (var bx = 0; bx < rowBytes; bx++) {
                 byte value = 0;
                 var baseX = bx * 8;
@@ -39,9 +61,8 @@ public static class XbmWriter {
                     var b = rgba[p + 2];
                     var a = rgba[p + 3];
                     if (a == 0) continue;
-                    var lum = (r * 299 + g * 587 + b * 114 + 500) / 1000;
-                    var isBlack = lum <= 127;
-                    if (isBlack) {
+                    var lum = LumaTables.Luma(r, g, b);
+                    if (lum <= 127) {
                         value |= (byte)(1 << bit);
                     }
                 }

@@ -14,8 +14,7 @@ public static class MatrixJpegRenderer {
     /// </summary>
     public static byte[] Render(BitMatrix modules, MatrixPngRenderOptions opts, int quality = 85) {
         var scanlines = MatrixPngRenderer.RenderScanlines(modules, opts, out var width, out var height, out var stride);
-        var rgba = ExtractRgba(scanlines, height, stride);
-        return JpegWriter.WriteRgba(width, height, rgba, stride, quality);
+        return JpegWriter.WriteRgbaScanlines(width, height, scanlines, stride, quality);
     }
 
     /// <summary>
@@ -27,8 +26,7 @@ public static class MatrixJpegRenderer {
     /// <param name="quality">JPEG quality (1-100).</param>
     public static void RenderToStream(BitMatrix modules, MatrixPngRenderOptions opts, Stream stream, int quality = 85) {
         var scanlines = MatrixPngRenderer.RenderScanlines(modules, opts, out var width, out var height, out var stride);
-        var rgba = ExtractRgba(scanlines, height, stride);
-        JpegWriter.WriteRgba(stream, width, height, rgba, stride, quality);
+        JpegWriter.WriteRgbaScanlines(stream, width, height, scanlines, stride, quality);
     }
 
     /// <summary>
@@ -58,11 +56,4 @@ public static class MatrixJpegRenderer {
         return RenderIO.WriteBinary(directory, fileName, jpeg);
     }
 
-    private static byte[] ExtractRgba(byte[] scanlines, int height, int stride) {
-        var rgba = new byte[height * stride];
-        for (var y = 0; y < height; y++) {
-            Buffer.BlockCopy(scanlines, y * (stride + 1) + 1, rgba, y * stride, stride);
-        }
-        return rgba;
-    }
 }

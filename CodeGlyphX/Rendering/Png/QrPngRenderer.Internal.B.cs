@@ -186,13 +186,14 @@ public static partial class QrPngRenderer {
         if (rx <= 0 || ry <= 0) return;
         var cx = x + rx;
         var cy = y + ry;
+        var rowStride = stride + 1;
 
         for (var py = y0; py < y1; py++) {
             var dy = (py + 0.5 - cy) / ry;
-            for (var px = x0; px < x1; px++) {
+            var p = py * rowStride + 1 + x0 * 4;
+            for (var px = x0; px < x1; px++, p += 4) {
                 var dx = (px + 0.5 - cx) / rx;
                 if (dx * dx + dy * dy > 1.0) continue;
-                var p = py * (stride + 1) + 1 + px * 4;
                 scanlines[p + 0] = color.R;
                 scanlines[p + 1] = color.G;
                 scanlines[p + 2] = color.B;
@@ -223,13 +224,14 @@ public static partial class QrPngRenderer {
         if (rx <= 0 || ry <= 0) return;
         var cx = x + rx;
         var cy = y + ry;
+        var rowStride = stride + 1;
 
         for (var py = y0; py < y1; py++) {
             var dy = Math.Abs(py + 0.5 - cy) / ry;
-            for (var px = x0; px < x1; px++) {
+            var p = py * rowStride + 1 + x0 * 4;
+            for (var px = x0; px < x1; px++, p += 4) {
                 var dx = Math.Abs(px + 0.5 - cx) / rx;
                 if (dx + dy > 1.0) continue;
-                var p = py * (stride + 1) + 1 + px * 4;
                 scanlines[p + 0] = color.R;
                 scanlines[p + 1] = color.G;
                 scanlines[p + 2] = color.B;
@@ -260,14 +262,16 @@ public static partial class QrPngRenderer {
         if (rx <= 0 || ry <= 0) return;
         var cx = x + rx;
         var cy = y + ry;
+        var rowStride = stride + 1;
+        var gradientInfo = new GradientInfo(gradient, x1 - x0 - 1, y1 - y0 - 1);
 
         for (var py = y0; py < y1; py++) {
             var dy = (py + 0.5 - cy) / ry;
-            for (var px = x0; px < x1; px++) {
+            var p = py * rowStride + 1 + x0 * 4;
+            for (var px = x0; px < x1; px++, p += 4) {
                 var dx = (px + 0.5 - cx) / rx;
                 if (dx * dx + dy * dy > 1.0) continue;
-                var color = GetGradientColorInBox(gradient, px, py, x0, y0, x1 - x0, y1 - y0);
-                var p = py * (stride + 1) + 1 + px * 4;
+                var color = GetGradientColorInBox(gradientInfo, px, py, x0, y0);
                 scanlines[p + 0] = color.R;
                 scanlines[p + 1] = color.G;
                 scanlines[p + 2] = color.B;
@@ -334,14 +338,16 @@ public static partial class QrPngRenderer {
         if (rx <= 0 || ry <= 0) return;
         var cx = x + rx;
         var cy = y + ry;
+        var rowStride = stride + 1;
+        var gradientInfo = new GradientInfo(gradient, x1 - x0 - 1, y1 - y0 - 1);
 
         for (var py = y0; py < y1; py++) {
             var dy = Math.Abs(py + 0.5 - cy) / ry;
-            for (var px = x0; px < x1; px++) {
+            var p = py * rowStride + 1 + x0 * 4;
+            for (var px = x0; px < x1; px++, p += 4) {
                 var dx = Math.Abs(px + 0.5 - cx) / rx;
                 if (dx + dy > 1.0) continue;
-                var color = GetGradientColorInBox(gradient, px, py, x0, y0, x1 - x0, y1 - y0);
-                var p = py * (stride + 1) + 1 + px * 4;
+                var color = GetGradientColorInBox(gradientInfo, px, py, x0, y0);
                 scanlines[p + 0] = color.R;
                 scanlines[p + 1] = color.G;
                 scanlines[p + 2] = color.B;
@@ -372,15 +378,16 @@ public static partial class QrPngRenderer {
         if (rx <= 0 || ry <= 0) return;
         var cx = x + rx;
         var cy = y + ry;
+        var rowStride = stride + 1;
 
         for (var py = y0; py < y1; py++) {
             var dy = Math.Abs(py + 0.5 - cy) / ry;
             var dy2 = dy * dy;
-            for (var px = x0; px < x1; px++) {
+            var p = py * rowStride + 1 + x0 * 4;
+            for (var px = x0; px < x1; px++, p += 4) {
                 var dx = Math.Abs(px + 0.5 - cx) / rx;
                 var dx2 = dx * dx;
                 if (dx2 * dx2 + dy2 * dy2 > 1.0) continue;
-                var p = py * (stride + 1) + 1 + px * 4;
                 scanlines[p + 0] = color.R;
                 scanlines[p + 1] = color.G;
                 scanlines[p + 2] = color.B;
@@ -411,16 +418,18 @@ public static partial class QrPngRenderer {
         if (rx <= 0 || ry <= 0) return;
         var cx = x + rx;
         var cy = y + ry;
+        var rowStride = stride + 1;
+        var gradientInfo = new GradientInfo(gradient, x1 - x0 - 1, y1 - y0 - 1);
 
         for (var py = y0; py < y1; py++) {
             var dy = Math.Abs(py + 0.5 - cy) / ry;
             var dy2 = dy * dy;
-            for (var px = x0; px < x1; px++) {
+            var p = py * rowStride + 1 + x0 * 4;
+            for (var px = x0; px < x1; px++, p += 4) {
                 var dx = Math.Abs(px + 0.5 - cx) / rx;
                 var dx2 = dx * dx;
                 if (dx2 * dx2 + dy2 * dy2 > 1.0) continue;
-                var color = GetGradientColorInBox(gradient, px, py, x0, y0, x1 - x0, y1 - y0);
-                var p = py * (stride + 1) + 1 + px * 4;
+                var color = GetGradientColorInBox(gradientInfo, px, py, x0, y0);
                 scanlines[p + 0] = color.R;
                 scanlines[p + 1] = color.G;
                 scanlines[p + 2] = color.B;
@@ -485,18 +494,20 @@ public static partial class QrPngRenderer {
         var y0 = Math.Max(0, y);
         var x1 = Math.Min(widthPx, x + w);
         var y1 = Math.Min(heightPx, y + h);
+        var rowStride = stride + 1;
+        var gradientInfo = new GradientInfo(gradient, x1 - x0 - 1, y1 - y0 - 1);
 
         for (var py = y0; py < y1; py++) {
             var localY = py - baseY;
-            for (var px = x0; px < x1; px++) {
+            var p = py * rowStride + 1 + x0 * 4;
+            for (var px = x0; px < x1; px++, p += 4) {
                 var localX = px - baseX;
                 var inside = InsideCircleLocal(localX, localY, c0, r2) ||
                              InsideCircleLocal(localX, localY, c1, r2) ||
                              InsideCircleLocal(localX, localY, c0, r2, c1) ||
                              InsideCircleLocal(localX, localY, c1, r2, c0);
                 if (!inside) continue;
-                var color = GetGradientColorInBox(gradient, px, py, x0, y0, x1 - x0, y1 - y0);
-                var p = py * (stride + 1) + 1 + px * 4;
+                var color = GetGradientColorInBox(gradientInfo, px, py, x0, y0);
                 scanlines[p + 0] = color.R;
                 scanlines[p + 1] = color.G;
                 scanlines[p + 2] = color.B;
@@ -582,13 +593,14 @@ public static partial class QrPngRenderer {
         var maxR = Math.Min((x1 - x0) / 2, (y1 - y0) / 2);
         if (r > maxR) r = maxR;
         var r2 = r * r;
+        var rowStride = stride + 1;
 
         for (var py = y0; py < y1; py++) {
-            for (var px = x0; px < x1; px++) {
+            var p = py * rowStride + 1 + x0 * 4;
+            for (var px = x0; px < x1; px++, p += 4) {
                 if (r > 0 && !InsideRounded(px, py, x0, y0, x1 - 1, y1 - 1, r, r2)) {
                     continue;
                 }
-                var p = py * (stride + 1) + 1 + px * 4;
                 scanlines[p + 0] = color.R;
                 scanlines[p + 1] = color.G;
                 scanlines[p + 2] = color.B;
@@ -619,14 +631,16 @@ public static partial class QrPngRenderer {
         var maxR = Math.Min((x1 - x0) / 2, (y1 - y0) / 2);
         if (r > maxR) r = maxR;
         var r2 = r * r;
+        var rowStride = stride + 1;
+        var gradientInfo = new GradientInfo(gradient, x1 - x0 - 1, y1 - y0 - 1);
 
         for (var py = y0; py < y1; py++) {
-            for (var px = x0; px < x1; px++) {
+            var p = py * rowStride + 1 + x0 * 4;
+            for (var px = x0; px < x1; px++, p += 4) {
                 if (r > 0 && !InsideRounded(px, py, x0, y0, x1 - 1, y1 - 1, r, r2)) {
                     continue;
                 }
-                var color = GetGradientColorInBox(gradient, px, py, x0, y0, x1 - x0, y1 - y0);
-                var p = py * (stride + 1) + 1 + px * 4;
+                var color = GetGradientColorInBox(gradientInfo, px, py, x0, y0);
                 scanlines[p + 0] = color.R;
                 scanlines[p + 1] = color.G;
                 scanlines[p + 2] = color.B;

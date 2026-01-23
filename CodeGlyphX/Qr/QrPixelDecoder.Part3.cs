@@ -9,6 +9,7 @@ using System.Runtime.Intrinsics;
 using System.Runtime.Intrinsics.X86;
 using System.Threading;
 using CodeGlyphX;
+using CodeGlyphX.Internal;
 
 namespace CodeGlyphX.Qr;
 
@@ -31,7 +32,7 @@ internal static partial class QrPixelDecoder {
         int scale,
         QrProfileSettings settings,
         PooledList<QrDecoded> list,
-        HashSet<string> seen,
+        HashSet<byte[]> seen,
         Func<QrDecoded, bool>? accept,
         DecodeBudget budget,
         QrGrayImagePool? pool) {
@@ -88,7 +89,7 @@ internal static partial class QrPixelDecoder {
         QrGrayImage image,
         bool invert,
         PooledList<QrDecoded> results,
-        HashSet<string> seen,
+        HashSet<byte[]> seen,
         Func<QrDecoded, bool>? accept,
         List<QrFinderPatternDetector.FinderPattern> candidates,
         DecodeBudget budget,
@@ -125,7 +126,7 @@ internal static partial class QrPixelDecoder {
         bool invert,
         List<QrFinderPatternDetector.FinderPattern> candidates,
         PooledList<QrDecoded> results,
-        HashSet<string> seen,
+        HashSet<byte[]> seen,
         Func<QrDecoded, bool>? accept,
         DecodeBudget budget,
         bool aggressive,
@@ -185,7 +186,7 @@ internal static partial class QrPixelDecoder {
         QrGrayImage image,
         bool invert,
         PooledList<QrDecoded> results,
-        HashSet<string> seen,
+        HashSet<byte[]> seen,
         Func<QrDecoded, bool>? accept,
         DecodeBudget budget) {
         if (budget.IsExpired) return;
@@ -216,10 +217,9 @@ internal static partial class QrPixelDecoder {
         }
     }
 
-    private static void AddResult(PooledList<QrDecoded> results, HashSet<string> seen, QrDecoded decoded, Func<QrDecoded, bool>? accept) {
+    private static void AddResult(PooledList<QrDecoded> results, HashSet<byte[]> seen, QrDecoded decoded, Func<QrDecoded, bool>? accept) {
         if (accept is not null && !accept(decoded)) return;
-        var key = Convert.ToBase64String(decoded.Bytes);
-        if (!seen.Add(key)) return;
+        if (!seen.Add(decoded.Bytes)) return;
         results.Add(decoded);
     }
 
@@ -286,9 +286,11 @@ internal static partial class QrPixelDecoder {
             maxCandidates = aggressive ? 36 : 24;
         }
         QrFinderPatternDetector.FindCandidates(image, invert, candidates, aggressive, shouldStop, rowStepOverride, maxCandidates, allowFullScan: !tightBudget, requireDiagonalCheck: !tightBudget);
+        var candidatesSorted = false;
         if (budget.Enabled && candidates.Count > 64) {
             candidates.Sort(static (a, b) => b.Count.CompareTo(a.Count));
             candidates.RemoveRange(64, candidates.Count - 64);
+            candidatesSorted = true;
         }
         if (tightBudget && candidates.Count > 30) {
             diagnostics = new QrPixelDecodeDiagnostics(scale, threshold, invert, candidates.Count, candidateTriplesTried: 0, dimension: 0,
@@ -305,7 +307,7 @@ internal static partial class QrPixelDecoder {
                 diagnostics = Better(diagnostics, diagBounds);
                 return false;
             }
-            if (TryDecodeFromFinderCandidates(scale, threshold, image, invert, candidates, accept, aggressive, budget, out result, out var diagF)) {
+            if (TryDecodeFromFinderCandidates(scale, threshold, image, invert, candidates, candidatesSorted, accept, aggressive, budget, out result, out var diagF)) {
                 diagnostics = diagF;
                 return true;
             }
