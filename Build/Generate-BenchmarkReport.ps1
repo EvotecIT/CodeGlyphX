@@ -471,6 +471,7 @@ $lines.Add("- CodeGlyphX Alloc vs Fastest: CodeGlyphX allocated divided by the a
 $lines.Add("- Rating: good/ok/bad based on time + allocation ratios (good <=1.1x and <=1.25x alloc, ok <=1.5x and <=2.0x alloc).")
 $lines.Add("- Δ lines in comparison tables show vendor ratios vs CodeGlyphX (time / alloc).")
 $lines.Add("- Quick runs use fewer iterations for fast feedback; Full runs use BenchmarkDotNet defaults and are recommended for publishing.")
+$lines.Add("- Benchmarks run under controlled, ideal conditions on a single machine; treat results as directional, not definitive.")
 $lines.Add("Notes:")
 $lines.Add("- $runModeLabel")
 $lines.Add("- Comparisons target PNG output and include encode+render (not encode-only).")

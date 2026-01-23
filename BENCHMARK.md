@@ -15,7 +15,7 @@
 <!-- BENCHMARK:WINDOWS:QUICK:START -->
 ## WINDOWS
 
-Updated: 2026-01-23 17:56:11 UTC
+Updated: 2026-01-23 18:16:07 UTC
 Framework: net8.0
 Configuration: Release
 Artifacts: Build\BenchmarkResults\windows-20260123-172458
@@ -27,6 +27,7 @@ How to read:
 - Rating: good/ok/bad based on time + allocation ratios (good <=1.1x and <=1.25x alloc, ok <=1.5x and <=2.0x alloc).
 - Δ lines in comparison tables show vendor ratios vs CodeGlyphX (time / alloc).
 - Quick runs use fewer iterations for fast feedback; Full runs use BenchmarkDotNet defaults and are recommended for publishing.
+- Benchmarks run under controlled, ideal conditions on a single machine; treat results as directional, not definitive.
 Notes:
 - Run mode: Quick (warmupCount=1, iterationCount=3, invocationCount=1).
 - Comparisons target PNG output and include encode+render (not encode-only).
