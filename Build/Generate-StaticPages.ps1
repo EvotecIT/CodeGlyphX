@@ -4,9 +4,9 @@ param(
     [switch]$Force
 )
 
-# Default CSS path
+# Default CSS path (app.css contains all common styles)
 if (-not $CssPath) {
-    $CssPath = "/css/api-docs.css"
+    $CssPath = "/css/app.css"
 }
 
 $ErrorActionPreference = "Stop"
@@ -57,8 +57,12 @@ function New-StaticPage {
         [string]$Canonical = "",
         [string]$OpenGraph = "",
         [string]$StructuredData = "",
-        [string]$ExtraScripts = ""
+        [string]$ExtraScripts = "",
+        [string]$PageCssPath = ""
     )
+
+    # Use page-specific CSS if provided, otherwise use script-level default
+    $effectiveCssPath = if ($PageCssPath) { $PageCssPath } else { $CssPath }
 
     $bodyClassAttr = if ($BodyClass) { " class=`"$BodyClass`"" } else { "" }
     $extraCssLink = if ($ExtraCss) { "`n  <link rel=`"stylesheet`" href=`"$ExtraCss`" />" } else { "" }
@@ -78,7 +82,7 @@ $commonJs
     $html = $baseTemplate
     $html = $html -replace '{{TITLE}}', $Title
     $html = $html -replace '{{DESCRIPTION}}', $Description
-    $html = $html -replace '{{CSS_PATH}}', $CssPath
+    $html = $html -replace '{{CSS_PATH}}', $effectiveCssPath
     $html = $html -replace '{{EXTRA_CSS}}', $extraCssLink
     $html = $html -replace '{{CANONICAL}}', $canonicalLink
     $html = $html -replace '{{OPENGRAPH}}', $OpenGraph
@@ -127,6 +131,7 @@ New-StaticPage `
     -Description "CodeGlyphX documentation - learn how to generate and decode QR codes, barcodes, and 2D matrix codes in .NET." `
     -Content $docsContent `
     -OutputFile (Join-Path $docsDir "index.html") `
+    -PageCssPath "/css/api-docs.css" `
     -ExtraScripts $docsSidebarJs
 
 # ============================================================================
