@@ -27,22 +27,21 @@ internal static partial class QrPixelDecoder {
         var gray = image.Gray;
         var thresholdMap = image.ThresholdMap;
         var threshold = image.Threshold;
+        var useMap = thresholdMap is not null;
+        var invertSense = invert ? 1 : 0;
+        var compareThreshold = threshold;
 
         try {
-            bool IsBlackAt(int idx) {
-                if (thresholdMap is null) {
-                    return invert ? gray[idx] > threshold : gray[idx] <= threshold;
-                }
-                return invert ? gray[idx] > thresholdMap[idx] : gray[idx] <= thresholdMap[idx];
-            }
-
             for (var y = 0; y < h; y++) {
                 if (shouldStop?.Invoke() == true) break;
                 var row = y * w;
                 for (var x = 0; x < w; x++) {
                     var idx = row + x;
                     if (visited[idx]) continue;
-                    if (!IsBlackAt(idx)) {
+                    var lum = gray[idx];
+                    var t = useMap ? thresholdMap![idx] : compareThreshold;
+                    var isBlack = invertSense == 0 ? lum <= t : lum > t;
+                    if (!isBlack) {
                         visited[idx] = true;
                         continue;
                     }
@@ -61,7 +60,10 @@ internal static partial class QrPixelDecoder {
                         if (visited[cur]) continue;
                         visited[cur] = true;
 
-                        if (!IsBlackAt(cur)) continue;
+                        var curLum = gray[cur];
+                        var curT = useMap ? thresholdMap![cur] : compareThreshold;
+                        var curBlack = invertSense == 0 ? curLum <= curT : curLum > curT;
+                        if (!curBlack) continue;
 
                         var cy = cur / w;
                         var cx = cur - cy * w;
