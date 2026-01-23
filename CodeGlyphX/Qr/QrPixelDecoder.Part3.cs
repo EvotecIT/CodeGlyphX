@@ -131,12 +131,44 @@ internal static partial class QrPixelDecoder {
         DecodeBudget budget,
         bool aggressive,
         bool candidatesSorted) {
-        if (!candidatesSorted) {
-            candidates.Sort(static (a, b) => b.Count.CompareTo(a.Count));
+        var totalCandidates = candidates.Count;
+        if (candidatesSorted || totalCandidates <= 10) {
+            if (!candidatesSorted) {
+                candidates.Sort(static (a, b) => b.Count.CompareTo(a.Count));
+            }
+            CollectFromFinderCandidatesCore(image, invert, CollectionsMarshal.AsSpan(candidates), totalCandidates, results, seen, accept, budget, aggressive);
+            return;
         }
-        var candidateSpan = CollectionsMarshal.AsSpan(candidates);
-        var candidateCount = candidateSpan.Length;
-        var n = Math.Min(candidateCount, 10);
+
+        Span<QrFinderPatternDetector.FinderPattern> top = stackalloc QrFinderPatternDetector.FinderPattern[10];
+        var topCount = 0;
+        foreach (var candidate in candidates) {
+            var count = candidate.Count;
+            if (topCount == 10 && count <= top[topCount - 1].Count) continue;
+            var insertPos = topCount < 10 ? topCount : 9;
+            while (insertPos > 0 && count > top[insertPos - 1].Count) {
+                if (insertPos < 10) {
+                    top[insertPos] = top[insertPos - 1];
+                }
+                insertPos--;
+            }
+            top[insertPos] = candidate;
+            if (topCount < 10) topCount++;
+        }
+        CollectFromFinderCandidatesCore(image, invert, top.Slice(0, topCount), totalCandidates, results, seen, accept, budget, aggressive);
+    }
+
+    private static void CollectFromFinderCandidatesCore(
+        QrGrayImage image,
+        bool invert,
+        ReadOnlySpan<QrFinderPatternDetector.FinderPattern> candidateSpan,
+        int totalCandidates,
+        PooledList<QrDecoded> results,
+        HashSet<byte[]> seen,
+        Func<QrDecoded, bool>? accept,
+        DecodeBudget budget,
+        bool aggressive) {
+        var n = Math.Min(candidateSpan.Length, 10);
         var triedTriples = 0;
         var maxTriples = 48;
         if (budget.Enabled) {
@@ -168,7 +200,7 @@ internal static partial class QrPixelDecoder {
                             tl,
                             tr,
                             bl,
-                            candidateCount,
+                            totalCandidates,
                             triedTriples,
                             accept,
                             aggressive,
