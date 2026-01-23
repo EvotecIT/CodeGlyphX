@@ -10,7 +10,7 @@ jobs:
   build-test:
     name: Build & Test (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 20
+    timeout-minutes: 10
     strategy:
       fail-fast: false
       matrix:
@@ -55,16 +55,7 @@ jobs:
         run: dotnet build CodeGlyphX.Tests/CodeGlyphX.Tests.csproj -c Release -f net8.0 --no-restore
 
       - name: Test (net8.0)
-        if: runner.os != 'Linux'
         run: dotnet test CodeGlyphX.Tests/CodeGlyphX.Tests.csproj -c Release -f net8.0 --no-restore --no-build
-
-      - name: Test (net8.0)
-        if: runner.os == 'Linux' && github.event_name == 'pull_request'
-        run: dotnet test CodeGlyphX.Tests/CodeGlyphX.Tests.csproj -c Release -f net8.0 --no-restore --no-build
-
-      - name: Test (net8.0 + coverage)
-        if: runner.os == 'Linux' && github.event_name != 'pull_request'
-        run: dotnet test CodeGlyphX.Tests/CodeGlyphX.Tests.csproj -c Release -f net8.0 --no-restore --no-build --collect:"XPlat Code Coverage"
 
       - name: Upload coverage to Codecov
         if: runner.os == 'Linux' && github.event_name != 'pull_request'
@@ -87,3 +78,33 @@ jobs:
       - name: Build Core (net472)
         if: runner.os == 'Windows'
         run: dotnet build CodeGlyphX/CodeGlyphX.csproj -c Release -f net472 --no-restore
+
+  coverage:
+    name: Coverage (linux)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    if: github.event_name != 'pull_request'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore Tests
+        run: dotnet restore CodeGlyphX.Tests/CodeGlyphX.Tests.csproj
+
+      - name: Build Tests (net8.0)
+        run: dotnet build CodeGlyphX.Tests/CodeGlyphX.Tests.csproj -c Release -f net8.0 --no-restore
+
+      - name: Test (net8.0 + coverage)
+        run: dotnet test CodeGlyphX.Tests/CodeGlyphX.Tests.csproj -c Release -f net8.0 --no-restore --no-build --collect:"XPlat Code Coverage"
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          files: ./CodeGlyphX.Tests/TestResults/**/coverage.cobertura.xml
+          fail_ci_if_error: false
+          verbose: true
