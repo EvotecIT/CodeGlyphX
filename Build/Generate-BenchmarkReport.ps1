@@ -173,6 +173,22 @@ function Get-RowValue([object]$row, [string]$name) {
     return $null
 }
 
+function Get-EntryValue([object]$row, [string]$name, [string]$fallback) {
+    if (-not $row) { return $null }
+    $value = Get-RowValue $row $name
+    if (-not [string]::IsNullOrWhiteSpace($value)) { return $value }
+    if ($row -is [hashtable]) {
+        if ($row.ContainsKey($fallback)) { return $row[$fallback] }
+        $lower = $fallback.ToLowerInvariant()
+        if ($row.ContainsKey($lower)) { return $row[$lower] }
+    }
+    $prop = $row.PSObject.Properties[$fallback]
+    if ($prop) { return $prop.Value }
+    $lowerProp = $row.PSObject.Properties[$fallback.ToLowerInvariant()]
+    if ($lowerProp) { return $lowerProp.Value }
+    return $null
+}
+
 function Import-BenchmarkCsv([string]$path) {
     $delimiter = Get-CsvDelimiter $path
     $rows = Import-Csv -Path $path -Delimiter $delimiter -Encoding UTF8
@@ -269,8 +285,8 @@ function Format-MeanAllocCell([object]$entry, [string]$deltaText = $null) {
 
 function Format-DeltaText([object]$vendorRow, [object]$cgxRow) {
     if (-not $vendorRow -or -not $cgxRow) { return "" }
-    $vendorMean = Normalize-MeanText (Get-RowValue $vendorRow "Mean")
-    $cgxMean = Normalize-MeanText (Get-RowValue $cgxRow "Mean")
+    $vendorMean = Normalize-MeanText (Get-EntryValue $vendorRow "Mean" "mean")
+    $cgxMean = Normalize-MeanText (Get-EntryValue $cgxRow "Mean" "mean")
     $vendorNs = $null
     $cgxNs = $null
     [void](Try-Parse-Mean $vendorMean ([ref]$vendorNs))
@@ -279,8 +295,8 @@ function Format-DeltaText([object]$vendorRow, [object]$cgxRow) {
     if ($vendorNs -and $cgxNs) {
         $timeRatio = [math]::Round(($vendorNs / $cgxNs), 2)
     }
-    $vendorAlloc = Parse-AllocatedBytes (Get-RowValue $vendorRow "Allocated")
-    $cgxAlloc = Parse-AllocatedBytes (Get-RowValue $cgxRow "Allocated")
+    $vendorAlloc = Parse-AllocatedBytes (Get-EntryValue $vendorRow "Allocated" "allocated")
+    $cgxAlloc = Parse-AllocatedBytes (Get-EntryValue $cgxRow "Allocated" "allocated")
     $allocRatio = $null
     if ($vendorAlloc -and $cgxAlloc) {
         $allocRatio = [math]::Round(($vendorAlloc / $cgxAlloc), 2)
@@ -450,8 +466,8 @@ $lines.Add("Artifacts: $ArtifactsPath")
 $lines.Add("How to read:")
 $lines.Add("- Mean: average time per operation. Lower is better.")
 $lines.Add("- Allocated: managed memory allocated per operation. Lower is better.")
-$lines.Add("- CodeGlyphX vs Fastest: CodeGlyphX mean divided by the fastest mean for that scenario. 1 x means CodeGlyphX is fastest; 1.5 x means ~50% slower.")
-$lines.Add("- CodeGlyphX Alloc vs Fastest: CodeGlyphX allocated divided by the fastest allocation for that scenario. 1 x means CodeGlyphX allocates the least; higher is more allocations.")
+$lines.Add("- CodeGlyphX vs Fastest: CodeGlyphX mean divided by the fastest mean for that scenario. 1 x (fastest) means CodeGlyphX is fastest; 1.5 x means ~50% slower.")
+$lines.Add("- CodeGlyphX Alloc vs Fastest: CodeGlyphX allocated divided by the allocation of the fastest-time vendor for that scenario. Lower than 1 x means fewer allocations than the fastest-time vendor.")
 $lines.Add("- Rating: good/ok/bad based on time + allocation ratios (good <=1.1x and <=1.25x alloc, ok <=1.5x and <=2.0x alloc).")
 $lines.Add("- Δ lines in comparison tables show vendor ratios vs CodeGlyphX (time / alloc).")
 $lines.Add("- Quick runs use fewer iterations for fast feedback; Full runs use BenchmarkDotNet defaults and are recommended for publishing.")
@@ -540,6 +556,7 @@ if ($compareFiles.Count -gt 0) {
             if ($cgx -and $cgx.meanNs) {
                 $ratioValue = [math]::Round(($cgx.meanNs / $fastest.meanNs), 2)
                 $ratioText = "$ratioValue x"
+                if ($fastestVendor -eq "CodeGlyphX") { $ratioText = "1 x (fastest)" }
                 $cgxMean = $cgx.mean
                 $cgxAlloc = $cgx.allocated
                 $fastestAllocBytes = Parse-AllocatedBytes $fastest.allocated
