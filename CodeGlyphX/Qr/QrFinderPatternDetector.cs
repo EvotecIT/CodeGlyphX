@@ -3,6 +3,7 @@ using System;
 using System.Buffers;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace CodeGlyphX.Qr;
 
@@ -269,8 +270,36 @@ internal static class QrFinderPatternDetector {
         topRight = default;
         bottomLeft = default;
 
-        candidates.Sort(static (a, b) => b.Count.CompareTo(a.Count));
-        var n = Math.Min(candidates.Count, 10);
+        const int maxCandidates = 10;
+        if (candidates.Count <= maxCandidates) {
+            return TrySelectBestThreeCore(CollectionsMarshal.AsSpan(candidates), out topLeft, out topRight, out bottomLeft);
+        }
+
+        Span<FinderPattern> top = stackalloc FinderPattern[maxCandidates];
+        var topCount = 0;
+        foreach (var candidate in candidates) {
+            var count = candidate.Count;
+            if (topCount == maxCandidates && count <= top[topCount - 1].Count) continue;
+            var insertPos = topCount < maxCandidates ? topCount : maxCandidates - 1;
+            while (insertPos > 0 && count > top[insertPos - 1].Count) {
+                if (insertPos < maxCandidates) {
+                    top[insertPos] = top[insertPos - 1];
+                }
+                insertPos--;
+            }
+            top[insertPos] = candidate;
+            if (topCount < maxCandidates) topCount++;
+        }
+
+        return TrySelectBestThreeCore(top.Slice(0, topCount), out topLeft, out topRight, out bottomLeft);
+    }
+
+    private static bool TrySelectBestThreeCore(ReadOnlySpan<FinderPattern> source, out FinderPattern topLeft, out FinderPattern topRight, out FinderPattern bottomLeft) {
+        topLeft = default;
+        topRight = default;
+        bottomLeft = default;
+
+        var n = source.Length;
 
         var bestScore = double.NegativeInfinity;
         var bestA = default(FinderPattern);
@@ -280,9 +309,9 @@ internal static class QrFinderPatternDetector {
         for (var i = 0; i < n - 2; i++) {
             for (var j = i + 1; j < n - 1; j++) {
                 for (var k = j + 1; k < n; k++) {
-                    var a = candidates[i];
-                    var b = candidates[j];
-                    var c = candidates[k];
+                    var a = source[i];
+                    var b = source[j];
+                    var c = source[k];
 
                     var msAvg = (a.ModuleSize + b.ModuleSize + c.ModuleSize) / 3.0;
                     var msMin = Math.Min(a.ModuleSize, Math.Min(b.ModuleSize, c.ModuleSize));
