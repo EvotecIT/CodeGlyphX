@@ -2537,6 +2537,76 @@ section {
         font-size: 0.75rem;
         padding: 0.4rem 0.8rem;
     }
+
+    /* Showcase page mobile fixes */
+    .showcase-page {
+        padding: 3rem 1rem;
+    }
+
+    .showcase-grid {
+        min-width: 0;
+        overflow: hidden;
+    }
+
+    .showcase-card {
+        padding: 1rem;
+        max-width: 100%;
+        min-width: 0;
+        box-sizing: border-box;
+        overflow: hidden;
+    }
+
+    .showcase-description,
+    .showcase-details {
+        max-width: 100%;
+        overflow-wrap: break-word;
+        word-wrap: break-word;
+    }
+
+    .showcase-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+    }
+
+    .showcase-meta {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .showcase-features {
+        gap: 0.5rem;
+    }
+
+    .showcase-feature-badge {
+        font-size: 0.7rem;
+        padding: 0.3rem 0.5rem;
+    }
+
+    .showcase-gallery-tabs {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .showcase-carousel-thumbs {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .showcase-carousel-thumbs button {
+        font-size: 0.7rem;
+        padding: 0.4rem 0.6rem;
+    }
+
+    .showcase-actions {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .showcase-actions .btn {
+        width: 100%;
+        justify-content: center;
+    }
 }
 
 /* ============================================
