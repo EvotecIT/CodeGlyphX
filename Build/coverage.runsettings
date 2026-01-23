@@ -10,6 +10,8 @@
           <ExcludeByAttribute>Obsolete,GeneratedCodeAttribute,CompilerGeneratedAttribute</ExcludeByAttribute>
           <ExcludeByFile>**/*Designer.cs,**/*.g.cs,**/*.g.i.cs</ExcludeByFile>
           <SkipAutoProps>true</SkipAutoProps>
+          <SingleHit>true</SingleHit>
+          <UseSourceLink>false</UseSourceLink>
         </Configuration>
       </DataCollector>
     </DataCollectors>
