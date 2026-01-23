@@ -115,10 +115,14 @@ internal static class QrPayloadParser {
             var bitOffset = bitPos & 7;
             var totalBits = bitOffset + n;
             var bytesNeeded = (totalBits + 7) >> 3;
-            ulong acc = 0;
-            for (var i = 0; i < bytesNeeded; i++) {
-                acc = (acc << 8) | dataCodewords[byteIndex + i];
-            }
+            ulong acc = bytesNeeded switch {
+                1 => dataCodewords[byteIndex],
+                2 => ((ulong)dataCodewords[byteIndex] << 8) | dataCodewords[byteIndex + 1],
+                3 => ((ulong)dataCodewords[byteIndex] << 16) | ((ulong)dataCodewords[byteIndex + 1] << 8) | dataCodewords[byteIndex + 2],
+                4 => ((ulong)dataCodewords[byteIndex] << 24) | ((ulong)dataCodewords[byteIndex + 1] << 16) | ((ulong)dataCodewords[byteIndex + 2] << 8) | dataCodewords[byteIndex + 3],
+                5 => ((ulong)dataCodewords[byteIndex] << 32) | ((ulong)dataCodewords[byteIndex + 1] << 24) | ((ulong)dataCodewords[byteIndex + 2] << 16) | ((ulong)dataCodewords[byteIndex + 3] << 8) | dataCodewords[byteIndex + 4],
+                _ => 0UL
+            };
             var extraBits = (bytesNeeded * 8) - totalBits;
             acc >>= extraBits;
             var mask = (1UL << n) - 1UL;
