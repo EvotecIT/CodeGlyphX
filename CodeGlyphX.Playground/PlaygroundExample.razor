@@ -23,7 +23,7 @@ else
             <button class="code-tab @(SelectedPlatform == "Maui" ? "active" : "")" @onclick="@(() => SetPlatform("Maui"))">MAUI</button>
         </div>
 
-        <pre class="code-block">@GetPlatformExample()</pre>
+        <pre class="code-block" @key="@_codeBlockKey">@GetPlatformExample()</pre>
     </div>
 }
 
@@ -32,10 +32,12 @@ else
     public Playground? Host { get; set; }
 
     private string SelectedPlatform { get; set; } = "Console";
+    private int _codeBlockKey = 0;
 
     private void SetPlatform(string platform)
     {
         SelectedPlatform = platform;
+        _codeBlockKey++; // Force new element to avoid JS-modified DOM conflicts
         StateHasChanged();
     }
 
