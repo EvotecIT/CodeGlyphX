@@ -66,7 +66,9 @@ internal static class PngDecoder {
         }
 
         if (width <= 0 || height <= 0) throw new FormatException("Missing IHDR.");
-        if (bitDepth != 8 && bitDepth != 1) throw new FormatException("Only 1-bit or 8-bit PNGs are supported.");
+        if (bitDepth != 1 && bitDepth != 2 && bitDepth != 4 && bitDepth != 8) {
+            throw new FormatException("Unsupported PNG bit depth.");
+        }
         if (compression != 0 || filter != 0) throw new FormatException("Unsupported PNG compression/filter method.");
         if (interlace != 0) throw new FormatException("Interlaced PNGs are not supported.");
 
@@ -77,11 +79,16 @@ internal static class PngDecoder {
             6 => 4,
             _ => throw new FormatException("Unsupported PNG color type."),
         };
+        if ((colorType == 2 || colorType == 6) && bitDepth != 8) {
+            throw new FormatException("Unsupported PNG bit depth for truecolor.");
+        }
         if (colorType == 3 && (palette is null || palette.Length < 3)) {
             throw new FormatException("Missing PNG palette.");
         }
 
-        var rowBytes = bitDepth == 1 ? (width + 7) / 8 : checked(width * channels);
+        var rowBytes = bitDepth < 8
+            ? (width * bitDepth + 7) / 8
+            : checked(width * channels);
         var bytesPerPixel = (bitDepth * channels + 7) / 8;
         var expected = checked(height * (rowBytes + 1));
         var scanlines = ArrayPool<byte>.Shared.Rent(expected);
@@ -165,13 +172,14 @@ internal static class PngDecoder {
             return rgba;
         }
 
-        if (colorType == 0 && bitDepth == 1) {
+        if (colorType == 0 && bitDepth < 8) {
+            var rowBytes = (width * bitDepth + 7) / 8;
+            var max = (1 << bitDepth) - 1;
             for (var y = 0; y < height; y++) {
-                var rowStart = y * ((width + 7) / 8);
+                var rowStart = y * rowBytes;
                 for (var x = 0; x < width; x++) {
-                    var b = raw[rowStart + (x >> 3)];
-                    var bit = (b >> (7 - (x & 7))) & 1;
-                    var v = (byte)(bit == 0 ? 0 : 255);
+                    var sample = ReadPackedSample(raw, rowStart, x, bitDepth);
+                    var v = (byte)(sample * 255 / max);
                     var dst = (y * width + x) * 4;
                     rgba[dst + 0] = v;
                     rgba[dst + 1] = v;
@@ -197,12 +205,12 @@ internal static class PngDecoder {
                 }
                 return rgba;
             }
-            if (bitDepth == 1) {
+            if (bitDepth < 8) {
+                var rowBytes = (width * bitDepth + 7) / 8;
                 for (var y = 0; y < height; y++) {
-                    var rowStart = y * ((width + 7) / 8);
+                    var rowStart = y * rowBytes;
                     for (var x = 0; x < width; x++) {
-                        var b = raw[rowStart + (x >> 3)];
-                        var idx = (b >> (7 - (x & 7))) & 1;
+                        var idx = ReadPackedSample(raw, rowStart, x, bitDepth);
                         if (idx >= entryCount) throw new FormatException("Palette index out of range.");
                         var p = idx * 3;
                         var dst = (y * width + x) * 4;
@@ -217,6 +225,14 @@ internal static class PngDecoder {
         }
 
         throw new FormatException("Unsupported PNG color type.");
+    }
+
+    private static int ReadPackedSample(byte[] raw, int rowStart, int x, int bitDepth) {
+        var bitIndex = x * bitDepth;
+        var byteIndex = rowStart + (bitIndex >> 3);
+        var shift = 8 - bitDepth - (bitIndex & 7);
+        var mask = (1 << bitDepth) - 1;
+        return (raw[byteIndex] >> shift) & mask;
     }
 
     private static int Paeth(int a, int b, int c) {
