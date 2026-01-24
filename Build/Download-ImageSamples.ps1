@@ -1,6 +1,6 @@
 param(
-    [string]$Manifest = "CodeGlyphX.Tests/Fixtures/ExternalSamples/manifest.json",
-    [string]$Destination = "CodeGlyphX.Tests/Fixtures/ExternalSamples",
+    [string]$Manifest = "CodeGlyphX.Tests/Fixtures/ImageSamples/manifest.json",
+    [string]$Destination = "CodeGlyphX.Tests/Fixtures/ImageSamples",
     [switch]$Force,
     [switch]$NoUpdateManifest
 )
@@ -49,8 +49,16 @@ foreach ($entry in $entries) {
 
     $fileName = Get-EntryProperty -Entry $entry -Name "fileName"
     if (-not $fileName) {
-        $fileName = [IO.Path]::GetFileName($downloadUrl)
+        if ($downloadUrl) {
+            $fileName = [IO.Path]::GetFileName($downloadUrl)
+        } elseif ($archivePath) {
+            $fileName = [IO.Path]::GetFileName($archivePath)
+        }
     }
+    if (-not $fileName) {
+        throw "Missing fileName in manifest entry: $($entry.id)"
+    }
+
     $outPath = Join-Path $Destination $fileName
     $entrySha = Get-EntryProperty -Entry $entry -Name "sha256"
 
@@ -102,29 +110,6 @@ foreach ($entry in $entries) {
     if (-not $entrySha -and -not $NoUpdateManifest) {
         $entry | Add-Member -NotePropertyName sha256 -NotePropertyValue $hash
     }
-
-    $base = Join-Path $Destination ([IO.Path]::GetFileNameWithoutExtension($fileName))
-    $expected = @()
-    $expectedTexts = Get-EntryProperty -Entry $entry -Name "expectedTexts"
-    $expectedText = Get-EntryProperty -Entry $entry -Name "expectedText"
-    if ($expectedTexts) {
-        $expected = @($expectedTexts)
-    } elseif ($expectedText) {
-        $expected = @($expectedText)
-    }
-    if ($expected.Count -eq 0) {
-        throw "Missing expectedText(s) for entry: $($entry.id)"
-    }
-    Set-Content -Path "$base.txt" -Value ($expected -join "`n") -Encoding utf8
-
-    $kind = Get-EntryProperty -Entry $entry -Name "kind"
-    if ($kind) {
-        Set-Content -Path "$base.kind" -Value $kind -Encoding ascii
-    }
-    $barcodeType = Get-EntryProperty -Entry $entry -Name "barcodeType"
-    if ($barcodeType) {
-        Set-Content -Path "$base.type" -Value $barcodeType -Encoding ascii
-    }
 }
 
 if (-not $NoUpdateManifest) {
@@ -135,4 +120,4 @@ if (-not $NoUpdateManifest) {
     }
 }
 
-Write-Host "External samples synced to $Destination"
+Write-Host "Image samples synced to $Destination"
