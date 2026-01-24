@@ -49,25 +49,68 @@ public static class PamReader {
         if (width <= 0 || height <= 0) throw new FormatException("Invalid PAM dimensions.");
         if (width > MaxDimension || height > MaxDimension) throw new FormatException("PAM dimensions are too large.");
         if (maxVal == 0) throw new FormatException("Missing PAM max value.");
-        if (maxVal > 255) throw new FormatException("Unsupported PAM max value.");
-        if (depth is not (3 or 4)) throw new FormatException("Unsupported PAM depth.");
+        if (maxVal > 65535) throw new FormatException("Unsupported PAM max value.");
+        if (depth is not (1 or 2 or 3 or 4)) throw new FormatException("Unsupported PAM depth.");
         if (tupleType is null) throw new FormatException("Missing PAM tuple type.");
 
         var pixelCount = (long)width * height;
         var rgba = new byte[(int)pixelCount * 4];
-        var required = (long)pos + pixelCount * depth;
+        var bytesPerSample = maxVal > 255 ? 2 : 1;
+        var required = (long)pos + pixelCount * depth * bytesPerSample;
         if (required > pam.Length) throw new FormatException("Truncated PAM data.");
 
         var src = pos;
         for (var i = 0; i < pixelCount; i++) {
             var dst = i * 4;
-            rgba[dst + 0] = pam[src++];
-            rgba[dst + 1] = pam[src++];
-            rgba[dst + 2] = pam[src++];
-            rgba[dst + 3] = depth == 4 ? pam[src++] : (byte)255;
+            if (depth == 1) {
+                var v = ReadSample(pam, ref src, bytesPerSample);
+                var b = ScaleToByte(v, maxVal);
+                rgba[dst + 0] = b;
+                rgba[dst + 1] = b;
+                rgba[dst + 2] = b;
+                rgba[dst + 3] = 255;
+            } else if (depth == 2) {
+                var v = ReadSample(pam, ref src, bytesPerSample);
+                var a = ReadSample(pam, ref src, bytesPerSample);
+                var b = ScaleToByte(v, maxVal);
+                rgba[dst + 0] = b;
+                rgba[dst + 1] = b;
+                rgba[dst + 2] = b;
+                rgba[dst + 3] = ScaleToByte(a, maxVal);
+            } else if (depth == 3) {
+                var r = ReadSample(pam, ref src, bytesPerSample);
+                var g = ReadSample(pam, ref src, bytesPerSample);
+                var b = ReadSample(pam, ref src, bytesPerSample);
+                rgba[dst + 0] = ScaleToByte(r, maxVal);
+                rgba[dst + 1] = ScaleToByte(g, maxVal);
+                rgba[dst + 2] = ScaleToByte(b, maxVal);
+                rgba[dst + 3] = 255;
+            } else {
+                var r = ReadSample(pam, ref src, bytesPerSample);
+                var g = ReadSample(pam, ref src, bytesPerSample);
+                var b = ReadSample(pam, ref src, bytesPerSample);
+                var a = ReadSample(pam, ref src, bytesPerSample);
+                rgba[dst + 0] = ScaleToByte(r, maxVal);
+                rgba[dst + 1] = ScaleToByte(g, maxVal);
+                rgba[dst + 2] = ScaleToByte(b, maxVal);
+                rgba[dst + 3] = ScaleToByte(a, maxVal);
+            }
         }
 
         return rgba;
+    }
+
+    private static int ReadSample(ReadOnlySpan<byte> data, ref int pos, int bytesPerSample) {
+        if (bytesPerSample == 1) return data[pos++];
+        var value = (data[pos] << 8) | data[pos + 1];
+        pos += 2;
+        return value;
+    }
+
+    private static byte ScaleToByte(int value, int maxVal) {
+        if (value < 0) return 0;
+        if (maxVal == 255) return (byte)value;
+        return (byte)((value * 255 + maxVal / 2) / maxVal);
     }
 
     private static bool IsToken(ReadOnlySpan<byte> data, int pos, string token) {

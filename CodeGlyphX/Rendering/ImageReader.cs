@@ -129,7 +129,7 @@ public static partial class ImageReader {
     }
 
     private static bool IsPpm(ReadOnlySpan<byte> data) {
-        return data.Length >= 2 && data[0] == (byte)'P' && (data[1] == (byte)'5' || data[1] == (byte)'6');
+        return data.Length >= 2 && data[0] == (byte)'P' && (data[1] == (byte)'3' || data[1] == (byte)'5' || data[1] == (byte)'6');
     }
 
     private static bool IsPbm(ReadOnlySpan<byte> data) {
