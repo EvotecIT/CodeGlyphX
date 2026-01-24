@@ -464,7 +464,7 @@ $lines.Add("Updated: $timestamp")
 $lines.Add("Framework: $Framework")
 $lines.Add("Configuration: $Configuration")
 $lines.Add("Artifacts: $ArtifactsPath")
-$lines.Add("**How to read**")
+$lines.Add("### How to read")
 $lines.Add("- Mean: average time per operation. Lower is better.")
 $lines.Add("- Allocated: managed memory allocated per operation. Lower is better.")
 $lines.Add("- CodeGlyphX vs Fastest: CodeGlyphX mean divided by the fastest mean for that scenario. 1 x (fastest) means CodeGlyphX is fastest; 1.5 x means ~50% slower.")
@@ -474,7 +474,7 @@ $lines.Add("- Δ lines in comparison tables show vendor ratios vs CodeGlyphX (ti
 $lines.Add("- Quick runs use fewer iterations for fast feedback; Full runs use BenchmarkDotNet defaults and are recommended for publishing.")
 $lines.Add("- Benchmarks run under controlled, ideal conditions on a single machine; treat results as directional, not definitive.")
 $lines.Add("")
-$lines.Add("**Notes**")
+$lines.Add("### Notes")
 $lines.Add("- $runModeLabel")
 $lines.Add("- Comparisons target PNG output and include encode+render (not encode-only).")
 $lines.Add("- Module size and quiet zone are matched to CodeGlyphX defaults where possible; image size is derived from CodeGlyphX modules.")
@@ -768,6 +768,16 @@ foreach ($file in $compareFiles | Sort-Object Name) {
                 }
             }
             $entry["ratios"] = $ratios
+        }
+        if ($cgx) {
+            $deltas = @{}
+            foreach ($key in $vendors.Keys) {
+                if ($key -eq "CodeGlyphX") { continue }
+                $deltas[$key] = Format-DeltaText $vendors[$key] $cgx
+            }
+            if ($deltas.Count -gt 0) {
+                $entry["deltas"] = $deltas
+            }
         }
         $scenarios += $entry
     }

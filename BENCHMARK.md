@@ -15,7 +15,7 @@
 <!-- BENCHMARK:WINDOWS:QUICK:START -->
 ## WINDOWS (Quick)
 
-Updated: 2026-01-24 08:09:37 UTC
+Updated: 2026-01-24 08:30:07 UTC
 Framework: net8.0
 Configuration: Release
 Artifacts: Build\BenchmarkResults\windows-20260123-225838
@@ -188,7 +188,7 @@ Artifacts: Build\BenchmarkResults\windows-20260123-225838
 <!-- BENCHMARK:WINDOWS:FULL:START -->
 ## WINDOWS (Full)
 
-Updated: 2026-01-24 08:09:44 UTC
+Updated: 2026-01-24 08:30:18 UTC
 Framework: net8.0
 Configuration: Release
 Artifacts: Build\BenchmarkResults\windows-20260122-155044

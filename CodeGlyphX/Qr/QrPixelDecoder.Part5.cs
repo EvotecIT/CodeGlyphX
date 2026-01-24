@@ -356,27 +356,58 @@ internal static partial class QrPixelDecoder {
                 var sy = numY * inv;
                 var sxStep = stepNumX * inv;
                 var syStep = stepNumY * inv;
+                var wordIndex = rowOffset >> 5;
+                var bitMask = 1u << (rowOffset & 31);
 
-                for (var mx = 0; mx < dimension; mx++) {
-                    if (checkBudget && ((budgetCounter++ & 63) == 0) && budget.IsExpired) return false;
+                var sxEnd = sx + sxStep * (dimension - 1);
+                var syEnd = sy + syStep * (dimension - 1);
+                if (sx >= 0 && sx <= maxX && sxEnd >= 0 && sxEnd <= maxX &&
+                    sy >= 0 && sy <= maxY && syEnd >= 0 && syEnd <= maxY) {
+                    for (var mx = 0; mx < dimension; mx++) {
+                        if (checkBudget && ((budgetCounter++ & 63) == 0) && budget.IsExpired) return false;
 
-                    var sampleX = sx;
-                    var sampleY = sy;
-                    if (sampleX < 0) { sampleX = 0; clamped++; }
-                    else if (sampleX > maxX) { sampleX = maxX; clamped++; }
+                        if (TSampler.Sample(image, sx, sy, invert, delta)) {
+                            bmWords[wordIndex] |= bitMask;
+                        }
 
-                    if (sampleY < 0) { sampleY = 0; clamped++; }
-                    else if (sampleY > maxY) { sampleY = maxY; clamped++; }
+                        bitMask <<= 1;
+                        if (bitMask == 0) {
+                            bitMask = 1u;
+                            wordIndex++;
+                        }
 
-                    if (TSampler.Sample(image, sampleX, sampleY, invert, delta)) {
-                        var bitIndex = rowOffset + mx;
-                        bmWords[bitIndex >> 5] |= 1u << (bitIndex & 31);
+                        sx += sxStep;
+                        sy += syStep;
                     }
+                } else {
+                    for (var mx = 0; mx < dimension; mx++) {
+                        if (checkBudget && ((budgetCounter++ & 63) == 0) && budget.IsExpired) return false;
 
-                    sx += sxStep;
-                    sy += syStep;
+                        var sampleX = sx;
+                        var sampleY = sy;
+                        if (sampleX < 0) { sampleX = 0; clamped++; }
+                        else if (sampleX > maxX) { sampleX = maxX; clamped++; }
+
+                        if (sampleY < 0) { sampleY = 0; clamped++; }
+                        else if (sampleY > maxY) { sampleY = maxY; clamped++; }
+
+                        if (TSampler.Sample(image, sampleX, sampleY, invert, delta)) {
+                            bmWords[wordIndex] |= bitMask;
+                        }
+
+                        bitMask <<= 1;
+                        if (bitMask == 0) {
+                            bitMask = 1u;
+                            wordIndex++;
+                        }
+
+                        sx += sxStep;
+                        sy += syStep;
+                    }
                 }
             } else {
+                var wordIndex = rowOffset >> 5;
+                var bitMask = 1u << (rowOffset & 31);
                 for (var mx = 0; mx < dimension; mx++) {
                     if (checkBudget && ((budgetCounter++ & 63) == 0) && budget.IsExpired) return false;
 
@@ -391,8 +422,13 @@ internal static partial class QrPixelDecoder {
                     else if (sy > maxY) { sy = maxY; clamped++; }
 
                     if (TSampler.Sample(image, sx, sy, invert, delta)) {
-                        var bitIndex = rowOffset + mx;
-                        bmWords[bitIndex >> 5] |= 1u << (bitIndex & 31);
+                        bmWords[wordIndex] |= bitMask;
+                    }
+
+                    bitMask <<= 1;
+                    if (bitMask == 0) {
+                        bitMask = 1u;
+                        wordIndex++;
                     }
 
                     numX += stepNumX;
@@ -463,9 +499,9 @@ internal static partial class QrPixelDecoder {
                 for (var y = scanMinY; y <= scanMaxY; y++) {
                     if (checkBudget && budget.IsExpired) return false;
                     var row = y * width;
-                    for (var x = scanMinX; x <= scanMaxX; x++) {
+                    for (int x = scanMinX, idx = row + scanMinX; x <= scanMaxX; x++, idx++) {
                         if (checkBudget && ((budgetCounter++ & 255) == 0) && budget.IsExpired) return false;
-                        if (gray[row + x] > imageThreshold) continue;
+                        if (gray[idx] > imageThreshold) continue;
                         if (x < minX) minX = x;
                         if (y < minY) minY = y;
                         if (x > maxX) maxX = x;
@@ -476,9 +512,9 @@ internal static partial class QrPixelDecoder {
                 for (var y = scanMinY; y <= scanMaxY; y++) {
                     if (checkBudget && budget.IsExpired) return false;
                     var row = y * width;
-                    for (var x = scanMinX; x <= scanMaxX; x++) {
+                    for (int x = scanMinX, idx = row + scanMinX; x <= scanMaxX; x++, idx++) {
                         if (checkBudget && ((budgetCounter++ & 255) == 0) && budget.IsExpired) return false;
-                        if (gray[row + x] <= imageThreshold) continue;
+                        if (gray[idx] <= imageThreshold) continue;
                         if (x < minX) minX = x;
                         if (y < minY) minY = y;
                         if (x > maxX) maxX = x;
@@ -491,9 +527,8 @@ internal static partial class QrPixelDecoder {
                 for (var y = scanMinY; y <= scanMaxY; y++) {
                     if (checkBudget && budget.IsExpired) return false;
                     var row = y * width;
-                    for (var x = scanMinX; x <= scanMaxX; x++) {
+                    for (int x = scanMinX, idx = row + scanMinX; x <= scanMaxX; x++, idx++) {
                         if (checkBudget && ((budgetCounter++ & 255) == 0) && budget.IsExpired) return false;
-                        var idx = row + x;
                         if (gray[idx] > thresholdMap[idx]) continue;
                         if (x < minX) minX = x;
                         if (y < minY) minY = y;
@@ -505,9 +540,8 @@ internal static partial class QrPixelDecoder {
                 for (var y = scanMinY; y <= scanMaxY; y++) {
                     if (checkBudget && budget.IsExpired) return false;
                     var row = y * width;
-                    for (var x = scanMinX; x <= scanMaxX; x++) {
+                    for (int x = scanMinX, idx = row + scanMinX; x <= scanMaxX; x++, idx++) {
                         if (checkBudget && ((budgetCounter++ & 255) == 0) && budget.IsExpired) return false;
-                        var idx = row + x;
                         if (gray[idx] <= thresholdMap[idx]) continue;
                         if (x < minX) minX = x;
                         if (y < minY) minY = y;
@@ -767,72 +801,91 @@ internal static partial class QrPixelDecoder {
         var thresholdMap = image.ThresholdMap;
         var threshold = image.Threshold;
 
+        var x0 = px - 1;
+        if (x0 < 0) x0 = 0;
+        else if (x0 >= width) x0 = width - 1;
+        var x1 = px;
+        if (x1 < 0) x1 = 0;
+        else if (x1 >= width) x1 = width - 1;
+        var x2 = px + 1;
+        if (x2 < 0) x2 = 0;
+        else if (x2 >= width) x2 = width - 1;
+
+        var y0 = py - 1;
+        if (y0 < 0) y0 = 0;
+        else if (y0 >= height) y0 = height - 1;
+        var y1 = py;
+        if (y1 < 0) y1 = 0;
+        else if (y1 >= height) y1 = height - 1;
+        var y2 = py + 1;
+        if (y2 < 0) y2 = 0;
+        else if (y2 >= height) y2 = height - 1;
+
+        var row0 = y0 * width;
+        var row1 = y1 * width;
+        var row2 = y2 * width;
         var black = 0;
         if (thresholdMap is null) {
             if (!invert) {
-                for (var dy = -1; dy <= 1; dy++) {
-                    var y = py + dy;
-                    if (y < 0) y = 0;
-                    else if (y >= height) y = height - 1;
-                    var row = y * width;
-
-                    for (var dx = -1; dx <= 1; dx++) {
-                        var x = px + dx;
-                        if (x < 0) x = 0;
-                        else if (x >= width) x = width - 1;
-
-                        if (gray[row + x] <= threshold) black++;
-                    }
-                }
+                if (gray[row0 + x0] <= threshold) black++;
+                if (gray[row0 + x1] <= threshold) black++;
+                if (gray[row0 + x2] <= threshold) black++;
+                if (gray[row1 + x0] <= threshold) black++;
+                if (gray[row1 + x1] <= threshold) black++;
+                if (gray[row1 + x2] <= threshold) black++;
+                if (gray[row2 + x0] <= threshold) black++;
+                if (gray[row2 + x1] <= threshold) black++;
+                if (gray[row2 + x2] <= threshold) black++;
             } else {
-                for (var dy = -1; dy <= 1; dy++) {
-                    var y = py + dy;
-                    if (y < 0) y = 0;
-                    else if (y >= height) y = height - 1;
-                    var row = y * width;
-
-                    for (var dx = -1; dx <= 1; dx++) {
-                        var x = px + dx;
-                        if (x < 0) x = 0;
-                        else if (x >= width) x = width - 1;
-
-                        if (gray[row + x] > threshold) black++;
-                    }
-                }
+                if (gray[row0 + x0] > threshold) black++;
+                if (gray[row0 + x1] > threshold) black++;
+                if (gray[row0 + x2] > threshold) black++;
+                if (gray[row1 + x0] > threshold) black++;
+                if (gray[row1 + x1] > threshold) black++;
+                if (gray[row1 + x2] > threshold) black++;
+                if (gray[row2 + x0] > threshold) black++;
+                if (gray[row2 + x1] > threshold) black++;
+                if (gray[row2 + x2] > threshold) black++;
             }
         } else {
             if (!invert) {
-                for (var dy = -1; dy <= 1; dy++) {
-                    var y = py + dy;
-                    if (y < 0) y = 0;
-                    else if (y >= height) y = height - 1;
-                    var row = y * width;
-
-                    for (var dx = -1; dx <= 1; dx++) {
-                        var x = px + dx;
-                        if (x < 0) x = 0;
-                        else if (x >= width) x = width - 1;
-
-                        var idx = row + x;
-                        if (gray[idx] <= thresholdMap[idx]) black++;
-                    }
-                }
+                var idx = row0 + x0;
+                if (gray[idx] <= thresholdMap[idx]) black++;
+                idx = row0 + x1;
+                if (gray[idx] <= thresholdMap[idx]) black++;
+                idx = row0 + x2;
+                if (gray[idx] <= thresholdMap[idx]) black++;
+                idx = row1 + x0;
+                if (gray[idx] <= thresholdMap[idx]) black++;
+                idx = row1 + x1;
+                if (gray[idx] <= thresholdMap[idx]) black++;
+                idx = row1 + x2;
+                if (gray[idx] <= thresholdMap[idx]) black++;
+                idx = row2 + x0;
+                if (gray[idx] <= thresholdMap[idx]) black++;
+                idx = row2 + x1;
+                if (gray[idx] <= thresholdMap[idx]) black++;
+                idx = row2 + x2;
+                if (gray[idx] <= thresholdMap[idx]) black++;
             } else {
-                for (var dy = -1; dy <= 1; dy++) {
-                    var y = py + dy;
-                    if (y < 0) y = 0;
-                    else if (y >= height) y = height - 1;
-                    var row = y * width;
-
-                    for (var dx = -1; dx <= 1; dx++) {
-                        var x = px + dx;
-                        if (x < 0) x = 0;
-                        else if (x >= width) x = width - 1;
-
-                        var idx = row + x;
-                        if (gray[idx] > thresholdMap[idx]) black++;
-                    }
-                }
+                var idx = row0 + x0;
+                if (gray[idx] > thresholdMap[idx]) black++;
+                idx = row0 + x1;
+                if (gray[idx] > thresholdMap[idx]) black++;
+                idx = row0 + x2;
+                if (gray[idx] > thresholdMap[idx]) black++;
+                idx = row1 + x0;
+                if (gray[idx] > thresholdMap[idx]) black++;
+                idx = row1 + x1;
+                if (gray[idx] > thresholdMap[idx]) black++;
+                idx = row1 + x2;
+                if (gray[idx] > thresholdMap[idx]) black++;
+                idx = row2 + x0;
+                if (gray[idx] > thresholdMap[idx]) black++;
+                idx = row2 + x1;
+                if (gray[idx] > thresholdMap[idx]) black++;
+                idx = row2 + x2;
+                if (gray[idx] > thresholdMap[idx]) black++;
             }
         }
 

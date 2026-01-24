@@ -71,16 +71,27 @@ internal static class QrAlignmentPatternFinder {
         double vyX,
         double vyY) {
         var score = 0;
+        var vxX2 = vxX + vxX;
+        var vxY2 = vxY + vxY;
 
         for (var dy = -2; dy <= 2; dy++) {
-            for (var dx = -2; dx <= 2; dx++) {
-                var expectedBlack = Math.Abs(dx) == 2 || Math.Abs(dy) == 2 || (dx == 0 && dy == 0);
+            var borderRow = dy == -2 || dy == 2;
+            var centerRow = dy == 0;
 
-                var sx = centerX + vxX * dx + vyX * dy;
-                var sy = centerY + vxY * dx + vyY * dy;
+            var baseX = centerX + vyX * dy;
+            var baseY = centerY + vyY * dy;
+
+            var sx = baseX - vxX2;
+            var sy = baseY - vxY2;
+
+            for (var dx = -2; dx <= 2; dx++) {
+                var expectedBlack = borderRow || dx == -2 || dx == 2 || (centerRow && dx == 0);
 
                 var isBlack = QrPixelSampling.IsBlackBilinear(image, sx, sy, invert);
                 if (isBlack == expectedBlack) score++;
+
+                sx += vxX;
+                sy += vxY;
             }
         }
 
@@ -88,4 +99,3 @@ internal static class QrAlignmentPatternFinder {
     }
 }
 #endif
-

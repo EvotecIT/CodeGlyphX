@@ -7,6 +7,10 @@
                                                           "id":  "AztecCompareBenchmarks",
                                                           "scenarios":  [
                                                                             {
+                                                                                "deltas":  {
+                                                                                               "ZXing.Net":  "Δ 8.81 x / 4.43 x",
+                                                                                               "Barcoder":  "Δ 36.67 x / 15.27 x"
+                                                                                           },
                                                                                 "name":  "Aztec PNG",
                                                                                 "vendors":  {
                                                                                                 "Barcoder":  {
@@ -37,6 +41,10 @@
                                                           "id":  "Code128CompareBenchmarks",
                                                           "scenarios":  [
                                                                             {
+                                                                                "deltas":  {
+                                                                                               "ZXing.Net":  "Δ 13.48 x / 16.5 x",
+                                                                                               "Barcoder":  "Δ 331.37 x / 100.42 x"
+                                                                                           },
                                                                                 "name":  "Code128 PNG",
                                                                                 "vendors":  {
                                                                                                 "Barcoder":  {
@@ -67,6 +75,10 @@
                                                           "id":  "Code39CompareBenchmarks",
                                                           "scenarios":  [
                                                                             {
+                                                                                "deltas":  {
+                                                                                               "ZXing.Net":  "Δ 9.82 x / 17.02 x",
+                                                                                               "Barcoder":  "Δ 240.11 x / 118.67 x"
+                                                                                           },
                                                                                 "name":  "Code39 PNG",
                                                                                 "vendors":  {
                                                                                                 "Barcoder":  {
@@ -97,6 +109,10 @@
                                                           "id":  "Code93CompareBenchmarks",
                                                           "scenarios":  [
                                                                             {
+                                                                                "deltas":  {
+                                                                                               "ZXing.Net":  "Δ 7.43 x / 19.6 x",
+                                                                                               "Barcoder":  "Δ 166.06 x / 96.85 x"
+                                                                                           },
                                                                                 "name":  "Code93 PNG",
                                                                                 "vendors":  {
                                                                                                 "Barcoder":  {
@@ -127,6 +143,10 @@
                                                           "id":  "DataMatrixCompareBenchmarks",
                                                           "scenarios":  [
                                                                             {
+                                                                                "deltas":  {
+                                                                                               "ZXing.Net":  "Δ 9.58 x / 12.78 x",
+                                                                                               "Barcoder":  "Δ 44.74 x / 51.08 x"
+                                                                                           },
                                                                                 "name":  "Data Matrix PNG (medium)",
                                                                                 "vendors":  {
                                                                                                 "Barcoder":  {
@@ -157,6 +177,10 @@
                                                           "id":  "EanCompareBenchmarks",
                                                           "scenarios":  [
                                                                             {
+                                                                                "deltas":  {
+                                                                                               "ZXing.Net":  "Δ 5.76 x / 21.97 x",
+                                                                                               "Barcoder":  "Δ 136.95 x / 87.09 x"
+                                                                                           },
                                                                                 "name":  "EAN-13 PNG",
                                                                                 "vendors":  {
                                                                                                 "Barcoder":  {
@@ -187,6 +211,10 @@
                                                           "id":  "Pdf417CompareBenchmarks",
                                                           "scenarios":  [
                                                                             {
+                                                                                "deltas":  {
+                                                                                               "ZXing.Net":  "Δ 4.83 x / 16.28 x",
+                                                                                               "Barcoder":  "Δ 37.61 x / 68.43 x"
+                                                                                           },
                                                                                 "name":  "PDF417 PNG",
                                                                                 "vendors":  {
                                                                                                 "Barcoder":  {
@@ -217,6 +245,11 @@
                                                           "id":  "QrCompareBenchmarks",
                                                           "scenarios":  [
                                                                             {
+                                                                                "deltas":  {
+                                                                                               "Barcoder":  "Δ 21.39 x / 85.48 x",
+                                                                                               "ZXing.Net":  "Δ 5.89 x / 19.56 x",
+                                                                                               "QRCoder":  "Δ 1.29 x / 0.73 x"
+                                                                                           },
                                                                                 "name":  "QR PNG (medium)",
                                                                                 "vendors":  {
                                                                                                 "Barcoder":  {
@@ -253,6 +286,9 @@
                                                           "id":  "QrDecodeCleanCompareBenchmarks",
                                                           "scenarios":  [
                                                                             {
+                                                                                "deltas":  {
+                                                                                               "ZXing.Net":  "Δ 0.95 x / 0.95 x"
+                                                                                           },
                                                                                 "name":  "QR Decode (clean)",
                                                                                 "vendors":  {
                                                                                                 "ZXing.Net":  {
@@ -277,6 +313,9 @@
                                                           "id":  "QrDecodeNoisyCompareBenchmarks",
                                                           "scenarios":  [
                                                                             {
+                                                                                "deltas":  {
+                                                                                               "ZXing.Net":  "Δ 1.06 x / 0.69 x"
+                                                                                           },
                                                                                 "name":  "QR Decode (noisy)",
                                                                                 "vendors":  {
                                                                                                 "ZXing.Net":  {
@@ -301,6 +340,10 @@
                                                           "id":  "UpcACompareBenchmarks",
                                                           "scenarios":  [
                                                                             {
+                                                                                "deltas":  {
+                                                                                               "ZXing.Net":  "Δ 5.69 x / 21.37 x",
+                                                                                               "Barcoder":  "Δ 99 x / 77.12 x"
+                                                                                           },
                                                                                 "name":  "UPC-A PNG",
                                                                                 "vendors":  {
                                                                                                 "Barcoder":  {
@@ -576,7 +619,7 @@
                                                 "QR decode comparisons use raw RGBA32 bytes (ZXing via RGBLuminanceSource).",
                                                 "QR decode clean uses CodeGlyphX Balanced; noisy uses CodeGlyphX Robust with aggressive sampling/limits; ZXing uses default (clean) and TryHarder (noisy)."
                                             ],
-                                  "generatedUtc":  "2026-01-24T08:09:37.6622515Z",
+                                  "generatedUtc":  "2026-01-24T08:30:07.9840968Z",
                                   "meta":  {
                                                "commit":  null,
                                                "branch":  null,
@@ -999,6 +1042,10 @@
                                                          "id":  "AztecCompareBenchmarks",
                                                          "scenarios":  [
                                                                            {
+                                                                               "deltas":  {
+                                                                                              "ZXing.Net":  "Δ 4.85 x / 0.89 x",
+                                                                                              "Barcoder":  "Δ 15.33 x / 9.34 x"
+                                                                                          },
                                                                                "name":  "Aztec PNG",
                                                                                "vendors":  {
                                                                                                "Barcoder":  {
@@ -1029,6 +1076,10 @@
                                                          "id":  "Code128CompareBenchmarks",
                                                          "scenarios":  [
                                                                            {
+                                                                               "deltas":  {
+                                                                                              "ZXing.Net":  "Δ 6.37 x / 0.64 x",
+                                                                                              "Barcoder":  "Δ 194.47 x / 82.8 x"
+                                                                                          },
                                                                                "name":  "Code128 PNG",
                                                                                "vendors":  {
                                                                                                "Barcoder":  {
@@ -1059,6 +1110,10 @@
                                                          "id":  "Code39CompareBenchmarks",
                                                          "scenarios":  [
                                                                            {
+                                                                               "deltas":  {
+                                                                                              "ZXing.Net":  "Δ 2.75 x / 0.7 x",
+                                                                                              "Barcoder":  "Δ 63.56 x / 82.72 x"
+                                                                                          },
                                                                                "name":  "Code39 PNG",
                                                                                "vendors":  {
                                                                                                "Barcoder":  {
@@ -1089,6 +1144,10 @@
                                                          "id":  "Code93CompareBenchmarks",
                                                          "scenarios":  [
                                                                            {
+                                                                               "deltas":  {
+                                                                                              "ZXing.Net":  "Δ 1.88 x / 0.82 x",
+                                                                                              "Barcoder":  "Δ 44.04 x / 67.33 x"
+                                                                                          },
                                                                                "name":  "Code93 PNG",
                                                                                "vendors":  {
                                                                                                "Barcoder":  {
@@ -1119,6 +1178,10 @@
                                                          "id":  "DataMatrixCompareBenchmarks",
                                                          "scenarios":  [
                                                                            {
+                                                                               "deltas":  {
+                                                                                              "ZXing.Net":  "Δ 4.38 x / 0.96 x",
+                                                                                              "Barcoder":  "Δ 17.17 x / 27.8 x"
+                                                                                          },
                                                                                "name":  "Data Matrix PNG (medium)",
                                                                                "vendors":  {
                                                                                                "Barcoder":  {
@@ -1149,6 +1212,10 @@
                                                          "id":  "EanCompareBenchmarks",
                                                          "scenarios":  [
                                                                            {
+                                                                               "deltas":  {
+                                                                                              "ZXing.Net":  "Δ 2.82 x / 0.97 x",
+                                                                                              "Barcoder":  "Δ 49.24 x / 70.96 x"
+                                                                                          },
                                                                                "name":  "EAN-13 PNG",
                                                                                "vendors":  {
                                                                                                "Barcoder":  {
@@ -1179,6 +1246,10 @@
                                                          "id":  "Pdf417CompareBenchmarks",
                                                          "scenarios":  [
                                                                            {
+                                                                               "deltas":  {
+                                                                                              "ZXing.Net":  "Δ 4.72 x / 2.38 x",
+                                                                                              "Barcoder":  "Δ 37 x / 57.37 x"
+                                                                                          },
                                                                                "name":  "PDF417 PNG",
                                                                                "vendors":  {
                                                                                                "Barcoder":  {
@@ -1209,6 +1280,11 @@
                                                          "id":  "QrCompareBenchmarks",
                                                          "scenarios":  [
                                                                            {
+                                                                               "deltas":  {
+                                                                                              "Barcoder":  "Δ 13.12 x / 53.58 x",
+                                                                                              "ZXing.Net":  "Δ 3.47 x / 2.75 x",
+                                                                                              "QRCoder":  "Δ 0.82 x / 0.25 x"
+                                                                                          },
                                                                                "name":  "QR PNG (medium)",
                                                                                "vendors":  {
                                                                                                "Barcoder":  {
@@ -1245,6 +1321,9 @@
                                                          "id":  "QrDecodeCleanCompareBenchmarks",
                                                          "scenarios":  [
                                                                            {
+                                                                               "deltas":  {
+                                                                                              "ZXing.Net":  "Δ 0.74 x / 20.49 x"
+                                                                                          },
                                                                                "name":  "QR Decode (clean)",
                                                                                "vendors":  {
                                                                                                "ZXing.Net":  {
@@ -1269,6 +1348,9 @@
                                                          "id":  "QrDecodeNoisyCompareBenchmarks",
                                                          "scenarios":  [
                                                                            {
+                                                                               "deltas":  {
+                                                                                              "ZXing.Net":  "Δ 0.02 x / 0.08 x"
+                                                                                          },
                                                                                "name":  "QR Decode (noisy)",
                                                                                "vendors":  {
                                                                                                "ZXing.Net":  {
@@ -1293,6 +1375,10 @@
                                                          "id":  "UpcACompareBenchmarks",
                                                          "scenarios":  [
                                                                            {
+                                                                               "deltas":  {
+                                                                                              "ZXing.Net":  "Δ 2.28 x / 0.96 x",
+                                                                                              "Barcoder":  "Δ 41.62 x / 62.27 x"
+                                                                                          },
                                                                                "name":  "UPC-A PNG",
                                                                                "vendors":  {
                                                                                                "Barcoder":  {
@@ -1496,7 +1582,7 @@
                                                "QR decode comparisons use raw RGBA32 bytes (ZXing via RGBLuminanceSource).",
                                                "QR decode clean uses CodeGlyphX Balanced; noisy uses CodeGlyphX Robust with aggressive sampling/limits; ZXing uses default (clean) and TryHarder (noisy)."
                                            ],
-                                 "generatedUtc":  "2026-01-24T08:09:44.7901106Z",
+                                 "generatedUtc":  "2026-01-24T08:30:18.4597663Z",
                                  "meta":  {
                                               "commit":  null,
                                               "branch":  null,

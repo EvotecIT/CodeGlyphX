@@ -77,7 +77,6 @@ internal static class QrFinderPatternDetector {
 
     private static void FindCandidatesWithStep(QrGrayImage image, bool invert, int rowStep, PooledList<FinderPattern> possibleCenters, bool aggressive, Func<bool>? shouldStop, int maxCandidates, bool requireDiagonalCheck) {
         // Scan rows for 1:1:3:1:1 run-length patterns and cross-check vertically/horizontally.
-        Span<int> stateCount = stackalloc int[5];
         var width = image.Width;
         var height = image.Height;
         var gray = image.Gray;
@@ -92,7 +91,11 @@ internal static class QrFinderPatternDetector {
                 for (var y = 0; y < height; y += rowStep) {
                     if (shouldStop?.Invoke() == true) return;
                     if (possibleCenters.Count >= maxCandidatesLimit) return;
-                    stateCount.Clear();
+                    var s0 = 0;
+                    var s1 = 0;
+                    var s2 = 0;
+                    var s3 = 0;
+                    var s4 = 0;
                     var currentState = 0;
                     var rowOffset = y * width;
                     var idx = rowOffset;
@@ -101,41 +104,45 @@ internal static class QrFinderPatternDetector {
                         if (gray[idx] <= threshold) {
                             if ((currentState & 1) == 1) currentState++;
                             if (currentState > 4) {
-                                ShiftCounts(stateCount);
+                                ShiftCounts(ref s0, ref s1, ref s2, ref s3, ref s4);
                                 currentState = 3;
                             }
-                            stateCount[currentState]++;
+                            IncrementState(currentState, ref s0, ref s1, ref s2, ref s3, ref s4);
                         } else {
                             if ((currentState & 1) == 0) {
                                 if (currentState == 4) {
-                                if (FoundPatternCross(stateCount, aggressive) && HandlePossibleCenter(image, invert, possibleCenters, stateCount, x, y, aggressive, requireDiagonalCheck)) {
-                                    if (possibleCenters.Count >= maxCandidatesLimit) return;
-                                    currentState = 0;
-                                    stateCount.Clear();
-                                } else {
-                                        ShiftCounts(stateCount);
+                                    if (FoundPatternCross(s0, s1, s2, s3, s4, aggressive) && HandlePossibleCenter(image, invert, possibleCenters, s0, s1, s2, s3, s4, x, y, aggressive, requireDiagonalCheck)) {
+                                        if (possibleCenters.Count >= maxCandidatesLimit) return;
+                                        currentState = 0;
+                                        ResetCounts(ref s0, ref s1, ref s2, ref s3, ref s4);
+                                    } else {
+                                        ShiftCounts(ref s0, ref s1, ref s2, ref s3, ref s4);
                                         currentState = 3;
                                     }
                                 } else {
                                     currentState++;
-                                    stateCount[currentState]++;
+                                    IncrementState(currentState, ref s0, ref s1, ref s2, ref s3, ref s4);
                                 }
                             } else {
-                                stateCount[currentState]++;
+                                IncrementState(currentState, ref s0, ref s1, ref s2, ref s3, ref s4);
                             }
                         }
                     }
 
                     // Check for pattern at end of row.
-                    if (FoundPatternCross(stateCount, aggressive)) {
-                        HandlePossibleCenter(image, invert, possibleCenters, stateCount, width, y, aggressive, requireDiagonalCheck);
+                    if (FoundPatternCross(s0, s1, s2, s3, s4, aggressive)) {
+                        HandlePossibleCenter(image, invert, possibleCenters, s0, s1, s2, s3, s4, width, y, aggressive, requireDiagonalCheck);
                     }
                 }
             } else {
                 for (var y = 0; y < height; y += rowStep) {
                     if (shouldStop?.Invoke() == true) return;
                     if (possibleCenters.Count >= maxCandidatesLimit) return;
-                    stateCount.Clear();
+                    var s0 = 0;
+                    var s1 = 0;
+                    var s2 = 0;
+                    var s3 = 0;
+                    var s4 = 0;
                     var currentState = 0;
                     var rowOffset = y * width;
                     var idx = rowOffset;
@@ -144,34 +151,34 @@ internal static class QrFinderPatternDetector {
                         if (gray[idx] > threshold) {
                             if ((currentState & 1) == 1) currentState++;
                             if (currentState > 4) {
-                                ShiftCounts(stateCount);
+                                ShiftCounts(ref s0, ref s1, ref s2, ref s3, ref s4);
                                 currentState = 3;
                             }
-                            stateCount[currentState]++;
+                            IncrementState(currentState, ref s0, ref s1, ref s2, ref s3, ref s4);
                         } else {
                             if ((currentState & 1) == 0) {
                                 if (currentState == 4) {
-                                if (FoundPatternCross(stateCount, aggressive) && HandlePossibleCenter(image, invert, possibleCenters, stateCount, x, y, aggressive, requireDiagonalCheck)) {
-                                    if (possibleCenters.Count >= maxCandidatesLimit) return;
-                                    currentState = 0;
-                                    stateCount.Clear();
-                                } else {
-                                        ShiftCounts(stateCount);
+                                    if (FoundPatternCross(s0, s1, s2, s3, s4, aggressive) && HandlePossibleCenter(image, invert, possibleCenters, s0, s1, s2, s3, s4, x, y, aggressive, requireDiagonalCheck)) {
+                                        if (possibleCenters.Count >= maxCandidatesLimit) return;
+                                        currentState = 0;
+                                        ResetCounts(ref s0, ref s1, ref s2, ref s3, ref s4);
+                                    } else {
+                                        ShiftCounts(ref s0, ref s1, ref s2, ref s3, ref s4);
                                         currentState = 3;
                                     }
                                 } else {
                                     currentState++;
-                                    stateCount[currentState]++;
+                                    IncrementState(currentState, ref s0, ref s1, ref s2, ref s3, ref s4);
                                 }
                             } else {
-                                stateCount[currentState]++;
+                                IncrementState(currentState, ref s0, ref s1, ref s2, ref s3, ref s4);
                             }
                         }
                     }
 
                     // Check for pattern at end of row.
-                    if (FoundPatternCross(stateCount, aggressive)) {
-                        HandlePossibleCenter(image, invert, possibleCenters, stateCount, width, y, aggressive, requireDiagonalCheck);
+                    if (FoundPatternCross(s0, s1, s2, s3, s4, aggressive)) {
+                        HandlePossibleCenter(image, invert, possibleCenters, s0, s1, s2, s3, s4, width, y, aggressive, requireDiagonalCheck);
                     }
                 }
             }
@@ -180,7 +187,11 @@ internal static class QrFinderPatternDetector {
                 for (var y = 0; y < height; y += rowStep) {
                     if (shouldStop?.Invoke() == true) return;
                     if (possibleCenters.Count >= maxCandidatesLimit) return;
-                    stateCount.Clear();
+                    var s0 = 0;
+                    var s1 = 0;
+                    var s2 = 0;
+                    var s3 = 0;
+                    var s4 = 0;
                     var currentState = 0;
                     var rowOffset = y * width;
                     var idx = rowOffset;
@@ -189,41 +200,45 @@ internal static class QrFinderPatternDetector {
                         if (gray[idx] <= thresholds[idx]) {
                             if ((currentState & 1) == 1) currentState++;
                             if (currentState > 4) {
-                                ShiftCounts(stateCount);
+                                ShiftCounts(ref s0, ref s1, ref s2, ref s3, ref s4);
                                 currentState = 3;
                             }
-                            stateCount[currentState]++;
+                            IncrementState(currentState, ref s0, ref s1, ref s2, ref s3, ref s4);
                         } else {
                             if ((currentState & 1) == 0) {
                                 if (currentState == 4) {
-                                if (FoundPatternCross(stateCount, aggressive) && HandlePossibleCenter(image, invert, possibleCenters, stateCount, x, y, aggressive, requireDiagonalCheck)) {
-                                    if (possibleCenters.Count >= maxCandidatesLimit) return;
-                                    currentState = 0;
-                                    stateCount.Clear();
-                                } else {
-                                        ShiftCounts(stateCount);
+                                    if (FoundPatternCross(s0, s1, s2, s3, s4, aggressive) && HandlePossibleCenter(image, invert, possibleCenters, s0, s1, s2, s3, s4, x, y, aggressive, requireDiagonalCheck)) {
+                                        if (possibleCenters.Count >= maxCandidatesLimit) return;
+                                        currentState = 0;
+                                        ResetCounts(ref s0, ref s1, ref s2, ref s3, ref s4);
+                                    } else {
+                                        ShiftCounts(ref s0, ref s1, ref s2, ref s3, ref s4);
                                         currentState = 3;
                                     }
                                 } else {
                                     currentState++;
-                                    stateCount[currentState]++;
+                                    IncrementState(currentState, ref s0, ref s1, ref s2, ref s3, ref s4);
                                 }
                             } else {
-                                stateCount[currentState]++;
+                                IncrementState(currentState, ref s0, ref s1, ref s2, ref s3, ref s4);
                             }
                         }
                     }
 
                     // Check for pattern at end of row.
-                    if (FoundPatternCross(stateCount, aggressive)) {
-                        HandlePossibleCenter(image, invert, possibleCenters, stateCount, width, y, aggressive, requireDiagonalCheck);
+                    if (FoundPatternCross(s0, s1, s2, s3, s4, aggressive)) {
+                        HandlePossibleCenter(image, invert, possibleCenters, s0, s1, s2, s3, s4, width, y, aggressive, requireDiagonalCheck);
                     }
                 }
             } else {
                 for (var y = 0; y < height; y += rowStep) {
                     if (shouldStop?.Invoke() == true) return;
                     if (possibleCenters.Count >= maxCandidatesLimit) return;
-                    stateCount.Clear();
+                    var s0 = 0;
+                    var s1 = 0;
+                    var s2 = 0;
+                    var s3 = 0;
+                    var s4 = 0;
                     var currentState = 0;
                     var rowOffset = y * width;
                     var idx = rowOffset;
@@ -232,34 +247,34 @@ internal static class QrFinderPatternDetector {
                         if (gray[idx] > thresholds[idx]) {
                             if ((currentState & 1) == 1) currentState++;
                             if (currentState > 4) {
-                                ShiftCounts(stateCount);
+                                ShiftCounts(ref s0, ref s1, ref s2, ref s3, ref s4);
                                 currentState = 3;
                             }
-                            stateCount[currentState]++;
+                            IncrementState(currentState, ref s0, ref s1, ref s2, ref s3, ref s4);
                         } else {
                             if ((currentState & 1) == 0) {
                                 if (currentState == 4) {
-                                if (FoundPatternCross(stateCount, aggressive) && HandlePossibleCenter(image, invert, possibleCenters, stateCount, x, y, aggressive, requireDiagonalCheck)) {
-                                    if (possibleCenters.Count >= maxCandidatesLimit) return;
-                                    currentState = 0;
-                                    stateCount.Clear();
-                                } else {
-                                        ShiftCounts(stateCount);
+                                    if (FoundPatternCross(s0, s1, s2, s3, s4, aggressive) && HandlePossibleCenter(image, invert, possibleCenters, s0, s1, s2, s3, s4, x, y, aggressive, requireDiagonalCheck)) {
+                                        if (possibleCenters.Count >= maxCandidatesLimit) return;
+                                        currentState = 0;
+                                        ResetCounts(ref s0, ref s1, ref s2, ref s3, ref s4);
+                                    } else {
+                                        ShiftCounts(ref s0, ref s1, ref s2, ref s3, ref s4);
                                         currentState = 3;
                                     }
                                 } else {
                                     currentState++;
-                                    stateCount[currentState]++;
+                                    IncrementState(currentState, ref s0, ref s1, ref s2, ref s3, ref s4);
                                 }
                             } else {
-                                stateCount[currentState]++;
+                                IncrementState(currentState, ref s0, ref s1, ref s2, ref s3, ref s4);
                             }
                         }
                     }
 
                     // Check for pattern at end of row.
-                    if (FoundPatternCross(stateCount, aggressive)) {
-                        HandlePossibleCenter(image, invert, possibleCenters, stateCount, width, y, aggressive, requireDiagonalCheck);
+                    if (FoundPatternCross(s0, s1, s2, s3, s4, aggressive)) {
+                        HandlePossibleCenter(image, invert, possibleCenters, s0, s1, s2, s3, s4, width, y, aggressive, requireDiagonalCheck);
                     }
                 }
             }
@@ -388,28 +403,61 @@ internal static class QrFinderPatternDetector {
         return true;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static double Dist2(FinderPattern a, FinderPattern b) {
         var dx = a.X - b.X;
         var dy = a.Y - b.Y;
         return dx * dx + dy * dy;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static double Cross(double ax, double ay, double bx, double by) => ax * by - ay * bx;
 
-    private static void ShiftCounts(Span<int> stateCount) {
-        stateCount[0] = stateCount[2];
-        stateCount[1] = stateCount[3];
-        stateCount[2] = stateCount[4];
-        stateCount[3] = 1;
-        stateCount[4] = 0;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static void ResetCounts(ref int s0, ref int s1, ref int s2, ref int s3, ref int s4) {
+        s0 = 0;
+        s1 = 0;
+        s2 = 0;
+        s3 = 0;
+        s4 = 0;
     }
 
-    private static bool HandlePossibleCenter(QrGrayImage image, bool invert, PooledList<FinderPattern> possibleCenters, ReadOnlySpan<int> stateCount, int endX, int y, bool aggressive, bool requireDiagonalCheck) {
-        var stateCountTotal = stateCount[0] + stateCount[1] + stateCount[2] + stateCount[3] + stateCount[4];
-        var centerX = CenterFromEnd(stateCount, endX);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static void ShiftCounts(ref int s0, ref int s1, ref int s2, ref int s3, ref int s4) {
+        s0 = s2;
+        s1 = s3;
+        s2 = s4;
+        s3 = 1;
+        s4 = 0;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static void IncrementState(int state, ref int s0, ref int s1, ref int s2, ref int s3, ref int s4) {
+        switch (state) {
+            case 0:
+                s0++;
+                break;
+            case 1:
+                s1++;
+                break;
+            case 2:
+                s2++;
+                break;
+            case 3:
+                s3++;
+                break;
+            default:
+                s4++;
+                break;
+        }
+    }
+
+    private static bool HandlePossibleCenter(QrGrayImage image, bool invert, PooledList<FinderPattern> possibleCenters, int s0, int s1, int s2, int s3, int s4, int endX, int y, bool aggressive, bool requireDiagonalCheck) {
+        var stateCountTotal = s0 + s1 + s2 + s3 + s4;
+        var centerX = CenterFromEnd(s0, s1, s2, s3, s4, endX);
         if (centerX < 0 || centerX >= image.Width) return false;
 
-        var maxCount = stateCount[2];
+        var maxCount = s2;
         if (!CrossCheckVertical(image, invert, QrMath.RoundToInt(centerX), y, maxCount, stateCountTotal, aggressive, out var centerY, out var moduleSizeV)) {
             return false;
         }
@@ -492,6 +540,7 @@ internal static class QrFinderPatternDetector {
         }
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static bool FoundPatternCross(ReadOnlySpan<int> stateCount, bool aggressive) {
         var total = stateCount[0] + stateCount[1] + stateCount[2] + stateCount[3] + stateCount[4];
         if (total < 7) return false;
@@ -520,8 +569,43 @@ internal static class QrFinderPatternDetector {
         return diff4 * 10 <= total * outerLimit;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static bool FoundPatternCross(int s0, int s1, int s2, int s3, int s4, bool aggressive) {
+        var total = s0 + s1 + s2 + s3 + s4;
+        if (total < 7) return false;
+        if (s0 == 0 || s1 == 0 || s2 == 0 || s3 == 0 || s4 == 0) return false;
+        var outerLimit = aggressive ? 8 : 5;
+        var centerLimit = aggressive ? 28 : 15;
+
+        var diff0 = 7 * s0 - total;
+        if (diff0 < 0) diff0 = -diff0;
+        if (diff0 * 10 > total * outerLimit) return false;
+
+        var diff1 = 7 * s1 - total;
+        if (diff1 < 0) diff1 = -diff1;
+        if (diff1 * 10 > total * outerLimit) return false;
+
+        var diff2 = 7 * s2 - (3 * total);
+        if (diff2 < 0) diff2 = -diff2;
+        if (diff2 * 10 > total * centerLimit) return false;
+
+        var diff3 = 7 * s3 - total;
+        if (diff3 < 0) diff3 = -diff3;
+        if (diff3 * 10 > total * outerLimit) return false;
+
+        var diff4 = 7 * s4 - total;
+        if (diff4 < 0) diff4 = -diff4;
+        return diff4 * 10 <= total * outerLimit;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static double CenterFromEnd(ReadOnlySpan<int> stateCount, int end) {
         return end - stateCount[4] - stateCount[3] - stateCount[2] / 2.0;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static double CenterFromEnd(int s0, int s1, int s2, int s3, int s4, int end) {
+        return end - s4 - s3 - s2 / 2.0;
     }
 
     private static bool CrossCheckVertical(QrGrayImage image, bool invert, int centerX, int startY, int maxCount, int originalTotal, bool aggressive, out double centerY, out double moduleSize) {
@@ -533,198 +617,201 @@ internal static class QrFinderPatternDetector {
         var gray = image.Gray;
         var thresholds = image.ThresholdMap;
         var threshold = image.Threshold;
-
-        Span<int> stateCount = stackalloc int[5];
+        var s0 = 0;
+        var s1 = 0;
+        var s2 = 0;
+        var s3 = 0;
+        var s4 = 0;
 
         var y = startY;
         var idx = (y * width) + centerX;
         if (thresholds is null) {
             if (!invert) {
                 while (y >= 0 && gray[idx] <= threshold) {
-                    stateCount[2]++;
+                    s2++;
                     y--;
                     idx -= width;
                 }
                 if (y < 0) return false;
 
-                while (y >= 0 && gray[idx] > threshold && stateCount[1] <= maxCount) {
-                    stateCount[1]++;
+                while (y >= 0 && gray[idx] > threshold && s1 <= maxCount) {
+                    s1++;
                     y--;
                     idx -= width;
                 }
-                if (y < 0 || stateCount[1] > maxCount) return false;
+                if (y < 0 || s1 > maxCount) return false;
 
-                while (y >= 0 && gray[idx] <= threshold && stateCount[0] <= maxCount) {
-                    stateCount[0]++;
+                while (y >= 0 && gray[idx] <= threshold && s0 <= maxCount) {
+                    s0++;
                     y--;
                     idx -= width;
                 }
-                if (stateCount[0] > maxCount) return false;
+                if (s0 > maxCount) return false;
 
                 y = startY + 1;
                 idx = (y * width) + centerX;
                 while (y < height && gray[idx] <= threshold) {
-                    stateCount[2]++;
+                    s2++;
                     y++;
                     idx += width;
                 }
                 if (y == height) return false;
 
-                while (y < height && gray[idx] > threshold && stateCount[3] < maxCount) {
-                    stateCount[3]++;
+                while (y < height && gray[idx] > threshold && s3 < maxCount) {
+                    s3++;
                     y++;
                     idx += width;
                 }
-                if (y == height || stateCount[3] >= maxCount) return false;
+                if (y == height || s3 >= maxCount) return false;
 
-                while (y < height && gray[idx] <= threshold && stateCount[4] < maxCount) {
-                    stateCount[4]++;
+                while (y < height && gray[idx] <= threshold && s4 < maxCount) {
+                    s4++;
                     y++;
                     idx += width;
                 }
-                if (stateCount[4] >= maxCount) return false;
+                if (s4 >= maxCount) return false;
             } else {
                 while (y >= 0 && gray[idx] > threshold) {
-                    stateCount[2]++;
+                    s2++;
                     y--;
                     idx -= width;
                 }
                 if (y < 0) return false;
 
-                while (y >= 0 && gray[idx] <= threshold && stateCount[1] <= maxCount) {
-                    stateCount[1]++;
+                while (y >= 0 && gray[idx] <= threshold && s1 <= maxCount) {
+                    s1++;
                     y--;
                     idx -= width;
                 }
-                if (y < 0 || stateCount[1] > maxCount) return false;
+                if (y < 0 || s1 > maxCount) return false;
 
-                while (y >= 0 && gray[idx] > threshold && stateCount[0] <= maxCount) {
-                    stateCount[0]++;
+                while (y >= 0 && gray[idx] > threshold && s0 <= maxCount) {
+                    s0++;
                     y--;
                     idx -= width;
                 }
-                if (stateCount[0] > maxCount) return false;
+                if (s0 > maxCount) return false;
 
                 y = startY + 1;
                 idx = (y * width) + centerX;
                 while (y < height && gray[idx] > threshold) {
-                    stateCount[2]++;
+                    s2++;
                     y++;
                     idx += width;
                 }
                 if (y == height) return false;
 
-                while (y < height && gray[idx] <= threshold && stateCount[3] < maxCount) {
-                    stateCount[3]++;
+                while (y < height && gray[idx] <= threshold && s3 < maxCount) {
+                    s3++;
                     y++;
                     idx += width;
                 }
-                if (y == height || stateCount[3] >= maxCount) return false;
+                if (y == height || s3 >= maxCount) return false;
 
-                while (y < height && gray[idx] > threshold && stateCount[4] < maxCount) {
-                    stateCount[4]++;
+                while (y < height && gray[idx] > threshold && s4 < maxCount) {
+                    s4++;
                     y++;
                     idx += width;
                 }
-                if (stateCount[4] >= maxCount) return false;
+                if (s4 >= maxCount) return false;
             }
         } else {
             if (!invert) {
                 while (y >= 0 && gray[idx] <= thresholds[idx]) {
-                    stateCount[2]++;
+                    s2++;
                     y--;
                     idx -= width;
                 }
                 if (y < 0) return false;
 
-                while (y >= 0 && gray[idx] > thresholds[idx] && stateCount[1] <= maxCount) {
-                    stateCount[1]++;
+                while (y >= 0 && gray[idx] > thresholds[idx] && s1 <= maxCount) {
+                    s1++;
                     y--;
                     idx -= width;
                 }
-                if (y < 0 || stateCount[1] > maxCount) return false;
+                if (y < 0 || s1 > maxCount) return false;
 
-                while (y >= 0 && gray[idx] <= thresholds[idx] && stateCount[0] <= maxCount) {
-                    stateCount[0]++;
+                while (y >= 0 && gray[idx] <= thresholds[idx] && s0 <= maxCount) {
+                    s0++;
                     y--;
                     idx -= width;
                 }
-                if (stateCount[0] > maxCount) return false;
+                if (s0 > maxCount) return false;
 
                 y = startY + 1;
                 idx = (y * width) + centerX;
                 while (y < height && gray[idx] <= thresholds[idx]) {
-                    stateCount[2]++;
+                    s2++;
                     y++;
                     idx += width;
                 }
                 if (y == height) return false;
 
-                while (y < height && gray[idx] > thresholds[idx] && stateCount[3] < maxCount) {
-                    stateCount[3]++;
+                while (y < height && gray[idx] > thresholds[idx] && s3 < maxCount) {
+                    s3++;
                     y++;
                     idx += width;
                 }
-                if (y == height || stateCount[3] >= maxCount) return false;
+                if (y == height || s3 >= maxCount) return false;
 
-                while (y < height && gray[idx] <= thresholds[idx] && stateCount[4] < maxCount) {
-                    stateCount[4]++;
+                while (y < height && gray[idx] <= thresholds[idx] && s4 < maxCount) {
+                    s4++;
                     y++;
                     idx += width;
                 }
-                if (stateCount[4] >= maxCount) return false;
+                if (s4 >= maxCount) return false;
             } else {
                 while (y >= 0 && gray[idx] > thresholds[idx]) {
-                    stateCount[2]++;
+                    s2++;
                     y--;
                     idx -= width;
                 }
                 if (y < 0) return false;
 
-                while (y >= 0 && gray[idx] <= thresholds[idx] && stateCount[1] <= maxCount) {
-                    stateCount[1]++;
+                while (y >= 0 && gray[idx] <= thresholds[idx] && s1 <= maxCount) {
+                    s1++;
                     y--;
                     idx -= width;
                 }
-                if (y < 0 || stateCount[1] > maxCount) return false;
+                if (y < 0 || s1 > maxCount) return false;
 
-                while (y >= 0 && gray[idx] > thresholds[idx] && stateCount[0] <= maxCount) {
-                    stateCount[0]++;
+                while (y >= 0 && gray[idx] > thresholds[idx] && s0 <= maxCount) {
+                    s0++;
                     y--;
                     idx -= width;
                 }
-                if (stateCount[0] > maxCount) return false;
+                if (s0 > maxCount) return false;
 
                 y = startY + 1;
                 idx = (y * width) + centerX;
                 while (y < height && gray[idx] > thresholds[idx]) {
-                    stateCount[2]++;
+                    s2++;
                     y++;
                     idx += width;
                 }
                 if (y == height) return false;
 
-                while (y < height && gray[idx] <= thresholds[idx] && stateCount[3] < maxCount) {
-                    stateCount[3]++;
+                while (y < height && gray[idx] <= thresholds[idx] && s3 < maxCount) {
+                    s3++;
                     y++;
                     idx += width;
                 }
-                if (y == height || stateCount[3] >= maxCount) return false;
+                if (y == height || s3 >= maxCount) return false;
 
-                while (y < height && gray[idx] > thresholds[idx] && stateCount[4] < maxCount) {
-                    stateCount[4]++;
+                while (y < height && gray[idx] > thresholds[idx] && s4 < maxCount) {
+                    s4++;
                     y++;
                     idx += width;
                 }
-                if (stateCount[4] >= maxCount) return false;
+                if (s4 >= maxCount) return false;
             }
         }
 
-        var total = stateCount[0] + stateCount[1] + stateCount[2] + stateCount[3] + stateCount[4];
+        var total = s0 + s1 + s2 + s3 + s4;
         if (Math.Abs(total - originalTotal) * 5 >= originalTotal * 2) return false;
-        if (!FoundPatternCross(stateCount, aggressive)) return false;
+        if (!FoundPatternCross(s0, s1, s2, s3, s4, aggressive)) return false;
 
-        centerY = CenterFromEnd(stateCount, y);
+        centerY = CenterFromEnd(s0, s1, s2, s3, s4, y);
         moduleSize = total / 7.0;
         return true;
     }
@@ -737,8 +824,11 @@ internal static class QrFinderPatternDetector {
         var gray = image.Gray;
         var thresholds = image.ThresholdMap;
         var threshold = image.Threshold;
-
-        Span<int> stateCount = stackalloc int[5];
+        var s0 = 0;
+        var s1 = 0;
+        var s2 = 0;
+        var s3 = 0;
+        var s4 = 0;
 
         var x = startX;
         var rowOffset = centerY * width;
@@ -746,190 +836,190 @@ internal static class QrFinderPatternDetector {
         if (thresholds is null) {
             if (!invert) {
                 while (x >= 0 && gray[idx] <= threshold) {
-                    stateCount[2]++;
+                    s2++;
                     x--;
                     idx--;
                 }
                 if (x < 0) return false;
 
-                while (x >= 0 && gray[idx] > threshold && stateCount[1] <= maxCount) {
-                    stateCount[1]++;
+                while (x >= 0 && gray[idx] > threshold && s1 <= maxCount) {
+                    s1++;
                     x--;
                     idx--;
                 }
-                if (x < 0 || stateCount[1] > maxCount) return false;
+                if (x < 0 || s1 > maxCount) return false;
 
-                while (x >= 0 && gray[idx] <= threshold && stateCount[0] <= maxCount) {
-                    stateCount[0]++;
+                while (x >= 0 && gray[idx] <= threshold && s0 <= maxCount) {
+                    s0++;
                     x--;
                     idx--;
                 }
-                if (stateCount[0] > maxCount) return false;
+                if (s0 > maxCount) return false;
 
                 x = startX + 1;
                 idx = rowOffset + x;
                 while (x < width && gray[idx] <= threshold) {
-                    stateCount[2]++;
+                    s2++;
                     x++;
                     idx++;
                 }
                 if (x == width) return false;
 
-                while (x < width && gray[idx] > threshold && stateCount[3] < maxCount) {
-                    stateCount[3]++;
+                while (x < width && gray[idx] > threshold && s3 < maxCount) {
+                    s3++;
                     x++;
                     idx++;
                 }
-                if (x == width || stateCount[3] >= maxCount) return false;
+                if (x == width || s3 >= maxCount) return false;
 
-                while (x < width && gray[idx] <= threshold && stateCount[4] < maxCount) {
-                    stateCount[4]++;
+                while (x < width && gray[idx] <= threshold && s4 < maxCount) {
+                    s4++;
                     x++;
                     idx++;
                 }
-                if (stateCount[4] >= maxCount) return false;
+                if (s4 >= maxCount) return false;
             } else {
                 while (x >= 0 && gray[idx] > threshold) {
-                    stateCount[2]++;
+                    s2++;
                     x--;
                     idx--;
                 }
                 if (x < 0) return false;
 
-                while (x >= 0 && gray[idx] <= threshold && stateCount[1] <= maxCount) {
-                    stateCount[1]++;
+                while (x >= 0 && gray[idx] <= threshold && s1 <= maxCount) {
+                    s1++;
                     x--;
                     idx--;
                 }
-                if (x < 0 || stateCount[1] > maxCount) return false;
+                if (x < 0 || s1 > maxCount) return false;
 
-                while (x >= 0 && gray[idx] > threshold && stateCount[0] <= maxCount) {
-                    stateCount[0]++;
+                while (x >= 0 && gray[idx] > threshold && s0 <= maxCount) {
+                    s0++;
                     x--;
                     idx--;
                 }
-                if (stateCount[0] > maxCount) return false;
+                if (s0 > maxCount) return false;
 
                 x = startX + 1;
                 idx = rowOffset + x;
                 while (x < width && gray[idx] > threshold) {
-                    stateCount[2]++;
+                    s2++;
                     x++;
                     idx++;
                 }
                 if (x == width) return false;
 
-                while (x < width && gray[idx] <= threshold && stateCount[3] < maxCount) {
-                    stateCount[3]++;
+                while (x < width && gray[idx] <= threshold && s3 < maxCount) {
+                    s3++;
                     x++;
                     idx++;
                 }
-                if (x == width || stateCount[3] >= maxCount) return false;
+                if (x == width || s3 >= maxCount) return false;
 
-                while (x < width && gray[idx] > threshold && stateCount[4] < maxCount) {
-                    stateCount[4]++;
+                while (x < width && gray[idx] > threshold && s4 < maxCount) {
+                    s4++;
                     x++;
                     idx++;
                 }
-                if (stateCount[4] >= maxCount) return false;
+                if (s4 >= maxCount) return false;
             }
         } else {
             if (!invert) {
                 while (x >= 0 && gray[idx] <= thresholds[idx]) {
-                    stateCount[2]++;
+                    s2++;
                     x--;
                     idx--;
                 }
                 if (x < 0) return false;
 
-                while (x >= 0 && gray[idx] > thresholds[idx] && stateCount[1] <= maxCount) {
-                    stateCount[1]++;
+                while (x >= 0 && gray[idx] > thresholds[idx] && s1 <= maxCount) {
+                    s1++;
                     x--;
                     idx--;
                 }
-                if (x < 0 || stateCount[1] > maxCount) return false;
+                if (x < 0 || s1 > maxCount) return false;
 
-                while (x >= 0 && gray[idx] <= thresholds[idx] && stateCount[0] <= maxCount) {
-                    stateCount[0]++;
+                while (x >= 0 && gray[idx] <= thresholds[idx] && s0 <= maxCount) {
+                    s0++;
                     x--;
                     idx--;
                 }
-                if (stateCount[0] > maxCount) return false;
+                if (s0 > maxCount) return false;
 
                 x = startX + 1;
                 idx = rowOffset + x;
                 while (x < width && gray[idx] <= thresholds[idx]) {
-                    stateCount[2]++;
+                    s2++;
                     x++;
                     idx++;
                 }
                 if (x == width) return false;
 
-                while (x < width && gray[idx] > thresholds[idx] && stateCount[3] < maxCount) {
-                    stateCount[3]++;
+                while (x < width && gray[idx] > thresholds[idx] && s3 < maxCount) {
+                    s3++;
                     x++;
                     idx++;
                 }
-                if (x == width || stateCount[3] >= maxCount) return false;
+                if (x == width || s3 >= maxCount) return false;
 
-                while (x < width && gray[idx] <= thresholds[idx] && stateCount[4] < maxCount) {
-                    stateCount[4]++;
+                while (x < width && gray[idx] <= thresholds[idx] && s4 < maxCount) {
+                    s4++;
                     x++;
                     idx++;
                 }
-                if (stateCount[4] >= maxCount) return false;
+                if (s4 >= maxCount) return false;
             } else {
                 while (x >= 0 && gray[idx] > thresholds[idx]) {
-                    stateCount[2]++;
+                    s2++;
                     x--;
                     idx--;
                 }
                 if (x < 0) return false;
 
-                while (x >= 0 && gray[idx] <= thresholds[idx] && stateCount[1] <= maxCount) {
-                    stateCount[1]++;
+                while (x >= 0 && gray[idx] <= thresholds[idx] && s1 <= maxCount) {
+                    s1++;
                     x--;
                     idx--;
                 }
-                if (x < 0 || stateCount[1] > maxCount) return false;
+                if (x < 0 || s1 > maxCount) return false;
 
-                while (x >= 0 && gray[idx] > thresholds[idx] && stateCount[0] <= maxCount) {
-                    stateCount[0]++;
+                while (x >= 0 && gray[idx] > thresholds[idx] && s0 <= maxCount) {
+                    s0++;
                     x--;
                     idx--;
                 }
-                if (stateCount[0] > maxCount) return false;
+                if (s0 > maxCount) return false;
 
                 x = startX + 1;
                 idx = rowOffset + x;
                 while (x < width && gray[idx] > thresholds[idx]) {
-                    stateCount[2]++;
+                    s2++;
                     x++;
                     idx++;
                 }
                 if (x == width) return false;
 
-                while (x < width && gray[idx] <= thresholds[idx] && stateCount[3] < maxCount) {
-                    stateCount[3]++;
+                while (x < width && gray[idx] <= thresholds[idx] && s3 < maxCount) {
+                    s3++;
                     x++;
                     idx++;
                 }
-                if (x == width || stateCount[3] >= maxCount) return false;
+                if (x == width || s3 >= maxCount) return false;
 
-                while (x < width && gray[idx] > thresholds[idx] && stateCount[4] < maxCount) {
-                    stateCount[4]++;
+                while (x < width && gray[idx] > thresholds[idx] && s4 < maxCount) {
+                    s4++;
                     x++;
                     idx++;
                 }
-                if (stateCount[4] >= maxCount) return false;
+                if (s4 >= maxCount) return false;
             }
         }
 
-        var total = stateCount[0] + stateCount[1] + stateCount[2] + stateCount[3] + stateCount[4];
+        var total = s0 + s1 + s2 + s3 + s4;
         if (Math.Abs(total - originalTotal) * 5 >= originalTotal * 2) return false;
-        if (!FoundPatternCross(stateCount, aggressive)) return false;
+        if (!FoundPatternCross(s0, s1, s2, s3, s4, aggressive)) return false;
 
-        centerX = CenterFromEnd(stateCount, x);
+        centerX = CenterFromEnd(s0, s1, s2, s3, s4, x);
         moduleSize = total / 7.0;
         return true;
     }
@@ -941,7 +1031,11 @@ internal static class QrFinderPatternDetector {
         var thresholds = image.ThresholdMap;
         var threshold = image.Threshold;
 
-        Span<int> stateCount = stackalloc int[5];
+        var s0 = 0;
+        var s1 = 0;
+        var s2 = 0;
+        var s3 = 0;
+        var s4 = 0;
 
         var x = centerX;
         var y = centerY;
@@ -949,216 +1043,216 @@ internal static class QrFinderPatternDetector {
         if (thresholds is null) {
             if (!invert) {
                 while (x >= 0 && y >= 0 && gray[idx] <= threshold) {
-                    stateCount[2]++;
+                    s2++;
                     x--;
                     y--;
                     idx -= width + 1;
                 }
                 if (x < 0 || y < 0) return false;
 
-                while (x >= 0 && y >= 0 && gray[idx] > threshold && stateCount[1] <= maxCount) {
-                    stateCount[1]++;
+                while (x >= 0 && y >= 0 && gray[idx] > threshold && s1 <= maxCount) {
+                    s1++;
                     x--;
                     y--;
                     idx -= width + 1;
                 }
-                if (x < 0 || y < 0 || stateCount[1] > maxCount) return false;
+                if (x < 0 || y < 0 || s1 > maxCount) return false;
 
-                while (x >= 0 && y >= 0 && gray[idx] <= threshold && stateCount[0] <= maxCount) {
-                    stateCount[0]++;
+                while (x >= 0 && y >= 0 && gray[idx] <= threshold && s0 <= maxCount) {
+                    s0++;
                     x--;
                     y--;
                     idx -= width + 1;
                 }
-                if (stateCount[0] > maxCount) return false;
+                if (s0 > maxCount) return false;
 
                 x = centerX + 1;
                 y = centerY + 1;
                 idx = (y * width) + x;
                 while (x < width && y < height && gray[idx] <= threshold) {
-                    stateCount[2]++;
+                    s2++;
                     x++;
                     y++;
                     idx += width + 1;
                 }
                 if (x >= width || y >= height) return false;
 
-                while (x < width && y < height && gray[idx] > threshold && stateCount[3] < maxCount) {
-                    stateCount[3]++;
+                while (x < width && y < height && gray[idx] > threshold && s3 < maxCount) {
+                    s3++;
                     x++;
                     y++;
                     idx += width + 1;
                 }
-                if (x >= width || y >= height || stateCount[3] >= maxCount) return false;
+                if (x >= width || y >= height || s3 >= maxCount) return false;
 
-                while (x < width && y < height && gray[idx] <= threshold && stateCount[4] < maxCount) {
-                    stateCount[4]++;
+                while (x < width && y < height && gray[idx] <= threshold && s4 < maxCount) {
+                    s4++;
                     x++;
                     y++;
                     idx += width + 1;
                 }
-                if (stateCount[4] >= maxCount) return false;
+                if (s4 >= maxCount) return false;
             } else {
                 while (x >= 0 && y >= 0 && gray[idx] > threshold) {
-                    stateCount[2]++;
+                    s2++;
                     x--;
                     y--;
                     idx -= width + 1;
                 }
                 if (x < 0 || y < 0) return false;
 
-                while (x >= 0 && y >= 0 && gray[idx] <= threshold && stateCount[1] <= maxCount) {
-                    stateCount[1]++;
+                while (x >= 0 && y >= 0 && gray[idx] <= threshold && s1 <= maxCount) {
+                    s1++;
                     x--;
                     y--;
                     idx -= width + 1;
                 }
-                if (x < 0 || y < 0 || stateCount[1] > maxCount) return false;
+                if (x < 0 || y < 0 || s1 > maxCount) return false;
 
-                while (x >= 0 && y >= 0 && gray[idx] > threshold && stateCount[0] <= maxCount) {
-                    stateCount[0]++;
+                while (x >= 0 && y >= 0 && gray[idx] > threshold && s0 <= maxCount) {
+                    s0++;
                     x--;
                     y--;
                     idx -= width + 1;
                 }
-                if (stateCount[0] > maxCount) return false;
+                if (s0 > maxCount) return false;
 
                 x = centerX + 1;
                 y = centerY + 1;
                 idx = (y * width) + x;
                 while (x < width && y < height && gray[idx] > threshold) {
-                    stateCount[2]++;
+                    s2++;
                     x++;
                     y++;
                     idx += width + 1;
                 }
                 if (x >= width || y >= height) return false;
 
-                while (x < width && y < height && gray[idx] <= threshold && stateCount[3] < maxCount) {
-                    stateCount[3]++;
+                while (x < width && y < height && gray[idx] <= threshold && s3 < maxCount) {
+                    s3++;
                     x++;
                     y++;
                     idx += width + 1;
                 }
-                if (x >= width || y >= height || stateCount[3] >= maxCount) return false;
+                if (x >= width || y >= height || s3 >= maxCount) return false;
 
-                while (x < width && y < height && gray[idx] > threshold && stateCount[4] < maxCount) {
-                    stateCount[4]++;
+                while (x < width && y < height && gray[idx] > threshold && s4 < maxCount) {
+                    s4++;
                     x++;
                     y++;
                     idx += width + 1;
                 }
-                if (stateCount[4] >= maxCount) return false;
+                if (s4 >= maxCount) return false;
             }
         } else {
             if (!invert) {
                 while (x >= 0 && y >= 0 && gray[idx] <= thresholds[idx]) {
-                    stateCount[2]++;
+                    s2++;
                     x--;
                     y--;
                     idx -= width + 1;
                 }
                 if (x < 0 || y < 0) return false;
 
-                while (x >= 0 && y >= 0 && gray[idx] > thresholds[idx] && stateCount[1] <= maxCount) {
-                    stateCount[1]++;
+                while (x >= 0 && y >= 0 && gray[idx] > thresholds[idx] && s1 <= maxCount) {
+                    s1++;
                     x--;
                     y--;
                     idx -= width + 1;
                 }
-                if (x < 0 || y < 0 || stateCount[1] > maxCount) return false;
+                if (x < 0 || y < 0 || s1 > maxCount) return false;
 
-                while (x >= 0 && y >= 0 && gray[idx] <= thresholds[idx] && stateCount[0] <= maxCount) {
-                    stateCount[0]++;
+                while (x >= 0 && y >= 0 && gray[idx] <= thresholds[idx] && s0 <= maxCount) {
+                    s0++;
                     x--;
                     y--;
                     idx -= width + 1;
                 }
-                if (stateCount[0] > maxCount) return false;
+                if (s0 > maxCount) return false;
 
                 x = centerX + 1;
                 y = centerY + 1;
                 idx = (y * width) + x;
                 while (x < width && y < height && gray[idx] <= thresholds[idx]) {
-                    stateCount[2]++;
+                    s2++;
                     x++;
                     y++;
                     idx += width + 1;
                 }
                 if (x >= width || y >= height) return false;
 
-                while (x < width && y < height && gray[idx] > thresholds[idx] && stateCount[3] < maxCount) {
-                    stateCount[3]++;
+                while (x < width && y < height && gray[idx] > thresholds[idx] && s3 < maxCount) {
+                    s3++;
                     x++;
                     y++;
                     idx += width + 1;
                 }
-                if (x >= width || y >= height || stateCount[3] >= maxCount) return false;
+                if (x >= width || y >= height || s3 >= maxCount) return false;
 
-                while (x < width && y < height && gray[idx] <= thresholds[idx] && stateCount[4] < maxCount) {
-                    stateCount[4]++;
+                while (x < width && y < height && gray[idx] <= thresholds[idx] && s4 < maxCount) {
+                    s4++;
                     x++;
                     y++;
                     idx += width + 1;
                 }
-                if (stateCount[4] >= maxCount) return false;
+                if (s4 >= maxCount) return false;
             } else {
                 while (x >= 0 && y >= 0 && gray[idx] > thresholds[idx]) {
-                    stateCount[2]++;
+                    s2++;
                     x--;
                     y--;
                     idx -= width + 1;
                 }
                 if (x < 0 || y < 0) return false;
 
-                while (x >= 0 && y >= 0 && gray[idx] <= thresholds[idx] && stateCount[1] <= maxCount) {
-                    stateCount[1]++;
+                while (x >= 0 && y >= 0 && gray[idx] <= thresholds[idx] && s1 <= maxCount) {
+                    s1++;
                     x--;
                     y--;
                     idx -= width + 1;
                 }
-                if (x < 0 || y < 0 || stateCount[1] > maxCount) return false;
+                if (x < 0 || y < 0 || s1 > maxCount) return false;
 
-                while (x >= 0 && y >= 0 && gray[idx] > thresholds[idx] && stateCount[0] <= maxCount) {
-                    stateCount[0]++;
+                while (x >= 0 && y >= 0 && gray[idx] > thresholds[idx] && s0 <= maxCount) {
+                    s0++;
                     x--;
                     y--;
                     idx -= width + 1;
                 }
-                if (stateCount[0] > maxCount) return false;
+                if (s0 > maxCount) return false;
 
                 x = centerX + 1;
                 y = centerY + 1;
                 idx = (y * width) + x;
                 while (x < width && y < height && gray[idx] > thresholds[idx]) {
-                    stateCount[2]++;
+                    s2++;
                     x++;
                     y++;
                     idx += width + 1;
                 }
                 if (x >= width || y >= height) return false;
 
-                while (x < width && y < height && gray[idx] <= thresholds[idx] && stateCount[3] < maxCount) {
-                    stateCount[3]++;
+                while (x < width && y < height && gray[idx] <= thresholds[idx] && s3 < maxCount) {
+                    s3++;
                     x++;
                     y++;
                     idx += width + 1;
                 }
-                if (x >= width || y >= height || stateCount[3] >= maxCount) return false;
+                if (x >= width || y >= height || s3 >= maxCount) return false;
 
-                while (x < width && y < height && gray[idx] > thresholds[idx] && stateCount[4] < maxCount) {
-                    stateCount[4]++;
+                while (x < width && y < height && gray[idx] > thresholds[idx] && s4 < maxCount) {
+                    s4++;
                     x++;
                     y++;
                     idx += width + 1;
                 }
-                if (stateCount[4] >= maxCount) return false;
+                if (s4 >= maxCount) return false;
             }
         }
 
-        var total = stateCount[0] + stateCount[1] + stateCount[2] + stateCount[3] + stateCount[4];
+        var total = s0 + s1 + s2 + s3 + s4;
         if (Math.Abs(total - originalTotal) * 5 >= originalTotal * 2) return false;
-        if (!FoundPatternCross(stateCount, aggressive)) return false;
+        if (!FoundPatternCross(s0, s1, s2, s3, s4, aggressive)) return false;
 
         return true;
     }

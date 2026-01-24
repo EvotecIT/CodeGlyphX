@@ -24,7 +24,7 @@
                     {
                         "os":  "windows",
                         "runMode":  "quick",
-                        "generatedUtc":  "2026-01-24T08:09:37.6622515Z",
+                        "generatedUtc":  "2026-01-24T08:30:07.9840968Z",
                         "publish":  false,
                         "framework":  "net8.0",
                         "configuration":  "Release",
@@ -45,7 +45,7 @@
                     {
                         "os":  "windows",
                         "runMode":  "full",
-                        "generatedUtc":  "2026-01-24T08:09:44.7901106Z",
+                        "generatedUtc":  "2026-01-24T08:30:18.4597663Z",
                         "publish":  true,
                         "framework":  "net8.0",
                         "configuration":  "Release",

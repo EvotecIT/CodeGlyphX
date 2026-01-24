@@ -27,118 +27,353 @@ internal static partial class QrPixelDecoder {
         var gray = image.Gray;
         var thresholdMap = image.ThresholdMap;
         var threshold = image.Threshold;
-        var useMap = thresholdMap is not null;
-        var invertSense = invert ? 1 : 0;
         var compareThreshold = threshold;
 
         try {
-            for (var y = 0; y < h; y++) {
-                if (shouldStop?.Invoke() == true) break;
-                var row = y * w;
-                for (var x = 0; x < w; x++) {
-                    var idx = row + x;
-                    if (visited[idx]) continue;
-                    var lum = gray[idx];
-                    var t = useMap ? thresholdMap![idx] : compareThreshold;
-                    var isBlack = invertSense == 0 ? lum <= t : lum > t;
-                    if (!isBlack) {
-                        visited[idx] = true;
-                        continue;
-                    }
-                    visited[idx] = true;
+            if (thresholdMap is null) {
+                if (!invert) {
+                    for (var y = 0; y < h; y++) {
+                        if (shouldStop?.Invoke() == true) break;
+                        var row = y * w;
+                        for (int x = 0, idx = row; x < w; x++, idx++) {
+                            if (visited[idx]) continue;
+                            if (gray[idx] > compareThreshold) {
+                                visited[idx] = true;
+                                continue;
+                            }
+                            visited[idx] = true;
 
-                    var minX = x;
-                    var maxX = x;
-                    var minY = y;
-                    var maxY = y;
-                    var area = 0;
+                            var minX = x;
+                            var maxX = x;
+                            var minY = y;
+                            var maxY = y;
+                            var area = 0;
 
-                    var sp = 0;
-                    stack[sp++] = idx;
+                            var sp = 0;
+                            stack[sp++] = idx;
 
-                    while (sp > 0) {
-                        var cur = stack[--sp];
+                            while (sp > 0) {
+                                if (sp + 4 >= stack.Length) {
+                                    GrowStack(ref stack, sp + 4);
+                                }
+                                var cur = stack[--sp];
 
-                        var cy = cur / w;
-                        var cx = cur - cy * w;
+                                var cy = cur / w;
+                                var cx = cur - cy * w;
 
-                        area++;
-                        if (cx < minX) minX = cx;
-                        if (cx > maxX) maxX = cx;
-                        if (cy < minY) minY = cy;
-                        if (cy > maxY) maxY = cy;
+                                area++;
+                                if (cx < minX) minX = cx;
+                                if (cx > maxX) maxX = cx;
+                                if (cy < minY) minY = cy;
+                                if (cy > maxY) maxY = cy;
 
-                        if (cx > 0) {
-                            var ni = cur - 1;
-                            if (!visited[ni]) {
-                                visited[ni] = true;
-                                var nLum = gray[ni];
-                                var nT = useMap ? thresholdMap![ni] : compareThreshold;
-                                var nBlack = invertSense == 0 ? nLum <= nT : nLum > nT;
-                                if (nBlack) {
-                                    if (sp >= stack.Length) {
-                                        GrowStack(ref stack, sp);
+                                if (cx > 0) {
+                                    var ni = cur - 1;
+                                    if (!visited[ni]) {
+                                        visited[ni] = true;
+                                        if (gray[ni] <= compareThreshold) {
+                                            stack[sp++] = ni;
+                                        }
                                     }
-                                    stack[sp++] = ni;
+                                }
+                                if (cx + 1 < w) {
+                                    var ni = cur + 1;
+                                    if (!visited[ni]) {
+                                        visited[ni] = true;
+                                        if (gray[ni] <= compareThreshold) {
+                                            stack[sp++] = ni;
+                                        }
+                                    }
+                                }
+                                if (cy > 0) {
+                                    var ni = cur - w;
+                                    if (!visited[ni]) {
+                                        visited[ni] = true;
+                                        if (gray[ni] <= compareThreshold) {
+                                            stack[sp++] = ni;
+                                        }
+                                    }
+                                }
+                                if (cy + 1 < h) {
+                                    var ni = cur + w;
+                                    if (!visited[ni]) {
+                                        visited[ni] = true;
+                                        if (gray[ni] <= compareThreshold) {
+                                            stack[sp++] = ni;
+                                        }
+                                    }
                                 }
                             }
-                        }
-                        if (cx + 1 < w) {
-                            var ni = cur + 1;
-                            if (!visited[ni]) {
-                                visited[ni] = true;
-                                var nLum = gray[ni];
-                                var nT = useMap ? thresholdMap![ni] : compareThreshold;
-                                var nBlack = invertSense == 0 ? nLum <= nT : nLum > nT;
-                                if (nBlack) {
-                                    if (sp >= stack.Length) {
-                                        GrowStack(ref stack, sp);
-                                    }
-                                    stack[sp++] = ni;
-                                }
-                            }
-                        }
-                        if (cy > 0) {
-                            var ni = cur - w;
-                            if (!visited[ni]) {
-                                visited[ni] = true;
-                                var nLum = gray[ni];
-                                var nT = useMap ? thresholdMap![ni] : compareThreshold;
-                                var nBlack = invertSense == 0 ? nLum <= nT : nLum > nT;
-                                if (nBlack) {
-                                    if (sp >= stack.Length) {
-                                        GrowStack(ref stack, sp);
-                                    }
-                                    stack[sp++] = ni;
-                                }
-                            }
-                        }
-                        if (cy + 1 < h) {
-                            var ni = cur + w;
-                            if (!visited[ni]) {
-                                visited[ni] = true;
-                                var nLum = gray[ni];
-                                var nT = useMap ? thresholdMap![ni] : compareThreshold;
-                                var nBlack = invertSense == 0 ? nLum <= nT : nLum > nT;
-                                if (nBlack) {
-                                    if (sp >= stack.Length) {
-                                        GrowStack(ref stack, sp);
-                                    }
-                                    stack[sp++] = ni;
-                                }
-                            }
+
+                            if (area < minArea) continue;
+                            var cw = maxX - minX + 1;
+                            var ch = maxY - minY + 1;
+                            if (cw < 21 || ch < 21) continue;
+
+                            var ratio = cw > ch ? (double)cw / ch : (double)ch / cw;
+                            if (ratio > 2.2) continue;
+
+                            comps.Add(new Component(minX, minY, maxX, maxY, area));
                         }
                     }
+                } else {
+                    for (var y = 0; y < h; y++) {
+                        if (shouldStop?.Invoke() == true) break;
+                        var row = y * w;
+                        for (int x = 0, idx = row; x < w; x++, idx++) {
+                            if (visited[idx]) continue;
+                            if (gray[idx] <= compareThreshold) {
+                                visited[idx] = true;
+                                continue;
+                            }
+                            visited[idx] = true;
 
-                    if (area < minArea) continue;
-                    var cw = maxX - minX + 1;
-                    var ch = maxY - minY + 1;
-                    if (cw < 21 || ch < 21) continue;
+                            var minX = x;
+                            var maxX = x;
+                            var minY = y;
+                            var maxY = y;
+                            var area = 0;
 
-                    var ratio = cw > ch ? (double)cw / ch : (double)ch / cw;
-                    if (ratio > 2.2) continue;
+                            var sp = 0;
+                            stack[sp++] = idx;
 
-                    comps.Add(new Component(minX, minY, maxX, maxY, area));
+                            while (sp > 0) {
+                                if (sp + 4 >= stack.Length) {
+                                    GrowStack(ref stack, sp + 4);
+                                }
+                                var cur = stack[--sp];
+
+                                var cy = cur / w;
+                                var cx = cur - cy * w;
+
+                                area++;
+                                if (cx < minX) minX = cx;
+                                if (cx > maxX) maxX = cx;
+                                if (cy < minY) minY = cy;
+                                if (cy > maxY) maxY = cy;
+
+                                if (cx > 0) {
+                                    var ni = cur - 1;
+                                    if (!visited[ni]) {
+                                        visited[ni] = true;
+                                        if (gray[ni] > compareThreshold) {
+                                            stack[sp++] = ni;
+                                        }
+                                    }
+                                }
+                                if (cx + 1 < w) {
+                                    var ni = cur + 1;
+                                    if (!visited[ni]) {
+                                        visited[ni] = true;
+                                        if (gray[ni] > compareThreshold) {
+                                            stack[sp++] = ni;
+                                        }
+                                    }
+                                }
+                                if (cy > 0) {
+                                    var ni = cur - w;
+                                    if (!visited[ni]) {
+                                        visited[ni] = true;
+                                        if (gray[ni] > compareThreshold) {
+                                            stack[sp++] = ni;
+                                        }
+                                    }
+                                }
+                                if (cy + 1 < h) {
+                                    var ni = cur + w;
+                                    if (!visited[ni]) {
+                                        visited[ni] = true;
+                                        if (gray[ni] > compareThreshold) {
+                                            stack[sp++] = ni;
+                                        }
+                                    }
+                                }
+                            }
+
+                            if (area < minArea) continue;
+                            var cw = maxX - minX + 1;
+                            var ch = maxY - minY + 1;
+                            if (cw < 21 || ch < 21) continue;
+
+                            var ratio = cw > ch ? (double)cw / ch : (double)ch / cw;
+                            if (ratio > 2.2) continue;
+
+                            comps.Add(new Component(minX, minY, maxX, maxY, area));
+                        }
+                    }
+                }
+            } else {
+                var thresholds = thresholdMap;
+                if (!invert) {
+                    for (var y = 0; y < h; y++) {
+                        if (shouldStop?.Invoke() == true) break;
+                        var row = y * w;
+                        for (int x = 0, idx = row; x < w; x++, idx++) {
+                            if (visited[idx]) continue;
+                            if (gray[idx] > thresholds![idx]) {
+                                visited[idx] = true;
+                                continue;
+                            }
+                            visited[idx] = true;
+
+                            var minX = x;
+                            var maxX = x;
+                            var minY = y;
+                            var maxY = y;
+                            var area = 0;
+
+                            var sp = 0;
+                            stack[sp++] = idx;
+
+                            while (sp > 0) {
+                                if (sp + 4 >= stack.Length) {
+                                    GrowStack(ref stack, sp + 4);
+                                }
+                                var cur = stack[--sp];
+
+                                var cy = cur / w;
+                                var cx = cur - cy * w;
+
+                                area++;
+                                if (cx < minX) minX = cx;
+                                if (cx > maxX) maxX = cx;
+                                if (cy < minY) minY = cy;
+                                if (cy > maxY) maxY = cy;
+
+                                if (cx > 0) {
+                                    var ni = cur - 1;
+                                    if (!visited[ni]) {
+                                        visited[ni] = true;
+                                        if (gray[ni] <= thresholds[ni]) {
+                                            stack[sp++] = ni;
+                                        }
+                                    }
+                                }
+                                if (cx + 1 < w) {
+                                    var ni = cur + 1;
+                                    if (!visited[ni]) {
+                                        visited[ni] = true;
+                                        if (gray[ni] <= thresholds[ni]) {
+                                            stack[sp++] = ni;
+                                        }
+                                    }
+                                }
+                                if (cy > 0) {
+                                    var ni = cur - w;
+                                    if (!visited[ni]) {
+                                        visited[ni] = true;
+                                        if (gray[ni] <= thresholds[ni]) {
+                                            stack[sp++] = ni;
+                                        }
+                                    }
+                                }
+                                if (cy + 1 < h) {
+                                    var ni = cur + w;
+                                    if (!visited[ni]) {
+                                        visited[ni] = true;
+                                        if (gray[ni] <= thresholds[ni]) {
+                                            stack[sp++] = ni;
+                                        }
+                                    }
+                                }
+                            }
+
+                            if (area < minArea) continue;
+                            var cw = maxX - minX + 1;
+                            var ch = maxY - minY + 1;
+                            if (cw < 21 || ch < 21) continue;
+
+                            var ratio = cw > ch ? (double)cw / ch : (double)ch / cw;
+                            if (ratio > 2.2) continue;
+
+                            comps.Add(new Component(minX, minY, maxX, maxY, area));
+                        }
+                    }
+                } else {
+                    for (var y = 0; y < h; y++) {
+                        if (shouldStop?.Invoke() == true) break;
+                        var row = y * w;
+                        for (int x = 0, idx = row; x < w; x++, idx++) {
+                            if (visited[idx]) continue;
+                            if (gray[idx] <= thresholds![idx]) {
+                                visited[idx] = true;
+                                continue;
+                            }
+                            visited[idx] = true;
+
+                            var minX = x;
+                            var maxX = x;
+                            var minY = y;
+                            var maxY = y;
+                            var area = 0;
+
+                            var sp = 0;
+                            stack[sp++] = idx;
+
+                            while (sp > 0) {
+                                if (sp + 4 >= stack.Length) {
+                                    GrowStack(ref stack, sp + 4);
+                                }
+                                var cur = stack[--sp];
+
+                                var cy = cur / w;
+                                var cx = cur - cy * w;
+
+                                area++;
+                                if (cx < minX) minX = cx;
+                                if (cx > maxX) maxX = cx;
+                                if (cy < minY) minY = cy;
+                                if (cy > maxY) maxY = cy;
+
+                                if (cx > 0) {
+                                    var ni = cur - 1;
+                                    if (!visited[ni]) {
+                                        visited[ni] = true;
+                                        if (gray[ni] > thresholds[ni]) {
+                                            stack[sp++] = ni;
+                                        }
+                                    }
+                                }
+                                if (cx + 1 < w) {
+                                    var ni = cur + 1;
+                                    if (!visited[ni]) {
+                                        visited[ni] = true;
+                                        if (gray[ni] > thresholds[ni]) {
+                                            stack[sp++] = ni;
+                                        }
+                                    }
+                                }
+                                if (cy > 0) {
+                                    var ni = cur - w;
+                                    if (!visited[ni]) {
+                                        visited[ni] = true;
+                                        if (gray[ni] > thresholds[ni]) {
+                                            stack[sp++] = ni;
+                                        }
+                                    }
+                                }
+                                if (cy + 1 < h) {
+                                    var ni = cur + w;
+                                    if (!visited[ni]) {
+                                        visited[ni] = true;
+                                        if (gray[ni] > thresholds[ni]) {
+                                            stack[sp++] = ni;
+                                        }
+                                    }
+                                }
+                            }
+
+                            if (area < minArea) continue;
+                            var cw = maxX - minX + 1;
+                            var ch = maxY - minY + 1;
+                            if (cw < 21 || ch < 21) continue;
+
+                            var ratio = cw > ch ? (double)cw / ch : (double)ch / cw;
+                            if (ratio > 2.2) continue;
+
+                            comps.Add(new Component(minX, minY, maxX, maxY, area));
+                        }
+                    }
                 }
             }
         } finally {
