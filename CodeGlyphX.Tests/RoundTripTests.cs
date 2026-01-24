@@ -1,3 +1,4 @@
+using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Png;
 using CodeGlyphX.Qr;
 using CodeGlyphX.Tests.TestHelpers;
@@ -161,6 +162,48 @@ public sealed class RoundTripTests {
             AggressiveSampling = true
         };
         Assert.True(QrDecoder.TryDecode(scaled, dstW, dstH, dstStride, PixelFormat.Rgba32, out var decoded, options));
+        Assert.Equal(text, decoded.Text);
+    }
+
+    [Fact]
+    public void DecodePixels_CanDecodeLogoQr_Robust() {
+        var text = "Logo QR";
+        var logo = LogoBuilder.CreateCirclePng(
+            size: 96,
+            color: new Rgba32(24, 24, 24, 255),
+            accent: new Rgba32(240, 240, 240, 255),
+            out _,
+            out _);
+        var opts = QrPresets.Logo(logo);
+        var png = QrEasy.RenderPng(text, opts);
+
+        var (rgba, width, height, stride) = PngTestDecoder.DecodeRgba32(png);
+        var options = new QrPixelDecodeOptions { Profile = QrDecodeProfile.Robust, AggressiveSampling = true };
+        Assert.True(QrDecoder.TryDecode(rgba, width, height, stride, PixelFormat.Rgba32, out var decoded, options));
+        Assert.Equal(text, decoded.Text);
+    }
+
+    [Fact]
+    public void DecodePixels_CanDecodeFancyQr_Robust() {
+        var text = "Fancy QR";
+        var opts = new QrEasyOptions { Style = QrRenderStyle.Fancy, ModuleSize = 8, QuietZone = 4 };
+        var png = QrEasy.RenderPng(text, opts);
+
+        var (rgba, width, height, stride) = PngTestDecoder.DecodeRgba32(png);
+        var options = new QrPixelDecodeOptions { Profile = QrDecodeProfile.Robust, AggressiveSampling = true };
+        Assert.True(QrDecoder.TryDecode(rgba, width, height, stride, PixelFormat.Rgba32, out var decoded, options));
+        Assert.Equal(text, decoded.Text);
+    }
+
+    [Fact]
+    public void DecodePixels_CanDecodeNoQuietZone_Robust() {
+        var text = "No quiet zone";
+        var opts = new QrEasyOptions { QuietZone = 0, ErrorCorrectionLevel = QrErrorCorrectionLevel.H, ModuleSize = 8 };
+        var png = QrEasy.RenderPng(text, opts);
+
+        var (rgba, width, height, stride) = PngTestDecoder.DecodeRgba32(png);
+        var options = new QrPixelDecodeOptions { Profile = QrDecodeProfile.Robust, AggressiveSampling = true };
+        Assert.True(QrDecoder.TryDecode(rgba, width, height, stride, PixelFormat.Rgba32, out var decoded, options));
         Assert.Equal(text, decoded.Text);
     }
 

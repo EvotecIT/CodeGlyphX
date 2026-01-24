@@ -92,19 +92,17 @@ internal static class QrPayloadParser {
 
         if (dataCodewords is null) return false;
         if (version is < 1 or > 40) return false;
-        if (shouldStop?.Invoke() == true) return false;
+        if (shouldStop is not null && shouldStop()) return false;
 
         var bitLen = dataCodewords.Length * 8;
         var bitPos = 0;
         var stop = shouldStop;
+        var useStop = stop is not null;
         var stopCounter = 0;
         const int stopMask = 15;
 
-        bool ShouldStopSparse() {
-            if (stop is null) return false;
-            if ((stopCounter++ & stopMask) != 0) return false;
-            return stop();
-        }
+        bool ShouldStopSparse()
+            => useStop && ((stopCounter++ & stopMask) == 0) && stop!();
 
         int ReadBits(int n) {
             if (ShouldStopSparse()) return -1;
@@ -159,7 +157,7 @@ internal static class QrPayloadParser {
 
         try {
             while (true) {
-                if (stop?.Invoke() == true) return false;
+                if (useStop && stop!()) return false;
                 var mode = ReadBits(4);
                 if (mode < 0) {
                     // Some encoders omit an explicit terminator if the payload exactly fills the available space,
