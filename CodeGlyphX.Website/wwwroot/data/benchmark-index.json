@@ -23,12 +23,12 @@
     },
     {
       "os": "windows",
-      "runMode": "Quick",
-      "generatedUtc": "2026-01-24T10:49:32.5125421Z",
-      "publish": false,
+      "runMode": "Full",
+      "generatedUtc": "2026-01-24T10:49:40.7910358Z",
+      "publish": true,
       "framework": "net8.0",
       "configuration": "Release",
-      "artifacts": "Build/BenchmarkResults/windows-20260124-111753",
+      "artifacts": "Build/BenchmarkResults/windows-20260124-091830",
       "meta": {
         "commit": null,
         "branch": null,
@@ -44,12 +44,12 @@
     },
     {
       "os": "windows",
-      "runMode": "Full",
-      "generatedUtc": "2026-01-24T10:49:40.7910358Z",
-      "publish": true,
+      "runMode": "quick",
+      "generatedUtc": "2026-01-24T11:41:47.0013230Z",
+      "publish": false,
       "framework": "net8.0",
       "configuration": "Release",
-      "artifacts": "Build/BenchmarkResults/windows-20260124-091830",
+      "artifacts": "C:\\Support\\GitHub\\CodeMatrix\\Build\\BenchmarkResults\\windows-20260124-124033",
       "meta": {
         "commit": null,
         "branch": null,
