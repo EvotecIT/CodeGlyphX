@@ -413,7 +413,7 @@ QR payload helpers generate well-known structured strings so scanners can trigge
 - PNG: color types 0/2/3/4/6, bit depths 1/2/4/8/16, tRNS transparency, Adam7 interlace
 - JPEG: baseline + progressive (8-bit, Huffman), EXIF orientation
 - GIF: first frame only, interlaced supported, transparency via GCE
-- TIFF: baseline, uncompressed, 8-bit samples, planar=contiguous
+- TIFF: baseline, uncompressed/PackBits/Deflate, 8-bit samples, planar=contiguous
 - BMP, PPM, PBM, PGM, PAM, XBM, XPM, TGA, ICO/CUR
 - Pure C# decoders (no native image libraries)
 
