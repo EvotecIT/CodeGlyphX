@@ -134,8 +134,12 @@ internal static class TiffReader {
             bitsPerSample = new ushort[samplesPerPixel];
             for (var i = 0; i < bitsPerSample.Length; i++) bitsPerSample[i] = 8;
         }
-        for (var i = 0; i < bitsPerSample.Length; i++) {
-            if (bitsPerSample[i] != 8) throw new FormatException("Only 8-bit TIFF samples are supported.");
+        var bitsPerSampleValue = bitsPerSample[0];
+        for (var i = 1; i < bitsPerSample.Length; i++) {
+            if (bitsPerSample[i] != bitsPerSampleValue) throw new FormatException("Mixed TIFF sample sizes are not supported.");
+        }
+        if (bitsPerSampleValue != 8 && bitsPerSampleValue != 16) {
+            throw new FormatException("Only 8-bit or 16-bit TIFF samples are supported.");
         }
 
         if (stripOffsets is null || stripByteCounts is null || stripOffsets.Length == 0) {
@@ -144,7 +148,8 @@ internal static class TiffReader {
         if (rowsPerStrip <= 0) rowsPerStrip = height;
 
         var rgba = new byte[width * height * 4];
-        var bytesPerPixel = samplesPerPixel;
+        var bytesPerSample = bitsPerSampleValue / 8;
+        var bytesPerPixel = samplesPerPixel * bytesPerSample;
         var bytesPerRow = width * bytesPerPixel;
         var row = 0;
         var paletteSize = colorMap is not null ? colorMap.Length / 3 : 0;
@@ -185,7 +190,7 @@ internal static class TiffReader {
 
             if (predictor == 2) {
                 if (decompressed is null) throw new FormatException("TIFF predictor requires mutable buffer.");
-                ApplyPredictor(decompressed, bytesPerRow, samplesPerPixel);
+                ApplyPredictor(decompressed, bytesPerRow, samplesPerPixel, bytesPerSample, little);
                 stripSpan = decompressed;
             }
 
@@ -194,7 +199,7 @@ internal static class TiffReader {
                 var dstRow = (row + r) * width * 4;
                 for (var x = 0; x < width; x++) {
                     if (photometric == 3 && paletteSize > 0) {
-                        var idx = stripSpan[srcIndex];
+                        var idx = bytesPerSample == 2 ? ReadU16(stripSpan, srcIndex, little) : stripSpan[srcIndex];
                         if (idx < paletteSize) {
                             var r0 = (byte)(colorMap![idx] >> 8);
                             var g0 = (byte)(colorMap![idx + paletteStride] >> 8);
@@ -207,29 +212,60 @@ internal static class TiffReader {
                             rgba[dstRow + x * 4 + 3] = 255;
                         }
                     } else if (photometric == 2 && samplesPerPixel >= 3) {
-                        var r0 = stripSpan[srcIndex + 0];
-                        var g0 = stripSpan[srcIndex + 1];
-                        var b0 = stripSpan[srcIndex + 2];
-                        var a0 = samplesPerPixel >= 4 ? stripSpan[srcIndex + 3] : (byte)255;
-                        rgba[dstRow + x * 4 + 0] = r0;
-                        rgba[dstRow + x * 4 + 1] = g0;
-                        rgba[dstRow + x * 4 + 2] = b0;
-                        rgba[dstRow + x * 4 + 3] = a0;
+                        if (bytesPerSample == 2) {
+                            var r16 = ReadU16(stripSpan, srcIndex + 0, little);
+                            var g16 = ReadU16(stripSpan, srcIndex + 2, little);
+                            var b16 = ReadU16(stripSpan, srcIndex + 4, little);
+                            var a16 = samplesPerPixel >= 4 ? ReadU16(stripSpan, srcIndex + 6, little) : (ushort)65535;
+                            rgba[dstRow + x * 4 + 0] = Scale16To8(r16);
+                            rgba[dstRow + x * 4 + 1] = Scale16To8(g16);
+                            rgba[dstRow + x * 4 + 2] = Scale16To8(b16);
+                            rgba[dstRow + x * 4 + 3] = Scale16To8(a16);
+                        } else {
+                            var r0 = stripSpan[srcIndex + 0];
+                            var g0 = stripSpan[srcIndex + 1];
+                            var b0 = stripSpan[srcIndex + 2];
+                            var a0 = samplesPerPixel >= 4 ? stripSpan[srcIndex + 3] : (byte)255;
+                            rgba[dstRow + x * 4 + 0] = r0;
+                            rgba[dstRow + x * 4 + 1] = g0;
+                            rgba[dstRow + x * 4 + 2] = b0;
+                            rgba[dstRow + x * 4 + 3] = a0;
+                        }
                     } else if (samplesPerPixel >= 2 && hasExtraSamples) {
-                        var v = stripSpan[srcIndex];
-                        var a0 = stripSpan[srcIndex + 1];
-                        if (photometric == 0) v = (byte)(255 - v);
-                        rgba[dstRow + x * 4 + 0] = v;
-                        rgba[dstRow + x * 4 + 1] = v;
-                        rgba[dstRow + x * 4 + 2] = v;
-                        rgba[dstRow + x * 4 + 3] = a0;
+                        if (bytesPerSample == 2) {
+                            var v16 = ReadU16(stripSpan, srcIndex, little);
+                            var a16 = ReadU16(stripSpan, srcIndex + 2, little);
+                            if (photometric == 0) v16 = (ushort)(65535 - v16);
+                            rgba[dstRow + x * 4 + 0] = Scale16To8(v16);
+                            rgba[dstRow + x * 4 + 1] = Scale16To8(v16);
+                            rgba[dstRow + x * 4 + 2] = Scale16To8(v16);
+                            rgba[dstRow + x * 4 + 3] = Scale16To8(a16);
+                        } else {
+                            var v = stripSpan[srcIndex];
+                            var a0 = stripSpan[srcIndex + 1];
+                            if (photometric == 0) v = (byte)(255 - v);
+                            rgba[dstRow + x * 4 + 0] = v;
+                            rgba[dstRow + x * 4 + 1] = v;
+                            rgba[dstRow + x * 4 + 2] = v;
+                            rgba[dstRow + x * 4 + 3] = a0;
+                        }
                     } else if (samplesPerPixel >= 1) {
-                        var v = stripSpan[srcIndex];
-                        if (photometric == 0) v = (byte)(255 - v);
-                        rgba[dstRow + x * 4 + 0] = v;
-                        rgba[dstRow + x * 4 + 1] = v;
-                        rgba[dstRow + x * 4 + 2] = v;
-                        rgba[dstRow + x * 4 + 3] = 255;
+                        if (bytesPerSample == 2) {
+                            var v16 = ReadU16(stripSpan, srcIndex, little);
+                            if (photometric == 0) v16 = (ushort)(65535 - v16);
+                            var v = Scale16To8(v16);
+                            rgba[dstRow + x * 4 + 0] = v;
+                            rgba[dstRow + x * 4 + 1] = v;
+                            rgba[dstRow + x * 4 + 2] = v;
+                            rgba[dstRow + x * 4 + 3] = 255;
+                        } else {
+                            var v = stripSpan[srcIndex];
+                            if (photometric == 0) v = (byte)(255 - v);
+                            rgba[dstRow + x * 4 + 0] = v;
+                            rgba[dstRow + x * 4 + 1] = v;
+                            rgba[dstRow + x * 4 + 2] = v;
+                            rgba[dstRow + x * 4 + 3] = 255;
+                        }
                     } else {
                         rgba[dstRow + x * 4 + 3] = 255;
                     }
@@ -351,14 +387,32 @@ internal static class TiffReader {
         return value;
     }
 
-    private static void ApplyPredictor(Span<byte> data, int bytesPerRow, int samplesPerPixel) {
+    private static void ApplyPredictor(Span<byte> data, int bytesPerRow, int samplesPerPixel, int bytesPerSample, bool little) {
         if (samplesPerPixel <= 0) return;
+        if (bytesPerSample == 1) {
+            for (var rowStart = 0; rowStart + bytesPerRow <= data.Length; rowStart += bytesPerRow) {
+                for (var i = samplesPerPixel; i < bytesPerRow; i++) {
+                    var value = data[rowStart + i] + data[rowStart + i - samplesPerPixel];
+                    data[rowStart + i] = (byte)value;
+                }
+            }
+            return;
+        }
+
+        if (bytesPerSample != 2) throw new FormatException("Unsupported TIFF predictor sample size.");
+        var sampleStride = samplesPerPixel * bytesPerSample;
         for (var rowStart = 0; rowStart + bytesPerRow <= data.Length; rowStart += bytesPerRow) {
-            for (var i = samplesPerPixel; i < bytesPerRow; i++) {
-                var value = data[rowStart + i] + data[rowStart + i - samplesPerPixel];
-                data[rowStart + i] = (byte)value;
+            for (var offset = sampleStride; offset < bytesPerRow; offset += bytesPerSample) {
+                var value = ReadU16(data, rowStart + offset, little);
+                var prev = ReadU16(data, rowStart + offset - sampleStride, little);
+                var sum = (ushort)(value + prev);
+                WriteU16(data, rowStart + offset, little, sum);
             }
         }
+    }
+
+    private static byte Scale16To8(ushort value) {
+        return (byte)((value * 255 + 32767) / 65535);
     }
 
     private static byte[] DecompressDeflate(ReadOnlySpan<byte> src, int expected) {
@@ -456,6 +510,16 @@ internal static class TiffReader {
             return (ushort)(data[offset] | (data[offset + 1] << 8));
         }
         return (ushort)((data[offset] << 8) | data[offset + 1]);
+    }
+
+    private static void WriteU16(Span<byte> data, int offset, bool little, ushort value) {
+        if (little) {
+            data[offset] = (byte)(value & 0xFF);
+            data[offset + 1] = (byte)(value >> 8);
+        } else {
+            data[offset] = (byte)(value >> 8);
+            data[offset + 1] = (byte)(value & 0xFF);
+        }
     }
 
     private static uint ReadU32(ReadOnlySpan<byte> data, int offset, bool little) {
