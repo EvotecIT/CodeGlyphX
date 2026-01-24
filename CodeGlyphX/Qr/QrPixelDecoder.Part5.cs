@@ -363,8 +363,104 @@ internal static partial class QrPixelDecoder {
                 var syEnd = sy + syStep * (dimension - 1);
                 if (sx >= 0 && sx <= maxX && sxEnd >= 0 && sxEnd <= maxX &&
                     sy >= 0 && sy <= maxY && syEnd >= 0 && syEnd <= maxY) {
+                    if (!checkBudget) {
+                        for (var mx = 0; mx < dimension; mx++) {
+                            if (TSampler.Sample(image, sx, sy, invert, delta)) {
+                                bmWords[wordIndex] |= bitMask;
+                            }
+
+                            bitMask <<= 1;
+                            if (bitMask == 0) {
+                                bitMask = 1u;
+                                wordIndex++;
+                            }
+
+                            sx += sxStep;
+                            sy += syStep;
+                        }
+                    } else {
+                        for (var mx = 0; mx < dimension; mx++) {
+                            if (((budgetCounter++ & 63) == 0) && budget.IsExpired) return false;
+
+                            if (TSampler.Sample(image, sx, sy, invert, delta)) {
+                                bmWords[wordIndex] |= bitMask;
+                            }
+
+                            bitMask <<= 1;
+                            if (bitMask == 0) {
+                                bitMask = 1u;
+                                wordIndex++;
+                            }
+
+                            sx += sxStep;
+                            sy += syStep;
+                        }
+                    }
+                } else {
+                    if (!checkBudget) {
+                        for (var mx = 0; mx < dimension; mx++) {
+                            var sampleX = sx;
+                            var sampleY = sy;
+                            if (sampleX < 0) { sampleX = 0; clamped++; }
+                            else if (sampleX > maxX) { sampleX = maxX; clamped++; }
+
+                            if (sampleY < 0) { sampleY = 0; clamped++; }
+                            else if (sampleY > maxY) { sampleY = maxY; clamped++; }
+
+                            if (TSampler.Sample(image, sampleX, sampleY, invert, delta)) {
+                                bmWords[wordIndex] |= bitMask;
+                            }
+
+                            bitMask <<= 1;
+                            if (bitMask == 0) {
+                                bitMask = 1u;
+                                wordIndex++;
+                            }
+
+                            sx += sxStep;
+                            sy += syStep;
+                        }
+                    } else {
+                        for (var mx = 0; mx < dimension; mx++) {
+                            if (((budgetCounter++ & 63) == 0) && budget.IsExpired) return false;
+
+                            var sampleX = sx;
+                            var sampleY = sy;
+                            if (sampleX < 0) { sampleX = 0; clamped++; }
+                            else if (sampleX > maxX) { sampleX = maxX; clamped++; }
+
+                            if (sampleY < 0) { sampleY = 0; clamped++; }
+                            else if (sampleY > maxY) { sampleY = maxY; clamped++; }
+
+                            if (TSampler.Sample(image, sampleX, sampleY, invert, delta)) {
+                                bmWords[wordIndex] |= bitMask;
+                            }
+
+                            bitMask <<= 1;
+                            if (bitMask == 0) {
+                                bitMask = 1u;
+                                wordIndex++;
+                            }
+
+                            sx += sxStep;
+                            sy += syStep;
+                        }
+                    }
+                }
+            } else {
+                var wordIndex = rowOffset >> 5;
+                var bitMask = 1u << (rowOffset & 31);
+                if (!checkBudget) {
                     for (var mx = 0; mx < dimension; mx++) {
-                        if (checkBudget && ((budgetCounter++ & 63) == 0) && budget.IsExpired) return false;
+                        var inv = 1.0 / denom;
+                        var sx = numX * inv;
+                        var sy = numY * inv;
+
+                        if (sx < 0) { sx = 0; clamped++; }
+                        else if (sx > maxX) { sx = maxX; clamped++; }
+
+                        if (sy < 0) { sy = 0; clamped++; }
+                        else if (sy > maxY) { sy = maxY; clamped++; }
 
                         if (TSampler.Sample(image, sx, sy, invert, delta)) {
                             bmWords[wordIndex] |= bitMask;
@@ -376,22 +472,25 @@ internal static partial class QrPixelDecoder {
                             wordIndex++;
                         }
 
-                        sx += sxStep;
-                        sy += syStep;
+                        numX += stepNumX;
+                        numY += stepNumY;
+                        denom += stepDenom;
                     }
                 } else {
                     for (var mx = 0; mx < dimension; mx++) {
-                        if (checkBudget && ((budgetCounter++ & 63) == 0) && budget.IsExpired) return false;
+                        if (((budgetCounter++ & 63) == 0) && budget.IsExpired) return false;
 
-                        var sampleX = sx;
-                        var sampleY = sy;
-                        if (sampleX < 0) { sampleX = 0; clamped++; }
-                        else if (sampleX > maxX) { sampleX = maxX; clamped++; }
+                        var inv = 1.0 / denom;
+                        var sx = numX * inv;
+                        var sy = numY * inv;
 
-                        if (sampleY < 0) { sampleY = 0; clamped++; }
-                        else if (sampleY > maxY) { sampleY = maxY; clamped++; }
+                        if (sx < 0) { sx = 0; clamped++; }
+                        else if (sx > maxX) { sx = maxX; clamped++; }
 
-                        if (TSampler.Sample(image, sampleX, sampleY, invert, delta)) {
+                        if (sy < 0) { sy = 0; clamped++; }
+                        else if (sy > maxY) { sy = maxY; clamped++; }
+
+                        if (TSampler.Sample(image, sx, sy, invert, delta)) {
                             bmWords[wordIndex] |= bitMask;
                         }
 
@@ -401,39 +500,10 @@ internal static partial class QrPixelDecoder {
                             wordIndex++;
                         }
 
-                        sx += sxStep;
-                        sy += syStep;
+                        numX += stepNumX;
+                        numY += stepNumY;
+                        denom += stepDenom;
                     }
-                }
-            } else {
-                var wordIndex = rowOffset >> 5;
-                var bitMask = 1u << (rowOffset & 31);
-                for (var mx = 0; mx < dimension; mx++) {
-                    if (checkBudget && ((budgetCounter++ & 63) == 0) && budget.IsExpired) return false;
-
-                    var inv = 1.0 / denom;
-                    var sx = numX * inv;
-                    var sy = numY * inv;
-
-                    if (sx < 0) { sx = 0; clamped++; }
-                    else if (sx > maxX) { sx = maxX; clamped++; }
-
-                    if (sy < 0) { sy = 0; clamped++; }
-                    else if (sy > maxY) { sy = maxY; clamped++; }
-
-                    if (TSampler.Sample(image, sx, sy, invert, delta)) {
-                        bmWords[wordIndex] |= bitMask;
-                    }
-
-                    bitMask <<= 1;
-                    if (bitMask == 0) {
-                        bitMask = 1u;
-                        wordIndex++;
-                    }
-
-                    numX += stepNumX;
-                    numY += stepNumY;
-                    denom += stepDenom;
                 }
             }
 
@@ -577,7 +647,7 @@ internal static partial class QrPixelDecoder {
         // Try smaller versions first (more likely for OTP QR), but accept non-integer module sizes.
         var best = default(QrPixelDecodeDiagnostics);
         for (var version = 1; version <= maxVersion; version++) {
-            if (budget.IsExpired) return false;
+            if (checkBudget && budget.IsExpired) return false;
             var modulesCount = version * 4 + 17;
             var moduleSizeX = boxW / (double)modulesCount;
             var moduleSizeY = boxH / (double)modulesCount;
@@ -589,34 +659,53 @@ internal static partial class QrPixelDecoder {
             var bm = new global::CodeGlyphX.BitMatrix(modulesCount, modulesCount);
             var bmWords = bm.Words;
             var bmWidth = modulesCount;
+            Span<int> pxs = stackalloc int[modulesCount];
+            Span<int> pys = stackalloc int[modulesCount];
+            var sx = minX + 0.5 * moduleSizeX;
+            for (var mx = 0; mx < modulesCount; mx++) {
+                var px = QrMath.RoundToInt(sx);
+                if (px < 0) px = 0;
+                else if (px >= width) px = width - 1;
+                pxs[mx] = px;
+                sx += moduleSizeX;
+            }
+            var sy = minY + 0.5 * moduleSizeY;
             for (var my = 0; my < modulesCount; my++) {
-                if (budget.IsExpired) return false;
-                var sy = minY + (my + 0.5) * moduleSizeY;
                 var py = QrMath.RoundToInt(sy);
                 if (py < 0) py = 0;
                 else if (py >= height) py = height - 1;
+                pys[my] = py;
+                sy += moduleSizeY;
+            }
+            for (var my = 0; my < modulesCount; my++) {
+                if (checkBudget && budget.IsExpired) return false;
+                var py = pys[my];
 
+                var rowOffset = my * bmWidth;
+                var wordIndex = rowOffset >> 5;
+                var bitMask = 1u << (rowOffset & 31);
                 for (var mx = 0; mx < modulesCount; mx++) {
-                    var sx = minX + (mx + 0.5) * moduleSizeX;
-                    var px = QrMath.RoundToInt(sx);
-                    if (px < 0) px = 0;
-                    else if (px >= width) px = width - 1;
-
+                    var px = pxs[mx];
                     if (SampleMajority3x3(image, px, py, invert)) {
-                        var bitIndex = my * bmWidth + mx;
-                        bmWords[bitIndex >> 5] |= 1u << (bitIndex & 31);
+                        bmWords[wordIndex] |= bitMask;
+                    }
+
+                    bitMask <<= 1;
+                    if (bitMask == 0) {
+                        bitMask = 1u;
+                        wordIndex++;
                     }
                 }
             }
 
-            if (budget.IsNearDeadline(120)) return false;
+            if (checkBudget && budget.IsNearDeadline(120)) return false;
             if (TryDecodeWithInversion(bm, accept, budget, out result, out var moduleDiag)) {
                 diagnostics = new QrPixelDecodeDiagnostics(scale, threshold, invert, candidateCount, candidateTriplesTried, modulesCount, moduleDiag);
                 return true;
             }
             best = Better(best, new QrPixelDecodeDiagnostics(scale, threshold, invert, candidateCount, candidateTriplesTried, modulesCount, moduleDiag));
 
-            if (budget.IsNearDeadline(120)) return false;
+            if (checkBudget && budget.IsNearDeadline(120)) return false;
             if (TryDecodeByRotations(bm, accept, budget, out result, out var moduleDiagRot)) {
                 diagnostics = new QrPixelDecodeDiagnostics(scale, threshold, invert, candidateCount, candidateTriplesTried, modulesCount, moduleDiagRot);
                 return true;
@@ -825,71 +914,169 @@ internal static partial class QrPixelDecoder {
         var row1 = y1 * width;
         var row2 = y2 * width;
         var black = 0;
+        var remaining = 9;
+        const int required = 5;
         if (thresholdMap is null) {
             if (!invert) {
                 if (gray[row0 + x0] <= threshold) black++;
+                remaining--;
+                if (black >= required) return true;
+                if (black + remaining < required) return false;
                 if (gray[row0 + x1] <= threshold) black++;
+                remaining--;
+                if (black >= required) return true;
+                if (black + remaining < required) return false;
                 if (gray[row0 + x2] <= threshold) black++;
+                remaining--;
+                if (black >= required) return true;
+                if (black + remaining < required) return false;
                 if (gray[row1 + x0] <= threshold) black++;
+                remaining--;
+                if (black >= required) return true;
+                if (black + remaining < required) return false;
                 if (gray[row1 + x1] <= threshold) black++;
+                remaining--;
+                if (black >= required) return true;
+                if (black + remaining < required) return false;
                 if (gray[row1 + x2] <= threshold) black++;
+                remaining--;
+                if (black >= required) return true;
+                if (black + remaining < required) return false;
                 if (gray[row2 + x0] <= threshold) black++;
+                remaining--;
+                if (black >= required) return true;
+                if (black + remaining < required) return false;
                 if (gray[row2 + x1] <= threshold) black++;
+                remaining--;
+                if (black >= required) return true;
+                if (black + remaining < required) return false;
                 if (gray[row2 + x2] <= threshold) black++;
             } else {
                 if (gray[row0 + x0] > threshold) black++;
+                remaining--;
+                if (black >= required) return true;
+                if (black + remaining < required) return false;
                 if (gray[row0 + x1] > threshold) black++;
+                remaining--;
+                if (black >= required) return true;
+                if (black + remaining < required) return false;
                 if (gray[row0 + x2] > threshold) black++;
+                remaining--;
+                if (black >= required) return true;
+                if (black + remaining < required) return false;
                 if (gray[row1 + x0] > threshold) black++;
+                remaining--;
+                if (black >= required) return true;
+                if (black + remaining < required) return false;
                 if (gray[row1 + x1] > threshold) black++;
+                remaining--;
+                if (black >= required) return true;
+                if (black + remaining < required) return false;
                 if (gray[row1 + x2] > threshold) black++;
+                remaining--;
+                if (black >= required) return true;
+                if (black + remaining < required) return false;
                 if (gray[row2 + x0] > threshold) black++;
+                remaining--;
+                if (black >= required) return true;
+                if (black + remaining < required) return false;
                 if (gray[row2 + x1] > threshold) black++;
+                remaining--;
+                if (black >= required) return true;
+                if (black + remaining < required) return false;
                 if (gray[row2 + x2] > threshold) black++;
             }
         } else {
             if (!invert) {
                 var idx = row0 + x0;
                 if (gray[idx] <= thresholdMap[idx]) black++;
+                remaining--;
+                if (black >= required) return true;
+                if (black + remaining < required) return false;
                 idx = row0 + x1;
                 if (gray[idx] <= thresholdMap[idx]) black++;
+                remaining--;
+                if (black >= required) return true;
+                if (black + remaining < required) return false;
                 idx = row0 + x2;
                 if (gray[idx] <= thresholdMap[idx]) black++;
+                remaining--;
+                if (black >= required) return true;
+                if (black + remaining < required) return false;
                 idx = row1 + x0;
                 if (gray[idx] <= thresholdMap[idx]) black++;
+                remaining--;
+                if (black >= required) return true;
+                if (black + remaining < required) return false;
                 idx = row1 + x1;
                 if (gray[idx] <= thresholdMap[idx]) black++;
+                remaining--;
+                if (black >= required) return true;
+                if (black + remaining < required) return false;
                 idx = row1 + x2;
                 if (gray[idx] <= thresholdMap[idx]) black++;
+                remaining--;
+                if (black >= required) return true;
+                if (black + remaining < required) return false;
                 idx = row2 + x0;
                 if (gray[idx] <= thresholdMap[idx]) black++;
+                remaining--;
+                if (black >= required) return true;
+                if (black + remaining < required) return false;
                 idx = row2 + x1;
                 if (gray[idx] <= thresholdMap[idx]) black++;
+                remaining--;
+                if (black >= required) return true;
+                if (black + remaining < required) return false;
                 idx = row2 + x2;
                 if (gray[idx] <= thresholdMap[idx]) black++;
             } else {
                 var idx = row0 + x0;
                 if (gray[idx] > thresholdMap[idx]) black++;
+                remaining--;
+                if (black >= required) return true;
+                if (black + remaining < required) return false;
                 idx = row0 + x1;
                 if (gray[idx] > thresholdMap[idx]) black++;
+                remaining--;
+                if (black >= required) return true;
+                if (black + remaining < required) return false;
                 idx = row0 + x2;
                 if (gray[idx] > thresholdMap[idx]) black++;
+                remaining--;
+                if (black >= required) return true;
+                if (black + remaining < required) return false;
                 idx = row1 + x0;
                 if (gray[idx] > thresholdMap[idx]) black++;
+                remaining--;
+                if (black >= required) return true;
+                if (black + remaining < required) return false;
                 idx = row1 + x1;
                 if (gray[idx] > thresholdMap[idx]) black++;
+                remaining--;
+                if (black >= required) return true;
+                if (black + remaining < required) return false;
                 idx = row1 + x2;
                 if (gray[idx] > thresholdMap[idx]) black++;
+                remaining--;
+                if (black >= required) return true;
+                if (black + remaining < required) return false;
                 idx = row2 + x0;
                 if (gray[idx] > thresholdMap[idx]) black++;
+                remaining--;
+                if (black >= required) return true;
+                if (black + remaining < required) return false;
                 idx = row2 + x1;
                 if (gray[idx] > thresholdMap[idx]) black++;
+                remaining--;
+                if (black >= required) return true;
+                if (black + remaining < required) return false;
                 idx = row2 + x2;
                 if (gray[idx] > thresholdMap[idx]) black++;
             }
         }
 
-        return black >= 5;
+        return black >= required;
     }
 
     private static bool TryDecodeWithInversion(global::CodeGlyphX.BitMatrix matrix, Func<QrDecoded, bool>? accept, DecodeBudget budget, out QrDecoded result, out global::CodeGlyphX.QrDecodeDiagnostics diagnostics) {

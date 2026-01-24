@@ -845,7 +845,8 @@ internal static partial class QrPixelDecoder {
         result = null!;
         moduleDiagnostics = default;
 
-        if (budget.IsExpired) return false;
+        var checkBudget = budget.Enabled || budget.IsCancelled;
+        if (checkBudget && budget.IsExpired) return false;
 
         Span<double> offsets = stackalloc double[3];
         offsets[0] = -0.60;
@@ -856,10 +857,10 @@ internal static partial class QrPixelDecoder {
         const double jitterEpsilon = 1e-9;
 
         for (var yi = 0; yi < offsets.Length; yi++) {
-            if (budget.IsExpired) return false;
+            if (checkBudget && budget.IsExpired) return false;
             var oy = offsets[yi];
             for (var xi = 0; xi < offsets.Length; xi++) {
-                if (budget.IsExpired) return false;
+                if (checkBudget && budget.IsExpired) return false;
                 var ox = offsets[xi];
                 if (Math.Abs(ox) <= jitterEpsilon && Math.Abs(oy) <= jitterEpsilon) continue;
 
@@ -903,7 +904,8 @@ internal static partial class QrPixelDecoder {
         result = null!;
         moduleDiagnostics = default;
 
-        if (budget.IsExpired) return false;
+        var checkBudget = budget.Enabled || budget.IsCancelled;
+        if (checkBudget && budget.IsExpired) return false;
 
         Span<double> offsets = stackalloc double[2];
         offsets[0] = -0.25;
@@ -912,7 +914,7 @@ internal static partial class QrPixelDecoder {
         var best = default(global::CodeGlyphX.QrDecodeDiagnostics);
 
         for (var i = 0; i < offsets.Length; i++) {
-            if (budget.IsExpired) return false;
+            if (checkBudget && budget.IsExpired) return false;
             var ox = phaseX + offsets[i];
             if (TrySampleWithCorners(
                     image,
@@ -943,7 +945,7 @@ internal static partial class QrPixelDecoder {
         }
 
         for (var i = 0; i < offsets.Length; i++) {
-            if (budget.IsExpired) return false;
+            if (checkBudget && budget.IsExpired) return false;
             var oy = phaseY + offsets[i];
             if (TrySampleWithCorners(
                     image,
@@ -1001,7 +1003,8 @@ internal static partial class QrPixelDecoder {
         result = null!;
         moduleDiagnostics = default;
 
-        if (budget.IsExpired) return false;
+        var checkBudget = budget.Enabled || budget.IsCancelled;
+        if (checkBudget && budget.IsExpired) return false;
 
         Span<double> offsets = stackalloc double[3];
         offsets[0] = -0.35;
@@ -1012,10 +1015,10 @@ internal static partial class QrPixelDecoder {
         const double jitterEpsilon = 1e-9;
 
         for (var yi = 0; yi < offsets.Length; yi++) {
-            if (budget.IsExpired) return false;
+            if (checkBudget && budget.IsExpired) return false;
             var oy = phaseY + offsets[yi];
             for (var xi = 0; xi < offsets.Length; xi++) {
-                if (budget.IsExpired) return false;
+                if (checkBudget && budget.IsExpired) return false;
                 var ox = phaseX + offsets[xi];
                 if (Math.Abs(ox - phaseX) <= jitterEpsilon && Math.Abs(oy - phaseY) <= jitterEpsilon) continue;
 

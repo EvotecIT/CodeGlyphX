@@ -396,100 +396,113 @@ internal static class QrPixelSampling {
         var dx8 = 5 + phaseX; // 8 - 3 + phaseX
         var dy8 = 5 + phaseY; // 8 - 3 + phaseY
         var dx7 = 4 + phaseX; // 7 - 3 + phaseX
+        var vxXdx8 = vxX * dx8;
+        var vxYdx8 = vxY * dx8;
+        var vxXdx7 = vxX * dx7;
+        var vxYdx7 = vxY * dx7;
+        var vyXdy8 = vyX * dy8;
+        var vyYdy8 = vyY * dy8;
+
+        var baseXdx8 = tlX + vxXdx8;
+        var baseYdx8 = tlY + vxYdx8;
+        var baseXdx7 = tlX + vxXdx7;
+        var baseYdx7 = tlY + vxYdx7;
+        var baseXdy8 = tlX + vyXdy8;
+        var baseYdy8 = tlY + vyYdy8;
 
         if (thresholdMap is null) {
             if (!invert) {
                 for (var i = 0; i <= 5; i++) {
                     var dy = (i - 3) + phaseY;
-                    var sx = tlX + vxX * dx8 + vyX * dy;
-                    var sy = tlY + vxY * dx8 + vyY * dy;
+                    var sx = baseXdx8 + vyX * dy;
+                    var sy = baseYdx8 + vyY * dy;
                     if (SampleLumaBilinear(image, sx, sy) <= threshold) bitsA |= 1 << i;
                 }
 
                 {
                     var dy = 4 + phaseY; // 7 - 3 + phaseY
-                    var sx = tlX + vxX * dx8 + vyX * dy;
-                    var sy = tlY + vxY * dx8 + vyY * dy;
+                    var sx = baseXdx8 + vyX * dy;
+                    var sy = baseYdx8 + vyY * dy;
                     if (SampleLumaBilinear(image, sx, sy) <= threshold) bitsA |= 1 << 6;
                 }
 
                 {
-                    var sx = tlX + vxX * dx8 + vyX * dy8;
-                    var sy = tlY + vxY * dx8 + vyY * dy8;
+                    var sx = baseXdx8 + vyXdy8;
+                    var sy = baseYdx8 + vyYdy8;
                     if (SampleLumaBilinear(image, sx, sy) <= threshold) bitsA |= 1 << 7;
                 }
 
                 {
-                    var sx = tlX + vxX * dx7 + vyX * dy8;
-                    var sy = tlY + vxY * dx7 + vyY * dy8;
+                    var sx = baseXdx7 + vyXdy8;
+                    var sy = baseYdx7 + vyYdy8;
                     if (SampleLumaBilinear(image, sx, sy) <= threshold) bitsA |= 1 << 8;
                 }
 
                 for (var i = 9; i < 15; i++) {
                     var dx = (11 - i) + phaseX; // (14 - i) - 3 + phaseX
-                    var sx = tlX + vxX * dx + vyX * dy8;
-                    var sy = tlY + vxY * dx + vyY * dy8;
+                    var sx = baseXdy8 + vxX * dx;
+                    var sy = baseYdy8 + vxY * dx;
                     if (SampleLumaBilinear(image, sx, sy) <= threshold) bitsA |= 1 << i;
                 }
 
                 for (var i = 0; i < 8; i++) {
                     var dx = (size - 4 - i) + phaseX; // (size - 1 - i) - 3 + phaseX
-                    var sx = tlX + vxX * dx + vyX * dy8;
-                    var sy = tlY + vxY * dx + vyY * dy8;
+                    var sx = baseXdy8 + vxX * dx;
+                    var sy = baseYdy8 + vxY * dx;
                     if (SampleLumaBilinear(image, sx, sy) <= threshold) bitsB |= 1 << i;
                 }
 
                 for (var i = 8; i < 15; i++) {
                     var dy = (size - 18 + i) + phaseY; // (size - 15 + i) - 3 + phaseY
-                    var sx = tlX + vxX * dx8 + vyX * dy;
-                    var sy = tlY + vxY * dx8 + vyY * dy;
+                    var sx = baseXdx8 + vyX * dy;
+                    var sy = baseYdx8 + vyY * dy;
                     if (SampleLumaBilinear(image, sx, sy) <= threshold) bitsB |= 1 << i;
                 }
             } else {
                 for (var i = 0; i <= 5; i++) {
                     var dy = (i - 3) + phaseY;
-                    var sx = tlX + vxX * dx8 + vyX * dy;
-                    var sy = tlY + vxY * dx8 + vyY * dy;
+                    var sx = baseXdx8 + vyX * dy;
+                    var sy = baseYdx8 + vyY * dy;
                     if (SampleLumaBilinear(image, sx, sy) > threshold) bitsA |= 1 << i;
                 }
 
                 {
                     var dy = 4 + phaseY;
-                    var sx = tlX + vxX * dx8 + vyX * dy;
-                    var sy = tlY + vxY * dx8 + vyY * dy;
+                    var sx = baseXdx8 + vyX * dy;
+                    var sy = baseYdx8 + vyY * dy;
                     if (SampleLumaBilinear(image, sx, sy) > threshold) bitsA |= 1 << 6;
                 }
 
                 {
-                    var sx = tlX + vxX * dx8 + vyX * dy8;
-                    var sy = tlY + vxY * dx8 + vyY * dy8;
+                    var sx = baseXdx8 + vyXdy8;
+                    var sy = baseYdx8 + vyYdy8;
                     if (SampleLumaBilinear(image, sx, sy) > threshold) bitsA |= 1 << 7;
                 }
 
                 {
-                    var sx = tlX + vxX * dx7 + vyX * dy8;
-                    var sy = tlY + vxY * dx7 + vyY * dy8;
+                    var sx = baseXdx7 + vyXdy8;
+                    var sy = baseYdx7 + vyYdy8;
                     if (SampleLumaBilinear(image, sx, sy) > threshold) bitsA |= 1 << 8;
                 }
 
                 for (var i = 9; i < 15; i++) {
                     var dx = (11 - i) + phaseX;
-                    var sx = tlX + vxX * dx + vyX * dy8;
-                    var sy = tlY + vxY * dx + vyY * dy8;
+                    var sx = baseXdy8 + vxX * dx;
+                    var sy = baseYdy8 + vxY * dx;
                     if (SampleLumaBilinear(image, sx, sy) > threshold) bitsA |= 1 << i;
                 }
 
                 for (var i = 0; i < 8; i++) {
                     var dx = (size - 4 - i) + phaseX;
-                    var sx = tlX + vxX * dx + vyX * dy8;
-                    var sy = tlY + vxY * dx + vyY * dy8;
+                    var sx = baseXdy8 + vxX * dx;
+                    var sy = baseYdy8 + vxY * dx;
                     if (SampleLumaBilinear(image, sx, sy) > threshold) bitsB |= 1 << i;
                 }
 
                 for (var i = 8; i < 15; i++) {
                     var dy = (size - 18 + i) + phaseY;
-                    var sx = tlX + vxX * dx8 + vyX * dy;
-                    var sy = tlY + vxY * dx8 + vyY * dy;
+                    var sx = baseXdx8 + vyX * dy;
+                    var sy = baseYdx8 + vyY * dy;
                     if (SampleLumaBilinear(image, sx, sy) > threshold) bitsB |= 1 << i;
                 }
             }
@@ -497,108 +510,108 @@ internal static class QrPixelSampling {
             if (!invert) {
                 for (var i = 0; i <= 5; i++) {
                     var dy = (i - 3) + phaseY;
-                    var sx = tlX + vxX * dx8 + vyX * dy;
-                    var sy = tlY + vxY * dx8 + vyY * dy;
+                    var sx = baseXdx8 + vyX * dy;
+                    var sy = baseYdx8 + vyY * dy;
                     SampleLumaThresholdBilinear(image, sx, sy, out var lum, out var thr);
                     if (lum <= thr) bitsA |= 1 << i;
                 }
 
                 {
                     var dy = 4 + phaseY;
-                    var sx = tlX + vxX * dx8 + vyX * dy;
-                    var sy = tlY + vxY * dx8 + vyY * dy;
+                    var sx = baseXdx8 + vyX * dy;
+                    var sy = baseYdx8 + vyY * dy;
                     SampleLumaThresholdBilinear(image, sx, sy, out var lum, out var thr);
                     if (lum <= thr) bitsA |= 1 << 6;
                 }
 
                 {
-                    var sx = tlX + vxX * dx8 + vyX * dy8;
-                    var sy = tlY + vxY * dx8 + vyY * dy8;
+                    var sx = baseXdx8 + vyXdy8;
+                    var sy = baseYdx8 + vyYdy8;
                     SampleLumaThresholdBilinear(image, sx, sy, out var lum, out var thr);
                     if (lum <= thr) bitsA |= 1 << 7;
                 }
 
                 {
-                    var sx = tlX + vxX * dx7 + vyX * dy8;
-                    var sy = tlY + vxY * dx7 + vyY * dy8;
+                    var sx = baseXdx7 + vyXdy8;
+                    var sy = baseYdx7 + vyYdy8;
                     SampleLumaThresholdBilinear(image, sx, sy, out var lum, out var thr);
                     if (lum <= thr) bitsA |= 1 << 8;
                 }
 
                 for (var i = 9; i < 15; i++) {
                     var dx = (11 - i) + phaseX;
-                    var sx = tlX + vxX * dx + vyX * dy8;
-                    var sy = tlY + vxY * dx + vyY * dy8;
+                    var sx = baseXdy8 + vxX * dx;
+                    var sy = baseYdy8 + vxY * dx;
                     SampleLumaThresholdBilinear(image, sx, sy, out var lum, out var thr);
                     if (lum <= thr) bitsA |= 1 << i;
                 }
 
                 for (var i = 0; i < 8; i++) {
                     var dx = (size - 4 - i) + phaseX;
-                    var sx = tlX + vxX * dx + vyX * dy8;
-                    var sy = tlY + vxY * dx + vyY * dy8;
+                    var sx = baseXdy8 + vxX * dx;
+                    var sy = baseYdy8 + vxY * dx;
                     SampleLumaThresholdBilinear(image, sx, sy, out var lum, out var thr);
                     if (lum <= thr) bitsB |= 1 << i;
                 }
 
                 for (var i = 8; i < 15; i++) {
                     var dy = (size - 18 + i) + phaseY;
-                    var sx = tlX + vxX * dx8 + vyX * dy;
-                    var sy = tlY + vxY * dx8 + vyY * dy;
+                    var sx = baseXdx8 + vyX * dy;
+                    var sy = baseYdx8 + vyY * dy;
                     SampleLumaThresholdBilinear(image, sx, sy, out var lum, out var thr);
                     if (lum <= thr) bitsB |= 1 << i;
                 }
             } else {
                 for (var i = 0; i <= 5; i++) {
                     var dy = (i - 3) + phaseY;
-                    var sx = tlX + vxX * dx8 + vyX * dy;
-                    var sy = tlY + vxY * dx8 + vyY * dy;
+                    var sx = baseXdx8 + vyX * dy;
+                    var sy = baseYdx8 + vyY * dy;
                     SampleLumaThresholdBilinear(image, sx, sy, out var lum, out var thr);
                     if (lum > thr) bitsA |= 1 << i;
                 }
 
                 {
                     var dy = 4 + phaseY;
-                    var sx = tlX + vxX * dx8 + vyX * dy;
-                    var sy = tlY + vxY * dx8 + vyY * dy;
+                    var sx = baseXdx8 + vyX * dy;
+                    var sy = baseYdx8 + vyY * dy;
                     SampleLumaThresholdBilinear(image, sx, sy, out var lum, out var thr);
                     if (lum > thr) bitsA |= 1 << 6;
                 }
 
                 {
-                    var sx = tlX + vxX * dx8 + vyX * dy8;
-                    var sy = tlY + vxY * dx8 + vyY * dy8;
+                    var sx = baseXdx8 + vyXdy8;
+                    var sy = baseYdx8 + vyYdy8;
                     SampleLumaThresholdBilinear(image, sx, sy, out var lum, out var thr);
                     if (lum > thr) bitsA |= 1 << 7;
                 }
 
                 {
-                    var sx = tlX + vxX * dx7 + vyX * dy8;
-                    var sy = tlY + vxY * dx7 + vyY * dy8;
+                    var sx = baseXdx7 + vyXdy8;
+                    var sy = baseYdx7 + vyYdy8;
                     SampleLumaThresholdBilinear(image, sx, sy, out var lum, out var thr);
                     if (lum > thr) bitsA |= 1 << 8;
                 }
 
                 for (var i = 9; i < 15; i++) {
                     var dx = (11 - i) + phaseX;
-                    var sx = tlX + vxX * dx + vyX * dy8;
-                    var sy = tlY + vxY * dx + vyY * dy8;
+                    var sx = baseXdy8 + vxX * dx;
+                    var sy = baseYdy8 + vxY * dx;
                     SampleLumaThresholdBilinear(image, sx, sy, out var lum, out var thr);
                     if (lum > thr) bitsA |= 1 << i;
                 }
 
                 for (var i = 0; i < 8; i++) {
                     var dx = (size - 4 - i) + phaseX;
-                    var sx = tlX + vxX * dx + vyX * dy8;
-                    var sy = tlY + vxY * dx + vyY * dy8;
+                    var sx = baseXdy8 + vxX * dx;
+                    var sy = baseYdy8 + vxY * dx;
                     SampleLumaThresholdBilinear(image, sx, sy, out var lum, out var thr);
                     if (lum > thr) bitsB |= 1 << i;
                 }
 
                 for (var i = 8; i < 15; i++) {
                     var dy = (size - 18 + i) + phaseY;
-                    var sx = tlX + vxX * dx8 + vyX * dy;
-                    var sy = tlY + vxY * dx8 + vyY * dy;
+                    var sx = baseXdx8 + vyX * dy;
+                    var sy = baseYdx8 + vyY * dy;
                     SampleLumaThresholdBilinear(image, sx, sy, out var lum, out var thr);
                     if (lum > thr) bitsB |= 1 << i;
                 }
@@ -632,12 +645,24 @@ internal static class QrPixelSampling {
             var dyStart = start - 3 + phaseY;
             var dxFixed = 3 + phaseX;
             var dyFixed = 3 + phaseY;
+            var vxXdxStart = vxX * dxStart;
+            var vxYdxStart = vxY * dxStart;
+            var vyXdyFixed = vyX * dyFixed;
+            var vyYdyFixed = vyY * dyFixed;
+            var vxXdxFixed = vxX * dxFixed;
+            var vxYdxFixed = vxY * dxFixed;
+            var vyXdyStart = vyX * dyStart;
+            var vyYdyStart = vyY * dyStart;
+            var baseHX = tlX + vxXdxStart + vyXdyFixed;
+            var baseHY = tlY + vxYdxStart + vyYdyFixed;
+            var baseVX = tlX + vxXdxFixed + vyXdyStart;
+            var baseVY = tlY + vxYdxFixed + vyYdyStart;
 
             if (thresholdMap is null) {
                 if (!invert) {
                     // Horizontal
-                    var sx = tlX + vxX * dxStart + vyX * dyFixed;
-                    var sy = tlY + vxY * dxStart + vyY * dyFixed;
+                    var sx = baseHX;
+                    var sy = baseHY;
                     var prev = SampleLumaBilinear(image, sx, sy) <= threshold;
                     for (var x = start + 1; x <= end; x++) {
                         sx += vxX;
@@ -648,8 +673,8 @@ internal static class QrPixelSampling {
                     }
 
                     // Vertical
-                    sx = tlX + vxX * dxFixed + vyX * dyStart;
-                    sy = tlY + vxY * dxFixed + vyY * dyStart;
+                    sx = baseVX;
+                    sy = baseVY;
                     prev = SampleLumaBilinear(image, sx, sy) <= threshold;
                     for (var y = start + 1; y <= end; y++) {
                         sx += vyX;
@@ -660,8 +685,8 @@ internal static class QrPixelSampling {
                     }
                 } else {
                     // Horizontal
-                    var sx = tlX + vxX * dxStart + vyX * dyFixed;
-                    var sy = tlY + vxY * dxStart + vyY * dyFixed;
+                    var sx = baseHX;
+                    var sy = baseHY;
                     var prev = SampleLumaBilinear(image, sx, sy) > threshold;
                     for (var x = start + 1; x <= end; x++) {
                         sx += vxX;
@@ -672,8 +697,8 @@ internal static class QrPixelSampling {
                     }
 
                     // Vertical
-                    sx = tlX + vxX * dxFixed + vyX * dyStart;
-                    sy = tlY + vxY * dxFixed + vyY * dyStart;
+                    sx = baseVX;
+                    sy = baseVY;
                     prev = SampleLumaBilinear(image, sx, sy) > threshold;
                     for (var y = start + 1; y <= end; y++) {
                         sx += vyX;
@@ -686,8 +711,8 @@ internal static class QrPixelSampling {
             } else {
                 if (!invert) {
                     // Horizontal
-                    var sx = tlX + vxX * dxStart + vyX * dyFixed;
-                    var sy = tlY + vxY * dxStart + vyY * dyFixed;
+                    var sx = baseHX;
+                    var sy = baseHY;
                     SampleLumaThresholdBilinear(image, sx, sy, out var lum, out var thr);
                     var prev = lum <= thr;
                     for (var x = start + 1; x <= end; x++) {
@@ -700,8 +725,8 @@ internal static class QrPixelSampling {
                     }
 
                     // Vertical
-                    sx = tlX + vxX * dxFixed + vyX * dyStart;
-                    sy = tlY + vxY * dxFixed + vyY * dyStart;
+                    sx = baseVX;
+                    sy = baseVY;
                     SampleLumaThresholdBilinear(image, sx, sy, out lum, out thr);
                     prev = lum <= thr;
                     for (var y = start + 1; y <= end; y++) {
@@ -714,8 +739,8 @@ internal static class QrPixelSampling {
                     }
                 } else {
                     // Horizontal
-                    var sx = tlX + vxX * dxStart + vyX * dyFixed;
-                    var sy = tlY + vxY * dxStart + vyY * dyFixed;
+                    var sx = baseHX;
+                    var sy = baseHY;
                     SampleLumaThresholdBilinear(image, sx, sy, out var lum, out var thr);
                     var prev = lum > thr;
                     for (var x = start + 1; x <= end; x++) {
@@ -728,8 +753,8 @@ internal static class QrPixelSampling {
                     }
 
                     // Vertical
-                    sx = tlX + vxX * dxFixed + vyX * dyStart;
-                    sy = tlY + vxY * dxFixed + vyY * dyStart;
+                    sx = baseVX;
+                    sy = baseVY;
                     SampleLumaThresholdBilinear(image, sx, sy, out lum, out thr);
                     prev = lum > thr;
                     for (var y = start + 1; y <= end; y++) {
