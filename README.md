@@ -30,7 +30,7 @@ Status: Actively developed · Stable core · Expanding format support
 - Reliable QR decoding (ECI, FNC1/GS1, Kanji, structured append, Micro QR)
 - 1D barcode encoding/decoding (Code128/GS1-128, Code39, Code93, Code11, Codabar, MSI, Plessey, EAN/UPC, ITF-14)
 - 2D encoding/decoding (Data Matrix, MicroPDF417, PDF417, Aztec)
-- Renderers (SVG / SVGZ / HTML / PNG / JPEG / BMP / PPM / PBM / PGM / PAM / XBM / XPM / TGA / ICO / PDF / EPS / ASCII) and image decoding (PNG/JPEG/GIF/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA)
+- Renderers (SVG / SVGZ / HTML / PNG / JPEG / BMP / PPM / PBM / PGM / PAM / XBM / XPM / TGA / ICO / PDF / EPS / ASCII) and image decoding (PNG/JPEG/GIF/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA/ICO/TIFF)
 - OTP helpers (otpauth://totp + Base32)
 - WPF controls + demo apps
 
@@ -170,7 +170,7 @@ Runs wherever .NET runs (Windows, Linux, macOS). WPF controls are Windows-only.
 | --- | --- | --- | --- |
 | Core encode/decode (QR/1D/2D) | ✅ | ✅ | ✅ |
 | Renderers (PNG/SVG/SVGZ/HTML/JPEG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA/ICO/PDF/EPS/ASCII) | ✅ | ✅ | ✅ |
-| Image decoding (PNG/JPEG/GIF/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) | ✅ | ✅ | ✅ |
+| Image decoding (PNG/JPEG/GIF/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA/ICO/TIFF) | ✅ | ✅ | ✅ |
 | WPF controls | ✅ | ❌ | ❌ |
 
 ## Build Status
@@ -410,7 +410,11 @@ QR payload helpers generate well-known structured strings so scanners can trigge
 
 ## Image decoding (for readers)
 
-- PNG, JPEG (baseline + progressive, EXIF orientation), GIF, BMP, PPM, PBM, PGM, PAM, XBM, XPM, TGA, ICO/CUR
+- PNG: color types 0/2/3/4/6, bit depths 1/2/4/8/16, tRNS transparency, Adam7 interlace
+- JPEG: baseline + progressive (8-bit, Huffman), EXIF orientation
+- GIF: first frame only, interlaced supported, transparency via GCE
+- TIFF: baseline, uncompressed, 8-bit samples, planar=contiguous
+- BMP, PPM, PBM, PGM, PAM, XBM, XPM, TGA, ICO/CUR
 - Pure C# decoders (no native image libraries)
 
 ## Quick usage

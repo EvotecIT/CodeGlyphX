@@ -71,7 +71,7 @@ internal static class PngDecoder {
 
         if (width <= 0 || height <= 0) throw new FormatException("Missing IHDR.");
         if (compression != 0 || filter != 0) throw new FormatException("Unsupported PNG compression/filter method.");
-        if (interlace != 0) throw new FormatException("Interlaced PNGs are not supported.");
+        if (interlace != 0 && interlace != 1) throw new FormatException("Unsupported PNG interlace method.");
 
         var channels = colorType switch {
             0 => 1,
@@ -101,7 +101,9 @@ internal static class PngDecoder {
             ? (width * bitDepth + 7) / 8
             : checked(width * channels * (bitDepth / 8));
         var bytesPerPixel = (bitDepth * channels + 7) / 8;
-        var expected = checked(height * (rowBytes + 1));
+        var expected = interlace == 0
+            ? checked(height * (rowBytes + 1))
+            : GetAdam7ExpectedSize(width, height, bitDepth, channels);
         var scanlines = ArrayPool<byte>.Shared.Rent(expected);
 
         if (idat.Length == 0) throw new FormatException("Missing IDAT.");
@@ -112,8 +114,9 @@ internal static class PngDecoder {
                 ReadExact(z, scanlines, expected);
             }
 
-            var raw = new byte[checked(height * rowBytes)];
-            Unfilter(scanlines.AsSpan(0, expected), raw, rowBytes, height, bytesPerPixel);
+            var raw = interlace == 0
+                ? DecodeNonInterlaced(scanlines.AsSpan(0, expected), width, height, rowBytes, bytesPerPixel)
+                : DecodeAdam7(scanlines.AsSpan(0, expected), width, height, rowBytes, bitDepth, channels, bytesPerPixel);
 
             return ExpandToRgba(raw, width, height, colorType, bitDepth, palette, transparency);
         } finally {
@@ -153,6 +156,92 @@ internal static class PngDecoder {
             }
             dst += rowBytes;
         }
+    }
+
+    private static byte[] DecodeNonInterlaced(ReadOnlySpan<byte> scanlines, int width, int height, int rowBytes, int bytesPerPixel) {
+        var raw = new byte[checked(height * rowBytes)];
+        Unfilter(scanlines, raw, rowBytes, height, bytesPerPixel);
+        return raw;
+    }
+
+    private static byte[] DecodeAdam7(ReadOnlySpan<byte> scanlines, int width, int height, int rowBytes, int bitDepth, int channels, int bytesPerPixel) {
+        var raw = new byte[checked(height * rowBytes)];
+        var offset = 0;
+        var passes = Adam7Passes;
+        for (var i = 0; i < passes.Length; i++) {
+            var pass = passes[i];
+            var passWidth = GetAdam7Size(width, pass.StartX, pass.StepX);
+            var passHeight = GetAdam7Size(height, pass.StartY, pass.StepY);
+            if (passWidth == 0 || passHeight == 0) {
+                continue;
+            }
+
+            var passRowBytes = bitDepth < 8
+                ? (passWidth * bitDepth + 7) / 8
+                : checked(passWidth * channels * (bitDepth / 8));
+            var passExpected = checked(passHeight * (passRowBytes + 1));
+            if (offset + passExpected > scanlines.Length) {
+                throw new FormatException("Invalid Adam7 scanline data.");
+            }
+
+            var passRaw = new byte[checked(passHeight * passRowBytes)];
+            Unfilter(scanlines.Slice(offset, passExpected), passRaw, passRowBytes, passHeight, bytesPerPixel);
+            offset += passExpected;
+
+            if (bitDepth >= 8) {
+                for (var y = 0; y < passHeight; y++) {
+                    var srcRow = y * passRowBytes;
+                    var dstY = pass.StartY + y * pass.StepY;
+                    var dstRow = dstY * rowBytes;
+                    for (var x = 0; x < passWidth; x++) {
+                        var src = srcRow + x * bytesPerPixel;
+                        var dstX = pass.StartX + x * pass.StepX;
+                        var dst = dstRow + dstX * bytesPerPixel;
+                        Buffer.BlockCopy(passRaw, src, raw, dst, bytesPerPixel);
+                    }
+                }
+            } else {
+                for (var y = 0; y < passHeight; y++) {
+                    var srcRow = y * passRowBytes;
+                    var dstY = pass.StartY + y * pass.StepY;
+                    var dstRow = dstY * rowBytes;
+                    for (var x = 0; x < passWidth; x++) {
+                        var sample = ReadPackedSample(passRaw, srcRow, x, bitDepth);
+                        var dstX = pass.StartX + x * pass.StepX;
+                        WritePackedSample(raw, dstRow, dstX, bitDepth, sample);
+                    }
+                }
+            }
+        }
+
+        if (offset != scanlines.Length) {
+            throw new FormatException("Invalid Adam7 scanline length.");
+        }
+
+        return raw;
+    }
+
+    private static int GetAdam7ExpectedSize(int width, int height, int bitDepth, int channels) {
+        var total = 0;
+        var passes = Adam7Passes;
+        for (var i = 0; i < passes.Length; i++) {
+            var pass = passes[i];
+            var passWidth = GetAdam7Size(width, pass.StartX, pass.StepX);
+            var passHeight = GetAdam7Size(height, pass.StartY, pass.StepY);
+            if (passWidth == 0 || passHeight == 0) {
+                continue;
+            }
+            var passRowBytes = bitDepth < 8
+                ? (passWidth * bitDepth + 7) / 8
+                : checked(passWidth * channels * (bitDepth / 8));
+            total = checked(total + passHeight * (passRowBytes + 1));
+        }
+        return total;
+    }
+
+    private static int GetAdam7Size(int length, int start, int step) {
+        if (length <= start) return 0;
+        return (length - start + step - 1) / step;
     }
 
     private static byte[] ExpandToRgba(byte[] raw, int width, int height, int colorType, int bitDepth, byte[]? palette, byte[]? transparency) {
@@ -330,6 +419,14 @@ internal static class PngDecoder {
         return (raw[byteIndex] >> shift) & mask;
     }
 
+    private static void WritePackedSample(byte[] raw, int rowStart, int x, int bitDepth, int sample) {
+        var bitIndex = x * bitDepth;
+        var byteIndex = rowStart + (bitIndex >> 3);
+        var shift = 8 - bitDepth - (bitIndex & 7);
+        var mask = ((1 << bitDepth) - 1) << shift;
+        raw[byteIndex] = (byte)((raw[byteIndex] & ~mask) | ((sample << shift) & mask));
+    }
+
     private static byte Sample16To8(ushort sample) {
         return (byte)(sample >> 8);
     }
@@ -361,6 +458,18 @@ internal static class PngDecoder {
                && buffer[offset + 2] == (byte)type[2]
                && buffer[offset + 3] == (byte)type[3];
     }
+
+    private readonly record struct Adam7Pass(int StartX, int StartY, int StepX, int StepY);
+
+    private static readonly Adam7Pass[] Adam7Passes = {
+        new Adam7Pass(0, 0, 8, 8),
+        new Adam7Pass(4, 0, 8, 8),
+        new Adam7Pass(0, 4, 4, 8),
+        new Adam7Pass(2, 0, 4, 4),
+        new Adam7Pass(0, 2, 2, 4),
+        new Adam7Pass(1, 0, 2, 2),
+        new Adam7Pass(0, 1, 1, 2)
+    };
 
     private static Stream CreateZLibStream(Stream source) {
 #if NET8_0_OR_GREATER
