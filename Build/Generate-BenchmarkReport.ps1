@@ -476,6 +476,7 @@ $lines.Add("- Benchmarks run under controlled, ideal conditions on a single mach
 $lines.Add("")
 $lines.Add("### Notes")
 $lines.Add("- $runModeLabel")
+$lines.Add("- Full runs may include stylized/logo stress scenarios; quick runs focus on core paths.")
 $lines.Add("- Comparisons target PNG output and include encode+render (not encode-only).")
 $lines.Add("- Module size and quiet zone are matched to CodeGlyphX defaults where possible; image size is derived from CodeGlyphX modules.")
 $lines.Add("- ZXing.Net uses ZXing.Net.Bindings.ImageSharp.V3 (ImageSharp 3.x renderer).")

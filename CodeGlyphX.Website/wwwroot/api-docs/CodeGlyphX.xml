@@ -10615,6 +10615,31 @@
             Sets the render style preset.
             </summary>
         </member>
+        <member name="M:CodeGlyphX.QR.QrBuilder.WithModuleShape(CodeGlyphX.Rendering.Png.QrPngModuleShape)">
+            <summary>
+            Sets module shape override.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QR.QrBuilder.WithModuleScale(System.Double)">
+            <summary>
+            Sets module scale override (0.1..1.0).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QR.QrBuilder.WithModuleCornerRadiusPx(System.Int32)">
+            <summary>
+            Sets module corner radius in pixels.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QR.QrBuilder.WithForegroundGradient(CodeGlyphX.Rendering.Png.QrPngGradientOptions)">
+            <summary>
+            Sets the foreground gradient.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QR.QrBuilder.WithEyes(CodeGlyphX.Rendering.Png.QrPngEyeOptions)">
+            <summary>
+            Sets eye (finder) styling.
+            </summary>
+        </member>
         <member name="M:CodeGlyphX.QR.QrBuilder.WithTargetSize(System.Int32,System.Boolean)">
             <summary>
             Sets a fixed target size (in pixels). Module size is adjusted to fit.
@@ -10628,6 +10653,31 @@
         <member name="M:CodeGlyphX.QR.QrBuilder.WithLogoPng(System.Byte[])">
             <summary>
             Sets an embedded logo from PNG bytes.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QR.QrBuilder.WithLogoScale(System.Double)">
+            <summary>
+            Sets the logo scale relative to the QR area (excluding quiet zone).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QR.QrBuilder.WithLogoPaddingPx(System.Int32)">
+            <summary>
+            Sets the logo padding in pixels.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QR.QrBuilder.WithLogoBackground(System.Boolean)">
+            <summary>
+            Sets whether to draw a background plate behind the logo.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QR.QrBuilder.WithLogoBackgroundColor(System.Nullable{CodeGlyphX.Rendering.Png.Rgba32})">
+            <summary>
+            Sets the logo background color.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QR.QrBuilder.WithLogoCornerRadiusPx(System.Int32)">
+            <summary>
+            Sets the logo background corner radius in pixels.
             </summary>
         </member>
         <member name="M:CodeGlyphX.QR.QrBuilder.WithLogoFile(System.String)">

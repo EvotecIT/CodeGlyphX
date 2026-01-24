@@ -100,6 +100,46 @@ public static partial class QR {
         }
 
         /// <summary>
+        /// Sets module shape override.
+        /// </summary>
+        public QrBuilder WithModuleShape(QrPngModuleShape shape) {
+            Options.ModuleShape = shape;
+            return this;
+        }
+
+        /// <summary>
+        /// Sets module scale override (0.1..1.0).
+        /// </summary>
+        public QrBuilder WithModuleScale(double scale) {
+            Options.ModuleScale = scale;
+            return this;
+        }
+
+        /// <summary>
+        /// Sets module corner radius in pixels.
+        /// </summary>
+        public QrBuilder WithModuleCornerRadiusPx(int radiusPx) {
+            Options.ModuleCornerRadiusPx = radiusPx;
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the foreground gradient.
+        /// </summary>
+        public QrBuilder WithForegroundGradient(QrPngGradientOptions? gradient) {
+            Options.ForegroundGradient = gradient;
+            return this;
+        }
+
+        /// <summary>
+        /// Sets eye (finder) styling.
+        /// </summary>
+        public QrBuilder WithEyes(QrPngEyeOptions? eyes) {
+            Options.Eyes = eyes;
+            return this;
+        }
+
+        /// <summary>
         /// Sets a fixed target size (in pixels). Module size is adjusted to fit.
         /// </summary>
         public QrBuilder WithTargetSize(int sizePx, bool includeQuietZone = true) {
@@ -118,6 +158,46 @@ public static partial class QR {
         /// </summary>
         public QrBuilder WithLogoPng(byte[] png) {
             Options.LogoPng = png;
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the logo scale relative to the QR area (excluding quiet zone).
+        /// </summary>
+        public QrBuilder WithLogoScale(double scale) {
+            Options.LogoScale = scale;
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the logo padding in pixels.
+        /// </summary>
+        public QrBuilder WithLogoPaddingPx(int paddingPx) {
+            Options.LogoPaddingPx = paddingPx;
+            return this;
+        }
+
+        /// <summary>
+        /// Sets whether to draw a background plate behind the logo.
+        /// </summary>
+        public QrBuilder WithLogoBackground(bool enabled = true) {
+            Options.LogoDrawBackground = enabled;
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the logo background color.
+        /// </summary>
+        public QrBuilder WithLogoBackgroundColor(Rgba32? color) {
+            Options.LogoBackground = color;
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the logo background corner radius in pixels.
+        /// </summary>
+        public QrBuilder WithLogoCornerRadiusPx(int radiusPx) {
+            Options.LogoCornerRadiusPx = radiusPx;
             return this;
         }
 

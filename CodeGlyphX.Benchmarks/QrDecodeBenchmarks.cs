@@ -3,6 +3,7 @@ using System.IO;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Jobs;
 using CodeGlyphX.Rendering;
+using CodeGlyphX.Rendering.Png;
 
 namespace CodeGlyphX.Benchmarks;
 
@@ -27,6 +28,14 @@ public class QrDecodeBenchmarks
     private int _screenshotHeight;
     private int _antialiasWidth;
     private int _antialiasHeight;
+#if !BENCH_QUICK
+    private byte[] _logoRgba = Array.Empty<byte>();
+    private byte[] _fancyRgba = Array.Empty<byte>();
+    private int _logoWidth;
+    private int _logoHeight;
+    private int _fancyWidth;
+    private int _fancyHeight;
+#endif
     private readonly QrPixelDecodeOptions _fast = new() { Profile = QrDecodeProfile.Fast };
     private readonly QrPixelDecodeOptions _balanced = new() { Profile = QrDecodeProfile.Balanced };
     private readonly QrPixelDecodeOptions _robust = new() {
@@ -47,6 +56,10 @@ public class QrDecodeBenchmarks
         LoadRgba("Assets/DecodingSamples/qr-noisy-ui.png", out _noisyRgba, out _noisyWidth, out _noisyHeight);
         LoadRgba("Assets/DecodingSamples/qr-screenshot-1.png", out _screenshotRgba, out _screenshotWidth, out _screenshotHeight);
         LoadRgba("Assets/DecodingSamples/qr-dot-aa.png", out _antialiasRgba, out _antialiasWidth, out _antialiasHeight);
+#if !BENCH_QUICK
+        BuildLogoSample(out _logoRgba, out _logoWidth, out _logoHeight);
+        BuildFancySample(out _fancyRgba, out _fancyWidth, out _fancyHeight);
+#endif
     }
 
     [Benchmark(Description = "QR Decode (clean, fast)")]
@@ -85,6 +98,20 @@ public class QrDecodeBenchmarks
         return QrDecoder.TryDecode(_antialiasRgba, _antialiasWidth, _antialiasHeight, _antialiasWidth * 4, PixelFormat.Rgba32, out _, _robust);
     }
 
+#if !BENCH_QUICK
+    [Benchmark(Description = "QR Decode (logo, robust)")]
+    public bool DecodeLogoRobust()
+    {
+        return QrDecoder.TryDecode(_logoRgba, _logoWidth, _logoHeight, _logoWidth * 4, PixelFormat.Rgba32, out _, _robust);
+    }
+
+    [Benchmark(Description = "QR Decode (fancy, robust)")]
+    public bool DecodeFancyRobust()
+    {
+        return QrDecoder.TryDecode(_fancyRgba, _fancyWidth, _fancyHeight, _fancyWidth * 4, PixelFormat.Rgba32, out _, _robust);
+    }
+#endif
+
     private static void LoadRgba(string relativePath, out byte[] rgba, out int width, out int height)
     {
         var bytes = ReadRepoFile(relativePath);
@@ -93,6 +120,36 @@ public class QrDecodeBenchmarks
             throw new InvalidOperationException($"Failed to decode image '{relativePath}'.");
         }
     }
+
+#if !BENCH_QUICK
+    private static void BuildLogoSample(out byte[] rgba, out int width, out int height)
+    {
+        var logo = LogoBuilder.CreateCirclePng(
+            size: 96,
+            color: new Rgba32(24, 24, 24, 255),
+            accent: new Rgba32(240, 240, 240, 255),
+            out _,
+            out _);
+        var options = QrPresets.Logo(logo);
+        var png = QrEasy.RenderPng("https://github.com/EvotecIT/CodeGlyphX", options);
+        DecodePng(png, out rgba, out width, out height);
+    }
+
+    private static void BuildFancySample(out byte[] rgba, out int width, out int height)
+    {
+        var options = new QrEasyOptions { Style = QrRenderStyle.Fancy };
+        var png = QrEasy.RenderPng("https://github.com/EvotecIT/CodeGlyphX", options);
+        DecodePng(png, out rgba, out width, out height);
+    }
+
+    private static void DecodePng(byte[] png, out byte[] rgba, out int width, out int height)
+    {
+        if (!ImageReader.TryDecodeRgba32(png, out rgba, out width, out height))
+        {
+            throw new InvalidOperationException("Failed to decode generated QR PNG sample.");
+        }
+    }
+#endif
 
     private static byte[] ReadRepoFile(string relativePath)
     {

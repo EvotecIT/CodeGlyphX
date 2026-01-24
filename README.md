@@ -54,7 +54,7 @@ dotnet add package CodeGlyphX
 
 ## Target Framework Feature Matrix
 
-CodeGlyphX targets `netstandard2.0`, `net472`, `net8.0`, and `net10.0`. Most features are available everywhere, but the high-performance QR pixel pipeline and Span-based APIs are net8+ only.
+CodeGlyphX targets `netstandard2.0`, `net472`, `net8.0`, and `net10.0`. Most features are available everywhere, but the QR pixel pipeline and Span-based APIs are net8+ only.
 
 | Feature | net8.0 / net10.0 | net472 / netstandard2.0 |
 | --- | --- | --- |
@@ -63,12 +63,17 @@ CodeGlyphX targets `netstandard2.0`, `net472`, `net8.0`, and `net10.0`. Most fea
 | Renderers + image file codecs (PNG/JPEG/SVG/PDF/etc) | ✅ | ✅ |
 | 1D/2D pixel decode (Barcode/DataMatrix/PDF417/Aztec) | ✅ | ✅ |
 | QR pixel decode from raw pixels / screenshots | ✅ | ⚠️ Not available (returns false) |
-| Span-based overloads + fast pixel pipeline | ✅ | ✖ (byte[] only) |
+| QR pixel debug rendering | ✅ | ✖ |
+| Span-based overloads | ✅ | ✖ (byte[] only) |
 
 Notes:
 - `netstandard2.0` and `net472` require `System.Memory` 4.5.5 (automatically pulled by NuGet).
 - `QrImageDecoder.TryDecodeImage(...)` and `QrDecoder.TryDecode(...)` from pixels are net8+ only.
 - Runtime checks are available via `CodeGlyphXFeatures` (e.g., `SupportsQrPixelDecode`, `SupportsQrPixelDebug`).
+
+Choosing a target:
+- Pick `net8.0`/`net10.0` when you need QR pixel decode from images/screenshots, pixel debug rendering, Span APIs, or maximum throughput.
+- Pick `net472`/`netstandard2.0` for legacy apps that only need encoding, rendering, and module-grid decode (QR pixel decode from images is unavailable).
 
 ## Decode (unified)
 
@@ -177,6 +182,7 @@ Runs wherever .NET runs (Windows, Linux, macOS). WPF controls are Windows-only.
 Latest benchmark tables are generated into `BENCHMARK.md` (and `Assets/Data/benchmark*.json`).
 Benchmarks below were run on 2026-01-19 (Linux Ubuntu 24.04, Ryzen 9 9950X, .NET 8.0.22). Your results will vary.
 Benchmarks run on identical hardware with default settings.
+Quick runs focus on core paths; full runs may include stylized/logo stress scenarios.
 
 ### QR (Encode)
 
