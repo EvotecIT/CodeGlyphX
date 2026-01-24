@@ -19,12 +19,19 @@ internal static class TiffReader {
     private const ushort TagRowsPerStrip = 278;
     private const ushort TagStripByteCounts = 279;
     private const ushort TagPlanarConfiguration = 284;
+    private const ushort TagPredictor = 317;
     private const ushort TagExtraSamples = 338;
     private const ushort TagColorMap = 320;
 
     private const ushort TypeByte = 1;
     private const ushort TypeShort = 3;
     private const ushort TypeLong = 4;
+
+    private const int CompressionNone = 1;
+    private const int CompressionLzw = 5;
+    private const int CompressionDeflate = 8;
+    private const int CompressionPackBits = 32773;
+    private const int CompressionDeflateAdobe = 32946;
 
     public static bool IsTiff(ReadOnlySpan<byte> data) {
         if (data.Length < 8) return false;
@@ -47,11 +54,12 @@ internal static class TiffReader {
 
         width = 0;
         height = 0;
-        var compression = 1;
+        var compression = CompressionNone;
         var photometric = 1;
         var samplesPerPixel = 1;
         var rowsPerStrip = 0;
         var planar = 1;
+        var predictor = 1;
         ushort[]? bitsPerSample = null;
         int[]? stripOffsets = null;
         int[]? stripByteCounts = null;
@@ -97,6 +105,9 @@ internal static class TiffReader {
                 case TagPlanarConfiguration:
                     planar = (int)ReadValue(valueSpan, type, little, 0);
                     break;
+                case TagPredictor:
+                    predictor = (int)ReadValue(valueSpan, type, little, 0);
+                    break;
                 case TagExtraSamples:
                     hasExtraSamples = true;
                     break;
@@ -107,7 +118,11 @@ internal static class TiffReader {
         }
 
         if (width <= 0 || height <= 0) throw new FormatException("Invalid TIFF dimensions.");
-        if (compression != 1 && compression != 32773 && compression != 8 && compression != 32946) {
+        if (compression != CompressionNone
+            && compression != CompressionPackBits
+            && compression != CompressionLzw
+            && compression != CompressionDeflate
+            && compression != CompressionDeflateAdobe) {
             throw new FormatException("Unsupported TIFF compression.");
         }
         if (planar != 1) throw new FormatException("Unsupported TIFF planar configuration.");
@@ -148,15 +163,29 @@ internal static class TiffReader {
 
             byte[]? decompressed = null;
             ReadOnlySpan<byte> stripSpan;
-            if (compression == 1) {
-                stripSpan = src.Slice(0, expected);
-            } else if (compression == 32773) {
+            if (compression == CompressionNone) {
+                if (predictor == 2) {
+                    decompressed = src.Slice(0, expected).ToArray();
+                    stripSpan = decompressed;
+                } else {
+                    stripSpan = src.Slice(0, expected);
+                }
+            } else if (compression == CompressionPackBits) {
                 decompressed = new byte[expected];
                 var written = DecompressPackBits(src, decompressed);
                 if (written != expected) throw new FormatException("Invalid TIFF PackBits data.");
                 stripSpan = decompressed;
+            } else if (compression == CompressionLzw) {
+                decompressed = DecompressLzw(src, expected, earlyChange: 1);
+                stripSpan = decompressed;
             } else {
                 decompressed = DecompressDeflate(src, expected);
+                stripSpan = decompressed;
+            }
+
+            if (predictor == 2) {
+                if (decompressed is null) throw new FormatException("TIFF predictor requires mutable buffer.");
+                ApplyPredictor(decompressed, bytesPerRow, samplesPerPixel);
                 stripSpan = decompressed;
             }
 
@@ -233,6 +262,103 @@ internal static class TiffReader {
             }
         }
         return di;
+    }
+
+    private static byte[] DecompressLzw(ReadOnlySpan<byte> src, int expected, int earlyChange) {
+        if (expected <= 0) throw new FormatException("Invalid TIFF LZW output size.");
+        var prefix = new short[4096];
+        var suffix = new byte[4096];
+        var stack = new byte[4096];
+        var output = new byte[expected];
+
+        for (var i = 0; i < 256; i++) {
+            prefix[i] = -1;
+            suffix[i] = (byte)i;
+        }
+
+        var bitPos = 0;
+        var codeSize = 9;
+        var clear = 256;
+        var eoi = 257;
+        var nextCode = 258;
+        var oldCode = -1;
+        var outIndex = 0;
+        byte firstChar = 0;
+
+        while (true) {
+            var code = ReadBitsMsb(src, ref bitPos, codeSize);
+            if (code < 0) break;
+            if (code == clear) {
+                codeSize = 9;
+                nextCode = 258;
+                oldCode = -1;
+                continue;
+            }
+            if (code == eoi) {
+                break;
+            }
+
+            var inCode = code;
+            var stackTop = 0;
+            if (code >= nextCode) {
+                if (oldCode < 0) throw new FormatException("Invalid TIFF LZW stream.");
+                stack[stackTop++] = firstChar;
+                code = oldCode;
+            }
+
+            while (code >= 256) {
+                stack[stackTop++] = suffix[code];
+                code = prefix[code];
+            }
+
+            firstChar = (byte)code;
+            stack[stackTop++] = firstChar;
+
+            while (stackTop > 0) {
+                if (outIndex >= output.Length) throw new FormatException("TIFF LZW output too large.");
+                output[outIndex++] = stack[--stackTop];
+            }
+
+            if (oldCode >= 0) {
+                if (nextCode < 4096) {
+                    prefix[nextCode] = (short)oldCode;
+                    suffix[nextCode] = firstChar;
+                    nextCode++;
+                    if (nextCode == (1 << codeSize) - earlyChange && codeSize < 12) {
+                        codeSize++;
+                    }
+                }
+            }
+            oldCode = inCode;
+        }
+
+        if (outIndex != output.Length) throw new FormatException("TIFF LZW output truncated.");
+        return output;
+    }
+
+    private static int ReadBitsMsb(ReadOnlySpan<byte> data, ref int bitPos, int bitCount) {
+        var totalBits = data.Length * 8;
+        if (bitPos + bitCount > totalBits) return -1;
+        var value = 0;
+        for (var i = 0; i < bitCount; i++) {
+            var bitIndex = bitPos + i;
+            var byteIndex = bitIndex >> 3;
+            var shift = 7 - (bitIndex & 7);
+            var bit = (data[byteIndex] >> shift) & 1;
+            value = (value << 1) | bit;
+        }
+        bitPos += bitCount;
+        return value;
+    }
+
+    private static void ApplyPredictor(Span<byte> data, int bytesPerRow, int samplesPerPixel) {
+        if (samplesPerPixel <= 0) return;
+        for (var rowStart = 0; rowStart + bytesPerRow <= data.Length; rowStart += bytesPerRow) {
+            for (var i = samplesPerPixel; i < bytesPerRow; i++) {
+                var value = data[rowStart + i] + data[rowStart + i - samplesPerPixel];
+                data[rowStart + i] = (byte)value;
+            }
+        }
     }
 
     private static byte[] DecompressDeflate(ReadOnlySpan<byte> src, int expected) {
