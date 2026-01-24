@@ -87,215 +87,90 @@ internal static class QrPixelSampling {
     }
 
     public static bool SampleModule9(QrGrayImage image, double sx, double sy, double oxX, double oxY, double oyX, double oyY, bool invert) {
+        var thresholdMap = image.ThresholdMap;
+        if (thresholdMap is null) {
+            return SampleModule9NoMap(image, sx, sy, oxX, oxY, oyX, oyY, invert);
+        }
+        return SampleModule9WithMap(image, sx, sy, oxX, oxY, oyX, oyY, invert);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static bool SampleModule9NoMap(QrGrayImage image, double sx, double sy, double oxX, double oxY, double oyX, double oyY, bool invert) {
         const int required = 5;
+        Span<double> dx = stackalloc double[9];
+        Span<double> dy = stackalloc double[9];
+        FillSampleOffsets(oxX, oxY, oyX, oyY, dx, dy);
+        var threshold = image.Threshold;
         var black = 0;
         var remaining = 9;
-        var thresholdMap = image.ThresholdMap;
-        var threshold = image.Threshold;
-
-        if (thresholdMap is null) {
-            if (!invert) {
-                if (SampleLumaBilinear(image, sx, sy) <= threshold) black++;
-                remaining--;
-                if (black >= required) return true;
-                if (black + remaining < required) return false;
-
-                // Axes
-                if (SampleLumaBilinear(image, sx + oxX, sy + oxY) <= threshold) black++;
-                remaining--;
-                if (black >= required) return true;
-                if (black + remaining < required) return false;
-
-                if (SampleLumaBilinear(image, sx - oxX, sy - oxY) <= threshold) black++;
-                remaining--;
-                if (black >= required) return true;
-                if (black + remaining < required) return false;
-
-                if (SampleLumaBilinear(image, sx + oyX, sy + oyY) <= threshold) black++;
-                remaining--;
-                if (black >= required) return true;
-                if (black + remaining < required) return false;
-
-                if (SampleLumaBilinear(image, sx - oyX, sy - oyY) <= threshold) black++;
-                remaining--;
-                if (black >= required) return true;
-                if (black + remaining < required) return false;
-
-                // Diagonals
-                if (SampleLumaBilinear(image, sx + oxX + oyX, sy + oxY + oyY) <= threshold) black++;
-                remaining--;
-                if (black >= required) return true;
-                if (black + remaining < required) return false;
-
-                if (SampleLumaBilinear(image, sx + oxX - oyX, sy + oxY - oyY) <= threshold) black++;
-                remaining--;
-                if (black >= required) return true;
-                if (black + remaining < required) return false;
-
-                if (SampleLumaBilinear(image, sx - oxX + oyX, sy - oxY + oyY) <= threshold) black++;
-                remaining--;
-                if (black >= required) return true;
-                if (black + remaining < required) return false;
-
-                if (SampleLumaBilinear(image, sx - oxX - oyX, sy - oxY - oyY) <= threshold) black++;
-                return black >= required;
-            }
-
-            if (SampleLumaBilinear(image, sx, sy) > threshold) black++;
-            remaining--;
-            if (black >= required) return true;
-            if (black + remaining < required) return false;
-
-            // Axes
-            if (SampleLumaBilinear(image, sx + oxX, sy + oxY) > threshold) black++;
-            remaining--;
-            if (black >= required) return true;
-            if (black + remaining < required) return false;
-
-            if (SampleLumaBilinear(image, sx - oxX, sy - oxY) > threshold) black++;
-            remaining--;
-            if (black >= required) return true;
-            if (black + remaining < required) return false;
-
-            if (SampleLumaBilinear(image, sx + oyX, sy + oyY) > threshold) black++;
-            remaining--;
-            if (black >= required) return true;
-            if (black + remaining < required) return false;
-
-            if (SampleLumaBilinear(image, sx - oyX, sy - oyY) > threshold) black++;
-            remaining--;
-            if (black >= required) return true;
-            if (black + remaining < required) return false;
-
-            // Diagonals
-            if (SampleLumaBilinear(image, sx + oxX + oyX, sy + oxY + oyY) > threshold) black++;
-            remaining--;
-            if (black >= required) return true;
-            if (black + remaining < required) return false;
-
-            if (SampleLumaBilinear(image, sx + oxX - oyX, sy + oxY - oyY) > threshold) black++;
-            remaining--;
-            if (black >= required) return true;
-            if (black + remaining < required) return false;
-
-            if (SampleLumaBilinear(image, sx - oxX + oyX, sy - oxY + oyY) > threshold) black++;
-            remaining--;
-            if (black >= required) return true;
-            if (black + remaining < required) return false;
-
-            if (SampleLumaBilinear(image, sx - oxX - oyX, sy - oxY - oyY) > threshold) black++;
-            return black >= required;
-        }
-
         if (!invert) {
-            SampleLumaThresholdBilinear(image, sx, sy, out var lum, out var thr);
-            if (lum <= thr) black++;
-            remaining--;
-            if (black >= required) return true;
-            if (black + remaining < required) return false;
-
-            // Axes
-            SampleLumaThresholdBilinear(image, sx + oxX, sy + oxY, out lum, out thr);
-            if (lum <= thr) black++;
-            remaining--;
-            if (black >= required) return true;
-            if (black + remaining < required) return false;
-
-            SampleLumaThresholdBilinear(image, sx - oxX, sy - oxY, out lum, out thr);
-            if (lum <= thr) black++;
-            remaining--;
-            if (black >= required) return true;
-            if (black + remaining < required) return false;
-
-            SampleLumaThresholdBilinear(image, sx + oyX, sy + oyY, out lum, out thr);
-            if (lum <= thr) black++;
-            remaining--;
-            if (black >= required) return true;
-            if (black + remaining < required) return false;
-
-            SampleLumaThresholdBilinear(image, sx - oyX, sy - oyY, out lum, out thr);
-            if (lum <= thr) black++;
-            remaining--;
-            if (black >= required) return true;
-            if (black + remaining < required) return false;
-
-            // Diagonals
-            SampleLumaThresholdBilinear(image, sx + oxX + oyX, sy + oxY + oyY, out lum, out thr);
-            if (lum <= thr) black++;
-            remaining--;
-            if (black >= required) return true;
-            if (black + remaining < required) return false;
-
-            SampleLumaThresholdBilinear(image, sx + oxX - oyX, sy + oxY - oyY, out lum, out thr);
-            if (lum <= thr) black++;
-            remaining--;
-            if (black >= required) return true;
-            if (black + remaining < required) return false;
-
-            SampleLumaThresholdBilinear(image, sx - oxX + oyX, sy - oxY + oyY, out lum, out thr);
-            if (lum <= thr) black++;
-            remaining--;
-            if (black >= required) return true;
-            if (black + remaining < required) return false;
-
-            SampleLumaThresholdBilinear(image, sx - oxX - oyX, sy - oxY - oyY, out lum, out thr);
-            if (lum <= thr) black++;
+            for (var i = 0; i < 9; i++) {
+                if (SampleLumaBilinear(image, sx + dx[i], sy + dy[i]) <= threshold) black++;
+                remaining--;
+                if (black >= required) return true;
+                if (black + remaining < required) return false;
+            }
             return black >= required;
         }
 
-        SampleLumaThresholdBilinear(image, sx, sy, out var lumInv, out var thrInv);
-        if (lumInv > thrInv) black++;
-        remaining--;
-        if (black >= required) return true;
-        if (black + remaining < required) return false;
-
-        // Axes
-        SampleLumaThresholdBilinear(image, sx + oxX, sy + oxY, out lumInv, out thrInv);
-        if (lumInv > thrInv) black++;
-        remaining--;
-        if (black >= required) return true;
-        if (black + remaining < required) return false;
-
-        SampleLumaThresholdBilinear(image, sx - oxX, sy - oxY, out lumInv, out thrInv);
-        if (lumInv > thrInv) black++;
-        remaining--;
-        if (black >= required) return true;
-        if (black + remaining < required) return false;
-
-        SampleLumaThresholdBilinear(image, sx + oyX, sy + oyY, out lumInv, out thrInv);
-        if (lumInv > thrInv) black++;
-        remaining--;
-        if (black >= required) return true;
-        if (black + remaining < required) return false;
-
-        SampleLumaThresholdBilinear(image, sx - oyX, sy - oyY, out lumInv, out thrInv);
-        if (lumInv > thrInv) black++;
-        remaining--;
-        if (black >= required) return true;
-        if (black + remaining < required) return false;
-
-        // Diagonals
-        SampleLumaThresholdBilinear(image, sx + oxX + oyX, sy + oxY + oyY, out lumInv, out thrInv);
-        if (lumInv > thrInv) black++;
-        remaining--;
-        if (black >= required) return true;
-        if (black + remaining < required) return false;
-
-        SampleLumaThresholdBilinear(image, sx + oxX - oyX, sy + oxY - oyY, out lumInv, out thrInv);
-        if (lumInv > thrInv) black++;
-        remaining--;
-        if (black >= required) return true;
-        if (black + remaining < required) return false;
-
-        SampleLumaThresholdBilinear(image, sx - oxX + oyX, sy - oxY + oyY, out lumInv, out thrInv);
-        if (lumInv > thrInv) black++;
-        remaining--;
-        if (black >= required) return true;
-        if (black + remaining < required) return false;
-
-        SampleLumaThresholdBilinear(image, sx - oxX - oyX, sy - oxY - oyY, out lumInv, out thrInv);
-        if (lumInv > thrInv) black++;
+        for (var i = 0; i < 9; i++) {
+            if (SampleLumaBilinear(image, sx + dx[i], sy + dy[i]) > threshold) black++;
+            remaining--;
+            if (black >= required) return true;
+            if (black + remaining < required) return false;
+        }
         return black >= required;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static bool SampleModule9WithMap(QrGrayImage image, double sx, double sy, double oxX, double oxY, double oyX, double oyY, bool invert) {
+        const int required = 5;
+        Span<double> dx = stackalloc double[9];
+        Span<double> dy = stackalloc double[9];
+        FillSampleOffsets(oxX, oxY, oyX, oyY, dx, dy);
+        var black = 0;
+        var remaining = 9;
+        if (!invert) {
+            for (var i = 0; i < 9; i++) {
+                SampleLumaThresholdBilinear(image, sx + dx[i], sy + dy[i], out var lum, out var thr);
+                if (lum <= thr) black++;
+                remaining--;
+                if (black >= required) return true;
+                if (black + remaining < required) return false;
+            }
+            return black >= required;
+        }
+
+        for (var i = 0; i < 9; i++) {
+            SampleLumaThresholdBilinear(image, sx + dx[i], sy + dy[i], out var lum, out var thr);
+            if (lum > thr) black++;
+            remaining--;
+            if (black >= required) return true;
+            if (black + remaining < required) return false;
+        }
+        return black >= required;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static void FillSampleOffsets(double oxX, double oxY, double oyX, double oyY, Span<double> dx, Span<double> dy) {
+        dx[0] = 0;
+        dy[0] = 0;
+        dx[1] = oxX;
+        dy[1] = oxY;
+        dx[2] = -oxX;
+        dy[2] = -oxY;
+        dx[3] = oyX;
+        dy[3] = oyY;
+        dx[4] = -oyX;
+        dy[4] = -oyY;
+        dx[5] = oxX + oyX;
+        dy[5] = oxY + oyY;
+        dx[6] = oxX - oyX;
+        dy[6] = oxY - oyY;
+        dx[7] = -oxX + oyX;
+        dy[7] = -oxY + oyY;
+        dx[8] = -oxX - oyX;
+        dy[8] = -oxY - oyY;
     }
 
     private static void FindBestPhase(
@@ -411,210 +286,119 @@ internal static class QrPixelSampling {
         var baseYdy8 = tlY + vyYdy8;
 
         if (thresholdMap is null) {
-            if (!invert) {
-                for (var i = 0; i <= 5; i++) {
-                    var dy = (i - 3) + phaseY;
-                    var sx = baseXdx8 + vyX * dy;
-                    var sy = baseYdx8 + vyY * dy;
-                    if (SampleLumaBilinear(image, sx, sy) <= threshold) bitsA |= 1 << i;
-                }
+            for (var i = 0; i <= 5; i++) {
+                var dy = (i - 3) + phaseY;
+                var sx = baseXdx8 + vyX * dy;
+                var sy = baseYdx8 + vyY * dy;
+                var isBlack = (SampleLumaBilinear(image, sx, sy) <= threshold) ^ invert;
+                bitsA |= (isBlack ? 1 : 0) << i;
+            }
 
-                {
-                    var dy = 4 + phaseY; // 7 - 3 + phaseY
-                    var sx = baseXdx8 + vyX * dy;
-                    var sy = baseYdx8 + vyY * dy;
-                    if (SampleLumaBilinear(image, sx, sy) <= threshold) bitsA |= 1 << 6;
-                }
+            {
+                var dy = 4 + phaseY; // 7 - 3 + phaseY
+                var sx = baseXdx8 + vyX * dy;
+                var sy = baseYdx8 + vyY * dy;
+                var isBlack = (SampleLumaBilinear(image, sx, sy) <= threshold) ^ invert;
+                bitsA |= (isBlack ? 1 : 0) << 6;
+            }
 
-                {
-                    var sx = baseXdx8 + vyXdy8;
-                    var sy = baseYdx8 + vyYdy8;
-                    if (SampleLumaBilinear(image, sx, sy) <= threshold) bitsA |= 1 << 7;
-                }
+            {
+                var sx = baseXdx8 + vyXdy8;
+                var sy = baseYdx8 + vyYdy8;
+                var isBlack = (SampleLumaBilinear(image, sx, sy) <= threshold) ^ invert;
+                bitsA |= (isBlack ? 1 : 0) << 7;
+            }
 
-                {
-                    var sx = baseXdx7 + vyXdy8;
-                    var sy = baseYdx7 + vyYdy8;
-                    if (SampleLumaBilinear(image, sx, sy) <= threshold) bitsA |= 1 << 8;
-                }
+            {
+                var sx = baseXdx7 + vyXdy8;
+                var sy = baseYdx7 + vyYdy8;
+                var isBlack = (SampleLumaBilinear(image, sx, sy) <= threshold) ^ invert;
+                bitsA |= (isBlack ? 1 : 0) << 8;
+            }
 
-                for (var i = 9; i < 15; i++) {
-                    var dx = (11 - i) + phaseX; // (14 - i) - 3 + phaseX
-                    var sx = baseXdy8 + vxX * dx;
-                    var sy = baseYdy8 + vxY * dx;
-                    if (SampleLumaBilinear(image, sx, sy) <= threshold) bitsA |= 1 << i;
-                }
+            for (var i = 9; i < 15; i++) {
+                var dx = (11 - i) + phaseX; // (14 - i) - 3 + phaseX
+                var sx = baseXdy8 + vxX * dx;
+                var sy = baseYdy8 + vxY * dx;
+                var isBlack = (SampleLumaBilinear(image, sx, sy) <= threshold) ^ invert;
+                bitsA |= (isBlack ? 1 : 0) << i;
+            }
 
-                for (var i = 0; i < 8; i++) {
-                    var dx = (size - 4 - i) + phaseX; // (size - 1 - i) - 3 + phaseX
-                    var sx = baseXdy8 + vxX * dx;
-                    var sy = baseYdy8 + vxY * dx;
-                    if (SampleLumaBilinear(image, sx, sy) <= threshold) bitsB |= 1 << i;
-                }
+            for (var i = 0; i < 8; i++) {
+                var dx = (size - 4 - i) + phaseX; // (size - 1 - i) - 3 + phaseX
+                var sx = baseXdy8 + vxX * dx;
+                var sy = baseYdy8 + vxY * dx;
+                var isBlack = (SampleLumaBilinear(image, sx, sy) <= threshold) ^ invert;
+                bitsB |= (isBlack ? 1 : 0) << i;
+            }
 
-                for (var i = 8; i < 15; i++) {
-                    var dy = (size - 18 + i) + phaseY; // (size - 15 + i) - 3 + phaseY
-                    var sx = baseXdx8 + vyX * dy;
-                    var sy = baseYdx8 + vyY * dy;
-                    if (SampleLumaBilinear(image, sx, sy) <= threshold) bitsB |= 1 << i;
-                }
-            } else {
-                for (var i = 0; i <= 5; i++) {
-                    var dy = (i - 3) + phaseY;
-                    var sx = baseXdx8 + vyX * dy;
-                    var sy = baseYdx8 + vyY * dy;
-                    if (SampleLumaBilinear(image, sx, sy) > threshold) bitsA |= 1 << i;
-                }
-
-                {
-                    var dy = 4 + phaseY;
-                    var sx = baseXdx8 + vyX * dy;
-                    var sy = baseYdx8 + vyY * dy;
-                    if (SampleLumaBilinear(image, sx, sy) > threshold) bitsA |= 1 << 6;
-                }
-
-                {
-                    var sx = baseXdx8 + vyXdy8;
-                    var sy = baseYdx8 + vyYdy8;
-                    if (SampleLumaBilinear(image, sx, sy) > threshold) bitsA |= 1 << 7;
-                }
-
-                {
-                    var sx = baseXdx7 + vyXdy8;
-                    var sy = baseYdx7 + vyYdy8;
-                    if (SampleLumaBilinear(image, sx, sy) > threshold) bitsA |= 1 << 8;
-                }
-
-                for (var i = 9; i < 15; i++) {
-                    var dx = (11 - i) + phaseX;
-                    var sx = baseXdy8 + vxX * dx;
-                    var sy = baseYdy8 + vxY * dx;
-                    if (SampleLumaBilinear(image, sx, sy) > threshold) bitsA |= 1 << i;
-                }
-
-                for (var i = 0; i < 8; i++) {
-                    var dx = (size - 4 - i) + phaseX;
-                    var sx = baseXdy8 + vxX * dx;
-                    var sy = baseYdy8 + vxY * dx;
-                    if (SampleLumaBilinear(image, sx, sy) > threshold) bitsB |= 1 << i;
-                }
-
-                for (var i = 8; i < 15; i++) {
-                    var dy = (size - 18 + i) + phaseY;
-                    var sx = baseXdx8 + vyX * dy;
-                    var sy = baseYdx8 + vyY * dy;
-                    if (SampleLumaBilinear(image, sx, sy) > threshold) bitsB |= 1 << i;
-                }
+            for (var i = 8; i < 15; i++) {
+                var dy = (size - 18 + i) + phaseY; // (size - 15 + i) - 3 + phaseY
+                var sx = baseXdx8 + vyX * dy;
+                var sy = baseYdx8 + vyY * dy;
+                var isBlack = (SampleLumaBilinear(image, sx, sy) <= threshold) ^ invert;
+                bitsB |= (isBlack ? 1 : 0) << i;
             }
         } else {
-            if (!invert) {
-                for (var i = 0; i <= 5; i++) {
-                    var dy = (i - 3) + phaseY;
-                    var sx = baseXdx8 + vyX * dy;
-                    var sy = baseYdx8 + vyY * dy;
-                    SampleLumaThresholdBilinear(image, sx, sy, out var lum, out var thr);
-                    if (lum <= thr) bitsA |= 1 << i;
-                }
+            for (var i = 0; i <= 5; i++) {
+                var dy = (i - 3) + phaseY;
+                var sx = baseXdx8 + vyX * dy;
+                var sy = baseYdx8 + vyY * dy;
+                SampleLumaThresholdBilinear(image, sx, sy, out var lum, out var thr);
+                var isBlack = (lum <= thr) ^ invert;
+                bitsA |= (isBlack ? 1 : 0) << i;
+            }
 
-                {
-                    var dy = 4 + phaseY;
-                    var sx = baseXdx8 + vyX * dy;
-                    var sy = baseYdx8 + vyY * dy;
-                    SampleLumaThresholdBilinear(image, sx, sy, out var lum, out var thr);
-                    if (lum <= thr) bitsA |= 1 << 6;
-                }
+            {
+                var dy = 4 + phaseY;
+                var sx = baseXdx8 + vyX * dy;
+                var sy = baseYdx8 + vyY * dy;
+                SampleLumaThresholdBilinear(image, sx, sy, out var lum, out var thr);
+                var isBlack = (lum <= thr) ^ invert;
+                bitsA |= (isBlack ? 1 : 0) << 6;
+            }
 
-                {
-                    var sx = baseXdx8 + vyXdy8;
-                    var sy = baseYdx8 + vyYdy8;
-                    SampleLumaThresholdBilinear(image, sx, sy, out var lum, out var thr);
-                    if (lum <= thr) bitsA |= 1 << 7;
-                }
+            {
+                var sx = baseXdx8 + vyXdy8;
+                var sy = baseYdx8 + vyYdy8;
+                SampleLumaThresholdBilinear(image, sx, sy, out var lum, out var thr);
+                var isBlack = (lum <= thr) ^ invert;
+                bitsA |= (isBlack ? 1 : 0) << 7;
+            }
 
-                {
-                    var sx = baseXdx7 + vyXdy8;
-                    var sy = baseYdx7 + vyYdy8;
-                    SampleLumaThresholdBilinear(image, sx, sy, out var lum, out var thr);
-                    if (lum <= thr) bitsA |= 1 << 8;
-                }
+            {
+                var sx = baseXdx7 + vyXdy8;
+                var sy = baseYdx7 + vyYdy8;
+                SampleLumaThresholdBilinear(image, sx, sy, out var lum, out var thr);
+                var isBlack = (lum <= thr) ^ invert;
+                bitsA |= (isBlack ? 1 : 0) << 8;
+            }
 
-                for (var i = 9; i < 15; i++) {
-                    var dx = (11 - i) + phaseX;
-                    var sx = baseXdy8 + vxX * dx;
-                    var sy = baseYdy8 + vxY * dx;
-                    SampleLumaThresholdBilinear(image, sx, sy, out var lum, out var thr);
-                    if (lum <= thr) bitsA |= 1 << i;
-                }
+            for (var i = 9; i < 15; i++) {
+                var dx = (11 - i) + phaseX;
+                var sx = baseXdy8 + vxX * dx;
+                var sy = baseYdy8 + vxY * dx;
+                SampleLumaThresholdBilinear(image, sx, sy, out var lum, out var thr);
+                var isBlack = (lum <= thr) ^ invert;
+                bitsA |= (isBlack ? 1 : 0) << i;
+            }
 
-                for (var i = 0; i < 8; i++) {
-                    var dx = (size - 4 - i) + phaseX;
-                    var sx = baseXdy8 + vxX * dx;
-                    var sy = baseYdy8 + vxY * dx;
-                    SampleLumaThresholdBilinear(image, sx, sy, out var lum, out var thr);
-                    if (lum <= thr) bitsB |= 1 << i;
-                }
+            for (var i = 0; i < 8; i++) {
+                var dx = (size - 4 - i) + phaseX;
+                var sx = baseXdy8 + vxX * dx;
+                var sy = baseYdy8 + vxY * dx;
+                SampleLumaThresholdBilinear(image, sx, sy, out var lum, out var thr);
+                var isBlack = (lum <= thr) ^ invert;
+                bitsB |= (isBlack ? 1 : 0) << i;
+            }
 
-                for (var i = 8; i < 15; i++) {
-                    var dy = (size - 18 + i) + phaseY;
-                    var sx = baseXdx8 + vyX * dy;
-                    var sy = baseYdx8 + vyY * dy;
-                    SampleLumaThresholdBilinear(image, sx, sy, out var lum, out var thr);
-                    if (lum <= thr) bitsB |= 1 << i;
-                }
-            } else {
-                for (var i = 0; i <= 5; i++) {
-                    var dy = (i - 3) + phaseY;
-                    var sx = baseXdx8 + vyX * dy;
-                    var sy = baseYdx8 + vyY * dy;
-                    SampleLumaThresholdBilinear(image, sx, sy, out var lum, out var thr);
-                    if (lum > thr) bitsA |= 1 << i;
-                }
-
-                {
-                    var dy = 4 + phaseY;
-                    var sx = baseXdx8 + vyX * dy;
-                    var sy = baseYdx8 + vyY * dy;
-                    SampleLumaThresholdBilinear(image, sx, sy, out var lum, out var thr);
-                    if (lum > thr) bitsA |= 1 << 6;
-                }
-
-                {
-                    var sx = baseXdx8 + vyXdy8;
-                    var sy = baseYdx8 + vyYdy8;
-                    SampleLumaThresholdBilinear(image, sx, sy, out var lum, out var thr);
-                    if (lum > thr) bitsA |= 1 << 7;
-                }
-
-                {
-                    var sx = baseXdx7 + vyXdy8;
-                    var sy = baseYdx7 + vyYdy8;
-                    SampleLumaThresholdBilinear(image, sx, sy, out var lum, out var thr);
-                    if (lum > thr) bitsA |= 1 << 8;
-                }
-
-                for (var i = 9; i < 15; i++) {
-                    var dx = (11 - i) + phaseX;
-                    var sx = baseXdy8 + vxX * dx;
-                    var sy = baseYdy8 + vxY * dx;
-                    SampleLumaThresholdBilinear(image, sx, sy, out var lum, out var thr);
-                    if (lum > thr) bitsA |= 1 << i;
-                }
-
-                for (var i = 0; i < 8; i++) {
-                    var dx = (size - 4 - i) + phaseX;
-                    var sx = baseXdy8 + vxX * dx;
-                    var sy = baseYdy8 + vxY * dx;
-                    SampleLumaThresholdBilinear(image, sx, sy, out var lum, out var thr);
-                    if (lum > thr) bitsB |= 1 << i;
-                }
-
-                for (var i = 8; i < 15; i++) {
-                    var dy = (size - 18 + i) + phaseY;
-                    var sx = baseXdx8 + vyX * dy;
-                    var sy = baseYdx8 + vyY * dy;
-                    SampleLumaThresholdBilinear(image, sx, sy, out var lum, out var thr);
-                    if (lum > thr) bitsB |= 1 << i;
-                }
+            for (var i = 8; i < 15; i++) {
+                var dy = (size - 18 + i) + phaseY;
+                var sx = baseXdx8 + vyX * dy;
+                var sy = baseYdx8 + vyY * dy;
+                SampleLumaThresholdBilinear(image, sx, sy, out var lum, out var thr);
+                var isBlack = (lum <= thr) ^ invert;
+                bitsB |= (isBlack ? 1 : 0) << i;
             }
         }
 
@@ -657,119 +441,48 @@ internal static class QrPixelSampling {
             var baseHY = tlY + vxYdxStart + vyYdyFixed;
             var baseVX = tlX + vxXdxFixed + vyXdyStart;
             var baseVY = tlY + vxYdxFixed + vyYdyStart;
+            var steps = end - start;
 
             if (thresholdMap is null) {
-                if (!invert) {
-                    // Horizontal
-                    var sx = baseHX;
-                    var sy = baseHY;
-                    var prev = SampleLumaBilinear(image, sx, sy) <= threshold;
-                    for (var x = start + 1; x <= end; x++) {
-                        sx += vxX;
-                        sy += vxY;
-                        var cur = SampleLumaBilinear(image, sx, sy) <= threshold;
-                        if (cur != prev) max++;
-                        prev = cur;
-                    }
-
-                    // Vertical
-                    sx = baseVX;
-                    sy = baseVY;
-                    prev = SampleLumaBilinear(image, sx, sy) <= threshold;
-                    for (var y = start + 1; y <= end; y++) {
-                        sx += vyX;
-                        sy += vyY;
-                        var cur = SampleLumaBilinear(image, sx, sy) <= threshold;
-                        if (cur != prev) max++;
-                        prev = cur;
-                    }
-                } else {
-                    // Horizontal
-                    var sx = baseHX;
-                    var sy = baseHY;
-                    var prev = SampleLumaBilinear(image, sx, sy) > threshold;
-                    for (var x = start + 1; x <= end; x++) {
-                        sx += vxX;
-                        sy += vxY;
-                        var cur = SampleLumaBilinear(image, sx, sy) > threshold;
-                        if (cur != prev) max++;
-                        prev = cur;
-                    }
-
-                    // Vertical
-                    sx = baseVX;
-                    sy = baseVY;
-                    prev = SampleLumaBilinear(image, sx, sy) > threshold;
-                    for (var y = start + 1; y <= end; y++) {
-                        sx += vyX;
-                        sy += vyY;
-                        var cur = SampleLumaBilinear(image, sx, sy) > threshold;
-                        if (cur != prev) max++;
-                        prev = cur;
-                    }
-                }
+                max += CountAlternationsNoMap(image, baseHX, baseHY, vxX, vxY, steps, invert, threshold);
+                max += CountAlternationsNoMap(image, baseVX, baseVY, vyX, vyY, steps, invert, threshold);
             } else {
-                if (!invert) {
-                    // Horizontal
-                    var sx = baseHX;
-                    var sy = baseHY;
-                    SampleLumaThresholdBilinear(image, sx, sy, out var lum, out var thr);
-                    var prev = lum <= thr;
-                    for (var x = start + 1; x <= end; x++) {
-                        sx += vxX;
-                        sy += vxY;
-                        SampleLumaThresholdBilinear(image, sx, sy, out lum, out thr);
-                        var cur = lum <= thr;
-                        if (cur != prev) max++;
-                        prev = cur;
-                    }
-
-                    // Vertical
-                    sx = baseVX;
-                    sy = baseVY;
-                    SampleLumaThresholdBilinear(image, sx, sy, out lum, out thr);
-                    prev = lum <= thr;
-                    for (var y = start + 1; y <= end; y++) {
-                        sx += vyX;
-                        sy += vyY;
-                        SampleLumaThresholdBilinear(image, sx, sy, out lum, out thr);
-                        var cur = lum <= thr;
-                        if (cur != prev) max++;
-                        prev = cur;
-                    }
-                } else {
-                    // Horizontal
-                    var sx = baseHX;
-                    var sy = baseHY;
-                    SampleLumaThresholdBilinear(image, sx, sy, out var lum, out var thr);
-                    var prev = lum > thr;
-                    for (var x = start + 1; x <= end; x++) {
-                        sx += vxX;
-                        sy += vxY;
-                        SampleLumaThresholdBilinear(image, sx, sy, out lum, out thr);
-                        var cur = lum > thr;
-                        if (cur != prev) max++;
-                        prev = cur;
-                    }
-
-                    // Vertical
-                    sx = baseVX;
-                    sy = baseVY;
-                    SampleLumaThresholdBilinear(image, sx, sy, out lum, out thr);
-                    prev = lum > thr;
-                    for (var y = start + 1; y <= end; y++) {
-                        sx += vyX;
-                        sy += vyY;
-                        SampleLumaThresholdBilinear(image, sx, sy, out lum, out thr);
-                        var cur = lum > thr;
-                        if (cur != prev) max++;
-                        prev = cur;
-                    }
-                }
+                max += CountAlternationsWithMap(image, baseHX, baseHY, vxX, vxY, steps, invert);
+                max += CountAlternationsWithMap(image, baseVX, baseVY, vyX, vyY, steps, invert);
             }
         }
 
         return max;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static int CountAlternationsNoMap(QrGrayImage image, double sx, double sy, double stepX, double stepY, int steps, bool invert, int threshold) {
+        var prev = (SampleLumaBilinear(image, sx, sy) <= threshold) ^ invert;
+        var alternations = 0;
+        for (var i = 0; i < steps; i++) {
+            sx += stepX;
+            sy += stepY;
+            var cur = (SampleLumaBilinear(image, sx, sy) <= threshold) ^ invert;
+            if (cur != prev) alternations++;
+            prev = cur;
+        }
+        return alternations;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static int CountAlternationsWithMap(QrGrayImage image, double sx, double sy, double stepX, double stepY, int steps, bool invert) {
+        SampleLumaThresholdBilinear(image, sx, sy, out var lum, out var thr);
+        var prev = (lum <= thr) ^ invert;
+        var alternations = 0;
+        for (var i = 0; i < steps; i++) {
+            sx += stepX;
+            sy += stepY;
+            SampleLumaThresholdBilinear(image, sx, sy, out lum, out thr);
+            var cur = (lum <= thr) ^ invert;
+            if (cur != prev) alternations++;
+            prev = cur;
+        }
+        return alternations;
     }
 
     public static bool IsBlackBilinear(QrGrayImage image, double x, double y, bool invert) {
@@ -813,9 +526,64 @@ internal static class QrPixelSampling {
         var gray = image.Gray;
         var thresholdMap = image.ThresholdMap;
         var threshold = image.Threshold;
+        var maxX = width - 1;
+        var maxY = height - 1;
+        var inBounds = px > 0 && px < maxX && py > 0 && py < maxY;
 
         if (thresholdMap is null) {
             if (!invert) {
+                if (inBounds) {
+                    var x0 = px - 1;
+                    var x1 = px;
+                    var x2 = px + 1;
+                    var row0 = (py - 1) * width;
+                    var row1 = py * width;
+                    var row2 = (py + 1) * width;
+
+                    if (gray[row0 + x0] <= threshold) black++;
+                    remaining--;
+                    if (black >= required) return true;
+                    if (black + remaining < required) return false;
+
+                    if (gray[row0 + x1] <= threshold) black++;
+                    remaining--;
+                    if (black >= required) return true;
+                    if (black + remaining < required) return false;
+
+                    if (gray[row0 + x2] <= threshold) black++;
+                    remaining--;
+                    if (black >= required) return true;
+                    if (black + remaining < required) return false;
+
+                    if (gray[row1 + x0] <= threshold) black++;
+                    remaining--;
+                    if (black >= required) return true;
+                    if (black + remaining < required) return false;
+
+                    if (gray[row1 + x1] <= threshold) black++;
+                    remaining--;
+                    if (black >= required) return true;
+                    if (black + remaining < required) return false;
+
+                    if (gray[row1 + x2] <= threshold) black++;
+                    remaining--;
+                    if (black >= required) return true;
+                    if (black + remaining < required) return false;
+
+                    if (gray[row2 + x0] <= threshold) black++;
+                    remaining--;
+                    if (black >= required) return true;
+                    if (black + remaining < required) return false;
+
+                    if (gray[row2 + x1] <= threshold) black++;
+                    remaining--;
+                    if (black >= required) return true;
+                    if (black + remaining < required) return false;
+
+                    if (gray[row2 + x2] <= threshold) black++;
+                    return black >= required;
+                }
+
                 for (var dy = -1; dy <= 1; dy++) {
                     var y = py + dy;
                     if (y < 0) y = 0;
@@ -834,6 +602,58 @@ internal static class QrPixelSampling {
                     }
                 }
             } else {
+                if (inBounds) {
+                    var x0 = px - 1;
+                    var x1 = px;
+                    var x2 = px + 1;
+                    var row0 = (py - 1) * width;
+                    var row1 = py * width;
+                    var row2 = (py + 1) * width;
+
+                    if (gray[row0 + x0] > threshold) black++;
+                    remaining--;
+                    if (black >= required) return true;
+                    if (black + remaining < required) return false;
+
+                    if (gray[row0 + x1] > threshold) black++;
+                    remaining--;
+                    if (black >= required) return true;
+                    if (black + remaining < required) return false;
+
+                    if (gray[row0 + x2] > threshold) black++;
+                    remaining--;
+                    if (black >= required) return true;
+                    if (black + remaining < required) return false;
+
+                    if (gray[row1 + x0] > threshold) black++;
+                    remaining--;
+                    if (black >= required) return true;
+                    if (black + remaining < required) return false;
+
+                    if (gray[row1 + x1] > threshold) black++;
+                    remaining--;
+                    if (black >= required) return true;
+                    if (black + remaining < required) return false;
+
+                    if (gray[row1 + x2] > threshold) black++;
+                    remaining--;
+                    if (black >= required) return true;
+                    if (black + remaining < required) return false;
+
+                    if (gray[row2 + x0] > threshold) black++;
+                    remaining--;
+                    if (black >= required) return true;
+                    if (black + remaining < required) return false;
+
+                    if (gray[row2 + x1] > threshold) black++;
+                    remaining--;
+                    if (black >= required) return true;
+                    if (black + remaining < required) return false;
+
+                    if (gray[row2 + x2] > threshold) black++;
+                    return black >= required;
+                }
+
                 for (var dy = -1; dy <= 1; dy++) {
                     var y = py + dy;
                     if (y < 0) y = 0;
@@ -854,6 +674,67 @@ internal static class QrPixelSampling {
             }
         } else {
             if (!invert) {
+                if (inBounds) {
+                    var x0 = px - 1;
+                    var x1 = px;
+                    var x2 = px + 1;
+                    var row0 = (py - 1) * width;
+                    var row1 = py * width;
+                    var row2 = (py + 1) * width;
+
+                    var idx = row0 + x0;
+                    if (gray[idx] <= thresholdMap[idx]) black++;
+                    remaining--;
+                    if (black >= required) return true;
+                    if (black + remaining < required) return false;
+
+                    idx = row0 + x1;
+                    if (gray[idx] <= thresholdMap[idx]) black++;
+                    remaining--;
+                    if (black >= required) return true;
+                    if (black + remaining < required) return false;
+
+                    idx = row0 + x2;
+                    if (gray[idx] <= thresholdMap[idx]) black++;
+                    remaining--;
+                    if (black >= required) return true;
+                    if (black + remaining < required) return false;
+
+                    idx = row1 + x0;
+                    if (gray[idx] <= thresholdMap[idx]) black++;
+                    remaining--;
+                    if (black >= required) return true;
+                    if (black + remaining < required) return false;
+
+                    idx = row1 + x1;
+                    if (gray[idx] <= thresholdMap[idx]) black++;
+                    remaining--;
+                    if (black >= required) return true;
+                    if (black + remaining < required) return false;
+
+                    idx = row1 + x2;
+                    if (gray[idx] <= thresholdMap[idx]) black++;
+                    remaining--;
+                    if (black >= required) return true;
+                    if (black + remaining < required) return false;
+
+                    idx = row2 + x0;
+                    if (gray[idx] <= thresholdMap[idx]) black++;
+                    remaining--;
+                    if (black >= required) return true;
+                    if (black + remaining < required) return false;
+
+                    idx = row2 + x1;
+                    if (gray[idx] <= thresholdMap[idx]) black++;
+                    remaining--;
+                    if (black >= required) return true;
+                    if (black + remaining < required) return false;
+
+                    idx = row2 + x2;
+                    if (gray[idx] <= thresholdMap[idx]) black++;
+                    return black >= required;
+                }
+
                 for (var dy = -1; dy <= 1; dy++) {
                     var y = py + dy;
                     if (y < 0) y = 0;
@@ -873,6 +754,67 @@ internal static class QrPixelSampling {
                     }
                 }
             } else {
+                if (inBounds) {
+                    var x0 = px - 1;
+                    var x1 = px;
+                    var x2 = px + 1;
+                    var row0 = (py - 1) * width;
+                    var row1 = py * width;
+                    var row2 = (py + 1) * width;
+
+                    var idx = row0 + x0;
+                    if (gray[idx] > thresholdMap[idx]) black++;
+                    remaining--;
+                    if (black >= required) return true;
+                    if (black + remaining < required) return false;
+
+                    idx = row0 + x1;
+                    if (gray[idx] > thresholdMap[idx]) black++;
+                    remaining--;
+                    if (black >= required) return true;
+                    if (black + remaining < required) return false;
+
+                    idx = row0 + x2;
+                    if (gray[idx] > thresholdMap[idx]) black++;
+                    remaining--;
+                    if (black >= required) return true;
+                    if (black + remaining < required) return false;
+
+                    idx = row1 + x0;
+                    if (gray[idx] > thresholdMap[idx]) black++;
+                    remaining--;
+                    if (black >= required) return true;
+                    if (black + remaining < required) return false;
+
+                    idx = row1 + x1;
+                    if (gray[idx] > thresholdMap[idx]) black++;
+                    remaining--;
+                    if (black >= required) return true;
+                    if (black + remaining < required) return false;
+
+                    idx = row1 + x2;
+                    if (gray[idx] > thresholdMap[idx]) black++;
+                    remaining--;
+                    if (black >= required) return true;
+                    if (black + remaining < required) return false;
+
+                    idx = row2 + x0;
+                    if (gray[idx] > thresholdMap[idx]) black++;
+                    remaining--;
+                    if (black >= required) return true;
+                    if (black + remaining < required) return false;
+
+                    idx = row2 + x1;
+                    if (gray[idx] > thresholdMap[idx]) black++;
+                    remaining--;
+                    if (black >= required) return true;
+                    if (black + remaining < required) return false;
+
+                    idx = row2 + x2;
+                    if (gray[idx] > thresholdMap[idx]) black++;
+                    return black >= required;
+                }
+
                 for (var dy = -1; dy <= 1; dy++) {
                     var y = py + dy;
                     if (y < 0) y = 0;

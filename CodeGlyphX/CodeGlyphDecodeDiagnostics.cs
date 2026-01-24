@@ -43,4 +43,9 @@ public sealed class CodeGlyphDecodeDiagnostics {
     /// Optional failure message when decoding fails.
     /// </summary>
     public string? Failure { get; internal set; }
+
+    /// <summary>
+    /// Failure reason when decoding fails.
+    /// </summary>
+    public DecodeFailureReason FailureReason { get; internal set; }
 }

@@ -166,6 +166,7 @@ if (QrImageDecoder.TryDecodeImage(imageBytes, out var result))
                 </tbody>
             </table>
             <p class="text-muted">QR pixel decode APIs are net8+ only (e.g., <code>QrImageDecoder.TryDecodeImage(...)</code> and <code>QrDecoder.TryDecode(...)</code> from pixels).</p>
+            <p class="text-muted">You can check capabilities at runtime via <code>CodeGlyphXFeatures</code> (for example, <code>SupportsQrPixelDecode</code>).</p>
         </section>
 
         <section id="quickstart">
@@ -654,6 +655,15 @@ var results = QrImageDecoder.DecodeAllImages(imageBytes);
 foreach (var barcode in results)
 {
     Console.WriteLine($"{barcode.BarcodeFormat}: {barcode.Text}");
+}</pre>
+
+            <h2>Diagnostics</h2>
+            <pre class="code-block">using CodeGlyphX;
+
+if (!CodeGlyph.TryDecodeImage(imageBytes, out var decoded, out var diagnostics, options: null))
+{
+    Console.WriteLine(diagnostics.FailureReason);
+    Console.WriteLine(diagnostics.Failure);
 }</pre>
         </section>
 

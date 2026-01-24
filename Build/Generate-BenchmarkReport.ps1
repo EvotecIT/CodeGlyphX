@@ -467,7 +467,7 @@ $lines.Add("Artifacts: $ArtifactsPath")
 $lines.Add("### How to read")
 $lines.Add("- Mean: average time per operation. Lower is better.")
 $lines.Add("- Allocated: managed memory allocated per operation. Lower is better.")
-$lines.Add("- CodeGlyphX vs Fastest: CodeGlyphX mean divided by the fastest mean for that scenario. 1 x (fastest) means CodeGlyphX is fastest; 1.5 x means ~50% slower.")
+$lines.Add("- CodeGlyphX vs Fastest: CodeGlyphX mean divided by the fastest mean for that scenario. If CodeGlyphX is fastest, the text shows the lead vs the runner-up; otherwise it shows the lag vs the fastest vendor.")
 $lines.Add("- CodeGlyphX Alloc vs Fastest: CodeGlyphX allocated divided by the allocation of the fastest-time vendor for that scenario. Lower than 1 x means fewer allocations than the fastest-time vendor.")
 $lines.Add("- Rating: good/ok/bad based on time + allocation ratios (good <=1.1x and <=1.25x alloc, ok <=1.5x and <=2.0x alloc).")
 $lines.Add("- Δ lines in comparison tables show vendor ratios vs CodeGlyphX (time / alloc).")
@@ -538,28 +538,40 @@ if ($compareFiles.Count -gt 0) {
 
         foreach ($scenario in ($scenarioMap.Keys | Sort-Object)) {
             $vendors = $scenarioMap[$scenario]
-            $fastestVendor = $null
-            $fastest = $null
+            $ranked = @()
             foreach ($vendor in $vendors.Keys) {
                 $entry = $vendors[$vendor]
                 if (-not $entry.meanNs) { continue }
-                if (-not $fastest -or $entry.meanNs -lt $fastest.meanNs) {
-                    $fastest = $entry
-                    $fastestVendor = $vendor
-                }
+                $ranked += [pscustomobject]@{ Vendor = $vendor; Entry = $entry }
             }
-            if (-not $fastestVendor) { continue }
+            if ($ranked.Count -eq 0) { continue }
+            $ranked = $ranked | Sort-Object { $_.Entry.meanNs }
+            $fastestVendor = $ranked[0].Vendor
+            $fastest = $ranked[0].Entry
+            $runnerUpVendor = if ($ranked.Count -gt 1) { $ranked[1].Vendor } else { $null }
+            $runnerUp = if ($ranked.Count -gt 1) { $ranked[1].Entry } else { $null }
+
             $cgx = $vendors["CodeGlyphX"]
             $ratioText = ""
             $ratioValue = $null
             $allocRatioText = ""
             $allocRatioValue = $null
+            $leadRatioValue = $null
+            $leadRatioText = ""
             $cgxMean = ""
             $cgxAlloc = ""
             if ($cgx -and $cgx.meanNs) {
                 $ratioValue = [math]::Round(($cgx.meanNs / $fastest.meanNs), 2)
-                $ratioText = "$ratioValue x"
-                if ($fastestVendor -eq "CodeGlyphX") { $ratioText = "1 x (fastest)" }
+                if ($fastestVendor -eq "CodeGlyphX") {
+                    $ratioText = "1 x (fastest)"
+                    if ($runnerUp -and $runnerUp.meanNs -and $runnerUpVendor) {
+                        $leadRatioValue = [math]::Round(($runnerUp.meanNs / $cgx.meanNs), 2)
+                        $leadRatioText = "$leadRatioValue x vs $runnerUpVendor"
+                        $ratioText = "1 x (fastest, lead $leadRatioText)"
+                    }
+                } else {
+                    $ratioText = "$ratioValue x (lag vs $fastestVendor)"
+                }
                 $cgxMean = $cgx.mean
                 $cgxAlloc = $cgx.allocated
                 $fastestAllocBytes = Parse-AllocatedBytes $fastest.allocated
@@ -584,10 +596,14 @@ if ($compareFiles.Count -gt 0) {
                 scenario = $scenario
                 fastestVendor = $fastestVendor
                 fastestMean = $fastest.mean
+                runnerUpVendor = $runnerUpVendor
+                runnerUpMean = if ($runnerUp) { $runnerUp.mean } else { $null }
                 codeGlyphXMean = $cgxMean
                 codeGlyphXAlloc = $cgxAlloc
                 codeGlyphXVsFastest = $ratioValue
                 codeGlyphXVsFastestText = $ratioText
+                codeGlyphXLeadOverRunnerUp = $leadRatioValue
+                codeGlyphXLeadOverRunnerUpText = $leadRatioText
                 codeGlyphXAllocVsFastest = $allocRatioValue
                 codeGlyphXAllocVsFastestText = $allocRatioText
                 rating = $rating

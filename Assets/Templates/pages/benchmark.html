@@ -76,8 +76,8 @@
         <h2>Comparison Summary</h2>
         <p class="section-description">
             How CodeGlyphX compares to the fastest library in each scenario.
-            "vs Fastest" shows how much slower/faster CodeGlyphX is (1x means fastest; 2x means twice as slow).
-            When CodeGlyphX is fastest, use the vendor columns and Δ lines to see how far ahead it is.
+            "vs Fastest" shows lag when CodeGlyphX is not fastest; when CodeGlyphX is fastest it also includes the lead vs the runner-up.
+            Use the vendor columns and Δ lines for full context.
             See "Detailed Results" below for full vendor breakdowns.
         </p>
         <div class="benchmark-table-container" data-benchmark-summary>
@@ -143,12 +143,12 @@
             Clone the repository and run benchmarks on your own hardware:
         </p>
         <pre class="code-block"><code><span class="comment"># Quick benchmark (fast, less accurate)</span>
-pwsh Build/Run-Benchmarks.ps1 -Quick
+pwsh Build/Run-Benchmarks-Compare.ps1
 
 <span class="comment"># Full benchmark (slow, statistically rigorous)</span>
-pwsh Build/Run-Benchmarks.ps1
+pwsh Build/Run-Benchmarks-Compare.ps1 -Full
 
 <span class="comment"># Generate report</span>
-pwsh Build/Generate-BenchmarkReport.ps1</code></pre>
+pwsh Build/Generate-BenchmarkReport.ps1 -ArtifactsPath Build/BenchmarkResults/&lt;run-folder&gt;</code></pre>
     </section>
 </div>

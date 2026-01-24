@@ -68,6 +68,7 @@ CodeGlyphX targets `netstandard2.0`, `net472`, `net8.0`, and `net10.0`. Most fea
 Notes:
 - `netstandard2.0` and `net472` require `System.Memory` 4.5.5 (automatically pulled by NuGet).
 - `QrImageDecoder.TryDecodeImage(...)` and `QrDecoder.TryDecode(...)` from pixels are net8+ only.
+- Runtime checks are available via `CodeGlyphXFeatures` (e.g., `SupportsQrPixelDecode`, `SupportsQrPixelDebug`).
 
 ## Decode (unified)
 
@@ -85,6 +86,15 @@ var options = new CodeGlyphDecodeOptions {
 
 if (CodeGlyph.TryDecode(pixels, width, height, stride, PixelFormat.Rgba32, out var decoded, options)) {
     Console.WriteLine($"{decoded.Kind}: {decoded.Text}");
+}
+```
+
+Diagnostics:
+
+```csharp
+if (!CodeGlyph.TryDecode(pixels, width, height, stride, PixelFormat.Rgba32, out var decoded, out var diagnostics, options)) {
+    Console.WriteLine(diagnostics.FailureReason);
+    Console.WriteLine(diagnostics.Failure);
 }
 ```
 

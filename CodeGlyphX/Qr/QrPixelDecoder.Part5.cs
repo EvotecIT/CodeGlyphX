@@ -699,8 +699,11 @@ internal static partial class QrPixelDecoder {
         }
         if (maxVersion < 1) return false;
         var maxDimension = maxVersion * 4 + 17;
-        Span<int> pxs = stackalloc int[maxDimension];
-        Span<int> pys = stackalloc int[maxDimension];
+        const int maxQrDimension = 17 + 4 * 40;
+#pragma warning disable CA2014 // Stackalloc size is bounded by QR max version and not inside a loop.
+        Span<int> pxs = stackalloc int[maxQrDimension];
+        Span<int> pys = stackalloc int[maxQrDimension];
+#pragma warning restore CA2014
 
         // Try smaller versions first (more likely for OTP QR), but accept non-integer module sizes.
         var best = default(QrPixelDecodeDiagnostics);
@@ -842,7 +845,7 @@ internal static partial class QrPixelDecoder {
                     var signed = Sse2.Xor(vec, offset).AsSByte();
                     var gt = Sse2.CompareGreaterThan(signed, thresholdVec.AsSByte());
                     var mask = (uint)Sse2.MoveMask(gt.AsByte());
-                    count += BitOperations.PopCount(mask);
+                    count += CodeGlyphX.Internal.BitOps.PopCount(mask);
                     i += 16;
                 }
 

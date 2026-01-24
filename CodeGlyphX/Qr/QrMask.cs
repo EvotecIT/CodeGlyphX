@@ -1,5 +1,5 @@
 using System;
-using System.Numerics;
+using CodeGlyphX.Internal;
 
 namespace CodeGlyphX.Qr;
 
@@ -91,12 +91,12 @@ internal static class QrMask {
         var words = modules.Words;
         var fullWords = totalBits >> 5;
         for (var i = 0; i < fullWords; i++) {
-            dark += BitOperations.PopCount(words[i]);
+            dark += BitOps.PopCount(words[i]);
         }
         var remainingBits = totalBits & 31;
         if (remainingBits != 0) {
             var mask = (1u << remainingBits) - 1u;
-            dark += BitOperations.PopCount(words[fullWords] & mask);
+            dark += BitOps.PopCount(words[fullWords] & mask);
         }
         var percent = (dark * 100) / total;
         var k = Math.Abs(percent - 50) / 5;

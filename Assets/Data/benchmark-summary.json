@@ -1,21 +1,21 @@
 {
   "windows": {
     "quick": {
-      "generatedUtc": "2026-01-24T10:19:00.5145929Z",
+      "generatedUtc": "2026-01-24T10:49:32.5125421Z",
       "schemaVersion": 1,
       "os": "windows",
       "framework": "net8.0",
       "configuration": "Release",
-      "runMode": "quick",
+      "runMode": "Quick",
       "runModeDetails": "Run mode: Quick (warmupCount=1, iterationCount=3, invocationCount=1).",
       "runModeSource": "explicit",
       "publish": false,
-      "artifacts": "C:\\Support\\GitHub\\CodeMatrix\\Build\\BenchmarkResults\\windows-20260124-111753",
+      "artifacts": "Build/BenchmarkResults/windows-20260124-111753",
       "meta": {
         "commit": null,
         "branch": null,
         "dotnetSdk": "10.0.102",
-        "runtime": ".NET 10.0.0",
+        "runtime": ".NET 9.0.10",
         "osDescription": "Microsoft Windows 10.0.26200",
         "osArchitecture": "X64",
         "processArchitecture": "X64",
@@ -45,403 +45,447 @@
       ],
       "summary": [
         {
-          "codeGlyphXAlloc": "61.34 KB",
-          "rating": "good",
-          "fastestMean": "222.1 μs",
-          "codeGlyphXVsFastestText": "1 x (fastest)",
+          "codeGlyphXAllocVsFastest": 1.0,
           "vendors": {
-            "Barcoder": {
-              "mean": "7,519.3 μs",
-              "allocated": "642.58 KB",
-              "meanNs": 7519300.0
-            },
             "ZXing.Net": {
-              "mean": "1,533.6 μs",
               "allocated": "61.42 KB",
-              "meanNs": 1533600.0
+              "meanNs": 1533600.0,
+              "mean": "1,533.6 μs"
             },
             "CodeGlyphX": {
-              "mean": "222.1 μs",
               "allocated": "61.34 KB",
-              "meanNs": 222100.0
+              "meanNs": 222100.0,
+              "mean": "222.1 μs"
+            },
+            "Barcoder": {
+              "allocated": "642.58 KB",
+              "meanNs": 7519300.0,
+              "mean": "7,519.3 μs"
             }
           },
+          "runnerUpMean": "1,533.6 μs",
+          "runnerUpVendor": "ZXing.Net",
           "deltas": {
             "ZXing.Net": "Δ 6.9 x / 1 x",
             "Barcoder": "Δ 33.86 x / 10.48 x",
             "QRCoder": ""
           },
-          "fastestVendor": "CodeGlyphX",
           "codeGlyphXMean": "222.1 μs",
-          "codeGlyphXAllocVsFastest": 1.0,
-          "codeGlyphXVsFastest": 1.0,
-          "scenario": "Aztec PNG",
+          "codeGlyphXVsFastestText": "1 x (fastest, lead 6.9 x vs ZXing.Net)",
           "benchmark": "Aztec (Encode)",
+          "fastestVendor": "CodeGlyphX",
+          "rating": "good",
+          "codeGlyphXLeadOverRunnerUpText": "6.9 x vs ZXing.Net",
+          "codeGlyphXAlloc": "61.34 KB",
+          "scenario": "Aztec PNG",
+          "codeGlyphXVsFastest": 1.0,
+          "fastestMean": "222.1 μs",
+          "codeGlyphXLeadOverRunnerUp": 6.9,
           "codeGlyphXAllocVsFastestText": "1 x"
         },
         {
-          "codeGlyphXAlloc": "14.43 KB",
-          "rating": "good",
-          "fastestMean": "173.3 μs",
-          "codeGlyphXVsFastestText": "1 x (fastest)",
+          "codeGlyphXAllocVsFastest": 1.0,
           "vendors": {
-            "Barcoder": {
-              "mean": "50,197.1 μs",
-              "allocated": "2035.16 KB",
-              "meanNs": 50197100.0
-            },
             "ZXing.Net": {
-              "mean": "1,794.0 μs",
               "allocated": "15.74 KB",
-              "meanNs": 1794000.0
+              "meanNs": 1794000.0,
+              "mean": "1,794.0 μs"
             },
             "CodeGlyphX": {
-              "mean": "173.3 μs",
               "allocated": "14.43 KB",
-              "meanNs": 173300.0
+              "meanNs": 173300.0,
+              "mean": "173.3 μs"
+            },
+            "Barcoder": {
+              "allocated": "2035.16 KB",
+              "meanNs": 50197100.0,
+              "mean": "50,197.1 μs"
             }
           },
+          "runnerUpMean": "1,794.0 μs",
+          "runnerUpVendor": "ZXing.Net",
           "deltas": {
             "ZXing.Net": "Δ 10.35 x / 1.09 x",
             "Barcoder": "Δ 289.65 x / 141.04 x",
             "QRCoder": ""
           },
-          "fastestVendor": "CodeGlyphX",
           "codeGlyphXMean": "173.3 μs",
-          "codeGlyphXAllocVsFastest": 1.0,
-          "codeGlyphXVsFastest": 1.0,
-          "scenario": "Code128 PNG",
+          "codeGlyphXVsFastestText": "1 x (fastest, lead 10.35 x vs ZXing.Net)",
           "benchmark": "Code 128 (Encode)",
+          "fastestVendor": "CodeGlyphX",
+          "rating": "good",
+          "codeGlyphXLeadOverRunnerUpText": "10.35 x vs ZXing.Net",
+          "codeGlyphXAlloc": "14.43 KB",
+          "scenario": "Code128 PNG",
+          "codeGlyphXVsFastest": 1.0,
+          "fastestMean": "173.3 μs",
+          "codeGlyphXLeadOverRunnerUp": 10.35,
           "codeGlyphXAllocVsFastestText": "1 x"
         },
         {
-          "codeGlyphXAlloc": "10.02 KB",
-          "rating": "good",
-          "fastestMean": "172.6 μs",
-          "codeGlyphXVsFastestText": "1 x (fastest)",
+          "codeGlyphXAllocVsFastest": 1.0,
           "vendors": {
-            "Barcoder": {
-              "mean": "38,262.5 μs",
-              "allocated": "1448.61 KB",
-              "meanNs": 38262500.0
-            },
             "ZXing.Net": {
-              "mean": "1,667.8 μs",
               "allocated": "12.28 KB",
-              "meanNs": 1667800.0
+              "meanNs": 1667800.0,
+              "mean": "1,667.8 μs"
             },
             "CodeGlyphX": {
-              "mean": "172.6 μs",
               "allocated": "10.02 KB",
-              "meanNs": 172600.0
+              "meanNs": 172600.0,
+              "mean": "172.6 μs"
+            },
+            "Barcoder": {
+              "allocated": "1448.61 KB",
+              "meanNs": 38262500.0,
+              "mean": "38,262.5 μs"
             }
           },
+          "runnerUpMean": "1,667.8 μs",
+          "runnerUpVendor": "ZXing.Net",
           "deltas": {
             "ZXing.Net": "Δ 9.66 x / 1.23 x",
             "Barcoder": "Δ 221.68 x / 144.57 x",
             "QRCoder": ""
           },
-          "fastestVendor": "CodeGlyphX",
           "codeGlyphXMean": "172.6 μs",
-          "codeGlyphXAllocVsFastest": 1.0,
-          "codeGlyphXVsFastest": 1.0,
-          "scenario": "Code39 PNG",
+          "codeGlyphXVsFastestText": "1 x (fastest, lead 9.66 x vs ZXing.Net)",
           "benchmark": "Code 39 (Encode)",
+          "fastestVendor": "CodeGlyphX",
+          "rating": "good",
+          "codeGlyphXLeadOverRunnerUpText": "9.66 x vs ZXing.Net",
+          "codeGlyphXAlloc": "10.02 KB",
+          "scenario": "Code39 PNG",
+          "codeGlyphXVsFastest": 1.0,
+          "fastestMean": "172.6 μs",
+          "codeGlyphXLeadOverRunnerUp": 9.66,
           "codeGlyphXAllocVsFastestText": "1 x"
         },
         {
-          "codeGlyphXAlloc": "8.13 KB",
-          "rating": "good",
-          "fastestMean": "159.2 μs",
-          "codeGlyphXVsFastestText": "1 x (fastest)",
+          "codeGlyphXAllocVsFastest": 1.0,
           "vendors": {
-            "Barcoder": {
-              "mean": "22,938.5 μs",
-              "allocated": "957.41 KB",
-              "meanNs": 22938500.0
-            },
             "ZXing.Net": {
-              "mean": "1,450.8 μs",
               "allocated": "11.7 KB",
-              "meanNs": 1450800.0
+              "meanNs": 1450800.0,
+              "mean": "1,450.8 μs"
             },
             "CodeGlyphX": {
-              "mean": "159.2 μs",
               "allocated": "8.13 KB",
-              "meanNs": 159200.0
+              "meanNs": 159200.0,
+              "mean": "159.2 μs"
+            },
+            "Barcoder": {
+              "allocated": "957.41 KB",
+              "meanNs": 22938500.0,
+              "mean": "22,938.5 μs"
             }
           },
+          "runnerUpMean": "1,450.8 μs",
+          "runnerUpVendor": "ZXing.Net",
           "deltas": {
             "ZXing.Net": "Δ 9.11 x / 1.44 x",
             "Barcoder": "Δ 144.09 x / 117.76 x",
             "QRCoder": ""
           },
-          "fastestVendor": "CodeGlyphX",
           "codeGlyphXMean": "159.2 μs",
-          "codeGlyphXAllocVsFastest": 1.0,
-          "codeGlyphXVsFastest": 1.0,
-          "scenario": "Code93 PNG",
+          "codeGlyphXVsFastestText": "1 x (fastest, lead 9.11 x vs ZXing.Net)",
           "benchmark": "Code 93 (Encode)",
+          "fastestVendor": "CodeGlyphX",
+          "rating": "good",
+          "codeGlyphXLeadOverRunnerUpText": "9.11 x vs ZXing.Net",
+          "codeGlyphXAlloc": "8.13 KB",
+          "scenario": "Code93 PNG",
+          "codeGlyphXVsFastest": 1.0,
+          "fastestMean": "159.2 μs",
+          "codeGlyphXLeadOverRunnerUp": 9.11,
           "codeGlyphXAllocVsFastestText": "1 x"
         },
         {
-          "codeGlyphXAlloc": "15.52 KB",
-          "rating": "good",
-          "fastestMean": "226.8 μs",
-          "codeGlyphXVsFastestText": "1 x (fastest)",
+          "codeGlyphXAllocVsFastest": 1.0,
           "vendors": {
-            "Barcoder": {
-              "mean": "8,912.7 μs",
-              "allocated": "645.05 KB",
-              "meanNs": 8912700.0
-            },
             "ZXing.Net": {
-              "mean": "1,703.4 μs",
               "allocated": "22.31 KB",
-              "meanNs": 1703400.0
+              "meanNs": 1703400.0,
+              "mean": "1,703.4 μs"
             },
             "CodeGlyphX": {
-              "mean": "226.8 μs",
               "allocated": "15.52 KB",
-              "meanNs": 226800.0
+              "meanNs": 226800.0,
+              "mean": "226.8 μs"
+            },
+            "Barcoder": {
+              "allocated": "645.05 KB",
+              "meanNs": 8912700.0,
+              "mean": "8,912.7 μs"
             }
           },
+          "runnerUpMean": "1,703.4 μs",
+          "runnerUpVendor": "ZXing.Net",
           "deltas": {
             "ZXing.Net": "Δ 7.51 x / 1.44 x",
             "Barcoder": "Δ 39.3 x / 41.56 x",
             "QRCoder": ""
           },
-          "fastestVendor": "CodeGlyphX",
           "codeGlyphXMean": "226.8 μs",
-          "codeGlyphXAllocVsFastest": 1.0,
-          "codeGlyphXVsFastest": 1.0,
-          "scenario": "Data Matrix PNG (medium)",
+          "codeGlyphXVsFastestText": "1 x (fastest, lead 7.51 x vs ZXing.Net)",
           "benchmark": "Data Matrix (Encode)",
+          "fastestVendor": "CodeGlyphX",
+          "rating": "good",
+          "codeGlyphXLeadOverRunnerUpText": "7.51 x vs ZXing.Net",
+          "codeGlyphXAlloc": "15.52 KB",
+          "scenario": "Data Matrix PNG (medium)",
+          "codeGlyphXVsFastest": 1.0,
+          "fastestMean": "226.8 μs",
+          "codeGlyphXLeadOverRunnerUp": 7.51,
           "codeGlyphXAllocVsFastestText": "1 x"
         },
         {
-          "codeGlyphXAlloc": "6.84 KB",
-          "rating": "good",
-          "fastestMean": "199.0 μs",
-          "codeGlyphXVsFastestText": "1 x (fastest)",
+          "codeGlyphXAllocVsFastest": 1.0,
           "vendors": {
-            "Barcoder": {
-              "mean": "21,580.0 μs",
-              "allocated": "850.67 KB",
-              "meanNs": 21580000.0
-            },
             "ZXing.Net": {
-              "mean": "1,030.8 μs",
               "allocated": "11.68 KB",
-              "meanNs": 1030800.0
+              "meanNs": 1030800.0,
+              "mean": "1,030.8 μs"
             },
             "CodeGlyphX": {
-              "mean": "199.0 μs",
               "allocated": "6.84 KB",
-              "meanNs": 199000.0
+              "meanNs": 199000.0,
+              "mean": "199.0 μs"
+            },
+            "Barcoder": {
+              "allocated": "850.67 KB",
+              "meanNs": 21580000.0,
+              "mean": "21,580.0 μs"
             }
           },
+          "runnerUpMean": "1,030.8 μs",
+          "runnerUpVendor": "ZXing.Net",
           "deltas": {
             "ZXing.Net": "Δ 5.18 x / 1.71 x",
             "Barcoder": "Δ 108.44 x / 124.37 x",
             "QRCoder": ""
           },
-          "fastestVendor": "CodeGlyphX",
           "codeGlyphXMean": "199.0 μs",
-          "codeGlyphXAllocVsFastest": 1.0,
-          "codeGlyphXVsFastest": 1.0,
-          "scenario": "EAN-13 PNG",
+          "codeGlyphXVsFastestText": "1 x (fastest, lead 5.18 x vs ZXing.Net)",
           "benchmark": "EAN-13 (Encode)",
+          "fastestVendor": "CodeGlyphX",
+          "rating": "good",
+          "codeGlyphXLeadOverRunnerUpText": "5.18 x vs ZXing.Net",
+          "codeGlyphXAlloc": "6.84 KB",
+          "scenario": "EAN-13 PNG",
+          "codeGlyphXVsFastest": 1.0,
+          "fastestMean": "199.0 μs",
+          "codeGlyphXLeadOverRunnerUp": 5.18,
           "codeGlyphXAllocVsFastestText": "1 x"
         },
         {
-          "codeGlyphXAlloc": "49.9 KB",
-          "rating": "good",
-          "fastestMean": "1.150 ms",
-          "codeGlyphXVsFastestText": "1 x (fastest)",
+          "codeGlyphXAllocVsFastest": 1.0,
           "vendors": {
-            "Barcoder": {
-              "mean": "57.925 ms",
-              "allocated": "5003.86 KB",
-              "meanNs": 57925000.0
-            },
             "ZXing.Net": {
-              "mean": "6.801 ms",
               "allocated": "207.63 KB",
-              "meanNs": 6801000.0
+              "meanNs": 6801000.0,
+              "mean": "6.801 ms"
             },
             "CodeGlyphX": {
-              "mean": "1.150 ms",
               "allocated": "49.9 KB",
-              "meanNs": 1150000.0
+              "meanNs": 1150000.0,
+              "mean": "1.150 ms"
+            },
+            "Barcoder": {
+              "allocated": "5003.86 KB",
+              "meanNs": 57925000.0,
+              "mean": "57.925 ms"
             }
           },
+          "runnerUpMean": "6.801 ms",
+          "runnerUpVendor": "ZXing.Net",
           "deltas": {
             "ZXing.Net": "Δ 5.91 x / 4.16 x",
             "Barcoder": "Δ 50.37 x / 100.28 x",
             "QRCoder": ""
           },
-          "fastestVendor": "CodeGlyphX",
           "codeGlyphXMean": "1.150 ms",
-          "codeGlyphXAllocVsFastest": 1.0,
-          "codeGlyphXVsFastest": 1.0,
-          "scenario": "PDF417 PNG",
+          "codeGlyphXVsFastestText": "1 x (fastest, lead 5.91 x vs ZXing.Net)",
           "benchmark": "PDF417 (Encode)",
+          "fastestVendor": "CodeGlyphX",
+          "rating": "good",
+          "codeGlyphXLeadOverRunnerUpText": "5.91 x vs ZXing.Net",
+          "codeGlyphXAlloc": "49.9 KB",
+          "scenario": "PDF417 PNG",
+          "codeGlyphXVsFastest": 1.0,
+          "fastestMean": "1.150 ms",
+          "codeGlyphXLeadOverRunnerUp": 5.91,
           "codeGlyphXAllocVsFastestText": "1 x"
         },
         {
-          "codeGlyphXAlloc": "14.19 KB",
-          "rating": "good",
-          "fastestMean": "687.7 μs",
-          "codeGlyphXVsFastestText": "1 x (fastest)",
+          "codeGlyphXAllocVsFastest": 1.0,
           "vendors": {
-            "Barcoder": {
-              "mean": "14,996.5 μs",
-              "allocated": "1547.36 KB",
-              "meanNs": 14996500.0
-            },
             "ZXing.Net": {
-              "mean": "4,108.0 μs",
               "allocated": "79.41 KB",
-              "meanNs": 4108000.0
+              "meanNs": 4108000.0,
+              "mean": "4,108.0 μs"
             },
             "CodeGlyphX": {
-              "mean": "687.7 μs",
               "allocated": "14.19 KB",
-              "meanNs": 687700.0
+              "meanNs": 687700.0,
+              "mean": "687.7 μs"
+            },
+            "Barcoder": {
+              "allocated": "1547.36 KB",
+              "meanNs": 14996500.0,
+              "mean": "14,996.5 μs"
             },
             "QRCoder": {
-              "mean": "971.9 μs",
               "allocated": "7.31 KB",
-              "meanNs": 971900.0
+              "meanNs": 971900.0,
+              "mean": "971.9 μs"
             }
           },
+          "runnerUpMean": "971.9 μs",
+          "runnerUpVendor": "QRCoder",
           "deltas": {
             "ZXing.Net": "Δ 5.97 x / 5.6 x",
             "Barcoder": "Δ 21.81 x / 109.05 x",
             "QRCoder": "Δ 1.41 x / 0.52 x"
           },
-          "fastestVendor": "CodeGlyphX",
           "codeGlyphXMean": "687.7 μs",
-          "codeGlyphXAllocVsFastest": 1.0,
-          "codeGlyphXVsFastest": 1.0,
-          "scenario": "QR PNG (medium)",
+          "codeGlyphXVsFastestText": "1 x (fastest, lead 1.41 x vs QRCoder)",
           "benchmark": "QR (Encode)",
+          "fastestVendor": "CodeGlyphX",
+          "rating": "good",
+          "codeGlyphXLeadOverRunnerUpText": "1.41 x vs QRCoder",
+          "codeGlyphXAlloc": "14.19 KB",
+          "scenario": "QR PNG (medium)",
+          "codeGlyphXVsFastest": 1.0,
+          "fastestMean": "687.7 μs",
+          "codeGlyphXLeadOverRunnerUp": 1.41,
           "codeGlyphXAllocVsFastestText": "1 x"
         },
         {
-          "codeGlyphXAlloc": "5.27 KB",
-          "rating": "good",
-          "fastestMean": "1.993 ms",
-          "codeGlyphXVsFastestText": "1 x",
+          "codeGlyphXAllocVsFastest": 0.04,
           "vendors": {
-            "CodeGlyphX": {
-              "mean": "1.998 ms",
-              "allocated": "5.27 KB",
-              "meanNs": 1998000.0
-            },
             "ZXing.Net": {
-              "mean": "1.993 ms",
               "allocated": "127.67 KB",
-              "meanNs": 1993000.0
+              "meanNs": 1993000.0,
+              "mean": "1.993 ms"
+            },
+            "CodeGlyphX": {
+              "allocated": "5.27 KB",
+              "meanNs": 1998000.0,
+              "mean": "1.998 ms"
             }
           },
+          "runnerUpMean": "1.998 ms",
+          "runnerUpVendor": "CodeGlyphX",
           "deltas": {
             "ZXing.Net": "Δ 1 x / 24.23 x",
             "Barcoder": "",
             "QRCoder": ""
           },
-          "fastestVendor": "ZXing.Net",
           "codeGlyphXMean": "1.998 ms",
-          "codeGlyphXAllocVsFastest": 0.04,
-          "codeGlyphXVsFastest": 1.0,
-          "scenario": "QR Decode (clean)",
+          "codeGlyphXVsFastestText": "1 x (lag vs ZXing.Net)",
           "benchmark": "QR Decode (Clean)",
+          "fastestVendor": "ZXing.Net",
+          "rating": "good",
+          "codeGlyphXLeadOverRunnerUpText": "",
+          "codeGlyphXAlloc": "5.27 KB",
+          "scenario": "QR Decode (clean)",
+          "codeGlyphXVsFastest": 1.0,
+          "fastestMean": "1.993 ms",
+          "codeGlyphXLeadOverRunnerUp": null,
           "codeGlyphXAllocVsFastestText": "0.04 x"
         },
         {
-          "codeGlyphXAlloc": "5.45 KB",
-          "rating": "good",
-          "fastestMean": "4.189 ms",
-          "codeGlyphXVsFastestText": "1 x (fastest)",
+          "codeGlyphXAllocVsFastest": 1.0,
           "vendors": {
-            "CodeGlyphX": {
-              "mean": "4.189 ms",
-              "allocated": "5.45 KB",
-              "meanNs": 4189000.0
-            },
             "ZXing.Net": {
-              "mean": "4.413 ms",
               "allocated": "706.89 KB",
-              "meanNs": 4413000.0
+              "meanNs": 4413000.0,
+              "mean": "4.413 ms"
+            },
+            "CodeGlyphX": {
+              "allocated": "5.45 KB",
+              "meanNs": 4189000.0,
+              "mean": "4.189 ms"
             }
           },
+          "runnerUpMean": "4.413 ms",
+          "runnerUpVendor": "ZXing.Net",
           "deltas": {
             "ZXing.Net": "Δ 1.05 x / 129.7 x",
             "Barcoder": "",
             "QRCoder": ""
           },
-          "fastestVendor": "CodeGlyphX",
           "codeGlyphXMean": "4.189 ms",
-          "codeGlyphXAllocVsFastest": 1.0,
-          "codeGlyphXVsFastest": 1.0,
-          "scenario": "QR Decode (noisy)",
+          "codeGlyphXVsFastestText": "1 x (fastest, lead 1.05 x vs ZXing.Net)",
           "benchmark": "QR Decode (Noisy)",
+          "fastestVendor": "CodeGlyphX",
+          "rating": "good",
+          "codeGlyphXLeadOverRunnerUpText": "1.05 x vs ZXing.Net",
+          "codeGlyphXAlloc": "5.45 KB",
+          "scenario": "QR Decode (noisy)",
+          "codeGlyphXVsFastest": 1.0,
+          "fastestMean": "4.189 ms",
+          "codeGlyphXLeadOverRunnerUp": 1.05,
           "codeGlyphXAllocVsFastestText": "1 x"
         },
         {
-          "codeGlyphXAlloc": "7.15 KB",
-          "rating": "good",
-          "fastestMean": "167.1 μs",
-          "codeGlyphXVsFastestText": "1 x (fastest)",
+          "codeGlyphXAllocVsFastest": 1.0,
           "vendors": {
-            "Barcoder": {
-              "mean": "22,742.3 μs",
-              "allocated": "765.73 KB",
-              "meanNs": 22742300.0
-            },
             "ZXing.Net": {
-              "mean": "1,330.5 μs",
               "allocated": "11.75 KB",
-              "meanNs": 1330500.0
+              "meanNs": 1330500.0,
+              "mean": "1,330.5 μs"
             },
             "CodeGlyphX": {
-              "mean": "167.1 μs",
               "allocated": "7.15 KB",
-              "meanNs": 167100.0
+              "meanNs": 167100.0,
+              "mean": "167.1 μs"
+            },
+            "Barcoder": {
+              "allocated": "765.73 KB",
+              "meanNs": 22742300.0,
+              "mean": "22,742.3 μs"
             }
           },
+          "runnerUpMean": "1,330.5 μs",
+          "runnerUpVendor": "ZXing.Net",
           "deltas": {
             "ZXing.Net": "Δ 7.96 x / 1.64 x",
             "Barcoder": "Δ 136.1 x / 107.1 x",
             "QRCoder": ""
           },
-          "fastestVendor": "CodeGlyphX",
           "codeGlyphXMean": "167.1 μs",
-          "codeGlyphXAllocVsFastest": 1.0,
-          "codeGlyphXVsFastest": 1.0,
-          "scenario": "UPC-A PNG",
+          "codeGlyphXVsFastestText": "1 x (fastest, lead 7.96 x vs ZXing.Net)",
           "benchmark": "UPC-A (Encode)",
+          "fastestVendor": "CodeGlyphX",
+          "rating": "good",
+          "codeGlyphXLeadOverRunnerUpText": "7.96 x vs ZXing.Net",
+          "codeGlyphXAlloc": "7.15 KB",
+          "scenario": "UPC-A PNG",
+          "codeGlyphXVsFastest": 1.0,
+          "fastestMean": "167.1 μs",
+          "codeGlyphXLeadOverRunnerUp": 7.96,
           "codeGlyphXAllocVsFastestText": "1 x"
         }
       ]
     },
     "full": {
-      "generatedUtc": "2026-01-24T09:37:48.5113126Z",
+      "generatedUtc": "2026-01-24T10:49:40.7910358Z",
       "schemaVersion": 1,
       "os": "windows",
       "framework": "net8.0",
       "configuration": "Release",
-      "runMode": "full",
+      "runMode": "Full",
       "runModeDetails": "Run mode: Full (BenchmarkDotNet default job settings).",
       "runModeSource": "explicit",
       "publish": true,
-      "artifacts": "C:\\Support\\GitHub\\CodeMatrix\\Build\\BenchmarkResults\\windows-20260124-091830",
+      "artifacts": "Build/BenchmarkResults/windows-20260124-091830",
       "meta": {
         "commit": null,
         "branch": null,
         "dotnetSdk": "10.0.102",
-        "runtime": ".NET 10.0.0",
+        "runtime": ".NET 9.0.10",
         "osDescription": "Microsoft Windows 10.0.26200",
         "osArchitecture": "X64",
         "processArchitecture": "X64",
@@ -471,384 +515,428 @@
       ],
       "summary": [
         {
-          "codeGlyphXAlloc": "61.34 KB",
-          "rating": "good",
           "fastestMean": "21.18 μs",
-          "codeGlyphXVsFastestText": "1 x (fastest)",
-          "vendors": {
-            "Barcoder": {
-              "mean": "1,337.96 μs",
-              "allocated": "642.4 KB",
-              "meanNs": 1337960.0
-            },
-            "ZXing.Net": {
-              "mean": "556.01 μs",
-              "allocated": "61.38 KB",
-              "meanNs": 556010.0
-            },
-            "CodeGlyphX": {
-              "mean": "21.18 μs",
-              "allocated": "61.34 KB",
-              "meanNs": 21180.0
-            }
-          },
-          "deltas": {
-            "ZXing.Net": "Δ 26.25 x / 1 x",
-            "Barcoder": "Δ 63.17 x / 10.47 x",
-            "QRCoder": ""
-          },
-          "fastestVendor": "CodeGlyphX",
+          "codeGlyphXLeadOverRunnerUpText": "26.25 x vs ZXing.Net",
           "codeGlyphXMean": "21.18 μs",
-          "codeGlyphXAllocVsFastest": 1.0,
+          "fastestVendor": "CodeGlyphX",
+          "codeGlyphXAllocVsFastestText": "1 x",
+          "codeGlyphXLeadOverRunnerUp": 26.25,
+          "codeGlyphXAlloc": "61.34 KB",
           "codeGlyphXVsFastest": 1.0,
+          "deltas": {
+            "Barcoder": "Δ 63.17 x / 10.47 x",
+            "ZXing.Net": "Δ 26.25 x / 1 x",
+            "QRCoder": ""
+          },
+          "codeGlyphXAllocVsFastest": 1.0,
+          "runnerUpMean": "556.01 μs",
+          "rating": "good",
           "scenario": "Aztec PNG",
+          "runnerUpVendor": "ZXing.Net",
           "benchmark": "Aztec (Encode)",
-          "codeGlyphXAllocVsFastestText": "1 x"
+          "codeGlyphXVsFastestText": "1 x (fastest, lead 26.25 x vs ZXing.Net)",
+          "vendors": {
+            "CodeGlyphX": {
+              "allocated": "61.34 KB",
+              "meanNs": 21180.0,
+              "mean": "21.18 μs"
+            },
+            "ZXing.Net": {
+              "allocated": "61.38 KB",
+              "meanNs": 556010.0,
+              "mean": "556.01 μs"
+            },
+            "Barcoder": {
+              "allocated": "642.4 KB",
+              "meanNs": 1337960.0,
+              "mean": "1,337.96 μs"
+            }
+          }
         },
         {
-          "codeGlyphXAlloc": "14.43 KB",
-          "rating": "good",
           "fastestMean": "10.76 μs",
-          "codeGlyphXVsFastestText": "1 x (fastest)",
-          "vendors": {
-            "Barcoder": {
-              "mean": "8,099.55 μs",
-              "allocated": "2034.97 KB",
-              "meanNs": 8099550.0
-            },
-            "ZXing.Net": {
-              "mean": "698.57 μs",
-              "allocated": "15.7 KB",
-              "meanNs": 698570.0
-            },
-            "CodeGlyphX": {
-              "mean": "10.76 μs",
-              "allocated": "14.43 KB",
-              "meanNs": 10760.0
-            }
-          },
-          "deltas": {
-            "ZXing.Net": "Δ 64.92 x / 1.09 x",
-            "Barcoder": "Δ 752.75 x / 141.02 x",
-            "QRCoder": ""
-          },
-          "fastestVendor": "CodeGlyphX",
+          "codeGlyphXLeadOverRunnerUpText": "64.92 x vs ZXing.Net",
           "codeGlyphXMean": "10.76 μs",
-          "codeGlyphXAllocVsFastest": 1.0,
+          "fastestVendor": "CodeGlyphX",
+          "codeGlyphXAllocVsFastestText": "1 x",
+          "codeGlyphXLeadOverRunnerUp": 64.92,
+          "codeGlyphXAlloc": "14.43 KB",
           "codeGlyphXVsFastest": 1.0,
+          "deltas": {
+            "Barcoder": "Δ 752.75 x / 141.02 x",
+            "ZXing.Net": "Δ 64.92 x / 1.09 x",
+            "QRCoder": ""
+          },
+          "codeGlyphXAllocVsFastest": 1.0,
+          "runnerUpMean": "698.57 μs",
+          "rating": "good",
           "scenario": "Code128 PNG",
+          "runnerUpVendor": "ZXing.Net",
           "benchmark": "Code 128 (Encode)",
-          "codeGlyphXAllocVsFastestText": "1 x"
+          "codeGlyphXVsFastestText": "1 x (fastest, lead 64.92 x vs ZXing.Net)",
+          "vendors": {
+            "CodeGlyphX": {
+              "allocated": "14.43 KB",
+              "meanNs": 10760.0,
+              "mean": "10.76 μs"
+            },
+            "ZXing.Net": {
+              "allocated": "15.7 KB",
+              "meanNs": 698570.0,
+              "mean": "698.57 μs"
+            },
+            "Barcoder": {
+              "allocated": "2034.97 KB",
+              "meanNs": 8099550.0,
+              "mean": "8,099.55 μs"
+            }
+          }
         },
         {
-          "codeGlyphXAlloc": "10.02 KB",
-          "rating": "good",
           "fastestMean": "8.167 μs",
-          "codeGlyphXVsFastestText": "1 x (fastest)",
-          "vendors": {
-            "Barcoder": {
-              "mean": "5,682.405 μs",
-              "allocated": "1448.41 KB",
-              "meanNs": 5682405.0
-            },
-            "ZXing.Net": {
-              "mean": "492.240 μs",
-              "allocated": "12.23 KB",
-              "meanNs": 492240.0
-            },
-            "CodeGlyphX": {
-              "mean": "8.167 μs",
-              "allocated": "10.02 KB",
-              "meanNs": 8167.0
-            }
-          },
-          "deltas": {
-            "ZXing.Net": "Δ 60.27 x / 1.22 x",
-            "Barcoder": "Δ 695.78 x / 144.55 x",
-            "QRCoder": ""
-          },
-          "fastestVendor": "CodeGlyphX",
+          "codeGlyphXLeadOverRunnerUpText": "60.27 x vs ZXing.Net",
           "codeGlyphXMean": "8.167 μs",
-          "codeGlyphXAllocVsFastest": 1.0,
+          "fastestVendor": "CodeGlyphX",
+          "codeGlyphXAllocVsFastestText": "1 x",
+          "codeGlyphXLeadOverRunnerUp": 60.27,
+          "codeGlyphXAlloc": "10.02 KB",
           "codeGlyphXVsFastest": 1.0,
+          "deltas": {
+            "Barcoder": "Δ 695.78 x / 144.55 x",
+            "ZXing.Net": "Δ 60.27 x / 1.22 x",
+            "QRCoder": ""
+          },
+          "codeGlyphXAllocVsFastest": 1.0,
+          "runnerUpMean": "492.240 μs",
+          "rating": "good",
           "scenario": "Code39 PNG",
+          "runnerUpVendor": "ZXing.Net",
           "benchmark": "Code 39 (Encode)",
-          "codeGlyphXAllocVsFastestText": "1 x"
+          "codeGlyphXVsFastestText": "1 x (fastest, lead 60.27 x vs ZXing.Net)",
+          "vendors": {
+            "CodeGlyphX": {
+              "allocated": "10.02 KB",
+              "meanNs": 8167.0,
+              "mean": "8.167 μs"
+            },
+            "ZXing.Net": {
+              "allocated": "12.23 KB",
+              "meanNs": 492240.0,
+              "mean": "492.240 μs"
+            },
+            "Barcoder": {
+              "allocated": "1448.41 KB",
+              "meanNs": 5682405.0,
+              "mean": "5,682.405 μs"
+            }
+          }
         },
         {
-          "codeGlyphXAlloc": "8.13 KB",
-          "rating": "good",
           "fastestMean": "6.548 μs",
-          "codeGlyphXVsFastestText": "1 x (fastest)",
-          "vendors": {
-            "Barcoder": {
-              "mean": "3,626.355 μs",
-              "allocated": "957.22 KB",
-              "meanNs": 3626355.0
-            },
-            "ZXing.Net": {
-              "mean": "369.068 μs",
-              "allocated": "11.66 KB",
-              "meanNs": 369068.0
-            },
-            "CodeGlyphX": {
-              "mean": "6.548 μs",
-              "allocated": "8.13 KB",
-              "meanNs": 6548.0
-            }
-          },
-          "deltas": {
-            "ZXing.Net": "Δ 56.36 x / 1.43 x",
-            "Barcoder": "Δ 553.81 x / 117.74 x",
-            "QRCoder": ""
-          },
-          "fastestVendor": "CodeGlyphX",
+          "codeGlyphXLeadOverRunnerUpText": "56.36 x vs ZXing.Net",
           "codeGlyphXMean": "6.548 μs",
-          "codeGlyphXAllocVsFastest": 1.0,
+          "fastestVendor": "CodeGlyphX",
+          "codeGlyphXAllocVsFastestText": "1 x",
+          "codeGlyphXLeadOverRunnerUp": 56.36,
+          "codeGlyphXAlloc": "8.13 KB",
           "codeGlyphXVsFastest": 1.0,
+          "deltas": {
+            "Barcoder": "Δ 553.81 x / 117.74 x",
+            "ZXing.Net": "Δ 56.36 x / 1.43 x",
+            "QRCoder": ""
+          },
+          "codeGlyphXAllocVsFastest": 1.0,
+          "runnerUpMean": "369.068 μs",
+          "rating": "good",
           "scenario": "Code93 PNG",
+          "runnerUpVendor": "ZXing.Net",
           "benchmark": "Code 93 (Encode)",
-          "codeGlyphXAllocVsFastestText": "1 x"
+          "codeGlyphXVsFastestText": "1 x (fastest, lead 56.36 x vs ZXing.Net)",
+          "vendors": {
+            "CodeGlyphX": {
+              "allocated": "8.13 KB",
+              "meanNs": 6548.0,
+              "mean": "6.548 μs"
+            },
+            "ZXing.Net": {
+              "allocated": "11.66 KB",
+              "meanNs": 369068.0,
+              "mean": "369.068 μs"
+            },
+            "Barcoder": {
+              "allocated": "957.22 KB",
+              "meanNs": 3626355.0,
+              "mean": "3,626.355 μs"
+            }
+          }
         },
         {
-          "codeGlyphXAlloc": "15.52 KB",
-          "rating": "good",
           "fastestMean": "21.02 μs",
-          "codeGlyphXVsFastestText": "1 x (fastest)",
-          "vendors": {
-            "Barcoder": {
-              "mean": "1,414.52 μs",
-              "allocated": "644.93 KB",
-              "meanNs": 1414520.0
-            },
-            "ZXing.Net": {
-              "mean": "532.46 μs",
-              "allocated": "21.2 KB",
-              "meanNs": 532460.0
-            },
-            "CodeGlyphX": {
-              "mean": "21.02 μs",
-              "allocated": "15.52 KB",
-              "meanNs": 21020.0
-            }
-          },
-          "deltas": {
-            "ZXing.Net": "Δ 25.33 x / 1.37 x",
-            "Barcoder": "Δ 67.29 x / 41.55 x",
-            "QRCoder": ""
-          },
-          "fastestVendor": "CodeGlyphX",
+          "codeGlyphXLeadOverRunnerUpText": "25.33 x vs ZXing.Net",
           "codeGlyphXMean": "21.02 μs",
-          "codeGlyphXAllocVsFastest": 1.0,
+          "fastestVendor": "CodeGlyphX",
+          "codeGlyphXAllocVsFastestText": "1 x",
+          "codeGlyphXLeadOverRunnerUp": 25.33,
+          "codeGlyphXAlloc": "15.52 KB",
           "codeGlyphXVsFastest": 1.0,
+          "deltas": {
+            "Barcoder": "Δ 67.29 x / 41.55 x",
+            "ZXing.Net": "Δ 25.33 x / 1.37 x",
+            "QRCoder": ""
+          },
+          "codeGlyphXAllocVsFastest": 1.0,
+          "runnerUpMean": "532.46 μs",
+          "rating": "good",
           "scenario": "Data Matrix PNG (medium)",
+          "runnerUpVendor": "ZXing.Net",
           "benchmark": "Data Matrix (Encode)",
-          "codeGlyphXAllocVsFastestText": "1 x"
+          "codeGlyphXVsFastestText": "1 x (fastest, lead 25.33 x vs ZXing.Net)",
+          "vendors": {
+            "CodeGlyphX": {
+              "allocated": "15.52 KB",
+              "meanNs": 21020.0,
+              "mean": "21.02 μs"
+            },
+            "ZXing.Net": {
+              "allocated": "21.2 KB",
+              "meanNs": 532460.0,
+              "mean": "532.46 μs"
+            },
+            "Barcoder": {
+              "allocated": "644.93 KB",
+              "meanNs": 1414520.0,
+              "mean": "1,414.52 μs"
+            }
+          }
         },
         {
-          "codeGlyphXAlloc": "6.75 KB",
-          "rating": "good",
           "fastestMean": "5.243 μs",
-          "codeGlyphXVsFastestText": "1 x (fastest)",
-          "vendors": {
-            "Barcoder": {
-              "mean": "3,583.869 μs",
-              "allocated": "850.63 KB",
-              "meanNs": 3583869.0
-            },
-            "ZXing.Net": {
-              "mean": "296.403 μs",
-              "allocated": "11.63 KB",
-              "meanNs": 296403.0
-            },
-            "CodeGlyphX": {
-              "mean": "5.243 μs",
-              "allocated": "6.75 KB",
-              "meanNs": 5243.0
-            }
-          },
-          "deltas": {
-            "ZXing.Net": "Δ 56.53 x / 1.72 x",
-            "Barcoder": "Δ 683.55 x / 126.02 x",
-            "QRCoder": ""
-          },
-          "fastestVendor": "CodeGlyphX",
+          "codeGlyphXLeadOverRunnerUpText": "56.53 x vs ZXing.Net",
           "codeGlyphXMean": "5.243 μs",
-          "codeGlyphXAllocVsFastest": 1.0,
+          "fastestVendor": "CodeGlyphX",
+          "codeGlyphXAllocVsFastestText": "1 x",
+          "codeGlyphXLeadOverRunnerUp": 56.53,
+          "codeGlyphXAlloc": "6.75 KB",
           "codeGlyphXVsFastest": 1.0,
-          "scenario": "EAN-13 PNG",
-          "benchmark": "EAN-13 (Encode)",
-          "codeGlyphXAllocVsFastestText": "1 x"
-        },
-        {
-          "codeGlyphXAlloc": "49.9 KB",
-          "rating": "good",
-          "fastestMean": "52.67 μs",
-          "codeGlyphXVsFastestText": "1 x (fastest)",
-          "vendors": {
-            "Barcoder": {
-              "mean": "10,174.70 μs",
-              "allocated": "5003.67 KB",
-              "meanNs": 10174700.0
-            },
-            "ZXing.Net": {
-              "mean": "3,079.46 μs",
-              "allocated": "207.59 KB",
-              "meanNs": 3079460.0
-            },
-            "CodeGlyphX": {
-              "mean": "52.67 μs",
-              "allocated": "49.9 KB",
-              "meanNs": 52670.0
-            }
-          },
           "deltas": {
-            "ZXing.Net": "Δ 58.47 x / 4.16 x",
-            "Barcoder": "Δ 193.18 x / 100.27 x",
+            "Barcoder": "Δ 683.55 x / 126.02 x",
+            "ZXing.Net": "Δ 56.53 x / 1.72 x",
             "QRCoder": ""
           },
-          "fastestVendor": "CodeGlyphX",
-          "codeGlyphXMean": "52.67 μs",
           "codeGlyphXAllocVsFastest": 1.0,
-          "codeGlyphXVsFastest": 1.0,
-          "scenario": "PDF417 PNG",
-          "benchmark": "PDF417 (Encode)",
-          "codeGlyphXAllocVsFastestText": "1 x"
-        },
-        {
-          "codeGlyphXAlloc": "14.19 KB",
+          "runnerUpMean": "296.403 μs",
           "rating": "good",
-          "fastestMean": "97.86 μs",
-          "codeGlyphXVsFastestText": "1 x (fastest)",
+          "scenario": "EAN-13 PNG",
+          "runnerUpVendor": "ZXing.Net",
+          "benchmark": "EAN-13 (Encode)",
+          "codeGlyphXVsFastestText": "1 x (fastest, lead 56.53 x vs ZXing.Net)",
           "vendors": {
-            "Barcoder": {
-              "mean": "3,024.08 μs",
-              "allocated": "1545.71 KB",
-              "meanNs": 3024080.0
+            "CodeGlyphX": {
+              "allocated": "6.75 KB",
+              "meanNs": 5243.0,
+              "mean": "5.243 μs"
             },
             "ZXing.Net": {
-              "mean": "1,202.59 μs",
-              "allocated": "79.37 KB",
-              "meanNs": 1202590.0
+              "allocated": "11.63 KB",
+              "meanNs": 296403.0,
+              "mean": "296.403 μs"
             },
-            "CodeGlyphX": {
-              "mean": "97.86 μs",
-              "allocated": "14.19 KB",
-              "meanNs": 97860.0
-            },
-            "QRCoder": {
-              "mean": "244.56 μs",
-              "allocated": "7.31 KB",
-              "meanNs": 244560.0
+            "Barcoder": {
+              "allocated": "850.63 KB",
+              "meanNs": 3583869.0,
+              "mean": "3,583.869 μs"
             }
-          },
+          }
+        },
+        {
+          "fastestMean": "52.67 μs",
+          "codeGlyphXLeadOverRunnerUpText": "58.47 x vs ZXing.Net",
+          "codeGlyphXMean": "52.67 μs",
+          "fastestVendor": "CodeGlyphX",
+          "codeGlyphXAllocVsFastestText": "1 x",
+          "codeGlyphXLeadOverRunnerUp": 58.47,
+          "codeGlyphXAlloc": "49.9 KB",
+          "codeGlyphXVsFastest": 1.0,
           "deltas": {
-            "ZXing.Net": "Δ 12.29 x / 5.59 x",
+            "Barcoder": "Δ 193.18 x / 100.27 x",
+            "ZXing.Net": "Δ 58.47 x / 4.16 x",
+            "QRCoder": ""
+          },
+          "codeGlyphXAllocVsFastest": 1.0,
+          "runnerUpMean": "3,079.46 μs",
+          "rating": "good",
+          "scenario": "PDF417 PNG",
+          "runnerUpVendor": "ZXing.Net",
+          "benchmark": "PDF417 (Encode)",
+          "codeGlyphXVsFastestText": "1 x (fastest, lead 58.47 x vs ZXing.Net)",
+          "vendors": {
+            "CodeGlyphX": {
+              "allocated": "49.9 KB",
+              "meanNs": 52670.0,
+              "mean": "52.67 μs"
+            },
+            "ZXing.Net": {
+              "allocated": "207.59 KB",
+              "meanNs": 3079460.0,
+              "mean": "3,079.46 μs"
+            },
+            "Barcoder": {
+              "allocated": "5003.67 KB",
+              "meanNs": 10174700.0,
+              "mean": "10,174.70 μs"
+            }
+          }
+        },
+        {
+          "fastestMean": "97.86 μs",
+          "codeGlyphXLeadOverRunnerUpText": "2.5 x vs QRCoder",
+          "codeGlyphXMean": "97.86 μs",
+          "fastestVendor": "CodeGlyphX",
+          "codeGlyphXAllocVsFastestText": "1 x",
+          "codeGlyphXLeadOverRunnerUp": 2.5,
+          "codeGlyphXAlloc": "14.19 KB",
+          "codeGlyphXVsFastest": 1.0,
+          "deltas": {
             "Barcoder": "Δ 30.9 x / 108.93 x",
+            "ZXing.Net": "Δ 12.29 x / 5.59 x",
             "QRCoder": "Δ 2.5 x / 0.52 x"
           },
-          "fastestVendor": "CodeGlyphX",
-          "codeGlyphXMean": "97.86 μs",
           "codeGlyphXAllocVsFastest": 1.0,
-          "codeGlyphXVsFastest": 1.0,
+          "runnerUpMean": "244.56 μs",
+          "rating": "good",
           "scenario": "QR PNG (medium)",
+          "runnerUpVendor": "QRCoder",
           "benchmark": "QR (Encode)",
-          "codeGlyphXAllocVsFastestText": "1 x"
-        },
-        {
-          "codeGlyphXAlloc": "5.27 KB",
-          "rating": "good",
-          "fastestMean": "322.1 μs",
-          "codeGlyphXVsFastestText": "1 x (fastest)",
+          "codeGlyphXVsFastestText": "1 x (fastest, lead 2.5 x vs QRCoder)",
           "vendors": {
             "CodeGlyphX": {
-              "mean": "322.1 μs",
-              "allocated": "5.27 KB",
-              "meanNs": 322100.0
+              "allocated": "14.19 KB",
+              "meanNs": 97860.0,
+              "mean": "97.86 μs"
             },
             "ZXing.Net": {
-              "mean": "469.7 μs",
-              "allocated": "127.69 KB",
-              "meanNs": 469700.0
-            }
-          },
-          "deltas": {
-            "ZXing.Net": "Δ 1.46 x / 24.23 x",
-            "Barcoder": "",
-            "QRCoder": ""
-          },
-          "fastestVendor": "CodeGlyphX",
-          "codeGlyphXMean": "322.1 μs",
-          "codeGlyphXAllocVsFastest": 1.0,
-          "codeGlyphXVsFastest": 1.0,
-          "scenario": "QR Decode (clean)",
-          "benchmark": "QR Decode (Clean)",
-          "codeGlyphXAllocVsFastestText": "1 x"
-        },
-        {
-          "codeGlyphXAlloc": "5.45 KB",
-          "rating": "good",
-          "fastestMean": "1.595 ms",
-          "codeGlyphXVsFastestText": "1 x (fastest)",
-          "vendors": {
-            "CodeGlyphX": {
-              "mean": "1.595 ms",
-              "allocated": "5.45 KB",
-              "meanNs": 1595000.0
+              "allocated": "79.37 KB",
+              "meanNs": 1202590.0,
+              "mean": "1,202.59 μs"
             },
-            "ZXing.Net": {
-              "mean": "1.943 ms",
-              "allocated": "706.98 KB",
-              "meanNs": 1943000.0
-            }
-          },
-          "deltas": {
-            "ZXing.Net": "Δ 1.22 x / 129.72 x",
-            "Barcoder": "",
-            "QRCoder": ""
-          },
-          "fastestVendor": "CodeGlyphX",
-          "codeGlyphXMean": "1.595 ms",
-          "codeGlyphXAllocVsFastest": 1.0,
-          "codeGlyphXVsFastest": 1.0,
-          "scenario": "QR Decode (noisy)",
-          "benchmark": "QR Decode (Noisy)",
-          "codeGlyphXAllocVsFastestText": "1 x"
-        },
-        {
-          "codeGlyphXAlloc": "7.05 KB",
-          "rating": "good",
-          "fastestMean": "5.766 μs",
-          "codeGlyphXVsFastestText": "1 x (fastest)",
-          "vendors": {
             "Barcoder": {
-              "mean": "3,002.774 μs",
-              "allocated": "765.7 KB",
-              "meanNs": 3002774.0
+              "allocated": "1545.71 KB",
+              "meanNs": 3024080.0,
+              "mean": "3,024.08 μs"
             },
-            "ZXing.Net": {
-              "mean": "321.472 μs",
-              "allocated": "11.7 KB",
-              "meanNs": 321472.0
-            },
-            "CodeGlyphX": {
-              "mean": "5.766 μs",
-              "allocated": "7.05 KB",
-              "meanNs": 5766.0
+            "QRCoder": {
+              "allocated": "7.31 KB",
+              "meanNs": 244560.0,
+              "mean": "244.56 μs"
             }
-          },
+          }
+        },
+        {
+          "fastestMean": "322.1 μs",
+          "codeGlyphXLeadOverRunnerUpText": "1.46 x vs ZXing.Net",
+          "codeGlyphXMean": "322.1 μs",
+          "fastestVendor": "CodeGlyphX",
+          "codeGlyphXAllocVsFastestText": "1 x",
+          "codeGlyphXLeadOverRunnerUp": 1.46,
+          "codeGlyphXAlloc": "5.27 KB",
+          "codeGlyphXVsFastest": 1.0,
           "deltas": {
-            "ZXing.Net": "Δ 55.75 x / 1.66 x",
-            "Barcoder": "Δ 520.77 x / 108.61 x",
+            "Barcoder": "",
+            "ZXing.Net": "Δ 1.46 x / 24.23 x",
             "QRCoder": ""
           },
-          "fastestVendor": "CodeGlyphX",
-          "codeGlyphXMean": "5.766 μs",
           "codeGlyphXAllocVsFastest": 1.0,
+          "runnerUpMean": "469.7 μs",
+          "rating": "good",
+          "scenario": "QR Decode (clean)",
+          "runnerUpVendor": "ZXing.Net",
+          "benchmark": "QR Decode (Clean)",
+          "codeGlyphXVsFastestText": "1 x (fastest, lead 1.46 x vs ZXing.Net)",
+          "vendors": {
+            "CodeGlyphX": {
+              "allocated": "5.27 KB",
+              "meanNs": 322100.0,
+              "mean": "322.1 μs"
+            },
+            "ZXing.Net": {
+              "allocated": "127.69 KB",
+              "meanNs": 469700.0,
+              "mean": "469.7 μs"
+            }
+          }
+        },
+        {
+          "fastestMean": "1.595 ms",
+          "codeGlyphXLeadOverRunnerUpText": "1.22 x vs ZXing.Net",
+          "codeGlyphXMean": "1.595 ms",
+          "fastestVendor": "CodeGlyphX",
+          "codeGlyphXAllocVsFastestText": "1 x",
+          "codeGlyphXLeadOverRunnerUp": 1.22,
+          "codeGlyphXAlloc": "5.45 KB",
           "codeGlyphXVsFastest": 1.0,
+          "deltas": {
+            "Barcoder": "",
+            "ZXing.Net": "Δ 1.22 x / 129.72 x",
+            "QRCoder": ""
+          },
+          "codeGlyphXAllocVsFastest": 1.0,
+          "runnerUpMean": "1.943 ms",
+          "rating": "good",
+          "scenario": "QR Decode (noisy)",
+          "runnerUpVendor": "ZXing.Net",
+          "benchmark": "QR Decode (Noisy)",
+          "codeGlyphXVsFastestText": "1 x (fastest, lead 1.22 x vs ZXing.Net)",
+          "vendors": {
+            "CodeGlyphX": {
+              "allocated": "5.45 KB",
+              "meanNs": 1595000.0,
+              "mean": "1.595 ms"
+            },
+            "ZXing.Net": {
+              "allocated": "706.98 KB",
+              "meanNs": 1943000.0,
+              "mean": "1.943 ms"
+            }
+          }
+        },
+        {
+          "fastestMean": "5.766 μs",
+          "codeGlyphXLeadOverRunnerUpText": "55.75 x vs ZXing.Net",
+          "codeGlyphXMean": "5.766 μs",
+          "fastestVendor": "CodeGlyphX",
+          "codeGlyphXAllocVsFastestText": "1 x",
+          "codeGlyphXLeadOverRunnerUp": 55.75,
+          "codeGlyphXAlloc": "7.05 KB",
+          "codeGlyphXVsFastest": 1.0,
+          "deltas": {
+            "Barcoder": "Δ 520.77 x / 108.61 x",
+            "ZXing.Net": "Δ 55.75 x / 1.66 x",
+            "QRCoder": ""
+          },
+          "codeGlyphXAllocVsFastest": 1.0,
+          "runnerUpMean": "321.472 μs",
+          "rating": "good",
           "scenario": "UPC-A PNG",
+          "runnerUpVendor": "ZXing.Net",
           "benchmark": "UPC-A (Encode)",
-          "codeGlyphXAllocVsFastestText": "1 x"
+          "codeGlyphXVsFastestText": "1 x (fastest, lead 55.75 x vs ZXing.Net)",
+          "vendors": {
+            "CodeGlyphX": {
+              "allocated": "7.05 KB",
+              "meanNs": 5766.0,
+              "mean": "5.766 μs"
+            },
+            "ZXing.Net": {
+              "allocated": "11.7 KB",
+              "meanNs": 321472.0,
+              "mean": "321.472 μs"
+            },
+            "Barcoder": {
+              "allocated": "765.7 KB",
+              "meanNs": 3002774.0,
+              "mean": "3,002.774 μs"
+            }
+          }
         }
       ]
     }

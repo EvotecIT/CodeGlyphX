@@ -237,37 +237,46 @@ public static partial class QrDecoder {
         dataCodewords = null!;
 
         var size = modules.Width;
-        var unmasked = modules.Clone();
-        for (var y = 0; y < size; y++) {
-            if (shouldStop?.Invoke() == true) return false;
-            for (var x = 0; x < size; x++) {
-                if (functionMask[x, y]) continue;
-                if (QrMask.ShouldInvert(mask, x, y)) unmasked[x, y] = !unmasked[x, y];
-            }
-        }
-
         var rawCodewords = QrTables.GetNumRawDataModules(version) / 8;
         var codewords = new byte[rawCodewords];
+        var totalBits = rawCodewords * 8;
+        var moduleWords = modules.Words;
+        var functionWords = functionMask.Words;
 
         var bitIndex = 0;
         var upward = true;
+        var done = false;
         for (var right = size - 1; right >= 1; right -= 2) {
             if (right == 6) right = 5;
 
             for (var vert = 0; vert < size; vert++) {
                 if (shouldStop?.Invoke() == true) return false;
                 var y = upward ? size - 1 - vert : vert;
+                var rowOffset = y * size;
                 for (var j = 0; j < 2; j++) {
                     var x = right - j;
-                    if (functionMask[x, y]) continue;
+                    var idx = rowOffset + x;
+                    var wordIndex = idx >> 5;
+                    var bitMask = 1u << (idx & 31);
+                    if ((functionWords[wordIndex] & bitMask) != 0) continue;
 
-                    if (bitIndex < rawCodewords * 8 && unmasked[x, y]) {
-                        codewords[bitIndex >> 3] |= (byte)(1 << (7 - (bitIndex & 7)));
+                    if (bitIndex < totalBits) {
+                        var bit = (moduleWords[wordIndex] & bitMask) != 0;
+                        if (QrMask.ShouldInvert(mask, x, y)) bit = !bit;
+                        if (bit) {
+                            codewords[bitIndex >> 3] |= (byte)(1 << (7 - (bitIndex & 7)));
+                        }
                     }
 
                     bitIndex++;
+                    if (bitIndex == totalBits) {
+                        done = true;
+                        break;
+                    }
                 }
+                if (done) break;
             }
+            if (done) break;
 
             upward = !upward;
         }
@@ -349,6 +358,14 @@ public static partial class QrDecoder {
         var blockEccLen = QrTables.GetEccCodewordsPerBlock(version, ecc);
         var rawCodewords = QrTables.GetNumRawDataModules(version) / 8;
         var dataLen = QrTables.GetNumDataCodewords(version, ecc);
+
+        if (numBlocks == 1) {
+            if (!QrReedSolomonDecoder.TryCorrectInPlace(codewords, blockEccLen, shouldStop)) return false;
+            var dataOut = new byte[dataLen];
+            Array.Copy(codewords, 0, dataOut, 0, dataLen);
+            dataCodewords = dataOut;
+            return true;
+        }
 
         var numShortBlocks = numBlocks - (rawCodewords % numBlocks);
         var shortBlockLen = rawCodewords / numBlocks;

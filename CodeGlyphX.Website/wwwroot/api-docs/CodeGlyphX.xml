@@ -3501,6 +3501,11 @@
             Optional failure message when decoding fails.
             </summary>
         </member>
+        <member name="P:CodeGlyphX.CodeGlyphDecodeDiagnostics.FailureReason">
+            <summary>
+            Failure reason when decoding fails.
+            </summary>
+        </member>
         <member name="T:CodeGlyphX.CodeGlyphDecodeOptions">
             <summary>
             Options for unified QR/barcode decoding.
@@ -3707,6 +3712,31 @@
         </member>
         <member name="F:CodeGlyphX.CodeGlyphKind.Aztec">
             <summary>Aztec.</summary>
+        </member>
+        <member name="T:CodeGlyphX.CodeGlyphXFeatures">
+            <summary>
+            Runtime feature flags for CodeGlyphX capabilities.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.CodeGlyphXFeatures.SupportsQrPixelDecode">
+            <summary>
+            True when the high-performance QR pixel pipeline is available (net8+).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.CodeGlyphXFeatures.SupportsQrPixelDebug">
+            <summary>
+            True when QR pixel debug rendering is available (net8+).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.CodeGlyphXFeatures.SupportsSpanPixelPipeline">
+            <summary>
+            True when span-based pixel APIs and fast pipeline paths are available (net8+).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.CodeGlyphXFeatures.TargetFramework">
+            <summary>
+            The target framework for this build (compile-time constant).
+            </summary>
         </member>
         <member name="T:CodeGlyphX.DataBar.DataBar14Decoder">
             <summary>
@@ -5341,6 +5371,11 @@
         <member name="F:CodeGlyphX.DecodeFailureReason.UnsupportedFormat">
             <summary>
             Image format or data was not supported.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.DecodeFailureReason.PlatformNotSupported">
+            <summary>
+            Feature is not supported on this target framework.
             </summary>
         </member>
         <member name="F:CodeGlyphX.DecodeFailureReason.Cancelled">
