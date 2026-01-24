@@ -4,6 +4,7 @@ using System.Buffers;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Runtime.Intrinsics;
 using System.Runtime.Intrinsics.X86;
@@ -339,18 +340,20 @@ internal static partial class QrPixelDecoder {
                 out var stepNumY,
                 out var stepDenom);
 
-            if (!double.IsFinite(numX) || !double.IsFinite(numY) || !double.IsFinite(denom) ||
-                !double.IsFinite(stepNumX) || !double.IsFinite(stepNumY) || !double.IsFinite(stepDenom)) {
+            if (!double.IsFinite(numX + numY + denom + stepNumX + stepNumY + stepDenom)) {
                 return false;
             }
 
             var denomEnd = denom + stepDenom * (dimension - 1);
             if (!double.IsFinite(denomEnd)) return false;
-            if (Math.Abs(denom) < 1e-12 || Math.Abs(denomEnd) < 1e-12) return false;
+            var absDenom = denom < 0 ? -denom : denom;
+            var absDenomEnd = denomEnd < 0 ? -denomEnd : denomEnd;
+            if (absDenom < 1e-12 || absDenomEnd < 1e-12) return false;
             if (denom * denomEnd < 0) return false;
 
             var rowOffset = my * bmWidth;
-            if (Math.Abs(stepDenom) < 1e-12) {
+            var absStepDenom = stepDenom < 0 ? -stepDenom : stepDenom;
+            if (absStepDenom < 1e-12) {
                 var inv = 1.0 / denom;
                 var sx = numX * inv;
                 var sy = numY * inv;
@@ -542,7 +545,6 @@ internal static partial class QrPixelDecoder {
         result = null!;
         diagnostics = default;
 
-        if (budget.IsExpired) return false;
         var width = image.Width;
         var height = image.Height;
         if (scanMaxX < 0) scanMaxX = width - 1;
@@ -563,60 +565,113 @@ internal static partial class QrPixelDecoder {
         var imageThreshold = image.Threshold;
         var checkBudget = budget.Enabled || budget.IsCancelled;
         var budgetCounter = 0;
+        if (checkBudget && budget.IsExpired) return false;
 
         if (thresholdMap is null) {
             if (!invert) {
-                for (var y = scanMinY; y <= scanMaxY; y++) {
-                    if (checkBudget && budget.IsExpired) return false;
-                    var row = y * width;
-                    for (int x = scanMinX, idx = row + scanMinX; x <= scanMaxX; x++, idx++) {
-                        if (checkBudget && ((budgetCounter++ & 255) == 0) && budget.IsExpired) return false;
-                        if (gray[idx] > imageThreshold) continue;
-                        if (x < minX) minX = x;
-                        if (y < minY) minY = y;
-                        if (x > maxX) maxX = x;
-                        if (y > maxY) maxY = y;
+                if (!checkBudget) {
+                    for (var y = scanMinY; y <= scanMaxY; y++) {
+                        var row = y * width;
+                        for (int x = scanMinX, idx = row + scanMinX; x <= scanMaxX; x++, idx++) {
+                            if (gray[idx] > imageThreshold) continue;
+                            if (x < minX) minX = x;
+                            if (y < minY) minY = y;
+                            if (x > maxX) maxX = x;
+                            if (y > maxY) maxY = y;
+                        }
+                    }
+                } else {
+                    for (var y = scanMinY; y <= scanMaxY; y++) {
+                        if (budget.IsExpired) return false;
+                        var row = y * width;
+                        for (int x = scanMinX, idx = row + scanMinX; x <= scanMaxX; x++, idx++) {
+                            if (((budgetCounter++ & 255) == 0) && budget.IsExpired) return false;
+                            if (gray[idx] > imageThreshold) continue;
+                            if (x < minX) minX = x;
+                            if (y < minY) minY = y;
+                            if (x > maxX) maxX = x;
+                            if (y > maxY) maxY = y;
+                        }
                     }
                 }
             } else {
-                for (var y = scanMinY; y <= scanMaxY; y++) {
-                    if (checkBudget && budget.IsExpired) return false;
-                    var row = y * width;
-                    for (int x = scanMinX, idx = row + scanMinX; x <= scanMaxX; x++, idx++) {
-                        if (checkBudget && ((budgetCounter++ & 255) == 0) && budget.IsExpired) return false;
-                        if (gray[idx] <= imageThreshold) continue;
-                        if (x < minX) minX = x;
-                        if (y < minY) minY = y;
-                        if (x > maxX) maxX = x;
-                        if (y > maxY) maxY = y;
+                if (!checkBudget) {
+                    for (var y = scanMinY; y <= scanMaxY; y++) {
+                        var row = y * width;
+                        for (int x = scanMinX, idx = row + scanMinX; x <= scanMaxX; x++, idx++) {
+                            if (gray[idx] <= imageThreshold) continue;
+                            if (x < minX) minX = x;
+                            if (y < minY) minY = y;
+                            if (x > maxX) maxX = x;
+                            if (y > maxY) maxY = y;
+                        }
+                    }
+                } else {
+                    for (var y = scanMinY; y <= scanMaxY; y++) {
+                        if (budget.IsExpired) return false;
+                        var row = y * width;
+                        for (int x = scanMinX, idx = row + scanMinX; x <= scanMaxX; x++, idx++) {
+                            if (((budgetCounter++ & 255) == 0) && budget.IsExpired) return false;
+                            if (gray[idx] <= imageThreshold) continue;
+                            if (x < minX) minX = x;
+                            if (y < minY) minY = y;
+                            if (x > maxX) maxX = x;
+                            if (y > maxY) maxY = y;
+                        }
                     }
                 }
             }
         } else {
             if (!invert) {
-                for (var y = scanMinY; y <= scanMaxY; y++) {
-                    if (checkBudget && budget.IsExpired) return false;
-                    var row = y * width;
-                    for (int x = scanMinX, idx = row + scanMinX; x <= scanMaxX; x++, idx++) {
-                        if (checkBudget && ((budgetCounter++ & 255) == 0) && budget.IsExpired) return false;
-                        if (gray[idx] > thresholdMap[idx]) continue;
-                        if (x < minX) minX = x;
-                        if (y < minY) minY = y;
-                        if (x > maxX) maxX = x;
-                        if (y > maxY) maxY = y;
+                if (!checkBudget) {
+                    for (var y = scanMinY; y <= scanMaxY; y++) {
+                        var row = y * width;
+                        for (int x = scanMinX, idx = row + scanMinX; x <= scanMaxX; x++, idx++) {
+                            if (gray[idx] > thresholdMap[idx]) continue;
+                            if (x < minX) minX = x;
+                            if (y < minY) minY = y;
+                            if (x > maxX) maxX = x;
+                            if (y > maxY) maxY = y;
+                        }
+                    }
+                } else {
+                    for (var y = scanMinY; y <= scanMaxY; y++) {
+                        if (budget.IsExpired) return false;
+                        var row = y * width;
+                        for (int x = scanMinX, idx = row + scanMinX; x <= scanMaxX; x++, idx++) {
+                            if (((budgetCounter++ & 255) == 0) && budget.IsExpired) return false;
+                            if (gray[idx] > thresholdMap[idx]) continue;
+                            if (x < minX) minX = x;
+                            if (y < minY) minY = y;
+                            if (x > maxX) maxX = x;
+                            if (y > maxY) maxY = y;
+                        }
                     }
                 }
             } else {
-                for (var y = scanMinY; y <= scanMaxY; y++) {
-                    if (checkBudget && budget.IsExpired) return false;
-                    var row = y * width;
-                    for (int x = scanMinX, idx = row + scanMinX; x <= scanMaxX; x++, idx++) {
-                        if (checkBudget && ((budgetCounter++ & 255) == 0) && budget.IsExpired) return false;
-                        if (gray[idx] <= thresholdMap[idx]) continue;
-                        if (x < minX) minX = x;
-                        if (y < minY) minY = y;
-                        if (x > maxX) maxX = x;
-                        if (y > maxY) maxY = y;
+                if (!checkBudget) {
+                    for (var y = scanMinY; y <= scanMaxY; y++) {
+                        var row = y * width;
+                        for (int x = scanMinX, idx = row + scanMinX; x <= scanMaxX; x++, idx++) {
+                            if (gray[idx] <= thresholdMap[idx]) continue;
+                            if (x < minX) minX = x;
+                            if (y < minY) minY = y;
+                            if (x > maxX) maxX = x;
+                            if (y > maxY) maxY = y;
+                        }
+                    }
+                } else {
+                    for (var y = scanMinY; y <= scanMaxY; y++) {
+                        if (budget.IsExpired) return false;
+                        var row = y * width;
+                        for (int x = scanMinX, idx = row + scanMinX; x <= scanMaxX; x++, idx++) {
+                            if (((budgetCounter++ & 255) == 0) && budget.IsExpired) return false;
+                            if (gray[idx] <= thresholdMap[idx]) continue;
+                            if (x < minX) minX = x;
+                            if (y < minY) minY = y;
+                            if (x > maxX) maxX = x;
+                            if (y > maxY) maxY = y;
+                        }
                     }
                 }
             }
@@ -643,6 +698,9 @@ internal static partial class QrPixelDecoder {
             maxVersion = 10;
         }
         if (maxVersion < 1) return false;
+        var maxDimension = maxVersion * 4 + 17;
+        Span<int> pxs = stackalloc int[maxDimension];
+        Span<int> pys = stackalloc int[maxDimension];
 
         // Try smaller versions first (more likely for OTP QR), but accept non-integer module sizes.
         var best = default(QrPixelDecodeDiagnostics);
@@ -659,14 +717,14 @@ internal static partial class QrPixelDecoder {
             var bm = new global::CodeGlyphX.BitMatrix(modulesCount, modulesCount);
             var bmWords = bm.Words;
             var bmWidth = modulesCount;
-            Span<int> pxs = stackalloc int[modulesCount];
-            Span<int> pys = stackalloc int[modulesCount];
+            var pxsSpan = pxs.Slice(0, modulesCount);
+            var pysSpan = pys.Slice(0, modulesCount);
             var sx = minX + 0.5 * moduleSizeX;
             for (var mx = 0; mx < modulesCount; mx++) {
                 var px = QrMath.RoundToInt(sx);
                 if (px < 0) px = 0;
                 else if (px >= width) px = width - 1;
-                pxs[mx] = px;
+                pxsSpan[mx] = px;
                 sx += moduleSizeX;
             }
             var sy = minY + 0.5 * moduleSizeY;
@@ -674,18 +732,18 @@ internal static partial class QrPixelDecoder {
                 var py = QrMath.RoundToInt(sy);
                 if (py < 0) py = 0;
                 else if (py >= height) py = height - 1;
-                pys[my] = py;
+                pysSpan[my] = py;
                 sy += moduleSizeY;
             }
             for (var my = 0; my < modulesCount; my++) {
                 if (checkBudget && budget.IsExpired) return false;
-                var py = pys[my];
+                var py = pysSpan[my];
 
                 var rowOffset = my * bmWidth;
                 var wordIndex = rowOffset >> 5;
                 var bitMask = 1u << (rowOffset & 31);
                 for (var mx = 0; mx < modulesCount; mx++) {
-                    var px = pxs[mx];
+                    var px = pxsSpan[mx];
                     if (SampleMajority3x3(image, px, py, invert)) {
                         bmWords[wordIndex] |= bitMask;
                     }
@@ -877,12 +935,14 @@ internal static partial class QrPixelDecoder {
         return best;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static double Distance(double x1, double y1, double x2, double y2) {
         var dx = x1 - x2;
         var dy = y1 - y2;
         return Math.Sqrt(dx * dx + dy * dy);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static bool SampleMajority3x3(QrGrayImage image, int px, int py, bool invert) {
         var width = image.Width;
         var height = image.Height;
