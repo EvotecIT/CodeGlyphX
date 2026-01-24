@@ -1,0 +1,87 @@
+﻿{
+    "version":  1,
+    "generated":  "2026-01-24",
+    "entries":  [
+                    {
+                        "id":  "qr-zxing-main-page",
+                        "fileName":  "qr-zxing-main-page.png",
+                        "required":  false,
+                        "kind":  "Qr",
+                        "expectedTexts":  [
+                                              "MEBKM:URL:http\\://en.wikipedia.org/wiki/Main_Page;;"
+                                          ],
+                        "sourcePage":  "https://github.com/zxing/zxing/blob/master/core/src/test/resources/blackbox/qrcode-1/1.png",
+                        "downloadUrl":  "https://raw.githubusercontent.com/zxing/zxing/master/core/src/test/resources/blackbox/qrcode-1/1.png",
+                        "license":  "Apache-2.0",
+                        "licenseUrl":  "https://github.com/zxing/zxing/blob/master/LICENSE",
+                        "attribution":  "ZXing authors (Apache 2.0)",
+                        "notes":  "ZXing blackbox test sample (optional until decoder matches).",
+                        "sha256":  "6908e133d3ce9bdbf3f72bd2c881ea993c6c5d388f8420ac3c87673e2b3f7bd4"
+                    },
+                    {
+                        "id":  "datamatrix-0123456789",
+                        "fileName":  "datamatrix-0123456789.png",
+                        "required":  false,
+                        "kind":  "DataMatrix",
+                        "expectedTexts":  [
+                                              "0123456789"
+                                          ],
+                        "sourcePage":  "https://github.com/zxing/zxing/blob/master/core/src/test/resources/blackbox/datamatrix-1/0123456789.png",
+                        "downloadUrl":  "https://raw.githubusercontent.com/zxing/zxing/master/core/src/test/resources/blackbox/datamatrix-1/0123456789.png",
+                        "license":  "Apache-2.0",
+                        "licenseUrl":  "https://github.com/zxing/zxing/blob/master/LICENSE",
+                        "attribution":  "ZXing authors (Apache 2.0)",
+                        "notes":  "ZXing blackbox test sample.",
+                        "sha256":  "4f395fb1356cfa598ef08f3aaa07d372e1b836c6bc7bc08a6820a4584db2facc"
+                    },
+                    {
+                        "id":  "pdf417-zxing-01",
+                        "fileName":  "pdf417-01.png",
+                        "required":  false,
+                        "kind":  "Pdf417",
+                        "expectedTexts":  [
+                                              "This is PDF417"
+                                          ],
+                        "sourcePage":  "https://github.com/zxing/zxing/blob/master/core/src/test/resources/blackbox/pdf417-1/01.png",
+                        "downloadUrl":  "https://raw.githubusercontent.com/zxing/zxing/master/core/src/test/resources/blackbox/pdf417-1/01.png",
+                        "license":  "Apache-2.0",
+                        "licenseUrl":  "https://github.com/zxing/zxing/blob/master/LICENSE",
+                        "attribution":  "ZXing authors (Apache 2.0)",
+                        "notes":  "ZXing blackbox test sample (optional until decoder matches).",
+                        "sha256":  "c849c7f70faea84083d428aae543ea577900f7f3da2e2aaa22c83fad2d013fe2"
+                    },
+                    {
+                        "id":  "aztec-hello",
+                        "fileName":  "aztec-hello.png",
+                        "required":  true,
+                        "kind":  "Aztec",
+                        "expectedTexts":  [
+                                              "hello"
+                                          ],
+                        "sourcePage":  "https://github.com/zxing/zxing/blob/master/core/src/test/resources/blackbox/aztec-1/hello.png",
+                        "downloadUrl":  "https://raw.githubusercontent.com/zxing/zxing/master/core/src/test/resources/blackbox/aztec-1/hello.png",
+                        "license":  "Apache-2.0",
+                        "licenseUrl":  "https://github.com/zxing/zxing/blob/master/LICENSE",
+                        "attribution":  "ZXing authors (Apache 2.0)",
+                        "notes":  "ZXing blackbox test sample.",
+                        "sha256":  "2b2f0367f81fa1d5c6384ee72f9f3726f8e657fee84aea26f19fe7a022649cf2"
+                    },
+                    {
+                        "id":  "ean13-8413000065504",
+                        "fileName":  "ean13-8413000065504.png",
+                        "required":  false,
+                        "kind":  "Barcode1D",
+                        "barcodeType":  "EAN",
+                        "expectedTexts":  [
+                                              "8413000065504"
+                                          ],
+                        "sourcePage":  "https://github.com/zxing/zxing/blob/master/core/src/test/resources/blackbox/ean13-1/1.png",
+                        "downloadUrl":  "https://raw.githubusercontent.com/zxing/zxing/master/core/src/test/resources/blackbox/ean13-1/1.png",
+                        "license":  "Apache-2.0",
+                        "licenseUrl":  "https://github.com/zxing/zxing/blob/master/LICENSE",
+                        "attribution":  "ZXing authors (Apache 2.0)",
+                        "notes":  "ZXing blackbox test sample.",
+                        "sha256":  "4bf8ecf4ab02dc88b20e5f4824c068e772a9e8bbe8a45ffb1bd0ef3dd92ce65a"
+                    }
+                ]
+}

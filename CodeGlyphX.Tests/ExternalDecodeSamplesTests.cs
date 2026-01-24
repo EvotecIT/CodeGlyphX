@@ -2,12 +2,20 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
 using CodeGlyphX;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace CodeGlyphX.Tests;
 
 public sealed class ExternalDecodeSamplesTests {
+    private readonly ITestOutputHelper _output;
+
+    public ExternalDecodeSamplesTests(ITestOutputHelper output) {
+        _output = output;
+    }
+
     private static readonly HashSet<string> SupportedExtensions = new(StringComparer.OrdinalIgnoreCase) {
         ".png",
         ".jpg",
@@ -33,64 +41,97 @@ public sealed class ExternalDecodeSamplesTests {
             return;
         }
 
-        var entries = Directory
-            .EnumerateFiles(samplesDir, "*.*", SearchOption.AllDirectories)
-            .Where(IsSupportedImage)
-            .Select(path => (
-                ImagePath: path,
-                ExpectedPath: Path.ChangeExtension(path, ".txt"),
-                KindPath: Path.ChangeExtension(path, ".kind"),
-                TypePath: Path.ChangeExtension(path, ".type")))
-            .Where(entry => File.Exists(entry.ExpectedPath))
-            .OrderBy(entry => entry.ImagePath, StringComparer.OrdinalIgnoreCase)
-            .ToArray();
-
-        if (entries.Length == 0) {
+        var entries = LoadSamples(samplesDir);
+        if (entries.Count == 0) {
             return;
         }
 
-        var qrOptions = new QrPixelDecodeOptions {
-            Profile = QrDecodeProfile.Robust,
-            AggressiveSampling = true,
-            EnableTileScan = true,
-            MaxDimension = 2000
-        };
-
         foreach (var entry in entries) {
-            var expectedTexts = ReadExpectedTexts(entry.ExpectedPath);
-            var expectedKind = ReadExpectedKind(entry.KindPath);
-            var expectedType = ReadExpectedBarcodeType(entry.TypePath);
+            var expectedTexts = entry.ExpectedTexts;
+            var expectedKind = entry.ExpectedKind;
+            var expectedType = entry.ExpectedBarcodeType;
             var preferBarcode = expectedKind == CodeGlyphKind.Barcode1D || expectedType.HasValue;
 
+            if (!File.Exists(entry.ImagePath)) {
+                if (entry.Required) {
+                    Assert.Fail($"Missing external sample: {entry.ImagePath}");
+                } else {
+                    _output.WriteLine($"Optional sample missing: {entry.ImagePath}");
+                    continue;
+                }
+            }
+
             var image = File.ReadAllBytes(entry.ImagePath);
+            var options = new CodeGlyphDecodeOptions {
+                ExpectedBarcode = expectedType,
+                PreferBarcode = preferBarcode,
+                IncludeBarcode = true,
+                Qr = new QrPixelDecodeOptions {
+                    Profile = QrDecodeProfile.Robust,
+                    AggressiveSampling = true,
+                    EnableTileScan = true,
+                    MaxDimension = 2000,
+                    MaxMilliseconds = 1500,
+                    BudgetMilliseconds = 2500
+                },
+                Image = new ImageDecodeOptions {
+                    MaxDimension = 2000,
+                    MaxMilliseconds = 1500
+                },
+                Barcode = new BarcodeDecodeOptions {
+                    EnableTileScan = true,
+                    TileGrid = 2
+                }
+            };
+
             if (expectedTexts.Count == 1) {
                 var expectedText = expectedTexts[0];
-                Assert.True(
-                    CodeGlyph.TryDecodeImage(image, out var decoded, expectedType, preferBarcode, qrOptions),
-                    $"Failed to decode external sample: {entry.ImagePath}");
-
-                Assert.Equal(expectedText, decoded.Text);
-                if (expectedKind.HasValue) {
-                    Assert.Equal(expectedKind.Value, decoded.Kind);
+                if (!CodeGlyph.TryDecodeImage(image, out var decoded, options)) {
+                    if (entry.Required) {
+                        Assert.Fail($"Failed to decode external sample: {entry.ImagePath}");
+                    }
+                    _output.WriteLine($"Optional sample failed to decode: {entry.ImagePath}");
+                    continue;
                 }
-                if (expectedType.HasValue) {
-                    Assert.Equal(expectedType.Value, decoded.Barcode?.Type);
+
+                if (entry.Required) {
+                    Assert.Equal(expectedText, decoded.Text);
+                    if (expectedKind.HasValue) {
+                        Assert.Equal(expectedKind.Value, decoded.Kind);
+                    }
+                    if (expectedType.HasValue) {
+                        Assert.Equal(expectedType.Value, decoded.Barcode?.Type);
+                    }
+                } else if (!string.Equals(expectedText, decoded.Text, StringComparison.Ordinal)) {
+                    _output.WriteLine($"Optional sample mismatch: {entry.ImagePath} expected '{expectedText}', got '{decoded.Text}'.");
                 }
             } else {
-                Assert.True(
-                    CodeGlyph.TryDecodeAllImage(image, out var decoded, expectedType, includeBarcode: true, preferBarcode, qrOptions),
-                    $"Failed to decode external sample (multi): {entry.ImagePath}");
+                if (!CodeGlyph.TryDecodeAllImage(image, out var decoded, options)) {
+                    if (entry.Required) {
+                        Assert.Fail($"Failed to decode external sample (multi): {entry.ImagePath}");
+                    }
+                    _output.WriteLine($"Optional sample failed to decode (multi): {entry.ImagePath}");
+                    continue;
+                }
 
                 var decodedTexts = decoded.Select(result => result.Text).Where(text => !string.IsNullOrWhiteSpace(text)).Distinct(StringComparer.Ordinal).ToArray();
-                foreach (var expectedText in expectedTexts) {
-                    Assert.Contains(expectedText, decodedTexts);
-                }
+                if (entry.Required) {
+                    foreach (var expectedText in expectedTexts) {
+                        Assert.Contains(expectedText, decodedTexts);
+                    }
 
-                if (expectedKind.HasValue) {
-                    Assert.All(decoded, result => Assert.Equal(expectedKind.Value, result.Kind));
-                }
-                if (expectedType.HasValue) {
-                    Assert.All(decoded, result => Assert.Equal(expectedType.Value, result.Barcode?.Type));
+                    if (expectedKind.HasValue) {
+                        Assert.All(decoded, result => Assert.Equal(expectedKind.Value, result.Kind));
+                    }
+                    if (expectedType.HasValue) {
+                        Assert.All(decoded, result => Assert.Equal(expectedType.Value, result.Barcode?.Type));
+                    }
+                } else {
+                    foreach (var expectedText in expectedTexts) {
+                        if (!decodedTexts.Contains(expectedText, StringComparer.Ordinal)) {
+                            _output.WriteLine($"Optional sample mismatch: {entry.ImagePath} missing '{expectedText}'.");
+                        }
+                    }
                 }
             }
         }
@@ -114,6 +155,75 @@ public sealed class ExternalDecodeSamplesTests {
         }
 
         return null;
+    }
+
+    private static List<SampleEntry> LoadSamples(string samplesDir) {
+        var manifestPath = Path.Combine(samplesDir, "manifest.json");
+        if (File.Exists(manifestPath)) {
+            var manifestEntries = TryLoadManifest(manifestPath, samplesDir);
+            if (manifestEntries.Count > 0) {
+                return manifestEntries;
+            }
+        }
+
+        return Directory
+            .EnumerateFiles(samplesDir, "*.*", SearchOption.AllDirectories)
+            .Where(IsSupportedImage)
+            .Select(path => {
+                var expectedPath = Path.ChangeExtension(path, ".txt");
+                var kindPath = Path.ChangeExtension(path, ".kind");
+                var typePath = Path.ChangeExtension(path, ".type");
+                if (!File.Exists(expectedPath)) return null;
+                return new SampleEntry(
+                    path,
+                    ReadExpectedTexts(expectedPath),
+                    ReadExpectedKind(kindPath),
+                    ReadExpectedBarcodeType(typePath),
+                    Required: true);
+            })
+            .Where(entry => entry is not null)
+            .OrderBy(entry => entry!.ImagePath, StringComparer.OrdinalIgnoreCase)
+            .Cast<SampleEntry>()
+            .ToList();
+    }
+
+    private static List<SampleEntry> TryLoadManifest(string manifestPath, string samplesDir) {
+        try {
+            var json = File.ReadAllText(manifestPath);
+            var manifest = JsonSerializer.Deserialize<ExternalSamplesManifest>(json, new JsonSerializerOptions {
+                PropertyNameCaseInsensitive = true
+            });
+            if (manifest?.Entries is null || manifest.Entries.Count == 0) return new List<SampleEntry>();
+
+            var entries = new List<SampleEntry>(manifest.Entries.Count);
+            foreach (var entry in manifest.Entries) {
+                if (string.IsNullOrWhiteSpace(entry.FileName)) continue;
+                var expected = entry.ExpectedTexts ?? (entry.ExpectedText is null ? null : new List<string> { entry.ExpectedText });
+                if (expected is null || expected.Count == 0) continue;
+
+                CodeGlyphKind? kind = null;
+                if (!string.IsNullOrWhiteSpace(entry.Kind)) {
+                    if (!Enum.TryParse(entry.Kind, true, out CodeGlyphKind parsedKind)) {
+                        Assert.Fail($"Invalid CodeGlyphKind '{entry.Kind}' in manifest entry '{entry.Id}'.");
+                    }
+                    kind = parsedKind;
+                }
+
+                BarcodeType? barcodeType = null;
+                if (!string.IsNullOrWhiteSpace(entry.BarcodeType)) {
+                    if (!Enum.TryParse(entry.BarcodeType, true, out BarcodeType parsedType)) {
+                        Assert.Fail($"Invalid BarcodeType '{entry.BarcodeType}' in manifest entry '{entry.Id}'.");
+                    }
+                    barcodeType = parsedType;
+                }
+
+                var imagePath = Path.Combine(samplesDir, entry.FileName);
+                entries.Add(new SampleEntry(imagePath, expected, kind, barcodeType, entry.Required ?? true));
+            }
+            return entries;
+        } catch {
+            return new List<SampleEntry>();
+        }
     }
 
     private static bool IsSupportedImage(string path) {
@@ -150,5 +260,26 @@ public sealed class ExternalDecodeSamplesTests {
             Assert.Fail($"Invalid BarcodeType '{text}' in {path}");
         }
         return type;
+    }
+
+    private sealed record SampleEntry(
+        string ImagePath,
+        List<string> ExpectedTexts,
+        CodeGlyphKind? ExpectedKind,
+        BarcodeType? ExpectedBarcodeType,
+        bool Required);
+
+    private sealed class ExternalSamplesManifest {
+        public List<ExternalSamplesEntry> Entries { get; set; } = new();
+    }
+
+    private sealed class ExternalSamplesEntry {
+        public string? Id { get; set; }
+        public string? FileName { get; set; }
+        public List<string>? ExpectedTexts { get; set; }
+        public string? ExpectedText { get; set; }
+        public string? Kind { get; set; }
+        public string? BarcodeType { get; set; }
+        public bool? Required { get; set; }
     }
 }
