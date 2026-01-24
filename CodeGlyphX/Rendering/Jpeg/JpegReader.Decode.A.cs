@@ -10,9 +10,10 @@ public static partial class JpegReader {
         int[][] quantTables,
         HuffmanTable[] dcTables,
         HuffmanTable[] acTables,
-        int restartInterval) {
+        int restartInterval,
+        int? adobeTransform) {
         if (frame.ComponentCount == 0) throw new FormatException("Invalid JPEG frame.");
-        if (frame.ComponentCount != 1 && frame.ComponentCount != 3) {
+        if (frame.ComponentCount != 1 && frame.ComponentCount != 3 && frame.ComponentCount != 4) {
             throw new FormatException("Unsupported JPEG component count.");
         }
         if (scan.Ss != 0 || scan.Se != 63 || scan.Ah != 0 || scan.Al != 0) {
@@ -101,7 +102,7 @@ public static partial class JpegReader {
             }
         }
 
-        return ComposeRgba(frame, states);
+        return ComposeRgba(frame, states, adobeTransform);
     }
 
     private static void DecodeProgressiveScan(

@@ -3,29 +3,132 @@ using System;
 namespace CodeGlyphX.Rendering.Jpeg;
 
 public static partial class JpegReader {
-    private static byte[] ComposeRgba(JpegFrame frame, BaselineComponentState[] states) {
+    private static byte[] ComposeRgba(JpegFrame frame, BaselineComponentState[] states, int? adobeTransform) {
         var rgba = new byte[frame.Width * frame.Height * 4];
         var maxH = frame.MaxH;
         var maxV = frame.MaxV;
 
-        var yIndex = FindComponentIndex(frame.Components, 1);
-        if (yIndex < 0) yIndex = 0;
+        if (frame.ComponentCount == 4) {
+            var cIndex = FindComponentIndex(frame.Components, (byte)'C');
+            var mIndex = FindComponentIndex(frame.Components, (byte)'M');
+            var yIndex = FindComponentIndex(frame.Components, (byte)'Y');
+            var kIndex = FindComponentIndex(frame.Components, (byte)'K');
+            if (cIndex < 0 || mIndex < 0 || yIndex < 0 || kIndex < 0) {
+                cIndex = FindComponentIndex(frame.Components, 1);
+                mIndex = FindComponentIndex(frame.Components, 2);
+                yIndex = FindComponentIndex(frame.Components, 3);
+                kIndex = FindComponentIndex(frame.Components, 4);
+                if (cIndex < 0 || mIndex < 0 || yIndex < 0 || kIndex < 0) {
+                    cIndex = 0;
+                    mIndex = 1;
+                    yIndex = 2;
+                    kIndex = 3;
+                }
+            }
+
+            var isYcck = adobeTransform == 2;
+            var ycckY = FindComponentIndex(frame.Components, 1);
+            var ycckCb = FindComponentIndex(frame.Components, 2);
+            var ycckCr = FindComponentIndex(frame.Components, 3);
+            var ycckK = FindComponentIndex(frame.Components, 4);
+            if (isYcck && (ycckY < 0 || ycckCb < 0 || ycckCr < 0 || ycckK < 0)) {
+                ycckY = cIndex;
+                ycckCb = mIndex;
+                ycckCr = yIndex;
+                ycckK = kIndex;
+            }
+
+            for (var y = 0; y < frame.Height; y++) {
+                for (var x = 0; x < frame.Width; x++) {
+                    byte r;
+                    byte g;
+                    byte b;
+                    var kVal = SampleComponent(states, isYcck ? ycckK : kIndex, x, y, maxH, maxV, 0);
+
+                    if (isYcck) {
+                        var yVal = SampleComponent(states, ycckY, x, y, maxH, maxV, 128);
+                        var cbVal = SampleComponent(states, ycckCb, x, y, maxH, maxV, 128);
+                        var crVal = SampleComponent(states, ycckCr, x, y, maxH, maxV, 128);
+                        r = ClampToByte(yVal + (1.402 * (crVal - 128)));
+                        g = ClampToByte(yVal - (0.344136 * (cbVal - 128)) - (0.714136 * (crVal - 128)));
+                        b = ClampToByte(yVal + (1.772 * (cbVal - 128)));
+                    } else {
+                        var c = SampleComponent(states, cIndex, x, y, maxH, maxV, 0);
+                        var m = SampleComponent(states, mIndex, x, y, maxH, maxV, 0);
+                        var y0 = SampleComponent(states, yIndex, x, y, maxH, maxV, 0);
+                        r = ApplyCmyk(c, kVal);
+                        g = ApplyCmyk(m, kVal);
+                        b = ApplyCmyk(y0, kVal);
+                    }
+
+                    if (isYcck) {
+                        var c = (byte)(255 - r);
+                        var m = (byte)(255 - g);
+                        var y0 = (byte)(255 - b);
+                        r = ApplyCmyk(c, kVal);
+                        g = ApplyCmyk(m, kVal);
+                        b = ApplyCmyk(y0, kVal);
+                    }
+
+                    var p = (y * frame.Width + x) * 4;
+                    rgba[p + 0] = r;
+                    rgba[p + 1] = g;
+                    rgba[p + 2] = b;
+                    rgba[p + 3] = 255;
+                }
+            }
+
+            return rgba;
+        }
+
+        if (frame.ComponentCount == 1) {
+            var grayIndex = FindComponentIndex(frame.Components, 1);
+            if (grayIndex < 0) grayIndex = 0;
+            for (var y = 0; y < frame.Height; y++) {
+                for (var x = 0; x < frame.Width; x++) {
+                    var v = SampleComponent(states, grayIndex, x, y, maxH, maxV, 0);
+                    var p = (y * frame.Width + x) * 4;
+                    rgba[p + 0] = (byte)v;
+                    rgba[p + 1] = (byte)v;
+                    rgba[p + 2] = (byte)v;
+                    rgba[p + 3] = 255;
+                }
+            }
+            return rgba;
+        }
+
+        var rIndex = FindComponentIndex(frame.Components, (byte)'R');
+        var gIndex = FindComponentIndex(frame.Components, (byte)'G');
+        var bIndex = FindComponentIndex(frame.Components, (byte)'B');
+        var rgb = rIndex >= 0 && gIndex >= 0 && bIndex >= 0;
+
+        var yIndex2 = FindComponentIndex(frame.Components, 1);
+        if (yIndex2 < 0) yIndex2 = 0;
         var cbIndex = frame.ComponentCount > 1 ? FindComponentIndex(frame.Components, 2) : -1;
         var crIndex = frame.ComponentCount > 1 ? FindComponentIndex(frame.Components, 3) : -1;
         if (frame.ComponentCount == 3) {
-            if (cbIndex < 0) cbIndex = yIndex == 0 ? 1 : 0;
-            if (crIndex < 0) crIndex = yIndex == 2 ? 1 : 2;
+            if (cbIndex < 0) cbIndex = yIndex2 == 0 ? 1 : 0;
+            if (crIndex < 0) crIndex = yIndex2 == 2 ? 1 : 2;
         }
 
         for (var y = 0; y < frame.Height; y++) {
             for (var x = 0; x < frame.Width; x++) {
-                var yVal = SampleComponent(states, yIndex, x, y, maxH, maxV, 128);
-                var cbVal = SampleComponent(states, cbIndex, x, y, maxH, maxV, 128);
-                var crVal = SampleComponent(states, crIndex, x, y, maxH, maxV, 128);
+                byte r;
+                byte g;
+                byte b;
+                if (rgb) {
+                    r = (byte)SampleComponent(states, rIndex, x, y, maxH, maxV, 0);
+                    g = (byte)SampleComponent(states, gIndex, x, y, maxH, maxV, 0);
+                    b = (byte)SampleComponent(states, bIndex, x, y, maxH, maxV, 0);
+                } else {
+                    var yVal = SampleComponent(states, yIndex2, x, y, maxH, maxV, 128);
+                    var cbVal = SampleComponent(states, cbIndex, x, y, maxH, maxV, 128);
+                    var crVal = SampleComponent(states, crIndex, x, y, maxH, maxV, 128);
 
-                var r = ClampToByte(yVal + (1.402 * (crVal - 128)));
-                var g = ClampToByte(yVal - (0.344136 * (cbVal - 128)) - (0.714136 * (crVal - 128)));
-                var b = ClampToByte(yVal + (1.772 * (cbVal - 128)));
+                    r = ClampToByte(yVal + (1.402 * (crVal - 128)));
+                    g = ClampToByte(yVal - (0.344136 * (cbVal - 128)) - (0.714136 * (crVal - 128)));
+                    b = ClampToByte(yVal + (1.772 * (cbVal - 128)));
+                }
 
                 var p = (y * frame.Width + x) * 4;
                 rgba[p + 0] = r;
@@ -303,6 +406,16 @@ public static partial class JpegReader {
         return false;
     }
 
+    private static bool TryReadAdobeTransform(ReadOnlySpan<byte> data, out int transform) {
+        transform = 0;
+        if (data.Length < 12) return false;
+        if (data[0] != (byte)'A' || data[1] != (byte)'d' || data[2] != (byte)'o' || data[3] != (byte)'b' || data[4] != (byte)'e') {
+            return false;
+        }
+        transform = data[11];
+        return true;
+    }
+
     private static ushort ReadUInt16(ReadOnlySpan<byte> data, int offset, bool little) {
         return little
             ? (ushort)(data[offset] | (data[offset + 1] << 8))
@@ -473,7 +586,7 @@ public static partial class JpegReader {
             };
         }
 
-        public byte[] RenderRgba(JpegFrame frame) {
+        public byte[] RenderRgba(JpegFrame frame, int? adobeTransform) {
             for (var i = 0; i < Components.Length; i++) {
                 var compState = Components[i];
                 for (var by = 0; by < compState.BlocksPerCol; by++) {
@@ -496,8 +609,14 @@ public static partial class JpegReader {
                 baselineStates[i] = baseline;
             }
 
-            return ComposeRgba(frame, baselineStates);
+            return ComposeRgba(frame, baselineStates, adobeTransform);
         }
+    }
+
+    private static byte ApplyCmyk(int c, int k) {
+        var v = c + k;
+        if (v > 255) v = 255;
+        return (byte)(255 - v);
     }
 
     private sealed class ProgressiveComponentState {

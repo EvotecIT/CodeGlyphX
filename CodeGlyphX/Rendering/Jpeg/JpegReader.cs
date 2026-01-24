@@ -39,6 +39,7 @@ public static partial class JpegReader {
         var hasFrame = false;
         var progressive = false;
         var orientation = 1;
+        int? adobeTransform = null;
         var frame = default(JpegFrame);
         ProgressiveState? progressiveState = null;
 
@@ -69,7 +70,7 @@ public static partial class JpegReader {
                 if (!progressive) {
                     width = frame.Width;
                     height = frame.Height;
-                    var rgba = DecodeBaselineScan(scanData, scan, frame, quantTables, dcTables, acTables, restartInterval);
+                    var rgba = DecodeBaselineScan(scanData, scan, frame, quantTables, dcTables, acTables, restartInterval, adobeTransform);
                     return ApplyOrientation(rgba, ref width, ref height, orientation);
                 }
 
@@ -156,6 +157,16 @@ public static partial class JpegReader {
                 continue;
             }
 
+            if (marker == 0xEE) {
+                var segLen = ReadUInt16BE(data, offset);
+                offset += 2;
+                if (segLen < 2 || offset + segLen - 2 > data.Length) throw new FormatException("Invalid JPEG APP14 segment.");
+                var app14 = data.Slice(offset, segLen - 2);
+                if (TryReadAdobeTransform(app14, out var transform)) adobeTransform = transform;
+                offset += segLen - 2;
+                continue;
+            }
+
             if (marker >= 0xD0 && marker <= 0xD7) {
                 continue;
             }
@@ -169,7 +180,7 @@ public static partial class JpegReader {
         if (progressive && hasFrame && progressiveState is not null) {
             width = frame.Width;
             height = frame.Height;
-            var rgba = progressiveState.RenderRgba(frame);
+            var rgba = progressiveState.RenderRgba(frame, adobeTransform);
             return ApplyOrientation(rgba, ref width, ref height, orientation);
         }
 
