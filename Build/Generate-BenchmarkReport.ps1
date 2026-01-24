@@ -331,6 +331,7 @@ $titleMap = @{
     "QrCompareBenchmarks" = "QR (Encode)"
     "QrDecodeCleanCompareBenchmarks" = "QR Decode (Clean)"
     "QrDecodeNoisyCompareBenchmarks" = "QR Decode (Noisy)"
+    "QrDecodeStressCompareBenchmarks" = "QR Decode (Stress)"
     "Code128CompareBenchmarks" = "Code 128 (Encode)"
     "Code39CompareBenchmarks" = "Code 39 (Encode)"
     "Code93CompareBenchmarks" = "Code 93 (Encode)"
@@ -472,11 +473,12 @@ $lines.Add("- CodeGlyphX Alloc vs Fastest: CodeGlyphX allocated divided by the a
 $lines.Add("- Rating: good/ok/bad based on time + allocation ratios (good <=1.1x and <=1.25x alloc, ok <=1.5x and <=2.0x alloc).")
 $lines.Add("- Δ lines in comparison tables show vendor ratios vs CodeGlyphX (time / alloc).")
 $lines.Add("- Quick runs use fewer iterations for fast feedback; Full runs use BenchmarkDotNet defaults and are recommended for publishing.")
+$lines.Add("- Quick and Full runs include the same scenario list; only the iteration settings differ.")
 $lines.Add("- Benchmarks run under controlled, ideal conditions on a single machine; treat results as directional, not definitive.")
 $lines.Add("")
 $lines.Add("### Notes")
 $lines.Add("- $runModeLabel")
-$lines.Add("- Full runs may include stylized/logo stress scenarios; quick runs focus on core paths.")
+$lines.Add("- Quick runs include the same scenario set as Full runs; run time is driven by iteration counts.")
 $lines.Add("- Comparisons target PNG output and include encode+render (not encode-only).")
 $lines.Add("- Module size and quiet zone are matched to CodeGlyphX defaults where possible; image size is derived from CodeGlyphX modules.")
 $lines.Add("- ZXing.Net uses ZXing.Net.Bindings.ImageSharp.V3 (ImageSharp 3.x renderer).")

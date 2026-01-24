@@ -4,6 +4,7 @@ using CodeGlyphX.Internal;
 namespace CodeGlyphX.Qr;
 
 internal static class QrMask {
+    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
     public static bool ShouldInvert(int mask, int x, int y) {
         return mask switch {
             0 => ((x + y) & 1) == 0,

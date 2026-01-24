@@ -20,6 +20,7 @@ This list contains **only work we still want to do** (no already‑done items).
 ## DX & Docs (ongoing)
 - Keep “quick vs full” benchmark guidance and preflight steps in README/docs.
 - Decision guide: “which symbology to pick” + “which target framework to pick”.
+- CI: add PR website build check (compile + static output) before merge.
 
 ## Additional symbologies (weeks)
 - MaxiCode — decode + encode.

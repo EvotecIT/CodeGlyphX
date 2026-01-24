@@ -1,9 +1,12 @@
 using System;
-using System.IO;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Jobs;
 using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Png;
+#if COMPARE_ZXING
+using ZXing;
+using ZXing.Common;
+#endif
 
 namespace CodeGlyphX.Benchmarks;
 
@@ -14,21 +17,9 @@ namespace CodeGlyphX.Benchmarks;
 #endif
 [MemoryDiagnoser]
 [RankColumn]
-public class QrDecodeBenchmarks
+public class QrDecodeStressCompareBenchmarks
 {
     private const string SampleText = "https://github.com/EvotecIT/CodeGlyphX";
-    private byte[] _cleanRgba = Array.Empty<byte>();
-    private byte[] _noisyRgba = Array.Empty<byte>();
-    private byte[] _screenshotRgba = Array.Empty<byte>();
-    private byte[] _antialiasRgba = Array.Empty<byte>();
-    private int _cleanWidth;
-    private int _cleanHeight;
-    private int _noisyWidth;
-    private int _noisyHeight;
-    private int _screenshotWidth;
-    private int _screenshotHeight;
-    private int _antialiasWidth;
-    private int _antialiasHeight;
     private byte[] _logoRgba = Array.Empty<byte>();
     private byte[] _fancyRgba = Array.Empty<byte>();
     private byte[] _resampledRgba = Array.Empty<byte>();
@@ -41,100 +32,90 @@ public class QrDecodeBenchmarks
     private int _resampledHeight;
     private int _noQuietWidth;
     private int _noQuietHeight;
-    private readonly QrPixelDecodeOptions _fast = new() { Profile = QrDecodeProfile.Fast };
     private readonly QrPixelDecodeOptions _balanced = new() { Profile = QrDecodeProfile.Balanced };
-    private readonly QrPixelDecodeOptions _robust = new() {
+    private readonly QrPixelDecodeOptions _robust = new()
+    {
         Profile = QrDecodeProfile.Robust,
-        AggressiveSampling = true
-    };
-    private readonly QrPixelDecodeOptions _robustNoisy = new() {
-        Profile = QrDecodeProfile.Robust,
+        AggressiveSampling = true,
         MaxMilliseconds = 800,
-        MaxDimension = 1600,
-        AggressiveSampling = true
+        MaxDimension = 1600
     };
+
+#if COMPARE_ZXING
+    private readonly BarcodeReaderGeneric _zxingReader = new()
+    {
+        Options = new DecodingOptions
+        {
+            PossibleFormats = new[] { BarcodeFormat.QR_CODE },
+            TryHarder = true
+        }
+    };
+#endif
 
     [GlobalSetup]
     public void Setup()
     {
-        LoadRgba("Assets/DecodingSamples/qr-clean-small.png", out _cleanRgba, out _cleanWidth, out _cleanHeight);
-        LoadRgba("Assets/DecodingSamples/qr-noisy-ui.png", out _noisyRgba, out _noisyWidth, out _noisyHeight);
-        LoadRgba("Assets/DecodingSamples/qr-screenshot-1.png", out _screenshotRgba, out _screenshotWidth, out _screenshotHeight);
-        LoadRgba("Assets/DecodingSamples/qr-dot-aa.png", out _antialiasRgba, out _antialiasWidth, out _antialiasHeight);
         BuildLogoSample(out _logoRgba, out _logoWidth, out _logoHeight);
         BuildFancySample(out _fancyRgba, out _fancyWidth, out _fancyHeight);
         BuildResampledSample(out _resampledRgba, out _resampledWidth, out _resampledHeight);
         BuildNoQuietSample(out _noQuietRgba, out _noQuietWidth, out _noQuietHeight);
     }
 
-    [Benchmark(Description = "QR Decode (clean, fast)")]
-    public bool DecodeCleanFast()
-    {
-        return QrDecoder.TryDecode(_cleanRgba, _cleanWidth, _cleanHeight, _cleanWidth * 4, PixelFormat.Rgba32, out _, _fast);
-    }
-
-    [Benchmark(Description = "QR Decode (clean, balanced)")]
-    public bool DecodeCleanBalanced()
-    {
-        return QrDecoder.TryDecode(_cleanRgba, _cleanWidth, _cleanHeight, _cleanWidth * 4, PixelFormat.Rgba32, out _, _balanced);
-    }
-
-    [Benchmark(Description = "QR Decode (clean, robust)")]
-    public bool DecodeCleanRobust()
-    {
-        return QrDecoder.TryDecode(_cleanRgba, _cleanWidth, _cleanHeight, _cleanWidth * 4, PixelFormat.Rgba32, out _, _robust);
-    }
-
-    [Benchmark(Description = "QR Decode (noisy, robust)")]
-    public bool DecodeNoisyRobust()
-    {
-        return QrDecoder.TryDecode(_noisyRgba, _noisyWidth, _noisyHeight, _noisyWidth * 4, PixelFormat.Rgba32, out _, _robustNoisy);
-    }
-
-    [Benchmark(Description = "QR Decode (screenshot, balanced)")]
-    public bool DecodeScreenshotBalanced()
-    {
-        return QrDecoder.TryDecode(_screenshotRgba, _screenshotWidth, _screenshotHeight, _screenshotWidth * 4, PixelFormat.Rgba32, out _, _balanced);
-    }
-
-    [Benchmark(Description = "QR Decode (antialias, robust)")]
-    public bool DecodeAntialiasRobust()
-    {
-        return QrDecoder.TryDecode(_antialiasRgba, _antialiasWidth, _antialiasHeight, _antialiasWidth * 4, PixelFormat.Rgba32, out _, _robust);
-    }
-
-    [Benchmark(Description = "QR Decode (logo, robust)")]
-    public bool DecodeLogoRobust()
+    [Benchmark(Baseline = true, Description = "CodeGlyphX QR Decode (logo)")]
+    public bool CodeGlyphX_DecodeLogoRobust()
     {
         return QrDecoder.TryDecode(_logoRgba, _logoWidth, _logoHeight, _logoWidth * 4, PixelFormat.Rgba32, out _, _robust);
     }
 
-    [Benchmark(Description = "QR Decode (fancy, robust)")]
-    public bool DecodeFancyRobust()
+#if COMPARE_ZXING
+    [Benchmark(Description = "ZXing.Net QR Decode (logo)")]
+    public bool ZXing_DecodeLogoTryHarder()
+    {
+        return _zxingReader.Decode(_logoRgba, _logoWidth, _logoHeight, RGBLuminanceSource.BitmapFormat.RGBA32) is not null;
+    }
+#endif
+
+    [Benchmark(Description = "CodeGlyphX QR Decode (fancy)")]
+    public bool CodeGlyphX_DecodeFancyRobust()
     {
         return QrDecoder.TryDecode(_fancyRgba, _fancyWidth, _fancyHeight, _fancyWidth * 4, PixelFormat.Rgba32, out _, _robust);
     }
 
-    [Benchmark(Description = "QR Decode (resampled, balanced)")]
-    public bool DecodeResampledBalanced()
+#if COMPARE_ZXING
+    [Benchmark(Description = "ZXing.Net QR Decode (fancy)")]
+    public bool ZXing_DecodeFancyTryHarder()
+    {
+        return _zxingReader.Decode(_fancyRgba, _fancyWidth, _fancyHeight, RGBLuminanceSource.BitmapFormat.RGBA32) is not null;
+    }
+#endif
+
+    [Benchmark(Description = "CodeGlyphX QR Decode (resampled)")]
+    public bool CodeGlyphX_DecodeResampledBalanced()
     {
         return QrDecoder.TryDecode(_resampledRgba, _resampledWidth, _resampledHeight, _resampledWidth * 4, PixelFormat.Rgba32, out _, _balanced);
     }
 
-    [Benchmark(Description = "QR Decode (no quiet zone, robust)")]
-    public bool DecodeNoQuietRobust()
+#if COMPARE_ZXING
+    [Benchmark(Description = "ZXing.Net QR Decode (resampled)")]
+    public bool ZXing_DecodeResampledTryHarder()
+    {
+        return _zxingReader.Decode(_resampledRgba, _resampledWidth, _resampledHeight, RGBLuminanceSource.BitmapFormat.RGBA32) is not null;
+    }
+#endif
+
+    [Benchmark(Description = "CodeGlyphX QR Decode (no quiet zone)")]
+    public bool CodeGlyphX_DecodeNoQuietRobust()
     {
         return QrDecoder.TryDecode(_noQuietRgba, _noQuietWidth, _noQuietHeight, _noQuietWidth * 4, PixelFormat.Rgba32, out _, _robust);
     }
 
-    private static void LoadRgba(string relativePath, out byte[] rgba, out int width, out int height)
+#if COMPARE_ZXING
+    [Benchmark(Description = "ZXing.Net QR Decode (no quiet zone)")]
+    public bool ZXing_DecodeNoQuietTryHarder()
     {
-        var bytes = ReadRepoFile(relativePath);
-        if (!ImageReader.TryDecodeRgba32(bytes, out rgba, out width, out height))
-        {
-            throw new InvalidOperationException($"Failed to decode image '{relativePath}'.");
-        }
+        return _zxingReader.Decode(_noQuietRgba, _noQuietWidth, _noQuietHeight, RGBLuminanceSource.BitmapFormat.RGBA32) is not null;
     }
+#endif
 
     private static void BuildLogoSample(out byte[] rgba, out int width, out int height)
     {
@@ -244,26 +225,5 @@ public class QrDecodeBenchmarks
         }
 
         return dst;
-    }
-
-    private static byte[] ReadRepoFile(string relativePath)
-    {
-        if (string.IsNullOrWhiteSpace(relativePath))
-        {
-            throw new ArgumentException("Path is required.", nameof(relativePath));
-        }
-
-        var dir = new DirectoryInfo(AppContext.BaseDirectory);
-        for (var i = 0; i < 10 && dir is not null; i++)
-        {
-            var candidate = Path.Combine(dir.FullName, relativePath);
-            if (File.Exists(candidate))
-            {
-                return File.ReadAllBytes(candidate);
-            }
-            dir = dir.Parent;
-        }
-
-        throw new FileNotFoundException($"Could not locate sample file '{relativePath}'.");
     }
 }

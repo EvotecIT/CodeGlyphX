@@ -218,7 +218,7 @@ if (QrImageDecoder.TryDecodeImage(imageBytes, out var result))
                 Benchmarks are run locally using BenchmarkDotNet under controlled, ideal conditions. Results below were captured on
                 2026-01-18 (Ubuntu 24.04, Ryzen 9 9950X, .NET 8.0.22). Treat these numbers as directional; your results will vary.
             </p>
-            <p class="text-muted">Quick runs focus on core paths; full runs may include stylized/logo stress scenarios. See <code>BENCHMARK.md</code> for full tables.</p>
+            <p class="text-muted">Quick runs use fewer iterations but include the same scenario list as full runs. See <code>BENCHMARK.md</code> for full tables.</p>
             <div class="bench-summary" data-benchmark-summary>
                 <div class="bench-summary-loading">Loading benchmark summary...</div>
             </div>
