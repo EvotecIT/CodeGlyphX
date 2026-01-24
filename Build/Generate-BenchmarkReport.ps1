@@ -457,13 +457,14 @@ $lines = New-Object System.Collections.Generic.List[string]
 $osName = Resolve-OsName $ArtifactsPath $OsName
 $timestamp = (Get-Date).ToUniversalTime().ToString("yyyy-MM-dd HH:mm:ss 'UTC'")
 
-$lines.Add("## $($osName.ToUpperInvariant())")
+$runModeTitle = if ($runModeNormalized -eq "quick") { "Quick" } else { "Full" }
+$lines.Add("## $($osName.ToUpperInvariant()) ($runModeTitle)")
 $lines.Add("")
 $lines.Add("Updated: $timestamp")
 $lines.Add("Framework: $Framework")
 $lines.Add("Configuration: $Configuration")
 $lines.Add("Artifacts: $ArtifactsPath")
-$lines.Add("How to read:")
+$lines.Add("**How to read**")
 $lines.Add("- Mean: average time per operation. Lower is better.")
 $lines.Add("- Allocated: managed memory allocated per operation. Lower is better.")
 $lines.Add("- CodeGlyphX vs Fastest: CodeGlyphX mean divided by the fastest mean for that scenario. 1 x (fastest) means CodeGlyphX is fastest; 1.5 x means ~50% slower.")
@@ -472,7 +473,8 @@ $lines.Add("- Rating: good/ok/bad based on time + allocation ratios (good <=1.1x
 $lines.Add("- Δ lines in comparison tables show vendor ratios vs CodeGlyphX (time / alloc).")
 $lines.Add("- Quick runs use fewer iterations for fast feedback; Full runs use BenchmarkDotNet defaults and are recommended for publishing.")
 $lines.Add("- Benchmarks run under controlled, ideal conditions on a single machine; treat results as directional, not definitive.")
-$lines.Add("Notes:")
+$lines.Add("")
+$lines.Add("**Notes**")
 $lines.Add("- $runModeLabel")
 $lines.Add("- Comparisons target PNG output and include encode+render (not encode-only).")
 $lines.Add("- Module size and quiet zone are matched to CodeGlyphX defaults where possible; image size is derived from CodeGlyphX modules.")
@@ -600,7 +602,7 @@ if ($compareFiles.Count -gt 0) {
     }
 
     if ($summaryRows.Count -gt 0) {
-        $lines.Add("### Summary (Comparisons)")
+        $lines.Add("### Summary (Comparisons) - $runModeTitle")
         $lines.Add("")
         $lines.Add("| Benchmark | Scenario | Fastest | CodeGlyphX (Mean / Alloc) | ZXing.Net (Mean / Alloc) | QRCoder (Mean / Alloc) | Barcoder (Mean / Alloc) | CodeGlyphX vs Fastest | CodeGlyphX Alloc vs Fastest | Rating |")
         $lines.Add("| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |")

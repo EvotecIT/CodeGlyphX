@@ -52,6 +52,23 @@ Status: Actively developed · Stable core · Expanding format support
 dotnet add package CodeGlyphX
 ```
 
+## Target Framework Feature Matrix
+
+CodeGlyphX targets `netstandard2.0`, `net472`, `net8.0`, and `net10.0`. Most features are available everywhere, but the high-performance QR pixel pipeline and Span-based APIs are net8+ only.
+
+| Feature | net8.0 / net10.0 | net472 / netstandard2.0 |
+| --- | --- | --- |
+| Encode (QR/Micro QR + 1D/2D symbologies) | ✅ | ✅ |
+| Decode from module grids (BitMatrix) | ✅ | ✅ |
+| Renderers + image file codecs (PNG/JPEG/SVG/PDF/etc) | ✅ | ✅ |
+| 1D/2D pixel decode (Barcode/DataMatrix/PDF417/Aztec) | ✅ | ✅ |
+| QR pixel decode from raw pixels / screenshots | ✅ | ⚠️ Not available (returns false) |
+| Span-based overloads + fast pixel pipeline | ✅ | ✖ (byte[] only) |
+
+Notes:
+- `netstandard2.0` and `net472` require `System.Memory` 4.5.5 (automatically pulled by NuGet).
+- `QrImageDecoder.TryDecodeImage(...)` and `QrDecoder.TryDecode(...)` from pixels are net8+ only.
+
 ## Decode (unified)
 
 ```csharp

@@ -121,6 +121,51 @@ if (QrImageDecoder.TryDecodeImage(imageBytes, out var result))
                 <li><strong>.NET Standard 2.0</strong> - Requires System.Memory 4.5.5</li>
                 <li><strong>.NET Framework 4.7.2+</strong> - Requires System.Memory 4.5.5</li>
             </ul>
+
+            <h2>Feature Availability</h2>
+            <p>Most features are available across all targets, but the high-performance QR pixel pipeline and Span-based APIs are net8+ only.</p>
+            <table style="width: 100%; border-collapse: collapse; margin: 1rem 0;">
+                <thead>
+                    <tr style="border-bottom: 1px solid var(--border);">
+                        <th style="text-align: left; padding: 0.75rem;">Feature</th>
+                        <th style="text-align: left; padding: 0.75rem;">net8.0+</th>
+                        <th style="text-align: left; padding: 0.75rem;">net472 / netstandard2.0</th>
+                    </tr>
+                </thead>
+                <tbody style="color: var(--text-muted);">
+                    <tr style="border-bottom: 1px solid var(--border);">
+                        <td style="padding: 0.75rem;">Encode (QR/Micro QR + 1D/2D)</td>
+                        <td style="padding: 0.75rem;">Yes</td>
+                        <td style="padding: 0.75rem;">Yes</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid var(--border);">
+                        <td style="padding: 0.75rem;">Decode from module grids (BitMatrix)</td>
+                        <td style="padding: 0.75rem;">Yes</td>
+                        <td style="padding: 0.75rem;">Yes</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid var(--border);">
+                        <td style="padding: 0.75rem;">Renderers + image file codecs</td>
+                        <td style="padding: 0.75rem;">Yes</td>
+                        <td style="padding: 0.75rem;">Yes</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid var(--border);">
+                        <td style="padding: 0.75rem;">1D/2D pixel decode (Barcode/DataMatrix/PDF417/Aztec)</td>
+                        <td style="padding: 0.75rem;">Yes</td>
+                        <td style="padding: 0.75rem;">Yes</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid var(--border);">
+                        <td style="padding: 0.75rem;">QR pixel decode from raw pixels / screenshots</td>
+                        <td style="padding: 0.75rem;">Yes</td>
+                        <td style="padding: 0.75rem;">No (returns false)</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 0.75rem;">Span-based overloads + fast pixel pipeline</td>
+                        <td style="padding: 0.75rem;">Yes</td>
+                        <td style="padding: 0.75rem;">No (byte[] only)</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="text-muted">QR pixel decode APIs are net8+ only (e.g., <code>QrImageDecoder.TryDecodeImage(...)</code> and <code>QrDecoder.TryDecode(...)</code> from pixels).</p>
         </section>
 
         <section id="quickstart">

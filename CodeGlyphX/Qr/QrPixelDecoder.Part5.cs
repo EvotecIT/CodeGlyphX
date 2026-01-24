@@ -339,15 +339,13 @@ internal static partial class QrPixelDecoder {
                 out var stepNumY,
                 out var stepDenom);
 
-            if (double.IsNaN(numX) || double.IsNaN(numY) || double.IsNaN(denom) ||
-                double.IsNaN(stepNumX) || double.IsNaN(stepNumY) || double.IsNaN(stepDenom) ||
-                double.IsInfinity(numX) || double.IsInfinity(numY) || double.IsInfinity(denom) ||
-                double.IsInfinity(stepNumX) || double.IsInfinity(stepNumY) || double.IsInfinity(stepDenom)) {
+            if (!double.IsFinite(numX) || !double.IsFinite(numY) || !double.IsFinite(denom) ||
+                !double.IsFinite(stepNumX) || !double.IsFinite(stepNumY) || !double.IsFinite(stepDenom)) {
                 return false;
             }
 
             var denomEnd = denom + stepDenom * (dimension - 1);
-            if (double.IsNaN(denomEnd) || double.IsInfinity(denomEnd)) return false;
+            if (!double.IsFinite(denomEnd)) return false;
             if (Math.Abs(denom) < 1e-12 || Math.Abs(denomEnd) < 1e-12) return false;
             if (denom * denomEnd < 0) return false;
 

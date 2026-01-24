@@ -1,6 +1,7 @@
 #if NET8_0_OR_GREATER
 using System;
 using System.Buffers;
+using System.Runtime.CompilerServices;
 using CodeGlyphX.Rendering;
 
 namespace CodeGlyphX.Qr;
@@ -24,6 +25,7 @@ internal readonly struct QrGrayImage {
         ThresholdMap = thresholdMap;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool IsBlack(int x, int y, bool invert) {
         var idx = y * Width + x;
         var lum = Gray[idx];

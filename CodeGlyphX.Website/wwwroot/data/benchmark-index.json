@@ -24,11 +24,11 @@
                     {
                         "os":  "windows",
                         "runMode":  "quick",
-                        "generatedUtc":  "2026-01-23T21:23:16.3123882Z",
+                        "generatedUtc":  "2026-01-24T08:09:37.6622515Z",
                         "publish":  false,
                         "framework":  "net8.0",
                         "configuration":  "Release",
-                        "artifacts":  ".\\Build\\BenchmarkResults\\windows-20260123-204729",
+                        "artifacts":  "Build\\BenchmarkResults\\windows-20260123-225838",
                         "meta":  {
                                      "commit":  null,
                                      "branch":  null,
@@ -45,11 +45,11 @@
                     {
                         "os":  "windows",
                         "runMode":  "full",
-                        "generatedUtc":  "2026-01-23T21:23:33.8459560Z",
+                        "generatedUtc":  "2026-01-24T08:09:44.7901106Z",
                         "publish":  true,
                         "framework":  "net8.0",
                         "configuration":  "Release",
-                        "artifacts":  ".\\Build\\BenchmarkResults\\windows-20260122-155044",
+                        "artifacts":  "Build\\BenchmarkResults\\windows-20260122-155044",
                         "meta":  {
                                      "commit":  null,
                                      "branch":  null,

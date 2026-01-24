@@ -3,6 +3,252 @@
                     "quick":  {
                                   "comparisons":  [
                                                       {
+                                                          "title":  "Aztec (Encode)",
+                                                          "id":  "AztecCompareBenchmarks",
+                                                          "scenarios":  [
+                                                                            {
+                                                                                "name":  "Aztec PNG",
+                                                                                "vendors":  {
+                                                                                                "Barcoder":  {
+                                                                                                                 "allocated":  "998.83 KB",
+                                                                                                                 "mean":  "8,071.5 μs",
+                                                                                                                 "meanNs":  8071500
+                                                                                                             },
+                                                                                                "CodeGlyphX":  {
+                                                                                                                   "allocated":  "65.41 KB",
+                                                                                                                   "mean":  "220.1 μs",
+                                                                                                                   "meanNs":  220100
+                                                                                                               },
+                                                                                                "ZXing.Net":  {
+                                                                                                                  "allocated":  "289.63 KB",
+                                                                                                                  "mean":  "1,939.3 μs",
+                                                                                                                  "meanNs":  1939300
+                                                                                                              }
+                                                                                            },
+                                                                                "ratios":  {
+                                                                                               "ZXing.Net":  8.811,
+                                                                                               "Barcoder":  36.672
+                                                                                           }
+                                                                            }
+                                                                        ]
+                                                      },
+                                                      {
+                                                          "title":  "Code 128 (Encode)",
+                                                          "id":  "Code128CompareBenchmarks",
+                                                          "scenarios":  [
+                                                                            {
+                                                                                "name":  "Code128 PNG",
+                                                                                "vendors":  {
+                                                                                                "Barcoder":  {
+                                                                                                                 "allocated":  "2263.41 KB",
+                                                                                                                 "mean":  "54,378.4 μs",
+                                                                                                                 "meanNs":  54378400
+                                                                                                             },
+                                                                                                "CodeGlyphX":  {
+                                                                                                                   "allocated":  "22.54 KB",
+                                                                                                                   "mean":  "164.1 μs",
+                                                                                                                   "meanNs":  164100
+                                                                                                               },
+                                                                                                "ZXing.Net":  {
+                                                                                                                  "allocated":  "371.95 KB",
+                                                                                                                  "mean":  "2,211.9 μs",
+                                                                                                                  "meanNs":  2211900
+                                                                                                              }
+                                                                                            },
+                                                                                "ratios":  {
+                                                                                               "ZXing.Net":  13.479,
+                                                                                               "Barcoder":  331.374
+                                                                                           }
+                                                                            }
+                                                                        ]
+                                                      },
+                                                      {
+                                                          "title":  "Code 39 (Encode)",
+                                                          "id":  "Code39CompareBenchmarks",
+                                                          "scenarios":  [
+                                                                            {
+                                                                                "name":  "Code39 PNG",
+                                                                                "vendors":  {
+                                                                                                "Barcoder":  {
+                                                                                                                 "allocated":  "1676.85 KB",
+                                                                                                                 "mean":  "43,291.1 μs",
+                                                                                                                 "meanNs":  43291100
+                                                                                                             },
+                                                                                                "CodeGlyphX":  {
+                                                                                                                   "allocated":  "14.13 KB",
+                                                                                                                   "mean":  "180.3 μs",
+                                                                                                                   "meanNs":  180300
+                                                                                                               },
+                                                                                                "ZXing.Net":  {
+                                                                                                                  "allocated":  "240.48 KB",
+                                                                                                                  "mean":  "1,771.1 μs",
+                                                                                                                  "meanNs":  1771100
+                                                                                                              }
+                                                                                            },
+                                                                                "ratios":  {
+                                                                                               "ZXing.Net":  9.823,
+                                                                                               "Barcoder":  240.106
+                                                                                           }
+                                                                            }
+                                                                        ]
+                                                      },
+                                                      {
+                                                          "title":  "Code 93 (Encode)",
+                                                          "id":  "Code93CompareBenchmarks",
+                                                          "scenarios":  [
+                                                                            {
+                                                                                "name":  "Code93 PNG",
+                                                                                "vendors":  {
+                                                                                                "Barcoder":  {
+                                                                                                                 "allocated":  "1185.5 KB",
+                                                                                                                 "mean":  "28,977.2 μs",
+                                                                                                                 "meanNs":  28977200
+                                                                                                             },
+                                                                                                "CodeGlyphX":  {
+                                                                                                                   "allocated":  "12.24 KB",
+                                                                                                                   "mean":  "174.5 μs",
+                                                                                                                   "meanNs":  174500
+                                                                                                               },
+                                                                                                "ZXing.Net":  {
+                                                                                                                  "allocated":  "239.91 KB",
+                                                                                                                  "mean":  "1,295.9 μs",
+                                                                                                                  "meanNs":  1295900
+                                                                                                              }
+                                                                                            },
+                                                                                "ratios":  {
+                                                                                               "ZXing.Net":  7.426,
+                                                                                               "Barcoder":  166.058
+                                                                                           }
+                                                                            }
+                                                                        ]
+                                                      },
+                                                      {
+                                                          "title":  "Data Matrix (Encode)",
+                                                          "id":  "DataMatrixCompareBenchmarks",
+                                                          "scenarios":  [
+                                                                            {
+                                                                                "name":  "Data Matrix PNG (medium)",
+                                                                                "vendors":  {
+                                                                                                "Barcoder":  {
+                                                                                                                 "allocated":  "1001.25 KB",
+                                                                                                                 "mean":  "10,329.6 μs",
+                                                                                                                 "meanNs":  10329600
+                                                                                                             },
+                                                                                                "CodeGlyphX":  {
+                                                                                                                   "allocated":  "19.6 KB",
+                                                                                                                   "mean":  "230.9 μs",
+                                                                                                                   "meanNs":  230900
+                                                                                                               },
+                                                                                                "ZXing.Net":  {
+                                                                                                                  "allocated":  "250.52 KB",
+                                                                                                                  "mean":  "2,211.2 μs",
+                                                                                                                  "meanNs":  2211200
+                                                                                                              }
+                                                                                            },
+                                                                                "ratios":  {
+                                                                                               "ZXing.Net":  9.576,
+                                                                                               "Barcoder":  44.736
+                                                                                           }
+                                                                            }
+                                                                        ]
+                                                      },
+                                                      {
+                                                          "title":  "EAN-13 (Encode)",
+                                                          "id":  "EanCompareBenchmarks",
+                                                          "scenarios":  [
+                                                                            {
+                                                                                "name":  "EAN-13 PNG",
+                                                                                "vendors":  {
+                                                                                                "Barcoder":  {
+                                                                                                                 "allocated":  "951.05 KB",
+                                                                                                                 "mean":  "26,486.2 μs",
+                                                                                                                 "meanNs":  26486200
+                                                                                                             },
+                                                                                                "CodeGlyphX":  {
+                                                                                                                   "allocated":  "10.92 KB",
+                                                                                                                   "mean":  "193.4 μs",
+                                                                                                                   "meanNs":  193400
+                                                                                                               },
+                                                                                                "ZXing.Net":  {
+                                                                                                                  "allocated":  "239.88 KB",
+                                                                                                                  "mean":  "1,114.3 μs",
+                                                                                                                  "meanNs":  1114300
+                                                                                                              }
+                                                                                            },
+                                                                                "ratios":  {
+                                                                                               "ZXing.Net":  5.762,
+                                                                                               "Barcoder":  136.95
+                                                                                           }
+                                                                            }
+                                                                        ]
+                                                      },
+                                                      {
+                                                          "title":  "PDF417 (Encode)",
+                                                          "id":  "Pdf417CompareBenchmarks",
+                                                          "scenarios":  [
+                                                                            {
+                                                                                "name":  "PDF417 PNG",
+                                                                                "vendors":  {
+                                                                                                "Barcoder":  {
+                                                                                                                 "allocated":  "5616.22 KB",
+                                                                                                                 "mean":  "56.081 ms",
+                                                                                                                 "meanNs":  56081000
+                                                                                                             },
+                                                                                                "CodeGlyphX":  {
+                                                                                                                   "allocated":  "82.07 KB",
+                                                                                                                   "mean":  "1.491 ms",
+                                                                                                                   "meanNs":  1491000
+                                                                                                               },
+                                                                                                "ZXing.Net":  {
+                                                                                                                  "allocated":  "1335.86 KB",
+                                                                                                                  "mean":  "7.206 ms",
+                                                                                                                  "meanNs":  7206000
+                                                                                                              }
+                                                                                            },
+                                                                                "ratios":  {
+                                                                                               "ZXing.Net":  4.833,
+                                                                                               "Barcoder":  37.613
+                                                                                           }
+                                                                            }
+                                                                        ]
+                                                      },
+                                                      {
+                                                          "title":  "QR (Encode)",
+                                                          "id":  "QrCompareBenchmarks",
+                                                          "scenarios":  [
+                                                                            {
+                                                                                "name":  "QR PNG (medium)",
+                                                                                "vendors":  {
+                                                                                                "Barcoder":  {
+                                                                                                                 "allocated":  "1903.56 KB",
+                                                                                                                 "mean":  "16,056.4 μs",
+                                                                                                                 "meanNs":  16056400
+                                                                                                             },
+                                                                                                "CodeGlyphX":  {
+                                                                                                                   "allocated":  "22.27 KB",
+                                                                                                                   "mean":  "750.7 μs",
+                                                                                                                   "meanNs":  750700
+                                                                                                               },
+                                                                                                "ZXing.Net":  {
+                                                                                                                  "allocated":  "435.62 KB",
+                                                                                                                  "mean":  "4,424.8 μs",
+                                                                                                                  "meanNs":  4424800
+                                                                                                              },
+                                                                                                "QRCoder":  {
+                                                                                                                "allocated":  "16.34 KB",
+                                                                                                                "mean":  "967.5 μs",
+                                                                                                                "meanNs":  967500
+                                                                                                            }
+                                                                                            },
+                                                                                "ratios":  {
+                                                                                               "Barcoder":  21.389,
+                                                                                               "ZXing.Net":  5.894,
+                                                                                               "QRCoder":  1.289
+                                                                                           }
+                                                                            }
+                                                                        ]
+                                                      },
+                                                      {
                                                           "title":  "QR Decode (Clean)",
                                                           "id":  "QrDecodeCleanCompareBenchmarks",
                                                           "scenarios":  [
@@ -11,17 +257,17 @@
                                                                                 "vendors":  {
                                                                                                 "ZXing.Net":  {
                                                                                                                   "allocated":  "127.67 KB",
-                                                                                                                  "mean":  "1.878 ms",
-                                                                                                                  "meanNs":  1878000
+                                                                                                                  "mean":  "1.951 ms",
+                                                                                                                  "meanNs":  1951000
                                                                                                               },
                                                                                                 "CodeGlyphX":  {
-                                                                                                                   "allocated":  "5.27 KB",
-                                                                                                                   "mean":  "2.626 ms",
-                                                                                                                   "meanNs":  2626000
+                                                                                                                   "allocated":  "134.05 KB",
+                                                                                                                   "mean":  "2.044 ms",
+                                                                                                                   "meanNs":  2044000
                                                                                                                }
                                                                                             },
                                                                                 "ratios":  {
-                                                                                               "ZXing.Net":  0.715
+                                                                                               "ZXing.Net":  0.955
                                                                                            }
                                                                             }
                                                                         ]
@@ -35,17 +281,47 @@
                                                                                 "vendors":  {
                                                                                                 "ZXing.Net":  {
                                                                                                                   "allocated":  "706.89 KB",
-                                                                                                                  "mean":  "3.735 ms",
-                                                                                                                  "meanNs":  3735000
+                                                                                                                  "mean":  "4.582 ms",
+                                                                                                                  "meanNs":  4582000
                                                                                                               },
                                                                                                 "CodeGlyphX":  {
-                                                                                                                   "allocated":  "5.45 KB",
-                                                                                                                   "mean":  "6.385 ms",
-                                                                                                                   "meanNs":  6385000
+                                                                                                                   "allocated":  "1030.23 KB",
+                                                                                                                   "mean":  "4.308 ms",
+                                                                                                                   "meanNs":  4308000
                                                                                                                }
                                                                                             },
                                                                                 "ratios":  {
-                                                                                               "ZXing.Net":  0.585
+                                                                                               "ZXing.Net":  1.064
+                                                                                           }
+                                                                            }
+                                                                        ]
+                                                      },
+                                                      {
+                                                          "title":  "UPC-A (Encode)",
+                                                          "id":  "UpcACompareBenchmarks",
+                                                          "scenarios":  [
+                                                                            {
+                                                                                "name":  "UPC-A PNG",
+                                                                                "vendors":  {
+                                                                                                "Barcoder":  {
+                                                                                                                 "allocated":  "866.11 KB",
+                                                                                                                 "mean":  "24,452.9 μs",
+                                                                                                                 "meanNs":  24452900
+                                                                                                             },
+                                                                                                "CodeGlyphX":  {
+                                                                                                                   "allocated":  "11.23 KB",
+                                                                                                                   "mean":  "247.0 μs",
+                                                                                                                   "meanNs":  247000
+                                                                                                               },
+                                                                                                "ZXing.Net":  {
+                                                                                                                  "allocated":  "239.95 KB",
+                                                                                                                  "mean":  "1,406.6 μs",
+                                                                                                                  "meanNs":  1406600
+                                                                                                              }
+                                                                                            },
+                                                                                "ratios":  {
+                                                                                               "ZXing.Net":  5.695,
+                                                                                               "Barcoder":  99
                                                                                            }
                                                                             }
                                                                         ]
@@ -53,58 +329,242 @@
                                                   ],
                                   "baseline":  [
                                                    {
+                                                       "title":  "1D Barcodes (Encode)",
+                                                       "id":  "BarcodeBenchmarks",
+                                                       "scenarios":  [
+                                                                         {
+                                                                             "allocated":  "22.62 KB",
+                                                                             "name":  "Code 128 PNG",
+                                                                             "mean":  "211.70 μs",
+                                                                             "meanNs":  211700
+                                                                         },
+                                                                         {
+                                                                             "allocated":  "18.13 KB",
+                                                                             "name":  "Code 128 SVG",
+                                                                             "mean":  "49.67 μs",
+                                                                             "meanNs":  49670
+                                                                         },
+                                                                         {
+                                                                             "allocated":  "11 KB",
+                                                                             "name":  "EAN PNG",
+                                                                             "mean":  "232.73 μs",
+                                                                             "meanNs":  232730
+                                                                         },
+                                                                         {
+                                                                             "allocated":  "14.2 KB",
+                                                                             "name":  "Code 39 PNG",
+                                                                             "mean":  "211.73 μs",
+                                                                             "meanNs":  211730
+                                                                         },
+                                                                         {
+                                                                             "allocated":  "12.32 KB",
+                                                                             "name":  "Code 93 PNG",
+                                                                             "mean":  "237.32 μs",
+                                                                             "meanNs":  237320
+                                                                         },
+                                                                         {
+                                                                             "allocated":  "11.3 KB",
+                                                                             "name":  "UPC-A PNG",
+                                                                             "mean":  "165.57 μs",
+                                                                             "meanNs":  165570
+                                                                         }
+                                                                     ]
+                                                   },
+                                                   {
+                                                       "title":  "2D Matrix Codes (Encode)",
+                                                       "id":  "MatrixCodeBenchmarks",
+                                                       "scenarios":  [
+                                                                         {
+                                                                             "allocated":  "18.24 KB",
+                                                                             "name":  "Data Matrix PNG (medium)",
+                                                                             "mean":  "205.20 μs",
+                                                                             "meanNs":  205200
+                                                                         },
+                                                                         {
+                                                                             "allocated":  "36.45 KB",
+                                                                             "name":  "Data Matrix PNG (long)",
+                                                                             "mean":  "417.93 μs",
+                                                                             "meanNs":  417930
+                                                                         },
+                                                                         {
+                                                                             "allocated":  "12.81 KB",
+                                                                             "name":  "Data Matrix SVG",
+                                                                             "mean":  "66.73 μs",
+                                                                             "meanNs":  66730
+                                                                         },
+                                                                         {
+                                                                             "allocated":  "82.16 KB",
+                                                                             "name":  "PDF417 PNG",
+                                                                             "mean":  "1,323.63 μs",
+                                                                             "meanNs":  1323630
+                                                                         },
+                                                                         {
+                                                                             "allocated":  "65.05 KB",
+                                                                             "name":  "PDF417 SVG",
+                                                                             "mean":  "3,434.90 μs",
+                                                                             "meanNs":  3434900
+                                                                         },
+                                                                         {
+                                                                             "allocated":  "65.46 KB",
+                                                                             "name":  "Aztec PNG",
+                                                                             "mean":  "299.97 μs",
+                                                                             "meanNs":  299970
+                                                                         },
+                                                                         {
+                                                                             "allocated":  "60.41 KB",
+                                                                             "name":  "Aztec SVG",
+                                                                             "mean":  "116.77 μs",
+                                                                             "meanNs":  116770
+                                                                         }
+                                                                     ]
+                                                   },
+                                                   {
+                                                       "title":  "QR (Encode)",
+                                                       "id":  "QrCodeBenchmarks",
+                                                       "scenarios":  [
+                                                                         {
+                                                                             "allocated":  "13.33 KB",
+                                                                             "name":  "QR PNG (short text)",
+                                                                             "mean":  "682.1 μs",
+                                                                             "meanNs":  682100
+                                                                         },
+                                                                         {
+                                                                             "allocated":  "22.44 KB",
+                                                                             "name":  "QR PNG (medium text)",
+                                                                             "mean":  "683.9 μs",
+                                                                             "meanNs":  683900
+                                                                         },
+                                                                         {
+                                                                             "allocated":  "68.91 KB",
+                                                                             "name":  "QR PNG (long text)",
+                                                                             "mean":  "3,107.3 μs",
+                                                                             "meanNs":  3107300
+                                                                         },
+                                                                         {
+                                                                             "allocated":  "18.91 KB",
+                                                                             "name":  "QR SVG (medium text)",
+                                                                             "mean":  "768.4 μs",
+                                                                             "meanNs":  768400
+                                                                         },
+                                                                         {
+                                                                             "allocated":  "36.59 KB",
+                                                                             "name":  "QR PNG High Error Correction",
+                                                                             "mean":  "1,080.5 μs",
+                                                                             "meanNs":  1080500
+                                                                         },
+                                                                         {
+                                                                             "allocated":  "136.3 KB",
+                                                                             "name":  "QR HTML (medium text)",
+                                                                             "mean":  "659.4 μs",
+                                                                             "meanNs":  659400
+                                                                         }
+                                                                     ]
+                                                   },
+                                                   {
                                                        "title":  "QR (Decode)",
                                                        "id":  "QrDecodeBenchmarks",
                                                        "scenarios":  [
                                                                          {
-                                                                             "allocated":  "5.27 KB",
+                                                                             "allocated":  "134.05 KB",
                                                                              "name":  "QR Decode (clean, fast)",
-                                                                             "mean":  "1,915.2 μs",
-                                                                             "meanNs":  1915200
+                                                                             "mean":  "2,435.1 μs",
+                                                                             "meanNs":  2435100
                                                                          },
                                                                          {
-                                                                             "allocated":  "5.27 KB",
+                                                                             "allocated":  "134.05 KB",
                                                                              "name":  "QR Decode (clean, balanced)",
-                                                                             "mean":  "1,755.2 μs",
-                                                                             "meanNs":  1755200
+                                                                             "mean":  "2,365.1 μs",
+                                                                             "meanNs":  2365100
                                                                          },
                                                                          {
-                                                                             "allocated":  "5.27 KB",
+                                                                             "allocated":  "134.05 KB",
                                                                              "name":  "QR Decode (clean, robust)",
-                                                                             "mean":  "1,887.9 μs",
-                                                                             "meanNs":  1887900
+                                                                             "mean":  "2,176.2 μs",
+                                                                             "meanNs":  2176200
                                                                          },
                                                                          {
-                                                                             "allocated":  "5.45 KB",
+                                                                             "allocated":  "1030.23 KB",
                                                                              "name":  "QR Decode (noisy, robust)",
-                                                                             "mean":  "4,963.9 μs",
-                                                                             "meanNs":  4963900
+                                                                             "mean":  "4,844.7 μs",
+                                                                             "meanNs":  4844700
                                                                          },
                                                                          {
-                                                                             "allocated":  "5.27 KB",
+                                                                             "allocated":  "2054.05 KB",
                                                                              "name":  "QR Decode (screenshot, balanced)",
-                                                                             "mean":  "10,142.4 μs",
-                                                                             "meanNs":  10142400
+                                                                             "mean":  "8,139.2 μs",
+                                                                             "meanNs":  8139200
                                                                          },
                                                                          {
-                                                                             "allocated":  "1.32 KB",
+                                                                             "allocated":  "146.34 KB",
                                                                              "name":  "QR Decode (antialias, robust)",
-                                                                             "mean":  "431.1 μs",
-                                                                             "meanNs":  431100
+                                                                             "mean":  "558.0 μs",
+                                                                             "meanNs":  558000
+                                                                         }
+                                                                     ]
+                                                   },
+                                                   {
+                                                       "title":  "QrPipelineBenchmarks",
+                                                       "id":  "QrPipelineBenchmarks",
+                                                       "scenarios":  [
+                                                                         {
+                                                                             "allocated":  "832 B",
+                                                                             "name":  "QR Encode (short text)",
+                                                                             "mean":  "353.33 μs",
+                                                                             "meanNs":  353330
+                                                                         },
+                                                                         {
+                                                                             "allocated":  "1184 B",
+                                                                             "name":  "QR Encode (medium text)",
+                                                                             "mean":  "911.53 μs",
+                                                                             "meanNs":  911530
+                                                                         },
+                                                                         {
+                                                                             "allocated":  "2648 B",
+                                                                             "name":  "QR Encode (long text)",
+                                                                             "mean":  "1,909.57 μs",
+                                                                             "meanNs":  1909570
+                                                                         },
+                                                                         {
+                                                                             "allocated":  "12744 B",
+                                                                             "name":  "QR Render PNG (short, pre-encoded)",
+                                                                             "mean":  "193.93 μs",
+                                                                             "meanNs":  193930
+                                                                         },
+                                                                         {
+                                                                             "allocated":  "21720 B",
+                                                                             "name":  "QR Render PNG (medium, pre-encoded)",
+                                                                             "mean":  "62.03 μs",
+                                                                             "meanNs":  62030
+                                                                         },
+                                                                         {
+                                                                             "allocated":  "67848 B",
+                                                                             "name":  "QR Render PNG (long, pre-encoded)",
+                                                                             "mean":  "908.43 μs",
+                                                                             "meanNs":  908430
+                                                                         },
+                                                                         {
+                                                                             "allocated":  "122176 B",
+                                                                             "name":  "QR Render Pixels (short, pre-encoded)",
+                                                                             "mean":  "37.40 μs",
+                                                                             "meanNs":  37400
+                                                                         },
+                                                                         {
+                                                                             "allocated":  "198208 B",
+                                                                             "name":  "QR Render Pixels (medium, pre-encoded)",
+                                                                             "mean":  "56.47 μs",
+                                                                             "meanNs":  56470
+                                                                         },
+                                                                         {
+                                                                             "allocated":  "537920 B",
+                                                                             "name":  "QR Render Pixels (long, pre-encoded)",
+                                                                             "mean":  "1,040.40 μs",
+                                                                             "meanNs":  1040400.0000000001
                                                                          }
                                                                      ]
                                                    }
                                                ],
                                   "missingComparisons":  [
-                                                             "Aztec (Encode)",
-                                                             "Code 128 (Encode)",
-                                                             "Code 39 (Encode)",
-                                                             "Code 93 (Encode)",
-                                                             "Data Matrix (Encode)",
-                                                             "EAN-13 (Encode)",
-                                                             "PDF417 (Encode)",
-                                                             "QR (Encode)",
-                                                             "UPC-A (Encode)"
+
                                                          ],
                                   "notes":  [
                                                 "Run mode: Quick (warmupCount=1, iterationCount=3, invocationCount=1).",
@@ -116,7 +576,7 @@
                                                 "QR decode comparisons use raw RGBA32 bytes (ZXing via RGBLuminanceSource).",
                                                 "QR decode clean uses CodeGlyphX Balanced; noisy uses CodeGlyphX Robust with aggressive sampling/limits; ZXing uses default (clean) and TryHarder (noisy)."
                                             ],
-                                  "generatedUtc":  "2026-01-23T21:23:16.3123882Z",
+                                  "generatedUtc":  "2026-01-24T08:09:37.6622515Z",
                                   "meta":  {
                                                "commit":  null,
                                                "branch":  null,
@@ -139,80 +599,392 @@
                                                     "Δ lines in comparison tables show vendor ratios vs CodeGlyphX (time / alloc).",
                                                     "Quick runs use fewer iterations for fast feedback; Full runs use BenchmarkDotNet defaults and are recommended for publishing."
                                                 ],
-                                  "artifacts":  ".\\Build\\BenchmarkResults\\windows-20260123-204729",
+                                  "artifacts":  "Build\\BenchmarkResults\\windows-20260123-225838",
                                   "missingComparisonIds":  [
-                                                               "AztecCompareBenchmarks",
-                                                               "Code128CompareBenchmarks",
-                                                               "Code39CompareBenchmarks",
-                                                               "Code93CompareBenchmarks",
-                                                               "DataMatrixCompareBenchmarks",
-                                                               "EanCompareBenchmarks",
-                                                               "Pdf417CompareBenchmarks",
-                                                               "QrCompareBenchmarks",
-                                                               "UpcACompareBenchmarks"
+
                                                            ],
                                   "publish":  false,
                                   "runMode":  "quick",
                                   "schemaVersion":  1,
                                   "summary":  [
                                                   {
-                                                      "rating":  "ok",
-                                                      "codeGlyphXAlloc":  "5.27 KB",
+                                                      "rating":  "good",
+                                                      "codeGlyphXAlloc":  "65.41 KB",
                                                       "deltas":  {
-                                                                     "Barcoder":  "",
-                                                                     "ZXing.Net":  "Δ 0.72 x / 24.23 x",
+                                                                     "Barcoder":  "Δ 36.67 x / 15.27 x",
+                                                                     "ZXing.Net":  "Δ 8.81 x / 4.43 x",
                                                                      "QRCoder":  ""
                                                                  },
-                                                      "codeGlyphXAllocVsFastest":  0.04,
+                                                      "codeGlyphXAllocVsFastest":  1,
+                                                      "fastestVendor":  "CodeGlyphX",
+                                                      "benchmark":  "Aztec (Encode)",
+                                                      "codeGlyphXVsFastestText":  "1 x (fastest)",
+                                                      "codeGlyphXMean":  "220.1 μs",
+                                                      "scenario":  "Aztec PNG",
+                                                      "fastestMean":  "220.1 μs",
+                                                      "codeGlyphXAllocVsFastestText":  "1 x",
+                                                      "codeGlyphXVsFastest":  1,
+                                                      "vendors":  {
+                                                                      "Barcoder":  {
+                                                                                       "allocated":  "998.83 KB",
+                                                                                       "mean":  "8,071.5 μs",
+                                                                                       "meanNs":  8071500
+                                                                                   },
+                                                                      "CodeGlyphX":  {
+                                                                                         "allocated":  "65.41 KB",
+                                                                                         "mean":  "220.1 μs",
+                                                                                         "meanNs":  220100
+                                                                                     },
+                                                                      "ZXing.Net":  {
+                                                                                        "allocated":  "289.63 KB",
+                                                                                        "mean":  "1,939.3 μs",
+                                                                                        "meanNs":  1939300
+                                                                                    }
+                                                                  }
+                                                  },
+                                                  {
+                                                      "rating":  "good",
+                                                      "codeGlyphXAlloc":  "22.54 KB",
+                                                      "deltas":  {
+                                                                     "Barcoder":  "Δ 331.37 x / 100.42 x",
+                                                                     "ZXing.Net":  "Δ 13.48 x / 16.5 x",
+                                                                     "QRCoder":  ""
+                                                                 },
+                                                      "codeGlyphXAllocVsFastest":  1,
+                                                      "fastestVendor":  "CodeGlyphX",
+                                                      "benchmark":  "Code 128 (Encode)",
+                                                      "codeGlyphXVsFastestText":  "1 x (fastest)",
+                                                      "codeGlyphXMean":  "164.1 μs",
+                                                      "scenario":  "Code128 PNG",
+                                                      "fastestMean":  "164.1 μs",
+                                                      "codeGlyphXAllocVsFastestText":  "1 x",
+                                                      "codeGlyphXVsFastest":  1,
+                                                      "vendors":  {
+                                                                      "Barcoder":  {
+                                                                                       "allocated":  "2263.41 KB",
+                                                                                       "mean":  "54,378.4 μs",
+                                                                                       "meanNs":  54378400
+                                                                                   },
+                                                                      "CodeGlyphX":  {
+                                                                                         "allocated":  "22.54 KB",
+                                                                                         "mean":  "164.1 μs",
+                                                                                         "meanNs":  164100
+                                                                                     },
+                                                                      "ZXing.Net":  {
+                                                                                        "allocated":  "371.95 KB",
+                                                                                        "mean":  "2,211.9 μs",
+                                                                                        "meanNs":  2211900
+                                                                                    }
+                                                                  }
+                                                  },
+                                                  {
+                                                      "rating":  "good",
+                                                      "codeGlyphXAlloc":  "14.13 KB",
+                                                      "deltas":  {
+                                                                     "Barcoder":  "Δ 240.11 x / 118.67 x",
+                                                                     "ZXing.Net":  "Δ 9.82 x / 17.02 x",
+                                                                     "QRCoder":  ""
+                                                                 },
+                                                      "codeGlyphXAllocVsFastest":  1,
+                                                      "fastestVendor":  "CodeGlyphX",
+                                                      "benchmark":  "Code 39 (Encode)",
+                                                      "codeGlyphXVsFastestText":  "1 x (fastest)",
+                                                      "codeGlyphXMean":  "180.3 μs",
+                                                      "scenario":  "Code39 PNG",
+                                                      "fastestMean":  "180.3 μs",
+                                                      "codeGlyphXAllocVsFastestText":  "1 x",
+                                                      "codeGlyphXVsFastest":  1,
+                                                      "vendors":  {
+                                                                      "Barcoder":  {
+                                                                                       "allocated":  "1676.85 KB",
+                                                                                       "mean":  "43,291.1 μs",
+                                                                                       "meanNs":  43291100
+                                                                                   },
+                                                                      "CodeGlyphX":  {
+                                                                                         "allocated":  "14.13 KB",
+                                                                                         "mean":  "180.3 μs",
+                                                                                         "meanNs":  180300
+                                                                                     },
+                                                                      "ZXing.Net":  {
+                                                                                        "allocated":  "240.48 KB",
+                                                                                        "mean":  "1,771.1 μs",
+                                                                                        "meanNs":  1771100
+                                                                                    }
+                                                                  }
+                                                  },
+                                                  {
+                                                      "rating":  "good",
+                                                      "codeGlyphXAlloc":  "12.24 KB",
+                                                      "deltas":  {
+                                                                     "Barcoder":  "Δ 166.06 x / 96.85 x",
+                                                                     "ZXing.Net":  "Δ 7.43 x / 19.6 x",
+                                                                     "QRCoder":  ""
+                                                                 },
+                                                      "codeGlyphXAllocVsFastest":  1,
+                                                      "fastestVendor":  "CodeGlyphX",
+                                                      "benchmark":  "Code 93 (Encode)",
+                                                      "codeGlyphXVsFastestText":  "1 x (fastest)",
+                                                      "codeGlyphXMean":  "174.5 μs",
+                                                      "scenario":  "Code93 PNG",
+                                                      "fastestMean":  "174.5 μs",
+                                                      "codeGlyphXAllocVsFastestText":  "1 x",
+                                                      "codeGlyphXVsFastest":  1,
+                                                      "vendors":  {
+                                                                      "Barcoder":  {
+                                                                                       "allocated":  "1185.5 KB",
+                                                                                       "mean":  "28,977.2 μs",
+                                                                                       "meanNs":  28977200
+                                                                                   },
+                                                                      "CodeGlyphX":  {
+                                                                                         "allocated":  "12.24 KB",
+                                                                                         "mean":  "174.5 μs",
+                                                                                         "meanNs":  174500
+                                                                                     },
+                                                                      "ZXing.Net":  {
+                                                                                        "allocated":  "239.91 KB",
+                                                                                        "mean":  "1,295.9 μs",
+                                                                                        "meanNs":  1295900
+                                                                                    }
+                                                                  }
+                                                  },
+                                                  {
+                                                      "rating":  "good",
+                                                      "codeGlyphXAlloc":  "19.6 KB",
+                                                      "deltas":  {
+                                                                     "Barcoder":  "Δ 44.74 x / 51.08 x",
+                                                                     "ZXing.Net":  "Δ 9.58 x / 12.78 x",
+                                                                     "QRCoder":  ""
+                                                                 },
+                                                      "codeGlyphXAllocVsFastest":  1,
+                                                      "fastestVendor":  "CodeGlyphX",
+                                                      "benchmark":  "Data Matrix (Encode)",
+                                                      "codeGlyphXVsFastestText":  "1 x (fastest)",
+                                                      "codeGlyphXMean":  "230.9 μs",
+                                                      "scenario":  "Data Matrix PNG (medium)",
+                                                      "fastestMean":  "230.9 μs",
+                                                      "codeGlyphXAllocVsFastestText":  "1 x",
+                                                      "codeGlyphXVsFastest":  1,
+                                                      "vendors":  {
+                                                                      "Barcoder":  {
+                                                                                       "allocated":  "1001.25 KB",
+                                                                                       "mean":  "10,329.6 μs",
+                                                                                       "meanNs":  10329600
+                                                                                   },
+                                                                      "CodeGlyphX":  {
+                                                                                         "allocated":  "19.6 KB",
+                                                                                         "mean":  "230.9 μs",
+                                                                                         "meanNs":  230900
+                                                                                     },
+                                                                      "ZXing.Net":  {
+                                                                                        "allocated":  "250.52 KB",
+                                                                                        "mean":  "2,211.2 μs",
+                                                                                        "meanNs":  2211200
+                                                                                    }
+                                                                  }
+                                                  },
+                                                  {
+                                                      "rating":  "good",
+                                                      "codeGlyphXAlloc":  "10.92 KB",
+                                                      "deltas":  {
+                                                                     "Barcoder":  "Δ 136.95 x / 87.09 x",
+                                                                     "ZXing.Net":  "Δ 5.76 x / 21.97 x",
+                                                                     "QRCoder":  ""
+                                                                 },
+                                                      "codeGlyphXAllocVsFastest":  1,
+                                                      "fastestVendor":  "CodeGlyphX",
+                                                      "benchmark":  "EAN-13 (Encode)",
+                                                      "codeGlyphXVsFastestText":  "1 x (fastest)",
+                                                      "codeGlyphXMean":  "193.4 μs",
+                                                      "scenario":  "EAN-13 PNG",
+                                                      "fastestMean":  "193.4 μs",
+                                                      "codeGlyphXAllocVsFastestText":  "1 x",
+                                                      "codeGlyphXVsFastest":  1,
+                                                      "vendors":  {
+                                                                      "Barcoder":  {
+                                                                                       "allocated":  "951.05 KB",
+                                                                                       "mean":  "26,486.2 μs",
+                                                                                       "meanNs":  26486200
+                                                                                   },
+                                                                      "CodeGlyphX":  {
+                                                                                         "allocated":  "10.92 KB",
+                                                                                         "mean":  "193.4 μs",
+                                                                                         "meanNs":  193400
+                                                                                     },
+                                                                      "ZXing.Net":  {
+                                                                                        "allocated":  "239.88 KB",
+                                                                                        "mean":  "1,114.3 μs",
+                                                                                        "meanNs":  1114300
+                                                                                    }
+                                                                  }
+                                                  },
+                                                  {
+                                                      "rating":  "good",
+                                                      "codeGlyphXAlloc":  "82.07 KB",
+                                                      "deltas":  {
+                                                                     "Barcoder":  "Δ 37.61 x / 68.43 x",
+                                                                     "ZXing.Net":  "Δ 4.83 x / 16.28 x",
+                                                                     "QRCoder":  ""
+                                                                 },
+                                                      "codeGlyphXAllocVsFastest":  1,
+                                                      "fastestVendor":  "CodeGlyphX",
+                                                      "benchmark":  "PDF417 (Encode)",
+                                                      "codeGlyphXVsFastestText":  "1 x (fastest)",
+                                                      "codeGlyphXMean":  "1.491 ms",
+                                                      "scenario":  "PDF417 PNG",
+                                                      "fastestMean":  "1.491 ms",
+                                                      "codeGlyphXAllocVsFastestText":  "1 x",
+                                                      "codeGlyphXVsFastest":  1,
+                                                      "vendors":  {
+                                                                      "Barcoder":  {
+                                                                                       "allocated":  "5616.22 KB",
+                                                                                       "mean":  "56.081 ms",
+                                                                                       "meanNs":  56081000
+                                                                                   },
+                                                                      "CodeGlyphX":  {
+                                                                                         "allocated":  "82.07 KB",
+                                                                                         "mean":  "1.491 ms",
+                                                                                         "meanNs":  1491000
+                                                                                     },
+                                                                      "ZXing.Net":  {
+                                                                                        "allocated":  "1335.86 KB",
+                                                                                        "mean":  "7.206 ms",
+                                                                                        "meanNs":  7206000
+                                                                                    }
+                                                                  }
+                                                  },
+                                                  {
+                                                      "rating":  "good",
+                                                      "codeGlyphXAlloc":  "22.27 KB",
+                                                      "deltas":  {
+                                                                     "Barcoder":  "Δ 21.39 x / 85.48 x",
+                                                                     "ZXing.Net":  "Δ 5.89 x / 19.56 x",
+                                                                     "QRCoder":  "Δ 1.29 x / 0.73 x"
+                                                                 },
+                                                      "codeGlyphXAllocVsFastest":  1,
+                                                      "fastestVendor":  "CodeGlyphX",
+                                                      "benchmark":  "QR (Encode)",
+                                                      "codeGlyphXVsFastestText":  "1 x (fastest)",
+                                                      "codeGlyphXMean":  "750.7 μs",
+                                                      "scenario":  "QR PNG (medium)",
+                                                      "fastestMean":  "750.7 μs",
+                                                      "codeGlyphXAllocVsFastestText":  "1 x",
+                                                      "codeGlyphXVsFastest":  1,
+                                                      "vendors":  {
+                                                                      "Barcoder":  {
+                                                                                       "allocated":  "1903.56 KB",
+                                                                                       "mean":  "16,056.4 μs",
+                                                                                       "meanNs":  16056400
+                                                                                   },
+                                                                      "CodeGlyphX":  {
+                                                                                         "allocated":  "22.27 KB",
+                                                                                         "mean":  "750.7 μs",
+                                                                                         "meanNs":  750700
+                                                                                     },
+                                                                      "ZXing.Net":  {
+                                                                                        "allocated":  "435.62 KB",
+                                                                                        "mean":  "4,424.8 μs",
+                                                                                        "meanNs":  4424800
+                                                                                    },
+                                                                      "QRCoder":  {
+                                                                                      "allocated":  "16.34 KB",
+                                                                                      "mean":  "967.5 μs",
+                                                                                      "meanNs":  967500
+                                                                                  }
+                                                                  }
+                                                  },
+                                                  {
+                                                      "rating":  "good",
+                                                      "codeGlyphXAlloc":  "134.05 KB",
+                                                      "deltas":  {
+                                                                     "Barcoder":  "",
+                                                                     "ZXing.Net":  "Δ 0.95 x / 0.95 x",
+                                                                     "QRCoder":  ""
+                                                                 },
+                                                      "codeGlyphXAllocVsFastest":  1.05,
                                                       "fastestVendor":  "ZXing.Net",
                                                       "benchmark":  "QR Decode (Clean)",
-                                                      "codeGlyphXVsFastestText":  "1.4 x",
-                                                      "codeGlyphXMean":  "2.626 ms",
+                                                      "codeGlyphXVsFastestText":  "1.05 x",
+                                                      "codeGlyphXMean":  "2.044 ms",
                                                       "scenario":  "QR Decode (clean)",
-                                                      "fastestMean":  "1.878 ms",
-                                                      "codeGlyphXAllocVsFastestText":  "0.04 x",
-                                                      "codeGlyphXVsFastest":  1.4,
+                                                      "fastestMean":  "1.951 ms",
+                                                      "codeGlyphXAllocVsFastestText":  "1.05 x",
+                                                      "codeGlyphXVsFastest":  1.05,
                                                       "vendors":  {
                                                                       "ZXing.Net":  {
                                                                                         "allocated":  "127.67 KB",
-                                                                                        "mean":  "1.878 ms",
-                                                                                        "meanNs":  1878000
+                                                                                        "mean":  "1.951 ms",
+                                                                                        "meanNs":  1951000
                                                                                     },
                                                                       "CodeGlyphX":  {
-                                                                                         "allocated":  "5.27 KB",
-                                                                                         "mean":  "2.626 ms",
-                                                                                         "meanNs":  2626000
+                                                                                         "allocated":  "134.05 KB",
+                                                                                         "mean":  "2.044 ms",
+                                                                                         "meanNs":  2044000
                                                                                      }
                                                                   }
                                                   },
                                                   {
-                                                      "rating":  "bad",
-                                                      "codeGlyphXAlloc":  "5.45 KB",
+                                                      "rating":  "good",
+                                                      "codeGlyphXAlloc":  "1030.23 KB",
                                                       "deltas":  {
                                                                      "Barcoder":  "",
-                                                                     "ZXing.Net":  "Δ 0.58 x / 129.7 x",
+                                                                     "ZXing.Net":  "Δ 1.06 x / 0.69 x",
                                                                      "QRCoder":  ""
                                                                  },
-                                                      "codeGlyphXAllocVsFastest":  0.01,
-                                                      "fastestVendor":  "ZXing.Net",
+                                                      "codeGlyphXAllocVsFastest":  1,
+                                                      "fastestVendor":  "CodeGlyphX",
                                                       "benchmark":  "QR Decode (Noisy)",
-                                                      "codeGlyphXVsFastestText":  "1.71 x",
-                                                      "codeGlyphXMean":  "6.385 ms",
+                                                      "codeGlyphXVsFastestText":  "1 x (fastest)",
+                                                      "codeGlyphXMean":  "4.308 ms",
                                                       "scenario":  "QR Decode (noisy)",
-                                                      "fastestMean":  "3.735 ms",
-                                                      "codeGlyphXAllocVsFastestText":  "0.01 x",
-                                                      "codeGlyphXVsFastest":  1.71,
+                                                      "fastestMean":  "4.308 ms",
+                                                      "codeGlyphXAllocVsFastestText":  "1 x",
+                                                      "codeGlyphXVsFastest":  1,
                                                       "vendors":  {
                                                                       "ZXing.Net":  {
                                                                                         "allocated":  "706.89 KB",
-                                                                                        "mean":  "3.735 ms",
-                                                                                        "meanNs":  3735000
+                                                                                        "mean":  "4.582 ms",
+                                                                                        "meanNs":  4582000
                                                                                     },
                                                                       "CodeGlyphX":  {
-                                                                                         "allocated":  "5.45 KB",
-                                                                                         "mean":  "6.385 ms",
-                                                                                         "meanNs":  6385000
+                                                                                         "allocated":  "1030.23 KB",
+                                                                                         "mean":  "4.308 ms",
+                                                                                         "meanNs":  4308000
                                                                                      }
+                                                                  }
+                                                  },
+                                                  {
+                                                      "rating":  "good",
+                                                      "codeGlyphXAlloc":  "11.23 KB",
+                                                      "deltas":  {
+                                                                     "Barcoder":  "Δ 99 x / 77.12 x",
+                                                                     "ZXing.Net":  "Δ 5.69 x / 21.37 x",
+                                                                     "QRCoder":  ""
+                                                                 },
+                                                      "codeGlyphXAllocVsFastest":  1,
+                                                      "fastestVendor":  "CodeGlyphX",
+                                                      "benchmark":  "UPC-A (Encode)",
+                                                      "codeGlyphXVsFastestText":  "1 x (fastest)",
+                                                      "codeGlyphXMean":  "247.0 μs",
+                                                      "scenario":  "UPC-A PNG",
+                                                      "fastestMean":  "247.0 μs",
+                                                      "codeGlyphXAllocVsFastestText":  "1 x",
+                                                      "codeGlyphXVsFastest":  1,
+                                                      "vendors":  {
+                                                                      "Barcoder":  {
+                                                                                       "allocated":  "866.11 KB",
+                                                                                       "mean":  "24,452.9 μs",
+                                                                                       "meanNs":  24452900
+                                                                                   },
+                                                                      "CodeGlyphX":  {
+                                                                                         "allocated":  "11.23 KB",
+                                                                                         "mean":  "247.0 μs",
+                                                                                         "meanNs":  247000
+                                                                                     },
+                                                                      "ZXing.Net":  {
+                                                                                        "allocated":  "239.95 KB",
+                                                                                        "mean":  "1,406.6 μs",
+                                                                                        "meanNs":  1406600
+                                                                                    }
                                                                   }
                                                   }
                                               ],
@@ -724,7 +1496,7 @@
                                                "QR decode comparisons use raw RGBA32 bytes (ZXing via RGBLuminanceSource).",
                                                "QR decode clean uses CodeGlyphX Balanced; noisy uses CodeGlyphX Robust with aggressive sampling/limits; ZXing uses default (clean) and TryHarder (noisy)."
                                            ],
-                                 "generatedUtc":  "2026-01-23T21:23:33.8459560Z",
+                                 "generatedUtc":  "2026-01-24T08:09:44.7901106Z",
                                  "meta":  {
                                               "commit":  null,
                                               "branch":  null,
@@ -747,7 +1519,7 @@
                                                    "Δ lines in comparison tables show vendor ratios vs CodeGlyphX (time / alloc).",
                                                    "Quick runs use fewer iterations for fast feedback; Full runs use BenchmarkDotNet defaults and are recommended for publishing."
                                                ],
-                                 "artifacts":  ".\\Build\\BenchmarkResults\\windows-20260122-155044",
+                                 "artifacts":  "Build\\BenchmarkResults\\windows-20260122-155044",
                                  "missingComparisonIds":  [
 
                                                           ],

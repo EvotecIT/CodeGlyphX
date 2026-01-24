@@ -1450,16 +1450,42 @@ internal static class QrPixelSampling {
         var threshold = image.Threshold;
         var startY = sy - (2 * d);
         var startX = sx - (2 * d);
-        var px0 = ClampRound(startX, maxX);
-        var px1 = ClampRound(startX + d, maxX);
-        var px2 = ClampRound(startX + d * 2, maxX);
-        var px3 = ClampRound(startX + d * 3, maxX);
-        var px4 = ClampRound(startX + d * 4, maxX);
-        var py0 = ClampRound(startY, maxY);
-        var py1 = ClampRound(startY + d, maxY);
-        var py2 = ClampRound(startY + d * 2, maxY);
-        var py3 = ClampRound(startY + d * 3, maxY);
-        var py4 = ClampRound(startY + d * 4, maxY);
+        var endX = startX + d * 4;
+        var endY = startY + d * 4;
+        var inBounds = startX >= -0.5 && endX < maxX + 0.5 && startY >= -0.5 && endY < maxY + 0.5;
+        int px0;
+        int px1;
+        int px2;
+        int px3;
+        int px4;
+        int py0;
+        int py1;
+        int py2;
+        int py3;
+        int py4;
+        if (inBounds) {
+            px0 = QrMath.RoundToInt(startX);
+            px1 = QrMath.RoundToInt(startX + d);
+            px2 = QrMath.RoundToInt(startX + d * 2);
+            px3 = QrMath.RoundToInt(startX + d * 3);
+            px4 = QrMath.RoundToInt(endX);
+            py0 = QrMath.RoundToInt(startY);
+            py1 = QrMath.RoundToInt(startY + d);
+            py2 = QrMath.RoundToInt(startY + d * 2);
+            py3 = QrMath.RoundToInt(startY + d * 3);
+            py4 = QrMath.RoundToInt(endY);
+        } else {
+            px0 = ClampRound(startX, maxX);
+            px1 = ClampRound(startX + d, maxX);
+            px2 = ClampRound(startX + d * 2, maxX);
+            px3 = ClampRound(startX + d * 3, maxX);
+            px4 = ClampRound(endX, maxX);
+            py0 = ClampRound(startY, maxY);
+            py1 = ClampRound(startY + d, maxY);
+            py2 = ClampRound(startY + d * 2, maxY);
+            py3 = ClampRound(startY + d * 3, maxY);
+            py4 = ClampRound(endY, maxY);
+        }
         Span<int> rows = stackalloc int[5];
         rows[0] = py0 * width;
         rows[1] = py1 * width;
@@ -1648,12 +1674,30 @@ internal static class QrPixelSampling {
         var threshold = image.Threshold;
         var startY = sy - d;
         var startX = sx - d;
-        var px0 = ClampRound(startX, maxX);
-        var px1 = ClampRound(startX + d, maxX);
-        var px2 = ClampRound(startX + d * 2, maxX);
-        var py0 = ClampRound(startY, maxY);
-        var py1 = ClampRound(startY + d, maxY);
-        var py2 = ClampRound(startY + d * 2, maxY);
+        var endX = startX + d * 2;
+        var endY = startY + d * 2;
+        var inBounds = startX >= -0.5 && endX < maxX + 0.5 && startY >= -0.5 && endY < maxY + 0.5;
+        int px0;
+        int px1;
+        int px2;
+        int py0;
+        int py1;
+        int py2;
+        if (inBounds) {
+            px0 = QrMath.RoundToInt(startX);
+            px1 = QrMath.RoundToInt(startX + d);
+            px2 = QrMath.RoundToInt(endX);
+            py0 = QrMath.RoundToInt(startY);
+            py1 = QrMath.RoundToInt(startY + d);
+            py2 = QrMath.RoundToInt(endY);
+        } else {
+            px0 = ClampRound(startX, maxX);
+            px1 = ClampRound(startX + d, maxX);
+            px2 = ClampRound(endX, maxX);
+            py0 = ClampRound(startY, maxY);
+            py1 = ClampRound(startY + d, maxY);
+            py2 = ClampRound(endY, maxY);
+        }
         var row0 = py0 * width;
         var row1 = py1 * width;
         var row2 = py2 * width;
@@ -1849,8 +1893,10 @@ internal static class QrPixelSampling {
                 if (gray[idx] > thresholdMap[idx]) black++;
             }
         }
+
         return black >= required;
     }
+
 
     internal static double GetSampleDeltaForModule(double moduleSizePx) => GetSampleDelta(moduleSizePx);
 
@@ -1903,12 +1949,14 @@ internal static class QrPixelSampling {
         return d;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static int ClampRound(double value, int max) {
         var v = QrMath.RoundToInt(value);
         if ((uint)v > (uint)max) return v < 0 ? 0 : max;
         return v;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static byte SampleLumaBilinear(QrGrayImage image, double x, double y) {
         var width = image.Width;
         var height = image.Height;
@@ -1993,6 +2041,7 @@ internal static class QrPixelSampling {
         return (byte)rounded;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static void SampleLumaThresholdBilinear(QrGrayImage image, double x, double y, out byte lum, out byte threshold) {
         var width = image.Width;
         var height = image.Height;
@@ -2119,6 +2168,7 @@ internal static class QrPixelSampling {
         threshold = (byte)thrRounded;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static byte SampleThresholdBilinear(QrGrayImage image, double x, double y) {
         if (image.ThresholdMap is null) return image.Threshold;
 
