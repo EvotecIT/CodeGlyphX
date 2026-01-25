@@ -1,0 +1,9 @@
+{
+  "links": [
+    { "href": "/", "text": "Home" },
+    { "href": "/playground/", "text": "Playground" },
+    { "href": "/docs/", "text": "Docs" },
+    { "href": "/benchmarks/", "text": "Benchmarks" },
+    { "href": "/showcase/", "text": "Showcase" }
+  ]
+}

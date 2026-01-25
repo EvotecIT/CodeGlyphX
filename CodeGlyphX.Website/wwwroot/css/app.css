@@ -2407,6 +2407,7 @@ body.using-keyboard .docs-static h1:focus-visible {
 main, .main {
     flex: 1;
     padding: 2rem;
+    padding-top: calc(2rem + var(--header-height));
     width: 100%;
     max-width: 100vw;
     min-width: 0;
