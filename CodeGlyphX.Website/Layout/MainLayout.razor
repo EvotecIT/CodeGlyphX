@@ -1,12 +1,18 @@
 @inherits LayoutComponentBase
 @implements IDisposable
+@using Microsoft.AspNetCore.Components.Routing
+@using Microsoft.Extensions.Logging
+@using System.Net.Http.Json
+@using System.Text.Json
+@inject ILogger<MainLayout> Logger
+@inject HttpClient Http
 @inject IJSRuntime JS
 @inject NavigationManager Nav
 
 <div class="page">
     <header class="header">
         <div class="header-content">
-            <a href="/" class="brand" @onclick="GoHome" @onclick:preventDefault="true">
+            <a href="/" class="brand" @onclick="@(() => Navigate("/"))" @onclick:preventDefault="true">
                 <div class="brand-icon">
                     <img src="codeglyphx-qr-icon.png" alt="CodeGlyphX logo" width="28" height="28" />
                 </div>
@@ -22,11 +28,21 @@
 
             <nav class="nav @(_navOpen ? "nav-open" : "")">
                 <div class="nav-links">
-                    <a href="/" @onclick="GoHome" @onclick:preventDefault="true">Home</a>
-                    <a href="/playground/" @onclick="GoPlayground" @onclick:preventDefault="true">Playground</a>
-                    <a href="/docs/" @onclick="GoDocs" @onclick:preventDefault="true">Docs</a>
-                    <a href="/benchmarks/">Benchmarks</a>
-                    <a href="/showcase/" @onclick="GoShowcase" @onclick:preventDefault="true">Showcase</a>
+                    @foreach (var link in PrimaryLinks)
+                    {
+                        if (link.Spa)
+                        {
+                            <a href="@link.Href" @onclick="() => Navigate(link.Href)" @onclick:preventDefault="true">@link.Text</a>
+                        }
+                        else if (IsExternal(link.Href))
+                        {
+                            <a href="@link.Href" target="_blank" rel="noopener">@link.Text</a>
+                        }
+                        else
+                        {
+                            <a href="@link.Href">@link.Text</a>
+                        }
+                    }
                 </div>
                 <div class="nav-actions">
                     <a href="https://github.com/EvotecIT/CodeGlyphX" target="_blank" rel="noopener" class="nav-icon" title="GitHub" aria-label="GitHub">
@@ -81,23 +97,45 @@
             <div class="footer-links">
                 <div class="footer-section">
                     <h3>Product</h3>
-                    <a href="/">Home</a>
-                    <a href="/playground/">Playground</a>
-                    <a href="/docs/">Docs</a>
-                    <a href="/benchmarks/">Benchmarks</a>
-                    <a href="/showcase/">Showcase</a>
+                    @foreach (var link in FooterLinks.Product)
+                    {
+                        if (IsExternal(link.Href))
+                        {
+                            <a href="@link.Href" target="_blank" rel="noopener">@link.Text</a>
+                        }
+                        else
+                        {
+                            <a href="@link.Href">@link.Text</a>
+                        }
+                    }
                 </div>
                 <div class="footer-section">
                     <h3>Resources</h3>
-                    <a href="/faq/">FAQ</a>
-                    <a href="https://www.nuget.org/packages/CodeGlyphX" target="_blank" rel="noopener">NuGet Package</a>
-                    <a href="https://github.com/EvotecIT/CodeGlyphX" target="_blank" rel="noopener">GitHub Repository</a>
-                    <a href="https://github.com/EvotecIT/CodeGlyphX/issues" target="_blank" rel="noopener">Report Issue</a>
+                    @foreach (var link in FooterLinks.Resources)
+                    {
+                        if (IsExternal(link.Href))
+                        {
+                            <a href="@link.Href" target="_blank" rel="noopener">@link.Text</a>
+                        }
+                        else
+                        {
+                            <a href="@link.Href">@link.Text</a>
+                        }
+                    }
                 </div>
                 <div class="footer-section">
                     <h3>Company</h3>
-                    <a href="https://evotec.xyz" target="_blank" rel="noopener">Evotec Services</a>
-                    <a href="https://evotec.xyz/hub" target="_blank" rel="noopener">Blog</a>
+                    @foreach (var link in FooterLinks.Company)
+                    {
+                        if (IsExternal(link.Href))
+                        {
+                            <a href="@link.Href" target="_blank" rel="noopener">@link.Text</a>
+                        }
+                        else
+                        {
+                            <a href="@link.Href">@link.Text</a>
+                        }
+                    }
                 </div>
             </div>
             <div class="footer-bottom">
@@ -135,6 +173,52 @@
 @code {
     private string CurrentTheme { get; set; } = "dark";
     private bool _navOpen = false;
+    private IReadOnlyList<NavLink> _primaryLinks = DefaultPrimaryLinks;
+    private FooterNav _footerLinks = DefaultFooter;
+
+    private IReadOnlyList<NavLink> PrimaryLinks => _primaryLinks;
+    private FooterNav FooterLinks => _footerLinks;
+
+    private static readonly NavLink[] DefaultPrimaryLinks =
+    {
+        new NavLink("/", "Home", true),
+        new NavLink("/playground/", "Playground", true),
+        new NavLink("/docs/", "Docs", true),
+        new NavLink("/benchmarks/", "Benchmarks", false),
+        new NavLink("/showcase/", "Showcase", true)
+    };
+
+    private static readonly FooterNav DefaultFooter = new FooterNav
+    {
+        Product = new List<NavLink>
+        {
+            new NavLink("/", "Home"),
+            new NavLink("/playground/", "Playground"),
+            new NavLink("/docs/", "Docs"),
+            new NavLink("/benchmarks/", "Benchmarks"),
+            new NavLink("/showcase/", "Showcase")
+        },
+        Resources = new List<NavLink>
+        {
+            new NavLink("/faq/", "FAQ"),
+            new NavLink("https://www.nuget.org/packages/CodeGlyphX", "NuGet Package"),
+            new NavLink("https://github.com/EvotecIT/CodeGlyphX", "GitHub Repository"),
+            new NavLink("https://github.com/EvotecIT/CodeGlyphX/issues", "Report Issue")
+        },
+        Company = new List<NavLink>
+        {
+            new NavLink("https://evotec.xyz", "Evotec Services"),
+            new NavLink("https://evotec.xyz/hub", "Blog")
+        }
+    };
+
+    private static NavConfigCache? CachedNav;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Nav.LocationChanged += OnLocationChanged;
+        await LoadNavAsync();
+    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -145,9 +229,42 @@
         }
     }
 
-    protected override void OnInitialized()
+    private async Task LoadNavAsync()
     {
-        Nav.LocationChanged += OnLocationChanged;
+        try
+        {
+            if (CachedNav is not null)
+            {
+                _primaryLinks = CachedNav.Primary;
+                _footerLinks = CachedNav.Footer;
+                return;
+            }
+
+            var json = await Http.GetStringAsync("data/site-nav.json");
+            using var document = JsonDocument.Parse(json);
+            var root = document.RootElement;
+            var primaryDefined = root.TryGetProperty("primary", out _);
+            var linksDefined = root.TryGetProperty("links", out _);
+            var config = JsonSerializer.Deserialize<SiteNavConfig>(json, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
+
+            if (config == null)
+            {
+                Logger?.LogWarning("Navigation config missing or empty. Using defaults.");
+                return;
+            }
+
+            ApplyNavConfig(config, primaryDefined, linksDefined);
+            CachedNav = new NavConfigCache(_primaryLinks, _footerLinks);
+        }
+        catch (Exception ex)
+        {
+            Logger?.LogError(ex, "Failed to load navigation config. Using defaults.");
+            _primaryLinks = DefaultPrimaryLinks;
+            _footerLinks = DefaultFooter;
+        }
     }
 
     private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
@@ -178,34 +295,109 @@
         _navOpen = false;
     }
 
-    private void GoHome()
+    private void Navigate(string href)
     {
         _navOpen = false;
-        Nav.NavigateTo("/");
+        Nav.NavigateTo(href);
     }
 
-    private void GoDocs()
+    private static bool IsExternal(string href)
     {
-        _navOpen = false;
-        Nav.NavigateTo("/docs/");
+        if (string.IsNullOrWhiteSpace(href))
+            return false;
+
+        return Uri.TryCreate(href, UriKind.Absolute, out var uri)
+            && (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps);
     }
 
-    private void GoApi()
+    private static bool IsSafeHref(string href)
     {
-        _navOpen = false;
-        Nav.NavigateTo("/docs/api/");
+        if (string.IsNullOrWhiteSpace(href))
+            return false;
+
+        if (IsExternal(href))
+            return true;
+
+        return href.StartsWith("/", StringComparison.Ordinal)
+            || href.StartsWith("./", StringComparison.Ordinal)
+            || href.StartsWith("../", StringComparison.Ordinal)
+            || href.StartsWith("#", StringComparison.Ordinal);
     }
 
-    private void GoShowcase()
+    private static List<NavLink> FilterLinks(IEnumerable<NavLink>? links)
     {
-        _navOpen = false;
-        Nav.NavigateTo("/showcase/");
+        if (links is null)
+            return new List<NavLink>();
+
+        var filtered = new List<NavLink>();
+        foreach (var link in links)
+        {
+            if (link is null)
+                continue;
+
+            if (string.IsNullOrWhiteSpace(link.Href) || string.IsNullOrWhiteSpace(link.Text))
+                continue;
+
+            if (!IsSafeHref(link.Href))
+                continue;
+
+            filtered.Add(link);
+        }
+
+        return filtered;
     }
 
-    private void GoPlayground()
+    private void ApplyNavConfig(SiteNavConfig config, bool primaryDefined, bool linksDefined)
     {
-        _navOpen = false;
-        Nav.NavigateTo("/playground/");
+        var primarySource = config.Primary;
+        if (!primaryDefined && linksDefined && config.Links.Count > 0)
+        {
+            primarySource = config.Links;
+        }
+
+        var primaryLinks = FilterLinks(primarySource);
+        if (primaryLinks.Count == 0)
+        {
+            if (primaryDefined)
+            {
+                _primaryLinks = Array.Empty<NavLink>();
+            }
+            else
+            {
+                Logger?.LogWarning("Navigation config missing primary links. Using defaults.");
+                _primaryLinks = DefaultPrimaryLinks;
+            }
+        }
+        else
+        {
+            _primaryLinks = primaryLinks;
+        }
+
+        var footer = config.Footer ?? DefaultFooter;
+        _footerLinks = new FooterNav
+        {
+            Product = FilterLinks(footer.Product),
+            Resources = FilterLinks(footer.Resources),
+            Company = FilterLinks(footer.Company)
+        };
+    }
+
+    private sealed record NavConfigCache(IReadOnlyList<NavLink> Primary, FooterNav Footer);
+
+    private sealed record NavLink(string Href, string Text, bool Spa = false);
+
+    private sealed class FooterNav
+    {
+        public List<NavLink> Product { get; set; } = new();
+        public List<NavLink> Resources { get; set; } = new();
+        public List<NavLink> Company { get; set; } = new();
+    }
+
+    private sealed class SiteNavConfig
+    {
+        public List<NavLink> Primary { get; set; } = new();
+        public List<NavLink> Links { get; set; } = new();
+        public FooterNav? Footer { get; set; } = DefaultFooter;
     }
 
     public void Dispose()

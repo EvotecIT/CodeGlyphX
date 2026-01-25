@@ -9,6 +9,7 @@ larger structural changes.
 - API docs are static JSON/HTML in `wwwroot/api/` and are served under `/docs/api/`.
 - The publish script strips `.br`/`.gz` and rewrites `blazor.boot.json` integrity hashes.
 - GitHub Pages controls cache headers; long TTL requires Cloudflare rules.
+- Navigation/footers are sourced from `CodeGlyphX.Website/wwwroot/data/site-nav.json` and synced into static fragments via `Build/Update-NavFragments.ps1`.
 
 ## Priority 0: Fix What PageSpeed Flags (No Architecture Change)
 

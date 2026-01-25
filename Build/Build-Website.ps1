@@ -54,6 +54,9 @@ if (-not (Test-Path $apiCss)) { throw "Missing API docs CSS at $apiCss" }
 if (-not (Test-Path $apiHeader)) { throw "Missing API docs header at $apiHeader" }
 if (-not (Test-Path $apiFooter)) { throw "Missing API docs footer at $apiFooter" }
 
+$navScript = Join-Path $PSScriptRoot "Update-NavFragments.ps1"
+Invoke-Step "Updating navigation fragments..." @("pwsh",$navScript)
+
 Invoke-Step "Building CodeGlyphX..." @("dotnet","build",$codeGlyphProject,"-c",$Configuration,"-f",$Framework)
 
 if (-not $SkipApiDocs) {

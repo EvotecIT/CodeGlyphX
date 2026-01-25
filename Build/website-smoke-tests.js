@@ -32,7 +32,12 @@ async function loadNavConfig() {
         const res = await fetch(`${baseUrl}/data/site-nav.json`, { cache: 'no-store' });
         if (!res.ok) return;
         const data = await res.json();
-        if (data && Array.isArray(data.links) && data.links.length) {
+        if (!data) return;
+        if (Array.isArray(data.primary) && data.primary.length) {
+            expectedNav = data.primary;
+            return;
+        }
+        if (Array.isArray(data.links) && data.links.length) {
             expectedNav = data.links;
         }
     } catch {
