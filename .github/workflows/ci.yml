@@ -104,6 +104,9 @@ jobs:
       - name: Restore Website
         run: dotnet restore CodeGlyphX.Website/CodeGlyphX.Website.csproj
 
+      - name: Verify Blazor host index
+        run: pwsh Build/Verify-BlazorHost.ps1
+
       - name: Install PSParseHTML module
         shell: pwsh
         run: |

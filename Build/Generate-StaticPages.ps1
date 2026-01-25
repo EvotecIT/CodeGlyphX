@@ -18,6 +18,23 @@ if (-not $OutputPath) {
     Write-Warning "No -OutputPath specified. Using default: $OutputPath"
 }
 
+function Resolve-FullPath {
+    param(
+        [string]$Path,
+        [string]$BasePath
+    )
+    if ([IO.Path]::IsPathRooted($Path)) {
+        return [IO.Path]::GetFullPath($Path)
+    }
+    return [IO.Path]::GetFullPath((Join-Path $BasePath $Path))
+}
+
+$wwwrootPath = Resolve-FullPath -Path (Join-Path $repoRoot "CodeGlyphX.Website" "wwwroot") -BasePath $repoRoot
+$outputFullPath = Resolve-FullPath -Path $OutputPath -BasePath $repoRoot
+if (-not $Force -and $outputFullPath.StartsWith($wwwrootPath, [System.StringComparison]::OrdinalIgnoreCase)) {
+    throw "Refusing to write static pages into '$wwwrootPath'. Use -Force to overwrite Blazor wwwroot assets."
+}
+
 # Paths
 $assetsPath = Join-Path $repoRoot "Assets"
 $templatesPath = Join-Path $assetsPath "Templates"
