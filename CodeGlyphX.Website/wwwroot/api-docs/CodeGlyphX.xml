@@ -10670,6 +10670,16 @@
             Sets whether to draw a background plate behind the logo.
             </summary>
         </member>
+        <member name="M:CodeGlyphX.QR.QrBuilder.WithLogoBackgroundAutoBump(System.Boolean)">
+            <summary>
+            Enables/disables auto-bumping the minimum version for logo background plates.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QR.QrBuilder.WithLogoBackgroundMinVersion(System.Int32)">
+            <summary>
+            Sets the minimum version used when a logo background plate is enabled.
+            </summary>
+        </member>
         <member name="M:CodeGlyphX.QR.QrBuilder.WithLogoBackgroundColor(System.Nullable{CodeGlyphX.Rendering.Png.Rgba32})">
             <summary>
             Sets the logo background color.
@@ -13054,6 +13064,17 @@
         <member name="P:CodeGlyphX.QrEasyOptions.LogoDrawBackground">
             <summary>
             Whether to draw a background plate behind the logo.
+            When enabled, the encoder may auto-bump the minimum version for scan safety.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.QrEasyOptions.AutoBumpVersionForLogoBackground">
+            <summary>
+            When true, bumps <see cref="P:CodeGlyphX.QrEasyOptions.MinVersion"/> to a safer minimum for logo background plates.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.QrEasyOptions.LogoBackgroundMinVersion">
+            <summary>
+            Minimum version to use when a logo background plate is enabled (0 = disable auto bump).
             </summary>
         </member>
         <member name="P:CodeGlyphX.QrEasyOptions.LogoBackground">
@@ -14281,7 +14302,7 @@
         </member>
         <member name="T:CodeGlyphX.Rendering.Bmp.BmpReader">
             <summary>
-            Decodes BMP images to RGBA buffers (uncompressed 24/32/8-bit).
+            Decodes BMP images to RGBA buffers (1/4/8-bit palette, 16/24/32-bit, RLE4/RLE8, bitfields).
             </summary>
         </member>
         <member name="M:CodeGlyphX.Rendering.Bmp.BmpReader.DecodeRgba32(System.ReadOnlySpan{System.Byte},System.Int32@,System.Int32@)">
@@ -17571,7 +17592,7 @@
         </member>
         <member name="T:CodeGlyphX.Rendering.Tga.TgaReader">
             <summary>
-            Decodes TGA images to RGBA buffers (uncompressed true-color/grayscale).
+            Decodes TGA images to RGBA buffers (uncompressed + RLE, true-color/grayscale/color-mapped).
             </summary>
         </member>
         <member name="M:CodeGlyphX.Rendering.Tga.TgaReader.DecodeRgba32(System.ReadOnlySpan{System.Byte},System.Int32@,System.Int32@)">

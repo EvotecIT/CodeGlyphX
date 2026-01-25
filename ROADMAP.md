@@ -15,7 +15,20 @@ This list contains **only work we still want to do** (no already‑done items).
 - Mask-specialized decode traversal to remove per-cell mask math in QR data extraction.
 - Reduce allocations in hot decode loops (pool block buffers, reuse scratch grids).
 - Optional SIMD for thresholding/binarization where it wins on real inputs.
-- Evaluate AOT impact on cold start and size; document any AOT‑safe paths.
+- Evaluate AOT impact on cold start and size; document any AOT-safe paths.
+
+## Next — QR Styling & Presets (weeks)
+- Expand module shapes beyond square/rounded/circle (dot, blob, diamond, leaf, wave, etc.).
+- Separate eye frame + eye ball shape palettes with presets.
+- Curved “soft” corners for frames/eyes (vector + raster parity).
+- More logo treatments (background plate variants, inner padding presets, safe defaults).
+- Gradient presets and multi-color palettes for modules/eyes.
+- Add QR style presets gallery (exportable settings) for consistent “high-quality” looks.
+- Preset pack v1 (names + intent):
+  - Classic, Bold, Soft, Dot, Grid, Tech, Stamp, Poster, Neon, Minimal.
+- Shape set v1 (modules + eyes):
+  - Modules: square, rounded, circle, dot, squircle, diamond, soft-diamond, leaf, wave.
+  - Eyes (frame/ball): square, rounded, circle, squircle, diamond, bracket, double-ring.
 
 ## DX & Docs (ongoing)
 - Keep “quick vs full” benchmark guidance and preflight steps in README/docs.

@@ -5,6 +5,7 @@ param(
     [string]$SiteTitle = "CodeGlyphX API Reference",
     [string]$PowerForgeCliProject,
     [string]$WebsiteProject = "CodeGlyphX.Website/CodeGlyphX.Website.csproj",
+    [string]$OutputPath = "site",
     [switch]$SkipApiDocs,
     [switch]$SkipLlms,
     [switch]$Publish
@@ -84,16 +85,10 @@ $sitemapScript = Join-Path $PSScriptRoot "Generate-Sitemap.ps1"
 Invoke-Step "Generating sitemap.xml..." @("pwsh",$sitemapScript,"-SiteBase",$siteBase)
 
 if ($Publish) {
-    # Build first to ensure everything compiles
-    Invoke-Step "Building website..." @("dotnet","build",$websiteProjectPath,"-c",$Configuration,"-f",$Framework)
-
-    # Generate static pages for production (overwrites Blazor's index.html with static home)
-    $staticPagesScript = Join-Path $PSScriptRoot "Generate-StaticPages.ps1"
-    $wwwrootPath = [IO.Path]::Combine($repoRoot, "CodeGlyphX.Website", "wwwroot")
-    Invoke-Step "Generating static pages for production..." @("pwsh",$staticPagesScript,"-OutputPath",$wwwrootPath)
-
-    # Publish (includes the static pages)
-    Invoke-Step "Publishing website..." @("dotnet","publish",$websiteProjectPath,"-c",$Configuration,"-f",$Framework)
+    # Publish into a separate output folder to avoid overwriting Blazor host files in wwwroot.
+    $publishScript = Join-Path $PSScriptRoot "Publish-WebsitePages.ps1"
+    Invoke-Step "Publishing static website..." @("pwsh",$publishScript,"-Configuration",$Configuration,"-Framework",$Framework,"-OutputPath",$OutputPath)
+    return
 } else {
     # Development build - no static pages, keep Blazor for all routes
     # Clean up any existing static HTML files that would conflict with SPA routing
