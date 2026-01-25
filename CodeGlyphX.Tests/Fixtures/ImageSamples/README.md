@@ -1,8 +1,8 @@
 Image Samples (optional)
 
-These are external, non-barcode images used to validate ImageReader format
-coverage (PNG/TIFF edge cases, interlace, packed bit-depths, palettes, etc.).
-They are not stored in the repo. Use the download script to fetch them.
+This folder is the **image format corpus** for ImageReader coverage tests
+(PNG/TIFF edge cases, interlace, packed bit-depths, palettes, etc.). The files
+are external and not stored in the repo. Use the download script to fetch them.
 
 Download:
   pwsh Build/Download-ImageSamples.ps1

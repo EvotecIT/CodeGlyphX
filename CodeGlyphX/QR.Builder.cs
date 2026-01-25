@@ -186,6 +186,22 @@ public static partial class QR {
         }
 
         /// <summary>
+        /// Enables/disables auto-bumping the minimum version for logo background plates.
+        /// </summary>
+        public QrBuilder WithLogoBackgroundAutoBump(bool enabled = true) {
+            Options.AutoBumpVersionForLogoBackground = enabled;
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the minimum version used when a logo background plate is enabled.
+        /// </summary>
+        public QrBuilder WithLogoBackgroundMinVersion(int minVersion) {
+            Options.LogoBackgroundMinVersion = minVersion;
+            return this;
+        }
+
+        /// <summary>
         /// Sets the logo background color.
         /// </summary>
         public QrBuilder WithLogoBackgroundColor(Rgba32? color) {

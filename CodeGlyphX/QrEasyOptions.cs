@@ -119,8 +119,19 @@ public sealed class QrEasyOptions {
 
     /// <summary>
     /// Whether to draw a background plate behind the logo.
+    /// When enabled, the encoder may auto-bump the minimum version for scan safety.
     /// </summary>
     public bool LogoDrawBackground { get; set; } = true;
+
+    /// <summary>
+    /// When true, bumps <see cref="MinVersion"/> to a safer minimum for logo background plates.
+    /// </summary>
+    public bool AutoBumpVersionForLogoBackground { get; set; } = true;
+
+    /// <summary>
+    /// Minimum version to use when a logo background plate is enabled (0 = disable auto bump).
+    /// </summary>
+    public int LogoBackgroundMinVersion { get; set; } = 8;
 
     /// <summary>
     /// Logo background color (defaults to QR background).

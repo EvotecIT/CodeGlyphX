@@ -21,6 +21,7 @@ This list contains **only work we still want to do** (no already‑done items).
 - Keep “quick vs full” benchmark guidance and preflight steps in README/docs.
 - Decision guide: “which symbology to pick” + “which target framework to pick”.
 - CI: add PR website build check (compile + static output) before merge.
+- Publish a supported format matrix + known gaps; keep docs/FAQ in sync.
 
 ## Additional symbologies (weeks)
 - MaxiCode — decode + encode.
@@ -37,3 +38,4 @@ This list contains **only work we still want to do** (no already‑done items).
 ## Image formats (weeks)
 - WebP **decode** (lossless + VP8).
 - Optional: WebP **encode** (lossless first).
+- Expand the image format corpus (JPEG progressive/CMYK, GIF variants, BMP/ICO edge cases) and add a scheduled CI run.

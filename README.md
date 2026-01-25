@@ -408,14 +408,45 @@ QR payload helpers generate well-known structured strings so scanners can trigge
 | Payments | UPI, SEPA Girocode (EPC), BezahlCode (contact/payment/debit/periodic), Swiss QR Bill, Slovenian UPN, Russia Payment Order (ST00012) |
 | Crypto & Network | Bitcoin / Bitcoin Cash / Litecoin, Monero, ShadowSocks |
 
-## Image decoding (for readers)
+## Image format support
 
-- PNG: color types 0/2/3/4/6, bit depths 1/2/4/8/16, tRNS transparency, Adam7 interlace
-- JPEG: baseline + progressive (8-bit, Huffman), EXIF orientation, CMYK/YCCK (Adobe APP14)
-- GIF: first frame only, interlaced supported, transparency via GCE
-- TIFF: baseline, uncompressed/PackBits/LZW/Deflate, 8/16-bit samples, planar=contiguous, predictor 2
-- BMP (1/4/8/16/24/32-bit, RLE4/RLE8, bitfields), PPM/PGM/PAM (8/16-bit maxval), PBM, XBM, XPM, TGA (RLE + color-mapped), ICO/CUR
-- Pure C# decoders (no native image libraries)
+### Raster formats (encode + decode)
+
+| Format | Encode | Decode | Notes |
+| --- | --- | --- | --- |
+| PNG | ✅ | ✅ | Color types 0/2/3/4/6, bit depths 1/2/4/8/16, tRNS, Adam7 |
+| JPEG | ✅ | ✅ | Baseline + progressive (8-bit, Huffman), EXIF orientation, CMYK/YCCK |
+| BMP | ✅ | ✅ | 1/4/8/16/24/32-bit, RLE4/RLE8, bitfields |
+| GIF | No | ✅ | First frame only, transparency via GCE |
+| TIFF | No | ✅ | Baseline, strips, uncompressed/PackBits/LZW/Deflate, 8/16-bit, predictor 2 |
+| PPM/PGM/PAM/PBM | ✅ | ✅ | Portable pixmaps (8/16-bit maxval, PAM RGBA) |
+| TGA | ✅ | ✅ | Uncompressed + RLE, true-color/grayscale/color-mapped |
+| ICO/CUR | ✅ | ✅ | Multi-size icons (PNG/BMP payloads) |
+| XBM/XPM | ✅ | ✅ | X Window text formats |
+
+### Vector / text outputs (encode only)
+
+| Format | Encode | Notes |
+| --- | --- | --- |
+| SVG / SVGZ | ✅ | Vector output |
+| PDF / EPS | ✅ | Vector by default, raster via RenderMode |
+| HTML | ✅ | Table-based output |
+| ASCII | ✅ | API only |
+| Raw RGBA | ✅ | Use `RenderPixels` APIs |
+
+### Known gaps / not supported (decode)
+
+- WebP, AVIF, HEIC, JPEG2000, PSD
+- Animated GIF (first frame only)
+- Multi-page / tiled TIFF, mixed sample sizes, 12-bit JPEG
+- PDF/PS decode (rasterize first)
+
+### Format corpus (optional)
+
+- Image format corpus: `CodeGlyphX.Tests/Fixtures/ImageSamples/manifest.json`  
+  Download with `pwsh Build/Download-ImageSamples.ps1` (or set `CODEGLYPHX_IMAGE_SAMPLES`).
+- External barcode/QR samples: `CodeGlyphX.Tests/Fixtures/ExternalSamples/manifest.json`  
+  Download with `pwsh Build/Download-ExternalSamples.ps1` (or set `CODEGLYPHX_EXTERNAL_SAMPLES`).
 
 ## Quick usage
 
@@ -458,6 +489,7 @@ Notes:
 - Vector PDF/EPS support square/rounded/circle modules and eye shapes.
 - Gradients and logos automatically fall back to raster to preserve appearance.
 - PDF/EPS are output-only. For decoding, rasterize to PNG/BMP/PPM/PBM/PGM/PAM/TGA and use the image decoders.
+- Logo background plates auto-bump the minimum QR version to 8 by default for scan safety (disable with `AutoBumpVersionForLogoBackground` or set `LogoBackgroundMinVersion = 0`).
 
 ```csharp
 using CodeGlyphX;

@@ -1,5 +1,6 @@
 External Samples (optional)
 
+This folder is the **barcode/QR corpus** used by optional decode tests.
 Place real-world barcode/QR images here. For each image, add a sidecar text file
 with the same base name and a .txt extension that contains the expected decoded
 text. For multi-code images, put one expected payload per line. Example:

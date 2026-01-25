@@ -401,30 +401,118 @@ QR.Save(QrPayloads.OneTimePassword(
             <h1>Output Formats</h1>
             <p>CodeGlyphX supports a wide variety of output formats. The format is automatically determined by the file extension.</p>
 
-            <h2>Vector Formats</h2>
-            <ul style="color: var(--text-muted); margin-left: 1.5rem;">
-                <li><strong>SVG</strong> (<code>.svg</code>) - Scalable, web-friendly</li>
-                <li><strong>SVGZ</strong> (<code>.svgz</code>) - Compressed SVG</li>
-                <li><strong>PDF</strong> (<code>.pdf</code>) - Vector by default</li>
-                <li><strong>EPS</strong> (<code>.eps</code>) - PostScript</li>
-            </ul>
-
-            <h2>Raster Formats</h2>
-            <ul style="color: var(--text-muted); margin-left: 1.5rem;">
-                <li><strong>PNG</strong> (<code>.png</code>) - Lossless, transparent</li>
-                <li><strong>JPEG</strong> (<code>.jpg</code>) - Lossy compression</li>
-                <li><strong>BMP</strong> (<code>.bmp</code>) - Uncompressed bitmap</li>
-                <li><strong>TGA</strong> (<code>.tga</code>) - Targa format</li>
-                <li><strong>ICO</strong> (<code>.ico</code>) - Windows icon</li>
-            </ul>
-
-            <h2>Special Formats</h2>
-            <ul style="color: var(--text-muted); margin-left: 1.5rem;">
-                <li><strong>HTML</strong> (<code>.html</code>) - Table-based output</li>
-                <li><strong>PPM/PBM/PGM/PAM</strong> - Portable pixel formats</li>
-                <li><strong>XBM/XPM</strong> - X Window formats</li>
-                <li><strong>ASCII</strong> - Text representation (API only)</li>
-            </ul>
+            <h2>Format Matrix (Encode + Decode)</h2>
+            <table style="width: 100%; border-collapse: collapse; margin: 1rem 0;">
+                <thead>
+                    <tr style="border-bottom: 1px solid var(--border);">
+                        <th style="text-align: left; padding: 0.75rem;">Format</th>
+                        <th style="text-align: left; padding: 0.75rem;">Extensions</th>
+                        <th style="text-align: left; padding: 0.75rem;">Encode</th>
+                        <th style="text-align: left; padding: 0.75rem;">Decode</th>
+                        <th style="text-align: left; padding: 0.75rem;">Notes</th>
+                    </tr>
+                </thead>
+                <tbody style="color: var(--text-muted);">
+                    <tr style="border-bottom: 1px solid var(--border);">
+                        <td style="padding: 0.75rem;">PNG</td>
+                        <td style="padding: 0.75rem;"><code>.png</code></td>
+                        <td style="padding: 0.75rem;">Yes</td>
+                        <td style="padding: 0.75rem;">Yes</td>
+                        <td style="padding: 0.75rem;">tRNS, Adam7, 1/2/4/8/16-bit</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid var(--border);">
+                        <td style="padding: 0.75rem;">JPEG</td>
+                        <td style="padding: 0.75rem;"><code>.jpg</code>, <code>.jpeg</code></td>
+                        <td style="padding: 0.75rem;">Yes</td>
+                        <td style="padding: 0.75rem;">Yes</td>
+                        <td style="padding: 0.75rem;">Baseline + progressive, EXIF, CMYK/YCCK</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid var(--border);">
+                        <td style="padding: 0.75rem;">BMP</td>
+                        <td style="padding: 0.75rem;"><code>.bmp</code></td>
+                        <td style="padding: 0.75rem;">Yes</td>
+                        <td style="padding: 0.75rem;">Yes</td>
+                        <td style="padding: 0.75rem;">1/4/8/16/24/32-bit, RLE, bitfields</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid var(--border);">
+                        <td style="padding: 0.75rem;">GIF</td>
+                        <td style="padding: 0.75rem;"><code>.gif</code></td>
+                        <td style="padding: 0.75rem;">No</td>
+                        <td style="padding: 0.75rem;">Yes</td>
+                        <td style="padding: 0.75rem;">First frame only, transparency via GCE</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid var(--border);">
+                        <td style="padding: 0.75rem;">TIFF</td>
+                        <td style="padding: 0.75rem;"><code>.tif</code>, <code>.tiff</code></td>
+                        <td style="padding: 0.75rem;">No</td>
+                        <td style="padding: 0.75rem;">Yes</td>
+                        <td style="padding: 0.75rem;">Baseline strips, PackBits/LZW/Deflate, 8/16-bit</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid var(--border);">
+                        <td style="padding: 0.75rem;">PPM/PGM/PAM/PBM</td>
+                        <td style="padding: 0.75rem;"><code>.ppm</code>, <code>.pgm</code>, <code>.pam</code>, <code>.pbm</code></td>
+                        <td style="padding: 0.75rem;">Yes</td>
+                        <td style="padding: 0.75rem;">Yes</td>
+                        <td style="padding: 0.75rem;">Portable pixmaps (8/16-bit maxval)</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid var(--border);">
+                        <td style="padding: 0.75rem;">TGA</td>
+                        <td style="padding: 0.75rem;"><code>.tga</code></td>
+                        <td style="padding: 0.75rem;">Yes</td>
+                        <td style="padding: 0.75rem;">Yes</td>
+                        <td style="padding: 0.75rem;">Uncompressed + RLE, true-color/grayscale/color-mapped</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid var(--border);">
+                        <td style="padding: 0.75rem;">ICO/CUR</td>
+                        <td style="padding: 0.75rem;"><code>.ico</code>, <code>.cur</code></td>
+                        <td style="padding: 0.75rem;">Yes</td>
+                        <td style="padding: 0.75rem;">Yes</td>
+                        <td style="padding: 0.75rem;">Multi-size icons (PNG/BMP payloads)</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid var(--border);">
+                        <td style="padding: 0.75rem;">XBM/XPM</td>
+                        <td style="padding: 0.75rem;"><code>.xbm</code>, <code>.xpm</code></td>
+                        <td style="padding: 0.75rem;">Yes</td>
+                        <td style="padding: 0.75rem;">Yes</td>
+                        <td style="padding: 0.75rem;">Text formats</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid var(--border);">
+                        <td style="padding: 0.75rem;">SVG / SVGZ</td>
+                        <td style="padding: 0.75rem;"><code>.svg</code>, <code>.svgz</code></td>
+                        <td style="padding: 0.75rem;">Yes</td>
+                        <td style="padding: 0.75rem;">No</td>
+                        <td style="padding: 0.75rem;">Vector output only</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid var(--border);">
+                        <td style="padding: 0.75rem;">PDF / EPS</td>
+                        <td style="padding: 0.75rem;"><code>.pdf</code>, <code>.eps</code></td>
+                        <td style="padding: 0.75rem;">Yes</td>
+                        <td style="padding: 0.75rem;">No</td>
+                        <td style="padding: 0.75rem;">Vector by default, raster via RenderMode</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid var(--border);">
+                        <td style="padding: 0.75rem;">HTML</td>
+                        <td style="padding: 0.75rem;"><code>.html</code>, <code>.htm</code></td>
+                        <td style="padding: 0.75rem;">Yes</td>
+                        <td style="padding: 0.75rem;">No</td>
+                        <td style="padding: 0.75rem;">Table-based output</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid var(--border);">
+                        <td style="padding: 0.75rem;">ASCII</td>
+                        <td style="padding: 0.75rem;">API only</td>
+                        <td style="padding: 0.75rem;">Yes</td>
+                        <td style="padding: 0.75rem;">No</td>
+                        <td style="padding: 0.75rem;">Text art</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 0.75rem;">Raw RGBA</td>
+                        <td style="padding: 0.75rem;">API only</td>
+                        <td style="padding: 0.75rem;">Yes</td>
+                        <td style="padding: 0.75rem;">No</td>
+                        <td style="padding: 0.75rem;">Use <code>RenderPixels</code></td>
+                    </tr>
+                </tbody>
+            </table>
 
             <h2>Programmatic Rendering</h2>
             <pre class="code-block">using CodeGlyphX;
@@ -682,10 +770,27 @@ var decodeResult = QrImageDecoder.DecodeImage(stream);</pre>
 
             <h2>Supported Formats for Decoding</h2>
             <ul style="color: var(--text-muted); margin-left: 1.5rem;">
-                <li><strong>Images:</strong> PNG, JPEG, BMP, GIF</li>
+                <li><strong>Images:</strong> PNG, JPEG, BMP, GIF, TIFF, PPM/PGM/PBM/PAM, TGA, ICO/CUR, XBM, XPM</li>
                 <li><strong>QR Codes:</strong> Standard QR, Micro QR</li>
-                <li><strong>1D Barcodes:</strong> Code 128, Code 39, EAN, UPC</li>
+                <li><strong>1D Barcodes:</strong> Code 128, Code 39/93, EAN/UPC, ITF, Codabar, MSI, Telepen, Plessey, more</li>
+                <li><strong>2D Matrix:</strong> Data Matrix, PDF417, Aztec</li>
             </ul>
+
+            <h2>Known Gaps (Decoding)</h2>
+            <ul style="color: var(--text-muted); margin-left: 1.5rem;">
+                <li>WebP, AVIF, HEIC, JPEG2000, PSD</li>
+                <li>Animated GIF (first frame only)</li>
+                <li>Multi-page / tiled TIFF and mixed sample sizes</li>
+                <li>PDF/PS decode (rasterize first)</li>
+            </ul>
+
+            <h2>Format Corpus (Optional)</h2>
+            <p class="text-muted">We maintain external image samples to validate edge cases (PNG/TIFF suites, packed bit-depths, interlace, etc.). These are not stored in the repo.</p>
+            <pre class="code-block">// Download the image format corpus
+pwsh Build/Download-ImageSamples.ps1
+
+// Download external barcode/QR samples
+pwsh Build/Download-ExternalSamples.ps1</pre>
 
             <h2>Handling Multiple Results</h2>
             <pre class="code-block">// Decode all barcodes in an image

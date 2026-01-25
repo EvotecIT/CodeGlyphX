@@ -27,6 +27,14 @@ public static class PamReader {
             if (pos >= pam.Length) throw new FormatException("Invalid PAM header.");
             if (IsToken(pam, pos, "ENDHDR")) {
                 pos += 6;
+                while (pos < pam.Length) {
+                    var c = pam[pos];
+                    if (c == (byte)'\n' || c == (byte)'\r' || c == (byte)' ' || c == (byte)'\t') {
+                        pos++;
+                        continue;
+                    }
+                    break;
+                }
                 break;
             }
 
