@@ -195,9 +195,14 @@ public static partial class QrPngRenderer {
     }
 
     private static bool CanRenderAsBinary(QrPngRenderOptions opts) {
+        if (opts.BackgroundGradient is not null) return false;
         if (opts.ForegroundGradient is not null) return false;
+        if (opts.ForegroundPalette is not null) return false;
+        if (opts.ForegroundPaletteZones is not null) return false;
+        if (opts.ModuleScaleMap is not null) return false;
         if (opts.Eyes is not null) return false;
         if (opts.Logo is not null) return false;
+        if (opts.Canvas is not null) return false;
         if (opts.ModuleShape != QrPngModuleShape.Square) return false;
         if (!IsUnitScale(opts.ModuleScale)) return false;
         if (opts.ModuleCornerRadiusPx != 0) return false;

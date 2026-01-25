@@ -10,9 +10,17 @@ public static partial class QrPngRenderer {
 
     private static bool CanRenderSimpleRgba(QrPngRenderOptions opts) {
         if (opts is null) throw new ArgumentNullException(nameof(opts));
-        return opts.ForegroundGradient is null
+        return opts.BackgroundGradient is null
+            && opts.BackgroundPattern is null
+            && opts.BackgroundSupersample == 1
+            && opts.ForegroundGradient is null
+            && opts.ForegroundPalette is null
+            && opts.ForegroundPaletteZones is null
+            && opts.ModuleScaleMap is null
             && opts.Eyes is null
             && opts.Logo is null
+            && opts.Canvas is null
+            && (opts.Debug is null || !opts.Debug.HasOverlay)
             && opts.ModuleShape == QrPngModuleShape.Square
             && IsUnitScale(opts.ModuleScale)
             && opts.ModuleCornerRadiusPx == 0;

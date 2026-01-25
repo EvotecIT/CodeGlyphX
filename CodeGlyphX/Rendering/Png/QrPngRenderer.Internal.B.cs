@@ -47,11 +47,13 @@ public static partial class QrPngRenderer {
         int heightPx,
         int stride,
         QrPngRenderOptions opts,
+        int offsetX,
+        int offsetY,
         int ex,
         int ey) {
         var moduleSize = opts.ModuleSize;
-        var x0 = (ex + opts.QuietZone) * moduleSize;
-        var y0 = (ey + opts.QuietZone) * moduleSize;
+        var x0 = offsetX + (ex + opts.QuietZone) * moduleSize;
+        var y0 = offsetY + (ey + opts.QuietZone) * moduleSize;
 
         var outerSize = 7 * moduleSize;
         var innerSize = 5 * moduleSize;
@@ -60,12 +62,15 @@ public static partial class QrPngRenderer {
         var eye = opts.Eyes!;
         var outerScaled = ScaleSize(outerSize, eye.OuterScale);
         var innerScaled = ScaleSize(innerSize, eye.OuterScale);
+        var innerRingScaled = ScaleSize(innerSize, eye.InnerScale);
         var dotScaled = ScaleSize(dotSize, eye.InnerScale);
 
         var outerX = x0 + (outerSize - outerScaled) / 2;
         var outerY = y0 + (outerSize - outerScaled) / 2;
         var innerX = x0 + (outerSize - innerScaled) / 2;
         var innerY = y0 + (outerSize - innerScaled) / 2;
+        var innerRingX = x0 + (outerSize - innerRingScaled) / 2;
+        var innerRingY = y0 + (outerSize - innerRingScaled) / 2;
         var dotX = x0 + (outerSize - dotScaled) / 2;
         var dotY = y0 + (outerSize - dotScaled) / 2;
 
@@ -74,20 +79,112 @@ public static partial class QrPngRenderer {
         var outerGradient = eye.OuterGradient;
         var innerGradient = eye.InnerGradient;
 
-        if (outerGradient is null) {
-            FillShape(scanlines, widthPx, heightPx, stride, outerX, outerY, outerScaled, outerScaled, outerColor, eye.OuterShape, eye.OuterCornerRadiusPx);
-        } else {
-            FillShapeGradient(scanlines, widthPx, heightPx, stride, outerX, outerY, outerScaled, outerScaled, outerGradient, eye.OuterShape, eye.OuterCornerRadiusPx);
-        }
-        FillShape(scanlines, widthPx, heightPx, stride, innerX, innerY, innerScaled, innerScaled, opts.Background, eye.OuterShape, eye.InnerCornerRadiusPx);
+        switch (eye.FrameStyle) {
+            case QrPngEyeFrameStyle.DoubleRing:
+            case QrPngEyeFrameStyle.Target:
+                if (outerGradient is null) {
+                    FillShape(scanlines, widthPx, heightPx, stride, outerX, outerY, outerScaled, outerScaled, outerColor, eye.OuterShape, eye.OuterCornerRadiusPx);
+                } else {
+                    FillShapeGradient(scanlines, widthPx, heightPx, stride, outerX, outerY, outerScaled, outerScaled, outerGradient, eye.OuterShape, eye.OuterCornerRadiusPx);
+                }
+                FillShape(scanlines, widthPx, heightPx, stride, innerX, innerY, innerScaled, innerScaled, opts.Background, eye.OuterShape, eye.InnerCornerRadiusPx);
 
-        if (dotScaled > 0) {
-            if (innerGradient is null) {
-                FillShape(scanlines, widthPx, heightPx, stride, dotX, dotY, dotScaled, dotScaled, innerColor, eye.InnerShape, eye.InnerCornerRadiusPx);
-            } else {
-                FillShapeGradient(scanlines, widthPx, heightPx, stride, dotX, dotY, dotScaled, dotScaled, innerGradient, eye.InnerShape, eye.InnerCornerRadiusPx);
-            }
+                if (innerRingScaled > 0) {
+                    if (innerGradient is null) {
+                        FillShape(scanlines, widthPx, heightPx, stride, innerRingX, innerRingY, innerRingScaled, innerRingScaled, innerColor, eye.InnerShape, eye.InnerCornerRadiusPx);
+                    } else {
+                        FillShapeGradient(scanlines, widthPx, heightPx, stride, innerRingX, innerRingY, innerRingScaled, innerRingScaled, innerGradient, eye.InnerShape, eye.InnerCornerRadiusPx);
+                    }
+                }
+
+                if (dotScaled > 0) {
+                    FillShape(scanlines, widthPx, heightPx, stride, dotX, dotY, dotScaled, dotScaled, opts.Background, eye.InnerShape, eye.InnerCornerRadiusPx);
+                }
+
+                if (eye.FrameStyle == QrPngEyeFrameStyle.Target && dotScaled > 0) {
+                    if (innerGradient is null) {
+                        FillShape(scanlines, widthPx, heightPx, stride, dotX, dotY, dotScaled, dotScaled, innerColor, eye.InnerShape, eye.InnerCornerRadiusPx);
+                    } else {
+                        FillShapeGradient(scanlines, widthPx, heightPx, stride, dotX, dotY, dotScaled, dotScaled, innerGradient, eye.InnerShape, eye.InnerCornerRadiusPx);
+                    }
+                }
+                break;
+            case QrPngEyeFrameStyle.Bracket:
+                DrawBracketFrame(scanlines, widthPx, heightPx, stride, outerX, outerY, outerScaled, outerScaled, outerColor, eye.OuterCornerRadiusPx, eye.OuterScale);
+                if (dotScaled > 0) {
+                    if (innerGradient is null) {
+                        FillShape(scanlines, widthPx, heightPx, stride, dotX, dotY, dotScaled, dotScaled, innerColor, eye.InnerShape, eye.InnerCornerRadiusPx);
+                    } else {
+                        FillShapeGradient(scanlines, widthPx, heightPx, stride, dotX, dotY, dotScaled, dotScaled, innerGradient, eye.InnerShape, eye.InnerCornerRadiusPx);
+                    }
+                }
+                break;
+            case QrPngEyeFrameStyle.Badge:
+                if (outerGradient is null) {
+                    FillShape(scanlines, widthPx, heightPx, stride, outerX, outerY, outerScaled, outerScaled, outerColor, eye.OuterShape, eye.OuterCornerRadiusPx);
+                } else {
+                    FillShapeGradient(scanlines, widthPx, heightPx, stride, outerX, outerY, outerScaled, outerScaled, outerGradient, eye.OuterShape, eye.OuterCornerRadiusPx);
+                }
+                var badgeInset = Math.Max(1, (int)Math.Round(moduleSize * 0.6));
+                var badgeX = outerX + badgeInset;
+                var badgeY = outerY + badgeInset;
+                var badgeW = Math.Max(1, outerScaled - badgeInset * 2);
+                var badgeH = Math.Max(1, outerScaled - badgeInset * 2);
+                FillShape(scanlines, widthPx, heightPx, stride, badgeX, badgeY, badgeW, badgeH, opts.Background, eye.OuterShape, Math.Max(0, eye.InnerCornerRadiusPx));
+                if (dotScaled > 0) {
+                    if (innerGradient is null) {
+                        FillShape(scanlines, widthPx, heightPx, stride, dotX, dotY, dotScaled, dotScaled, innerColor, eye.InnerShape, eye.InnerCornerRadiusPx);
+                    } else {
+                        FillShapeGradient(scanlines, widthPx, heightPx, stride, dotX, dotY, dotScaled, dotScaled, innerGradient, eye.InnerShape, eye.InnerCornerRadiusPx);
+                    }
+                }
+                break;
+            default:
+                if (outerGradient is null) {
+                    FillShape(scanlines, widthPx, heightPx, stride, outerX, outerY, outerScaled, outerScaled, outerColor, eye.OuterShape, eye.OuterCornerRadiusPx);
+                } else {
+                    FillShapeGradient(scanlines, widthPx, heightPx, stride, outerX, outerY, outerScaled, outerScaled, outerGradient, eye.OuterShape, eye.OuterCornerRadiusPx);
+                }
+                FillShape(scanlines, widthPx, heightPx, stride, innerX, innerY, innerScaled, innerScaled, opts.Background, eye.OuterShape, eye.InnerCornerRadiusPx);
+
+                if (dotScaled > 0) {
+                    if (innerGradient is null) {
+                        FillShape(scanlines, widthPx, heightPx, stride, dotX, dotY, dotScaled, dotScaled, innerColor, eye.InnerShape, eye.InnerCornerRadiusPx);
+                    } else {
+                        FillShapeGradient(scanlines, widthPx, heightPx, stride, dotX, dotY, dotScaled, dotScaled, innerGradient, eye.InnerShape, eye.InnerCornerRadiusPx);
+                    }
+                }
+                break;
         }
+    }
+
+    private static void DrawBracketFrame(
+        byte[] scanlines,
+        int widthPx,
+        int heightPx,
+        int stride,
+        int x,
+        int y,
+        int w,
+        int h,
+        Rgba32 color,
+        int radius,
+        double scale) {
+        var thickness = Math.Max(1, (int)Math.Round(w * Math.Min(scale, 0.35)));
+        if (thickness > w / 2) thickness = w / 2;
+
+        // Top-left
+        FillRoundedRect(scanlines, widthPx, heightPx, stride, x, y, thickness, h / 2, color, radius);
+        FillRoundedRect(scanlines, widthPx, heightPx, stride, x, y, w / 2, thickness, color, radius);
+        // Top-right
+        FillRoundedRect(scanlines, widthPx, heightPx, stride, x + w - thickness, y, thickness, h / 2, color, radius);
+        FillRoundedRect(scanlines, widthPx, heightPx, stride, x + w / 2, y, w / 2, thickness, color, radius);
+        // Bottom-left
+        FillRoundedRect(scanlines, widthPx, heightPx, stride, x, y + h / 2, thickness, h / 2, color, radius);
+        FillRoundedRect(scanlines, widthPx, heightPx, stride, x, y + h - thickness, w / 2, thickness, color, radius);
+        // Bottom-right
+        FillRoundedRect(scanlines, widthPx, heightPx, stride, x + w - thickness, y + h / 2, thickness, h / 2, color, radius);
+        FillRoundedRect(scanlines, widthPx, heightPx, stride, x + w / 2, y + h - thickness, w / 2, thickness, color, radius);
     }
 
     private static void FillShape(
@@ -540,6 +637,8 @@ public static partial class QrPngRenderer {
         int widthPx,
         int heightPx,
         int stride,
+        int originX,
+        int originY,
         int qrSizePx,
         QrPngLogoOptions logo) {
         if (logo.Rgba.Length == 0) return;
@@ -556,8 +655,8 @@ public static partial class QrPngRenderer {
         var targetH = Math.Max(1, (int)Math.Round(logo.Height * scale));
         if (targetW <= 0 || targetH <= 0) return;
 
-        var x0 = (widthPx - targetW) / 2;
-        var y0 = (heightPx - targetH) / 2;
+        var x0 = originX + (qrSizePx - targetW) / 2;
+        var y0 = originY + (qrSizePx - targetH) / 2;
 
         if (logo.DrawBackground) {
             var pad = Math.Max(0, logo.PaddingPx);
@@ -706,6 +805,260 @@ public static partial class QrPngRenderer {
                 scanlines[dst + 1] = (byte)((sg * sa + dg * inv + 127) / 255);
                 scanlines[dst + 2] = (byte)((sb * sa + db * inv + 127) / 255);
                 scanlines[dst + 3] = (byte)((sa + da * inv + 127) / 255);
+            }
+        }
+    }
+
+    private static void DrawDebugOverlay(
+        byte[] scanlines,
+        int widthPx,
+        int heightPx,
+        int stride,
+        QrPngRenderOptions opts,
+        int qrOffsetX,
+        int qrOffsetY,
+        int qrOriginX,
+        int qrOriginY,
+        int qrFullPx,
+        int qrSizePx,
+        int moduleCount) {
+        var debug = opts.Debug;
+        if (debug is null || !debug.HasOverlay) return;
+
+        var stroke = debug.StrokePx;
+
+        if (debug.ShowQuietZone) {
+            DrawRectOutline(scanlines, widthPx, heightPx, stride, qrOffsetX, qrOffsetY, qrFullPx, qrFullPx, debug.QuietZoneColor, stroke);
+        }
+
+        if (debug.ShowQrBounds) {
+            DrawRectOutline(scanlines, widthPx, heightPx, stride, qrOriginX, qrOriginY, qrSizePx, qrSizePx, debug.QrBoundsColor, stroke);
+        }
+
+        if (debug.ShowEyeBounds) {
+            var eyeSize = 7 * opts.ModuleSize;
+            var rightX = qrOriginX + (moduleCount - 7) * opts.ModuleSize;
+            var bottomY = qrOriginY + (moduleCount - 7) * opts.ModuleSize;
+            DrawRectOutline(scanlines, widthPx, heightPx, stride, qrOriginX, qrOriginY, eyeSize, eyeSize, debug.EyeBoundsColor, stroke);
+            DrawRectOutline(scanlines, widthPx, heightPx, stride, rightX, qrOriginY, eyeSize, eyeSize, debug.EyeBoundsColor, stroke);
+            DrawRectOutline(scanlines, widthPx, heightPx, stride, qrOriginX, bottomY, eyeSize, eyeSize, debug.EyeBoundsColor, stroke);
+        }
+
+        if (debug.ShowLogoBounds && opts.Logo is not null) {
+            if (TryGetLogoBounds(opts.Logo, qrOriginX, qrOriginY, qrSizePx, out var x, out var y, out var w, out var h)) {
+                DrawRectOutline(scanlines, widthPx, heightPx, stride, x, y, w, h, debug.LogoBoundsColor, stroke);
+            }
+        }
+    }
+
+    private static bool TryGetLogoBounds(QrPngLogoOptions logo, int originX, int originY, int qrSizePx, out int x, out int y, out int w, out int h) {
+        x = 0;
+        y = 0;
+        w = 0;
+        h = 0;
+
+        if (logo.Rgba.Length == 0) return false;
+        if (logo.Scale <= 0) return false;
+
+        var maxLogoPx = (int)Math.Round(qrSizePx * logo.Scale);
+        if (maxLogoPx <= 0) return false;
+        if (maxLogoPx > qrSizePx) maxLogoPx = qrSizePx;
+
+        var scale = Math.Min(maxLogoPx / (double)logo.Width, maxLogoPx / (double)logo.Height);
+        if (scale <= 0) return false;
+
+        var targetW = Math.Max(1, (int)Math.Round(logo.Width * scale));
+        var targetH = Math.Max(1, (int)Math.Round(logo.Height * scale));
+        if (targetW <= 0 || targetH <= 0) return false;
+
+        var x0 = originX + (qrSizePx - targetW) / 2;
+        var y0 = originY + (qrSizePx - targetH) / 2;
+
+        var pad = logo.DrawBackground ? Math.Max(0, logo.PaddingPx) : 0;
+        x = x0 - pad;
+        y = y0 - pad;
+        w = targetW + pad * 2;
+        h = targetH + pad * 2;
+        return w > 0 && h > 0;
+    }
+
+    private static void DrawRectOutline(byte[] scanlines, int widthPx, int heightPx, int stride, int x, int y, int w, int h, Rgba32 color, int stroke) {
+        if (w <= 0 || h <= 0) return;
+        var s = Math.Max(1, stroke);
+        for (var t = 0; t < s; t++) {
+            var xt = x + t;
+            var yt = y + t;
+            var wt = w - t * 2;
+            var ht = h - t * 2;
+            if (wt <= 0 || ht <= 0) break;
+
+            var yTop = yt;
+            var yBottom = yt + ht - 1;
+            var xLeft = xt;
+            var xRight = xt + wt - 1;
+
+            DrawHLine(scanlines, widthPx, heightPx, stride, xLeft, xRight, yTop, color);
+            if (yBottom != yTop) {
+                DrawHLine(scanlines, widthPx, heightPx, stride, xLeft, xRight, yBottom, color);
+            }
+            DrawVLine(scanlines, widthPx, heightPx, stride, xLeft, yTop, yBottom, color);
+            if (xRight != xLeft) {
+                DrawVLine(scanlines, widthPx, heightPx, stride, xRight, yTop, yBottom, color);
+            }
+        }
+    }
+
+    private static void DrawHLine(byte[] scanlines, int widthPx, int heightPx, int stride, int x0, int x1, int y, Rgba32 color) {
+        if (y < 0 || y >= heightPx) return;
+        if (x0 > x1) (x0, x1) = (x1, x0);
+        if (x1 < 0 || x0 >= widthPx) return;
+        var start = Math.Max(0, x0);
+        var end = Math.Min(widthPx - 1, x1);
+        var row = y * (stride + 1) + 1 + start * 4;
+        for (var x = start; x <= end; x++) {
+            scanlines[row + 0] = color.R;
+            scanlines[row + 1] = color.G;
+            scanlines[row + 2] = color.B;
+            scanlines[row + 3] = color.A;
+            row += 4;
+        }
+    }
+
+    private static void DrawVLine(byte[] scanlines, int widthPx, int heightPx, int stride, int x, int y0, int y1, Rgba32 color) {
+        if (x < 0 || x >= widthPx) return;
+        if (y0 > y1) (y0, y1) = (y1, y0);
+        if (y1 < 0 || y0 >= heightPx) return;
+        var start = Math.Max(0, y0);
+        var end = Math.Min(heightPx - 1, y1);
+        for (var y = start; y <= end; y++) {
+            var row = y * (stride + 1) + 1 + x * 4;
+            scanlines[row + 0] = color.R;
+            scanlines[row + 1] = color.G;
+            scanlines[row + 2] = color.B;
+            scanlines[row + 3] = color.A;
+        }
+    }
+
+    private static void RenderBackgroundSupersampled(
+        byte[] scanlines,
+        int widthPx,
+        int heightPx,
+        int stride,
+        QrPngRenderOptions opts,
+        int qrOffsetX,
+        int qrOffsetY,
+        int qrFullPx) {
+        var scale = Math.Max(1, opts.BackgroundSupersample);
+        if (scale <= 1) return;
+
+        var scaledWidth = widthPx * scale;
+        var scaledHeight = heightPx * scale;
+        var scaledStride = scaledWidth * 4;
+        var length = scaledHeight * (scaledStride + 1);
+        var temp = new byte[length];
+
+        var scaledOpts = CreateScaledBackgroundOptions(opts, scale);
+        var scaledQrOffsetX = qrOffsetX * scale;
+        var scaledQrOffsetY = qrOffsetY * scale;
+        var scaledQrFullPx = qrFullPx * scale;
+
+        if (scaledOpts.Canvas is null) {
+            if (scaledOpts.BackgroundGradient is null) {
+                PngRenderHelpers.FillBackground(temp, scaledWidth, scaledHeight, scaledStride, scaledOpts.Background);
+            } else {
+                FillBackgroundGradient(temp, scaledWidth, scaledHeight, scaledStride, scaledOpts.BackgroundGradient);
+            }
+            if (scaledOpts.BackgroundPattern is not null) {
+                DrawCanvasPattern(temp, scaledWidth, scaledHeight, scaledStride, scaledQrOffsetX, scaledQrOffsetY, scaledQrFullPx, scaledQrFullPx, scaledOpts.ModuleSize, 0, scaledOpts.BackgroundPattern);
+            }
+        } else {
+            PngRenderHelpers.FillBackground(temp, scaledWidth, scaledHeight, scaledStride, Rgba32.Transparent);
+            DrawCanvas(temp, scaledWidth, scaledHeight, scaledStride, scaledOpts, scaledQrOffsetX, scaledQrOffsetY, scaledQrFullPx);
+            FillQrBackground(temp, scaledWidth, scaledHeight, scaledStride, scaledOpts, scaledQrOffsetX, scaledQrOffsetY, scaledQrFullPx);
+        }
+
+        DownsampleScanlines(temp, scaledWidth, scaledHeight, scaledStride, scanlines, widthPx, heightPx, stride, scale);
+    }
+
+    private static QrPngRenderOptions CreateScaledBackgroundOptions(QrPngRenderOptions opts, int scale) {
+        return new QrPngRenderOptions {
+            ModuleSize = Math.Max(1, opts.ModuleSize * scale),
+            QuietZone = opts.QuietZone,
+            Foreground = opts.Foreground,
+            Background = opts.Background,
+            BackgroundGradient = opts.BackgroundGradient,
+            BackgroundPattern = ScalePattern(opts.BackgroundPattern, scale),
+            BackgroundSupersample = 1,
+            Canvas = ScaleCanvas(opts.Canvas, scale),
+        };
+    }
+
+    private static QrPngBackgroundPatternOptions? ScalePattern(QrPngBackgroundPatternOptions? pattern, int scale) {
+        if (pattern is null) return null;
+        return new QrPngBackgroundPatternOptions {
+            Type = pattern.Type,
+            Color = pattern.Color,
+            SizePx = Math.Max(1, pattern.SizePx * scale),
+            ThicknessPx = Math.Max(1, pattern.ThicknessPx * scale),
+            SnapToModuleSize = pattern.SnapToModuleSize,
+            ModuleStep = pattern.ModuleStep
+        };
+    }
+
+    private static QrPngCanvasOptions? ScaleCanvas(QrPngCanvasOptions? canvas, int scale) {
+        if (canvas is null) return null;
+        return new QrPngCanvasOptions {
+            PaddingPx = canvas.PaddingPx * scale,
+            CornerRadiusPx = canvas.CornerRadiusPx * scale,
+            Background = canvas.Background,
+            BackgroundGradient = canvas.BackgroundGradient,
+            Pattern = ScalePattern(canvas.Pattern, scale),
+            BorderPx = canvas.BorderPx * scale,
+            BorderColor = canvas.BorderColor,
+            ShadowOffsetX = canvas.ShadowOffsetX * scale,
+            ShadowOffsetY = canvas.ShadowOffsetY * scale,
+            ShadowColor = canvas.ShadowColor
+        };
+    }
+
+    private static void DownsampleScanlines(
+        byte[] src,
+        int srcWidth,
+        int srcHeight,
+        int srcStride,
+        byte[] dst,
+        int dstWidth,
+        int dstHeight,
+        int dstStride,
+        int scale) {
+        var rowStride = dstStride + 1;
+        for (var y = 0; y < dstHeight; y++) {
+            var dstRow = y * rowStride;
+            dst[dstRow] = 0;
+            var dstIndex = dstRow + 1;
+            var srcY0 = y * scale;
+            for (var x = 0; x < dstWidth; x++) {
+                var srcX0 = x * scale;
+                var r = 0;
+                var g = 0;
+                var b = 0;
+                var a = 0;
+                for (var sy = 0; sy < scale; sy++) {
+                    var srcRow = (srcY0 + sy) * (srcStride + 1) + 1 + srcX0 * 4;
+                    for (var sx = 0; sx < scale; sx++) {
+                        var p = srcRow + sx * 4;
+                        r += src[p + 0];
+                        g += src[p + 1];
+                        b += src[p + 2];
+                        a += src[p + 3];
+                    }
+                }
+                var div = scale * scale;
+                dst[dstIndex + 0] = (byte)(r / div);
+                dst[dstIndex + 1] = (byte)(g / div);
+                dst[dstIndex + 2] = (byte)(b / div);
+                dst[dstIndex + 3] = (byte)(a / div);
+                dstIndex += 4;
             }
         }
     }

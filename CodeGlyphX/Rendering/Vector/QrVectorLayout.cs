@@ -83,8 +83,17 @@ internal static class QrVectorLayout {
     }
 
     internal static bool ShouldRaster(QrPngRenderOptions opts) {
+        if (opts.BackgroundGradient is not null) return true;
+        if (opts.BackgroundPattern is not null) return true;
+        if (opts.BackgroundSupersample > 1) return true;
         if (opts.ForegroundGradient is not null) return true;
+        if (opts.ForegroundPalette is not null) return true;
+        if (opts.ForegroundPaletteZones is not null) return true;
+        if (opts.ModuleScaleMap is not null) return true;
         if (opts.Logo is not null) return true;
+        if (opts.Canvas is not null) return true;
+        if (opts.Debug is not null && opts.Debug.HasOverlay) return true;
+        if (opts.Eyes is not null && opts.Eyes.FrameStyle != QrPngEyeFrameStyle.Single) return true;
         if (opts.Eyes is not null && (opts.Eyes.OuterGradient is not null || opts.Eyes.InnerGradient is not null)) return true;
         if (!IsVectorShapeSupported(opts.ModuleShape)) return true;
         if (opts.Eyes is not null && (!IsVectorShapeSupported(opts.Eyes.OuterShape) || !IsVectorShapeSupported(opts.Eyes.InnerShape))) return true;
