@@ -79,6 +79,7 @@ public readonly struct DecodeResult<T> {
             DecodeFailureReason.None => string.Empty,
             DecodeFailureReason.InvalidInput => "invalid input",
             DecodeFailureReason.UnsupportedFormat => "unsupported format",
+            DecodeFailureReason.PlatformNotSupported => "platform not supported",
             DecodeFailureReason.Cancelled => "cancelled",
             DecodeFailureReason.NoResult => "no result",
             DecodeFailureReason.Error => "error",

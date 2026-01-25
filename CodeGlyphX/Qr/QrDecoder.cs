@@ -239,10 +239,9 @@ public static partial class QrDecoder {
     private static bool ApplyTileScan(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat fmt, QrPixelDecodeOptions options, CancellationToken cancellationToken, ref QrDecoded[] results) {
         if (width <= 0 || height <= 0 || stride < width * 4) return results.Length > 0;
         var list = new System.Collections.Generic.List<QrDecoded>(results.Length + 4);
-        var seen = new System.Collections.Generic.HashSet<string>(StringComparer.Ordinal);
+        var seen = new System.Collections.Generic.HashSet<byte[]>(ByteArrayComparer.Instance);
         for (var i = 0; i < results.Length; i++) {
-            var key = Convert.ToBase64String(results[i].Bytes);
-            if (seen.Add(key)) list.Add(results[i]);
+            if (seen.Add(results[i].Bytes)) list.Add(results[i]);
         }
 
         var budgetMs = options.BudgetMilliseconds > 0 ? options.BudgetMilliseconds : options.MaxMilliseconds;
@@ -279,23 +278,14 @@ public static partial class QrDecoder {
                 var th = y1 - y0;
                 if (tw < 48 || th < 48) continue;
 
-                var tileStride = tw * 4;
-                var len = tileStride * th;
-                var buffer = System.Buffers.ArrayPool<byte>.Shared.Rent(len);
-                try {
-                    var tileSpan = buffer.AsSpan(0, len);
-                    for (var y = 0; y < th; y++) {
-                        if (ShouldStop()) break;
-                        var srcIndex = (y0 + y) * stride + x0 * 4;
-                        pixels.Slice(srcIndex, tileStride).CopyTo(tileSpan.Slice(y * tileStride, tileStride));
-                    }
-                    if (ShouldStop()) break;
-                    if (TryDecode(tileSpan, tw, th, tileStride, fmt, out var decoded, options, cancellationToken)) {
-                        var key = Convert.ToBase64String(decoded.Bytes);
-                        if (seen.Add(key)) list.Add(decoded);
-                    }
-                } finally {
-                    System.Buffers.ArrayPool<byte>.Shared.Return(buffer);
+                var startIndex = (long)y0 * stride + x0 * 4L;
+                var requiredLen = (long)(th - 1) * stride + tw * 4L;
+                if (startIndex < 0 || requiredLen <= 0) continue;
+                if (startIndex + requiredLen > pixels.Length) continue;
+
+                var tileSpan = pixels.Slice((int)startIndex, (int)requiredLen);
+                if (TryDecode(tileSpan, tw, th, stride, fmt, out var decoded, options, cancellationToken)) {
+                    if (seen.Add(decoded.Bytes)) list.Add(decoded);
                 }
             }
             if (ShouldStop()) break;

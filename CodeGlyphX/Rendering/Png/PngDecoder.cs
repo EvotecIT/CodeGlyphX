@@ -32,6 +32,7 @@ internal static class PngDecoder {
 
         var idat = new MemoryStream();
         byte[]? palette = null;
+        byte[]? transparency = null;
         var localOffset = Signature.Length;
         var end = length;
 
@@ -58,6 +59,9 @@ internal static class PngDecoder {
             } else if (MatchType(png, typeOffset, "PLTE")) {
                 palette = new byte[len];
                 Buffer.BlockCopy(png, dataOffset, palette, 0, (int)len);
+            } else if (MatchType(png, typeOffset, "tRNS")) {
+                transparency = new byte[len];
+                Buffer.BlockCopy(png, dataOffset, transparency, 0, (int)len);
             } else if (MatchType(png, typeOffset, "IDAT")) {
                 idat.Write(png, dataOffset, (int)len);
             } else if (MatchType(png, typeOffset, "IEND")) {
@@ -66,24 +70,40 @@ internal static class PngDecoder {
         }
 
         if (width <= 0 || height <= 0) throw new FormatException("Missing IHDR.");
-        if (bitDepth != 8 && bitDepth != 1) throw new FormatException("Only 1-bit or 8-bit PNGs are supported.");
         if (compression != 0 || filter != 0) throw new FormatException("Unsupported PNG compression/filter method.");
-        if (interlace != 0) throw new FormatException("Interlaced PNGs are not supported.");
+        if (interlace != 0 && interlace != 1) throw new FormatException("Unsupported PNG interlace method.");
 
         var channels = colorType switch {
             0 => 1,
             2 => 3,
             3 => 1,
+            4 => 2,
             6 => 4,
             _ => throw new FormatException("Unsupported PNG color type."),
         };
+        var bitDepthOk = colorType switch {
+            0 => bitDepth == 1 || bitDepth == 2 || bitDepth == 4 || bitDepth == 8 || bitDepth == 16,
+            2 => bitDepth == 8 || bitDepth == 16,
+            3 => bitDepth == 1 || bitDepth == 2 || bitDepth == 4 || bitDepth == 8,
+            4 => bitDepth == 8 || bitDepth == 16,
+            6 => bitDepth == 8 || bitDepth == 16,
+            _ => false
+        };
+        if (!bitDepthOk) throw new FormatException("Unsupported PNG bit depth.");
         if (colorType == 3 && (palette is null || palette.Length < 3)) {
             throw new FormatException("Missing PNG palette.");
         }
+        if (palette is not null && palette.Length % 3 != 0) {
+            throw new FormatException("Invalid PNG palette.");
+        }
 
-        var rowBytes = bitDepth == 1 ? (width + 7) / 8 : checked(width * channels);
+        var rowBytes = bitDepth < 8
+            ? (width * bitDepth + 7) / 8
+            : checked(width * channels * (bitDepth / 8));
         var bytesPerPixel = (bitDepth * channels + 7) / 8;
-        var expected = checked(height * (rowBytes + 1));
+        var expected = interlace == 0
+            ? checked(height * (rowBytes + 1))
+            : GetAdam7ExpectedSize(width, height, bitDepth, channels);
         var scanlines = ArrayPool<byte>.Shared.Rent(expected);
 
         if (idat.Length == 0) throw new FormatException("Missing IDAT.");
@@ -94,10 +114,11 @@ internal static class PngDecoder {
                 ReadExact(z, scanlines, expected);
             }
 
-            var raw = new byte[checked(height * rowBytes)];
-            Unfilter(scanlines.AsSpan(0, expected), raw, rowBytes, height, bytesPerPixel);
+            var raw = interlace == 0
+                ? DecodeNonInterlaced(scanlines.AsSpan(0, expected), width, height, rowBytes, bytesPerPixel)
+                : DecodeAdam7(scanlines.AsSpan(0, expected), width, height, rowBytes, bitDepth, channels, bytesPerPixel);
 
-            return ExpandToRgba(raw, width, height, colorType, bitDepth, palette);
+            return ExpandToRgba(raw, width, height, colorType, bitDepth, palette, transparency);
         } finally {
             ArrayPool<byte>.Shared.Return(scanlines);
         }
@@ -137,46 +158,211 @@ internal static class PngDecoder {
         }
     }
 
-    private static byte[] ExpandToRgba(byte[] raw, int width, int height, int colorType, int bitDepth, byte[]? palette) {
-        if (colorType == 6 && bitDepth == 8) return raw;
+    private static byte[] DecodeNonInterlaced(ReadOnlySpan<byte> scanlines, int width, int height, int rowBytes, int bytesPerPixel) {
+        var raw = new byte[checked(height * rowBytes)];
+        Unfilter(scanlines, raw, rowBytes, height, bytesPerPixel);
+        return raw;
+    }
+
+    private static byte[] DecodeAdam7(ReadOnlySpan<byte> scanlines, int width, int height, int rowBytes, int bitDepth, int channels, int bytesPerPixel) {
+        var raw = new byte[checked(height * rowBytes)];
+        var offset = 0;
+        var passes = Adam7Passes;
+        for (var i = 0; i < passes.Length; i++) {
+            var pass = passes[i];
+            var passWidth = GetAdam7Size(width, pass.StartX, pass.StepX);
+            var passHeight = GetAdam7Size(height, pass.StartY, pass.StepY);
+            if (passWidth == 0 || passHeight == 0) {
+                continue;
+            }
+
+            var passRowBytes = bitDepth < 8
+                ? (passWidth * bitDepth + 7) / 8
+                : checked(passWidth * channels * (bitDepth / 8));
+            var passExpected = checked(passHeight * (passRowBytes + 1));
+            if (offset + passExpected > scanlines.Length) {
+                throw new FormatException("Invalid Adam7 scanline data.");
+            }
+
+            var passRaw = new byte[checked(passHeight * passRowBytes)];
+            Unfilter(scanlines.Slice(offset, passExpected), passRaw, passRowBytes, passHeight, bytesPerPixel);
+            offset += passExpected;
+
+            if (bitDepth >= 8) {
+                for (var y = 0; y < passHeight; y++) {
+                    var srcRow = y * passRowBytes;
+                    var dstY = pass.StartY + y * pass.StepY;
+                    var dstRow = dstY * rowBytes;
+                    for (var x = 0; x < passWidth; x++) {
+                        var src = srcRow + x * bytesPerPixel;
+                        var dstX = pass.StartX + x * pass.StepX;
+                        var dst = dstRow + dstX * bytesPerPixel;
+                        Buffer.BlockCopy(passRaw, src, raw, dst, bytesPerPixel);
+                    }
+                }
+            } else {
+                for (var y = 0; y < passHeight; y++) {
+                    var srcRow = y * passRowBytes;
+                    var dstY = pass.StartY + y * pass.StepY;
+                    var dstRow = dstY * rowBytes;
+                    for (var x = 0; x < passWidth; x++) {
+                        var sample = ReadPackedSample(passRaw, srcRow, x, bitDepth);
+                        var dstX = pass.StartX + x * pass.StepX;
+                        WritePackedSample(raw, dstRow, dstX, bitDepth, sample);
+                    }
+                }
+            }
+        }
+
+        if (offset != scanlines.Length) {
+            throw new FormatException("Invalid Adam7 scanline length.");
+        }
+
+        return raw;
+    }
+
+    private static int GetAdam7ExpectedSize(int width, int height, int bitDepth, int channels) {
+        var total = 0;
+        var passes = Adam7Passes;
+        for (var i = 0; i < passes.Length; i++) {
+            var pass = passes[i];
+            var passWidth = GetAdam7Size(width, pass.StartX, pass.StepX);
+            var passHeight = GetAdam7Size(height, pass.StartY, pass.StepY);
+            if (passWidth == 0 || passHeight == 0) {
+                continue;
+            }
+            var passRowBytes = bitDepth < 8
+                ? (passWidth * bitDepth + 7) / 8
+                : checked(passWidth * channels * (bitDepth / 8));
+            total = checked(total + passHeight * (passRowBytes + 1));
+        }
+        return total;
+    }
+
+    private static int GetAdam7Size(int length, int start, int step) {
+        if (length <= start) return 0;
+        return (length - start + step - 1) / step;
+    }
+
+    private static byte[] ExpandToRgba(byte[] raw, int width, int height, int colorType, int bitDepth, byte[]? palette, byte[]? transparency) {
+        if (colorType == 6 && bitDepth == 8 && transparency is null) return raw;
 
         var rgba = new byte[checked(width * height * 4)];
         if (colorType == 2 && bitDepth == 8) {
+            var tr = transparency is { Length: >= 6 } ? ReadUInt16BE(transparency, 0) >> 8 : -1;
+            var tg = transparency is { Length: >= 6 } ? ReadUInt16BE(transparency, 2) >> 8 : -1;
+            var tb = transparency is { Length: >= 6 } ? ReadUInt16BE(transparency, 4) >> 8 : -1;
             for (var i = 0; i < width * height; i++) {
                 var src = i * 3;
                 var dst = i * 4;
                 rgba[dst + 0] = raw[src + 0];
                 rgba[dst + 1] = raw[src + 1];
                 rgba[dst + 2] = raw[src + 2];
-                rgba[dst + 3] = 255;
+                rgba[dst + 3] = (raw[src + 0] == tr && raw[src + 1] == tg && raw[src + 2] == tb) ? (byte)0 : (byte)255;
+            }
+            return rgba;
+        }
+
+        if (colorType == 2 && bitDepth == 16) {
+            var tr = transparency is { Length: >= 6 } ? ReadUInt16BE(transparency, 0) : -1;
+            var tg = transparency is { Length: >= 6 } ? ReadUInt16BE(transparency, 2) : -1;
+            var tb = transparency is { Length: >= 6 } ? ReadUInt16BE(transparency, 4) : -1;
+            for (var i = 0; i < width * height; i++) {
+                var src = i * 6;
+                var r16 = ReadUInt16BE(raw, src);
+                var g16 = ReadUInt16BE(raw, src + 2);
+                var b16 = ReadUInt16BE(raw, src + 4);
+                var dst = i * 4;
+                rgba[dst + 0] = Sample16To8(r16);
+                rgba[dst + 1] = Sample16To8(g16);
+                rgba[dst + 2] = Sample16To8(b16);
+                rgba[dst + 3] = (r16 == tr && g16 == tg && b16 == tb) ? (byte)0 : (byte)255;
+            }
+            return rgba;
+        }
+
+        if (colorType == 6 && bitDepth == 16) {
+            for (var i = 0; i < width * height; i++) {
+                var src = i * 8;
+                var dst = i * 4;
+                rgba[dst + 0] = Sample16To8(ReadUInt16BE(raw, src));
+                rgba[dst + 1] = Sample16To8(ReadUInt16BE(raw, src + 2));
+                rgba[dst + 2] = Sample16To8(ReadUInt16BE(raw, src + 4));
+                rgba[dst + 3] = Sample16To8(ReadUInt16BE(raw, src + 6));
+            }
+            return rgba;
+        }
+
+        if (colorType == 4 && bitDepth == 8) {
+            for (var i = 0; i < width * height; i++) {
+                var src = i * 2;
+                var dst = i * 4;
+                var v = raw[src + 0];
+                rgba[dst + 0] = v;
+                rgba[dst + 1] = v;
+                rgba[dst + 2] = v;
+                rgba[dst + 3] = raw[src + 1];
+            }
+            return rgba;
+        }
+
+        if (colorType == 4 && bitDepth == 16) {
+            for (var i = 0; i < width * height; i++) {
+                var src = i * 4;
+                var dst = i * 4;
+                var v = Sample16To8(ReadUInt16BE(raw, src));
+                rgba[dst + 0] = v;
+                rgba[dst + 1] = v;
+                rgba[dst + 2] = v;
+                rgba[dst + 3] = Sample16To8(ReadUInt16BE(raw, src + 2));
+            }
+            return rgba;
+        }
+
+        if (colorType == 0 && bitDepth == 16) {
+            var transparent = transparency is { Length: >= 2 } ? ReadUInt16BE(transparency, 0) : -1;
+            for (var i = 0; i < width * height; i++) {
+                var src = i * 2;
+                var dst = i * 4;
+                var v16 = ReadUInt16BE(raw, src);
+                var v8 = Sample16To8(v16);
+                rgba[dst + 0] = v8;
+                rgba[dst + 1] = v8;
+                rgba[dst + 2] = v8;
+                rgba[dst + 3] = v16 == transparent ? (byte)0 : (byte)255;
             }
             return rgba;
         }
 
         if (colorType == 0 && bitDepth == 8) {
+            var transparent = transparency is { Length: >= 2 } ? ReadUInt16BE(transparency, 0) >> 8 : -1;
             for (var i = 0; i < width * height; i++) {
                 var v = raw[i];
                 var dst = i * 4;
                 rgba[dst + 0] = v;
                 rgba[dst + 1] = v;
                 rgba[dst + 2] = v;
-                rgba[dst + 3] = 255;
+                rgba[dst + 3] = v == transparent ? (byte)0 : (byte)255;
             }
             return rgba;
         }
 
-        if (colorType == 0 && bitDepth == 1) {
+        if (colorType == 0 && bitDepth < 8) {
+            var rowBytes = (width * bitDepth + 7) / 8;
+            var max = (1 << bitDepth) - 1;
+            var transparent = transparency is { Length: >= 2 }
+                ? ReadUInt16BE(transparency, 0) >> (16 - bitDepth)
+                : -1;
             for (var y = 0; y < height; y++) {
-                var rowStart = y * ((width + 7) / 8);
+                var rowStart = y * rowBytes;
                 for (var x = 0; x < width; x++) {
-                    var b = raw[rowStart + (x >> 3)];
-                    var bit = (b >> (7 - (x & 7))) & 1;
-                    var v = (byte)(bit == 0 ? 0 : 255);
+                    var sample = ReadPackedSample(raw, rowStart, x, bitDepth);
+                    var v = (byte)(sample * 255 / max);
                     var dst = (y * width + x) * 4;
                     rgba[dst + 0] = v;
                     rgba[dst + 1] = v;
                     rgba[dst + 2] = v;
-                    rgba[dst + 3] = 255;
+                    rgba[dst + 3] = sample == transparent ? (byte)0 : (byte)255;
                 }
             }
             return rgba;
@@ -184,6 +370,12 @@ internal static class PngDecoder {
 
         if (colorType == 3 && palette is not null) {
             var entryCount = palette.Length / 3;
+            byte[]? paletteAlpha = null;
+            if (transparency is { Length: > 0 }) {
+                paletteAlpha = new byte[entryCount];
+                for (var i = 0; i < paletteAlpha.Length; i++) paletteAlpha[i] = 255;
+                Buffer.BlockCopy(transparency, 0, paletteAlpha, 0, Math.Min(transparency.Length, paletteAlpha.Length));
+            }
             if (bitDepth == 8) {
                 for (var i = 0; i < width * height; i++) {
                     var idx = raw[i];
@@ -193,23 +385,23 @@ internal static class PngDecoder {
                     rgba[dst + 0] = palette[p + 0];
                     rgba[dst + 1] = palette[p + 1];
                     rgba[dst + 2] = palette[p + 2];
-                    rgba[dst + 3] = 255;
+                    rgba[dst + 3] = paletteAlpha is null ? (byte)255 : paletteAlpha[idx];
                 }
                 return rgba;
             }
-            if (bitDepth == 1) {
+            if (bitDepth < 8) {
+                var rowBytes = (width * bitDepth + 7) / 8;
                 for (var y = 0; y < height; y++) {
-                    var rowStart = y * ((width + 7) / 8);
+                    var rowStart = y * rowBytes;
                     for (var x = 0; x < width; x++) {
-                        var b = raw[rowStart + (x >> 3)];
-                        var idx = (b >> (7 - (x & 7))) & 1;
+                        var idx = ReadPackedSample(raw, rowStart, x, bitDepth);
                         if (idx >= entryCount) throw new FormatException("Palette index out of range.");
                         var p = idx * 3;
                         var dst = (y * width + x) * 4;
                         rgba[dst + 0] = palette[p + 0];
                         rgba[dst + 1] = palette[p + 1];
                         rgba[dst + 2] = palette[p + 2];
-                        rgba[dst + 3] = 255;
+                        rgba[dst + 3] = paletteAlpha is null ? (byte)255 : paletteAlpha[idx];
                     }
                 }
                 return rgba;
@@ -217,6 +409,26 @@ internal static class PngDecoder {
         }
 
         throw new FormatException("Unsupported PNG color type.");
+    }
+
+    private static int ReadPackedSample(byte[] raw, int rowStart, int x, int bitDepth) {
+        var bitIndex = x * bitDepth;
+        var byteIndex = rowStart + (bitIndex >> 3);
+        var shift = 8 - bitDepth - (bitIndex & 7);
+        var mask = (1 << bitDepth) - 1;
+        return (raw[byteIndex] >> shift) & mask;
+    }
+
+    private static void WritePackedSample(byte[] raw, int rowStart, int x, int bitDepth, int sample) {
+        var bitIndex = x * bitDepth;
+        var byteIndex = rowStart + (bitIndex >> 3);
+        var shift = 8 - bitDepth - (bitIndex & 7);
+        var mask = ((1 << bitDepth) - 1) << shift;
+        raw[byteIndex] = (byte)((raw[byteIndex] & ~mask) | ((sample << shift) & mask));
+    }
+
+    private static byte Sample16To8(ushort sample) {
+        return (byte)(sample >> 8);
     }
 
     private static int Paeth(int a, int b, int c) {
@@ -235,6 +447,10 @@ internal static class PngDecoder {
                buffer[offset + 3];
     }
 
+    private static ushort ReadUInt16BE(byte[] buffer, int offset) {
+        return (ushort)((buffer[offset] << 8) | buffer[offset + 1]);
+    }
+
     private static bool MatchType(byte[] buffer, int offset, string type) {
         return offset + 4 <= buffer.Length
                && buffer[offset] == (byte)type[0]
@@ -242,6 +458,18 @@ internal static class PngDecoder {
                && buffer[offset + 2] == (byte)type[2]
                && buffer[offset + 3] == (byte)type[3];
     }
+
+    private readonly record struct Adam7Pass(int StartX, int StartY, int StepX, int StepY);
+
+    private static readonly Adam7Pass[] Adam7Passes = {
+        new Adam7Pass(0, 0, 8, 8),
+        new Adam7Pass(4, 0, 8, 8),
+        new Adam7Pass(0, 4, 4, 8),
+        new Adam7Pass(2, 0, 4, 4),
+        new Adam7Pass(0, 2, 2, 4),
+        new Adam7Pass(1, 0, 2, 2),
+        new Adam7Pass(0, 1, 1, 2)
+    };
 
     private static Stream CreateZLibStream(Stream source) {
 #if NET8_0_OR_GREATER

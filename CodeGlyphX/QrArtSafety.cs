@@ -137,6 +137,15 @@ public static class QrArtSafety {
 
         if (options.Logo is not null) {
             var area = options.Logo.Scale * options.Logo.Scale;
+            if (options.Logo.DrawBackground && options.Logo.PaddingPx > 0 && options.ModuleSize > 0) {
+                var qrSizePx = qr.Size * options.ModuleSize;
+                if (qrSizePx > 0) {
+                    var logoPx = qrSizePx * options.Logo.Scale;
+                    var paddedPx = logoPx + options.Logo.PaddingPx * 2;
+                    var effectiveScale = paddedPx / qrSizePx;
+                    area = Math.Max(area, effectiveScale * effectiveScale);
+                }
+            }
             if (area > 0.25) {
                 Add(QrArtWarningKind.LogoTooLarge, "Logo covers too much of the QR area (>25%).", 35);
             } else if (area > 0.15) {
@@ -145,6 +154,10 @@ public static class QrArtSafety {
 
             if (qr.ErrorCorrectionLevel != QrErrorCorrectionLevel.H) {
                 Add(QrArtWarningKind.LogoNeedsHighEcc, "Logo overlays work best with error correction level H.", 15);
+            }
+
+            if (options.Logo.DrawBackground && qr.Version < 8) {
+                Add(QrArtWarningKind.LogoTooLarge, "Logo background plates are risky on small versions; consider a higher version or disable the background.", 15);
             }
         }
 

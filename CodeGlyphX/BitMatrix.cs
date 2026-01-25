@@ -83,6 +83,28 @@ public sealed class BitMatrix {
     /// </summary>
     public BitMatrix Clone() => new(Width, Height, (uint[])_words.Clone());
 
+    internal void CopyFrom(BitMatrix other) {
+        if (other is null) throw new ArgumentNullException(nameof(other));
+        if (other.Width != Width || other.Height != Height) throw new ArgumentException("Matrix size mismatch.", nameof(other));
+        Array.Copy(other._words, _words, _words.Length);
+    }
+
+    internal uint[] Words => _words;
+
+    internal void Invert() {
+        var words = _words;
+        for (var i = 0; i < words.Length; i++) {
+            words[i] = ~words[i];
+        }
+
+        var totalBits = Width * Height;
+        var remainingBits = totalBits & 31;
+        if (remainingBits == 0) return;
+
+        var mask = (1u << remainingBits) - 1u;
+        words[words.Length - 1] &= mask;
+    }
+
     /// <summary>
     /// Packs the matrix into row-major bytes (left-to-right, top-to-bottom).
     /// </summary>

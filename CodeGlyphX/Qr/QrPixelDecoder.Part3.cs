@@ -9,6 +9,7 @@ using System.Runtime.Intrinsics;
 using System.Runtime.Intrinsics.X86;
 using System.Threading;
 using CodeGlyphX;
+using CodeGlyphX.Internal;
 
 namespace CodeGlyphX.Qr;
 
@@ -31,7 +32,7 @@ internal static partial class QrPixelDecoder {
         int scale,
         QrProfileSettings settings,
         PooledList<QrDecoded> list,
-        HashSet<string> seen,
+        HashSet<byte[]> seen,
         Func<QrDecoded, bool>? accept,
         DecodeBudget budget,
         QrGrayImagePool? pool) {
@@ -65,30 +66,34 @@ internal static partial class QrPixelDecoder {
             histogram[gray[i]]++;
         }
 
-        var q25 = FindQuantile(histogram, total * 25 / 100);
-        var q50 = FindQuantile(histogram, total / 2);
-        var q75 = FindQuantile(histogram, total * 75 / 100);
+        var target25 = total * 25 / 100;
+        var target50 = total / 2;
+        var target75 = total * 75 / 100;
+        var q25 = (byte)0;
+        var q50 = (byte)0;
+        var q75 = (byte)0;
+        var got25 = target25 <= 0;
+        var got50 = target50 <= 0;
+        var got75 = target75 <= 0;
+        var sum = 0;
+        for (var i = 0; i < histogram.Length; i++) {
+            sum += histogram[i];
+            if (!got25 && sum >= target25) { q25 = (byte)i; got25 = true; }
+            if (!got50 && sum >= target50) { q50 = (byte)i; got50 = true; }
+            if (!got75 && sum >= target75) { q75 = (byte)i; got75 = true; }
+            if (got25 && got50 && got75) break;
+        }
 
         AddThresholdCandidate(ref list, ref count, q25);
         AddThresholdCandidate(ref list, ref count, q50);
         AddThresholdCandidate(ref list, ref count, q75);
     }
 
-    private static byte FindQuantile(Span<int> histogram, int target) {
-        if (target <= 0) return 0;
-        var sum = 0;
-        for (var i = 0; i < histogram.Length; i++) {
-            sum += histogram[i];
-            if (sum >= target) return (byte)i;
-        }
-        return 255;
-    }
-
     private static void CollectFromImage(
         QrGrayImage image,
         bool invert,
         PooledList<QrDecoded> results,
-        HashSet<string> seen,
+        HashSet<byte[]> seen,
         Func<QrDecoded, bool>? accept,
         List<QrFinderPatternDetector.FinderPattern> candidates,
         DecodeBudget budget,
@@ -125,17 +130,49 @@ internal static partial class QrPixelDecoder {
         bool invert,
         List<QrFinderPatternDetector.FinderPattern> candidates,
         PooledList<QrDecoded> results,
-        HashSet<string> seen,
+        HashSet<byte[]> seen,
         Func<QrDecoded, bool>? accept,
         DecodeBudget budget,
         bool aggressive,
         bool candidatesSorted) {
-        if (!candidatesSorted) {
-            candidates.Sort(static (a, b) => b.Count.CompareTo(a.Count));
+        var totalCandidates = candidates.Count;
+        if (candidatesSorted || totalCandidates <= 10) {
+            if (!candidatesSorted) {
+                candidates.Sort(static (a, b) => b.Count.CompareTo(a.Count));
+            }
+            CollectFromFinderCandidatesCore(image, invert, CollectionsMarshal.AsSpan(candidates), totalCandidates, results, seen, accept, budget, aggressive);
+            return;
         }
-        var candidateSpan = CollectionsMarshal.AsSpan(candidates);
-        var candidateCount = candidateSpan.Length;
-        var n = Math.Min(candidateCount, 10);
+
+        Span<QrFinderPatternDetector.FinderPattern> top = stackalloc QrFinderPatternDetector.FinderPattern[10];
+        var topCount = 0;
+        foreach (var candidate in candidates) {
+            var count = candidate.Count;
+            if (topCount == 10 && count <= top[topCount - 1].Count) continue;
+            var insertPos = topCount < 10 ? topCount : 9;
+            while (insertPos > 0 && count > top[insertPos - 1].Count) {
+                if (insertPos < 10) {
+                    top[insertPos] = top[insertPos - 1];
+                }
+                insertPos--;
+            }
+            top[insertPos] = candidate;
+            if (topCount < 10) topCount++;
+        }
+        CollectFromFinderCandidatesCore(image, invert, top.Slice(0, topCount), totalCandidates, results, seen, accept, budget, aggressive);
+    }
+
+    private static void CollectFromFinderCandidatesCore(
+        QrGrayImage image,
+        bool invert,
+        ReadOnlySpan<QrFinderPatternDetector.FinderPattern> candidateSpan,
+        int totalCandidates,
+        PooledList<QrDecoded> results,
+        HashSet<byte[]> seen,
+        Func<QrDecoded, bool>? accept,
+        DecodeBudget budget,
+        bool aggressive) {
+        var n = Math.Min(candidateSpan.Length, 10);
         var triedTriples = 0;
         var maxTriples = 48;
         if (budget.Enabled) {
@@ -167,7 +204,7 @@ internal static partial class QrPixelDecoder {
                             tl,
                             tr,
                             bl,
-                            candidateCount,
+                            totalCandidates,
                             triedTriples,
                             accept,
                             aggressive,
@@ -185,7 +222,7 @@ internal static partial class QrPixelDecoder {
         QrGrayImage image,
         bool invert,
         PooledList<QrDecoded> results,
-        HashSet<string> seen,
+        HashSet<byte[]> seen,
         Func<QrDecoded, bool>? accept,
         DecodeBudget budget) {
         if (budget.IsExpired) return;
@@ -193,12 +230,27 @@ internal static partial class QrPixelDecoder {
         using var comps = FindComponents(image, invert, shouldStop);
         if (comps.Count == 0) return;
 
-        comps.Sort(static (a, b) => b.Area.CompareTo(a.Area));
-        var maxTry = Math.Min(comps.Count, 12);
+        const int maxTry = 12;
+        Span<Component> top = stackalloc Component[maxTry];
+        var topCount = 0;
+        for (var i = 0; i < comps.Count; i++) {
+            var comp = comps[i];
+            var area = comp.Area;
+            if (topCount == maxTry && area <= top[topCount - 1].Area) continue;
+            var insertPos = topCount < maxTry ? topCount : maxTry - 1;
+            while (insertPos > 0 && area > top[insertPos - 1].Area) {
+                if (insertPos < maxTry) {
+                    top[insertPos] = top[insertPos - 1];
+                }
+                insertPos--;
+            }
+            top[insertPos] = comp;
+            if (topCount < maxTry) topCount++;
+        }
 
-        for (var i = 0; i < maxTry; i++) {
+        for (var i = 0; i < topCount; i++) {
             if (budget.IsExpired || budget.IsNearDeadline(120)) return;
-            var c = comps[i];
+            var c = top[i];
             var pad = Math.Max(2, (int)Math.Round(Math.Min(c.Width, c.Height) * 0.05));
             var bminX = c.MinX - pad;
             var bminY = c.MinY - pad;
@@ -216,10 +268,9 @@ internal static partial class QrPixelDecoder {
         }
     }
 
-    private static void AddResult(PooledList<QrDecoded> results, HashSet<string> seen, QrDecoded decoded, Func<QrDecoded, bool>? accept) {
+    private static void AddResult(PooledList<QrDecoded> results, HashSet<byte[]> seen, QrDecoded decoded, Func<QrDecoded, bool>? accept) {
         if (accept is not null && !accept(decoded)) return;
-        var key = Convert.ToBase64String(decoded.Bytes);
-        if (!seen.Add(key)) return;
+        if (!seen.Add(decoded.Bytes)) return;
         results.Add(decoded);
     }
 
@@ -286,9 +337,11 @@ internal static partial class QrPixelDecoder {
             maxCandidates = aggressive ? 36 : 24;
         }
         QrFinderPatternDetector.FindCandidates(image, invert, candidates, aggressive, shouldStop, rowStepOverride, maxCandidates, allowFullScan: !tightBudget, requireDiagonalCheck: !tightBudget);
+        var candidatesSorted = false;
         if (budget.Enabled && candidates.Count > 64) {
             candidates.Sort(static (a, b) => b.Count.CompareTo(a.Count));
             candidates.RemoveRange(64, candidates.Count - 64);
+            candidatesSorted = true;
         }
         if (tightBudget && candidates.Count > 30) {
             diagnostics = new QrPixelDecodeDiagnostics(scale, threshold, invert, candidates.Count, candidateTriplesTried: 0, dimension: 0,
@@ -305,7 +358,7 @@ internal static partial class QrPixelDecoder {
                 diagnostics = Better(diagnostics, diagBounds);
                 return false;
             }
-            if (TryDecodeFromFinderCandidates(scale, threshold, image, invert, candidates, accept, aggressive, budget, out result, out var diagF)) {
+            if (TryDecodeFromFinderCandidates(scale, threshold, image, invert, candidates, candidatesSorted, accept, aggressive, budget, out result, out var diagF)) {
                 diagnostics = diagF;
                 return true;
             }

@@ -14,8 +14,7 @@ public static class MatrixXpmRenderer {
     /// </summary>
     public static string Render(BitMatrix modules, MatrixPngRenderOptions opts, string? name = null) {
         var scanlines = MatrixPngRenderer.RenderScanlines(modules, opts, out var width, out var height, out var stride);
-        var rgba = ExtractRgba(scanlines, height, stride);
-        return XpmWriter.WriteRgba32(width, height, rgba, stride, name, opts.Foreground, opts.Background);
+        return XpmWriter.WriteRgba32Scanlines(width, height, scanlines, stride, name, opts.Foreground, opts.Background);
     }
 
     /// <summary>
@@ -42,11 +41,4 @@ public static class MatrixXpmRenderer {
         return RenderIO.WriteText(directory, fileName, xpm);
     }
 
-    private static byte[] ExtractRgba(byte[] scanlines, int height, int stride) {
-        var rgba = new byte[height * stride];
-        for (var y = 0; y < height; y++) {
-            Buffer.BlockCopy(scanlines, y * (stride + 1) + 1, rgba, y * stride, stride);
-        }
-        return rgba;
-    }
 }

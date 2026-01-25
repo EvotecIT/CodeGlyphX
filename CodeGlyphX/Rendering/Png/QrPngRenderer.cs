@@ -82,11 +82,24 @@ public static partial class QrPngRenderer {
     /// Renders the QR module matrix to a raw RGBA pixel buffer (no PNG encoding).
     /// </summary>
     public static byte[] RenderPixels(BitMatrix modules, QrPngRenderOptions opts, out int widthPx, out int heightPx, out int stride) {
-        var scanlines = RenderScanlines(modules, opts, out widthPx, out heightPx, out stride);
-        var pixels = new byte[heightPx * stride];
-        for (var y = 0; y < heightPx; y++) {
-            Buffer.BlockCopy(scanlines, y * (stride + 1) + 1, pixels, y * stride, stride);
+        GetScanlineLength(modules, opts, out widthPx, out heightPx, out stride);
+        if (CanRenderSimpleRgba(opts)) {
+            var pixels = new byte[heightPx * stride];
+            RenderSimplePixels(modules, opts, pixels, widthPx, heightPx, stride);
+            return pixels;
         }
-        return pixels;
+
+        var length = heightPx * (stride + 1);
+        var scanlines = ArrayPool<byte>.Shared.Rent(length);
+        try {
+            RenderScanlines(modules, opts, out widthPx, out heightPx, out stride, scanlines);
+            var pixels = new byte[heightPx * stride];
+            for (var y = 0; y < heightPx; y++) {
+                Buffer.BlockCopy(scanlines, y * (stride + 1) + 1, pixels, y * stride, stride);
+            }
+            return pixels;
+        } finally {
+            ArrayPool<byte>.Shared.Return(scanlines);
+        }
     }
 }

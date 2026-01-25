@@ -159,6 +159,7 @@ public static partial class QrEasy {
     }
 
     private static QrCode EncodePayload(string payload, QrEasyOptions opts) {
+        opts = ApplyLogoBackgroundVersionBump(opts);
         var ecc = opts.ErrorCorrectionLevel ?? GuessEcc(payload, opts.LogoPng is { Length: > 0 });
         if (opts.TextEncoding.HasValue) {
             return QrCodeEncoder.EncodeText(payload, opts.TextEncoding.Value, ecc, opts.MinVersion, opts.MaxVersion, opts.ForceMask, opts.IncludeEci);
@@ -211,11 +212,29 @@ public static partial class QrEasy {
             LogoScale = opts.LogoScale,
             LogoPaddingPx = opts.LogoPaddingPx,
             LogoDrawBackground = opts.LogoDrawBackground,
+            AutoBumpVersionForLogoBackground = opts.AutoBumpVersionForLogoBackground,
+            LogoBackgroundMinVersion = opts.LogoBackgroundMinVersion,
             LogoBackground = opts.LogoBackground,
             LogoCornerRadiusPx = opts.LogoCornerRadiusPx,
             JpegQuality = opts.JpegQuality,
             HtmlEmailSafeTable = opts.HtmlEmailSafeTable
         };
+    }
+
+    private static QrEasyOptions ApplyLogoBackgroundVersionBump(QrEasyOptions opts) {
+        if (!opts.AutoBumpVersionForLogoBackground) return opts;
+        if (opts.LogoBackgroundMinVersion <= 0) return opts;
+        if (!opts.LogoDrawBackground) return opts;
+        if (opts.LogoPng is null || opts.LogoPng.Length == 0) return opts;
+
+        var safeMin = Math.Max(opts.MinVersion, opts.LogoBackgroundMinVersion);
+        if (safeMin == opts.MinVersion && opts.MaxVersion >= safeMin) return opts;
+
+        var bumped = CloneOptions(opts);
+        safeMin = Math.Max(bumped.MinVersion, bumped.LogoBackgroundMinVersion);
+        bumped.MinVersion = safeMin;
+        if (bumped.MaxVersion < safeMin) bumped.MaxVersion = safeMin;
+        return bumped;
     }
 
     private static QrPngLogoOptions? BuildPngLogo(QrEasyOptions opts) {

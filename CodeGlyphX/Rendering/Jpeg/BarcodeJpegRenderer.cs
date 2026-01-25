@@ -1,4 +1,5 @@
 using System;
+using System.Buffers;
 using System.IO;
 using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Png;
@@ -13,9 +14,14 @@ public static class BarcodeJpegRenderer {
     /// Renders the barcode to a JPEG byte array.
     /// </summary>
     public static byte[] Render(Barcode1D barcode, BarcodePngRenderOptions opts, int quality = 85) {
-        var scanlines = BarcodePngRenderer.RenderScanlines(barcode, opts, out var width, out var height, out var stride);
-        var rgba = ExtractRgba(scanlines, width, height, stride);
-        return JpegWriter.WriteRgba(width, height, rgba, stride, quality);
+        var length = BarcodePngRenderer.GetScanlineLength(barcode, opts, out var width, out var height, out var stride);
+        var scanlines = ArrayPool<byte>.Shared.Rent(length);
+        try {
+            BarcodePngRenderer.RenderScanlines(barcode, opts, out width, out height, out stride, scanlines);
+            return JpegWriter.WriteRgbaScanlines(width, height, scanlines, stride, quality);
+        } finally {
+            ArrayPool<byte>.Shared.Return(scanlines);
+        }
     }
 
     /// <summary>
@@ -26,9 +32,14 @@ public static class BarcodeJpegRenderer {
     /// <param name="stream">Target stream.</param>
     /// <param name="quality">JPEG quality (1-100).</param>
     public static void RenderToStream(Barcode1D barcode, BarcodePngRenderOptions opts, Stream stream, int quality = 85) {
-        var scanlines = BarcodePngRenderer.RenderScanlines(barcode, opts, out var width, out var height, out var stride);
-        var rgba = ExtractRgba(scanlines, width, height, stride);
-        JpegWriter.WriteRgba(stream, width, height, rgba, stride, quality);
+        var length = BarcodePngRenderer.GetScanlineLength(barcode, opts, out var width, out var height, out var stride);
+        var scanlines = ArrayPool<byte>.Shared.Rent(length);
+        try {
+            BarcodePngRenderer.RenderScanlines(barcode, opts, out width, out height, out stride, scanlines);
+            JpegWriter.WriteRgbaScanlines(stream, width, height, scanlines, stride, quality);
+        } finally {
+            ArrayPool<byte>.Shared.Return(scanlines);
+        }
     }
 
     /// <summary>
@@ -58,11 +69,4 @@ public static class BarcodeJpegRenderer {
         return RenderIO.WriteBinary(directory, fileName, jpeg);
     }
 
-    private static byte[] ExtractRgba(byte[] scanlines, int width, int height, int stride) {
-        var rgba = new byte[height * stride];
-        for (var y = 0; y < height; y++) {
-            Buffer.BlockCopy(scanlines, y * (stride + 1) + 1, rgba, y * stride, stride);
-        }
-        return rgba;
-    }
 }

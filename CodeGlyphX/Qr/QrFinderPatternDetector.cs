@@ -2,6 +2,8 @@
 using System;
 using System.Buffers;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace CodeGlyphX.Qr;
 
@@ -75,48 +77,206 @@ internal static class QrFinderPatternDetector {
 
     private static void FindCandidatesWithStep(QrGrayImage image, bool invert, int rowStep, PooledList<FinderPattern> possibleCenters, bool aggressive, Func<bool>? shouldStop, int maxCandidates, bool requireDiagonalCheck) {
         // Scan rows for 1:1:3:1:1 run-length patterns and cross-check vertically/horizontally.
-        Span<int> stateCount = stackalloc int[5];
+        var width = image.Width;
+        var height = image.Height;
+        var gray = image.Gray;
+        var thresholds = image.ThresholdMap;
+        var threshold = image.Threshold;
+        var maxCandidatesLimit = maxCandidates > 0 ? maxCandidates : int.MaxValue;
 
         if (rowStep < 1) rowStep = 1;
 
-        for (var y = 0; y < image.Height; y += rowStep) {
-            if (shouldStop?.Invoke() == true) return;
-            if (maxCandidates > 0 && possibleCenters.Count >= maxCandidates) return;
-            stateCount.Clear();
-            var currentState = 0;
+        if (thresholds is null) {
+            if (!invert) {
+                for (var y = 0; y < height; y += rowStep) {
+                    if (shouldStop?.Invoke() == true) return;
+                    if (possibleCenters.Count >= maxCandidatesLimit) return;
+                    var s0 = 0;
+                    var s1 = 0;
+                    var s2 = 0;
+                    var s3 = 0;
+                    var s4 = 0;
+                    var currentState = 0;
+                    var rowOffset = y * width;
+                    var idx = rowOffset;
 
-            for (var x = 0; x < image.Width; x++) {
-                if (image.IsBlack(x, y, invert)) {
-                    if ((currentState & 1) == 1) currentState++;
-                    if (currentState > 4) {
-                        ShiftCounts(stateCount);
-                        currentState = 3;
-                    }
-                    stateCount[currentState]++;
-                } else {
-                    if ((currentState & 1) == 0) {
-                        if (currentState == 4) {
-                            if (FoundPatternCross(stateCount, aggressive) && HandlePossibleCenter(image, invert, possibleCenters, stateCount, x, y, aggressive, requireDiagonalCheck)) {
-                                if (maxCandidates > 0 && possibleCenters.Count >= maxCandidates) return;
-                                currentState = 0;
-                                stateCount.Clear();
-                            } else {
-                                ShiftCounts(stateCount);
+                    for (var x = 0; x < width; x++, idx++) {
+                        if (gray[idx] <= threshold) {
+                            if ((currentState & 1) == 1) currentState++;
+                            if (currentState > 4) {
+                                ShiftCounts(ref s0, ref s1, ref s2, ref s3, ref s4);
                                 currentState = 3;
                             }
+                            IncrementState(currentState, ref s0, ref s1, ref s2, ref s3, ref s4);
                         } else {
-                            currentState++;
-                            stateCount[currentState]++;
+                            if ((currentState & 1) == 0) {
+                                if (currentState == 4) {
+                                    if (FoundPatternCross(s0, s1, s2, s3, s4, aggressive) && HandlePossibleCenter(image, invert, possibleCenters, s0, s1, s2, s3, s4, x, y, aggressive, requireDiagonalCheck)) {
+                                        if (possibleCenters.Count >= maxCandidatesLimit) return;
+                                        currentState = 0;
+                                        ResetCounts(ref s0, ref s1, ref s2, ref s3, ref s4);
+                                    } else {
+                                        ShiftCounts(ref s0, ref s1, ref s2, ref s3, ref s4);
+                                        currentState = 3;
+                                    }
+                                } else {
+                                    currentState++;
+                                    IncrementState(currentState, ref s0, ref s1, ref s2, ref s3, ref s4);
+                                }
+                            } else {
+                                IncrementState(currentState, ref s0, ref s1, ref s2, ref s3, ref s4);
+                            }
                         }
-                    } else {
-                        stateCount[currentState]++;
+                    }
+
+                    // Check for pattern at end of row.
+                    if (FoundPatternCross(s0, s1, s2, s3, s4, aggressive)) {
+                        HandlePossibleCenter(image, invert, possibleCenters, s0, s1, s2, s3, s4, width, y, aggressive, requireDiagonalCheck);
+                    }
+                }
+            } else {
+                for (var y = 0; y < height; y += rowStep) {
+                    if (shouldStop?.Invoke() == true) return;
+                    if (possibleCenters.Count >= maxCandidatesLimit) return;
+                    var s0 = 0;
+                    var s1 = 0;
+                    var s2 = 0;
+                    var s3 = 0;
+                    var s4 = 0;
+                    var currentState = 0;
+                    var rowOffset = y * width;
+                    var idx = rowOffset;
+
+                    for (var x = 0; x < width; x++, idx++) {
+                        if (gray[idx] > threshold) {
+                            if ((currentState & 1) == 1) currentState++;
+                            if (currentState > 4) {
+                                ShiftCounts(ref s0, ref s1, ref s2, ref s3, ref s4);
+                                currentState = 3;
+                            }
+                            IncrementState(currentState, ref s0, ref s1, ref s2, ref s3, ref s4);
+                        } else {
+                            if ((currentState & 1) == 0) {
+                                if (currentState == 4) {
+                                    if (FoundPatternCross(s0, s1, s2, s3, s4, aggressive) && HandlePossibleCenter(image, invert, possibleCenters, s0, s1, s2, s3, s4, x, y, aggressive, requireDiagonalCheck)) {
+                                        if (possibleCenters.Count >= maxCandidatesLimit) return;
+                                        currentState = 0;
+                                        ResetCounts(ref s0, ref s1, ref s2, ref s3, ref s4);
+                                    } else {
+                                        ShiftCounts(ref s0, ref s1, ref s2, ref s3, ref s4);
+                                        currentState = 3;
+                                    }
+                                } else {
+                                    currentState++;
+                                    IncrementState(currentState, ref s0, ref s1, ref s2, ref s3, ref s4);
+                                }
+                            } else {
+                                IncrementState(currentState, ref s0, ref s1, ref s2, ref s3, ref s4);
+                            }
+                        }
+                    }
+
+                    // Check for pattern at end of row.
+                    if (FoundPatternCross(s0, s1, s2, s3, s4, aggressive)) {
+                        HandlePossibleCenter(image, invert, possibleCenters, s0, s1, s2, s3, s4, width, y, aggressive, requireDiagonalCheck);
                     }
                 }
             }
+        } else {
+            if (!invert) {
+                for (var y = 0; y < height; y += rowStep) {
+                    if (shouldStop?.Invoke() == true) return;
+                    if (possibleCenters.Count >= maxCandidatesLimit) return;
+                    var s0 = 0;
+                    var s1 = 0;
+                    var s2 = 0;
+                    var s3 = 0;
+                    var s4 = 0;
+                    var currentState = 0;
+                    var rowOffset = y * width;
+                    var idx = rowOffset;
 
-            // Check for pattern at end of row.
-            if (FoundPatternCross(stateCount, aggressive)) {
-                HandlePossibleCenter(image, invert, possibleCenters, stateCount, image.Width, y, aggressive, requireDiagonalCheck);
+                    for (var x = 0; x < width; x++, idx++) {
+                        if (gray[idx] <= thresholds[idx]) {
+                            if ((currentState & 1) == 1) currentState++;
+                            if (currentState > 4) {
+                                ShiftCounts(ref s0, ref s1, ref s2, ref s3, ref s4);
+                                currentState = 3;
+                            }
+                            IncrementState(currentState, ref s0, ref s1, ref s2, ref s3, ref s4);
+                        } else {
+                            if ((currentState & 1) == 0) {
+                                if (currentState == 4) {
+                                    if (FoundPatternCross(s0, s1, s2, s3, s4, aggressive) && HandlePossibleCenter(image, invert, possibleCenters, s0, s1, s2, s3, s4, x, y, aggressive, requireDiagonalCheck)) {
+                                        if (possibleCenters.Count >= maxCandidatesLimit) return;
+                                        currentState = 0;
+                                        ResetCounts(ref s0, ref s1, ref s2, ref s3, ref s4);
+                                    } else {
+                                        ShiftCounts(ref s0, ref s1, ref s2, ref s3, ref s4);
+                                        currentState = 3;
+                                    }
+                                } else {
+                                    currentState++;
+                                    IncrementState(currentState, ref s0, ref s1, ref s2, ref s3, ref s4);
+                                }
+                            } else {
+                                IncrementState(currentState, ref s0, ref s1, ref s2, ref s3, ref s4);
+                            }
+                        }
+                    }
+
+                    // Check for pattern at end of row.
+                    if (FoundPatternCross(s0, s1, s2, s3, s4, aggressive)) {
+                        HandlePossibleCenter(image, invert, possibleCenters, s0, s1, s2, s3, s4, width, y, aggressive, requireDiagonalCheck);
+                    }
+                }
+            } else {
+                for (var y = 0; y < height; y += rowStep) {
+                    if (shouldStop?.Invoke() == true) return;
+                    if (possibleCenters.Count >= maxCandidatesLimit) return;
+                    var s0 = 0;
+                    var s1 = 0;
+                    var s2 = 0;
+                    var s3 = 0;
+                    var s4 = 0;
+                    var currentState = 0;
+                    var rowOffset = y * width;
+                    var idx = rowOffset;
+
+                    for (var x = 0; x < width; x++, idx++) {
+                        if (gray[idx] > thresholds[idx]) {
+                            if ((currentState & 1) == 1) currentState++;
+                            if (currentState > 4) {
+                                ShiftCounts(ref s0, ref s1, ref s2, ref s3, ref s4);
+                                currentState = 3;
+                            }
+                            IncrementState(currentState, ref s0, ref s1, ref s2, ref s3, ref s4);
+                        } else {
+                            if ((currentState & 1) == 0) {
+                                if (currentState == 4) {
+                                    if (FoundPatternCross(s0, s1, s2, s3, s4, aggressive) && HandlePossibleCenter(image, invert, possibleCenters, s0, s1, s2, s3, s4, x, y, aggressive, requireDiagonalCheck)) {
+                                        if (possibleCenters.Count >= maxCandidatesLimit) return;
+                                        currentState = 0;
+                                        ResetCounts(ref s0, ref s1, ref s2, ref s3, ref s4);
+                                    } else {
+                                        ShiftCounts(ref s0, ref s1, ref s2, ref s3, ref s4);
+                                        currentState = 3;
+                                    }
+                                } else {
+                                    currentState++;
+                                    IncrementState(currentState, ref s0, ref s1, ref s2, ref s3, ref s4);
+                                }
+                            } else {
+                                IncrementState(currentState, ref s0, ref s1, ref s2, ref s3, ref s4);
+                            }
+                        }
+                    }
+
+                    // Check for pattern at end of row.
+                    if (FoundPatternCross(s0, s1, s2, s3, s4, aggressive)) {
+                        HandlePossibleCenter(image, invert, possibleCenters, s0, s1, s2, s3, s4, width, y, aggressive, requireDiagonalCheck);
+                    }
+                }
             }
         }
     }
@@ -126,8 +286,36 @@ internal static class QrFinderPatternDetector {
         topRight = default;
         bottomLeft = default;
 
-        candidates.Sort(static (a, b) => b.Count.CompareTo(a.Count));
-        var n = Math.Min(candidates.Count, 10);
+        const int maxCandidates = 10;
+        if (candidates.Count <= maxCandidates) {
+            return TrySelectBestThreeCore(CollectionsMarshal.AsSpan(candidates), out topLeft, out topRight, out bottomLeft);
+        }
+
+        Span<FinderPattern> top = stackalloc FinderPattern[maxCandidates];
+        var topCount = 0;
+        foreach (var candidate in candidates) {
+            var count = candidate.Count;
+            if (topCount == maxCandidates && count <= top[topCount - 1].Count) continue;
+            var insertPos = topCount < maxCandidates ? topCount : maxCandidates - 1;
+            while (insertPos > 0 && count > top[insertPos - 1].Count) {
+                if (insertPos < maxCandidates) {
+                    top[insertPos] = top[insertPos - 1];
+                }
+                insertPos--;
+            }
+            top[insertPos] = candidate;
+            if (topCount < maxCandidates) topCount++;
+        }
+
+        return TrySelectBestThreeCore(top.Slice(0, topCount), out topLeft, out topRight, out bottomLeft);
+    }
+
+    private static bool TrySelectBestThreeCore(ReadOnlySpan<FinderPattern> source, out FinderPattern topLeft, out FinderPattern topRight, out FinderPattern bottomLeft) {
+        topLeft = default;
+        topRight = default;
+        bottomLeft = default;
+
+        var n = source.Length;
 
         var bestScore = double.NegativeInfinity;
         var bestA = default(FinderPattern);
@@ -137,9 +325,9 @@ internal static class QrFinderPatternDetector {
         for (var i = 0; i < n - 2; i++) {
             for (var j = i + 1; j < n - 1; j++) {
                 for (var k = j + 1; k < n; k++) {
-                    var a = candidates[i];
-                    var b = candidates[j];
-                    var c = candidates[k];
+                    var a = source[i];
+                    var b = source[j];
+                    var c = source[k];
 
                     var msAvg = (a.ModuleSize + b.ModuleSize + c.ModuleSize) / 3.0;
                     var msMin = Math.Min(a.ModuleSize, Math.Min(b.ModuleSize, c.ModuleSize));
@@ -215,28 +403,61 @@ internal static class QrFinderPatternDetector {
         return true;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static double Dist2(FinderPattern a, FinderPattern b) {
         var dx = a.X - b.X;
         var dy = a.Y - b.Y;
         return dx * dx + dy * dy;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static double Cross(double ax, double ay, double bx, double by) => ax * by - ay * bx;
 
-    private static void ShiftCounts(Span<int> stateCount) {
-        stateCount[0] = stateCount[2];
-        stateCount[1] = stateCount[3];
-        stateCount[2] = stateCount[4];
-        stateCount[3] = 1;
-        stateCount[4] = 0;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static void ResetCounts(ref int s0, ref int s1, ref int s2, ref int s3, ref int s4) {
+        s0 = 0;
+        s1 = 0;
+        s2 = 0;
+        s3 = 0;
+        s4 = 0;
     }
 
-    private static bool HandlePossibleCenter(QrGrayImage image, bool invert, PooledList<FinderPattern> possibleCenters, ReadOnlySpan<int> stateCount, int endX, int y, bool aggressive, bool requireDiagonalCheck) {
-        var stateCountTotal = stateCount[0] + stateCount[1] + stateCount[2] + stateCount[3] + stateCount[4];
-        var centerX = CenterFromEnd(stateCount, endX);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static void ShiftCounts(ref int s0, ref int s1, ref int s2, ref int s3, ref int s4) {
+        s0 = s2;
+        s1 = s3;
+        s2 = s4;
+        s3 = 1;
+        s4 = 0;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static void IncrementState(int state, ref int s0, ref int s1, ref int s2, ref int s3, ref int s4) {
+        switch (state) {
+            case 0:
+                s0++;
+                break;
+            case 1:
+                s1++;
+                break;
+            case 2:
+                s2++;
+                break;
+            case 3:
+                s3++;
+                break;
+            default:
+                s4++;
+                break;
+        }
+    }
+
+    private static bool HandlePossibleCenter(QrGrayImage image, bool invert, PooledList<FinderPattern> possibleCenters, int s0, int s1, int s2, int s3, int s4, int endX, int y, bool aggressive, bool requireDiagonalCheck) {
+        var stateCountTotal = s0 + s1 + s2 + s3 + s4;
+        var centerX = CenterFromEnd(s0, s1, s2, s3, s4, endX);
         if (centerX < 0 || centerX >= image.Width) return false;
 
-        var maxCount = stateCount[2];
+        var maxCount = s2;
         if (!CrossCheckVertical(image, invert, QrMath.RoundToInt(centerX), y, maxCount, stateCountTotal, aggressive, out var centerY, out var moduleSizeV)) {
             return false;
         }
@@ -319,75 +540,278 @@ internal static class QrFinderPatternDetector {
         }
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static bool FoundPatternCross(ReadOnlySpan<int> stateCount, bool aggressive) {
         var total = stateCount[0] + stateCount[1] + stateCount[2] + stateCount[3] + stateCount[4];
         if (total < 7) return false;
         if (stateCount[0] == 0 || stateCount[1] == 0 || stateCount[2] == 0 || stateCount[3] == 0 || stateCount[4] == 0) return false;
+        var outerLimit = aggressive ? 8 : 5;   // 0.8x or 0.5x, scaled by 10.
+        var centerLimit = aggressive ? 28 : 15; // 2.8x or 1.5x, scaled by 10.
 
-        var moduleSize = total / 7.0;
-        var maxVariance = moduleSize * (aggressive ? 0.8 : 0.5);
-        var centerVariance = aggressive ? 3.5 * maxVariance : 3.0 * maxVariance;
+        var diff0 = 7 * stateCount[0] - total;
+        if (diff0 < 0) diff0 = -diff0;
+        if (diff0 * 10 > total * outerLimit) return false;
 
-        return Math.Abs(moduleSize - stateCount[0]) <= maxVariance &&
-               Math.Abs(moduleSize - stateCount[1]) <= maxVariance &&
-               Math.Abs(3.0 * moduleSize - stateCount[2]) <= centerVariance &&
-               Math.Abs(moduleSize - stateCount[3]) <= maxVariance &&
-               Math.Abs(moduleSize - stateCount[4]) <= maxVariance;
+        var diff1 = 7 * stateCount[1] - total;
+        if (diff1 < 0) diff1 = -diff1;
+        if (diff1 * 10 > total * outerLimit) return false;
+
+        var diff2 = 7 * stateCount[2] - (3 * total);
+        if (diff2 < 0) diff2 = -diff2;
+        if (diff2 * 10 > total * centerLimit) return false;
+
+        var diff3 = 7 * stateCount[3] - total;
+        if (diff3 < 0) diff3 = -diff3;
+        if (diff3 * 10 > total * outerLimit) return false;
+
+        var diff4 = 7 * stateCount[4] - total;
+        if (diff4 < 0) diff4 = -diff4;
+        return diff4 * 10 <= total * outerLimit;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static bool FoundPatternCross(int s0, int s1, int s2, int s3, int s4, bool aggressive) {
+        var total = s0 + s1 + s2 + s3 + s4;
+        if (total < 7) return false;
+        if (s0 == 0 || s1 == 0 || s2 == 0 || s3 == 0 || s4 == 0) return false;
+        var outerLimit = aggressive ? 8 : 5;
+        var centerLimit = aggressive ? 28 : 15;
+
+        var diff0 = 7 * s0 - total;
+        if (diff0 < 0) diff0 = -diff0;
+        if (diff0 * 10 > total * outerLimit) return false;
+
+        var diff1 = 7 * s1 - total;
+        if (diff1 < 0) diff1 = -diff1;
+        if (diff1 * 10 > total * outerLimit) return false;
+
+        var diff2 = 7 * s2 - (3 * total);
+        if (diff2 < 0) diff2 = -diff2;
+        if (diff2 * 10 > total * centerLimit) return false;
+
+        var diff3 = 7 * s3 - total;
+        if (diff3 < 0) diff3 = -diff3;
+        if (diff3 * 10 > total * outerLimit) return false;
+
+        var diff4 = 7 * s4 - total;
+        if (diff4 < 0) diff4 = -diff4;
+        return diff4 * 10 <= total * outerLimit;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static double CenterFromEnd(ReadOnlySpan<int> stateCount, int end) {
         return end - stateCount[4] - stateCount[3] - stateCount[2] / 2.0;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static double CenterFromEnd(int s0, int s1, int s2, int s3, int s4, int end) {
+        return end - s4 - s3 - s2 / 2.0;
     }
 
     private static bool CrossCheckVertical(QrGrayImage image, bool invert, int centerX, int startY, int maxCount, int originalTotal, bool aggressive, out double centerY, out double moduleSize) {
         centerY = 0;
         moduleSize = 0;
 
-        Span<int> stateCount = stackalloc int[5];
+        var width = image.Width;
+        var height = image.Height;
+        var gray = image.Gray;
+        var thresholds = image.ThresholdMap;
+        var threshold = image.Threshold;
+        var s0 = 0;
+        var s1 = 0;
+        var s2 = 0;
+        var s3 = 0;
+        var s4 = 0;
 
         var y = startY;
-        while (y >= 0 && image.IsBlack(centerX, y, invert)) {
-            stateCount[2]++;
-            y--;
-        }
-        if (y < 0) return false;
+        var idx = (y * width) + centerX;
+        if (thresholds is null) {
+            if (!invert) {
+                while (y >= 0 && gray[idx] <= threshold) {
+                    s2++;
+                    y--;
+                    idx -= width;
+                }
+                if (y < 0) return false;
 
-        while (y >= 0 && !image.IsBlack(centerX, y, invert) && stateCount[1] <= maxCount) {
-            stateCount[1]++;
-            y--;
-        }
-        if (y < 0 || stateCount[1] > maxCount) return false;
+                while (y >= 0 && gray[idx] > threshold && s1 <= maxCount) {
+                    s1++;
+                    y--;
+                    idx -= width;
+                }
+                if (y < 0 || s1 > maxCount) return false;
 
-        while (y >= 0 && image.IsBlack(centerX, y, invert) && stateCount[0] <= maxCount) {
-            stateCount[0]++;
-            y--;
-        }
-        if (stateCount[0] > maxCount) return false;
+                while (y >= 0 && gray[idx] <= threshold && s0 <= maxCount) {
+                    s0++;
+                    y--;
+                    idx -= width;
+                }
+                if (s0 > maxCount) return false;
 
-        y = startY + 1;
-        while (y < image.Height && image.IsBlack(centerX, y, invert)) {
-            stateCount[2]++;
-            y++;
-        }
-        if (y == image.Height) return false;
+                y = startY + 1;
+                idx = (y * width) + centerX;
+                while (y < height && gray[idx] <= threshold) {
+                    s2++;
+                    y++;
+                    idx += width;
+                }
+                if (y == height) return false;
 
-        while (y < image.Height && !image.IsBlack(centerX, y, invert) && stateCount[3] < maxCount) {
-            stateCount[3]++;
-            y++;
-        }
-        if (y == image.Height || stateCount[3] >= maxCount) return false;
+                while (y < height && gray[idx] > threshold && s3 < maxCount) {
+                    s3++;
+                    y++;
+                    idx += width;
+                }
+                if (y == height || s3 >= maxCount) return false;
 
-        while (y < image.Height && image.IsBlack(centerX, y, invert) && stateCount[4] < maxCount) {
-            stateCount[4]++;
-            y++;
-        }
-        if (stateCount[4] >= maxCount) return false;
+                while (y < height && gray[idx] <= threshold && s4 < maxCount) {
+                    s4++;
+                    y++;
+                    idx += width;
+                }
+                if (s4 >= maxCount) return false;
+            } else {
+                while (y >= 0 && gray[idx] > threshold) {
+                    s2++;
+                    y--;
+                    idx -= width;
+                }
+                if (y < 0) return false;
 
-        var total = stateCount[0] + stateCount[1] + stateCount[2] + stateCount[3] + stateCount[4];
+                while (y >= 0 && gray[idx] <= threshold && s1 <= maxCount) {
+                    s1++;
+                    y--;
+                    idx -= width;
+                }
+                if (y < 0 || s1 > maxCount) return false;
+
+                while (y >= 0 && gray[idx] > threshold && s0 <= maxCount) {
+                    s0++;
+                    y--;
+                    idx -= width;
+                }
+                if (s0 > maxCount) return false;
+
+                y = startY + 1;
+                idx = (y * width) + centerX;
+                while (y < height && gray[idx] > threshold) {
+                    s2++;
+                    y++;
+                    idx += width;
+                }
+                if (y == height) return false;
+
+                while (y < height && gray[idx] <= threshold && s3 < maxCount) {
+                    s3++;
+                    y++;
+                    idx += width;
+                }
+                if (y == height || s3 >= maxCount) return false;
+
+                while (y < height && gray[idx] > threshold && s4 < maxCount) {
+                    s4++;
+                    y++;
+                    idx += width;
+                }
+                if (s4 >= maxCount) return false;
+            }
+        } else {
+            if (!invert) {
+                while (y >= 0 && gray[idx] <= thresholds[idx]) {
+                    s2++;
+                    y--;
+                    idx -= width;
+                }
+                if (y < 0) return false;
+
+                while (y >= 0 && gray[idx] > thresholds[idx] && s1 <= maxCount) {
+                    s1++;
+                    y--;
+                    idx -= width;
+                }
+                if (y < 0 || s1 > maxCount) return false;
+
+                while (y >= 0 && gray[idx] <= thresholds[idx] && s0 <= maxCount) {
+                    s0++;
+                    y--;
+                    idx -= width;
+                }
+                if (s0 > maxCount) return false;
+
+                y = startY + 1;
+                idx = (y * width) + centerX;
+                while (y < height && gray[idx] <= thresholds[idx]) {
+                    s2++;
+                    y++;
+                    idx += width;
+                }
+                if (y == height) return false;
+
+                while (y < height && gray[idx] > thresholds[idx] && s3 < maxCount) {
+                    s3++;
+                    y++;
+                    idx += width;
+                }
+                if (y == height || s3 >= maxCount) return false;
+
+                while (y < height && gray[idx] <= thresholds[idx] && s4 < maxCount) {
+                    s4++;
+                    y++;
+                    idx += width;
+                }
+                if (s4 >= maxCount) return false;
+            } else {
+                while (y >= 0 && gray[idx] > thresholds[idx]) {
+                    s2++;
+                    y--;
+                    idx -= width;
+                }
+                if (y < 0) return false;
+
+                while (y >= 0 && gray[idx] <= thresholds[idx] && s1 <= maxCount) {
+                    s1++;
+                    y--;
+                    idx -= width;
+                }
+                if (y < 0 || s1 > maxCount) return false;
+
+                while (y >= 0 && gray[idx] > thresholds[idx] && s0 <= maxCount) {
+                    s0++;
+                    y--;
+                    idx -= width;
+                }
+                if (s0 > maxCount) return false;
+
+                y = startY + 1;
+                idx = (y * width) + centerX;
+                while (y < height && gray[idx] > thresholds[idx]) {
+                    s2++;
+                    y++;
+                    idx += width;
+                }
+                if (y == height) return false;
+
+                while (y < height && gray[idx] <= thresholds[idx] && s3 < maxCount) {
+                    s3++;
+                    y++;
+                    idx += width;
+                }
+                if (y == height || s3 >= maxCount) return false;
+
+                while (y < height && gray[idx] > thresholds[idx] && s4 < maxCount) {
+                    s4++;
+                    y++;
+                    idx += width;
+                }
+                if (s4 >= maxCount) return false;
+            }
+        }
+
+        var total = s0 + s1 + s2 + s3 + s4;
         if (Math.Abs(total - originalTotal) * 5 >= originalTotal * 2) return false;
-        if (!FoundPatternCross(stateCount, aggressive)) return false;
+        if (!FoundPatternCross(s0, s1, s2, s3, s4, aggressive)) return false;
 
-        centerY = CenterFromEnd(stateCount, y);
+        centerY = CenterFromEnd(s0, s1, s2, s3, s4, y);
         moduleSize = total / 7.0;
         return true;
     }
@@ -396,110 +820,449 @@ internal static class QrFinderPatternDetector {
         centerX = 0;
         moduleSize = 0;
 
-        Span<int> stateCount = stackalloc int[5];
+        var width = image.Width;
+        var gray = image.Gray;
+        var thresholds = image.ThresholdMap;
+        var threshold = image.Threshold;
+        var s0 = 0;
+        var s1 = 0;
+        var s2 = 0;
+        var s3 = 0;
+        var s4 = 0;
 
         var x = startX;
-        while (x >= 0 && image.IsBlack(x, centerY, invert)) {
-            stateCount[2]++;
-            x--;
-        }
-        if (x < 0) return false;
+        var rowOffset = centerY * width;
+        var idx = rowOffset + x;
+        if (thresholds is null) {
+            if (!invert) {
+                while (x >= 0 && gray[idx] <= threshold) {
+                    s2++;
+                    x--;
+                    idx--;
+                }
+                if (x < 0) return false;
 
-        while (x >= 0 && !image.IsBlack(x, centerY, invert) && stateCount[1] <= maxCount) {
-            stateCount[1]++;
-            x--;
-        }
-        if (x < 0 || stateCount[1] > maxCount) return false;
+                while (x >= 0 && gray[idx] > threshold && s1 <= maxCount) {
+                    s1++;
+                    x--;
+                    idx--;
+                }
+                if (x < 0 || s1 > maxCount) return false;
 
-        while (x >= 0 && image.IsBlack(x, centerY, invert) && stateCount[0] <= maxCount) {
-            stateCount[0]++;
-            x--;
-        }
-        if (stateCount[0] > maxCount) return false;
+                while (x >= 0 && gray[idx] <= threshold && s0 <= maxCount) {
+                    s0++;
+                    x--;
+                    idx--;
+                }
+                if (s0 > maxCount) return false;
 
-        x = startX + 1;
-        while (x < image.Width && image.IsBlack(x, centerY, invert)) {
-            stateCount[2]++;
-            x++;
-        }
-        if (x == image.Width) return false;
+                x = startX + 1;
+                idx = rowOffset + x;
+                while (x < width && gray[idx] <= threshold) {
+                    s2++;
+                    x++;
+                    idx++;
+                }
+                if (x == width) return false;
 
-        while (x < image.Width && !image.IsBlack(x, centerY, invert) && stateCount[3] < maxCount) {
-            stateCount[3]++;
-            x++;
-        }
-        if (x == image.Width || stateCount[3] >= maxCount) return false;
+                while (x < width && gray[idx] > threshold && s3 < maxCount) {
+                    s3++;
+                    x++;
+                    idx++;
+                }
+                if (x == width || s3 >= maxCount) return false;
 
-        while (x < image.Width && image.IsBlack(x, centerY, invert) && stateCount[4] < maxCount) {
-            stateCount[4]++;
-            x++;
-        }
-        if (stateCount[4] >= maxCount) return false;
+                while (x < width && gray[idx] <= threshold && s4 < maxCount) {
+                    s4++;
+                    x++;
+                    idx++;
+                }
+                if (s4 >= maxCount) return false;
+            } else {
+                while (x >= 0 && gray[idx] > threshold) {
+                    s2++;
+                    x--;
+                    idx--;
+                }
+                if (x < 0) return false;
 
-        var total = stateCount[0] + stateCount[1] + stateCount[2] + stateCount[3] + stateCount[4];
+                while (x >= 0 && gray[idx] <= threshold && s1 <= maxCount) {
+                    s1++;
+                    x--;
+                    idx--;
+                }
+                if (x < 0 || s1 > maxCount) return false;
+
+                while (x >= 0 && gray[idx] > threshold && s0 <= maxCount) {
+                    s0++;
+                    x--;
+                    idx--;
+                }
+                if (s0 > maxCount) return false;
+
+                x = startX + 1;
+                idx = rowOffset + x;
+                while (x < width && gray[idx] > threshold) {
+                    s2++;
+                    x++;
+                    idx++;
+                }
+                if (x == width) return false;
+
+                while (x < width && gray[idx] <= threshold && s3 < maxCount) {
+                    s3++;
+                    x++;
+                    idx++;
+                }
+                if (x == width || s3 >= maxCount) return false;
+
+                while (x < width && gray[idx] > threshold && s4 < maxCount) {
+                    s4++;
+                    x++;
+                    idx++;
+                }
+                if (s4 >= maxCount) return false;
+            }
+        } else {
+            if (!invert) {
+                while (x >= 0 && gray[idx] <= thresholds[idx]) {
+                    s2++;
+                    x--;
+                    idx--;
+                }
+                if (x < 0) return false;
+
+                while (x >= 0 && gray[idx] > thresholds[idx] && s1 <= maxCount) {
+                    s1++;
+                    x--;
+                    idx--;
+                }
+                if (x < 0 || s1 > maxCount) return false;
+
+                while (x >= 0 && gray[idx] <= thresholds[idx] && s0 <= maxCount) {
+                    s0++;
+                    x--;
+                    idx--;
+                }
+                if (s0 > maxCount) return false;
+
+                x = startX + 1;
+                idx = rowOffset + x;
+                while (x < width && gray[idx] <= thresholds[idx]) {
+                    s2++;
+                    x++;
+                    idx++;
+                }
+                if (x == width) return false;
+
+                while (x < width && gray[idx] > thresholds[idx] && s3 < maxCount) {
+                    s3++;
+                    x++;
+                    idx++;
+                }
+                if (x == width || s3 >= maxCount) return false;
+
+                while (x < width && gray[idx] <= thresholds[idx] && s4 < maxCount) {
+                    s4++;
+                    x++;
+                    idx++;
+                }
+                if (s4 >= maxCount) return false;
+            } else {
+                while (x >= 0 && gray[idx] > thresholds[idx]) {
+                    s2++;
+                    x--;
+                    idx--;
+                }
+                if (x < 0) return false;
+
+                while (x >= 0 && gray[idx] <= thresholds[idx] && s1 <= maxCount) {
+                    s1++;
+                    x--;
+                    idx--;
+                }
+                if (x < 0 || s1 > maxCount) return false;
+
+                while (x >= 0 && gray[idx] > thresholds[idx] && s0 <= maxCount) {
+                    s0++;
+                    x--;
+                    idx--;
+                }
+                if (s0 > maxCount) return false;
+
+                x = startX + 1;
+                idx = rowOffset + x;
+                while (x < width && gray[idx] > thresholds[idx]) {
+                    s2++;
+                    x++;
+                    idx++;
+                }
+                if (x == width) return false;
+
+                while (x < width && gray[idx] <= thresholds[idx] && s3 < maxCount) {
+                    s3++;
+                    x++;
+                    idx++;
+                }
+                if (x == width || s3 >= maxCount) return false;
+
+                while (x < width && gray[idx] > thresholds[idx] && s4 < maxCount) {
+                    s4++;
+                    x++;
+                    idx++;
+                }
+                if (s4 >= maxCount) return false;
+            }
+        }
+
+        var total = s0 + s1 + s2 + s3 + s4;
         if (Math.Abs(total - originalTotal) * 5 >= originalTotal * 2) return false;
-        if (!FoundPatternCross(stateCount, aggressive)) return false;
+        if (!FoundPatternCross(s0, s1, s2, s3, s4, aggressive)) return false;
 
-        centerX = CenterFromEnd(stateCount, x);
+        centerX = CenterFromEnd(s0, s1, s2, s3, s4, x);
         moduleSize = total / 7.0;
         return true;
     }
 
     private static bool CrossCheckDiagonal(QrGrayImage image, bool invert, int centerX, int centerY, int maxCount, int originalTotal, bool aggressive) {
-        Span<int> stateCount = stackalloc int[5];
+        var width = image.Width;
+        var height = image.Height;
+        var gray = image.Gray;
+        var thresholds = image.ThresholdMap;
+        var threshold = image.Threshold;
+
+        var s0 = 0;
+        var s1 = 0;
+        var s2 = 0;
+        var s3 = 0;
+        var s4 = 0;
 
         var x = centerX;
         var y = centerY;
+        var idx = (y * width) + x;
+        if (thresholds is null) {
+            if (!invert) {
+                while (x >= 0 && y >= 0 && gray[idx] <= threshold) {
+                    s2++;
+                    x--;
+                    y--;
+                    idx -= width + 1;
+                }
+                if (x < 0 || y < 0) return false;
 
-        while (x >= 0 && y >= 0 && image.IsBlack(x, y, invert)) {
-            stateCount[2]++;
-            x--;
-            y--;
+                while (x >= 0 && y >= 0 && gray[idx] > threshold && s1 <= maxCount) {
+                    s1++;
+                    x--;
+                    y--;
+                    idx -= width + 1;
+                }
+                if (x < 0 || y < 0 || s1 > maxCount) return false;
+
+                while (x >= 0 && y >= 0 && gray[idx] <= threshold && s0 <= maxCount) {
+                    s0++;
+                    x--;
+                    y--;
+                    idx -= width + 1;
+                }
+                if (s0 > maxCount) return false;
+
+                x = centerX + 1;
+                y = centerY + 1;
+                idx = (y * width) + x;
+                while (x < width && y < height && gray[idx] <= threshold) {
+                    s2++;
+                    x++;
+                    y++;
+                    idx += width + 1;
+                }
+                if (x >= width || y >= height) return false;
+
+                while (x < width && y < height && gray[idx] > threshold && s3 < maxCount) {
+                    s3++;
+                    x++;
+                    y++;
+                    idx += width + 1;
+                }
+                if (x >= width || y >= height || s3 >= maxCount) return false;
+
+                while (x < width && y < height && gray[idx] <= threshold && s4 < maxCount) {
+                    s4++;
+                    x++;
+                    y++;
+                    idx += width + 1;
+                }
+                if (s4 >= maxCount) return false;
+            } else {
+                while (x >= 0 && y >= 0 && gray[idx] > threshold) {
+                    s2++;
+                    x--;
+                    y--;
+                    idx -= width + 1;
+                }
+                if (x < 0 || y < 0) return false;
+
+                while (x >= 0 && y >= 0 && gray[idx] <= threshold && s1 <= maxCount) {
+                    s1++;
+                    x--;
+                    y--;
+                    idx -= width + 1;
+                }
+                if (x < 0 || y < 0 || s1 > maxCount) return false;
+
+                while (x >= 0 && y >= 0 && gray[idx] > threshold && s0 <= maxCount) {
+                    s0++;
+                    x--;
+                    y--;
+                    idx -= width + 1;
+                }
+                if (s0 > maxCount) return false;
+
+                x = centerX + 1;
+                y = centerY + 1;
+                idx = (y * width) + x;
+                while (x < width && y < height && gray[idx] > threshold) {
+                    s2++;
+                    x++;
+                    y++;
+                    idx += width + 1;
+                }
+                if (x >= width || y >= height) return false;
+
+                while (x < width && y < height && gray[idx] <= threshold && s3 < maxCount) {
+                    s3++;
+                    x++;
+                    y++;
+                    idx += width + 1;
+                }
+                if (x >= width || y >= height || s3 >= maxCount) return false;
+
+                while (x < width && y < height && gray[idx] > threshold && s4 < maxCount) {
+                    s4++;
+                    x++;
+                    y++;
+                    idx += width + 1;
+                }
+                if (s4 >= maxCount) return false;
+            }
+        } else {
+            if (!invert) {
+                while (x >= 0 && y >= 0 && gray[idx] <= thresholds[idx]) {
+                    s2++;
+                    x--;
+                    y--;
+                    idx -= width + 1;
+                }
+                if (x < 0 || y < 0) return false;
+
+                while (x >= 0 && y >= 0 && gray[idx] > thresholds[idx] && s1 <= maxCount) {
+                    s1++;
+                    x--;
+                    y--;
+                    idx -= width + 1;
+                }
+                if (x < 0 || y < 0 || s1 > maxCount) return false;
+
+                while (x >= 0 && y >= 0 && gray[idx] <= thresholds[idx] && s0 <= maxCount) {
+                    s0++;
+                    x--;
+                    y--;
+                    idx -= width + 1;
+                }
+                if (s0 > maxCount) return false;
+
+                x = centerX + 1;
+                y = centerY + 1;
+                idx = (y * width) + x;
+                while (x < width && y < height && gray[idx] <= thresholds[idx]) {
+                    s2++;
+                    x++;
+                    y++;
+                    idx += width + 1;
+                }
+                if (x >= width || y >= height) return false;
+
+                while (x < width && y < height && gray[idx] > thresholds[idx] && s3 < maxCount) {
+                    s3++;
+                    x++;
+                    y++;
+                    idx += width + 1;
+                }
+                if (x >= width || y >= height || s3 >= maxCount) return false;
+
+                while (x < width && y < height && gray[idx] <= thresholds[idx] && s4 < maxCount) {
+                    s4++;
+                    x++;
+                    y++;
+                    idx += width + 1;
+                }
+                if (s4 >= maxCount) return false;
+            } else {
+                while (x >= 0 && y >= 0 && gray[idx] > thresholds[idx]) {
+                    s2++;
+                    x--;
+                    y--;
+                    idx -= width + 1;
+                }
+                if (x < 0 || y < 0) return false;
+
+                while (x >= 0 && y >= 0 && gray[idx] <= thresholds[idx] && s1 <= maxCount) {
+                    s1++;
+                    x--;
+                    y--;
+                    idx -= width + 1;
+                }
+                if (x < 0 || y < 0 || s1 > maxCount) return false;
+
+                while (x >= 0 && y >= 0 && gray[idx] > thresholds[idx] && s0 <= maxCount) {
+                    s0++;
+                    x--;
+                    y--;
+                    idx -= width + 1;
+                }
+                if (s0 > maxCount) return false;
+
+                x = centerX + 1;
+                y = centerY + 1;
+                idx = (y * width) + x;
+                while (x < width && y < height && gray[idx] > thresholds[idx]) {
+                    s2++;
+                    x++;
+                    y++;
+                    idx += width + 1;
+                }
+                if (x >= width || y >= height) return false;
+
+                while (x < width && y < height && gray[idx] <= thresholds[idx] && s3 < maxCount) {
+                    s3++;
+                    x++;
+                    y++;
+                    idx += width + 1;
+                }
+                if (x >= width || y >= height || s3 >= maxCount) return false;
+
+                while (x < width && y < height && gray[idx] > thresholds[idx] && s4 < maxCount) {
+                    s4++;
+                    x++;
+                    y++;
+                    idx += width + 1;
+                }
+                if (s4 >= maxCount) return false;
+            }
         }
-        if (x < 0 || y < 0) return false;
 
-        while (x >= 0 && y >= 0 && !image.IsBlack(x, y, invert) && stateCount[1] <= maxCount) {
-            stateCount[1]++;
-            x--;
-            y--;
-        }
-        if (x < 0 || y < 0 || stateCount[1] > maxCount) return false;
-
-        while (x >= 0 && y >= 0 && image.IsBlack(x, y, invert) && stateCount[0] <= maxCount) {
-            stateCount[0]++;
-            x--;
-            y--;
-        }
-        if (stateCount[0] > maxCount) return false;
-
-        x = centerX + 1;
-        y = centerY + 1;
-        while (x < image.Width && y < image.Height && image.IsBlack(x, y, invert)) {
-            stateCount[2]++;
-            x++;
-            y++;
-        }
-        if (x >= image.Width || y >= image.Height) return false;
-
-        while (x < image.Width && y < image.Height && !image.IsBlack(x, y, invert) && stateCount[3] < maxCount) {
-            stateCount[3]++;
-            x++;
-            y++;
-        }
-        if (x >= image.Width || y >= image.Height || stateCount[3] >= maxCount) return false;
-
-        while (x < image.Width && y < image.Height && image.IsBlack(x, y, invert) && stateCount[4] < maxCount) {
-            stateCount[4]++;
-            x++;
-            y++;
-        }
-        if (stateCount[4] >= maxCount) return false;
-
-        var total = stateCount[0] + stateCount[1] + stateCount[2] + stateCount[3] + stateCount[4];
+        var total = s0 + s1 + s2 + s3 + s4;
         if (Math.Abs(total - originalTotal) * 5 >= originalTotal * 2) return false;
-        if (!FoundPatternCross(stateCount, aggressive)) return false;
+        if (!FoundPatternCross(s0, s1, s2, s3, s4, aggressive)) return false;
 
         return true;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static bool IsBlackAt(byte[] gray, byte[]? thresholds, byte threshold, int index, bool invert) {
+        var lum = gray[index];
+        var t = thresholds is null ? threshold : thresholds[index];
+        var black = lum <= t;
+        return invert ? !black : black;
     }
 }
 #endif

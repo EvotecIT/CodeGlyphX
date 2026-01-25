@@ -92,21 +92,39 @@ internal static class QrPayloadParser {
 
         if (dataCodewords is null) return false;
         if (version is < 1 or > 40) return false;
-        if (shouldStop?.Invoke() == true) return false;
+        if (shouldStop is not null && shouldStop()) return false;
 
         var bitLen = dataCodewords.Length * 8;
         var bitPos = 0;
+        var stop = shouldStop;
+        var useStop = stop is not null;
+        var stopCounter = 0;
+        const int stopMask = 15;
+
+        bool ShouldStopSparse()
+            => useStop && ((stopCounter++ & stopMask) == 0) && stop!();
 
         int ReadBits(int n) {
-            if (shouldStop?.Invoke() == true) return -1;
+            if (ShouldStopSparse()) return -1;
             if (n == 0) return 0;
             if (n < 0 || n > 31) throw new ArgumentOutOfRangeException(nameof(n));
             if (bitPos + n > bitLen) return -1;
-            var val = 0;
-            for (var i = 0; i < n; i++) {
-                var b = (dataCodewords[(bitPos + i) >> 3] >> (7 - ((bitPos + i) & 7))) & 1;
-                val = (val << 1) | b;
-            }
+            var byteIndex = bitPos >> 3;
+            var bitOffset = bitPos & 7;
+            var totalBits = bitOffset + n;
+            var bytesNeeded = (totalBits + 7) >> 3;
+            ulong acc = bytesNeeded switch {
+                1 => dataCodewords[byteIndex],
+                2 => ((ulong)dataCodewords[byteIndex] << 8) | dataCodewords[byteIndex + 1],
+                3 => ((ulong)dataCodewords[byteIndex] << 16) | ((ulong)dataCodewords[byteIndex + 1] << 8) | dataCodewords[byteIndex + 2],
+                4 => ((ulong)dataCodewords[byteIndex] << 24) | ((ulong)dataCodewords[byteIndex + 1] << 16) | ((ulong)dataCodewords[byteIndex + 2] << 8) | dataCodewords[byteIndex + 3],
+                5 => ((ulong)dataCodewords[byteIndex] << 32) | ((ulong)dataCodewords[byteIndex + 1] << 24) | ((ulong)dataCodewords[byteIndex + 2] << 16) | ((ulong)dataCodewords[byteIndex + 3] << 8) | dataCodewords[byteIndex + 4],
+                _ => 0UL
+            };
+            var extraBits = (bytesNeeded * 8) - totalBits;
+            acc >>= extraBits;
+            var mask = (1UL << n) - 1UL;
+            var val = (int)(acc & mask);
             bitPos += n;
             return val;
         }
@@ -118,20 +136,28 @@ internal static class QrPayloadParser {
         var buffer = ArrayPool<byte>.Shared.Rent(64);
         var count = 0;
 
-        void AddByte(byte b) {
-            if (count == buffer.Length) {
-                var next = ArrayPool<byte>.Shared.Rent(buffer.Length * 2);
-                Buffer.BlockCopy(buffer, 0, next, 0, count);
-                ArrayPool<byte>.Shared.Return(buffer);
-                buffer = next;
+        void EnsureCapacity(int required) {
+            if (required <= buffer.Length) return;
+            var nextSize = buffer.Length;
+            if (nextSize == 0) nextSize = 64;
+            while (nextSize < required) {
+                nextSize *= 2;
             }
+            var next = ArrayPool<byte>.Shared.Rent(nextSize);
+            Buffer.BlockCopy(buffer, 0, next, 0, count);
+            ArrayPool<byte>.Shared.Return(buffer);
+            buffer = next;
+        }
+
+        void AddByte(byte b) {
+            if (count == buffer.Length) EnsureCapacity(count + 1);
             buffer[count++] = b;
             segmentLength++;
         }
 
         try {
             while (true) {
-                if (shouldStop?.Invoke() == true) return false;
+                if (useStop && stop!()) return false;
                 var mode = ReadBits(4);
                 if (mode < 0) {
                     // Some encoders omit an explicit terminator if the payload exactly fills the available space,
@@ -165,9 +191,10 @@ internal static class QrPayloadParser {
                     var countBits = QrTables.GetByteModeCharCountBits(version);
                     var charCount = ReadBits(countBits);
                     if (charCount < 0) return false;
+                    EnsureCapacity(count + charCount);
 
                     for (var i = 0; i < charCount; i++) {
-                        if (shouldStop?.Invoke() == true) return false;
+                        if (ShouldStopSparse()) return false;
                         var b = ReadBits(8);
                         if (b < 0) return false;
                         AddByte((byte)b);
@@ -181,13 +208,14 @@ internal static class QrPayloadParser {
                     var countBits = QrTables.GetKanjiModeCharCountBits(version);
                     var charCount = ReadBits(countBits);
                     if (charCount < 0) return false;
+                    EnsureCapacity(count + (charCount * 2));
 
                     FlushSegment(ref segmentBuilder, encoding, ref segmentStart, ref segmentLength, count);
                     var previousEncoding = encoding;
                     encoding = QrTextEncoding.ShiftJis;
 
                     for (var i = 0; i < charCount; i++) {
-                        if (shouldStop?.Invoke() == true) return false;
+                        if (ShouldStopSparse()) return false;
                         var v = ReadBits(13);
                         if (v < 0) return false;
                         var assembled = ((v / 0xC0) << 8) | (v % 0xC0);
@@ -218,10 +246,11 @@ internal static class QrPayloadParser {
                     var countBits = QrTables.GetNumericModeCharCountBits(version);
                     var charCount = ReadBits(countBits);
                     if (charCount < 0) return false;
+                    EnsureCapacity(count + charCount);
 
                     var remaining = charCount;
                     while (remaining >= 3) {
-                        if (shouldStop?.Invoke() == true) return false;
+                        if (ShouldStopSparse()) return false;
                         var v = ReadBits(10);
                         if (v < 0 || v > 999) return false;
                         AddByte((byte)('0' + (v / 100)));
@@ -231,13 +260,13 @@ internal static class QrPayloadParser {
                     }
 
                     if (remaining == 2) {
-                        if (shouldStop?.Invoke() == true) return false;
+                        if (ShouldStopSparse()) return false;
                         var v = ReadBits(7);
                         if (v < 0 || v > 99) return false;
                         AddByte((byte)('0' + (v / 10)));
                         AddByte((byte)('0' + (v % 10)));
                     } else if (remaining == 1) {
-                        if (shouldStop?.Invoke() == true) return false;
+                        if (ShouldStopSparse()) return false;
                         var v = ReadBits(4);
                         if (v < 0 || v > 9) return false;
                         AddByte((byte)('0' + v));
@@ -251,11 +280,12 @@ internal static class QrPayloadParser {
                     var countBits = QrTables.GetAlphanumericModeCharCountBits(version);
                     var charCount = ReadBits(countBits);
                     if (charCount < 0) return false;
+                    EnsureCapacity(count + charCount);
 
                     var remaining = charCount;
                     if (fnc1Mode == QrFnc1Mode.None) {
                         while (remaining >= 2) {
-                            if (shouldStop?.Invoke() == true) return false;
+                            if (ShouldStopSparse()) return false;
                             var v = ReadBits(11);
                             if (v < 0 || v >= 45 * 45) return false;
                             var a = v / 45;
@@ -266,7 +296,7 @@ internal static class QrPayloadParser {
                         }
 
                         if (remaining == 1) {
-                            if (shouldStop?.Invoke() == true) return false;
+                            if (ShouldStopSparse()) return false;
                             var v = ReadBits(6);
                             if (v < 0 || v >= 45) return false;
                             AddByte((byte)AlphanumericTable[v]);
@@ -291,7 +321,7 @@ internal static class QrPayloadParser {
                         }
 
                         while (remaining >= 2) {
-                            if (shouldStop?.Invoke() == true) return false;
+                            if (ShouldStopSparse()) return false;
                             var v = ReadBits(11);
                             if (v < 0 || v >= 45 * 45) return false;
                             var a = v / 45;
@@ -302,7 +332,7 @@ internal static class QrPayloadParser {
                         }
 
                         if (remaining == 1) {
-                            if (shouldStop?.Invoke() == true) return false;
+                            if (ShouldStopSparse()) return false;
                             var v = ReadBits(6);
                             if (v < 0 || v >= 45) return false;
                             AppendAlpha((byte)AlphanumericTable[v]);

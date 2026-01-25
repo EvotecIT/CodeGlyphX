@@ -175,12 +175,12 @@ public static partial class CodeGlyph {
         diagnostics = new CodeGlyphDecodeDiagnostics();
         decoded = null!;
         if (pixels is null) throw new ArgumentNullException(nameof(pixels));
-        if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+        if (IsCancelled(cancellationToken, diagnostics)) return false;
         var squareish = IsSquareish(width, height);
         var preferQr = squareish && LooksLikeQr(pixels, width, height, stride, format);
 
         if (preferBarcode) {
-            if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+            if (IsCancelled(cancellationToken, diagnostics)) return false;
             if (BarcodeDecoder.TryDecode(pixels, width, height, stride, format, expectedBarcode, barcodeOptions, cancellationToken, out var barcode, out var barcodeDiag)) {
                 diagnostics.Barcode = barcodeDiag;
                 diagnostics.Success = true;
@@ -191,7 +191,7 @@ public static partial class CodeGlyph {
             diagnostics.Barcode = barcodeDiag;
 
             if (!squareish) {
-                if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+                if (IsCancelled(cancellationToken, diagnostics)) return false;
                 if (Pdf417Decoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var pdf417, out var pdfDiag)) {
                     diagnostics.Pdf417 = pdfDiag;
                     diagnostics.Success = true;
@@ -201,7 +201,7 @@ public static partial class CodeGlyph {
                 }
                 diagnostics.Pdf417 = pdfDiag;
 
-                if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+                if (IsCancelled(cancellationToken, diagnostics)) return false;
                 if (DataMatrixDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var dataMatrix, out var dmDiag)) {
                     diagnostics.DataMatrix = dmDiag;
                     diagnostics.Success = true;
@@ -211,7 +211,7 @@ public static partial class CodeGlyph {
                 }
                 diagnostics.DataMatrix = dmDiag;
 
-                if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+                if (IsCancelled(cancellationToken, diagnostics)) return false;
                 if (QrDecoder.TryDecode(pixels, width, height, stride, format, out var qr, out var qrInfo, qrOptions, cancellationToken)) {
                     diagnostics.Qr = qrInfo;
                     diagnostics.Success = true;
@@ -221,7 +221,7 @@ public static partial class CodeGlyph {
                 }
                 diagnostics.Qr = qrInfo;
 
-                if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+                if (IsCancelled(cancellationToken, diagnostics)) return false;
                 if (AztecDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var aztec, out var aztecDiag)) {
                     diagnostics.Aztec = aztecDiag;
                     diagnostics.Success = true;
@@ -231,12 +231,12 @@ public static partial class CodeGlyph {
                 }
                 diagnostics.Aztec = aztecDiag;
 
-                diagnostics.Failure ??= "No symbol decoded.";
+                SetNoResult(diagnostics);
                 return false;
             }
 
             if (preferQr) {
-                if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+                if (IsCancelled(cancellationToken, diagnostics)) return false;
                 if (QrDecoder.TryDecode(pixels, width, height, stride, format, out var qrPrefQr, out var qrInfoPrefQr, qrOptions, cancellationToken)) {
                     diagnostics.Qr = qrInfoPrefQr;
                     diagnostics.Success = true;
@@ -246,7 +246,7 @@ public static partial class CodeGlyph {
                 }
                 diagnostics.Qr = qrInfoPrefQr;
 
-                if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+                if (IsCancelled(cancellationToken, diagnostics)) return false;
                 if (AztecDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var aztecPrefQr, out var aztecDiagPrefQr)) {
                     diagnostics.Aztec = aztecDiagPrefQr;
                     diagnostics.Success = true;
@@ -256,7 +256,7 @@ public static partial class CodeGlyph {
                 }
                 diagnostics.Aztec = aztecDiagPrefQr;
 
-                if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+                if (IsCancelled(cancellationToken, diagnostics)) return false;
                 if (DataMatrixDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var dataMatrixPrefQr, out var dmDiagPrefQr)) {
                     diagnostics.DataMatrix = dmDiagPrefQr;
                     diagnostics.Success = true;
@@ -266,7 +266,7 @@ public static partial class CodeGlyph {
                 }
                 diagnostics.DataMatrix = dmDiagPrefQr;
             } else {
-                if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+                if (IsCancelled(cancellationToken, diagnostics)) return false;
                 if (DataMatrixDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var dataMatrixPrefDm, out var dmDiagPrefDm)) {
                     diagnostics.DataMatrix = dmDiagPrefDm;
                     diagnostics.Success = true;
@@ -276,7 +276,7 @@ public static partial class CodeGlyph {
                 }
                 diagnostics.DataMatrix = dmDiagPrefDm;
 
-                if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+                if (IsCancelled(cancellationToken, diagnostics)) return false;
                 if (AztecDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var aztecPrefDm, out var aztecDiagPrefDm)) {
                     diagnostics.Aztec = aztecDiagPrefDm;
                     diagnostics.Success = true;
@@ -286,7 +286,7 @@ public static partial class CodeGlyph {
                 }
                 diagnostics.Aztec = aztecDiagPrefDm;
 
-                if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+                if (IsCancelled(cancellationToken, diagnostics)) return false;
                 if (QrDecoder.TryDecode(pixels, width, height, stride, format, out var qrPrefDm, out var qrInfoPrefDm, qrOptions, cancellationToken)) {
                     diagnostics.Qr = qrInfoPrefDm;
                     diagnostics.Success = true;
@@ -297,7 +297,7 @@ public static partial class CodeGlyph {
                 diagnostics.Qr = qrInfoPrefDm;
             }
 
-            if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+            if (IsCancelled(cancellationToken, diagnostics)) return false;
             if (Pdf417Decoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var pdf4170, out var pdfDiag0)) {
                 diagnostics.Pdf417 = pdfDiag0;
                 diagnostics.Success = true;
@@ -307,12 +307,12 @@ public static partial class CodeGlyph {
             }
             diagnostics.Pdf417 = pdfDiag0;
 
-            diagnostics.Failure ??= "No symbol decoded.";
+            SetNoResult(diagnostics);
             return false;
         }
 
         if (!squareish) {
-            if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+            if (IsCancelled(cancellationToken, diagnostics)) return false;
             if (Pdf417Decoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var pdf417Decoded, out var pdfDiagA)) {
                 diagnostics.Pdf417 = pdfDiagA;
                 diagnostics.Success = true;
@@ -322,7 +322,7 @@ public static partial class CodeGlyph {
             }
             diagnostics.Pdf417 = pdfDiagA;
 
-            if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+            if (IsCancelled(cancellationToken, diagnostics)) return false;
             if (BarcodeDecoder.TryDecode(pixels, width, height, stride, format, expectedBarcode, barcodeOptions, cancellationToken, out var barcodeDecoded, out var barcodeDiagA)) {
                 diagnostics.Barcode = barcodeDiagA;
                 diagnostics.Success = true;
@@ -332,7 +332,7 @@ public static partial class CodeGlyph {
             }
             diagnostics.Barcode = barcodeDiagA;
 
-            if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+            if (IsCancelled(cancellationToken, diagnostics)) return false;
             if (DataMatrixDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var dataMatrixDecoded, out var dmDiagA)) {
                 diagnostics.DataMatrix = dmDiagA;
                 diagnostics.Success = true;
@@ -342,7 +342,7 @@ public static partial class CodeGlyph {
             }
             diagnostics.DataMatrix = dmDiagA;
 
-            if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+            if (IsCancelled(cancellationToken, diagnostics)) return false;
             if (QrDecoder.TryDecode(pixels, width, height, stride, format, out var qrDecoded, out var qrInfoA, qrOptions, cancellationToken)) {
                 diagnostics.Qr = qrInfoA;
                 diagnostics.Success = true;
@@ -352,7 +352,7 @@ public static partial class CodeGlyph {
             }
             diagnostics.Qr = qrInfoA;
 
-            if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+            if (IsCancelled(cancellationToken, diagnostics)) return false;
             if (AztecDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var aztecDecoded, out var aztecDiagA)) {
                 diagnostics.Aztec = aztecDiagA;
                 diagnostics.Success = true;
@@ -362,12 +362,12 @@ public static partial class CodeGlyph {
             }
             diagnostics.Aztec = aztecDiagA;
 
-            diagnostics.Failure ??= "No symbol decoded.";
+            SetNoResult(diagnostics);
             return false;
         }
 
         if (preferQr) {
-            if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+            if (IsCancelled(cancellationToken, diagnostics)) return false;
             if (QrDecoder.TryDecode(pixels, width, height, stride, format, out var qrNonQr0, out var qrInfoNonQr0, qrOptions, cancellationToken)) {
                 diagnostics.Qr = qrInfoNonQr0;
                 diagnostics.Success = true;
@@ -377,7 +377,7 @@ public static partial class CodeGlyph {
             }
             diagnostics.Qr = qrInfoNonQr0;
 
-            if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+            if (IsCancelled(cancellationToken, diagnostics)) return false;
             if (AztecDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var aztecNonQr0, out var aztecDiagNonQr0)) {
                 diagnostics.Aztec = aztecDiagNonQr0;
                 diagnostics.Success = true;
@@ -387,7 +387,7 @@ public static partial class CodeGlyph {
             }
             diagnostics.Aztec = aztecDiagNonQr0;
 
-            if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+            if (IsCancelled(cancellationToken, diagnostics)) return false;
             if (DataMatrixDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var dataMatrixNonQr0, out var dmDiagNonQr0)) {
                 diagnostics.DataMatrix = dmDiagNonQr0;
                 diagnostics.Success = true;
@@ -397,7 +397,7 @@ public static partial class CodeGlyph {
             }
             diagnostics.DataMatrix = dmDiagNonQr0;
         } else {
-            if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+            if (IsCancelled(cancellationToken, diagnostics)) return false;
             if (DataMatrixDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var dataMatrixNonDm0, out var dmDiagNonDm0)) {
                 diagnostics.DataMatrix = dmDiagNonDm0;
                 diagnostics.Success = true;
@@ -407,7 +407,7 @@ public static partial class CodeGlyph {
             }
             diagnostics.DataMatrix = dmDiagNonDm0;
 
-            if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+            if (IsCancelled(cancellationToken, diagnostics)) return false;
             if (AztecDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var aztecNonDm0, out var aztecDiagNonDm0)) {
                 diagnostics.Aztec = aztecDiagNonDm0;
                 diagnostics.Success = true;
@@ -417,7 +417,7 @@ public static partial class CodeGlyph {
             }
             diagnostics.Aztec = aztecDiagNonDm0;
 
-            if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+            if (IsCancelled(cancellationToken, diagnostics)) return false;
             if (QrDecoder.TryDecode(pixels, width, height, stride, format, out var qrNonDm0, out var qrInfoNonDm0, qrOptions, cancellationToken)) {
                 diagnostics.Qr = qrInfoNonDm0;
                 diagnostics.Success = true;
@@ -428,7 +428,7 @@ public static partial class CodeGlyph {
             diagnostics.Qr = qrInfoNonDm0;
         }
 
-        if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+        if (IsCancelled(cancellationToken, diagnostics)) return false;
         if (Pdf417Decoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var pdf417Decoded0, out var pdfDiagB)) {
             diagnostics.Pdf417 = pdfDiagB;
             diagnostics.Success = true;
@@ -438,7 +438,7 @@ public static partial class CodeGlyph {
         }
         diagnostics.Pdf417 = pdfDiagB;
 
-        if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+        if (IsCancelled(cancellationToken, diagnostics)) return false;
         if (BarcodeDecoder.TryDecode(pixels, width, height, stride, format, expectedBarcode, barcodeOptions, cancellationToken, out var barcodeDecoded0, out var barcodeDiagB)) {
             diagnostics.Barcode = barcodeDiagB;
             diagnostics.Success = true;
@@ -447,7 +447,7 @@ public static partial class CodeGlyph {
             return true;
         }
         diagnostics.Barcode = barcodeDiagB;
-        diagnostics.Failure ??= "No symbol decoded.";
+        SetNoResult(diagnostics);
         return false;
     }
 
@@ -528,7 +528,7 @@ public static partial class CodeGlyph {
         diagnostics = new CodeGlyphDecodeDiagnostics();
         decoded = Array.Empty<CodeGlyphDecoded>();
         if (pixels is null) throw new ArgumentNullException(nameof(pixels));
-        if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+        if (IsCancelled(cancellationToken, diagnostics)) return false;
         var squareish = IsSquareish(width, height);
         var qrOptionsLocal = qrOptions ?? new QrPixelDecodeOptions {
             Profile = QrDecodeProfile.Balanced,
@@ -541,7 +541,7 @@ public static partial class CodeGlyph {
         var list = new System.Collections.Generic.List<CodeGlyphDecoded>(4);
 
         if (includeBarcode && preferBarcode) {
-            if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+            if (IsCancelled(cancellationToken, diagnostics)) return false;
             if (BarcodeDecoder.TryDecodeAll(pixels, width, height, stride, format, out var barcodes, expectedBarcode, barcodeOptions, cancellationToken)) {
                 for (var i = 0; i < barcodes.Length; i++) {
                     list.Add(new CodeGlyphDecoded(barcodes[i]));
@@ -551,7 +551,7 @@ public static partial class CodeGlyph {
         }
 
         if (squareish) {
-            if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+            if (IsCancelled(cancellationToken, diagnostics)) return false;
             if (QrDecoder.TryDecodeAll(pixels, width, height, stride, format, out var qrResults, out var qrInfo, qrOptionsLocal, cancellationToken)) {
                 diagnostics.Qr = qrInfo;
                 for (var i = 0; i < qrResults.Length; i++) {
@@ -563,7 +563,7 @@ public static partial class CodeGlyph {
             }
 
             if (!preferQr || !foundQr) {
-                if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+                if (IsCancelled(cancellationToken, diagnostics)) return false;
                 if (AztecDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var aztec, out var aztecDiag)) {
                     diagnostics.Aztec = aztecDiag;
                     list.Add(new CodeGlyphDecoded(CodeGlyphKind.Aztec, aztec));
@@ -574,7 +574,7 @@ public static partial class CodeGlyph {
         }
 
         if (!preferQr || !foundQr) {
-            if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+            if (IsCancelled(cancellationToken, diagnostics)) return false;
             if (DataMatrixDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var dataMatrix, out var dmDiag)) {
                 diagnostics.DataMatrix = dmDiag;
                 list.Add(new CodeGlyphDecoded(CodeGlyphKind.DataMatrix, dataMatrix));
@@ -582,7 +582,7 @@ public static partial class CodeGlyph {
                 diagnostics.DataMatrix = dmDiag;
             }
 
-            if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+            if (IsCancelled(cancellationToken, diagnostics)) return false;
             if (Pdf417Decoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var pdf417, out var pdfDiag)) {
                 diagnostics.Pdf417 = pdfDiag;
                 list.Add(new CodeGlyphDecoded(CodeGlyphKind.Pdf417, pdf417));
@@ -592,7 +592,7 @@ public static partial class CodeGlyph {
         }
 
         if (includeBarcode && !preferBarcode) {
-            if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+            if (IsCancelled(cancellationToken, diagnostics)) return false;
             if (BarcodeDecoder.TryDecodeAll(pixels, width, height, stride, format, out var barcodes, expectedBarcode, barcodeOptions, cancellationToken)) {
                 for (var i = 0; i < barcodes.Length; i++) {
                     list.Add(new CodeGlyphDecoded(barcodes[i]));
@@ -602,7 +602,7 @@ public static partial class CodeGlyph {
         }
 
         if (list.Count == 0) {
-            diagnostics.Failure ??= "No symbol decoded.";
+            SetNoResult(diagnostics);
             return false;
         }
         diagnostics.Success = true;
@@ -616,6 +616,23 @@ public static partial class CodeGlyph {
         var min = width < height ? width : height;
         var max = width > height ? width : height;
         return (double)max / min <= 1.35d;
+    }
+
+    private static bool IsCancelled(CancellationToken token, CodeGlyphDecodeDiagnostics diagnostics) {
+        if (!token.IsCancellationRequested) return false;
+        diagnostics.Failure ??= "Cancelled.";
+        diagnostics.FailureReason = DecodeFailureReason.Cancelled;
+        return true;
+    }
+
+    private static void SetNoResult(CodeGlyphDecodeDiagnostics diagnostics) {
+        diagnostics.Failure ??= "No symbol decoded.";
+        diagnostics.FailureReason = DecodeFailureReason.NoResult;
+    }
+
+    private static void SetFailure(CodeGlyphDecodeDiagnostics diagnostics, DecodeFailureReason reason, string message) {
+        diagnostics.Failure ??= message;
+        diagnostics.FailureReason = reason;
     }
 
     private static bool LooksLikeQr(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat format) {
@@ -794,12 +811,12 @@ public static partial class CodeGlyph {
     public static bool TryDecode(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat format, out CodeGlyphDecoded decoded, out CodeGlyphDecodeDiagnostics diagnostics, BarcodeType? expectedBarcode = null, bool preferBarcode = false, QrPixelDecodeOptions? qrOptions = null, CancellationToken cancellationToken = default, BarcodeDecodeOptions? barcodeOptions = null) {
         diagnostics = new CodeGlyphDecodeDiagnostics();
         decoded = null!;
-        if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+        if (IsCancelled(cancellationToken, diagnostics)) return false;
         var squareish = IsSquareish(width, height);
         var preferQr = squareish && LooksLikeQr(pixels, width, height, stride, format);
 
         if (preferBarcode) {
-            if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+            if (IsCancelled(cancellationToken, diagnostics)) return false;
             if (BarcodeDecoder.TryDecode(pixels, width, height, stride, format, expectedBarcode, barcodeOptions, cancellationToken, out var barcode, out var barcodeDiag)) {
                 diagnostics.Barcode = barcodeDiag;
                 diagnostics.Success = true;
@@ -810,7 +827,7 @@ public static partial class CodeGlyph {
             diagnostics.Barcode = barcodeDiag;
 
             if (!squareish) {
-                if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+                if (IsCancelled(cancellationToken, diagnostics)) return false;
                 if (Pdf417Decoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var pdf417, out var pdfDiag)) {
                     diagnostics.Pdf417 = pdfDiag;
                     diagnostics.Success = true;
@@ -820,7 +837,7 @@ public static partial class CodeGlyph {
                 }
                 diagnostics.Pdf417 = pdfDiag;
 
-                if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+                if (IsCancelled(cancellationToken, diagnostics)) return false;
                 if (DataMatrixDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var dataMatrix, out var dmDiag)) {
                     diagnostics.DataMatrix = dmDiag;
                     diagnostics.Success = true;
@@ -830,7 +847,7 @@ public static partial class CodeGlyph {
                 }
                 diagnostics.DataMatrix = dmDiag;
 
-                if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+                if (IsCancelled(cancellationToken, diagnostics)) return false;
                 if (QrDecoder.TryDecode(pixels, width, height, stride, format, out var qr, out var qrInfo, qrOptions, cancellationToken)) {
                     diagnostics.Qr = qrInfo;
                     diagnostics.Success = true;
@@ -840,7 +857,7 @@ public static partial class CodeGlyph {
                 }
                 diagnostics.Qr = qrInfo;
 
-                if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+                if (IsCancelled(cancellationToken, diagnostics)) return false;
                 if (AztecDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var aztec, out var aztecDiag)) {
                     diagnostics.Aztec = aztecDiag;
                     diagnostics.Success = true;
@@ -850,12 +867,12 @@ public static partial class CodeGlyph {
                 }
                 diagnostics.Aztec = aztecDiag;
 
-                diagnostics.Failure ??= "No symbol decoded.";
+                SetNoResult(diagnostics);
                 return false;
             }
 
             if (preferQr) {
-                if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+                if (IsCancelled(cancellationToken, diagnostics)) return false;
                 if (QrDecoder.TryDecode(pixels, width, height, stride, format, out var qrPrefQr, out var qrInfoPrefQr, qrOptions, cancellationToken)) {
                     diagnostics.Qr = qrInfoPrefQr;
                     diagnostics.Success = true;
@@ -865,7 +882,7 @@ public static partial class CodeGlyph {
                 }
                 diagnostics.Qr = qrInfoPrefQr;
 
-                if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+                if (IsCancelled(cancellationToken, diagnostics)) return false;
                 if (AztecDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var aztecPrefQr, out var aztecDiagPrefQr)) {
                     diagnostics.Aztec = aztecDiagPrefQr;
                     diagnostics.Success = true;
@@ -875,7 +892,7 @@ public static partial class CodeGlyph {
                 }
                 diagnostics.Aztec = aztecDiagPrefQr;
 
-                if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+                if (IsCancelled(cancellationToken, diagnostics)) return false;
                 if (DataMatrixDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var dataMatrixPrefQr, out var dmDiagPrefQr)) {
                     diagnostics.DataMatrix = dmDiagPrefQr;
                     diagnostics.Success = true;
@@ -885,7 +902,7 @@ public static partial class CodeGlyph {
                 }
                 diagnostics.DataMatrix = dmDiagPrefQr;
             } else {
-                if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+                if (IsCancelled(cancellationToken, diagnostics)) return false;
                 if (DataMatrixDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var dataMatrixPrefDm, out var dmDiagPrefDm)) {
                     diagnostics.DataMatrix = dmDiagPrefDm;
                     diagnostics.Success = true;
@@ -895,7 +912,7 @@ public static partial class CodeGlyph {
                 }
                 diagnostics.DataMatrix = dmDiagPrefDm;
 
-                if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+                if (IsCancelled(cancellationToken, diagnostics)) return false;
                 if (AztecDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var aztecPrefDm, out var aztecDiagPrefDm)) {
                     diagnostics.Aztec = aztecDiagPrefDm;
                     diagnostics.Success = true;
@@ -905,7 +922,7 @@ public static partial class CodeGlyph {
                 }
                 diagnostics.Aztec = aztecDiagPrefDm;
 
-                if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+                if (IsCancelled(cancellationToken, diagnostics)) return false;
                 if (QrDecoder.TryDecode(pixels, width, height, stride, format, out var qrPrefDm, out var qrInfoPrefDm, qrOptions, cancellationToken)) {
                     diagnostics.Qr = qrInfoPrefDm;
                     diagnostics.Success = true;
@@ -916,7 +933,7 @@ public static partial class CodeGlyph {
                 diagnostics.Qr = qrInfoPrefDm;
             }
 
-            if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+            if (IsCancelled(cancellationToken, diagnostics)) return false;
             if (Pdf417Decoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var pdf4170, out var pdfDiag0)) {
                 diagnostics.Pdf417 = pdfDiag0;
                 diagnostics.Success = true;
@@ -926,12 +943,12 @@ public static partial class CodeGlyph {
             }
             diagnostics.Pdf417 = pdfDiag0;
 
-            diagnostics.Failure ??= "No symbol decoded.";
+            SetNoResult(diagnostics);
             return false;
         }
 
         if (!squareish) {
-            if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+            if (IsCancelled(cancellationToken, diagnostics)) return false;
             if (Pdf417Decoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var pdf417Decoded, out var pdfDiagA)) {
                 diagnostics.Pdf417 = pdfDiagA;
                 diagnostics.Success = true;
@@ -941,7 +958,7 @@ public static partial class CodeGlyph {
             }
             diagnostics.Pdf417 = pdfDiagA;
 
-            if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+            if (IsCancelled(cancellationToken, diagnostics)) return false;
             if (BarcodeDecoder.TryDecode(pixels, width, height, stride, format, expectedBarcode, barcodeOptions, cancellationToken, out var barcodeDecoded, out var barcodeDiagA)) {
                 diagnostics.Barcode = barcodeDiagA;
                 diagnostics.Success = true;
@@ -951,7 +968,7 @@ public static partial class CodeGlyph {
             }
             diagnostics.Barcode = barcodeDiagA;
 
-            if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+            if (IsCancelled(cancellationToken, diagnostics)) return false;
             if (DataMatrixDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var dataMatrixDecoded, out var dmDiagA)) {
                 diagnostics.DataMatrix = dmDiagA;
                 diagnostics.Success = true;
@@ -961,7 +978,7 @@ public static partial class CodeGlyph {
             }
             diagnostics.DataMatrix = dmDiagA;
 
-            if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+            if (IsCancelled(cancellationToken, diagnostics)) return false;
             if (QrDecoder.TryDecode(pixels, width, height, stride, format, out var qrDecoded, out var qrInfoA, qrOptions, cancellationToken)) {
                 diagnostics.Qr = qrInfoA;
                 diagnostics.Success = true;
@@ -971,7 +988,7 @@ public static partial class CodeGlyph {
             }
             diagnostics.Qr = qrInfoA;
 
-            if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+            if (IsCancelled(cancellationToken, diagnostics)) return false;
             if (AztecDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var aztecDecoded, out var aztecDiagA)) {
                 diagnostics.Aztec = aztecDiagA;
                 diagnostics.Success = true;
@@ -981,12 +998,12 @@ public static partial class CodeGlyph {
             }
             diagnostics.Aztec = aztecDiagA;
 
-            diagnostics.Failure ??= "No symbol decoded.";
+            SetNoResult(diagnostics);
             return false;
         }
 
         if (preferQr) {
-            if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+            if (IsCancelled(cancellationToken, diagnostics)) return false;
             if (QrDecoder.TryDecode(pixels, width, height, stride, format, out var qrNonQr0, out var qrInfoNonQr0, qrOptions, cancellationToken)) {
                 diagnostics.Qr = qrInfoNonQr0;
                 diagnostics.Success = true;
@@ -996,7 +1013,7 @@ public static partial class CodeGlyph {
             }
             diagnostics.Qr = qrInfoNonQr0;
 
-            if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+            if (IsCancelled(cancellationToken, diagnostics)) return false;
             if (AztecDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var aztecNonQr0, out var aztecDiagNonQr0)) {
                 diagnostics.Aztec = aztecDiagNonQr0;
                 diagnostics.Success = true;
@@ -1006,7 +1023,7 @@ public static partial class CodeGlyph {
             }
             diagnostics.Aztec = aztecDiagNonQr0;
 
-            if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+            if (IsCancelled(cancellationToken, diagnostics)) return false;
             if (DataMatrixDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var dataMatrixNonQr0, out var dmDiagNonQr0)) {
                 diagnostics.DataMatrix = dmDiagNonQr0;
                 diagnostics.Success = true;
@@ -1016,7 +1033,7 @@ public static partial class CodeGlyph {
             }
             diagnostics.DataMatrix = dmDiagNonQr0;
         } else {
-            if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+            if (IsCancelled(cancellationToken, diagnostics)) return false;
             if (DataMatrixDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var dataMatrixNonDm0, out var dmDiagNonDm0)) {
                 diagnostics.DataMatrix = dmDiagNonDm0;
                 diagnostics.Success = true;
@@ -1026,7 +1043,7 @@ public static partial class CodeGlyph {
             }
             diagnostics.DataMatrix = dmDiagNonDm0;
 
-            if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+            if (IsCancelled(cancellationToken, diagnostics)) return false;
             if (AztecDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var aztecNonDm0, out var aztecDiagNonDm0)) {
                 diagnostics.Aztec = aztecDiagNonDm0;
                 diagnostics.Success = true;
@@ -1036,7 +1053,7 @@ public static partial class CodeGlyph {
             }
             diagnostics.Aztec = aztecDiagNonDm0;
 
-            if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+            if (IsCancelled(cancellationToken, diagnostics)) return false;
             if (QrDecoder.TryDecode(pixels, width, height, stride, format, out var qrNonDm0, out var qrInfoNonDm0, qrOptions, cancellationToken)) {
                 diagnostics.Qr = qrInfoNonDm0;
                 diagnostics.Success = true;
@@ -1047,7 +1064,7 @@ public static partial class CodeGlyph {
             diagnostics.Qr = qrInfoNonDm0;
         }
 
-        if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+        if (IsCancelled(cancellationToken, diagnostics)) return false;
         if (Pdf417Decoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var pdf417Decoded0, out var pdfDiagB)) {
             diagnostics.Pdf417 = pdfDiagB;
             diagnostics.Success = true;
@@ -1057,7 +1074,7 @@ public static partial class CodeGlyph {
         }
         diagnostics.Pdf417 = pdfDiagB;
 
-        if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+        if (IsCancelled(cancellationToken, diagnostics)) return false;
         if (BarcodeDecoder.TryDecode(pixels, width, height, stride, format, expectedBarcode, barcodeOptions, cancellationToken, out var barcodeDecoded0, out var barcodeDiagB)) {
             diagnostics.Barcode = barcodeDiagB;
             diagnostics.Success = true;
@@ -1066,7 +1083,7 @@ public static partial class CodeGlyph {
             return true;
         }
         diagnostics.Barcode = barcodeDiagB;
-        diagnostics.Failure ??= "No symbol decoded.";
+        SetNoResult(diagnostics);
         return false;
     }
 
@@ -1145,7 +1162,7 @@ public static partial class CodeGlyph {
     public static bool TryDecodeAll(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat format, out CodeGlyphDecoded[] decoded, out CodeGlyphDecodeDiagnostics diagnostics, BarcodeType? expectedBarcode = null, bool includeBarcode = true, bool preferBarcode = false, QrPixelDecodeOptions? qrOptions = null, CancellationToken cancellationToken = default, BarcodeDecodeOptions? barcodeOptions = null) {
         diagnostics = new CodeGlyphDecodeDiagnostics();
         decoded = Array.Empty<CodeGlyphDecoded>();
-        if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+        if (IsCancelled(cancellationToken, diagnostics)) return false;
         var squareish = IsSquareish(width, height);
         var qrOptionsLocal = qrOptions ?? new QrPixelDecodeOptions {
             Profile = QrDecodeProfile.Balanced,
@@ -1158,7 +1175,7 @@ public static partial class CodeGlyph {
         var list = new System.Collections.Generic.List<CodeGlyphDecoded>(4);
 
         if (includeBarcode && preferBarcode) {
-            if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+            if (IsCancelled(cancellationToken, diagnostics)) return false;
             if (BarcodeDecoder.TryDecodeAll(pixels, width, height, stride, format, out var barcodes, expectedBarcode, barcodeOptions, cancellationToken)) {
                 for (var i = 0; i < barcodes.Length; i++) {
                     list.Add(new CodeGlyphDecoded(barcodes[i]));
@@ -1168,7 +1185,7 @@ public static partial class CodeGlyph {
         }
 
         if (squareish) {
-            if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+            if (IsCancelled(cancellationToken, diagnostics)) return false;
             if (QrDecoder.TryDecodeAll(pixels, width, height, stride, format, out var qrResults, out var qrInfo, qrOptionsLocal, cancellationToken)) {
                 diagnostics.Qr = qrInfo;
                 for (var i = 0; i < qrResults.Length; i++) {
@@ -1180,7 +1197,7 @@ public static partial class CodeGlyph {
             }
 
             if (!preferQr || !foundQr) {
-                if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+                if (IsCancelled(cancellationToken, diagnostics)) return false;
                 if (AztecDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var aztec, out var aztecDiag)) {
                     diagnostics.Aztec = aztecDiag;
                     list.Add(new CodeGlyphDecoded(CodeGlyphKind.Aztec, aztec));
@@ -1191,7 +1208,7 @@ public static partial class CodeGlyph {
         }
 
         if (!preferQr || !foundQr) {
-            if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+            if (IsCancelled(cancellationToken, diagnostics)) return false;
             if (DataMatrixDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var dataMatrix, out var dmDiag)) {
                 diagnostics.DataMatrix = dmDiag;
                 list.Add(new CodeGlyphDecoded(CodeGlyphKind.DataMatrix, dataMatrix));
@@ -1199,7 +1216,7 @@ public static partial class CodeGlyph {
                 diagnostics.DataMatrix = dmDiag;
             }
 
-            if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+            if (IsCancelled(cancellationToken, diagnostics)) return false;
             if (Pdf417Decoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var pdf417, out var pdfDiag)) {
                 diagnostics.Pdf417 = pdfDiag;
                 list.Add(new CodeGlyphDecoded(CodeGlyphKind.Pdf417, pdf417));
@@ -1209,7 +1226,7 @@ public static partial class CodeGlyph {
         }
 
         if (includeBarcode && !preferBarcode) {
-            if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
+            if (IsCancelled(cancellationToken, diagnostics)) return false;
             if (BarcodeDecoder.TryDecodeAll(pixels, width, height, stride, format, out var barcodes, expectedBarcode, barcodeOptions, cancellationToken)) {
                 for (var i = 0; i < barcodes.Length; i++) {
                     list.Add(new CodeGlyphDecoded(barcodes[i]));
@@ -1219,7 +1236,7 @@ public static partial class CodeGlyph {
         }
 
         if (list.Count == 0) {
-            diagnostics.Failure ??= "No symbol decoded.";
+            SetNoResult(diagnostics);
             return false;
         }
         diagnostics.Success = true;
@@ -1229,3 +1246,5 @@ public static partial class CodeGlyph {
     }
 #endif
 }
+
+

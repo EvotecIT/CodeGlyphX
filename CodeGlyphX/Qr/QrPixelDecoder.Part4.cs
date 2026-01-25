@@ -24,90 +24,356 @@ internal static partial class QrPixelDecoder {
         var visited = ArrayPool<bool>.Shared.Rent(total);
         Array.Clear(visited, 0, total);
         var stack = ArrayPool<int>.Shared.Rent(Math.Max(64, total / 16));
+        var gray = image.Gray;
+        var thresholdMap = image.ThresholdMap;
+        var threshold = image.Threshold;
+        var compareThreshold = threshold;
 
         try {
-            for (var y = 0; y < h; y++) {
-                if (shouldStop?.Invoke() == true) break;
-                var row = y * w;
-                for (var x = 0; x < w; x++) {
-                    var idx = row + x;
-                    if (visited[idx]) continue;
-                    if (!image.IsBlack(x, y, invert)) {
-                        visited[idx] = true;
-                        continue;
+            if (thresholdMap is null) {
+                if (!invert) {
+                    for (var y = 0; y < h; y++) {
+                        if (shouldStop?.Invoke() == true) break;
+                        var row = y * w;
+                        for (int x = 0, idx = row; x < w; x++, idx++) {
+                            if (visited[idx]) continue;
+                            if (gray[idx] > compareThreshold) {
+                                visited[idx] = true;
+                                continue;
+                            }
+                            visited[idx] = true;
+
+                            var minX = x;
+                            var maxX = x;
+                            var minY = y;
+                            var maxY = y;
+                            var area = 0;
+
+                            var sp = 0;
+                            stack[sp++] = idx;
+
+                            while (sp > 0) {
+                                if (sp + 4 >= stack.Length) {
+                                    GrowStack(ref stack, sp + 4);
+                                }
+                                var cur = stack[--sp];
+
+                                var cy = cur / w;
+                                var cx = cur - cy * w;
+
+                                area++;
+                                if (cx < minX) minX = cx;
+                                if (cx > maxX) maxX = cx;
+                                if (cy < minY) minY = cy;
+                                if (cy > maxY) maxY = cy;
+
+                                if (cx > 0) {
+                                    var ni = cur - 1;
+                                    if (!visited[ni]) {
+                                        visited[ni] = true;
+                                        if (gray[ni] <= compareThreshold) {
+                                            stack[sp++] = ni;
+                                        }
+                                    }
+                                }
+                                if (cx + 1 < w) {
+                                    var ni = cur + 1;
+                                    if (!visited[ni]) {
+                                        visited[ni] = true;
+                                        if (gray[ni] <= compareThreshold) {
+                                            stack[sp++] = ni;
+                                        }
+                                    }
+                                }
+                                if (cy > 0) {
+                                    var ni = cur - w;
+                                    if (!visited[ni]) {
+                                        visited[ni] = true;
+                                        if (gray[ni] <= compareThreshold) {
+                                            stack[sp++] = ni;
+                                        }
+                                    }
+                                }
+                                if (cy + 1 < h) {
+                                    var ni = cur + w;
+                                    if (!visited[ni]) {
+                                        visited[ni] = true;
+                                        if (gray[ni] <= compareThreshold) {
+                                            stack[sp++] = ni;
+                                        }
+                                    }
+                                }
+                            }
+
+                            if (area < minArea) continue;
+                            var cw = maxX - minX + 1;
+                            var ch = maxY - minY + 1;
+                            if (cw < 21 || ch < 21) continue;
+
+                            var ratio = cw > ch ? (double)cw / ch : (double)ch / cw;
+                            if (ratio > 2.2) continue;
+
+                            comps.Add(new Component(minX, minY, maxX, maxY, area));
+                        }
                     }
-
-                    var minX = x;
-                    var maxX = x;
-                    var minY = y;
-                    var maxY = y;
-                    var area = 0;
-
-                    var sp = 0;
-                    stack[sp++] = idx;
-
-                    while (sp > 0) {
-                        var cur = stack[--sp];
-                        if (visited[cur]) continue;
-                        visited[cur] = true;
-
-                        var cy = cur / w;
-                        var cx = cur - cy * w;
-                        if (!image.IsBlack(cx, cy, invert)) continue;
-
-                        area++;
-                        if (cx < minX) minX = cx;
-                        if (cx > maxX) maxX = cx;
-                        if (cy < minY) minY = cy;
-                        if (cy > maxY) maxY = cy;
-
-                        if (cx > 0) {
-                            var ni = cur - 1;
-                            if (!visited[ni]) {
-                                if (sp >= stack.Length) {
-                                    GrowStack(ref stack, sp);
-                                }
-                                stack[sp++] = ni;
+                } else {
+                    for (var y = 0; y < h; y++) {
+                        if (shouldStop?.Invoke() == true) break;
+                        var row = y * w;
+                        for (int x = 0, idx = row; x < w; x++, idx++) {
+                            if (visited[idx]) continue;
+                            if (gray[idx] <= compareThreshold) {
+                                visited[idx] = true;
+                                continue;
                             }
-                        }
-                        if (cx + 1 < w) {
-                            var ni = cur + 1;
-                            if (!visited[ni]) {
-                                if (sp >= stack.Length) {
-                                    GrowStack(ref stack, sp);
+                            visited[idx] = true;
+
+                            var minX = x;
+                            var maxX = x;
+                            var minY = y;
+                            var maxY = y;
+                            var area = 0;
+
+                            var sp = 0;
+                            stack[sp++] = idx;
+
+                            while (sp > 0) {
+                                if (sp + 4 >= stack.Length) {
+                                    GrowStack(ref stack, sp + 4);
                                 }
-                                stack[sp++] = ni;
-                            }
-                        }
-                        if (cy > 0) {
-                            var ni = cur - w;
-                            if (!visited[ni]) {
-                                if (sp >= stack.Length) {
-                                    GrowStack(ref stack, sp);
+                                var cur = stack[--sp];
+
+                                var cy = cur / w;
+                                var cx = cur - cy * w;
+
+                                area++;
+                                if (cx < minX) minX = cx;
+                                if (cx > maxX) maxX = cx;
+                                if (cy < minY) minY = cy;
+                                if (cy > maxY) maxY = cy;
+
+                                if (cx > 0) {
+                                    var ni = cur - 1;
+                                    if (!visited[ni]) {
+                                        visited[ni] = true;
+                                        if (gray[ni] > compareThreshold) {
+                                            stack[sp++] = ni;
+                                        }
+                                    }
                                 }
-                                stack[sp++] = ni;
-                            }
-                        }
-                        if (cy + 1 < h) {
-                            var ni = cur + w;
-                            if (!visited[ni]) {
-                                if (sp >= stack.Length) {
-                                    GrowStack(ref stack, sp);
+                                if (cx + 1 < w) {
+                                    var ni = cur + 1;
+                                    if (!visited[ni]) {
+                                        visited[ni] = true;
+                                        if (gray[ni] > compareThreshold) {
+                                            stack[sp++] = ni;
+                                        }
+                                    }
                                 }
-                                stack[sp++] = ni;
+                                if (cy > 0) {
+                                    var ni = cur - w;
+                                    if (!visited[ni]) {
+                                        visited[ni] = true;
+                                        if (gray[ni] > compareThreshold) {
+                                            stack[sp++] = ni;
+                                        }
+                                    }
+                                }
+                                if (cy + 1 < h) {
+                                    var ni = cur + w;
+                                    if (!visited[ni]) {
+                                        visited[ni] = true;
+                                        if (gray[ni] > compareThreshold) {
+                                            stack[sp++] = ni;
+                                        }
+                                    }
+                                }
                             }
+
+                            if (area < minArea) continue;
+                            var cw = maxX - minX + 1;
+                            var ch = maxY - minY + 1;
+                            if (cw < 21 || ch < 21) continue;
+
+                            var ratio = cw > ch ? (double)cw / ch : (double)ch / cw;
+                            if (ratio > 2.2) continue;
+
+                            comps.Add(new Component(minX, minY, maxX, maxY, area));
                         }
                     }
+                }
+            } else {
+                var thresholds = thresholdMap;
+                if (!invert) {
+                    for (var y = 0; y < h; y++) {
+                        if (shouldStop?.Invoke() == true) break;
+                        var row = y * w;
+                        for (int x = 0, idx = row; x < w; x++, idx++) {
+                            if (visited[idx]) continue;
+                            if (gray[idx] > thresholds![idx]) {
+                                visited[idx] = true;
+                                continue;
+                            }
+                            visited[idx] = true;
 
-                    if (area < minArea) continue;
-                    var cw = maxX - minX + 1;
-                    var ch = maxY - minY + 1;
-                    if (cw < 21 || ch < 21) continue;
+                            var minX = x;
+                            var maxX = x;
+                            var minY = y;
+                            var maxY = y;
+                            var area = 0;
 
-                    var ratio = cw > ch ? (double)cw / ch : (double)ch / cw;
-                    if (ratio > 2.2) continue;
+                            var sp = 0;
+                            stack[sp++] = idx;
 
-                    comps.Add(new Component(minX, minY, maxX, maxY, area));
+                            while (sp > 0) {
+                                if (sp + 4 >= stack.Length) {
+                                    GrowStack(ref stack, sp + 4);
+                                }
+                                var cur = stack[--sp];
+
+                                var cy = cur / w;
+                                var cx = cur - cy * w;
+
+                                area++;
+                                if (cx < minX) minX = cx;
+                                if (cx > maxX) maxX = cx;
+                                if (cy < minY) minY = cy;
+                                if (cy > maxY) maxY = cy;
+
+                                if (cx > 0) {
+                                    var ni = cur - 1;
+                                    if (!visited[ni]) {
+                                        visited[ni] = true;
+                                        if (gray[ni] <= thresholds[ni]) {
+                                            stack[sp++] = ni;
+                                        }
+                                    }
+                                }
+                                if (cx + 1 < w) {
+                                    var ni = cur + 1;
+                                    if (!visited[ni]) {
+                                        visited[ni] = true;
+                                        if (gray[ni] <= thresholds[ni]) {
+                                            stack[sp++] = ni;
+                                        }
+                                    }
+                                }
+                                if (cy > 0) {
+                                    var ni = cur - w;
+                                    if (!visited[ni]) {
+                                        visited[ni] = true;
+                                        if (gray[ni] <= thresholds[ni]) {
+                                            stack[sp++] = ni;
+                                        }
+                                    }
+                                }
+                                if (cy + 1 < h) {
+                                    var ni = cur + w;
+                                    if (!visited[ni]) {
+                                        visited[ni] = true;
+                                        if (gray[ni] <= thresholds[ni]) {
+                                            stack[sp++] = ni;
+                                        }
+                                    }
+                                }
+                            }
+
+                            if (area < minArea) continue;
+                            var cw = maxX - minX + 1;
+                            var ch = maxY - minY + 1;
+                            if (cw < 21 || ch < 21) continue;
+
+                            var ratio = cw > ch ? (double)cw / ch : (double)ch / cw;
+                            if (ratio > 2.2) continue;
+
+                            comps.Add(new Component(minX, minY, maxX, maxY, area));
+                        }
+                    }
+                } else {
+                    for (var y = 0; y < h; y++) {
+                        if (shouldStop?.Invoke() == true) break;
+                        var row = y * w;
+                        for (int x = 0, idx = row; x < w; x++, idx++) {
+                            if (visited[idx]) continue;
+                            if (gray[idx] <= thresholds![idx]) {
+                                visited[idx] = true;
+                                continue;
+                            }
+                            visited[idx] = true;
+
+                            var minX = x;
+                            var maxX = x;
+                            var minY = y;
+                            var maxY = y;
+                            var area = 0;
+
+                            var sp = 0;
+                            stack[sp++] = idx;
+
+                            while (sp > 0) {
+                                if (sp + 4 >= stack.Length) {
+                                    GrowStack(ref stack, sp + 4);
+                                }
+                                var cur = stack[--sp];
+
+                                var cy = cur / w;
+                                var cx = cur - cy * w;
+
+                                area++;
+                                if (cx < minX) minX = cx;
+                                if (cx > maxX) maxX = cx;
+                                if (cy < minY) minY = cy;
+                                if (cy > maxY) maxY = cy;
+
+                                if (cx > 0) {
+                                    var ni = cur - 1;
+                                    if (!visited[ni]) {
+                                        visited[ni] = true;
+                                        if (gray[ni] > thresholds[ni]) {
+                                            stack[sp++] = ni;
+                                        }
+                                    }
+                                }
+                                if (cx + 1 < w) {
+                                    var ni = cur + 1;
+                                    if (!visited[ni]) {
+                                        visited[ni] = true;
+                                        if (gray[ni] > thresholds[ni]) {
+                                            stack[sp++] = ni;
+                                        }
+                                    }
+                                }
+                                if (cy > 0) {
+                                    var ni = cur - w;
+                                    if (!visited[ni]) {
+                                        visited[ni] = true;
+                                        if (gray[ni] > thresholds[ni]) {
+                                            stack[sp++] = ni;
+                                        }
+                                    }
+                                }
+                                if (cy + 1 < h) {
+                                    var ni = cur + w;
+                                    if (!visited[ni]) {
+                                        visited[ni] = true;
+                                        if (gray[ni] > thresholds[ni]) {
+                                            stack[sp++] = ni;
+                                        }
+                                    }
+                                }
+                            }
+
+                            if (area < minArea) continue;
+                            var cw = maxX - minX + 1;
+                            var ch = maxY - minY + 1;
+                            if (cw < 21 || ch < 21) continue;
+
+                            var ratio = cw > ch ? (double)cw / ch : (double)ch / cw;
+                            if (ratio > 2.2) continue;
+
+                            comps.Add(new Component(minX, minY, maxX, maxY, area));
+                        }
+                    }
                 }
             }
         } finally {
@@ -127,11 +393,13 @@ internal static partial class QrPixelDecoder {
         stack = next;
     }
 
-    private static bool TryDecodeFromFinderCandidates(int scale, byte threshold, QrGrayImage image, bool invert, List<QrFinderPatternDetector.FinderPattern> candidates, Func<QrDecoded, bool>? accept, bool aggressive, DecodeBudget budget, out QrDecoded result, out QrPixelDecodeDiagnostics diagnostics) {
+    private static bool TryDecodeFromFinderCandidates(int scale, byte threshold, QrGrayImage image, bool invert, List<QrFinderPatternDetector.FinderPattern> candidates, bool candidatesSorted, Func<QrDecoded, bool>? accept, bool aggressive, DecodeBudget budget, out QrDecoded result, out QrPixelDecodeDiagnostics diagnostics) {
         result = null!;
         diagnostics = default;
 
-        candidates.Sort(static (a, b) => b.Count.CompareTo(a.Count));
+        if (!candidatesSorted) {
+            candidates.Sort(static (a, b) => b.Count.CompareTo(a.Count));
+        }
         var tightBudget = budget.Enabled && budget.MaxMilliseconds <= 800;
         var n = Math.Min(candidates.Count, tightBudget ? 5 : (budget.Enabled ? 8 : 12));
         var triedTriples = 0;
@@ -328,6 +596,7 @@ internal static partial class QrPixelDecoder {
 
         if (budget.IsExpired) return false;
 
+        var scratch = new global::CodeGlyphX.BitMatrix(dimension, dimension);
         var modulesBetweenCenters = dimension - 7;
         if (modulesBetweenCenters <= 0) return false;
 
@@ -354,7 +623,7 @@ internal static partial class QrPixelDecoder {
         var cornerBrX0 = cornerTlX0 + (vxX + vyX) * dimension;
         var cornerBrY0 = cornerTlY0 + (vxY + vyY) * dimension;
 
-        if (TrySampleWithCorners(image, invert, phaseX: 0, phaseY: 0, dimension, cornerTlX0, cornerTlY0, cornerTrX0, cornerTrY0, cornerBrX0, cornerBrY0, cornerBlX0, cornerBlY0, moduleSize0, accept, aggressive, budget, out result, out var moduleDiag0)) {
+        if (TrySampleWithCorners(image, invert, phaseX: 0, phaseY: 0, dimension, scratch, cornerTlX0, cornerTlY0, cornerTrX0, cornerTrY0, cornerBrX0, cornerBrY0, cornerBlX0, cornerBlY0, moduleSize0, accept, aggressive, budget, out result, out var moduleDiag0)) {
             diagnostics = new QrPixelDecodeDiagnostics(scale, threshold, invert, candidateCount, candidateTriplesTried, dimension, moduleDiag0);
             return true;
         }
@@ -389,7 +658,7 @@ internal static partial class QrPixelDecoder {
 
         // Then try with refined phase/scale. Alignment pattern detection can produce false positives on busy UI regions;
         // use it as a fallback only.
-        if (TrySampleWithCorners(image, invert, phaseX, phaseY, dimension, cornerTlX, cornerTlY, cornerTrX, cornerTrY, cornerBrXr0, cornerBrYr0, cornerBlX, cornerBlY, moduleSize, accept, aggressive, budget, out result, out var moduleDiagR)) {
+        if (TrySampleWithCorners(image, invert, phaseX, phaseY, dimension, scratch, cornerTlX, cornerTlY, cornerTrX, cornerTrY, cornerBrXr0, cornerBrYr0, cornerBlX, cornerBlY, moduleSize, accept, aggressive, budget, out result, out var moduleDiagR)) {
             diagnostics = new QrPixelDecodeDiagnostics(scale, threshold, invert, candidateCount, candidateTriplesTried, dimension, moduleDiagR);
             return true;
         }
@@ -411,7 +680,7 @@ internal static partial class QrPixelDecoder {
                 var rCornerBrX = rCornerTlX + (rvxX + rvyX) * dimension;
                 var rCornerBrY = rCornerTlY + (rvxY + rvyY) * dimension;
 
-                if (TrySampleWithCorners(image, invert, rPhaseX, rPhaseY, dimension, rCornerTlX, rCornerTlY, rCornerTrX, rCornerTrY, rCornerBrX, rCornerBrY, rCornerBlX, rCornerBlY, rModuleSize, accept, aggressive, budget, out result, out var moduleDiagT)) {
+                if (TrySampleWithCorners(image, invert, rPhaseX, rPhaseY, dimension, scratch, rCornerTlX, rCornerTlY, rCornerTrX, rCornerTrY, rCornerBrX, rCornerBrY, rCornerBlX, rCornerBlY, rModuleSize, accept, aggressive, budget, out result, out var moduleDiagT)) {
                     diagnostics = new QrPixelDecodeDiagnostics(scale, threshold, invert, candidateCount, candidateTriplesTried, dimension, moduleDiagT);
                     return true;
                 }
@@ -428,6 +697,7 @@ internal static partial class QrPixelDecoder {
                         phaseX,
                         phaseY,
                         dimension,
+                        scratch,
                         cornerTlX,
                         cornerTlY,
                         cornerTrX,
@@ -460,6 +730,7 @@ internal static partial class QrPixelDecoder {
                 phaseX,
                 phaseY,
                 dimension,
+                scratch,
                 cornerTlX,
                 cornerTlY,
                 cornerTrX,
@@ -502,7 +773,7 @@ internal static partial class QrPixelDecoder {
                     var cornerBrXA = ax + (vxX + vyX) * 6.5;
                     var cornerBrYA = ay + (vxY + vyY) * 6.5;
 
-                    if (TrySampleWithCorners(image, invert, phaseX, phaseY, dimension, cornerTlX, cornerTlY, cornerTrX, cornerTrY, cornerBrXA, cornerBrYA, cornerBlX, cornerBlY, moduleSize, accept, aggressive, budget, out result, out var moduleDiagA)) {
+                    if (TrySampleWithCorners(image, invert, phaseX, phaseY, dimension, scratch, cornerTlX, cornerTlY, cornerTrX, cornerTrY, cornerBrXA, cornerBrYA, cornerBlX, cornerBlY, moduleSize, accept, aggressive, budget, out result, out var moduleDiagA)) {
                         diagnostics = new QrPixelDecodeDiagnostics(scale, threshold, invert, candidateCount, candidateTriplesTried, dimension, moduleDiagA);
                         return true;
                     }
@@ -519,6 +790,7 @@ internal static partial class QrPixelDecoder {
                 phaseX,
                 phaseY,
                 dimension,
+                scratch,
                 cornerTlX,
                 cornerTlY,
                 cornerTrX,
@@ -551,6 +823,7 @@ internal static partial class QrPixelDecoder {
         double phaseX,
         double phaseY,
         int dimension,
+        global::CodeGlyphX.BitMatrix scratch,
         double cornerTlX,
         double cornerTlY,
         double cornerTrX,
@@ -572,7 +845,8 @@ internal static partial class QrPixelDecoder {
         result = null!;
         moduleDiagnostics = default;
 
-        if (budget.IsExpired) return false;
+        var checkBudget = budget.Enabled || budget.CanCancel;
+        if (checkBudget && budget.IsExpired) return false;
 
         Span<double> offsets = stackalloc double[3];
         offsets[0] = -0.60;
@@ -583,17 +857,17 @@ internal static partial class QrPixelDecoder {
         const double jitterEpsilon = 1e-9;
 
         for (var yi = 0; yi < offsets.Length; yi++) {
-            if (budget.IsExpired) return false;
+            if (checkBudget && budget.IsExpired) return false;
             var oy = offsets[yi];
             for (var xi = 0; xi < offsets.Length; xi++) {
-                if (budget.IsExpired) return false;
+                if (checkBudget && budget.IsExpired) return false;
                 var ox = offsets[xi];
                 if (Math.Abs(ox) <= jitterEpsilon && Math.Abs(oy) <= jitterEpsilon) continue;
 
                 var jx = cornerBrX + vxX * ox + vyX * oy;
                 var jy = cornerBrY + vxY * ox + vyY * oy;
 
-                if (TrySampleWithCorners(image, invert, phaseX, phaseY, dimension, cornerTlX, cornerTlY, cornerTrX, cornerTrY, jx, jy, cornerBlX, cornerBlY, moduleSizePx, accept, aggressive, budget, out result, out var diag)) {
+                if (TrySampleWithCorners(image, invert, phaseX, phaseY, dimension, scratch, cornerTlX, cornerTlY, cornerTrX, cornerTrY, jx, jy, cornerBlX, cornerBlY, moduleSizePx, accept, aggressive, budget, out result, out var diag)) {
                     moduleDiagnostics = diag;
                     return true;
                 }
@@ -612,6 +886,7 @@ internal static partial class QrPixelDecoder {
         double phaseX,
         double phaseY,
         int dimension,
+        global::CodeGlyphX.BitMatrix scratch,
         double cornerTlX,
         double cornerTlY,
         double cornerTrX,
@@ -629,7 +904,8 @@ internal static partial class QrPixelDecoder {
         result = null!;
         moduleDiagnostics = default;
 
-        if (budget.IsExpired) return false;
+        var checkBudget = budget.Enabled || budget.CanCancel;
+        if (checkBudget && budget.IsExpired) return false;
 
         Span<double> offsets = stackalloc double[2];
         offsets[0] = -0.25;
@@ -638,7 +914,7 @@ internal static partial class QrPixelDecoder {
         var best = default(global::CodeGlyphX.QrDecodeDiagnostics);
 
         for (var i = 0; i < offsets.Length; i++) {
-            if (budget.IsExpired) return false;
+            if (checkBudget && budget.IsExpired) return false;
             var ox = phaseX + offsets[i];
             if (TrySampleWithCorners(
                     image,
@@ -646,6 +922,7 @@ internal static partial class QrPixelDecoder {
                     ox,
                     phaseY,
                     dimension,
+                    scratch,
                     cornerTlX,
                     cornerTlY,
                     cornerTrX,
@@ -668,7 +945,7 @@ internal static partial class QrPixelDecoder {
         }
 
         for (var i = 0; i < offsets.Length; i++) {
-            if (budget.IsExpired) return false;
+            if (checkBudget && budget.IsExpired) return false;
             var oy = phaseY + offsets[i];
             if (TrySampleWithCorners(
                     image,
@@ -676,6 +953,7 @@ internal static partial class QrPixelDecoder {
                     phaseX,
                     oy,
                     dimension,
+                    scratch,
                     cornerTlX,
                     cornerTlY,
                     cornerTrX,
@@ -707,6 +985,7 @@ internal static partial class QrPixelDecoder {
         double phaseX,
         double phaseY,
         int dimension,
+        global::CodeGlyphX.BitMatrix scratch,
         double cornerTlX,
         double cornerTlY,
         double cornerTrX,
@@ -724,7 +1003,8 @@ internal static partial class QrPixelDecoder {
         result = null!;
         moduleDiagnostics = default;
 
-        if (budget.IsExpired) return false;
+        var checkBudget = budget.Enabled || budget.CanCancel;
+        if (checkBudget && budget.IsExpired) return false;
 
         Span<double> offsets = stackalloc double[3];
         offsets[0] = -0.35;
@@ -735,10 +1015,10 @@ internal static partial class QrPixelDecoder {
         const double jitterEpsilon = 1e-9;
 
         for (var yi = 0; yi < offsets.Length; yi++) {
-            if (budget.IsExpired) return false;
+            if (checkBudget && budget.IsExpired) return false;
             var oy = phaseY + offsets[yi];
             for (var xi = 0; xi < offsets.Length; xi++) {
-                if (budget.IsExpired) return false;
+                if (checkBudget && budget.IsExpired) return false;
                 var ox = phaseX + offsets[xi];
                 if (Math.Abs(ox - phaseX) <= jitterEpsilon && Math.Abs(oy - phaseY) <= jitterEpsilon) continue;
 
@@ -748,6 +1028,7 @@ internal static partial class QrPixelDecoder {
                         ox,
                         oy,
                         dimension,
+                        scratch,
                         cornerTlX,
                         cornerTlY,
                         cornerTrX,

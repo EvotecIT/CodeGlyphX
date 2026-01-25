@@ -34,6 +34,7 @@ $footer = Get-Content (Join-Path $fragmentsPath "footer.html") -Raw
 $commonJs = Get-Content (Join-Path $scriptsPath "common.js") -Raw
 $docsSidebarJs = Get-Content (Join-Path $scriptsPath "docs-sidebar.js") -Raw
 $carouselJs = Get-Content (Join-Path $scriptsPath "carousel.js") -Raw
+$benchmarkJs = Get-Content (Join-Path $scriptsPath "benchmark.js") -Raw
 
 # Icon definitions for reuse
 $icons = @{
@@ -471,5 +472,58 @@ if (-not (Test-Path $showcaseJsonPath)) {
         -StructuredData $showcaseBreadcrumbJsonLd `
         -ExtraScripts $carouselJs
 }
+
+# ============================================================================
+# BENCHMARKS PAGE
+# ============================================================================
+Write-Host "Generating Benchmarks page..." -ForegroundColor Cyan
+
+$benchmarkContent = Get-Content ([IO.Path]::Combine($templatesPath, "pages", "benchmark.html")) -Raw
+
+$benchmarkOpenGraph = @"
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Benchmarks - CodeGlyphX" />
+  <meta property="og:description" content="Performance benchmarks comparing CodeGlyphX with other .NET barcode libraries." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://codeglyphx.com/benchmarks/" />
+  <meta property="og:image" content="https://codeglyphx.com/codeglyphx-qr-icon.png" />
+  <meta property="og:site_name" content="CodeGlyphX" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Benchmarks - CodeGlyphX" />
+  <meta name="twitter:description" content="Performance benchmarks comparing CodeGlyphX with other .NET barcode libraries." />
+  <meta name="twitter:image" content="https://codeglyphx.com/codeglyphx-qr-icon.png" />
+"@
+
+$benchmarkBreadcrumbJsonLd = @"
+
+  <script type="application/ld+json">
+  {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://codeglyphx.com/" },
+          { "@type": "ListItem", "position": 2, "name": "Benchmarks", "item": "https://codeglyphx.com/benchmarks/" }
+      ]
+  }
+  </script>
+"@
+
+$benchmarkDir = Join-Path $OutputPath "benchmarks"
+if (-not (Test-Path $benchmarkDir)) {
+    New-Item -ItemType Directory -Path $benchmarkDir -Force | Out-Null
+}
+
+New-StaticPage `
+    -Title "Benchmarks - CodeGlyphX" `
+    -Description "Performance benchmarks comparing CodeGlyphX with other .NET barcode libraries. Transparent methodology and raw data." `
+    -Content $benchmarkContent `
+    -OutputFile (Join-Path $benchmarkDir "index.html") `
+    -Canonical "https://codeglyphx.com/benchmarks/" `
+    -OpenGraph $benchmarkOpenGraph `
+    -StructuredData $benchmarkBreadcrumbJsonLd `
+    -ExtraScripts $benchmarkJs
 
 Write-Host "Static pages generated successfully!" -ForegroundColor Green

@@ -6,16 +6,24 @@ namespace CodeGlyphX.Rendering.Png;
 
 internal static class PngWriter {
     private static readonly uint[] CrcTable = BuildCrcTable();
+    private const uint AdlerMod = 65521;
+    private const int AdlerNmax = 5552;
+    private static readonly byte[] ChunkIHDR = { (byte)'I', (byte)'H', (byte)'D', (byte)'R' };
+    private static readonly byte[] ChunkIDAT = { (byte)'I', (byte)'D', (byte)'A', (byte)'T' };
+    private static readonly byte[] ChunkIEND = { (byte)'I', (byte)'E', (byte)'N', (byte)'D' };
+    private static readonly byte[] ChunkPLTE = { (byte)'P', (byte)'L', (byte)'T', (byte)'E' };
     internal delegate void RowWriter(int y, byte[] rowBuffer, int rowLength);
 
     public static byte[] WriteRgba8(int width, int height, byte[] scanlinesWithFilter) {
-        using var ms = new MemoryStream();
+        var idatLength = GetZlibStoredLength(scanlinesWithFilter.Length);
+        using var ms = new MemoryStream(EstimateTotalLength(idatLength, hasPlte: false));
         WriteRgba8(ms, width, height, scanlinesWithFilter, scanlinesWithFilter.Length);
         return ms.ToArray();
     }
 
     public static byte[] WriteRgba8(int width, int height, byte[] scanlinesWithFilter, int length) {
-        using var ms = new MemoryStream();
+        var idatLength = GetZlibStoredLength(length);
+        using var ms = new MemoryStream(EstimateTotalLength(idatLength, hasPlte: false));
         WriteRgba8(ms, width, height, scanlinesWithFilter, length);
         return ms.ToArray();
     }
@@ -61,7 +69,8 @@ internal static class PngWriter {
     }
 
     public static byte[] WriteGray1(int width, int height, byte[] scanlinesWithFilter, int length) {
-        using var ms = new MemoryStream();
+        var idatLength = GetZlibStoredLength(length);
+        using var ms = new MemoryStream(EstimateTotalLength(idatLength, hasPlte: false));
         WriteGray1(ms, width, height, scanlinesWithFilter, length);
         return ms.ToArray();
     }
@@ -86,7 +95,8 @@ internal static class PngWriter {
     }
 
     public static byte[] WriteIndexed1(int width, int height, byte[] scanlinesWithFilter, int length, byte[] palette) {
-        using var ms = new MemoryStream();
+        var idatLength = GetZlibStoredLength(length);
+        using var ms = new MemoryStream(EstimateTotalLength(idatLength, hasPlte: true));
         WriteIndexed1(ms, width, height, scanlinesWithFilter, length, palette);
         return ms.ToArray();
     }
@@ -142,7 +152,7 @@ internal static class PngWriter {
         if (type.Length != 4) throw new ArgumentOutOfRangeException(nameof(type));
 
         WriteUInt32BE(s, (uint)dataLength);
-        var typeBytes = new byte[] { (byte)type[0], (byte)type[1], (byte)type[2], (byte)type[3] };
+        var typeBytes = GetChunkTypeBytes(type);
         s.Write(typeBytes, 0, typeBytes.Length);
 
         var crc = 0xFFFFFFFFu;
@@ -152,6 +162,16 @@ internal static class PngWriter {
         }
         crc = ~crc;
         WriteUInt32BE(s, crc);
+    }
+
+    private static byte[] GetChunkTypeBytes(string type) {
+        return type switch {
+            "IHDR" => ChunkIHDR,
+            "IDAT" => ChunkIDAT,
+            "IEND" => ChunkIEND,
+            "PLTE" => ChunkPLTE,
+            _ => new byte[] { (byte)type[0], (byte)type[1], (byte)type[2], (byte)type[3] }
+        };
     }
 
     private static uint UpdateCrc(uint crc, byte[] data, int offset, int count) {
@@ -177,8 +197,14 @@ internal static class PngWriter {
         return 2 + 4 + dataLength + blocks * 5;
     }
 
+    private static int EstimateTotalLength(int idatLength, bool hasPlte) {
+        // PNG layout: signature (8) + IHDR (25) + [PLTE (18)] + IDAT (12 + data) + IEND (12)
+        var total = 57 + idatLength;
+        if (hasPlte) total += 18;
+        return total;
+    }
+
     private static void WriteZlibStored(Stream stream, byte[] uncompressed, int length, ref uint crc) {
-        const uint mod = 65521;
         uint a = 1;
         uint b = 0;
 
@@ -200,14 +226,7 @@ internal static class PngWriter {
             WriteByteWithCrc(stream, (byte)((nlen >> 8) & 0xFF), ref crc);
 
             stream.Write(uncompressed, offset, len);
-            for (var i = 0; i < len; i++) {
-                var value = uncompressed[offset + i];
-                crc = (crc >> 8) ^ CrcTable[(crc ^ value) & 0xFF];
-                a += value;
-                if (a >= mod) a -= mod;
-                b += a;
-                b %= mod;
-            }
+            UpdateCrcAndAdler(uncompressed, offset, len, ref crc, ref a, ref b);
 
             offset += len;
         }
@@ -217,7 +236,6 @@ internal static class PngWriter {
     }
 
     private static void WriteZlibStoredRows(Stream stream, int height, int rowLength, RowWriter fillRow, ref uint crc) {
-        const uint mod = 65521;
         uint a = 1;
         uint b = 0;
 
@@ -242,14 +260,7 @@ internal static class PngWriter {
                     WriteByteWithCrc(stream, (byte)((nlen >> 8) & 0xFF), ref crc);
 
                     stream.Write(rowBuffer, offset, len);
-                    for (var i = 0; i < len; i++) {
-                        var value = rowBuffer[offset + i];
-                        crc = (crc >> 8) ^ CrcTable[(crc ^ value) & 0xFF];
-                        a += value;
-                        if (a >= mod) a -= mod;
-                        b += a;
-                        b %= mod;
-                    }
+                    UpdateCrcAndAdler(rowBuffer, offset, len, ref crc, ref a, ref b);
                     offset += len;
                 }
             }
@@ -259,6 +270,23 @@ internal static class PngWriter {
 
         var adler = (b << 16) | a;
         WriteUInt32BEWithCrc(stream, adler, ref crc);
+    }
+
+    private static void UpdateCrcAndAdler(byte[] buffer, int offset, int count, ref uint crc, ref uint a, ref uint b) {
+        var table = CrcTable;
+        var end = offset + count;
+        while (offset < end) {
+            var n = Math.Min(AdlerNmax, end - offset);
+            var limit = offset + n;
+            while (offset < limit) {
+                var value = buffer[offset++];
+                crc = (crc >> 8) ^ table[(crc ^ value) & 0xFF];
+                a += value;
+                b += a;
+            }
+            a %= AdlerMod;
+            b %= AdlerMod;
+        }
     }
 
     private static void WriteUInt32BE(Stream s, uint value) {

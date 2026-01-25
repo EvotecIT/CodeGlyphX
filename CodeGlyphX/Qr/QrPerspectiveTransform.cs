@@ -1,5 +1,6 @@
 #if NET8_0_OR_GREATER
 using System;
+using System.Runtime.CompilerServices;
 
 namespace CodeGlyphX.Qr;
 
@@ -46,6 +47,7 @@ internal readonly struct QrPerspectiveTransform {
         return sToQ.Times(qToS);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Transform(double x, double y, out double outX, out double outY) {
         var denominator = _a13 * x + _a23 * y + _a33;
         if (Math.Abs(denominator) < 1e-12) {
@@ -56,6 +58,29 @@ internal readonly struct QrPerspectiveTransform {
 
         outX = (_a11 * x + _a21 * y + _a31) / denominator;
         outY = (_a12 * x + _a22 * y + _a32) / denominator;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void GetRowParameters(
+        double xStart,
+        double y,
+        out double numX,
+        out double numY,
+        out double denom,
+        out double stepNumX,
+        out double stepNumY,
+        out double stepDenom) {
+        stepNumX = _a11;
+        stepNumY = _a12;
+        stepDenom = _a13;
+
+        var baseNumX = _a21 * y + _a31;
+        var baseNumY = _a22 * y + _a32;
+        var baseDenom = _a23 * y + _a33;
+
+        numX = _a11 * xStart + baseNumX;
+        numY = _a12 * xStart + baseNumY;
+        denom = _a13 * xStart + baseDenom;
     }
 
     private QrPerspectiveTransform Times(QrPerspectiveTransform other) {
@@ -133,4 +158,3 @@ internal readonly struct QrPerspectiveTransform {
     }
 }
 #endif
-

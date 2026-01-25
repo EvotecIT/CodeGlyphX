@@ -389,3 +389,20 @@ temp-check/
 docfx/
 *.bak/
 api.bak/
+
+# External image samples (downloaded at test time)
+CodeGlyphX.Tests/Fixtures/ImageSamples/*.png
+CodeGlyphX.Tests/Fixtures/ImageSamples/*.tif
+CodeGlyphX.Tests/Fixtures/ImageSamples/*.tiff
+CodeGlyphX.Tests/Fixtures/ImageSamples/*.jpg
+CodeGlyphX.Tests/Fixtures/ImageSamples/*.jpeg
+CodeGlyphX.Tests/Fixtures/ImageSamples/*.bmp
+CodeGlyphX.Tests/Fixtures/ImageSamples/*.gif
+CodeGlyphX.Tests/Fixtures/ImageSamples/*.tga
+CodeGlyphX.Tests/Fixtures/ImageSamples/*.ppm
+CodeGlyphX.Tests/Fixtures/ImageSamples/*.pgm
+CodeGlyphX.Tests/Fixtures/ImageSamples/*.pbm
+CodeGlyphX.Tests/Fixtures/ImageSamples/*.pam
+CodeGlyphX.Tests/Fixtures/ImageSamples/*.xpm
+CodeGlyphX.Tests/Fixtures/ImageSamples/*.xbm
+CodeGlyphX.Tests/Fixtures/ImageSamples/*.ico

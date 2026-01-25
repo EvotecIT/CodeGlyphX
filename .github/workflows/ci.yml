@@ -58,6 +58,10 @@ jobs:
       - name: Build Tests (net8.0)
         run: dotnet build CodeGlyphX.Tests/CodeGlyphX.Tests.csproj -c Release -f net8.0 --no-restore
 
+      - name: Download image samples
+        if: runner.os == 'Linux'
+        run: pwsh Build/Download-ImageSamples.ps1
+
       - name: Test (net8.0)
         run: dotnet test CodeGlyphX.Tests/CodeGlyphX.Tests.csproj -c Release -f net8.0 --no-restore --no-build
 
@@ -82,6 +86,62 @@ jobs:
       - name: Build Core (net472)
         if: runner.os == 'Windows'
         run: dotnet build CodeGlyphX/CodeGlyphX.csproj -c Release -f net472 --no-restore
+
+  website-build:
+    name: Website Build (PR)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    if: github.event_name == 'pull_request'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Restore Website
+        run: dotnet restore CodeGlyphX.Website/CodeGlyphX.Website.csproj
+
+      - name: Install PSParseHTML module
+        shell: pwsh
+        run: |
+          Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
+          Install-Module PSParseHTML -Force -Scope CurrentUser
+
+      - name: Build website (static + playground)
+        run: pwsh Build/Publish-WebsitePages.ps1 -Configuration Release -Framework net10.0 -OutputPath site
+
+      - name: Verify website output
+        run: |
+          test -f site/.nojekyll
+          test -f site/index.html
+          test -f site/docs/index.html
+          test -f site/playground/index.html
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Playwright
+        run: |
+          npm install playwright serve
+          npx playwright install chromium --with-deps
+
+      - name: Smoke test website
+        run: |
+          # Start local server in background
+          npx serve site -l 5051 &
+          SERVER_PID=$!
+          sleep 3
+
+          # Run smoke tests
+          node Build/website-smoke-tests.js
+
+          # Cleanup
+          kill $SERVER_PID 2>/dev/null || true
 
   coverage:
     name: Coverage (linux)

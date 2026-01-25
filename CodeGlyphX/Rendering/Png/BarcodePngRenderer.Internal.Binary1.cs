@@ -151,30 +151,42 @@ public static partial class BarcodePngRenderer {
         var rowStride = rowBytes + 1;
         var fill = invert ? (byte)0xFF : (byte)0x00;
 
-        var offset = 0;
-        for (var y = 0; y < heightPx; y++) {
-            scanlines[offset++] = 0;
-            for (var i = 0; i < rowBytes; i++) {
-                scanlines[offset + i] = fill;
+        if (fill == 0) {
+            scanlines.AsSpan(0, length).Clear();
+        } else {
+            scanlines.AsSpan(0, length).Fill(fill);
+            for (var rowStart = 0; rowStart < length; rowStart += rowStride) {
+                scanlines[rowStart] = 0;
             }
-            offset += rowBytes;
         }
 
-        var xModules = quiet;
-        for (var i = 0; i < barcode.Segments.Count; i++) {
-            var seg = barcode.Segments[i];
-            if (!seg.IsBar) {
-                xModules += seg.Modules;
-                continue;
+        var rowBuffer = ArrayPool<byte>.Shared.Rent(rowBytes);
+        try {
+            if (fill == 0) {
+                rowBuffer.AsSpan(0, rowBytes).Clear();
+            } else {
+                rowBuffer.AsSpan(0, rowBytes).Fill(fill);
             }
 
-            var x0 = xModules * moduleSize;
-            var x1 = (xModules + seg.Modules) * moduleSize;
-            for (var y = 0; y < barHeightPx; y++) {
-                var rowStart = y * rowStride + 1;
-                ApplyRun(scanlines, rowStart, x0, x1, invert);
+            var xModules = quiet;
+            for (var i = 0; i < barcode.Segments.Count; i++) {
+                var seg = barcode.Segments[i];
+                if (seg.IsBar) {
+                    var x0 = xModules * moduleSize;
+                    var x1 = (xModules + seg.Modules) * moduleSize;
+                    ApplyRun(rowBuffer, 0, x0, x1, invert);
+                }
+                xModules += seg.Modules;
             }
-            xModules += seg.Modules;
+
+            var offset = 0;
+            for (var y = 0; y < barHeightPx; y++) {
+                scanlines[offset] = 0;
+                Buffer.BlockCopy(rowBuffer, 0, scanlines, offset + 1, rowBytes);
+                offset += rowStride;
+            }
+        } finally {
+            ArrayPool<byte>.Shared.Return(rowBuffer);
         }
 
         if (labelKind == LabelDrawKind.Foreground && !string.IsNullOrEmpty(labelText)) {
@@ -218,33 +230,42 @@ public static partial class BarcodePngRenderer {
 
     private static void DrawLabelBinary(byte[] scanlines, int widthPx, int heightPx, int rowStride, int xStart, int yStart, string text, int scale, int spacing, bool invert) {
         var x = xStart;
+        var glyphWidth = BarcodeLabelFont.GlyphWidth;
+        var glyphHeight = BarcodeLabelFont.GlyphHeight;
         for (var i = 0; i < text.Length; i++) {
             var glyph = BarcodeLabelFont.GetGlyph(text[i]);
-            for (var row = 0; row < BarcodeLabelFont.GlyphHeight; row++) {
+            for (var row = 0; row < glyphHeight; row++) {
                 var bits = glyph[row];
-                for (var col = 0; col < BarcodeLabelFont.GlyphWidth; col++) {
-                    if ((bits & (1 << (BarcodeLabelFont.GlyphWidth - 1 - col))) == 0) continue;
-                    var px = x + col * scale;
-                    var py = yStart + row * scale;
+                if (bits == 0) continue;
+                var py = yStart + row * scale;
+                var col = 0;
+                while (col < glyphWidth) {
+                    var mask = 1 << (glyphWidth - 1 - col);
+                    if ((bits & mask) == 0) {
+                        col++;
+                        continue;
+                    }
+
+                    var runStart = col;
+                    col++;
+                    while (col < glyphWidth && (bits & (1 << (glyphWidth - 1 - col))) != 0) col++;
+                    var runLen = col - runStart;
+                    var px = x + runStart * scale;
+                    var pixelCount = runLen * scale;
+                    if ((uint)px >= (uint)widthPx) continue;
+                    var maxPixels = widthPx - px;
+                    if (pixelCount > maxPixels) pixelCount = maxPixels;
+                    var x1 = px + pixelCount;
+
                     for (var sy = 0; sy < scale; sy++) {
                         var y = py + sy;
                         if ((uint)y >= (uint)heightPx) continue;
                         var rowStart = y * rowStride + 1;
-                        for (var sx = 0; sx < scale; sx++) {
-                            var px2 = px + sx;
-                            if ((uint)px2 >= (uint)widthPx) continue;
-                            var byteIndex = rowStart + (px2 >> 3);
-                            var mask = (byte)(1 << (7 - (px2 & 7)));
-                            if (invert) {
-                                scanlines[byteIndex] &= (byte)~mask;
-                            } else {
-                                scanlines[byteIndex] |= mask;
-                            }
-                        }
+                        ApplyRun(scanlines, rowStart, px, x1, invert);
                     }
                 }
             }
-            x += BarcodeLabelFont.GlyphWidth * scale + spacing;
+            x += glyphWidth * scale + spacing;
         }
     }
 

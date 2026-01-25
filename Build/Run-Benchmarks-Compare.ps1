@@ -49,6 +49,7 @@ $expectedCompare = @(
     "QrCompareBenchmarks",
     "QrDecodeCleanCompareBenchmarks",
     "QrDecodeNoisyCompareBenchmarks",
+    "QrDecodeStressCompareBenchmarks",
     "Code128CompareBenchmarks",
     "Code39CompareBenchmarks",
     "Code93CompareBenchmarks",

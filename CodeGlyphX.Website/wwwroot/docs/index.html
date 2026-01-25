@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
@@ -10,12 +10,13 @@
   <link rel="apple-touch-icon" href="/codeglyphx-qr-icon.png" />
   <link rel="preconnect" href="https://img.shields.io" crossorigin />
   <link rel="dns-prefetch" href="https://img.shields.io" />
-  <link rel="preload" href="/codeglyphx-qr-icon.png" as="image" type="image/png" />
-  <link rel="stylesheet" href="/css/api-docs.css" />
-  
-  
-  
   <script>(function(){const t=localStorage.getItem('theme')||'auto';document.documentElement.dataset.theme=t;})();</script>
+  <style>:root{--bg-dark:#0a0e14;--bg-card:#151b23;--text:#e6edf3;--text-muted:#8b949e;--primary:#2f81f7;--primary-light:#58a6ff}[data-theme="light"]{--bg-dark:#ffffff;--bg-card:#f6f8fa;--text:#1f2328;--text-muted:#656d76;--primary:#0969da;--primary-light:#0550ae}*,*::before,*::after{box-sizing:border-box}html,body{margin:0;padding:0;min-height:100vh}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,sans-serif;background:var(--bg-dark);color:var(--text);line-height:1.6}svg{max-width:100%;height:auto}.header svg,.nav svg,.nav-icon svg,.nav-cta svg,.btn-icon{width:20px;height:20px;flex-shrink:0}.feature-icon{width:48px;height:48px;display:flex;align-items:center;justify-content:center}.feature-icon svg{width:24px;height:24px}.hero-code-preview{display:flex;justify-content:center;gap:1.5rem}.code-preview-item{width:80px;height:80px;padding:12px;display:flex;align-items:center;justify-content:center;background:#fff;border-radius:12px}.code-preview-item svg{width:100%;height:100%}.barcode-preview{width:120px;height:60px}.header{position:sticky;top:0;z-index:100;background:var(--bg-dark);border-bottom:1px solid rgba(255,255,255,0.1)}.header-content{display:flex;align-items:center;justify-content:space-between;max-width:1400px;margin:0 auto;padding:0.75rem 1.5rem}.brand{display:flex;align-items:center;gap:0.5rem;text-decoration:none;color:var(--text);font-weight:600}.brand-icon img{width:28px;height:28px}.nav{display:flex;align-items:center;gap:1rem}.nav-links{display:flex;gap:0.25rem}.nav-links a{padding:0.5rem 1rem;color:var(--text-muted);text-decoration:none}.nav-actions{display:flex;align-items:center;gap:0.5rem}.theme-toggle{display:flex;align-items:center;gap:0.25rem;padding:0.25rem;background:var(--bg-card);border-radius:8px}.theme-toggle button{display:flex;align-items:center;justify-content:center;width:32px;height:32px;padding:0;background:transparent;border:none;border-radius:6px;color:var(--text-muted);cursor:pointer}.theme-toggle button.active{background:var(--primary);color:white}.theme-toggle button svg{width:18px;height:18px}.hero{min-height:60vh}.nav-cta{display:flex;align-items:center;gap:0.5rem;padding:0.5rem 1rem;background:var(--primary);color:#fff;border-radius:8px;text-decoration:none;font-weight:600}.nav-icon{display:flex;padding:0.5rem;color:var(--text-muted)}.copy-btn{opacity:0}</style>
+  <link rel="stylesheet" href="/css/api-docs.css" media="print" onload="this.media='all'" />
+  <noscript><link rel="stylesheet" href="/css/api-docs.css" /></noscript>
+  
+  
+  
 </head>
 <body>
   <div class="page">
@@ -40,7 +41,8 @@
             <div class="nav-links">
                 <a href="/">Home</a>
                 <a href="/playground/">Playground</a>
-                <a href="/docs/">Documentation</a>
+                <a href="/docs/">Docs</a>
+                <a href="/benchmarks/">Benchmarks</a>
                 <a href="/showcase/">Showcase</a>
             </div>
             <div class="nav-actions">
@@ -203,6 +205,58 @@ if (QrImageDecoder.TryDecodeImage(imageBytes, out var result))
                 <li><strong>.NET Standard 2.0</strong> - Requires System.Memory 4.5.5</li>
                 <li><strong>.NET Framework 4.7.2+</strong> - Requires System.Memory 4.5.5</li>
             </ul>
+
+            <h2>Feature Availability</h2>
+            <p>Most features are available across all targets, but the QR pixel pipeline and Span-based APIs are net8+ only.</p>
+            <table style="width: 100%; border-collapse: collapse; margin: 1rem 0;">
+                <thead>
+                    <tr style="border-bottom: 1px solid var(--border);">
+                        <th style="text-align: left; padding: 0.75rem;">Feature</th>
+                        <th style="text-align: left; padding: 0.75rem;">net8.0+</th>
+                        <th style="text-align: left; padding: 0.75rem;">net472 / netstandard2.0</th>
+                    </tr>
+                </thead>
+                <tbody style="color: var(--text-muted);">
+                    <tr style="border-bottom: 1px solid var(--border);">
+                        <td style="padding: 0.75rem;">Encode (QR/Micro QR + 1D/2D)</td>
+                        <td style="padding: 0.75rem;">Yes</td>
+                        <td style="padding: 0.75rem;">Yes</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid var(--border);">
+                        <td style="padding: 0.75rem;">Decode from module grids (BitMatrix)</td>
+                        <td style="padding: 0.75rem;">Yes</td>
+                        <td style="padding: 0.75rem;">Yes</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid var(--border);">
+                        <td style="padding: 0.75rem;">Renderers + image file codecs</td>
+                        <td style="padding: 0.75rem;">Yes</td>
+                        <td style="padding: 0.75rem;">Yes</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid var(--border);">
+                        <td style="padding: 0.75rem;">1D/2D pixel decode (Barcode/DataMatrix/PDF417/Aztec)</td>
+                        <td style="padding: 0.75rem;">Yes</td>
+                        <td style="padding: 0.75rem;">Yes</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid var(--border);">
+                        <td style="padding: 0.75rem;">QR pixel decode from raw pixels / screenshots</td>
+                        <td style="padding: 0.75rem;">Yes</td>
+                        <td style="padding: 0.75rem;">No (returns false)</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid var(--border);">
+                        <td style="padding: 0.75rem;">QR pixel debug rendering</td>
+                        <td style="padding: 0.75rem;">Yes</td>
+                        <td style="padding: 0.75rem;">No</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 0.75rem;">Span-based overloads</td>
+                        <td style="padding: 0.75rem;">Yes</td>
+                        <td style="padding: 0.75rem;">No (byte[] only)</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="text-muted">QR pixel decode APIs are net8+ only (e.g., <code>QrImageDecoder.TryDecodeImage(...)</code> and <code>QrDecoder.TryDecode(...)</code> from pixels).</p>
+            <p class="text-muted">You can check capabilities at runtime via <code>CodeGlyphXFeatures</code> (for example, <code>SupportsQrPixelDecode</code> and <code>SupportsQrPixelDebug</code>).</p>
+            <p class="text-muted"><strong>Choosing a target:</strong> pick <code>net8.0+</code> for QR image decoding, pixel debug tools, Span APIs, and maximum throughput. Pick <code>net472</code>/<code>netstandard2.0</code> for legacy apps that only need encoding, rendering, and module-grid decode.</p>
         </section>
 
         <section id="quickstart">
@@ -245,9 +299,10 @@ if (QrImageDecoder.TryDecodeImage(imageBytes, out var result))
         <section id="benchmarks">
             <h1>Benchmarks</h1>
             <p>
-                Benchmarks are run locally using BenchmarkDotNet. Results below were captured on
-                2026-01-18 (Ubuntu 24.04, Ryzen 9 9950X, .NET 8.0.22). Your results will vary.
+                Benchmarks are run locally using BenchmarkDotNet under controlled, ideal conditions. Results below were captured on
+                2026-01-18 (Ubuntu 24.04, Ryzen 9 9950X, .NET 8.0.22). Treat these numbers as directional; your results will vary.
             </p>
+            <p class="text-muted">Quick runs use fewer iterations but include the same scenario list as full runs. See <code>BENCHMARK.md</code> for full tables.</p>
             <div class="bench-summary" data-benchmark-summary>
                 <div class="bench-summary-loading">Loading benchmark summary...</div>
             </div>
@@ -348,6 +403,24 @@ var options = new QrEasyOptions
 };
 
 QR.Save("https://example.com", "styled-qr.png", options);</pre>
+
+            <h3>Fluent Builder (logo + styling)</h3>
+            <pre class="code-block">using CodeGlyphX;
+using CodeGlyphX.Rendering;
+
+var logo = LogoBuilder.CreateCirclePng(
+    size: 96,
+    color: new Rgba32(24, 24, 24),
+    accent: new Rgba32(240, 240, 240),
+    out _,
+    out _);
+
+var png = QR.Create("https://example.com")
+    .WithLogoPng(logo)
+    .WithLogoScale(0.22)
+    .WithLogoPaddingPx(6)
+    .WithStyle(QrRenderStyle.Fancy)
+    .Png();</pre>
         </section>
 
         <section id="payloads">
@@ -692,6 +765,15 @@ foreach (var barcode in results)
 {
     Console.WriteLine($"{barcode.BarcodeFormat}: {barcode.Text}");
 }</pre>
+
+            <h2>Diagnostics</h2>
+            <pre class="code-block">using CodeGlyphX;
+
+if (!CodeGlyph.TryDecodeImage(imageBytes, out var decoded, out var diagnostics, options: null))
+{
+    Console.WriteLine(diagnostics.FailureReason);
+    Console.WriteLine(diagnostics.Failure);
+}</pre>
         </section>
 
         <section id="microqr">
@@ -751,6 +833,7 @@ QR.Save("ABC123", "microqr.png", microQr: true);</pre>
                 <a href="/">Home</a>
                 <a href="/playground/">Playground</a>
                 <a href="/docs/">Documentation</a>
+                <a href="/benchmarks/">Benchmarks</a>
                 <a href="/showcase/">Showcase</a>
             </div>
             <div class="footer-section">

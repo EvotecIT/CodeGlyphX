@@ -30,7 +30,7 @@ Status: Actively developed · Stable core · Expanding format support
 - Reliable QR decoding (ECI, FNC1/GS1, Kanji, structured append, Micro QR)
 - 1D barcode encoding/decoding (Code128/GS1-128, Code39, Code93, Code11, Codabar, MSI, Plessey, EAN/UPC, ITF-14)
 - 2D encoding/decoding (Data Matrix, MicroPDF417, PDF417, Aztec)
-- Renderers (SVG / SVGZ / HTML / PNG / JPEG / BMP / PPM / PBM / PGM / PAM / XBM / XPM / TGA / ICO / PDF / EPS / ASCII) and image decoding (PNG/JPEG/GIF/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA)
+- Renderers (SVG / SVGZ / HTML / PNG / JPEG / BMP / PPM / PBM / PGM / PAM / XBM / XPM / TGA / ICO / PDF / EPS / ASCII) and image decoding (PNG/JPEG/GIF/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA/ICO/TIFF)
 - OTP helpers (otpauth://totp + Base32)
 - WPF controls + demo apps
 
@@ -52,6 +52,29 @@ Status: Actively developed · Stable core · Expanding format support
 dotnet add package CodeGlyphX
 ```
 
+## Target Framework Feature Matrix
+
+CodeGlyphX targets `netstandard2.0`, `net472`, `net8.0`, and `net10.0`. Most features are available everywhere, but the QR pixel pipeline and Span-based APIs are net8+ only.
+
+| Feature | net8.0 / net10.0 | net472 / netstandard2.0 |
+| --- | --- | --- |
+| Encode (QR/Micro QR + 1D/2D symbologies) | ✅ | ✅ |
+| Decode from module grids (BitMatrix) | ✅ | ✅ |
+| Renderers + image file codecs (PNG/JPEG/SVG/PDF/etc) | ✅ | ✅ |
+| 1D/2D pixel decode (Barcode/DataMatrix/PDF417/Aztec) | ✅ | ✅ |
+| QR pixel decode from raw pixels / screenshots | ✅ | ⚠️ Not available (returns false) |
+| QR pixel debug rendering | ✅ | ✖ |
+| Span-based overloads | ✅ | ✖ (byte[] only) |
+
+Notes:
+- `netstandard2.0` and `net472` require `System.Memory` 4.5.5 (automatically pulled by NuGet).
+- `QrImageDecoder.TryDecodeImage(...)` and `QrDecoder.TryDecode(...)` from pixels are net8+ only.
+- Runtime checks are available via `CodeGlyphXFeatures` (e.g., `SupportsQrPixelDecode`, `SupportsQrPixelDebug`).
+
+Choosing a target:
+- Pick `net8.0`/`net10.0` when you need QR pixel decode from images/screenshots, pixel debug rendering, Span APIs, or maximum throughput.
+- Pick `net472`/`netstandard2.0` for legacy apps that only need encoding, rendering, and module-grid decode (QR pixel decode from images is unavailable).
+
 ## Decode (unified)
 
 ```csharp
@@ -68,6 +91,15 @@ var options = new CodeGlyphDecodeOptions {
 
 if (CodeGlyph.TryDecode(pixels, width, height, stride, PixelFormat.Rgba32, out var decoded, options)) {
     Console.WriteLine($"{decoded.Kind}: {decoded.Text}");
+}
+```
+
+Diagnostics:
+
+```csharp
+if (!CodeGlyph.TryDecode(pixels, width, height, stride, PixelFormat.Rgba32, out var decoded, out var diagnostics, options)) {
+    Console.WriteLine(diagnostics.FailureReason);
+    Console.WriteLine(diagnostics.Failure);
 }
 ```
 
@@ -138,7 +170,7 @@ Runs wherever .NET runs (Windows, Linux, macOS). WPF controls are Windows-only.
 | --- | --- | --- | --- |
 | Core encode/decode (QR/1D/2D) | ✅ | ✅ | ✅ |
 | Renderers (PNG/SVG/SVGZ/HTML/JPEG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA/ICO/PDF/EPS/ASCII) | ✅ | ✅ | ✅ |
-| Image decoding (PNG/JPEG/GIF/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) | ✅ | ✅ | ✅ |
+| Image decoding (PNG/JPEG/GIF/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA/ICO/TIFF) | ✅ | ✅ | ✅ |
 | WPF controls | ✅ | ❌ | ❌ |
 
 ## Build Status
@@ -150,6 +182,7 @@ Runs wherever .NET runs (Windows, Linux, macOS). WPF controls are Windows-only.
 Latest benchmark tables are generated into `BENCHMARK.md` (and `Assets/Data/benchmark*.json`).
 Benchmarks below were run on 2026-01-19 (Linux Ubuntu 24.04, Ryzen 9 9950X, .NET 8.0.22). Your results will vary.
 Benchmarks run on identical hardware with default settings.
+Quick runs use fewer iterations but include the same scenario list as full runs.
 
 ### QR (Encode)
 
@@ -375,10 +408,45 @@ QR payload helpers generate well-known structured strings so scanners can trigge
 | Payments | UPI, SEPA Girocode (EPC), BezahlCode (contact/payment/debit/periodic), Swiss QR Bill, Slovenian UPN, Russia Payment Order (ST00012) |
 | Crypto & Network | Bitcoin / Bitcoin Cash / Litecoin, Monero, ShadowSocks |
 
-## Image decoding (for readers)
+## Image format support
 
-- PNG, JPEG (baseline + progressive, EXIF orientation), GIF, BMP, PPM, PBM, PGM, PAM, XBM, XPM, TGA, ICO/CUR
-- Pure C# decoders (no native image libraries)
+### Raster formats (encode + decode)
+
+| Format | Encode | Decode | Notes |
+| --- | --- | --- | --- |
+| PNG | ✅ | ✅ | Color types 0/2/3/4/6, bit depths 1/2/4/8/16, tRNS, Adam7 |
+| JPEG | ✅ | ✅ | Baseline + progressive (8-bit, Huffman), EXIF orientation, CMYK/YCCK |
+| BMP | ✅ | ✅ | 1/4/8/16/24/32-bit, RLE4/RLE8, bitfields |
+| GIF | No | ✅ | First frame only, transparency via GCE |
+| TIFF | No | ✅ | Baseline, strips, uncompressed/PackBits/LZW/Deflate, 8/16-bit, predictor 2 |
+| PPM/PGM/PAM/PBM | ✅ | ✅ | Portable pixmaps (8/16-bit maxval, PAM RGBA) |
+| TGA | ✅ | ✅ | Uncompressed + RLE, true-color/grayscale/color-mapped |
+| ICO/CUR | ✅ | ✅ | Multi-size icons (PNG/BMP payloads) |
+| XBM/XPM | ✅ | ✅ | X Window text formats |
+
+### Vector / text outputs (encode only)
+
+| Format | Encode | Notes |
+| --- | --- | --- |
+| SVG / SVGZ | ✅ | Vector output |
+| PDF / EPS | ✅ | Vector by default, raster via RenderMode |
+| HTML | ✅ | Table-based output |
+| ASCII | ✅ | API only |
+| Raw RGBA | ✅ | Use `RenderPixels` APIs |
+
+### Known gaps / not supported (decode)
+
+- WebP, AVIF, HEIC, JPEG2000, PSD
+- Animated GIF (first frame only)
+- Multi-page / tiled TIFF, mixed sample sizes, 12-bit JPEG
+- PDF/PS decode (rasterize first)
+
+### Format corpus (optional)
+
+- Image format corpus: `CodeGlyphX.Tests/Fixtures/ImageSamples/manifest.json`  
+  Download with `pwsh Build/Download-ImageSamples.ps1` (or set `CODEGLYPHX_IMAGE_SAMPLES`).
+- External barcode/QR samples: `CodeGlyphX.Tests/Fixtures/ExternalSamples/manifest.json`  
+  Download with `pwsh Build/Download-ExternalSamples.ps1` (or set `CODEGLYPHX_EXTERNAL_SAMPLES`).
 
 ## Quick usage
 
@@ -421,6 +489,7 @@ Notes:
 - Vector PDF/EPS support square/rounded/circle modules and eye shapes.
 - Gradients and logos automatically fall back to raster to preserve appearance.
 - PDF/EPS are output-only. For decoding, rasterize to PNG/BMP/PPM/PBM/PGM/PAM/TGA and use the image decoders.
+- Logo background plates auto-bump the minimum QR version to 8 by default for scan safety (disable with `AutoBumpVersionForLogoBackground` or set `LogoBackgroundMinVersion = 0`).
 
 ```csharp
 using CodeGlyphX;

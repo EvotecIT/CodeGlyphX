@@ -73,11 +73,39 @@ public static partial class MatrixPngRenderer {
     /// Renders the matrix to a raw RGBA pixel buffer (no PNG encoding).
     /// </summary>
     public static byte[] RenderPixels(BitMatrix modules, MatrixPngRenderOptions opts, out int widthPx, out int heightPx, out int stride) {
-        var scanlines = RenderScanlines(modules, opts, out widthPx, out heightPx, out stride);
+        GetScanlineLength(modules, opts, out widthPx, out heightPx, out stride);
         var pixels = new byte[heightPx * stride];
-        for (var y = 0; y < heightPx; y++) {
-            Buffer.BlockCopy(scanlines, y * (stride + 1) + 1, pixels, y * stride, stride);
+        PngRenderHelpers.FillBackgroundPixels(pixels, widthPx, heightPx, stride, opts.Background);
+
+        var rowLength = stride;
+        var backgroundRow = ArrayPool<byte>.Shared.Rent(rowLength);
+        var rowBuffer = ArrayPool<byte>.Shared.Rent(rowLength);
+        try {
+            PngRenderHelpers.FillRowPixels(backgroundRow, 0, widthPx, opts.Background);
+
+            for (var my = 0; my < modules.Height; my++) {
+                Buffer.BlockCopy(backgroundRow, 0, rowBuffer, 0, rowLength);
+                var rowHasDark = false;
+
+                for (var mx = 0; mx < modules.Width; mx++) {
+                    if (!modules[mx, my]) continue;
+                    rowHasDark = true;
+                    var x0 = (mx + opts.QuietZone) * opts.ModuleSize;
+                    PngRenderHelpers.FillRowPixels(rowBuffer, x0 * 4, opts.ModuleSize, opts.Foreground);
+                }
+
+                if (!rowHasDark) continue;
+
+                var y0 = (my + opts.QuietZone) * opts.ModuleSize;
+                for (var sy = 0; sy < opts.ModuleSize; sy++) {
+                    Buffer.BlockCopy(rowBuffer, 0, pixels, (y0 + sy) * rowLength, rowLength);
+                }
+            }
+        } finally {
+            ArrayPool<byte>.Shared.Return(rowBuffer);
+            ArrayPool<byte>.Shared.Return(backgroundRow);
         }
+
         return pixels;
     }
 
@@ -104,36 +132,35 @@ public static partial class MatrixPngRenderer {
         var buffer = scanlines ?? new byte[length];
         if (buffer.Length < length) throw new ArgumentException("Invalid scanline buffer length.", nameof(scanlines));
 
-        // Fill background.
-        for (var y = 0; y < heightPx; y++) {
-            var rowStart = y * (stride + 1);
-            buffer[rowStart] = 0;
-            var p = rowStart + 1;
-            for (var x = 0; x < widthPx; x++) {
-                buffer[p++] = opts.Background.R;
-                buffer[p++] = opts.Background.G;
-                buffer[p++] = opts.Background.B;
-                buffer[p++] = opts.Background.A;
-            }
-        }
+        PngRenderHelpers.FillBackground(buffer, widthPx, heightPx, stride, opts.Background);
 
-        for (var my = 0; my < modules.Height; my++) {
-            for (var mx = 0; mx < modules.Width; mx++) {
-                if (!modules[mx, my]) continue;
+        var rowLength = stride + 1;
+        var backgroundRow = ArrayPool<byte>.Shared.Rent(rowLength);
+        var rowBuffer = ArrayPool<byte>.Shared.Rent(rowLength);
+        try {
+            backgroundRow[0] = 0;
+            PngRenderHelpers.FillRowPixels(backgroundRow, 1, widthPx, opts.Background);
+            for (var my = 0; my < modules.Height; my++) {
+                Buffer.BlockCopy(backgroundRow, 0, rowBuffer, 0, rowLength);
+                var rowHasDark = false;
 
-                var x0 = (mx + opts.QuietZone) * opts.ModuleSize;
+                for (var mx = 0; mx < modules.Width; mx++) {
+                    if (!modules[mx, my]) continue;
+                    rowHasDark = true;
+                    var x0 = (mx + opts.QuietZone) * opts.ModuleSize;
+                    PngRenderHelpers.FillRowPixels(rowBuffer, 1 + x0 * 4, opts.ModuleSize, opts.Foreground);
+                }
+
+                if (!rowHasDark) continue;
+
                 var y0 = (my + opts.QuietZone) * opts.ModuleSize;
                 for (var sy = 0; sy < opts.ModuleSize; sy++) {
-                    var rowStart = (y0 + sy) * (stride + 1) + 1 + x0 * 4;
-                    for (var sx = 0; sx < opts.ModuleSize; sx++) {
-                        buffer[rowStart + 0] = opts.Foreground.R;
-                        buffer[rowStart + 1] = opts.Foreground.G;
-                        buffer[rowStart + 2] = opts.Foreground.B;
-                        buffer[rowStart + 3] = opts.Foreground.A;
-                        rowStart += 4;
-                    }
+                    Buffer.BlockCopy(rowBuffer, 0, buffer, (y0 + sy) * rowLength, rowLength);
                 }
             }
+        } finally {
+            ArrayPool<byte>.Shared.Return(rowBuffer);
+            ArrayPool<byte>.Shared.Return(backgroundRow);
         }
 
         return buffer;

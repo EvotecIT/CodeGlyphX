@@ -17,6 +17,10 @@ public enum DecodeFailureReason {
     /// </summary>
     UnsupportedFormat,
     /// <summary>
+    /// Feature is not supported on this target framework.
+    /// </summary>
+    PlatformNotSupported,
+    /// <summary>
     /// Operation was cancelled.
     /// </summary>
     Cancelled,

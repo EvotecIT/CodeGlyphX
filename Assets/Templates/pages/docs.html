@@ -121,6 +121,58 @@ if (QrImageDecoder.TryDecodeImage(imageBytes, out var result))
                 <li><strong>.NET Standard 2.0</strong> - Requires System.Memory 4.5.5</li>
                 <li><strong>.NET Framework 4.7.2+</strong> - Requires System.Memory 4.5.5</li>
             </ul>
+
+            <h2>Feature Availability</h2>
+            <p>Most features are available across all targets, but the QR pixel pipeline and Span-based APIs are net8+ only.</p>
+            <table style="width: 100%; border-collapse: collapse; margin: 1rem 0;">
+                <thead>
+                    <tr style="border-bottom: 1px solid var(--border);">
+                        <th style="text-align: left; padding: 0.75rem;">Feature</th>
+                        <th style="text-align: left; padding: 0.75rem;">net8.0+</th>
+                        <th style="text-align: left; padding: 0.75rem;">net472 / netstandard2.0</th>
+                    </tr>
+                </thead>
+                <tbody style="color: var(--text-muted);">
+                    <tr style="border-bottom: 1px solid var(--border);">
+                        <td style="padding: 0.75rem;">Encode (QR/Micro QR + 1D/2D)</td>
+                        <td style="padding: 0.75rem;">Yes</td>
+                        <td style="padding: 0.75rem;">Yes</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid var(--border);">
+                        <td style="padding: 0.75rem;">Decode from module grids (BitMatrix)</td>
+                        <td style="padding: 0.75rem;">Yes</td>
+                        <td style="padding: 0.75rem;">Yes</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid var(--border);">
+                        <td style="padding: 0.75rem;">Renderers + image file codecs</td>
+                        <td style="padding: 0.75rem;">Yes</td>
+                        <td style="padding: 0.75rem;">Yes</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid var(--border);">
+                        <td style="padding: 0.75rem;">1D/2D pixel decode (Barcode/DataMatrix/PDF417/Aztec)</td>
+                        <td style="padding: 0.75rem;">Yes</td>
+                        <td style="padding: 0.75rem;">Yes</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid var(--border);">
+                        <td style="padding: 0.75rem;">QR pixel decode from raw pixels / screenshots</td>
+                        <td style="padding: 0.75rem;">Yes</td>
+                        <td style="padding: 0.75rem;">No (returns false)</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid var(--border);">
+                        <td style="padding: 0.75rem;">QR pixel debug rendering</td>
+                        <td style="padding: 0.75rem;">Yes</td>
+                        <td style="padding: 0.75rem;">No</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 0.75rem;">Span-based overloads</td>
+                        <td style="padding: 0.75rem;">Yes</td>
+                        <td style="padding: 0.75rem;">No (byte[] only)</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="text-muted">QR pixel decode APIs are net8+ only (e.g., <code>QrImageDecoder.TryDecodeImage(...)</code> and <code>QrDecoder.TryDecode(...)</code> from pixels).</p>
+            <p class="text-muted">You can check capabilities at runtime via <code>CodeGlyphXFeatures</code> (for example, <code>SupportsQrPixelDecode</code> and <code>SupportsQrPixelDebug</code>).</p>
+            <p class="text-muted"><strong>Choosing a target:</strong> pick <code>net8.0+</code> for QR image decoding, pixel debug tools, Span APIs, and maximum throughput. Pick <code>net472</code>/<code>netstandard2.0</code> for legacy apps that only need encoding, rendering, and module-grid decode.</p>
         </section>
 
         <section id="quickstart">
@@ -163,9 +215,10 @@ if (QrImageDecoder.TryDecodeImage(imageBytes, out var result))
         <section id="benchmarks">
             <h1>Benchmarks</h1>
             <p>
-                Benchmarks are run locally using BenchmarkDotNet. Results below were captured on
-                2026-01-18 (Ubuntu 24.04, Ryzen 9 9950X, .NET 8.0.22). Your results will vary.
+                Benchmarks are run locally using BenchmarkDotNet under controlled, ideal conditions. Results below were captured on
+                2026-01-18 (Ubuntu 24.04, Ryzen 9 9950X, .NET 8.0.22). Treat these numbers as directional; your results will vary.
             </p>
+            <p class="text-muted">Quick runs use fewer iterations but include the same scenario list as full runs. See <code>BENCHMARK.md</code> for full tables.</p>
             <div class="bench-summary" data-benchmark-summary>
                 <div class="bench-summary-loading">Loading benchmark summary...</div>
             </div>
@@ -266,6 +319,24 @@ var options = new QrEasyOptions
 };
 
 QR.Save("https://example.com", "styled-qr.png", options);</pre>
+
+            <h3>Fluent Builder (logo + styling)</h3>
+            <pre class="code-block">using CodeGlyphX;
+using CodeGlyphX.Rendering;
+
+var logo = LogoBuilder.CreateCirclePng(
+    size: 96,
+    color: new Rgba32(24, 24, 24),
+    accent: new Rgba32(240, 240, 240),
+    out _,
+    out _);
+
+var png = QR.Create("https://example.com")
+    .WithLogoPng(logo)
+    .WithLogoScale(0.22)
+    .WithLogoPaddingPx(6)
+    .WithStyle(QrRenderStyle.Fancy)
+    .Png();</pre>
         </section>
 
         <section id="payloads">
@@ -609,6 +680,15 @@ var results = QrImageDecoder.DecodeAllImages(imageBytes);
 foreach (var barcode in results)
 {
     Console.WriteLine($"{barcode.BarcodeFormat}: {barcode.Text}");
+}</pre>
+
+            <h2>Diagnostics</h2>
+            <pre class="code-block">using CodeGlyphX;
+
+if (!CodeGlyph.TryDecodeImage(imageBytes, out var decoded, out var diagnostics, options: null))
+{
+    Console.WriteLine(diagnostics.FailureReason);
+    Console.WriteLine(diagnostics.Failure);
 }</pre>
         </section>
 

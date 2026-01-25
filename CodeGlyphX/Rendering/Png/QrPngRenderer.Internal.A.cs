@@ -31,19 +31,30 @@ public static partial class QrPngRenderer {
         var length = GetScanlineLength(modules, opts, out widthPx, out heightPx, out stride);
         var buffer = scanlines ?? new byte[length];
         if (buffer.Length < length) throw new ArgumentException("Invalid scanline buffer length.", nameof(scanlines));
-        FillBackground(buffer, widthPx, heightPx, stride, opts.Background);
+        PngRenderHelpers.FillBackground(buffer, widthPx, heightPx, stride, opts.Background);
 
         var size = modules.Width;
         var mask = BuildModuleMask(opts.ModuleSize, opts.ModuleShape, opts.ModuleScale, opts.ModuleCornerRadiusPx);
+        var maskSolid = IsSolidMask(mask);
         var eyeOuterMask = opts.Eyes is null
             ? mask
             : BuildModuleMask(opts.ModuleSize, opts.Eyes.OuterShape, opts.Eyes.OuterScale, opts.Eyes.OuterCornerRadiusPx);
+        var eyeOuterSolid = eyeOuterMask == mask ? maskSolid : IsSolidMask(eyeOuterMask);
         var eyeInnerMask = opts.Eyes is null
             ? mask
             : BuildModuleMask(opts.ModuleSize, opts.Eyes.InnerShape, opts.Eyes.InnerScale, opts.Eyes.InnerCornerRadiusPx);
+        var eyeInnerSolid = eyeInnerMask == mask ? maskSolid : IsSolidMask(eyeInnerMask);
         var qrOrigin = opts.QuietZone * opts.ModuleSize;
         var qrSizePx = size * opts.ModuleSize;
         var useFrame = opts.Eyes is not null && opts.Eyes.UseFrame;
+        var background = opts.Background;
+        var gradientInfo = opts.ForegroundGradient is null
+            ? (GradientInfo?)null
+            : new GradientInfo(opts.ForegroundGradient, qrSizePx - 1, qrSizePx - 1);
+        var eyeOuterGradient = opts.Eyes?.OuterGradient;
+        var eyeInnerGradient = opts.Eyes?.InnerGradient;
+        var eyeOuterGradientInfo = eyeOuterGradient is null ? (GradientInfo?)null : new GradientInfo(eyeOuterGradient, 7 * opts.ModuleSize - 1, 7 * opts.ModuleSize - 1);
+        var eyeInnerGradientInfo = eyeInnerGradient is null ? (GradientInfo?)null : new GradientInfo(eyeInnerGradient, 3 * opts.ModuleSize - 1, 3 * opts.ModuleSize - 1);
 
         for (var my = 0; my < size; my++) {
             for (var mx = 0; mx < size; mx++) {
@@ -58,6 +69,7 @@ public static partial class QrPngRenderer {
                 if (useFrame && eyeKind != EyeKind.None) continue;
 
                 var useMask = eyeKind == EyeKind.Outer ? eyeOuterMask : eyeKind == EyeKind.Inner ? eyeInnerMask : mask;
+                var useMaskSolid = eyeKind == EyeKind.Outer ? eyeOuterSolid : eyeKind == EyeKind.Inner ? eyeInnerSolid : maskSolid;
                 var useColor = eyeKind switch {
                     EyeKind.Outer => opts.Eyes!.OuterColor ?? opts.Foreground,
                     EyeKind.Inner => opts.Eyes!.InnerColor ?? opts.Foreground,
@@ -65,12 +77,11 @@ public static partial class QrPngRenderer {
                 };
 
                 if (!useFrame && eyeKind != EyeKind.None) {
-                    var eyeGrad = eyeKind == EyeKind.Outer ? opts.Eyes!.OuterGradient : opts.Eyes!.InnerGradient;
+                    var eyeGrad = eyeKind == EyeKind.Outer ? eyeOuterGradientInfo : eyeInnerGradientInfo;
                     if (eyeGrad is not null) {
                         var eyeSizeModules = eyeKind == EyeKind.Outer ? 7 : 3;
                         var boxX = (eyeX + opts.QuietZone) * opts.ModuleSize;
                         var boxY = (eyeY + opts.QuietZone) * opts.ModuleSize;
-                        var boxSize = eyeSizeModules * opts.ModuleSize;
                         DrawModuleInBox(
                             buffer,
                             stride,
@@ -78,16 +89,20 @@ public static partial class QrPngRenderer {
                             mx,
                             my,
                             opts.QuietZone,
-                            eyeGrad,
+                            eyeGrad.Value,
                             useMask,
                             boxX,
-                            boxY,
-                            boxSize);
+                            boxY);
                         continue;
                     }
                 }
 
-                var useGradient = eyeKind == EyeKind.None ? opts.ForegroundGradient : null;
+                var useGradient = eyeKind == EyeKind.None ? gradientInfo : null;
+                if (useGradient is null && useMaskSolid) {
+                    var solid = useColor.A == 255 ? useColor : CompositeColor(useColor, background);
+                    DrawModuleSolid(buffer, stride, opts.ModuleSize, mx, my, opts.QuietZone, solid);
+                    continue;
+                }
 
                 DrawModule(
                     buffer,
@@ -117,17 +132,12 @@ public static partial class QrPngRenderer {
         return buffer;
     }
 
-    private static void FillBackground(byte[] scanlines, int widthPx, int heightPx, int stride, Rgba32 color) {
-        for (var y = 0; y < heightPx; y++) {
-            var rowStart = y * (stride + 1);
-            scanlines[rowStart] = 0;
-            var p = rowStart + 1;
-            for (var x = 0; x < widthPx; x++) {
-                scanlines[p++] = color.R;
-                scanlines[p++] = color.G;
-                scanlines[p++] = color.B;
-                scanlines[p++] = color.A;
-            }
+    private static void DrawModuleSolid(byte[] scanlines, int stride, int moduleSize, int mx, int my, int quietZone, Rgba32 color) {
+        var x0 = (mx + quietZone) * moduleSize;
+        var y0 = (my + quietZone) * moduleSize;
+        for (var sy = 0; sy < moduleSize; sy++) {
+            var rowStart = (y0 + sy) * (stride + 1) + 1 + x0 * 4;
+            PngRenderHelpers.FillRowPixels(scanlines, rowStart, moduleSize, color);
         }
     }
 
@@ -139,7 +149,7 @@ public static partial class QrPngRenderer {
         int my,
         int quietZone,
         Rgba32 color,
-        QrPngGradientOptions? gradient,
+        GradientInfo? gradient,
         bool[] mask,
         int qrOrigin,
         int qrSizePx) {
@@ -155,7 +165,7 @@ public static partial class QrPngRenderer {
                 }
                 var outColor = gradient is null
                     ? color
-                    : GetGradientColor(gradient, x0 + sx, y0 + sy, qrOrigin, qrSizePx);
+                    : GetGradientColor(gradient.Value, x0 + sx, y0 + sy, qrOrigin, qrOrigin);
 
                 if (outColor.A == 255) {
                     scanlines[rowStart + 0] = outColor.R;
@@ -186,11 +196,10 @@ public static partial class QrPngRenderer {
         int mx,
         int my,
         int quietZone,
-        QrPngGradientOptions gradient,
+        GradientInfo gradient,
         bool[] mask,
         int boxX,
-        int boxY,
-        int boxSizePx) {
+        int boxY) {
         var x0 = (mx + quietZone) * moduleSize;
         var y0 = (my + quietZone) * moduleSize;
         for (var sy = 0; sy < moduleSize; sy++) {
@@ -201,7 +210,7 @@ public static partial class QrPngRenderer {
                     rowStart += 4;
                     continue;
                 }
-                var color = GetGradientColorInBox(gradient, x0 + sx, y0 + sy, boxX, boxY, boxSizePx, boxSizePx);
+                var color = GetGradientColorInBox(gradient, x0 + sx, y0 + sy, boxX, boxY);
                 scanlines[rowStart + 0] = color.R;
                 scanlines[rowStart + 1] = color.G;
                 scanlines[rowStart + 2] = color.B;
@@ -209,6 +218,24 @@ public static partial class QrPngRenderer {
                 rowStart += 4;
             }
         }
+    }
+
+    private static bool IsSolidMask(bool[] mask) {
+        for (var i = 0; i < mask.Length; i++) {
+            if (!mask[i]) return false;
+        }
+        return true;
+    }
+
+    private static Rgba32 CompositeColor(Rgba32 foreground, Rgba32 background) {
+        if (foreground.A == 255) return foreground;
+        var sa = foreground.A;
+        var inv = 255 - sa;
+        var r = (byte)((foreground.R * sa + background.R * inv + 127) / 255);
+        var g = (byte)((foreground.G * sa + background.G * inv + 127) / 255);
+        var b = (byte)((foreground.B * sa + background.B * inv + 127) / 255);
+        var a = (byte)((sa + background.A * inv + 127) / 255);
+        return new Rgba32(r, g, b, a);
     }
 
     private static bool[] BuildModuleMask(
@@ -320,10 +347,9 @@ public static partial class QrPngRenderer {
         return dx * dx + dy * dy <= radiusSq;
     }
 
-    private static Rgba32 GetGradientColor(QrPngGradientOptions gradient, int px, int py, int qrOrigin, int qrSizePx) {
-        var size = Math.Max(1, qrSizePx - 1);
-        var u = (px - qrOrigin) / (double)size;
-        var v = (py - qrOrigin) / (double)size;
+    private static Rgba32 GetGradientColor(GradientInfo gradient, int px, int py, int originX, int originY) {
+        var u = (px - originX) * gradient.InvSizeX;
+        var v = (py - originY) * gradient.InvSizeY;
         if (u < 0) u = 0;
         if (u > 1) u = 1;
         if (v < 0) v = 0;
@@ -334,18 +360,16 @@ public static partial class QrPngRenderer {
             QrPngGradientType.Vertical => v,
             QrPngGradientType.DiagonalDown => (u + v) * 0.5,
             QrPngGradientType.DiagonalUp => (u + (1 - v)) * 0.5,
-            QrPngGradientType.Radial => GetRadialT(u, v, gradient.CenterX, gradient.CenterY),
+            QrPngGradientType.Radial => GetRadialT(u, v, gradient.CenterX, gradient.CenterY, gradient.MaxDist),
             _ => u,
         };
 
-        return Lerp(gradient.StartColor, gradient.EndColor, t);
+        return Lerp(gradient, t);
     }
 
-    private static Rgba32 GetGradientColorInBox(QrPngGradientOptions gradient, int px, int py, int x, int y, int w, int h) {
-        var sizeX = Math.Max(1, w - 1);
-        var sizeY = Math.Max(1, h - 1);
-        var u = (px - x) / (double)sizeX;
-        var v = (py - y) / (double)sizeY;
+    private static Rgba32 GetGradientColorInBox(GradientInfo gradient, int px, int py, int x, int y) {
+        var u = (px - x) * gradient.InvSizeX;
+        var v = (py - y) * gradient.InvSizeY;
         if (u < 0) u = 0;
         if (u > 1) u = 1;
         if (v < 0) v = 0;
@@ -356,22 +380,17 @@ public static partial class QrPngRenderer {
             QrPngGradientType.Vertical => v,
             QrPngGradientType.DiagonalDown => (u + v) * 0.5,
             QrPngGradientType.DiagonalUp => (u + (1 - v)) * 0.5,
-            QrPngGradientType.Radial => GetRadialT(u, v, gradient.CenterX, gradient.CenterY),
+            QrPngGradientType.Radial => GetRadialT(u, v, gradient.CenterX, gradient.CenterY, gradient.MaxDist),
             _ => u,
         };
 
-        return Lerp(gradient.StartColor, gradient.EndColor, t);
+        return Lerp(gradient, t);
     }
 
-    private static double GetRadialT(double u, double v, double cx, double cy) {
+    private static double GetRadialT(double u, double v, double cx, double cy, double maxDist) {
         var dx = u - cx;
         var dy = v - cy;
         var dist = Math.Sqrt(dx * dx + dy * dy);
-        var maxDist = 0.0;
-        maxDist = Math.Max(maxDist, Distance(0, 0, cx, cy));
-        maxDist = Math.Max(maxDist, Distance(1, 0, cx, cy));
-        maxDist = Math.Max(maxDist, Distance(0, 1, cx, cy));
-        maxDist = Math.Max(maxDist, Distance(1, 1, cx, cy));
         if (maxDist <= 0) return 0;
         var t = dist / maxDist;
         if (t < 0) return 0;
@@ -379,20 +398,61 @@ public static partial class QrPngRenderer {
         return t;
     }
 
+    private static Rgba32 Lerp(GradientInfo gradient, double t) {
+        if (t <= 0) return gradient.StartColor;
+        if (t >= 1) return gradient.EndColor;
+        var r = (byte)Math.Round(gradient.StartColor.R + gradient.Dr * t);
+        var g = (byte)Math.Round(gradient.StartColor.G + gradient.Dg * t);
+        var b = (byte)Math.Round(gradient.StartColor.B + gradient.Db * t);
+        var a = (byte)Math.Round(gradient.StartColor.A + gradient.Da * t);
+        return new Rgba32(r, g, b, a);
+    }
+
+    private readonly struct GradientInfo {
+        public QrPngGradientType Type { get; }
+        public Rgba32 StartColor { get; }
+        public Rgba32 EndColor { get; }
+        public double CenterX { get; }
+        public double CenterY { get; }
+        public double InvSizeX { get; }
+        public double InvSizeY { get; }
+        public double MaxDist { get; }
+        public int Dr { get; }
+        public int Dg { get; }
+        public int Db { get; }
+        public int Da { get; }
+
+        public GradientInfo(QrPngGradientOptions gradient, int sizeX, int sizeY) {
+            Type = gradient.Type;
+            StartColor = gradient.StartColor;
+            EndColor = gradient.EndColor;
+            CenterX = gradient.CenterX;
+            CenterY = gradient.CenterY;
+            var sx = Math.Max(1, sizeX);
+            var sy = Math.Max(1, sizeY);
+            InvSizeX = 1.0 / sx;
+            InvSizeY = 1.0 / sy;
+            Dr = EndColor.R - StartColor.R;
+            Dg = EndColor.G - StartColor.G;
+            Db = EndColor.B - StartColor.B;
+            Da = EndColor.A - StartColor.A;
+            MaxDist = Type == QrPngGradientType.Radial ? ComputeMaxDist(CenterX, CenterY) : 0.0;
+        }
+    }
+
+    private static double ComputeMaxDist(double cx, double cy) {
+        var maxDist = 0.0;
+        maxDist = Math.Max(maxDist, Distance(0, 0, cx, cy));
+        maxDist = Math.Max(maxDist, Distance(1, 0, cx, cy));
+        maxDist = Math.Max(maxDist, Distance(0, 1, cx, cy));
+        maxDist = Math.Max(maxDist, Distance(1, 1, cx, cy));
+        return maxDist;
+    }
+
     private static double Distance(double x, double y, double cx, double cy) {
         var dx = x - cx;
         var dy = y - cy;
         return Math.Sqrt(dx * dx + dy * dy);
-    }
-
-    private static Rgba32 Lerp(Rgba32 a, Rgba32 b, double t) {
-        if (t <= 0) return a;
-        if (t >= 1) return b;
-        var r = (byte)Math.Round(a.R + (b.R - a.R) * t);
-        var g = (byte)Math.Round(a.G + (b.G - a.G) * t);
-        var bl = (byte)Math.Round(a.B + (b.B - a.B) * t);
-        var al = (byte)Math.Round(a.A + (b.A - a.A) * t);
-        return new Rgba32(r, g, bl, al);
     }
 
     private enum EyeKind {

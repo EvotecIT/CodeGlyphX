@@ -3501,6 +3501,11 @@
             Optional failure message when decoding fails.
             </summary>
         </member>
+        <member name="P:CodeGlyphX.CodeGlyphDecodeDiagnostics.FailureReason">
+            <summary>
+            Failure reason when decoding fails.
+            </summary>
+        </member>
         <member name="T:CodeGlyphX.CodeGlyphDecodeOptions">
             <summary>
             Options for unified QR/barcode decoding.
@@ -3707,6 +3712,31 @@
         </member>
         <member name="F:CodeGlyphX.CodeGlyphKind.Aztec">
             <summary>Aztec.</summary>
+        </member>
+        <member name="T:CodeGlyphX.CodeGlyphXFeatures">
+            <summary>
+            Runtime feature flags for CodeGlyphX capabilities.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.CodeGlyphXFeatures.SupportsQrPixelDecode">
+            <summary>
+            True when the high-performance QR pixel pipeline is available (net8+).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.CodeGlyphXFeatures.SupportsQrPixelDebug">
+            <summary>
+            True when QR pixel debug rendering is available (net8+).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.CodeGlyphXFeatures.SupportsSpanPixelPipeline">
+            <summary>
+            True when span-based pixel APIs and fast pipeline paths are available (net8+).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.CodeGlyphXFeatures.TargetFramework">
+            <summary>
+            The target framework for this build (compile-time constant).
+            </summary>
         </member>
         <member name="T:CodeGlyphX.DataBar.DataBar14Decoder">
             <summary>
@@ -5341,6 +5371,11 @@
         <member name="F:CodeGlyphX.DecodeFailureReason.UnsupportedFormat">
             <summary>
             Image format or data was not supported.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.DecodeFailureReason.PlatformNotSupported">
+            <summary>
+            Feature is not supported on this target framework.
             </summary>
         </member>
         <member name="F:CodeGlyphX.DecodeFailureReason.Cancelled">
@@ -10580,6 +10615,31 @@
             Sets the render style preset.
             </summary>
         </member>
+        <member name="M:CodeGlyphX.QR.QrBuilder.WithModuleShape(CodeGlyphX.Rendering.Png.QrPngModuleShape)">
+            <summary>
+            Sets module shape override.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QR.QrBuilder.WithModuleScale(System.Double)">
+            <summary>
+            Sets module scale override (0.1..1.0).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QR.QrBuilder.WithModuleCornerRadiusPx(System.Int32)">
+            <summary>
+            Sets module corner radius in pixels.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QR.QrBuilder.WithForegroundGradient(CodeGlyphX.Rendering.Png.QrPngGradientOptions)">
+            <summary>
+            Sets the foreground gradient.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QR.QrBuilder.WithEyes(CodeGlyphX.Rendering.Png.QrPngEyeOptions)">
+            <summary>
+            Sets eye (finder) styling.
+            </summary>
+        </member>
         <member name="M:CodeGlyphX.QR.QrBuilder.WithTargetSize(System.Int32,System.Boolean)">
             <summary>
             Sets a fixed target size (in pixels). Module size is adjusted to fit.
@@ -10593,6 +10653,31 @@
         <member name="M:CodeGlyphX.QR.QrBuilder.WithLogoPng(System.Byte[])">
             <summary>
             Sets an embedded logo from PNG bytes.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QR.QrBuilder.WithLogoScale(System.Double)">
+            <summary>
+            Sets the logo scale relative to the QR area (excluding quiet zone).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QR.QrBuilder.WithLogoPaddingPx(System.Int32)">
+            <summary>
+            Sets the logo padding in pixels.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QR.QrBuilder.WithLogoBackground(System.Boolean)">
+            <summary>
+            Sets whether to draw a background plate behind the logo.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QR.QrBuilder.WithLogoBackgroundColor(System.Nullable{CodeGlyphX.Rendering.Png.Rgba32})">
+            <summary>
+            Sets the logo background color.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QR.QrBuilder.WithLogoCornerRadiusPx(System.Int32)">
+            <summary>
+            Sets the logo background corner radius in pixels.
             </summary>
         </member>
         <member name="M:CodeGlyphX.QR.QrBuilder.WithLogoFile(System.String)">

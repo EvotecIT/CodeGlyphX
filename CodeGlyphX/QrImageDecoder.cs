@@ -496,7 +496,7 @@ public static class QrImageDecoder {
         _ = options;
         _ = cancellationToken;
         if (image is null) throw new ArgumentNullException(nameof(image));
-        return new DecodeResult<QrDecoded>(DecodeFailureReason.Error, default, TimeSpan.Zero, "QR decoding requires .NET 8 or later.");
+        return new DecodeResult<QrDecoded>(DecodeFailureReason.PlatformNotSupported, default, TimeSpan.Zero, "QR decoding requires .NET 8 or later.");
 #endif
     }
 
@@ -537,7 +537,7 @@ public static class QrImageDecoder {
         _ = imageOptions;
         _ = options;
         _ = cancellationToken;
-        return new DecodeResult<QrDecoded>(DecodeFailureReason.Error, default, TimeSpan.Zero, "QR decoding requires .NET 8 or later.");
+        return new DecodeResult<QrDecoded>(DecodeFailureReason.PlatformNotSupported, default, TimeSpan.Zero, "QR decoding requires .NET 8 or later.");
 #endif
     }
 
@@ -557,7 +557,7 @@ public static class QrImageDecoder {
         _ = options;
         _ = cancellationToken;
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        return new DecodeResult<QrDecoded>(DecodeFailureReason.Error, default, TimeSpan.Zero, "QR decoding requires .NET 8 or later.");
+        return new DecodeResult<QrDecoded>(DecodeFailureReason.PlatformNotSupported, default, TimeSpan.Zero, "QR decoding requires .NET 8 or later.");
 #endif
     }
 

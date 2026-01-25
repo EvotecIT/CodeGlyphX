@@ -1,4 +1,4 @@
-param(
+﻿param(
     [string]$ArtifactsPath,
     [string]$OutputPath,
     [string]$Framework = "net8.0",
@@ -155,10 +155,12 @@ function Normalize-Method([string]$value) {
 function Normalize-MeanText([string]$value) {
     if ([string]::IsNullOrWhiteSpace($value)) { return $value }
     $normalized = $value
-    $normalized = $normalized -replace "µs", "μs"
-    $normalized = $normalized -replace "�s", "μs"
     $normalized = $normalized -replace "Âµs", "μs"
-    $normalized = $normalized -replace "Âμs", "μs"
+    $normalized = $normalized -replace "ï¿½s", "μs"
+    $normalized = $normalized -replace "Ã‚Âµs", "μs"
+    $normalized = $normalized -replace "Ã‚Î¼s", "μs"
+    $normalized = $normalized -replace "Î¼s", "μs"
+    $normalized = $normalized -replace "µs", "μs"
     return $normalized
 }
 
@@ -168,6 +170,22 @@ function Get-RowValue([object]$row, [string]$name) {
         $clean = $prop -replace "^\uFEFF", ""
         if ($clean -eq $name) { return $row.$prop }
     }
+    return $null
+}
+
+function Get-EntryValue([object]$row, [string]$name, [string]$fallback) {
+    if (-not $row) { return $null }
+    $value = Get-RowValue $row $name
+    if (-not [string]::IsNullOrWhiteSpace($value)) { return $value }
+    if ($row -is [hashtable]) {
+        if ($row.ContainsKey($fallback)) { return $row[$fallback] }
+        $lower = $fallback.ToLowerInvariant()
+        if ($row.ContainsKey($lower)) { return $row[$lower] }
+    }
+    $prop = $row.PSObject.Properties[$fallback]
+    if ($prop) { return $prop.Value }
+    $lowerProp = $row.PSObject.Properties[$fallback.ToLowerInvariant()]
+    if ($lowerProp) { return $lowerProp.Value }
     return $null
 }
 
@@ -236,12 +254,12 @@ function Try-Parse-Mean([string]$value, [ref]$nanoseconds) {
     if ([string]::IsNullOrWhiteSpace($value)) { return $false }
     $clean = (Normalize-MeanText $value).Trim().Replace(",", "")
     if ($clean -eq "NA") { return $false }
-    if ($clean -match "^([0-9]+(?:\.[0-9]+)?)\s*(ns|us|μs|µs|ms|s)$") {
+    if ($clean -match "^([0-9]+(?:\.[0-9]+)?)\s*(ns|us|μs|µs|Î¼s|Âµs|ms|s)$") {
         $number = [double]$Matches[1]
         $unit = $Matches[2]
         $scale = 1.0
         if ($unit -eq "ns") { $scale = 1.0 }
-        elseif ($unit -eq "us" -or $unit -eq "μs" -or $unit -eq "µs") { $scale = 1000.0 }
+        elseif ($unit -eq "us" -or $unit -eq "μs" -or $unit -eq "µs" -or $unit -eq "Î¼s" -or $unit -eq "Âµs") { $scale = 1000.0 }
         elseif ($unit -eq "ms") { $scale = 1000000.0 }
         elseif ($unit -eq "s") { $scale = 1000000000.0 }
         $nanoseconds.Value = $number * $scale
@@ -267,8 +285,8 @@ function Format-MeanAllocCell([object]$entry, [string]$deltaText = $null) {
 
 function Format-DeltaText([object]$vendorRow, [object]$cgxRow) {
     if (-not $vendorRow -or -not $cgxRow) { return "" }
-    $vendorMean = Normalize-MeanText (Get-RowValue $vendorRow "Mean")
-    $cgxMean = Normalize-MeanText (Get-RowValue $cgxRow "Mean")
+    $vendorMean = Normalize-MeanText (Get-EntryValue $vendorRow "Mean" "mean")
+    $cgxMean = Normalize-MeanText (Get-EntryValue $cgxRow "Mean" "mean")
     $vendorNs = $null
     $cgxNs = $null
     [void](Try-Parse-Mean $vendorMean ([ref]$vendorNs))
@@ -277,8 +295,8 @@ function Format-DeltaText([object]$vendorRow, [object]$cgxRow) {
     if ($vendorNs -and $cgxNs) {
         $timeRatio = [math]::Round(($vendorNs / $cgxNs), 2)
     }
-    $vendorAlloc = Parse-AllocatedBytes (Get-RowValue $vendorRow "Allocated")
-    $cgxAlloc = Parse-AllocatedBytes (Get-RowValue $cgxRow "Allocated")
+    $vendorAlloc = Parse-AllocatedBytes (Get-EntryValue $vendorRow "Allocated" "allocated")
+    $cgxAlloc = Parse-AllocatedBytes (Get-EntryValue $cgxRow "Allocated" "allocated")
     $allocRatio = $null
     if ($vendorAlloc -and $cgxAlloc) {
         $allocRatio = [math]::Round(($vendorAlloc / $cgxAlloc), 2)
@@ -313,6 +331,7 @@ $titleMap = @{
     "QrCompareBenchmarks" = "QR (Encode)"
     "QrDecodeCleanCompareBenchmarks" = "QR Decode (Clean)"
     "QrDecodeNoisyCompareBenchmarks" = "QR Decode (Noisy)"
+    "QrDecodeStressCompareBenchmarks" = "QR Decode (Stress)"
     "Code128CompareBenchmarks" = "Code 128 (Encode)"
     "Code39CompareBenchmarks" = "Code 39 (Encode)"
     "Code93CompareBenchmarks" = "Code 93 (Encode)"
@@ -439,22 +458,27 @@ $lines = New-Object System.Collections.Generic.List[string]
 $osName = Resolve-OsName $ArtifactsPath $OsName
 $timestamp = (Get-Date).ToUniversalTime().ToString("yyyy-MM-dd HH:mm:ss 'UTC'")
 
-$lines.Add("## $($osName.ToUpperInvariant())")
+$runModeTitle = if ($runModeNormalized -eq "quick") { "Quick" } else { "Full" }
+$lines.Add("## $($osName.ToUpperInvariant()) ($runModeTitle)")
 $lines.Add("")
 $lines.Add("Updated: $timestamp")
 $lines.Add("Framework: $Framework")
 $lines.Add("Configuration: $Configuration")
 $lines.Add("Artifacts: $ArtifactsPath")
-$lines.Add("How to read:")
+$lines.Add("### How to read")
 $lines.Add("- Mean: average time per operation. Lower is better.")
 $lines.Add("- Allocated: managed memory allocated per operation. Lower is better.")
-$lines.Add("- CodeGlyphX vs Fastest: CodeGlyphX mean divided by the fastest mean for that scenario. 1 x means CodeGlyphX is fastest; 1.5 x means ~50% slower.")
-$lines.Add("- CodeGlyphX Alloc vs Fastest: CodeGlyphX allocated divided by the fastest allocation for that scenario. 1 x means CodeGlyphX allocates the least; higher is more allocations.")
+$lines.Add("- CodeGlyphX vs Fastest: CodeGlyphX mean divided by the fastest mean for that scenario. If CodeGlyphX is fastest, the text shows the lead vs the runner-up; otherwise it shows the lag vs the fastest vendor.")
+$lines.Add("- CodeGlyphX Alloc vs Fastest: CodeGlyphX allocated divided by the allocation of the fastest-time vendor for that scenario. Lower than 1 x means fewer allocations than the fastest-time vendor.")
 $lines.Add("- Rating: good/ok/bad based on time + allocation ratios (good <=1.1x and <=1.25x alloc, ok <=1.5x and <=2.0x alloc).")
 $lines.Add("- Δ lines in comparison tables show vendor ratios vs CodeGlyphX (time / alloc).")
 $lines.Add("- Quick runs use fewer iterations for fast feedback; Full runs use BenchmarkDotNet defaults and are recommended for publishing.")
-$lines.Add("Notes:")
+$lines.Add("- Quick and Full runs include the same scenario list; only the iteration settings differ.")
+$lines.Add("- Benchmarks run under controlled, ideal conditions on a single machine; treat results as directional, not definitive.")
+$lines.Add("")
+$lines.Add("### Notes")
 $lines.Add("- $runModeLabel")
+$lines.Add("- Quick runs include the same scenario set as Full runs; run time is driven by iteration counts.")
 $lines.Add("- Comparisons target PNG output and include encode+render (not encode-only).")
 $lines.Add("- Module size and quiet zone are matched to CodeGlyphX defaults where possible; image size is derived from CodeGlyphX modules.")
 $lines.Add("- ZXing.Net uses ZXing.Net.Bindings.ImageSharp.V3 (ImageSharp 3.x renderer).")
@@ -517,27 +541,40 @@ if ($compareFiles.Count -gt 0) {
 
         foreach ($scenario in ($scenarioMap.Keys | Sort-Object)) {
             $vendors = $scenarioMap[$scenario]
-            $fastestVendor = $null
-            $fastest = $null
+            $ranked = @()
             foreach ($vendor in $vendors.Keys) {
                 $entry = $vendors[$vendor]
                 if (-not $entry.meanNs) { continue }
-                if (-not $fastest -or $entry.meanNs -lt $fastest.meanNs) {
-                    $fastest = $entry
-                    $fastestVendor = $vendor
-                }
+                $ranked += [pscustomobject]@{ Vendor = $vendor; Entry = $entry }
             }
-            if (-not $fastestVendor) { continue }
+            if ($ranked.Count -eq 0) { continue }
+            $ranked = $ranked | Sort-Object { $_.Entry.meanNs }
+            $fastestVendor = $ranked[0].Vendor
+            $fastest = $ranked[0].Entry
+            $runnerUpVendor = if ($ranked.Count -gt 1) { $ranked[1].Vendor } else { $null }
+            $runnerUp = if ($ranked.Count -gt 1) { $ranked[1].Entry } else { $null }
+
             $cgx = $vendors["CodeGlyphX"]
             $ratioText = ""
             $ratioValue = $null
             $allocRatioText = ""
             $allocRatioValue = $null
+            $leadRatioValue = $null
+            $leadRatioText = ""
             $cgxMean = ""
             $cgxAlloc = ""
             if ($cgx -and $cgx.meanNs) {
                 $ratioValue = [math]::Round(($cgx.meanNs / $fastest.meanNs), 2)
-                $ratioText = "$ratioValue x"
+                if ($fastestVendor -eq "CodeGlyphX") {
+                    $ratioText = "1 x (fastest)"
+                    if ($runnerUp -and $runnerUp.meanNs -and $runnerUpVendor) {
+                        $leadRatioValue = [math]::Round(($runnerUp.meanNs / $cgx.meanNs), 2)
+                        $leadRatioText = "$leadRatioValue x vs $runnerUpVendor"
+                        $ratioText = "1 x (fastest, lead $leadRatioText)"
+                    }
+                } else {
+                    $ratioText = "$ratioValue x (lag vs $fastestVendor)"
+                }
                 $cgxMean = $cgx.mean
                 $cgxAlloc = $cgx.allocated
                 $fastestAllocBytes = Parse-AllocatedBytes $fastest.allocated
@@ -562,10 +599,14 @@ if ($compareFiles.Count -gt 0) {
                 scenario = $scenario
                 fastestVendor = $fastestVendor
                 fastestMean = $fastest.mean
+                runnerUpVendor = $runnerUpVendor
+                runnerUpMean = if ($runnerUp) { $runnerUp.mean } else { $null }
                 codeGlyphXMean = $cgxMean
                 codeGlyphXAlloc = $cgxAlloc
                 codeGlyphXVsFastest = $ratioValue
                 codeGlyphXVsFastestText = $ratioText
+                codeGlyphXLeadOverRunnerUp = $leadRatioValue
+                codeGlyphXLeadOverRunnerUpText = $leadRatioText
                 codeGlyphXAllocVsFastest = $allocRatioValue
                 codeGlyphXAllocVsFastestText = $allocRatioText
                 rating = $rating
@@ -580,7 +621,7 @@ if ($compareFiles.Count -gt 0) {
     }
 
     if ($summaryRows.Count -gt 0) {
-        $lines.Add("### Summary (Comparisons)")
+        $lines.Add("### Summary (Comparisons) - $runModeTitle")
         $lines.Add("")
         $lines.Add("| Benchmark | Scenario | Fastest | CodeGlyphX (Mean / Alloc) | ZXing.Net (Mean / Alloc) | QRCoder (Mean / Alloc) | Barcoder (Mean / Alloc) | CodeGlyphX vs Fastest | CodeGlyphX Alloc vs Fastest | Rating |")
         $lines.Add("| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |")
@@ -747,6 +788,16 @@ foreach ($file in $compareFiles | Sort-Object Name) {
             }
             $entry["ratios"] = $ratios
         }
+        if ($cgx) {
+            $deltas = @{}
+            foreach ($key in $vendors.Keys) {
+                if ($key -eq "CodeGlyphX") { continue }
+                $deltas[$key] = Format-DeltaText $vendors[$key] $cgx
+            }
+            if ($deltas.Count -gt 0) {
+                $entry["deltas"] = $deltas
+            }
+        }
         $scenarios += $entry
     }
 
@@ -802,8 +853,8 @@ $jsonDoc = @{
     howToRead = @(
         "Mean: average time per operation. Lower is better.",
         "Allocated: managed memory allocated per operation. Lower is better.",
-        "CodeGlyphX vs Fastest: CodeGlyphX mean divided by the fastest mean for that scenario. 1 x means CodeGlyphX is fastest; 1.5 x means ~50% slower.",
-        "CodeGlyphX Alloc vs Fastest: CodeGlyphX allocated divided by the fastest allocation for that scenario. 1 x means CodeGlyphX allocates the least; higher is more allocations.",
+        "CodeGlyphX vs Fastest: CodeGlyphX mean divided by the fastest mean for that scenario. 1 x (fastest) means CodeGlyphX is fastest; 1.5 x means ~50% slower.",
+        "CodeGlyphX Alloc vs Fastest: CodeGlyphX allocated divided by the allocation of the fastest-time vendor for that scenario. Lower than 1 x means fewer allocations than the fastest-time vendor.",
         "Rating: good/ok/bad based on time + allocation ratios (good <=1.1x and <=1.25x alloc, ok <=1.5x and <=2.0x alloc).",
         "Δ lines in comparison tables show vendor ratios vs CodeGlyphX (time / alloc).",
         "Quick runs use fewer iterations for fast feedback; Full runs use BenchmarkDotNet defaults and are recommended for publishing."
