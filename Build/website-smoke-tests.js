@@ -2,6 +2,13 @@ const { chromium } = require('playwright');
 
 const baseUrl = process.env.WEBSITE_BASE_URL || 'http://localhost:5051';
 const trackedResourceTypes = new Set(['document', 'stylesheet', 'script', 'fetch']);
+const expectedNav = [
+    { href: '/', text: 'Home' },
+    { href: '/playground/', text: 'Playground' },
+    { href: '/docs/', text: 'Docs' },
+    { href: '/benchmarks/', text: 'Benchmarks' },
+    { href: '/showcase/', text: 'Showcase' }
+];
 
 function attachResourceMonitor(page) {
     const badResponses = [];
@@ -92,6 +99,32 @@ async function expectText(page, text, failures, label) {
     }
 }
 
+async function expectNavConsistency(page, failures, label) {
+    const navLinks = await page.$$eval('.nav-links a', links => links.map(link => ({
+        href: link.getAttribute('href'),
+        text: (link.textContent || '').trim()
+    })));
+
+    expectedNav.forEach(expected => {
+        const match = navLinks.find(link => link.href === expected.href);
+        if (!match) {
+            failures.push({
+                test: 'nav',
+                page: label,
+                error: `Missing nav link: ${expected.href}`
+            });
+            return;
+        }
+        if (match.text !== expected.text) {
+            failures.push({
+                test: 'nav',
+                page: label,
+                error: `Nav text mismatch for ${expected.href}: "${match.text}" vs "${expected.text}"`
+            });
+        }
+    });
+}
+
 async function testNavigation(page) {
     console.log('\n=== Testing Navigation ===');
     const failures = [];
@@ -168,6 +201,10 @@ async function testStaticPage(page, path, label, options = {}) {
 
         if (options.stylesheet) {
             await expectStylesheet(page, options.stylesheet, failures, label);
+        }
+
+        if (options.checkNav) {
+            await expectNavConsistency(page, failures, label);
         }
 
         if (typeof options.afterLoad === 'function') {
@@ -292,6 +329,10 @@ async function testBlazorApp(page, path, appName, options = {}) {
             await expectStylesheet(page, options.stylesheet, failures, appName);
         }
 
+        if (options.checkNav) {
+            await expectNavConsistency(page, failures, appName);
+        }
+
         console.log('  ✓', appName, 'loaded successfully');
     } catch (err) {
         failures.push({
@@ -352,6 +393,8 @@ async function testBenchmarks(page) {
                 });
             }
         }
+
+        await expectNavConsistency(page, failures, label);
     } catch (err) {
         failures.push({
             test: 'benchmarks',
@@ -379,17 +422,20 @@ async function testBenchmarks(page) {
     allFailures.push(...await testStaticPage(page, '/', 'Home', {
         expectedText: 'Generate QR Codes',
         expectedSelector: '.hero',
-        stylesheet: 'app.css'
+        stylesheet: 'app.css',
+        checkNav: true
     }));
     allFailures.push(...await testStaticPage(page, '/showcase/', 'Showcase', {
         expectedText: 'Showcase',
         expectedSelector: '.showcase-page',
-        stylesheet: 'app.css'
+        stylesheet: 'app.css',
+        checkNav: true
     }));
     allFailures.push(...await testStaticPage(page, '/faq/', 'FAQ', {
         expectedText: 'Frequently Asked Questions',
         expectedSelector: '.faq-page',
-        stylesheet: 'app.css'
+        stylesheet: 'app.css',
+        checkNav: true
     }));
     allFailures.push(...await testBenchmarks(page));
 
@@ -407,12 +453,14 @@ async function testBenchmarks(page) {
         expectedSelector: '.docs-layout',
         expectedText: 'CodeGlyphX Documentation',
         expectedBaseHref: '/docs/',
-        stylesheet: 'app.css'
+        stylesheet: 'app.css',
+        checkNav: true
     }));
     allFailures.push(...await testBlazorApp(page, '/playground/', 'Playground', {
         expectedSelector: '.playground',
         expectedBaseHref: '/playground/',
-        stylesheet: 'app.css'
+        stylesheet: 'app.css',
+        checkNav: true
     }));
 
     console.log('\n=== Testing Blazor Apps Mobile Layout ===');
