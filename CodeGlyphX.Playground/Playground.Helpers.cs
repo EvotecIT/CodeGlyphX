@@ -64,7 +64,11 @@ public partial class Playground {
             "Dot" => QrPngModuleShape.Dot,
             "DotGrid" => QrPngModuleShape.DotGrid,
             "Diamond" => QrPngModuleShape.Diamond,
+            "SoftDiamond" => QrPngModuleShape.SoftDiamond,
             "Squircle" => QrPngModuleShape.Squircle,
+            "Leaf" => QrPngModuleShape.Leaf,
+            "Wave" => QrPngModuleShape.Wave,
+            "Blob" => QrPngModuleShape.Blob,
             "Circle" => QrPngModuleShape.Circle,
             "Rounded" => QrPngModuleShape.Rounded,
             _ => QrPngModuleShape.Square
@@ -214,13 +218,25 @@ public partial class Playground {
         if (SelectedCategory == "QR")
         {
             var escapedContent = EscapeString(Content);
-            if (ModuleShape != "Square" || CustomEyes || ForegroundColor != "#000000")
+            if (ModuleShape != "Square" || CustomEyes || ForegroundColor != "#000000" || TargetSizePx > 0 || BackgroundSupersample > 1)
             {
                 var sb = new System.Text.StringBuilder();
                 sb.Append("using CodeGlyphX;").Append(nl).Append(nl);
                 sb.Append("var options = new QrEasyOptions").Append(nl);
                 sb.Append("{").Append(nl);
                 sb.Append("    ErrorCorrectionLevel = QrErrorCorrectionLevel.").Append(ErrorCorrection).Append(",").Append(nl);
+                if (TargetSizePx > 0)
+                {
+                    sb.Append("    TargetSizePx = ").Append(TargetSizePx).Append(",").Append(nl);
+                    if (TargetSizeIncludesQuietZone)
+                    {
+                        sb.Append("    TargetSizeIncludesQuietZone = true,").Append(nl);
+                    }
+                }
+                if (BackgroundSupersample > 1)
+                {
+                    sb.Append("    BackgroundSupersample = ").Append(BackgroundSupersample).Append(",").Append(nl);
+                }
                 if (ModuleShape != "Square")
                 {
                     sb.Append("    ModuleShape = QrPngModuleShape.").Append(ModuleShape).Append(",").Append(nl);

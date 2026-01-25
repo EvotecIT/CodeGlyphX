@@ -84,7 +84,9 @@ public partial class Playground {
                     Background = ParseColor(BackgroundColor),
                     ModuleShape = ParseModuleShape(ModuleShape),
                     ModuleScale = ModuleScale,
-                    ModuleCornerRadiusPx = ModuleShape == "Rounded" ? CornerRadius : 0
+                    ModuleCornerRadiusPx = ModuleShape == "Rounded" ? CornerRadius : 0,
+                    TargetSizePx = TargetSizePx,
+                    TargetSizeIncludesQuietZone = TargetSizeIncludesQuietZone
                 };
 
                 if (UseForegroundGradient)

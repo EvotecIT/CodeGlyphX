@@ -132,8 +132,34 @@ else
                         <option value="Dot">Dot</option>
                         <option value="DotGrid">Dot Grid</option>
                         <option value="Diamond">Diamond</option>
+                        <option value="SoftDiamond">Soft Diamond</option>
                         <option value="Squircle">Squircle</option>
+                        <option value="Leaf">Leaf</option>
+                        <option value="Wave">Wave</option>
+                        <option value="Blob">Blob</option>
                     </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Output Size</label>
+                    <select @bind="Host.OutputSizePreset" @bind:after="Host.OnOutputSizePresetChanged">
+                        <option value="Auto">Auto</option>
+                        <option value="1200">1200 px</option>
+                        <option value="2400">2400 px</option>
+                        <option value="4000">4000 px</option>
+                        <option value="8000">8000 px</option>
+                        <option value="Custom">Custom</option>
+                    </select>
+                    @if (Host.OutputSizePreset == "Custom")
+                    {
+                        <div class="form-row" style="margin-top:8px;">
+                            <label>Target px</label>
+                            <input type="number" min="200" max="12000" step="50" @bind="Host.TargetSizePx" @bind:after="Host.GenerateCode" />
+                        </div>
+                    }
+                    <div class="form-row" style="margin-top:8px;">
+                        <label><input type="checkbox" @bind="Host.TargetSizeIncludesQuietZone" @bind:after="Host.GenerateCode" /> Include quiet zone</label>
+                    </div>
                 </div>
 
                 <div class="form-group">
@@ -376,7 +402,11 @@ else
                             <option value="Dot">Dot</option>
                             <option value="DotGrid">Dot Grid</option>
                             <option value="Diamond">Diamond</option>
+                            <option value="SoftDiamond">Soft Diamond</option>
                             <option value="Squircle">Squircle</option>
+                            <option value="Leaf">Leaf</option>
+                            <option value="Wave">Wave</option>
+                            <option value="Blob">Blob</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -388,7 +418,11 @@ else
                             <option value="Dot">Dot</option>
                             <option value="DotGrid">Dot Grid</option>
                             <option value="Diamond">Diamond</option>
+                            <option value="SoftDiamond">Soft Diamond</option>
                             <option value="Squircle">Squircle</option>
+                            <option value="Leaf">Leaf</option>
+                            <option value="Wave">Wave</option>
+                            <option value="Blob">Blob</option>
                         </select>
                     </div>
                     <div class="form-group">

@@ -40,6 +40,10 @@ public partial class Playground {
     internal string BackgroundGradientEnd { get; set; } = "#e7ecf7";
     internal int BackgroundSupersample { get; set; } = 1;
 
+    internal string OutputSizePreset { get; set; } = "Auto";
+    internal int TargetSizePx { get; set; } = 0;
+    internal bool TargetSizeIncludesQuietZone { get; set; } = true;
+
     internal bool EnableQrBackgroundPattern { get; set; } = false;
     internal string QrBackgroundPatternType { get; set; } = "Dots";
     internal string QrBackgroundPatternColor { get; set; } = "#0ea5e9";
@@ -303,6 +307,27 @@ public partial class Playground {
 
     internal void OnModeChanged()
     {
+        ResetOutputs();
+        if (SelectedMode == "Generate")
+        {
+            GenerateCode();
+        }
+        _exampleKey++;
+        StateHasChanged();
+    }
+
+    internal void OnOutputSizePresetChanged()
+    {
+        TargetSizePx = OutputSizePreset switch
+        {
+            "1200" => 1200,
+            "2400" => 2400,
+            "4000" => 4000,
+            "8000" => 8000,
+            "Custom" => TargetSizePx > 0 ? TargetSizePx : 1200,
+            _ => 0
+        };
+
         ResetOutputs();
         if (SelectedMode == "Generate")
         {
