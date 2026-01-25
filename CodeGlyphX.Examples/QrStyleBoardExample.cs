@@ -121,6 +121,34 @@ internal static class QrStyleBoardExample {
                 canvas: CanvasGradient(R(9, 9, 20), R(22, 12, 40)),
                 logo: logoCool), logoCool),
 
+            new("Leaf Bloom", "https://example.com/leaf", () => BaseSticker(
+                fg: R(64, 196, 155),
+                palette: Palette(QrPngPaletteMode.Cycle, 0, R(64, 196, 155), R(140, 255, 214), R(255, 198, 125)),
+                shape: QrPngModuleShape.Leaf,
+                eyes: Eye(QrPngEyeFrameStyle.DoubleRing, R(64, 196, 155), R(255, 198, 125)),
+                canvas: CanvasGradient(R(8, 26, 22), R(12, 52, 44)))),
+
+            new("Wave Pulse", "https://example.com/wave", () => BaseSticker(
+                fg: R(88, 140, 255),
+                palette: Palette(QrPngPaletteMode.Random, 7421, R(88, 140, 255), R(46, 244, 255), R(255, 255, 255)),
+                shape: QrPngModuleShape.Wave,
+                eyes: Eye(QrPngEyeFrameStyle.Target, R(88, 140, 255), R(46, 244, 255)),
+                canvas: CanvasPattern(R(12, 16, 32), Pattern(QrPngBackgroundPatternType.Dots, R(88, 140, 255, 22))))),
+
+            new("Ink Blob", "https://example.com/blob", () => BaseSticker(
+                fg: R(30, 30, 30),
+                palette: Palette(QrPngPaletteMode.Random, 2024, R(30, 30, 30), R(80, 80, 80), R(200, 200, 200)),
+                shape: QrPngModuleShape.Blob,
+                eyes: Eye(QrPngEyeFrameStyle.Badge, R(30, 30, 30), R(80, 80, 80)),
+                canvas: CanvasBorder(R(248, 248, 248), R(30, 30, 30)))),
+
+            new("Soft Diamond", "https://example.com/soft-diamond", () => BaseSticker(
+                fg: R(255, 128, 74),
+                palette: Palette(QrPngPaletteMode.Rings, 0, R(255, 128, 74), R(255, 214, 122), R(255, 94, 128)),
+                shape: QrPngModuleShape.SoftDiamond,
+                eyes: Eye(QrPngEyeFrameStyle.DoubleRing, R(255, 128, 74), R(255, 94, 128)),
+                canvas: CanvasGradient(R(40, 16, 10), R(72, 26, 14)))),
+
             new("Sticker Grid", "https://example.com/sticker-grid", () => BaseSticker(
                 fg: R(30, 30, 30),
                 palette: Palette(QrPngPaletteMode.Cycle, 0, R(30, 30, 30), R(80, 80, 80)),
@@ -219,6 +247,8 @@ internal static class QrStyleBoardExample {
             Color = color,
             SizePx = 14,
             ThicknessPx = 1,
+            SnapToModuleSize = true,
+            ModuleStep = 2
         };
     }
 
