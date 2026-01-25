@@ -353,7 +353,15 @@ internal readonly struct QrGrayImage {
                         var b = pixels[p + 0];
                         var g = pixels[p + 1];
                         var r = pixels[p + 2];
+                        var a = pixels[p + 3];
                         p += 4;
+
+                        if (a != 255) {
+                            var invA = 255 - a;
+                            r = (byte)((r * a + 255 * invA + 127) / 255);
+                            g = (byte)((g * a + 255 * invA + 127) / 255);
+                            b = (byte)((b * a + 255 * invA + 127) / 255);
+                        }
 
                         var lum = (299 * r + 587 * g + 114 * b + 500) / 1000;
                         var l = (byte)lum;
@@ -374,7 +382,15 @@ internal readonly struct QrGrayImage {
                         var r = pixels[p + 0];
                         var g = pixels[p + 1];
                         var b = pixels[p + 2];
+                        var a = pixels[p + 3];
                         p += 4;
+
+                        if (a != 255) {
+                            var invA = 255 - a;
+                            r = (byte)((r * a + 255 * invA + 127) / 255);
+                            g = (byte)((g * a + 255 * invA + 127) / 255);
+                            b = (byte)((b * a + 255 * invA + 127) / 255);
+                        }
 
                         var lum = (299 * r + 587 * g + 114 * b + 500) / 1000;
                         var l = (byte)lum;
@@ -408,9 +424,19 @@ internal readonly struct QrGrayImage {
                             var p = pBase + dy * stride;
 
                             for (var dx = 0; dx < scale; dx++) {
-                                sumB += pixels[p + 0];
-                                sumG += pixels[p + 1];
-                                sumR += pixels[p + 2];
+                                var b = pixels[p + 0];
+                                var g = pixels[p + 1];
+                                var r = pixels[p + 2];
+                                var a = pixels[p + 3];
+                                if (a != 255) {
+                                    var invA = 255 - a;
+                                    b = (byte)((b * a + 255 * invA + 127) / 255);
+                                    g = (byte)((g * a + 255 * invA + 127) / 255);
+                                    r = (byte)((r * a + 255 * invA + 127) / 255);
+                                }
+                                sumB += b;
+                                sumG += g;
+                                sumR += r;
                                 p += 4;
                             }
                         }
@@ -443,9 +469,19 @@ internal readonly struct QrGrayImage {
                             var p = pBase + dy * stride;
 
                             for (var dx = 0; dx < scale; dx++) {
-                                sumR += pixels[p + 0];
-                                sumG += pixels[p + 1];
-                                sumB += pixels[p + 2];
+                                var r = pixels[p + 0];
+                                var g = pixels[p + 1];
+                                var b = pixels[p + 2];
+                                var a = pixels[p + 3];
+                                if (a != 255) {
+                                    var invA = 255 - a;
+                                    r = (byte)((r * a + 255 * invA + 127) / 255);
+                                    g = (byte)((g * a + 255 * invA + 127) / 255);
+                                    b = (byte)((b * a + 255 * invA + 127) / 255);
+                                }
+                                sumR += r;
+                                sumG += g;
+                                sumB += b;
                                 p += 4;
                             }
                         }

@@ -175,11 +175,22 @@ public sealed class RoundTripTests {
             out _,
             out _);
         var opts = QrPresets.Logo(logo);
+        opts.LogoScale = 0.10;
+        opts.LogoDrawBackground = false;
+        var expectedModules = QrEasy.Encode(text, opts).Modules.Width;
         var png = QrEasy.RenderPng(text, opts);
 
-        var (rgba, width, height, stride) = PngTestDecoder.DecodeRgba32(png);
-        var options = new QrPixelDecodeOptions { Profile = QrDecodeProfile.Robust, AggressiveSampling = true };
-        Assert.True(QrDecoder.TryDecode(rgba, width, height, stride, PixelFormat.Rgba32, out var decoded, options));
+        Assert.True(ImageReader.TryDecodeRgba32(png, out var rgba, out var width, out var height));
+        var stride = width * 4;
+        var options = new QrPixelDecodeOptions {
+            Profile = QrDecodeProfile.Robust,
+            AggressiveSampling = true,
+            MaxMilliseconds = 2500,
+            BudgetMilliseconds = 2500,
+            MaxDimension = 1400
+        };
+        var ok = QrDecoder.TryDecode(rgba, width, height, stride, PixelFormat.Rgba32, out var decoded, out var info, options);
+        Assert.True(ok, $"{info} expected-dim{expectedModules}");
         Assert.Equal(text, decoded.Text);
     }
 

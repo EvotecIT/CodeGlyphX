@@ -47,46 +47,53 @@ public sealed class ImageDecodeSamplesTests {
                     continue;
                 }
             }
+            try {
+                var data = File.ReadAllBytes(entry.ImagePath);
+                var infoAvailable = ImageReader.TryReadInfo(data, out var info);
 
-            var data = File.ReadAllBytes(entry.ImagePath);
-            var infoAvailable = ImageReader.TryReadInfo(data, out var info);
-
-            if (infoAvailable) {
-                if (entry.ExpectedFormat.HasValue) {
-                    Assert.Equal(entry.ExpectedFormat.Value, info.Format);
+                if (infoAvailable) {
+                    if (entry.ExpectedFormat.HasValue) {
+                        Assert.Equal(entry.ExpectedFormat.Value, info.Format);
+                    }
+                    if (entry.ExpectedWidth.HasValue) {
+                        Assert.Equal(entry.ExpectedWidth.Value, info.Width);
+                    }
+                    if (entry.ExpectedHeight.HasValue) {
+                        Assert.Equal(entry.ExpectedHeight.Value, info.Height);
+                    }
+                } else if (entry.Required) {
+                    Assert.Fail($"Failed to read image info: {entry.ImagePath}");
                 }
+
+                if (!ImageReader.TryDecodeRgba32(data, out var rgba, out var width, out var height)) {
+                    if (entry.Required) {
+                        Assert.Fail($"Failed to decode image sample: {entry.ImagePath}");
+                    } else {
+                        _output.WriteLine($"Optional sample failed to decode: {entry.ImagePath}");
+                        continue;
+                    }
+                }
+
                 if (entry.ExpectedWidth.HasValue) {
-                    Assert.Equal(entry.ExpectedWidth.Value, info.Width);
+                    Assert.Equal(entry.ExpectedWidth.Value, width);
                 }
                 if (entry.ExpectedHeight.HasValue) {
-                    Assert.Equal(entry.ExpectedHeight.Value, info.Height);
+                    Assert.Equal(entry.ExpectedHeight.Value, height);
                 }
-            } else if (entry.Required) {
-                Assert.Fail($"Failed to read image info: {entry.ImagePath}");
-            }
+                if (infoAvailable) {
+                    Assert.Equal(info.Width, width);
+                    Assert.Equal(info.Height, height);
+                }
 
-            if (!ImageReader.TryDecodeRgba32(data, out var rgba, out var width, out var height)) {
+                Assert.True(width > 0 && height > 0);
+                Assert.Equal(checked(width * height * 4), rgba.Length);
+            } catch (Exception ex) {
                 if (entry.Required) {
-                    Assert.Fail($"Failed to decode image sample: {entry.ImagePath}");
+                    Assert.Fail($"Exception decoding sample '{entry.Id}' at {entry.ImagePath}: {ex.GetType().Name} {ex.Message}");
                 } else {
-                    _output.WriteLine($"Optional sample failed to decode: {entry.ImagePath}");
-                    continue;
+                    _output.WriteLine($"Optional sample threw: {entry.ImagePath} ({ex.GetType().Name}: {ex.Message})");
                 }
             }
-
-            if (entry.ExpectedWidth.HasValue) {
-                Assert.Equal(entry.ExpectedWidth.Value, width);
-            }
-            if (entry.ExpectedHeight.HasValue) {
-                Assert.Equal(entry.ExpectedHeight.Value, height);
-            }
-            if (infoAvailable) {
-                Assert.Equal(info.Width, width);
-                Assert.Equal(info.Height, height);
-            }
-
-            Assert.True(width > 0 && height > 0);
-            Assert.Equal(checked(width * height * 4), rgba.Length);
         }
     }
 

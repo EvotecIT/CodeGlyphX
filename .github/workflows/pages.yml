@@ -49,7 +49,7 @@ jobs:
 
       - name: Install Playwright
         run: |
-          npm install playwright
+          npm install playwright serve
           npx playwright install chromium --with-deps
 
       - name: Test website

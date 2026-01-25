@@ -58,6 +58,10 @@ jobs:
       - name: Build Tests (net8.0)
         run: dotnet build CodeGlyphX.Tests/CodeGlyphX.Tests.csproj -c Release -f net8.0 --no-restore
 
+      - name: Download image samples
+        if: runner.os == 'Linux'
+        run: pwsh Build/Download-ImageSamples.ps1
+
       - name: Test (net8.0)
         run: dotnet test CodeGlyphX.Tests/CodeGlyphX.Tests.csproj -c Release -f net8.0 --no-restore --no-build
 
@@ -123,7 +127,7 @@ jobs:
 
       - name: Install Playwright
         run: |
-          npm install playwright
+          npm install playwright serve
           npx playwright install chromium --with-deps
 
       - name: Smoke test website

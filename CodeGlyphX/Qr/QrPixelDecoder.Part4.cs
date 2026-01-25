@@ -845,7 +845,7 @@ internal static partial class QrPixelDecoder {
         result = null!;
         moduleDiagnostics = default;
 
-        var checkBudget = budget.Enabled || budget.IsCancelled;
+        var checkBudget = budget.Enabled || budget.CanCancel;
         if (checkBudget && budget.IsExpired) return false;
 
         Span<double> offsets = stackalloc double[3];
@@ -904,7 +904,7 @@ internal static partial class QrPixelDecoder {
         result = null!;
         moduleDiagnostics = default;
 
-        var checkBudget = budget.Enabled || budget.IsCancelled;
+        var checkBudget = budget.Enabled || budget.CanCancel;
         if (checkBudget && budget.IsExpired) return false;
 
         Span<double> offsets = stackalloc double[2];
@@ -1003,7 +1003,7 @@ internal static partial class QrPixelDecoder {
         result = null!;
         moduleDiagnostics = default;
 
-        var checkBudget = budget.Enabled || budget.IsCancelled;
+        var checkBudget = budget.Enabled || budget.CanCancel;
         if (checkBudget && budget.IsExpired) return false;
 
         Span<double> offsets = stackalloc double[3];

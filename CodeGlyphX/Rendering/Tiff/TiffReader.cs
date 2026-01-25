@@ -181,7 +181,7 @@ internal static class TiffReader {
                 if (written != expected) throw new FormatException("Invalid TIFF PackBits data.");
                 stripSpan = decompressed;
             } else if (compression == CompressionLzw) {
-                decompressed = DecompressLzw(src, expected, earlyChange: 1);
+                decompressed = DecompressLzwCompat(src, expected);
                 stripSpan = decompressed;
             } else {
                 decompressed = DecompressDeflate(src, expected);
@@ -300,7 +300,25 @@ internal static class TiffReader {
         return di;
     }
 
-    private static byte[] DecompressLzw(ReadOnlySpan<byte> src, int expected, int earlyChange) {
+    private static byte[] DecompressLzwCompat(ReadOnlySpan<byte> src, int expected) {
+        FormatException? last = null;
+        var attempts = new (int earlyChange, bool msb)[] {
+            (1, true),
+            (0, true),
+            (1, false),
+            (0, false)
+        };
+        foreach (var attempt in attempts) {
+            try {
+                return DecompressLzw(src, expected, attempt.earlyChange, attempt.msb);
+            } catch (FormatException ex) {
+                last = ex;
+            }
+        }
+        throw last ?? new FormatException("Invalid TIFF LZW data.");
+    }
+
+    private static byte[] DecompressLzw(ReadOnlySpan<byte> src, int expected, int earlyChange, bool msb) {
         if (expected <= 0) throw new FormatException("Invalid TIFF LZW output size.");
         var prefix = new short[4096];
         var suffix = new byte[4096];
@@ -322,7 +340,7 @@ internal static class TiffReader {
         byte firstChar = 0;
 
         while (true) {
-            var code = ReadBitsMsb(src, ref bitPos, codeSize);
+            var code = msb ? ReadBitsMsb(src, ref bitPos, codeSize) : ReadBitsLsb(src, ref bitPos, codeSize);
             if (code < 0) break;
             if (code == clear) {
                 codeSize = 9;
@@ -338,16 +356,20 @@ internal static class TiffReader {
             var stackTop = 0;
             if (code >= nextCode) {
                 if (oldCode < 0) throw new FormatException("Invalid TIFF LZW stream.");
+                if (stackTop >= stack.Length) throw new FormatException("Invalid TIFF LZW stack overflow.");
                 stack[stackTop++] = firstChar;
                 code = oldCode;
             }
 
             while (code >= 256) {
+                if ((uint)code >= 4096) throw new FormatException("Invalid TIFF LZW code.");
+                if (stackTop >= stack.Length) throw new FormatException("Invalid TIFF LZW stack overflow.");
                 stack[stackTop++] = suffix[code];
                 code = prefix[code];
             }
 
             firstChar = (byte)code;
+            if (stackTop >= stack.Length) throw new FormatException("Invalid TIFF LZW stack overflow.");
             stack[stackTop++] = firstChar;
 
             while (stackTop > 0) {
@@ -382,6 +404,21 @@ internal static class TiffReader {
             var shift = 7 - (bitIndex & 7);
             var bit = (data[byteIndex] >> shift) & 1;
             value = (value << 1) | bit;
+        }
+        bitPos += bitCount;
+        return value;
+    }
+
+    private static int ReadBitsLsb(ReadOnlySpan<byte> data, ref int bitPos, int bitCount) {
+        var totalBits = data.Length * 8;
+        if (bitPos + bitCount > totalBits) return -1;
+        var value = 0;
+        for (var i = 0; i < bitCount; i++) {
+            var bitIndex = bitPos + i;
+            var byteIndex = bitIndex >> 3;
+            var shift = bitIndex & 7;
+            var bit = (data[byteIndex] >> shift) & 1;
+            value |= bit << i;
         }
         bitPos += bitCount;
         return value;

@@ -73,6 +73,42 @@
       "required": true
     },
     {
+      "id": "pngsuite-basn6a16",
+      "fileName": "pngsuite-basn6a16.png",
+      "downloadUrl": "https://libpng.org/pub/png/PngSuite/basn6a16.png",
+      "format": "Png",
+      "width": 32,
+      "height": 32,
+      "sha256": "8f9d81060aebf4576461403c5057de7f23f73157016b659402b906df805845aa",
+      "source": "libpng PngSuite",
+      "license": "PngSuite README (libpng.org)",
+      "required": true
+    },
+    {
+      "id": "pngsuite-basi0g16",
+      "fileName": "pngsuite-basi0g16.png",
+      "downloadUrl": "https://libpng.org/pub/png/PngSuite/basi0g16.png",
+      "format": "Png",
+      "width": 32,
+      "height": 32,
+      "sha256": "d354026bdd0aa6ed7bedea7c92e5eef2ebbd4854848b8a0a48f562cc71bfe80f",
+      "source": "libpng PngSuite",
+      "license": "PngSuite README (libpng.org)",
+      "required": true
+    },
+    {
+      "id": "pngsuite-basi2c16",
+      "fileName": "pngsuite-basi2c16.png",
+      "downloadUrl": "https://libpng.org/pub/png/PngSuite/basi2c16.png",
+      "format": "Png",
+      "width": 32,
+      "height": 32,
+      "sha256": "ae13eba5fabbf7cbe8c01ec4458cdaa7e6bfdfcbd5109e831efaac9f39096027",
+      "source": "libpng PngSuite",
+      "license": "PngSuite README (libpng.org)",
+      "required": true
+    },
+    {
       "id": "pngsuite-basn3p08",
       "fileName": "pngsuite-basn3p08.png",
       "downloadUrl": "https://libpng.org/pub/png/PngSuite/basn3p08.png",
