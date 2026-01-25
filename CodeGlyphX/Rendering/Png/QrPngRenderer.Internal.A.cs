@@ -661,7 +661,11 @@ public static partial class QrPngRenderer {
                     QrPngModuleShape.Circle => InsideCircle(lx, ly, center, circleR2),
                     QrPngModuleShape.Rounded => InsideRoundedLocal(lx, ly, inner, radius, r2),
                     QrPngModuleShape.Diamond => InsideDiamond(lx, ly, center, circleR),
+                    QrPngModuleShape.SoftDiamond => InsideSoftDiamond(lx, ly, center, circleR),
                     QrPngModuleShape.Squircle => InsideSquircle(lx, ly, center, circleR),
+                    QrPngModuleShape.Leaf => InsideLeaf(lx, ly, center, circleR),
+                    QrPngModuleShape.Wave => InsideWave(lx, ly, center, circleR),
+                    QrPngModuleShape.Blob => InsideBlob(lx, ly, center, circleR),
                     QrPngModuleShape.Dot => InsideCircle(lx, ly, center, circleR2),
                     QrPngModuleShape.DotGrid => InsideDotGrid(lx, ly, dotGridCenter0, dotGridCenter1, dotGridRadiusSq),
                     _ => true,
@@ -685,6 +689,14 @@ public static partial class QrPngRenderer {
         return dx + dy <= radius;
     }
 
+    private static bool InsideSoftDiamond(int x, int y, double center, double radius) {
+        if (radius <= 0) return false;
+        var dx = Math.Abs(x - center);
+        var dy = Math.Abs(y - center);
+        var p = QrPngShapeDefaults.SoftDiamondExponent;
+        return Math.Pow(dx, p) + Math.Pow(dy, p) <= Math.Pow(radius, p);
+    }
+
     private static bool InsideSquircle(int x, int y, double center, double radius) {
         if (radius <= 0) return false;
         var dx = Math.Abs(x - center) / radius;
@@ -692,6 +704,45 @@ public static partial class QrPngRenderer {
         var dx2 = dx * dx;
         var dy2 = dy * dy;
         return dx2 * dx2 + dy2 * dy2 <= 1.0;
+    }
+
+    private static bool InsideLeaf(int x, int y, double center, double radius) {
+        if (radius <= 0) return false;
+        var r = radius * QrPngShapeDefaults.LeafRadiusFactor;
+        var d = radius * QrPngShapeDefaults.LeafOffsetFactor;
+        if (r <= 0) return false;
+        var dx = x - center;
+        var dy = y - center;
+        var r2 = r * r;
+        var dx1 = dx + d;
+        var dx2 = dx - d;
+        return dx1 * dx1 + dy * dy <= r2 && dx2 * dx2 + dy * dy <= r2;
+    }
+
+    private static bool InsideWave(int x, int y, double center, double radius) {
+        if (radius <= 0) return false;
+        var dx = x - center;
+        var dy = y - center;
+        var dist = Math.Sqrt(dx * dx + dy * dy);
+        var angle = Math.Atan2(dy, dx);
+        var boundary = radius * (1.0 + QrPngShapeDefaults.WaveAmplitude * Math.Sin(QrPngShapeDefaults.WaveFrequency * angle));
+        var min = radius * 0.2;
+        if (boundary < min) boundary = min;
+        return dist <= boundary;
+    }
+
+    private static bool InsideBlob(int x, int y, double center, double radius) {
+        if (radius <= 0) return false;
+        var dx = x - center;
+        var dy = y - center;
+        var dist = Math.Sqrt(dx * dx + dy * dy);
+        var angle = Math.Atan2(dy, dx);
+        var wave = Math.Sin(QrPngShapeDefaults.BlobFrequencyA * angle) +
+                   0.5 * Math.Sin(QrPngShapeDefaults.BlobFrequencyB * angle);
+        var boundary = radius * (1.0 + QrPngShapeDefaults.BlobAmplitude * (wave / 1.5));
+        var min = radius * 0.2;
+        if (boundary < min) boundary = min;
+        return dist <= boundary;
     }
 
     private static bool InsideDotGrid(int x, int y, double c0, double c1, double radiusSq) {

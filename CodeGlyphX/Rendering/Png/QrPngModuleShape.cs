@@ -21,9 +21,25 @@ public enum QrPngModuleShape {
     /// </summary>
     Diamond,
     /// <summary>
+    /// Soft diamond (rounded diamond) modules.
+    /// </summary>
+    SoftDiamond,
+    /// <summary>
     /// Squircle (superellipse) modules.
     /// </summary>
     Squircle,
+    /// <summary>
+    /// Leaf (lens) modules.
+    /// </summary>
+    Leaf,
+    /// <summary>
+    /// Wavy circle modules.
+    /// </summary>
+    Wave,
+    /// <summary>
+    /// Organic blob modules.
+    /// </summary>
+    Blob,
     /// <summary>
     /// Dot modules (small circles inside the cell).
     /// </summary>

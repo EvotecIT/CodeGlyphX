@@ -202,6 +202,8 @@ public static partial class QrEasy {
         return new QrEasyOptions {
             ModuleSize = opts.ModuleSize,
             QuietZone = opts.QuietZone,
+            TargetSizePx = opts.TargetSizePx,
+            TargetSizeIncludesQuietZone = opts.TargetSizeIncludesQuietZone,
             ErrorCorrectionLevel = opts.ErrorCorrectionLevel,
             TextEncoding = opts.TextEncoding,
             IncludeEci = opts.IncludeEci,

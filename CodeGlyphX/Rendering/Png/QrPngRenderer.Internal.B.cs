@@ -209,6 +209,12 @@ public static partial class QrPngRenderer {
             case QrPngModuleShape.Diamond:
                 FillDiamond(scanlines, widthPx, heightPx, stride, x, y, w, h, color);
                 return;
+            case QrPngModuleShape.SoftDiamond:
+            case QrPngModuleShape.Leaf:
+            case QrPngModuleShape.Wave:
+            case QrPngModuleShape.Blob:
+                FillMaskShape(scanlines, widthPx, heightPx, stride, x, y, w, h, color, shape, radius);
+                return;
             case QrPngModuleShape.Squircle:
                 FillSquircle(scanlines, widthPx, heightPx, stride, x, y, w, h, color);
                 return;
@@ -246,6 +252,12 @@ public static partial class QrPngRenderer {
             case QrPngModuleShape.Diamond:
                 FillDiamondGradient(scanlines, widthPx, heightPx, stride, x, y, w, h, gradient);
                 return;
+            case QrPngModuleShape.SoftDiamond:
+            case QrPngModuleShape.Leaf:
+            case QrPngModuleShape.Wave:
+            case QrPngModuleShape.Blob:
+                FillMaskShapeGradient(scanlines, widthPx, heightPx, stride, x, y, w, h, gradient, shape, radius);
+                return;
             case QrPngModuleShape.Squircle:
                 FillSquircleGradient(scanlines, widthPx, heightPx, stride, x, y, w, h, gradient);
                 return;
@@ -258,6 +270,90 @@ public static partial class QrPngRenderer {
             default:
                 FillRoundedRectGradient(scanlines, widthPx, heightPx, stride, x, y, w, h, gradient, 0);
                 return;
+        }
+    }
+
+    private static void FillMaskShape(
+        byte[] scanlines,
+        int widthPx,
+        int heightPx,
+        int stride,
+        int x,
+        int y,
+        int w,
+        int h,
+        Rgba32 color,
+        QrPngModuleShape shape,
+        int radius) {
+        var size = Math.Min(w, h);
+        if (size <= 0) return;
+        var offsetX = x + (w - size) / 2;
+        var offsetY = y + (h - size) / 2;
+
+        var x0 = Math.Max(0, offsetX);
+        var y0 = Math.Max(0, offsetY);
+        var x1 = Math.Min(widthPx, offsetX + size);
+        var y1 = Math.Min(heightPx, offsetY + size);
+        if (x1 <= x0 || y1 <= y0) return;
+
+        var mask = BuildModuleMask(size, shape, 1.0, radius);
+        var rowStride = stride + 1;
+
+        for (var py = y0; py < y1; py++) {
+            var my = py - offsetY;
+            var maskRow = my * size;
+            var p = py * rowStride + 1 + x0 * 4;
+            for (var px = x0; px < x1; px++, p += 4) {
+                var mx = px - offsetX;
+                if (!mask[maskRow + mx]) continue;
+                scanlines[p + 0] = color.R;
+                scanlines[p + 1] = color.G;
+                scanlines[p + 2] = color.B;
+                scanlines[p + 3] = color.A;
+            }
+        }
+    }
+
+    private static void FillMaskShapeGradient(
+        byte[] scanlines,
+        int widthPx,
+        int heightPx,
+        int stride,
+        int x,
+        int y,
+        int w,
+        int h,
+        QrPngGradientOptions gradient,
+        QrPngModuleShape shape,
+        int radius) {
+        var size = Math.Min(w, h);
+        if (size <= 0) return;
+        var offsetX = x + (w - size) / 2;
+        var offsetY = y + (h - size) / 2;
+
+        var x0 = Math.Max(0, offsetX);
+        var y0 = Math.Max(0, offsetY);
+        var x1 = Math.Min(widthPx, offsetX + size);
+        var y1 = Math.Min(heightPx, offsetY + size);
+        if (x1 <= x0 || y1 <= y0) return;
+
+        var mask = BuildModuleMask(size, shape, 1.0, radius);
+        var rowStride = stride + 1;
+        var gradientInfo = new GradientInfo(gradient, size - 1, size - 1);
+
+        for (var py = y0; py < y1; py++) {
+            var my = py - offsetY;
+            var maskRow = my * size;
+            var p = py * rowStride + 1 + x0 * 4;
+            for (var px = x0; px < x1; px++, p += 4) {
+                var mx = px - offsetX;
+                if (!mask[maskRow + mx]) continue;
+                var color = GetGradientColorInBox(gradientInfo, px, py, offsetX, offsetY);
+                scanlines[p + 0] = color.R;
+                scanlines[p + 1] = color.G;
+                scanlines[p + 2] = color.B;
+                scanlines[p + 3] = color.A;
+            }
         }
     }
 
