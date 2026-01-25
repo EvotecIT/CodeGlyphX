@@ -58,10 +58,10 @@ function Replace-Section {
     if (-not $LinksHtml) { return $Html }
     $pattern = "(?s)(<div class=`"footer-section`">\\s*<h3>$([regex]::Escape($SectionTitle))</h3>)(.*?)(</div>)"
     return [regex]::Replace($Html, $pattern, {
-        param($match)
-        $replacementLinks = $LinksHtml -replace "(?m)^", $footerLinkIndent
-        "$($match.Groups[1].Value)`n$replacementLinks`n$footerContainerIndent$($match.Groups[3].Value)"
-    }, 1)
+            param($match)
+            $replacementLinks = $LinksHtml -replace "(?m)^", $footerLinkIndent
+            "$($match.Groups[1].Value)`n$replacementLinks`n$footerContainerIndent$($match.Groups[3].Value)"
+        }, 1)
 }
 
 Write-Host "Updating navigation fragments from $navFullPath..." -ForegroundColor Cyan
@@ -69,11 +69,11 @@ Write-Host "Updating navigation fragments from $navFullPath..." -ForegroundColor
 $headerHtml = Get-Content -Path $headerFullPath -Raw
 if ($primaryLinks.Count -gt 0) {
     $headerHtml = [regex]::Replace($headerHtml, "(?s)(<div class=`"nav-links`">)(.*?)(</div>)", {
-        param($match)
-        $linksHtml = Format-LinkList -Links $primaryLinks
-        $linksHtml = $linksHtml -replace "(?m)^", $headerLinkIndent
-        "$($match.Groups[1].Value)`n$linksHtml`n$headerContainerIndent$($match.Groups[3].Value)"
-    }, 1)
+            param($match)
+            $linksHtml = Format-LinkList -Links $primaryLinks
+            $linksHtml = $linksHtml -replace "(?m)^", $headerLinkIndent
+            "$($match.Groups[1].Value)`n$linksHtml`n$headerContainerIndent$($match.Groups[3].Value)"
+        }, 1)
 }
 
 $headerHtml = $headerHtml.TrimEnd() + [Environment]::NewLine
