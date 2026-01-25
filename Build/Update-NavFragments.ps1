@@ -16,7 +16,8 @@ if (-not (Test-Path $headerFullPath)) { throw "Header fragment not found at $hea
 if (-not (Test-Path $footerFullPath)) { throw "Footer fragment not found at $footerFullPath" }
 
 $navConfig = Get-Content -Path $navFullPath -Raw | ConvertFrom-Json
-$primaryLinks = if ($navConfig.primary) { $navConfig.primary } elseif ($navConfig.links) { $navConfig.links } else { @() }
+$hasPrimary = $navConfig.PSObject.Properties.Name -contains "primary"
+$primaryLinks = if ($hasPrimary) { $navConfig.primary } elseif ($navConfig.links) { $navConfig.links } else { @() }
 $footerConfig = $navConfig.footer
 
 $headerContainerIndent = "            "
@@ -26,7 +27,8 @@ $footerLinkIndent = "                    "
 
 function Format-LinkList {
     param(
-        [object[]]$Links
+        [object[]]$Links,
+        [string]$Indent
     )
 
     if (-not $Links) { return "" }
@@ -43,7 +45,7 @@ function Format-LinkList {
             $attrs += "aria-label=`"$label (opens in new tab)`""
         }
         $attrString = if ($attrs.Count -gt 0) { " " + ($attrs -join " ") } else { "" }
-        "<a href=`"$href`"$attrString>$text</a>"
+        "$Indent<a href=`"$href`"$attrString>$text</a>"
     }
     return ($lines -join "`n")
 }
@@ -58,10 +60,9 @@ function Replace-Section {
     if (-not $LinksHtml) { return $Html }
     $pattern = "(?s)(<div class=`"footer-section`">\\s*<h3>$([regex]::Escape($SectionTitle))</h3>)(.*?)(</div>)"
     return [regex]::Replace($Html, $pattern, {
-            param($match)
-            $replacementLinks = $LinksHtml -replace "(?m)^", $footerLinkIndent
-            "$($match.Groups[1].Value)`n$replacementLinks`n$footerContainerIndent$($match.Groups[3].Value)"
-        }, 1)
+        param($match)
+        "$($match.Groups[1].Value)`n$LinksHtml`n$footerContainerIndent$($match.Groups[3].Value)"
+    }, 1)
 }
 
 Write-Host "Updating navigation fragments from $navFullPath..." -ForegroundColor Cyan
@@ -69,21 +70,20 @@ Write-Host "Updating navigation fragments from $navFullPath..." -ForegroundColor
 $headerHtml = Get-Content -Path $headerFullPath -Raw
 if ($primaryLinks.Count -gt 0) {
     $headerHtml = [regex]::Replace($headerHtml, "(?s)(<div class=`"nav-links`">)(.*?)(</div>)", {
-            param($match)
-            $linksHtml = Format-LinkList -Links $primaryLinks
-            $linksHtml = $linksHtml -replace "(?m)^", $headerLinkIndent
-            "$($match.Groups[1].Value)`n$linksHtml`n$headerContainerIndent$($match.Groups[3].Value)"
-        }, 1)
+        param($match)
+        $linksHtml = Format-LinkList -Links $primaryLinks -Indent $headerLinkIndent
+        "$($match.Groups[1].Value)`n$linksHtml`n$headerContainerIndent$($match.Groups[3].Value)"
+    }, 1)
 }
 
-$headerHtml = $headerHtml.TrimEnd() + [Environment]::NewLine
+$headerHtml = $headerHtml.TrimEnd("`r", "`n") + [Environment]::NewLine
 Set-Content -Path $headerFullPath -Value $headerHtml -Encoding UTF8
 
 $footerHtml = Get-Content -Path $footerFullPath -Raw
 if ($footerConfig) {
-    $footerHtml = Replace-Section -Html $footerHtml -SectionTitle "Product" -LinksHtml (Format-LinkList -Links $footerConfig.product)
-    $footerHtml = Replace-Section -Html $footerHtml -SectionTitle "Resources" -LinksHtml (Format-LinkList -Links $footerConfig.resources)
-    $footerHtml = Replace-Section -Html $footerHtml -SectionTitle "Company" -LinksHtml (Format-LinkList -Links $footerConfig.company)
+    $footerHtml = Replace-Section -Html $footerHtml -SectionTitle "Product" -LinksHtml (Format-LinkList -Links $footerConfig.product -Indent $footerLinkIndent)
+    $footerHtml = Replace-Section -Html $footerHtml -SectionTitle "Resources" -LinksHtml (Format-LinkList -Links $footerConfig.resources -Indent $footerLinkIndent)
+    $footerHtml = Replace-Section -Html $footerHtml -SectionTitle "Company" -LinksHtml (Format-LinkList -Links $footerConfig.company -Indent $footerLinkIndent)
 }
 
 $footerHtml = [regex]::Replace(
@@ -99,7 +99,7 @@ $footerHtml = [regex]::Replace(
     }
 )
 
-$footerHtml = $footerHtml.TrimEnd() + [Environment]::NewLine
+$footerHtml = $footerHtml.TrimEnd("`r", "`n") + [Environment]::NewLine
 Set-Content -Path $footerFullPath -Value $footerHtml -Encoding UTF8
 
 Write-Host "Navigation fragments updated." -ForegroundColor Green
