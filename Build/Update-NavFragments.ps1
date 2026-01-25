@@ -49,6 +49,15 @@ function Format-LinkList {
     return ($lines -join "`n")
 }
 
+function Get-IndentedLinks {
+    param(
+        [object[]]$Links,
+        [string]$Indent
+    )
+
+    return Apply-Indent -Text (Format-LinkList -Links $Links) -Indent $Indent
+}
+
 function Apply-Indent {
     param(
         [string]$Text,
@@ -80,7 +89,7 @@ $headerHtml = Get-Content -Path $headerFullPath -Raw
 if ($primaryLinks.Count -gt 0) {
     $headerHtml = [regex]::Replace($headerHtml, "(?s)(<div class=`"nav-links`">)(.*?)(</div>)", {
         param($match)
-        $linksHtml = Apply-Indent -Text (Format-LinkList -Links $primaryLinks) -Indent $headerLinkIndent
+        $linksHtml = Get-IndentedLinks -Links $primaryLinks -Indent $headerLinkIndent
         "$($match.Groups[1].Value)`n$linksHtml`n$headerContainerIndent$($match.Groups[3].Value)"
     }, 1)
 }
@@ -90,9 +99,9 @@ Set-Content -Path $headerFullPath -Value $headerHtml -Encoding UTF8 -NoNewline
 
 $footerHtml = Get-Content -Path $footerFullPath -Raw
 if ($footerConfig) {
-    $footerHtml = Replace-Section -Html $footerHtml -SectionTitle "Product" -LinksHtml (Apply-Indent -Text (Format-LinkList -Links $footerConfig.product) -Indent $footerLinkIndent)
-    $footerHtml = Replace-Section -Html $footerHtml -SectionTitle "Resources" -LinksHtml (Apply-Indent -Text (Format-LinkList -Links $footerConfig.resources) -Indent $footerLinkIndent)
-    $footerHtml = Replace-Section -Html $footerHtml -SectionTitle "Company" -LinksHtml (Apply-Indent -Text (Format-LinkList -Links $footerConfig.company) -Indent $footerLinkIndent)
+    $footerHtml = Replace-Section -Html $footerHtml -SectionTitle "Product" -LinksHtml (Get-IndentedLinks -Links $footerConfig.product -Indent $footerLinkIndent)
+    $footerHtml = Replace-Section -Html $footerHtml -SectionTitle "Resources" -LinksHtml (Get-IndentedLinks -Links $footerConfig.resources -Indent $footerLinkIndent)
+    $footerHtml = Replace-Section -Html $footerHtml -SectionTitle "Company" -LinksHtml (Get-IndentedLinks -Links $footerConfig.company -Indent $footerLinkIndent)
 }
 
 $footerHtml = [regex]::Replace(

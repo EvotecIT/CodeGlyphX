@@ -174,11 +174,16 @@
     private string CurrentTheme { get; set; } = "dark";
     private bool _navOpen = false;
     private SiteNavConfig? _navConfig;
+    private bool _primaryDefined;
 
     private IReadOnlyList<NavLink> PrimaryLinks =>
-        _navConfig?.Primary is { Count: > 0 }
-            ? _navConfig.Primary
-            : DefaultPrimaryLinks;
+        _navConfig is null
+            ? DefaultPrimaryLinks
+            : _primaryDefined
+                ? _navConfig.Primary
+                : _navConfig.Primary is { Count: > 0 }
+                    ? _navConfig.Primary
+                    : DefaultPrimaryLinks;
     private FooterNav FooterLinks => _navConfig?.Footer ?? DefaultFooter;
 
     private static readonly NavLink[] DefaultPrimaryLinks =
@@ -236,7 +241,7 @@
             var json = await Http.GetStringAsync("data/site-nav.json");
             using var document = JsonDocument.Parse(json);
             var root = document.RootElement;
-            var primaryDefined = root.TryGetProperty("primary", out _);
+            _primaryDefined = root.TryGetProperty("primary", out _);
             var linksDefined = root.TryGetProperty("links", out _);
             var config = JsonSerializer.Deserialize<SiteNavConfig>(json, new JsonSerializerOptions
             {
@@ -249,14 +254,14 @@
                 return;
             }
 
-            if (!primaryDefined && linksDefined && config.Primary.Count == 0 && config.Links.Count > 0)
+            if (!_primaryDefined && linksDefined && config.Primary.Count == 0 && config.Links.Count > 0)
             {
                 config.Primary = config.Links;
             }
 
             config.Footer ??= DefaultFooter;
 
-            if (config.Primary.Count == 0)
+            if (config.Primary.Count == 0 && !_primaryDefined)
             {
                 Logger?.LogWarning("Navigation config missing primary links. Using defaults.");
                 return;
