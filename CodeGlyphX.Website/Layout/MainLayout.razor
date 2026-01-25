@@ -1,12 +1,15 @@
 @inherits LayoutComponentBase
 @implements IDisposable
+@using Microsoft.AspNetCore.Components.Routing
+@using System.Net.Http.Json
+@inject HttpClient Http
 @inject IJSRuntime JS
 @inject NavigationManager Nav
 
 <div class="page">
     <header class="header">
         <div class="header-content">
-            <a href="/" class="brand" @onclick="GoHome" @onclick:preventDefault="true">
+            <a href="/" class="brand" @onclick="@(() => Navigate("/"))" @onclick:preventDefault="true">
                 <div class="brand-icon">
                     <img src="codeglyphx-qr-icon.png" alt="CodeGlyphX logo" width="28" height="28" />
                 </div>
@@ -22,11 +25,21 @@
 
             <nav class="nav @(_navOpen ? "nav-open" : "")">
                 <div class="nav-links">
-                    <a href="/" @onclick="GoHome" @onclick:preventDefault="true">Home</a>
-                    <a href="/playground/" @onclick="GoPlayground" @onclick:preventDefault="true">Playground</a>
-                    <a href="/docs/" @onclick="GoDocs" @onclick:preventDefault="true">Docs</a>
-                    <a href="/benchmarks/">Benchmarks</a>
-                    <a href="/showcase/" @onclick="GoShowcase" @onclick:preventDefault="true">Showcase</a>
+                    @foreach (var link in PrimaryLinks)
+                    {
+                        if (link.Spa)
+                        {
+                            <a href="@link.Href" @onclick="() => Navigate(link.Href)" @onclick:preventDefault="true">@link.Text</a>
+                        }
+                        else if (IsExternal(link.Href))
+                        {
+                            <a href="@link.Href" target="_blank" rel="noopener">@link.Text</a>
+                        }
+                        else
+                        {
+                            <a href="@link.Href">@link.Text</a>
+                        }
+                    }
                 </div>
                 <div class="nav-actions">
                     <a href="https://github.com/EvotecIT/CodeGlyphX" target="_blank" rel="noopener" class="nav-icon" title="GitHub" aria-label="GitHub">
@@ -81,23 +94,45 @@
             <div class="footer-links">
                 <div class="footer-section">
                     <h3>Product</h3>
-                    <a href="/">Home</a>
-                    <a href="/playground/">Playground</a>
-                    <a href="/docs/">Docs</a>
-                    <a href="/benchmarks/">Benchmarks</a>
-                    <a href="/showcase/">Showcase</a>
+                    @foreach (var link in FooterLinks.Product)
+                    {
+                        if (IsExternal(link.Href))
+                        {
+                            <a href="@link.Href" target="_blank" rel="noopener">@link.Text</a>
+                        }
+                        else
+                        {
+                            <a href="@link.Href">@link.Text</a>
+                        }
+                    }
                 </div>
                 <div class="footer-section">
                     <h3>Resources</h3>
-                    <a href="/faq/">FAQ</a>
-                    <a href="https://www.nuget.org/packages/CodeGlyphX" target="_blank" rel="noopener">NuGet Package</a>
-                    <a href="https://github.com/EvotecIT/CodeGlyphX" target="_blank" rel="noopener">GitHub Repository</a>
-                    <a href="https://github.com/EvotecIT/CodeGlyphX/issues" target="_blank" rel="noopener">Report Issue</a>
+                    @foreach (var link in FooterLinks.Resources)
+                    {
+                        if (IsExternal(link.Href))
+                        {
+                            <a href="@link.Href" target="_blank" rel="noopener">@link.Text</a>
+                        }
+                        else
+                        {
+                            <a href="@link.Href">@link.Text</a>
+                        }
+                    }
                 </div>
                 <div class="footer-section">
                     <h3>Company</h3>
-                    <a href="https://evotec.xyz" target="_blank" rel="noopener">Evotec Services</a>
-                    <a href="https://evotec.xyz/hub" target="_blank" rel="noopener">Blog</a>
+                    @foreach (var link in FooterLinks.Company)
+                    {
+                        if (IsExternal(link.Href))
+                        {
+                            <a href="@link.Href" target="_blank" rel="noopener">@link.Text</a>
+                        }
+                        else
+                        {
+                            <a href="@link.Href">@link.Text</a>
+                        }
+                    }
                 </div>
             </div>
             <div class="footer-bottom">
@@ -135,13 +170,67 @@
 @code {
     private string CurrentTheme { get; set; } = "dark";
     private bool _navOpen = false;
+    private SiteNavConfig? _navConfig;
+
+    private IReadOnlyList<NavLink> PrimaryLinks => _navConfig?.Primary.Count > 0 ? _navConfig!.Primary : DefaultPrimaryLinks;
+    private FooterNav FooterLinks => _navConfig?.Footer ?? DefaultFooter;
+
+    private static readonly NavLink[] DefaultPrimaryLinks =
+    {
+        new NavLink("/", "Home", true),
+        new NavLink("/playground/", "Playground", true),
+        new NavLink("/docs/", "Docs", true),
+        new NavLink("/benchmarks/", "Benchmarks", false),
+        new NavLink("/showcase/", "Showcase", true)
+    };
+
+    private static readonly FooterNav DefaultFooter = new FooterNav
+    {
+        Product = new List<NavLink>
+        {
+            new NavLink("/", "Home"),
+            new NavLink("/playground/", "Playground"),
+            new NavLink("/docs/", "Docs"),
+            new NavLink("/benchmarks/", "Benchmarks"),
+            new NavLink("/showcase/", "Showcase")
+        },
+        Resources = new List<NavLink>
+        {
+            new NavLink("/faq/", "FAQ"),
+            new NavLink("https://www.nuget.org/packages/CodeGlyphX", "NuGet Package"),
+            new NavLink("https://github.com/EvotecIT/CodeGlyphX", "GitHub Repository"),
+            new NavLink("https://github.com/EvotecIT/CodeGlyphX/issues", "Report Issue")
+        },
+        Company = new List<NavLink>
+        {
+            new NavLink("https://evotec.xyz", "Evotec Services"),
+            new NavLink("https://evotec.xyz/hub", "Blog")
+        }
+    };
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
             CurrentTheme = await JS.InvokeAsync<string>("getTheme") ?? "dark";
+            await LoadNavAsync();
             StateHasChanged();
+        }
+    }
+
+    private async Task LoadNavAsync()
+    {
+        try
+        {
+            _navConfig = await Http.GetFromJsonAsync<SiteNavConfig>("data/site-nav.json");
+            if (_navConfig != null && _navConfig.Primary.Count == 0 && _navConfig.Links.Count > 0)
+            {
+                _navConfig.Primary = _navConfig.Links;
+            }
+        }
+        catch
+        {
+            _navConfig = null;
         }
     }
 
@@ -178,34 +267,29 @@
         _navOpen = false;
     }
 
-    private void GoHome()
+    private void Navigate(string href)
     {
         _navOpen = false;
-        Nav.NavigateTo("/");
+        Nav.NavigateTo(href);
     }
 
-    private void GoDocs()
+    private static bool IsExternal(string href)
+        => href.StartsWith("http", StringComparison.OrdinalIgnoreCase);
+
+    private sealed record NavLink(string Href, string Text, bool Spa = false);
+
+    private sealed class FooterNav
     {
-        _navOpen = false;
-        Nav.NavigateTo("/docs/");
+        public List<NavLink> Product { get; set; } = new();
+        public List<NavLink> Resources { get; set; } = new();
+        public List<NavLink> Company { get; set; } = new();
     }
 
-    private void GoApi()
+    private sealed class SiteNavConfig
     {
-        _navOpen = false;
-        Nav.NavigateTo("/docs/api/");
-    }
-
-    private void GoShowcase()
-    {
-        _navOpen = false;
-        Nav.NavigateTo("/showcase/");
-    }
-
-    private void GoPlayground()
-    {
-        _navOpen = false;
-        Nav.NavigateTo("/playground/");
+        public List<NavLink> Primary { get; set; } = new();
+        public List<NavLink> Links { get; set; } = new();
+        public FooterNav Footer { get; set; } = DefaultFooter;
     }
 
     public void Dispose()

@@ -181,6 +181,9 @@ $playgroundConstants = "$baseConstants;PLAYGROUND_BUILD"
 if (-not (Test-Path $websiteProjectPath)) { throw "Missing website project at $websiteProjectPath" }
 if (-not (Test-Path $wwwrootSource)) { throw "Missing wwwroot at $wwwrootSource" }
 
+$navScript = Join-Path $PSScriptRoot "Update-NavFragments.ps1"
+Invoke-Step "Updating navigation fragments..." @("pwsh",$navScript)
+
 $projectFrameworks = Get-ProjectFrameworks -ProjectPath $websiteProjectPath
 if ($projectFrameworks.Count -gt 0 -and -not ($projectFrameworks -contains $Framework)) {
     $requested = $Framework
