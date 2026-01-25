@@ -176,7 +176,7 @@
     private SiteNavConfig? _navConfig;
 
     private IReadOnlyList<NavLink> PrimaryLinks =>
-        _navConfig is not null && _navConfig.Primary.Count > 0
+        _navConfig?.Primary is { Count: > 0 }
             ? _navConfig.Primary
             : DefaultPrimaryLinks;
     private FooterNav FooterLinks => _navConfig?.Footer ?? DefaultFooter;

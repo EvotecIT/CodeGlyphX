@@ -27,8 +27,7 @@ $footerLinkIndent = "                    "
 
 function Format-LinkList {
     param(
-        [object[]]$Links,
-        [string]$Indent
+        [object[]]$Links
     )
 
     if (-not $Links) { return "" }
@@ -45,9 +44,19 @@ function Format-LinkList {
             $attrs += "aria-label=`"$label (opens in new tab)`""
         }
         $attrString = if ($attrs.Count -gt 0) { " " + ($attrs -join " ") } else { "" }
-        "$Indent<a href=`"$href`"$attrString>$text</a>"
+        "<a href=`"$href`"$attrString>$text</a>"
     }
     return ($lines -join "`n")
+}
+
+function Apply-Indent {
+    param(
+        [string]$Text,
+        [string]$Indent
+    )
+
+    if (-not $Text) { return "" }
+    return ($Text -replace "(?m)^", $Indent)
 }
 
 function Replace-Section {
@@ -71,7 +80,7 @@ $headerHtml = Get-Content -Path $headerFullPath -Raw
 if ($primaryLinks.Count -gt 0) {
     $headerHtml = [regex]::Replace($headerHtml, "(?s)(<div class=`"nav-links`">)(.*?)(</div>)", {
         param($match)
-        $linksHtml = Format-LinkList -Links $primaryLinks -Indent $headerLinkIndent
+        $linksHtml = Apply-Indent -Text (Format-LinkList -Links $primaryLinks) -Indent $headerLinkIndent
         "$($match.Groups[1].Value)`n$linksHtml`n$headerContainerIndent$($match.Groups[3].Value)"
     }, 1)
 }
@@ -81,9 +90,9 @@ Set-Content -Path $headerFullPath -Value $headerHtml -Encoding UTF8 -NoNewline
 
 $footerHtml = Get-Content -Path $footerFullPath -Raw
 if ($footerConfig) {
-    $footerHtml = Replace-Section -Html $footerHtml -SectionTitle "Product" -LinksHtml (Format-LinkList -Links $footerConfig.product -Indent $footerLinkIndent)
-    $footerHtml = Replace-Section -Html $footerHtml -SectionTitle "Resources" -LinksHtml (Format-LinkList -Links $footerConfig.resources -Indent $footerLinkIndent)
-    $footerHtml = Replace-Section -Html $footerHtml -SectionTitle "Company" -LinksHtml (Format-LinkList -Links $footerConfig.company -Indent $footerLinkIndent)
+    $footerHtml = Replace-Section -Html $footerHtml -SectionTitle "Product" -LinksHtml (Apply-Indent -Text (Format-LinkList -Links $footerConfig.product) -Indent $footerLinkIndent)
+    $footerHtml = Replace-Section -Html $footerHtml -SectionTitle "Resources" -LinksHtml (Apply-Indent -Text (Format-LinkList -Links $footerConfig.resources) -Indent $footerLinkIndent)
+    $footerHtml = Replace-Section -Html $footerHtml -SectionTitle "Company" -LinksHtml (Apply-Indent -Text (Format-LinkList -Links $footerConfig.company) -Indent $footerLinkIndent)
 }
 
 $footerHtml = [regex]::Replace(
