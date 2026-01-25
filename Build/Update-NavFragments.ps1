@@ -35,7 +35,16 @@ function Format-LinkList {
         $href = $link.href
         $text = $link.text
         if (-not $href -or -not $text) { continue }
-        "$Indent<a href=`"$href`">$text</a>"
+        $isExternal = $href -match '^https?://'
+        $attrs = @()
+        if ($isExternal) {
+            $label = $text -replace '"', '&quot;'
+            $attrs += 'target="_blank"'
+            $attrs += 'rel="noopener"'
+            $attrs += "aria-label=`"$label (opens in new tab)`""
+        }
+        $attrString = if ($attrs.Count -gt 0) { " " + ($attrs -join " ") } else { "" }
+        "$Indent<a href=`"$href`"$attrString>$text</a>"
     }
     return ($lines -join "`n")
 }
@@ -75,6 +84,19 @@ if ($footerConfig) {
     $footerHtml = Replace-Section -Html $footerHtml -SectionTitle "Resources" -LinksHtml (Format-LinkList -Links $footerConfig.resources -Indent "")
     $footerHtml = Replace-Section -Html $footerHtml -SectionTitle "Company" -LinksHtml (Format-LinkList -Links $footerConfig.company -Indent "")
 }
+
+$footerHtml = [regex]::Replace(
+    $footerHtml,
+    '(?i)<a\s+href="(https?://[^"]+)"(?![^>]*aria-label)([^>]*)>([^<]+)</a>',
+    {
+        param($match)
+        $href = $match.Groups[1].Value
+        $attrs = $match.Groups[2].Value
+        $text = $match.Groups[3].Value
+        $label = $text -replace '"', '&quot;'
+        "<a href=`"$href`"$attrs aria-label=`"$label (opens in new tab)`">$text</a>"
+    }
+)
 
 Set-Content -Path $footerFullPath -Value $footerHtml -Encoding UTF8
 

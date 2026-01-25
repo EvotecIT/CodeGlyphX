@@ -1,7 +1,9 @@
 @inherits LayoutComponentBase
 @implements IDisposable
 @using Microsoft.AspNetCore.Components.Routing
+@using Microsoft.Extensions.Logging
 @using System.Net.Http.Json
+@inject ILogger<MainLayout> Logger
 @inject HttpClient Http
 @inject IJSRuntime JS
 @inject NavigationManager Nav
@@ -208,12 +210,17 @@
         }
     };
 
+    protected override async Task OnInitializedAsync()
+    {
+        Nav.LocationChanged += OnLocationChanged;
+        await LoadNavAsync();
+    }
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
             CurrentTheme = await JS.InvokeAsync<string>("getTheme") ?? "dark";
-            await LoadNavAsync();
             StateHasChanged();
         }
     }
@@ -222,21 +229,33 @@
     {
         try
         {
-            _navConfig = await Http.GetFromJsonAsync<SiteNavConfig>("data/site-nav.json");
-            if (_navConfig != null && _navConfig.Primary.Count == 0 && _navConfig.Links.Count > 0)
+            var config = await Http.GetFromJsonAsync<SiteNavConfig>("data/site-nav.json");
+            if (config == null)
             {
-                _navConfig.Primary = _navConfig.Links;
+                Logger?.LogWarning("Navigation config missing or empty. Using defaults.");
+                return;
             }
+
+            if (config.Primary.Count == 0 && config.Links.Count > 0)
+            {
+                config.Primary = config.Links;
+            }
+
+            config.Footer ??= DefaultFooter;
+
+            if (config.Primary.Count == 0)
+            {
+                Logger?.LogWarning("Navigation config missing primary links. Using defaults.");
+                return;
+            }
+
+            _navConfig = config;
         }
-        catch
+        catch (Exception ex)
         {
+            Logger?.LogWarning(ex, "Failed to load navigation config. Using defaults.");
             _navConfig = null;
         }
-    }
-
-    protected override void OnInitialized()
-    {
-        Nav.LocationChanged += OnLocationChanged;
     }
 
     private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
@@ -289,7 +308,7 @@
     {
         public List<NavLink> Primary { get; set; } = new();
         public List<NavLink> Links { get; set; } = new();
-        public FooterNav Footer { get; set; } = DefaultFooter;
+        public FooterNav? Footer { get; set; } = DefaultFooter;
     }
 
     public void Dispose()
