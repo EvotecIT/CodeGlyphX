@@ -24,6 +24,11 @@ This list contains **only work we still want to do** (no already‑done items).
 - More logo treatments (background plate variants, inner padding presets, safe defaults).
 - Gradient presets and multi-color palettes for modules/eyes.
 - Add QR style presets gallery (exportable settings) for consistent “high-quality” looks.
+- Preset pack v1 (names + intent):
+  - Classic, Bold, Soft, Dot, Grid, Tech, Stamp, Poster, Neon, Minimal.
+- Shape set v1 (modules + eyes):
+  - Modules: square, rounded, circle, dot, squircle, diamond, soft-diamond, leaf, wave.
+  - Eyes (frame/ball): square, rounded, circle, squircle, diamond, bracket, double-ring.
 
 ## DX & Docs (ongoing)
 - Keep “quick vs full” benchmark guidance and preflight steps in README/docs.
