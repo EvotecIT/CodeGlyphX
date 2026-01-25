@@ -83,14 +83,115 @@ public partial class Playground {
                     Foreground = ParseColor(ForegroundColor),
                     Background = ParseColor(BackgroundColor),
                     ModuleShape = ParseModuleShape(ModuleShape),
+                    ModuleScale = ModuleScale,
                     ModuleCornerRadiusPx = ModuleShape == "Rounded" ? CornerRadius : 0
                 };
+
+                if (UseForegroundGradient)
+                {
+                    options.ForegroundGradient = new QrPngGradientOptions
+                    {
+                        Type = ParseGradientType(ForegroundGradientType),
+                        StartColor = ParseColor(ForegroundGradientStart),
+                        EndColor = ParseColor(ForegroundGradientEnd)
+                    };
+                }
+
+                if (UseBackgroundGradient)
+                {
+                    options.BackgroundGradient = new QrPngGradientOptions
+                    {
+                        Type = ParseGradientType(BackgroundGradientType),
+                        StartColor = ParseColor(BackgroundGradientStart),
+                        EndColor = ParseColor(BackgroundGradientEnd)
+                    };
+                }
+
+                options.BackgroundSupersample = BackgroundSupersample;
+
+                if (EnableQrBackgroundPattern)
+                {
+                    options.BackgroundPattern = new QrPngBackgroundPatternOptions
+                    {
+                        Type = ParsePatternType(QrBackgroundPatternType),
+                        Color = ApplyAlpha(ParseColor(QrBackgroundPatternColor), QrBackgroundPatternAlpha),
+                        SizePx = QrBackgroundPatternSizePx,
+                        ThicknessPx = QrBackgroundPatternThicknessPx,
+                        SnapToModuleSize = QrBackgroundPatternSnapToModules,
+                        ModuleStep = QrBackgroundPatternModuleStep
+                    };
+                }
+
+                if (EnablePalette)
+                {
+                    options.ForegroundPalette = new QrPngPaletteOptions
+                    {
+                        Mode = ParsePaletteMode(PaletteMode),
+                        Seed = PaletteSeed,
+                        RingSize = PaletteRingSize,
+                        ApplyToEyes = false,
+                        Colors = new[]
+                        {
+                            ParseColor(PaletteColor1),
+                            ParseColor(PaletteColor2),
+                            ParseColor(PaletteColor3)
+                        }
+                    };
+                }
+
+                if (EnableZonePalettes)
+                {
+                    options.ForegroundPaletteZones = new QrPngPaletteZoneOptions
+                    {
+                        CenterPalette = new QrPngPaletteOptions
+                        {
+                            Mode = ParsePaletteMode(CenterPaletteMode),
+                            Seed = CenterPaletteSeed,
+                            RingSize = 2,
+                            ApplyToEyes = false,
+                            Colors = new[]
+                            {
+                                ParseColor(CenterPaletteColor1),
+                                ParseColor(CenterPaletteColor2),
+                                ParseColor(CenterPaletteColor3)
+                            }
+                        },
+                        CenterSize = CenterZoneSize,
+                        CornerPalette = new QrPngPaletteOptions
+                        {
+                            Mode = ParsePaletteMode(CornerPaletteMode),
+                            Seed = CornerPaletteSeed,
+                            RingSize = 2,
+                            ApplyToEyes = false,
+                            Colors = new[]
+                            {
+                                ParseColor(CornerPaletteColor1),
+                                ParseColor(CornerPaletteColor2)
+                            }
+                        },
+                        CornerSize = CornerZoneSize
+                    };
+                }
+
+                if (EnableScaleMap)
+                {
+                    options.ModuleScaleMap = new QrPngModuleScaleMapOptions
+                    {
+                        Mode = ParseScaleMapMode(ScaleMapMode),
+                        MinScale = ScaleMapMin,
+                        MaxScale = ScaleMapMax,
+                        RingSize = ScaleMapRingSize,
+                        Seed = ScaleMapSeed,
+                        ApplyToEyes = ScaleMapApplyToEyes
+                    };
+                }
 
                 if (CustomEyes)
                 {
                     options.Eyes = new QrPngEyeOptions
                     {
                         UseFrame = true,
+                        FrameStyle = ParseEyeFrameStyle(EyeFrameStyle),
                         OuterShape = ParseModuleShape(EyeOuterShape),
                         InnerShape = ParseModuleShape(EyeInnerShape),
                         OuterColor = ParseColor(EyeOuterColor),
@@ -98,6 +199,51 @@ public partial class Playground {
                     };
                 }
 
+                if (EnableCanvas)
+                {
+                    options.Canvas = new QrPngCanvasOptions
+                    {
+                        PaddingPx = CanvasPaddingPx,
+                        CornerRadiusPx = CanvasCornerRadiusPx,
+                        Background = ParseColor(CanvasBackgroundColor),
+                        BackgroundGradient = CanvasUseGradient
+                            ? new QrPngGradientOptions
+                            {
+                                Type = ParseGradientType(CanvasGradientType),
+                                StartColor = ParseColor(CanvasGradientStart),
+                                EndColor = ParseColor(CanvasGradientEnd)
+                            }
+                            : null,
+                        Pattern = CanvasUsePattern
+                            ? new QrPngBackgroundPatternOptions
+                            {
+                                Type = ParsePatternType(CanvasPatternType),
+                                Color = ApplyAlpha(ParseColor(CanvasPatternColor), CanvasPatternAlpha),
+                                SizePx = CanvasPatternSizePx,
+                                ThicknessPx = CanvasPatternThicknessPx
+                            }
+                            : null,
+                        BorderPx = CanvasBorderPx,
+                        BorderColor = ParseColor(CanvasBorderColor),
+                        ShadowOffsetX = CanvasShadowOffsetX,
+                        ShadowOffsetY = CanvasShadowOffsetY,
+                        ShadowColor = ApplyAlpha(ParseColor(CanvasShadowColor), CanvasShadowAlpha)
+                    };
+                }
+
+                if (EnableDebugOverlay)
+                {
+                    options.Debug = new QrPngDebugOptions
+                    {
+                        ShowQuietZone = DebugShowQuietZone,
+                        ShowQrBounds = DebugShowQrBounds,
+                        ShowEyeBounds = DebugShowEyeBounds,
+                        ShowLogoBounds = DebugShowLogoBounds,
+                        StrokePx = DebugStrokePx
+                    };
+                }
+
+                SafetyReport = QrEasy.EvaluateSafety(Content, options);
                 pngBytes = QrEasy.RenderPng(Content, options);
                 svg = QrEasy.RenderSvg(Content, options);
             }

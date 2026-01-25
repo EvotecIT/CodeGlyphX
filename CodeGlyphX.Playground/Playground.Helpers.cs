@@ -61,10 +61,95 @@ public partial class Playground {
     {
         return shape switch
         {
+            "Dot" => QrPngModuleShape.Dot,
+            "DotGrid" => QrPngModuleShape.DotGrid,
+            "Diamond" => QrPngModuleShape.Diamond,
+            "Squircle" => QrPngModuleShape.Squircle,
             "Circle" => QrPngModuleShape.Circle,
             "Rounded" => QrPngModuleShape.Rounded,
             _ => QrPngModuleShape.Square
         };
+    }
+
+    internal static QrPngEyeFrameStyle ParseEyeFrameStyle(string style)
+    {
+        return style switch
+        {
+            "DoubleRing" => QrPngEyeFrameStyle.DoubleRing,
+            "Target" => QrPngEyeFrameStyle.Target,
+            "Bracket" => QrPngEyeFrameStyle.Bracket,
+            "Badge" => QrPngEyeFrameStyle.Badge,
+            _ => QrPngEyeFrameStyle.Single
+        };
+    }
+
+    internal static QrPngPaletteMode ParsePaletteMode(string mode)
+    {
+        return mode switch
+        {
+            "Checker" => QrPngPaletteMode.Checker,
+            "Random" => QrPngPaletteMode.Random,
+            "Rings" => QrPngPaletteMode.Rings,
+            _ => QrPngPaletteMode.Cycle
+        };
+    }
+
+    internal static QrPngModuleScaleMode ParseScaleMapMode(string mode)
+    {
+        return mode switch
+        {
+            "Radial" => QrPngModuleScaleMode.Radial,
+            "Random" => QrPngModuleScaleMode.Random,
+            "Checker" => QrPngModuleScaleMode.Checker,
+            _ => QrPngModuleScaleMode.Rings
+        };
+    }
+
+    internal static QrPngGradientType ParseGradientType(string mode)
+    {
+        return mode switch
+        {
+            "Vertical" => QrPngGradientType.Vertical,
+            "DiagonalDown" => QrPngGradientType.DiagonalDown,
+            "DiagonalUp" => QrPngGradientType.DiagonalUp,
+            "Radial" => QrPngGradientType.Radial,
+            _ => QrPngGradientType.Horizontal
+        };
+    }
+
+    internal static QrPngBackgroundPatternType ParsePatternType(string mode)
+    {
+        return mode switch
+        {
+            "Grid" => QrPngBackgroundPatternType.Grid,
+            "Checker" => QrPngBackgroundPatternType.Checker,
+            _ => QrPngBackgroundPatternType.Dots
+        };
+    }
+
+    internal static Rgba32 ApplyAlpha(Rgba32 color, int alpha)
+    {
+        if (alpha < 0) alpha = 0;
+        if (alpha > 255) alpha = 255;
+        return new Rgba32(color.R, color.G, color.B, (byte)alpha);
+    }
+
+    internal string GetSafetyStatus()
+    {
+        if (SafetyReport is null) return string.Empty;
+        var score = SafetyReport.Score;
+        if (score >= 80) return "Safe";
+        if (score >= 60) return "Caution";
+        return "Risky";
+    }
+
+    internal string GetSafetyColor()
+    {
+        if (SafetyReport is null) return "#94a3b8";
+        var score = SafetyReport.Score;
+        if (score >= 80) return "#22c55e";
+        if (score >= 60) return "#f59e0b";
+        return "#ef4444";
     }
 
     internal static DataMatrixEncodingMode ParseDataMatrixMode(string mode)

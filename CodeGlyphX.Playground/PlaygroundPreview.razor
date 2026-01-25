@@ -51,6 +51,35 @@ else
             </div>
         }
 
+        @if (Host.SelectedMode == "Generate" && Host.SelectedCategory == "QR" && Host.SafetyReport is not null && !string.IsNullOrEmpty(Host.ImageDataUri))
+        {
+            <div style="margin-top: 1.25rem; border: 1px solid rgba(148,163,184,0.25); border-radius: 12px; padding: 0.85rem;">
+                <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.75rem;">
+                    <div>
+                        <strong>Scan safety</strong>
+                        <span style="margin-left: 0.5rem; font-size: 0.85rem; color: @Host.GetSafetyColor();">@Host.GetSafetyStatus()</span>
+                    </div>
+                    <div style="font-weight: 600; color: @Host.GetSafetyColor();">@Host.SafetyReport.Score/100</div>
+                </div>
+                <div style="height: 6px; background: rgba(148,163,184,0.25); border-radius: 999px; overflow: hidden; margin-top: 0.5rem;">
+                    <div style="height: 100%; width: @Host.SafetyReport.Score%; background: @Host.GetSafetyColor();"></div>
+                </div>
+                @if (Host.SafetyReport.Warnings.Length > 0)
+                {
+                    <ul style="color: var(--text-muted); margin: 0.65rem 0 0 1rem;">
+                        @foreach (var warning in Host.SafetyReport.Warnings)
+                        {
+                            <li>@warning.Message</li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <p style="color: var(--text-muted); margin: 0.65rem 0 0 0;">No scan risks detected.</p>
+                }
+            </div>
+        }
+
         @if (Host.SelectedMode == "Decode")
         {
             <div style="margin-top: 1.5rem;">

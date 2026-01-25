@@ -26,14 +26,92 @@ public partial class Playground {
 
     // QR Styling
     internal string ModuleShape { get; set; } = "Square";
+    internal double ModuleScale { get; set; } = 1.0;
     internal int CornerRadius { get; set; } = 3;
     internal string ForegroundColor { get; set; } = "#000000";
     internal string BackgroundColor { get; set; } = "#FFFFFF";
+    internal bool UseForegroundGradient { get; set; } = false;
+    internal string ForegroundGradientType { get; set; } = "DiagonalDown";
+    internal string ForegroundGradientStart { get; set; } = "#000000";
+    internal string ForegroundGradientEnd { get; set; } = "#5b5b5b";
+    internal bool UseBackgroundGradient { get; set; } = false;
+    internal string BackgroundGradientType { get; set; } = "DiagonalDown";
+    internal string BackgroundGradientStart { get; set; } = "#ffffff";
+    internal string BackgroundGradientEnd { get; set; } = "#e7ecf7";
+    internal int BackgroundSupersample { get; set; } = 1;
+
+    internal bool EnableQrBackgroundPattern { get; set; } = false;
+    internal string QrBackgroundPatternType { get; set; } = "Dots";
+    internal string QrBackgroundPatternColor { get; set; } = "#0ea5e9";
+    internal int QrBackgroundPatternAlpha { get; set; } = 30;
+    internal int QrBackgroundPatternSizePx { get; set; } = 10;
+    internal int QrBackgroundPatternThicknessPx { get; set; } = 1;
+    internal bool QrBackgroundPatternSnapToModules { get; set; } = true;
+    internal int QrBackgroundPatternModuleStep { get; set; } = 2;
+
+    internal bool EnablePalette { get; set; } = false;
+    internal string PaletteMode { get; set; } = "Cycle";
+    internal int PaletteSeed { get; set; } = 12345;
+    internal int PaletteRingSize { get; set; } = 2;
+    internal string PaletteColor1 { get; set; } = "#00ffd5";
+    internal string PaletteColor2 { get; set; } = "#ff3bff";
+    internal string PaletteColor3 { get; set; } = "#ffd600";
+
+    internal bool EnableZonePalettes { get; set; } = false;
+    internal int CenterZoneSize { get; set; } = 9;
+    internal int CornerZoneSize { get; set; } = 5;
+    internal string CenterPaletteMode { get; set; } = "Random";
+    internal int CenterPaletteSeed { get; set; } = 135;
+    internal string CenterPaletteColor1 { get; set; } = "#ff6b6b";
+    internal string CenterPaletteColor2 { get; set; } = "#ffd93d";
+    internal string CenterPaletteColor3 { get; set; } = "#6effc8";
+    internal string CornerPaletteMode { get; set; } = "Checker";
+    internal int CornerPaletteSeed { get; set; } = 0;
+    internal string CornerPaletteColor1 { get; set; } = "#0f172a";
+    internal string CornerPaletteColor2 { get; set; } = "#ffd93d";
+
+    internal bool EnableScaleMap { get; set; } = false;
+    internal string ScaleMapMode { get; set; } = "Rings";
+    internal double ScaleMapMin { get; set; } = 0.7;
+    internal double ScaleMapMax { get; set; } = 1.0;
+    internal int ScaleMapRingSize { get; set; } = 2;
+    internal int ScaleMapSeed { get; set; } = 12345;
+    internal bool ScaleMapApplyToEyes { get; set; } = false;
+
     internal bool CustomEyes { get; set; } = false;
+    internal string EyeFrameStyle { get; set; } = "Single";
     internal string EyeOuterShape { get; set; } = "Square";
     internal string EyeInnerShape { get; set; } = "Square";
     internal string EyeOuterColor { get; set; } = "#8b5cf6";
     internal string EyeInnerColor { get; set; } = "#06b6d4";
+
+    internal bool EnableCanvas { get; set; } = false;
+    internal int CanvasPaddingPx { get; set; } = 24;
+    internal int CanvasCornerRadiusPx { get; set; } = 24;
+    internal string CanvasBackgroundColor { get; set; } = "#ffffff";
+    internal bool CanvasUseGradient { get; set; } = false;
+    internal string CanvasGradientStart { get; set; } = "#101827";
+    internal string CanvasGradientEnd { get; set; } = "#2b1b3f";
+    internal string CanvasGradientType { get; set; } = "DiagonalDown";
+    internal bool CanvasUsePattern { get; set; } = false;
+    internal string CanvasPatternType { get; set; } = "Dots";
+    internal string CanvasPatternColor { get; set; } = "#00ffd5";
+    internal int CanvasPatternAlpha { get; set; } = 32;
+    internal int CanvasPatternSizePx { get; set; } = 10;
+    internal int CanvasPatternThicknessPx { get; set; } = 1;
+    internal int CanvasBorderPx { get; set; } = 2;
+    internal string CanvasBorderColor { get; set; } = "#ffffff";
+    internal int CanvasShadowOffsetX { get; set; } = 6;
+    internal int CanvasShadowOffsetY { get; set; } = 8;
+    internal string CanvasShadowColor { get; set; } = "#000000";
+    internal int CanvasShadowAlpha { get; set; } = 60;
+
+    internal bool EnableDebugOverlay { get; set; } = false;
+    internal bool DebugShowQuietZone { get; set; } = true;
+    internal bool DebugShowQrBounds { get; set; } = true;
+    internal bool DebugShowEyeBounds { get; set; } = false;
+    internal bool DebugShowLogoBounds { get; set; } = true;
+    internal int DebugStrokePx { get; set; } = 1;
 
     // Special QR Payloads
     internal string SpecialPayloadType { get; set; } = "WiFi";
@@ -102,6 +180,7 @@ public partial class Playground {
     internal string? ImageDataUri { get; set; }
     internal string? SvgDataUri { get; set; }
     internal string? ErrorMessage { get; set; }
+    internal QrArtSafetyReport? SafetyReport { get; set; }
     internal string? DecodeImageDataUri { get; set; }
     internal string? DecodeError { get; set; }
     internal readonly List<DecodeResult> DecodeResults = new();
