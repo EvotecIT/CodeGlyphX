@@ -26,8 +26,7 @@ $footerLinkIndent = "                    "
 
 function Format-LinkList {
     param(
-        [object[]]$Links,
-        [string]$Indent
+        [object[]]$Links
     )
 
     if (-not $Links) { return "" }
@@ -44,7 +43,7 @@ function Format-LinkList {
             $attrs += "aria-label=`"$label (opens in new tab)`""
         }
         $attrString = if ($attrs.Count -gt 0) { " " + ($attrs -join " ") } else { "" }
-        "$Indent<a href=`"$href`"$attrString>$text</a>"
+        "<a href=`"$href`"$attrString>$text</a>"
     }
     return ($lines -join "`n")
 }
@@ -71,18 +70,20 @@ $headerHtml = Get-Content -Path $headerFullPath -Raw
 if ($primaryLinks.Count -gt 0) {
     $headerHtml = [regex]::Replace($headerHtml, "(?s)(<div class=`"nav-links`">)(.*?)(</div>)", {
         param($match)
-        $linksHtml = Format-LinkList -Links $primaryLinks -Indent $headerLinkIndent
+        $linksHtml = Format-LinkList -Links $primaryLinks
+        $linksHtml = $linksHtml -replace "(?m)^", $headerLinkIndent
         "$($match.Groups[1].Value)`n$linksHtml`n$headerContainerIndent$($match.Groups[3].Value)"
     }, 1)
 }
 
+$headerHtml = $headerHtml.TrimEnd() + [Environment]::NewLine
 Set-Content -Path $headerFullPath -Value $headerHtml -Encoding UTF8
 
 $footerHtml = Get-Content -Path $footerFullPath -Raw
 if ($footerConfig) {
-    $footerHtml = Replace-Section -Html $footerHtml -SectionTitle "Product" -LinksHtml (Format-LinkList -Links $footerConfig.product -Indent "")
-    $footerHtml = Replace-Section -Html $footerHtml -SectionTitle "Resources" -LinksHtml (Format-LinkList -Links $footerConfig.resources -Indent "")
-    $footerHtml = Replace-Section -Html $footerHtml -SectionTitle "Company" -LinksHtml (Format-LinkList -Links $footerConfig.company -Indent "")
+    $footerHtml = Replace-Section -Html $footerHtml -SectionTitle "Product" -LinksHtml (Format-LinkList -Links $footerConfig.product)
+    $footerHtml = Replace-Section -Html $footerHtml -SectionTitle "Resources" -LinksHtml (Format-LinkList -Links $footerConfig.resources)
+    $footerHtml = Replace-Section -Html $footerHtml -SectionTitle "Company" -LinksHtml (Format-LinkList -Links $footerConfig.company)
 }
 
 $footerHtml = [regex]::Replace(
@@ -98,6 +99,7 @@ $footerHtml = [regex]::Replace(
     }
 )
 
+$footerHtml = $footerHtml.TrimEnd() + [Environment]::NewLine
 Set-Content -Path $footerFullPath -Value $footerHtml -Encoding UTF8
 
 Write-Host "Navigation fragments updated." -ForegroundColor Green

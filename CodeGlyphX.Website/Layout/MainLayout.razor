@@ -174,7 +174,10 @@
     private bool _navOpen = false;
     private SiteNavConfig? _navConfig;
 
-    private IReadOnlyList<NavLink> PrimaryLinks => _navConfig?.Primary.Count > 0 ? _navConfig!.Primary : DefaultPrimaryLinks;
+    private IReadOnlyList<NavLink> PrimaryLinks =>
+        _navConfig is not null && _navConfig.Primary.Count > 0
+            ? _navConfig.Primary
+            : DefaultPrimaryLinks;
     private FooterNav FooterLinks => _navConfig?.Footer ?? DefaultFooter;
 
     private static readonly NavLink[] DefaultPrimaryLinks =
@@ -293,7 +296,13 @@
     }
 
     private static bool IsExternal(string href)
-        => href.StartsWith("http", StringComparison.OrdinalIgnoreCase);
+    {
+        if (string.IsNullOrWhiteSpace(href))
+            return false;
+
+        return Uri.TryCreate(href, UriKind.Absolute, out var uri)
+            && (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps);
+    }
 
     private sealed record NavLink(string Href, string Text, bool Spa = false);
 
