@@ -76,8 +76,8 @@ if ($primaryLinks.Count -gt 0) {
     }, 1)
 }
 
-$headerHtml = $headerHtml.TrimEnd("`r", "`n") + [Environment]::NewLine
-Set-Content -Path $headerFullPath -Value $headerHtml -Encoding UTF8
+$headerHtml = $headerHtml.TrimEnd("`r", "`n")
+Set-Content -Path $headerFullPath -Value $headerHtml -Encoding UTF8 -NoNewline
 
 $footerHtml = Get-Content -Path $footerFullPath -Raw
 if ($footerConfig) {
@@ -99,7 +99,7 @@ $footerHtml = [regex]::Replace(
     }
 )
 
-$footerHtml = $footerHtml.TrimEnd("`r", "`n") + [Environment]::NewLine
-Set-Content -Path $footerFullPath -Value $footerHtml -Encoding UTF8
+$footerHtml = $footerHtml.TrimEnd("`r", "`n")
+Set-Content -Path $footerFullPath -Value $footerHtml -Encoding UTF8 -NoNewline
 
 Write-Host "Navigation fragments updated." -ForegroundColor Green
