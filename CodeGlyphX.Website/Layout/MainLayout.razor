@@ -173,18 +173,11 @@
 @code {
     private string CurrentTheme { get; set; } = "dark";
     private bool _navOpen = false;
-    private SiteNavConfig? _navConfig;
-    private bool _primaryDefined;
+    private IReadOnlyList<NavLink> _primaryLinks = DefaultPrimaryLinks;
+    private FooterNav _footerLinks = DefaultFooter;
 
-    private IReadOnlyList<NavLink> PrimaryLinks =>
-        _navConfig is null
-            ? DefaultPrimaryLinks
-            : _primaryDefined
-                ? _navConfig.Primary
-                : _navConfig.Primary is { Count: > 0 }
-                    ? _navConfig.Primary
-                    : DefaultPrimaryLinks;
-    private FooterNav FooterLinks => _navConfig?.Footer ?? DefaultFooter;
+    private IReadOnlyList<NavLink> PrimaryLinks => _primaryLinks;
+    private FooterNav FooterLinks => _footerLinks;
 
     private static readonly NavLink[] DefaultPrimaryLinks =
     {
@@ -219,6 +212,8 @@
         }
     };
 
+    private static NavConfigCache? CachedNav;
+
     protected override async Task OnInitializedAsync()
     {
         Nav.LocationChanged += OnLocationChanged;
@@ -238,10 +233,17 @@
     {
         try
         {
+            if (CachedNav is not null)
+            {
+                _primaryLinks = CachedNav.Primary;
+                _footerLinks = CachedNav.Footer;
+                return;
+            }
+
             var json = await Http.GetStringAsync("data/site-nav.json");
             using var document = JsonDocument.Parse(json);
             var root = document.RootElement;
-            _primaryDefined = root.TryGetProperty("primary", out _);
+            var primaryDefined = root.TryGetProperty("primary", out _);
             var linksDefined = root.TryGetProperty("links", out _);
             var config = JsonSerializer.Deserialize<SiteNavConfig>(json, new JsonSerializerOptions
             {
@@ -254,25 +256,14 @@
                 return;
             }
 
-            if (!_primaryDefined && linksDefined && config.Primary.Count == 0 && config.Links.Count > 0)
-            {
-                config.Primary = config.Links;
-            }
-
-            config.Footer ??= DefaultFooter;
-
-            if (config.Primary.Count == 0 && !_primaryDefined)
-            {
-                Logger?.LogWarning("Navigation config missing primary links. Using defaults.");
-                return;
-            }
-
-            _navConfig = config;
+            ApplyNavConfig(config, primaryDefined, linksDefined);
+            CachedNav = new NavConfigCache(_primaryLinks, _footerLinks);
         }
         catch (Exception ex)
         {
-            Logger?.LogWarning(ex, "Failed to load navigation config. Using defaults.");
-            _navConfig = null;
+            Logger?.LogError(ex, "Failed to load navigation config. Using defaults.");
+            _primaryLinks = DefaultPrimaryLinks;
+            _footerLinks = DefaultFooter;
         }
     }
 
@@ -318,6 +309,80 @@
         return Uri.TryCreate(href, UriKind.Absolute, out var uri)
             && (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps);
     }
+
+    private static bool IsSafeHref(string href)
+    {
+        if (string.IsNullOrWhiteSpace(href))
+            return false;
+
+        if (IsExternal(href))
+            return true;
+
+        return href.StartsWith("/", StringComparison.Ordinal)
+            || href.StartsWith("./", StringComparison.Ordinal)
+            || href.StartsWith("../", StringComparison.Ordinal)
+            || href.StartsWith("#", StringComparison.Ordinal);
+    }
+
+    private static List<NavLink> FilterLinks(IEnumerable<NavLink>? links)
+    {
+        if (links is null)
+            return new List<NavLink>();
+
+        var filtered = new List<NavLink>();
+        foreach (var link in links)
+        {
+            if (link is null)
+                continue;
+
+            if (string.IsNullOrWhiteSpace(link.Href) || string.IsNullOrWhiteSpace(link.Text))
+                continue;
+
+            if (!IsSafeHref(link.Href))
+                continue;
+
+            filtered.Add(link);
+        }
+
+        return filtered;
+    }
+
+    private void ApplyNavConfig(SiteNavConfig config, bool primaryDefined, bool linksDefined)
+    {
+        var primarySource = config.Primary;
+        if (!primaryDefined && linksDefined && config.Links.Count > 0)
+        {
+            primarySource = config.Links;
+        }
+
+        var primaryLinks = FilterLinks(primarySource);
+        if (primaryLinks.Count == 0)
+        {
+            if (primaryDefined)
+            {
+                _primaryLinks = Array.Empty<NavLink>();
+            }
+            else
+            {
+                Logger?.LogWarning("Navigation config missing primary links. Using defaults.");
+                _primaryLinks = DefaultPrimaryLinks;
+            }
+        }
+        else
+        {
+            _primaryLinks = primaryLinks;
+        }
+
+        var footer = config.Footer ?? DefaultFooter;
+        _footerLinks = new FooterNav
+        {
+            Product = FilterLinks(footer.Product),
+            Resources = FilterLinks(footer.Resources),
+            Company = FilterLinks(footer.Company)
+        };
+    }
+
+    private sealed record NavConfigCache(IReadOnlyList<NavLink> Primary, FooterNav Footer);
 
     private sealed record NavLink(string Href, string Text, bool Spa = false);
 

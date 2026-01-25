@@ -25,6 +25,31 @@ $headerLinkIndent = "                "
 $footerContainerIndent = "                "
 $footerLinkIndent = "                    "
 
+function Test-ExternalUrl {
+    param(
+        [string]$Href
+    )
+
+    if ([string]::IsNullOrWhiteSpace($Href)) { return $false }
+    $uri = $null
+    if ([Uri]::TryCreate($Href, [UriKind]::Absolute, [ref]$uri)) {
+        return $uri.Scheme -in @("http", "https")
+    }
+
+    return $false
+}
+
+function Test-SafeHref {
+    param(
+        [string]$Href
+    )
+
+    if ([string]::IsNullOrWhiteSpace($Href)) { return $false }
+    if (Test-ExternalUrl -Href $Href) { return $true }
+
+    return $Href.StartsWith("/") -or $Href.StartsWith("./") -or $Href.StartsWith("../") -or $Href.StartsWith("#")
+}
+
 function Format-LinkList {
     param(
         [object[]]$Links
@@ -35,7 +60,8 @@ function Format-LinkList {
         $href = $link.href
         $text = $link.text
         if (-not $href -or -not $text) { continue }
-        $isExternal = $href -match '^https?://'
+        if (-not (Test-SafeHref -Href $href)) { continue }
+        $isExternal = Test-ExternalUrl -Href $href
         $attrs = @()
         if ($isExternal) {
             $label = $text -replace '"', '&quot;'
