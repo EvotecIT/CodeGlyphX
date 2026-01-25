@@ -22,6 +22,7 @@ internal static class Program {
         runner.Run("QR (basic)", QrGenerationExample.Run);
         runner.Run("QR (payloads)", QrPayloadsExample.Run);
         runner.Run("QR (styling)", QrFancyExample.Run);
+        runner.Run("QR (style board)", QrStyleBoardExample.Run);
         runner.Run("QR (logo)", EvotecExamples.Run);
         runner.Run("QR (decode)", QrDecodeExample.Run);
         runner.Run("Decode (auto)", CodeGlyphDecodeExample.Run);
