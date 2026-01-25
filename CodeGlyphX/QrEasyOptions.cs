@@ -73,6 +73,21 @@ public sealed class QrEasyOptions {
     public Rgba32 Background { get; set; } = RenderDefaults.QrBackground;
 
     /// <summary>
+    /// Optional background gradient.
+    /// </summary>
+    public QrPngGradientOptions? BackgroundGradient { get; set; }
+
+    /// <summary>
+    /// Optional pattern overlay for the QR background area.
+    /// </summary>
+    public QrPngBackgroundPatternOptions? BackgroundPattern { get; set; }
+
+    /// <summary>
+    /// Background supersample factor for gradients/patterns (1 = disabled).
+    /// </summary>
+    public int BackgroundSupersample { get; set; } = 1;
+
+    /// <summary>
     /// Style preset for PNG rendering.
     /// </summary>
     public QrRenderStyle Style { get; set; } = QrRenderStyle.Default;
@@ -88,6 +103,11 @@ public sealed class QrEasyOptions {
     public double? ModuleScale { get; set; }
 
     /// <summary>
+    /// Overrides the module scale map.
+    /// </summary>
+    public QrPngModuleScaleMapOptions? ModuleScaleMap { get; set; }
+
+    /// <summary>
     /// Overrides the module corner radius in pixels.
     /// </summary>
     public int? ModuleCornerRadiusPx { get; set; }
@@ -96,6 +116,26 @@ public sealed class QrEasyOptions {
     /// Overrides the foreground gradient.
     /// </summary>
     public QrPngGradientOptions? ForegroundGradient { get; set; }
+
+    /// <summary>
+    /// Overrides the foreground palette.
+    /// </summary>
+    public QrPngPaletteOptions? ForegroundPalette { get; set; }
+
+    /// <summary>
+    /// Overrides palette zones.
+    /// </summary>
+    public QrPngPaletteZoneOptions? ForegroundPaletteZones { get; set; }
+
+    /// <summary>
+    /// Optional canvas options for sticker-style output.
+    /// </summary>
+    public QrPngCanvasOptions? Canvas { get; set; }
+
+    /// <summary>
+    /// Optional debug overlay options (PNG only).
+    /// </summary>
+    public QrPngDebugOptions? Debug { get; set; }
 
     /// <summary>
     /// Overrides eye (finder) styling.
