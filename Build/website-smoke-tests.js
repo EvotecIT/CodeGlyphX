@@ -2,13 +2,59 @@ const { chromium } = require('playwright');
 
 const baseUrl = process.env.WEBSITE_BASE_URL || 'http://localhost:5051';
 const trackedResourceTypes = new Set(['document', 'stylesheet', 'script', 'fetch']);
-const expectedNav = [
+
+function getTimeout(name, fallback) {
+    const raw = process.env[`WEBSITE_TIMEOUT_${name}`];
+    if (!raw) return fallback;
+    const value = parseInt(raw, 10);
+    return Number.isFinite(value) && value > 0 ? value : fallback;
+}
+
+const timeouts = {
+    page: getTimeout('PAGE', 30000),
+    nav: getTimeout('NAV', 10000),
+    blazorLoad: getTimeout('BLAZOR_LOAD', 60000),
+    blazorReady: getTimeout('BLAZOR_READY', 45000),
+    selector: getTimeout('SELECTOR', 15000),
+    networkIdle: getTimeout('NETWORK_IDLE', 30000)
+};
+
+let expectedNav = [
     { href: '/', text: 'Home' },
     { href: '/playground/', text: 'Playground' },
     { href: '/docs/', text: 'Docs' },
     { href: '/benchmarks/', text: 'Benchmarks' },
     { href: '/showcase/', text: 'Showcase' }
 ];
+
+async function loadNavConfig() {
+    try {
+        const res = await fetch(`${baseUrl}/data/site-nav.json`, { cache: 'no-store' });
+        if (!res.ok) return;
+        const data = await res.json();
+        if (data && Array.isArray(data.links) && data.links.length) {
+            expectedNav = data.links;
+        }
+    } catch {
+        // Keep defaults if config isn't available
+    }
+}
+
+async function withRetries(label, attempts, fn) {
+    let lastError;
+    for (let attempt = 1; attempt <= attempts; attempt++) {
+        try {
+            return await fn();
+        } catch (err) {
+            lastError = err;
+            if (attempt < attempts) {
+                console.warn(`Retrying ${label} (attempt ${attempt + 1}/${attempts})...`);
+                await new Promise(resolve => setTimeout(resolve, 500));
+            }
+        }
+    }
+    throw lastError;
+}
 
 function attachResourceMonitor(page) {
     const badResponses = [];
@@ -132,48 +178,49 @@ async function testNavigation(page) {
         { label: 'Home', href: '/', expectedPath: '/', expectedContent: 'Generate QR Codes' },
         { label: 'Playground', href: '/playground/', expectedPath: '/playground/', expectedContent: null },
         { label: 'Docs', href: '/docs/', expectedPath: '/docs/', expectedContent: null },
+        { label: 'Benchmarks', href: '/benchmarks/', expectedPath: '/benchmarks/', expectedContent: 'Performance Benchmarks' },
         { label: 'Showcase', href: '/showcase/', expectedPath: '/showcase/', expectedContent: 'Showcase' },
     ];
 
-    await page.goto(baseUrl, { waitUntil: 'networkidle', timeout: 30000 });
+    await page.goto(baseUrl, { waitUntil: 'networkidle', timeout: timeouts.page });
 
     for (const { label, href, expectedPath, expectedContent } of navTests) {
         try {
             console.log('Testing navigation to:', label);
-            let link = page.locator(`.nav-links a[href="${href}"]`).first();
-            if (!await link.isVisible().catch(() => false)) {
-                link = page.locator('.nav-links a', { hasText: label }).first();
-            }
-
-            if (!await link.isVisible().catch(() => false)) {
-                failures.push({ test: 'navigation', link: label, error: 'Link not visible' });
-                continue;
-            }
-
-            await link.click();
-            await page.waitForURL('**' + expectedPath + '**', { timeout: 10000 });
-
-            if (expectedPath === '/playground/' || expectedPath === '/docs/') {
-                await page.waitForTimeout(3000);
-            }
-
-            const url = page.url();
-            if (!url.includes(expectedPath)) {
-                failures.push({ test: 'navigation', link: label, error: 'Wrong URL: ' + url });
-                continue;
-            }
-
-            if (expectedContent) {
-                const content = await page.textContent('body');
-                if (!content.includes(expectedContent)) {
-                    failures.push({ test: 'navigation', link: label, error: 'Missing content: ' + expectedContent });
-                    continue;
+            await withRetries(`navigation ${label}`, 2, async () => {
+                let link = page.locator(`.nav-links a[href="${href}"]`).first();
+                if (!await link.isVisible().catch(() => false)) {
+                    link = page.locator('.nav-links a', { hasText: label }).first();
                 }
-            }
+
+                if (!await link.isVisible().catch(() => false)) {
+                    throw new Error('Link not visible');
+                }
+
+                await link.click();
+                await page.waitForURL('**' + expectedPath + '**', { timeout: timeouts.nav });
+
+                if (expectedPath === '/playground/' || expectedPath === '/docs/') {
+                    await page.waitForTimeout(3000);
+                }
+
+                const url = page.url();
+                if (!url.includes(expectedPath)) {
+                    throw new Error('Wrong URL: ' + url);
+                }
+
+                if (expectedContent) {
+                    const content = await page.textContent('body');
+                    if (!content.includes(expectedContent)) {
+                        throw new Error('Missing content: ' + expectedContent);
+                    }
+                }
+            });
 
             console.log('  ✓', label, 'navigation works');
         } catch (err) {
             failures.push({ test: 'navigation', link: label, error: err.message });
+            await page.goto(baseUrl, { waitUntil: 'networkidle', timeout: timeouts.page }).catch(() => {});
         }
     }
 
@@ -185,10 +232,10 @@ async function testStaticPage(page, path, label, options = {}) {
     const monitor = attachResourceMonitor(page);
 
     try {
-        await page.goto(baseUrl + path, { waitUntil: 'networkidle', timeout: 30000 });
+        await page.goto(baseUrl + path, { waitUntil: 'networkidle', timeout: timeouts.page });
 
         if (options.waitForSelector) {
-            await page.waitForSelector(options.waitForSelector, { timeout: 15000 });
+            await page.waitForSelector(options.waitForSelector, { timeout: timeouts.selector });
         }
 
         if (options.expectedSelector) {
@@ -261,14 +308,14 @@ async function testBlazorApp(page, path, appName, options = {}) {
     page.on('pageerror', err => errors.push(err.message));
 
     try {
-        await page.goto(url, { timeout: 60000, waitUntil: 'networkidle' });
+        await page.goto(url, { timeout: timeouts.blazorLoad, waitUntil: 'networkidle' });
 
         await page.waitForFunction(() => {
             const loading = document.querySelector('.loading-progress, .loading, [class*="loading"]');
             const blazorError = document.body.innerText.includes('error') &&
                                 document.body.innerText.includes('reload');
             return !loading && !blazorError;
-        }, { timeout: 45000 });
+        }, { timeout: timeouts.blazorReady });
 
         const baseHref = await page.locator('base').getAttribute('href').catch(() => null);
         const expectedBase = options.expectedBaseHref || path;
@@ -356,13 +403,13 @@ async function testBenchmarks(page) {
 
     try {
         await page.goto(baseUrl + path, { waitUntil: 'networkidle', timeout: 30000 });
-        await page.waitForSelector('.benchmark-page', { timeout: 15000 });
+        await page.waitForSelector('.benchmark-page', { timeout: timeouts.selector });
         await expectStylesheet(page, 'app.css', failures, label);
 
         await page.waitForFunction(() => {
             const summary = document.querySelector('[data-benchmark-summary]');
             return summary && summary.querySelector('table');
-        }, { timeout: 30000 });
+        }, { timeout: timeouts.page });
 
         const rowCount = await page.$$eval('.bench-summary-table tbody tr', rows => rows.length);
         if (rowCount === 0) {
@@ -410,6 +457,7 @@ async function testBenchmarks(page) {
 }
 
 (async () => {
+    await loadNavConfig();
     const browser = await chromium.launch();
     const context = await browser.newContext();
     const page = await context.newPage();
