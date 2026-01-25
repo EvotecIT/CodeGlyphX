@@ -477,6 +477,22 @@ var opts = new QrEasyOptions {
 QR.Save("https://example.com", "qr-styled.png", opts);
 ```
 
+### High-resolution output (print / large displays)
+
+For large displays or print, render at a higher pixel size using `TargetSizePx` or a larger `ModuleSize`.
+Vector output (SVG/PDF) is ideal when your style stays vector-friendly (no gradients/palettes/logos).
+
+```csharp
+using CodeGlyphX;
+
+var opts = new QrEasyOptions {
+    TargetSizePx = 1200,
+    TargetSizeIncludesQuietZone = true,
+    BackgroundSupersample = 2 // smoother gradients/patterns
+};
+QR.Save("https://example.com", "qr-1200.png", opts);
+```
+
 ```csharp
 using CodeGlyphX;
 using CodeGlyphX.Rendering;
