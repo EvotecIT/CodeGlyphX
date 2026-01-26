@@ -10,6 +10,8 @@ using CodeGlyphX.Rendering.Png;
 namespace CodeGlyphX.Examples;
 
 internal static class QrStyleBoardExample {
+    private const int StyleBoardTargetSizePx = 384;
+
     public static void Run(string outputDir) {
         var dir = Path.Combine(outputDir, "qr-style-board");
         Directory.CreateDirectory(dir);
@@ -180,7 +182,8 @@ internal static class QrStyleBoardExample {
         byte[]? logo = null) {
         return new QrEasyOptions {
             ErrorCorrectionLevel = QrErrorCorrectionLevel.H,
-            TargetSizePx = 1200,
+            // Web-friendly size: keeps assets lightweight while remaining crisp in the grid.
+            TargetSizePx = StyleBoardTargetSizePx,
             TargetSizeIncludesQuietZone = true,
             ModuleSize = 10,
             QuietZone = 4,

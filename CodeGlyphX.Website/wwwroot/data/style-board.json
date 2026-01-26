@@ -1,0 +1,82 @@
+﻿[
+  {
+    "name": "Neon Dot",
+    "file": "neon-dot.png",
+    "payload": "https://example.com/neon-dot"
+  },
+  {
+    "name": "Candy Checker",
+    "file": "candy-checker.png",
+    "payload": "https://example.com/candy"
+  },
+  {
+    "name": "Pastel Rings",
+    "file": "pastel-rings.png",
+    "payload": "https://example.com/pastel"
+  },
+  {
+    "name": "Ocean Grid",
+    "file": "ocean-grid.png",
+    "payload": "https://example.com/ocean"
+  },
+  {
+    "name": "Mono Badge",
+    "file": "mono-badge.png",
+    "payload": "https://example.com/mono"
+  },
+  {
+    "name": "Bracket Tech",
+    "file": "bracket-tech.png",
+    "payload": "https://example.com/bracket"
+  },
+  {
+    "name": "Sunset Sticker",
+    "file": "sunset-sticker.png",
+    "payload": "https://example.com/sunset"
+  },
+  {
+    "name": "Aurora",
+    "file": "aurora.png",
+    "payload": "https://example.com/aurora"
+  },
+  {
+    "name": "Mint Board",
+    "file": "mint-board.png",
+    "payload": "https://example.com/mint"
+  },
+  {
+    "name": "Deep Space",
+    "file": "deep-space.png",
+    "payload": "https://example.com/space"
+  },
+  {
+    "name": "Leaf Bloom",
+    "file": "leaf-bloom.png",
+    "payload": "https://example.com/leaf"
+  },
+  {
+    "name": "Wave Pulse",
+    "file": "wave-pulse.png",
+    "payload": "https://example.com/wave"
+  },
+  {
+    "name": "Ink Blob",
+    "file": "ink-blob.png",
+    "payload": "https://example.com/blob"
+  },
+  {
+    "name": "Soft Diamond",
+    "file": "soft-diamond.png",
+    "payload": "https://example.com/soft-diamond"
+  },
+  {
+    "name": "Sticker Grid",
+    "file": "sticker-grid.png",
+    "payload": "https://example.com/sticker-grid"
+  },
+  {
+    "name": "Center Pop",
+    "file": "center-pop.png",
+    "payload": "https://example.com/center"
+  }
+]
