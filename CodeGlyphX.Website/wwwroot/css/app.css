@@ -2466,8 +2466,12 @@ body.using-keyboard .docs-static h1:focus-visible {
 }
 
 .docs-content h1 {
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
+    font-size: clamp(2.25rem, 4vw, 3rem);
+    margin-bottom: 0.75rem;
+    background: linear-gradient(135deg, var(--text) 0%, var(--primary-light) 50%, var(--secondary) 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
 }
 
 .docs-content h2 {
@@ -3457,8 +3461,12 @@ body.using-keyboard .faq-hero h1:focus-visible {
 }
 
 .benchmark-hero h1 {
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
+    font-size: clamp(2.25rem, 4vw, 3rem);
+    margin-bottom: 0.75rem;
+    background: linear-gradient(135deg, var(--text) 0%, var(--primary-light) 50%, var(--secondary) 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
 }
 
 .benchmark-intro {
