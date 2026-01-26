@@ -2050,14 +2050,6 @@ body.using-keyboard .showcase-hero h1:focus-visible {
     }
 }
 
-@media (min-width: 901px) {
-    .playground-preview-card {
-        position: sticky;
-        top: 6rem;
-        align-self: start;
-    }
-}
-
 .playground .card {
     background: var(--bg-card);
     border: 1px solid var(--border);
@@ -3042,6 +3034,15 @@ section {
 
 .playground .card:hover::before {
     opacity: 1;
+}
+
+@media (min-width: 901px) {
+    .playground .playground-preview-card {
+        position: sticky;
+        top: 6rem;
+        align-self: start;
+        z-index: 1;
+    }
 }
 
 /* ============================================
