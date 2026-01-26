@@ -35,6 +35,7 @@
                 <a href="/docs/code128" class="@(Section == "code128" ? "active" : "")">Code 128 / GS1-128</a>
                 <a href="/docs/code39" class="@(Section == "code39" ? "active" : "")">Code 39 / 93</a>
                 <a href="/docs/ean-upc" class="@(Section == "ean-upc" ? "active" : "")">EAN / UPC</a>
+                <a href="/docs/other-1d" class="@(Section == "other-1d" ? "active" : "")">Other 1D Symbologies</a>
             </div>
 
             <div class="docs-nav-section">
@@ -522,7 +523,7 @@ var options = new QrEasyOptions
     }
 };
 
-QR.Save("https://codeglyphx.com/docs/?style=neon-dot#styling-options", "neon-dot.png", options);</pre>
+QR.Save("https://codeglyphx.com/docs/qr?style=neon-dot#styling-options", "neon-dot.png", options);</pre>
         }
         else if (Section == "payloads")
         {
@@ -918,6 +919,58 @@ Barcode.Save(BarcodeType.UpcE, "01234565", "upce.png");</pre>
                     </tr>
                 </tbody>
             </table>
+        }
+        else if (Section == "other-1d")
+        {
+            <h1>Other 1D Barcodes</h1>
+            <p>CodeGlyphX supports a wide range of additional 1D symbologies beyond the most common retail formats.</p>
+
+            <h2>Supported Types</h2>
+            <table style="width: 100%; border-collapse: collapse; margin: 1rem 0;">
+                <thead>
+                    <tr style="border-bottom: 1px solid var(--border);">
+                        <th style="text-align: left; padding: 0.75rem;">Category</th>
+                        <th style="text-align: left; padding: 0.75rem;">Symbologies</th>
+                        <th style="text-align: left; padding: 0.75rem;">Notes</th>
+                    </tr>
+                </thead>
+                <tbody style="color: var(--text-muted);">
+                    <tr style="border-bottom: 1px solid var(--border);">
+                        <td style="padding: 0.75rem;">Interleaved / 2-of-5</td>
+                        <td style="padding: 0.75rem;">ITF, ITF-14, Industrial 2-of-5, Matrix 2-of-5, IATA 2-of-5</td>
+                        <td style="padding: 0.75rem;">Logistics, cartons, older systems</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid var(--border);">
+                        <td style="padding: 0.75rem;">Specialty / Legacy</td>
+                        <td style="padding: 0.75rem;">Codabar, MSI, Code 11, Plessey, Telepen, Code 32</td>
+                        <td style="padding: 0.75rem;">Warehousing, libraries, healthcare</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid var(--border);">
+                        <td style="padding: 0.75rem;">Pharma</td>
+                        <td style="padding: 0.75rem;">Pharmacode (one-track), Pharmacode (two-track)</td>
+                        <td style="padding: 0.75rem;">Packaging and pharmaceuticals</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid var(--border);">
+                        <td style="padding: 0.75rem;">Postal</td>
+                        <td style="padding: 0.75rem;">POSTNET, PLANET, Royal Mail 4-State, Australia Post, Japan Post, USPS IMB</td>
+                        <td style="padding: 0.75rem;">Mail sorting and postal services</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 0.75rem;">GS1 DataBar</td>
+                        <td style="padding: 0.75rem;">DataBar Truncated, Omni, Stacked, Expanded, Expanded Stacked</td>
+                        <td style="padding: 0.75rem;">Small-package retail and coupons</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>Examples</h2>
+            <pre class="code-block">using CodeGlyphX;
+
+Barcode.Save(BarcodeType.ITF14, "12345678901231", "itf14.png");
+Barcode.Save(BarcodeType.Codabar, "A40156B", "codabar.png");
+Barcode.Save(BarcodeType.Telepen, "TELEPEN-123", "telepen.png");
+Barcode.Save(BarcodeType.GS1DataBarExpanded, "01095011015300031725010110ABC123", "gs1-expanded.png");
+Barcode.Save(BarcodeType.UspsImb, "0123456709498765432101234567891", "usps-imb.png");</pre>
         }
         else if (Section == "decoding")
         {
