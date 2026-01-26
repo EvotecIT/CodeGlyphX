@@ -23,7 +23,7 @@ internal static class ImageDecodeHelper {
         var dstHeight = Math.Max(1, (int)Math.Round(height * scale));
         if (dstWidth == width && dstHeight == height) return true;
 
-        var scaled = ImageScaler.ResizeToFitNearest(
+        var scaled = ImageScaler.ResizeToFitBox(
             rgba,
             width,
             height,

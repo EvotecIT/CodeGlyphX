@@ -32,6 +32,7 @@ internal static partial class QrPixelDecoder {
         double moduleSizePx,
         Func<QrDecoded, bool>? accept,
         bool aggressive,
+        bool stylized,
         DecodeBudget budget,
         out QrDecoded result,
         out global::CodeGlyphX.QrDecodeDiagnostics moduleDiagnostics) {
@@ -59,8 +60,10 @@ internal static partial class QrPixelDecoder {
                 moduleSizePx,
                 accept,
                 budget,
+                aggressive,
                 loose: false,
                 centerSampling: false,
+                ringSampling: false,
                 out result,
                 out moduleDiagnostics)) {
             return true;
@@ -87,8 +90,10 @@ internal static partial class QrPixelDecoder {
                 moduleSizePx,
                 accept,
                 budget,
+                aggressive,
                 loose: true,
                 centerSampling: false,
+                ringSampling: false,
                 out result,
                 out looseDiag)) {
             moduleDiagnostics = looseDiag;
@@ -115,8 +120,10 @@ internal static partial class QrPixelDecoder {
                     moduleSizePx,
                     accept,
                     budget,
+                    aggressive,
                     loose: false,
                     centerSampling: true,
+                    ringSampling: false,
                     out result,
                     out var centerDiag)) {
                 moduleDiagnostics = centerDiag;
@@ -143,8 +150,10 @@ internal static partial class QrPixelDecoder {
                     moduleSizePx,
                     accept,
                     budget,
+                    aggressive,
                     loose: true,
                     centerSampling: true,
+                    ringSampling: false,
                     out result,
                     out centerLooseDiag)) {
                 moduleDiagnostics = centerLooseDiag;
@@ -153,6 +162,69 @@ internal static partial class QrPixelDecoder {
 
             best = Better(best, centerDiag);
             best = Better(best, centerLooseDiag);
+        }
+
+        if (stylized && moduleSizePx >= 1.1 && !budget.IsNearDeadline(150)) {
+            if (TrySampleWithCornersInternal(
+                    image,
+                    invert,
+                    phaseX,
+                    phaseY,
+                    dimension,
+                    scratch,
+                    cornerTlX,
+                    cornerTlY,
+                    cornerTrX,
+                    cornerTrY,
+                    cornerBrX,
+                    cornerBrY,
+                    cornerBlX,
+                    cornerBlY,
+                    moduleSizePx,
+                    accept,
+                    budget,
+                    aggressive,
+                    loose: false,
+                    centerSampling: false,
+                    ringSampling: true,
+                    out result,
+                    out var ringDiag)) {
+                moduleDiagnostics = ringDiag;
+                return true;
+            }
+
+            var ringLooseDiag = default(global::CodeGlyphX.QrDecodeDiagnostics);
+            if (ShouldTryLooseSampling(ringDiag, moduleSizePx) &&
+                TrySampleWithCornersInternal(
+                    image,
+                    invert,
+                    phaseX,
+                    phaseY,
+                    dimension,
+                    scratch,
+                    cornerTlX,
+                    cornerTlY,
+                    cornerTrX,
+                    cornerTrY,
+                    cornerBrX,
+                    cornerBrY,
+                    cornerBlX,
+                    cornerBlY,
+                    moduleSizePx,
+                    accept,
+                    budget,
+                    aggressive,
+                    loose: true,
+                    centerSampling: false,
+                    ringSampling: true,
+                    out result,
+                    out ringLooseDiag)) {
+                moduleDiagnostics = ringLooseDiag;
+                return true;
+            }
+
+            best = Better(best, ringDiag);
+            best = Better(best, ringLooseDiag);
         }
 
         moduleDiagnostics = best;
@@ -177,8 +249,10 @@ internal static partial class QrPixelDecoder {
         double moduleSizePx,
         Func<QrDecoded, bool>? accept,
         DecodeBudget budget,
+        bool aggressive,
         bool loose,
         bool centerSampling,
+        bool ringSampling,
         out QrDecoded result,
         out global::CodeGlyphX.QrDecodeDiagnostics moduleDiagnostics) {
         result = null!;
@@ -198,6 +272,7 @@ internal static partial class QrPixelDecoder {
         var bm = scratch;
         bm.Clear();
         var clampedLimit = dimension * 2;
+        var useRing = ringSampling && moduleSizePx >= 1.1;
         var mode = (centerSampling && moduleSizePx >= 1.25)
             ? 0
             : moduleSizePx >= 6.0
@@ -205,26 +280,32 @@ internal static partial class QrPixelDecoder {
                 : moduleSizePx >= 1.25
                     ? 2
                     : 3;
-        var delta = mode switch {
-            0 => QrPixelSampling.GetSampleDeltaCenterForModule(moduleSizePx),
-            1 => QrPixelSampling.GetSampleDelta5x5ForModule(moduleSizePx),
-            _ => QrPixelSampling.GetSampleDeltaForModule(moduleSizePx)
-        };
+        var delta = useRing
+            ? QrPixelSampling.GetSampleDeltaRingForModule(moduleSizePx)
+            : mode switch {
+                0 => QrPixelSampling.GetSampleDeltaCenterForModule(moduleSizePx),
+                1 => QrPixelSampling.GetSampleDelta5x5ForModule(moduleSizePx),
+                _ => QrPixelSampling.GetSampleDeltaForModule(moduleSizePx)
+            };
 
-        var sampledOk = mode switch {
-            0 => loose
-                ? SampleModules<Center3x3LooseSampler>(image, invert, transform, dimension, phaseX, phaseY, bm, budget, clampedLimit, delta, out _)
-                : SampleModules<Center3x3Sampler>(image, invert, transform, dimension, phaseX, phaseY, bm, budget, clampedLimit, delta, out _),
-            1 => loose
-                ? SampleModules<Nearest25LooseSampler>(image, invert, transform, dimension, phaseX, phaseY, bm, budget, clampedLimit, delta, out _)
-                : SampleModules<Nearest25Sampler>(image, invert, transform, dimension, phaseX, phaseY, bm, budget, clampedLimit, delta, out _),
-            2 => loose
-                ? SampleModules<Nearest9LooseSampler>(image, invert, transform, dimension, phaseX, phaseY, bm, budget, clampedLimit, delta, out _)
-                : SampleModules<Nearest9Sampler>(image, invert, transform, dimension, phaseX, phaseY, bm, budget, clampedLimit, delta, out _),
-            _ => loose
+        var sampledOk = useRing
+            ? (loose
                 ? SampleModules<NinePxLooseSampler>(image, invert, transform, dimension, phaseX, phaseY, bm, budget, clampedLimit, delta, out _)
-                : SampleModules<NinePxSampler>(image, invert, transform, dimension, phaseX, phaseY, bm, budget, clampedLimit, delta, out _)
-        };
+                : SampleModules<NinePxSampler>(image, invert, transform, dimension, phaseX, phaseY, bm, budget, clampedLimit, delta, out _))
+            : mode switch {
+                0 => loose
+                    ? SampleModules<Center3x3LooseSampler>(image, invert, transform, dimension, phaseX, phaseY, bm, budget, clampedLimit, delta, out _)
+                    : SampleModules<Center3x3Sampler>(image, invert, transform, dimension, phaseX, phaseY, bm, budget, clampedLimit, delta, out _),
+                1 => loose
+                    ? SampleModules<Nearest25LooseSampler>(image, invert, transform, dimension, phaseX, phaseY, bm, budget, clampedLimit, delta, out _)
+                    : SampleModules<Nearest25Sampler>(image, invert, transform, dimension, phaseX, phaseY, bm, budget, clampedLimit, delta, out _),
+                2 => loose
+                    ? SampleModules<Nearest9LooseSampler>(image, invert, transform, dimension, phaseX, phaseY, bm, budget, clampedLimit, delta, out _)
+                    : SampleModules<Nearest9Sampler>(image, invert, transform, dimension, phaseX, phaseY, bm, budget, clampedLimit, delta, out _),
+                _ => loose
+                    ? SampleModules<NinePxLooseSampler>(image, invert, transform, dimension, phaseX, phaseY, bm, budget, clampedLimit, delta, out _)
+                    : SampleModules<NinePxSampler>(image, invert, transform, dimension, phaseX, phaseY, bm, budget, clampedLimit, delta, out _)
+            };
 
         if (!sampledOk) return false;
 
@@ -533,6 +614,7 @@ internal static partial class QrPixelDecoder {
         bool invert,
         Func<QrDecoded, bool>? accept,
         bool aggressive,
+        bool stylized,
         DecodeBudget budget,
         out QrDecoded result,
         out QrPixelDecodeDiagnostics diagnostics,
@@ -698,15 +780,9 @@ internal static partial class QrPixelDecoder {
             maxVersion = 10;
         }
         if (maxVersion < 1) return false;
-        var maxDimension = maxVersion * 4 + 17;
-        const int maxQrDimension = 17 + 4 * 40;
-#pragma warning disable CA2014 // Stackalloc size is bounded by QR max version and not inside a loop.
-        Span<int> pxs = stackalloc int[maxQrDimension];
-        Span<int> pys = stackalloc int[maxQrDimension];
-#pragma warning restore CA2014
-
         // Try smaller versions first (more likely for OTP QR), but accept non-integer module sizes.
         var best = default(QrPixelDecodeDiagnostics);
+        Span<double> phases = stackalloc double[3];
         for (var version = 1; version <= maxVersion; version++) {
             if (checkBudget && budget.IsExpired) return false;
             var modulesCount = version * 4 + 17;
@@ -716,62 +792,66 @@ internal static partial class QrPixelDecoder {
 
             var relDiff = Math.Abs(moduleSizeX - moduleSizeY) / Math.Max(moduleSizeX, moduleSizeY);
             if (relDiff > 0.20) continue;
+            var moduleSize = (moduleSizeX + moduleSizeY) * 0.5;
+            var useRing = stylized && moduleSize >= 1.25 && !(checkBudget && budget.IsNearDeadline(200));
+            var ringDelta = useRing ? QrPixelSampling.GetSampleDeltaRingForModule(moduleSize) : 0.0;
 
-            var bm = new global::CodeGlyphX.BitMatrix(modulesCount, modulesCount);
-            var bmWords = bm.Words;
-            var bmWidth = modulesCount;
-            var pxsSpan = pxs.Slice(0, modulesCount);
-            var pysSpan = pys.Slice(0, modulesCount);
-            var sx = minX + 0.5 * moduleSizeX;
-            for (var mx = 0; mx < modulesCount; mx++) {
-                var px = QrMath.RoundToInt(sx);
-                if (px < 0) px = 0;
-                else if (px >= width) px = width - 1;
-                pxsSpan[mx] = px;
-                sx += moduleSizeX;
+            phases[0] = 0.5;
+            var phaseCount = 1;
+            if (aggressive && moduleSize >= 2.0 && !(checkBudget && budget.IsNearDeadline(150))) {
+                phases[phaseCount++] = 0.42;
+                phases[phaseCount++] = 0.58;
             }
-            var sy = minY + 0.5 * moduleSizeY;
-            for (var my = 0; my < modulesCount; my++) {
-                var py = QrMath.RoundToInt(sy);
-                if (py < 0) py = 0;
-                else if (py >= height) py = height - 1;
-                pysSpan[my] = py;
-                sy += moduleSizeY;
-            }
-            for (var my = 0; my < modulesCount; my++) {
+
+            for (var p = 0; p < phaseCount; p++) {
                 if (checkBudget && budget.IsExpired) return false;
-                var py = pysSpan[my];
+                var phase = phases[p];
+                var bm = new global::CodeGlyphX.BitMatrix(modulesCount, modulesCount);
+                var bmWords = bm.Words;
+                var bmWidth = modulesCount;
 
-                var rowOffset = my * bmWidth;
-                var wordIndex = rowOffset >> 5;
-                var bitMask = 1u << (rowOffset & 31);
-                for (var mx = 0; mx < modulesCount; mx++) {
-                    var px = pxsSpan[mx];
-                    if (SampleMajority3x3(image, px, py, invert)) {
-                        bmWords[wordIndex] |= bitMask;
-                    }
+                for (var my = 0; my < modulesCount; my++) {
+                    if (checkBudget && budget.IsExpired) return false;
+                    var sy = minY + (my + phase) * moduleSizeY;
 
-                    bitMask <<= 1;
-                    if (bitMask == 0) {
-                        bitMask = 1u;
-                        wordIndex++;
+                    var rowOffset = my * bmWidth;
+                    var wordIndex = rowOffset >> 5;
+                    var bitMask = 1u << (rowOffset & 31);
+                    for (var mx = 0; mx < modulesCount; mx++) {
+                        var sx = minX + (mx + phase) * moduleSizeX;
+                        var isBlack = moduleSize >= 2.0
+                            ? (useRing
+                                ? QrPixelSampling.SampleModule9PxWithDelta(image, sx, sy, invert, ringDelta)
+                                : QrPixelSampling.SampleModule9Px(image, sx, sy, invert, moduleSize))
+                            : (useRing
+                                ? QrPixelSampling.SampleModule9PxWithDelta(image, sx, sy, invert, ringDelta)
+                                : QrPixelSampling.SampleModuleMajority3x3(image, sx, sy, invert));
+                        if (isBlack) {
+                            bmWords[wordIndex] |= bitMask;
+                        }
+
+                        bitMask <<= 1;
+                        if (bitMask == 0) {
+                            bitMask = 1u;
+                            wordIndex++;
+                        }
                     }
                 }
-            }
 
-            if (checkBudget && budget.IsNearDeadline(120)) return false;
-            if (TryDecodeWithInversion(bm, accept, budget, out result, out var moduleDiag)) {
-                diagnostics = new QrPixelDecodeDiagnostics(scale, threshold, invert, candidateCount, candidateTriplesTried, modulesCount, moduleDiag);
-                return true;
-            }
-            best = Better(best, new QrPixelDecodeDiagnostics(scale, threshold, invert, candidateCount, candidateTriplesTried, modulesCount, moduleDiag));
+                if (checkBudget && budget.IsNearDeadline(120)) return false;
+                if (TryDecodeWithInversion(bm, accept, budget, out result, out var moduleDiag)) {
+                    diagnostics = new QrPixelDecodeDiagnostics(scale, threshold, invert, candidateCount, candidateTriplesTried, modulesCount, moduleDiag);
+                    return true;
+                }
+                best = Better(best, new QrPixelDecodeDiagnostics(scale, threshold, invert, candidateCount, candidateTriplesTried, modulesCount, moduleDiag));
 
-            if (checkBudget && budget.IsNearDeadline(120)) return false;
-            if (TryDecodeByRotations(bm, accept, budget, out result, out var moduleDiagRot)) {
-                diagnostics = new QrPixelDecodeDiagnostics(scale, threshold, invert, candidateCount, candidateTriplesTried, modulesCount, moduleDiagRot);
-                return true;
+                if (checkBudget && budget.IsNearDeadline(120)) return false;
+                if (TryDecodeByRotations(bm, accept, budget, out result, out var moduleDiagRot)) {
+                    diagnostics = new QrPixelDecodeDiagnostics(scale, threshold, invert, candidateCount, candidateTriplesTried, modulesCount, moduleDiagRot);
+                    return true;
+                }
+                best = Better(best, new QrPixelDecodeDiagnostics(scale, threshold, invert, candidateCount, candidateTriplesTried, modulesCount, moduleDiagRot));
             }
-            best = Better(best, new QrPixelDecodeDiagnostics(scale, threshold, invert, candidateCount, candidateTriplesTried, modulesCount, moduleDiagRot));
         }
 
         diagnostics = best;

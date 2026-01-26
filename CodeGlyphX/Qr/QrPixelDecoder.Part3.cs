@@ -97,7 +97,8 @@ internal static partial class QrPixelDecoder {
         Func<QrDecoded, bool>? accept,
         List<QrFinderPatternDetector.FinderPattern> candidates,
         DecodeBudget budget,
-        bool aggressive) {
+        bool aggressive,
+        bool stylized) {
         if (budget.IsExpired) return;
         Func<bool>? shouldStop = budget.Enabled ? () => budget.IsExpired : null;
         var tightBudget = budget.Enabled && budget.MaxMilliseconds <= 800;
@@ -108,7 +109,7 @@ internal static partial class QrPixelDecoder {
             rowStepOverride = minDim >= 720 ? 3 : 2;
             maxCandidates = aggressive ? 36 : 24;
         }
-        QrFinderPatternDetector.FindCandidates(image, invert, candidates, aggressive, shouldStop, rowStepOverride, maxCandidates, allowFullScan: !tightBudget, requireDiagonalCheck: !tightBudget);
+        QrFinderPatternDetector.FindCandidates(image, invert, candidates, aggressive, shouldStop, rowStepOverride, maxCandidates, allowFullScan: !tightBudget, requireDiagonalCheck: !tightBudget && !aggressive);
         var candidatesSorted = false;
         if (budget.Enabled && candidates.Count > 64) {
             candidates.Sort(static (a, b) => b.Count.CompareTo(a.Count));
@@ -117,12 +118,13 @@ internal static partial class QrPixelDecoder {
         }
         if (budget.IsExpired) return;
         if (candidates.Count >= 3) {
-            CollectFromFinderCandidates(image, invert, candidates, results, seen, accept, budget, aggressive, candidatesSorted);
+            CollectFromFinderCandidates(image, invert, candidates, results, seen, accept, budget, aggressive, stylized, candidatesSorted);
         }
 
         if (!budget.IsExpired && (!budget.Enabled || !budget.IsNearDeadline(200))) {
             CollectFromComponents(image, invert, results, seen, accept, budget);
         }
+
     }
 
     private static void CollectFromFinderCandidates(
@@ -134,13 +136,14 @@ internal static partial class QrPixelDecoder {
         Func<QrDecoded, bool>? accept,
         DecodeBudget budget,
         bool aggressive,
+        bool stylized,
         bool candidatesSorted) {
         var totalCandidates = candidates.Count;
         if (candidatesSorted || totalCandidates <= 10) {
             if (!candidatesSorted) {
                 candidates.Sort(static (a, b) => b.Count.CompareTo(a.Count));
             }
-            CollectFromFinderCandidatesCore(image, invert, CollectionsMarshal.AsSpan(candidates), totalCandidates, results, seen, accept, budget, aggressive);
+            CollectFromFinderCandidatesCore(image, invert, CollectionsMarshal.AsSpan(candidates), totalCandidates, results, seen, accept, budget, aggressive, stylized);
             return;
         }
 
@@ -159,7 +162,7 @@ internal static partial class QrPixelDecoder {
             top[insertPos] = candidate;
             if (topCount < 10) topCount++;
         }
-        CollectFromFinderCandidatesCore(image, invert, top.Slice(0, topCount), totalCandidates, results, seen, accept, budget, aggressive);
+        CollectFromFinderCandidatesCore(image, invert, top.Slice(0, topCount), totalCandidates, results, seen, accept, budget, aggressive, stylized);
     }
 
     private static void CollectFromFinderCandidatesCore(
@@ -171,7 +174,8 @@ internal static partial class QrPixelDecoder {
         HashSet<byte[]> seen,
         Func<QrDecoded, bool>? accept,
         DecodeBudget budget,
-        bool aggressive) {
+        bool aggressive,
+        bool stylized) {
         var n = Math.Min(candidateSpan.Length, 10);
         var triedTriples = 0;
         var maxTriples = 48;
@@ -195,7 +199,7 @@ internal static partial class QrPixelDecoder {
                     if (msMin <= 0) continue;
                     if (msMax > msMin * 1.75) continue;
 
-                    if (!TryOrderAsTlTrBl(a, b, c, out var tl, out var tr, out var bl)) continue;
+                    if (!TryOrderAsTlTrBl(a, b, c, 1.8, out var tl, out var tr, out var bl)) continue;
                     if (TrySampleAndDecode(
                             scale: 1,
                             threshold: image.Threshold,
@@ -208,6 +212,7 @@ internal static partial class QrPixelDecoder {
                             triedTriples,
                             accept,
                             aggressive,
+                            stylized,
                             budget,
                             out var decoded,
                             out _)) {
@@ -227,7 +232,7 @@ internal static partial class QrPixelDecoder {
         DecodeBudget budget) {
         if (budget.IsExpired) return;
         Func<bool>? shouldStop = budget.Enabled ? () => budget.IsExpired : null;
-        using var comps = FindComponents(image, invert, shouldStop);
+        using var comps = FindComponents(image, invert, shouldStop, minAreaDivisor: 400, minComponentSize: 21);
         if (comps.Count == 0) return;
 
         const int maxTry = 12;
@@ -262,7 +267,7 @@ internal static partial class QrPixelDecoder {
             if (bmaxX >= image.Width) bmaxX = image.Width - 1;
             if (bmaxY >= image.Height) bmaxY = image.Height - 1;
 
-            if (TryDecodeByBoundingBox(scale: 1, threshold: image.Threshold, image, invert, accept, aggressive: false, budget, out var decoded, out _, candidateCount: 0, candidateTriplesTried: 0, bminX, bminY, bmaxX, bmaxY)) {
+            if (TryDecodeByBoundingBox(scale: 1, threshold: image.Threshold, image, invert, accept, aggressive: false, stylized: false, budget, out var decoded, out _, candidateCount: 0, candidateTriplesTried: 0, bminX, bminY, bmaxX, bmaxY)) {
                 AddResult(results, seen, decoded, accept);
             }
         }
@@ -318,7 +323,7 @@ internal static partial class QrPixelDecoder {
         }
     }
 
-    private static bool TryDecodeFromGray(int scale, byte threshold, QrGrayImage image, bool invert, List<QrFinderPatternDetector.FinderPattern> candidates, Func<QrDecoded, bool>? accept, bool aggressive, DecodeBudget budget, out QrDecoded result, out QrPixelDecodeDiagnostics diagnostics) {
+    private static bool TryDecodeFromGray(int scale, byte threshold, QrGrayImage image, bool invert, List<QrFinderPatternDetector.FinderPattern> candidates, Func<QrDecoded, bool>? accept, bool aggressive, bool stylized, DecodeBudget budget, out QrDecoded result, out QrPixelDecodeDiagnostics diagnostics) {
         result = null!;
         diagnostics = default;
 
@@ -331,12 +336,14 @@ internal static partial class QrPixelDecoder {
         if (tightBudget) {
             var minDim = image.Width < image.Height ? image.Width : image.Height;
             rowStepOverride = minDim >= 720 ? 3 : 2;
+        } else if (aggressive) {
+            rowStepOverride = 1;
         }
         var maxCandidates = 0;
         if (tightBudget) {
             maxCandidates = aggressive ? 36 : 24;
         }
-        QrFinderPatternDetector.FindCandidates(image, invert, candidates, aggressive, shouldStop, rowStepOverride, maxCandidates, allowFullScan: !tightBudget, requireDiagonalCheck: !tightBudget);
+        QrFinderPatternDetector.FindCandidates(image, invert, candidates, aggressive, shouldStop, rowStepOverride, maxCandidates, allowFullScan: !tightBudget, requireDiagonalCheck: !tightBudget && !aggressive);
         var candidatesSorted = false;
         if (budget.Enabled && candidates.Count > 64) {
             candidates.Sort(static (a, b) => b.Count.CompareTo(a.Count));
@@ -351,24 +358,89 @@ internal static partial class QrPixelDecoder {
 
         if (candidates.Count >= 3) {
             if (tightBudget && candidates.Count > 16) {
-                if (TryDecodeByCandidateBounds(scale, threshold, image, invert, candidates, accept, aggressive, budget, out result, out var diagBounds)) {
+                if (TryDecodeByCandidateBounds(scale, threshold, image, invert, candidates, accept, aggressive, stylized, budget, out result, out var diagBounds)) {
                     diagnostics = diagBounds;
                     return true;
                 }
                 diagnostics = Better(diagnostics, diagBounds);
                 return false;
             }
-            if (TryDecodeFromFinderCandidates(scale, threshold, image, invert, candidates, candidatesSorted, accept, aggressive, budget, out result, out var diagF)) {
+            if (TryDecodeFromFinderCandidates(scale, threshold, image, invert, candidates, candidatesSorted, accept, aggressive, stylized, budget, out result, out var diagF)) {
                 diagnostics = diagF;
                 return true;
             }
             diagnostics = Better(diagnostics, diagF);
 
-            if (TryDecodeByCandidateBounds(scale, threshold, image, invert, candidates, accept, aggressive, budget, out result, out var diagC)) {
+            if (TryDecodeByCandidateBounds(scale, threshold, image, invert, candidates, accept, aggressive, stylized, budget, out result, out var diagC)) {
                 diagnostics = diagC;
                 return true;
             }
             diagnostics = Better(diagnostics, diagC);
+
+            if (aggressive && !budget.IsNearDeadline(200)) {
+                var diagRelaxed = default(QrPixelDecodeDiagnostics);
+                if (TryDecodeFromFinderCandidates(
+                        scale,
+                        threshold,
+                        image,
+                        invert,
+                        candidates,
+                        candidatesSorted,
+                        accept,
+                        aggressive,
+                        stylized,
+                        budget,
+                        out result,
+                        out diagRelaxed,
+                        moduleRatioLimit: 2.4,
+                        sideRatioLimit: 2.4,
+                        maxTriplesOverride: 320,
+                        maxCandidatesOverride: 24)) {
+                    diagnostics = diagRelaxed;
+                    return true;
+                }
+                diagnostics = Better(diagnostics, diagRelaxed);
+            }
+        }
+
+        if (aggressive && !budget.IsNearDeadline(200)) {
+            var diagComponents = default(QrPixelDecodeDiagnostics);
+            if (TryDecodeFromComponentFinders(scale, threshold, image, invert, accept, aggressive, stylized, budget, out result, out diagComponents)) {
+                diagnostics = diagComponents;
+                return true;
+            }
+            diagnostics = Better(diagnostics, diagComponents);
+        }
+
+        if (aggressive && !budget.IsNearDeadline(250)) {
+            var diagTemplate = default(QrPixelDecodeDiagnostics);
+            if (TryDecodeFromTemplateFinders(scale, threshold, image, invert, accept, aggressive, stylized, budget, out result, out diagTemplate)) {
+                diagnostics = diagTemplate;
+                return true;
+            }
+            diagnostics = Better(diagnostics, diagTemplate);
+
+            if (!budget.IsNearDeadline(250)) {
+                var closed = image.WithBinaryClose(1);
+                if (!ReferenceEquals(closed.Gray, image.Gray)) {
+                    if (TryDecodeFromTemplateFinders(scale, closed.Threshold, closed, invert, accept, aggressive, stylized, budget, out result, out diagTemplate)) {
+                        diagnostics = diagTemplate;
+                        return true;
+                    }
+                    diagnostics = Better(diagnostics, diagTemplate);
+                }
+            }
+
+            if (!budget.IsNearDeadline(250)) {
+                var edged = image.WithBinaryEdge(1);
+                if (!ReferenceEquals(edged.Gray, image.Gray)) {
+                    if (TryDecodeFromTemplateFinders(scale, edged.Threshold, edged, invert, accept, aggressive, stylized, budget, out result, out diagTemplate)) {
+                        diagnostics = diagTemplate;
+                        return true;
+                    }
+                    diagnostics = Better(diagnostics, diagTemplate);
+                }
+            }
         }
 
         if (candidates.Count > 0) {
@@ -377,7 +449,7 @@ internal static partial class QrPixelDecoder {
             }
             var maxSingleFinder = aggressive ? 20 : 30;
             if (candidates.Count <= maxSingleFinder) {
-                if (TryDecodeBySingleFinder(scale, threshold, image, invert, candidates, accept, aggressive, budget, out result, out var diagS)) {
+                if (TryDecodeBySingleFinder(scale, threshold, image, invert, candidates, accept, aggressive, stylized, budget, out result, out var diagS)) {
                     diagnostics = diagS;
                     return true;
                 }
@@ -396,15 +468,64 @@ internal static partial class QrPixelDecoder {
 
         // Connected-components fallback (helps when finder detection fails but a clean symbol exists).
         var diagCC = default(QrPixelDecodeDiagnostics);
-        if (!budget.IsExpired && TryDecodeByConnectedComponents(scale, threshold, image, invert, accept, aggressive, budget, out result, out diagCC)) {
+        if (!budget.IsExpired && TryDecodeByConnectedComponents(scale, threshold, image, invert, accept, aggressive, stylized, budget, out result, out diagCC)) {
             diagnostics = diagCC;
             return true;
         }
         diagnostics = Better(diagnostics, diagCC);
 
+        if (aggressive && !budget.IsNearDeadline(200)) {
+            var closed = image.WithBinaryClose(1);
+            var diagClosed = default(QrPixelDecodeDiagnostics);
+            if (!budget.IsExpired && TryDecodeByConnectedComponents(scale, closed.Threshold, closed, invert, accept, aggressive, stylized, budget, out result, out diagClosed)) {
+                diagnostics = diagClosed;
+                return true;
+            }
+            diagnostics = Better(diagnostics, diagClosed);
+
+            if (!budget.IsNearDeadline(200)) {
+                var closed2 = image.WithBinaryClose(2);
+                var diagClosed2 = default(QrPixelDecodeDiagnostics);
+                if (!budget.IsExpired && TryDecodeByConnectedComponents(scale, closed2.Threshold, closed2, invert, accept, aggressive, stylized, budget, out result, out diagClosed2)) {
+                    diagnostics = diagClosed2;
+                    return true;
+                }
+                diagnostics = Better(diagnostics, diagClosed2);
+            }
+        }
+
+        if (aggressive && !budget.IsNearDeadline(200)) {
+            var edge = image.WithBinaryEdge(1);
+            var diagEdge = default(QrPixelDecodeDiagnostics);
+            if (!budget.IsExpired && TryDecodeByConnectedComponents(scale, edge.Threshold, edge, invert, accept, aggressive, stylized, budget, out result, out diagEdge)) {
+                diagnostics = diagEdge;
+                return true;
+            }
+            diagnostics = Better(diagnostics, diagEdge);
+
+            if (!budget.IsNearDeadline(200)) {
+                var edgeClosed = edge.WithBinaryClose(1);
+                var diagEdgeClosed = default(QrPixelDecodeDiagnostics);
+                if (!budget.IsExpired && TryDecodeByConnectedComponents(scale, edgeClosed.Threshold, edgeClosed, invert, accept, aggressive, stylized, budget, out result, out diagEdgeClosed)) {
+                    diagnostics = diagEdgeClosed;
+                    return true;
+                }
+                diagnostics = Better(diagnostics, diagEdgeClosed);
+            }
+        }
+
+        if (aggressive && !budget.IsNearDeadline(250)) {
+            var diagSquares = default(QrPixelDecodeDiagnostics);
+            if (TryDecodeFromEdgeSquares(scale, threshold, image, invert, accept, aggressive, stylized, budget, out result, out diagSquares)) {
+                diagnostics = diagSquares;
+                return true;
+            }
+            diagnostics = Better(diagnostics, diagSquares);
+        }
+
         // Fallback: bounding box exact-fit (works for perfectly cropped/generated images).
         var diagB = default(QrPixelDecodeDiagnostics);
-        if (!budget.IsExpired && TryDecodeByBoundingBox(scale, threshold, image, invert, accept, aggressive, budget, out result, out diagB)) {
+        if (!budget.IsExpired && TryDecodeByBoundingBox(scale, threshold, image, invert, accept, aggressive, stylized, budget, out result, out diagB)) {
             diagnostics = diagB;
             return true;
         }
@@ -421,6 +542,7 @@ internal static partial class QrPixelDecoder {
         List<QrFinderPatternDetector.FinderPattern> candidates,
         Func<QrDecoded, bool>? accept,
         bool aggressive,
+        bool stylized,
         DecodeBudget budget,
         out QrDecoded result,
         out QrPixelDecodeDiagnostics diagnostics) {
@@ -458,7 +580,7 @@ internal static partial class QrPixelDecoder {
 
         if (bmaxX <= bminX || bmaxY <= bminY) return false;
 
-        return TryDecodeByBoundingBox(scale, threshold, image, invert, accept, aggressive, budget, out result, out diagnostics, candidates.Count, candidateTriplesTried: 0, bminX, bminY, bmaxX, bmaxY);
+        return TryDecodeByBoundingBox(scale, threshold, image, invert, accept, aggressive, stylized, budget, out result, out diagnostics, candidates.Count, candidateTriplesTried: 0, bminX, bminY, bmaxX, bmaxY);
     }
 
     private static bool TryDecodeBySingleFinder(
@@ -469,6 +591,7 @@ internal static partial class QrPixelDecoder {
         List<QrFinderPatternDetector.FinderPattern> candidates,
         Func<QrDecoded, bool>? accept,
         bool aggressive,
+        bool stylized,
         DecodeBudget budget,
         out QrDecoded result,
         out QrPixelDecodeDiagnostics diagnostics) {
@@ -525,7 +648,7 @@ internal static partial class QrPixelDecoder {
                         continue;
                     }
 
-                    if (TryDecodeByBoundingBox(scale, threshold, image, invert, accept, aggressive, budget, out result, out diagnostics, candidates.Count, candidateTriplesTried: 0, minX, minY, maxX, maxY)) {
+                    if (TryDecodeByBoundingBox(scale, threshold, image, invert, accept, aggressive, stylized, budget, out result, out diagnostics, candidates.Count, candidateTriplesTried: 0, minX, minY, maxX, maxY)) {
                         return true;
                     }
                 }
@@ -641,6 +764,7 @@ internal static partial class QrPixelDecoder {
         bool invert,
         Func<QrDecoded, bool>? accept,
         bool aggressive,
+        bool stylized,
         DecodeBudget budget,
         out QrDecoded result,
         out QrPixelDecodeDiagnostics diagnostics) {
@@ -652,7 +776,7 @@ internal static partial class QrPixelDecoder {
 
         if (budget.IsExpired) return false;
         Func<bool>? shouldStop = budget.Enabled ? () => budget.IsExpired : null;
-        using var comps = FindComponents(image, invert, shouldStop);
+        using var comps = FindComponents(image, invert, shouldStop, minAreaDivisor: 400, minComponentSize: 21);
         if (comps.Count == 0) return false;
 
         comps.Sort(static (a, b) => b.Area.CompareTo(a.Area));
@@ -672,7 +796,7 @@ internal static partial class QrPixelDecoder {
             if (bmaxX >= w) bmaxX = w - 1;
             if (bmaxY >= h) bmaxY = h - 1;
 
-            if (TryDecodeByBoundingBox(scale, threshold, image, invert, accept, aggressive, budget, out result, out diagnostics, candidateCount: 0, candidateTriplesTried: 0, bminX, bminY, bmaxX, bmaxY)) {
+            if (TryDecodeByBoundingBox(scale, threshold, image, invert, accept, aggressive, stylized, budget, out result, out diagnostics, candidateCount: 0, candidateTriplesTried: 0, bminX, bminY, bmaxX, bmaxY)) {
                 return true;
             }
         }

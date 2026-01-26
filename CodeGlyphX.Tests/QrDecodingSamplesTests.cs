@@ -17,14 +17,19 @@ public sealed class QrDecodingSamplesTests {
     [InlineData("Assets/DecodingSamples/qr-dot-aa-soft.png", 1)]
     [InlineData("Assets/DecodingSamples/qr-dot-antialiasing-twitter.png", 1)]
     [InlineData("Assets/DecodingSamples/qr-generator-ui.png", 1)]
+    [InlineData("Assets/DecodingSamples/qr-art-dots-variants.png", 1)]
+    [InlineData("Assets/DecodingSamples/qr-art-jess3-characters-grid.png", 1)]
+    [InlineData("Assets/DecodingSamples/qr-art-jess3-characters-splash.png", 1)]
+    [InlineData("Assets/DecodingSamples/qr-art-jess3-characters-splash-variant.png", 1)]
     public void QrDecode_SampleImages(string relativePath, int minCount) {
         var bytes = ReadRepoFile(relativePath);
         Assert.True(ImageReader.TryDecodeRgba32(bytes, out var rgba, out var width, out var height));
 
         var options = new QrPixelDecodeOptions {
             Profile = QrDecodeProfile.Robust,
-            MaxDimension = 1600,
+            MaxDimension = 2200,
             BudgetMilliseconds = 2000,
+            AggressiveSampling = true,
             EnableTileScan = true
         };
 
@@ -47,6 +52,10 @@ public sealed class QrDecodingSamplesTests {
     [InlineData("Assets/DecodingSamples/qr-dot-antialiasing-twitter.png", "This is a quick test! 123#?")]
     [InlineData("Assets/DecodingSamples/qr-generator-ui.png", "https://qrstud.io/qrmnky")]
     [InlineData("Assets/DecodingSamples/qr-noisy-ui.png", "otpauth://totp/Evotec+Services+sp.+z+o.o.%3aprzemyslaw.klys%40evotec.pl?secret=pqhjwcgzncvzykhd&issuer=Microsoft")]
+    [InlineData("Assets/DecodingSamples/qr-art-dots-variants.png", "http://jess3.com")]
+    [InlineData("Assets/DecodingSamples/qr-art-jess3-characters-grid.png", "http://jess3.com")]
+    [InlineData("Assets/DecodingSamples/qr-art-jess3-characters-splash.png", "http://jess3.com")]
+    [InlineData("Assets/DecodingSamples/qr-art-jess3-characters-splash-variant.png", "http://jess3.com")]
     public void QrDecode_SampleImages_ReturnExpectedText(string relativePath, string expectedText) {
         var bytes = ReadRepoFile(relativePath);
         Assert.True(ImageReader.TryDecodeRgba32(bytes, out var rgba, out var width, out var height));
@@ -117,6 +126,36 @@ public sealed class QrDecodingSamplesTests {
         foreach (var text in texts) {
             Assert.Contains(text, decodedText);
         }
+    }
+
+    [Theory(Skip = "Pending stylized finder/decoder improvements for heavy illustration samples.")]
+    [InlineData("Assets/DecodingSamples/qr-art-facebook-splash-grid.png", 1)]
+    [InlineData("Assets/DecodingSamples/qr-art-montage-grid.png", 1)]
+    [InlineData("Assets/DecodingSamples/qr-art-stripe-eye-grid.png", 1)]
+    [InlineData("Assets/DecodingSamples/qr-art-drip-variants.png", 1)]
+    [InlineData("Assets/DecodingSamples/qr-art-solid-bg-grid.png", 1)]
+    [InlineData("Assets/DecodingSamples/qr-art-gear-illustration-grid.png", 1)]
+    public void QrDecode_StylizedIllustrationSamples_Pending(string relativePath, int minCount) {
+        var bytes = ReadRepoFile(relativePath);
+        Assert.True(ImageReader.TryDecodeRgba32(bytes, out var rgba, out var width, out var height));
+
+        var options = new QrPixelDecodeOptions {
+            Profile = QrDecodeProfile.Robust,
+            MaxDimension = 2200,
+            BudgetMilliseconds = 2500,
+            AggressiveSampling = true,
+            EnableTileScan = true
+        };
+
+        if (!QrDecoder.TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, out var results, options)) {
+            if (QrDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out var decoded, out var info, options)) {
+                results = new[] { decoded };
+            } else {
+                Assert.Fail(info.ToString());
+            }
+        }
+
+        Assert.True(results.Length >= minCount);
     }
 
     [Fact]
