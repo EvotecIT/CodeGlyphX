@@ -3125,19 +3125,6 @@ section {
     }
 }
 
-[data-theme="light"] .output-preview.output-preview-empty {
-    background: var(--bg-input);
-    border: 1px dashed var(--border);
-    box-shadow: none;
-}
-
-@media (prefers-color-scheme: light) {
-    [data-theme="auto"] .output-preview.output-preview-empty {
-        background: var(--bg-input);
-        border: 1px dashed var(--border);
-        box-shadow: none;
-    }
-}
 
 [data-theme="light"] .btn-primary {
     box-shadow: 0 0 30px rgba(124, 58, 237, 0.2);

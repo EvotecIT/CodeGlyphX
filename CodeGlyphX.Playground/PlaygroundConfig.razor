@@ -35,8 +35,10 @@ else
                     <InputFile class="drop-input"
                                OnChange="Host.OnDecodeFileChanged"
                                accept="image/*"
-                               @ondragenter="@(() => Host.IsDropActive = true)"
+                                @ondragenter="@(() => Host.IsDropActive = true)"
+                               @ondragenter:preventDefault="true"
                                @ondragleave="@(() => Host.IsDropActive = false)"
+                               @ondragleave:preventDefault="true"
                                @ondrop="@(() => Host.IsDropActive = false)"
                                @ondragover:preventDefault="true" />
                     <div class="dropzone-inner">
