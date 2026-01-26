@@ -98,6 +98,76 @@ public sealed class QrPngRendererTests {
     }
 
     [Fact]
+    public void Render_With_Background_Pattern_Draws_Overlay() {
+        var matrix = new BitMatrix(1, 1);
+        matrix[0, 0] = true;
+
+        var opts = new QrPngRenderOptions {
+            ModuleSize = 4,
+            QuietZone = 2,
+            Foreground = Rgba32.Black,
+            Background = Rgba32.White,
+            BackgroundPattern = new QrPngBackgroundPatternOptions {
+                Type = QrPngBackgroundPatternType.Grid,
+                SizePx = 4,
+                ThicknessPx = 2,
+                Color = Rgba32.Black,
+            },
+        };
+
+        var png = QrPngRenderer.Render(matrix, opts);
+        var (rgba, _, _, stride) = PngTestDecoder.DecodeRgba32(png);
+
+        var p0 = 0 * stride + 0 * 4;
+        Assert.Equal(0, rgba[p0 + 0]);
+        Assert.Equal(0, rgba[p0 + 1]);
+        Assert.Equal(0, rgba[p0 + 2]);
+
+        var p1 = 3 * stride + 3 * 4;
+        Assert.Equal(255, rgba[p1 + 0]);
+        Assert.Equal(255, rgba[p1 + 1]);
+        Assert.Equal(255, rgba[p1 + 2]);
+    }
+
+    [Fact]
+    public void Render_With_Foreground_Palette_Checker_Alternates_Modules() {
+        var matrix = new BitMatrix(2, 2);
+        matrix[0, 0] = true;
+        matrix[1, 0] = true;
+        matrix[0, 1] = true;
+        matrix[1, 1] = true;
+
+        var opts = new QrPngRenderOptions {
+            ModuleSize = 3,
+            QuietZone = 0,
+            Background = Rgba32.White,
+            Foreground = Rgba32.Black,
+            ForegroundPalette = new QrPngPaletteOptions {
+                Mode = QrPngPaletteMode.Checker,
+                Colors = new[] {
+                    new Rgba32(255, 0, 0),
+                    new Rgba32(0, 0, 255),
+                }
+            }
+        };
+
+        var png = QrPngRenderer.Render(matrix, opts);
+        var (rgba, _, _, stride) = PngTestDecoder.DecodeRgba32(png);
+
+        var moduleCenter = opts.ModuleSize / 2;
+        var p00 = moduleCenter * stride + moduleCenter * 4;
+        var p10 = moduleCenter * stride + (opts.ModuleSize + moduleCenter) * 4;
+
+        Assert.Equal(255, rgba[p00 + 0]);
+        Assert.Equal(0, rgba[p00 + 1]);
+        Assert.Equal(0, rgba[p00 + 2]);
+
+        Assert.Equal(0, rgba[p10 + 0]);
+        Assert.Equal(0, rgba[p10 + 1]);
+        Assert.Equal(255, rgba[p10 + 2]);
+    }
+
+    [Fact]
     public void LogoOptions_FromPng_Decodes_Rgba() {
         var matrix = new BitMatrix(1, 1);
         matrix[0, 0] = true;

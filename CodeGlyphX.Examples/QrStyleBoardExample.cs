@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Text.Json;
 using CodeGlyphX;
 using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Png;
@@ -14,8 +15,7 @@ internal static class QrStyleBoardExample {
         Directory.CreateDirectory(dir);
 
         var presets = BuildPresets();
-        var manifest = new StringBuilder();
-        manifest.AppendLine("[");
+        var manifestEntries = new List<StyleBoardEntry>(presets.Count);
 
         for (var i = 0; i < presets.Count; i++) {
             var preset = presets[i];
@@ -29,15 +29,14 @@ internal static class QrStyleBoardExample {
 
             QR.Save(preset.Payload, path, options);
 
-            manifest.Append("  {\"name\":\"").Append(preset.Name)
-                .Append("\",\"file\":\"").Append(fileName)
-                .Append("\",\"payload\":\"").Append(preset.Payload).Append("\"}");
-            if (i < presets.Count - 1) manifest.Append(',');
-            manifest.AppendLine();
+            manifestEntries.Add(new StyleBoardEntry(preset.Name, fileName, preset.Payload));
         }
 
-        manifest.AppendLine("]");
-        manifest.ToString().WriteText(Path.Combine(dir, "style-board.json"));
+        var manifestJson = JsonSerializer.Serialize(manifestEntries, new JsonSerializerOptions {
+            WriteIndented = true,
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        });
+        manifestJson.WriteText(Path.Combine(dir, "style-board.json"));
         WriteHtmlIndex(dir, presets);
     }
 
@@ -167,6 +166,8 @@ internal static class QrStyleBoardExample {
                 canvas: CanvasBorder(R(250, 252, 255), R(35, 54, 89)), logo: logoWarm), logoWarm)
         };
     }
+
+    private readonly record struct StyleBoardEntry(string Name, string File, string Payload);
 
     private static QrEasyOptions BaseSticker(
         Rgba32 fg,

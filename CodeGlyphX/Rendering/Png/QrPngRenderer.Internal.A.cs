@@ -15,7 +15,10 @@ public static partial class QrPngRenderer {
         if (opts.ModuleScale is <= 0 or > 1.0) throw new ArgumentOutOfRangeException(nameof(opts.ModuleScale));
         opts.BackgroundGradient?.Validate();
         opts.BackgroundPattern?.Validate();
-        if (opts.BackgroundSupersample < 1 || opts.BackgroundSupersample > 4) throw new ArgumentOutOfRangeException(nameof(opts.BackgroundSupersample));
+        if (opts.BackgroundSupersample < QrPngRenderOptions.BackgroundSupersampleMin ||
+            opts.BackgroundSupersample > QrPngRenderOptions.BackgroundSupersampleMax) {
+            throw new ArgumentOutOfRangeException(nameof(opts.BackgroundSupersample));
+        }
         opts.ForegroundGradient?.Validate();
         opts.ForegroundPalette?.Validate();
         opts.ForegroundPaletteZones?.Validate();
@@ -105,15 +108,12 @@ public static partial class QrPngRenderer {
                     _ => opts.Foreground,
                 };
                 PaletteInfo? palette = null;
-                if (zoneInfo.HasValue && zoneInfo.Value.TryGetPalette(mx, my, out var zonePalette)) {
-                    if (eyeKind == EyeKind.None || zonePalette.ApplyToEyes) {
-                        palette = zonePalette;
-                    }
-                }
-                if (!palette.HasValue && paletteInfo.HasValue) {
-                    if (eyeKind == EyeKind.None || paletteInfo.Value.ApplyToEyes) {
-                        palette = paletteInfo;
-                    }
+                if (zoneInfo.HasValue
+                    && zoneInfo.Value.TryGetPalette(mx, my, out var zonePalette)
+                    && (eyeKind == EyeKind.None || zonePalette.ApplyToEyes)) {
+                    palette = zonePalette;
+                } else if (paletteInfo.HasValue && (eyeKind == EyeKind.None || paletteInfo.Value.ApplyToEyes)) {
+                    palette = paletteInfo;
                 }
                 var usePalette = palette.HasValue;
                 if (usePalette) {
@@ -438,6 +438,7 @@ public static partial class QrPngRenderer {
         int radius,
         QrPngBackgroundPatternOptions pattern) {
         if (pattern.Color.A == 0) return;
+        if (pattern.ThicknessPx <= 0) return;
         var size = Math.Max(1, pattern.SizePx);
         if (pattern.SnapToModuleSize && moduleSize > 0) {
             var step = Math.Max(1, pattern.ModuleStep);
@@ -491,11 +492,19 @@ public static partial class QrPngRenderer {
         var db = scanlines[rowStart + 2];
         var da = scanlines[rowStart + 3];
         var sa = color.A;
-        var inv = 255 - sa;
-        scanlines[rowStart + 0] = (byte)((color.R * sa + dr * inv + 127) / 255);
-        scanlines[rowStart + 1] = (byte)((color.G * sa + dg * inv + 127) / 255);
-        scanlines[rowStart + 2] = (byte)((color.B * sa + db * inv + 127) / 255);
-        scanlines[rowStart + 3] = (byte)((sa + da * inv + 127) / 255);
+        var invSa = 255 - sa;
+        var outA = sa + (da * invSa + 127) / 255;
+        if (outA == 0) {
+            scanlines[rowStart + 0] = 0;
+            scanlines[rowStart + 1] = 0;
+            scanlines[rowStart + 2] = 0;
+            scanlines[rowStart + 3] = 0;
+            return;
+        }
+        scanlines[rowStart + 0] = (byte)((color.R * sa + dr * da * invSa / 255 + outA / 2) / outA);
+        scanlines[rowStart + 1] = (byte)((color.G * sa + dg * da * invSa / 255 + outA / 2) / outA);
+        scanlines[rowStart + 2] = (byte)((color.B * sa + db * da * invSa / 255 + outA / 2) / outA);
+        scanlines[rowStart + 3] = (byte)outA;
     }
 
     private static void FillBackgroundGradient(byte[] scanlines, int widthPx, int heightPx, int stride, QrPngGradientOptions gradient) {
@@ -547,7 +556,7 @@ public static partial class QrPngRenderer {
             case QrPngModuleScaleMode.Radial:
                 var dx = mx - map.Center;
                 var dy = my - map.Center;
-                var dist = Math.Sqrt(dx * dx + dy * dy);
+                var dist = Math.Sqrt((double)dx * dx + (double)dy * dy);
                 var tRad = map.MaxDist <= 0 ? 0 : dist / map.MaxDist;
                 return Lerp(map.MaxScale, map.MinScale, tRad);
             default:
@@ -883,7 +892,7 @@ public static partial class QrPngRenderer {
             ApplyToEyes = options.ApplyToEyes;
             Center = (size - 1) / 2;
             MaxRing = Math.Max(Center, size - 1 - Center);
-            MaxDist = Math.Sqrt(MaxRing * MaxRing + MaxRing * MaxRing);
+            MaxDist = Math.Sqrt((double)MaxRing * MaxRing + (double)MaxRing * MaxRing);
         }
     }
 

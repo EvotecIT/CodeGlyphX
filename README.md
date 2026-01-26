@@ -503,6 +503,13 @@ using CodeGlyphX.Rendering;
 QR.SavePdf("https://example.com", "qr-raster.pdf", mode: RenderMode.Raster);
 ```
 
+### Rendering pipeline notes (PNG)
+
+- Layout: compute quiet-zone, module grid, and output pixel size.
+- Background: solid/gradient/pattern fill (optional supersample for smoother gradients/patterns).
+- Modules: shape + scale map + palette/gradient, then eyes, then logo overlay.
+- Canvas/debug: optional sticker canvas + debug overlays as final passes.
+
 Notes:
 - Vector PDF/EPS support square/rounded/circle modules and eye shapes.
 - Gradients and logos automatically fall back to raster to preserve appearance.

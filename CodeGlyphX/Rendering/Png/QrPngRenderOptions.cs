@@ -7,6 +7,16 @@ namespace CodeGlyphX.Rendering.Png;
 /// </summary>
 public sealed partial class QrPngRenderOptions {
     /// <summary>
+    /// Minimum allowed background supersample factor.
+    /// </summary>
+    public const int BackgroundSupersampleMin = 1;
+
+    /// <summary>
+    /// Maximum allowed background supersample factor (capped to avoid large memory spikes).
+    /// </summary>
+    public const int BackgroundSupersampleMax = 4;
+
+    /// <summary>
     /// Gets or sets the size of a single QR module in pixels.
     /// </summary>
     public int ModuleSize { get; set; } = RenderDefaults.QrModuleSize;
@@ -37,9 +47,9 @@ public sealed partial class QrPngRenderOptions {
     public QrPngBackgroundPatternOptions? BackgroundPattern { get; set; }
 
     /// <summary>
-    /// Background supersample factor for gradients/patterns (1 = disabled).
+    /// Background supersample factor for gradients/patterns (1 = disabled, max 4).
     /// </summary>
-    public int BackgroundSupersample { get; set; } = 1;
+    public int BackgroundSupersample { get; set; } = BackgroundSupersampleMin;
 
     /// <summary>
     /// Optional gradient for the foreground (dark) modules.
