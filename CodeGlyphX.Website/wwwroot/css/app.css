@@ -2050,6 +2050,14 @@ body.using-keyboard .showcase-hero h1:focus-visible {
     }
 }
 
+@media (min-width: 901px) {
+    .playground-preview-card {
+        position: sticky;
+        top: 6rem;
+        align-self: start;
+    }
+}
+
 .playground .card {
     background: var(--bg-card);
     border: 1px solid var(--border);
@@ -2994,6 +3002,12 @@ section {
     box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
+.output-preview.output-preview-empty {
+    background: var(--bg-input);
+    border: 1px dashed var(--border);
+    box-shadow: none;
+}
+
 .output-preview img {
     max-width: 100%;
     max-height: 380px;
@@ -3108,6 +3122,20 @@ section {
     [data-theme="auto"] .output-preview {
         background: var(--preview-bg);
         box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.03);
+    }
+}
+
+[data-theme="light"] .output-preview.output-preview-empty {
+    background: var(--bg-input);
+    border: 1px dashed var(--border);
+    box-shadow: none;
+}
+
+@media (prefers-color-scheme: light) {
+    [data-theme="auto"] .output-preview.output-preview-empty {
+        background: var(--bg-input);
+        border: 1px dashed var(--border);
+        box-shadow: none;
     }
 }
 
