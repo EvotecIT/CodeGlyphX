@@ -493,6 +493,8 @@ var opts = new QrEasyOptions {
 QR.Save("https://example.com", "qr-1200.png", opts);
 ```
 
+Examples: see `CodeGlyphX.Examples` output files (`qr-print-4k.png`, `qr-print-8k.png`, `qr-print-8k.pdf`) for print-ready presets.
+
 ```csharp
 using CodeGlyphX;
 using CodeGlyphX.Rendering;

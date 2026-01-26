@@ -7,6 +7,7 @@ This list contains **only work we still want to do** (no already‑done items).
 - Benchmark controls: add scenario packs + filters so quick runs stay short while full runs include stress cases.
 - Benchmark reliability: enforce minimum iteration time for quick runs (or increase ops); keep quick/full guidance current; capture environment metadata in reports.
 - Reporting clarity: add pack labels + “what these results mean” disclaimers per pack.
+- Decoder robustness: use `Assets/DecodingSamples` as a stylized QR pack and close the remaining “illustrated” failures.
 
 ## Now — Platform/UX Decisions (days → weeks)
 - net472 parity: document what’s missing vs net8/10 and decide what can be back‑ported without hurting perf.
@@ -20,7 +21,6 @@ This list contains **only work we still want to do** (no already‑done items).
 ## Next — QR Styling & Presets (weeks)
 ### End-to-end “Fancy QR” pipeline (for Image #1/#2/#3/#4 style boards)
 **Phase 1 — Core rendering options (must come first)**
-- Add remaining module shapes (soft-diamond, leaf, wave, blob) with PNG/SVG/HTML parity.
 - Add per-module color rules beyond palette zones (by mask bit/position, optional finder proximity rules).
 - Add safe defaults for logo overlays + padding (sizing presets + ECC/version guidance).
 - Add optional eye palette modes (multi-color) and finalize preset coverage for eye styles.
@@ -39,12 +39,15 @@ This list contains **only work we still want to do** (no already‑done items).
 - Add curated palette sets (brand, neon, pastel, mono-contrast, duotone).
 
 **Phase 4 — Examples + gallery (after core options are in)**
-- Produce a versioned “style board” asset pack for docs/website (wire build copy targets).
-- Add a “style gallery” page that consumes the generated assets.
+- Add a dedicated “style gallery” page (beyond the home section) if we want a full catalog view.
 
 **Phase 5 — UI integration (last)**
 - Playground: add template selector + live preview with preset export/import.
 - Website: add marketing gallery + download links (use generated assets, not manual images).
+
+## Later — Illustrated QR Art (backlog)
+- Sprite/atlas renderer for illustrated module tiles (no API calls).
+- Optional AI overlay mode (experimental), gated behind safety checks and decode validation.
 
 ## DX & Docs (ongoing)
 - Keep “quick vs full” benchmark guidance and preflight steps in README/docs.

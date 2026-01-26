@@ -52,6 +52,7 @@ $commonJs = Get-Content (Join-Path $scriptsPath "common.js") -Raw
 $docsSidebarJs = Get-Content (Join-Path $scriptsPath "docs-sidebar.js") -Raw
 $carouselJs = Get-Content (Join-Path $scriptsPath "carousel.js") -Raw
 $benchmarkJs = Get-Content (Join-Path $scriptsPath "benchmark.js") -Raw
+$styleBoardJs = Get-Content (Join-Path $scriptsPath "style-board.js") -Raw
 
 # Icon definitions for reuse
 $icons = @{
@@ -133,7 +134,8 @@ New-StaticPage `
     -Title "CodeGlyphX - Zero-Dependency QR & Barcode Toolkit for .NET" `
     -Description "CodeGlyphX is a blazing-fast, zero-dependency .NET library for generating and decoding QR codes, barcodes, Data Matrix, PDF417, and Aztec codes." `
     -Content $homeContent `
-    -OutputFile (Join-Path $OutputPath "index.html")
+    -OutputFile (Join-Path $OutputPath "index.html") `
+    -ExtraScripts $styleBoardJs
 
 # ============================================================================
 # DOCS PAGE
