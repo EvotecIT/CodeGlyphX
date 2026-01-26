@@ -1047,16 +1047,31 @@ public static partial class QrPngRenderer {
         var scale = Math.Max(1, opts.BackgroundSupersample);
         if (scale <= 1) return;
 
-        var scaledWidth = widthPx * scale;
-        var scaledHeight = heightPx * scale;
-        var scaledStride = scaledWidth * 4;
-        var length = scaledHeight * (scaledStride + 1);
-        var temp = new byte[length];
+        var scaledWidthLong = (long)widthPx * scale;
+        var scaledHeightLong = (long)heightPx * scale;
+        if (scaledWidthLong > int.MaxValue || scaledHeightLong > int.MaxValue) {
+            throw new ArgumentOutOfRangeException(nameof(opts.BackgroundSupersample), "Background supersample exceeds maximum bitmap size.");
+        }
+
+        var scaledStrideLong = scaledWidthLong * 4;
+        if (scaledStrideLong > int.MaxValue) {
+            throw new ArgumentOutOfRangeException(nameof(opts.BackgroundSupersample), "Background supersample exceeds maximum bitmap size.");
+        }
+
+        var lengthLong = scaledHeightLong * (scaledStrideLong + 1);
+        if (lengthLong > int.MaxValue) {
+            throw new ArgumentOutOfRangeException(nameof(opts.BackgroundSupersample), "Background supersample exceeds maximum bitmap size.");
+        }
+
+        var scaledWidth = (int)scaledWidthLong;
+        var scaledHeight = (int)scaledHeightLong;
+        var scaledStride = (int)scaledStrideLong;
+        var temp = new byte[(int)lengthLong];
 
         var scaledOpts = CreateScaledBackgroundOptions(opts, scale);
-        var scaledQrOffsetX = qrOffsetX * scale;
-        var scaledQrOffsetY = qrOffsetY * scale;
-        var scaledQrFullPx = qrFullPx * scale;
+        var scaledQrOffsetX = checked(qrOffsetX * scale);
+        var scaledQrOffsetY = checked(qrOffsetY * scale);
+        var scaledQrFullPx = checked(qrFullPx * scale);
 
         if (scaledOpts.Canvas is null) {
             if (scaledOpts.BackgroundGradient is null) {
@@ -1095,7 +1110,7 @@ public static partial class QrPngRenderer {
             Type = pattern.Type,
             Color = pattern.Color,
             SizePx = Math.Max(1, pattern.SizePx * scale),
-            ThicknessPx = Math.Max(1, pattern.ThicknessPx * scale),
+            ThicknessPx = pattern.ThicknessPx <= 0 ? 0 : Math.Max(1, pattern.ThicknessPx * scale),
             SnapToModuleSize = pattern.SnapToModuleSize,
             ModuleStep = pattern.ModuleStep
         };
