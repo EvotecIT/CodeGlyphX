@@ -2470,7 +2470,7 @@ main, .main {
     width: 100%;
     max-width: 100vw;
     min-width: 0;
-    overflow-x: hidden;
+    overflow-x: visible;
     box-sizing: border-box;
 }
 
