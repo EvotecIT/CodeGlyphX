@@ -244,6 +244,20 @@ a:hover {
     width: 100%;
 }
 
+.page.page-playground {
+    overflow: visible;
+}
+
+.page.page-playground .main {
+    overflow: visible;
+}
+
+/* Fix sticky positioning for playground - override html/body overflow */
+html:has(.page-playground),
+body:has(.page-playground) {
+    overflow-x: clip; /* Use clip instead of hidden - doesn't break sticky */
+}
+
 .container {
     max-width: 1200px;
     margin: 0 auto;
@@ -2023,33 +2037,57 @@ body.using-keyboard .showcase-hero h1:focus-visible {
 .playground {
     max-width: 1100px;
     margin: 0 auto;
-    padding-top: 6rem;
+    padding-top: 5rem;
+    overflow: visible; /* Ensure sticky works */
 }
 
 .playground h1 {
     text-align: center;
-    font-size: 2.5rem;
-    margin-bottom: 0.5rem;
+    font-size: clamp(2rem, 5vw, 2.75rem);
+    margin-bottom: 0.25rem;
+    background: linear-gradient(135deg, var(--text) 0%, var(--primary-light) 50%, var(--secondary) 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
 }
 
 .playground-subtitle {
     text-align: center;
     color: var(--text-muted);
-    margin-bottom: 3rem;
+    margin-bottom: 2rem;
 }
 
 .playground-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    display: flex;
+    flex-direction: column;
     gap: 2rem;
 }
 
-@media (max-width: 900px) {
+@media (min-width: 1001px) {
     .playground-grid {
-        grid-template-columns: 1fr;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+    }
+
+    .playground-config-column {
+        max-width: 520px;
+    }
+
+    .playground-preview-column {
+        max-width: 520px;
+        height: fit-content;
+        position: -webkit-sticky;
+        position: sticky;
+        top: 5rem;
     }
 }
 
+@media (max-width: 1000px) {
+    .playground-preview-column {
+        order: -1;
+    }
+}
 .playground .card {
     background: var(--bg-card);
     border: 1px solid var(--border);
@@ -2125,6 +2163,119 @@ body.using-keyboard .showcase-hero h1:focus-visible {
 
 .download-buttons .btn {
     flex: 1;
+}
+
+/* Playground Accordion Sections */
+.accordion-section {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 0.75rem;
+    overflow: hidden;
+    background: var(--bg-card);
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.accordion-section:hover {
+    border-color: rgba(139, 92, 246, 0.3);
+}
+
+.accordion-section.open {
+    border-color: rgba(139, 92, 246, 0.4);
+    box-shadow: 0 0 0 1px rgba(139, 92, 246, 0.1);
+}
+
+.accordion-section:last-child {
+    margin-bottom: 0;
+}
+
+.accordion-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.875rem 1rem;
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(6, 182, 212, 0.05) 100%);
+    border: none;
+    width: 100%;
+    cursor: pointer;
+    color: var(--text);
+    font-size: 0.95rem;
+    font-weight: 600;
+    font-family: inherit;
+    text-align: left;
+    transition: background 0.2s;
+}
+
+.accordion-section.open .accordion-header {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(6, 182, 212, 0.08) 100%);
+}
+
+.accordion-header:hover {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.18) 0%, rgba(6, 182, 212, 0.1) 100%);
+}
+
+.accordion-header:focus {
+    outline: none;
+}
+
+.accordion-header:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: -2px;
+}
+
+.accordion-icon {
+    width: 20px;
+    height: 20px;
+    transition: transform 0.25s ease, color 0.2s;
+    color: var(--primary-light);
+    flex-shrink: 0;
+}
+
+.accordion-section.open .accordion-icon {
+    transform: rotate(180deg);
+    color: var(--primary);
+}
+
+.accordion-content {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.25s ease;
+}
+
+.accordion-section.open .accordion-content {
+    grid-template-rows: 1fr;
+}
+
+.accordion-content-inner {
+    overflow: hidden;
+    padding: 0 1rem;
+}
+
+.accordion-section.open .accordion-content-inner {
+    padding: 0.5rem 1rem 1rem;
+    border-top: 1px solid var(--border);
+}
+
+/* Remove bottom margin from last form-group in accordion */
+.accordion-content-inner .form-group:last-child {
+    margin-bottom: 0;
+}
+
+/* Nested form groups in accordion should have less spacing */
+.accordion-content-inner .form-group {
+    margin-bottom: 1rem;
+}
+
+/* Light theme accordion adjustments */
+[data-theme="light"] .accordion-header {
+    background: linear-gradient(135deg, rgba(109, 40, 217, 0.06) 0%, rgba(14, 116, 144, 0.04) 100%);
+}
+
+[data-theme="light"] .accordion-section.open .accordion-header {
+    background: linear-gradient(135deg, rgba(109, 40, 217, 0.1) 0%, rgba(14, 116, 144, 0.06) 100%);
+}
+
+[data-theme="light"] .accordion-header:hover {
+    background: linear-gradient(135deg, rgba(109, 40, 217, 0.12) 0%, rgba(14, 116, 144, 0.08) 100%);
 }
 
 /* ============================================
@@ -2906,6 +3057,12 @@ section {
     height: 100%;
     opacity: 0;
     cursor: pointer;
+    z-index: 10;
+}
+
+/* Ensure InputFile's actual input element covers the area */
+.drop-input::file-selector-button {
+    display: none;
 }
 
 /* Color picker styling */

@@ -63,9 +63,25 @@ else
 
     private string GetAspNetExample(string baseCode)
     {
-        if (Host?.SelectedMode == "Decode") return baseCode;
-
         var nl = "\n";
+
+        if (Host?.SelectedMode == "Decode")
+        {
+            return "// ASP.NET Core - Decode uploaded image" + nl
+                + "[HttpPost(\"decode\")]" + nl
+                + "public IActionResult DecodeImage(IFormFile file)" + nl
+                + "{" + nl
+                + "    using var ms = new MemoryStream();" + nl
+                + "    file.CopyTo(ms);" + nl
+                + "    var bytes = ms.ToArray();" + nl + nl
+                + "    if (QrImageDecoder.TryDecodeImage(bytes, out var result))" + nl
+                + "    {" + nl
+                + "        return Ok(new { Text = result.Text });" + nl
+                + "    }" + nl + nl
+                + "    return BadRequest(\"No code found in image\");" + nl
+                + "}";
+        }
+
         var category = Host?.SelectedCategory ?? "QR";
 
         if (category == "QR" || category == "SpecialQR")
@@ -126,9 +142,34 @@ else
 
     private string GetBlazorExample(string baseCode)
     {
-        if (Host?.SelectedMode == "Decode") return baseCode;
-
         var nl = "\n";
+
+        if (Host?.SelectedMode == "Decode")
+        {
+            return "// Blazor component with file upload for decoding" + nl
+                + "@using CodeGlyphX" + nl
+                + "@using Microsoft.AspNetCore.Components.Forms" + nl + nl
+                + "<InputFile OnChange=\"OnFileSelected\" accept=\"image/*\" />" + nl
+                + "<p>@_decodedText</p>" + nl + nl
+                + "@code {" + nl
+                + "    private string _decodedText = \"\";" + nl + nl
+                + "    private async Task OnFileSelected(InputFileChangeEventArgs e)" + nl
+                + "    {" + nl
+                + "        using var ms = new MemoryStream();" + nl
+                + "        await e.File.OpenReadStream().CopyToAsync(ms);" + nl
+                + "        var bytes = ms.ToArray();" + nl + nl
+                + "        if (QrImageDecoder.TryDecodeImage(bytes, out var result))" + nl
+                + "        {" + nl
+                + "            _decodedText = result.Text;" + nl
+                + "        }" + nl
+                + "        else" + nl
+                + "        {" + nl
+                + "            _decodedText = \"No code found in image\";" + nl
+                + "        }" + nl
+                + "    }" + nl
+                + "}";
+        }
+
         var category = Host?.SelectedCategory ?? "QR";
 
         if (category == "QR" || category == "SpecialQR")
@@ -183,9 +224,36 @@ else
 
     private string GetMauiExample(string baseCode)
     {
-        if (Host?.SelectedMode == "Decode") return baseCode;
-
         var nl = "\n";
+
+        if (Host?.SelectedMode == "Decode")
+        {
+            return "// .NET MAUI - Decode image from file picker" + nl
+                + "using CodeGlyphX;" + nl + nl
+                + "// In your ViewModel or code-behind:" + nl
+                + "async Task PickAndDecodeAsync()" + nl
+                + "{" + nl
+                + "    var result = await FilePicker.PickAsync(new PickOptions" + nl
+                + "    {" + nl
+                + "        FileTypes = FilePickerFileType.Images," + nl
+                + "        PickerTitle = \"Select an image to decode\"" + nl
+                + "    });" + nl + nl
+                + "    if (result is null) return;" + nl + nl
+                + "    using var stream = await result.OpenReadAsync();" + nl
+                + "    using var ms = new MemoryStream();" + nl
+                + "    await stream.CopyToAsync(ms);" + nl
+                + "    var bytes = ms.ToArray();" + nl + nl
+                + "    if (QrImageDecoder.TryDecodeImage(bytes, out var decoded))" + nl
+                + "    {" + nl
+                + "        DecodedText = decoded.Text;" + nl
+                + "    }" + nl
+                + "    else" + nl
+                + "    {" + nl
+                + "        DecodedText = \"No code found in image\";" + nl
+                + "    }" + nl
+                + "}";
+        }
+
         var category = Host?.SelectedCategory ?? "QR";
 
         if (category == "QR" || category == "SpecialQR")

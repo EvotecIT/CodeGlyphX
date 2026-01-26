@@ -12,6 +12,7 @@ using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Png;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace CodeGlyphX.Playground;
 
@@ -199,6 +200,25 @@ public partial class Playground {
     internal string DecodeStatus { get; set; } = string.Empty;
     internal CancellationTokenSource? _decodeCts;
     internal bool IsDropActive { get; set; } = false;
+
+    internal void OnDragEnter(DragEventArgs e)
+    {
+        if (e.DataTransfer?.Types?.Contains("Files") == true)
+        {
+            IsDropActive = true;
+        }
+    }
+
+    internal void OnDragLeave(DragEventArgs e)
+    {
+        IsDropActive = false;
+    }
+
+    internal void OnDrop(DragEventArgs e)
+    {
+        IsDropActive = false;
+        // The InputFile component will handle the actual file via OnChange
+    }
 
     protected override void OnInitialized()
     {
