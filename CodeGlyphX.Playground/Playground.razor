@@ -8,8 +8,12 @@
 
     <CascadingValue Value="this">
         <div class="playground-grid">
-            <PlaygroundConfig />
-            <PlaygroundPreview />
+            <div class="playground-config-column">
+                <PlaygroundConfig />
+            </div>
+            <div class="playground-preview-column">
+                <PlaygroundPreview />
+            </div>
         </div>
 
         <PlaygroundExample @key="_exampleKey" />

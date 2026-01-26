@@ -311,3 +311,44 @@ globalThis.setTheme = setTheme;
     globalThis.CodeGlyphX.initCodeBlocks = initCodeBlocks;
     globalThis.CodeGlyphX.renderBenchmarkSummary = renderBenchmarkSummary;
 })();
+
+// File drop handling for Blazor InputFile
+globalThis.CodeGlyphX = globalThis.CodeGlyphX || {};
+globalThis.CodeGlyphX.setupDropZone = function(dropZoneElement, inputFileElement) {
+    if (!dropZoneElement || !inputFileElement) return;
+
+    // Find the actual input element inside the InputFile component
+    const inputElement = inputFileElement.querySelector('input[type="file"]') || inputFileElement;
+
+    function handleDrop(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (e.dataTransfer?.files?.length > 0) {
+            // Create a new DataTransfer to set files on the input
+            const dt = new DataTransfer();
+            for (let i = 0; i < e.dataTransfer.files.length; i++) {
+                dt.items.add(e.dataTransfer.files[i]);
+            }
+            inputElement.files = dt.files;
+
+            // Trigger change event
+            inputElement.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+    }
+
+    function handleDragOver(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
+    dropZoneElement.addEventListener('drop', handleDrop);
+    dropZoneElement.addEventListener('dragover', handleDragOver);
+
+    return {
+        dispose: function() {
+            dropZoneElement.removeEventListener('drop', handleDrop);
+            dropZoneElement.removeEventListener('dragover', handleDragOver);
+        }
+    };
+};

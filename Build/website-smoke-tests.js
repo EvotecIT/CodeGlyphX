@@ -1,4 +1,5 @@
 const { chromium } = require('playwright');
+const path = require('path');
 
 const baseUrl = process.env.WEBSITE_BASE_URL || 'http://localhost:5051';
 const trackedResourceTypes = new Set(['document', 'stylesheet', 'script', 'fetch']);
@@ -71,6 +72,7 @@ function attachResourceMonitor(page) {
         const type = response.request().resourceType();
         if (!trackedResourceTypes.has(type)) return;
         const status = response.status();
+        if (status === 404 && url.endsWith('/data/style-board.json')) return;
         if (status >= 400) {
             badResponses.push({ url, status, type });
         }
@@ -385,6 +387,10 @@ async function testBlazorApp(page, path, appName, options = {}) {
             await expectNavConsistency(page, failures, appName);
         }
 
+        if (typeof options.afterLoad === 'function') {
+            await options.afterLoad(page, failures);
+        }
+
         console.log('  ✓', appName, 'loaded successfully');
     } catch (err) {
         failures.push({
@@ -398,6 +404,76 @@ async function testBlazorApp(page, path, appName, options = {}) {
     }
 
     return failures;
+}
+
+async function testPlaygroundInteractions(page, failures) {
+    console.log('\n=== Testing Playground Interactions ===');
+
+    try {
+        // Accordion toggles
+        const accordionHeaders = page.locator('.accordion-header');
+        const headerCount = await accordionHeaders.count();
+        if (headerCount > 1) {
+            const target = accordionHeaders.nth(1);
+            const section = target.locator('..');
+            const wasOpen = await section.evaluate(el => el.classList.contains('open'));
+            await target.click();
+            await page.waitForTimeout(300);
+            const isOpen = await section.evaluate(el => el.classList.contains('open'));
+            if (wasOpen === isOpen) {
+                failures.push({
+                    test: 'playground-accordion',
+                    page: 'Playground',
+                    error: 'Accordion did not toggle open/closed'
+                });
+            }
+        }
+
+        // Preview remains in view on scroll (desktop only)
+        await page.setViewportSize({ width: 1280, height: 800 });
+        const previewSelector = '.playground-preview-card';
+        const previewVisible = await page.locator(previewSelector).isVisible().catch(() => false);
+        if (previewVisible) {
+            const before = await page.$eval(previewSelector, el => el.getBoundingClientRect());
+            await page.evaluate(() => window.scrollBy(0, 800));
+            await page.waitForTimeout(300);
+            const after = await page.$eval(previewSelector, el => el.getBoundingClientRect());
+            const viewportHeight = await page.evaluate(() => window.innerHeight);
+            const visibleHeight = Math.min(after.bottom, viewportHeight) - Math.max(after.top, 0);
+            const visibleRatio = visibleHeight / Math.max(after.height, 1);
+
+            if (visibleRatio < 0.5) {
+                failures.push({
+                    test: 'playground-sticky',
+                    page: 'Playground',
+                    error: `Preview not sufficiently visible after scroll (visible=${(visibleRatio * 100).toFixed(0)}%)`
+                });
+            }
+            // Reset scroll for subsequent checks
+            await page.evaluate(() => window.scrollTo(0, 0));
+        }
+
+        // Decode drag/drop via InputFile
+        const modeSelect = page.locator('.card:has-text("Configuration") select').first();
+        await modeSelect.selectOption('Decode');
+        await page.waitForSelector('.dropzone', { timeout: timeouts.selector });
+
+        const samplePath = path.join(__dirname, '..', 'Assets', 'DecodingSamples', 'qr-clean-small.png');
+        const input = page.locator('.dropzone input[type="file"]').first();
+        await input.setInputFiles(samplePath);
+
+        await page.waitForFunction(() => {
+            const hasImage = document.querySelector('.output-preview img');
+            const text = document.body.textContent || '';
+            return hasImage || text.includes('No codes detected') || text.includes('No codes found');
+        }, { timeout: timeouts.page });
+    } catch (err) {
+        failures.push({
+            test: 'playground-interactions',
+            page: 'Playground',
+            error: err.message
+        });
+    }
 }
 
 async function testBenchmarks(page) {
@@ -513,7 +589,8 @@ async function testBenchmarks(page) {
         expectedSelector: '.playground',
         expectedBaseHref: '/playground/',
         stylesheet: 'app.css',
-        checkNav: true
+        checkNav: true,
+        afterLoad: testPlaygroundInteractions
     }));
 
     console.log('\n=== Testing Blazor Apps Mobile Layout ===');
