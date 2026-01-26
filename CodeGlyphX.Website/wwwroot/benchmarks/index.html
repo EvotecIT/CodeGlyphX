@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
@@ -104,7 +104,6 @@
         </nav>
     </div>
 </header>
-
 <main>
 <div class="benchmark-page">
     <section class="benchmark-hero">
@@ -276,21 +275,21 @@ pwsh Build/Generate-BenchmarkReport.ps1 -ArtifactsPath Build/BenchmarkResults/&l
                 <h3>Product</h3>
                 <a href="/">Home</a>
                 <a href="/playground/">Playground</a>
-                <a href="/docs/">Documentation</a>
+                <a href="/docs/">Docs</a>
                 <a href="/benchmarks/">Benchmarks</a>
                 <a href="/showcase/">Showcase</a>
             </div>
             <div class="footer-section">
                 <h3>Resources</h3>
                 <a href="/faq/">FAQ</a>
-                <a href="https://www.nuget.org/packages/CodeGlyphX" target="_blank" rel="noopener">NuGet Package</a>
-                <a href="https://github.com/EvotecIT/CodeGlyphX" target="_blank" rel="noopener">GitHub Repository</a>
-                <a href="https://github.com/EvotecIT/CodeGlyphX/issues" target="_blank" rel="noopener">Report Issue</a>
+                <a href="https://www.nuget.org/packages/CodeGlyphX" target="_blank" rel="noopener" aria-label="NuGet Package (opens in new tab)">NuGet Package</a>
+                <a href="https://github.com/EvotecIT/CodeGlyphX" target="_blank" rel="noopener" aria-label="GitHub Repository (opens in new tab)">GitHub Repository</a>
+                <a href="https://github.com/EvotecIT/CodeGlyphX/issues" target="_blank" rel="noopener" aria-label="Report Issue (opens in new tab)">Report Issue</a>
             </div>
             <div class="footer-section">
                 <h3>Company</h3>
-                <a href="https://evotec.xyz" target="_blank" rel="noopener">Evotec Services</a>
-                <a href="https://evotec.xyz/hub" target="_blank" rel="noopener">Blog</a>
+                <a href="https://evotec.xyz" target="_blank" rel="noopener" aria-label="Evotec Services (opens in new tab)">Evotec Services</a>
+                <a href="https://evotec.xyz/hub" target="_blank" rel="noopener" aria-label="Blog (opens in new tab)">Blog</a>
             </div>
         </div>
         <div class="footer-bottom">
@@ -307,7 +306,6 @@ pwsh Build/Generate-BenchmarkReport.ps1 -ArtifactsPath Build/BenchmarkResults/&l
     </div>
 </footer>
 <script src="/js/site.js"></script>
-
   </div>
   <script src="/js/site.js" defer></script>
     <script>
@@ -532,11 +530,11 @@ if (navToggle) {
   function getRatingIcon(rating) {
     switch (rating) {
       case 'good':
-        return '<span class="rating-icon rating-good" aria-label="Good">â—</span>';
+        return '<span class="rating-icon rating-good" aria-label="Good">●</span>';
       case 'ok':
-        return '<span class="rating-icon rating-ok" aria-label="Okay">â—</span>';
+        return '<span class="rating-icon rating-ok" aria-label="Okay">●</span>';
       case 'bad':
-        return '<span class="rating-icon rating-bad" aria-label="Needs improvement">â—</span>';
+        return '<span class="rating-icon rating-bad" aria-label="Needs improvement">●</span>';
       default:
         return '<span class="rating-icon">-</span>';
     }
@@ -885,6 +883,7 @@ if (navToggle) {
 
     let html = '<ul>';
     entry.notes.forEach(function(note) {
+      if (!note || !note.trim()) return;
       html += '<li>' + escapeHtml(note) + '</li>';
     });
     html += '</ul>';
@@ -893,14 +892,14 @@ if (navToggle) {
 
   function parseTimeValue(str) {
     if (!str) return null;
-    // Parse values like "1.234 ms", "567.8 Î¼s", "12.3 ns"
-    const match = str.match(/^([\d.]+)\s*(ms|Î¼s|us|ns)/i);
+    // Parse values like "1.234 ms", "567.8 μs", "12.3 ns"
+    const match = str.match(/^([\d.]+)\s*(ms|μs|us|ns)/i);
     if (!match) return null;
     const value = parseFloat(match[1]);
     const unit = match[2].toLowerCase();
     // Convert to microseconds for comparison
     if (unit === 'ms') return value * 1000;
-    if (unit === 'Î¼s' || unit === 'us') return value;
+    if (unit === 'μs' || unit === 'us') return value;
     if (unit === 'ns') return value / 1000;
     return value;
   }
