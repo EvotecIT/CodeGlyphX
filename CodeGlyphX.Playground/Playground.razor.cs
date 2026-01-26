@@ -194,8 +194,9 @@ public partial class Playground {
     internal bool DecodeMatrix { get; set; } = true;
     internal bool DecodeDownscale { get; set; } = true;
     internal bool DecodeStopAfterFirst { get; set; } = true;
-    internal int DecodeMaxDimension { get; set; } = 1024;
-    internal int DecodeMaxMilliseconds { get; set; } = 600;
+    internal string DecodeQualityPreset { get; set; } = "Balanced";
+    internal int DecodeMaxDimension { get; set; } = 2048;
+    internal int DecodeMaxMilliseconds { get; set; } = 2000;
     internal bool IsDecoding { get; set; }
     internal string DecodeStatus { get; set; } = string.Empty;
     internal CancellationTokenSource? _decodeCts;
@@ -218,6 +219,37 @@ public partial class Playground {
     {
         IsDropActive = false;
         // The InputFile component will handle the actual file via OnChange
+    }
+
+    internal void ApplyDecodePreset()
+    {
+        switch (DecodeQualityPreset)
+        {
+            case "Speed":
+                DecodeDownscale = true;
+                DecodeStopAfterFirst = true;
+                DecodeMaxDimension = 1024;
+                DecodeMaxMilliseconds = 600;
+                break;
+            case "Quality":
+                DecodeDownscale = false;
+                DecodeStopAfterFirst = true;
+                DecodeMaxDimension = 4096;
+                DecodeMaxMilliseconds = 8000;
+                break;
+            case "Balanced":
+            default:
+                DecodeDownscale = true;
+                DecodeStopAfterFirst = true;
+                DecodeMaxDimension = 2048;
+                DecodeMaxMilliseconds = 2000;
+                break;
+        }
+    }
+
+    internal void MarkDecodePresetCustom()
+    {
+        DecodeQualityPreset = "Custom";
     }
 
     protected override void OnInitialized()

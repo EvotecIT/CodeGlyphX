@@ -50,21 +50,32 @@ else
             </div>
 
             <div class="form-group">
+                <label>Decode quality</label>
+                <select @bind="Host.DecodeQualityPreset" @bind:after="Host.ApplyDecodePreset">
+                    <option value="Speed">Speed</option>
+                    <option value="Balanced">Balanced</option>
+                    <option value="Quality">Quality</option>
+                    <option value="Custom">Custom</option>
+                </select>
+                <small class="form-hint">Use Quality for large or artistic codes.</small>
+            </div>
+
+            <div class="form-group">
                 <label>Decode Options</label>
                 <div class="form-row">
-                    <label><input type="checkbox" @bind="Host.DecodeDownscale" /> Downscale large images</label>
-                    <label><input type="checkbox" @bind="Host.DecodeStopAfterFirst" /> Stop after first match</label>
+                    <label><input type="checkbox" @bind="Host.DecodeDownscale" @bind:after="Host.MarkDecodePresetCustom" /> Downscale large images</label>
+                    <label><input type="checkbox" @bind="Host.DecodeStopAfterFirst" @bind:after="Host.MarkDecodePresetCustom" /> Stop after first match</label>
                 </div>
             </div>
 
             <div class="form-group">
                 <label>Max dimension (px): @Host.DecodeMaxDimension</label>
-                <input type="range" min="512" max="2048" step="128" @bind="Host.DecodeMaxDimension" />
+                <input type="range" min="512" max="4096" step="256" @bind="Host.DecodeMaxDimension" @bind:after="Host.MarkDecodePresetCustom" />
             </div>
 
             <div class="form-group">
                 <label>Max time (ms): @Host.DecodeMaxMilliseconds</label>
-                <input type="range" min="200" max="2000" step="50" @bind="Host.DecodeMaxMilliseconds" />
+                <input type="range" min="200" max="10000" step="250" @bind="Host.DecodeMaxMilliseconds" @bind:after="Host.MarkDecodePresetCustom" />
             </div>
 
             <div class="form-group">
