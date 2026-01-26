@@ -3,6 +3,7 @@
     { "href": "/", "text": "Home", "spa": true },
     { "href": "/playground/", "text": "Playground", "spa": true },
     { "href": "/docs/", "text": "Docs", "spa": true },
+    { "href": "/faq/", "text": "FAQ", "spa": true },
     { "href": "/benchmarks/", "text": "Benchmarks", "spa": false },
     { "href": "/showcase/", "text": "Showcase", "spa": true }
   ],
