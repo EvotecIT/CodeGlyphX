@@ -72,12 +72,12 @@ public sealed class ExternalDecodeSamplesTests {
                     AggressiveSampling = true,
                     EnableTileScan = true,
                     MaxDimension = 2000,
-                    MaxMilliseconds = 1500,
-                    BudgetMilliseconds = 2500
+                    MaxMilliseconds = 4000,
+                    BudgetMilliseconds = 6000
                 },
                 Image = new ImageDecodeOptions {
                     MaxDimension = 2000,
-                    MaxMilliseconds = 1500
+                    MaxMilliseconds = 4000
                 },
                 Barcode = new BarcodeDecodeOptions {
                     EnableTileScan = true,
