@@ -31,13 +31,14 @@ else
         {
             <div class="form-group">
                 <label>Image File</label>
-                <div class="dropzone @(Host.IsDropActive ? "active" : string.Empty)"
-                     @ondragenter="@(() => Host.IsDropActive = true)"
-                     @ondragleave="@(() => Host.IsDropActive = false)"
-                     @ondrop="@(() => Host.IsDropActive = false)"
-                     @ondragover:preventDefault="true"
-                     @ondrop:preventDefault="true">
-                    <InputFile class="drop-input" OnChange="Host.OnDecodeFileChanged" accept="image/*" />
+                <div class="dropzone @(Host.IsDropActive ? "active" : string.Empty)">
+                    <InputFile class="drop-input"
+                               OnChange="Host.OnDecodeFileChanged"
+                               accept="image/*"
+                               @ondragenter="@(() => Host.IsDropActive = true)"
+                               @ondragleave="@(() => Host.IsDropActive = false)"
+                               @ondragover:preventDefault="true"
+                               @ondrop:preventDefault="true" />
                     <div class="dropzone-inner">
                         <strong>Drop an image here</strong>
                         <span>or click to select</span>
