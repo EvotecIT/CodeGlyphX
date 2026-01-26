@@ -108,15 +108,12 @@ public static partial class QrPngRenderer {
                     _ => opts.Foreground,
                 };
                 PaletteInfo? palette = null;
-                if (zoneInfo.HasValue && zoneInfo.Value.TryGetPalette(mx, my, out var zonePalette)) {
-                    if (eyeKind == EyeKind.None || zonePalette.ApplyToEyes) {
-                        palette = zonePalette;
-                    }
-                }
-                if (!palette.HasValue && paletteInfo.HasValue) {
-                    if (eyeKind == EyeKind.None || paletteInfo.Value.ApplyToEyes) {
-                        palette = paletteInfo;
-                    }
+                if (zoneInfo.HasValue
+                    && zoneInfo.Value.TryGetPalette(mx, my, out var zonePalette)
+                    && (eyeKind == EyeKind.None || zonePalette.ApplyToEyes)) {
+                    palette = zonePalette;
+                } else if (paletteInfo.HasValue && (eyeKind == EyeKind.None || paletteInfo.Value.ApplyToEyes)) {
+                    palette = paletteInfo;
                 }
                 var usePalette = palette.HasValue;
                 if (usePalette) {

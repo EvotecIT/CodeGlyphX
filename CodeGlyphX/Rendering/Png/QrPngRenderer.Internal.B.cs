@@ -940,10 +940,10 @@ public static partial class QrPngRenderer {
             DrawRectOutline(scanlines, widthPx, heightPx, stride, qrOriginX, bottomY, eyeSize, eyeSize, debug.EyeBoundsColor, stroke);
         }
 
-        if (debug.ShowLogoBounds && opts.Logo is not null) {
-            if (TryGetLogoBounds(opts.Logo, qrOriginX, qrOriginY, qrSizePx, out var x, out var y, out var w, out var h)) {
-                DrawRectOutline(scanlines, widthPx, heightPx, stride, x, y, w, h, debug.LogoBoundsColor, stroke);
-            }
+        if (debug.ShowLogoBounds
+            && opts.Logo is not null
+            && TryGetLogoBounds(opts.Logo, qrOriginX, qrOriginY, qrSizePx, out var x, out var y, out var w, out var h)) {
+            DrawRectOutline(scanlines, widthPx, heightPx, stride, x, y, w, h, debug.LogoBoundsColor, stroke);
         }
     }
 
