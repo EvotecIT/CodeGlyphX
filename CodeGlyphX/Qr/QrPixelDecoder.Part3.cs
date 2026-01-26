@@ -350,14 +350,16 @@ internal static partial class QrPixelDecoder {
             candidates.RemoveRange(64, candidates.Count - 64);
             candidatesSorted = true;
         }
-        if (tightBudget && candidates.Count > 30) {
+        var tightCandidateLimit = aggressive ? 36 : 30;
+        if (tightBudget && candidates.Count > tightCandidateLimit) {
             diagnostics = new QrPixelDecodeDiagnostics(scale, threshold, invert, candidates.Count, candidateTriplesTried: 0, dimension: 0,
                 moduleDiagnostics: new global::CodeGlyphX.QrDecodeDiagnostics(global::CodeGlyphX.QrDecodeFailure.Payload));
             return false;
         }
 
         if (candidates.Count >= 3) {
-            if (tightBudget && candidates.Count > 16) {
+            var tightBoundsLimit = aggressive ? 32 : 16;
+            if (tightBudget && candidates.Count > tightBoundsLimit) {
                 if (TryDecodeByCandidateBounds(scale, threshold, image, invert, candidates, accept, aggressive, stylized, budget, out result, out var diagBounds)) {
                     diagnostics = diagBounds;
                     return true;
