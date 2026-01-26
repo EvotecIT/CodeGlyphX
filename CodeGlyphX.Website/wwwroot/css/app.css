@@ -2042,6 +2042,7 @@ body.using-keyboard .showcase-hero h1:focus-visible {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 2rem;
+    align-items: start;
 }
 
 @media (max-width: 900px) {
