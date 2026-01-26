@@ -7,6 +7,10 @@ namespace CodeGlyphX.Rendering.Png;
 /// </summary>
 public sealed class QrPngPaletteOptions {
     /// <summary>
+    /// Default ring size (in modules) for <see cref="QrPngPaletteMode.Rings"/>.
+    /// </summary>
+    public const int DefaultRingSize = 2;
+    /// <summary>
     /// Gets or sets the palette colors (required).
     /// </summary>
     public Rgba32[] Colors { get; set; } = { Rgba32.Black };
@@ -24,7 +28,7 @@ public sealed class QrPngPaletteOptions {
     /// <summary>
     /// Gets or sets the ring thickness in modules for <see cref="QrPngPaletteMode.Rings"/>.
     /// </summary>
-    public int RingSize { get; set; } = 2;
+    public int RingSize { get; set; } = DefaultRingSize;
 
     /// <summary>
     /// When false, finder (eye) modules keep the foreground color.

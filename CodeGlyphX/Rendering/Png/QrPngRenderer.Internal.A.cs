@@ -15,7 +15,10 @@ public static partial class QrPngRenderer {
         if (opts.ModuleScale is <= 0 or > 1.0) throw new ArgumentOutOfRangeException(nameof(opts.ModuleScale));
         opts.BackgroundGradient?.Validate();
         opts.BackgroundPattern?.Validate();
-        if (opts.BackgroundSupersample < 1 || opts.BackgroundSupersample > 4) throw new ArgumentOutOfRangeException(nameof(opts.BackgroundSupersample));
+        if (opts.BackgroundSupersample < QrPngRenderOptions.BackgroundSupersampleMin ||
+            opts.BackgroundSupersample > QrPngRenderOptions.BackgroundSupersampleMax) {
+            throw new ArgumentOutOfRangeException(nameof(opts.BackgroundSupersample));
+        }
         opts.ForegroundGradient?.Validate();
         opts.ForegroundPalette?.Validate();
         opts.ForegroundPaletteZones?.Validate();

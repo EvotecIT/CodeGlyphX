@@ -7,6 +7,10 @@ namespace CodeGlyphX.Rendering.Png;
 /// </summary>
 public sealed class QrPngModuleScaleMapOptions {
     /// <summary>
+    /// Default ring size (in modules) for <see cref="QrPngModuleScaleMode.Rings"/>.
+    /// </summary>
+    public const int DefaultRingSize = 2;
+    /// <summary>
     /// Gets or sets the scale map mode.
     /// </summary>
     public QrPngModuleScaleMode Mode { get; set; } = QrPngModuleScaleMode.Rings;
@@ -24,7 +28,7 @@ public sealed class QrPngModuleScaleMapOptions {
     /// <summary>
     /// Gets or sets the ring size in modules for <see cref="QrPngModuleScaleMode.Rings"/>.
     /// </summary>
-    public int RingSize { get; set; } = 2;
+    public int RingSize { get; set; } = DefaultRingSize;
 
     /// <summary>
     /// Gets or sets the random seed for <see cref="QrPngModuleScaleMode.Random"/>.
