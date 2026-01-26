@@ -24,6 +24,7 @@ public partial class Playground {
         DecodeError = null;
         DecodeImageDataUri = null;
         DecodeStatus = string.Empty;
+        IsDropActive = false;
 
         var file = args.File;
         if (file is null)
