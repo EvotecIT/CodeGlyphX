@@ -116,6 +116,14 @@ public static partial class QR {
         }
 
         /// <summary>
+        /// Sets module scale map.
+        /// </summary>
+        public QrBuilder WithModuleScaleMap(QrPngModuleScaleMapOptions? map) {
+            Options.ModuleScaleMap = map;
+            return this;
+        }
+
+        /// <summary>
         /// Sets module corner radius in pixels.
         /// </summary>
         public QrBuilder WithModuleCornerRadiusPx(int radiusPx) {
@@ -128,6 +136,38 @@ public static partial class QR {
         /// </summary>
         public QrBuilder WithForegroundGradient(QrPngGradientOptions? gradient) {
             Options.ForegroundGradient = gradient;
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the background gradient.
+        /// </summary>
+        public QrBuilder WithBackgroundGradient(QrPngGradientOptions? gradient) {
+            Options.BackgroundGradient = gradient;
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the foreground palette.
+        /// </summary>
+        public QrBuilder WithForegroundPalette(QrPngPaletteOptions? palette) {
+            Options.ForegroundPalette = palette;
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the canvas options.
+        /// </summary>
+        public QrBuilder WithCanvas(QrPngCanvasOptions? canvas) {
+            Options.Canvas = canvas;
+            return this;
+        }
+
+        /// <summary>
+        /// Sets palette overrides for specific zones.
+        /// </summary>
+        public QrBuilder WithForegroundPaletteZones(QrPngPaletteZoneOptions? zones) {
+            Options.ForegroundPaletteZones = zones;
             return this;
         }
 

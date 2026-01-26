@@ -129,7 +129,42 @@ else
                         <option value="Square">Square</option>
                         <option value="Circle">Circle</option>
                         <option value="Rounded">Rounded</option>
+                        <option value="Dot">Dot</option>
+                        <option value="DotGrid">Dot Grid</option>
+                        <option value="Diamond">Diamond</option>
+                        <option value="SoftDiamond">Soft Diamond</option>
+                        <option value="Squircle">Squircle</option>
+                        <option value="Leaf">Leaf</option>
+                        <option value="Wave">Wave</option>
+                        <option value="Blob">Blob</option>
                     </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Output Size</label>
+                    <select @bind="Host.OutputSizePreset" @bind:after="Host.OnOutputSizePresetChanged">
+                        <option value="Auto">Auto</option>
+                        <option value="1200">1200 px</option>
+                        <option value="2400">2400 px</option>
+                        <option value="4000">4000 px</option>
+                        <option value="8000">8000 px</option>
+                        <option value="Custom">Custom</option>
+                    </select>
+                    @if (Host.OutputSizePreset == "Custom")
+                    {
+                        <div class="form-row" style="margin-top:8px;">
+                            <label>Target px</label>
+                            <input type="number" min="200" max="12000" step="50" @bind="Host.TargetSizePx" @bind:after="Host.GenerateCode" />
+                        </div>
+                    }
+                    <div class="form-row" style="margin-top:8px;">
+                        <label><input type="checkbox" @bind="Host.TargetSizeIncludesQuietZone" @bind:after="Host.GenerateCode" /> Include quiet zone</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Module Scale: @Host.ModuleScale.ToString("0.00")</label>
+                    <input type="range" min="0.6" max="1.0" step="0.01" @bind="Host.ModuleScale" @bind:after="Host.GenerateCode" />
                 </div>
 
                 @if (Host.ModuleShape == "Rounded")
@@ -149,6 +184,197 @@ else
                 </div>
 
                 <div class="form-group">
+                    <label>Background quality: @Host.BackgroundSupersample x</label>
+                    <input type="range" min="1" max="4" step="1" @bind="Host.BackgroundSupersample" @bind:after="Host.GenerateCode" />
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" @bind="Host.EnableQrBackgroundPattern" @bind:after="Host.GenerateCode" />
+                        QR background pattern
+                    </label>
+                    @if (Host.EnableQrBackgroundPattern)
+                    {
+                        <div class="form-row" style="margin-top:8px;">
+                            <select @bind="Host.QrBackgroundPatternType" @bind:after="Host.GenerateCode">
+                                <option value="Dots">Dots</option>
+                                <option value="Grid">Grid</option>
+                                <option value="Checker">Checker</option>
+                            </select>
+                            <input type="color" @bind="Host.QrBackgroundPatternColor" @bind:after="Host.GenerateCode" />
+                        </div>
+                        <div class="form-row" style="margin-top:8px;">
+                            <label>Alpha: @Host.QrBackgroundPatternAlpha</label>
+                            <input type="range" min="0" max="200" step="5" @bind="Host.QrBackgroundPatternAlpha" @bind:after="Host.GenerateCode" />
+                            <label>Size: @Host.QrBackgroundPatternSizePx</label>
+                            <input type="range" min="4" max="20" step="1" @bind="Host.QrBackgroundPatternSizePx" @bind:after="Host.GenerateCode" disabled="@Host.QrBackgroundPatternSnapToModules" />
+                            <label>Thickness: @Host.QrBackgroundPatternThicknessPx</label>
+                            <input type="range" min="1" max="6" step="1" @bind="Host.QrBackgroundPatternThicknessPx" @bind:after="Host.GenerateCode" />
+                        </div>
+                        <div class="form-row" style="margin-top:8px;">
+                            <label><input type="checkbox" @bind="Host.QrBackgroundPatternSnapToModules" @bind:after="Host.GenerateCode" /> Snap to modules</label>
+                            <label>Step: @Host.QrBackgroundPatternModuleStep</label>
+                            <input type="range" min="1" max="6" step="1" @bind="Host.QrBackgroundPatternModuleStep" @bind:after="Host.GenerateCode" />
+                        </div>
+                    }
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" @bind="Host.UseForegroundGradient" @bind:after="Host.GenerateCode" />
+                        Foreground gradient
+                    </label>
+                    @if (Host.UseForegroundGradient)
+                    {
+                        <div class="form-row" style="margin-top:8px;">
+                            <select @bind="Host.ForegroundGradientType" @bind:after="Host.GenerateCode">
+                                <option value="Horizontal">Horizontal</option>
+                                <option value="Vertical">Vertical</option>
+                                <option value="DiagonalDown">Diagonal Down</option>
+                                <option value="DiagonalUp">Diagonal Up</option>
+                                <option value="Radial">Radial</option>
+                            </select>
+                            <input type="color" @bind="Host.ForegroundGradientStart" @bind:after="Host.GenerateCode" />
+                            <input type="color" @bind="Host.ForegroundGradientEnd" @bind:after="Host.GenerateCode" />
+                        </div>
+                    }
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" @bind="Host.UseBackgroundGradient" @bind:after="Host.GenerateCode" />
+                        Background gradient
+                    </label>
+                    @if (Host.UseBackgroundGradient)
+                    {
+                        <div class="form-row" style="margin-top:8px;">
+                            <select @bind="Host.BackgroundGradientType" @bind:after="Host.GenerateCode">
+                                <option value="Horizontal">Horizontal</option>
+                                <option value="Vertical">Vertical</option>
+                                <option value="DiagonalDown">Diagonal Down</option>
+                                <option value="DiagonalUp">Diagonal Up</option>
+                                <option value="Radial">Radial</option>
+                            </select>
+                            <input type="color" @bind="Host.BackgroundGradientStart" @bind:after="Host.GenerateCode" />
+                            <input type="color" @bind="Host.BackgroundGradientEnd" @bind:after="Host.GenerateCode" />
+                        </div>
+                    }
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" @bind="Host.EnablePalette" @bind:after="Host.GenerateCode" />
+                        Palette colors
+                    </label>
+                    @if (Host.EnablePalette)
+                    {
+                        <div class="form-group" style="margin-top:8px;">
+                            <label>Palette Mode</label>
+                            <select @bind="Host.PaletteMode" @bind:after="Host.GenerateCode">
+                                <option value="Cycle">Cycle</option>
+                                <option value="Checker">Checker</option>
+                                <option value="Random">Random</option>
+                                <option value="Rings">Rings</option>
+                            </select>
+                        </div>
+                        <div class="form-row">
+                            <input type="color" @bind="Host.PaletteColor1" @bind:after="Host.GenerateCode" />
+                            <input type="color" @bind="Host.PaletteColor2" @bind:after="Host.GenerateCode" />
+                            <input type="color" @bind="Host.PaletteColor3" @bind:after="Host.GenerateCode" />
+                        </div>
+                        <div class="form-row" style="margin-top:8px;">
+                            <label>Seed: @Host.PaletteSeed</label>
+                            <input type="range" min="0" max="20000" step="1" @bind="Host.PaletteSeed" @bind:after="Host.GenerateCode" />
+                            <label>Ring Size: @Host.PaletteRingSize</label>
+                            <input type="range" min="1" max="6" step="1" @bind="Host.PaletteRingSize" @bind:after="Host.GenerateCode" />
+                        </div>
+                    }
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" @bind="Host.EnableZonePalettes" @bind:after="Host.GenerateCode" />
+                        Zone palettes
+                    </label>
+                    @if (Host.EnableZonePalettes)
+                    {
+                        <div class="form-group" style="margin-top:8px;">
+                            <label>Center Zone</label>
+                            <div class="form-row">
+                                <select @bind="Host.CenterPaletteMode" @bind:after="Host.GenerateCode">
+                                    <option value="Cycle">Cycle</option>
+                                    <option value="Checker">Checker</option>
+                                    <option value="Random">Random</option>
+                                    <option value="Rings">Rings</option>
+                                </select>
+                                <input type="color" @bind="Host.CenterPaletteColor1" @bind:after="Host.GenerateCode" />
+                                <input type="color" @bind="Host.CenterPaletteColor2" @bind:after="Host.GenerateCode" />
+                                <input type="color" @bind="Host.CenterPaletteColor3" @bind:after="Host.GenerateCode" />
+                            </div>
+                            <div class="form-row" style="margin-top:8px;">
+                                <label>Size: @Host.CenterZoneSize</label>
+                                <input type="range" min="3" max="15" step="1" @bind="Host.CenterZoneSize" @bind:after="Host.GenerateCode" />
+                                <label>Seed: @Host.CenterPaletteSeed</label>
+                                <input type="range" min="0" max="20000" step="1" @bind="Host.CenterPaletteSeed" @bind:after="Host.GenerateCode" />
+                            </div>
+                        </div>
+                        <div class="form-group" style="margin-top:8px;">
+                            <label>Corner Zone</label>
+                            <div class="form-row">
+                                <select @bind="Host.CornerPaletteMode" @bind:after="Host.GenerateCode">
+                                    <option value="Cycle">Cycle</option>
+                                    <option value="Checker">Checker</option>
+                                    <option value="Random">Random</option>
+                                    <option value="Rings">Rings</option>
+                                </select>
+                                <input type="color" @bind="Host.CornerPaletteColor1" @bind:after="Host.GenerateCode" />
+                                <input type="color" @bind="Host.CornerPaletteColor2" @bind:after="Host.GenerateCode" />
+                            </div>
+                            <div class="form-row" style="margin-top:8px;">
+                                <label>Size: @Host.CornerZoneSize</label>
+                                <input type="range" min="3" max="10" step="1" @bind="Host.CornerZoneSize" @bind:after="Host.GenerateCode" />
+                                <label>Seed: @Host.CornerPaletteSeed</label>
+                                <input type="range" min="0" max="20000" step="1" @bind="Host.CornerPaletteSeed" @bind:after="Host.GenerateCode" />
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" @bind="Host.EnableScaleMap" @bind:after="Host.GenerateCode" />
+                        Module scale map
+                    </label>
+                    @if (Host.EnableScaleMap)
+                    {
+                        <div class="form-group" style="margin-top:8px;">
+                            <label>Mode</label>
+                            <select @bind="Host.ScaleMapMode" @bind:after="Host.GenerateCode">
+                                <option value="Rings">Rings</option>
+                                <option value="Radial">Radial</option>
+                                <option value="Random">Random</option>
+                                <option value="Checker">Checker</option>
+                            </select>
+                        </div>
+                        <div class="form-row" style="margin-top:8px;">
+                            <label>Min: @Host.ScaleMapMin.ToString("0.00")</label>
+                            <input type="range" min="0.5" max="1.0" step="0.01" @bind="Host.ScaleMapMin" @bind:after="Host.GenerateCode" />
+                            <label>Max: @Host.ScaleMapMax.ToString("0.00")</label>
+                            <input type="range" min="0.5" max="1.0" step="0.01" @bind="Host.ScaleMapMax" @bind:after="Host.GenerateCode" />
+                        </div>
+                        <div class="form-row" style="margin-top:8px;">
+                            <label>Ring Size: @Host.ScaleMapRingSize</label>
+                            <input type="range" min="1" max="6" step="1" @bind="Host.ScaleMapRingSize" @bind:after="Host.GenerateCode" />
+                            <label>Seed: @Host.ScaleMapSeed</label>
+                            <input type="range" min="0" max="20000" step="1" @bind="Host.ScaleMapSeed" @bind:after="Host.GenerateCode" />
+                        </div>
+                        <div class="form-row" style="margin-top:8px;">
+                            <label><input type="checkbox" @bind="Host.ScaleMapApplyToEyes" @bind:after="Host.GenerateCode" /> Apply to eyes</label>
+                        </div>
+                    }
+                </div>
+
+                <div class="form-group">
                     <label>
                         <input type="checkbox" @bind="Host.CustomEyes" @bind:after="Host.GenerateCode" />
                         Customize eyes
@@ -158,11 +384,29 @@ else
                 @if (Host.CustomEyes)
                 {
                     <div class="form-group">
+                        <label>Eye Frame Style</label>
+                        <select @bind="Host.EyeFrameStyle" @bind:after="Host.GenerateCode">
+                            <option value="Single">Single</option>
+                            <option value="DoubleRing">Double Ring</option>
+                            <option value="Target">Target</option>
+                            <option value="Bracket">Bracket</option>
+                            <option value="Badge">Badge</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
                         <label>Eye Outer Shape</label>
                         <select @bind="Host.EyeOuterShape" @bind:after="Host.GenerateCode">
                             <option value="Square">Square</option>
                             <option value="Circle">Circle</option>
                             <option value="Rounded">Rounded</option>
+                            <option value="Dot">Dot</option>
+                            <option value="DotGrid">Dot Grid</option>
+                            <option value="Diamond">Diamond</option>
+                            <option value="SoftDiamond">Soft Diamond</option>
+                            <option value="Squircle">Squircle</option>
+                            <option value="Leaf">Leaf</option>
+                            <option value="Wave">Wave</option>
+                            <option value="Blob">Blob</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -171,6 +415,14 @@ else
                             <option value="Square">Square</option>
                             <option value="Circle">Circle</option>
                             <option value="Rounded">Rounded</option>
+                            <option value="Dot">Dot</option>
+                            <option value="DotGrid">Dot Grid</option>
+                            <option value="Diamond">Diamond</option>
+                            <option value="SoftDiamond">Soft Diamond</option>
+                            <option value="Squircle">Squircle</option>
+                            <option value="Leaf">Leaf</option>
+                            <option value="Wave">Wave</option>
+                            <option value="Blob">Blob</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -181,6 +433,115 @@ else
                         </div>
                     </div>
                 }
+
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" @bind="Host.EnableCanvas" @bind:after="Host.GenerateCode" />
+                        Canvas / Sticker
+                    </label>
+                    @if (Host.EnableCanvas)
+                    {
+                        <div class="form-row" style="margin-top:8px;">
+                            <label>Padding: @Host.CanvasPaddingPx</label>
+                            <input type="range" min="8" max="48" step="1" @bind="Host.CanvasPaddingPx" @bind:after="Host.GenerateCode" />
+                            <label>Radius: @Host.CanvasCornerRadiusPx</label>
+                            <input type="range" min="0" max="36" step="1" @bind="Host.CanvasCornerRadiusPx" @bind:after="Host.GenerateCode" />
+                        </div>
+                        <div class="form-group" style="margin-top:8px;">
+                            <label>Canvas Background</label>
+                            <div class="form-row">
+                                <input type="color" @bind="Host.CanvasBackgroundColor" @bind:after="Host.GenerateCode" />
+                                <label><input type="checkbox" @bind="Host.CanvasUseGradient" @bind:after="Host.GenerateCode" /> Gradient</label>
+                            </div>
+                            @if (Host.CanvasUseGradient)
+                            {
+                                <div class="form-row" style="margin-top:8px;">
+                                    <select @bind="Host.CanvasGradientType" @bind:after="Host.GenerateCode">
+                                        <option value="Horizontal">Horizontal</option>
+                                        <option value="Vertical">Vertical</option>
+                                        <option value="DiagonalDown">Diagonal Down</option>
+                                        <option value="DiagonalUp">Diagonal Up</option>
+                                        <option value="Radial">Radial</option>
+                                    </select>
+                                    <input type="color" @bind="Host.CanvasGradientStart" @bind:after="Host.GenerateCode" />
+                                    <input type="color" @bind="Host.CanvasGradientEnd" @bind:after="Host.GenerateCode" />
+                                </div>
+                            }
+                        </div>
+
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" @bind="Host.CanvasUsePattern" @bind:after="Host.GenerateCode" />
+                                Pattern overlay
+                            </label>
+                            @if (Host.CanvasUsePattern)
+                            {
+                                <div class="form-row" style="margin-top:8px;">
+                                    <select @bind="Host.CanvasPatternType" @bind:after="Host.GenerateCode">
+                                        <option value="Dots">Dots</option>
+                                        <option value="Grid">Grid</option>
+                                        <option value="Checker">Checker</option>
+                                    </select>
+                                    <input type="color" @bind="Host.CanvasPatternColor" @bind:after="Host.GenerateCode" />
+                                </div>
+                                <div class="form-row" style="margin-top:8px;">
+                                    <label>Alpha: @Host.CanvasPatternAlpha</label>
+                                    <input type="range" min="0" max="200" step="5" @bind="Host.CanvasPatternAlpha" @bind:after="Host.GenerateCode" />
+                                    <label>Size: @Host.CanvasPatternSizePx</label>
+                                    <input type="range" min="4" max="20" step="1" @bind="Host.CanvasPatternSizePx" @bind:after="Host.GenerateCode" />
+                                    <label>Thickness: @Host.CanvasPatternThicknessPx</label>
+                                    <input type="range" min="1" max="6" step="1" @bind="Host.CanvasPatternThicknessPx" @bind:after="Host.GenerateCode" />
+                                </div>
+                            }
+                        </div>
+
+                        <div class="form-group">
+                            <label>Border</label>
+                            <div class="form-row">
+                                <label>Size: @Host.CanvasBorderPx</label>
+                                <input type="range" min="0" max="8" step="1" @bind="Host.CanvasBorderPx" @bind:after="Host.GenerateCode" />
+                                <input type="color" @bind="Host.CanvasBorderColor" @bind:after="Host.GenerateCode" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Shadow</label>
+                            <div class="form-row">
+                                <label>X: @Host.CanvasShadowOffsetX</label>
+                                <input type="range" min="-12" max="12" step="1" @bind="Host.CanvasShadowOffsetX" @bind:after="Host.GenerateCode" />
+                                <label>Y: @Host.CanvasShadowOffsetY</label>
+                                <input type="range" min="-12" max="12" step="1" @bind="Host.CanvasShadowOffsetY" @bind:after="Host.GenerateCode" />
+                            </div>
+                            <div class="form-row" style="margin-top:8px;">
+                                <input type="color" @bind="Host.CanvasShadowColor" @bind:after="Host.GenerateCode" />
+                                <label>Alpha: @Host.CanvasShadowAlpha</label>
+                                <input type="range" min="0" max="200" step="5" @bind="Host.CanvasShadowAlpha" @bind:after="Host.GenerateCode" />
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" @bind="Host.EnableDebugOverlay" @bind:after="Host.GenerateCode" />
+                        Safety overlay
+                    </label>
+                    @if (Host.EnableDebugOverlay)
+                    {
+                        <div class="form-row" style="margin-top:8px;">
+                            <label><input type="checkbox" @bind="Host.DebugShowQuietZone" @bind:after="Host.GenerateCode" /> Quiet zone</label>
+                            <label><input type="checkbox" @bind="Host.DebugShowQrBounds" @bind:after="Host.GenerateCode" /> QR bounds</label>
+                        </div>
+                        <div class="form-row" style="margin-top:8px;">
+                            <label><input type="checkbox" @bind="Host.DebugShowEyeBounds" @bind:after="Host.GenerateCode" /> Eye bounds</label>
+                            <label><input type="checkbox" @bind="Host.DebugShowLogoBounds" @bind:after="Host.GenerateCode" /> Logo bounds</label>
+                        </div>
+                        <div class="form-row" style="margin-top:8px;">
+                            <label>Stroke: @Host.DebugStrokePx</label>
+                            <input type="range" min="1" max="4" step="1" @bind="Host.DebugStrokePx" @bind:after="Host.GenerateCode" />
+                        </div>
+                    }
+                </div>
             }
             else if (Host.SelectedCategory == "SpecialQR")
             {

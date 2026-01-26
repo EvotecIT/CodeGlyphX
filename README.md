@@ -477,6 +477,24 @@ var opts = new QrEasyOptions {
 QR.Save("https://example.com", "qr-styled.png", opts);
 ```
 
+### High-resolution output (print / large displays)
+
+For large displays or print, render at a higher pixel size using `TargetSizePx` or a larger `ModuleSize`.
+Vector output (SVG/PDF) is ideal when your style stays vector-friendly (no gradients/palettes/logos).
+
+```csharp
+using CodeGlyphX;
+
+var opts = new QrEasyOptions {
+    TargetSizePx = 1200,
+    TargetSizeIncludesQuietZone = true,
+    BackgroundSupersample = 2 // smoother gradients/patterns
+};
+QR.Save("https://example.com", "qr-1200.png", opts);
+```
+
+Examples: see `CodeGlyphX.Examples` output files (`qr-print-4k.png`, `qr-print-8k.png`, `qr-print-8k.pdf`) for print-ready presets.
+
 ```csharp
 using CodeGlyphX;
 using CodeGlyphX.Rendering;
@@ -484,6 +502,13 @@ using CodeGlyphX.Rendering;
 // PDF/EPS are vector by default. Use Raster when you need pixels.
 QR.SavePdf("https://example.com", "qr-raster.pdf", mode: RenderMode.Raster);
 ```
+
+### Rendering pipeline notes (PNG)
+
+- Layout: compute quiet-zone, module grid, and output pixel size.
+- Background: solid/gradient/pattern fill (optional supersample for smoother gradients/patterns).
+- Modules: shape + scale map + palette/gradient, then eyes, then logo overlay.
+- Canvas/debug: optional sticker canvas + debug overlays as final passes.
 
 Notes:
 - Vector PDF/EPS support square/rounded/circle modules and eye shapes.

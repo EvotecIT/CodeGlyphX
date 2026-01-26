@@ -8,6 +8,7 @@ param(
     [string]$OutputPath = "site",
     [switch]$SkipApiDocs,
     [switch]$SkipLlms,
+    [switch]$SkipStyleBoard,
     [switch]$Publish
 )
 
@@ -58,6 +59,11 @@ $navScript = Join-Path $PSScriptRoot "Update-NavFragments.ps1"
 Invoke-Step "Updating navigation fragments..." @("pwsh",$navScript)
 
 Invoke-Step "Building CodeGlyphX..." @("dotnet","build",$codeGlyphProject,"-c",$Configuration,"-f",$Framework)
+
+if (-not $SkipStyleBoard) {
+    $styleBoardScript = Join-Path $PSScriptRoot "Update-StyleBoard.ps1"
+    Invoke-Step "Updating style board assets..." @("pwsh",$styleBoardScript,"-Configuration",$Configuration,"-Framework","net8.0")
+}
 
 if (-not $SkipApiDocs) {
     Invoke-Step "Generating API docs..." @(

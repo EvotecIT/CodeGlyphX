@@ -30,6 +30,11 @@ public static partial class QrEasy {
             QuietZone = opts.QuietZone,
             Foreground = opts.Foreground,
             Background = opts.Background,
+            BackgroundGradient = opts.BackgroundGradient,
+            BackgroundPattern = opts.BackgroundPattern,
+            BackgroundSupersample = opts.BackgroundSupersample,
+            Canvas = opts.Canvas,
+            Debug = opts.Debug,
         };
 
         if (opts.Style == QrRenderStyle.Rounded) {
@@ -68,6 +73,10 @@ public static partial class QrEasy {
         if (opts.ModuleScale.HasValue) render.ModuleScale = opts.ModuleScale.Value;
         if (opts.ModuleCornerRadiusPx.HasValue) render.ModuleCornerRadiusPx = opts.ModuleCornerRadiusPx.Value;
         if (opts.ForegroundGradient is not null) render.ForegroundGradient = opts.ForegroundGradient;
+        if (opts.ForegroundPalette is not null) render.ForegroundPalette = opts.ForegroundPalette;
+        if (opts.ForegroundPaletteZones is not null) render.ForegroundPaletteZones = opts.ForegroundPaletteZones;
+        if (opts.ModuleScaleMap is not null) render.ModuleScaleMap = opts.ModuleScaleMap;
+        if (opts.Canvas is not null) render.Canvas = opts.Canvas;
         if (opts.Eyes is not null) render.Eyes = opts.Eyes;
 
         var logo = BuildPngLogo(opts);
@@ -193,6 +202,8 @@ public static partial class QrEasy {
         return new QrEasyOptions {
             ModuleSize = opts.ModuleSize,
             QuietZone = opts.QuietZone,
+            TargetSizePx = opts.TargetSizePx,
+            TargetSizeIncludesQuietZone = opts.TargetSizeIncludesQuietZone,
             ErrorCorrectionLevel = opts.ErrorCorrectionLevel,
             TextEncoding = opts.TextEncoding,
             IncludeEci = opts.IncludeEci,
@@ -202,12 +213,20 @@ public static partial class QrEasy {
             ForceMask = opts.ForceMask,
             Foreground = opts.Foreground,
             Background = opts.Background,
+            BackgroundGradient = opts.BackgroundGradient,
+            BackgroundPattern = opts.BackgroundPattern,
+            BackgroundSupersample = opts.BackgroundSupersample,
             Style = opts.Style,
             ModuleShape = opts.ModuleShape,
             ModuleScale = opts.ModuleScale,
+            ModuleScaleMap = opts.ModuleScaleMap,
             ModuleCornerRadiusPx = opts.ModuleCornerRadiusPx,
             ForegroundGradient = opts.ForegroundGradient,
+            ForegroundPalette = opts.ForegroundPalette,
+            ForegroundPaletteZones = opts.ForegroundPaletteZones,
             Eyes = opts.Eyes,
+            Canvas = opts.Canvas,
+            Debug = opts.Debug,
             LogoPng = opts.LogoPng,
             LogoScale = opts.LogoScale,
             LogoPaddingPx = opts.LogoPaddingPx,

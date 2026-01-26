@@ -12,6 +12,11 @@ public sealed class QrPngEyeOptions {
     public bool UseFrame { get; set; }
 
     /// <summary>
+    /// Gets or sets the eye frame style when <see cref="UseFrame"/> is enabled.
+    /// </summary>
+    public QrPngEyeFrameStyle FrameStyle { get; set; } = QrPngEyeFrameStyle.Single;
+
+    /// <summary>
     /// Gets or sets the outer (7x7) eye module shape.
     /// </summary>
     public QrPngModuleShape OuterShape { get; set; } = QrPngModuleShape.Square;

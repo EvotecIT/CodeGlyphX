@@ -3,7 +3,8 @@ param(
     [string]$Framework = "net10.0",
     [string]$WebsiteProject = "CodeGlyphX.Website/CodeGlyphX.Website.csproj",
     [string]$OutputPath = "site",
-    [switch]$MinifyAssets
+    [switch]$MinifyAssets,
+    [switch]$SkipStyleBoard
 )
 
 $ErrorActionPreference = "Stop"
@@ -180,6 +181,11 @@ $playgroundConstants = "$baseConstants;PLAYGROUND_BUILD"
 
 if (-not (Test-Path $websiteProjectPath)) { throw "Missing website project at $websiteProjectPath" }
 if (-not (Test-Path $wwwrootSource)) { throw "Missing wwwroot at $wwwrootSource" }
+
+$styleBoardScript = Join-Path $PSScriptRoot "Update-StyleBoard.ps1"
+if (-not $SkipStyleBoard) {
+    Invoke-Step "Updating style board assets..." @("pwsh",$styleBoardScript,"-Configuration",$Configuration,"-Framework","net8.0")
+}
 
 $navScript = Join-Path $PSScriptRoot "Update-NavFragments.ps1"
 Invoke-Step "Updating navigation fragments..." @("pwsh",$navScript)

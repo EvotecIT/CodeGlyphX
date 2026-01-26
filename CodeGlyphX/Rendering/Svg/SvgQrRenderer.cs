@@ -282,8 +282,24 @@ public static class SvgQrRenderer {
                 .Append("\" fill=\"").Append(fill).Append("\"/>");
             return;
         }
+        if (shape == QrPngModuleShape.SoftDiamond) {
+            AppendSuperellipse(sb, x, y, size, QrPngShapeDefaults.SoftDiamondExponent, fill);
+            return;
+        }
         if (shape == QrPngModuleShape.Squircle) {
             AppendSquircle(sb, x, y, size, fill);
+            return;
+        }
+        if (shape == QrPngModuleShape.Leaf) {
+            AppendRadialShape(sb, x, y, size, LeafRadiusFactor, fill);
+            return;
+        }
+        if (shape == QrPngModuleShape.Wave) {
+            AppendRadialShape(sb, x, y, size, WaveRadiusFactor, fill);
+            return;
+        }
+        if (shape == QrPngModuleShape.Blob) {
+            AppendRadialShape(sb, x, y, size, BlobRadiusFactor, fill);
             return;
         }
 
@@ -348,6 +364,70 @@ public static class SvgQrRenderer {
             sb.Append(Format(px)).Append(',').Append(Format(py));
         }
         sb.Append("\" fill=\"").Append(fill).Append("\"/>");
+    }
+
+    private static void AppendSuperellipse(StringBuilder sb, double x, double y, double size, double exponent, string fill) {
+        var steps = QrPngShapeDefaults.ShapeSteps;
+        var cx = x + size / 2.0;
+        var cy = y + size / 2.0;
+        var r = size / 2.0;
+        if (r <= 0) return;
+
+        sb.Append("<polygon points=\"");
+        for (var i = 0; i < steps; i++) {
+            var angle = i * (Math.PI * 2.0 / steps);
+            var cos = Math.Cos(angle);
+            var sin = Math.Sin(angle);
+            var denom = Math.Pow(Math.Abs(cos), exponent) + Math.Pow(Math.Abs(sin), exponent);
+            var rf = denom <= 0 ? 0 : Math.Pow(1.0 / denom, 1.0 / exponent);
+            var px = cx + cos * r * rf;
+            var py = cy + sin * r * rf;
+            sb.Append(Format(px)).Append(',').Append(Format(py));
+            if (i < steps - 1) sb.Append(' ');
+        }
+        sb.Append("\" fill=\"").Append(fill).Append("\"/>");
+    }
+
+    private static void AppendRadialShape(StringBuilder sb, double x, double y, double size, Func<double, double> radiusFactor, string fill) {
+        var steps = QrPngShapeDefaults.ShapeSteps;
+        var cx = x + size / 2.0;
+        var cy = y + size / 2.0;
+        var r = size / 2.0;
+        if (r <= 0) return;
+
+        sb.Append("<polygon points=\"");
+        for (var i = 0; i < steps; i++) {
+            var angle = i * (Math.PI * 2.0 / steps);
+            var factor = radiusFactor(angle);
+            if (factor < 0.05) factor = 0.05;
+            var px = cx + Math.Cos(angle) * r * factor;
+            var py = cy + Math.Sin(angle) * r * factor;
+            sb.Append(Format(px)).Append(',').Append(Format(py));
+            if (i < steps - 1) sb.Append(' ');
+        }
+        sb.Append("\" fill=\"").Append(fill).Append("\"/>");
+    }
+
+    private static double LeafRadiusFactor(double angle) {
+        var r = QrPngShapeDefaults.LeafRadiusFactor;
+        var d = QrPngShapeDefaults.LeafOffsetFactor;
+        var sin = Math.Sin(angle);
+        var cos = Math.Cos(angle);
+        var term = r * r - d * d * sin * sin;
+        if (term <= 0) return 0;
+        var root = Math.Sqrt(term);
+        var radius = root - Math.Abs(d * cos);
+        return radius < 0 ? 0 : radius;
+    }
+
+    private static double WaveRadiusFactor(double angle) {
+        return 1.0 + QrPngShapeDefaults.WaveAmplitude * Math.Sin(QrPngShapeDefaults.WaveFrequency * angle);
+    }
+
+    private static double BlobRadiusFactor(double angle) {
+        var wave = Math.Sin(QrPngShapeDefaults.BlobFrequencyA * angle) +
+                   0.5 * Math.Sin(QrPngShapeDefaults.BlobFrequencyB * angle);
+        return 1.0 + QrPngShapeDefaults.BlobAmplitude * (wave / 1.5);
     }
 
     private static void DrawEyeFrame(

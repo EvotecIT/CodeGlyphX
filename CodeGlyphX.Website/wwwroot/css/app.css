@@ -13,6 +13,57 @@
     --header-height: 60px;
 }
 
+/* QR Style Board */
+.style-board {
+    padding: 96px 6vw;
+    background: var(--bg);
+}
+
+.style-board-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 18px;
+    margin-top: 32px;
+}
+
+.style-board-card {
+    background: var(--bg-card);
+    border-radius: 18px;
+    padding: 14px;
+    text-align: center;
+    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.18);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.style-board-card img {
+    width: 100%;
+    height: auto;
+    border-radius: 14px;
+    display: block;
+}
+
+.style-board-label {
+    margin-top: 10px;
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 0.3px;
+    color: var(--text);
+}
+
+.style-board-actions {
+    margin-top: 28px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.style-board-fallback {
+    color: var(--text-muted);
+    padding: 16px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.04);
+}
+
 /* Dark theme (default) */
 :root, [data-theme="dark"] {
     /* Colors */

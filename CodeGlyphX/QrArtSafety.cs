@@ -25,6 +25,10 @@ public enum QrArtWarningKind {
     /// </summary>
     LowContrastGradient,
     /// <summary>
+    /// Palette includes colors with low contrast against the background.
+    /// </summary>
+    LowContrastPalette,
+    /// <summary>
     /// Module scale is too small (excessive rounding or shrink).
     /// </summary>
     ModuleScaleTooSmall,
@@ -115,22 +119,33 @@ public static class QrArtSafety {
             Add(QrArtWarningKind.ModuleSizeTooSmall, "Module size below 3px can be hard for cameras to resolve.", 10);
         }
 
-        if (options.ModuleScale < 0.8) {
+        var minScale = options.ModuleScale;
+        if (options.ModuleScaleMap is not null) {
+            var mapMin = Math.Min(options.ModuleScaleMap.MinScale, options.ModuleScaleMap.MaxScale);
+            minScale *= mapMin;
+        }
+        if (minScale < 0.8) {
             Add(QrArtWarningKind.ModuleScaleTooSmall, "Module scale below 0.8 can weaken timing/finder clarity.", 10);
         }
 
-        var bg = options.Background;
-        if (options.ForegroundGradient is null) {
-            var contrast = ContrastRatio(options.Foreground, bg);
+        var bg = options.BackgroundGradient is null
+            ? new[] { options.Background }
+            : new[] { options.BackgroundGradient.StartColor, options.BackgroundGradient.EndColor };
+
+        if (options.ForegroundPalette is not null || options.ForegroundPaletteZones is not null) {
+            var palettes = CollectPalettes(options.ForegroundPalette, options.ForegroundPaletteZones);
+            var min = MinContrast(palettes, bg);
+            if (min < 4.5) {
+                Add(QrArtWarningKind.LowContrastPalette, "Palette includes low-contrast colors against the background.", 30);
+            }
+        } else if (options.ForegroundGradient is null) {
+            var contrast = MinContrast(new[] { options.Foreground }, bg);
             if (contrast < 4.5) {
                 Add(QrArtWarningKind.LowContrast, $"Foreground/background contrast {contrast:0.00} is low.", 30);
             }
         } else {
-            var fgStart = options.ForegroundGradient.StartColor;
-            var fgEnd = options.ForegroundGradient.EndColor;
-            var c1 = ContrastRatio(fgStart, bg);
-            var c2 = ContrastRatio(fgEnd, bg);
-            if (Math.Min(c1, c2) < 4.5) {
+            var min = MinContrast(new[] { options.ForegroundGradient.StartColor, options.ForegroundGradient.EndColor }, bg);
+            if (min < 4.5) {
                 Add(QrArtWarningKind.LowContrastGradient, "Gradient includes low-contrast colors against the background.", 30);
             }
         }
@@ -169,6 +184,40 @@ public static class QrArtSafety {
         var l2 = RelativeLuminance(b);
         if (l1 < l2) (l1, l2) = (l2, l1);
         return (l1 + 0.05) / (l2 + 0.05);
+    }
+
+    private static double MinContrast(Rgba32[] foregrounds, Rgba32[] backgrounds) {
+        var min = double.MaxValue;
+        for (var i = 0; i < foregrounds.Length; i++) {
+            for (var j = 0; j < backgrounds.Length; j++) {
+                var contrast = ContrastRatio(foregrounds[i], backgrounds[j]);
+                if (contrast < min) min = contrast;
+            }
+        }
+        return min;
+    }
+
+    private static Rgba32[] CollectPalettes(QrPngPaletteOptions? basePalette, QrPngPaletteZoneOptions? zones) {
+        var count = 0;
+        if (basePalette is not null) count += basePalette.Colors.Length;
+        if (zones?.CenterPalette is not null) count += zones.CenterPalette.Colors.Length;
+        if (zones?.CornerPalette is not null) count += zones.CornerPalette.Colors.Length;
+        if (count == 0) return Array.Empty<Rgba32>();
+
+        var colors = new Rgba32[count];
+        var offset = 0;
+        if (basePalette is not null) {
+            Array.Copy(basePalette.Colors, 0, colors, offset, basePalette.Colors.Length);
+            offset += basePalette.Colors.Length;
+        }
+        if (zones?.CenterPalette is not null) {
+            Array.Copy(zones.CenterPalette.Colors, 0, colors, offset, zones.CenterPalette.Colors.Length);
+            offset += zones.CenterPalette.Colors.Length;
+        }
+        if (zones?.CornerPalette is not null) {
+            Array.Copy(zones.CornerPalette.Colors, 0, colors, offset, zones.CornerPalette.Colors.Length);
+        }
+        return colors;
     }
 
     private static double RelativeLuminance(Rgba32 c) {

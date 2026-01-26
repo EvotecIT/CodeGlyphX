@@ -378,6 +378,7 @@ public partial class Playground {
         ErrorMessage = null;
         ImageDataUri = null;
         SvgDataUri = null;
+        SafetyReport = null;
         DecodeImageDataUri = null;
         DecodeError = null;
         DecodeResults.Clear();

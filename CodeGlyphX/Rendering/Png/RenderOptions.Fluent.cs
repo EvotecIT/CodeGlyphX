@@ -34,10 +34,50 @@ public sealed partial class QrPngRenderOptions {
     }
 
     /// <summary>
+    /// Sets the background gradient.
+    /// </summary>
+    public QrPngRenderOptions WithBackgroundGradient(QrPngGradientOptions? gradient) {
+        BackgroundGradient = gradient;
+        return this;
+    }
+
+    /// <summary>
+    /// Sets the background pattern overlay.
+    /// </summary>
+    public QrPngRenderOptions WithBackgroundPattern(QrPngBackgroundPatternOptions? pattern) {
+        BackgroundPattern = pattern;
+        return this;
+    }
+
+    /// <summary>
+    /// Sets the background supersample factor (1 = disabled).
+    /// </summary>
+    public QrPngRenderOptions WithBackgroundSupersample(int factor) {
+        BackgroundSupersample = factor;
+        return this;
+    }
+
+    /// <summary>
     /// Sets the foreground gradient.
     /// </summary>
     public QrPngRenderOptions WithForegroundGradient(QrPngGradientOptions? gradient) {
         ForegroundGradient = gradient;
+        return this;
+    }
+
+    /// <summary>
+    /// Sets the foreground palette.
+    /// </summary>
+    public QrPngRenderOptions WithForegroundPalette(QrPngPaletteOptions? palette) {
+        ForegroundPalette = palette;
+        return this;
+    }
+
+    /// <summary>
+    /// Sets palette overrides for specific zones.
+    /// </summary>
+    public QrPngRenderOptions WithForegroundPaletteZones(QrPngPaletteZoneOptions? zones) {
+        ForegroundPaletteZones = zones;
         return this;
     }
 
@@ -66,6 +106,14 @@ public sealed partial class QrPngRenderOptions {
     }
 
     /// <summary>
+    /// Sets per-module scale mapping options.
+    /// </summary>
+    public QrPngRenderOptions WithModuleScaleMap(QrPngModuleScaleMapOptions? map) {
+        ModuleScaleMap = map;
+        return this;
+    }
+
+    /// <summary>
     /// Sets the module corner radius in pixels.
     /// </summary>
     public QrPngRenderOptions WithModuleCornerRadiusPx(int radiusPx) {
@@ -78,6 +126,22 @@ public sealed partial class QrPngRenderOptions {
     /// </summary>
     public QrPngRenderOptions WithLogo(QrPngLogoOptions? logo) {
         Logo = logo;
+        return this;
+    }
+
+    /// <summary>
+    /// Sets the canvas options.
+    /// </summary>
+    public QrPngRenderOptions WithCanvas(QrPngCanvasOptions? canvas) {
+        Canvas = canvas;
+        return this;
+    }
+
+    /// <summary>
+    /// Sets the debug overlay options.
+    /// </summary>
+    public QrPngRenderOptions WithDebug(QrPngDebugOptions? debug) {
+        Debug = debug;
         return this;
     }
 }
