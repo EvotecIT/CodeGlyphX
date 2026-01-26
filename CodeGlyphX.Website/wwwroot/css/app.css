@@ -2068,10 +2068,12 @@ body.using-keyboard .showcase-hero h1:focus-visible {
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 2rem;
+        align-items: start;
     }
 
     .playground-config-column {
         max-width: 520px;
+        align-self: start;
     }
 
     .playground-preview-column {
@@ -2080,6 +2082,7 @@ body.using-keyboard .showcase-hero h1:focus-visible {
         position: -webkit-sticky;
         position: sticky;
         top: 5rem;
+        align-self: start;
     }
 }
 
