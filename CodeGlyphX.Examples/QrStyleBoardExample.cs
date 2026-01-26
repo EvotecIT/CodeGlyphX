@@ -11,7 +11,7 @@ namespace CodeGlyphX.Examples;
 
 internal static class QrStyleBoardExample {
     private const int StyleBoardTargetSizePx = 384;
-    private const string StyleDocsBase = "https://codeglyphx.com/docs/?style=";
+    private const string StyleDocsBase = "https://codeglyphx.com/docs/qr?style=";
 
     public static void Run(string outputDir) {
         var dir = Path.Combine(outputDir, "qr-style-board");
