@@ -383,6 +383,7 @@ public static partial class QrPngRenderer {
                 FillMaskShape(scanlines, widthPx, heightPx, stride, x, y, w, h, color, shape, radius);
                 return;
             case QrPngModuleShape.Squircle:
+            case QrPngModuleShape.ConnectedSquircle:
                 FillSquircle(scanlines, widthPx, heightPx, stride, x, y, w, h, color);
                 return;
             case QrPngModuleShape.Dot:
@@ -427,6 +428,7 @@ public static partial class QrPngRenderer {
                 FillMaskShapeGradient(scanlines, widthPx, heightPx, stride, x, y, w, h, gradient, shape, radius);
                 return;
             case QrPngModuleShape.Squircle:
+            case QrPngModuleShape.ConnectedSquircle:
                 FillSquircleGradient(scanlines, widthPx, heightPx, stride, x, y, w, h, gradient);
                 return;
             case QrPngModuleShape.Dot:

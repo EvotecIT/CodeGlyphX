@@ -79,6 +79,24 @@ public sealed class RendererFormatTests {
     }
 
     [Fact]
+    public void Qr_ArtPresets_Render_Png_Format() {
+        var payload = "https://example.com/art";
+        var presets = new[] {
+            QrArtPresets.NeonGlow(),
+            QrArtPresets.LiquidGlass(),
+            QrArtPresets.ConnectedSquircleGlow(),
+            QrArtPresets.CutCornerTech(),
+            QrArtPresets.InsetRings(),
+        };
+
+        foreach (var preset in presets) {
+            var png = QrEasy.RenderPng(payload, preset);
+            Assert.True(ImageReader.TryDetectFormat(png, out var format));
+            Assert.Equal(ImageFormat.Png, format);
+        }
+    }
+
+    [Fact]
     public void Qr_Ascii_UnicodeBlocks_Uses_Block_Glyphs() {
         var payload = "https://example.com";
         var ascii = QrEasy.RenderAscii(payload, new MatrixAsciiRenderOptions {

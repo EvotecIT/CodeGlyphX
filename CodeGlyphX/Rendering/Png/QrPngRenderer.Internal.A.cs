@@ -79,8 +79,11 @@ public static partial class QrPngRenderer {
             DrawCanvas(buffer, widthPx, heightPx, stride, opts, qrOffsetX, qrOffsetY, qrFullPx);
             FillQrBackground(buffer, widthPx, heightPx, stride, opts, qrOffsetX, qrOffsetY, qrFullPx);
         }
-        var connectedRounded = opts.ModuleShape == QrPngModuleShape.ConnectedRounded;
-        var baseModuleShape = connectedRounded ? QrPngModuleShape.Rounded : opts.ModuleShape;
+        var connectedShape = opts.ModuleShape;
+        var connectedMode = connectedShape is QrPngModuleShape.ConnectedRounded or QrPngModuleShape.ConnectedSquircle;
+        var baseModuleShape = connectedMode
+            ? connectedShape == QrPngModuleShape.ConnectedRounded ? QrPngModuleShape.Rounded : QrPngModuleShape.Squircle
+            : opts.ModuleShape;
         var mask = BuildModuleMask(opts.ModuleSize, baseModuleShape, opts.ModuleScale, opts.ModuleCornerRadiusPx);
         var maskSolid = IsSolidMask(mask);
         var eyeOuterMask = opts.Eyes is null
@@ -107,7 +110,7 @@ public static partial class QrPngRenderer {
         var zoneInfo = opts.ForegroundPaletteZones is null ? (PaletteZoneInfo?)null : new PaletteZoneInfo(opts.ForegroundPaletteZones, size);
         var scaleMapInfo = opts.ModuleScaleMap is null ? (ModuleScaleMapInfo?)null : new ModuleScaleMapInfo(opts.ModuleScaleMap, size);
         var scaleMaskCache = scaleMapInfo.HasValue ? new Dictionary<int, MaskInfo>(8) : null;
-        var connectedMaskCache = connectedRounded ? new Dictionary<int, MaskInfo>(32) : null;
+        var connectedMaskCache = connectedMode ? new Dictionary<int, MaskInfo>(32) : null;
         // Eye detection is needed for styling decisions (eyes/palettes/scale maps),
         // but we keep it decoupled from functional protection so gradients can still
         // apply to eyes when no eye-specific styling is configured.
@@ -166,14 +169,20 @@ public static partial class QrPngRenderer {
                     useColor = GetPaletteColor(palette!.Value, mx, my);
                 }
 
-                if (!protectFunctional && connectedRounded && eyeKind == EyeKind.None) {
+                if (!protectFunctional && connectedMode && eyeKind == EyeKind.None) {
                     var scale = opts.ModuleScale;
                     if (scaleMapInfo.HasValue) {
                         scale *= GetScaleFactor(scaleMapInfo.Value, mx, my);
                     }
                     scale = ClampScale(scale);
                     var neighborMask = GetNeighborMask(modules, mx, my);
-                    var maskInfo = GetConnectedRoundedMask(connectedMaskCache!, opts.ModuleSize, scale, opts.ModuleCornerRadiusPx, neighborMask);
+                    var maskInfo = GetConnectedMask(
+                        connectedMaskCache!,
+                        opts.ModuleSize,
+                        scale,
+                        opts.ModuleCornerRadiusPx,
+                        neighborMask,
+                        connectedShape);
                     useMask = maskInfo.Mask;
                     useMaskSolid = maskInfo.IsSolid;
                 } else if (!protectFunctional
@@ -702,6 +711,19 @@ public static partial class QrPngRenderer {
         }
     }
 
+    private static int Hash(int a, int b, int c, int d) {
+        unchecked {
+            var h = (uint)Hash(a, b, c);
+            h = (h * 31u) ^ (uint)d;
+            h ^= h >> 16;
+            h *= 0x7feb352du;
+            h ^= h >> 15;
+            h *= 0x846ca68bu;
+            h ^= h >> 16;
+            return (int)h;
+        }
+    }
+
     private const int NeighborNorth = 1 << 0;
     private const int NeighborEast = 1 << 1;
     private const int NeighborSouth = 1 << 2;
@@ -716,19 +738,33 @@ public static partial class QrPngRenderer {
         return mask;
     }
 
-    private static MaskInfo GetConnectedRoundedMask(
+    private static MaskInfo GetConnectedMask(
         Dictionary<int, MaskInfo> cache,
         int moduleSize,
         double scale,
         int cornerRadiusPx,
-        int neighborMask) {
-        var key = Hash(QuantizeScaleKey(scale), cornerRadiusPx, neighborMask & 0xF);
+        int neighborMask,
+        QrPngModuleShape shape) {
+        var key = Hash(QuantizeScaleKey(scale), cornerRadiusPx, neighborMask & 0xF, (int)shape);
         if (!cache.TryGetValue(key, out var info)) {
-            var mask = BuildConnectedRoundedMask(moduleSize, scale, cornerRadiusPx, neighborMask);
+            var mask = BuildConnectedMask(moduleSize, scale, cornerRadiusPx, neighborMask, shape);
             info = new MaskInfo(mask, IsSolidMask(mask));
             cache[key] = info;
         }
         return info;
+    }
+
+    private static bool[] BuildConnectedMask(
+        int moduleSize,
+        double scale,
+        int cornerRadiusPx,
+        int neighborMask,
+        QrPngModuleShape shape) {
+        return shape switch {
+            QrPngModuleShape.ConnectedRounded => BuildConnectedRoundedMask(moduleSize, scale, cornerRadiusPx, neighborMask),
+            QrPngModuleShape.ConnectedSquircle => BuildConnectedSquircleMask(moduleSize, scale, neighborMask),
+            _ => BuildConnectedRoundedMask(moduleSize, scale, cornerRadiusPx, neighborMask),
+        };
     }
 
     private static bool[] BuildConnectedRoundedMask(int moduleSize, double scale, int cornerRadiusPx, int neighborMask) {
@@ -772,6 +808,67 @@ public static partial class QrPngRenderer {
             var row = y * moduleSize;
             for (var x = 0; x < moduleSize; x++) {
                 mask[row + x] = InsideRoundedConnected(x, y, x0, y0, x1, y1, radius, roundTl, roundTr, roundBr, roundBl);
+            }
+        }
+
+        return mask;
+    }
+
+    private static bool[] BuildConnectedSquircleMask(int moduleSize, double scale, int neighborMask) {
+        var mask = new bool[moduleSize * moduleSize];
+        if (moduleSize <= 0) return mask;
+
+        if (scale < 0.1) scale = 0.1;
+        if (scale > 1.0) scale = 1.0;
+
+        var inset = (int)Math.Round((moduleSize - moduleSize * scale) / 2.0);
+        if (inset < 0) inset = 0;
+        if (inset > moduleSize / 2) inset = moduleSize / 2;
+
+        var insetTop = (neighborMask & NeighborNorth) != 0 ? 0 : inset;
+        var insetRight = (neighborMask & NeighborEast) != 0 ? 0 : inset;
+        var insetBottom = (neighborMask & NeighborSouth) != 0 ? 0 : inset;
+        var insetLeft = (neighborMask & NeighborWest) != 0 ? 0 : inset;
+
+        var x0 = insetLeft;
+        var y0 = insetTop;
+        var x1 = moduleSize - insetRight - 1;
+        var y1 = moduleSize - insetBottom - 1;
+        if (x1 < x0 || y1 < y0) return mask;
+
+        var innerW = x1 - x0 + 1;
+        var innerH = y1 - y0 + 1;
+        if (innerW <= 0 || innerH <= 0) return mask;
+
+        var centerX = x0 + (innerW - 1) / 2.0;
+        var centerY = y0 + (innerH - 1) / 2.0;
+        var halfW = innerW / 2.0;
+        var halfH = innerH / 2.0;
+        if (halfW <= 0 || halfH <= 0) return mask;
+
+        var roundTl = (neighborMask & (NeighborNorth | NeighborWest)) == 0;
+        var roundTr = (neighborMask & (NeighborNorth | NeighborEast)) == 0;
+        var roundBr = (neighborMask & (NeighborSouth | NeighborEast)) == 0;
+        var roundBl = (neighborMask & (NeighborSouth | NeighborWest)) == 0;
+
+        for (var y = 0; y < moduleSize; y++) {
+            var row = y * moduleSize;
+            for (var x = 0; x < moduleSize; x++) {
+                mask[row + x] = InsideSquircleConnected(
+                    x,
+                    y,
+                    x0,
+                    y0,
+                    x1,
+                    y1,
+                    centerX,
+                    centerY,
+                    halfW,
+                    halfH,
+                    roundTl,
+                    roundTr,
+                    roundBr,
+                    roundBl);
             }
         }
 
@@ -834,6 +931,38 @@ public static partial class QrPngRenderer {
         return true;
     }
 
+    private static bool InsideSquircleConnected(
+        int x,
+        int y,
+        int x0,
+        int y0,
+        int x1,
+        int y1,
+        double centerX,
+        double centerY,
+        double halfW,
+        double halfH,
+        bool roundTl,
+        bool roundTr,
+        bool roundBr,
+        bool roundBl) {
+        if (x < x0 || x > x1 || y < y0 || y > y1) return false;
+        if (halfW <= 0 || halfH <= 0) return true;
+
+        var isLeft = x < centerX;
+        var isTop = y < centerY;
+        if (isLeft && isTop && !roundTl) return true;
+        if (!isLeft && isTop && !roundTr) return true;
+        if (!isLeft && !isTop && !roundBr) return true;
+        if (isLeft && !isTop && !roundBl) return true;
+
+        var dx = Math.Abs(x - centerX) / halfW;
+        var dy = Math.Abs(y - centerY) / halfH;
+        var dx2 = dx * dx;
+        var dy2 = dy * dy;
+        return dx2 * dx2 + dy2 * dy2 <= 1.0;
+    }
+
     private static bool[] BuildModuleMask(
         int moduleSize,
         QrPngModuleShape shape,
@@ -843,6 +972,7 @@ public static partial class QrPngRenderer {
         if (moduleSize <= 0) return mask;
 
         if (shape == QrPngModuleShape.ConnectedRounded) shape = QrPngModuleShape.Rounded;
+        if (shape == QrPngModuleShape.ConnectedSquircle) shape = QrPngModuleShape.Squircle;
         if (scale < 0.1) scale = 0.1;
         if (scale > 1.0) scale = 1.0;
         if (shape == QrPngModuleShape.Dot) scale *= QrPngShapeDefaults.DotScale;

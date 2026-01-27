@@ -32,6 +32,7 @@ internal static class Program {
         runner.Run("QR (ascii console)", QrAsciiExample.Run);
         runner.Run("QR (payloads)", QrPayloadsExample.Run);
         runner.Run("QR (styling)", QrFancyExample.Run);
+        runner.Run("QR (art presets)", QrArtPresetsExample.Run);
         runner.Run("QR (connected)", QrConnectedExample.Run);
         runner.Run("QR (glow eyes)", QrGlowExample.Run);
         runner.Run("QR (style board)", QrStyleBoardExample.Run);
