@@ -89,6 +89,11 @@ public static class QrPayloadParser {
             return true;
         }
 
+        if (TryParseCrypto(raw, out var crypto)) {
+            parsed = new QrParsedPayload(QrPayloadType.Crypto, raw, crypto);
+            return true;
+        }
+
         if (LooksLikeUrl(raw)) {
             parsed = new QrParsedPayload(QrPayloadType.Url, raw, raw);
             return true;
@@ -174,6 +179,81 @@ public static class QrPayloadParser {
         if (!TryNormalizePayPalUrl(raw, out var url, out var handle, out var amount, out var currency)) return false;
         paypal = new QrParsedData.PayPal(handle, amount, currency, url);
         return true;
+    }
+
+    private static bool TryParseCrypto(string raw, out QrParsedData.Crypto crypto) {
+        crypto = null!;
+        var colon = raw.IndexOf(':');
+        if (colon <= 0) return false;
+
+        var scheme = raw.Substring(0, colon).Trim().ToLowerInvariant();
+        if (scheme.Length == 0) return false;
+        if (!IsCryptoScheme(scheme)) return false;
+
+        var rest = raw.Substring(colon + 1);
+        if (rest.StartsWith("//", StringComparison.Ordinal)) rest = rest.Substring(2);
+        if (rest.Length == 0) return false;
+
+        var queryIndex = rest.IndexOf('?');
+        var address = (queryIndex >= 0 ? rest.Substring(0, queryIndex) : rest).Trim();
+        if (address.Length == 0) return false;
+
+        var parameters = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        if (queryIndex >= 0 && queryIndex < rest.Length - 1) {
+            var query = rest.Substring(queryIndex + 1);
+            var parts = query.Split('&');
+            for (var i = 0; i < parts.Length; i++) {
+                var part = parts[i];
+                if (string.IsNullOrEmpty(part)) continue;
+                SplitOnce(part, '=', out var key, out var value);
+                if (string.IsNullOrEmpty(key)) continue;
+                parameters[key] = value is null ? string.Empty : Uri.UnescapeDataString(value);
+            }
+        }
+
+        decimal? amount = null;
+        if (TryGetParameter(parameters, "amount", out var amountText) ||
+            TryGetParameter(parameters, "tx_amount", out amountText)) {
+            if (decimal.TryParse(amountText, NumberStyles.Float, CultureInfo.InvariantCulture, out var parsedAmount)) {
+                amount = parsedAmount;
+            }
+        }
+
+        string? label = null;
+        if (TryGetParameter(parameters, "label", out var labelText) ||
+            TryGetParameter(parameters, "recipient_name", out labelText)) {
+            label = labelText;
+        }
+
+        string? message = null;
+        if (TryGetParameter(parameters, "message", out var messageText) ||
+            TryGetParameter(parameters, "tx_description", out messageText)) {
+            message = messageText;
+        }
+
+        crypto = new QrParsedData.Crypto(scheme, address, amount, label, message, parameters);
+        return true;
+    }
+
+    private static bool TryGetParameter(Dictionary<string, string> parameters, string key, out string value) {
+        if (parameters.TryGetValue(key, out value!)) return true;
+        value = string.Empty;
+        return false;
+    }
+
+    private static bool IsCryptoScheme(string scheme) {
+        return scheme switch {
+            "bitcoin" => true,
+            "bitcoincash" => true,
+            "litecoin" => true,
+            "monero" => true,
+            "ethereum" => true,
+            "eth" => true,
+            "dogecoin" => true,
+            "dash" => true,
+            "zcash" => true,
+            _ => false
+        };
     }
 
     private static bool TryReadFieldValue(ReadOnlySpan<char> body, string key, out ReadOnlySpan<char> value) {
@@ -718,6 +798,12 @@ public static class QrPayloadParser {
                     validation.Add("PayPal currency is invalid.");
                 }
                 if (!QrPayloadValidation.IsValidUrl(paypal.Url)) validation.Add("PayPal URL is invalid.");
+                break;
+            case QrPayloadType.Crypto:
+                if (!parsed.TryGet<QrParsedData.Crypto>(out var crypto)) break;
+                if (string.IsNullOrWhiteSpace(crypto.Scheme)) validation.Add("Crypto scheme is missing.");
+                if (string.IsNullOrWhiteSpace(crypto.Address)) validation.Add("Crypto address is missing.");
+                if (crypto.Amount.HasValue && crypto.Amount.Value <= 0m) validation.Add("Crypto amount must be positive.");
                 break;
             case QrPayloadType.Url:
                 if (!QrPayloadValidation.IsValidUrl(parsed.Raw)) validation.Add("URL is invalid.");

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace CodeGlyphX.Payloads;
 
@@ -47,4 +48,7 @@ public static class QrParsedData {
 
     /// <summary>PayPal payment payload (PayPal.Me).</summary>
     public sealed record PayPal(string Handle, decimal? Amount, string? Currency, string Url);
+
+    /// <summary>Crypto/payment URI payload (bitcoin:, monero:, etc.).</summary>
+    public sealed record Crypto(string Scheme, string Address, decimal? Amount, string? Label, string? Message, IReadOnlyDictionary<string, string> Parameters);
 }

@@ -35,5 +35,7 @@ public enum QrPayloadType {
     /// <summary>Bookmark payload.</summary>
     Bookmark,
     /// <summary>PayPal payment payload.</summary>
-    PayPal
+    PayPal,
+    /// <summary>Crypto/payment URI payload.</summary>
+    Crypto
 }

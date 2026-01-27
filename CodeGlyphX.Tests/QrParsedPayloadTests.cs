@@ -67,6 +67,34 @@ public sealed class QrParsedPayloadTests {
     }
 
     [Fact]
+    public void Parse_BitcoinLike() {
+        var raw = QrPayloads.BitcoinLike(QrBitcoinLikeType.Bitcoin, "bc1qexample", amount: 0.015, label: "CodeGlyphX", message: "Thanks").Text;
+        Assert.True(QrPayloadParser.TryParse(raw, out var parsed));
+        Assert.Equal(QrPayloadType.Crypto, parsed.Type);
+        Assert.True(parsed.TryGet<QrParsedData.Crypto>(out var crypto));
+        Assert.Equal("bitcoin", crypto.Scheme);
+        Assert.Equal("bc1qexample", crypto.Address);
+        Assert.True(crypto.Amount.HasValue);
+        Assert.Equal(0.015m, crypto.Amount.Value);
+        Assert.Equal("CodeGlyphX", crypto.Label);
+        Assert.Equal("Thanks", crypto.Message);
+    }
+
+    [Fact]
+    public void Parse_Monero() {
+        var raw = QrPayloads.Monero("48moneroaddr", amount: 1.25f, recipientName: "Alice", description: "Invoice 42").Text;
+        Assert.True(QrPayloadParser.TryParse(raw, out var parsed));
+        Assert.Equal(QrPayloadType.Crypto, parsed.Type);
+        Assert.True(parsed.TryGet<QrParsedData.Crypto>(out var crypto));
+        Assert.Equal("monero", crypto.Scheme);
+        Assert.Equal("48moneroaddr", crypto.Address);
+        Assert.True(crypto.Amount.HasValue);
+        Assert.Equal(1.25m, crypto.Amount.Value);
+        Assert.Equal("Alice", crypto.Label);
+        Assert.Equal("Invoice 42", crypto.Message);
+    }
+
+    [Fact]
     public void Parse_Strict_InvalidEmail_FailsValidation() {
         var raw = "mailto:invalid";
         var ok = QrPayloadParser.TryParse(raw, new QrPayloadParseOptions { Strict = true }, out _, out var validation);
