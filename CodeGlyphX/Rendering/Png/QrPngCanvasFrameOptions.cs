@@ -27,6 +27,16 @@ public sealed class QrPngCanvasFrameOptions {
     public Rgba32 Color { get; set; } = new(20, 24, 40, 220);
 
     /// <summary>
+    /// Optional frame gradient (overrides <see cref="Color"/> when set).
+    /// </summary>
+    public QrPngGradientOptions? Gradient { get; set; }
+
+    /// <summary>
+    /// Optional edge pattern overlay.
+    /// </summary>
+    public QrPngCanvasEdgePatternOptions? EdgePattern { get; set; }
+
+    /// <summary>
     /// Optional inner frame thickness in pixels (0 = disabled).
     /// </summary>
     public int InnerThicknessPx { get; set; }
@@ -41,12 +51,25 @@ public sealed class QrPngCanvasFrameOptions {
     /// </summary>
     public Rgba32? InnerColor { get; set; }
 
+    /// <summary>
+    /// Optional inner frame gradient (overrides <see cref="InnerColor"/> when set).
+    /// </summary>
+    public QrPngGradientOptions? InnerGradient { get; set; }
+
+    /// <summary>
+    /// Optional inner edge pattern overlay.
+    /// </summary>
+    public QrPngCanvasEdgePatternOptions? InnerEdgePattern { get; set; }
+
     internal void Validate() {
         if (ThicknessPx < 0) throw new ArgumentOutOfRangeException(nameof(ThicknessPx));
         if (GapPx < 0) throw new ArgumentOutOfRangeException(nameof(GapPx));
         if (RadiusPx < 0) throw new ArgumentOutOfRangeException(nameof(RadiusPx));
         if (InnerThicknessPx < 0) throw new ArgumentOutOfRangeException(nameof(InnerThicknessPx));
         if (InnerGapPx < 0) throw new ArgumentOutOfRangeException(nameof(InnerGapPx));
+        Gradient?.Validate();
+        InnerGradient?.Validate();
+        EdgePattern?.Validate();
+        InnerEdgePattern?.Validate();
     }
 }
-

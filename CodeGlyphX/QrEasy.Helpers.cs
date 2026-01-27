@@ -418,6 +418,7 @@ public static partial class QrEasy {
             Vignette = CloneVignette(canvas.Vignette),
             Grain = CloneGrain(canvas.Grain),
             Frame = CloneFrame(canvas.Frame),
+            Band = CloneBand(canvas.Band),
             Badge = CloneBadge(canvas.Badge),
             BorderPx = canvas.BorderPx,
             BorderColor = canvas.BorderColor,
@@ -438,6 +439,8 @@ public static partial class QrEasy {
             OffsetPx = badge.OffsetPx,
             CornerRadiusPx = badge.CornerRadiusPx,
             Color = badge.Color,
+            Gradient = CloneGradient(badge.Gradient),
+            EdgePattern = CloneEdgePattern(badge.EdgePattern),
             TailPx = badge.TailPx,
         };
     }
@@ -449,9 +452,37 @@ public static partial class QrEasy {
             GapPx = frame.GapPx,
             RadiusPx = frame.RadiusPx,
             Color = frame.Color,
+            Gradient = CloneGradient(frame.Gradient),
+            EdgePattern = CloneEdgePattern(frame.EdgePattern),
             InnerThicknessPx = frame.InnerThicknessPx,
             InnerGapPx = frame.InnerGapPx,
             InnerColor = frame.InnerColor,
+            InnerGradient = CloneGradient(frame.InnerGradient),
+            InnerEdgePattern = CloneEdgePattern(frame.InnerEdgePattern),
+        };
+    }
+
+    private static QrPngCanvasBandOptions? CloneBand(QrPngCanvasBandOptions? band) {
+        if (band is null) return null;
+        return new QrPngCanvasBandOptions {
+            BandPx = band.BandPx,
+            GapPx = band.GapPx,
+            RadiusPx = band.RadiusPx,
+            Color = band.Color,
+            Gradient = CloneGradient(band.Gradient),
+            EdgePattern = CloneEdgePattern(band.EdgePattern),
+        };
+    }
+
+    private static QrPngCanvasEdgePatternOptions? CloneEdgePattern(QrPngCanvasEdgePatternOptions? pattern) {
+        if (pattern is null) return null;
+        return new QrPngCanvasEdgePatternOptions {
+            Type = pattern.Type,
+            Color = pattern.Color,
+            ThicknessPx = pattern.ThicknessPx,
+            SpacingPx = pattern.SpacingPx,
+            DashPx = pattern.DashPx,
+            InsetPx = pattern.InsetPx,
         };
     }
 

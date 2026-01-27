@@ -116,6 +116,62 @@ internal static class QrStyleBoardExample {
                     ribbonColor: R(0, 150, 136, 220),
                     position: QrPngCanvasBadgePosition.Bottom))),
 
+            new("Gradient Frame", StyleDocs("gradient-frame"), () => BaseSticker(
+                fg: R(24, 40, 100),
+                palette: Palette(QrPngPaletteMode.Cycle, 0, R(24, 40, 100), R(64, 120, 220), R(150, 210, 255)),
+                shape: QrPngModuleShape.ConnectedRounded,
+                eyes: Eye(QrPngEyeFrameStyle.Target, R(24, 40, 100), R(150, 210, 255)),
+                scaleMap: ScaleMap(QrPngModuleScaleMode.Radial, 0.9, 1.0, 30030),
+                canvas: CanvasGradientFrame(
+                    bgStart: R(246, 249, 255),
+                    bgEnd: R(220, 235, 255),
+                    frameStart: R(24, 84, 220),
+                    frameEnd: R(120, 210, 255)))),
+
+            new("Stitched Frame", StyleDocs("stitched-frame"), () => BaseSticker(
+                fg: R(28, 28, 48),
+                palette: Palette(QrPngPaletteMode.Cycle, 0, R(28, 28, 48), R(96, 130, 210), R(255, 189, 89)),
+                shape: QrPngModuleShape.ConnectedRounded,
+                eyes: Eye(QrPngEyeFrameStyle.Single, R(28, 28, 48), R(255, 189, 89)),
+                scaleMap: ScaleMap(QrPngModuleScaleMode.Radial, 0.9, 1.0, 31031),
+                canvas: CanvasStitchedFrame(
+                    background: R(252, 250, 245),
+                    stitchColor: R(28, 28, 48, 190)))),
+
+            new("Quiet Band", StyleDocs("quiet-band"), () => BaseSticker(
+                fg: R(16, 30, 62),
+                palette: Palette(QrPngPaletteMode.Cycle, 0, R(16, 30, 62), R(60, 120, 200), R(150, 210, 255)),
+                shape: QrPngModuleShape.ConnectedRounded,
+                eyes: EyeInsetRing(R(16, 30, 62), R(150, 210, 255)),
+                scaleMap: ScaleMap(QrPngModuleScaleMode.Radial, 0.9, 1.0, 32032),
+                canvas: CanvasBand(
+                    background: R(248, 251, 255),
+                    bandStart: R(60, 120, 200, 210),
+                    bandEnd: R(150, 210, 255, 210)))),
+
+            new("Warm Harmony", StyleDocs("warm-harmony"), () => {
+                var warm = QrArtPalettes.Warm();
+                return BaseSticker(
+                    fg: warm.Foreground,
+                    palette: warm.Palette,
+                    shape: QrPngModuleShape.ConnectedRounded,
+                    eyes: QrEyePresets.MinimalRing(),
+                    canvas: CanvasBadge(
+                        background: warm.Background,
+                        badgeColor: R(201, 86, 46, 210),
+                        position: QrPngCanvasBadgePosition.Top),
+                    background: warm.Background);
+            }),
+
+            new("Eye Sparkle", StyleDocs("eye-sparkle"), () => BaseSticker(
+                fg: R(0, 240, 220),
+                palette: Palette(QrPngPaletteMode.Cycle, 0, R(0, 240, 220), R(64, 180, 255)),
+                shape: QrPngModuleShape.ConnectedRounded,
+                eyes: QrEyePresets.NeonSparkle(),
+                scaleMap: ScaleMap(QrPngModuleScaleMode.Radial, 0.9, 1.0, 33033),
+                canvas: CanvasGradient(R(10, 12, 22), R(30, 34, 64)),
+                background: R(10, 12, 22))),
+
             new("Candy Checker", StyleDocs("candy-checker"), () => BaseSticker(
                 fg: R(255, 107, 107),
                 palette: Palette(QrPngPaletteMode.Checker, 0, R(255, 107, 107), R(255, 217, 61)),
@@ -463,7 +519,8 @@ internal static class QrStyleBoardExample {
         QrPngModuleScaleMapOptions? scaleMap = null,
         QrPngPaletteZoneOptions? zones = null,
         QrPngForegroundPatternOptions? pattern = null,
-        byte[]? logo = null) {
+        byte[]? logo = null,
+        Rgba32? background = null) {
         return new QrEasyOptions {
             ErrorCorrectionLevel = QrErrorCorrectionLevel.H,
             // Web-friendly size: keeps assets lightweight while remaining crisp in the grid.
@@ -472,7 +529,7 @@ internal static class QrStyleBoardExample {
             ModuleSize = 10,
             QuietZone = 4,
             Foreground = fg,
-            Background = R(255, 255, 255),
+            Background = background ?? R(255, 255, 255),
             BackgroundSupersample = 2,
             ModuleShape = shape,
             ModuleScale = 0.9,
@@ -786,6 +843,97 @@ internal static class QrStyleBoardExample {
         };
     }
 
+    private static QrPngCanvasOptions CanvasGradientFrame(Rgba32 bgStart, Rgba32 bgEnd, Rgba32 frameStart, Rgba32 frameEnd) {
+        return new QrPngCanvasOptions {
+            PaddingPx = 34,
+            CornerRadiusPx = 30,
+            BackgroundGradient = new QrPngGradientOptions {
+                Type = QrPngGradientType.DiagonalDown,
+                StartColor = bgStart,
+                EndColor = bgEnd,
+            },
+            BorderPx = 2,
+            BorderColor = R(255, 255, 255, 36),
+            Frame = new QrPngCanvasFrameOptions {
+                ThicknessPx = 14,
+                GapPx = 10,
+                RadiusPx = 26,
+                Gradient = new QrPngGradientOptions {
+                    Type = QrPngGradientType.DiagonalDown,
+                    StartColor = frameStart,
+                    EndColor = frameEnd,
+                },
+                EdgePattern = EdgePattern(QrPngCanvasEdgePatternType.Dots, R(255, 255, 255, 160), thicknessPx: 2, spacingPx: 8, dashPx: 10),
+            },
+            ShadowOffsetX = 7,
+            ShadowOffsetY = 10,
+            ShadowColor = R(0, 0, 0, 60),
+        };
+    }
+
+    private static QrPngCanvasOptions CanvasStitchedFrame(Rgba32 background, Rgba32 stitchColor) {
+        return new QrPngCanvasOptions {
+            PaddingPx = 32,
+            CornerRadiusPx = 26,
+            Background = background,
+            BorderPx = 2,
+            BorderColor = R(0, 0, 0, 18),
+            Frame = new QrPngCanvasFrameOptions {
+                ThicknessPx = 12,
+                GapPx = 10,
+                RadiusPx = 22,
+                Color = R(255, 255, 255),
+                EdgePattern = EdgePattern(QrPngCanvasEdgePatternType.Stitches, stitchColor, thicknessPx: 2, spacingPx: 10, dashPx: 6, insetPx: 2),
+            },
+            ShadowOffsetX = 6,
+            ShadowOffsetY = 9,
+            ShadowColor = R(0, 0, 0, 50),
+        };
+    }
+
+    private static QrPngCanvasOptions CanvasBand(Rgba32 background, Rgba32 bandStart, Rgba32 bandEnd) {
+        return new QrPngCanvasOptions {
+            PaddingPx = 28,
+            CornerRadiusPx = 24,
+            Background = background,
+            BorderPx = 2,
+            BorderColor = R(0, 0, 0, 18),
+            Band = new QrPngCanvasBandOptions {
+                BandPx = 12,
+                GapPx = 0,
+                RadiusPx = 20,
+                Gradient = new QrPngGradientOptions {
+                    Type = QrPngGradientType.Radial,
+                    StartColor = bandStart,
+                    EndColor = bandEnd,
+                    CenterX = 0.3,
+                    CenterY = 0.3,
+                },
+                EdgePattern = EdgePattern(QrPngCanvasEdgePatternType.Dashes, R(255, 255, 255, 140), thicknessPx: 2, spacingPx: 10, dashPx: 8, insetPx: 1),
+            },
+            ShadowOffsetX = 6,
+            ShadowOffsetY = 9,
+            ShadowColor = R(0, 0, 0, 50),
+        };
+    }
+
+    private static QrPngCanvasEdgePatternOptions EdgePattern(
+        QrPngCanvasEdgePatternType type,
+        Rgba32 color,
+        int thicknessPx = 2,
+        int spacingPx = 8,
+        int dashPx = 10,
+        int insetPx = 1) {
+        return new QrPngCanvasEdgePatternOptions {
+            Type = type,
+            Color = color,
+            ThicknessPx = thicknessPx,
+            SpacingPx = spacingPx,
+            DashPx = dashPx,
+            InsetPx = insetPx,
+        };
+    }
+
     private static QrPngCanvasOptions CanvasBadge(Rgba32 background, Rgba32 badgeColor, QrPngCanvasBadgePosition position) {
         return new QrPngCanvasOptions {
             PaddingPx = 34,
@@ -801,6 +949,7 @@ internal static class QrStyleBoardExample {
                 GapPx = 10,
                 CornerRadiusPx = 16,
                 Color = badgeColor,
+                EdgePattern = EdgePattern(QrPngCanvasEdgePatternType.Dots, R(255, 255, 255, 150), thicknessPx: 2, spacingPx: 10, dashPx: 8, insetPx: 2),
             },
             ShadowOffsetX = 7,
             ShadowOffsetY = 10,
@@ -824,6 +973,7 @@ internal static class QrStyleBoardExample {
                 CornerRadiusPx = 8,
                 TailPx = 12,
                 Color = ribbonColor,
+                EdgePattern = EdgePattern(QrPngCanvasEdgePatternType.Dashes, R(255, 255, 255, 150), thicknessPx: 2, spacingPx: 10, dashPx: 8, insetPx: 2),
             },
             ShadowOffsetX = 7,
             ShadowOffsetY = 10,

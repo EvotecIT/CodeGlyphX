@@ -47,6 +47,16 @@ public sealed class QrPngCanvasBadgeOptions {
     public Rgba32 Color { get; set; } = new(30, 40, 80, 220);
 
     /// <summary>
+    /// Optional badge gradient (overrides <see cref="Color"/> when set).
+    /// </summary>
+    public QrPngGradientOptions? Gradient { get; set; }
+
+    /// <summary>
+    /// Optional edge pattern overlay.
+    /// </summary>
+    public QrPngCanvasEdgePatternOptions? EdgePattern { get; set; }
+
+    /// <summary>
     /// Ribbon tail length in pixels (applies to <see cref="QrPngCanvasBadgeShape.Ribbon"/>).
     /// </summary>
     public int TailPx { get; set; } = 10;
@@ -57,6 +67,7 @@ public sealed class QrPngCanvasBadgeOptions {
         if (GapPx < 0) throw new ArgumentOutOfRangeException(nameof(GapPx));
         if (CornerRadiusPx < 0) throw new ArgumentOutOfRangeException(nameof(CornerRadiusPx));
         if (TailPx < 0) throw new ArgumentOutOfRangeException(nameof(TailPx));
+        Gradient?.Validate();
+        EdgePattern?.Validate();
     }
 }
-

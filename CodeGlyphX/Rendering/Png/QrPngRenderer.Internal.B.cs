@@ -1367,12 +1367,25 @@ public static partial class QrPngRenderer {
             Vignette = ScaleVignette(canvas.Vignette, scale),
             Grain = ScaleGrain(canvas.Grain, scale),
             Frame = ScaleFrame(canvas.Frame, scale),
+            Band = ScaleBand(canvas.Band, scale),
             Badge = ScaleBadge(canvas.Badge, scale),
             BorderPx = canvas.BorderPx * scale,
             BorderColor = canvas.BorderColor,
             ShadowOffsetX = canvas.ShadowOffsetX * scale,
             ShadowOffsetY = canvas.ShadowOffsetY * scale,
             ShadowColor = canvas.ShadowColor
+        };
+    }
+
+    private static QrPngCanvasBandOptions? ScaleBand(QrPngCanvasBandOptions? band, int scale) {
+        if (band is null) return null;
+        return new QrPngCanvasBandOptions {
+            BandPx = band.BandPx <= 0 ? 0 : Math.Max(1, band.BandPx * scale),
+            GapPx = Math.Max(0, band.GapPx * scale),
+            RadiusPx = Math.Max(0, band.RadiusPx * scale),
+            Color = band.Color,
+            Gradient = band.Gradient,
+            EdgePattern = ScaleEdgePattern(band.EdgePattern, scale),
         };
     }
 
@@ -1387,6 +1400,8 @@ public static partial class QrPngRenderer {
             OffsetPx = badge.OffsetPx * scale,
             CornerRadiusPx = Math.Max(0, badge.CornerRadiusPx * scale),
             Color = badge.Color,
+            Gradient = badge.Gradient,
+            EdgePattern = ScaleEdgePattern(badge.EdgePattern, scale),
             TailPx = Math.Max(0, badge.TailPx * scale),
         };
     }
@@ -1398,9 +1413,25 @@ public static partial class QrPngRenderer {
             GapPx = Math.Max(0, frame.GapPx * scale),
             RadiusPx = Math.Max(0, frame.RadiusPx * scale),
             Color = frame.Color,
+            Gradient = frame.Gradient,
+            EdgePattern = ScaleEdgePattern(frame.EdgePattern, scale),
             InnerThicknessPx = frame.InnerThicknessPx <= 0 ? 0 : Math.Max(1, frame.InnerThicknessPx * scale),
             InnerGapPx = Math.Max(0, frame.InnerGapPx * scale),
             InnerColor = frame.InnerColor,
+            InnerGradient = frame.InnerGradient,
+            InnerEdgePattern = ScaleEdgePattern(frame.InnerEdgePattern, scale),
+        };
+    }
+
+    private static QrPngCanvasEdgePatternOptions? ScaleEdgePattern(QrPngCanvasEdgePatternOptions? pattern, int scale) {
+        if (pattern is null) return null;
+        return new QrPngCanvasEdgePatternOptions {
+            Type = pattern.Type,
+            Color = pattern.Color,
+            ThicknessPx = pattern.ThicknessPx <= 0 ? 0 : Math.Max(1, pattern.ThicknessPx * scale),
+            SpacingPx = Math.Max(0, pattern.SpacingPx * scale),
+            DashPx = pattern.DashPx <= 0 ? 0 : Math.Max(1, pattern.DashPx * scale),
+            InsetPx = Math.Max(0, pattern.InsetPx * scale),
         };
     }
 

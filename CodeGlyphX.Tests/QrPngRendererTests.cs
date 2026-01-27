@@ -1432,6 +1432,112 @@ public sealed class QrPngRendererTests {
     }
 
     [Fact]
+    public void Render_With_Canvas_Band_Draws_Outside_Qr_Bounds() {
+        var qr = QrCodeEncoder.EncodeText("HELLO", QrErrorCorrectionLevel.H);
+        var moduleSize = 8;
+        var quietZone = 4;
+        var padding = 28;
+
+        var opts = new QrPngRenderOptions {
+            ModuleSize = moduleSize,
+            QuietZone = quietZone,
+            Foreground = Rgba32.Black,
+            Background = Rgba32.White,
+            Canvas = new QrPngCanvasOptions {
+                PaddingPx = padding,
+                CornerRadiusPx = 20,
+                Background = Rgba32.White,
+                Band = new QrPngCanvasBandOptions {
+                    BandPx = 12,
+                    GapPx = 0,
+                    RadiusPx = 18,
+                    Color = new Rgba32(30, 80, 160, 200),
+                },
+            },
+        };
+
+        var png = QrPngRenderer.Render(qr.Modules, opts);
+        var (rgba, width, height, stride) = PngTestDecoder.DecodeRgba32(png);
+
+        var qrFullPx = (qr.Size + quietZone * 2) * moduleSize;
+        var qrX0 = padding;
+        var qrY0 = padding;
+        var qrX1 = qrX0 + qrFullPx - 1;
+        var qrY1 = qrY0 + qrFullPx - 1;
+
+        var foundBand = false;
+        for (var y = 0; y < height && !foundBand; y++) {
+            for (var x = 0; x < width; x++) {
+                if (x >= qrX0 && x <= qrX1 && y >= qrY0 && y <= qrY1) continue;
+                var p = y * stride + x * 4;
+                var r = rgba[p + 0];
+                var g = rgba[p + 1];
+                var b = rgba[p + 2];
+                if (r != 255 || g != 255 || b != 255) {
+                    foundBand = true;
+                    break;
+                }
+            }
+        }
+
+        Assert.True(foundBand, "Expected band pixels outside the QR bounds.");
+    }
+
+    [Fact]
+    public void Render_With_Canvas_Band_Clamps_To_Padding_And_Stays_Outside_Qr() {
+        var matrix = new BitMatrix(21, 21);
+        var moduleSize = 6;
+        var quietZone = 4;
+        var padding = 12;
+
+        var opts = new QrPngRenderOptions {
+            ModuleSize = moduleSize,
+            QuietZone = quietZone,
+            Foreground = Rgba32.Black,
+            Background = Rgba32.White,
+            Canvas = new QrPngCanvasOptions {
+                PaddingPx = padding,
+                CornerRadiusPx = 16,
+                Background = Rgba32.White,
+                Band = new QrPngCanvasBandOptions {
+                    BandPx = 40,
+                    GapPx = 12,
+                    RadiusPx = 16,
+                    Color = new Rgba32(80, 120, 200, 200),
+                },
+            },
+        };
+
+        var png = QrPngRenderer.Render(matrix, opts);
+        var (rgba, width, height, stride) = PngTestDecoder.DecodeRgba32(png);
+
+        var qrFullPx = (matrix.Width + quietZone * 2) * moduleSize;
+        var qrX0 = padding;
+        var qrY0 = padding;
+        var qrX1 = qrX0 + qrFullPx - 1;
+        var qrY1 = qrY0 + qrFullPx - 1;
+
+        var foundBand = false;
+        for (var y = 0; y < height; y++) {
+            for (var x = 0; x < width; x++) {
+                var p = y * stride + x * 4;
+                var r = rgba[p + 0];
+                var g = rgba[p + 1];
+                var b = rgba[p + 2];
+
+                var insideQr = x >= qrX0 && x <= qrX1 && y >= qrY0 && y <= qrY1;
+                if (insideQr) {
+                    Assert.True(r == 255 && g == 255 && b == 255, "Band should not draw inside the QR bounds.");
+                } else if (r != 255 || g != 255 || b != 255) {
+                    foundBand = true;
+                }
+            }
+        }
+
+        Assert.True(foundBand, "Expected band pixels outside the QR bounds.");
+    }
+
+    [Fact]
     public void Render_With_Eye_InsetRing_Leaves_Center_Light_And_Ring_Dark() {
         var qr = QrCodeEncoder.EncodeText("HELLO", QrErrorCorrectionLevel.H);
 
