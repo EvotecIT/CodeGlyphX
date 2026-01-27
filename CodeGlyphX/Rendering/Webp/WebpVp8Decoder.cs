@@ -574,6 +574,15 @@ internal static class WebpVp8Decoder {
             }
         }
 
+        var partitionRowIndexByGlobalRow = new int[headers.MacroblockRows];
+        var partitionRowCursor = new int[partitionCount];
+        for (var row = 0; row < headers.MacroblockRows; row++) {
+            var partitionIndex = GetTokenPartitionForRow(row, partitionCount);
+            if ((uint)partitionIndex >= (uint)partitionRowCursor.Length) return false;
+            partitionRowIndexByGlobalRow[row] = partitionRowCursor[partitionIndex];
+            partitionRowCursor[partitionIndex]++;
+        }
+
         var macroblocksPerPartition = new int[partitionCount];
         for (var i = 0; i < headers.Macroblocks.Length; i++) {
             var partitionIndex = GetTokenPartitionForRow(headers.Macroblocks[i].Y, partitionCount);
@@ -586,6 +595,7 @@ internal static class WebpVp8Decoder {
         var partitionTokenTotals = new int[partitionCount];
         var partitionByteTotals = new int[partitionCount];
         var partitionRowByteBudgets = new int[partitionCount][];
+        var partitionRowNonSkippedMacroblocks = new int[partitionCount][];
         var partitionTokensConsumed = new int[partitionCount];
         var partitionBytesConsumed = new int[partitionCount];
         var partitionCurrentRowIndex = new int[partitionCount];
@@ -605,6 +615,7 @@ internal static class WebpVp8Decoder {
             var rowCount = rowsPerPartition[p];
             if (rowCount <= 0) {
                 partitionRowByteBudgets[p] = Array.Empty<int>();
+                partitionRowNonSkippedMacroblocks[p] = Array.Empty<int>();
                 continue;
             }
 
@@ -616,6 +627,19 @@ internal static class WebpVp8Decoder {
             }
 
             partitionRowByteBudgets[p] = budgets;
+            partitionRowNonSkippedMacroblocks[p] = new int[rowCount];
+        }
+
+        for (var i = 0; i < headers.Macroblocks.Length; i++) {
+            var header = headers.Macroblocks[i];
+            var partitionIndex = GetTokenPartitionForRow(header.Y, partitionCount);
+            if ((uint)partitionIndex >= (uint)partitionRowNonSkippedMacroblocks.Length) return false;
+            var rowIndex = partitionRowIndexByGlobalRow[header.Y];
+            var rowNonSkipped = partitionRowNonSkippedMacroblocks[partitionIndex];
+            if ((uint)rowIndex >= (uint)rowNonSkipped.Length) return false;
+            if (!header.SkipCoefficients) {
+                rowNonSkipped[rowIndex]++;
+            }
         }
 
         var macroblocks = new WebpVp8MacroblockTokenScaffold[headers.Macroblocks.Length];
@@ -633,13 +657,21 @@ internal static class WebpVp8Decoder {
 
             var assignedBlocks = new WebpVp8BlockTokenScaffold[MacroblockScaffoldBlocksPerMacroblock];
             var macroblockTokensRead = 0;
-            for (var b = 0; b < assignedBlocks.Length; b++) {
-                var blockIndex = GetNextPartitionBlockIndex(partitionIndex, partition.Blocks.Length, blockCursors);
-                var baseBlock = partition.Blocks[blockIndex];
-                var segmentDequantFactor = ComputeScaffoldDequantFactorForSegment(baseBlock.BlockType, frameHeader, header.SegmentId);
-                var segmentBlock = ApplySegmentDequantization(baseBlock, segmentDequantFactor);
-                assignedBlocks[b] = segmentBlock;
-                macroblockTokensRead += segmentBlock.TokensRead;
+            if (header.SkipCoefficients) {
+                for (var b = 0; b < assignedBlocks.Length; b++) {
+                    var blockType = GetScaffoldBlockType(b);
+                    var dequantFactor = ComputeScaffoldDequantFactorForSegment(blockType, frameHeader, header.SegmentId);
+                    assignedBlocks[b] = BuildSkippedBlockScaffold(b, blockType, dequantFactor);
+                }
+            } else {
+                for (var b = 0; b < assignedBlocks.Length; b++) {
+                    var blockIndex = GetNextPartitionBlockIndex(partitionIndex, partition.Blocks.Length, blockCursors);
+                    var baseBlock = partition.Blocks[blockIndex];
+                    var segmentDequantFactor = ComputeScaffoldDequantFactorForSegment(baseBlock.BlockType, frameHeader, header.SegmentId);
+                    var segmentBlock = ApplySegmentDequantization(baseBlock, segmentDequantFactor);
+                    assignedBlocks[b] = segmentBlock;
+                    macroblockTokensRead += segmentBlock.TokensRead;
+                }
             }
 
             if (header.X == 0) {
@@ -652,22 +684,31 @@ internal static class WebpVp8Decoder {
             var rowBudgets = partitionRowByteBudgets[partitionIndex];
             if ((uint)partitionRowIndex >= (uint)rowBudgets.Length) return false;
 
+            var expectedRowIndex = partitionRowIndexByGlobalRow[header.Y];
+            if (expectedRowIndex != partitionRowIndex) return false;
+
             var tokensPerMacroblock = Math.Max(0, blocks.Partitions[partitionIndex].TokensRead);
-            var rowTokenTotal = tokensPerMacroblock * headers.MacroblockCols;
+            var rowNonSkipped = partitionRowNonSkippedMacroblocks[partitionIndex];
+            if ((uint)partitionRowIndex >= (uint)rowNonSkipped.Length) return false;
+            var nonSkippedCount = rowNonSkipped[partitionRowIndex];
+            var rowTokenTotal = tokensPerMacroblock * nonSkippedCount;
             var rowByteTotal = rowBudgets[partitionRowIndex];
 
             var partitionTokensBefore = partitionTokensConsumed[partitionIndex];
             var partitionBytesBefore = partitionBytesConsumed[partitionIndex];
-            var macroblockBytesConsumed = ComputePartitionByteShare(
-                rowByteTotal,
-                partitionRowBytesConsumed[partitionIndex],
-                rowTokenTotal,
-                partitionRowTokensConsumed[partitionIndex],
-                macroblockTokensRead);
-            partitionRowTokensConsumed[partitionIndex] += macroblockTokensRead;
-            partitionRowBytesConsumed[partitionIndex] += macroblockBytesConsumed;
-            partitionTokensConsumed[partitionIndex] += macroblockTokensRead;
-            partitionBytesConsumed[partitionIndex] += macroblockBytesConsumed;
+            var macroblockBytesConsumed = 0;
+            if (!header.SkipCoefficients && rowTokenTotal > 0) {
+                macroblockBytesConsumed = ComputePartitionByteShare(
+                    rowByteTotal,
+                    partitionRowBytesConsumed[partitionIndex],
+                    rowTokenTotal,
+                    partitionRowTokensConsumed[partitionIndex],
+                    macroblockTokensRead);
+                partitionRowTokensConsumed[partitionIndex] += macroblockTokensRead;
+                partitionRowBytesConsumed[partitionIndex] += macroblockBytesConsumed;
+                partitionTokensConsumed[partitionIndex] += macroblockTokensRead;
+                partitionBytesConsumed[partitionIndex] += macroblockBytesConsumed;
+            }
             var partitionTokensAfter = partitionTokensConsumed[partitionIndex];
             var partitionBytesAfter = partitionBytesConsumed[partitionIndex];
 
@@ -1345,6 +1386,39 @@ internal static class WebpVp8Decoder {
         var blockIndex = cursor % blockCount;
         cursors[partitionIndex] = cursor + 1;
         return blockIndex;
+    }
+
+    private static WebpVp8BlockTokenScaffold BuildSkippedBlockScaffold(int blockIndex, int blockType, int dequantFactor) {
+        if (dequantFactor <= 0) dequantFactor = 1;
+
+        var coefficients = new int[CoefficientsPerBlock];
+        var dequantizedCoefficients = new int[CoefficientsPerBlock];
+        var coefficientsNaturalOrder = new int[CoefficientsPerBlock];
+        var dequantizedCoefficientsNaturalOrder = new int[CoefficientsPerBlock];
+        var tokens = new WebpVp8BlockTokenInfo[BlockScaffoldMaxTokensPerBlock];
+
+        var blockResult = BuildScaffoldBlockResult(
+            blockType,
+            dequantFactor,
+            coefficientsNaturalOrder,
+            dequantizedCoefficientsNaturalOrder,
+            reachedEob: true,
+            tokensRead: 0);
+        var blockPixels = BuildScaffoldBlockPixels(blockResult);
+
+        return new WebpVp8BlockTokenScaffold(
+            blockIndex,
+            blockType,
+            dequantFactor,
+            coefficients,
+            dequantizedCoefficients,
+            coefficientsNaturalOrder,
+            dequantizedCoefficientsNaturalOrder,
+            tokens,
+            tokensRead: 0,
+            reachedEob: true,
+            blockResult,
+            blockPixels);
     }
 
     private static WebpVp8BlockTokenScaffold ApplySegmentDequantization(WebpVp8BlockTokenScaffold block, int dequantFactor) {

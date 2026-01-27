@@ -33,38 +33,98 @@ public sealed class WebpVp8MacroblockTokenScaffoldTests
             partitionSizes,
             tokenSeed: 0x6D);
 
+        Assert.True(WebpVp8Decoder.TryReadMacroblockHeaderScaffold(payload, out var headers));
         Assert.True(WebpVp8Decoder.TryReadBlockTokenScaffold(payload, out var blockScaffold));
         var partitionByteTotals = new int[dctCount];
         var partitionTokenTotals = new int[dctCount];
-        var macroblocksPerPartition = new int[dctCount];
-        for (var y = 0; y < expectedRows; y++)
+        var rowsPerPartition = new int[dctCount];
+        for (var row = 0; row < headers.MacroblockRows; row++)
         {
-            var partitionIndex = y % dctCount;
-            macroblocksPerPartition[partitionIndex] += expectedCols;
+            var partitionIndex = row % dctCount;
+            rowsPerPartition[partitionIndex]++;
         }
+
+        var partitionRowIndexByGlobalRow = new int[headers.MacroblockRows];
+        var partitionRowCursor = new int[dctCount];
+        for (var row = 0; row < headers.MacroblockRows; row++)
+        {
+            var partitionIndex = row % dctCount;
+            partitionRowIndexByGlobalRow[row] = partitionRowCursor[partitionIndex];
+            partitionRowCursor[partitionIndex]++;
+        }
+
+        var partitionRowBudgets = new int[dctCount][];
+        var partitionRowNonSkippedCounts = new int[dctCount][];
         var totalPartitionBytes = 0;
-        var usedPartitionBytes = 0;
         for (var p = 0; p < dctCount; p++)
         {
             partitionByteTotals[p] = blockScaffold.Partitions[p].BytesConsumed;
-            var tokensPerMacroblock = blockScaffold.Partitions[p].TokensRead;
-            partitionTokenTotals[p] = tokensPerMacroblock * System.Math.Max(1, macroblocksPerPartition[p]);
             totalPartitionBytes += partitionByteTotals[p];
-            if (macroblocksPerPartition[p] > 0)
+
+            var rowCount = rowsPerPartition[p];
+            if (rowCount <= 0)
             {
-                usedPartitionBytes += partitionByteTotals[p];
+                partitionRowBudgets[p] = System.Array.Empty<int>();
+                partitionRowNonSkippedCounts[p] = System.Array.Empty<int>();
+                continue;
             }
+
+            var budgets = new int[rowCount];
+            var baseBytesPerRow = partitionByteTotals[p] / rowCount;
+            var remainder = partitionByteTotals[p] % rowCount;
+            for (var r = 0; r < budgets.Length; r++)
+            {
+                budgets[r] = baseBytesPerRow + (r < remainder ? 1 : 0);
+            }
+
+            partitionRowBudgets[p] = budgets;
+            partitionRowNonSkippedCounts[p] = new int[rowCount];
+        }
+
+        for (var i = 0; i < headers.Macroblocks.Length; i++)
+        {
+            var header = headers.Macroblocks[i];
+            var partitionIndex = header.Y % dctCount;
+            var rowIndex = partitionRowIndexByGlobalRow[header.Y];
+            if (!header.SkipCoefficients)
+            {
+                partitionRowNonSkippedCounts[partitionIndex][rowIndex]++;
+            }
+        }
+
+        var usedPartitionBytes = 0;
+        var usedPartitionBytesPerPartition = new int[dctCount];
+        var nonSkippedMacroblocksPerPartition = new int[dctCount];
+        for (var p = 0; p < dctCount; p++)
+        {
+            var tokensPerMacroblock = blockScaffold.Partitions[p].TokensRead;
+
+            var nonSkippedCount = 0;
+            var rowBudgets = partitionRowBudgets[p];
+            var rowNonSkipped = partitionRowNonSkippedCounts[p];
+            for (var r = 0; r < rowNonSkipped.Length; r++)
+            {
+                nonSkippedCount += rowNonSkipped[r];
+                if (rowNonSkipped[r] > 0)
+                {
+                    usedPartitionBytesPerPartition[p] += rowBudgets[r];
+                }
+            }
+
+            nonSkippedMacroblocksPerPartition[p] = nonSkippedCount;
+            partitionTokenTotals[p] = tokensPerMacroblock * nonSkippedCount;
+            usedPartitionBytes += usedPartitionBytesPerPartition[p];
         }
 
         var success = WebpVp8Decoder.TryReadMacroblockTokenScaffold(payload, out var scaffold);
 
         Assert.True(success);
-        Assert.Equal(expectedCols, scaffold.MacroblockCols);
-        Assert.Equal(expectedRows, scaffold.MacroblockRows);
+        Assert.Equal(headers.MacroblockCols, scaffold.MacroblockCols);
+        Assert.Equal(headers.MacroblockRows, scaffold.MacroblockRows);
         Assert.Equal(dctCount, scaffold.PartitionCount);
         Assert.Equal(expectedMacroblocks, scaffold.Macroblocks.Length);
         Assert.Equal(expectedMacroblocks * 4, scaffold.TotalBlocksAssigned);
-        Assert.InRange(scaffold.TotalTokensRead, scaffold.TotalBlocksAssigned, scaffold.TotalBlocksAssigned * 16);
+        Assert.InRange(scaffold.TotalTokensRead, 0, scaffold.TotalBlocksAssigned * 16);
         Assert.InRange(scaffold.TotalBytesConsumed, 0, totalPartitionBytes);
         Assert.Equal(usedPartitionBytes, scaffold.TotalBytesConsumed);
 
@@ -77,13 +137,35 @@ public sealed class WebpVp8MacroblockTokenScaffoldTests
             var macroblock = scaffold.Macroblocks[i];
             var expectedPartition = macroblock.Header.Y % dctCount;
             Assert.Equal(expectedPartition, macroblock.PartitionIndex);
+
+            var rowIndex = partitionRowIndexByGlobalRow[macroblock.Header.Y];
+            var rowNonSkipped = partitionRowNonSkippedCounts[macroblock.PartitionIndex][rowIndex];
+            var rowBudget = partitionRowBudgets[macroblock.PartitionIndex][rowIndex];
+
             Assert.Equal(lastBytesAfter[macroblock.PartitionIndex], macroblock.PartitionBytesBefore);
             Assert.Equal(lastTokensAfter[macroblock.PartitionIndex], macroblock.PartitionTokensBefore);
-            Assert.InRange(macroblock.PartitionBytesConsumed, 0, partitionByteTotals[macroblock.PartitionIndex]);
-            Assert.InRange(macroblock.PartitionBytesAfter, macroblock.PartitionBytesBefore, partitionByteTotals[macroblock.PartitionIndex]);
-            Assert.InRange(macroblock.PartitionTokensAfter, macroblock.PartitionTokensBefore, partitionTokenTotals[macroblock.PartitionIndex]);
             Assert.Equal(4, macroblock.Blocks.Length);
-            Assert.InRange(macroblock.TokensRead, macroblock.Blocks.Length, macroblock.Blocks.Length * 16);
+
+            if (macroblock.Header.SkipCoefficients || rowNonSkipped == 0)
+            {
+                Assert.Equal(0, macroblock.TokensRead);
+                Assert.Equal(0, macroblock.PartitionBytesConsumed);
+                Assert.Equal(macroblock.PartitionBytesBefore, macroblock.PartitionBytesAfter);
+                Assert.Equal(macroblock.PartitionTokensBefore, macroblock.PartitionTokensAfter);
+
+                for (var b = 0; b < macroblock.Blocks.Length; b++)
+                {
+                    Assert.Equal(0, macroblock.Blocks[b].TokensRead);
+                    Assert.True(macroblock.Blocks[b].ReachedEob);
+                }
+            }
+            else
+            {
+                Assert.InRange(macroblock.PartitionBytesConsumed, 0, rowBudget);
+                Assert.InRange(macroblock.PartitionBytesAfter, macroblock.PartitionBytesBefore, usedPartitionBytesPerPartition[macroblock.PartitionIndex]);
+                Assert.InRange(macroblock.PartitionTokensAfter, macroblock.PartitionTokensBefore, partitionTokenTotals[macroblock.PartitionIndex]);
+                Assert.InRange(macroblock.TokensRead, macroblock.Blocks.Length, macroblock.Blocks.Length * 16);
+            }
 
             lastBytesAfter[macroblock.PartitionIndex] = macroblock.PartitionBytesAfter;
             lastTokensAfter[macroblock.PartitionIndex] = macroblock.PartitionTokensAfter;
@@ -101,13 +183,14 @@ public sealed class WebpVp8MacroblockTokenScaffoldTests
 
         for (var p = 0; p < dctCount; p++)
         {
-            if (macroblocksPerPartition[p] > 0)
+            Assert.Equal(usedPartitionBytesPerPartition[p], lastBytesAfter[p]);
+            if (nonSkippedMacroblocksPerPartition[p] > 0)
             {
-                Assert.Equal(partitionByteTotals[p], lastBytesAfter[p]);
+                Assert.Equal(partitionTokenTotals[p], lastTokensAfter[p]);
             }
             else
             {
-                Assert.Equal(0, lastBytesAfter[p]);
+                Assert.Equal(0, lastTokensAfter[p]);
             }
         }
     }
