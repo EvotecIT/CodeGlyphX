@@ -25,6 +25,8 @@ public static partial class QrPngRenderer {
         opts.ForegroundPattern?.Validate();
         opts.ForegroundPaletteZones?.Validate();
         opts.ModuleScaleMap?.Validate();
+        opts.ModuleShapeMap?.Validate();
+        opts.ModuleJitter?.Validate();
         opts.Eyes?.Validate();
         opts.Canvas?.Validate();
         opts.Debug?.Validate();
@@ -98,11 +100,13 @@ public static partial class QrPngRenderer {
             DrawEyeAccentStripes(buffer, widthPx, heightPx, stride, opts, qrOffsetX, qrOffsetY, qrFullPx, qrSizePx, size);
         }
 
-        var connectedShape = opts.ModuleShape;
-        var connectedMode = connectedShape is QrPngModuleShape.ConnectedRounded or QrPngModuleShape.ConnectedSquircle;
-        var baseModuleShape = connectedMode
-            ? connectedShape == QrPngModuleShape.ConnectedRounded ? QrPngModuleShape.Rounded : QrPngModuleShape.Squircle
-            : opts.ModuleShape;
+        var baseModuleShape = opts.ModuleShape;
+        var connectedMode = IsConnectedShape(baseModuleShape);
+        if (connectedMode) {
+            baseModuleShape = baseModuleShape == QrPngModuleShape.ConnectedRounded
+                ? QrPngModuleShape.Rounded
+                : QrPngModuleShape.Squircle;
+        }
         var mask = BuildModuleMask(opts.ModuleSize, baseModuleShape, opts.ModuleScale, opts.ModuleCornerRadiusPx);
         var maskSolid = IsSolidMask(mask);
         var eyeOuterMask = opts.Eyes is null
@@ -129,8 +133,11 @@ public static partial class QrPngRenderer {
         var foregroundPattern = opts.ForegroundPattern;
         var zoneInfo = opts.ForegroundPaletteZones is null ? (PaletteZoneInfo?)null : new PaletteZoneInfo(opts.ForegroundPaletteZones, size);
         var scaleMapInfo = opts.ModuleScaleMap is null ? (ModuleScaleMapInfo?)null : new ModuleScaleMapInfo(opts.ModuleScaleMap, size);
-        var scaleMaskCache = scaleMapInfo.HasValue ? new Dictionary<int, MaskInfo>(8) : null;
-        var connectedMaskCache = connectedMode ? new Dictionary<int, MaskInfo>(32) : null;
+        var shapeMapInfo = opts.ModuleShapeMap is null ? (ModuleShapeMapInfo?)null : new ModuleShapeMapInfo(opts.ModuleShapeMap, size);
+        var jitterInfo = opts.ModuleJitter is null ? (ModuleJitterInfo?)null : new ModuleJitterInfo(opts.ModuleJitter);
+        var usesConnected = connectedMode || (shapeMapInfo.HasValue && shapeMapInfo.Value.UsesConnected);
+        var scaleMaskCache = scaleMapInfo.HasValue || shapeMapInfo.HasValue ? new Dictionary<int, MaskInfo>(8) : null;
+        var connectedMaskCache = usesConnected ? new Dictionary<int, MaskInfo>(32) : null;
         // Eye detection is needed for styling decisions (eyes/palettes/scale maps),
         // but we keep it decoupled from functional protection so gradients can still
         // apply to eyes when no eye-specific styling is configured.
@@ -196,40 +203,76 @@ public static partial class QrPngRenderer {
                     useColor = GetPaletteColor(palette!.Value, mx, my);
                 }
 
-                if (!protectFunctional && connectedMode && eyeKind == EyeKind.None) {
-                    var scale = opts.ModuleScale;
-                    if (scaleMapInfo.HasValue) {
-                        scale *= GetScaleFactor(scaleMapInfo.Value, mx, my);
+                var useScale = opts.ModuleScale;
+                var allowEyeScaleMap = scaleMapInfo.HasValue && scaleMapInfo.Value.ApplyToEyes;
+                if (!protectFunctional
+                    && scaleMapInfo.HasValue
+                    && (eyeKind == EyeKind.None || allowEyeScaleMap)) {
+                    useScale = ClampScale(useScale * GetScaleFactor(scaleMapInfo.Value, mx, my));
+                }
+
+                var applyShapeMap = shapeMapInfo.HasValue
+                    && (!protectFunctional || !shapeMapInfo.Value.ProtectFunctionalPatterns);
+                var allowShapeMapOnEyes = shapeMapInfo.HasValue && shapeMapInfo.Value.ApplyToEyes && applyShapeMap;
+                var isEyeForShapeMap = false;
+                if (applyShapeMap && !allowShapeMapOnEyes) {
+                    isEyeForShapeMap = isEye;
+                    if (!isEyeForShapeMap) {
+                        isEyeForShapeMap = TryGetEye(mx, my, size, out _, out _, out _);
                     }
-                    scale = ClampScale(scale);
-                    var neighborMask = GetNeighborMask(modules, mx, my);
-                    var maskInfo = GetConnectedMask(
-                        connectedMaskCache!,
-                        opts.ModuleSize,
-                        scale,
-                        opts.ModuleCornerRadiusPx,
-                        neighborMask,
-                        connectedShape);
-                    useMask = maskInfo.Mask;
-                    useMaskSolid = maskInfo.IsSolid;
-                } else if (!protectFunctional
-                           && scaleMapInfo.HasValue
-                           && (eyeKind == EyeKind.None || scaleMapInfo.Value.ApplyToEyes)) {
-                    var scale = ClampScale(opts.ModuleScale * GetScaleFactor(scaleMapInfo.Value, mx, my));
-                    var maskInfo = GetScaleMask(scaleMaskCache!, opts.ModuleSize, baseModuleShape, scale, opts.ModuleCornerRadiusPx);
-                    useMask = maskInfo.Mask;
-                    useMaskSolid = maskInfo.IsSolid;
+                }
+
+                var useShape = baseModuleShape;
+                if (applyShapeMap && !isEyeForShapeMap) {
+                    useShape = GetShapeForModule(shapeMapInfo!.Value, mx, my, size);
+                }
+
+                var allowEyeOverride = eyeKind != EyeKind.None && (allowShapeMapOnEyes || allowEyeScaleMap);
+
+                if (!protectFunctional && (eyeKind == EyeKind.None || allowEyeOverride)) {
+                    if (IsConnectedShape(useShape)) {
+                        var neighborMask = GetNeighborMask(modules, mx, my);
+                        var maskInfo = GetConnectedMask(
+                            connectedMaskCache!,
+                            opts.ModuleSize,
+                            useScale,
+                            opts.ModuleCornerRadiusPx,
+                            neighborMask,
+                            useShape);
+                        useMask = maskInfo.Mask;
+                        useMaskSolid = maskInfo.IsSolid;
+                    } else if (scaleMapInfo.HasValue || shapeMapInfo.HasValue || useShape != baseModuleShape || useScale != opts.ModuleScale) {
+                        var maskInfo = GetScaleMask(scaleMaskCache!, opts.ModuleSize, useShape, useScale, opts.ModuleCornerRadiusPx);
+                        useMask = maskInfo.Mask;
+                        useMaskSolid = maskInfo.IsSolid;
+                    }
                 }
 
                 QrPngForegroundPatternOptions? usePattern = null;
                 if (!protectFunctional
                     && foregroundPattern is not null
-                    && foregroundPattern.Color.A != 0
-                    && foregroundPattern.ThicknessPx > 0) {
+                    && foregroundPattern.ThicknessPx > 0
+                    && (foregroundPattern.BlendMode == QrPngForegroundPatternBlendMode.Mask || foregroundPattern.Color.A != 0)) {
                     var applyToEyes = eyeKind != EyeKind.None && foregroundPattern.ApplyToEyes;
                     var applyToModules = eyeKind == EyeKind.None && foregroundPattern.ApplyToModules;
                     if (applyToEyes || applyToModules) {
                         usePattern = foregroundPattern;
+                    }
+                }
+
+                var moduleJitterX = 0;
+                var moduleJitterY = 0;
+                if (jitterInfo.HasValue
+                    && (!jitterInfo.Value.ProtectFunctionalPatterns || !protectFunctional)
+                    && (eyeKind == EyeKind.None || jitterInfo.Value.ApplyToEyes)) {
+                    var jitterLimit = jitterInfo.Value.MaxOffsetPx;
+                    if (jitterLimit > 0) {
+                        if (jitterInfo.Value.ClampToShape) {
+                            jitterLimit = ClampJitterLimit(jitterLimit, opts.ModuleSize, useShape, useScale);
+                        }
+                        if (jitterLimit > 0) {
+                            GetJitterOffsets(mx, my, jitterInfo.Value.Seed, jitterLimit, out moduleJitterX, out moduleJitterY);
+                        }
                     }
                 }
 
@@ -256,13 +299,15 @@ public static partial class QrPngRenderer {
                             boxY,
                             qrOriginX,
                             qrOriginY,
-                            qrSizePx);
+                            qrSizePx,
+                            moduleJitterX,
+                            moduleJitterY);
                         continue;
                     }
                 }
 
-                var useGradient = !protectFunctional && !usePalette && eyeKind == EyeKind.None ? gradientInfo : null;
-                if (useGradient is null && useMaskSolid && usePattern is null) {
+                var useGradient = !protectFunctional && !usePalette && (eyeKind == EyeKind.None || opts.Eyes is null) ? gradientInfo : null;
+                if (useGradient is null && useMaskSolid && usePattern is null && moduleJitterX == 0 && moduleJitterY == 0) {
                     var solid = useColor.A == 255 ? useColor : CompositeColor(useColor, background);
                     DrawModuleSolid(buffer, stride, opts.ModuleSize, mx, my, opts.QuietZone, qrOffsetX, qrOffsetY, solid);
                     continue;
@@ -283,7 +328,9 @@ public static partial class QrPngRenderer {
                     useMask,
                     qrOriginX,
                     qrOriginY,
-                    qrSizePx);
+                    qrSizePx,
+                    moduleJitterX,
+                    moduleJitterY);
             }
         }
 
@@ -346,14 +393,21 @@ public static partial class QrPngRenderer {
         bool[] mask,
         int originX,
         int originY,
-        int qrSizePx) {
+        int qrSizePx,
+        int jitterX,
+        int jitterY) {
         var x0 = offsetX + (mx + quietZone) * moduleSize;
         var y0 = offsetY + (my + quietZone) * moduleSize;
         for (var sy = 0; sy < moduleSize; sy++) {
             var rowStart = (y0 + sy) * (stride + 1) + 1 + x0 * 4;
-            var maskRow = sy * moduleSize;
             for (var sx = 0; sx < moduleSize; sx++) {
-                if (!mask[maskRow + sx]) {
+                var localX = sx - jitterX;
+                var localY = sy - jitterY;
+                if ((uint)localX >= (uint)moduleSize || (uint)localY >= (uint)moduleSize) {
+                    rowStart += 4;
+                    continue;
+                }
+                if (!mask[localY * moduleSize + localX]) {
                     rowStart += 4;
                     continue;
                 }
@@ -361,8 +415,26 @@ public static partial class QrPngRenderer {
                     ? color
                     : GetGradientColor(gradient.Value, x0 + sx, y0 + sy, originX, originY);
 
-                if (pattern is not null && ShouldDrawForegroundPattern(pattern, moduleSize, x0 + sx, y0 + sy, originX, originY, qrSizePx)) {
-                    outColor = ComposeOver(pattern.Color, outColor);
+                if (pattern is not null) {
+                    var drawPattern = ShouldDrawForegroundPattern(pattern, moduleSize, x0 + sx, y0 + sy, originX, originY, qrSizePx);
+                    switch (pattern.BlendMode) {
+                        case QrPngForegroundPatternBlendMode.Mask:
+                            if (!drawPattern) {
+                                rowStart += 4;
+                                continue;
+                            }
+                            break;
+                        case QrPngForegroundPatternBlendMode.Replace:
+                            if (drawPattern) {
+                                outColor = pattern.Color;
+                            }
+                            break;
+                        default:
+                            if (drawPattern) {
+                                outColor = ComposeOver(pattern.Color, outColor);
+                            }
+                            break;
+                    }
                 }
 
                 if (outColor.A == 255) {
@@ -403,20 +475,45 @@ public static partial class QrPngRenderer {
         int boxY,
         int originX,
         int originY,
-        int qrSizePx) {
+        int qrSizePx,
+        int jitterX,
+        int jitterY) {
         var x0 = offsetX + (mx + quietZone) * moduleSize;
         var y0 = offsetY + (my + quietZone) * moduleSize;
         for (var sy = 0; sy < moduleSize; sy++) {
             var rowStart = (y0 + sy) * (stride + 1) + 1 + x0 * 4;
-            var maskRow = sy * moduleSize;
             for (var sx = 0; sx < moduleSize; sx++) {
-                if (!mask[maskRow + sx]) {
+                var localX = sx - jitterX;
+                var localY = sy - jitterY;
+                if ((uint)localX >= (uint)moduleSize || (uint)localY >= (uint)moduleSize) {
+                    rowStart += 4;
+                    continue;
+                }
+                if (!mask[localY * moduleSize + localX]) {
                     rowStart += 4;
                     continue;
                 }
                 var outColor = GetGradientColorInBox(gradient, x0 + sx, y0 + sy, boxX, boxY);
-                if (pattern is not null && ShouldDrawForegroundPattern(pattern, moduleSize, x0 + sx, y0 + sy, originX, originY, qrSizePx)) {
-                    outColor = ComposeOver(pattern.Color, outColor);
+                if (pattern is not null) {
+                    var drawPattern = ShouldDrawForegroundPattern(pattern, moduleSize, x0 + sx, y0 + sy, originX, originY, qrSizePx);
+                    switch (pattern.BlendMode) {
+                        case QrPngForegroundPatternBlendMode.Mask:
+                            if (!drawPattern) {
+                                rowStart += 4;
+                                continue;
+                            }
+                            break;
+                        case QrPngForegroundPatternBlendMode.Replace:
+                            if (drawPattern) {
+                                outColor = pattern.Color;
+                            }
+                            break;
+                        default:
+                            if (drawPattern) {
+                                outColor = ComposeOver(pattern.Color, outColor);
+                            }
+                            break;
+                    }
                 }
 
                 if (outColor.A == 255) {
@@ -3098,7 +3195,7 @@ public static partial class QrPngRenderer {
     }
 
     private static MaskInfo GetScaleMask(Dictionary<int, MaskInfo> cache, int moduleSize, QrPngModuleShape shape, double scale, int radius) {
-        var key = QuantizeScaleKey(scale);
+        var key = Hash(QuantizeScaleKey(scale), (int)shape, radius, 0);
         if (!cache.TryGetValue(key, out var info)) {
             var mask = BuildModuleMask(moduleSize, shape, scale, radius);
             info = new MaskInfo(mask, IsSolidMask(mask));
@@ -3117,6 +3214,25 @@ public static partial class QrPngRenderer {
         if (scale > 1.0) return 1.0;
         return scale;
     }
+
+    private static double GetEffectiveShapeScale(QrPngModuleShape shape, double scale) {
+        if (shape == QrPngModuleShape.ConnectedRounded) shape = QrPngModuleShape.Rounded;
+        if (shape == QrPngModuleShape.ConnectedSquircle) shape = QrPngModuleShape.Squircle;
+        if (shape == QrPngModuleShape.Dot) scale *= QrPngShapeDefaults.DotScale;
+        if (shape == QrPngModuleShape.DotGrid) scale *= QrPngShapeDefaults.DotGridScale;
+        return ClampScale(scale);
+    }
+
+    private static int ClampJitterLimit(int desired, int moduleSize, QrPngModuleShape shape, double scale) {
+        if (desired <= 0 || moduleSize <= 1) return 0;
+        if (IsConnectedShape(shape)) return 0;
+        var effective = GetEffectiveShapeScale(shape, scale);
+        var margin = (moduleSize - moduleSize * effective) * 0.5;
+        var max = (int)Math.Floor(margin);
+        if (max < 0) max = 0;
+        return Math.Min(desired, max);
+    }
+
 
     private static double GetScaleFactor(in ModuleScaleMapInfo map, int mx, int my) {
         switch (map.Mode) {
@@ -3140,6 +3256,31 @@ public static partial class QrPngRenderer {
                 return Lerp(map.MaxScale, map.MinScale, tRing);
         }
     }
+
+    private static QrPngModuleShape GetShapeForModule(in ModuleShapeMapInfo map, int mx, int my, int size) {
+        return map.Mode switch {
+            QrPngModuleShapeMapMode.Checker => ((mx + my) & 1) == 0 ? map.PrimaryShape : map.SecondaryShape,
+            QrPngModuleShapeMapMode.Random => ((uint)Hash(mx, my, map.Seed) / (double)uint.MaxValue) < map.SecondaryChance
+                ? map.SecondaryShape
+                : map.PrimaryShape,
+            QrPngModuleShapeMapMode.Corners => map.CornerSize > 0 && IsInCornerZone(mx, my, size, map.CornerSize)
+                ? map.SecondaryShape
+                : map.PrimaryShape,
+            QrPngModuleShapeMapMode.Rings => (GetRingIndex(mx, my, map.Center, map.RingSize) & 1) == 0
+                ? map.PrimaryShape
+                : map.SecondaryShape,
+            _ => GetRadialShape(map, mx, my),
+        };
+    }
+
+    private static QrPngModuleShape GetRadialShape(in ModuleShapeMapInfo map, int mx, int my) {
+        var dx = mx - map.Center;
+        var dy = my - map.Center;
+        var dist = Math.Sqrt((double)dx * dx + (double)dy * dy);
+        var t = map.MaxDist <= 0 ? 0 : dist / map.MaxDist;
+        return t <= map.Split ? map.PrimaryShape : map.SecondaryShape;
+    }
+
 
     private static double Lerp(double a, double b, double t) {
         if (t <= 0) return a;
@@ -3169,6 +3310,10 @@ public static partial class QrPngRenderer {
         if (mx >= size - cornerSize && my < cornerSize) return true;
         if (mx < cornerSize && my >= size - cornerSize) return true;
         return mx >= size - cornerSize && my >= size - cornerSize;
+    }
+
+    private static bool IsConnectedShape(QrPngModuleShape shape) {
+        return shape is QrPngModuleShape.ConnectedRounded or QrPngModuleShape.ConnectedSquircle;
     }
 
     private static int GetRingIndex(int x, int y, int center, int ringSize) {
@@ -3204,6 +3349,20 @@ public static partial class QrPngRenderer {
             return (int)h;
         }
     }
+
+    private static void GetJitterOffsets(int mx, int my, int seed, int maxOffset, out int jitterX, out int jitterY) {
+        if (maxOffset <= 0) {
+            jitterX = 0;
+            jitterY = 0;
+            return;
+        }
+        var span = maxOffset * 2 + 1;
+        var hx = (uint)Hash(mx, my, seed);
+        jitterX = (int)(hx % (uint)span) - maxOffset;
+        var hy = (uint)Hash(my, mx, seed ^ 0x68bc21eb);
+        jitterY = (int)(hy % (uint)span) - maxOffset;
+    }
+
 
     private const int NeighborNorth = 1 << 0;
     private const int NeighborEast = 1 << 1;
@@ -3722,6 +3881,57 @@ public static partial class QrPngRenderer {
             MaxDist = Math.Sqrt((double)MaxRing * MaxRing + (double)MaxRing * MaxRing);
         }
     }
+
+    private readonly struct ModuleShapeMapInfo {
+        public QrPngModuleShapeMapMode Mode { get; }
+        public QrPngModuleShape PrimaryShape { get; }
+        public QrPngModuleShape SecondaryShape { get; }
+        public double Split { get; }
+        public int RingSize { get; }
+        public int Seed { get; }
+        public double SecondaryChance { get; }
+        public int CornerSize { get; }
+        public bool ApplyToEyes { get; }
+        public bool ProtectFunctionalPatterns { get; }
+        public bool UsesConnected { get; }
+        public int Center { get; }
+        public int MaxRing { get; }
+        public double MaxDist { get; }
+
+        public ModuleShapeMapInfo(QrPngModuleShapeMapOptions options, int size) {
+            Mode = options.Mode;
+            PrimaryShape = options.PrimaryShape;
+            SecondaryShape = options.SecondaryShape;
+            Split = options.Split;
+            RingSize = options.RingSize;
+            Seed = options.Seed;
+            SecondaryChance = options.SecondaryChance;
+            CornerSize = Math.Min(options.CornerSize, size);
+            ApplyToEyes = options.ApplyToEyes;
+            ProtectFunctionalPatterns = options.ProtectFunctionalPatterns;
+            UsesConnected = IsConnectedShape(PrimaryShape) || IsConnectedShape(SecondaryShape);
+            Center = (size - 1) / 2;
+            MaxRing = Math.Max(Center, size - 1 - Center);
+            MaxDist = Math.Sqrt((double)MaxRing * MaxRing + (double)MaxRing * MaxRing);
+        }
+    }
+
+    private readonly struct ModuleJitterInfo {
+        public int MaxOffsetPx { get; }
+        public int Seed { get; }
+        public bool ApplyToEyes { get; }
+        public bool ProtectFunctionalPatterns { get; }
+        public bool ClampToShape { get; }
+
+        public ModuleJitterInfo(QrPngModuleJitterOptions options) {
+            MaxOffsetPx = options.MaxOffsetPx;
+            Seed = options.Seed;
+            ApplyToEyes = options.ApplyToEyes;
+            ProtectFunctionalPatterns = options.ProtectFunctionalPatterns;
+            ClampToShape = options.ClampToShape;
+        }
+    }
+
 
     private readonly struct PaletteZoneInfo {
         public PaletteInfo? CenterPalette { get; }

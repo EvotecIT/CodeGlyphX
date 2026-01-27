@@ -86,6 +86,8 @@ public static partial class QrEasy {
         if (opts.ForegroundPattern is not null) render.ForegroundPattern = opts.ForegroundPattern;
         if (opts.ForegroundPaletteZones is not null) render.ForegroundPaletteZones = opts.ForegroundPaletteZones;
         if (opts.ModuleScaleMap is not null) render.ModuleScaleMap = opts.ModuleScaleMap;
+        if (opts.ModuleShapeMap is not null) render.ModuleShapeMap = opts.ModuleShapeMap;
+        if (opts.ModuleJitter is not null) render.ModuleJitter = opts.ModuleJitter;
         if (opts.Canvas is not null) render.Canvas = opts.Canvas;
         if (opts.Eyes is not null) render.Eyes = opts.Eyes;
 
@@ -236,6 +238,8 @@ public static partial class QrEasy {
             ModuleShape = opts.ModuleShape,
             ModuleScale = opts.ModuleScale,
             ModuleScaleMap = CloneScaleMap(opts.ModuleScaleMap),
+            ModuleShapeMap = CloneShapeMap(opts.ModuleShapeMap),
+            ModuleJitter = CloneJitter(opts.ModuleJitter),
             ProtectFunctionalPatterns = opts.ProtectFunctionalPatterns,
             ProtectQuietZone = opts.ProtectQuietZone,
             ModuleCornerRadiusPx = opts.ModuleCornerRadiusPx,
@@ -298,6 +302,7 @@ public static partial class QrEasy {
             ModuleStep = pattern.ModuleStep,
             ApplyToModules = pattern.ApplyToModules,
             ApplyToEyes = pattern.ApplyToEyes,
+            BlendMode = pattern.BlendMode,
         };
     }
 
@@ -312,6 +317,34 @@ public static partial class QrEasy {
             ApplyToEyes = map.ApplyToEyes,
         };
     }
+
+    private static QrPngModuleShapeMapOptions? CloneShapeMap(QrPngModuleShapeMapOptions? map) {
+        if (map is null) return null;
+        return new QrPngModuleShapeMapOptions {
+            Mode = map.Mode,
+            PrimaryShape = map.PrimaryShape,
+            SecondaryShape = map.SecondaryShape,
+            Split = map.Split,
+            RingSize = map.RingSize,
+            Seed = map.Seed,
+            SecondaryChance = map.SecondaryChance,
+            CornerSize = map.CornerSize,
+            ApplyToEyes = map.ApplyToEyes,
+            ProtectFunctionalPatterns = map.ProtectFunctionalPatterns,
+        };
+    }
+
+    private static QrPngModuleJitterOptions? CloneJitter(QrPngModuleJitterOptions? jitter) {
+        if (jitter is null) return null;
+        return new QrPngModuleJitterOptions {
+            MaxOffsetPx = jitter.MaxOffsetPx,
+            Seed = jitter.Seed,
+            ApplyToEyes = jitter.ApplyToEyes,
+            ProtectFunctionalPatterns = jitter.ProtectFunctionalPatterns,
+            ClampToShape = jitter.ClampToShape,
+        };
+    }
+
 
     private static QrPngPaletteOptions? ClonePalette(QrPngPaletteOptions? palette) {
         if (palette is null) return null;
@@ -614,6 +647,8 @@ public static partial class QrEasy {
         if (preset.ModuleScale.HasValue) render.ModuleScale = preset.ModuleScale.Value;
         if (preset.ModuleCornerRadiusPx.HasValue) render.ModuleCornerRadiusPx = preset.ModuleCornerRadiusPx.Value;
         if (preset.ModuleScaleMap is not null) render.ModuleScaleMap = preset.ModuleScaleMap;
+        if (preset.ModuleShapeMap is not null) render.ModuleShapeMap = preset.ModuleShapeMap;
+        if (preset.ModuleJitter is not null) render.ModuleJitter = preset.ModuleJitter;
         if (preset.ForegroundGradient is not null) render.ForegroundGradient = preset.ForegroundGradient;
         if (preset.ForegroundPalette is not null) render.ForegroundPalette = preset.ForegroundPalette;
         if (preset.ForegroundPattern is not null) render.ForegroundPattern = preset.ForegroundPattern;
@@ -714,6 +749,8 @@ public static partial class QrEasy {
             || eyes.AccentStripeCount > 0);
         var hasArtHints = opts.Art is not null
             || opts.ForegroundPattern is not null
+            || opts.ModuleShapeMap is not null
+            || opts.ModuleJitter is not null
             || canvasIsArt
             || eyesIsArt
             || paletteIsArt;
@@ -758,6 +795,8 @@ public static partial class QrEasy {
             || eyes.AccentStripeCount > 0);
         var hasArtHints = opts.Art is not null
             || render.ForegroundPattern is not null
+            || render.ModuleShapeMap is not null
+            || render.ModuleJitter is not null
             || canvasIsArt
             || eyesIsArt
             || paletteIsArt;

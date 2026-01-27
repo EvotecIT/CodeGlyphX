@@ -139,6 +139,8 @@ public static class QrArtSafety {
         var hasDecorativeModules = options.ModuleShape != QrPngModuleShape.Square
             || options.ModuleScale < 1.0
             || options.ModuleScaleMap is not null
+            || options.ModuleShapeMap is not null
+            || options.ModuleJitter is not null
             || options.ForegroundGradient is not null
             || options.ForegroundPalette is not null
             || options.ForegroundPattern is not null
@@ -157,7 +159,7 @@ public static class QrArtSafety {
             ? new[] { options.Background }
             : new[] { options.BackgroundGradient.StartColor, options.BackgroundGradient.EndColor };
         var pattern = options.ForegroundPattern;
-        var patternActive = pattern is not null && pattern.Color.A != 0 && pattern.ThicknessPx > 0;
+        var patternActive = pattern is not null && pattern.ThicknessPx > 0 && (pattern.BlendMode == QrPngForegroundPatternBlendMode.Mask || pattern.Color.A != 0);
 
         if (options.ForegroundPalette is not null || options.ForegroundPaletteZones is not null) {
             var palettes = CollectPalettes(options.ForegroundPalette, options.ForegroundPaletteZones);

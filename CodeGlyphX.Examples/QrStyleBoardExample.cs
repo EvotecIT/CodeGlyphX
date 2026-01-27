@@ -289,6 +289,45 @@ internal static class QrStyleBoardExample {
                 pattern: Speckle(R(0, 80, 120, 96), seed: 4242, sizePx: 7, thicknessPx: 2, variation: 0.84, density: 0.94),
                 canvas: CanvasGradient(R(8, 20, 36), R(16, 44, 72)))),
 
+            new("Bead Cluster", StyleDocs("bead-cluster"), () => BaseSticker(
+                fg: R(18, 32, 72),
+                palette: Palette(QrPngPaletteMode.Cycle, 0, R(18, 32, 72), R(52, 130, 200), R(0, 180, 150)),
+                shape: QrPngModuleShape.Rounded,
+                eyes: Eye(QrPngEyeFrameStyle.Target, R(18, 32, 72), R(255, 255, 255)),
+                pattern: new QrPngForegroundPatternOptions {
+                    Type = QrPngForegroundPatternType.StippleDots,
+                    SizePx = 5,
+                    ThicknessPx = 2,
+                    BlendMode = QrPngForegroundPatternBlendMode.Mask,
+                    ApplyToModules = true,
+                },
+                canvas: CanvasGradient(R(238, 244, 255), R(214, 228, 248)))),
+
+            new("Shape Blend", StyleDocs("shape-blend"), () => BaseSticker(
+                fg: R(30, 44, 84),
+                palette: Palette(QrPngPaletteMode.Cycle, 0, R(30, 44, 84), R(64, 120, 190), R(120, 190, 255)),
+                shape: QrPngModuleShape.Squircle,
+                eyes: EyeGlow(R(30, 44, 84), R(120, 190, 255), R(64, 120, 190, 160)),
+                shapeMap: new QrPngModuleShapeMapOptions {
+                    Mode = QrPngModuleShapeMapMode.Radial,
+                    PrimaryShape = QrPngModuleShape.Dot,
+                    SecondaryShape = QrPngModuleShape.Squircle,
+                    Split = 0.55,
+                },
+                canvas: CanvasGradient(R(244, 248, 255), R(220, 232, 248)))),
+
+            new("Jittered Ink", StyleDocs("jittered-ink"), () => BaseSticker(
+                fg: R(24, 28, 40),
+                palette: Palette(QrPngPaletteMode.Random, 7071, R(24, 28, 40), R(60, 90, 140), R(220, 140, 90)),
+                shape: QrPngModuleShape.Blob,
+                eyes: EyeInsetRing(R(24, 28, 40), R(220, 140, 90)),
+                jitter: new QrPngModuleJitterOptions {
+                    MaxOffsetPx = 2,
+                    Seed = 7071,
+                    ClampToShape = true,
+                },
+                canvas: CanvasGradient(R(246, 242, 236), R(230, 220, 208)))),
+
             new("Edge Drips", StyleDocs("edge-drips"), () => BaseSticker(
                 fg: R(22, 40, 92),
                 palette: Palette(QrPngPaletteMode.Cycle, 0, R(22, 40, 92), R(24, 138, 216), R(0, 190, 150)),
@@ -517,6 +556,8 @@ internal static class QrStyleBoardExample {
         QrPngEyeOptions eyes,
         QrPngCanvasOptions canvas,
         QrPngModuleScaleMapOptions? scaleMap = null,
+        QrPngModuleShapeMapOptions? shapeMap = null,
+        QrPngModuleJitterOptions? jitter = null,
         QrPngPaletteZoneOptions? zones = null,
         QrPngForegroundPatternOptions? pattern = null,
         byte[]? logo = null,
@@ -536,6 +577,8 @@ internal static class QrStyleBoardExample {
             ForegroundPalette = palette,
             ForegroundPaletteZones = zones,
             ModuleScaleMap = scaleMap,
+            ModuleShapeMap = shapeMap,
+            ModuleJitter = jitter,
             ForegroundPattern = pattern,
             Eyes = eyes,
             Canvas = canvas,

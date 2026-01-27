@@ -92,6 +92,17 @@ public sealed partial class QrPngRenderOptions {
     public QrPngModuleScaleMapOptions? ModuleScaleMap { get; set; }
 
     /// <summary>
+    /// Optional per-module shape mapping.
+    /// </summary>
+    public QrPngModuleShapeMapOptions? ModuleShapeMap { get; set; }
+
+    /// <summary>
+    /// Optional per-module jitter (organic placement).
+    /// </summary>
+    public QrPngModuleJitterOptions? ModuleJitter { get; set; }
+
+
+    /// <summary>
     /// When true, keeps non-eye functional patterns (timing/alignment/format/version/dark module)
     /// at full scale and a stable foreground color for scan reliability.
     /// </summary>

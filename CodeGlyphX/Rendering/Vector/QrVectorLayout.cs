@@ -90,6 +90,8 @@ internal static class QrVectorLayout {
         if (opts.ForegroundPalette is not null) return true;
         if (opts.ForegroundPaletteZones is not null) return true;
         if (opts.ModuleScaleMap is not null) return true;
+        if (opts.ModuleShapeMap is not null) return true;
+        if (opts.ModuleJitter is not null) return true;
         if (opts.Logo is not null) return true;
         if (opts.Canvas is not null) return true;
         if (opts.Debug is not null && opts.Debug.HasOverlay) return true;

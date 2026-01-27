@@ -1792,4 +1792,145 @@ public sealed class QrPngRendererTests {
         Assert.Equal(0, rgba[p + 1]);
         Assert.Equal(0, rgba[p + 2]);
     }
+
+    [Fact]
+    public void Render_With_PatternMask_Reduces_Dark_Pixels() {
+        var matrix = new BitMatrix(1, 1);
+        matrix[0, 0] = true;
+
+        var solidOpts = new QrPngRenderOptions {
+            ModuleSize = 18,
+            QuietZone = 0,
+            Foreground = Rgba32.Black,
+            Background = Rgba32.White,
+        };
+
+        var maskOpts = new QrPngRenderOptions {
+            ModuleSize = 18,
+            QuietZone = 0,
+            Foreground = Rgba32.Black,
+            Background = Rgba32.White,
+            ForegroundPattern = new QrPngForegroundPatternOptions {
+                Type = QrPngForegroundPatternType.StippleDots,
+                SizePx = 4,
+                ThicknessPx = 2,
+                BlendMode = QrPngForegroundPatternBlendMode.Mask,
+                ApplyToModules = true,
+            },
+        };
+
+        var pngSolid = QrPngRenderer.Render(matrix, solidOpts);
+        var (rgbaSolid, widthSolid, heightSolid, strideSolid) = PngTestDecoder.DecodeRgba32(pngSolid);
+        var pngMasked = QrPngRenderer.Render(matrix, maskOpts);
+        var (rgbaMasked, widthMasked, heightMasked, strideMasked) = PngTestDecoder.DecodeRgba32(pngMasked);
+
+        static int CountDark(byte[] rgba, int width, int height, int stride) {
+            var count = 0;
+            for (var y = 0; y < height; y++) {
+                var row = y * stride;
+                for (var x = 0; x < width; x++) {
+                    var idx = row + x * 4;
+                    var r = rgba[idx + 0];
+                    var g = rgba[idx + 1];
+                    var b = rgba[idx + 2];
+                    if (r < 200 || g < 200 || b < 200) count++;
+                }
+            }
+            return count;
+        }
+
+        var solidCount = CountDark(rgbaSolid, widthSolid, heightSolid, strideSolid);
+        var maskedCount = CountDark(rgbaMasked, widthMasked, heightMasked, strideMasked);
+
+        Assert.True(maskedCount < solidCount, "Expected mask mode to reduce filled pixels.");
+    }
+
+    [Fact]
+    public void Render_With_ModuleJitter_Changes_With_Seed() {
+        var matrix = new BitMatrix(1, 1);
+        matrix[0, 0] = true;
+
+        static QrPngRenderOptions OptionsForSeed(int seed) => new() {
+            ModuleSize = 20,
+            QuietZone = 0,
+            Foreground = Rgba32.Black,
+            Background = Rgba32.White,
+            ModuleShape = QrPngModuleShape.Dot,
+            ModuleJitter = new QrPngModuleJitterOptions {
+                MaxOffsetPx = 3,
+                Seed = seed,
+            },
+        };
+
+        static int Fingerprint(byte[] rgba, int width, int height, int stride) {
+            var hash = unchecked((int)2166136261);
+            var length = height * stride;
+            for (var i = 0; i < length; i++) {
+                hash ^= rgba[i];
+                hash = unchecked(hash * 16777619);
+            }
+            return hash;
+        }
+
+        var pngA = QrPngRenderer.Render(matrix, OptionsForSeed(100));
+        var (rgbaA, widthA, heightA, strideA) = PngTestDecoder.DecodeRgba32(pngA);
+        var pngB = QrPngRenderer.Render(matrix, OptionsForSeed(200));
+        var (rgbaB, widthB, heightB, strideB) = PngTestDecoder.DecodeRgba32(pngB);
+
+        Assert.Equal(widthA, widthB);
+        Assert.Equal(heightA, heightB);
+
+        var fpA = Fingerprint(rgbaA, widthA, heightA, strideA);
+        var fpB = Fingerprint(rgbaB, widthB, heightB, strideB);
+        Assert.NotEqual(fpA, fpB);
+    }
+
+    [Fact]
+    public void Render_With_ShapeMap_Produces_Mixed_Shapes() {
+        var matrix = new BitMatrix(2, 2);
+        matrix[0, 0] = true;
+        matrix[1, 0] = true;
+        matrix[0, 1] = true;
+        matrix[1, 1] = true;
+
+        var baseOpts = new QrPngRenderOptions {
+            ModuleSize = 14,
+            QuietZone = 0,
+            Foreground = Rgba32.Black,
+            Background = Rgba32.White,
+            ModuleShape = QrPngModuleShape.Square,
+        };
+
+        var mapOpts = new QrPngRenderOptions {
+            ModuleSize = 14,
+            QuietZone = 0,
+            Foreground = Rgba32.Black,
+            Background = Rgba32.White,
+            ModuleShape = QrPngModuleShape.Square,
+            ModuleShapeMap = new QrPngModuleShapeMapOptions {
+                Mode = QrPngModuleShapeMapMode.Checker,
+                PrimaryShape = QrPngModuleShape.Square,
+                SecondaryShape = QrPngModuleShape.Dot,
+            },
+        };
+
+        var pngBase = QrPngRenderer.Render(matrix, baseOpts);
+        var (rgbaBase, widthBase, heightBase, strideBase) = PngTestDecoder.DecodeRgba32(pngBase);
+        var pngMap = QrPngRenderer.Render(matrix, mapOpts);
+        var (rgbaMap, widthMap, heightMap, strideMap) = PngTestDecoder.DecodeRgba32(pngMap);
+
+        static int Fingerprint(byte[] rgba, int width, int height, int stride) {
+            var hash = unchecked((int)2166136261);
+            var length = height * stride;
+            for (var i = 0; i < length; i++) {
+                hash ^= rgba[i];
+                hash = unchecked(hash * 16777619);
+            }
+            return hash;
+        }
+
+        Assert.Equal(widthBase, widthMap);
+        Assert.Equal(heightBase, heightMap);
+        Assert.NotEqual(Fingerprint(rgbaBase, widthBase, heightBase, strideBase), Fingerprint(rgbaMap, widthMap, heightMap, strideMap));
+    }
 }
