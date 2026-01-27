@@ -11,13 +11,13 @@ internal static class QrDecodeSamplesExample {
     private static readonly string[] ImageExtensions = { ".png", ".jpg", ".jpeg", ".bmp", ".gif", ".webp", ".tga" };
 
     public static void Run(string outputDir) {
-        var sampleDir = ResolveSamplesDir("Assets/DecodingSamples");
+        var sampleDir = ExamplePaths.ResolveSamplesDir("Assets/DecodingSamples");
         var files = Directory.EnumerateFiles(sampleDir)
             .Where(path => ImageExtensions.Contains(Path.GetExtension(path), StringComparer.OrdinalIgnoreCase))
             .OrderBy(path => path, StringComparer.OrdinalIgnoreCase)
             .ToArray();
 
-        var options = new QrPixelDecodeOptions {
+        var baseOptions = new QrPixelDecodeOptions {
             Profile = QrDecodeProfile.Robust,
             MaxDimension = 2400,
             BudgetMilliseconds = 2500,
@@ -29,7 +29,7 @@ internal static class QrDecodeSamplesExample {
         var lines = new List<string> {
             $"SampleDir: {sampleDir}",
             $"Files: {files.Length}",
-            $"Options: Profile={options.Profile}, MaxDimension={options.MaxDimension}, BudgetMilliseconds={options.BudgetMilliseconds}, AggressiveSampling={options.AggressiveSampling}, StylizedSampling={options.StylizedSampling}, EnableTileScan={options.EnableTileScan}",
+            $"Options: Profile={baseOptions.Profile}, MaxDimension={baseOptions.MaxDimension}, BudgetMilliseconds={baseOptions.BudgetMilliseconds}, AggressiveSampling={baseOptions.AggressiveSampling}, StylizedSampling={baseOptions.StylizedSampling}, EnableTileScan={baseOptions.EnableTileScan}",
             string.Empty
         };
         var debugOutputs = ReadBoolEnv("CODEGLYPHX_DECODE_SAMPLES_DEBUG", false);
@@ -41,6 +41,7 @@ internal static class QrDecodeSamplesExample {
         foreach (var file in files) {
             var bytes = File.ReadAllBytes(file);
             var name = Path.GetFileName(file);
+            var options = SelectOptionsForSample(name, baseOptions);
 
             if (QrImageDecoder.TryDecodeAllImage(bytes, options, out var decoded) && decoded.Length > 0) {
                 var texts = decoded
@@ -60,17 +61,7 @@ internal static class QrDecodeSamplesExample {
                 lines.Add($"{name}: FAIL {info}");
                 if (debugOutputs && ImageReader.TryDecodeRgba32(bytes, out var rgba, out var width, out var height)) {
                     var baseName = Path.GetFileNameWithoutExtension(name);
-                    var opts = new QrPixelDebugOptions();
-                    QrPixelDebug.RenderToFile(rgba, width, height, width * 4, PixelFormat.Rgba32, QrPixelDebugMode.Binarized, debugDir, $"{baseName}-bin.png", opts);
-
-                    var adaptive = new QrPixelDebugOptions {
-                        AdaptiveThreshold = true,
-                        AdaptiveWindowSize = 15,
-                        AdaptiveOffset = 8
-                    };
-                    QrPixelDebug.RenderToFile(rgba, width, height, width * 4, PixelFormat.Rgba32, QrPixelDebugMode.Binarized, debugDir, $"{baseName}-bin-adaptive.png", adaptive);
-
-                    QrPixelDebug.RenderToFile(rgba, width, height, width * 4, PixelFormat.Rgba32, QrPixelDebugMode.Heatmap, debugDir, $"{baseName}-heatmap.png", opts);
+                    ExampleDebug.WriteQrDebugImages(rgba, width, height, width * 4, debugDir, baseName);
                 }
             }
         }
@@ -80,26 +71,38 @@ internal static class QrDecodeSamplesExample {
         Console.WriteLine(string.Join(Environment.NewLine, lines));
     }
 
+    private static QrPixelDecodeOptions SelectOptionsForSample(string fileName, QrPixelDecodeOptions baseOptions) {
+        if (fileName.Contains("screenshot", StringComparison.OrdinalIgnoreCase)) {
+            return new QrPixelDecodeOptions {
+                Profile = QrDecodeProfile.Robust,
+                MaxDimension = 3200,
+                BudgetMilliseconds = 12000,
+                AutoCrop = true,
+                AggressiveSampling = true,
+                StylizedSampling = true,
+                EnableTileScan = true,
+                TileGrid = 6
+            };
+        }
+
+        if (fileName.StartsWith("qr-art-", StringComparison.OrdinalIgnoreCase)) {
+            return new QrPixelDecodeOptions {
+                Profile = QrDecodeProfile.Robust,
+                MaxDimension = 3200,
+                BudgetMilliseconds = 8000,
+                AutoCrop = true,
+                AggressiveSampling = true,
+                StylizedSampling = true,
+                EnableTileScan = true,
+                TileGrid = 4
+            };
+        }
+
+        return baseOptions;
+    }
+
     private static bool ReadBoolEnv(string name, bool fallback) {
         var value = Environment.GetEnvironmentVariable(name);
         return bool.TryParse(value, out var parsed) ? parsed : fallback;
-    }
-
-    private static string ResolveSamplesDir(string relativePath) {
-        if (string.IsNullOrWhiteSpace(relativePath)) {
-            throw new ArgumentException("Path is required.", nameof(relativePath));
-        }
-
-        var dir = new DirectoryInfo(AppContext.BaseDirectory);
-        for (var i = 0; i < 10 && dir is not null; i++) {
-            var candidate = Path.Combine(dir.FullName, relativePath);
-            if (Directory.Exists(candidate)) {
-                return candidate;
-            }
-
-            dir = dir.Parent;
-        }
-
-        throw new DirectoryNotFoundException($"Could not locate sample directory '{relativePath}'.");
     }
 }
