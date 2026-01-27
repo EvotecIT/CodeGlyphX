@@ -1366,11 +1366,41 @@ public static partial class QrPngRenderer {
             Halo = ScaleHalo(canvas.Halo, scale),
             Vignette = ScaleVignette(canvas.Vignette, scale),
             Grain = ScaleGrain(canvas.Grain, scale),
+            Frame = ScaleFrame(canvas.Frame, scale),
+            Badge = ScaleBadge(canvas.Badge, scale),
             BorderPx = canvas.BorderPx * scale,
             BorderColor = canvas.BorderColor,
             ShadowOffsetX = canvas.ShadowOffsetX * scale,
             ShadowOffsetY = canvas.ShadowOffsetY * scale,
             ShadowColor = canvas.ShadowColor
+        };
+    }
+
+    private static QrPngCanvasBadgeOptions? ScaleBadge(QrPngCanvasBadgeOptions? badge, int scale) {
+        if (badge is null) return null;
+        return new QrPngCanvasBadgeOptions {
+            Shape = badge.Shape,
+            Position = badge.Position,
+            WidthPx = badge.WidthPx <= 0 ? 0 : Math.Max(1, badge.WidthPx * scale),
+            HeightPx = badge.HeightPx <= 0 ? 0 : Math.Max(1, badge.HeightPx * scale),
+            GapPx = Math.Max(0, badge.GapPx * scale),
+            OffsetPx = badge.OffsetPx * scale,
+            CornerRadiusPx = Math.Max(0, badge.CornerRadiusPx * scale),
+            Color = badge.Color,
+            TailPx = Math.Max(0, badge.TailPx * scale),
+        };
+    }
+
+    private static QrPngCanvasFrameOptions? ScaleFrame(QrPngCanvasFrameOptions? frame, int scale) {
+        if (frame is null) return null;
+        return new QrPngCanvasFrameOptions {
+            ThicknessPx = frame.ThicknessPx <= 0 ? 0 : Math.Max(1, frame.ThicknessPx * scale),
+            GapPx = Math.Max(0, frame.GapPx * scale),
+            RadiusPx = Math.Max(0, frame.RadiusPx * scale),
+            Color = frame.Color,
+            InnerThicknessPx = frame.InnerThicknessPx <= 0 ? 0 : Math.Max(1, frame.InnerThicknessPx * scale),
+            InnerGapPx = Math.Max(0, frame.InnerGapPx * scale),
+            InnerColor = frame.InnerColor,
         };
     }
 

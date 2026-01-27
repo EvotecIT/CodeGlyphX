@@ -417,11 +417,41 @@ public static partial class QrEasy {
             Halo = CloneHalo(canvas.Halo),
             Vignette = CloneVignette(canvas.Vignette),
             Grain = CloneGrain(canvas.Grain),
+            Frame = CloneFrame(canvas.Frame),
+            Badge = CloneBadge(canvas.Badge),
             BorderPx = canvas.BorderPx,
             BorderColor = canvas.BorderColor,
             ShadowOffsetX = canvas.ShadowOffsetX,
             ShadowOffsetY = canvas.ShadowOffsetY,
             ShadowColor = canvas.ShadowColor,
+        };
+    }
+
+    private static QrPngCanvasBadgeOptions? CloneBadge(QrPngCanvasBadgeOptions? badge) {
+        if (badge is null) return null;
+        return new QrPngCanvasBadgeOptions {
+            Shape = badge.Shape,
+            Position = badge.Position,
+            WidthPx = badge.WidthPx,
+            HeightPx = badge.HeightPx,
+            GapPx = badge.GapPx,
+            OffsetPx = badge.OffsetPx,
+            CornerRadiusPx = badge.CornerRadiusPx,
+            Color = badge.Color,
+            TailPx = badge.TailPx,
+        };
+    }
+
+    private static QrPngCanvasFrameOptions? CloneFrame(QrPngCanvasFrameOptions? frame) {
+        if (frame is null) return null;
+        return new QrPngCanvasFrameOptions {
+            ThicknessPx = frame.ThicknessPx,
+            GapPx = frame.GapPx,
+            RadiusPx = frame.RadiusPx,
+            Color = frame.Color,
+            InnerThicknessPx = frame.InnerThicknessPx,
+            InnerGapPx = frame.InnerGapPx,
+            InnerColor = frame.InnerColor,
         };
     }
 
