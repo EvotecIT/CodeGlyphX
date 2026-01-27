@@ -39,7 +39,7 @@ public static partial class QrEasy {
     /// </summary>
     public static QrCode Encode(string payload, QrEasyOptions? options = null) {
         if (payload is null) throw new ArgumentNullException(nameof(payload));
-        var opts = options ?? new QrEasyOptions();
+        var opts = options is null ? new QrEasyOptions() : CloneOptions(options);
         return EncodePayload(payload, opts);
     }
 
@@ -66,7 +66,7 @@ public static partial class QrEasy {
     /// </summary>
     public static QrArtSafetyReport EvaluateSafety(string payload, QrEasyOptions? options = null) {
         if (payload is null) throw new ArgumentNullException(nameof(payload));
-        var opts = options ?? new QrEasyOptions();
+        var opts = options is null ? new QrEasyOptions() : CloneOptions(options);
         var qr = Encode(payload, opts);
         var render = BuildPngOptions(opts, payload, qr);
         return QrArtSafety.Evaluate(qr, render);

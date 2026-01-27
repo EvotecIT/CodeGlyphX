@@ -37,7 +37,7 @@ public static partial class QrEasy {
     /// Renders a QR code as PAM to a stream.
     /// </summary>
     public static void RenderPamToStream(string payload, Stream stream, QrEasyOptions? options = null) {
-        var opts = options ?? new QrEasyOptions();
+        var opts = options is null ? new QrEasyOptions() : CloneOptions(options);
         var qr = Encode(payload, opts);
         var render = BuildPngOptions(opts, payload, qr);
         QrPamRenderer.RenderToStream(qr.Modules, render, stream);
@@ -85,7 +85,7 @@ public static partial class QrEasy {
     /// Renders a QR code as XBM.
     /// </summary>
     public static string RenderXbm(string payload, QrEasyOptions? options = null) {
-        var opts = options ?? new QrEasyOptions();
+        var opts = options is null ? new QrEasyOptions() : CloneOptions(options);
         var qr = Encode(payload, opts);
         var render = BuildPngOptions(opts, payload, qr);
         return QrXbmRenderer.Render(qr.Modules, render);
@@ -148,7 +148,7 @@ public static partial class QrEasy {
     /// Renders a QR code as XPM.
     /// </summary>
     public static string RenderXpm(string payload, QrEasyOptions? options = null) {
-        var opts = options ?? new QrEasyOptions();
+        var opts = options is null ? new QrEasyOptions() : CloneOptions(options);
         var qr = Encode(payload, opts);
         var render = BuildPngOptions(opts, payload, qr);
         return QrXpmRenderer.Render(qr.Modules, render);
@@ -211,7 +211,7 @@ public static partial class QrEasy {
     /// Renders a QR code as TGA.
     /// </summary>
     public static byte[] RenderTga(string payload, QrEasyOptions? options = null) {
-        var opts = options ?? new QrEasyOptions();
+        var opts = options is null ? new QrEasyOptions() : CloneOptions(options);
         var qr = Encode(payload, opts);
         var render = BuildPngOptions(opts, payload, qr);
         return QrTgaRenderer.Render(qr.Modules, render);
@@ -230,7 +230,7 @@ public static partial class QrEasy {
     /// Renders a QR code as TGA to a stream.
     /// </summary>
     public static void RenderTgaToStream(string payload, Stream stream, QrEasyOptions? options = null) {
-        var opts = options ?? new QrEasyOptions();
+        var opts = options is null ? new QrEasyOptions() : CloneOptions(options);
         var qr = Encode(payload, opts);
         var render = BuildPngOptions(opts, payload, qr);
         QrTgaRenderer.RenderToStream(qr.Modules, render, stream);
@@ -278,7 +278,7 @@ public static partial class QrEasy {
     /// Renders a QR code as ICO.
     /// </summary>
     public static byte[] RenderIco(string payload, QrEasyOptions? options = null) {
-        var opts = options ?? new QrEasyOptions();
+        var opts = options is null ? new QrEasyOptions() : CloneOptions(options);
         var qr = Encode(payload, opts);
         var render = BuildPngOptions(opts, payload, qr);
         return QrIcoRenderer.Render(qr.Modules, render, BuildIcoOptions(opts));
@@ -297,7 +297,7 @@ public static partial class QrEasy {
     /// Renders a QR code as ICO to a stream.
     /// </summary>
     public static void RenderIcoToStream(string payload, Stream stream, QrEasyOptions? options = null) {
-        var opts = options ?? new QrEasyOptions();
+        var opts = options is null ? new QrEasyOptions() : CloneOptions(options);
         var qr = Encode(payload, opts);
         var render = BuildPngOptions(opts, payload, qr);
         QrIcoRenderer.RenderToStream(qr.Modules, render, stream, BuildIcoOptions(opts));
@@ -345,7 +345,7 @@ public static partial class QrEasy {
     /// Renders a QR code as SVGZ.
     /// </summary>
     public static byte[] RenderSvgz(string payload, QrEasyOptions? options = null) {
-        var opts = options ?? new QrEasyOptions();
+        var opts = options is null ? new QrEasyOptions() : CloneOptions(options);
         var qr = Encode(payload, opts);
         var render = BuildSvgOptions(opts, qr.Modules.Width);
         return QrSvgzRenderer.Render(qr.Modules, render);
@@ -364,7 +364,7 @@ public static partial class QrEasy {
     /// Renders a QR code as SVGZ to a stream.
     /// </summary>
     public static void RenderSvgzToStream(string payload, Stream stream, QrEasyOptions? options = null) {
-        var opts = options ?? new QrEasyOptions();
+        var opts = options is null ? new QrEasyOptions() : CloneOptions(options);
         var qr = Encode(payload, opts);
         var render = BuildSvgOptions(opts, qr.Modules.Width);
         QrSvgzRenderer.RenderToStream(qr.Modules, render, stream);
@@ -415,7 +415,7 @@ public static partial class QrEasy {
     /// <param name="options">Optional rendering options.</param>
     /// <param name="mode">Vector or raster output.</param>
     public static byte[] RenderPdf(string payload, QrEasyOptions? options = null, RenderMode mode = RenderMode.Vector) {
-        var opts = options ?? new QrEasyOptions();
+        var opts = options is null ? new QrEasyOptions() : CloneOptions(options);
         var qr = Encode(payload, opts);
         var render = BuildPngOptions(opts, payload, qr);
         return QrPdfRenderer.Render(qr.Modules, render, mode);
@@ -442,7 +442,7 @@ public static partial class QrEasy {
     /// <param name="options">Optional rendering options.</param>
     /// <param name="mode">Vector or raster output.</param>
     public static void RenderPdfToStream(string payload, Stream stream, QrEasyOptions? options = null, RenderMode mode = RenderMode.Vector) {
-        var opts = options ?? new QrEasyOptions();
+        var opts = options is null ? new QrEasyOptions() : CloneOptions(options);
         var qr = Encode(payload, opts);
         var render = BuildPngOptions(opts, payload, qr);
         QrPdfRenderer.RenderToStream(qr.Modules, render, stream, mode);
@@ -508,7 +508,7 @@ public static partial class QrEasy {
     /// <param name="options">Optional rendering options.</param>
     /// <param name="mode">Vector or raster output.</param>
     public static string RenderEps(string payload, QrEasyOptions? options = null, RenderMode mode = RenderMode.Vector) {
-        var opts = options ?? new QrEasyOptions();
+        var opts = options is null ? new QrEasyOptions() : CloneOptions(options);
         var qr = Encode(payload, opts);
         var render = BuildPngOptions(opts, payload, qr);
         return QrEpsRenderer.Render(qr.Modules, render, mode);
@@ -535,7 +535,7 @@ public static partial class QrEasy {
     /// <param name="options">Optional rendering options.</param>
     /// <param name="mode">Vector or raster output.</param>
     public static void RenderEpsToStream(string payload, Stream stream, QrEasyOptions? options = null, RenderMode mode = RenderMode.Vector) {
-        var opts = options ?? new QrEasyOptions();
+        var opts = options is null ? new QrEasyOptions() : CloneOptions(options);
         var qr = Encode(payload, opts);
         var render = BuildPngOptions(opts, payload, qr);
         QrEpsRenderer.RenderToStream(qr.Modules, render, stream, mode);
@@ -598,7 +598,7 @@ public static partial class QrEasy {
     /// Renders a QR code as ASCII text.
     /// </summary>
     public static string RenderAscii(string payload, MatrixAsciiRenderOptions? asciiOptions = null, QrEasyOptions? options = null) {
-        var opts = options ?? new QrEasyOptions();
+        var opts = options is null ? new QrEasyOptions() : CloneOptions(options);
         var qr = Encode(payload, opts);
         var resolved = BuildAsciiOptions(asciiOptions, opts);
         return MatrixAsciiRenderer.Render(qr.Modules, resolved);
@@ -656,7 +656,7 @@ public static partial class QrEasy {
     /// Renders a QR code to a raw RGBA pixel buffer (no PNG encoding).
     /// </summary>
     public static byte[] RenderPixels(string payload, out int widthPx, out int heightPx, out int stride, QrEasyOptions? options = null) {
-        var opts = options ?? new QrEasyOptions();
+        var opts = options is null ? new QrEasyOptions() : CloneOptions(options);
         var qr = Encode(payload, opts);
         var render = BuildPngOptions(opts, payload, qr);
         return QrPngRenderer.RenderPixels(qr.Modules, render, out widthPx, out heightPx, out stride);
