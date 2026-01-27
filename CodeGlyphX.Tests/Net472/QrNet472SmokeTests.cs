@@ -191,6 +191,20 @@ public sealed class QrNet472SmokeTests {
         Assert.Equal(Payload, decoded.Text);
     }
 
+    [Fact]
+    public void Net472_QrImageDecoder_Decodes_Mirrored_Pixels() {
+        var qr = QrCodeEncoder.EncodeText(Payload);
+        var pixels = QrPngRenderer.RenderPixels(qr.Modules, new QrPngRenderOptions {
+            ModuleSize = 10,
+            QuietZone = 6
+        }, out var width, out var height, out var stride);
+
+        var mirrored = MirrorX(pixels, width, height, stride, out var mw, out var mh, out var mstride);
+        var ok = QrImageDecoder.TryDecode(mirrored, mw, mh, mstride, PixelFormat.Rgba32, out var decoded);
+        Assert.True(ok);
+        Assert.Equal(Payload, decoded.Text);
+    }
+
     private static void AddLightNoise(byte[] rgba, int width, int height, int stride) {
         var rng = new Random(12345);
         for (var y = 0; y < height; y++) {
@@ -242,6 +256,29 @@ public sealed class QrNet472SmokeTests {
         }
 
         return rotated;
+    }
+
+    private static byte[] MirrorX(byte[] pixels, int width, int height, int stride, out int outWidth, out int outHeight, out int outStride) {
+        outWidth = width;
+        outHeight = height;
+        outStride = outWidth * 4;
+        var mirrored = new byte[outHeight * outStride];
+
+        for (var y = 0; y < height; y++) {
+            var row = y * stride;
+            var outRow = y * outStride;
+            for (var x = 0; x < width; x++) {
+                var src = row + x * 4;
+                var nx = width - 1 - x;
+                var dst = outRow + nx * 4;
+                mirrored[dst + 0] = pixels[src + 0];
+                mirrored[dst + 1] = pixels[src + 1];
+                mirrored[dst + 2] = pixels[src + 2];
+                mirrored[dst + 3] = pixels[src + 3];
+            }
+        }
+
+        return mirrored;
     }
 
 }
