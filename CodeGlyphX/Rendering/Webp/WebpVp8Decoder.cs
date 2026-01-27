@@ -18,6 +18,7 @@ internal static class WebpVp8Decoder {
         height = 0;
 
         if (!TryReadHeader(payload, out var header)) return false;
+        _ = TryReadControlHeader(payload, out _);
 
         // Parsing-only scaffold for now.
         width = header.Width;
@@ -83,6 +84,22 @@ internal static class WebpVp8Decoder {
         return true;
     }
 
+    internal static bool TryReadControlHeader(ReadOnlySpan<byte> payload, out WebpVp8ControlHeader controlHeader) {
+        controlHeader = default;
+        if (!TryGetBoolCodedData(payload, out var boolData)) return false;
+        if (boolData.Length < 2) return false;
+
+        var decoder = new WebpVp8BoolDecoder(boolData);
+        if (!decoder.TryReadBool(probability: 128, out var colorSpaceBit)) return false;
+        if (!decoder.TryReadBool(probability: 128, out var clampTypeBit)) return false;
+
+        controlHeader = new WebpVp8ControlHeader(
+            colorSpaceBit ? 1 : 0,
+            clampTypeBit ? 1 : 0,
+            decoder.BytesConsumed);
+        return true;
+    }
+
     private static int ReadU16LE(ReadOnlySpan<byte> data, int offset) {
         if (offset < 0 || offset + 2 > data.Length) return 0;
         return data[offset] | (data[offset + 1] << 8);
@@ -124,4 +141,16 @@ internal readonly struct WebpVp8Header {
     public int HorizontalScale { get; }
     public int VerticalScale { get; }
     public int BitsConsumed { get; }
+}
+
+internal readonly struct WebpVp8ControlHeader {
+    public WebpVp8ControlHeader(int colorSpace, int clampType, int bytesConsumed) {
+        ColorSpace = colorSpace;
+        ClampType = clampType;
+        BytesConsumed = bytesConsumed;
+    }
+
+    public int ColorSpace { get; }
+    public int ClampType { get; }
+    public int BytesConsumed { get; }
 }
