@@ -69,6 +69,18 @@ public sealed class WebpVp8BlockTokenScaffoldTests
                 Assert.Equal(15, result.Ac.Length);
                 Assert.Equal(15, result.DequantAc.Length);
 
+                var pixels = block.BlockPixels;
+                Assert.Equal(4, pixels.Width);
+                Assert.Equal(4, pixels.Height);
+                Assert.Equal(16, pixels.Samples.Length);
+
+                var expectedBaseSample = ClampToByte(128 + (result.DequantDc / 8));
+                Assert.Equal(expectedBaseSample, pixels.BaseSample);
+                for (var i = 0; i < pixels.Samples.Length; i++)
+                {
+                    Assert.InRange(pixels.Samples[i], 0, 255);
+                }
+
                 var expectedHasNonZeroAc = false;
                 for (var i = 1; i < 16; i++)
                 {
@@ -153,6 +165,21 @@ public sealed class WebpVp8BlockTokenScaffoldTests
         }
 
         return TokenBaseMagnitude[tokenCode] + extraBitsValue;
+    }
+
+    private static byte ClampToByte(int value)
+    {
+        if (value < byte.MinValue)
+        {
+            return byte.MinValue;
+        }
+
+        if (value > byte.MaxValue)
+        {
+            return byte.MaxValue;
+        }
+
+        return (byte)value;
     }
 
     private static byte[] CreateBoolData(int length)

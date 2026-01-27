@@ -433,6 +433,7 @@ internal static class WebpVp8Decoder {
                     dequantizedCoefficientsNaturalOrder,
                     reachedEob,
                     tokensRead);
+                var blockPixels = BuildScaffoldBlockPixels(blockResult);
 
                 blocks[blockIndex] = new WebpVp8BlockTokenScaffold(
                     blockIndex,
@@ -445,7 +446,8 @@ internal static class WebpVp8Decoder {
                     tokenInfos,
                     tokensRead,
                     reachedEob,
-                    blockResult);
+                    blockResult,
+                    blockPixels);
                 blocksRead++;
             }
 
@@ -771,6 +773,29 @@ internal static class WebpVp8Decoder {
             hasNonZeroAc,
             reachedEob,
             tokensRead);
+    }
+
+    private static WebpVp8BlockPixelScaffold BuildScaffoldBlockPixels(WebpVp8BlockResult result) {
+        const int blockSize = 4;
+        var samples = new byte[blockSize * blockSize];
+
+        // Very small inverse-transform placeholder: DC sets the baseline,
+        // first AC (if present) adds a tiny alternating influence.
+        var baseSample = ClampToByte(128 + (result.DequantDc / 8));
+        var acInfluence = result.DequantAc.Length > 0 ? result.DequantAc[0] / 16 : 0;
+
+        for (var i = 0; i < samples.Length; i++) {
+            var signedInfluence = (i & 1) == 0 ? acInfluence : -acInfluence;
+            samples[i] = ClampToByte(baseSample + signedInfluence);
+        }
+
+        return new WebpVp8BlockPixelScaffold(blockSize, blockSize, samples, baseSample, acInfluence);
+    }
+
+    private static byte ClampToByte(int value) {
+        if (value < byte.MinValue) return byte.MinValue;
+        if (value > byte.MaxValue) return byte.MaxValue;
+        return (byte)value;
     }
 
     private static int GetCoeffIndex(int blockType, int band, int prev, int node) {
@@ -1121,7 +1146,8 @@ internal readonly struct WebpVp8BlockTokenScaffold {
         WebpVp8BlockTokenInfo[] tokens,
         int tokensRead,
         bool reachedEob,
-        WebpVp8BlockResult result) {
+        WebpVp8BlockResult result,
+        WebpVp8BlockPixelScaffold blockPixels) {
         BlockIndex = blockIndex;
         BlockType = blockType;
         DequantFactor = dequantFactor;
@@ -1133,6 +1159,7 @@ internal readonly struct WebpVp8BlockTokenScaffold {
         TokensRead = tokensRead;
         ReachedEob = reachedEob;
         Result = result;
+        BlockPixels = blockPixels;
     }
 
     public int BlockIndex { get; }
@@ -1146,6 +1173,7 @@ internal readonly struct WebpVp8BlockTokenScaffold {
     public int TokensRead { get; }
     public bool ReachedEob { get; }
     public WebpVp8BlockResult Result { get; }
+    public WebpVp8BlockPixelScaffold BlockPixels { get; }
 }
 
 internal readonly struct WebpVp8BlockResult {
@@ -1179,6 +1207,22 @@ internal readonly struct WebpVp8BlockResult {
     public bool HasNonZeroAc { get; }
     public bool ReachedEob { get; }
     public int TokensRead { get; }
+}
+
+internal readonly struct WebpVp8BlockPixelScaffold {
+    public WebpVp8BlockPixelScaffold(int width, int height, byte[] samples, byte baseSample, int acInfluence) {
+        Width = width;
+        Height = height;
+        Samples = samples;
+        BaseSample = baseSample;
+        AcInfluence = acInfluence;
+    }
+
+    public int Width { get; }
+    public int Height { get; }
+    public byte[] Samples { get; }
+    public byte BaseSample { get; }
+    public int AcInfluence { get; }
 }
 
 internal readonly struct WebpVp8BlockPartitionScaffold {
