@@ -134,6 +134,15 @@ public sealed class QrNet472SmokeTests {
         Assert.Equal(DecodeFailureReason.UnsupportedFormat, result.Failure);
     }
 
+    [Fact]
+    public void Net472_FeatureFlags_ReportFallback() {
+        Assert.False(CodeGlyphXFeatures.SupportsQrPixelDecode);
+        Assert.True(CodeGlyphXFeatures.SupportsQrPixelDecodeFallback);
+        Assert.False(CodeGlyphXFeatures.SupportsQrPixelDebug);
+        Assert.False(CodeGlyphXFeatures.SupportsSpanPixelPipeline);
+        Assert.Equal("net472", CodeGlyphXFeatures.TargetFramework);
+    }
+
     private static void AddLightNoise(byte[] rgba, int width, int height, int stride) {
         var rng = new Random(12345);
         for (var y = 0; y < height; y++) {
