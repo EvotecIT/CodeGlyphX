@@ -3883,6 +3883,52 @@ body.using-keyboard .faq-hero h1:focus-visible {
     word-break: break-word;
 }
 
+/* Pack runner reliability */
+.pack-runner-engines {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.pack-engine-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.75rem 0.9rem;
+}
+
+.pack-engine-name {
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 0.25rem;
+}
+
+.pack-engine-rate {
+    color: var(--text);
+    font-size: 0.9rem;
+}
+
+.pack-engine-fails {
+    margin-top: 0.35rem;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    line-height: 1.4;
+}
+
+.pack-runner-table-wrap {
+    overflow-x: auto;
+}
+
+.pack-runner-table td.pack-rate-good {
+    color: var(--text);
+}
+
+.pack-runner-table td.pack-rate-bad {
+    color: var(--warning, #f59e0b);
+    font-weight: 600;
+}
+
 /* Notes section */
 .benchmark-notes ul {
     margin: 0;
