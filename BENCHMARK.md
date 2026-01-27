@@ -359,21 +359,27 @@ Artifacts: Build/BenchmarkResults/windows-20260124-091830
 <!-- BENCHMARK:WINDOWS:FULL:END -->
 
 <!-- BENCHMARK:LINUX:QUICK:START -->
-## LINUX
+## LINUX (Quick)
 
-Updated: 2026-01-22 22:04:32 UTC
+Updated: 2026-01-27 14:16:09 UTC
 Framework: net8.0
 Configuration: Release
-Artifacts: /mnt/c/Support/GitHub/CodeMatrix/Build/BenchmarkResults/linux-20260122-230352
-How to read:
+Artifacts: /tmp/cgx-psquick-smoke/linux-20260127-151049
+### How to read
 - Mean: average time per operation. Lower is better.
 - Allocated: managed memory allocated per operation. Lower is better.
-- CodeGlyphX vs Fastest: CodeGlyphX mean divided by the fastest mean for that scenario. 1 x means CodeGlyphX is fastest; 1.5 x means ~50% slower.
-- CodeGlyphX Alloc vs Fastest: CodeGlyphX allocated divided by the fastest allocation for that scenario. 1 x means CodeGlyphX allocates the least; higher is more allocations.
+- CodeGlyphX vs Fastest: CodeGlyphX mean divided by the fastest mean for that scenario. If CodeGlyphX is fastest, the text shows the lead vs the runner-up; otherwise it shows the lag vs the fastest vendor.
+- CodeGlyphX Alloc vs Fastest: CodeGlyphX allocated divided by the allocation of the fastest-time vendor for that scenario. Lower than 1 x means fewer allocations than the fastest-time vendor.
 - Rating: good/ok/bad based on time + allocation ratios (good <=1.1x and <=1.25x alloc, ok <=1.5x and <=2.0x alloc).
+- Δ lines in comparison tables show vendor ratios vs CodeGlyphX (time / alloc).
 - Quick runs use fewer iterations for fast feedback; Full runs use BenchmarkDotNet defaults and are recommended for publishing.
-Notes:
+- Quick and Full runs include the same scenario list; only the iteration settings differ.
+- Benchmarks run under controlled, ideal conditions on a single machine; treat results as directional, not definitive.
+
+### Notes
 - Run mode: Quick (warmupCount=1, iterationCount=3, invocationCount=1).
+- QR pack runner (quick): CodeGlyphX expected=98 % (misses: art-jess3-grid)
+- Quick runs include the same scenario set as Full runs; run time is driven by iteration counts.
 - Comparisons target PNG output and include encode+render (not encode-only).
 - Module size and quiet zone are matched to CodeGlyphX defaults where possible; image size is derived from CodeGlyphX modules.
 - ZXing.Net uses ZXing.Net.Bindings.ImageSharp.V3 (ImageSharp 3.x renderer).
@@ -381,35 +387,101 @@ Notes:
 - QRCoder uses PngByteQRCode (managed PNG output, no external renderer).
 - QR decode comparisons use raw RGBA32 bytes (ZXing via RGBLuminanceSource).
 - QR decode clean uses CodeGlyphX Balanced; noisy uses CodeGlyphX Robust with aggressive sampling/limits; ZXing uses default (clean) and TryHarder (noisy).
-Warnings:
-- Missing compare results: Aztec (Encode), Code 128 (Encode), Code 39 (Encode), Code 93 (Encode), Data Matrix (Encode), EAN-13 (Encode), PDF417 (Encode), QR (Encode), UPC-A (Encode).
 
-### Baseline
+### Summary (Comparisons) - Quick
 
-#### QR (Decode)
-
-| Scenario | Mean | Allocated |
-| --- | --- | --- |
-| QR Decode (clean, fast) | 3,076.8 μs | 5.26 KB |
-| QR Decode (clean, balanced) | 3,052.8 μs | 5.26 KB |
-| QR Decode (clean, robust) | 2,435.8 μs | 5.26 KB |
-| QR Decode (noisy, robust) | 4,481.1 μs | 5.45 KB |
-| QR Decode (screenshot, balanced) | 7,166.1 μs | 5.26 KB |
-| QR Decode (antialias, robust) | 477.0 μs | 1.31 KB |
+| Benchmark | Scenario | Fastest | CodeGlyphX (Mean / Alloc) | ZXing.Net (Mean / Alloc) | QRCoder (Mean / Alloc) | Barcoder (Mean / Alloc) | CodeGlyphX vs Fastest | CodeGlyphX Alloc vs Fastest | Rating |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Aztec (Encode) | Aztec PNG | CodeGlyphX 270.8 μs | 270.8 μs<br>61.34 KB |  |  |  | 1 x (fastest) | 1 x | good |
+| Code 128 (Encode) | Code128 PNG | CodeGlyphX 150.3 μs | 150.3 μs<br>14.44 KB |  |  |  | 1 x (fastest) | 1 x | good |
+| Code 39 (Encode) | Code39 PNG | CodeGlyphX 128.0 μs | 128.0 μs<br>10.02 KB |  |  |  | 1 x (fastest) | 1 x | good |
+| Code 93 (Encode) | Code93 PNG | CodeGlyphX 144.5 μs | 144.5 μs<br>8.14 KB |  |  |  | 1 x (fastest) | 1 x | good |
+| Data Matrix (Encode) | Data Matrix PNG (medium) | CodeGlyphX 200.9 μs | 200.9 μs<br>15.53 KB |  |  |  | 1 x (fastest) | 1 x | good |
+| EAN-13 (Encode) | EAN-13 PNG | CodeGlyphX 168.9 μs | 168.9 μs<br>6.85 KB |  |  |  | 1 x (fastest) | 1 x | good |
+| PDF417 (Encode) | PDF417 PNG | CodeGlyphX 907.9 μs | 907.9 μs<br>49.91 KB |  |  |  | 1 x (fastest) | 1 x | good |
+| QR (Encode) | QR PNG (medium) | CodeGlyphX 614.1 μs | 614.1 μs<br>14.27 KB |  |  |  | 1 x (fastest) | 1 x | good |
+| QR Decode (Clean) | QR Decode (clean) | CodeGlyphX 956.5 μs | 956.5 μs<br>3.91 KB |  |  |  | 1 x (fastest) | 1 x | good |
+| QR Decode (Noisy) | QR Decode (noisy) | CodeGlyphX 41.20 ms | 41.20 ms<br>160.77 KB |  |  |  | 1 x (fastest) | 1 x | good |
+| QR Decode (Stress) | QR Decode (fancy) | CodeGlyphX 353.4 μs | 353.4 μs<br>2.68 KB |  |  |  | 1 x (fastest) | 1 x | good |
+| QR Decode (Stress) | QR Decode (no quiet zone) | CodeGlyphX 11,185.1 μs | 11,185.1 μs<br>45.09 KB |  |  |  | 1 x (fastest) | 1 x | good |
+| QR Decode (Stress) | QR Decode (resampled) | CodeGlyphX 557.4 μs | 557.4 μs<br>1.88 KB |  |  |  | 1 x (fastest) | 1 x | good |
+| UPC-A (Encode) | UPC-A PNG | CodeGlyphX 197.3 μs | 197.3 μs<br>7.16 KB |  |  |  | 1 x (fastest) | 1 x | good |
 
 ### Comparisons
+
+#### Aztec (Encode)
+
+| Scenario | CodeGlyphX (Mean / Alloc) | ZXing.Net (Mean / Alloc) | QRCoder (Mean / Alloc) | Barcoder (Mean / Alloc) |
+| --- | --- | --- | --- | --- |
+| Aztec PNG | 270.8 μs<br>61.34 KB |  |  |  |
+
+#### Code 128 (Encode)
+
+| Scenario | CodeGlyphX (Mean / Alloc) | ZXing.Net (Mean / Alloc) | QRCoder (Mean / Alloc) | Barcoder (Mean / Alloc) |
+| --- | --- | --- | --- | --- |
+| Code128 PNG | 150.3 μs<br>14.44 KB |  |  |  |
+
+#### Code 39 (Encode)
+
+| Scenario | CodeGlyphX (Mean / Alloc) | ZXing.Net (Mean / Alloc) | QRCoder (Mean / Alloc) | Barcoder (Mean / Alloc) |
+| --- | --- | --- | --- | --- |
+| Code39 PNG | 128.0 μs<br>10.02 KB |  |  |  |
+
+#### Code 93 (Encode)
+
+| Scenario | CodeGlyphX (Mean / Alloc) | ZXing.Net (Mean / Alloc) | QRCoder (Mean / Alloc) | Barcoder (Mean / Alloc) |
+| --- | --- | --- | --- | --- |
+| Code93 PNG | 144.5 μs<br>8.14 KB |  |  |  |
+
+#### Data Matrix (Encode)
+
+| Scenario | CodeGlyphX (Mean / Alloc) | ZXing.Net (Mean / Alloc) | QRCoder (Mean / Alloc) | Barcoder (Mean / Alloc) |
+| --- | --- | --- | --- | --- |
+| Data Matrix PNG (medium) | 200.9 μs<br>15.53 KB |  |  |  |
+
+#### EAN-13 (Encode)
+
+| Scenario | CodeGlyphX (Mean / Alloc) | ZXing.Net (Mean / Alloc) | QRCoder (Mean / Alloc) | Barcoder (Mean / Alloc) |
+| --- | --- | --- | --- | --- |
+| EAN-13 PNG | 168.9 μs<br>6.85 KB |  |  |  |
+
+#### PDF417 (Encode)
+
+| Scenario | CodeGlyphX (Mean / Alloc) | ZXing.Net (Mean / Alloc) | QRCoder (Mean / Alloc) | Barcoder (Mean / Alloc) |
+| --- | --- | --- | --- | --- |
+| PDF417 PNG | 907.9 μs<br>49.91 KB |  |  |  |
+
+#### QR (Encode)
+
+| Scenario | CodeGlyphX (Mean / Alloc) | ZXing.Net (Mean / Alloc) | QRCoder (Mean / Alloc) | Barcoder (Mean / Alloc) |
+| --- | --- | --- | --- | --- |
+| QR PNG (medium) | 614.1 μs<br>14.27 KB |  |  |  |
 
 #### QR Decode (Clean)
 
 | Scenario | CodeGlyphX (Mean / Alloc) | ZXing.Net (Mean / Alloc) | QRCoder (Mean / Alloc) | Barcoder (Mean / Alloc) |
 | --- | --- | --- | --- | --- |
-| QR Decode (clean) | 2.215 ms<br>5.26 KB |  |  |  |
+| QR Decode (clean) | 956.5 μs<br>3.91 KB |  |  |  |
 
 #### QR Decode (Noisy)
 
 | Scenario | CodeGlyphX (Mean / Alloc) | ZXing.Net (Mean / Alloc) | QRCoder (Mean / Alloc) | Barcoder (Mean / Alloc) |
 | --- | --- | --- | --- | --- |
-| QR Decode (noisy) | 4.090 ms<br>5.45 KB |  |  |  |
+| QR Decode (noisy) | 41.20 ms<br>160.77 KB |  |  |  |
+
+#### QR Decode (Stress)
+
+| Scenario | CodeGlyphX (Mean / Alloc) | ZXing.Net (Mean / Alloc) | QRCoder (Mean / Alloc) | Barcoder (Mean / Alloc) |
+| --- | --- | --- | --- | --- |
+| QR Decode (fancy) | 353.4 μs<br>2.68 KB |  |  |  |
+| QR Decode (no quiet zone) | 11,185.1 μs<br>45.09 KB |  |  |  |
+| QR Decode (resampled) | 557.4 μs<br>1.88 KB |  |  |  |
+
+#### UPC-A (Encode)
+
+| Scenario | CodeGlyphX (Mean / Alloc) | ZXing.Net (Mean / Alloc) | QRCoder (Mean / Alloc) | Barcoder (Mean / Alloc) |
+| --- | --- | --- | --- | --- |
+| UPC-A PNG | 197.3 μs<br>7.16 KB |  |  |  |
 <!-- BENCHMARK:LINUX:QUICK:END -->
 
 <!-- BENCHMARK:LINUX:FULL:START -->

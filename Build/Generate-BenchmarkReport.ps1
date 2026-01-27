@@ -384,14 +384,34 @@ function Get-PackRunnerPayload([string]$artifactsPath, [string]$runMode) {
             $decodeRate = $acc.decodeWeighted / $runs
             $expectedRate = $acc.expectedWeighted / $runs
         }
+        $failingScenariosSet = $acc.failingScenarios
+        if ($failingScenariosSet -isnot [System.Collections.Generic.HashSet[string]]) {
+            $failingScenariosSet = New-Object "System.Collections.Generic.HashSet[string]"
+            foreach ($fs in @($acc.failingScenarios)) {
+                if (-not [string]::IsNullOrWhiteSpace([string]$fs)) {
+                    [void]$failingScenariosSet.Add([string]$fs)
+                }
+            }
+        }
+        $failingPacksSet = $acc.failingPacks
+        if ($failingPacksSet -isnot [System.Collections.Generic.HashSet[string]]) {
+            $failingPacksSet = New-Object "System.Collections.Generic.HashSet[string]"
+            foreach ($fp in @($acc.failingPacks)) {
+                if (-not [string]::IsNullOrWhiteSpace([string]$fp)) {
+                    [void]$failingPacksSet.Add([string]$fp)
+                }
+            }
+        }
+        $failingScenariosArr = @($failingScenariosSet)
+        $failingPacksArr = @($failingPacksSet)
         $engineSummariesAcc += [pscustomobject]@{
             name = $acc.name
             isExternal = $acc.isExternal
             runs = $runs
             decodeRate = $decodeRate
             expectedRate = $expectedRate
-            failingScenarios = ($acc.failingScenarios.ToArray() | Sort-Object)
-            failingPacks = ($acc.failingPacks.ToArray() | Sort-Object)
+            failingScenarios = ($failingScenariosArr | Sort-Object)
+            failingPacks = ($failingPacksArr | Sort-Object)
         }
     }
 

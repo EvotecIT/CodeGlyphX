@@ -28,12 +28,16 @@ public class QrDecodeBenchmarks
     private int _screenshotHeight;
     private int _antialiasWidth;
     private int _antialiasHeight;
+#if !BENCH_QUICK
     private byte[] _logoRgba = Array.Empty<byte>();
+#endif
     private byte[] _fancyRgba = Array.Empty<byte>();
     private byte[] _resampledRgba = Array.Empty<byte>();
     private byte[] _noQuietRgba = Array.Empty<byte>();
+#if !BENCH_QUICK
     private int _logoWidth;
     private int _logoHeight;
+#endif
     private int _fancyWidth;
     private int _fancyHeight;
     private int _resampledWidth;
@@ -60,7 +64,9 @@ public class QrDecodeBenchmarks
         LoadRgba("Assets/DecodingSamples/qr-noisy-ui.png", out _noisyRgba, out _noisyWidth, out _noisyHeight);
         LoadRgba("Assets/DecodingSamples/qr-screenshot-1.png", out _screenshotRgba, out _screenshotWidth, out _screenshotHeight);
         LoadRgba("Assets/DecodingSamples/qr-dot-aa.png", out _antialiasRgba, out _antialiasWidth, out _antialiasHeight);
+#if !BENCH_QUICK
         BuildLogoSample(out _logoRgba, out _logoWidth, out _logoHeight);
+#endif
         BuildFancySample(out _fancyRgba, out _fancyWidth, out _fancyHeight);
         BuildResampledSample(out _resampledRgba, out _resampledWidth, out _resampledHeight);
         BuildNoQuietSample(out _noQuietRgba, out _noQuietWidth, out _noQuietHeight);
@@ -102,11 +108,13 @@ public class QrDecodeBenchmarks
         return QrDecoder.TryDecode(_antialiasRgba, _antialiasWidth, _antialiasHeight, _antialiasWidth * 4, PixelFormat.Rgba32, out _, _robust);
     }
 
+#if !BENCH_QUICK
     [Benchmark(Description = "QR Decode (logo, robust)")]
     public bool DecodeLogoRobust()
     {
         return QrDecoder.TryDecode(_logoRgba, _logoWidth, _logoHeight, _logoWidth * 4, PixelFormat.Rgba32, out _, _robust);
     }
+#endif
 
     [Benchmark(Description = "QR Decode (fancy, robust)")]
     public bool DecodeFancyRobust()
@@ -135,6 +143,7 @@ public class QrDecodeBenchmarks
         }
     }
 
+#if !BENCH_QUICK
     private static void BuildLogoSample(out byte[] rgba, out int width, out int height)
     {
         var logo = LogoBuilder.CreateCirclePng(
@@ -147,6 +156,7 @@ public class QrDecodeBenchmarks
         var png = QrEasy.RenderPng(SampleText, options);
         DecodePng(png, out rgba, out width, out height);
     }
+#endif
 
     private static void BuildFancySample(out byte[] rgba, out int width, out int height)
     {
