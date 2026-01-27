@@ -1081,6 +1081,7 @@ public static partial class QrPngRenderer {
         var localY = PositiveMod(py, size);
 
         return pattern.Type switch {
+            QrPngForegroundPatternType.SpeckleDots => ShouldDrawSpeckleDot(pattern, px, py, size, thickness, localX, localY),
             QrPngForegroundPatternType.DiagonalStripes => PositiveMod(localX + localY, size) < thickness,
             QrPngForegroundPatternType.Crosshatch =>
                 PositiveMod(localX + localY, size) < thickness || PositiveMod(localX - localY, size) < thickness,
@@ -1106,6 +1107,46 @@ public static partial class QrPngRenderer {
         var dy = localY - center;
         var radius = Math.Min(radiusPx, cellSize / 2.0);
         return dx * dx + dy * dy <= radius * radius;
+    }
+
+    private static bool ShouldDrawSpeckleDot(QrPngForegroundPatternOptions pattern, int px, int py, int size, int thickness, int localX, int localY) {
+        var density = Clamp01(pattern.Density);
+        if (density <= 0) return false;
+
+        var variation = Clamp01(pattern.Variation);
+        var cellX = (px - localX) / size;
+        var cellY = (py - localY) / size;
+        var seed = pattern.Seed;
+
+        var presenceHash = (uint)Hash(cellX, cellY, seed);
+        var presence = presenceHash / (double)uint.MaxValue;
+        if (presence > density) return false;
+
+        var jitterHashX = (uint)Hash(cellX, cellY, seed ^ unchecked((int)0x9e3779b9));
+        var jitterHashY = (uint)Hash(cellX, cellY, seed ^ unchecked((int)0x7f4a7c15));
+        var radiusHash = (uint)Hash(cellX, cellY, seed ^ unchecked((int)0x85ebca6b));
+
+        var jitterRange = variation * size * 0.35;
+        var jitterX = (jitterHashX / (double)uint.MaxValue * 2.0 - 1.0) * jitterRange;
+        var jitterY = (jitterHashY / (double)uint.MaxValue * 2.0 - 1.0) * jitterRange;
+
+        var center = (size - 1) / 2.0;
+        var cx = center + jitterX;
+        var cy = center + jitterY;
+
+        var baseRadius = Math.Max(0.75, thickness);
+        var radiusScale = 1.0 + (variation * 0.9) * ((radiusHash / (double)uint.MaxValue) - 0.5);
+        var radius = Math.Max(0.75, baseRadius * radiusScale);
+
+        var dx = localX - cx;
+        var dy = localY - cy;
+        return dx * dx + dy * dy <= radius * radius;
+    }
+
+    private static double Clamp01(double value) {
+        if (value <= 0) return 0;
+        if (value >= 1) return 1;
+        return value;
     }
 
     private static int PositiveMod(int value, int modulus) {

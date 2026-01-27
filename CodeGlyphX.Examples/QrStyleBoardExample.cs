@@ -140,6 +140,33 @@ internal static class QrStyleBoardExample {
                 scaleMap: ScaleMap(QrPngModuleScaleMode.Random, 0.6, 1.0, 9876),
                 canvas: CanvasPattern(R(15, 18, 34), Pattern(QrPngBackgroundPatternType.Dots, R(110, 255, 200, 22))))),
 
+            new("Speckle Splash", StyleDocs("speckle-splash"), () => BaseSticker(
+                fg: R(0, 160, 200),
+                palette: Palette(QrPngPaletteMode.Cycle, 0, R(0, 160, 200), R(0, 210, 140), R(220, 120, 255)),
+                shape: QrPngModuleShape.ConnectedRounded,
+                eyes: new QrPngEyeOptions {
+                    UseFrame = true,
+                    FrameStyle = QrPngEyeFrameStyle.Target,
+                    OuterShape = QrPngModuleShape.Rounded,
+                    InnerShape = QrPngModuleShape.Circle,
+                    OuterCornerRadiusPx = 7,
+                    InnerCornerRadiusPx = 4,
+                    OuterGradients = new[] {
+                        new QrPngGradientOptions { Type = QrPngGradientType.Radial, StartColor = R(0, 220, 255), EndColor = R(0, 120, 200) },
+                        new QrPngGradientOptions { Type = QrPngGradientType.Radial, StartColor = R(255, 120, 200), EndColor = R(210, 70, 160) },
+                        new QrPngGradientOptions { Type = QrPngGradientType.Radial, StartColor = R(0, 230, 150), EndColor = R(0, 150, 120) },
+                    },
+                    InnerColors = new[] { R(255, 255, 255), R(255, 255, 255), R(255, 255, 255) },
+                    SparkleCount = 18,
+                    SparkleRadiusPx = 3,
+                    SparkleSpreadPx = 26,
+                    SparkleSeed = 1337,
+                    SparkleColor = R(255, 255, 255, 180),
+                },
+                scaleMap: ScaleMap(QrPngModuleScaleMode.Radial, 0.8, 1.0, 31415),
+                pattern: Speckle(R(0, 80, 120, 96), seed: 4242, sizePx: 7, thicknessPx: 2, variation: 0.84, density: 0.94),
+                canvas: CanvasGradient(R(8, 20, 36), R(16, 44, 72)))),
+
             new("Mint Board", StyleDocs("mint-board"), () => BaseSticker(
                 fg: R(0, 156, 121),
                 palette: Palette(QrPngPaletteMode.Checker, 0, R(0, 156, 121), R(99, 224, 181)),
@@ -228,6 +255,7 @@ internal static class QrStyleBoardExample {
         QrPngCanvasOptions canvas,
         QrPngModuleScaleMapOptions? scaleMap = null,
         QrPngPaletteZoneOptions? zones = null,
+        QrPngForegroundPatternOptions? pattern = null,
         byte[]? logo = null) {
         return new QrEasyOptions {
             ErrorCorrectionLevel = QrErrorCorrectionLevel.H,
@@ -244,6 +272,7 @@ internal static class QrStyleBoardExample {
             ForegroundPalette = palette,
             ForegroundPaletteZones = zones,
             ModuleScaleMap = scaleMap,
+            ForegroundPattern = pattern,
             Eyes = eyes,
             Canvas = canvas,
             LogoPng = logo,
@@ -314,6 +343,20 @@ internal static class QrStyleBoardExample {
             MaxScale = max,
             Seed = seed,
             RingSize = 2,
+        };
+    }
+
+    private static QrPngForegroundPatternOptions Speckle(Rgba32 color, int seed, int sizePx = 6, int thicknessPx = 1, double variation = 0.78, double density = 0.92, bool applyToEyes = false) {
+        return new QrPngForegroundPatternOptions {
+            Type = QrPngForegroundPatternType.SpeckleDots,
+            Color = color,
+            Seed = seed,
+            Variation = variation,
+            Density = density,
+            SizePx = sizePx,
+            ThicknessPx = thicknessPx,
+            ApplyToModules = true,
+            ApplyToEyes = applyToEyes,
         };
     }
 

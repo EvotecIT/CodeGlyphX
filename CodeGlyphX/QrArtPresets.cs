@@ -37,7 +37,10 @@ public static class QrArtPresets {
             },
         };
         opts.ForegroundPattern = new QrPngForegroundPatternOptions {
-            Type = QrPngForegroundPatternType.StippleDots,
+            Type = QrPngForegroundPatternType.SpeckleDots,
+            Seed = 90210,
+            Variation = 0.82,
+            Density = 0.94,
             Color = new Rgba32(0, 48, 46, 120),
             SizePx = 5,
             ThicknessPx = 1,
@@ -97,7 +100,10 @@ public static class QrArtPresets {
             EndColor = new Rgba32(28, 52, 150),
         };
         opts.ForegroundPattern = new QrPngForegroundPatternOptions {
-            Type = QrPngForegroundPatternType.StippleDots,
+            Type = QrPngForegroundPatternType.SpeckleDots,
+            Seed = 2141,
+            Variation = 0.68,
+            Density = 0.92,
             Color = new Rgba32(18, 50, 120, 96),
             SizePx = 6,
             ThicknessPx = 1,
@@ -169,7 +175,10 @@ public static class QrArtPresets {
             },
         };
         opts.ForegroundPattern = new QrPngForegroundPatternOptions {
-            Type = QrPngForegroundPatternType.StippleDots,
+            Type = QrPngForegroundPatternType.SpeckleDots,
+            Seed = 7717,
+            Variation = 0.74,
+            Density = 0.9,
             Color = new Rgba32(44, 54, 150, 96),
             SizePx = 6,
             ThicknessPx = 1,
@@ -315,7 +324,10 @@ public static class QrArtPresets {
             },
         };
         opts.ForegroundPattern = new QrPngForegroundPatternOptions {
-            Type = QrPngForegroundPatternType.StippleDots,
+            Type = QrPngForegroundPatternType.SpeckleDots,
+            Seed = 4422,
+            Variation = 0.7,
+            Density = 0.9,
             Color = new Rgba32(18, 42, 120, 92),
             SizePx = 6,
             ThicknessPx = 1,

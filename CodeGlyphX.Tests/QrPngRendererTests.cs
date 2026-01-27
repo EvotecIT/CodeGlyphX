@@ -98,6 +98,52 @@ public sealed class QrPngRendererTests {
     }
 
     [Fact]
+    public void Render_With_SpecklePattern_Changes_With_Seed() {
+        var matrix = new BitMatrix(1, 1);
+        matrix[0, 0] = true;
+
+        static QrPngRenderOptions OptionsForSeed(int seed) => new() {
+            ModuleSize = 72,
+            QuietZone = 0,
+            Foreground = Rgba32.Black,
+            Background = Rgba32.White,
+            ForegroundPattern = new QrPngForegroundPatternOptions {
+                Type = QrPngForegroundPatternType.SpeckleDots,
+                Color = new Rgba32(255, 255, 255, 110),
+                Seed = seed,
+                Variation = 0.9,
+                Density = 1.0,
+                SizePx = 10,
+                ThicknessPx = 3,
+                ApplyToModules = true,
+                ApplyToEyes = true,
+            },
+        };
+
+        static int Fingerprint(byte[] rgba, int width, int height, int stride) {
+            var hash = unchecked((int)2166136261);
+            var length = height * stride;
+            for (var i = 0; i < length; i++) {
+                hash ^= rgba[i];
+                hash = unchecked(hash * 16777619);
+            }
+            return hash;
+        }
+
+        var pngA = QrPngRenderer.Render(matrix, OptionsForSeed(123));
+        var (rgbaA, widthA, heightA, strideA) = PngTestDecoder.DecodeRgba32(pngA);
+        var pngB = QrPngRenderer.Render(matrix, OptionsForSeed(456));
+        var (rgbaB, widthB, heightB, strideB) = PngTestDecoder.DecodeRgba32(pngB);
+
+        Assert.Equal(widthA, widthB);
+        Assert.Equal(heightA, heightB);
+
+        var fpA = Fingerprint(rgbaA, widthA, heightA, strideA);
+        var fpB = Fingerprint(rgbaB, widthB, heightB, strideB);
+        Assert.NotEqual(fpA, fpB);
+    }
+
+    [Fact]
     public void Render_With_Background_Pattern_Draws_Overlay() {
         var matrix = new BitMatrix(1, 1);
         matrix[0, 0] = true;

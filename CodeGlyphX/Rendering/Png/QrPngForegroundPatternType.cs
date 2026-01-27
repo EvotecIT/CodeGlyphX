@@ -9,6 +9,10 @@ public enum QrPngForegroundPatternType {
     /// </summary>
     StippleDots,
     /// <summary>
+    /// Organic stipple dots with jittered centers and varied sizes.
+    /// </summary>
+    SpeckleDots,
+    /// <summary>
     /// Diagonal stripes.
     /// </summary>
     DiagonalStripes,
