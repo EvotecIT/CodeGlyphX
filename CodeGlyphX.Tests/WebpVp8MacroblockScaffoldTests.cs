@@ -21,11 +21,12 @@ public sealed class WebpVp8MacroblockScaffoldTests
 
         var payload = WebpVp8TestHelper.BuildKeyframePayloadWithPartitionsAndTokens(96, 64, boolData, partitionSizes);
 
-        Assert.True(WebpVp8Decoder.TryReadBlockTokenScaffold(payload, out var blocks));
-        var ySample0 = blocks.Partitions[0].Blocks[0].BlockPixels.Samples[0];
-        var ySample1 = blocks.Partitions[0].Blocks[1].BlockPixels.Samples[0];
-        var uSample0 = blocks.Partitions[0].Blocks[2].BlockPixels.Samples[0];
-        var vSample0 = blocks.Partitions[0].Blocks[3].BlockPixels.Samples[0];
+        Assert.True(WebpVp8Decoder.TryReadMacroblockTokenScaffold(payload, out var macroblockTokens));
+        var sourceMacroblock = macroblockTokens.Macroblocks[0];
+        var ySample0 = sourceMacroblock.Blocks[0].BlockPixels.Samples[0];
+        var ySample1 = sourceMacroblock.Blocks[1].BlockPixels.Samples[0];
+        var uSample0 = sourceMacroblock.Blocks[2].BlockPixels.Samples[0];
+        var vSample0 = sourceMacroblock.Blocks[3].BlockPixels.Samples[0];
 
         var success = WebpVp8Decoder.TryReadMacroblockScaffold(payload, out var macroblock);
 

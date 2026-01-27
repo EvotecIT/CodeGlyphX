@@ -556,6 +556,7 @@ internal static class WebpVp8Decoder {
 
     internal static bool TryReadMacroblockTokenScaffold(ReadOnlySpan<byte> payload, out WebpVp8MacroblockTokenScaffoldSet scaffold) {
         scaffold = default;
+        if (!TryReadFrameHeader(payload, out var frameHeader)) return false;
         if (!TryReadMacroblockHeaderScaffold(payload, out var headers)) return false;
         if (!TryReadTokenPartitions(payload, out var tokenPartitions)) return false;
         if (!TryReadBlockTokenScaffold(payload, out var blocks)) return false;
@@ -602,8 +603,11 @@ internal static class WebpVp8Decoder {
             var macroblockTokensRead = 0;
             for (var b = 0; b < assignedBlocks.Length; b++) {
                 var blockIndex = GetNextPartitionBlockIndex(partitionIndex, partition.Blocks.Length, blockCursors);
-                assignedBlocks[b] = partition.Blocks[blockIndex];
-                macroblockTokensRead += assignedBlocks[b].TokensRead;
+                var baseBlock = partition.Blocks[blockIndex];
+                var segmentDequantFactor = ComputeScaffoldDequantFactorForSegment(baseBlock.BlockType, frameHeader, header.SegmentId);
+                var segmentBlock = ApplySegmentDequantization(baseBlock, segmentDequantFactor);
+                assignedBlocks[b] = segmentBlock;
+                macroblockTokensRead += segmentBlock.TokensRead;
             }
 
             var partitionTokensBefore = partitionTokensConsumed[partitionIndex];
@@ -1217,6 +1221,38 @@ internal static class WebpVp8Decoder {
         return probability;
     }
 
+    internal static int ComputeScaffoldDequantFactorForSegment(int blockType, WebpVp8FrameHeader frameHeader, int segmentId) {
+        var segmentBaseQIndex = ComputeSegmentBaseQIndex(frameHeader, segmentId);
+        var baseFactor = Math.Max(1, segmentBaseQIndex + 1);
+        return blockType switch {
+            BlockTypeY2 => baseFactor + 8,
+            BlockTypeY => baseFactor + 4,
+            BlockTypeU => baseFactor + 2,
+            BlockTypeV => baseFactor + 2,
+            _ => baseFactor + 2,
+        };
+    }
+
+    internal static int ComputeSegmentBaseQIndex(WebpVp8FrameHeader frameHeader, int segmentId) {
+        var baseQIndex = frameHeader.Quantization.BaseQIndex;
+        if (!frameHeader.Segmentation.Enabled || !frameHeader.Segmentation.UpdateData) {
+            return ClampQIndex(baseQIndex);
+        }
+
+        if ((uint)segmentId >= SegmentCount) segmentId = 0;
+        var segmentDeltaOrAbsolute = frameHeader.Segmentation.QuantizerDeltas[segmentId];
+        var candidate = frameHeader.Segmentation.AbsoluteDeltas
+            ? segmentDeltaOrAbsolute
+            : baseQIndex + segmentDeltaOrAbsolute;
+        return ClampQIndex(candidate);
+    }
+
+    private static int ClampQIndex(int qIndex) {
+        if (qIndex < 0) return 0;
+        if (qIndex > 127) return 127;
+        return qIndex;
+    }
+
     private static int GetMacroblockDimension(int pixels) {
         if (pixels <= 0) return 0;
         return (pixels + MacroblockSize - 1) / MacroblockSize;
@@ -1261,6 +1297,48 @@ internal static class WebpVp8Decoder {
         var blockIndex = cursor % blockCount;
         cursors[partitionIndex] = cursor + 1;
         return blockIndex;
+    }
+
+    private static WebpVp8BlockTokenScaffold ApplySegmentDequantization(WebpVp8BlockTokenScaffold block, int dequantFactor) {
+        if (dequantFactor <= 0) dequantFactor = 1;
+
+        var coefficients = block.Coefficients;
+        var dequantizedCoefficients = new int[CoefficientsPerBlock];
+        var coefficientsNaturalOrder = new int[CoefficientsPerBlock];
+        var dequantizedCoefficientsNaturalOrder = new int[CoefficientsPerBlock];
+
+        for (var i = 0; i < CoefficientsPerBlock; i++) {
+            var value = coefficients[i];
+            var dequantized = value * dequantFactor;
+            dequantizedCoefficients[i] = dequantized;
+
+            var naturalIndex = MapZigZagToNaturalIndex(i);
+            coefficientsNaturalOrder[naturalIndex] = value;
+            dequantizedCoefficientsNaturalOrder[naturalIndex] = dequantized;
+        }
+
+        var blockResult = BuildScaffoldBlockResult(
+            block.BlockType,
+            dequantFactor,
+            coefficientsNaturalOrder,
+            dequantizedCoefficientsNaturalOrder,
+            block.ReachedEob,
+            block.TokensRead);
+        var blockPixels = BuildScaffoldBlockPixels(blockResult);
+
+        return new WebpVp8BlockTokenScaffold(
+            block.BlockIndex,
+            block.BlockType,
+            dequantFactor,
+            coefficients,
+            dequantizedCoefficients,
+            coefficientsNaturalOrder,
+            dequantizedCoefficientsNaturalOrder,
+            block.Tokens,
+            block.TokensRead,
+            block.ReachedEob,
+            blockResult,
+            blockPixels);
     }
 
     private static byte GetChromaSampleNearest(byte[] chromaPlane, int width, int height, int x, int y) {
