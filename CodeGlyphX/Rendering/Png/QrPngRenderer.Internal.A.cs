@@ -490,6 +490,21 @@ public static partial class QrPngRenderer {
         } else {
             DrawCanvasFill(scanlines, widthPx, heightPx, stride, canvas, canvasX, canvasY, canvasW, canvasH, opts.ModuleSize, radius);
         }
+
+        if (canvas.Splash is not null && canvas.Splash.Color.A != 0 && canvas.Splash.Count > 0) {
+            DrawCanvasSplash(
+                scanlines,
+                stride,
+                canvasX,
+                canvasY,
+                canvasW,
+                canvasH,
+                radius,
+                qrOffsetX,
+                qrOffsetY,
+                qrFullPx,
+                canvas.Splash);
+        }
     }
 
     private static void DrawCanvasFill(
@@ -549,6 +564,210 @@ public static partial class QrPngRenderer {
                 opts.ProtectQuietZone,
                 opts.BackgroundPattern);
         }
+    }
+
+    private static void DrawCanvasSplash(
+        byte[] scanlines,
+        int stride,
+        int canvasX,
+        int canvasY,
+        int canvasW,
+        int canvasH,
+        int canvasRadius,
+        int qrX,
+        int qrY,
+        int qrSize,
+        QrPngCanvasSplashOptions splash) {
+        if (splash.Count <= 0) return;
+
+        var canvasX1 = canvasX + canvasW - 1;
+        var canvasY1 = canvasY + canvasH - 1;
+        var qrX0 = qrX;
+        var qrY0 = qrY;
+        var qrX1 = qrX + qrSize - 1;
+        var qrY1 = qrY + qrSize - 1;
+        var radius = Math.Max(0, canvasRadius);
+        var radiusSq = radius * radius;
+
+        var minR = Math.Max(1, splash.MinRadiusPx);
+        var maxR = Math.Max(minR, splash.MaxRadiusPx);
+        var spread = Math.Max(0, splash.SpreadPx);
+        var rand = new Random(splash.Seed);
+
+        var bandX0 = qrX0 - spread;
+        var bandX1 = qrX1 + spread;
+        var bandY0 = qrY0 - spread;
+        var bandY1 = qrY1 + spread;
+
+        for (var i = 0; i < splash.Count; i++) {
+            var blobR = NextBetween(rand, minR, maxR);
+            var side = rand.Next(4);
+
+            var cx = 0;
+            var cy = 0;
+            switch (side) {
+                case 0: // north
+                    cx = NextBetween(rand, bandX0, bandX1);
+                    cy = qrY0 - NextBetween(rand, blobR, blobR + spread);
+                    break;
+                case 1: // east
+                    cx = qrX1 + NextBetween(rand, blobR, blobR + spread);
+                    cy = NextBetween(rand, bandY0, bandY1);
+                    break;
+                case 2: // south
+                    cx = NextBetween(rand, bandX0, bandX1);
+                    cy = qrY1 + NextBetween(rand, blobR, blobR + spread);
+                    break;
+                default: // west
+                    cx = qrX0 - NextBetween(rand, blobR, blobR + spread);
+                    cy = NextBetween(rand, bandY0, bandY1);
+                    break;
+            }
+
+            cx = Clamp(cx, canvasX + blobR, canvasX1 - blobR);
+            cy = Clamp(cy, canvasY + blobR, canvasY1 - blobR);
+
+            FillSplashCircle(
+                scanlines,
+                stride,
+                cx,
+                cy,
+                blobR,
+                splash.Color,
+                canvasX,
+                canvasY,
+                canvasX1,
+                canvasY1,
+                radius,
+                radiusSq,
+                splash.ProtectQrArea,
+                qrX0,
+                qrY0,
+                qrX1,
+                qrY1);
+
+            if (splash.DripChance > 0 && splash.DripLengthPx > 0 && rand.NextDouble() < splash.DripChance) {
+                var dripLength = NextBetween(rand, Math.Max(4, splash.DripLengthPx / 2), splash.DripLengthPx);
+                var dripWidth = Math.Max(1, splash.DripWidthPx);
+                var dripCx = cx + rand.Next(-blobR / 3, blobR / 3 + 1);
+                var dripCy = cy + blobR / 2 + dripLength / 2;
+                var rx = Math.Max(1, dripWidth / 2);
+                var ry = Math.Max(2, dripLength / 2);
+
+                FillSplashEllipse(
+                    scanlines,
+                    stride,
+                    dripCx,
+                    dripCy,
+                    rx,
+                    ry,
+                    splash.Color,
+                    canvasX,
+                    canvasY,
+                    canvasX1,
+                    canvasY1,
+                    radius,
+                    radiusSq,
+                    splash.ProtectQrArea,
+                    qrX0,
+                    qrY0,
+                    qrX1,
+                    qrY1);
+            }
+        }
+    }
+
+    private static void FillSplashCircle(
+        byte[] scanlines,
+        int stride,
+        int cx,
+        int cy,
+        int radius,
+        Rgba32 color,
+        int canvasX0,
+        int canvasY0,
+        int canvasX1,
+        int canvasY1,
+        int canvasRadius,
+        int canvasRadiusSq,
+        bool protectQr,
+        int qrX0,
+        int qrY0,
+        int qrX1,
+        int qrY1) {
+        var r = Math.Max(1, radius);
+        var r2 = r * r;
+        var x0 = Math.Max(canvasX0, cx - r);
+        var y0 = Math.Max(canvasY0, cy - r);
+        var x1 = Math.Min(canvasX1, cx + r);
+        var y1 = Math.Min(canvasY1, cy + r);
+
+        for (var y = y0; y <= y1; y++) {
+            var dy = y - cy;
+            var dy2 = dy * dy;
+            for (var x = x0; x <= x1; x++) {
+                var dx = x - cx;
+                if (dx * dx + dy2 > r2) continue;
+                if (canvasRadius > 0 && !InsideRounded(x, y, canvasX0, canvasY0, canvasX1, canvasY1, canvasRadius, canvasRadiusSq)) continue;
+                if (protectQr && x >= qrX0 && x <= qrX1 && y >= qrY0 && y <= qrY1) continue;
+                BlendPixel(scanlines, stride, x, y, color);
+            }
+        }
+    }
+
+    private static void FillSplashEllipse(
+        byte[] scanlines,
+        int stride,
+        int cx,
+        int cy,
+        int rx,
+        int ry,
+        Rgba32 color,
+        int canvasX0,
+        int canvasY0,
+        int canvasX1,
+        int canvasY1,
+        int canvasRadius,
+        int canvasRadiusSq,
+        bool protectQr,
+        int qrX0,
+        int qrY0,
+        int qrX1,
+        int qrY1) {
+        var safeRx = Math.Max(1, rx);
+        var safeRy = Math.Max(1, ry);
+        var x0 = Math.Max(canvasX0, cx - safeRx);
+        var y0 = Math.Max(canvasY0, cy - safeRy);
+        var x1 = Math.Min(canvasX1, cx + safeRx);
+        var y1 = Math.Min(canvasY1, cy + safeRy);
+        var rx2 = safeRx * (double)safeRx;
+        var ry2 = safeRy * (double)safeRy;
+
+        for (var y = y0; y <= y1; y++) {
+            var dy = y - cy;
+            var dy2 = dy * (double)dy;
+            for (var x = x0; x <= x1; x++) {
+                var dx = x - cx;
+                var dx2 = dx * (double)dx;
+                if (dx2 / rx2 + dy2 / ry2 > 1.0) continue;
+                if (canvasRadius > 0 && !InsideRounded(x, y, canvasX0, canvasY0, canvasX1, canvasY1, canvasRadius, canvasRadiusSq)) continue;
+                if (protectQr && x >= qrX0 && x <= qrX1 && y >= qrY0 && y <= qrY1) continue;
+                BlendPixel(scanlines, stride, x, y, color);
+            }
+        }
+    }
+
+    private static int NextBetween(Random rand, int minInclusive, int maxInclusive) {
+        if (minInclusive > maxInclusive) (minInclusive, maxInclusive) = (maxInclusive, minInclusive);
+        if (minInclusive == maxInclusive) return minInclusive;
+        return rand.Next(minInclusive, maxInclusive + 1);
+    }
+
+    private static int Clamp(int value, int min, int max) {
+        if (min > max) return value;
+        if (value < min) return min;
+        if (value > max) return max;
+        return value;
     }
 
     private static void DrawCanvasPattern(

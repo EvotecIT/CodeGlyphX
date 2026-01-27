@@ -88,6 +88,7 @@ public sealed class RendererFormatTests {
             QrArtPresets.CutCornerTechSafe(),
             QrArtPresets.InsetRingsSafe(),
             QrArtPresets.StripeEyesSafe(),
+            QrArtPresets.PaintSplashSafe(),
         };
 
         foreach (var preset in presets) {
