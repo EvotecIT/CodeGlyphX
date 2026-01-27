@@ -19,6 +19,15 @@ internal static class Program {
             return;
         }
 
+        var runHardArtDiagnostics = Environment.GetEnvironmentVariable("CODEGLYPHX_DECODE_HARD_ART");
+        if (!string.IsNullOrEmpty(runHardArtDiagnostics) &&
+            (string.Equals(runHardArtDiagnostics, "1", StringComparison.OrdinalIgnoreCase) ||
+             string.Equals(runHardArtDiagnostics, "true", StringComparison.OrdinalIgnoreCase))) {
+            runner.Run("QR (hard art diagnostics)", QrHardArtDiagnosticsExample.Run);
+            runner.PrintSummary();
+            return;
+        }
+
         var runDecodeSamples = Environment.GetEnvironmentVariable("CODEGLYPHX_DECODE_SAMPLES");
         if (!string.IsNullOrEmpty(runDecodeSamples) &&
             (string.Equals(runDecodeSamples, "1", StringComparison.OrdinalIgnoreCase) ||
