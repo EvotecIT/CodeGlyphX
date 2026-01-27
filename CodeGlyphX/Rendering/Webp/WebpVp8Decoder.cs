@@ -743,140 +743,52 @@ internal static class WebpVp8Decoder {
         macroblock = default;
         if (!TryReadMacroblockTokenScaffold(payload, out var macroblockTokens)) return false;
         if (macroblockTokens.Macroblocks.Length == 0) return false;
-        var sourceMacroblock = macroblockTokens.Macroblocks[0];
-
-        var yPlane = new byte[MacroblockScaffoldWidth * MacroblockScaffoldHeight];
-        var uPlane = new byte[MacroblockScaffoldChromaWidth * MacroblockScaffoldChromaHeight];
-        var vPlane = new byte[MacroblockScaffoldChromaWidth * MacroblockScaffoldChromaHeight];
-        var blocksPlacedY = 0;
-        var blocksPlacedU = 0;
-        var blocksPlacedV = 0;
-        var blocksPlacedTotal = 0;
-
-        for (var b = 0; b < sourceMacroblock.Blocks.Length && blocksPlacedTotal < MacroblockScaffoldMaxBlocks; b++) {
-            var block = sourceMacroblock.Blocks[b];
-            switch (block.BlockType) {
-                case BlockTypeY2:
-                case BlockTypeY: {
-                    var (dstX, dstY) = GetMacroblockBlockOffset(blocksPlacedY);
-                    CopyBlockToPlane(
-                        block.BlockPixels.Samples,
-                        block.BlockPixels.Width,
-                        block.BlockPixels.Height,
-                        yPlane,
-                        MacroblockScaffoldWidth,
-                        MacroblockScaffoldHeight,
-                        dstX,
-                        dstY);
-                    blocksPlacedY++;
-                    blocksPlacedTotal++;
-                    break;
-                }
-                case BlockTypeU: {
-                    if (blocksPlacedU == 0) {
-                        CopyBlockToPlane(
-                            block.BlockPixels.Samples,
-                            block.BlockPixels.Width,
-                            block.BlockPixels.Height,
-                            uPlane,
-                            MacroblockScaffoldChromaWidth,
-                            MacroblockScaffoldChromaHeight,
-                            dstX: 0,
-                            dstY: 0);
-                        blocksPlacedU++;
-                        blocksPlacedTotal++;
-                    }
-
-                    break;
-                }
-                case BlockTypeV: {
-                    if (blocksPlacedV == 0) {
-                        CopyBlockToPlane(
-                            block.BlockPixels.Samples,
-                            block.BlockPixels.Width,
-                            block.BlockPixels.Height,
-                            vPlane,
-                            MacroblockScaffoldChromaWidth,
-                            MacroblockScaffoldChromaHeight,
-                            dstX: 0,
-                            dstY: 0);
-                        blocksPlacedV++;
-                        blocksPlacedTotal++;
-                    }
-
-                    break;
-                }
-            }
-        }
-
-        macroblock = new WebpVp8MacroblockScaffold(
-            MacroblockScaffoldWidth,
-            MacroblockScaffoldHeight,
-            yPlane,
-            MacroblockScaffoldChromaWidth,
-            MacroblockScaffoldChromaHeight,
-            uPlane,
-            vPlane,
-            blocksPlacedY,
-            blocksPlacedU,
-            blocksPlacedV,
-            blocksPlacedTotal,
-            macroblockTokens.TotalBlocksAssigned);
-        return true;
+        macroblock = BuildMacroblockScaffold(macroblockTokens.Macroblocks[0].Blocks, macroblockTokens.TotalBlocksAssigned);
+        return macroblock.Width > 0 && macroblock.Height > 0;
     }
 
     internal static bool TryReadMacroblockRgbaScaffold(ReadOnlySpan<byte> payload, out WebpVp8RgbaScaffold rgbaScaffold) {
         rgbaScaffold = default;
         if (!TryReadMacroblockScaffold(payload, out var macroblock)) return false;
-
-        var width = macroblock.Width;
-        var height = macroblock.Height;
-        var rgba = new byte[width * height * 4];
-
-        for (var y = 0; y < height; y++) {
-            var chromaY = y >> 1;
-            for (var x = 0; x < width; x++) {
-                var yIndex = (y * width) + x;
-                var ySample = macroblock.YPlane[yIndex];
-
-                var chromaX = x >> 1;
-                var uSample = GetChromaSampleNearest(macroblock.UPlane, macroblock.ChromaWidth, macroblock.ChromaHeight, chromaX, chromaY);
-                var vSample = GetChromaSampleNearest(macroblock.VPlane, macroblock.ChromaWidth, macroblock.ChromaHeight, chromaX, chromaY);
-
-                var (r, g, b) = ConvertYuvToRgb(ySample, uSample, vSample);
-                var dst = yIndex * 4;
-                rgba[dst + 0] = r;
-                rgba[dst + 1] = g;
-                rgba[dst + 2] = b;
-                rgba[dst + 3] = 255;
-            }
-        }
-
-        rgbaScaffold = new WebpVp8RgbaScaffold(width, height, rgba, macroblock.BlocksPlacedTotal);
+        var rgba = ConvertMacroblockScaffoldToRgba(macroblock);
+        rgbaScaffold = new WebpVp8RgbaScaffold(macroblock.Width, macroblock.Height, rgba, macroblock.BlocksPlacedTotal);
         return true;
     }
 
     private static bool TryReadImageRgbaScaffold(ReadOnlySpan<byte> payload, WebpVp8Header header, out byte[] rgba) {
         rgba = Array.Empty<byte>();
         if (header.Width <= 0 || header.Height <= 0) return false;
-        if (!TryReadMacroblockRgbaScaffold(payload, out var macroblockScaffold)) return false;
+        if (!TryReadMacroblockTokenScaffold(payload, out var macroblockTokens)) return false;
+        if (macroblockTokens.Macroblocks.Length == 0) return false;
+        if (macroblockTokens.MacroblockCols <= 0 || macroblockTokens.MacroblockRows <= 0) return false;
 
-        var macroblockWidth = macroblockScaffold.Width;
-        var macroblockHeight = macroblockScaffold.Height;
+        var macroblockWidth = MacroblockScaffoldWidth;
+        var macroblockHeight = MacroblockScaffoldHeight;
         if (macroblockWidth <= 0 || macroblockHeight <= 0) return false;
 
         var pixelBytes = checked(header.Width * header.Height * 4);
         var output = new byte[pixelBytes];
 
-        var macroblockCols = (header.Width + macroblockWidth - 1) / macroblockWidth;
-        var macroblockRows = (header.Height + macroblockHeight - 1) / macroblockHeight;
+        var tileCols = (header.Width + macroblockWidth - 1) / macroblockWidth;
+        var tileRows = (header.Height + macroblockHeight - 1) / macroblockHeight;
 
-        for (var mbY = 0; mbY < macroblockRows; mbY++) {
-            var dstBlockY = mbY * macroblockHeight;
-            for (var mbX = 0; mbX < macroblockCols; mbX++) {
-                var dstBlockX = mbX * macroblockWidth;
+        var macroblockRgbaCache = new byte[macroblockTokens.Macroblocks.Length][];
+        for (var i = 0; i < macroblockTokens.Macroblocks.Length; i++) {
+            var macroblock = BuildMacroblockScaffold(macroblockTokens.Macroblocks[i].Blocks, macroblockTokens.TotalBlocksAssigned);
+            macroblockRgbaCache[i] = ConvertMacroblockScaffoldToRgba(macroblock);
+        }
+
+        for (var tileY = 0; tileY < tileRows; tileY++) {
+            var dstBlockY = tileY * macroblockHeight;
+            var sourceY = tileY % macroblockTokens.MacroblockRows;
+            for (var tileX = 0; tileX < tileCols; tileX++) {
+                var dstBlockX = tileX * macroblockWidth;
+                var sourceX = tileX % macroblockTokens.MacroblockCols;
+                var sourceIndex = (sourceY * macroblockTokens.MacroblockCols) + sourceX;
+                if ((uint)sourceIndex >= (uint)macroblockRgbaCache.Length) return false;
+
                 CopyMacroblockRgba(
-                    macroblockScaffold.Rgba,
+                    macroblockRgbaCache[sourceIndex],
                     macroblockWidth,
                     macroblockHeight,
                     output,
@@ -1244,6 +1156,117 @@ internal static class WebpVp8Decoder {
                 plane[planeRowOffset + px] = block[blockRowOffset + x];
             }
         }
+    }
+
+    internal static WebpVp8MacroblockScaffold BuildMacroblockScaffold(WebpVp8BlockTokenScaffold[] blocks, int blocksAvailable) {
+        if (blocks is null || blocks.Length == 0) return default;
+
+        var yPlane = new byte[MacroblockScaffoldWidth * MacroblockScaffoldHeight];
+        var uPlane = new byte[MacroblockScaffoldChromaWidth * MacroblockScaffoldChromaHeight];
+        var vPlane = new byte[MacroblockScaffoldChromaWidth * MacroblockScaffoldChromaHeight];
+        var blocksPlacedY = 0;
+        var blocksPlacedU = 0;
+        var blocksPlacedV = 0;
+        var blocksPlacedTotal = 0;
+
+        for (var b = 0; b < blocks.Length && blocksPlacedTotal < MacroblockScaffoldMaxBlocks; b++) {
+            var block = blocks[b];
+            switch (block.BlockType) {
+                case BlockTypeY2:
+                case BlockTypeY: {
+                    var (dstX, dstY) = GetMacroblockBlockOffset(blocksPlacedY);
+                    CopyBlockToPlane(
+                        block.BlockPixels.Samples,
+                        block.BlockPixels.Width,
+                        block.BlockPixels.Height,
+                        yPlane,
+                        MacroblockScaffoldWidth,
+                        MacroblockScaffoldHeight,
+                        dstX,
+                        dstY);
+                    blocksPlacedY++;
+                    blocksPlacedTotal++;
+                    break;
+                }
+                case BlockTypeU: {
+                    if (blocksPlacedU == 0) {
+                        CopyBlockToPlane(
+                            block.BlockPixels.Samples,
+                            block.BlockPixels.Width,
+                            block.BlockPixels.Height,
+                            uPlane,
+                            MacroblockScaffoldChromaWidth,
+                            MacroblockScaffoldChromaHeight,
+                            dstX: 0,
+                            dstY: 0);
+                        blocksPlacedU++;
+                        blocksPlacedTotal++;
+                    }
+
+                    break;
+                }
+                case BlockTypeV: {
+                    if (blocksPlacedV == 0) {
+                        CopyBlockToPlane(
+                            block.BlockPixels.Samples,
+                            block.BlockPixels.Width,
+                            block.BlockPixels.Height,
+                            vPlane,
+                            MacroblockScaffoldChromaWidth,
+                            MacroblockScaffoldChromaHeight,
+                            dstX: 0,
+                            dstY: 0);
+                        blocksPlacedV++;
+                        blocksPlacedTotal++;
+                    }
+
+                    break;
+                }
+            }
+        }
+
+        return new WebpVp8MacroblockScaffold(
+            MacroblockScaffoldWidth,
+            MacroblockScaffoldHeight,
+            yPlane,
+            MacroblockScaffoldChromaWidth,
+            MacroblockScaffoldChromaHeight,
+            uPlane,
+            vPlane,
+            blocksPlacedY,
+            blocksPlacedU,
+            blocksPlacedV,
+            blocksPlacedTotal,
+            blocksAvailable);
+    }
+
+    internal static byte[] ConvertMacroblockScaffoldToRgba(WebpVp8MacroblockScaffold macroblock) {
+        var width = macroblock.Width;
+        var height = macroblock.Height;
+        if (width <= 0 || height <= 0) return Array.Empty<byte>();
+
+        var rgba = new byte[width * height * 4];
+
+        for (var y = 0; y < height; y++) {
+            var chromaY = y >> 1;
+            for (var x = 0; x < width; x++) {
+                var yIndex = (y * width) + x;
+                var ySample = macroblock.YPlane[yIndex];
+
+                var chromaX = x >> 1;
+                var uSample = GetChromaSampleNearest(macroblock.UPlane, macroblock.ChromaWidth, macroblock.ChromaHeight, chromaX, chromaY);
+                var vSample = GetChromaSampleNearest(macroblock.VPlane, macroblock.ChromaWidth, macroblock.ChromaHeight, chromaX, chromaY);
+
+                var (r, g, b) = ConvertYuvToRgb(ySample, uSample, vSample);
+                var dst = yIndex * 4;
+                rgba[dst + 0] = r;
+                rgba[dst + 1] = g;
+                rgba[dst + 2] = b;
+                rgba[dst + 3] = 255;
+            }
+        }
+
+        return rgba;
     }
 
     private static void CopyMacroblockRgba(
