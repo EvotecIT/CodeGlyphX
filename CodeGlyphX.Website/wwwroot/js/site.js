@@ -44,16 +44,25 @@ globalThis.setTheme = setTheme;
         css.href = '/vendor/prism/prism-tomorrow.min.css';
         document.head.appendChild(css);
 
+        const loadScript = (src, done) => {
+            const el = document.createElement('script');
+            el.src = src;
+            el.onload = () => done?.();
+            document.head.appendChild(el);
+        };
+
         const script = document.createElement('script');
         script.src = '/vendor/prism/prism.min.js';
         script.onload = () => {
-            const csharp = document.createElement('script');
-            csharp.src = '/vendor/prism/prism-csharp.min.js';
-            csharp.onload = () => {
-                globalThis.__codeGlyphPrismLoaded = true;
-                callback?.();
-            };
-            document.head.appendChild(csharp);
+            loadScript('/vendor/prism/prism-csharp.min.js', () => {
+                // VB.NET grammar depends on the BASIC grammar.
+                loadScript('/vendor/prism/prism-basic.min.js', () => {
+                    loadScript('/vendor/prism/prism-vbnet.min.js', () => {
+                        globalThis.__codeGlyphPrismLoaded = true;
+                        callback?.();
+                    });
+                });
+            });
         };
         document.head.appendChild(script);
     }
@@ -127,7 +136,9 @@ globalThis.setTheme = setTheme;
             loadPrism(() => {
                 blocksNeedingHighlight.forEach((block) => {
                     if (!block.classList.contains('prism-highlighted')) {
-                        block.classList.add('language-csharp', 'prism-highlighted');
+                        const existingLanguage = Array.from(block.classList).find((cls) => cls.startsWith('language-'));
+                        const targetLanguage = existingLanguage || 'language-csharp';
+                        block.classList.add(targetLanguage, 'prism-highlighted');
                         globalThis.Prism?.highlightElement?.(block);
                     }
                     // Add copy button AFTER highlighting
