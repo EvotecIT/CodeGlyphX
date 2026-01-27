@@ -19,7 +19,7 @@ public sealed class WebpVp8BlockTokenScaffoldTests
     [Fact]
     public void TryReadBlockTokenScaffold_ValidPayload_ProducesBlockShapedCursorData()
     {
-        const int blocksPerPartition = 2;
+        const int blocksPerPartition = 4;
         var boolData = CreateBoolData(length: 4096);
         var firstPartitionOnly = BuildKeyframePayload(width: 80, height: 56, boolData);
         Assert.True(WebpVp8Decoder.TryReadFrameHeader(firstPartitionOnly, out var frameHeader));
@@ -28,7 +28,7 @@ public sealed class WebpVp8BlockTokenScaffoldTests
         var partitionSizes = new int[dctCount];
         for (var i = 0; i < partitionSizes.Length; i++)
         {
-            partitionSizes[i] = 12 + i;
+            partitionSizes[i] = 24 + i;
         }
 
         var payload = BuildKeyframePayloadWithPartitionsAndTokens(80, 56, boolData, partitionSizes);

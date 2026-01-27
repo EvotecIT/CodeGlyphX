@@ -23,12 +23,14 @@ internal static class WebpVp8Decoder {
     private const int CoefficientsPerBlock = 16;
     private const int TokenScaffoldTokensPerPartition = 8;
     private const int CoeffTokenCount = 12;
-    private const int BlockScaffoldBlocksPerPartition = 2;
+    private const int BlockScaffoldBlocksPerPartition = 4;
     private const int BlockScaffoldMaxTokensPerBlock = CoefficientsPerBlock;
     private const int BlockSize = 4;
     private const int MacroblockScaffoldWidth = 8;
     private const int MacroblockScaffoldHeight = 8;
     private const int MacroblockScaffoldMaxBlocks = 4;
+    private const int MacroblockScaffoldChromaWidth = 4;
+    private const int MacroblockScaffoldChromaHeight = 4;
     private const int BlockTypeY2 = 0;
     private const int BlockTypeY = 1;
     private const int BlockTypeU = 2;
@@ -483,23 +485,69 @@ internal static class WebpVp8Decoder {
         if (!TryReadBlockTokenScaffold(payload, out var blocks)) return false;
 
         var yPlane = new byte[MacroblockScaffoldWidth * MacroblockScaffoldHeight];
-        var blocksPlaced = 0;
+        var uPlane = new byte[MacroblockScaffoldChromaWidth * MacroblockScaffoldChromaHeight];
+        var vPlane = new byte[MacroblockScaffoldChromaWidth * MacroblockScaffoldChromaHeight];
+        var blocksPlacedY = 0;
+        var blocksPlacedU = 0;
+        var blocksPlacedV = 0;
+        var blocksPlacedTotal = 0;
 
-        for (var p = 0; p < blocks.Partitions.Length && blocksPlaced < MacroblockScaffoldMaxBlocks; p++) {
+        for (var p = 0; p < blocks.Partitions.Length && blocksPlacedTotal < MacroblockScaffoldMaxBlocks; p++) {
             var partition = blocks.Partitions[p];
-            for (var b = 0; b < partition.Blocks.Length && blocksPlaced < MacroblockScaffoldMaxBlocks; b++) {
+            for (var b = 0; b < partition.Blocks.Length && blocksPlacedTotal < MacroblockScaffoldMaxBlocks; b++) {
                 var block = partition.Blocks[b];
-                var (dstX, dstY) = GetMacroblockBlockOffset(blocksPlaced);
-                CopyBlockToPlane(
-                    block.BlockPixels.Samples,
-                    block.BlockPixels.Width,
-                    block.BlockPixels.Height,
-                    yPlane,
-                    MacroblockScaffoldWidth,
-                    MacroblockScaffoldHeight,
-                    dstX,
-                    dstY);
-                blocksPlaced++;
+                switch (block.BlockType) {
+                    case BlockTypeY2:
+                    case BlockTypeY: {
+                        var (dstX, dstY) = GetMacroblockBlockOffset(blocksPlacedY);
+                        CopyBlockToPlane(
+                            block.BlockPixels.Samples,
+                            block.BlockPixels.Width,
+                            block.BlockPixels.Height,
+                            yPlane,
+                            MacroblockScaffoldWidth,
+                            MacroblockScaffoldHeight,
+                            dstX,
+                            dstY);
+                        blocksPlacedY++;
+                        blocksPlacedTotal++;
+                        break;
+                    }
+                    case BlockTypeU: {
+                        if (blocksPlacedU == 0) {
+                            CopyBlockToPlane(
+                                block.BlockPixels.Samples,
+                                block.BlockPixels.Width,
+                                block.BlockPixels.Height,
+                                uPlane,
+                                MacroblockScaffoldChromaWidth,
+                                MacroblockScaffoldChromaHeight,
+                                dstX: 0,
+                                dstY: 0);
+                            blocksPlacedU++;
+                            blocksPlacedTotal++;
+                        }
+
+                        break;
+                    }
+                    case BlockTypeV: {
+                        if (blocksPlacedV == 0) {
+                            CopyBlockToPlane(
+                                block.BlockPixels.Samples,
+                                block.BlockPixels.Width,
+                                block.BlockPixels.Height,
+                                vPlane,
+                                MacroblockScaffoldChromaWidth,
+                                MacroblockScaffoldChromaHeight,
+                                dstX: 0,
+                                dstY: 0);
+                            blocksPlacedV++;
+                            blocksPlacedTotal++;
+                        }
+
+                        break;
+                    }
+                }
             }
         }
 
@@ -507,7 +555,14 @@ internal static class WebpVp8Decoder {
             MacroblockScaffoldWidth,
             MacroblockScaffoldHeight,
             yPlane,
-            blocksPlaced,
+            MacroblockScaffoldChromaWidth,
+            MacroblockScaffoldChromaHeight,
+            uPlane,
+            vPlane,
+            blocksPlacedY,
+            blocksPlacedU,
+            blocksPlacedV,
+            blocksPlacedTotal,
             blocks.TotalBlocksRead);
         return true;
     }
@@ -1340,17 +1395,43 @@ internal readonly struct WebpVp8BlockTokenScaffoldSet {
 }
 
 internal readonly struct WebpVp8MacroblockScaffold {
-    public WebpVp8MacroblockScaffold(int width, int height, byte[] yPlane, int blocksPlaced, int blocksAvailable) {
+    public WebpVp8MacroblockScaffold(
+        int width,
+        int height,
+        byte[] yPlane,
+        int chromaWidth,
+        int chromaHeight,
+        byte[] uPlane,
+        byte[] vPlane,
+        int blocksPlacedY,
+        int blocksPlacedU,
+        int blocksPlacedV,
+        int blocksPlacedTotal,
+        int blocksAvailable) {
         Width = width;
         Height = height;
         YPlane = yPlane;
-        BlocksPlaced = blocksPlaced;
+        ChromaWidth = chromaWidth;
+        ChromaHeight = chromaHeight;
+        UPlane = uPlane;
+        VPlane = vPlane;
+        BlocksPlacedY = blocksPlacedY;
+        BlocksPlacedU = blocksPlacedU;
+        BlocksPlacedV = blocksPlacedV;
+        BlocksPlacedTotal = blocksPlacedTotal;
         BlocksAvailable = blocksAvailable;
     }
 
     public int Width { get; }
     public int Height { get; }
     public byte[] YPlane { get; }
-    public int BlocksPlaced { get; }
+    public int ChromaWidth { get; }
+    public int ChromaHeight { get; }
+    public byte[] UPlane { get; }
+    public byte[] VPlane { get; }
+    public int BlocksPlacedY { get; }
+    public int BlocksPlacedU { get; }
+    public int BlocksPlacedV { get; }
+    public int BlocksPlacedTotal { get; }
     public int BlocksAvailable { get; }
 }
