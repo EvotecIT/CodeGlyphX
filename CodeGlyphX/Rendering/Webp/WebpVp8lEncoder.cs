@@ -67,6 +67,10 @@ internal static class WebpVp8lEncoder {
             return true;
         }
 
+        if (TryEncodeWithPredictorTransform(rgba, width, height, stride, out webp, out reason)) {
+            return true;
+        }
+
         return TryEncodeWithoutTransforms(rgba, width, height, stride, out webp, out reason);
     }
 
@@ -146,6 +150,57 @@ internal static class WebpVp8lEncoder {
         writer.WriteBits(0, 1); // no more transforms
 
         if (!TryWriteImageCore(writer, indexedRgba, encodedWidth, height, encodedStride, out reason)) return false;
+
+        webp = WriteWebpContainer(writer.ToArray());
+        return true;
+    }
+
+    private static bool TryEncodeWithPredictorTransform(
+        ReadOnlySpan<byte> rgba,
+        int width,
+        int height,
+        int stride,
+        out byte[] webp,
+        out string reason) {
+        webp = Array.Empty<byte>();
+        reason = string.Empty;
+
+        if (width <= 0 || height <= 0) return false;
+
+        const int sizeBits = 2; // 4x4 predictor blocks.
+        var blockSize = 1 << sizeBits;
+        var transformWidth = (width + blockSize - 1) >> sizeBits;
+        var transformHeight = (height + blockSize - 1) >> sizeBits;
+        if (transformWidth <= 0 || transformHeight <= 0) return false;
+
+        var pixelCount = checked(width * height);
+        var pixels = new int[pixelCount];
+        FillArgbPixels(rgba, width, height, stride, pixels);
+
+        var modes = ChoosePredictorModes(pixels, width, height, sizeBits, transformWidth, transformHeight);
+        var predictorRgba = BuildPredictorImage(modes, transformWidth, transformHeight);
+        var residualRgba = BuildResidualImage(pixels, width, height, sizeBits, transformWidth, modes);
+
+        var predictorWriter = new WebpBitWriter();
+        WriteHeader(predictorWriter, transformWidth, transformHeight, alphaUsed: false);
+        if (!TryWriteImageCore(predictorWriter, predictorRgba, transformWidth, transformHeight, transformWidth * 4, out reason)) {
+            return false;
+        }
+
+        var alphaUsed = ComputeAlphaUsed(rgba, width, height, stride);
+        var writer = new WebpBitWriter();
+        WriteHeader(writer, width, height, alphaUsed);
+
+        // Transform section: predictor transform with embedded predictor image.
+        writer.WriteBits(1, 1); // has transform
+        writer.WriteBits(0, 2); // predictor transform
+        writer.WriteBits(sizeBits - 2, 3);
+        writer.Append(predictorWriter);
+        writer.WriteBits(0, 1); // no more transforms
+
+        if (!TryWriteImageCore(writer, residualRgba, width, height, width * 4, out reason)) {
+            return false;
+        }
 
         webp = WriteWebpContainer(writer.ToArray());
         return true;
@@ -357,6 +412,195 @@ internal static class WebpVp8lEncoder {
             }
         }
     }
+
+    private static int[] ChoosePredictorModes(
+        int[] pixels,
+        int width,
+        int height,
+        int sizeBits,
+        int transformWidth,
+        int transformHeight) {
+        var modes = new int[transformWidth * transformHeight];
+        if (pixels.Length == 0) return modes;
+
+        var blockSize = 1 << sizeBits;
+        var candidateModes = new[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13 };
+
+        for (var by = 0; by < transformHeight; by++) {
+            var y0 = by * blockSize;
+            for (var bx = 0; bx < transformWidth; bx++) {
+                var x0 = bx * blockSize;
+                var bestMode = 0;
+                var bestScore = long.MaxValue;
+
+                for (var m = 0; m < candidateModes.Length; m++) {
+                    var mode = candidateModes[m];
+                    long score = 0;
+                    for (var y = 0; y < blockSize; y++) {
+                        var py = y0 + y;
+                        if (py >= height) break;
+                        var rowIndex = py * width;
+                        for (var x = 0; x < blockSize; x++) {
+                            var px = x0 + x;
+                            if (px >= width) break;
+                            var index = rowIndex + px;
+                            var predicted = PredictPixel(pixels, width, px, py, mode);
+                            var value = pixels[index];
+                            score += ChannelAbsDiff(value, predicted);
+                        }
+                    }
+
+                    if (score < bestScore) {
+                        bestScore = score;
+                        bestMode = mode;
+                        if (score == 0) break;
+                    }
+                }
+
+                modes[by * transformWidth + bx] = bestMode;
+            }
+        }
+
+        return modes;
+    }
+
+    private static byte[] BuildPredictorImage(int[] modes, int width, int height) {
+        var rgba = new byte[width * height * 4];
+        var pos = 0;
+        for (var i = 0; i < modes.Length; i++) {
+            rgba[pos] = 0;
+            rgba[pos + 1] = (byte)(modes[i] & 0xFF);
+            rgba[pos + 2] = 0;
+            rgba[pos + 3] = 255;
+            pos += 4;
+        }
+        return rgba;
+    }
+
+    private static byte[] BuildResidualImage(
+        int[] pixels,
+        int width,
+        int height,
+        int sizeBits,
+        int transformWidth,
+        int[] modes) {
+        var rgba = new byte[width * height * 4];
+        var pos = 0;
+        for (var y = 0; y < height; y++) {
+            var rowIndex = y * width;
+            var blockY = y >> sizeBits;
+            for (var x = 0; x < width; x++) {
+                var blockX = x >> sizeBits;
+                var modeIndex = blockY * transformWidth + blockX;
+                var mode = (uint)modeIndex < (uint)modes.Length ? modes[modeIndex] : 0;
+                var index = rowIndex + x;
+                var predicted = PredictPixel(pixels, width, x, y, mode);
+                var residual = SubtractPixelsModulo(pixels[index], predicted);
+
+                rgba[pos] = (byte)((residual >> 16) & 0xFF);
+                rgba[pos + 1] = (byte)((residual >> 8) & 0xFF);
+                rgba[pos + 2] = (byte)(residual & 0xFF);
+                rgba[pos + 3] = (byte)((residual >> 24) & 0xFF);
+                pos += 4;
+            }
+        }
+        return rgba;
+    }
+
+    private static int PredictPixel(int[] pixels, int width, int x, int y, int mode) {
+        if (x == 0 && y == 0) return unchecked((int)0xFF000000);
+        var index = y * width + x;
+        if (y == 0) return pixels[index - 1];
+        if (x == 0) return pixels[index - width];
+
+        var left = pixels[index - 1];
+        var top = pixels[index - width];
+        var topLeft = pixels[index - width - 1];
+        var topRight = x == width - 1 ? pixels[index - x] : pixels[index - width + 1];
+
+        return mode switch {
+            0 => unchecked((int)0xFF000000),
+            1 => left,
+            2 => top,
+            3 => topRight,
+            4 => topLeft,
+            5 => Average2(Average2(left, topRight), top),
+            6 => Average2(left, topLeft),
+            7 => Average2(left, top),
+            8 => Average2(topLeft, top),
+            9 => Average2(top, topRight),
+            10 => Average2(Average2(left, topLeft), Average2(top, topRight)),
+            11 => Select(left, top, topLeft),
+            12 => ClampAddSubtractFull(left, top, topLeft),
+            13 => ClampAddSubtractHalf(Average2(left, top), topLeft),
+            _ => left
+        };
+    }
+
+    private static int SubtractPixelsModulo(int value, int predicted) {
+        var a = (byte)((value >> 24) - (predicted >> 24));
+        var r = (byte)((value >> 16) - (predicted >> 16));
+        var g = (byte)((value >> 8) - (predicted >> 8));
+        var b = (byte)(value - predicted);
+        return PackArgb(r, g, b, a);
+    }
+
+    private static long ChannelAbsDiff(int value, int predicted) {
+        var da = Abs(((value >> 24) & 0xFF) - ((predicted >> 24) & 0xFF));
+        var dr = Abs(((value >> 16) & 0xFF) - ((predicted >> 16) & 0xFF));
+        var dg = Abs(((value >> 8) & 0xFF) - ((predicted >> 8) & 0xFF));
+        var db = Abs((value & 0xFF) - (predicted & 0xFF));
+        return da + dr + dg + db;
+    }
+
+    private static int Average2(int a, int b) {
+        var aa = ((a >> 24) & 0xFF) + ((b >> 24) & 0xFF);
+        var ar = ((a >> 16) & 0xFF) + ((b >> 16) & 0xFF);
+        var ag = ((a >> 8) & 0xFF) + ((b >> 8) & 0xFF);
+        var ab = (a & 0xFF) + (b & 0xFF);
+        return PackArgb(ar >> 1, ag >> 1, ab >> 1, aa >> 1);
+    }
+
+    private static int ClampAddSubtractFull(int a, int b, int c) {
+        var aa = Clamp(((a >> 24) & 0xFF) + ((b >> 24) & 0xFF) - ((c >> 24) & 0xFF));
+        var ar = Clamp(((a >> 16) & 0xFF) + ((b >> 16) & 0xFF) - ((c >> 16) & 0xFF));
+        var ag = Clamp(((a >> 8) & 0xFF) + ((b >> 8) & 0xFF) - ((c >> 8) & 0xFF));
+        var ab = Clamp((a & 0xFF) + (b & 0xFF) - (c & 0xFF));
+        return PackArgb(ar, ag, ab, aa);
+    }
+
+    private static int ClampAddSubtractHalf(int a, int b) {
+        var aa = Clamp(((a >> 24) & 0xFF) + ((((a >> 24) & 0xFF) - ((b >> 24) & 0xFF)) >> 1));
+        var ar = Clamp(((a >> 16) & 0xFF) + ((((a >> 16) & 0xFF) - ((b >> 16) & 0xFF)) >> 1));
+        var ag = Clamp(((a >> 8) & 0xFF) + ((((a >> 8) & 0xFF) - ((b >> 8) & 0xFF)) >> 1));
+        var ab = Clamp((a & 0xFF) + (((a & 0xFF) - (b & 0xFF)) >> 1));
+        return PackArgb(ar, ag, ab, aa);
+    }
+
+    private static int Select(int left, int top, int topLeft) {
+        var pa = ((left >> 24) & 0xFF) + ((top >> 24) & 0xFF) - ((topLeft >> 24) & 0xFF);
+        var pr = ((left >> 16) & 0xFF) + ((top >> 16) & 0xFF) - ((topLeft >> 16) & 0xFF);
+        var pg = ((left >> 8) & 0xFF) + ((top >> 8) & 0xFF) - ((topLeft >> 8) & 0xFF);
+        var pb = (left & 0xFF) + (top & 0xFF) - (topLeft & 0xFF);
+
+        var distLeft = Abs(pa - ((left >> 24) & 0xFF))
+            + Abs(pr - ((left >> 16) & 0xFF))
+            + Abs(pg - ((left >> 8) & 0xFF))
+            + Abs(pb - (left & 0xFF));
+        var distTop = Abs(pa - ((top >> 24) & 0xFF))
+            + Abs(pr - ((top >> 16) & 0xFF))
+            + Abs(pg - ((top >> 8) & 0xFF))
+            + Abs(pb - (top & 0xFF));
+        return distLeft <= distTop ? left : top;
+    }
+
+    private static int Clamp(int value) {
+        if (value < 0) return 0;
+        if (value > 255) return 255;
+        return value;
+    }
+
+    private static int Abs(int value) => value < 0 ? -value : value;
 
     private static Token[] BuildLiteralTokens(ReadOnlySpan<int> pixels) {
         var tokens = new Token[pixels.Length];

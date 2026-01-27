@@ -190,7 +190,11 @@ public sealed class WebpManagedEncodeTests {
         var payload = ExtractVp8lPayload(webp);
         var reader = new WebpBitReader(payload);
         Assert.True(WebpVp8lDecoder.TryReadHeader(ref reader, out _));
-        Assert.Equal(0, reader.ReadBits(1)); // no transforms
+        var hasTransform = reader.ReadBits(1);
+        Assert.True(hasTransform == 0 || hasTransform == 1);
+        if (hasTransform == 1) {
+            Assert.Equal(0, reader.ReadBits(2)); // predictor transform
+        }
     }
 
     [Fact]
