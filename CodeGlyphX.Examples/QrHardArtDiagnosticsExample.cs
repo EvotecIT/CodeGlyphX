@@ -18,7 +18,7 @@ internal static class QrHardArtDiagnosticsExample {
     };
 
     public static void Run(string outputDir) {
-        var sampleDir = ResolveSamplesDir("Assets/DecodingSamples");
+        var sampleDir = ExamplePaths.ResolveSamplesDir("Assets/DecodingSamples");
         var debugDir = Path.Combine(outputDir, "qr-hard-art-debug");
         Directory.CreateDirectory(debugDir);
 
@@ -74,38 +74,11 @@ internal static class QrHardArtDiagnosticsExample {
             }
 
             // Always emit debug renders for these hard-art samples.
-            var debugOpts = new QrPixelDebugOptions();
-            QrPixelDebug.RenderToFile(rgba, width, height, width * 4, PixelFormat.Rgba32, QrPixelDebugMode.Binarized, debugDir, $"{baseName}-bin.png", debugOpts);
-
-            var adaptive = new QrPixelDebugOptions {
-                AdaptiveThreshold = true,
-                AdaptiveWindowSize = 15,
-                AdaptiveOffset = 8
-            };
-            QrPixelDebug.RenderToFile(rgba, width, height, width * 4, PixelFormat.Rgba32, QrPixelDebugMode.Binarized, debugDir, $"{baseName}-bin-adaptive.png", adaptive);
-            QrPixelDebug.RenderToFile(rgba, width, height, width * 4, PixelFormat.Rgba32, QrPixelDebugMode.Heatmap, debugDir, $"{baseName}-heatmap.png", debugOpts);
+            ExampleDebug.WriteQrDebugImages(rgba, width, height, width * 4, debugDir, baseName);
         }
 
         var outputPath = Path.Combine(outputDir, "qr-hard-art-diagnostics.txt");
         File.WriteAllLines(outputPath, lines, Encoding.UTF8);
         Console.WriteLine(string.Join(Environment.NewLine, lines));
-    }
-
-    private static string ResolveSamplesDir(string relativePath) {
-        if (string.IsNullOrWhiteSpace(relativePath)) {
-            throw new ArgumentException("Path is required.", nameof(relativePath));
-        }
-
-        var dir = new DirectoryInfo(AppContext.BaseDirectory);
-        for (var i = 0; i < 10 && dir is not null; i++) {
-            var candidate = Path.Combine(dir.FullName, relativePath);
-            if (Directory.Exists(candidate)) {
-                return candidate;
-            }
-
-            dir = dir.Parent;
-        }
-
-        throw new DirectoryNotFoundException($"Could not locate sample directory '{relativePath}'.");
     }
 }
