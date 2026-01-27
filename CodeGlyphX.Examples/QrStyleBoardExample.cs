@@ -188,6 +188,25 @@ internal static class QrStyleBoardExample {
                 pattern: Speckle(R(0, 80, 120, 96), seed: 4242, sizePx: 7, thicknessPx: 2, variation: 0.84, density: 0.94),
                 canvas: CanvasGradient(R(8, 20, 36), R(16, 44, 72)))),
 
+            new("Edge Drips", StyleDocs("edge-drips"), () => BaseSticker(
+                fg: R(22, 40, 92),
+                palette: Palette(QrPngPaletteMode.Cycle, 0, R(22, 40, 92), R(24, 138, 216), R(0, 190, 150)),
+                shape: QrPngModuleShape.ConnectedRounded,
+                eyes: EyeGlow(R(22, 40, 92), R(255, 255, 255), R(40, 150, 230, 170)),
+                scaleMap: ScaleMap(QrPngModuleScaleMode.Radial, 0.86, 1.0, 8088),
+                pattern: Speckle(R(255, 255, 255, 54), seed: 8181, sizePx: 7, thicknessPx: 2, variation: 0.78, density: 0.88),
+                canvas: CanvasEdgeSplash(
+                    R(236, 244, 255),
+                    R(214, 230, 255),
+                    splashSeed: 9090,
+                    edgeBandPx: 104,
+                    splashColors: new[] {
+                        R(30, 144, 255, 140),
+                        R(0, 190, 150, 132),
+                        R(255, 120, 210, 128),
+                        R(255, 170, 60, 132),
+                    }))),
+
             new("Halftone Bloom", StyleDocs("halftone-bloom"), () => BaseSticker(
                 fg: R(92, 90, 255),
                 palette: Palette(QrPngPaletteMode.Cycle, 0, R(92, 90, 255), R(190, 120, 255), R(120, 210, 255)),
@@ -609,6 +628,41 @@ internal static class QrStyleBoardExample {
                 ProtectQrArea = true,
             };
         }
+        return canvas;
+    }
+
+    private static QrPngCanvasOptions CanvasEdgeSplash(
+        Rgba32 start,
+        Rgba32 end,
+        int splashSeed,
+        int edgeBandPx,
+        Rgba32[] splashColors) {
+        var canvas = CanvasGradientTexture(
+            start,
+            end,
+            grainColor: R(16, 24, 60, 66),
+            grainDensity: 0.24,
+            grainPixelSize: 2,
+            grainSeed: splashSeed ^ 0x13579bdf,
+            vignetteColor: R(6, 10, 26, 90),
+            vignetteBandPx: 104,
+            vignetteStrength: 1.0);
+
+        canvas.Splash = new QrPngCanvasSplashOptions {
+            Colors = splashColors,
+            Count = 18,
+            MinRadiusPx = 18,
+            MaxRadiusPx = 56,
+            SpreadPx = 28,
+            Placement = QrPngCanvasSplashPlacement.CanvasEdges,
+            EdgeBandPx = edgeBandPx,
+            DripChance = 0.6,
+            DripLengthPx = 48,
+            DripWidthPx = 10,
+            Seed = splashSeed,
+            ProtectQrArea = true,
+        };
+
         return canvas;
     }
 

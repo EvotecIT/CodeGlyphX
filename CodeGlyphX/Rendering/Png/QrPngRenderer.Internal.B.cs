@@ -1393,6 +1393,8 @@ public static partial class QrPngRenderer {
             MinRadiusPx = Math.Max(1, splash.MinRadiusPx * scale),
             MaxRadiusPx = Math.Max(1, splash.MaxRadiusPx * scale),
             SpreadPx = Math.Max(0, splash.SpreadPx * scale),
+            Placement = splash.Placement,
+            EdgeBandPx = Math.Max(0, splash.EdgeBandPx * scale),
             Seed = splash.Seed,
             DripChance = splash.DripChance,
             DripLengthPx = Math.Max(0, splash.DripLengthPx * scale),

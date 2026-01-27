@@ -1487,6 +1487,7 @@ public static partial class QrPngRenderer {
         var minR = Math.Max(1, splash.MinRadiusPx);
         var maxR = Math.Max(minR, splash.MaxRadiusPx);
         var spread = Math.Max(0, splash.SpreadPx);
+        var placement = splash.Placement;
         var seed = splash.Seed != 0
             ? splash.Seed
             : unchecked(Environment.TickCount ^ Hash(canvasX, canvasY, canvasW, canvasH));
@@ -1499,6 +1500,14 @@ public static partial class QrPngRenderer {
         var bandY0 = qrY0 - spread;
         var bandY1 = qrY1 + spread;
 
+        var edgeBand = Math.Max(0, splash.EdgeBandPx);
+        if (placement == QrPngCanvasSplashPlacement.CanvasEdges) {
+            var derivedBand = Math.Max(spread + maxR, maxR + 12);
+            edgeBand = edgeBand > 0 ? edgeBand : derivedBand;
+            var maxBand = Math.Max(1, Math.Min(canvasW, canvasH) / 2);
+            edgeBand = Math.Min(edgeBand, maxBand);
+        }
+
         for (var i = 0; i < splash.Count; i++) {
             var blobColor = paletteLen > 0 ? palette![rand.Next(paletteLen)] : splash.Color;
             var blobR = NextBetween(rand, minR, maxR);
@@ -1506,23 +1515,56 @@ public static partial class QrPngRenderer {
 
             var cx = 0;
             var cy = 0;
-            switch (side) {
-                case 0: // north
-                    cx = NextBetween(rand, bandX0, bandX1);
-                    cy = qrY0 - NextBetween(rand, blobR, blobR + spread);
-                    break;
-                case 1: // east
-                    cx = qrX1 + NextBetween(rand, blobR, blobR + spread);
-                    cy = NextBetween(rand, bandY0, bandY1);
-                    break;
-                case 2: // south
-                    cx = NextBetween(rand, bandX0, bandX1);
-                    cy = qrY1 + NextBetween(rand, blobR, blobR + spread);
-                    break;
-                default: // west
-                    cx = qrX0 - NextBetween(rand, blobR, blobR + spread);
-                    cy = NextBetween(rand, bandY0, bandY1);
-                    break;
+            var dripDirX = 0;
+            var dripDirY = 0;
+
+            if (placement == QrPngCanvasSplashPlacement.CanvasEdges) {
+                var band = Math.Max(blobR + 2, edgeBand);
+                switch (side) {
+                    case 0: // north edge (drip down into canvas)
+                        cx = NextBetween(rand, canvasX + blobR, canvasX1 - blobR);
+                        cy = canvasY + NextBetween(rand, blobR, band);
+                        dripDirY = 1;
+                        break;
+                    case 1: // east edge (drip left into canvas)
+                        cx = canvasX1 - NextBetween(rand, blobR, band);
+                        cy = NextBetween(rand, canvasY + blobR, canvasY1 - blobR);
+                        dripDirX = -1;
+                        break;
+                    case 2: // south edge (drip up into canvas)
+                        cx = NextBetween(rand, canvasX + blobR, canvasX1 - blobR);
+                        cy = canvasY1 - NextBetween(rand, blobR, band);
+                        dripDirY = -1;
+                        break;
+                    default: // west edge (drip right into canvas)
+                        cx = canvasX + NextBetween(rand, blobR, band);
+                        cy = NextBetween(rand, canvasY + blobR, canvasY1 - blobR);
+                        dripDirX = 1;
+                        break;
+                }
+            } else {
+                switch (side) {
+                    case 0: // north of QR (drip upward, away from QR)
+                        cx = NextBetween(rand, bandX0, bandX1);
+                        cy = qrY0 - NextBetween(rand, blobR, blobR + spread);
+                        dripDirY = -1;
+                        break;
+                    case 1: // east of QR (drip outward to the right)
+                        cx = qrX1 + NextBetween(rand, blobR, blobR + spread);
+                        cy = NextBetween(rand, bandY0, bandY1);
+                        dripDirX = 1;
+                        break;
+                    case 2: // south of QR (drip downward, away from QR)
+                        cx = NextBetween(rand, bandX0, bandX1);
+                        cy = qrY1 + NextBetween(rand, blobR, blobR + spread);
+                        dripDirY = 1;
+                        break;
+                    default: // west of QR (drip outward to the left)
+                        cx = qrX0 - NextBetween(rand, blobR, blobR + spread);
+                        cy = NextBetween(rand, bandY0, bandY1);
+                        dripDirX = -1;
+                        break;
+                }
             }
 
             cx = Clamp(cx, canvasX + blobR, canvasX1 - blobR);
@@ -1551,16 +1593,23 @@ public static partial class QrPngRenderer {
             if (splash.DripChance > 0 && splash.DripLengthPx > 0 && rand.NextDouble() < splash.DripChance) {
                 var dripLength = NextBetween(rand, Math.Max(4, splash.DripLengthPx / 2), splash.DripLengthPx);
                 var dripWidth = Math.Max(1, splash.DripWidthPx);
-                var dripCx = cx + rand.Next(-blobR / 3, blobR / 3 + 1);
-                var dripCy = cy + blobR / 2 + dripLength / 2;
-                var rx = Math.Max(1, dripWidth / 2);
-                var ry = Math.Max(2, dripLength / 2);
+                var perpX = -dripDirY;
+                var perpY = dripDirX;
+                var drift = rand.Next(-blobR / 3, blobR / 3 + 1);
+                var dripMidX = cx + dripDirX * (blobR + dripLength / 2) + perpX * drift;
+                var dripMidY = cy + dripDirY * (blobR + dripLength / 2) + perpY * drift;
+
+                var rx = dripDirX != 0 ? Math.Max(2, dripLength / 2) : Math.Max(1, dripWidth / 2);
+                var ry = dripDirY != 0 ? Math.Max(2, dripLength / 2) : Math.Max(1, dripWidth / 2);
+
+                dripMidX = Clamp(dripMidX, canvasX + rx, canvasX1 - rx);
+                dripMidY = Clamp(dripMidY, canvasY + ry, canvasY1 - ry);
 
                 FillSplashEllipse(
                     scanlines,
                     stride,
-                    dripCx,
-                    dripCy,
+                    dripMidX,
+                    dripMidY,
                     rx,
                     ry,
                     blobColor,

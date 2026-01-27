@@ -1032,6 +1032,66 @@ public sealed class QrPngRendererTests {
     }
 
     [Fact]
+    public void Render_With_Canvas_Splash_CanvasEdges_Draws_Outside_Qr_Bounds() {
+        var qr = QrCodeEncoder.EncodeText("HELLO", QrErrorCorrectionLevel.H);
+        var moduleSize = 8;
+        var quietZone = 4;
+        var padding = 32;
+
+        var opts = new QrPngRenderOptions {
+            ModuleSize = moduleSize,
+            QuietZone = quietZone,
+            Foreground = Rgba32.Black,
+            Background = Rgba32.White,
+            Canvas = new QrPngCanvasOptions {
+                PaddingPx = padding,
+                CornerRadiusPx = 0,
+                Background = Rgba32.White,
+                Splash = new QrPngCanvasSplashOptions {
+                    Color = new Rgba32(0, 0, 0, 128),
+                    Count = 14,
+                    MinRadiusPx = 16,
+                    MaxRadiusPx = 46,
+                    SpreadPx = 26,
+                    Placement = QrPngCanvasSplashPlacement.CanvasEdges,
+                    EdgeBandPx = 104,
+                    DripChance = 0.6,
+                    DripLengthPx = 44,
+                    DripWidthPx = 10,
+                    Seed = 20260131,
+                    ProtectQrArea = true,
+                },
+            },
+        };
+
+        var png = QrPngRenderer.Render(qr.Modules, opts);
+        var (rgba, width, height, stride) = PngTestDecoder.DecodeRgba32(png);
+
+        var qrFullPx = (qr.Size + quietZone * 2) * moduleSize;
+        var qrX0 = padding;
+        var qrY0 = padding;
+        var qrX1 = qrX0 + qrFullPx - 1;
+        var qrY1 = qrY0 + qrFullPx - 1;
+
+        var foundSplash = false;
+        for (var y = 0; y < height && !foundSplash; y++) {
+            for (var x = 0; x < width; x++) {
+                if (x >= qrX0 && x <= qrX1 && y >= qrY0 && y <= qrY1) continue;
+                var p = y * stride + x * 4;
+                var r = rgba[p + 0];
+                var g = rgba[p + 1];
+                var b = rgba[p + 2];
+                if (r != 255 || g != 255 || b != 255) {
+                    foundSplash = true;
+                    break;
+                }
+            }
+        }
+
+        Assert.True(foundSplash, "Expected canvas-edge splash pixels outside the QR bounds.");
+    }
+
+    [Fact]
     public void Render_With_Eye_Accent_Stripes_Draws_Outside_Qr_Bounds() {
         var qr = QrCodeEncoder.EncodeText("HELLO", QrErrorCorrectionLevel.H);
         var moduleSize = 8;

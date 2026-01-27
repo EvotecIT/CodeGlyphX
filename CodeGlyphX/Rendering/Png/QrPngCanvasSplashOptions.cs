@@ -37,6 +37,17 @@ public sealed class QrPngCanvasSplashOptions {
     public int SpreadPx { get; set; } = 22;
 
     /// <summary>
+    /// Where splashes are placed. Defaults to <see cref="QrPngCanvasSplashPlacement.AroundQr"/>.
+    /// </summary>
+    public QrPngCanvasSplashPlacement Placement { get; set; } = QrPngCanvasSplashPlacement.AroundQr;
+
+    /// <summary>
+    /// Optional edge band width (in pixels) when <see cref="Placement"/> is <see cref="QrPngCanvasSplashPlacement.CanvasEdges"/>.
+    /// When 0, a sensible band is derived from splash size and spread.
+    /// </summary>
+    public int EdgeBandPx { get; set; }
+
+    /// <summary>
     /// Random seed used to place splashes. Use 0 to auto-randomize per render.
     /// </summary>
     public int Seed { get; set; }
@@ -72,6 +83,7 @@ public sealed class QrPngCanvasSplashOptions {
         if (MinRadiusPx < 1) throw new ArgumentOutOfRangeException(nameof(MinRadiusPx));
         if (MaxRadiusPx < MinRadiusPx) throw new ArgumentOutOfRangeException(nameof(MaxRadiusPx));
         if (SpreadPx < 0) throw new ArgumentOutOfRangeException(nameof(SpreadPx));
+        if (EdgeBandPx < 0) throw new ArgumentOutOfRangeException(nameof(EdgeBandPx));
         if (DripChance is < 0 or > 1) throw new ArgumentOutOfRangeException(nameof(DripChance));
         if (DripLengthPx < 0) throw new ArgumentOutOfRangeException(nameof(DripLengthPx));
         if (DripWidthPx < 0) throw new ArgumentOutOfRangeException(nameof(DripWidthPx));

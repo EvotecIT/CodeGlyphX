@@ -418,10 +418,21 @@ public static partial class QrEasy {
 
         var hasLogo = opts.LogoPng is { Length: > 0 };
         var paletteIsArt = opts.ForegroundPalette?.Colors is { Length: > 2 } || opts.ForegroundPaletteZones is not null;
+        var canvasIsArt = opts.Canvas?.Splash is not null
+            || opts.Canvas?.Halo is not null
+            || opts.Canvas?.Pattern is not null
+            || opts.Canvas?.Vignette is not null
+            || opts.Canvas?.Grain is not null;
+        var eyes = opts.Eyes;
+        var eyesIsArt = eyes is not null && (
+            eyes.SparkleCount > 0
+            || eyes.AccentRingCount > 0
+            || eyes.AccentRayCount > 0
+            || eyes.AccentStripeCount > 0);
         var hasArtHints = opts.Art is not null
             || opts.ForegroundPattern is not null
-            || opts.Canvas?.Splash is not null
-            || opts.Canvas?.Halo is not null
+            || canvasIsArt
+            || eyesIsArt
             || paletteIsArt;
 
         if (!hasLogo && !hasArtHints) return opts;
