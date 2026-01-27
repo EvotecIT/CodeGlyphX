@@ -1,3 +1,4 @@
+using System;
 using CodeGlyphX.Payloads;
 using Xunit;
 
@@ -105,6 +106,16 @@ public sealed class QrParsedPayloadTests {
     }
 
     [Fact]
+    public void Parse_Lightning_Lnurl_Bare() {
+        const string raw = "LNURL1DP68GURN8GHJ7MRWW4EXCTN0D3SK6AR0W4JRXCT5D9HXGETJV9MKZMRXDE5K7TMJXQUR2";
+        Assert.True(QrPayloadParser.TryParse(raw, out var parsed));
+        Assert.Equal(QrPayloadType.Lightning, parsed.Type);
+        Assert.True(parsed.TryGet<QrParsedData.Lightning>(out var lightning));
+        Assert.StartsWith("LNURL1", lightning.Invoice, StringComparison.Ordinal);
+        Assert.Equal("url", lightning.NetworkPrefix);
+    }
+
+    [Fact]
     public void Parse_Eip681_ValueWei_ConvertsToEther() {
         const string raw = "ethereum:pay-0xabc123@1?value=1000000000000000000";
         Assert.True(QrPayloadParser.TryParse(raw, out var parsed));
@@ -116,6 +127,21 @@ public sealed class QrParsedPayloadTests {
         Assert.True(eip681.AmountEther.HasValue);
         Assert.Equal(1_000_000_000_000_000_000m, eip681.ValueWei.Value);
         Assert.Equal(1m, eip681.AmountEther.Value);
+    }
+
+    [Fact]
+    public void Parse_Eip681_TransferWithFunctionAndAmount() {
+        const string raw = "ethereum:0xabc123@137/transfer?address=0xdef456&uint256=250000000000000000&amount=0.25";
+        Assert.True(QrPayloadParser.TryParse(raw, out var parsed));
+        Assert.Equal(QrPayloadType.Eip681, parsed.Type);
+        Assert.True(parsed.TryGet<QrParsedData.Eip681>(out var eip681));
+        Assert.Equal("0xabc123", eip681.Address);
+        Assert.Equal(137, eip681.ChainId);
+        Assert.Equal("transfer", eip681.Function);
+        Assert.True(eip681.AmountEther.HasValue);
+        Assert.Equal(0.25m, eip681.AmountEther.Value);
+        Assert.Equal("0xdef456", eip681.Parameters["address"]);
+        Assert.Equal("250000000000000000", eip681.Parameters["uint256"]);
     }
 
     [Fact]

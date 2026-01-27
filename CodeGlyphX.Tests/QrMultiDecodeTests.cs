@@ -97,12 +97,133 @@ public sealed class QrMultiDecodeTests {
         Assert.Equal(payloads.Length, texts.Count);
     }
 
+    [Fact]
+    public void DecodeAll_FindsEightQrCodes_FromScreenshotLikeJpeg() {
+        var payloads = Enumerable.Range(1, 8).Select(i => $"SHOT-{i}").ToArray();
+        var renderOptions = new QrEasyOptions {
+            ModuleSize = 14,
+            QuietZone = 4,
+            ErrorCorrectionLevel = QrErrorCorrectionLevel.H
+        };
+
+        var grid = 4;
+        var pad = 28;
+        var canvas = BuildCompositeCanvas(payloads, renderOptions, grid, pad, out var widthPx, out var heightPx, out var stridePx);
+
+        // Simulate UI capture/resampling + light blur/noise before JPEG compression.
+        canvas = ResizeNearest(canvas, widthPx, heightPx, stridePx, (int)(widthPx * 0.68), (int)(heightPx * 0.68), out widthPx, out heightPx, out stridePx);
+        canvas = ResizeNearest(canvas, widthPx, heightPx, stridePx, widthPx + 180, heightPx + 120, out widthPx, out heightPx, out stridePx);
+        ApplyBoxBlur(canvas, widthPx, heightPx, stridePx, radius: 1);
+        ApplyDeterministicNoise(canvas, widthPx, heightPx, stridePx, amplitude: 8, seed: 4242);
+
+        var jpeg = JpegWriter.WriteRgba(widthPx, heightPx, canvas, stridePx, quality: 82);
+        var options = new QrPixelDecodeOptions {
+            Profile = QrDecodeProfile.Robust,
+            MaxDimension = 3600,
+            BudgetMilliseconds = 18000,
+            AutoCrop = true,
+            AggressiveSampling = true,
+            StylizedSampling = true,
+            EnableTileScan = true,
+            TileGrid = 4
+        };
+
+        Assert.True(QrImageDecoder.TryDecodeAllImage(jpeg, options, out var decoded), "Failed to decode screenshot-like JPEG bytes.");
+
+        var texts = decoded.Select(result => result.Text).ToHashSet(StringComparer.Ordinal);
+        var missing = payloads.Where(payload => !texts.Contains(payload, StringComparer.Ordinal)).ToArray();
+        Assert.True(missing.Length == 0, $"Missing payloads: {string.Join(", ", missing)}. Decoded: {string.Join(", ", texts)}");
+        Assert.Equal(payloads.Length, texts.Count);
+    }
+
     private static void Blit(byte[] src, int srcW, int srcH, int srcStride, byte[] dest, int destW, int destH, int destStride, int offsetX, int offsetY) {
         for (var y = 0; y < srcH; y++) {
             var dy = offsetY + y;
             if ((uint)dy >= (uint)destH) break;
             Buffer.BlockCopy(src, y * srcStride, dest, dy * destStride + offsetX * 4, srcW * 4);
         }
+    }
+
+    private static byte[] ResizeNearest(byte[] src, int srcW, int srcH, int srcStride, int dstW, int dstH, out int outW, out int outH, out int outStride) {
+        outW = Math.Max(1, dstW);
+        outH = Math.Max(1, dstH);
+        outStride = outW * 4;
+        var dst = new byte[outH * outStride];
+
+        for (var y = 0; y < outH; y++) {
+            var sy = (int)((long)y * srcH / outH);
+            var srcRow = sy * srcStride;
+            var dstRow = y * outStride;
+            for (var x = 0; x < outW; x++) {
+                var sx = (int)((long)x * srcW / outW);
+                var si = srcRow + sx * 4;
+                var di = dstRow + x * 4;
+                dst[di] = src[si];
+                dst[di + 1] = src[si + 1];
+                dst[di + 2] = src[si + 2];
+                dst[di + 3] = src[si + 3];
+            }
+        }
+
+        return dst;
+    }
+
+    private static void ApplyBoxBlur(byte[] pixels, int width, int height, int stride, int radius) {
+        if (radius <= 0) return;
+        var copy = new byte[pixels.Length];
+        Buffer.BlockCopy(pixels, 0, copy, 0, pixels.Length);
+
+        for (var y = 0; y < height; y++) {
+            var y0 = Math.Max(0, y - radius);
+            var y1 = Math.Min(height - 1, y + radius);
+            for (var x = 0; x < width; x++) {
+                var x0 = Math.Max(0, x - radius);
+                var x1 = Math.Min(width - 1, x + radius);
+                var sumB = 0;
+                var sumG = 0;
+                var sumR = 0;
+                var sumA = 0;
+                var count = 0;
+                for (var yy = y0; yy <= y1; yy++) {
+                    var row = yy * stride;
+                    for (var xx = x0; xx <= x1; xx++) {
+                        var i = row + xx * 4;
+                        sumB += copy[i];
+                        sumG += copy[i + 1];
+                        sumR += copy[i + 2];
+                        sumA += copy[i + 3];
+                        count++;
+                    }
+                }
+
+                var di = y * stride + x * 4;
+                pixels[di] = (byte)(sumB / count);
+                pixels[di + 1] = (byte)(sumG / count);
+                pixels[di + 2] = (byte)(sumR / count);
+                pixels[di + 3] = (byte)(sumA / count);
+            }
+        }
+    }
+
+    private static void ApplyDeterministicNoise(byte[] pixels, int width, int height, int stride, int amplitude, int seed) {
+        if (amplitude <= 0) return;
+        var rng = new Random(seed);
+        for (var y = 0; y < height; y++) {
+            var row = y * stride;
+            for (var x = 0; x < width; x++) {
+                var i = row + x * 4;
+                var delta = rng.Next(-amplitude, amplitude + 1);
+                pixels[i] = ClampToByte(pixels[i] + delta);
+                pixels[i + 1] = ClampToByte(pixels[i + 1] + delta);
+                pixels[i + 2] = ClampToByte(pixels[i + 2] + delta);
+            }
+        }
+    }
+
+    private static byte ClampToByte(int value) {
+        if (value < 0) return 0;
+        if (value > 255) return 255;
+        return (byte)value;
     }
 
     private static byte[] BuildCompositeCanvas(
