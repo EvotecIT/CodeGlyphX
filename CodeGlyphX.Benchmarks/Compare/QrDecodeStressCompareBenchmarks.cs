@@ -20,12 +20,16 @@ namespace CodeGlyphX.Benchmarks;
 public class QrDecodeStressCompareBenchmarks
 {
     private const string SampleText = "https://github.com/EvotecIT/CodeGlyphX";
+#if !BENCH_QUICK
     private byte[] _logoRgba = Array.Empty<byte>();
+#endif
     private byte[] _fancyRgba = Array.Empty<byte>();
     private byte[] _resampledRgba = Array.Empty<byte>();
     private byte[] _noQuietRgba = Array.Empty<byte>();
+#if !BENCH_QUICK
     private int _logoWidth;
     private int _logoHeight;
+#endif
     private int _fancyWidth;
     private int _fancyHeight;
     private int _resampledWidth;
@@ -55,12 +59,15 @@ public class QrDecodeStressCompareBenchmarks
     [GlobalSetup]
     public void Setup()
     {
+#if !BENCH_QUICK
         BuildLogoSample(out _logoRgba, out _logoWidth, out _logoHeight);
+#endif
         BuildFancySample(out _fancyRgba, out _fancyWidth, out _fancyHeight);
         BuildResampledSample(out _resampledRgba, out _resampledWidth, out _resampledHeight);
         BuildNoQuietSample(out _noQuietRgba, out _noQuietWidth, out _noQuietHeight);
     }
 
+#if !BENCH_QUICK
     [Benchmark(Baseline = true, Description = "CodeGlyphX QR Decode (logo)")]
     public bool CodeGlyphX_DecodeLogoRobust()
     {
@@ -73,6 +80,7 @@ public class QrDecodeStressCompareBenchmarks
     {
         return _zxingReader.Decode(_logoRgba, _logoWidth, _logoHeight, RGBLuminanceSource.BitmapFormat.RGBA32) is not null;
     }
+#endif
 #endif
 
     [Benchmark(Description = "CodeGlyphX QR Decode (fancy)")]
@@ -117,6 +125,7 @@ public class QrDecodeStressCompareBenchmarks
     }
 #endif
 
+#if !BENCH_QUICK
     private static void BuildLogoSample(out byte[] rgba, out int width, out int height)
     {
         var logo = LogoBuilder.CreateCirclePng(
@@ -129,6 +138,7 @@ public class QrDecodeStressCompareBenchmarks
         var png = QrEasy.RenderPng(SampleText, options);
         DecodePng(png, out rgba, out width, out height);
     }
+#endif
 
     private static void BuildFancySample(out byte[] rgba, out int width, out int height)
     {
