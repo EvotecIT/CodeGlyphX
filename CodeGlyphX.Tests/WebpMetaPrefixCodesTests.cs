@@ -57,7 +57,6 @@ public sealed class WebpMetaPrefixCodesTests {
         writer.WriteBits(1 - 1, 14);
         writer.WriteBits(0, 1); // alpha hint
         writer.WriteBits(0, 3); // version
-        writer.WriteBits(0, 1); // no transforms
 
         writer.WriteBits(0, 1); // no color cache
         writer.WriteBits(0, 1); // no meta prefix codes
@@ -166,4 +165,3 @@ public sealed class WebpMetaPrefixCodesTests {
         public byte[] ToArray() => _bytes.ToArray();
     }
 }
-

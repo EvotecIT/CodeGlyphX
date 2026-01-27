@@ -13,15 +13,16 @@ public sealed class WebpVp8lHeaderTests {
         Assert.True(WebpVp8lDecoder.TryReadHeader(payload, out var header));
         Assert.Equal(5, header.Width);
         Assert.Equal(3, header.Height);
-        Assert.True(header.SubtractGreenTransformUsed);
-        Assert.Equal(44, header.BitsConsumed);
+        Assert.Equal(40, header.BitsConsumed);
     }
 
     [Fact]
-    public void Vp8l_Header_PredictorTransform_IsRejectedForNow() {
+    public void Vp8l_Header_PredictorTransform_DoesNotBreakHeaderParse() {
         var payload = BuildVp8lPayload(width: 5, height: 3, transformType: 0);
 
-        Assert.False(WebpVp8lDecoder.TryReadHeader(payload, out _));
+        Assert.True(WebpVp8lDecoder.TryReadHeader(payload, out var header));
+        Assert.Equal(5, header.Width);
+        Assert.Equal(3, header.Height);
     }
 
     private static byte[] BuildVp8lPayload(int width, int height, int transformType) {
@@ -63,4 +64,3 @@ public sealed class WebpVp8lHeaderTests {
         public byte[] ToArray() => _bytes.ToArray();
     }
 }
-

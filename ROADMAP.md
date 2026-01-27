@@ -80,5 +80,6 @@ This list contains **only work we still want to do** (no already‑done items).
 - WebP decode status (2026-01-27): managed VP8L minimal decode — adds backrefs + distance mapping (still no cache/meta).
 - WebP decode status (2026-01-27): managed VP8L minimal decode — color cache wired in (no meta prefix codes yet).
 - WebP decode status (2026-01-27): managed VP8L minimal decode — meta prefix codes support with entropy image.
+- WebP decode status (2026-01-27): managed VP8L transforms — subtract-green + predictor (color/indexing still pending).
 - Optional: WebP **encode** (lossless first).
 - Expand the image format corpus (JPEG progressive/CMYK, GIF variants, BMP/ICO edge cases) and add a scheduled CI run.

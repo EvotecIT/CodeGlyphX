@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace CodeGlyphX.Rendering.Webp;
 
@@ -6,7 +7,6 @@ namespace CodeGlyphX.Rendering.Webp;
 /// Managed VP8L lossless decoder scaffold (work in progress).
 /// </summary>
 internal static class WebpVp8lDecoder {
-    private const int TransformSubtractGreen = 2;
     private const int LiteralAlphabetSize = 256;
     private const int LengthPrefixCount = 24;
     private const int GreenAlphabetBase = LiteralAlphabetSize + LengthPrefixCount;
@@ -32,6 +32,29 @@ internal static class WebpVp8lDecoder {
         (-6, 7), (7, 6), (-7, 6), (8, 5), (7, 7), (-7, 7), (8, 6), (8, 7),
     };
 
+    private enum WebpTransformType {
+        Predictor = 0,
+        Color = 1,
+        SubtractGreen = 2,
+        ColorIndexing = 3
+    }
+
+    private readonly struct WebpTransform {
+        public WebpTransform(WebpTransformType type, int sizeBits = 0, int width = 0, int height = 0, int[]? data = null) {
+            Type = type;
+            SizeBits = sizeBits;
+            Width = width;
+            Height = height;
+            Data = data ?? Array.Empty<int>();
+        }
+
+        public WebpTransformType Type { get; }
+        public int SizeBits { get; }
+        public int Width { get; }
+        public int Height { get; }
+        public int[] Data { get; }
+    }
+
     /// <summary>
     /// Attempts to decode a VP8L payload. Currently parses only the header and a
     /// small subset of flags, then returns <c>false</c> so native fallback can run.
@@ -47,53 +70,11 @@ internal static class WebpVp8lDecoder {
         width = header.Width;
         height = header.Height;
 
-        // Color cache flag (1 bit). We parse it for roadmap progress, but do not
-        // decode the entropy-coded image yet.
-        var colorCacheFlag = reader.ReadBits(1);
-        if (colorCacheFlag < 0) return false;
-        var colorCacheBits = 0;
-        if (colorCacheFlag != 0) {
-            // color_cache_code_bits is 4 bits in the lossless bitstream.
-            colorCacheBits = reader.ReadBits(4);
-            if (colorCacheBits is < 1 or > 11) return false;
-        }
-        var colorCacheSize = colorCacheBits == 0 ? 0 : 1 << colorCacheBits;
-        var colorCache = colorCacheBits == 0 ? null : new int[colorCacheSize];
+        if (!TryReadTransforms(ref reader, width, height, out var transforms)) return false;
+        if (!TryDecodeImageCore(ref reader, width, height, depth: 0, out var transformed)) return false;
+        if (!ApplyTransforms(transformed, width, height, transforms)) return false;
 
-        // Meta prefix codes flag (1 bit). A value of 1 indicates an entropy image
-        var metaPrefixFlag = reader.ReadBits(1);
-        if (metaPrefixFlag < 0) return false;
-
-        var prefixBits = 0;
-        var metaGroups = Array.Empty<int>();
-        var metaWidth = 0;
-        var groupCount = 1;
-        if (metaPrefixFlag != 0) {
-            var prefixBitsCode = reader.ReadBits(3);
-            if (prefixBitsCode < 0) return false;
-            prefixBits = prefixBitsCode + 2;
-
-            var blockSize = 1 << prefixBits;
-            metaWidth = (header.Width + blockSize - 1) >> prefixBits;
-            var metaHeight = (header.Height + blockSize - 1) >> prefixBits;
-            if (metaWidth <= 0 || metaHeight <= 0) return false;
-
-            if (!TryDecodeMetaImage(ref reader, metaWidth, metaHeight, out metaGroups, out groupCount)) return false;
-        }
-
-        var greenAlphabetSize = GreenAlphabetBase + colorCacheSize;
-        var groups = new WebpPrefixCodesGroup[groupCount];
-        for (var i = 0; i < groupCount; i++) {
-            if (!TryReadPrefixCodesGroup(ref reader, greenAlphabetSize, LiteralAlphabetSize, out var group)) return false;
-            groups[i] = group;
-        }
-
-        if (!TryDecodeImageNoMeta(ref reader, header, groups, metaGroups, metaWidth, prefixBits, colorCache, colorCacheBits, out var transformed)) {
-            rgba = Array.Empty<byte>();
-            return false;
-        }
-
-        rgba = ConvertToRgba(transformed, header.SubtractGreenTransformUsed);
+        rgba = ConvertToRgba(transformed);
         return true;
     }
 
@@ -120,31 +101,142 @@ internal static class WebpVp8lDecoder {
         var height = heightMinus1 + 1;
         if (width <= 0 || height <= 0) return false;
 
-        var transformMask = 0;
+        header = new WebpVp8lHeader(
+            width,
+            height,
+            alphaUsed != 0,
+            reader.BitsConsumed);
+        return true;
+    }
+
+    private static bool TryReadTransforms(ref WebpBitReader reader, int width, int height, out WebpTransform[] transforms) {
+        transforms = Array.Empty<WebpTransform>();
+        var seenMask = 0;
+        var list = new List<WebpTransform>(4);
+
         while (true) {
             var hasTransform = reader.ReadBits(1);
             if (hasTransform < 0) return false;
             if (hasTransform == 0) break;
 
-            var transformType = reader.ReadBits(2);
-            if (transformType < 0) return false;
+            var transformTypeCode = reader.ReadBits(2);
+            if (transformTypeCode < 0) return false;
+            if (transformTypeCode > (int)WebpTransformType.ColorIndexing) return false;
+            var transformType = (WebpTransformType)transformTypeCode;
 
-            var bit = 1 << transformType;
-            if ((transformMask & bit) != 0) return false;
-            transformMask |= bit;
+            var bit = 1 << transformTypeCode;
+            if ((seenMask & bit) != 0) return false;
+            seenMask |= bit;
 
-            // Only subtract-green has no additional transform data. Any other
-            // transform would require decoding an embedded image to continue.
-            if (transformType != TransformSubtractGreen) return false;
+            switch (transformType) {
+                case WebpTransformType.SubtractGreen:
+                    list.Add(new WebpTransform(WebpTransformType.SubtractGreen));
+                    break;
+                case WebpTransformType.Predictor:
+                    if (!TryReadPredictorTransform(ref reader, width, height, out var predictor)) return false;
+                    list.Add(predictor);
+                    break;
+                default:
+                    // Color transform and color indexing are not managed yet.
+                    return false;
+            }
         }
 
-        header = new WebpVp8lHeader(
-            width,
-            height,
-            alphaUsed != 0,
-            transformMask,
-            reader.BitsConsumed);
+        transforms = list.ToArray();
         return true;
+    }
+
+    private static bool TryReadPredictorTransform(ref WebpBitReader reader, int width, int height, out WebpTransform transform) {
+        transform = default;
+
+        var sizeBitsCode = reader.ReadBits(3);
+        if (sizeBitsCode < 0) return false;
+        var sizeBits = sizeBitsCode + 2;
+        var blockSize = 1 << sizeBits;
+
+        var transformWidth = (width + blockSize - 1) >> sizeBits;
+        var transformHeight = (height + blockSize - 1) >> sizeBits;
+        if (transformWidth <= 0 || transformHeight <= 0) return false;
+
+        if (!TryDecodeImageNoTransforms(ref reader, transformWidth, transformHeight, depth: 1, out var predictorPixels)) return false;
+        var modes = new int[predictorPixels.Length];
+        for (var i = 0; i < predictorPixels.Length; i++) {
+            var green = (predictorPixels[i] >> 8) & 0xFF;
+            modes[i] = green % 14;
+        }
+
+        transform = new WebpTransform(WebpTransformType.Predictor, sizeBits, transformWidth, transformHeight, modes);
+        return true;
+    }
+
+    private static bool TryDecodeImageCore(ref WebpBitReader reader, int width, int height, int depth, out int[] transformed) {
+        transformed = Array.Empty<int>();
+        if (depth > 6) return false;
+
+        var colorCacheFlag = reader.ReadBits(1);
+        if (colorCacheFlag < 0) return false;
+        var colorCacheBits = 0;
+        if (colorCacheFlag != 0) {
+            colorCacheBits = reader.ReadBits(4);
+            if (colorCacheBits is < 1 or > 11) return false;
+        }
+        var colorCacheSize = colorCacheBits == 0 ? 0 : 1 << colorCacheBits;
+        var colorCache = colorCacheBits == 0 ? null : new int[colorCacheSize];
+
+        var metaPrefixFlag = reader.ReadBits(1);
+        if (metaPrefixFlag < 0) return false;
+        var prefixBits = 0;
+        var metaGroups = Array.Empty<int>();
+        var metaWidth = 0;
+        var groupCount = 1;
+        if (metaPrefixFlag != 0) {
+            var prefixBitsCode = reader.ReadBits(3);
+            if (prefixBitsCode < 0) return false;
+            prefixBits = prefixBitsCode + 2;
+
+            var blockSize = 1 << prefixBits;
+            metaWidth = (width + blockSize - 1) >> prefixBits;
+            var metaHeight = (height + blockSize - 1) >> prefixBits;
+            if (metaWidth <= 0 || metaHeight <= 0) return false;
+
+            if (!TryDecodeImageNoTransforms(ref reader, metaWidth, metaHeight, depth + 1, out var metaPixels)) return false;
+            if (!TryBuildMetaGroups(metaPixels, out metaGroups, out groupCount)) return false;
+        }
+
+        var greenAlphabetSize = GreenAlphabetBase + colorCacheSize;
+        var groups = new WebpPrefixCodesGroup[groupCount];
+        for (var i = 0; i < groupCount; i++) {
+            if (!TryReadPrefixCodesGroup(ref reader, greenAlphabetSize, LiteralAlphabetSize, out var group)) return false;
+            groups[i] = group;
+        }
+
+        return TryDecodeImageData(ref reader, width, height, groups, metaGroups, metaWidth, prefixBits, colorCache, colorCacheBits, out transformed);
+    }
+
+    private static bool TryDecodeImageNoTransforms(ref WebpBitReader reader, int expectedWidth, int expectedHeight, int depth, out int[] transformed) {
+        transformed = Array.Empty<int>();
+        if (!TryReadHeader(ref reader, out var header)) return false;
+        if (header.Width != expectedWidth || header.Height != expectedHeight) return false;
+        return TryDecodeImageCore(ref reader, header.Width, header.Height, depth, out transformed);
+    }
+
+    private static bool TryBuildMetaGroups(int[] metaPixels, out int[] metaGroups, out int groupCount) {
+        metaGroups = Array.Empty<int>();
+        groupCount = 1;
+        if (metaPixels.Length == 0) return false;
+
+        var maxGroup = 0;
+        var groups = new int[metaPixels.Length];
+        for (var i = 0; i < metaPixels.Length; i++) {
+            var green = (metaPixels[i] >> 8) & 0xFF;
+            groups[i] = green;
+            if (green > maxGroup) maxGroup = green;
+        }
+        if (maxGroup >= 256) return false;
+
+        metaGroups = groups;
+        groupCount = maxGroup + 1;
+        return groupCount > 0;
     }
 
     private static bool TryReadPrefixCodesGroup(
@@ -164,9 +256,10 @@ internal static class WebpVp8lDecoder {
         return true;
     }
 
-    private static bool TryDecodeImageNoMeta(
+    private static bool TryDecodeImageData(
         ref WebpBitReader reader,
-        WebpVp8lHeader header,
+        int width,
+        int height,
         WebpPrefixCodesGroup[] groups,
         int[] metaGroups,
         int metaWidth,
@@ -177,11 +270,11 @@ internal static class WebpVp8lDecoder {
         transformed = Array.Empty<int>();
         if (groups is null || groups.Length == 0) return false;
 
-        var pixelCount = checked(header.Width * header.Height);
+        var pixelCount = checked(width * height);
         var buffer = new int[pixelCount];
         var pos = 0;
         while (pos < pixelCount) {
-            var groupIndex = GetGroupIndex(pos, header.Width, groups.Length, metaGroups, metaWidth, prefixBits);
+            var groupIndex = GetGroupIndex(pos, width, groups.Length, metaGroups, metaWidth, prefixBits);
             if (groupIndex < 0) return false;
             var group = groups[groupIndex];
 
@@ -213,7 +306,7 @@ internal static class WebpVp8lDecoder {
             var distancePrefix = group.Distance.DecodeSymbol(ref reader);
             if (distancePrefix < 0 || distancePrefix >= 40) return false;
             if (!TryDecodePrefixValue(ref reader, distancePrefix, out var distanceCode)) return false;
-            if (!TryMapDistanceCode(distanceCode, header.Width, out var distance)) return false;
+            if (!TryMapDistanceCode(distanceCode, width, out var distance)) return false;
 
             var nextPos = CopyLz77(buffer, pos, distance, length, pixelCount, colorCache, colorCacheBits);
             if (nextPos < 0) return false;
@@ -238,25 +331,164 @@ internal static class WebpVp8lDecoder {
         return true;
     }
 
-    private static byte[] ConvertToRgba(int[] transformed, bool subtractGreen) {
-        var rgba = new byte[checked(transformed.Length * 4)];
-        var offset = 0;
-        for (var i = 0; i < transformed.Length; i++) {
-            var argb = transformed[i];
+    private static bool ApplyTransforms(int[] pixels, int width, int height, WebpTransform[] transforms) {
+        if (transforms.Length == 0) return true;
+        for (var i = transforms.Length - 1; i >= 0; i--) {
+            var transform = transforms[i];
+            switch (transform.Type) {
+                case WebpTransformType.SubtractGreen:
+                    ApplySubtractGreen(pixels);
+                    break;
+                case WebpTransformType.Predictor:
+                    if (!ApplyPredictorTransform(pixels, width, height, transform)) return false;
+                    break;
+                default:
+                    return false;
+            }
+        }
+        return true;
+    }
+
+    private static void ApplySubtractGreen(int[] pixels) {
+        for (var i = 0; i < pixels.Length; i++) {
+            var argb = pixels[i];
             var a = (byte)(argb >> 24);
             var r = (byte)(argb >> 16);
             var g = (byte)(argb >> 8);
             var b = (byte)argb;
+            r = (byte)(r + g);
+            b = (byte)(b + g);
+            pixels[i] = PackArgb(a, r, g, b);
+        }
+    }
 
-            if (subtractGreen) {
-                r = (byte)(r + g);
-                b = (byte)(b + g);
+    private static bool ApplyPredictorTransform(int[] pixels, int width, int height, WebpTransform transform) {
+        if (transform.Data.Length == 0) return false;
+        if (transform.Width <= 0 || transform.Height <= 0) return false;
+
+        var sizeBits = transform.SizeBits;
+        var transformWidth = transform.Width;
+        var modes = transform.Data;
+
+        for (var y = 0; y < height; y++) {
+            var rowStart = y * width;
+            for (var x = 0; x < width; x++) {
+                var index = rowStart + x;
+                var mode = GetPredictorMode(modes, transformWidth, sizeBits, x, y);
+                var predicted = PredictPixel(pixels, width, x, y, mode);
+                pixels[index] = AddPixelsModulo(pixels[index], predicted);
             }
+        }
+        return true;
+    }
 
-            rgba[offset++] = r;
-            rgba[offset++] = g;
-            rgba[offset++] = b;
-            rgba[offset++] = a;
+    private static int GetPredictorMode(int[] modes, int transformWidth, int sizeBits, int x, int y) {
+        var blockX = x >> sizeBits;
+        var blockY = y >> sizeBits;
+        var blockIndex = blockY * transformWidth + blockX;
+        if ((uint)blockIndex >= (uint)modes.Length) return 0;
+        var mode = modes[blockIndex];
+        if (mode < 0) mode = 0;
+        return mode % 14;
+    }
+
+    private static int PredictPixel(int[] pixels, int width, int x, int y, int mode) {
+        if (x == 0 && y == 0) return unchecked((int)0xFF000000);
+        var index = y * width + x;
+
+        if (y == 0) return pixels[index - 1];
+        if (x == 0) return pixels[index - width];
+
+        var left = pixels[index - 1];
+        var top = pixels[index - width];
+        var topLeft = pixels[index - width - 1];
+        var topRight = x == width - 1 ? pixels[index - x] : pixels[index - width + 1];
+
+        return mode switch {
+            0 => unchecked((int)0xFF000000),
+            1 => left,
+            2 => top,
+            3 => topRight,
+            4 => topLeft,
+            5 => Average2(Average2(left, topRight), top),
+            6 => Average2(left, topLeft),
+            7 => Average2(left, top),
+            8 => Average2(topLeft, top),
+            9 => Average2(top, topRight),
+            10 => Average2(Average2(left, topLeft), Average2(top, topRight)),
+            11 => Select(left, top, topLeft),
+            12 => ClampAddSubtractFull(left, top, topLeft),
+            13 => ClampAddSubtractHalf(Average2(left, top), topLeft),
+            _ => left
+        };
+    }
+
+    private static int AddPixelsModulo(int residual, int predicted) {
+        var a = (byte)((residual >> 24) + (predicted >> 24));
+        var r = (byte)((residual >> 16) + (predicted >> 16));
+        var g = (byte)((residual >> 8) + (predicted >> 8));
+        var b = (byte)(residual + predicted);
+        return PackArgb(a, r, g, b);
+    }
+
+    private static int Average2(int a, int b) {
+        var aa = ((a >> 24) & 0xFF) + ((b >> 24) & 0xFF);
+        var ar = ((a >> 16) & 0xFF) + ((b >> 16) & 0xFF);
+        var ag = ((a >> 8) & 0xFF) + ((b >> 8) & 0xFF);
+        var ab = (a & 0xFF) + (b & 0xFF);
+        return PackArgb(aa >> 1, ar >> 1, ag >> 1, ab >> 1);
+    }
+
+    private static int ClampAddSubtractFull(int a, int b, int c) {
+        var aa = Clamp(((a >> 24) & 0xFF) + ((b >> 24) & 0xFF) - ((c >> 24) & 0xFF));
+        var ar = Clamp(((a >> 16) & 0xFF) + ((b >> 16) & 0xFF) - ((c >> 16) & 0xFF));
+        var ag = Clamp(((a >> 8) & 0xFF) + ((b >> 8) & 0xFF) - ((c >> 8) & 0xFF));
+        var ab = Clamp((a & 0xFF) + (b & 0xFF) - (c & 0xFF));
+        return PackArgb(aa, ar, ag, ab);
+    }
+
+    private static int ClampAddSubtractHalf(int a, int b) {
+        var aa = Clamp(((a >> 24) & 0xFF) + ((((a >> 24) & 0xFF) - ((b >> 24) & 0xFF)) >> 1));
+        var ar = Clamp(((a >> 16) & 0xFF) + ((((a >> 16) & 0xFF) - ((b >> 16) & 0xFF)) >> 1));
+        var ag = Clamp(((a >> 8) & 0xFF) + ((((a >> 8) & 0xFF) - ((b >> 8) & 0xFF)) >> 1));
+        var ab = Clamp((a & 0xFF) + (((a & 0xFF) - (b & 0xFF)) >> 1));
+        return PackArgb(aa, ar, ag, ab);
+    }
+
+    private static int Select(int left, int top, int topLeft) {
+        var pa = ((left >> 24) & 0xFF) + ((top >> 24) & 0xFF) - ((topLeft >> 24) & 0xFF);
+        var pr = ((left >> 16) & 0xFF) + ((top >> 16) & 0xFF) - ((topLeft >> 16) & 0xFF);
+        var pg = ((left >> 8) & 0xFF) + ((top >> 8) & 0xFF) - ((topLeft >> 8) & 0xFF);
+        var pb = (left & 0xFF) + (top & 0xFF) - (topLeft & 0xFF);
+
+        var distLeft = Abs(pa - ((left >> 24) & 0xFF))
+            + Abs(pr - ((left >> 16) & 0xFF))
+            + Abs(pg - ((left >> 8) & 0xFF))
+            + Abs(pb - (left & 0xFF));
+        var distTop = Abs(pa - ((top >> 24) & 0xFF))
+            + Abs(pr - ((top >> 16) & 0xFF))
+            + Abs(pg - ((top >> 8) & 0xFF))
+            + Abs(pb - (top & 0xFF));
+        return distLeft <= distTop ? left : top;
+    }
+
+    private static int Clamp(int value) {
+        if (value < 0) return 0;
+        if (value > 255) return 255;
+        return value;
+    }
+
+    private static int Abs(int value) => value < 0 ? -value : value;
+
+    private static byte[] ConvertToRgba(int[] transformed) {
+        var rgba = new byte[checked(transformed.Length * 4)];
+        var offset = 0;
+        for (var i = 0; i < transformed.Length; i++) {
+            var argb = transformed[i];
+            rgba[offset++] = (byte)(argb >> 16);
+            rgba[offset++] = (byte)(argb >> 8);
+            rgba[offset++] = (byte)argb;
+            rgba[offset++] = (byte)(argb >> 24);
         }
         return rgba;
     }
@@ -287,45 +519,6 @@ internal static class WebpVp8lDecoder {
         var groupIndex = metaGroups[metaIndex];
         if (groupIndex < 0 || groupIndex >= groupCount) return -1;
         return groupIndex;
-    }
-
-    private static bool TryDecodeMetaImage(
-        ref WebpBitReader reader,
-        int expectedWidth,
-        int expectedHeight,
-        out int[] metaGroups,
-        out int groupCount) {
-        metaGroups = Array.Empty<int>();
-        groupCount = 1;
-
-        if (!TryReadHeader(ref reader, out var header)) return false;
-        if (header.Width != expectedWidth || header.Height != expectedHeight) return false;
-        if (header.TransformMask != 0) return false;
-
-        var colorCacheFlag = reader.ReadBits(1);
-        if (colorCacheFlag != 0) return false;
-        var metaPrefixFlag = reader.ReadBits(1);
-        if (metaPrefixFlag != 0) return false;
-
-        var greenAlphabetSize = GreenAlphabetBase;
-        if (!TryReadPrefixCodesGroup(ref reader, greenAlphabetSize, LiteralAlphabetSize, out var group)) return false;
-        var groups = new[] { group };
-
-        if (!TryDecodeImageNoMeta(ref reader, header, groups, metaGroups: Array.Empty<int>(), metaWidth: 0, prefixBits: 0, colorCache: null, colorCacheBits: 0, out var transformed)) {
-            return false;
-        }
-
-        var maxGroup = 0;
-        metaGroups = new int[transformed.Length];
-        for (var i = 0; i < transformed.Length; i++) {
-            var green = (transformed[i] >> 8) & 0xFF;
-            metaGroups[i] = green;
-            if (green > maxGroup) maxGroup = green;
-        }
-
-        if (maxGroup >= 256) return false;
-        groupCount = maxGroup + 1;
-        return groupCount > 0;
     }
 
     internal static int ComputeColorCacheIndex(int pixel, int cacheBits) {
@@ -407,21 +600,17 @@ internal static class WebpVp8lDecoder {
 }
 
 internal readonly struct WebpVp8lHeader {
-    public WebpVp8lHeader(int width, int height, bool alphaUsed, int transformMask, int bitsConsumed) {
+    public WebpVp8lHeader(int width, int height, bool alphaUsed, int bitsConsumed) {
         Width = width;
         Height = height;
         AlphaUsed = alphaUsed;
-        TransformMask = transformMask;
         BitsConsumed = bitsConsumed;
     }
 
     public int Width { get; }
     public int Height { get; }
     public bool AlphaUsed { get; }
-    public int TransformMask { get; }
     public int BitsConsumed { get; }
-
-    public bool SubtractGreenTransformUsed => (TransformMask & (1 << 2)) != 0;
 }
 
 internal readonly struct WebpPrefixCodesGroup {
