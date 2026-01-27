@@ -9,9 +9,14 @@
 }
 else
 {
-    <div class="card">
+    <div class="card playground-preview-card">
         <h2>@(Host.SelectedMode == "Decode" ? "Decode Result" : "Preview")</h2>
-        <div class="output-preview">
+        @{
+            var isEmpty = Host.SelectedMode == "Decode"
+                ? string.IsNullOrEmpty(Host.DecodeImageDataUri)
+                : string.IsNullOrEmpty(Host.ImageDataUri);
+        }
+        <div class="output-preview @(isEmpty ? "output-preview-empty" : string.Empty)">
             @if (!string.IsNullOrEmpty(Host.ErrorMessage))
             {
                 <div style="text-align: center; color: #ef4444;">

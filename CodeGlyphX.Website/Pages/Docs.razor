@@ -35,6 +35,7 @@
                 <a href="/docs/code128" class="@(Section == "code128" ? "active" : "")">Code 128 / GS1-128</a>
                 <a href="/docs/code39" class="@(Section == "code39" ? "active" : "")">Code 39 / 93</a>
                 <a href="/docs/ean-upc" class="@(Section == "ean-upc" ? "active" : "")">EAN / UPC</a>
+                <a href="/docs/other-1d" class="@(Section == "other-1d" ? "active" : "")">Other 1D Symbologies</a>
             </div>
 
             <div class="docs-nav-section">
@@ -42,12 +43,14 @@
                 <a href="/docs/payloads" class="@(Section == "payloads" ? "active" : "")">Payload Helpers</a>
                 <a href="/docs/decoding" class="@(Section == "decoding" ? "active" : "")">Image Decoding</a>
                 <a href="/docs/renderers" class="@(Section == "renderers" ? "active" : "")">Output Formats</a>
+                <a href="/docs/qr#styling-options" class="@(Section == "qr" ? "active" : "")">Styling Options</a>
                 <a href="/docs/benchmarks" class="@(Section == "benchmarks" ? "active" : "")">Benchmarks</a>
             </div>
 
             <div class="docs-nav-section">
                 <div class="docs-nav-title">Reference</div>
                 <a href="/docs/api">API Reference →</a>
+                <a href="/faq/">FAQ →</a>
             </div>
         </nav>
     </aside>
@@ -88,6 +91,17 @@
 
             <h3>1D Linear Barcodes</h3>
             <p>Code 128, GS1-128, Code 39, Code 93, Code 11, Codabar, MSI, Plessey, EAN-8, EAN-13, UPC-A, UPC-E, ITF-14</p>
+
+            <h2>Documentation Map</h2>
+            <ul style="color: var(--text-muted); margin-left: 1.5rem;">
+                <li><strong>QR &amp; Micro QR</strong> - Core encoding, error correction, and QR specifics. <a href="/docs/qr">QR docs</a></li>
+                <li><strong>Styling &amp; presets</strong> - Module shapes, palettes, logos, and the style board gallery. <a href="/docs/qr#styling-options">Styling options</a></li>
+                <li><strong>Payload helpers</strong> - WiFi, vCards, OTP, SEPA, and more. <a href="/docs/payloads">Payload helpers</a></li>
+                <li><strong>Image decoding</strong> - Decode from images and screenshots. <a href="/docs/decoding">Image decoding</a></li>
+                <li><strong>Output formats</strong> - PNG, SVG, PDF, EPS, HTML, and more. <a href="/docs/renderers">Output formats</a></li>
+                <li><strong>API Reference</strong> - Full type and method documentation. <a href="/docs/api">API reference</a></li>
+                <li><strong>FAQ</strong> - Common questions and troubleshooting. <a href="/faq/">FAQ</a></li>
+            </ul>
 
             <h2>Quick Example</h2>
             <pre class="code-block">using CodeGlyphX;
@@ -315,7 +329,7 @@ QR.Save("https://example.com", "qr.png", QrErrorCorrection.H);</pre>
                 </tbody>
             </table>
 
-            <h2>Styling Options</h2>
+            <h2 id="styling-options">Styling Options</h2>
             <pre class="code-block">using CodeGlyphX;
 
 var options = new QrEasyOptions
@@ -351,6 +365,165 @@ var png = QR.Create("https://example.com")
     .WithLogoPaddingPx(6)
     .WithStyle(QrRenderStyle.Fancy)
     .Png();</pre>
+
+            <h3>Style Board Presets (Homepage Gallery)</h3>
+            <p>
+                The homepage style board is generated from a curated set of presets. Each QR payload
+                points back to this section and includes a <code>?style=slug</code> hint for tracking or
+                future deep-linking. All presets use error correction <code>H</code>, a 384px target size,
+                and a quiet zone of 4 modules to keep them crisp while remaining web-friendly.
+            </p>
+            <p>
+                Full source code for these presets lives in
+                <a href="https://github.com/EvotecIT/CodeGlyphX/blob/master/CodeGlyphX.Examples/QrStyleBoardExample.cs" target="_blank" rel="noopener">QrStyleBoardExample.cs</a>.
+            </p>
+
+            <table style="width: 100%; border-collapse: collapse; margin: 1rem 0;">
+                <thead>
+                    <tr style="border-bottom: 1px solid var(--border);">
+                        <th style="text-align: left; padding: 0.75rem;">Style</th>
+                        <th style="text-align: left; padding: 0.75rem;">Recipe</th>
+                        <th style="text-align: left; padding: 0.75rem;">Extras</th>
+                    </tr>
+                </thead>
+                <tbody style="color: var(--text-muted);">
+                    <tr style="border-bottom: 1px solid var(--border);">
+                        <td style="padding: 0.75rem;"><strong>Neon Dot</strong><br /><span style="color: var(--text-dim);">Slug: <code>neon-dot</code></span></td>
+                        <td style="padding: 0.75rem;">Shape: Dot<br />Eyes: Target<br />Palette: Random (cyan/magenta/yellow)<br />Canvas: Dark gradient</td>
+                        <td style="padding: 0.75rem;">—</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid var(--border);">
+                        <td style="padding: 0.75rem;"><strong>Candy Checker</strong><br /><span style="color: var(--text-dim);">Slug: <code>candy-checker</code></span></td>
+                        <td style="padding: 0.75rem;">Shape: Rounded<br />Eyes: Badge<br />Palette: Checker (pink/yellow)<br />Canvas: Dots pattern</td>
+                        <td style="padding: 0.75rem;">—</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid var(--border);">
+                        <td style="padding: 0.75rem;"><strong>Pastel Rings</strong><br /><span style="color: var(--text-dim);">Slug: <code>pastel-rings</code></span></td>
+                        <td style="padding: 0.75rem;">Shape: Squircle<br />Eyes: DoubleRing<br />Palette: Rings (pastels)<br />Canvas: Checker pattern</td>
+                        <td style="padding: 0.75rem;">Scale map: Radial</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid var(--border);">
+                        <td style="padding: 0.75rem;"><strong>Ocean Grid</strong><br /><span style="color: var(--text-dim);">Slug: <code>ocean-grid</code></span></td>
+                        <td style="padding: 0.75rem;">Shape: DotGrid<br />Eyes: Single<br />Palette: Cycle (ocean blues)<br />Canvas: Grid pattern</td>
+                        <td style="padding: 0.75rem;">—</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid var(--border);">
+                        <td style="padding: 0.75rem;"><strong>Mono Badge</strong><br /><span style="color: var(--text-dim);">Slug: <code>mono-badge</code></span></td>
+                        <td style="padding: 0.75rem;">Shape: Square<br />Eyes: Badge<br />Palette: None (mono)<br />Canvas: White with black border</td>
+                        <td style="padding: 0.75rem;">—</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid var(--border);">
+                        <td style="padding: 0.75rem;"><strong>Bracket Tech</strong><br /><span style="color: var(--text-dim);">Slug: <code>bracket-tech</code></span></td>
+                        <td style="padding: 0.75rem;">Shape: Diamond<br />Eyes: Bracket<br />Palette: Random (teal/blue/white)<br />Canvas: Dark gradient</td>
+                        <td style="padding: 0.75rem;">Scale map: Rings</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid var(--border);">
+                        <td style="padding: 0.75rem;"><strong>Sunset Sticker</strong><br /><span style="color: var(--text-dim);">Slug: <code>sunset-sticker</code></span></td>
+                        <td style="padding: 0.75rem;">Shape: Rounded<br />Eyes: Target<br />Palette: Cycle (sunset warm)<br />Canvas: Warm gradient</td>
+                        <td style="padding: 0.75rem;">Logo: Warm circle</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid var(--border);">
+                        <td style="padding: 0.75rem;"><strong>Aurora</strong><br /><span style="color: var(--text-dim);">Slug: <code>aurora</code></span></td>
+                        <td style="padding: 0.75rem;">Shape: Circle<br />Eyes: DoubleRing<br />Palette: Random (aurora hues)<br />Canvas: Dots pattern</td>
+                        <td style="padding: 0.75rem;">Scale map: Random</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid var(--border);">
+                        <td style="padding: 0.75rem;"><strong>Mint Board</strong><br /><span style="color: var(--text-dim);">Slug: <code>mint-board</code></span></td>
+                        <td style="padding: 0.75rem;">Shape: Squircle<br />Eyes: Single<br />Palette: Checker (mint)<br />Canvas: Mint border</td>
+                        <td style="padding: 0.75rem;">—</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid var(--border);">
+                        <td style="padding: 0.75rem;"><strong>Deep Space</strong><br /><span style="color: var(--text-dim);">Slug: <code>deep-space</code></span></td>
+                        <td style="padding: 0.75rem;">Shape: Dot<br />Eyes: Target<br />Palette: Rings (purple/teal)<br />Canvas: Night gradient</td>
+                        <td style="padding: 0.75rem;">Logo: Cool circle</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid var(--border);">
+                        <td style="padding: 0.75rem;"><strong>Leaf Bloom</strong><br /><span style="color: var(--text-dim);">Slug: <code>leaf-bloom</code></span></td>
+                        <td style="padding: 0.75rem;">Shape: Leaf<br />Eyes: DoubleRing<br />Palette: Cycle (greens)<br />Canvas: Forest gradient</td>
+                        <td style="padding: 0.75rem;">—</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid var(--border);">
+                        <td style="padding: 0.75rem;"><strong>Wave Pulse</strong><br /><span style="color: var(--text-dim);">Slug: <code>wave-pulse</code></span></td>
+                        <td style="padding: 0.75rem;">Shape: Wave<br />Eyes: Target<br />Palette: Random (electric blue)<br />Canvas: Dots pattern</td>
+                        <td style="padding: 0.75rem;">—</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid var(--border);">
+                        <td style="padding: 0.75rem;"><strong>Ink Blob</strong><br /><span style="color: var(--text-dim);">Slug: <code>ink-blob</code></span></td>
+                        <td style="padding: 0.75rem;">Shape: Blob<br />Eyes: Badge<br />Palette: Random (grayscale)<br />Canvas: Light border</td>
+                        <td style="padding: 0.75rem;">—</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid var(--border);">
+                        <td style="padding: 0.75rem;"><strong>Soft Diamond</strong><br /><span style="color: var(--text-dim);">Slug: <code>soft-diamond</code></span></td>
+                        <td style="padding: 0.75rem;">Shape: SoftDiamond<br />Eyes: DoubleRing<br />Palette: Rings (peach/pink)<br />Canvas: Warm gradient</td>
+                        <td style="padding: 0.75rem;">—</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid var(--border);">
+                        <td style="padding: 0.75rem;"><strong>Sticker Grid</strong><br /><span style="color: var(--text-dim);">Slug: <code>sticker-grid</code></span></td>
+                        <td style="padding: 0.75rem;">Shape: Square<br />Eyes: Badge<br />Palette: Cycle (mono)<br />Canvas: Grid pattern</td>
+                        <td style="padding: 0.75rem;">—</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 0.75rem;"><strong>Center Pop</strong><br /><span style="color: var(--text-dim);">Slug: <code>center-pop</code></span></td>
+                        <td style="padding: 0.75rem;">Shape: Rounded<br />Eyes: Single<br />Palette: Cycle (navy) + Zones<br />Canvas: Clean border</td>
+                        <td style="padding: 0.75rem;">Logo: Warm circle<br />Zones: Center + corners</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h4>Preset Starting Point (Neon Dot)</h4>
+            <pre class="code-block">using CodeGlyphX;
+using CodeGlyphX.Rendering;
+using CodeGlyphX.Rendering.Png;
+
+var options = new QrEasyOptions
+{
+    ErrorCorrectionLevel = QrErrorCorrectionLevel.H,
+    TargetSizePx = 384,
+    TargetSizeIncludesQuietZone = true,
+    ModuleSize = 10,
+    QuietZone = 4,
+    Foreground = new Rgba32(0, 255, 213),
+    ModuleShape = QrPngModuleShape.Dot,
+    Eyes = new QrPngEyeOptions
+    {
+        UseFrame = true,
+        FrameStyle = QrPngEyeFrameStyle.Target,
+        OuterShape = QrPngModuleShape.Rounded,
+        InnerShape = QrPngModuleShape.Circle,
+        OuterColor = new Rgba32(0, 255, 213),
+        InnerColor = new Rgba32(255, 59, 255)
+    },
+    ForegroundPalette = new QrPngPaletteOptions
+    {
+        Mode = QrPngPaletteMode.Random,
+        Seed = 14001,
+        RingSize = 2,
+        Colors = new[]
+        {
+            new Rgba32(0, 255, 213),
+            new Rgba32(255, 59, 255),
+            new Rgba32(255, 214, 0)
+        }
+    },
+    Canvas = new QrPngCanvasOptions
+    {
+        PaddingPx = 24,
+        CornerRadiusPx = 26,
+        BackgroundGradient = new QrPngGradientOptions
+        {
+            Type = QrPngGradientType.DiagonalDown,
+            StartColor = new Rgba32(18, 18, 28),
+            EndColor = new Rgba32(48, 23, 72)
+        },
+        BorderPx = 2,
+        BorderColor = new Rgba32(255, 255, 255, 40),
+        ShadowOffsetX = 6,
+        ShadowOffsetY = 8,
+        ShadowColor = new Rgba32(0, 0, 0, 60)
+    }
+};
+
+QR.Save("https://codeglyphx.com/docs/qr?style=neon-dot#styling-options", "neon-dot.png", options);</pre>
         }
         else if (Section == "payloads")
         {
@@ -746,6 +919,65 @@ Barcode.Save(BarcodeType.UpcE, "01234565", "upce.png");</pre>
                     </tr>
                 </tbody>
             </table>
+        }
+        else if (Section == "other-1d")
+        {
+            <h1>Other 1D &amp; Postal Barcodes</h1>
+            <p>CodeGlyphX supports a wide range of additional 1D symbologies beyond the most common retail formats.</p>
+            <p><strong>Note:</strong> Some postal and stacked formats use the matrix pipeline and must be rendered with <code>MatrixBarcodeEncoder</code> + matrix renderers.</p>
+
+            <h2>Supported Types</h2>
+            <table style="width: 100%; border-collapse: collapse; margin: 1rem 0;">
+                <thead>
+                    <tr style="border-bottom: 1px solid var(--border);">
+                        <th style="text-align: left; padding: 0.75rem;">Category</th>
+                        <th style="text-align: left; padding: 0.75rem;">Symbologies</th>
+                        <th style="text-align: left; padding: 0.75rem;">Notes</th>
+                    </tr>
+                </thead>
+                <tbody style="color: var(--text-muted);">
+                    <tr style="border-bottom: 1px solid var(--border);">
+                        <td style="padding: 0.75rem;">Interleaved / 2-of-5</td>
+                        <td style="padding: 0.75rem;">ITF, ITF-14, Industrial 2-of-5, Matrix 2-of-5, IATA 2-of-5</td>
+                        <td style="padding: 0.75rem;">Logistics, cartons, older systems</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid var(--border);">
+                        <td style="padding: 0.75rem;">Specialty / Legacy</td>
+                        <td style="padding: 0.75rem;">Codabar, MSI, Code 11, Plessey, Telepen, Code 32</td>
+                        <td style="padding: 0.75rem;">Warehousing, libraries, healthcare</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid var(--border);">
+                        <td style="padding: 0.75rem;">Pharma</td>
+                        <td style="padding: 0.75rem;">Pharmacode (one-track), Pharmacode (two-track)</td>
+                        <td style="padding: 0.75rem;">Packaging and pharmaceuticals</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid var(--border);">
+                        <td style="padding: 0.75rem;">Postal</td>
+                        <td style="padding: 0.75rem;">POSTNET, PLANET, Royal Mail 4-State, Australia Post, Japan Post, USPS IMB</td>
+                        <td style="padding: 0.75rem;">Matrix encoder required</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 0.75rem;">GS1 DataBar</td>
+                        <td style="padding: 0.75rem;">DataBar Truncated, Omni, Stacked, Expanded, Expanded Stacked</td>
+                        <td style="padding: 0.75rem;">Omni/Stacked/Expanded Stacked use matrix encoder</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>Examples</h2>
+            <pre class="code-block">using CodeGlyphX;
+using CodeGlyphX.Rendering.Png;
+
+Barcode.Save(BarcodeType.ITF14, "12345678901231", "itf14.png");
+Barcode.Save(BarcodeType.Codabar, "A40156B", "codabar.png");
+Barcode.Save(BarcodeType.Telepen, "TELEPEN-123", "telepen.png");
+Barcode.Save(BarcodeType.GS1DataBarExpanded, "01095011015300031725010110ABC123", "gs1-expanded.png");
+
+var imb = MatrixBarcodeEncoder.EncodeUspsImb("0123456709498765432101234567891");
+MatrixPngRenderer.RenderToFile(
+    imb,
+    new MatrixPngRenderOptions { ModuleSize = 2, QuietZone = 2 },
+    "usps-imb.png");</pre>
         }
         else if (Section == "decoding")
         {

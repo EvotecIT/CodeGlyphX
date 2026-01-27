@@ -9,7 +9,7 @@
 @inject IJSRuntime JS
 @inject NavigationManager Nav
 
-<div class="page">
+<div class="page @(IsPlayground ? "page-playground" : "")">
     <header class="header">
         <div class="header-content">
             <a href="/" class="brand" @onclick="@(() => Navigate("/"))" @onclick:preventDefault="true">
@@ -30,18 +30,7 @@
                 <div class="nav-links">
                     @foreach (var link in PrimaryLinks)
                     {
-                        if (link.Spa)
-                        {
-                            <a href="@link.Href" @onclick="() => Navigate(link.Href)" @onclick:preventDefault="true">@link.Text</a>
-                        }
-                        else if (IsExternal(link.Href))
-                        {
-                            <a href="@link.Href" target="_blank" rel="noopener">@link.Text</a>
-                        }
-                        else
-                        {
-                            <a href="@link.Href">@link.Text</a>
-                        }
+                        @RenderNavLink(link)
                     }
                 </div>
                 <div class="nav-actions">
@@ -99,42 +88,21 @@
                     <h3>Product</h3>
                     @foreach (var link in FooterLinks.Product)
                     {
-                        if (IsExternal(link.Href))
-                        {
-                            <a href="@link.Href" target="_blank" rel="noopener">@link.Text</a>
-                        }
-                        else
-                        {
-                            <a href="@link.Href">@link.Text</a>
-                        }
+                        @RenderNavLink(link)
                     }
                 </div>
                 <div class="footer-section">
                     <h3>Resources</h3>
                     @foreach (var link in FooterLinks.Resources)
                     {
-                        if (IsExternal(link.Href))
-                        {
-                            <a href="@link.Href" target="_blank" rel="noopener">@link.Text</a>
-                        }
-                        else
-                        {
-                            <a href="@link.Href">@link.Text</a>
-                        }
+                        @RenderNavLink(link)
                     }
                 </div>
                 <div class="footer-section">
                     <h3>Company</h3>
                     @foreach (var link in FooterLinks.Company)
                     {
-                        if (IsExternal(link.Href))
-                        {
-                            <a href="@link.Href" target="_blank" rel="noopener">@link.Text</a>
-                        }
-                        else
-                        {
-                            <a href="@link.Href">@link.Text</a>
-                        }
+                        @RenderNavLink(link)
                     }
                 </div>
             </div>
@@ -175,6 +143,20 @@
     private bool _navOpen = false;
     private IReadOnlyList<NavLink> _primaryLinks = DefaultPrimaryLinks;
     private FooterNav _footerLinks = DefaultFooter;
+    private bool IsPlayground
+    {
+        get
+        {
+            var relative = Nav.ToBaseRelativePath(Nav.Uri);
+            if (relative.StartsWith("playground", StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+
+            var basePath = new Uri(Nav.BaseUri).AbsolutePath.TrimEnd('/');
+            return basePath.EndsWith("/playground", StringComparison.OrdinalIgnoreCase);
+        }
+    }
 
     private IReadOnlyList<NavLink> PrimaryLinks => _primaryLinks;
     private FooterNav FooterLinks => _footerLinks;
@@ -299,6 +281,42 @@
     {
         _navOpen = false;
         Nav.NavigateTo(href);
+    }
+
+    private void ForceNavigate(string href)
+    {
+        _navOpen = false;
+        Nav.NavigateTo(href, forceLoad: true);
+    }
+
+    private RenderFragment RenderNavLink(NavLink link) => __builder =>
+    {
+        if (IsExternal(link.Href))
+        {
+            <a href="@link.Href" target="_blank" rel="noopener">@link.Text</a>
+        }
+        else if (IsStaticPage(link.Href))
+        {
+            <a href="@link.Href" @onclick="() => ForceNavigate(link.Href)" @onclick:preventDefault="true">@link.Text</a>
+        }
+        else if (link.Spa)
+        {
+            <a href="@link.Href" @onclick="() => Navigate(link.Href)" @onclick:preventDefault="true">@link.Text</a>
+        }
+        else
+        {
+            <a href="@link.Href" @onclick="() => ForceNavigate(link.Href)" @onclick:preventDefault="true">@link.Text</a>
+        }
+    };
+
+    private static bool IsStaticPage(string href)
+    {
+        return string.Equals(href, "/", StringComparison.OrdinalIgnoreCase) ||
+               href.Contains("/benchmarks/", StringComparison.OrdinalIgnoreCase) ||
+               href.Contains("/docs/", StringComparison.OrdinalIgnoreCase) ||
+               href.Contains("/api/", StringComparison.OrdinalIgnoreCase) ||
+               href.Contains("/faq/", StringComparison.OrdinalIgnoreCase) ||
+               href.Contains("/showcase/", StringComparison.OrdinalIgnoreCase);
     }
 
     private static bool IsExternal(string href)

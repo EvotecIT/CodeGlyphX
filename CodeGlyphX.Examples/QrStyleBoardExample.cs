@@ -10,6 +10,9 @@ using CodeGlyphX.Rendering.Png;
 namespace CodeGlyphX.Examples;
 
 internal static class QrStyleBoardExample {
+    private const int StyleBoardTargetSizePx = 384;
+    private const string StyleDocsBase = "https://codeglyphx.com/docs/qr?style=";
+
     public static void Run(string outputDir) {
         var dir = Path.Combine(outputDir, "qr-style-board");
         Directory.CreateDirectory(dir);
@@ -45,21 +48,21 @@ internal static class QrStyleBoardExample {
         var logoCool = LogoBuilder.CreateCirclePng(52, R(12, 42, 96), R(90, 220, 255), out _, out _);
 
         return new List<StylePreset> {
-            new("Neon Dot", "https://example.com/neon-dot", () => BaseSticker(
+            new("Neon Dot", StyleDocs("neon-dot"), () => BaseSticker(
                 fg: R(0, 255, 213),
                 palette: Palette(QrPngPaletteMode.Random, 14001, R(0, 255, 213), R(255, 59, 255), R(255, 214, 0)),
                 shape: QrPngModuleShape.Dot,
                 eyes: Eye(QrPngEyeFrameStyle.Target, R(0, 255, 213), R(255, 59, 255)),
                 canvas: CanvasGradient(R(18, 18, 28), R(48, 23, 72)))),
 
-            new("Candy Checker", "https://example.com/candy", () => BaseSticker(
+            new("Candy Checker", StyleDocs("candy-checker"), () => BaseSticker(
                 fg: R(255, 107, 107),
                 palette: Palette(QrPngPaletteMode.Checker, 0, R(255, 107, 107), R(255, 217, 61)),
                 shape: QrPngModuleShape.Rounded,
                 eyes: Eye(QrPngEyeFrameStyle.Badge, R(255, 107, 107), R(255, 217, 61)),
                 canvas: CanvasPattern(R(255, 248, 240), Pattern(QrPngBackgroundPatternType.Dots, R(255, 107, 107, 28))))),
 
-            new("Pastel Rings", "https://example.com/pastel", () => BaseSticker(
+            new("Pastel Rings", StyleDocs("pastel-rings"), () => BaseSticker(
                 fg: R(121, 134, 255),
                 palette: Palette(QrPngPaletteMode.Rings, 0, R(121, 134, 255), R(255, 174, 206), R(144, 226, 196)),
                 shape: QrPngModuleShape.Squircle,
@@ -67,21 +70,21 @@ internal static class QrStyleBoardExample {
                 scaleMap: ScaleMap(QrPngModuleScaleMode.Radial, 0.65, 1.0),
                 canvas: CanvasPattern(R(245, 248, 255), Pattern(QrPngBackgroundPatternType.Checker, R(121, 134, 255, 20))))),
 
-            new("Ocean Grid", "https://example.com/ocean", () => BaseSticker(
+            new("Ocean Grid", StyleDocs("ocean-grid"), () => BaseSticker(
                 fg: R(0, 133, 255),
                 palette: Palette(QrPngPaletteMode.Cycle, 0, R(0, 133, 255), R(0, 201, 255), R(0, 255, 196)),
                 shape: QrPngModuleShape.DotGrid,
                 eyes: Eye(QrPngEyeFrameStyle.Single, R(0, 133, 255), R(0, 201, 255)),
                 canvas: CanvasPattern(R(10, 24, 45), Pattern(QrPngBackgroundPatternType.Grid, R(0, 133, 255, 24))))),
 
-            new("Mono Badge", "https://example.com/mono", () => BaseSticker(
+            new("Mono Badge", StyleDocs("mono-badge"), () => BaseSticker(
                 fg: R(0, 0, 0),
                 palette: null,
                 shape: QrPngModuleShape.Square,
                 eyes: Eye(QrPngEyeFrameStyle.Badge, R(0, 0, 0), R(0, 0, 0)),
                 canvas: CanvasBorder(R(255, 255, 255), R(0, 0, 0)))),
 
-            new("Bracket Tech", "https://example.com/bracket", () => BaseSticker(
+            new("Bracket Tech", StyleDocs("bracket-tech"), () => BaseSticker(
                 fg: R(24, 230, 145),
                 palette: Palette(QrPngPaletteMode.Random, 9001, R(24, 230, 145), R(52, 147, 255), R(255, 255, 255)),
                 shape: QrPngModuleShape.Diamond,
@@ -89,7 +92,7 @@ internal static class QrStyleBoardExample {
                 scaleMap: ScaleMap(QrPngModuleScaleMode.Rings, 0.7, 1.0),
                 canvas: CanvasGradient(R(7, 21, 28), R(9, 42, 54)))),
 
-            new("Sunset Sticker", "https://example.com/sunset", () => BaseSticker(
+            new("Sunset Sticker", StyleDocs("sunset-sticker"), () => BaseSticker(
                 fg: R(255, 93, 93),
                 palette: Palette(QrPngPaletteMode.Cycle, 0, R(255, 93, 93), R(255, 180, 60), R(255, 76, 193)),
                 shape: QrPngModuleShape.Rounded,
@@ -97,7 +100,7 @@ internal static class QrStyleBoardExample {
                 canvas: CanvasGradient(R(35, 9, 25), R(83, 22, 52)),
                 logo: logoWarm), logoWarm),
 
-            new("Aurora", "https://example.com/aurora", () => BaseSticker(
+            new("Aurora", StyleDocs("aurora"), () => BaseSticker(
                 fg: R(110, 255, 200),
                 palette: Palette(QrPngPaletteMode.Random, 4512, R(110, 255, 200), R(130, 195, 255), R(226, 170, 255)),
                 shape: QrPngModuleShape.Circle,
@@ -105,14 +108,14 @@ internal static class QrStyleBoardExample {
                 scaleMap: ScaleMap(QrPngModuleScaleMode.Random, 0.6, 1.0, 9876),
                 canvas: CanvasPattern(R(15, 18, 34), Pattern(QrPngBackgroundPatternType.Dots, R(110, 255, 200, 22))))),
 
-            new("Mint Board", "https://example.com/mint", () => BaseSticker(
+            new("Mint Board", StyleDocs("mint-board"), () => BaseSticker(
                 fg: R(0, 156, 121),
                 palette: Palette(QrPngPaletteMode.Checker, 0, R(0, 156, 121), R(99, 224, 181)),
                 shape: QrPngModuleShape.Squircle,
                 eyes: Eye(QrPngEyeFrameStyle.Single, R(0, 156, 121), R(99, 224, 181)),
                 canvas: CanvasBorder(R(238, 255, 248), R(0, 156, 121)))),
 
-            new("Deep Space", "https://example.com/space", () => BaseSticker(
+            new("Deep Space", StyleDocs("deep-space"), () => BaseSticker(
                 fg: R(165, 100, 255),
                 palette: Palette(QrPngPaletteMode.Rings, 0, R(165, 100, 255), R(255, 119, 198), R(124, 255, 232)),
                 shape: QrPngModuleShape.Dot,
@@ -120,42 +123,42 @@ internal static class QrStyleBoardExample {
                 canvas: CanvasGradient(R(9, 9, 20), R(22, 12, 40)),
                 logo: logoCool), logoCool),
 
-            new("Leaf Bloom", "https://example.com/leaf", () => BaseSticker(
+            new("Leaf Bloom", StyleDocs("leaf-bloom"), () => BaseSticker(
                 fg: R(64, 196, 155),
                 palette: Palette(QrPngPaletteMode.Cycle, 0, R(64, 196, 155), R(140, 255, 214), R(255, 198, 125)),
                 shape: QrPngModuleShape.Leaf,
                 eyes: Eye(QrPngEyeFrameStyle.DoubleRing, R(64, 196, 155), R(255, 198, 125)),
                 canvas: CanvasGradient(R(8, 26, 22), R(12, 52, 44)))),
 
-            new("Wave Pulse", "https://example.com/wave", () => BaseSticker(
+            new("Wave Pulse", StyleDocs("wave-pulse"), () => BaseSticker(
                 fg: R(88, 140, 255),
                 palette: Palette(QrPngPaletteMode.Random, 7421, R(88, 140, 255), R(46, 244, 255), R(255, 255, 255)),
                 shape: QrPngModuleShape.Wave,
                 eyes: Eye(QrPngEyeFrameStyle.Target, R(88, 140, 255), R(46, 244, 255)),
                 canvas: CanvasPattern(R(12, 16, 32), Pattern(QrPngBackgroundPatternType.Dots, R(88, 140, 255, 22))))),
 
-            new("Ink Blob", "https://example.com/blob", () => BaseSticker(
+            new("Ink Blob", StyleDocs("ink-blob"), () => BaseSticker(
                 fg: R(30, 30, 30),
                 palette: Palette(QrPngPaletteMode.Random, 2024, R(30, 30, 30), R(80, 80, 80), R(200, 200, 200)),
                 shape: QrPngModuleShape.Blob,
                 eyes: Eye(QrPngEyeFrameStyle.Badge, R(30, 30, 30), R(80, 80, 80)),
                 canvas: CanvasBorder(R(248, 248, 248), R(30, 30, 30)))),
 
-            new("Soft Diamond", "https://example.com/soft-diamond", () => BaseSticker(
+            new("Soft Diamond", StyleDocs("soft-diamond"), () => BaseSticker(
                 fg: R(255, 128, 74),
                 palette: Palette(QrPngPaletteMode.Rings, 0, R(255, 128, 74), R(255, 214, 122), R(255, 94, 128)),
                 shape: QrPngModuleShape.SoftDiamond,
                 eyes: Eye(QrPngEyeFrameStyle.DoubleRing, R(255, 128, 74), R(255, 94, 128)),
                 canvas: CanvasGradient(R(40, 16, 10), R(72, 26, 14)))),
 
-            new("Sticker Grid", "https://example.com/sticker-grid", () => BaseSticker(
+            new("Sticker Grid", StyleDocs("sticker-grid"), () => BaseSticker(
                 fg: R(30, 30, 30),
                 palette: Palette(QrPngPaletteMode.Cycle, 0, R(30, 30, 30), R(80, 80, 80)),
                 shape: QrPngModuleShape.Square,
                 eyes: Eye(QrPngEyeFrameStyle.Badge, R(30, 30, 30), R(80, 80, 80)),
                 canvas: CanvasPattern(R(255, 255, 255), Pattern(QrPngBackgroundPatternType.Grid, R(30, 30, 30, 18))))),
 
-            new("Center Pop", "https://example.com/center", () => BaseSticker(
+            new("Center Pop", StyleDocs("center-pop"), () => BaseSticker(
                 fg: R(35, 54, 89),
                 palette: Palette(QrPngPaletteMode.Cycle, 0, R(35, 54, 89), R(60, 90, 140)),
                 zones: Zones(
@@ -180,7 +183,8 @@ internal static class QrStyleBoardExample {
         byte[]? logo = null) {
         return new QrEasyOptions {
             ErrorCorrectionLevel = QrErrorCorrectionLevel.H,
-            TargetSizePx = 1200,
+            // Web-friendly size: keeps assets lightweight while remaining crisp in the grid.
+            TargetSizePx = StyleBoardTargetSizePx,
             TargetSizeIncludesQuietZone = true,
             ModuleSize = 10,
             QuietZone = 4,
@@ -339,6 +343,8 @@ internal static class QrStyleBoardExample {
         }
         return length == 0 ? "style" : new string(buffer, 0, length);
     }
+
+    private static string StyleDocs(string slug) => $"{StyleDocsBase}{slug}#styling-options";
 
     private sealed record StylePreset(
         string Name,

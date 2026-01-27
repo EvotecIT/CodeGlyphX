@@ -24,6 +24,7 @@ public partial class Playground {
         DecodeError = null;
         DecodeImageDataUri = null;
         DecodeStatus = string.Empty;
+        IsDropActive = false;
 
         var file = args.File;
         if (file is null)
@@ -44,7 +45,7 @@ public partial class Playground {
             var token = _decodeCts.Token;
             using var budgetScope = CodeGlyphBudget.Begin(DecodeMaxMilliseconds);
 
-            using var stream = file.OpenReadStream(5 * 1024 * 1024);
+            using var stream = file.OpenReadStream(15 * 1024 * 1024);
             using var ms = new MemoryStream();
             await stream.CopyToAsync(ms);
             var data = ms.ToArray();
