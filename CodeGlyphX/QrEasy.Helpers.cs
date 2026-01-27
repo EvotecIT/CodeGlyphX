@@ -24,7 +24,8 @@ using CodeGlyphX.Rendering.Xpm;
 namespace CodeGlyphX;
 
 public static partial class QrEasy {
-    private static QrPngRenderOptions BuildPngOptions(QrEasyOptions opts, string payload, int moduleCount) {
+    private static QrPngRenderOptions BuildPngOptions(QrEasyOptions opts, string payload, QrCode qr) {
+        var moduleCount = qr.Modules.Width;
         var render = new QrPngRenderOptions {
             ModuleSize = ResolveModuleSize(opts, moduleCount),
             QuietZone = opts.QuietZone,
@@ -89,6 +90,8 @@ public static partial class QrEasy {
 
         var logo = BuildPngLogo(opts);
         if (logo is not null) render.Logo = logo;
+
+        ApplyArtAutoTune(qr, render, opts);
 
         return render;
     }
@@ -176,6 +179,7 @@ public static partial class QrEasy {
     }
 
     private static QrCode EncodePayload(string payload, QrEasyOptions opts) {
+        opts = ApplyArtAutoTunePreEncode(opts, payload);
         opts = ApplyLogoBackgroundVersionBump(opts);
         var ecc = opts.ErrorCorrectionLevel ?? GuessEcc(payload, opts.LogoPng is { Length: > 0 });
         if (opts.TextEncoding.HasValue) {
@@ -226,6 +230,8 @@ public static partial class QrEasy {
             BackgroundSupersample = opts.BackgroundSupersample,
             Style = opts.Style,
             Art = opts.Art,
+            ArtAutoTune = opts.ArtAutoTune,
+            ArtAutoTuneMinScore = opts.ArtAutoTuneMinScore,
             ModuleShape = opts.ModuleShape,
             ModuleScale = opts.ModuleScale,
             ModuleScaleMap = opts.ModuleScaleMap,
@@ -405,6 +411,170 @@ public static partial class QrEasy {
                 render.Canvas.Splash.DripChance = Math.Min(render.Canvas.Splash.DripChance, 0.6);
             }
         }
+    }
+
+    private static QrEasyOptions ApplyArtAutoTunePreEncode(QrEasyOptions opts, string payload) {
+        if (!opts.ArtAutoTune) return opts;
+
+        var hasLogo = opts.LogoPng is { Length: > 0 };
+        var paletteIsArt = opts.ForegroundPalette?.Colors is { Length: > 2 } || opts.ForegroundPaletteZones is not null;
+        var hasArtHints = opts.Art is not null
+            || opts.ForegroundPattern is not null
+            || opts.Canvas?.Splash is not null
+            || paletteIsArt;
+
+        if (!hasLogo && !hasArtHints) return opts;
+
+        var changed = false;
+        var tuned = opts;
+
+        if (tuned.ErrorCorrectionLevel is null) {
+            tuned = changed ? tuned : CloneOptions(opts);
+            tuned.ErrorCorrectionLevel = QrErrorCorrectionLevel.H;
+            changed = true;
+        }
+
+        // Nudge very small versions upward when art is enabled (when allowed by the range).
+        const int artMinVersion = 3;
+        if (tuned.MinVersion < artMinVersion && tuned.MaxVersion >= artMinVersion) {
+            tuned = changed ? tuned : CloneOptions(opts);
+            tuned.MinVersion = artMinVersion;
+            if (tuned.MaxVersion < tuned.MinVersion) tuned.MaxVersion = tuned.MinVersion;
+            changed = true;
+        }
+
+        return changed ? tuned : opts;
+    }
+
+    private static void ApplyArtAutoTune(QrCode qr, QrPngRenderOptions render, QrEasyOptions opts) {
+        if (!opts.ArtAutoTune) return;
+
+        var paletteIsArt = render.ForegroundPalette?.Colors is { Length: > 2 } || render.ForegroundPaletteZones is not null;
+        var hasArtHints = opts.Art is not null
+            || render.ForegroundPattern is not null
+            || render.Canvas?.Splash is not null
+            || paletteIsArt;
+
+        if (!hasArtHints) return;
+
+        var safetyMode = opts.Art?.SafetyMode ?? QrArtSafetyMode.Safe;
+        var targetScore = Math.Max(0, Math.Min(opts.ArtAutoTuneMinScore, 100));
+
+        // Always enforce the core scan guardrails when art is active.
+        render.ProtectFunctionalPatterns = true;
+        render.ProtectQuietZone = true;
+        render.QuietZone = Math.Max(render.QuietZone, 4);
+
+        var minScale = safetyMode switch {
+            QrArtSafetyMode.Safe => 0.94,
+            QrArtSafetyMode.Balanced => 0.9,
+            _ => 0.86,
+        };
+
+        render.ModuleShape = MapToConnectedShape(render.ModuleShape);
+        render.ModuleScale = Math.Max(render.ModuleScale, minScale);
+
+        if (render.ModuleScaleMap is not null) {
+            render.ModuleScaleMap.MinScale = Math.Max(render.ModuleScaleMap.MinScale, minScale);
+            if (render.ModuleScaleMap.MinScale > render.ModuleScaleMap.MaxScale) {
+                render.ModuleScaleMap.MaxScale = render.ModuleScaleMap.MinScale;
+            }
+        }
+
+        if (render.Canvas?.Splash is not null) {
+            render.Canvas.Splash.ProtectQrArea = true;
+        }
+
+        var report = QrArtSafety.Evaluate(qr, render);
+        if (HasLowContrastWarnings(report)) {
+            ApplyLowContrastFallback(render);
+            report = QrArtSafety.Evaluate(qr, render);
+        }
+
+        if (report.Score >= targetScore) return;
+
+        ApplyStrongSafetyClamp(render, safetyMode);
+    }
+
+    private static bool HasLowContrastWarnings(QrArtSafetyReport report) {
+        foreach (var warning in report.Warnings) {
+            if (warning.Kind == QrArtWarningKind.LowContrast
+                || warning.Kind == QrArtWarningKind.LowContrastGradient
+                || warning.Kind == QrArtWarningKind.LowContrastPalette) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static void ApplyLowContrastFallback(QrPngRenderOptions render) {
+        render.Foreground = RenderDefaults.QrForeground;
+        render.Background = RenderDefaults.QrBackground;
+        render.ForegroundGradient = null;
+        render.ForegroundPalette = null;
+        render.ForegroundPaletteZones = null;
+        render.BackgroundGradient = null;
+
+        if (render.ForegroundPattern is not null) {
+            var pattern = render.ForegroundPattern;
+            var alpha = Math.Min(pattern.Color.A, (byte)96);
+            pattern.Color = WithAlpha(pattern.Color, alpha);
+            pattern.ThicknessPx = Math.Min(pattern.ThicknessPx, 1);
+        }
+    }
+
+    private static void ApplyStrongSafetyClamp(QrPngRenderOptions render, QrArtSafetyMode safetyMode) {
+        var strongMinScale = safetyMode switch {
+            QrArtSafetyMode.Safe => 0.97,
+            QrArtSafetyMode.Balanced => 0.94,
+            _ => 0.9,
+        };
+
+        render.ModuleScale = Math.Max(render.ModuleScale, strongMinScale);
+        if (render.ModuleScaleMap is not null) {
+            render.ModuleScaleMap.MinScale = Math.Max(render.ModuleScaleMap.MinScale, strongMinScale);
+            if (render.ModuleScaleMap.MinScale > render.ModuleScaleMap.MaxScale) {
+                render.ModuleScaleMap.MaxScale = render.ModuleScaleMap.MinScale;
+            }
+        }
+
+        if (render.ForegroundPattern is not null) {
+            var pattern = render.ForegroundPattern;
+            pattern.Color = WithAlpha(pattern.Color, Math.Min(pattern.Color.A, (byte)88));
+            pattern.ThicknessPx = 1;
+        }
+
+        if (render.Canvas?.Splash is not null) {
+            var splash = render.Canvas.Splash;
+            splash.ProtectQrArea = true;
+            splash.Count = safetyMode switch {
+                QrArtSafetyMode.Safe => Math.Min(splash.Count, 16),
+                QrArtSafetyMode.Balanced => Math.Min(splash.Count, 22),
+                _ => Math.Min(splash.Count, 28),
+            };
+            splash.DripChance = safetyMode == QrArtSafetyMode.Safe ? Math.Min(splash.DripChance, 0.45) : splash.DripChance;
+            splash.Color = WithAlpha(splash.Color, Math.Min(splash.Color.A, (byte)96));
+            if (splash.Colors is { Length: > 0 }) {
+                for (var i = 0; i < splash.Colors.Length; i++) {
+                    var color = splash.Colors[i];
+                    splash.Colors[i] = WithAlpha(color, Math.Min(color.A, (byte)96));
+                }
+            }
+        }
+    }
+
+    private static QrPngModuleShape MapToConnectedShape(QrPngModuleShape shape) {
+        return shape switch {
+            QrPngModuleShape.Rounded => QrPngModuleShape.ConnectedRounded,
+            QrPngModuleShape.Squircle => QrPngModuleShape.ConnectedSquircle,
+            QrPngModuleShape.Circle => QrPngModuleShape.ConnectedRounded,
+            QrPngModuleShape.Dot => QrPngModuleShape.ConnectedRounded,
+            QrPngModuleShape.DotGrid => QrPngModuleShape.ConnectedRounded,
+            QrPngModuleShape.Leaf => QrPngModuleShape.ConnectedRounded,
+            QrPngModuleShape.Wave => QrPngModuleShape.ConnectedRounded,
+            QrPngModuleShape.Blob => QrPngModuleShape.ConnectedRounded,
+            _ => shape,
+        };
     }
 
     private static QrErrorCorrectionLevel GuessEcc(string payload, bool hasLogo) {
