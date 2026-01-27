@@ -141,6 +141,26 @@ public static partial class QrPngRenderer {
                     FillShape(scanlines, widthPx, heightPx, stride, holeX, holeY, holeSize, holeSize, opts.Background, eye.InnerShape, eye.InnerCornerRadiusPx);
                 }
                 break;
+            case QrPngEyeFrameStyle.CutCorner:
+                if (outerGradient is null) {
+                    FillShape(scanlines, widthPx, heightPx, stride, outerX, outerY, outerScaled, outerScaled, outerColor, eye.OuterShape, eye.OuterCornerRadiusPx);
+                } else {
+                    FillShapeGradient(scanlines, widthPx, heightPx, stride, outerX, outerY, outerScaled, outerScaled, outerGradient, eye.OuterShape, eye.OuterCornerRadiusPx);
+                }
+                FillShape(scanlines, widthPx, heightPx, stride, innerX, innerY, innerScaled, innerScaled, opts.Background, eye.OuterShape, eye.InnerCornerRadiusPx);
+
+                if (dotScaled > 0) {
+                    if (innerGradient is null) {
+                        FillShape(scanlines, widthPx, heightPx, stride, dotX, dotY, dotScaled, dotScaled, innerColor, eye.InnerShape, eye.InnerCornerRadiusPx);
+                    } else {
+                        FillShapeGradient(scanlines, widthPx, heightPx, stride, dotX, dotY, dotScaled, dotScaled, innerGradient, eye.InnerShape, eye.InnerCornerRadiusPx);
+                    }
+                }
+
+                var cutSize = Math.Max(1, (int)Math.Round(moduleSize * 1.6));
+                cutSize = Math.Min(cutSize, Math.Max(1, outerScaled / 3));
+                CutCorners(scanlines, widthPx, heightPx, stride, outerX, outerY, outerScaled, cutSize, opts.Background);
+                break;
             case QrPngEyeFrameStyle.DoubleRing:
             case QrPngEyeFrameStyle.Target:
                 if (outerGradient is null) {
@@ -266,6 +286,40 @@ public static partial class QrPngRenderer {
                 if (a <= 0) continue;
 
                 BlendPixel(scanlines, stride, px, py, new Rgba32(glowColor.R, glowColor.G, glowColor.B, (byte)Math.Min(255, a)));
+            }
+        }
+    }
+
+    private static void CutCorners(
+        byte[] scanlines,
+        int widthPx,
+        int heightPx,
+        int stride,
+        int x,
+        int y,
+        int size,
+        int cutSize,
+        Rgba32 background) {
+        if (size <= 0 || cutSize <= 0) return;
+        var cut = Math.Min(cutSize, size / 2);
+        if (cut <= 0) return;
+
+        for (var dy = 0; dy < cut; dy++) {
+            var rowLimit = cut - dy;
+            for (var dx = 0; dx < rowLimit; dx++) {
+                var tlX = x + dx;
+                var tlY = y + dy;
+                var trX = x + size - 1 - dx;
+                var trY = y + dy;
+                var blX = x + dx;
+                var blY = y + size - 1 - dy;
+                var brX = x + size - 1 - dx;
+                var brY = y + size - 1 - dy;
+
+                if ((uint)tlX < (uint)widthPx && (uint)tlY < (uint)heightPx) BlendPixel(scanlines, stride, tlX, tlY, background);
+                if ((uint)trX < (uint)widthPx && (uint)trY < (uint)heightPx) BlendPixel(scanlines, stride, trX, trY, background);
+                if ((uint)blX < (uint)widthPx && (uint)blY < (uint)heightPx) BlendPixel(scanlines, stride, blX, blY, background);
+                if ((uint)brX < (uint)widthPx && (uint)brY < (uint)heightPx) BlendPixel(scanlines, stride, brX, brY, background);
             }
         }
     }

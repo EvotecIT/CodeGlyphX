@@ -1,3 +1,5 @@
+using CodeGlyphX.Rendering.Png;
+
 namespace CodeGlyphX.Rendering.Ascii;
 
 public sealed partial class MatrixAsciiRenderOptions {
@@ -70,6 +72,46 @@ public sealed partial class MatrixAsciiRenderOptions {
     /// </summary>
     public MatrixAsciiRenderOptions WithInvert(bool enabled = true) {
         Invert = enabled;
+        return this;
+    }
+
+    /// <summary>
+    /// Enables or disables ANSI color escape codes.
+    /// </summary>
+    public MatrixAsciiRenderOptions WithAnsiColors(bool enabled = true) {
+        UseAnsiColors = enabled;
+        return this;
+    }
+
+    /// <summary>
+    /// Enables or disables ANSI truecolor (24-bit) output.
+    /// </summary>
+    public MatrixAsciiRenderOptions WithAnsiTrueColor(bool enabled = true) {
+        UseAnsiTrueColor = enabled;
+        return this;
+    }
+
+    /// <summary>
+    /// Sets the ANSI color for dark modules.
+    /// </summary>
+    public MatrixAsciiRenderOptions WithAnsiDarkColor(Rgba32 color) {
+        AnsiDarkColor = color;
+        return this;
+    }
+
+    /// <summary>
+    /// Sets the ANSI color for light modules.
+    /// </summary>
+    public MatrixAsciiRenderOptions WithAnsiLightColor(Rgba32 color) {
+        AnsiLightColor = color;
+        return this;
+    }
+
+    /// <summary>
+    /// Enables or disables ANSI colorization of light modules.
+    /// </summary>
+    public MatrixAsciiRenderOptions WithAnsiColorizeLight(bool enabled = true) {
+        AnsiColorizeLight = enabled;
         return this;
     }
 }

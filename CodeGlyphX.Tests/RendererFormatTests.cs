@@ -90,6 +90,19 @@ public sealed class RendererFormatTests {
     }
 
     [Fact]
+    public void Qr_Ascii_AnsiColors_Emits_Escape_Codes() {
+        var payload = "https://example.com";
+        var ascii = QrEasy.RenderAscii(payload, new MatrixAsciiRenderOptions {
+            QuietZone = 1,
+            UseUnicodeBlocks = true,
+            UseAnsiColors = true,
+            UseAnsiTrueColor = false
+        });
+
+        Assert.Contains("\u001b[", ascii, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void Qr_Ascii_Scale_Increases_Output_Size() {
         var payload = "https://example.com";
         var baseAscii = QrEasy.RenderAscii(payload, new MatrixAsciiRenderOptions {

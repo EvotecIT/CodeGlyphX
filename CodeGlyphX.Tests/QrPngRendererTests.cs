@@ -528,6 +528,50 @@ public sealed class QrPngRendererTests {
     }
 
     [Fact]
+    public void Render_With_Eye_CutCorner_Clears_Corner_Pixels() {
+        var qr = QrCodeEncoder.EncodeText("HELLO", QrErrorCorrectionLevel.H);
+
+        var opts = new QrPngRenderOptions {
+            ModuleSize = 6,
+            QuietZone = 4,
+            Foreground = Rgba32.Black,
+            Background = Rgba32.White,
+            Eyes = new QrPngEyeOptions {
+                UseFrame = true,
+                FrameStyle = QrPngEyeFrameStyle.CutCorner,
+                OuterShape = QrPngModuleShape.Square,
+                InnerShape = QrPngModuleShape.Rounded,
+                OuterColor = Rgba32.Black,
+                InnerColor = Rgba32.Black,
+                OuterCornerRadiusPx = 0,
+                InnerCornerRadiusPx = 4,
+            },
+        };
+
+        var png = QrPngRenderer.Render(qr.Modules, opts);
+        var (rgba, _, _, stride) = PngTestDecoder.DecodeRgba32(png);
+
+        var baseX = opts.QuietZone * opts.ModuleSize;
+        var baseY = opts.QuietZone * opts.ModuleSize;
+
+        var cornerX = baseX + 1;
+        var cornerY = baseY + 1;
+        var corner = cornerY * stride + cornerX * 4;
+
+        var edgeX = baseX + 3 * opts.ModuleSize + opts.ModuleSize / 2;
+        var edgeY = baseY + opts.ModuleSize / 2;
+        var edge = edgeY * stride + edgeX * 4;
+
+        Assert.Equal(255, rgba[corner + 0]);
+        Assert.Equal(255, rgba[corner + 1]);
+        Assert.Equal(255, rgba[corner + 2]);
+
+        Assert.Equal(0, rgba[edge + 0]);
+        Assert.Equal(0, rgba[edge + 1]);
+        Assert.Equal(0, rgba[edge + 2]);
+    }
+
+    [Fact]
     public void Render_With_ScaleMap_ApplyToEyes_Affects_Eye_Modules() {
         var qr = QrCodeEncoder.EncodeText("HELLO", QrErrorCorrectionLevel.H);
 

@@ -116,6 +116,14 @@ internal static class QrStyleBoardExample {
                 scaleMap: ScaleMap(QrPngModuleScaleMode.Rings, 0.7, 1.0),
                 canvas: CanvasGradient(R(7, 21, 28), R(9, 42, 54)))),
 
+            new("Cut Corner Tech", StyleDocs("cut-corner-tech"), () => BaseSticker(
+                fg: R(80, 220, 255),
+                palette: Palette(QrPngPaletteMode.Random, 5120, R(80, 220, 255), R(100, 140, 255), R(220, 120, 255)),
+                shape: QrPngModuleShape.Rounded,
+                eyes: EyeCutCorner(R(80, 220, 255), R(220, 120, 255)),
+                scaleMap: ScaleMap(QrPngModuleScaleMode.Radial, 0.78, 1.0),
+                canvas: CanvasGradient(R(10, 18, 40), R(22, 38, 72)))),
+
             new("Sunset Sticker", StyleDocs("sunset-sticker"), () => BaseSticker(
                 fg: R(255, 93, 93),
                 palette: Palette(QrPngPaletteMode.Cycle, 0, R(255, 93, 93), R(255, 180, 60), R(255, 76, 193)),
@@ -268,6 +276,15 @@ internal static class QrStyleBoardExample {
     private static QrPngEyeOptions EyeInsetRing(Rgba32 outer, Rgba32 inner) {
         var eyes = Eye(QrPngEyeFrameStyle.InsetRing, outer, inner);
         eyes.InnerScale = 0.92;
+        return eyes;
+    }
+
+    private static QrPngEyeOptions EyeCutCorner(Rgba32 outer, Rgba32 inner) {
+        var eyes = Eye(QrPngEyeFrameStyle.CutCorner, outer, inner);
+        eyes.OuterShape = QrPngModuleShape.Square;
+        eyes.InnerShape = QrPngModuleShape.Rounded;
+        eyes.OuterCornerRadiusPx = 0;
+        eyes.InnerCornerRadiusPx = 4;
         return eyes;
     }
 
