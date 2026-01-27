@@ -8,4 +8,10 @@
     <!-- Avoid build failures caused by stale/Windows-only fallback folder paths from user/global NuGet configs. -->
     <RestoreFallbackFolders></RestoreFallbackFolders>
   </PropertyGroup>
+
+  <!-- Keep per-TFM obj folders isolated for the multi-target test project. -->
+  <PropertyGroup Condition="'$(MSBuildProjectName)' == 'CodeGlyphX.Tests' and '$(TargetFramework)' != ''">
+    <BaseIntermediateOutputPath>obj/$(TargetFramework)/</BaseIntermediateOutputPath>
+    <MSBuildProjectExtensionsPath>obj/$(TargetFramework)/</MSBuildProjectExtensionsPath>
+  </PropertyGroup>
 </Project>

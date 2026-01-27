@@ -107,6 +107,33 @@ public sealed class QrNet472SmokeTests {
         Assert.Equal(Payload, decoded.Text);
     }
 
+    [Fact]
+    public void Net472_QrImageDecoder_DecodeImageResult_Succeeds() {
+        var qr = QrCodeEncoder.EncodeText(Payload);
+        var png = QrPngRenderer.Render(qr.Modules, new QrPngRenderOptions {
+            ModuleSize = 22,
+            QuietZone = 8
+        });
+
+        var imageOptions = ImageDecodeOptions.Screen(maxMilliseconds: 700, maxDimension: 1200);
+        var result = QrImageDecoder.DecodeImageResult(png, imageOptions, new QrPixelDecodeOptions {
+            MaxDimension = 2500
+        });
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(DecodeFailureReason.None, result.Failure);
+        Assert.Equal(Payload, result.Value?.Text);
+    }
+
+    [Fact]
+    public void Net472_QrImageDecoder_DecodeImageResult_UnsupportedFormat() {
+        var bad = new byte[] { 1, 2, 3, 4, 5 };
+        var result = QrImageDecoder.DecodeImageResult(bad);
+
+        Assert.False(result.IsSuccess);
+        Assert.Equal(DecodeFailureReason.UnsupportedFormat, result.Failure);
+    }
+
     private static void AddLightNoise(byte[] rgba, int width, int height, int stride) {
         var rng = new Random(12345);
         for (var y = 0; y < height; y++) {

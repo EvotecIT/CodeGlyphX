@@ -69,7 +69,7 @@ CodeGlyphX targets `netstandard2.0`, `net472`, `net8.0`, and `net10.0`. Most fea
 Notes:
 - `netstandard2.0` and `net472` require `System.Memory` 4.5.5 (automatically pulled by NuGet).
 - net8+ uses the full QR pixel pipeline; `net472`/`netstandard2.0` use a limited fallback for QR image decode via `QrImageDecoder` and byte[] overloads.
-- Runtime checks are available via `CodeGlyphXFeatures` (e.g., `SupportsQrPixelDecode`, `SupportsQrPixelDebug`).
+- Runtime checks are available via `CodeGlyphXFeatures` (e.g., `SupportsQrPixelDecode`, `SupportsQrPixelDecodeFallback`, `SupportsQrPixelDebug`).
 
 net472 capability notes (QR from images):
 - ✅ Clean/generated PNG/JPEG QR renders (including large module sizes)

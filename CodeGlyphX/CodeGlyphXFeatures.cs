@@ -25,6 +25,19 @@ public static class CodeGlyphXFeatures {
     }
 
     /// <summary>
+    /// True when the legacy QR pixel fallback path is active (non-net8 targets).
+    /// </summary>
+    public static bool SupportsQrPixelDecodeFallback {
+        get {
+#if NET8_0_OR_GREATER
+            return false;
+#else
+            return true;
+#endif
+        }
+    }
+
+    /// <summary>
     /// True when QR pixel debug rendering is available (net8+).
     /// </summary>
     public static bool SupportsQrPixelDebug {
