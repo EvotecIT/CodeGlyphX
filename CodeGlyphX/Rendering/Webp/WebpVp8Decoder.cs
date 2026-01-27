@@ -762,8 +762,8 @@ internal static class WebpVp8Decoder {
         if (macroblockTokens.Macroblocks.Length == 0) return false;
         if (macroblockTokens.MacroblockCols <= 0 || macroblockTokens.MacroblockRows <= 0) return false;
 
-        var macroblockWidth = MacroblockScaffoldWidth;
-        var macroblockHeight = MacroblockScaffoldHeight;
+        var macroblockWidth = MacroblockSize;
+        var macroblockHeight = MacroblockSize;
         if (macroblockWidth <= 0 || macroblockHeight <= 0) return false;
 
         var pixelBytes = checked(header.Width * header.Height * 4);
@@ -775,7 +775,13 @@ internal static class WebpVp8Decoder {
         var macroblockRgbaCache = new byte[macroblockTokens.Macroblocks.Length][];
         for (var i = 0; i < macroblockTokens.Macroblocks.Length; i++) {
             var macroblock = BuildMacroblockScaffold(macroblockTokens.Macroblocks[i].Blocks, macroblockTokens.TotalBlocksAssigned);
-            macroblockRgbaCache[i] = ConvertMacroblockScaffoldToRgba(macroblock);
+            var macroblockRgba = ConvertMacroblockScaffoldToRgba(macroblock);
+            macroblockRgbaCache[i] = UpscaleRgbaNearest(
+                macroblockRgba,
+                macroblock.Width,
+                macroblock.Height,
+                macroblockWidth,
+                macroblockHeight);
         }
 
         for (var tileY = 0; tileY < tileRows; tileY++) {
@@ -1267,6 +1273,36 @@ internal static class WebpVp8Decoder {
         }
 
         return rgba;
+    }
+
+    internal static byte[] UpscaleRgbaNearest(byte[] rgba, int width, int height, int targetWidth, int targetHeight) {
+        if (rgba is null || rgba.Length == 0) return Array.Empty<byte>();
+        if (width <= 0 || height <= 0) return Array.Empty<byte>();
+        if (targetWidth <= 0 || targetHeight <= 0) return Array.Empty<byte>();
+        if (width == targetWidth && height == targetHeight) return (byte[])rgba.Clone();
+
+        var output = new byte[targetWidth * targetHeight * 4];
+
+        for (var y = 0; y < targetHeight; y++) {
+            var srcY = (y * height) / targetHeight;
+            if (srcY >= height) srcY = height - 1;
+            var srcRowOffset = srcY * width;
+            var dstRowOffset = y * targetWidth;
+
+            for (var x = 0; x < targetWidth; x++) {
+                var srcX = (x * width) / targetWidth;
+                if (srcX >= width) srcX = width - 1;
+
+                var srcIndex = (srcRowOffset + srcX) * 4;
+                var dstIndex = (dstRowOffset + x) * 4;
+                output[dstIndex + 0] = rgba[srcIndex + 0];
+                output[dstIndex + 1] = rgba[srcIndex + 1];
+                output[dstIndex + 2] = rgba[srcIndex + 2];
+                output[dstIndex + 3] = rgba[srcIndex + 3];
+            }
+        }
+
+        return output;
     }
 
     private static void CopyMacroblockRgba(
