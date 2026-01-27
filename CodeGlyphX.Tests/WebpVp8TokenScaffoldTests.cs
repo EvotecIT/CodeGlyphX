@@ -40,6 +40,7 @@ public sealed class WebpVp8TokenScaffoldTests
             for (var t = 0; t < partition.PrevContexts.Length; t++)
             {
                 Assert.InRange(partition.PrevContexts[t], 0, 2);
+                Assert.InRange(partition.Tokens[t], 0, 11);
             }
         }
     }

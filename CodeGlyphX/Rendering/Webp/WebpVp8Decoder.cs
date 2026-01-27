@@ -22,13 +22,27 @@ internal static class WebpVp8Decoder {
     private const int CoeffUpdateProbability = 128;
     private const int CoefficientsPerBlock = 16;
     private const int TokenScaffoldTokensPerPartition = 8;
-    private const int TokenScaffoldTreeDepth = 3;
+    private const int CoeffTokenCount = 12;
     private static readonly int[] CoeffBandTable = new[]
     {
         0, 1, 2, 3,
         6, 4, 5, 6,
         6, 6, 6, 6,
         6, 7, 7, 7,
+    };
+    private static readonly int[] CoeffTokenTree = new[]
+    {
+        -1, 2,
+        -2, 4,
+        -3, 6,
+        -4, 8,
+        -5, 10,
+        -6, 12,
+        -7, 14,
+        -8, 16,
+        -9, 18,
+        -10, 20,
+        -11, -12,
     };
 
     internal static bool TryDecode(ReadOnlySpan<byte> payload, out byte[] rgba, out int width, out int height) {
@@ -277,9 +291,13 @@ internal static class WebpVp8Decoder {
                 prevContexts[t] = prevContext;
                 tokensRead++;
 
-                // Scaffold-only context evolution: zero keeps context at 0,
-                // larger tokens push us into higher non-zero contexts.
-                prevContext = tokenCode == 0 ? 0 : (tokenCode >= 4 ? 2 : 1);
+                // Scaffold-only context evolution aligned to token classes:
+                // eob/zero => 0, one => 1, others => 2.
+                prevContext = tokenCode switch {
+                    0 or 1 => 0,
+                    2 => 1,
+                    _ => 2,
+                };
             }
 
             partitionScaffolds[i] = new WebpVp8TokenPartitionScaffold(
@@ -487,17 +505,28 @@ internal static class WebpVp8Decoder {
         int prevContext,
         out int tokenCode) {
         tokenCode = 0;
-        var code = 0;
+        if ((uint)band >= CoeffBands) return false;
+        if ((uint)prevContext >= CoeffPrevContexts) return false;
 
-        for (var depth = 0; depth < TokenScaffoldTreeDepth; depth++) {
-            var index = GetCoeffIndex(blockType: 0, band, prevContext, node: depth);
-            var probability = probabilities.Probabilities[index];
+        // Spec-shaped token tree traversal using the 11 coefficient probabilities.
+        var node = 0;
+        while (node >= 0) {
+            var probabilityIndex = node >> 1;
+            if ((uint)probabilityIndex >= CoeffEntropyNodes) return false;
+
+            var coeffIndex = GetCoeffIndex(blockType: 0, band, prevContext, node: probabilityIndex);
+            var probability = probabilities.Probabilities[coeffIndex];
             if ((uint)probability > 255) return false;
             if (!decoder.TryReadBool(probability, out var bit)) return false;
-            code = (code << 1) | (bit ? 1 : 0);
+
+            var nextIndex = node + (bit ? 1 : 0);
+            if ((uint)nextIndex >= CoeffTokenTree.Length) return false;
+            node = CoeffTokenTree[nextIndex];
         }
 
-        tokenCode = code;
+        var token = -node - 1;
+        if ((uint)token >= CoeffTokenCount) return false;
+        tokenCode = token;
         return true;
     }
 
