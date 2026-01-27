@@ -45,7 +45,10 @@ public sealed class WebpVp8BlockTokenScaffoldTests
             {
                 var block = partition.Blocks[b];
                 Assert.Equal(b, block.BlockIndex);
+                Assert.InRange(block.BlockType, 0, 3);
+                Assert.True(block.DequantFactor > 0);
                 Assert.Equal(16, block.Coefficients.Length);
+                Assert.Equal(16, block.DequantizedCoefficients.Length);
                 Assert.Equal(16, block.Tokens.Length);
                 Assert.InRange(block.TokensRead, 1, 16);
 
@@ -59,6 +62,7 @@ public sealed class WebpVp8BlockTokenScaffoldTests
                     Assert.InRange(token.PrevContextBefore, 0, 2);
                     Assert.InRange(token.PrevContextAfter, 0, 2);
                     Assert.InRange(token.TokenCode, 0, 11);
+                    Assert.Equal(block.BlockType, token.BlockType);
                     Assert.Equal(token.TokenCode != 0, token.HasMore);
                     Assert.Equal(token.TokenCode >= 2, token.IsNonZero);
                     Assert.True(token.ExtraBitsValue >= 0);
@@ -76,6 +80,9 @@ public sealed class WebpVp8BlockTokenScaffoldTests
                     var expectedMagnitude = ComputeExpectedMagnitude(token.TokenCode, token.ExtraBitsValue);
                     Assert.Equal(expectedMagnitude, Math.Abs(token.CoefficientValue));
                     Assert.Equal(token.CoefficientValue, block.Coefficients[token.CoefficientIndex]);
+                    Assert.Equal(
+                        block.Coefficients[token.CoefficientIndex] * block.DequantFactor,
+                        block.DequantizedCoefficients[token.CoefficientIndex]);
 
                     if (!token.HasMore)
                     {

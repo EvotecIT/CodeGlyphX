@@ -25,6 +25,10 @@ internal static class WebpVp8Decoder {
     private const int CoeffTokenCount = 12;
     private const int BlockScaffoldBlocksPerPartition = 2;
     private const int BlockScaffoldMaxTokensPerBlock = CoefficientsPerBlock;
+    private const int BlockTypeY2 = 0;
+    private const int BlockTypeY = 1;
+    private const int BlockTypeU = 2;
+    private const int BlockTypeV = 3;
     private static readonly int[] CoeffBandTable = new[]
     {
         0, 1, 2, 3,
@@ -296,6 +300,7 @@ internal static class WebpVp8Decoder {
                 if (!TryReadScaffoldCoefficientToken(
                     decoder,
                     frameHeader.CoefficientProbabilities,
+                    blockType: BlockTypeY2,
                     band,
                     prevContext,
                     out var tokenCode)) {
@@ -355,8 +360,11 @@ internal static class WebpVp8Decoder {
             var partitionTokensRead = 0;
 
             for (var blockIndex = 0; blockIndex < blocks.Length; blockIndex++) {
+                var blockType = GetScaffoldBlockType(blockIndex);
+                var dequantFactor = ComputeScaffoldDequantFactor(blockType, frameHeader.Quantization);
                 var tokenInfos = new WebpVp8BlockTokenInfo[BlockScaffoldMaxTokensPerBlock];
                 var coefficients = new int[CoefficientsPerBlock];
+                var dequantizedCoefficients = new int[CoefficientsPerBlock];
                 var tokensRead = 0;
                 var coefficientIndex = 0;
                 var prevContext = 0;
@@ -368,6 +376,7 @@ internal static class WebpVp8Decoder {
                     if (!TryReadScaffoldCoefficientToken(
                         decoder,
                         frameHeader.CoefficientProbabilities,
+                        blockType,
                         band,
                         prevContext,
                         out var tokenCode)) {
@@ -379,9 +388,11 @@ internal static class WebpVp8Decoder {
                     var magnitude = ComputeTokenMagnitude(tokenCode, extraBitsValue);
                     if (!TryReadSignedMagnitude(decoder, magnitude, out var coefficientValue)) return false;
                     coefficients[coefficientIndex] = coefficientValue;
+                    dequantizedCoefficients[coefficientIndex] = coefficientValue * dequantFactor;
                     tokenInfos[tokensRead] = new WebpVp8BlockTokenInfo(
                         coefficientIndex,
                         tokenInfo.TokenCode,
+                        blockType,
                         tokenInfo.Band,
                         tokenInfo.PrevContextBefore,
                         tokenInfo.PrevContextAfter,
@@ -404,7 +415,10 @@ internal static class WebpVp8Decoder {
 
                 blocks[blockIndex] = new WebpVp8BlockTokenScaffold(
                     blockIndex,
+                    blockType,
+                    dequantFactor,
                     coefficients,
+                    dequantizedCoefficients,
                     tokenInfos,
                     tokensRead,
                     reachedEob);
@@ -614,10 +628,12 @@ internal static class WebpVp8Decoder {
     private static bool TryReadScaffoldCoefficientToken(
         WebpVp8BoolDecoder decoder,
         WebpVp8CoefficientProbabilities probabilities,
+        int blockType,
         int band,
         int prevContext,
         out int tokenCode) {
         tokenCode = 0;
+        if ((uint)blockType >= CoeffBlockTypes) return false;
         if ((uint)band >= CoeffBands) return false;
         if ((uint)prevContext >= CoeffPrevContexts) return false;
 
@@ -627,7 +643,7 @@ internal static class WebpVp8Decoder {
             var probabilityIndex = node >> 1;
             if ((uint)probabilityIndex >= CoeffEntropyNodes) return false;
 
-            var coeffIndex = GetCoeffIndex(blockType: 0, band, prevContext, node: probabilityIndex);
+            var coeffIndex = GetCoeffIndex(blockType, band, prevContext, node: probabilityIndex);
             var probability = probabilities.Probabilities[coeffIndex];
             if ((uint)probability > 255) return false;
             if (!decoder.TryReadBool(probability, out var bit)) return false;
@@ -653,6 +669,23 @@ internal static class WebpVp8Decoder {
         };
 
         return new WebpVp8TokenInfo(tokenCode, band, prevContextBefore, prevContextAfter, hasMore, isNonZero);
+    }
+
+    private static int GetScaffoldBlockType(int blockIndex) {
+        var normalized = blockIndex % CoeffBlockTypes;
+        if (normalized < 0) normalized += CoeffBlockTypes;
+        return normalized;
+    }
+
+    private static int ComputeScaffoldDequantFactor(int blockType, WebpVp8Quantization quantization) {
+        var baseFactor = Math.Max(1, quantization.BaseQIndex + 1);
+        return blockType switch {
+            BlockTypeY2 => baseFactor + 8,
+            BlockTypeY => baseFactor + 4,
+            BlockTypeU => baseFactor + 2,
+            BlockTypeV => baseFactor + 2,
+            _ => baseFactor + 2,
+        };
     }
 
     private static bool TryReadTokenExtraBits(WebpVp8BoolDecoder decoder, int tokenCode, out int extraBitsValue) {
@@ -980,6 +1013,7 @@ internal readonly struct WebpVp8BlockTokenInfo {
     public WebpVp8BlockTokenInfo(
         int coefficientIndex,
         int tokenCode,
+        int blockType,
         int band,
         int prevContextBefore,
         int prevContextAfter,
@@ -989,6 +1023,7 @@ internal readonly struct WebpVp8BlockTokenInfo {
         int coefficientValue) {
         CoefficientIndex = coefficientIndex;
         TokenCode = tokenCode;
+        BlockType = blockType;
         Band = band;
         PrevContextBefore = prevContextBefore;
         PrevContextAfter = prevContextAfter;
@@ -1000,6 +1035,7 @@ internal readonly struct WebpVp8BlockTokenInfo {
 
     public int CoefficientIndex { get; }
     public int TokenCode { get; }
+    public int BlockType { get; }
     public int Band { get; }
     public int PrevContextBefore { get; }
     public int PrevContextAfter { get; }
@@ -1012,19 +1048,28 @@ internal readonly struct WebpVp8BlockTokenInfo {
 internal readonly struct WebpVp8BlockTokenScaffold {
     public WebpVp8BlockTokenScaffold(
         int blockIndex,
+        int blockType,
+        int dequantFactor,
         int[] coefficients,
+        int[] dequantizedCoefficients,
         WebpVp8BlockTokenInfo[] tokens,
         int tokensRead,
         bool reachedEob) {
         BlockIndex = blockIndex;
+        BlockType = blockType;
+        DequantFactor = dequantFactor;
         Coefficients = coefficients;
+        DequantizedCoefficients = dequantizedCoefficients;
         Tokens = tokens;
         TokensRead = tokensRead;
         ReachedEob = reachedEob;
     }
 
     public int BlockIndex { get; }
+    public int BlockType { get; }
+    public int DequantFactor { get; }
     public int[] Coefficients { get; }
+    public int[] DequantizedCoefficients { get; }
     public WebpVp8BlockTokenInfo[] Tokens { get; }
     public int TokensRead { get; }
     public bool ReachedEob { get; }
