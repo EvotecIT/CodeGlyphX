@@ -13,9 +13,11 @@ namespace CodeGlyphX.Benchmarks;
 internal sealed class QrDecodePackRunnerOptions {
     public required QrPackMode Mode { get; init; }
     public required HashSet<string> Packs { get; init; }
+    public required IReadOnlyList<IQrDecodeEngine> Engines { get; init; }
     public required int Iterations { get; init; }
     public required int MinIterationMilliseconds { get; init; }
     public required int OpsCap { get; init; }
+    public required int ExternalRunsCap { get; init; }
 }
 
 internal static class QrDecodePackRunner {
@@ -99,14 +101,18 @@ internal static class QrDecodePackRunner {
         var resolvedIterations = iterations ?? (resolvedMode == QrPackMode.Quick ? 3 : 5);
         var resolvedMinIterMs = minIterMs ?? (resolvedMode == QrPackMode.Quick ? 400 : 800);
         var resolvedOpsCap = opsCap ?? 12;
+        var externalRunsCap = resolvedMode == QrPackMode.Quick ? 2 : 3;
 
         var packs = ResolvePacks(packList, resolvedMode);
+        var engines = QrDecodeEngines.Create();
         options = new QrDecodePackRunnerOptions {
             Mode = resolvedMode,
             Packs = packs,
+            Engines = engines,
             Iterations = resolvedIterations,
             MinIterationMilliseconds = resolvedMinIterMs,
-            OpsCap = resolvedOpsCap
+            OpsCap = resolvedOpsCap,
+            ExternalRunsCap = externalRunsCap
         };
 
         return true;
@@ -122,9 +128,12 @@ internal static class QrDecodePackRunner {
             return 1;
         }
 
-        var results = new List<QrDecodeScenarioResult>(scenarios.Length);
-        foreach (var scenario in scenarios) {
-            results.Add(RunScenario(scenario, options));
+        var results = new List<QrDecodeScenarioResult>(scenarios.Length * options.Engines.Count);
+        foreach (var engine in options.Engines) {
+            foreach (var scenario in scenarios) {
+                var data = scenario.CreateData();
+                results.Add(RunScenario(engine, scenario, data, options));
+            }
         }
 
         var report = BuildReport(options, results);
@@ -140,15 +149,14 @@ internal static class QrDecodePackRunner {
         return 0;
     }
 
-    private static QrDecodeScenarioResult RunScenario(QrDecodeScenario scenario, QrDecodePackRunnerOptions options) {
-        var data = scenario.CreateData();
+    private static QrDecodeScenarioResult RunScenario(IQrDecodeEngine engine, QrDecodeScenario scenario, QrDecodeScenarioData data, QrDecodePackRunnerOptions options) {
         var times = new List<double>(options.Iterations * 4);
         var decodeSuccess = 0;
         var expectedMatch = 0;
         var decodedCountSum = 0;
 
         // Calibration run to determine ops-per-iteration.
-        var calibration = DecodeOnce(data, scenario.Options, scenario.ExpectedTexts);
+        var calibration = DecodeOnce(engine, data, scenario.Options, scenario.ExpectedTexts);
         times.Add(calibration.ElapsedMilliseconds);
         if (calibration.Decoded) decodeSuccess++;
         if (calibration.ExpectedMatched) expectedMatch++;
@@ -169,8 +177,11 @@ internal static class QrDecodePackRunner {
         if (options.Mode == QrPackMode.Full && string.Equals(scenario.Pack, QrDecodeScenarioPacks.Art, StringComparison.OrdinalIgnoreCase)) {
             targetRuns = Math.Min(targetRuns, 2);
         }
+        if (engine.IsExternal) {
+            targetRuns = Math.Min(targetRuns, options.ExternalRunsCap);
+        }
         for (var run = 1; run < targetRuns; run++) {
-            var res = DecodeOnce(data, scenario.Options, scenario.ExpectedTexts);
+            var res = DecodeOnce(engine, data, scenario.Options, scenario.ExpectedTexts);
             times.Add(res.ElapsedMilliseconds);
             if (res.Decoded) decodeSuccess++;
             if (res.ExpectedMatched) expectedMatch++;
@@ -185,41 +196,26 @@ internal static class QrDecodePackRunner {
             expectedMatch,
             decodedCountSum / (double)targetRuns,
             times,
+            engine.Name,
+            engine.IsExternal,
             data.Width,
             data.Height);
     }
 
-    private static DecodeRunResult DecodeOnce(QrDecodeScenarioData data, QrPixelDecodeOptions options, string[]? expectedTexts) {
+    private static DecodeRunResult DecodeOnce(IQrDecodeEngine engine, QrDecodeScenarioData data, QrPixelDecodeOptions options, string[]? expectedTexts) {
         var sw = Stopwatch.StartNew();
-        QrDecoded[] decoded;
-        var okAll = QrDecoder.TryDecodeAll(
-            data.Rgba,
-            data.Width,
-            data.Height,
-            data.Stride,
-            PixelFormat.Rgba32,
-            out decoded,
-            out _,
-            options);
-        if (!okAll || decoded.Length == 0) {
-            if (QrDecoder.TryDecode(data.Rgba, data.Width, data.Height, data.Stride, PixelFormat.Rgba32, out var single, out _, options)) {
-                decoded = new[] { single };
-            } else {
-                decoded = Array.Empty<QrDecoded>();
-            }
-        }
+        var result = engine.Decode(data, options);
         sw.Stop();
 
-        var decodedCount = decoded.Length;
-        var decodedSuccess = decodedCount > 0;
-        var expectedMatched = decodedSuccess && ExpectedMatched(decoded, expectedTexts);
+        var decodedCount = result.Count;
+        var decodedSuccess = result.Success;
+        var expectedMatched = decodedSuccess && ExpectedMatched(result.Texts, expectedTexts);
         return new DecodeRunResult(decodedSuccess, expectedMatched, decodedCount, sw.Elapsed.TotalMilliseconds);
     }
 
-    private static bool ExpectedMatched(QrDecoded[] decoded, string[]? expectedTexts) {
-        if (expectedTexts is null || expectedTexts.Length == 0) return decoded.Length > 0;
-        var texts = decoded
-            .Select(d => d.Text)
+    private static bool ExpectedMatched(string[] decodedTexts, string[]? expectedTexts) {
+        if (expectedTexts is null || expectedTexts.Length == 0) return decodedTexts.Length > 0;
+        var texts = decodedTexts
             .Where(t => !string.IsNullOrWhiteSpace(t))
             .ToHashSet(StringComparer.Ordinal);
         for (var i = 0; i < expectedTexts.Length; i++) {
@@ -237,6 +233,7 @@ internal static class QrDecodePackRunner {
         sb.AppendLine($"Mode: {options.Mode}");
         sb.AppendLine($"Packs: {string.Join(", ", packs)}");
         sb.AppendLine($"Iterations: {options.Iterations} (min iteration ms: {options.MinIterationMilliseconds}, ops cap: {options.OpsCap})");
+        sb.AppendLine($"Engines: {string.Join(", ", options.Engines.Select(e => e.Name))} (external runs cap: {options.ExternalRunsCap})");
         sb.AppendLine($"Runtime: {RuntimeInformation.FrameworkDescription} | OS: {RuntimeInformation.OSDescription} | Arch: {RuntimeInformation.ProcessArchitecture}");
         sb.AppendLine($"CPU: {Environment.ProcessorCount} logical cores | GC: {(GCSettings.IsServerGC ? "Server" : "Workstation")}");
         sb.AppendLine();
@@ -244,19 +241,26 @@ internal static class QrDecodePackRunner {
         sb.AppendLine("- decode% = any QR decoded");
         sb.AppendLine("- expected% = expected payload(s) decoded");
         sb.AppendLine("- ideal packs should be ~100%; stress/art packs track reliability progress");
+        sb.AppendLine("- external engines run fewer reps to keep runs tractable");
         sb.AppendLine();
 
         foreach (var group in results.GroupBy(r => r.Scenario.Pack).OrderBy(g => g.Key, StringComparer.OrdinalIgnoreCase)) {
-            var packSummary = Summarize(group.ToList());
-            sb.AppendLine($"Pack: {group.Key}  scenarios={group.Count()}  runs={packSummary.Runs}  decode%={packSummary.DecodeRate:P0}  expected%={packSummary.ExpectedRate:P0}  medianMs={packSummary.MedianMs:F1}  p95Ms={packSummary.P95Ms:F1}");
-            foreach (var result in group.OrderBy(r => r.Scenario.Name, StringComparer.OrdinalIgnoreCase)) {
-                var median = Percentile(result.Times, 0.50);
-                var p95 = Percentile(result.Times, 0.95);
-                var decodeRate = result.DecodeSuccess / (double)result.Runs;
-                var expectedRate = result.ExpectedMatch / (double)result.Runs;
-                var expectedLabel = result.Scenario.ExpectedTexts is null ? "any" : TruncateExpected(result.Scenario.ExpectedTexts);
-                sb.AppendLine(
-                    $"  - {result.Scenario.Name,-28} size={result.Width}x{result.Height} ops={result.OpsPerIteration,2} decode%={decodeRate,6:P0} expected%={expectedRate,6:P0} medianMs={median,7:F1} p95Ms={p95,7:F1} decoded~={result.AvgDecodedCount,4:F1} expected={expectedLabel}");
+            var scenarioCount = group.Select(r => r.Scenario.Name).Distinct(StringComparer.Ordinal).Count();
+            sb.AppendLine($"Pack: {group.Key}  scenarios={scenarioCount}");
+
+            foreach (var engineGroup in group.GroupBy(r => r.EngineName).OrderBy(g => g.Key, StringComparer.OrdinalIgnoreCase)) {
+                var packSummary = Summarize(engineGroup.ToList());
+                var externalTag = engineGroup.First().EngineIsExternal ? " (external)" : string.Empty;
+                sb.AppendLine($"  Engine: {engineGroup.Key}{externalTag}  runs={packSummary.Runs}  decode%={packSummary.DecodeRate:P0}  expected%={packSummary.ExpectedRate:P0}  medianMs={packSummary.MedianMs:F1}  p95Ms={packSummary.P95Ms:F1}");
+                foreach (var result in engineGroup.OrderBy(r => r.Scenario.Name, StringComparer.OrdinalIgnoreCase)) {
+                    var median = Percentile(result.Times, 0.50);
+                    var p95 = Percentile(result.Times, 0.95);
+                    var decodeRate = result.DecodeSuccess / (double)result.Runs;
+                    var expectedRate = result.ExpectedMatch / (double)result.Runs;
+                    var expectedLabel = result.Scenario.ExpectedTexts is null ? "any" : TruncateExpected(result.Scenario.ExpectedTexts);
+                    sb.AppendLine(
+                        $"    - {result.Scenario.Name,-26} size={result.Width}x{result.Height} ops={result.OpsPerIteration,2} decode%={decodeRate,6:P0} expected%={expectedRate,6:P0} medianMs={median,7:F1} p95Ms={p95,7:F1} decoded~={result.AvgDecodedCount,4:F1} expected={expectedLabel}");
+                }
             }
             sb.AppendLine();
         }
@@ -335,6 +339,8 @@ internal static class QrDecodePackRunner {
             int expectedMatch,
             double avgDecodedCount,
             List<double> times,
+            string engineName,
+            bool engineIsExternal,
             int width,
             int height) {
             Scenario = scenario;
@@ -344,6 +350,8 @@ internal static class QrDecodePackRunner {
             ExpectedMatch = expectedMatch;
             AvgDecodedCount = avgDecodedCount;
             Times = times;
+            EngineName = engineName;
+            EngineIsExternal = engineIsExternal;
             Width = width;
             Height = height;
         }
@@ -355,6 +363,8 @@ internal static class QrDecodePackRunner {
         public int ExpectedMatch { get; }
         public double AvgDecodedCount { get; }
         public List<double> Times { get; }
+        public string EngineName { get; }
+        public bool EngineIsExternal { get; }
         public int Width { get; }
         public int Height { get; }
     }
