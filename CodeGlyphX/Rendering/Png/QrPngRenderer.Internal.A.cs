@@ -614,6 +614,23 @@ public static partial class QrPngRenderer {
                 qrFullPx,
                 frame);
         }
+
+        if (canvas.Badge is not null && canvas.Badge.Color.A != 0) {
+            DrawCanvasBadge(
+                scanlines,
+                widthPx,
+                heightPx,
+                stride,
+                opts,
+                canvasX,
+                canvasY,
+                canvasW,
+                canvasH,
+                qrOffsetX,
+                qrOffsetY,
+                qrFullPx,
+                canvas.Badge);
+        }
     }
 
     private static void DrawCanvasFill(
@@ -1904,6 +1921,313 @@ public static partial class QrPngRenderer {
                 BlendPixel(scanlines, stride, x, y, color);
             }
         }
+    }
+
+    private static void DrawCanvasBadge(
+        byte[] scanlines,
+        int widthPx,
+        int heightPx,
+        int stride,
+        QrPngRenderOptions opts,
+        int canvasX,
+        int canvasY,
+        int canvasW,
+        int canvasH,
+        int qrX,
+        int qrY,
+        int qrSize,
+        QrPngCanvasBadgeOptions badge) {
+        var canvas = opts.Canvas;
+        if (canvas is null) return;
+
+        var inset = Math.Max(0, canvas.BorderPx);
+        var innerCanvasX = canvasX + inset;
+        var innerCanvasY = canvasY + inset;
+        var innerCanvasW = canvasW - inset * 2;
+        var innerCanvasH = canvasH - inset * 2;
+        if (innerCanvasW <= 0 || innerCanvasH <= 0) return;
+
+        var innerCanvasRadius = Math.Max(0, canvas.CornerRadiusPx - inset);
+        var innerCanvasX1 = innerCanvasX + innerCanvasW - 1;
+        var innerCanvasY1 = innerCanvasY + innerCanvasH - 1;
+        var innerCanvasRadiusSq = innerCanvasRadius * innerCanvasRadius;
+
+        var leftPad = qrX - innerCanvasX;
+        var topPad = qrY - innerCanvasY;
+        var rightPad = innerCanvasX + innerCanvasW - (qrX + qrSize);
+        var bottomPad = innerCanvasY + innerCanvasH - (qrY + qrSize);
+
+        var gap = Math.Max(0, badge.GapPx);
+        var desiredW = Math.Max(1, badge.WidthPx);
+        var desiredH = Math.Max(1, badge.HeightPx);
+        var offset = badge.OffsetPx;
+
+        var x = 0;
+        var y = 0;
+        var w = 0;
+        var h = 0;
+
+        switch (badge.Position) {
+            case QrPngCanvasBadgePosition.Top:
+                var topAvail = topPad - gap;
+                if (topAvail <= 0) return;
+                h = Clamp(desiredH, 1, topAvail);
+                w = Clamp(desiredW, 1, innerCanvasW);
+                y = qrY - gap - h;
+                x = (int)Math.Round(qrX + qrSize * 0.5 - w * 0.5 + offset);
+                break;
+            case QrPngCanvasBadgePosition.Bottom:
+                var bottomAvail = bottomPad - gap;
+                if (bottomAvail <= 0) return;
+                h = Clamp(desiredH, 1, bottomAvail);
+                w = Clamp(desiredW, 1, innerCanvasW);
+                y = qrY + qrSize + gap;
+                x = (int)Math.Round(qrX + qrSize * 0.5 - w * 0.5 + offset);
+                break;
+            case QrPngCanvasBadgePosition.Left:
+                var leftAvail = leftPad - gap;
+                if (leftAvail <= 0) return;
+                w = Clamp(desiredW, 1, leftAvail);
+                h = Clamp(desiredH, 1, innerCanvasH);
+                x = qrX - gap - w;
+                y = (int)Math.Round(qrY + qrSize * 0.5 - h * 0.5 + offset);
+                break;
+            case QrPngCanvasBadgePosition.Right:
+                var rightAvail = rightPad - gap;
+                if (rightAvail <= 0) return;
+                w = Clamp(desiredW, 1, rightAvail);
+                h = Clamp(desiredH, 1, innerCanvasH);
+                x = qrX + qrSize + gap;
+                y = (int)Math.Round(qrY + qrSize * 0.5 - h * 0.5 + offset);
+                break;
+            case QrPngCanvasBadgePosition.TopLeft:
+                var topLeftW = leftPad - gap;
+                var topLeftH = topPad - gap;
+                if (topLeftW <= 0 || topLeftH <= 0) return;
+                w = Clamp(desiredW, 1, topLeftW);
+                h = Clamp(desiredH, 1, topLeftH);
+                x = qrX - gap - w;
+                y = qrY - gap - h;
+                break;
+            case QrPngCanvasBadgePosition.TopRight:
+                var topRightW = rightPad - gap;
+                var topRightH = topPad - gap;
+                if (topRightW <= 0 || topRightH <= 0) return;
+                w = Clamp(desiredW, 1, topRightW);
+                h = Clamp(desiredH, 1, topRightH);
+                x = qrX + qrSize + gap;
+                y = qrY - gap - h;
+                break;
+            case QrPngCanvasBadgePosition.BottomLeft:
+                var bottomLeftW = leftPad - gap;
+                var bottomLeftH = bottomPad - gap;
+                if (bottomLeftW <= 0 || bottomLeftH <= 0) return;
+                w = Clamp(desiredW, 1, bottomLeftW);
+                h = Clamp(desiredH, 1, bottomLeftH);
+                x = qrX - gap - w;
+                y = qrY + qrSize + gap;
+                break;
+            case QrPngCanvasBadgePosition.BottomRight:
+                var bottomRightW = rightPad - gap;
+                var bottomRightH = bottomPad - gap;
+                if (bottomRightW <= 0 || bottomRightH <= 0) return;
+                w = Clamp(desiredW, 1, bottomRightW);
+                h = Clamp(desiredH, 1, bottomRightH);
+                x = qrX + qrSize + gap;
+                y = qrY + qrSize + gap;
+                break;
+            default:
+                return;
+        }
+
+        x = Clamp(x, innerCanvasX, innerCanvasX + innerCanvasW - w);
+        y = Clamp(y, innerCanvasY, innerCanvasY + innerCanvasH - h);
+
+        var baseRadius = badge.Shape == QrPngCanvasBadgeShape.Badge
+            ? ClampRadius(badge.CornerRadiusPx <= 0 ? Math.Min(w, h) / 2 : badge.CornerRadiusPx, Math.Min(w, h))
+            : ClampRadius(badge.CornerRadiusPx, Math.Min(w, h));
+
+        DrawRoundedRectClipped(
+            scanlines,
+            stride,
+            x,
+            y,
+            w,
+            h,
+            baseRadius,
+            badge.Color,
+            innerCanvasX,
+            innerCanvasY,
+            innerCanvasX1,
+            innerCanvasY1,
+            innerCanvasRadius,
+            innerCanvasRadiusSq);
+
+        if (badge.Shape != QrPngCanvasBadgeShape.Ribbon) return;
+
+        var tail = Math.Max(0, badge.TailPx);
+        if (tail <= 0) return;
+
+        if (badge.Position is QrPngCanvasBadgePosition.Top or QrPngCanvasBadgePosition.Bottom) {
+            var tailMax = badge.Position == QrPngCanvasBadgePosition.Top
+                ? Math.Max(0, y - innerCanvasY)
+                : Math.Max(0, innerCanvasY1 - (y + h - 1));
+            tail = Math.Min(tail, tailMax);
+            if (tail <= 0) return;
+
+            var tailWidth = Math.Max(6, Math.Min(w / 3, h * 2));
+            var leftBaseX0 = x;
+            var leftBaseX1 = x + tailWidth;
+            var rightBaseX0 = x + w - tailWidth;
+            var rightBaseX1 = x + w;
+
+            var baseY = badge.Position == QrPngCanvasBadgePosition.Top ? y : y + h - 1;
+            var apexY = badge.Position == QrPngCanvasBadgePosition.Top ? y - tail : y + h - 1 + tail;
+
+            DrawTriangleClipped(scanlines, stride,
+                leftBaseX0, baseY,
+                leftBaseX1, baseY,
+                leftBaseX0 + tailWidth / 2, apexY,
+                badge.Color,
+                innerCanvasX,
+                innerCanvasY,
+                innerCanvasX1,
+                innerCanvasY1,
+                innerCanvasRadius,
+                innerCanvasRadiusSq);
+
+            DrawTriangleClipped(scanlines, stride,
+                rightBaseX0, baseY,
+                rightBaseX1, baseY,
+                rightBaseX0 + tailWidth / 2, apexY,
+                badge.Color,
+                innerCanvasX,
+                innerCanvasY,
+                innerCanvasX1,
+                innerCanvasY1,
+                innerCanvasRadius,
+                innerCanvasRadiusSq);
+        } else if (badge.Position is QrPngCanvasBadgePosition.Left or QrPngCanvasBadgePosition.Right) {
+            var tailMax = badge.Position == QrPngCanvasBadgePosition.Left
+                ? Math.Max(0, x - innerCanvasX)
+                : Math.Max(0, innerCanvasX1 - (x + w - 1));
+            tail = Math.Min(tail, tailMax);
+            if (tail <= 0) return;
+
+            var tailHeight = Math.Max(6, Math.Min(h / 3, w * 2));
+            var topBaseY0 = y;
+            var topBaseY1 = y + tailHeight;
+            var bottomBaseY0 = y + h - tailHeight;
+            var bottomBaseY1 = y + h;
+
+            var baseX = badge.Position == QrPngCanvasBadgePosition.Left ? x : x + w - 1;
+            var apexX = badge.Position == QrPngCanvasBadgePosition.Left ? x - tail : x + w - 1 + tail;
+
+            DrawTriangleClipped(scanlines, stride,
+                baseX, topBaseY0,
+                baseX, topBaseY1,
+                apexX, topBaseY0 + tailHeight / 2,
+                badge.Color,
+                innerCanvasX,
+                innerCanvasY,
+                innerCanvasX1,
+                innerCanvasY1,
+                innerCanvasRadius,
+                innerCanvasRadiusSq);
+
+            DrawTriangleClipped(scanlines, stride,
+                baseX, bottomBaseY0,
+                baseX, bottomBaseY1,
+                apexX, bottomBaseY0 + tailHeight / 2,
+                badge.Color,
+                innerCanvasX,
+                innerCanvasY,
+                innerCanvasX1,
+                innerCanvasY1,
+                innerCanvasRadius,
+                innerCanvasRadiusSq);
+        }
+    }
+
+    private static void DrawRoundedRectClipped(
+        byte[] scanlines,
+        int stride,
+        int x,
+        int y,
+        int w,
+        int h,
+        int radius,
+        Rgba32 color,
+        int clipX0,
+        int clipY0,
+        int clipX1,
+        int clipY1,
+        int clipRadius,
+        int clipRadiusSq) {
+        if (color.A == 0) return;
+        if (w <= 0 || h <= 0) return;
+
+        var x1 = x + w - 1;
+        var y1 = y + h - 1;
+        var radiusSq = radius * radius;
+
+        var minX = Math.Max(x, clipX0);
+        var minY = Math.Max(y, clipY0);
+        var maxX = Math.Min(x1, clipX1);
+        var maxY = Math.Min(y1, clipY1);
+
+        for (var py = minY; py <= maxY; py++) {
+            for (var px = minX; px <= maxX; px++) {
+                if (radius > 0 && !InsideRounded(px, py, x, y, x1, y1, radius, radiusSq)) continue;
+                if (clipRadius > 0 && !InsideRounded(px, py, clipX0, clipY0, clipX1, clipY1, clipRadius, clipRadiusSq)) continue;
+                BlendPixel(scanlines, stride, px, py, color);
+            }
+        }
+    }
+
+    private static void DrawTriangleClipped(
+        byte[] scanlines,
+        int stride,
+        int ax,
+        int ay,
+        int bx,
+        int by,
+        int cx,
+        int cy,
+        Rgba32 color,
+        int clipX0,
+        int clipY0,
+        int clipX1,
+        int clipY1,
+        int clipRadius,
+        int clipRadiusSq) {
+        if (color.A == 0) return;
+
+        var minX = Math.Max(clipX0, Math.Min(ax, Math.Min(bx, cx)));
+        var minY = Math.Max(clipY0, Math.Min(ay, Math.Min(by, cy)));
+        var maxX = Math.Min(clipX1, Math.Max(ax, Math.Max(bx, cx)));
+        var maxY = Math.Min(clipY1, Math.Max(ay, Math.Max(by, cy)));
+
+        for (var y = minY; y <= maxY; y++) {
+            for (var x = minX; x <= maxX; x++) {
+                if (clipRadius > 0 && !InsideRounded(x, y, clipX0, clipY0, clipX1, clipY1, clipRadius, clipRadiusSq)) continue;
+                if (!PointInTriangle(ax, ay, bx, by, cx, cy, x, y)) continue;
+                BlendPixel(scanlines, stride, x, y, color);
+            }
+        }
+    }
+
+    private static bool PointInTriangle(int ax, int ay, int bx, int by, int cx, int cy, int px, int py) {
+        var e0 = Edge(ax, ay, bx, by, px, py);
+        var e1 = Edge(bx, by, cx, cy, px, py);
+        var e2 = Edge(cx, cy, ax, ay, px, py);
+        var hasNeg = e0 < 0 || e1 < 0 || e2 < 0;
+        var hasPos = e0 > 0 || e1 > 0 || e2 > 0;
+        return !(hasNeg && hasPos);
+    }
+
+    private static long Edge(int ax, int ay, int bx, int by, int px, int py) {
+        return (long)(px - ax) * (by - ay) - (long)(py - ay) * (bx - ax);
     }
 
     private static int ClampRadius(int radius, int size) {

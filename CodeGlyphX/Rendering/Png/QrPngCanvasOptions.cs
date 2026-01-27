@@ -57,6 +57,11 @@ public sealed class QrPngCanvasOptions {
     public QrPngCanvasFrameOptions? Frame { get; set; }
 
     /// <summary>
+    /// Optional badge/tab/ribbon drawn outside the QR bounds.
+    /// </summary>
+    public QrPngCanvasBadgeOptions? Badge { get; set; }
+
+    /// <summary>
     /// Border thickness in pixels (0 = no border).
     /// </summary>
     public int BorderPx { get; set; }
@@ -92,5 +97,6 @@ public sealed class QrPngCanvasOptions {
         Vignette?.Validate();
         Grain?.Validate();
         Frame?.Validate();
+        Badge?.Validate();
     }
 }

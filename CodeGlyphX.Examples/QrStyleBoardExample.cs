@@ -94,6 +94,28 @@ internal static class QrStyleBoardExample {
                     frameColor: R(18, 36, 66, 220),
                     accentColor: R(0, 150, 136, 220)))),
 
+            new("Top Badge", StyleDocs("top-badge"), () => BaseSticker(
+                fg: R(32, 48, 96),
+                palette: Palette(QrPngPaletteMode.Cycle, 0, R(32, 48, 96), R(74, 112, 210), R(140, 210, 255)),
+                shape: QrPngModuleShape.ConnectedRounded,
+                eyes: Eye(QrPngEyeFrameStyle.DoubleRing, R(32, 48, 96), R(140, 210, 255)),
+                scaleMap: ScaleMap(QrPngModuleScaleMode.Radial, 0.9, 1.0, 28028),
+                canvas: CanvasBadge(
+                    background: R(246, 249, 255),
+                    badgeColor: R(32, 80, 200, 220),
+                    position: QrPngCanvasBadgePosition.Top))),
+
+            new("Ribbon Tab", StyleDocs("ribbon-tab"), () => BaseSticker(
+                fg: R(20, 38, 80),
+                palette: Palette(QrPngPaletteMode.Cycle, 0, R(20, 38, 80), R(0, 150, 136), R(255, 127, 80)),
+                shape: QrPngModuleShape.ConnectedRounded,
+                eyes: EyeGlow(R(20, 38, 80), R(0, 150, 136), R(255, 127, 80, 180)),
+                scaleMap: ScaleMap(QrPngModuleScaleMode.Radial, 0.9, 1.0, 29029),
+                canvas: CanvasRibbon(
+                    background: R(250, 252, 255),
+                    ribbonColor: R(0, 150, 136, 220),
+                    position: QrPngCanvasBadgePosition.Bottom))),
+
             new("Candy Checker", StyleDocs("candy-checker"), () => BaseSticker(
                 fg: R(255, 107, 107),
                 palette: Palette(QrPngPaletteMode.Checker, 0, R(255, 107, 107), R(255, 217, 61)),
@@ -761,6 +783,51 @@ internal static class QrStyleBoardExample {
             ShadowOffsetX = 10,
             ShadowOffsetY = 14,
             ShadowColor = R(0, 0, 0, 64),
+        };
+    }
+
+    private static QrPngCanvasOptions CanvasBadge(Rgba32 background, Rgba32 badgeColor, QrPngCanvasBadgePosition position) {
+        return new QrPngCanvasOptions {
+            PaddingPx = 34,
+            CornerRadiusPx = 28,
+            Background = background,
+            BorderPx = 2,
+            BorderColor = R(0, 0, 0, 18),
+            Badge = new QrPngCanvasBadgeOptions {
+                Shape = QrPngCanvasBadgeShape.Badge,
+                Position = position,
+                WidthPx = 140,
+                HeightPx = 34,
+                GapPx = 10,
+                CornerRadiusPx = 16,
+                Color = badgeColor,
+            },
+            ShadowOffsetX = 7,
+            ShadowOffsetY = 10,
+            ShadowColor = R(0, 0, 0, 55),
+        };
+    }
+
+    private static QrPngCanvasOptions CanvasRibbon(Rgba32 background, Rgba32 ribbonColor, QrPngCanvasBadgePosition position) {
+        return new QrPngCanvasOptions {
+            PaddingPx = 36,
+            CornerRadiusPx = 28,
+            Background = background,
+            BorderPx = 2,
+            BorderColor = R(0, 0, 0, 18),
+            Badge = new QrPngCanvasBadgeOptions {
+                Shape = QrPngCanvasBadgeShape.Ribbon,
+                Position = position,
+                WidthPx = 150,
+                HeightPx = 30,
+                GapPx = 12,
+                CornerRadiusPx = 8,
+                TailPx = 12,
+                Color = ribbonColor,
+            },
+            ShadowOffsetX = 7,
+            ShadowOffsetY = 10,
+            ShadowColor = R(0, 0, 0, 55),
         };
     }
 
