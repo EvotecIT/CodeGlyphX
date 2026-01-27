@@ -96,13 +96,12 @@ internal static class WebpVp8Decoder {
             return false;
         }
 
-        if (!TryReadMacroblockRgbaScaffold(payload, out var rgbaScaffold)) {
+        if (!TryReadImageRgbaScaffold(payload, header, out rgba)) {
             return false;
         }
 
-        width = rgbaScaffold.Width;
-        height = rgbaScaffold.Height;
-        rgba = rgbaScaffold.Rgba;
+        width = header.Width;
+        height = header.Height;
         return true;
     }
 
@@ -610,6 +609,41 @@ internal static class WebpVp8Decoder {
         return true;
     }
 
+    private static bool TryReadImageRgbaScaffold(ReadOnlySpan<byte> payload, WebpVp8Header header, out byte[] rgba) {
+        rgba = Array.Empty<byte>();
+        if (header.Width <= 0 || header.Height <= 0) return false;
+        if (!TryReadMacroblockRgbaScaffold(payload, out var macroblockScaffold)) return false;
+
+        var macroblockWidth = macroblockScaffold.Width;
+        var macroblockHeight = macroblockScaffold.Height;
+        if (macroblockWidth <= 0 || macroblockHeight <= 0) return false;
+
+        var pixelBytes = checked(header.Width * header.Height * 4);
+        var output = new byte[pixelBytes];
+
+        var macroblockCols = (header.Width + macroblockWidth - 1) / macroblockWidth;
+        var macroblockRows = (header.Height + macroblockHeight - 1) / macroblockHeight;
+
+        for (var mbY = 0; mbY < macroblockRows; mbY++) {
+            var dstBlockY = mbY * macroblockHeight;
+            for (var mbX = 0; mbX < macroblockCols; mbX++) {
+                var dstBlockX = mbX * macroblockWidth;
+                CopyMacroblockRgba(
+                    macroblockScaffold.Rgba,
+                    macroblockWidth,
+                    macroblockHeight,
+                    output,
+                    header.Width,
+                    header.Height,
+                    dstBlockX,
+                    dstBlockY);
+            }
+        }
+
+        rgba = output;
+        return true;
+    }
+
     private static bool TryReadControlHeader(WebpVp8BoolDecoder decoder, out WebpVp8ControlHeader controlHeader) {
         controlHeader = default;
         if (!decoder.TryReadBool(probability: 128, out var colorSpaceBit)) return false;
@@ -961,6 +995,36 @@ internal static class WebpVp8Decoder {
                 var px = dstX + x;
                 if ((uint)px >= planeWidth) continue;
                 plane[planeRowOffset + px] = block[blockRowOffset + x];
+            }
+        }
+    }
+
+    private static void CopyMacroblockRgba(
+        byte[] macroblockRgba,
+        int macroblockWidth,
+        int macroblockHeight,
+        byte[] output,
+        int outputWidth,
+        int outputHeight,
+        int dstBlockX,
+        int dstBlockY) {
+        for (var y = 0; y < macroblockHeight; y++) {
+            var dstY = dstBlockY + y;
+            if ((uint)dstY >= outputHeight) break;
+
+            var macroblockRowOffset = y * macroblockWidth;
+            var outputRowOffset = dstY * outputWidth;
+
+            for (var x = 0; x < macroblockWidth; x++) {
+                var dstX = dstBlockX + x;
+                if ((uint)dstX >= outputWidth) break;
+
+                var srcIndex = (macroblockRowOffset + x) * 4;
+                var dstIndex = (outputRowOffset + dstX) * 4;
+                output[dstIndex + 0] = macroblockRgba[srcIndex + 0];
+                output[dstIndex + 1] = macroblockRgba[srcIndex + 1];
+                output[dstIndex + 2] = macroblockRgba[srcIndex + 2];
+                output[dstIndex + 3] = macroblockRgba[srcIndex + 3];
             }
         }
     }

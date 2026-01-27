@@ -9,9 +9,11 @@ public sealed class WebpVp8ContainerScaffoldDecodeTests
     [Fact]
     public void ImageReader_Vp8ScaffoldSignature_DecodesViaManagedPath()
     {
+        const int expectedWidth = 17;
+        const int expectedHeight = 10;
         var boolData = WebpVp8TestHelper.CreateBoolData(length: 4096);
         WebpVp8TestHelper.ApplyScaffoldSignature(boolData);
-        var firstPartitionOnly = WebpVp8TestHelper.BuildKeyframePayload(width: 8, height: 8, boolData);
+        var firstPartitionOnly = WebpVp8TestHelper.BuildKeyframePayload(expectedWidth, expectedHeight, boolData);
         Assert.True(WebpVp8Decoder.TryReadFrameHeader(firstPartitionOnly, out var frameHeader));
 
         var dctCount = frameHeader.DctPartitionCount;
@@ -22,8 +24,8 @@ public sealed class WebpVp8ContainerScaffoldDecodeTests
         }
 
         var vp8Payload = WebpVp8TestHelper.BuildKeyframePayloadWithPartitionsAndTokens(
-            8,
-            8,
+            expectedWidth,
+            expectedHeight,
             boolData,
             partitionSizes,
             tokenSeed: 0x53);
@@ -32,9 +34,9 @@ public sealed class WebpVp8ContainerScaffoldDecodeTests
         var success = ImageReader.TryDecodeRgba32(webp, out var rgba, out var width, out var height);
 
         Assert.True(success);
-        Assert.Equal(8, width);
-        Assert.Equal(8, height);
-        Assert.Equal(8 * 8 * 4, rgba.Length);
+        Assert.Equal(expectedWidth, width);
+        Assert.Equal(expectedHeight, height);
+        Assert.Equal(expectedWidth * expectedHeight * 4, rgba.Length);
 
         for (var i = 3; i < rgba.Length; i += 4)
         {
