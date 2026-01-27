@@ -61,6 +61,30 @@ public sealed class WebpVp8BlockTokenScaffoldTests
                 Assert.Equal(16, block.Tokens.Length);
                 Assert.InRange(block.TokensRead, 1, 16);
 
+                var result = block.Result;
+                Assert.Equal(block.BlockType, result.BlockType);
+                Assert.Equal(block.DequantFactor, result.DequantFactor);
+                Assert.Equal(block.CoefficientsNaturalOrder[0], result.Dc);
+                Assert.Equal(block.DequantizedCoefficientsNaturalOrder[0], result.DequantDc);
+                Assert.Equal(15, result.Ac.Length);
+                Assert.Equal(15, result.DequantAc.Length);
+
+                var expectedHasNonZeroAc = false;
+                for (var i = 1; i < 16; i++)
+                {
+                    var acIndex = i - 1;
+                    Assert.Equal(block.CoefficientsNaturalOrder[i], result.Ac[acIndex]);
+                    Assert.Equal(block.DequantizedCoefficientsNaturalOrder[i], result.DequantAc[acIndex]);
+                    if (block.CoefficientsNaturalOrder[i] != 0)
+                    {
+                        expectedHasNonZeroAc = true;
+                    }
+                }
+
+                Assert.Equal(expectedHasNonZeroAc, result.HasNonZeroAc);
+                Assert.Equal(block.ReachedEob, result.ReachedEob);
+                Assert.Equal(block.TokensRead, result.TokensRead);
+
                 var expectedCoefficientIndex = 0;
                 var sawEob = false;
                 for (var t = 0; t < block.TokensRead; t++)

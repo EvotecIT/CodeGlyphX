@@ -426,6 +426,14 @@ internal static class WebpVp8Decoder {
                     coefficientIndex++;
                 }
 
+                var blockResult = BuildScaffoldBlockResult(
+                    blockType,
+                    dequantFactor,
+                    coefficientsNaturalOrder,
+                    dequantizedCoefficientsNaturalOrder,
+                    reachedEob,
+                    tokensRead);
+
                 blocks[blockIndex] = new WebpVp8BlockTokenScaffold(
                     blockIndex,
                     blockType,
@@ -436,7 +444,8 @@ internal static class WebpVp8Decoder {
                     dequantizedCoefficientsNaturalOrder,
                     tokenInfos,
                     tokensRead,
-                    reachedEob);
+                    reachedEob,
+                    blockResult);
                 blocksRead++;
             }
 
@@ -730,6 +739,38 @@ internal static class WebpVp8Decoder {
         if (!decoder.TryReadBool(128, out var signBit)) return false;
         coefficientValue = signBit ? -magnitude : magnitude;
         return true;
+    }
+
+    private static WebpVp8BlockResult BuildScaffoldBlockResult(
+        int blockType,
+        int dequantFactor,
+        int[] coefficientsNaturalOrder,
+        int[] dequantizedCoefficientsNaturalOrder,
+        bool reachedEob,
+        int tokensRead) {
+        var ac = new int[CoefficientsPerBlock - 1];
+        var dequantAc = new int[CoefficientsPerBlock - 1];
+        var hasNonZeroAc = false;
+
+        for (var i = 1; i < CoefficientsPerBlock; i++) {
+            var acIndex = i - 1;
+            var value = coefficientsNaturalOrder[i];
+            var dequantValue = dequantizedCoefficientsNaturalOrder[i];
+            ac[acIndex] = value;
+            dequantAc[acIndex] = dequantValue;
+            if (value != 0) hasNonZeroAc = true;
+        }
+
+        return new WebpVp8BlockResult(
+            blockType,
+            dequantFactor,
+            coefficientsNaturalOrder[0],
+            dequantizedCoefficientsNaturalOrder[0],
+            ac,
+            dequantAc,
+            hasNonZeroAc,
+            reachedEob,
+            tokensRead);
     }
 
     private static int GetCoeffIndex(int blockType, int band, int prev, int node) {
@@ -1079,7 +1120,8 @@ internal readonly struct WebpVp8BlockTokenScaffold {
         int[] dequantizedCoefficientsNaturalOrder,
         WebpVp8BlockTokenInfo[] tokens,
         int tokensRead,
-        bool reachedEob) {
+        bool reachedEob,
+        WebpVp8BlockResult result) {
         BlockIndex = blockIndex;
         BlockType = blockType;
         DequantFactor = dequantFactor;
@@ -1090,6 +1132,7 @@ internal readonly struct WebpVp8BlockTokenScaffold {
         Tokens = tokens;
         TokensRead = tokensRead;
         ReachedEob = reachedEob;
+        Result = result;
     }
 
     public int BlockIndex { get; }
@@ -1102,6 +1145,40 @@ internal readonly struct WebpVp8BlockTokenScaffold {
     public WebpVp8BlockTokenInfo[] Tokens { get; }
     public int TokensRead { get; }
     public bool ReachedEob { get; }
+    public WebpVp8BlockResult Result { get; }
+}
+
+internal readonly struct WebpVp8BlockResult {
+    public WebpVp8BlockResult(
+        int blockType,
+        int dequantFactor,
+        int dc,
+        int dequantDc,
+        int[] ac,
+        int[] dequantAc,
+        bool hasNonZeroAc,
+        bool reachedEob,
+        int tokensRead) {
+        BlockType = blockType;
+        DequantFactor = dequantFactor;
+        Dc = dc;
+        DequantDc = dequantDc;
+        Ac = ac;
+        DequantAc = dequantAc;
+        HasNonZeroAc = hasNonZeroAc;
+        ReachedEob = reachedEob;
+        TokensRead = tokensRead;
+    }
+
+    public int BlockType { get; }
+    public int DequantFactor { get; }
+    public int Dc { get; }
+    public int DequantDc { get; }
+    public int[] Ac { get; }
+    public int[] DequantAc { get; }
+    public bool HasNonZeroAc { get; }
+    public bool ReachedEob { get; }
+    public int TokensRead { get; }
 }
 
 internal readonly struct WebpVp8BlockPartitionScaffold {
