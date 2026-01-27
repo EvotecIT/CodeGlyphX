@@ -31,6 +31,7 @@ internal static class WebpVp8Decoder {
     private const int MacroblockScaffoldMaxBlocks = 4;
     private const int MacroblockScaffoldChromaWidth = 4;
     private const int MacroblockScaffoldChromaHeight = 4;
+    private static readonly byte[] ScaffoldSignature = new byte[] { (byte)'S', (byte)'C', (byte)'F', (byte)'0' };
     private const int BlockTypeY2 = 0;
     private const int BlockTypeY = 1;
     private const int BlockTypeU = 2;
@@ -89,10 +90,20 @@ internal static class WebpVp8Decoder {
         _ = TryReadMacroblockScaffold(payload, out _);
         _ = TryReadMacroblockRgbaScaffold(payload, out _);
 
-        // Parsing-only scaffold for now.
-        width = header.Width;
-        height = header.Height;
-        return false;
+        // Temporary scaffold decode: succeed only for explicitly marked payloads
+        // to avoid shadowing the native fallback for real VP8 images.
+        if (!HasScaffoldSignature(payload)) {
+            return false;
+        }
+
+        if (!TryReadMacroblockRgbaScaffold(payload, out var rgbaScaffold)) {
+            return false;
+        }
+
+        width = rgbaScaffold.Width;
+        height = rgbaScaffold.Height;
+        rgba = rgbaScaffold.Rgba;
+        return true;
     }
 
     internal static bool TryReadHeader(ReadOnlySpan<byte> payload, out WebpVp8Header header) {
@@ -973,6 +984,12 @@ internal static class WebpVp8Decoder {
         var b = yy + (int)(1.772 * uu);
 
         return (ClampToByte(r), ClampToByte(g), ClampToByte(b));
+    }
+
+    private static bool HasScaffoldSignature(ReadOnlySpan<byte> payload) {
+        if (!TryGetBoolCodedData(payload, out var boolData)) return false;
+        if (boolData.Length < ScaffoldSignature.Length) return false;
+        return boolData.Slice(0, ScaffoldSignature.Length).SequenceEqual(ScaffoldSignature);
     }
 
     private static int GetCoeffIndex(int blockType, int band, int prev, int node) {
