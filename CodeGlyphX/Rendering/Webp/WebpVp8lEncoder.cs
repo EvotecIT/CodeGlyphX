@@ -353,11 +353,11 @@ internal static class WebpVp8lEncoder {
         var list = new List<Token>(pixels.Length);
         var pos = 0;
         const int maxDistance = 72;
-        const int minMatchLength = 3;
         const int maxMatchLength = 128;
         while (pos < pixels.Length) {
             var bestLength = 0;
             var bestDistance = 0;
+            var bestScore = int.MinValue;
 
             var remaining = pixels.Length - pos;
             var maxLen = remaining < 4096 ? remaining : 4096;
@@ -366,18 +366,24 @@ internal static class WebpVp8lEncoder {
             for (var distance = 1; distance <= maxDistance; distance++) {
                 if (pos < distance) continue;
 
+                var requiredLength = distance <= 8 ? 3 : (distance <= 32 ? 4 : 5);
+
                 var length = 0;
                 while (length < maxLen && pixels[pos + length] == pixels[pos - distance + length]) {
                     length++;
                 }
 
-                if (length >= minMatchLength && length > bestLength) {
+                if (length < requiredLength) continue;
+
+                var score = length - requiredLength;
+                if (score > bestScore || (score == bestScore && distance < bestDistance)) {
+                    bestScore = score;
                     bestLength = length;
                     bestDistance = distance;
                 }
             }
 
-            if (bestLength >= minMatchLength) {
+            if (bestLength > 0) {
                 list.Add(Token.BackReference(bestDistance, bestLength));
                 pos += bestLength;
                 continue;
