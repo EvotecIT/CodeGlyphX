@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using CodeGlyphX.Rendering;
 
 namespace CodeGlyphX.Benchmarks;
 
@@ -44,7 +45,7 @@ internal static class QrDecodeImageOps {
 
                     var v0 = v00 + (v10 - v00) * wx;
                     var v1 = v01 + (v11 - v01) * wx;
-                    var value = v0 + (v1 - v0) * wy;
+                    var value = (int)Math.Round(v0 + (v1 - v0) * wy);
                     if (value < 0) value = 0;
                     else if (value > 255) value = 255;
                     dst[dstIndex + c] = (byte)value;
@@ -60,9 +61,9 @@ internal static class QrDecodeImageOps {
             var row = y * stride;
             for (var x = 0; x < width; x++) {
                 var i = row + x * 4;
-                pixels[i] = b;
+                pixels[i] = r;
                 pixels[i + 1] = g;
-                pixels[i + 2] = r;
+                pixels[i + 2] = b;
                 pixels[i + 3] = a;
             }
         }
@@ -71,8 +72,23 @@ internal static class QrDecodeImageOps {
     public static void Blit(byte[] src, int srcW, int srcH, int srcStride, byte[] dest, int destW, int destH, int destStride, int offsetX, int offsetY) {
         for (var y = 0; y < srcH; y++) {
             var dy = offsetY + y;
+            if (dy < 0) continue;
             if ((uint)dy >= (uint)destH) break;
-            Buffer.BlockCopy(src, y * srcStride, dest, dy * destStride + offsetX * 4, srcW * 4);
+
+            var destStartX = offsetX;
+            var srcStartX = 0;
+            if (destStartX < 0) {
+                srcStartX = -destStartX;
+                destStartX = 0;
+            }
+            if ((uint)destStartX >= (uint)destW || srcStartX >= srcW) continue;
+
+            var copyWidth = Math.Min(srcW - srcStartX, destW - destStartX);
+            if (copyWidth <= 0) continue;
+
+            var srcOffset = y * srcStride + srcStartX * 4;
+            var destOffset = dy * destStride + destStartX * 4;
+            Buffer.BlockCopy(src, srcOffset, dest, destOffset, copyWidth * 4);
         }
     }
 
@@ -165,4 +181,3 @@ internal static class QrDecodeImageOps {
         return (byte)value;
     }
 }
-

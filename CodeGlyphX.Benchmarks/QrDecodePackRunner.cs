@@ -246,7 +246,7 @@ internal static class QrDecodePackRunner {
         var targetRuns = Math.Max(1, options.Iterations * opsPerIteration);
         if (calibration.ElapsedMilliseconds >= 7000) {
             targetRuns = 1;
-        } else if (calibration.ElapsedMilliseconds >= options.MinIterationMilliseconds * 4) {
+        } else if (calibration.ElapsedMilliseconds >= (long)options.MinIterationMilliseconds * 4L) {
             targetRuns = Math.Min(targetRuns, options.Iterations);
         }
         if (options.Mode == QrPackMode.Full && string.Equals(scenario.Pack, QrDecodeScenarioPacks.Art, StringComparison.OrdinalIgnoreCase)) {
@@ -584,8 +584,8 @@ internal static class QrDecodePackRunner {
 
         var valid = new HashSet<string>(QrDecodeScenarioPacks.AllPacks, StringComparer.OrdinalIgnoreCase);
         var packs = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-        foreach (var pack in requestedPacks) {
-            if (valid.Contains(pack)) packs.Add(pack);
+        foreach (var pack in requestedPacks.Where(valid.Contains)) {
+            packs.Add(pack);
         }
 
         if (packs.Count == 0) {
