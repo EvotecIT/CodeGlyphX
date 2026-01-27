@@ -871,10 +871,10 @@ public static partial class JpegReader {
             var right = new int[512];
             var symbols = new int[512];
             var fast = new short[1 << HuffmanFastBits];
-            Array.Fill(left, -1);
-            Array.Fill(right, -1);
-            Array.Fill(symbols, -1);
-            Array.Fill(fast, (short)-1);
+            for (var i = 0; i < left.Length; i++) left[i] = -1;
+            for (var i = 0; i < right.Length; i++) right[i] = -1;
+            for (var i = 0; i < symbols.Length; i++) symbols[i] = -1;
+            for (var i = 0; i < fast.Length; i++) fast[i] = -1;
 
             var next = 1;
             var code = 0;
