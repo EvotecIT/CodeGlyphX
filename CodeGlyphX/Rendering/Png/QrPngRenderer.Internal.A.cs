@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using CodeGlyphX.Qr;
 using CodeGlyphX.Rendering;
 
 namespace CodeGlyphX.Rendering.Png;
@@ -56,7 +57,22 @@ public static partial class QrPngRenderer {
                 FillBackgroundGradient(buffer, widthPx, heightPx, stride, opts.BackgroundGradient);
             }
             if (opts.BackgroundPattern is not null) {
-                DrawCanvasPattern(buffer, widthPx, heightPx, stride, qrOffsetX, qrOffsetY, qrFullPx, qrFullPx, opts.ModuleSize, 0, opts.BackgroundPattern);
+                var quietZonePx = opts.QuietZone * opts.ModuleSize;
+                DrawCanvasPattern(
+                    buffer,
+                    widthPx,
+                    heightPx,
+                    stride,
+                    qrOffsetX,
+                    qrOffsetY,
+                    qrFullPx,
+                    qrFullPx,
+                    opts.ModuleSize,
+                    0,
+                    quietZonePx,
+                    qrSizePx,
+                    opts.ProtectQuietZone,
+                    opts.BackgroundPattern);
             }
         } else {
             PngRenderHelpers.FillBackground(buffer, widthPx, heightPx, stride, Rgba32.Transparent);
@@ -73,6 +89,13 @@ public static partial class QrPngRenderer {
             ? mask
             : BuildModuleMask(opts.ModuleSize, opts.Eyes.InnerShape, opts.Eyes.InnerScale, opts.Eyes.InnerCornerRadiusPx);
         var eyeInnerSolid = eyeInnerMask == mask ? maskSolid : IsSolidMask(eyeInnerMask);
+        var functionalMask = opts.ProtectFunctionalPatterns
+            ? BuildModuleMask(opts.ModuleSize, QrPngModuleShape.Square, 1.0, cornerRadiusPx: 0)
+            : mask;
+        var functionalMaskSolid = functionalMask == mask ? maskSolid : IsSolidMask(functionalMask);
+        var functionMask = opts.ProtectFunctionalPatterns && TryGetVersion(size, out var version)
+            ? BuildFunctionMask(version, size)
+            : null;
         var useFrame = opts.Eyes is not null && opts.Eyes.UseFrame;
         var background = opts.Background;
         var gradientInfo = opts.ForegroundGradient is null
@@ -82,7 +105,7 @@ public static partial class QrPngRenderer {
         var zoneInfo = opts.ForegroundPaletteZones is null ? (PaletteZoneInfo?)null : new PaletteZoneInfo(opts.ForegroundPaletteZones, size);
         var scaleMapInfo = opts.ModuleScaleMap is null ? (ModuleScaleMapInfo?)null : new ModuleScaleMapInfo(opts.ModuleScaleMap, size);
         var scaleMaskCache = scaleMapInfo.HasValue ? new Dictionary<int, MaskInfo>(8) : null;
-        var detectEyes = opts.Eyes is not null || paletteInfo.HasValue || zoneInfo.HasValue || scaleMapInfo.HasValue;
+        var detectEyes = opts.Eyes is not null || paletteInfo.HasValue || zoneInfo.HasValue || scaleMapInfo.HasValue || functionMask is not null;
         var eyeOuterGradient = opts.Eyes?.OuterGradient;
         var eyeInnerGradient = opts.Eyes?.InnerGradient;
         var eyeOuterGradientInfo = eyeOuterGradient is null ? (GradientInfo?)null : new GradientInfo(eyeOuterGradient, 7 * opts.ModuleSize - 1, 7 * opts.ModuleSize - 1);
@@ -100,27 +123,40 @@ public static partial class QrPngRenderer {
 
                 if (useFrame && eyeKind != EyeKind.None) continue;
 
-                var useMask = eyeKind == EyeKind.Outer ? eyeOuterMask : eyeKind == EyeKind.Inner ? eyeInnerMask : mask;
-                var useMaskSolid = eyeKind == EyeKind.Outer ? eyeOuterSolid : eyeKind == EyeKind.Inner ? eyeInnerSolid : maskSolid;
-                var useColor = eyeKind switch {
-                    EyeKind.Outer => opts.Eyes?.OuterColor ?? opts.Foreground,
-                    EyeKind.Inner => opts.Eyes?.InnerColor ?? opts.Foreground,
-                    _ => opts.Foreground,
-                };
+                var isFunctional = functionMask is not null && functionMask[mx, my];
+                var protectFunctional = isFunctional && eyeKind == EyeKind.None;
+
+                var useMask = protectFunctional
+                    ? functionalMask
+                    : eyeKind == EyeKind.Outer ? eyeOuterMask : eyeKind == EyeKind.Inner ? eyeInnerMask : mask;
+                var useMaskSolid = protectFunctional
+                    ? functionalMaskSolid
+                    : eyeKind == EyeKind.Outer ? eyeOuterSolid : eyeKind == EyeKind.Inner ? eyeInnerSolid : maskSolid;
+                var useColor = protectFunctional
+                    ? opts.Foreground
+                    : eyeKind switch {
+                        EyeKind.Outer => opts.Eyes?.OuterColor ?? opts.Foreground,
+                        EyeKind.Inner => opts.Eyes?.InnerColor ?? opts.Foreground,
+                        _ => opts.Foreground,
+                    };
                 PaletteInfo? palette = null;
-                if (zoneInfo.HasValue
-                    && zoneInfo.Value.TryGetPalette(mx, my, out var zonePalette)
-                    && (eyeKind == EyeKind.None || zonePalette.ApplyToEyes)) {
-                    palette = zonePalette;
-                } else if (paletteInfo.HasValue && (eyeKind == EyeKind.None || paletteInfo.Value.ApplyToEyes)) {
-                    palette = paletteInfo;
+                if (!protectFunctional) {
+                    if (zoneInfo.HasValue
+                        && zoneInfo.Value.TryGetPalette(mx, my, out var zonePalette)
+                        && (eyeKind == EyeKind.None || zonePalette.ApplyToEyes)) {
+                        palette = zonePalette;
+                    } else if (paletteInfo.HasValue && (eyeKind == EyeKind.None || paletteInfo.Value.ApplyToEyes)) {
+                        palette = paletteInfo;
+                    }
                 }
                 var usePalette = palette.HasValue;
                 if (usePalette) {
                     useColor = GetPaletteColor(palette!.Value, mx, my);
                 }
 
-                if (scaleMapInfo.HasValue && (eyeKind == EyeKind.None || (scaleMapInfo.Value.ApplyToEyes && opts.Eyes is null))) {
+                if (!protectFunctional
+                    && scaleMapInfo.HasValue
+                    && (eyeKind == EyeKind.None || (scaleMapInfo.Value.ApplyToEyes && opts.Eyes is null))) {
                     var scale = ClampScale(opts.ModuleScale * GetScaleFactor(scaleMapInfo.Value, mx, my));
                     var maskInfo = GetScaleMask(scaleMaskCache!, opts.ModuleSize, opts.ModuleShape, scale, opts.ModuleCornerRadiusPx);
                     useMask = maskInfo.Mask;
@@ -149,7 +185,7 @@ public static partial class QrPngRenderer {
                     }
                 }
 
-                var useGradient = !usePalette && eyeKind == EyeKind.None ? gradientInfo : null;
+                var useGradient = !protectFunctional && !usePalette && eyeKind == EyeKind.None ? gradientInfo : null;
                 if (useGradient is null && useMaskSolid) {
                     var solid = useColor.A == 255 ? useColor : CompositeColor(useColor, background);
                     DrawModuleSolid(buffer, stride, opts.ModuleSize, mx, my, opts.QuietZone, qrOffsetX, qrOffsetY, solid);
@@ -401,7 +437,7 @@ public static partial class QrPngRenderer {
         }
 
         if (canvas.Pattern is not null) {
-            DrawCanvasPattern(scanlines, widthPx, heightPx, stride, x, y, w, h, moduleSize, radius, canvas.Pattern);
+            DrawCanvasPattern(scanlines, widthPx, heightPx, stride, x, y, w, h, moduleSize, radius, 0, 0, protectQuietZone: false, canvas.Pattern);
         }
     }
 
@@ -421,7 +457,23 @@ public static partial class QrPngRenderer {
         }
 
         if (opts.BackgroundPattern is not null) {
-            DrawCanvasPattern(scanlines, widthPx, heightPx, stride, qrOffsetX, qrOffsetY, qrFullPx, qrFullPx, opts.ModuleSize, 0, opts.BackgroundPattern);
+            var quietZonePx = opts.QuietZone * opts.ModuleSize;
+            var qrSizePx = Math.Max(0, qrFullPx - quietZonePx * 2);
+            DrawCanvasPattern(
+                scanlines,
+                widthPx,
+                heightPx,
+                stride,
+                qrOffsetX,
+                qrOffsetY,
+                qrFullPx,
+                qrFullPx,
+                opts.ModuleSize,
+                0,
+                quietZonePx,
+                qrSizePx,
+                opts.ProtectQuietZone,
+                opts.BackgroundPattern);
         }
     }
 
@@ -436,6 +488,9 @@ public static partial class QrPngRenderer {
         int h,
         int moduleSize,
         int radius,
+        int quietZonePx,
+        int qrSizePx,
+        bool protectQuietZone,
         QrPngBackgroundPatternOptions pattern) {
         if (pattern.Color.A == 0) return;
         if (pattern.ThicknessPx <= 0) return;
@@ -449,11 +504,17 @@ public static partial class QrPngRenderer {
         var y1 = y + h;
         var r = Math.Max(0, radius);
         var r2 = r * r;
+        var protectQuiet = protectQuietZone && quietZonePx > 0 && qrSizePx > 0;
+        var qrX0 = x + quietZonePx;
+        var qrY0 = y + quietZonePx;
+        var qrX1 = qrX0 + qrSizePx;
+        var qrY1 = qrY0 + qrSizePx;
 
         for (var py = y; py < y1; py++) {
             var localY = py - y;
             for (var px = x; px < x1; px++) {
                 if (r > 0 && !InsideRounded(px, py, x, y, x1 - 1, y1 - 1, r, r2)) continue;
+                if (protectQuiet && (px < qrX0 || px >= qrX1 || py < qrY0 || py >= qrY1)) continue;
 
                 var localX = px - x;
                 var draw = pattern.Type switch {
@@ -520,6 +581,74 @@ public static partial class QrPngRenderer {
                 scanlines[p + 1] = color.G;
                 scanlines[p + 2] = color.B;
                 scanlines[p + 3] = color.A;
+            }
+        }
+    }
+
+    private static bool TryGetVersion(int size, out int version) {
+        version = (size - 17) / 4;
+        return version is >= 1 and <= 40 && version * 4 + 17 == size;
+    }
+
+    private static BitMatrix BuildFunctionMask(int version, int size) {
+        var isFunction = new BitMatrix(size, size);
+
+        MarkFinder(0, 0, isFunction);
+        MarkFinder(size - 7, 0, isFunction);
+        MarkFinder(0, size - 7, isFunction);
+
+        for (var i = 0; i < size; i++) {
+            isFunction[6, i] = true;
+            isFunction[i, 6] = true;
+        }
+
+        var align = QrTables.GetAlignmentPatternPositions(version);
+        for (var i = 0; i < align.Length; i++) {
+            for (var j = 0; j < align.Length; j++) {
+                if ((i == 0 && j == 0) || (i == 0 && j == align.Length - 1) || (i == align.Length - 1 && j == 0)) {
+                    continue;
+                }
+                MarkAlignment(align[i], align[j], isFunction);
+            }
+        }
+
+        isFunction[8, size - 8] = true;
+
+        for (var i = 0; i <= 5; i++) isFunction[8, i] = true;
+        isFunction[8, 7] = true;
+        isFunction[8, 8] = true;
+        isFunction[7, 8] = true;
+        for (var i = 9; i < 15; i++) isFunction[14 - i, 8] = true;
+        for (var i = 0; i < 8; i++) isFunction[size - 1 - i, 8] = true;
+        for (var i = 8; i < 15; i++) isFunction[8, size - 15 + i] = true;
+
+        if (version >= 7) {
+            for (var i = 0; i < 18; i++) {
+                var a = size - 11 + (i % 3);
+                var b = i / 3;
+                isFunction[a, b] = true;
+                isFunction[b, a] = true;
+            }
+        }
+
+        return isFunction;
+    }
+
+    private static void MarkFinder(int x, int y, BitMatrix isFunction) {
+        for (var dy = -1; dy <= 7; dy++) {
+            for (var dx = -1; dx <= 7; dx++) {
+                var xx = x + dx;
+                var yy = y + dy;
+                if ((uint)xx >= (uint)isFunction.Width || (uint)yy >= (uint)isFunction.Height) continue;
+                isFunction[xx, yy] = true;
+            }
+        }
+    }
+
+    private static void MarkAlignment(int x, int y, BitMatrix isFunction) {
+        for (var dy = -2; dy <= 2; dy++) {
+            for (var dx = -2; dx <= 2; dx++) {
+                isFunction[x + dx, y + dy] = true;
             }
         }
     }

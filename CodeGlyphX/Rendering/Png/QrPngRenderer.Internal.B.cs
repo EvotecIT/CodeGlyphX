@@ -1080,7 +1080,23 @@ public static partial class QrPngRenderer {
                 FillBackgroundGradient(temp, scaledWidth, scaledHeight, scaledStride, scaledOpts.BackgroundGradient);
             }
             if (scaledOpts.BackgroundPattern is not null) {
-                DrawCanvasPattern(temp, scaledWidth, scaledHeight, scaledStride, scaledQrOffsetX, scaledQrOffsetY, scaledQrFullPx, scaledQrFullPx, scaledOpts.ModuleSize, 0, scaledOpts.BackgroundPattern);
+                var quietZonePx = scaledOpts.QuietZone * scaledOpts.ModuleSize;
+                var qrSizePx = Math.Max(0, scaledQrFullPx - quietZonePx * 2);
+                DrawCanvasPattern(
+                    temp,
+                    scaledWidth,
+                    scaledHeight,
+                    scaledStride,
+                    scaledQrOffsetX,
+                    scaledQrOffsetY,
+                    scaledQrFullPx,
+                    scaledQrFullPx,
+                    scaledOpts.ModuleSize,
+                    0,
+                    quietZonePx,
+                    qrSizePx,
+                    scaledOpts.ProtectQuietZone,
+                    scaledOpts.BackgroundPattern);
             }
         } else {
             PngRenderHelpers.FillBackground(temp, scaledWidth, scaledHeight, scaledStride, Rgba32.Transparent);
@@ -1100,6 +1116,8 @@ public static partial class QrPngRenderer {
             BackgroundGradient = opts.BackgroundGradient,
             BackgroundPattern = ScalePattern(opts.BackgroundPattern, scale),
             BackgroundSupersample = 1,
+            ProtectFunctionalPatterns = opts.ProtectFunctionalPatterns,
+            ProtectQuietZone = opts.ProtectQuietZone,
             Canvas = ScaleCanvas(opts.Canvas, scale),
         };
     }

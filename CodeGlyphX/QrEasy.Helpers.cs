@@ -33,6 +33,8 @@ public static partial class QrEasy {
             BackgroundGradient = opts.BackgroundGradient,
             BackgroundPattern = opts.BackgroundPattern,
             BackgroundSupersample = opts.BackgroundSupersample,
+            ProtectFunctionalPatterns = opts.ProtectFunctionalPatterns,
+            ProtectQuietZone = opts.ProtectQuietZone,
             Canvas = opts.Canvas,
             Debug = opts.Debug,
         };
@@ -220,6 +222,8 @@ public static partial class QrEasy {
             ModuleShape = opts.ModuleShape,
             ModuleScale = opts.ModuleScale,
             ModuleScaleMap = opts.ModuleScaleMap,
+            ProtectFunctionalPatterns = opts.ProtectFunctionalPatterns,
+            ProtectQuietZone = opts.ProtectQuietZone,
             ModuleCornerRadiusPx = opts.ModuleCornerRadiusPx,
             ForegroundGradient = opts.ForegroundGradient,
             ForegroundPalette = opts.ForegroundPalette,

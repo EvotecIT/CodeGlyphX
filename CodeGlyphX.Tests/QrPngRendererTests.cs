@@ -107,6 +107,7 @@ public sealed class QrPngRendererTests {
             QuietZone = 2,
             Foreground = Rgba32.Black,
             Background = Rgba32.White,
+            ProtectQuietZone = false,
             BackgroundPattern = new QrPngBackgroundPatternOptions {
                 Type = QrPngBackgroundPatternType.Grid,
                 SizePx = 4,
@@ -127,6 +128,34 @@ public sealed class QrPngRendererTests {
         Assert.Equal(255, rgba[p1 + 0]);
         Assert.Equal(255, rgba[p1 + 1]);
         Assert.Equal(255, rgba[p1 + 2]);
+    }
+
+    [Fact]
+    public void Render_With_QuietZone_Protection_Skips_Pattern_In_QuietZone() {
+        var matrix = new BitMatrix(1, 1);
+        matrix[0, 0] = true;
+
+        var opts = new QrPngRenderOptions {
+            ModuleSize = 4,
+            QuietZone = 2,
+            Foreground = Rgba32.Black,
+            Background = Rgba32.White,
+            ProtectQuietZone = true,
+            BackgroundPattern = new QrPngBackgroundPatternOptions {
+                Type = QrPngBackgroundPatternType.Grid,
+                SizePx = 4,
+                ThicknessPx = 2,
+                Color = Rgba32.Black,
+            },
+        };
+
+        var png = QrPngRenderer.Render(matrix, opts);
+        var (rgba, _, _, stride) = PngTestDecoder.DecodeRgba32(png);
+
+        var quietZonePixel = 0 * stride + 0 * 4;
+        Assert.Equal(255, rgba[quietZonePixel + 0]);
+        Assert.Equal(255, rgba[quietZonePixel + 1]);
+        Assert.Equal(255, rgba[quietZonePixel + 2]);
     }
 
     [Fact]
@@ -320,6 +349,45 @@ public sealed class QrPngRendererTests {
 
         Assert.True(rgba[left + 0] > rgba[left + 1]);
         Assert.True(rgba[right + 1] > rgba[right + 0]);
+    }
+
+    [Fact]
+    public void Render_With_Functional_Protection_Preserves_Dark_Module_Color_And_Coverage() {
+        var qr = QrCodeEncoder.EncodeText("HELLO", QrErrorCorrectionLevel.H);
+        var size = qr.Size;
+
+        const int darkModuleX = 8;
+        var darkModuleY = size - 8;
+        Assert.True(qr.Modules[darkModuleX, darkModuleY]);
+
+        var opts = new QrPngRenderOptions {
+            ModuleSize = 6,
+            QuietZone = 4,
+            Foreground = Rgba32.Black,
+            Background = Rgba32.White,
+            ModuleShape = QrPngModuleShape.Circle,
+            ModuleScale = 0.6,
+            ProtectFunctionalPatterns = true,
+            ForegroundPalette = new QrPngPaletteOptions {
+                Mode = QrPngPaletteMode.Random,
+                Seed = 42,
+                Colors = new[] {
+                    new Rgba32(255, 0, 0),
+                    new Rgba32(0, 0, 255),
+                },
+            },
+        };
+
+        var png = QrPngRenderer.Render(qr.Modules, opts);
+        var (rgba, _, _, stride) = PngTestDecoder.DecodeRgba32(png);
+
+        var px = (opts.QuietZone + darkModuleX) * opts.ModuleSize;
+        var py = (opts.QuietZone + darkModuleY) * opts.ModuleSize;
+        var p = py * stride + px * 4;
+
+        Assert.Equal(0, rgba[p + 0]);
+        Assert.Equal(0, rgba[p + 1]);
+        Assert.Equal(0, rgba[p + 2]);
     }
 
     [Theory]
