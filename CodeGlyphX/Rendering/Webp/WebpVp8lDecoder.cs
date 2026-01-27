@@ -12,6 +12,7 @@ internal static class WebpVp8lDecoder {
     private const int GreenAlphabetBase = LiteralAlphabetSize + LengthPrefixCount;
     private const int MaxBackwardLength = 4096;
     private const int DistanceMapSize = 120;
+    private const uint ColorCacheHashMultiplier = 0x1e35a7bd;
 
     private static readonly (int xi, int yi)[] DistanceMap = {
         (0, 1), (1, 0), (1, 1), (-1, 1), (0, 2), (2, 0), (1, 2), (-1, 2),
@@ -56,8 +57,8 @@ internal static class WebpVp8lDecoder {
             colorCacheBits = reader.ReadBits(4);
             if (colorCacheBits is < 1 or > 11) return false;
         }
-        if (colorCacheBits != 0) return false;
         var colorCacheSize = colorCacheBits == 0 ? 0 : 1 << colorCacheBits;
+        var colorCache = colorCacheBits == 0 ? null : new int[colorCacheSize];
 
         // Meta prefix codes flag (1 bit). A value of 1 indicates an entropy image
         // we cannot parse yet without full prefix-code support.
@@ -67,7 +68,7 @@ internal static class WebpVp8lDecoder {
         var greenAlphabetSize = GreenAlphabetBase + colorCacheSize;
         if (!TryReadPrefixCodesGroup(ref reader, greenAlphabetSize, LiteralAlphabetSize, out var group)) return false;
 
-        if (!TryDecodeNoCacheNoMeta(ref reader, header, group, out rgba)) {
+        if (!TryDecodeNoMeta(ref reader, header, group, colorCache, colorCacheBits, out rgba)) {
             rgba = Array.Empty<byte>();
             return false;
         }
@@ -142,10 +143,12 @@ internal static class WebpVp8lDecoder {
         return true;
     }
 
-    private static bool TryDecodeNoCacheNoMeta(
+    private static bool TryDecodeNoMeta(
         ref WebpBitReader reader,
         WebpVp8lHeader header,
         WebpPrefixCodesGroup group,
+        int[]? colorCache,
+        int colorCacheBits,
         out byte[] rgba) {
         rgba = Array.Empty<byte>();
 
@@ -159,6 +162,17 @@ internal static class WebpVp8lDecoder {
             if (symbol < LiteralAlphabetSize) {
                 if (!TryReadLiteral(ref reader, group, symbol, out var pixel)) return false;
                 transformed[pos++] = pixel;
+                InsertColorCache(colorCache, colorCacheBits, pixel);
+                continue;
+            }
+
+            if (symbol >= GreenAlphabetBase) {
+                if (colorCache is null) return false;
+                var cacheIndex = symbol - GreenAlphabetBase;
+                if ((uint)cacheIndex >= (uint)colorCache.Length) return false;
+                var pixel = colorCache[cacheIndex];
+                transformed[pos++] = pixel;
+                InsertColorCache(colorCache, colorCacheBits, pixel);
                 continue;
             }
 
@@ -172,7 +186,7 @@ internal static class WebpVp8lDecoder {
             if (!TryDecodePrefixValue(ref reader, distancePrefix, out var distanceCode)) return false;
             if (!TryMapDistanceCode(distanceCode, header.Width, out var distance)) return false;
 
-            var nextPos = CopyLz77(transformed, pos, distance, length, pixelCount);
+            var nextPos = CopyLz77(transformed, pos, distance, length, pixelCount, colorCache, colorCacheBits);
             if (nextPos < 0) return false;
             pos = nextPos;
         }
@@ -225,6 +239,19 @@ internal static class WebpVp8lDecoder {
             | (b & 0xFF);
     }
 
+    internal static int ComputeColorCacheIndex(int pixel, int cacheBits) {
+        if (cacheBits is < 1 or > 11) return -1;
+        var hash = unchecked((uint)pixel) * ColorCacheHashMultiplier;
+        return (int)(hash >> (32 - cacheBits));
+    }
+
+    private static void InsertColorCache(int[]? colorCache, int colorCacheBits, int pixel) {
+        if (colorCache is null) return;
+        var index = ComputeColorCacheIndex(pixel, colorCacheBits);
+        if ((uint)index >= (uint)colorCache.Length) return;
+        colorCache[index] = pixel;
+    }
+
     internal static bool TryDecodePrefixValue(ref WebpBitReader reader, int prefixCode, out int value) {
         value = 0;
         if (prefixCode < 0) return false;
@@ -262,7 +289,14 @@ internal static class WebpVp8lDecoder {
         return true;
     }
 
-    internal static int CopyLz77(int[] buffer, int pos, int distance, int length, int pixelCount) {
+    internal static int CopyLz77(
+        int[] buffer,
+        int pos,
+        int distance,
+        int length,
+        int pixelCount,
+        int[]? colorCache = null,
+        int colorCacheBits = 0) {
         if (buffer is null) return -1;
         if (pos < 0 || pos > pixelCount) return -1;
         if (distance <= 0 || length <= 0) return -1;
@@ -275,7 +309,9 @@ internal static class WebpVp8lDecoder {
         if (length > remaining) length = remaining;
 
         for (var i = 0; i < length; i++) {
-            buffer[pos + i] = buffer[src + i];
+            var pixel = buffer[src + i];
+            buffer[pos + i] = pixel;
+            InsertColorCache(colorCache, colorCacheBits, pixel);
         }
         return pos + length;
     }
