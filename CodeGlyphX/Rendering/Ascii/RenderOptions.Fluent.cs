@@ -26,6 +26,14 @@ public sealed partial class MatrixAsciiRenderOptions {
     }
 
     /// <summary>
+    /// Sets an additional scale multiplier applied to both module width and height.
+    /// </summary>
+    public MatrixAsciiRenderOptions WithScale(int scale) {
+        Scale = scale;
+        return this;
+    }
+
+    /// <summary>
     /// Sets the character(s) used for dark modules.
     /// </summary>
     public MatrixAsciiRenderOptions WithDark(string dark) {
@@ -46,6 +54,22 @@ public sealed partial class MatrixAsciiRenderOptions {
     /// </summary>
     public MatrixAsciiRenderOptions WithNewLine(string newLine) {
         NewLine = newLine;
+        return this;
+    }
+
+    /// <summary>
+    /// Enables or disables Unicode block glyphs when defaults are used.
+    /// </summary>
+    public MatrixAsciiRenderOptions WithUnicodeBlocks(bool enabled = true) {
+        UseUnicodeBlocks = enabled;
+        return this;
+    }
+
+    /// <summary>
+    /// Enables or disables inverted output (dark/light swapped).
+    /// </summary>
+    public MatrixAsciiRenderOptions WithInvert(bool enabled = true) {
+        Invert = enabled;
         return this;
     }
 }

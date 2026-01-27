@@ -86,6 +86,14 @@ internal static class QrStyleBoardExample {
                 scaleMap: ScaleMap(QrPngModuleScaleMode.Radial, 0.65, 1.0),
                 canvas: CanvasPattern(R(245, 248, 255), Pattern(QrPngBackgroundPatternType.Checker, R(121, 134, 255, 20))))),
 
+            new("Inset Rings", StyleDocs("inset-rings"), () => BaseSticker(
+                fg: R(96, 120, 255),
+                palette: Palette(QrPngPaletteMode.Rings, 0, R(96, 120, 255), R(140, 110, 255), R(120, 210, 255)),
+                shape: QrPngModuleShape.Squircle,
+                eyes: EyeInsetRing(R(96, 120, 255), R(120, 210, 255)),
+                scaleMap: ScaleMap(QrPngModuleScaleMode.Radial, 0.78, 1.0),
+                canvas: CanvasGradient(R(18, 20, 60), R(36, 28, 96)))),
+
             new("Ocean Grid", StyleDocs("ocean-grid"), () => BaseSticker(
                 fg: R(0, 133, 255),
                 palette: Palette(QrPngPaletteMode.Cycle, 0, R(0, 133, 255), R(0, 201, 255), R(0, 255, 196)),
@@ -254,6 +262,12 @@ internal static class QrStyleBoardExample {
         eyes.GlowRadiusPx = 28;
         eyes.GlowAlpha = 125;
         eyes.GlowColor = glow ?? outer;
+        return eyes;
+    }
+
+    private static QrPngEyeOptions EyeInsetRing(Rgba32 outer, Rgba32 inner) {
+        var eyes = Eye(QrPngEyeFrameStyle.InsetRing, outer, inner);
+        eyes.InnerScale = 0.92;
         return eyes;
     }
 

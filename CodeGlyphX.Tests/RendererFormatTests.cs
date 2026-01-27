@@ -79,6 +79,36 @@ public sealed class RendererFormatTests {
     }
 
     [Fact]
+    public void Qr_Ascii_UnicodeBlocks_Uses_Block_Glyphs() {
+        var payload = "https://example.com";
+        var ascii = QrEasy.RenderAscii(payload, new MatrixAsciiRenderOptions {
+            QuietZone = 1,
+            UseUnicodeBlocks = true
+        });
+
+        Assert.Contains("█", ascii, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Qr_Ascii_Scale_Increases_Output_Size() {
+        var payload = "https://example.com";
+        var baseAscii = QrEasy.RenderAscii(payload, new MatrixAsciiRenderOptions {
+            QuietZone = 1,
+            ModuleWidth = 1,
+            ModuleHeight = 1,
+            Scale = 1
+        });
+        var scaledAscii = QrEasy.RenderAscii(payload, new MatrixAsciiRenderOptions {
+            QuietZone = 1,
+            ModuleWidth = 1,
+            ModuleHeight = 1,
+            Scale = 2
+        });
+
+        Assert.True(scaledAscii.Length > baseAscii.Length);
+    }
+
+    [Fact]
     public void Qr_Ico_Respects_MultiSize_Options() {
         var payload = "https://example.com";
         var opts = new QrEasyOptions {

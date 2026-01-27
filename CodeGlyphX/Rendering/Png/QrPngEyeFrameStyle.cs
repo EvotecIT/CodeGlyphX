@@ -28,4 +28,8 @@ public enum QrPngEyeFrameStyle {
     /// Single frame with a soft glow halo behind it.
     /// </summary>
     Glow,
+    /// <summary>
+    /// Outer ring with an inset inner ring and a clear center.
+    /// </summary>
+    InsetRing,
 }

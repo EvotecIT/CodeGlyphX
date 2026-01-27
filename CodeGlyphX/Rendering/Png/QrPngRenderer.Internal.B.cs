@@ -113,6 +113,34 @@ public static partial class QrPngRenderer {
                         qrY1);
                 }
                 goto default;
+            case QrPngEyeFrameStyle.InsetRing:
+                if (outerGradient is null) {
+                    FillShape(scanlines, widthPx, heightPx, stride, outerX, outerY, outerScaled, outerScaled, outerColor, eye.OuterShape, eye.OuterCornerRadiusPx);
+                } else {
+                    FillShapeGradient(scanlines, widthPx, heightPx, stride, outerX, outerY, outerScaled, outerScaled, outerGradient, eye.OuterShape, eye.OuterCornerRadiusPx);
+                }
+                FillShape(scanlines, widthPx, heightPx, stride, innerX, innerY, innerScaled, innerScaled, opts.Background, eye.OuterShape, eye.InnerCornerRadiusPx);
+
+                var insetPadding = Math.Max(1, (int)Math.Round(moduleSize * 0.8));
+                var insetSize = Math.Max(1, innerScaled - insetPadding * 2);
+                var insetX = innerX + (innerScaled - insetSize) / 2;
+                var insetY = innerY + (innerScaled - insetSize) / 2;
+                if (insetSize > 0) {
+                    if (innerGradient is null) {
+                        FillShape(scanlines, widthPx, heightPx, stride, insetX, insetY, insetSize, insetSize, innerColor, eye.InnerShape, eye.InnerCornerRadiusPx);
+                    } else {
+                        FillShapeGradient(scanlines, widthPx, heightPx, stride, insetX, insetY, insetSize, insetSize, innerGradient, eye.InnerShape, eye.InnerCornerRadiusPx);
+                    }
+                }
+
+                var maxHoleSize = insetSize - 2;
+                if (maxHoleSize > 0) {
+                    var holeSize = Math.Max(1, Math.Min(dotScaled, maxHoleSize));
+                    var holeX = x0 + (outerSize - holeSize) / 2;
+                    var holeY = y0 + (outerSize - holeSize) / 2;
+                    FillShape(scanlines, widthPx, heightPx, stride, holeX, holeY, holeSize, holeSize, opts.Background, eye.InnerShape, eye.InnerCornerRadiusPx);
+                }
+                break;
             case QrPngEyeFrameStyle.DoubleRing:
             case QrPngEyeFrameStyle.Target:
                 if (outerGradient is null) {

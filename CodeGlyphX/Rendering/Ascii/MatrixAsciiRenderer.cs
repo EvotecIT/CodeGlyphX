@@ -15,11 +15,25 @@ public static class MatrixAsciiRenderer {
         var opts = options ?? new MatrixAsciiRenderOptions();
 
         var quiet = Math.Max(0, opts.QuietZone);
-        var moduleWidth = Math.Max(1, opts.ModuleWidth);
-        var moduleHeight = Math.Max(1, opts.ModuleHeight);
+        var scale = Math.Max(1, opts.Scale);
+        var moduleWidth = Math.Max(1, opts.ModuleWidth) * scale;
+        var moduleHeight = Math.Max(1, opts.ModuleHeight) * scale;
         var dark = string.IsNullOrEmpty(opts.Dark) ? "#" : opts.Dark;
         var light = string.IsNullOrEmpty(opts.Light) ? " " : opts.Light;
         var newline = NormalizeNewLine(opts.NewLine) ?? Environment.NewLine;
+
+        if (opts.UseUnicodeBlocks) {
+            if (string.IsNullOrEmpty(opts.Dark) || string.Equals(opts.Dark, "#", StringComparison.Ordinal)) {
+                dark = "█";
+            }
+            if (string.IsNullOrEmpty(opts.Light) || string.Equals(opts.Light, " ", StringComparison.Ordinal)) {
+                light = " ";
+            }
+        }
+
+        if (opts.Invert) {
+            (dark, light) = (light, dark);
+        }
 
         var widthModules = modules.Width + quiet * 2;
         var heightModules = modules.Height + quiet * 2;

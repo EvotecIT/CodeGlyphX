@@ -22,6 +22,11 @@ public sealed partial class MatrixAsciiRenderOptions {
     public int ModuleHeight { get; set; } = 1;
 
     /// <summary>
+    /// Additional scale multiplier applied to both module width and height.
+    /// </summary>
+    public int Scale { get; set; } = 1;
+
+    /// <summary>
     /// Character(s) used for dark modules.
     /// </summary>
     public string Dark { get; set; } = "#";
@@ -35,4 +40,14 @@ public sealed partial class MatrixAsciiRenderOptions {
     /// Line separator used between rows.
     /// </summary>
     public string NewLine { get; set; } = Environment.NewLine;
+
+    /// <summary>
+    /// When true, prefers Unicode block glyphs (for example, █) when defaults are used.
+    /// </summary>
+    public bool UseUnicodeBlocks { get; set; }
+
+    /// <summary>
+    /// When true, swaps dark and light output.
+    /// </summary>
+    public bool Invert { get; set; }
 }
