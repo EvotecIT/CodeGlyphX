@@ -9,11 +9,7 @@ public sealed class WebpVp8PartitionLayoutTests
     [Fact]
     public void TryReadPartitionLayout_ValidSizes_AreParsedConsistently()
     {
-        var boolData = new byte[]
-        {
-            0x9A, 0xBC, 0xDE, 0xF0, 0x12, 0x34, 0x56, 0x78,
-            0x89, 0xAB, 0xCD, 0xEF, 0x10, 0x32, 0x54, 0x76,
-        };
+        var boolData = CreateBoolData(length: 4096);
 
         var firstPartitionOnly = BuildKeyframePayload(width: 48, height: 32, boolData);
         Assert.True(WebpVp8Decoder.TryReadFrameHeader(firstPartitionOnly, out var frameHeader));
@@ -45,6 +41,19 @@ public sealed class WebpVp8PartitionLayoutTests
 
         Assert.Equal(lastSize, layout.DctPartitionSizes[dctCount - 1]);
         Assert.Equal(Sum(layout.DctPartitionSizes), payload.Length - layout.DctDataOffset);
+    }
+
+    private static byte[] CreateBoolData(int length)
+    {
+        var data = new byte[length];
+        var value = 0x5A;
+        for (var i = 0; i < data.Length; i++)
+        {
+            value = (value * 73 + 41) & 0xFF;
+            data[i] = (byte)value;
+        }
+
+        return data;
     }
 
     private static byte[] BuildKeyframePayload(int width, int height, byte[] boolData)
@@ -117,4 +126,3 @@ public sealed class WebpVp8PartitionLayoutTests
         return sum;
     }
 }
-

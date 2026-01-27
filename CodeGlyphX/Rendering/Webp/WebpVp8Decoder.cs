@@ -15,6 +15,11 @@ internal static class WebpVp8Decoder {
     private const int SegmentProbCount = 3;
     private const int LoopFilterDeltaCount = 4;
     private const int QuantDeltaCount = 5;
+    private const int CoeffBlockTypes = 4;
+    private const int CoeffBands = 8;
+    private const int CoeffPrevContexts = 3;
+    private const int CoeffEntropyNodes = 11;
+    private const int CoeffUpdateProbability = 128;
 
     internal static bool TryDecode(ReadOnlySpan<byte> payload, out byte[] rgba, out int width, out int height) {
         rgba = Array.Empty<byte>();
@@ -114,6 +119,7 @@ internal static class WebpVp8Decoder {
         var dctPartitionCount = 1 << partitionBits;
 
         if (!TryReadQuantization(decoder, out var quantization)) return false;
+        if (!TryReadCoefficientProbabilities(decoder, out var coefficientProbabilities)) return false;
         if (!decoder.TryReadBool(128, out var refreshEntropyProbsBit)) return false;
         if (!decoder.TryReadBool(128, out var noCoefficientSkipBit)) return false;
 
@@ -127,6 +133,7 @@ internal static class WebpVp8Decoder {
             segmentation,
             loopFilter,
             quantization,
+            coefficientProbabilities,
             dctPartitionCount,
             refreshEntropyProbsBit,
             noCoefficientSkipBit,
@@ -334,6 +341,42 @@ internal static class WebpVp8Decoder {
         return true;
     }
 
+    private static bool TryReadCoefficientProbabilities(WebpVp8BoolDecoder decoder, out WebpVp8CoefficientProbabilities probabilities) {
+        probabilities = default;
+        var totalCount = CoeffBlockTypes * CoeffBands * CoeffPrevContexts * CoeffEntropyNodes;
+        var probs = new int[totalCount];
+        var updated = new bool[totalCount];
+
+        for (var i = 0; i < probs.Length; i++) {
+            probs[i] = 128;
+        }
+
+        var updatedCount = 0;
+        for (var blockType = 0; blockType < CoeffBlockTypes; blockType++) {
+            for (var band = 0; band < CoeffBands; band++) {
+                for (var prev = 0; prev < CoeffPrevContexts; prev++) {
+                    for (var node = 0; node < CoeffEntropyNodes; node++) {
+                        if (!decoder.TryReadBool(CoeffUpdateProbability, out var updateBit)) return false;
+                        if (!updateBit) continue;
+
+                        if (!decoder.TryReadLiteral(8, out var value)) return false;
+                        var index = GetCoeffIndex(blockType, band, prev, node);
+                        probs[index] = value;
+                        updated[index] = true;
+                        updatedCount++;
+                    }
+                }
+            }
+        }
+
+        probabilities = new WebpVp8CoefficientProbabilities(probs, updated, updatedCount, decoder.BytesConsumed);
+        return true;
+    }
+
+    private static int GetCoeffIndex(int blockType, int band, int prev, int node) {
+        return (((blockType * CoeffBands) + band) * CoeffPrevContexts + prev) * CoeffEntropyNodes + node;
+    }
+
     private static int ReadU16LE(ReadOnlySpan<byte> data, int offset) {
         if (offset < 0 || offset + 2 > data.Length) return 0;
         return data[offset] | (data[offset + 1] << 8);
@@ -461,12 +504,27 @@ internal readonly struct WebpVp8Quantization {
     public bool[] DeltasUpdated { get; }
 }
 
+internal readonly struct WebpVp8CoefficientProbabilities {
+    public WebpVp8CoefficientProbabilities(int[] probabilities, bool[] updated, int updatedCount, int bytesConsumed) {
+        Probabilities = probabilities;
+        Updated = updated;
+        UpdatedCount = updatedCount;
+        BytesConsumed = bytesConsumed;
+    }
+
+    public int[] Probabilities { get; }
+    public bool[] Updated { get; }
+    public int UpdatedCount { get; }
+    public int BytesConsumed { get; }
+}
+
 internal readonly struct WebpVp8FrameHeader {
     public WebpVp8FrameHeader(
         WebpVp8ControlHeader controlHeader,
         WebpVp8Segmentation segmentation,
         WebpVp8LoopFilter loopFilter,
         WebpVp8Quantization quantization,
+        WebpVp8CoefficientProbabilities coefficientProbabilities,
         int dctPartitionCount,
         bool refreshEntropyProbs,
         bool noCoefficientSkip,
@@ -476,6 +534,7 @@ internal readonly struct WebpVp8FrameHeader {
         Segmentation = segmentation;
         LoopFilter = loopFilter;
         Quantization = quantization;
+        CoefficientProbabilities = coefficientProbabilities;
         DctPartitionCount = dctPartitionCount;
         RefreshEntropyProbs = refreshEntropyProbs;
         NoCoefficientSkip = noCoefficientSkip;
@@ -487,6 +546,7 @@ internal readonly struct WebpVp8FrameHeader {
     public WebpVp8Segmentation Segmentation { get; }
     public WebpVp8LoopFilter LoopFilter { get; }
     public WebpVp8Quantization Quantization { get; }
+    public WebpVp8CoefficientProbabilities CoefficientProbabilities { get; }
     public int DctPartitionCount { get; }
     public bool RefreshEntropyProbs { get; }
     public bool NoCoefficientSkip { get; }
