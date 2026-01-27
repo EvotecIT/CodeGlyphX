@@ -74,6 +74,15 @@ internal static class WebpVp8Decoder {
         return true;
     }
 
+    internal static bool TryGetBoolCodedData(ReadOnlySpan<byte> payload, out ReadOnlySpan<byte> boolData) {
+        boolData = default;
+        if (!TryGetFirstPartition(payload, out var firstPartition)) return false;
+        if (firstPartition.Length < KeyframeHeaderBytes) return false;
+
+        boolData = firstPartition.Slice(KeyframeHeaderBytes);
+        return true;
+    }
+
     private static int ReadU16LE(ReadOnlySpan<byte> data, int offset) {
         if (offset < 0 || offset + 2 > data.Length) return 0;
         return data[offset] | (data[offset + 1] << 8);

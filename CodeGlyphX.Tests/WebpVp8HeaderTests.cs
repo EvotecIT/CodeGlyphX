@@ -30,7 +30,7 @@ public sealed class WebpVp8HeaderTests {
 
     [Fact]
     public void Vp8_FirstPartition_IsExtractedUsingDeclaredSize() {
-        var payload = BuildKeyframePayload(width: 5, height: 3, partitionSize: 9);
+        var payload = BuildKeyframePayload(width: 5, height: 3, boolData: new byte[] { 0xAA, 0xBB });
 
         Assert.True(WebpVp8Decoder.TryGetFirstPartition(payload, out var firstPartition));
         Assert.Equal(9, firstPartition.Length);
@@ -38,8 +38,21 @@ public sealed class WebpVp8HeaderTests {
         Assert.Equal(0x2A, firstPartition[2]);
     }
 
-    private static byte[] BuildKeyframePayload(int width, int height, int partitionSize = 7) {
-        if (partitionSize < 7) partitionSize = 7;
+    [Fact]
+    public void Vp8_BoolCodedData_IsSlicedAfterKeyframeHeader() {
+        var boolData = new byte[] { 0x11, 0x22, 0x33 };
+        var payload = BuildKeyframePayload(width: 6, height: 4, boolData);
+
+        Assert.True(WebpVp8Decoder.TryGetBoolCodedData(payload, out var sliced));
+        Assert.Equal(boolData.Length, sliced.Length);
+        Assert.Equal(boolData[0], sliced[0]);
+        Assert.Equal(boolData[1], sliced[1]);
+        Assert.Equal(boolData[2], sliced[2]);
+    }
+
+    private static byte[] BuildKeyframePayload(int width, int height, byte[]? boolData = null) {
+        var extra = boolData?.Length ?? 0;
+        var partitionSize = 7 + extra;
         var payload = new byte[3 + partitionSize];
 
         // Frame tag (3 bytes, little-endian).
@@ -58,6 +71,10 @@ public sealed class WebpVp8HeaderTests {
         payload[7] = (byte)((width >> 8) & 0x3F);
         payload[8] = (byte)(height & 0xFF);
         payload[9] = (byte)((height >> 8) & 0x3F);
+
+        if (extra > 0) {
+            boolData!.CopyTo(payload, 10);
+        }
 
         return payload;
     }
