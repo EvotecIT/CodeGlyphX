@@ -8,6 +8,13 @@ public sealed class WebpVp8BlockTokenScaffoldTests
 {
     private static readonly int[] TokenExtraBits = new[] { 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 5, 11 };
     private static readonly int[] TokenBaseMagnitude = new[] { 0, 0, 1, 2, 3, 4, 5, 7, 11, 19, 35, 67 };
+    private static readonly int[] ZigZagToNaturalOrder = new[]
+    {
+        0,  1,  4,  8,
+        5,  2,  3,  6,
+        9, 12, 13, 10,
+        7, 11, 14, 15,
+    };
 
     [Fact]
     public void TryReadBlockTokenScaffold_ValidPayload_ProducesBlockShapedCursorData()
@@ -49,6 +56,8 @@ public sealed class WebpVp8BlockTokenScaffoldTests
                 Assert.True(block.DequantFactor > 0);
                 Assert.Equal(16, block.Coefficients.Length);
                 Assert.Equal(16, block.DequantizedCoefficients.Length);
+                Assert.Equal(16, block.CoefficientsNaturalOrder.Length);
+                Assert.Equal(16, block.DequantizedCoefficientsNaturalOrder.Length);
                 Assert.Equal(16, block.Tokens.Length);
                 Assert.InRange(block.TokensRead, 1, 16);
 
@@ -63,6 +72,8 @@ public sealed class WebpVp8BlockTokenScaffoldTests
                     Assert.InRange(token.PrevContextAfter, 0, 2);
                     Assert.InRange(token.TokenCode, 0, 11);
                     Assert.Equal(block.BlockType, token.BlockType);
+                    Assert.InRange(token.NaturalIndex, 0, 15);
+                    Assert.Equal(ZigZagToNaturalOrder[token.CoefficientIndex], token.NaturalIndex);
                     Assert.Equal(token.TokenCode != 0, token.HasMore);
                     Assert.Equal(token.TokenCode >= 2, token.IsNonZero);
                     Assert.True(token.ExtraBitsValue >= 0);
@@ -83,6 +94,10 @@ public sealed class WebpVp8BlockTokenScaffoldTests
                     Assert.Equal(
                         block.Coefficients[token.CoefficientIndex] * block.DequantFactor,
                         block.DequantizedCoefficients[token.CoefficientIndex]);
+                    Assert.Equal(token.CoefficientValue, block.CoefficientsNaturalOrder[token.NaturalIndex]);
+                    Assert.Equal(
+                        token.CoefficientValue * block.DequantFactor,
+                        block.DequantizedCoefficientsNaturalOrder[token.NaturalIndex]);
 
                     if (!token.HasMore)
                     {

@@ -36,6 +36,13 @@ internal static class WebpVp8Decoder {
         6, 6, 6, 6,
         6, 7, 7, 7,
     };
+    private static readonly int[] ZigZagToNaturalOrder = new[]
+    {
+        0,  1,  4,  8,
+        5,  2,  3,  6,
+        9, 12, 13, 10,
+        7, 11, 14, 15,
+    };
     private static readonly int[] CoeffTokenExtraBits = new[]
     {
         0, 0, 0, 0, 0, 0,
@@ -365,6 +372,8 @@ internal static class WebpVp8Decoder {
                 var tokenInfos = new WebpVp8BlockTokenInfo[BlockScaffoldMaxTokensPerBlock];
                 var coefficients = new int[CoefficientsPerBlock];
                 var dequantizedCoefficients = new int[CoefficientsPerBlock];
+                var coefficientsNaturalOrder = new int[CoefficientsPerBlock];
+                var dequantizedCoefficientsNaturalOrder = new int[CoefficientsPerBlock];
                 var tokensRead = 0;
                 var coefficientIndex = 0;
                 var prevContext = 0;
@@ -389,6 +398,9 @@ internal static class WebpVp8Decoder {
                     if (!TryReadSignedMagnitude(decoder, magnitude, out var coefficientValue)) return false;
                     coefficients[coefficientIndex] = coefficientValue;
                     dequantizedCoefficients[coefficientIndex] = coefficientValue * dequantFactor;
+                    var naturalIndex = MapZigZagToNaturalIndex(coefficientIndex);
+                    coefficientsNaturalOrder[naturalIndex] = coefficientValue;
+                    dequantizedCoefficientsNaturalOrder[naturalIndex] = coefficientValue * dequantFactor;
                     tokenInfos[tokensRead] = new WebpVp8BlockTokenInfo(
                         coefficientIndex,
                         tokenInfo.TokenCode,
@@ -399,7 +411,8 @@ internal static class WebpVp8Decoder {
                         tokenInfo.HasMore,
                         tokenInfo.IsNonZero,
                         extraBitsValue,
-                        coefficientValue);
+                        coefficientValue,
+                        naturalIndex);
 
                     tokensRead++;
                     partitionTokensRead++;
@@ -419,6 +432,8 @@ internal static class WebpVp8Decoder {
                     dequantFactor,
                     coefficients,
                     dequantizedCoefficients,
+                    coefficientsNaturalOrder,
+                    dequantizedCoefficientsNaturalOrder,
                     tokenInfos,
                     tokensRead,
                     reachedEob);
@@ -686,6 +701,11 @@ internal static class WebpVp8Decoder {
             BlockTypeV => baseFactor + 2,
             _ => baseFactor + 2,
         };
+    }
+
+    private static int MapZigZagToNaturalIndex(int zigZagIndex) {
+        if ((uint)zigZagIndex >= ZigZagToNaturalOrder.Length) return 0;
+        return ZigZagToNaturalOrder[zigZagIndex];
     }
 
     private static bool TryReadTokenExtraBits(WebpVp8BoolDecoder decoder, int tokenCode, out int extraBitsValue) {
@@ -1020,7 +1040,8 @@ internal readonly struct WebpVp8BlockTokenInfo {
         bool hasMore,
         bool isNonZero,
         int extraBitsValue,
-        int coefficientValue) {
+        int coefficientValue,
+        int naturalIndex) {
         CoefficientIndex = coefficientIndex;
         TokenCode = tokenCode;
         BlockType = blockType;
@@ -1031,6 +1052,7 @@ internal readonly struct WebpVp8BlockTokenInfo {
         IsNonZero = isNonZero;
         ExtraBitsValue = extraBitsValue;
         CoefficientValue = coefficientValue;
+        NaturalIndex = naturalIndex;
     }
 
     public int CoefficientIndex { get; }
@@ -1043,6 +1065,7 @@ internal readonly struct WebpVp8BlockTokenInfo {
     public bool IsNonZero { get; }
     public int ExtraBitsValue { get; }
     public int CoefficientValue { get; }
+    public int NaturalIndex { get; }
 }
 
 internal readonly struct WebpVp8BlockTokenScaffold {
@@ -1052,6 +1075,8 @@ internal readonly struct WebpVp8BlockTokenScaffold {
         int dequantFactor,
         int[] coefficients,
         int[] dequantizedCoefficients,
+        int[] coefficientsNaturalOrder,
+        int[] dequantizedCoefficientsNaturalOrder,
         WebpVp8BlockTokenInfo[] tokens,
         int tokensRead,
         bool reachedEob) {
@@ -1060,6 +1085,8 @@ internal readonly struct WebpVp8BlockTokenScaffold {
         DequantFactor = dequantFactor;
         Coefficients = coefficients;
         DequantizedCoefficients = dequantizedCoefficients;
+        CoefficientsNaturalOrder = coefficientsNaturalOrder;
+        DequantizedCoefficientsNaturalOrder = dequantizedCoefficientsNaturalOrder;
         Tokens = tokens;
         TokensRead = tokensRead;
         ReachedEob = reachedEob;
@@ -1070,6 +1097,8 @@ internal readonly struct WebpVp8BlockTokenScaffold {
     public int DequantFactor { get; }
     public int[] Coefficients { get; }
     public int[] DequantizedCoefficients { get; }
+    public int[] CoefficientsNaturalOrder { get; }
+    public int[] DequantizedCoefficientsNaturalOrder { get; }
     public WebpVp8BlockTokenInfo[] Tokens { get; }
     public int TokensRead { get; }
     public bool ReachedEob { get; }
