@@ -76,6 +76,7 @@ public static partial class QrEasy {
         if (opts.ModuleCornerRadiusPx.HasValue) render.ModuleCornerRadiusPx = opts.ModuleCornerRadiusPx.Value;
         if (opts.ForegroundGradient is not null) render.ForegroundGradient = opts.ForegroundGradient;
         if (opts.ForegroundPalette is not null) render.ForegroundPalette = opts.ForegroundPalette;
+        if (opts.ForegroundPattern is not null) render.ForegroundPattern = opts.ForegroundPattern;
         if (opts.ForegroundPaletteZones is not null) render.ForegroundPaletteZones = opts.ForegroundPaletteZones;
         if (opts.ModuleScaleMap is not null) render.ModuleScaleMap = opts.ModuleScaleMap;
         if (opts.Canvas is not null) render.Canvas = opts.Canvas;
@@ -227,6 +228,7 @@ public static partial class QrEasy {
             ModuleCornerRadiusPx = opts.ModuleCornerRadiusPx,
             ForegroundGradient = opts.ForegroundGradient,
             ForegroundPalette = opts.ForegroundPalette,
+            ForegroundPattern = opts.ForegroundPattern,
             ForegroundPaletteZones = opts.ForegroundPaletteZones,
             Eyes = opts.Eyes,
             Canvas = opts.Canvas,

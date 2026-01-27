@@ -32,6 +32,14 @@ public static class QrArtPresets {
                 new Rgba32(120, 40, 160),
             },
         };
+        opts.ForegroundPattern = new QrPngForegroundPatternOptions {
+            Type = QrPngForegroundPatternType.StippleDots,
+            Color = new Rgba32(0, 48, 46, 120),
+            SizePx = 5,
+            ThicknessPx = 1,
+            ApplyToModules = true,
+            ApplyToEyes = false,
+        };
         opts.Eyes = new QrPngEyeOptions {
             UseFrame = true,
             FrameStyle = QrPngEyeFrameStyle.Glow,
@@ -81,6 +89,14 @@ public static class QrArtPresets {
             Type = QrPngGradientType.DiagonalDown,
             StartColor = new Rgba32(24, 120, 180),
             EndColor = new Rgba32(28, 52, 150),
+        };
+        opts.ForegroundPattern = new QrPngForegroundPatternOptions {
+            Type = QrPngForegroundPatternType.StippleDots,
+            Color = new Rgba32(18, 50, 120, 96),
+            SizePx = 6,
+            ThicknessPx = 1,
+            ApplyToModules = true,
+            ApplyToEyes = false,
         };
         opts.Eyes = new QrPngEyeOptions {
             UseFrame = true,
@@ -144,6 +160,14 @@ public static class QrArtPresets {
                 new Rgba32(36, 120, 164),
             },
         };
+        opts.ForegroundPattern = new QrPngForegroundPatternOptions {
+            Type = QrPngForegroundPatternType.StippleDots,
+            Color = new Rgba32(44, 54, 150, 96),
+            SizePx = 6,
+            ThicknessPx = 1,
+            ApplyToModules = true,
+            ApplyToEyes = false,
+        };
         opts.Eyes = new QrPngEyeOptions {
             UseFrame = true,
             FrameStyle = QrPngEyeFrameStyle.Target,
@@ -190,6 +214,14 @@ public static class QrArtPresets {
                 new Rgba32(40, 60, 140),
                 new Rgba32(18, 98, 140),
             },
+        };
+        opts.ForegroundPattern = new QrPngForegroundPatternOptions {
+            Type = QrPngForegroundPatternType.Crosshatch,
+            Color = new Rgba32(12, 24, 64, 92),
+            SizePx = 6,
+            ThicknessPx = 1,
+            ApplyToModules = true,
+            ApplyToEyes = false,
         };
         opts.ForegroundPaletteZones = new QrPngPaletteZoneOptions {
             CornerSize = 9,
@@ -270,6 +302,14 @@ public static class QrArtPresets {
                 new Rgba32(16, 98, 140),
             },
         };
+        opts.ForegroundPattern = new QrPngForegroundPatternOptions {
+            Type = QrPngForegroundPatternType.StippleDots,
+            Color = new Rgba32(18, 42, 120, 92),
+            SizePx = 6,
+            ThicknessPx = 1,
+            ApplyToModules = true,
+            ApplyToEyes = false,
+        };
         opts.Eyes = new QrPngEyeOptions {
             UseFrame = true,
             FrameStyle = QrPngEyeFrameStyle.InsetRing,
@@ -293,6 +333,67 @@ public static class QrArtPresets {
             ShadowOffsetX = 4,
             ShadowOffsetY = 6,
             ShadowColor = new Rgba32(40, 70, 150, 48),
+        };
+        return opts;
+    }
+
+    /// <summary>
+    /// Stripe-textured eyes with calm module styling.
+    /// </summary>
+    public static QrEasyOptions StripeEyes() {
+        var opts = BaseArt();
+        opts.Foreground = new Rgba32(26, 46, 128);
+        opts.Background = new Rgba32(248, 250, 255);
+        opts.ModuleShape = QrPngModuleShape.Squircle;
+        opts.ModuleScale = 0.96;
+        opts.ModuleScaleMap = new QrPngModuleScaleMapOptions {
+            Mode = QrPngModuleScaleMode.Rings,
+            MinScale = 0.94,
+            MaxScale = 1.0,
+            RingSize = 2,
+        };
+        opts.ForegroundPalette = new QrPngPaletteOptions {
+            Mode = QrPngPaletteMode.Cycle,
+            RingSize = 2,
+            ApplyToEyes = false,
+            Colors = new[] {
+                new Rgba32(26, 46, 128),
+                new Rgba32(40, 70, 150),
+                new Rgba32(20, 110, 156),
+            },
+        };
+        opts.ForegroundPattern = new QrPngForegroundPatternOptions {
+            Type = QrPngForegroundPatternType.DiagonalStripes,
+            Color = new Rgba32(18, 34, 108, 148),
+            SizePx = 6,
+            ThicknessPx = 2,
+            SnapToModuleSize = true,
+            ModuleStep = 1,
+            ApplyToModules = false,
+            ApplyToEyes = true,
+        };
+        opts.Eyes = new QrPngEyeOptions {
+            UseFrame = false,
+            OuterShape = QrPngModuleShape.Rounded,
+            InnerShape = QrPngModuleShape.Squircle,
+            OuterCornerRadiusPx = 6,
+            InnerCornerRadiusPx = 4,
+            OuterColor = new Rgba32(24, 44, 132),
+            InnerColor = new Rgba32(46, 170, 188),
+        };
+        opts.Canvas = new QrPngCanvasOptions {
+            PaddingPx = 26,
+            CornerRadiusPx = 28,
+            BackgroundGradient = new QrPngGradientOptions {
+                Type = QrPngGradientType.Vertical,
+                StartColor = new Rgba32(236, 244, 255),
+                EndColor = new Rgba32(220, 232, 255),
+            },
+            BorderPx = 1,
+            BorderColor = new Rgba32(255, 255, 255, 200),
+            ShadowOffsetX = 4,
+            ShadowOffsetY = 6,
+            ShadowColor = new Rgba32(32, 60, 130, 48),
         };
         return opts;
     }
@@ -421,6 +522,32 @@ public static class QrArtPresets {
                 new Rgba32(54, 86, 184),
                 new Rgba32(18, 108, 152),
             };
+        }
+        return opts;
+    }
+
+    /// <summary>
+    /// Explicit scan-safe variant of <see cref="StripeEyes"/>.
+    /// </summary>
+    public static QrEasyOptions StripeEyesSafe() => StripeEyes();
+
+    /// <summary>
+    /// Bolder variant of <see cref="StripeEyes"/> that also textures modules.
+    /// </summary>
+    public static QrEasyOptions StripeEyesBold() {
+        var opts = StripeEyesSafe();
+        opts.ModuleScale = 0.94;
+        if (opts.ModuleScaleMap is not null) {
+            opts.ModuleScaleMap.MinScale = 0.90;
+            opts.ModuleScaleMap.RingSize = 1;
+        }
+        if (opts.ForegroundPattern is not null) {
+            opts.ForegroundPattern.ApplyToModules = true;
+            opts.ForegroundPattern.SizePx = 6;
+            opts.ForegroundPattern.ThicknessPx = 2;
+        }
+        if (opts.ForegroundPalette is not null) {
+            opts.ForegroundPalette.RingSize = 1;
         }
         return opts;
     }

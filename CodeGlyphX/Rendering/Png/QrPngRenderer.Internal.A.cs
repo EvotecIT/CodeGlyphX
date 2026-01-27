@@ -22,6 +22,7 @@ public static partial class QrPngRenderer {
         }
         opts.ForegroundGradient?.Validate();
         opts.ForegroundPalette?.Validate();
+        opts.ForegroundPattern?.Validate();
         opts.ForegroundPaletteZones?.Validate();
         opts.ModuleScaleMap?.Validate();
         opts.Eyes?.Validate();
@@ -107,6 +108,7 @@ public static partial class QrPngRenderer {
             ? (GradientInfo?)null
             : new GradientInfo(opts.ForegroundGradient, qrSizePx - 1, qrSizePx - 1);
         var paletteInfo = opts.ForegroundPalette is null ? (PaletteInfo?)null : new PaletteInfo(opts.ForegroundPalette, size);
+        var foregroundPattern = opts.ForegroundPattern;
         var zoneInfo = opts.ForegroundPaletteZones is null ? (PaletteZoneInfo?)null : new PaletteZoneInfo(opts.ForegroundPaletteZones, size);
         var scaleMapInfo = opts.ModuleScaleMap is null ? (ModuleScaleMapInfo?)null : new ModuleScaleMapInfo(opts.ModuleScaleMap, size);
         var scaleMaskCache = scaleMapInfo.HasValue ? new Dictionary<int, MaskInfo>(8) : null;
@@ -114,7 +116,11 @@ public static partial class QrPngRenderer {
         // Eye detection is needed for styling decisions (eyes/palettes/scale maps),
         // but we keep it decoupled from functional protection so gradients can still
         // apply to eyes when no eye-specific styling is configured.
-        var detectEyesForStyling = opts.Eyes is not null || paletteInfo.HasValue || zoneInfo.HasValue || scaleMapInfo.HasValue;
+        var detectEyesForStyling = opts.Eyes is not null
+            || paletteInfo.HasValue
+            || zoneInfo.HasValue
+            || scaleMapInfo.HasValue
+            || (foregroundPattern is not null && foregroundPattern.ApplyToEyes);
         var eyeOuterGradient = opts.Eyes?.OuterGradient;
         var eyeInnerGradient = opts.Eyes?.InnerGradient;
         var eyeOuterGradientInfo = eyeOuterGradient is null ? (GradientInfo?)null : new GradientInfo(eyeOuterGradient, 7 * opts.ModuleSize - 1, 7 * opts.ModuleSize - 1);
@@ -194,6 +200,18 @@ public static partial class QrPngRenderer {
                     useMaskSolid = maskInfo.IsSolid;
                 }
 
+                QrPngForegroundPatternOptions? usePattern = null;
+                if (!protectFunctional
+                    && foregroundPattern is not null
+                    && foregroundPattern.Color.A != 0
+                    && foregroundPattern.ThicknessPx > 0) {
+                    var applyToEyes = eyeKind != EyeKind.None && foregroundPattern.ApplyToEyes;
+                    var applyToModules = eyeKind == EyeKind.None && foregroundPattern.ApplyToModules;
+                    if (applyToEyes || applyToModules) {
+                        usePattern = foregroundPattern;
+                    }
+                }
+
                 if (!useFrame && eyeKind != EyeKind.None) {
                     var eyeGrad = eyeKind == EyeKind.Outer ? eyeOuterGradientInfo : eyeInnerGradientInfo;
                     if (eyeGrad is not null) {
@@ -209,6 +227,7 @@ public static partial class QrPngRenderer {
                             qrOffsetX,
                             qrOffsetY,
                             eyeGrad.Value,
+                            usePattern,
                             useMask,
                             boxX,
                             boxY);
@@ -217,7 +236,7 @@ public static partial class QrPngRenderer {
                 }
 
                 var useGradient = !protectFunctional && !usePalette && eyeKind == EyeKind.None ? gradientInfo : null;
-                if (useGradient is null && useMaskSolid) {
+                if (useGradient is null && useMaskSolid && usePattern is null) {
                     var solid = useColor.A == 255 ? useColor : CompositeColor(useColor, background);
                     DrawModuleSolid(buffer, stride, opts.ModuleSize, mx, my, opts.QuietZone, qrOffsetX, qrOffsetY, solid);
                     continue;
@@ -234,6 +253,7 @@ public static partial class QrPngRenderer {
                     qrOffsetY,
                     useColor,
                     useGradient,
+                    usePattern,
                     useMask,
                     qrOriginX,
                     qrOriginY,
@@ -278,6 +298,7 @@ public static partial class QrPngRenderer {
         int offsetY,
         Rgba32 color,
         GradientInfo? gradient,
+        QrPngForegroundPatternOptions? pattern,
         bool[] mask,
         int originX,
         int originY,
@@ -295,6 +316,10 @@ public static partial class QrPngRenderer {
                 var outColor = gradient is null
                     ? color
                     : GetGradientColor(gradient.Value, x0 + sx, y0 + sy, originX, originY);
+
+                if (pattern is not null && ShouldDrawForegroundPattern(pattern, moduleSize, x0 + sx, y0 + sy)) {
+                    outColor = ComposeOver(pattern.Color, outColor);
+                }
 
                 if (outColor.A == 255) {
                     scanlines[rowStart + 0] = outColor.R;
@@ -328,6 +353,7 @@ public static partial class QrPngRenderer {
         int offsetX,
         int offsetY,
         GradientInfo gradient,
+        QrPngForegroundPatternOptions? pattern,
         bool[] mask,
         int boxX,
         int boxY) {
@@ -341,11 +367,28 @@ public static partial class QrPngRenderer {
                     rowStart += 4;
                     continue;
                 }
-                var color = GetGradientColorInBox(gradient, x0 + sx, y0 + sy, boxX, boxY);
-                scanlines[rowStart + 0] = color.R;
-                scanlines[rowStart + 1] = color.G;
-                scanlines[rowStart + 2] = color.B;
-                scanlines[rowStart + 3] = color.A;
+                var outColor = GetGradientColorInBox(gradient, x0 + sx, y0 + sy, boxX, boxY);
+                if (pattern is not null && ShouldDrawForegroundPattern(pattern, moduleSize, x0 + sx, y0 + sy)) {
+                    outColor = ComposeOver(pattern.Color, outColor);
+                }
+
+                if (outColor.A == 255) {
+                    scanlines[rowStart + 0] = outColor.R;
+                    scanlines[rowStart + 1] = outColor.G;
+                    scanlines[rowStart + 2] = outColor.B;
+                    scanlines[rowStart + 3] = 255;
+                } else {
+                    var dr = scanlines[rowStart + 0];
+                    var dg = scanlines[rowStart + 1];
+                    var db = scanlines[rowStart + 2];
+                    var da = scanlines[rowStart + 3];
+                    var sa = outColor.A;
+                    var inv = 255 - sa;
+                    scanlines[rowStart + 0] = (byte)((outColor.R * sa + dr * inv + 127) / 255);
+                    scanlines[rowStart + 1] = (byte)((outColor.G * sa + dg * inv + 127) / 255);
+                    scanlines[rowStart + 2] = (byte)((outColor.B * sa + db * inv + 127) / 255);
+                    scanlines[rowStart + 3] = (byte)((sa + da * inv + 127) / 255);
+                }
                 rowStart += 4;
             }
         }
@@ -566,6 +609,62 @@ public static partial class QrPngRenderer {
         var dx = localX % cellSize - cx;
         var dy = localY % cellSize - cy;
         return dx * dx + dy * dy <= radius * radius;
+    }
+
+    private static bool ShouldDrawForegroundPattern(QrPngForegroundPatternOptions pattern, int moduleSize, int px, int py) {
+        var size = Math.Max(1, pattern.SizePx);
+        if (pattern.SnapToModuleSize && moduleSize > 0) {
+            var step = Math.Max(1, pattern.ModuleStep);
+            size = Math.Max(1, moduleSize * step);
+        }
+
+        var thickness = Math.Max(1, pattern.ThicknessPx);
+        if (thickness > size) thickness = size;
+
+        var localX = PositiveMod(px, size);
+        var localY = PositiveMod(py, size);
+
+        return pattern.Type switch {
+            QrPngForegroundPatternType.DiagonalStripes => PositiveMod(localX + localY, size) < thickness,
+            QrPngForegroundPatternType.Crosshatch =>
+                PositiveMod(localX + localY, size) < thickness || PositiveMod(localX - localY, size) < thickness,
+            _ => IsForegroundDot(localX, localY, size, thickness),
+        };
+    }
+
+    private static bool IsForegroundDot(int localX, int localY, int cellSize, int radiusPx) {
+        var center = (cellSize - 1) / 2.0;
+        var dx = localX - center;
+        var dy = localY - center;
+        var radius = Math.Min(radiusPx, cellSize / 2.0);
+        return dx * dx + dy * dy <= radius * radius;
+    }
+
+    private static int PositiveMod(int value, int modulus) {
+        if (modulus <= 0) return 0;
+        var m = value % modulus;
+        return m < 0 ? m + modulus : m;
+    }
+
+    private static Rgba32 ComposeOver(Rgba32 top, Rgba32 bottom) {
+        var ta = top.A;
+        if (ta == 0) return bottom;
+        if (ta == 255 && bottom.A == 255) return top;
+
+        var ba = bottom.A;
+        var inv = 255 - ta;
+        var outA = ta + (ba * inv + 127) / 255;
+        if (outA <= 0) return new Rgba32(0, 0, 0, 0);
+
+        var outRPre = top.R * ta + (int)((bottom.R * ba * (long)inv + 127) / 255);
+        var outGPre = top.G * ta + (int)((bottom.G * ba * (long)inv + 127) / 255);
+        var outBPre = top.B * ta + (int)((bottom.B * ba * (long)inv + 127) / 255);
+
+        var outR = (outRPre + outA / 2) / outA;
+        var outG = (outGPre + outA / 2) / outA;
+        var outB = (outBPre + outA / 2) / outA;
+
+        return new Rgba32((byte)outR, (byte)outG, (byte)outB, (byte)outA);
     }
 
     private static void BlendPixel(byte[] scanlines, int stride, int x, int y, Rgba32 color) {

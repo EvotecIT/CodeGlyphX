@@ -82,11 +82,12 @@ public sealed class RendererFormatTests {
     public void Qr_ArtPresets_Render_Png_Format() {
         var payload = "https://example.com/art";
         var presets = new[] {
-            QrArtPresets.NeonGlow(),
-            QrArtPresets.LiquidGlass(),
-            QrArtPresets.ConnectedSquircleGlow(),
-            QrArtPresets.CutCornerTech(),
-            QrArtPresets.InsetRings(),
+            QrArtPresets.NeonGlowSafe(),
+            QrArtPresets.LiquidGlassSafe(),
+            QrArtPresets.ConnectedSquircleGlowSafe(),
+            QrArtPresets.CutCornerTechSafe(),
+            QrArtPresets.InsetRingsSafe(),
+            QrArtPresets.StripeEyesSafe(),
         };
 
         foreach (var preset in presets) {

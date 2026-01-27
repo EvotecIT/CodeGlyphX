@@ -133,6 +133,11 @@ public sealed class QrEasyOptions {
     public QrPngPaletteOptions? ForegroundPalette { get; set; }
 
     /// <summary>
+    /// Overrides the foreground pattern overlay.
+    /// </summary>
+    public QrPngForegroundPatternOptions? ForegroundPattern { get; set; }
+
+    /// <summary>
     /// Overrides palette zones.
     /// </summary>
     public QrPngPaletteZoneOptions? ForegroundPaletteZones { get; set; }

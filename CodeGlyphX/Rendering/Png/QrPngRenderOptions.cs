@@ -62,6 +62,11 @@ public sealed partial class QrPngRenderOptions {
     public QrPngPaletteOptions? ForegroundPalette { get; set; }
 
     /// <summary>
+    /// Optional pattern overlay for foreground modules.
+    /// </summary>
+    public QrPngForegroundPatternOptions? ForegroundPattern { get; set; }
+
+    /// <summary>
     /// Optional palette overrides for specific zones.
     /// </summary>
     public QrPngPaletteZoneOptions? ForegroundPaletteZones { get; set; }
