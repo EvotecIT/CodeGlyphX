@@ -22,7 +22,7 @@ public sealed class QrArtAutoTuneTests {
         };
 
         var qr = QrEasy.Encode(payload, options);
-        var render = BuildRender(options, payload, qr);
+        var render = BuildRender(options, qr);
 
         Assert.True(render.QuietZone >= 4, $"QuietZone should be at least 4 (was {render.QuietZone}).");
         Assert.True(render.ProtectFunctionalPatterns, "ProtectFunctionalPatterns should be enforced by auto-tune.");
@@ -54,7 +54,7 @@ public sealed class QrArtAutoTuneTests {
         };
 
         var qr = QrEasy.Encode(payload, options);
-        var render = BuildRender(options, payload, qr);
+        var render = BuildRender(options, qr);
 
         Assert.Equal(RenderDefaults.QrForeground, render.Foreground);
         Assert.Equal(RenderDefaults.QrBackground, render.Background);
@@ -142,7 +142,7 @@ public sealed class QrArtAutoTuneTests {
         Assert.Equal(originalAccentStripeCount, options.Eyes.AccentStripeCount);
     }
 
-    private static QrPngRenderOptions BuildRender(QrEasyOptions options, string payload, QrCode qr) {
+    private static QrPngRenderOptions BuildRender(QrEasyOptions options, QrCode qr) {
         var cloneMethod = typeof(QrEasy).GetMethod(
             "CloneOptions",
             BindingFlags.NonPublic | BindingFlags.Static,
@@ -157,12 +157,12 @@ public sealed class QrArtAutoTuneTests {
             "BuildPngOptions",
             BindingFlags.NonPublic | BindingFlags.Static,
             binder: null,
-            types: new[] { typeof(QrEasyOptions), typeof(string), typeof(QrCode) },
+            types: new[] { typeof(QrEasyOptions), typeof(QrCode) },
             modifiers: null);
 
         Assert.NotNull(method);
 
-        var render = method!.Invoke(null, new object[] { safeOptions, payload, qr });
+        var render = method!.Invoke(null, new object[] { safeOptions, qr });
         return Assert.IsType<QrPngRenderOptions>(render);
     }
 }

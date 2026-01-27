@@ -30,7 +30,7 @@ public static partial class QrEasy {
     public static byte[] RenderPng(string payload, QrEasyOptions? options = null) {
         var opts = options is null ? new QrEasyOptions() : CloneOptions(options);
         var qr = Encode(payload, opts);
-        var render = BuildPngOptions(opts, payload, qr);
+        var render = BuildPngOptions(opts, qr);
         return QrPngRenderer.Render(qr.Modules, render);
     }
 
@@ -49,7 +49,7 @@ public static partial class QrEasy {
     public static void RenderPngToStream(string payload, Stream stream, QrEasyOptions? options = null) {
         var opts = options is null ? new QrEasyOptions() : CloneOptions(options);
         var qr = Encode(payload, opts);
-        var render = BuildPngOptions(opts, payload, qr);
+        var render = BuildPngOptions(opts, qr);
         QrPngRenderer.RenderToStream(qr.Modules, render, stream);
     }
 
@@ -84,7 +84,7 @@ public static partial class QrEasy {
         if (payload is null) throw new ArgumentNullException(nameof(payload));
         var opts = MergeOptions(payload, options);
         var qr = Encode(payload.Text, opts);
-        var render = BuildPngOptions(opts, payload.Text, qr);
+        var render = BuildPngOptions(opts, qr);
         return QrPngRenderer.Render(qr.Modules, render);
     }
 
@@ -95,7 +95,7 @@ public static partial class QrEasy {
         if (payload is null) throw new ArgumentNullException(nameof(payload));
         var opts = MergeOptions(payload, options);
         var qr = Encode(payload.Text, opts);
-        var render = BuildPngOptions(opts, payload.Text, qr);
+        var render = BuildPngOptions(opts, qr);
         QrPngRenderer.RenderToStream(qr.Modules, render, stream);
     }
 
@@ -105,7 +105,7 @@ public static partial class QrEasy {
     public static string RenderSvg(string payload, QrEasyOptions? options = null) {
         var opts = options is null ? new QrEasyOptions() : CloneOptions(options);
         var qr = Encode(payload, opts);
-        var baseRender = BuildPngOptions(opts, payload, qr);
+        var baseRender = BuildPngOptions(opts, qr);
         var render = new QrSvgRenderOptions {
             ModuleSize = baseRender.ModuleSize,
             QuietZone = baseRender.QuietZone,
@@ -161,7 +161,7 @@ public static partial class QrEasy {
         if (payload is null) throw new ArgumentNullException(nameof(payload));
         var opts = MergeOptions(payload, options);
         var qr = Encode(payload.Text, opts);
-        var baseRender = BuildPngOptions(opts, payload.Text, qr);
+        var baseRender = BuildPngOptions(opts, qr);
         var render = new QrSvgRenderOptions {
             ModuleSize = baseRender.ModuleSize,
             QuietZone = baseRender.QuietZone,
@@ -183,7 +183,7 @@ public static partial class QrEasy {
     public static string RenderHtml(string payload, QrEasyOptions? options = null) {
         var opts = options is null ? new QrEasyOptions() : CloneOptions(options);
         var qr = Encode(payload, opts);
-        var baseRender = BuildPngOptions(opts, payload, qr);
+        var baseRender = BuildPngOptions(opts, qr);
         var render = new QrHtmlRenderOptions {
             ModuleSize = baseRender.ModuleSize,
             QuietZone = baseRender.QuietZone,
@@ -240,7 +240,7 @@ public static partial class QrEasy {
         if (payload is null) throw new ArgumentNullException(nameof(payload));
         var opts = MergeOptions(payload, options);
         var qr = Encode(payload.Text, opts);
-        var baseRender = BuildPngOptions(opts, payload.Text, qr);
+        var baseRender = BuildPngOptions(opts, qr);
         var render = new QrHtmlRenderOptions {
             ModuleSize = baseRender.ModuleSize,
             QuietZone = baseRender.QuietZone,
@@ -263,7 +263,7 @@ public static partial class QrEasy {
     public static byte[] RenderJpeg(string payload, QrEasyOptions? options = null) {
         var opts = options is null ? new QrEasyOptions() : CloneOptions(options);
         var qr = Encode(payload, opts);
-        var render = BuildPngOptions(opts, payload, qr);
+        var render = BuildPngOptions(opts, qr);
         return QrJpegRenderer.Render(qr.Modules, render, opts.JpegQuality);
     }
 
@@ -282,7 +282,7 @@ public static partial class QrEasy {
     public static void RenderJpegToStream(string payload, Stream stream, QrEasyOptions? options = null) {
         var opts = options is null ? new QrEasyOptions() : CloneOptions(options);
         var qr = Encode(payload, opts);
-        var render = BuildPngOptions(opts, payload, qr);
+        var render = BuildPngOptions(opts, qr);
         QrJpegRenderer.RenderToStream(qr.Modules, render, stream, opts.JpegQuality);
     }
 
@@ -317,7 +317,7 @@ public static partial class QrEasy {
         if (payload is null) throw new ArgumentNullException(nameof(payload));
         var opts = MergeOptions(payload, options);
         var qr = Encode(payload.Text, opts);
-        var render = BuildPngOptions(opts, payload.Text, qr);
+        var render = BuildPngOptions(opts, qr);
         return QrJpegRenderer.Render(qr.Modules, render, opts.JpegQuality);
     }
 
@@ -328,7 +328,7 @@ public static partial class QrEasy {
         if (payload is null) throw new ArgumentNullException(nameof(payload));
         var opts = MergeOptions(payload, options);
         var qr = Encode(payload.Text, opts);
-        var render = BuildPngOptions(opts, payload.Text, qr);
+        var render = BuildPngOptions(opts, qr);
         QrJpegRenderer.RenderToStream(qr.Modules, render, stream, opts.JpegQuality);
     }
 
@@ -338,7 +338,7 @@ public static partial class QrEasy {
     public static byte[] RenderBmp(string payload, QrEasyOptions? options = null) {
         var opts = options is null ? new QrEasyOptions() : CloneOptions(options);
         var qr = Encode(payload, opts);
-        var render = BuildPngOptions(opts, payload, qr);
+        var render = BuildPngOptions(opts, qr);
         return QrBmpRenderer.Render(qr.Modules, render);
     }
 
@@ -357,7 +357,7 @@ public static partial class QrEasy {
     public static void RenderBmpToStream(string payload, Stream stream, QrEasyOptions? options = null) {
         var opts = options is null ? new QrEasyOptions() : CloneOptions(options);
         var qr = Encode(payload, opts);
-        var render = BuildPngOptions(opts, payload, qr);
+        var render = BuildPngOptions(opts, qr);
         QrBmpRenderer.RenderToStream(qr.Modules, render, stream);
     }
 
@@ -384,7 +384,7 @@ public static partial class QrEasy {
         if (payload is null) throw new ArgumentNullException(nameof(payload));
         var opts = MergeOptions(payload, options);
         var qr = Encode(payload.Text, opts);
-        var render = BuildPngOptions(opts, payload.Text, qr);
+        var render = BuildPngOptions(opts, qr);
         return QrBmpRenderer.Render(qr.Modules, render);
     }
 
@@ -395,7 +395,7 @@ public static partial class QrEasy {
         if (payload is null) throw new ArgumentNullException(nameof(payload));
         var opts = MergeOptions(payload, options);
         var qr = Encode(payload.Text, opts);
-        var render = BuildPngOptions(opts, payload.Text, qr);
+        var render = BuildPngOptions(opts, qr);
         QrBmpRenderer.RenderToStream(qr.Modules, render, stream);
     }
 
@@ -405,7 +405,7 @@ public static partial class QrEasy {
     public static byte[] RenderPpm(string payload, QrEasyOptions? options = null) {
         var opts = options is null ? new QrEasyOptions() : CloneOptions(options);
         var qr = Encode(payload, opts);
-        var render = BuildPngOptions(opts, payload, qr);
+        var render = BuildPngOptions(opts, qr);
         return QrPpmRenderer.Render(qr.Modules, render);
     }
 
@@ -424,7 +424,7 @@ public static partial class QrEasy {
     public static void RenderPpmToStream(string payload, Stream stream, QrEasyOptions? options = null) {
         var opts = options is null ? new QrEasyOptions() : CloneOptions(options);
         var qr = Encode(payload, opts);
-        var render = BuildPngOptions(opts, payload, qr);
+        var render = BuildPngOptions(opts, qr);
         QrPpmRenderer.RenderToStream(qr.Modules, render, stream);
     }
 
@@ -451,7 +451,7 @@ public static partial class QrEasy {
         if (payload is null) throw new ArgumentNullException(nameof(payload));
         var opts = MergeOptions(payload, options);
         var qr = Encode(payload.Text, opts);
-        var render = BuildPngOptions(opts, payload.Text, qr);
+        var render = BuildPngOptions(opts, qr);
         return QrPpmRenderer.Render(qr.Modules, render);
     }
 
@@ -462,7 +462,7 @@ public static partial class QrEasy {
         if (payload is null) throw new ArgumentNullException(nameof(payload));
         var opts = MergeOptions(payload, options);
         var qr = Encode(payload.Text, opts);
-        var render = BuildPngOptions(opts, payload.Text, qr);
+        var render = BuildPngOptions(opts, qr);
         QrPpmRenderer.RenderToStream(qr.Modules, render, stream);
     }
 
@@ -472,7 +472,7 @@ public static partial class QrEasy {
     public static byte[] RenderPbm(string payload, QrEasyOptions? options = null) {
         var opts = options is null ? new QrEasyOptions() : CloneOptions(options);
         var qr = Encode(payload, opts);
-        var render = BuildPngOptions(opts, payload, qr);
+        var render = BuildPngOptions(opts, qr);
         return QrPbmRenderer.Render(qr.Modules, render);
     }
 
@@ -491,7 +491,7 @@ public static partial class QrEasy {
     public static void RenderPbmToStream(string payload, Stream stream, QrEasyOptions? options = null) {
         var opts = options is null ? new QrEasyOptions() : CloneOptions(options);
         var qr = Encode(payload, opts);
-        var render = BuildPngOptions(opts, payload, qr);
+        var render = BuildPngOptions(opts, qr);
         QrPbmRenderer.RenderToStream(qr.Modules, render, stream);
     }
 
@@ -518,7 +518,7 @@ public static partial class QrEasy {
         if (payload is null) throw new ArgumentNullException(nameof(payload));
         var opts = MergeOptions(payload, options);
         var qr = Encode(payload.Text, opts);
-        var render = BuildPngOptions(opts, payload.Text, qr);
+        var render = BuildPngOptions(opts, qr);
         return QrPbmRenderer.Render(qr.Modules, render);
     }
 
@@ -529,7 +529,7 @@ public static partial class QrEasy {
         if (payload is null) throw new ArgumentNullException(nameof(payload));
         var opts = MergeOptions(payload, options);
         var qr = Encode(payload.Text, opts);
-        var render = BuildPngOptions(opts, payload.Text, qr);
+        var render = BuildPngOptions(opts, qr);
         QrPbmRenderer.RenderToStream(qr.Modules, render, stream);
     }
 
@@ -539,7 +539,7 @@ public static partial class QrEasy {
     public static byte[] RenderPgm(string payload, QrEasyOptions? options = null) {
         var opts = options is null ? new QrEasyOptions() : CloneOptions(options);
         var qr = Encode(payload, opts);
-        var render = BuildPngOptions(opts, payload, qr);
+        var render = BuildPngOptions(opts, qr);
         return QrPgmRenderer.Render(qr.Modules, render);
     }
 
@@ -558,7 +558,7 @@ public static partial class QrEasy {
     public static void RenderPgmToStream(string payload, Stream stream, QrEasyOptions? options = null) {
         var opts = options is null ? new QrEasyOptions() : CloneOptions(options);
         var qr = Encode(payload, opts);
-        var render = BuildPngOptions(opts, payload, qr);
+        var render = BuildPngOptions(opts, qr);
         QrPgmRenderer.RenderToStream(qr.Modules, render, stream);
     }
 
@@ -585,7 +585,7 @@ public static partial class QrEasy {
         if (payload is null) throw new ArgumentNullException(nameof(payload));
         var opts = MergeOptions(payload, options);
         var qr = Encode(payload.Text, opts);
-        var render = BuildPngOptions(opts, payload.Text, qr);
+        var render = BuildPngOptions(opts, qr);
         return QrPgmRenderer.Render(qr.Modules, render);
     }
 
@@ -596,7 +596,7 @@ public static partial class QrEasy {
         if (payload is null) throw new ArgumentNullException(nameof(payload));
         var opts = MergeOptions(payload, options);
         var qr = Encode(payload.Text, opts);
-        var render = BuildPngOptions(opts, payload.Text, qr);
+        var render = BuildPngOptions(opts, qr);
         QrPgmRenderer.RenderToStream(qr.Modules, render, stream);
     }
 
@@ -606,7 +606,7 @@ public static partial class QrEasy {
     public static byte[] RenderPam(string payload, QrEasyOptions? options = null) {
         var opts = options is null ? new QrEasyOptions() : CloneOptions(options);
         var qr = Encode(payload, opts);
-        var render = BuildPngOptions(opts, payload, qr);
+        var render = BuildPngOptions(opts, qr);
         return QrPamRenderer.Render(qr.Modules, render);
     }
 

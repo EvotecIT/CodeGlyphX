@@ -24,7 +24,7 @@ using CodeGlyphX.Rendering.Xpm;
 namespace CodeGlyphX;
 
 public static partial class QrEasy {
-    private static QrPngRenderOptions BuildPngOptions(QrEasyOptions opts, string payload, QrCode qr) {
+    private static QrPngRenderOptions BuildPngOptions(QrEasyOptions opts, QrCode qr) {
         var moduleCount = qr.Modules.Width;
         var render = new QrPngRenderOptions {
             ModuleSize = ResolveModuleSize(opts, moduleCount),
@@ -179,7 +179,7 @@ public static partial class QrEasy {
     }
 
     private static QrCode EncodePayload(string payload, QrEasyOptions opts) {
-        opts = ApplyArtAutoTunePreEncode(opts, payload);
+        opts = ApplyArtAutoTunePreEncode(opts);
         opts = ApplyLogoBackgroundVersionBump(opts);
         var ecc = opts.ErrorCorrectionLevel ?? GuessEcc(payload, opts.LogoPng is { Length: > 0 });
         if (opts.TextEncoding.HasValue) {
@@ -634,7 +634,7 @@ public static partial class QrEasy {
         }
     }
 
-    private static QrEasyOptions ApplyArtAutoTunePreEncode(QrEasyOptions opts, string payload) {
+    private static QrEasyOptions ApplyArtAutoTunePreEncode(QrEasyOptions opts) {
         if (!opts.ArtAutoTune) return opts;
 
         var hasLogo = opts.LogoPng is { Length: > 0 };
