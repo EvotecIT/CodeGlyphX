@@ -32,6 +32,7 @@ internal static class WebpVp8Decoder {
     private const int MacroblockScaffoldMaxBlocks = 4;
     private const int MacroblockScaffoldChromaWidth = 4;
     private const int MacroblockScaffoldChromaHeight = 4;
+    private const int MacroblockScaffoldBlocksPerMacroblock = 4;
     private static readonly byte[] ScaffoldSignature = new byte[] { (byte)'S', (byte)'C', (byte)'F', (byte)'0' };
     private const int BlockTypeY2 = 0;
     private const int BlockTypeY = 1;
@@ -89,6 +90,7 @@ internal static class WebpVp8Decoder {
         _ = TryReadTokenScaffold(payload, out _);
         _ = TryReadBlockTokenScaffold(payload, out _);
         _ = TryReadMacroblockHeaderScaffold(payload, out _);
+        _ = TryReadMacroblockTokenScaffold(payload, out _);
         _ = TryReadMacroblockScaffold(payload, out _);
         _ = TryReadMacroblockRgbaScaffold(payload, out _);
 
@@ -552,9 +554,67 @@ internal static class WebpVp8Decoder {
         return true;
     }
 
+    internal static bool TryReadMacroblockTokenScaffold(ReadOnlySpan<byte> payload, out WebpVp8MacroblockTokenScaffoldSet scaffold) {
+        scaffold = default;
+        if (!TryReadMacroblockHeaderScaffold(payload, out var headers)) return false;
+        if (!TryReadTokenPartitions(payload, out var tokenPartitions)) return false;
+        if (!TryReadBlockTokenScaffold(payload, out var blocks)) return false;
+
+        var partitionCount = tokenPartitions.Partitions.Length;
+        if (partitionCount <= 0) return false;
+        if (blocks.Partitions.Length != partitionCount) return false;
+        if (headers.Macroblocks.Length == 0) return false;
+
+        var blockCursors = new int[partitionCount];
+        var macroblocks = new WebpVp8MacroblockTokenScaffold[headers.Macroblocks.Length];
+        var totalBlocksAssigned = 0;
+        var totalTokensRead = 0;
+        var totalBytesConsumed = 0;
+
+        for (var i = 0; i < headers.Macroblocks.Length; i++) {
+            var header = headers.Macroblocks[i];
+            var partitionIndex = GetTokenPartitionForRow(header.Y, partitionCount);
+            if ((uint)partitionIndex >= (uint)partitionCount) return false;
+
+            var partition = blocks.Partitions[partitionIndex];
+            if (partition.Blocks.Length == 0) return false;
+
+            var assignedBlocks = new WebpVp8BlockTokenScaffold[MacroblockScaffoldBlocksPerMacroblock];
+            var macroblockTokensRead = 0;
+            for (var b = 0; b < assignedBlocks.Length; b++) {
+                var blockIndex = GetNextPartitionBlockIndex(partitionIndex, partition.Blocks.Length, blockCursors);
+                assignedBlocks[b] = partition.Blocks[blockIndex];
+                macroblockTokensRead += assignedBlocks[b].TokensRead;
+            }
+
+            macroblocks[i] = new WebpVp8MacroblockTokenScaffold(
+                header,
+                partitionIndex,
+                partition.BytesConsumed,
+                assignedBlocks,
+                macroblockTokensRead);
+
+            totalBlocksAssigned += assignedBlocks.Length;
+            totalTokensRead += macroblockTokensRead;
+            totalBytesConsumed += partition.BytesConsumed;
+        }
+
+        scaffold = new WebpVp8MacroblockTokenScaffoldSet(
+            headers.MacroblockCols,
+            headers.MacroblockRows,
+            partitionCount,
+            macroblocks,
+            totalBlocksAssigned,
+            totalTokensRead,
+            totalBytesConsumed);
+        return true;
+    }
+
     internal static bool TryReadMacroblockScaffold(ReadOnlySpan<byte> payload, out WebpVp8MacroblockScaffold macroblock) {
         macroblock = default;
-        if (!TryReadBlockTokenScaffold(payload, out var blocks)) return false;
+        if (!TryReadMacroblockTokenScaffold(payload, out var macroblockTokens)) return false;
+        if (macroblockTokens.Macroblocks.Length == 0) return false;
+        var sourceMacroblock = macroblockTokens.Macroblocks[0];
 
         var yPlane = new byte[MacroblockScaffoldWidth * MacroblockScaffoldHeight];
         var uPlane = new byte[MacroblockScaffoldChromaWidth * MacroblockScaffoldChromaHeight];
@@ -564,61 +624,58 @@ internal static class WebpVp8Decoder {
         var blocksPlacedV = 0;
         var blocksPlacedTotal = 0;
 
-        for (var p = 0; p < blocks.Partitions.Length && blocksPlacedTotal < MacroblockScaffoldMaxBlocks; p++) {
-            var partition = blocks.Partitions[p];
-            for (var b = 0; b < partition.Blocks.Length && blocksPlacedTotal < MacroblockScaffoldMaxBlocks; b++) {
-                var block = partition.Blocks[b];
-                switch (block.BlockType) {
-                    case BlockTypeY2:
-                    case BlockTypeY: {
-                        var (dstX, dstY) = GetMacroblockBlockOffset(blocksPlacedY);
+        for (var b = 0; b < sourceMacroblock.Blocks.Length && blocksPlacedTotal < MacroblockScaffoldMaxBlocks; b++) {
+            var block = sourceMacroblock.Blocks[b];
+            switch (block.BlockType) {
+                case BlockTypeY2:
+                case BlockTypeY: {
+                    var (dstX, dstY) = GetMacroblockBlockOffset(blocksPlacedY);
+                    CopyBlockToPlane(
+                        block.BlockPixels.Samples,
+                        block.BlockPixels.Width,
+                        block.BlockPixels.Height,
+                        yPlane,
+                        MacroblockScaffoldWidth,
+                        MacroblockScaffoldHeight,
+                        dstX,
+                        dstY);
+                    blocksPlacedY++;
+                    blocksPlacedTotal++;
+                    break;
+                }
+                case BlockTypeU: {
+                    if (blocksPlacedU == 0) {
                         CopyBlockToPlane(
                             block.BlockPixels.Samples,
                             block.BlockPixels.Width,
                             block.BlockPixels.Height,
-                            yPlane,
-                            MacroblockScaffoldWidth,
-                            MacroblockScaffoldHeight,
-                            dstX,
-                            dstY);
-                        blocksPlacedY++;
+                            uPlane,
+                            MacroblockScaffoldChromaWidth,
+                            MacroblockScaffoldChromaHeight,
+                            dstX: 0,
+                            dstY: 0);
+                        blocksPlacedU++;
                         blocksPlacedTotal++;
-                        break;
                     }
-                    case BlockTypeU: {
-                        if (blocksPlacedU == 0) {
-                            CopyBlockToPlane(
-                                block.BlockPixels.Samples,
-                                block.BlockPixels.Width,
-                                block.BlockPixels.Height,
-                                uPlane,
-                                MacroblockScaffoldChromaWidth,
-                                MacroblockScaffoldChromaHeight,
-                                dstX: 0,
-                                dstY: 0);
-                            blocksPlacedU++;
-                            blocksPlacedTotal++;
-                        }
 
-                        break;
+                    break;
+                }
+                case BlockTypeV: {
+                    if (blocksPlacedV == 0) {
+                        CopyBlockToPlane(
+                            block.BlockPixels.Samples,
+                            block.BlockPixels.Width,
+                            block.BlockPixels.Height,
+                            vPlane,
+                            MacroblockScaffoldChromaWidth,
+                            MacroblockScaffoldChromaHeight,
+                            dstX: 0,
+                            dstY: 0);
+                        blocksPlacedV++;
+                        blocksPlacedTotal++;
                     }
-                    case BlockTypeV: {
-                        if (blocksPlacedV == 0) {
-                            CopyBlockToPlane(
-                                block.BlockPixels.Samples,
-                                block.BlockPixels.Width,
-                                block.BlockPixels.Height,
-                                vPlane,
-                                MacroblockScaffoldChromaWidth,
-                                MacroblockScaffoldChromaHeight,
-                                dstX: 0,
-                                dstY: 0);
-                            blocksPlacedV++;
-                            blocksPlacedTotal++;
-                        }
 
-                        break;
-                    }
+                    break;
                 }
             }
         }
@@ -635,7 +692,7 @@ internal static class WebpVp8Decoder {
             blocksPlacedU,
             blocksPlacedV,
             blocksPlacedTotal,
-            blocks.TotalBlocksRead);
+            macroblockTokens.TotalBlocksAssigned);
         return true;
     }
 
@@ -1127,6 +1184,22 @@ internal static class WebpVp8Decoder {
     private static int GetMacroblockDimension(int pixels) {
         if (pixels <= 0) return 0;
         return (pixels + MacroblockSize - 1) / MacroblockSize;
+    }
+
+    private static int GetTokenPartitionForRow(int macroblockRow, int partitionCount) {
+        if (partitionCount <= 0) return -1;
+        if (macroblockRow < 0) macroblockRow = 0;
+        // VP8 uses power-of-two partition counts; modulo keeps the scaffold robust.
+        return macroblockRow % partitionCount;
+    }
+
+    private static int GetNextPartitionBlockIndex(int partitionIndex, int blockCount, int[] cursors) {
+        if ((uint)partitionIndex >= (uint)cursors.Length) return 0;
+        if (blockCount <= 0) return 0;
+        var cursor = cursors[partitionIndex];
+        var blockIndex = cursor % blockCount;
+        cursors[partitionIndex] = cursor + 1;
+        return blockIndex;
     }
 
     private static byte GetChromaSampleNearest(byte[] chromaPlane, int width, int height, int x, int y) {
@@ -1666,6 +1739,54 @@ internal readonly struct WebpVp8MacroblockHeaderScaffoldSet {
     public int BoolBytesConsumed { get; }
     public int SkipCount { get; }
     public int[] SegmentCounts { get; }
+}
+
+internal readonly struct WebpVp8MacroblockTokenScaffold {
+    public WebpVp8MacroblockTokenScaffold(
+        WebpVp8MacroblockHeaderScaffold header,
+        int partitionIndex,
+        int partitionBytesConsumed,
+        WebpVp8BlockTokenScaffold[] blocks,
+        int tokensRead) {
+        Header = header;
+        PartitionIndex = partitionIndex;
+        PartitionBytesConsumed = partitionBytesConsumed;
+        Blocks = blocks;
+        TokensRead = tokensRead;
+    }
+
+    public WebpVp8MacroblockHeaderScaffold Header { get; }
+    public int PartitionIndex { get; }
+    public int PartitionBytesConsumed { get; }
+    public WebpVp8BlockTokenScaffold[] Blocks { get; }
+    public int TokensRead { get; }
+}
+
+internal readonly struct WebpVp8MacroblockTokenScaffoldSet {
+    public WebpVp8MacroblockTokenScaffoldSet(
+        int macroblockCols,
+        int macroblockRows,
+        int partitionCount,
+        WebpVp8MacroblockTokenScaffold[] macroblocks,
+        int totalBlocksAssigned,
+        int totalTokensRead,
+        int totalBytesConsumed) {
+        MacroblockCols = macroblockCols;
+        MacroblockRows = macroblockRows;
+        PartitionCount = partitionCount;
+        Macroblocks = macroblocks;
+        TotalBlocksAssigned = totalBlocksAssigned;
+        TotalTokensRead = totalTokensRead;
+        TotalBytesConsumed = totalBytesConsumed;
+    }
+
+    public int MacroblockCols { get; }
+    public int MacroblockRows { get; }
+    public int PartitionCount { get; }
+    public WebpVp8MacroblockTokenScaffold[] Macroblocks { get; }
+    public int TotalBlocksAssigned { get; }
+    public int TotalTokensRead { get; }
+    public int TotalBytesConsumed { get; }
 }
 
 internal readonly struct WebpVp8MacroblockScaffold {
