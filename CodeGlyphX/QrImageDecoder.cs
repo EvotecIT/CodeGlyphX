@@ -29,8 +29,7 @@ public static class QrImageDecoder {
 #if NET8_0_OR_GREATER
         return global::CodeGlyphX.Qr.QrPixelDecoder.TryDecode(pixels, width, height, stride, format, out decoded);
 #else
-        decoded = null!;
-        return false;
+        return TryDecodeFallback(pixels, width, height, stride, format, options: null, cancellationToken: default, out decoded, out _);
 #endif
     }
 
@@ -41,8 +40,7 @@ public static class QrImageDecoder {
 #if NET8_0_OR_GREATER
         return global::CodeGlyphX.Qr.QrPixelDecoder.TryDecode(pixels, width, height, stride, format, options, out decoded);
 #else
-        decoded = null!;
-        return false;
+        return TryDecodeFallback(pixels, width, height, stride, format, options, cancellationToken: default, out decoded, out _);
 #endif
     }
 
@@ -53,8 +51,7 @@ public static class QrImageDecoder {
 #if NET8_0_OR_GREATER
         return global::CodeGlyphX.Qr.QrPixelDecoder.TryDecode(pixels, width, height, stride, format, options, cancellationToken, out decoded);
 #else
-        decoded = null!;
-        return false;
+        return TryDecodeFallback(pixels, width, height, stride, format, options, cancellationToken, out decoded, out _);
 #endif
     }
 
@@ -65,8 +62,7 @@ public static class QrImageDecoder {
 #if NET8_0_OR_GREATER
         return global::CodeGlyphX.Qr.QrPixelDecoder.TryDecodeAll(pixels, width, height, stride, format, out decoded);
 #else
-        decoded = Array.Empty<QrDecoded>();
-        return false;
+        return TryDecodeAllFallback(pixels, width, height, stride, format, options: null, cancellationToken: default, out decoded);
 #endif
     }
 
@@ -77,8 +73,7 @@ public static class QrImageDecoder {
 #if NET8_0_OR_GREATER
         return global::CodeGlyphX.Qr.QrPixelDecoder.TryDecodeAll(pixels, width, height, stride, format, options, out decoded);
 #else
-        decoded = Array.Empty<QrDecoded>();
-        return false;
+        return TryDecodeAllFallback(pixels, width, height, stride, format, options, cancellationToken: default, out decoded);
 #endif
     }
 
@@ -89,8 +84,7 @@ public static class QrImageDecoder {
 #if NET8_0_OR_GREATER
         return global::CodeGlyphX.Qr.QrPixelDecoder.TryDecodeAll(pixels, width, height, stride, format, options, cancellationToken, out decoded);
 #else
-        decoded = Array.Empty<QrDecoded>();
-        return false;
+        return TryDecodeAllFallback(pixels, width, height, stride, format, options, cancellationToken, out decoded);
 #endif
     }
 
@@ -106,8 +100,7 @@ public static class QrImageDecoder {
         }
         return global::CodeGlyphX.Qr.QrPixelDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded);
 #else
-        decoded = null!;
-        return false;
+        return TryDecodeImageFallback(image, options: null, cancellationToken: default, out decoded, out _);
 #endif
     }
 
@@ -124,9 +117,7 @@ public static class QrImageDecoder {
         }
         return QrDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, out info, options);
 #else
-        decoded = null!;
-        info = default;
-        return false;
+        return TryDecodeImageFallback(image, options, cancellationToken: default, out decoded, out info);
 #endif
     }
 
@@ -143,9 +134,7 @@ public static class QrImageDecoder {
         }
         return QrDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, out info, options, cancellationToken);
 #else
-        decoded = null!;
-        info = default;
-        return false;
+        return TryDecodeImageFallback(image, options, cancellationToken, out decoded, out info);
 #endif
     }
 
@@ -182,9 +171,7 @@ public static class QrImageDecoder {
 #if NET8_0_OR_GREATER
         return TryDecodeImageCore(image, imageOptions, options, cancellationToken, out decoded, out info);
 #else
-        decoded = null!;
-        info = default;
-        return false;
+        return TryDecodeImageFallback(image, options, cancellationToken, out decoded, out info);
 #endif
     }
 
@@ -200,8 +187,7 @@ public static class QrImageDecoder {
         }
         return global::CodeGlyphX.Qr.QrPixelDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, options, out decoded);
 #else
-        decoded = null!;
-        return false;
+        return TryDecodeImageFallback(image, options, cancellationToken: default, out decoded, out _);
 #endif
     }
 
@@ -217,8 +203,7 @@ public static class QrImageDecoder {
         }
         return global::CodeGlyphX.Qr.QrPixelDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, options, cancellationToken, out decoded);
 #else
-        decoded = null!;
-        return false;
+        return TryDecodeImageFallback(image, options, cancellationToken, out decoded, out _);
 #endif
     }
 
@@ -233,8 +218,7 @@ public static class QrImageDecoder {
         }
         return global::CodeGlyphX.Qr.QrPixelDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded);
 #else
-        decoded = null!;
-        return false;
+        return TryDecodeImageFallback(image.ToArray(), options: null, cancellationToken: default, out decoded, out _);
 #endif
     }
 
@@ -250,9 +234,7 @@ public static class QrImageDecoder {
         }
         return QrDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, out info, options);
 #else
-        decoded = null!;
-        info = default;
-        return false;
+        return TryDecodeImageFallback(image.ToArray(), options, cancellationToken: default, out decoded, out info);
 #endif
     }
 
@@ -268,9 +250,7 @@ public static class QrImageDecoder {
         }
         return QrDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, out info, options, cancellationToken);
 #else
-        decoded = null!;
-        info = default;
-        return false;
+        return TryDecodeImageFallback(image.ToArray(), options, cancellationToken, out decoded, out info);
 #endif
     }
 
@@ -288,8 +268,7 @@ public static class QrImageDecoder {
 #if NET8_0_OR_GREATER
         return TryDecodeImageCore(image, imageOptions, options, cancellationToken, out decoded);
 #else
-        decoded = null!;
-        return false;
+        return TryDecodeImageFallback(image.ToArray(), options, cancellationToken, out decoded, out _);
 #endif
     }
 
@@ -307,9 +286,7 @@ public static class QrImageDecoder {
 #if NET8_0_OR_GREATER
         return TryDecodeImageCore(image, imageOptions, options, cancellationToken, out decoded, out info);
 #else
-        decoded = null!;
-        info = default;
-        return false;
+        return TryDecodeImageFallback(image.ToArray(), options, cancellationToken, out decoded, out info);
 #endif
     }
 
@@ -324,8 +301,7 @@ public static class QrImageDecoder {
         }
         return global::CodeGlyphX.Qr.QrPixelDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, options, out decoded);
 #else
-        decoded = null!;
-        return false;
+        return TryDecodeImageFallback(image.ToArray(), options, cancellationToken: default, out decoded, out _);
 #endif
     }
 
@@ -340,8 +316,7 @@ public static class QrImageDecoder {
         }
         return global::CodeGlyphX.Qr.QrPixelDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, options, cancellationToken, out decoded);
 #else
-        decoded = null!;
-        return false;
+        return TryDecodeImageFallback(image.ToArray(), options, cancellationToken, out decoded, out _);
 #endif
     }
 
@@ -374,8 +349,12 @@ public static class QrImageDecoder {
         }
         return global::CodeGlyphX.Qr.QrPixelDecoder.TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, options, out decoded);
 #else
-        decoded = Array.Empty<QrDecoded>();
-        return false;
+        if (!TryDecodeImageFallback(image, options, cancellationToken: default, out var single, out _)) {
+            decoded = Array.Empty<QrDecoded>();
+            return false;
+        }
+        decoded = new[] { single };
+        return true;
 #endif
     }
 
@@ -393,8 +372,12 @@ public static class QrImageDecoder {
 #if NET8_0_OR_GREATER
         return TryDecodeAllImageCore(image, imageOptions, options, cancellationToken, out decoded);
 #else
-        decoded = Array.Empty<QrDecoded>();
-        return false;
+        if (!TryDecodeImageFallback(image, options, cancellationToken, out var single, out _)) {
+            decoded = Array.Empty<QrDecoded>();
+            return false;
+        }
+        decoded = new[] { single };
+        return true;
 #endif
     }
 
@@ -407,8 +390,9 @@ public static class QrImageDecoder {
         var rgba = ImageReader.DecodeRgba32(stream, out var width, out var height);
         return global::CodeGlyphX.Qr.QrPixelDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded);
 #else
-        decoded = null!;
-        return false;
+        if (stream is null) throw new ArgumentNullException(nameof(stream));
+        var data = RenderIO.ReadBinary(stream);
+        return TryDecodeImageFallback(data, options: null, cancellationToken: default, out decoded, out _);
 #endif
     }
 
@@ -421,9 +405,9 @@ public static class QrImageDecoder {
         var rgba = ImageReader.DecodeRgba32(stream, out var width, out var height);
         return QrDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, out info, options);
 #else
-        decoded = null!;
-        info = default;
-        return false;
+        if (stream is null) throw new ArgumentNullException(nameof(stream));
+        var data = RenderIO.ReadBinary(stream);
+        return TryDecodeImageFallback(data, options, cancellationToken: default, out decoded, out info);
 #endif
     }
 
@@ -436,8 +420,9 @@ public static class QrImageDecoder {
         var rgba = ImageReader.DecodeRgba32(stream, out var width, out var height);
         return global::CodeGlyphX.Qr.QrPixelDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, options, out decoded);
 #else
-        decoded = null!;
-        return false;
+        if (stream is null) throw new ArgumentNullException(nameof(stream));
+        var data = RenderIO.ReadBinary(stream);
+        return TryDecodeImageFallback(data, options, cancellationToken: default, out decoded, out _);
 #endif
     }
 
@@ -457,8 +442,9 @@ public static class QrImageDecoder {
         var data = RenderIO.ReadBinary(stream);
         return TryDecodeImageCore(data, imageOptions, options, cancellationToken, out decoded);
 #else
-        decoded = null!;
-        return false;
+        if (stream is null) throw new ArgumentNullException(nameof(stream));
+        var data = RenderIO.ReadBinary(stream);
+        return TryDecodeImageFallback(data, options, cancellationToken, out decoded, out _);
 #endif
     }
 
@@ -478,9 +464,9 @@ public static class QrImageDecoder {
         var data = RenderIO.ReadBinary(stream);
         return TryDecodeImageCore(data, imageOptions, options, cancellationToken, out decoded, out info);
 #else
-        decoded = null!;
-        info = default;
-        return false;
+        if (stream is null) throw new ArgumentNullException(nameof(stream));
+        var data = RenderIO.ReadBinary(stream);
+        return TryDecodeImageFallback(data, options, cancellationToken, out decoded, out info);
 #endif
     }
 
@@ -492,11 +478,8 @@ public static class QrImageDecoder {
         if (image is null) throw new ArgumentNullException(nameof(image));
         return DecodeImageResult((ReadOnlySpan<byte>)image, imageOptions, options, cancellationToken);
 #else
-        _ = imageOptions;
-        _ = options;
-        _ = cancellationToken;
         if (image is null) throw new ArgumentNullException(nameof(image));
-        return new DecodeResult<QrDecoded>(DecodeFailureReason.PlatformNotSupported, default, TimeSpan.Zero, "QR decoding requires .NET 8 or later.");
+        return DecodeImageResult((ReadOnlySpan<byte>)image, imageOptions, options, cancellationToken);
 #endif
     }
 
@@ -534,10 +517,26 @@ public static class QrImageDecoder {
             budgetScope?.Dispose();
         }
 #else
-        _ = imageOptions;
-        _ = options;
-        _ = cancellationToken;
-        return new DecodeResult<QrDecoded>(DecodeFailureReason.PlatformNotSupported, default, TimeSpan.Zero, "QR decoding requires .NET 8 or later.");
+        var stopwatch = Stopwatch.StartNew();
+        if (cancellationToken.IsCancellationRequested) {
+            return new DecodeResult<QrDecoded>(DecodeFailureReason.Cancelled, default, stopwatch.Elapsed);
+        }
+
+        ImageFormat format = ImageFormat.Unknown;
+        _ = ImageReader.TryDetectFormat(image, out format);
+
+        if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) {
+            var infoFail = new ImageInfo(format, 0, 0);
+            return new DecodeResult<QrDecoded>(DecodeFailureReason.UnsupportedFormat, infoFail, stopwatch.Elapsed);
+        }
+
+        var info = new ImageInfo(format, width, height);
+        if (TryDecodeFallback(rgba, width, height, width * 4, PixelFormat.Rgba32, options, cancellationToken, out var decoded, out _)) {
+            return new DecodeResult<QrDecoded>(decoded, info, stopwatch.Elapsed);
+        }
+
+        var failure = cancellationToken.IsCancellationRequested ? DecodeFailureReason.Cancelled : DecodeFailureReason.NoResult;
+        return new DecodeResult<QrDecoded>(failure, info, stopwatch.Elapsed);
 #endif
     }
 
@@ -553,11 +552,9 @@ public static class QrImageDecoder {
         var data = RenderIO.ReadBinary(stream);
         return DecodeImageResult(data, imageOptions, options, cancellationToken);
 #else
-        _ = imageOptions;
-        _ = options;
-        _ = cancellationToken;
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        return new DecodeResult<QrDecoded>(DecodeFailureReason.PlatformNotSupported, default, TimeSpan.Zero, "QR decoding requires .NET 8 or later.");
+        var data = RenderIO.ReadBinary(stream);
+        return DecodeImageResult(data, imageOptions, options, cancellationToken);
 #endif
     }
 
@@ -577,8 +574,14 @@ public static class QrImageDecoder {
         var rgba = ImageReader.DecodeRgba32(stream, out var width, out var height);
         return global::CodeGlyphX.Qr.QrPixelDecoder.TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded);
 #else
-        decoded = Array.Empty<QrDecoded>();
-        return false;
+        if (stream is null) throw new ArgumentNullException(nameof(stream));
+        var data = RenderIO.ReadBinary(stream);
+        if (!TryDecodeImageFallback(data, options: null, cancellationToken: default, out var single, out _)) {
+            decoded = Array.Empty<QrDecoded>();
+            return false;
+        }
+        decoded = new[] { single };
+        return true;
 #endif
     }
 
@@ -591,8 +594,14 @@ public static class QrImageDecoder {
         var rgba = ImageReader.DecodeRgba32(stream, out var width, out var height);
         return global::CodeGlyphX.Qr.QrPixelDecoder.TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, options, out decoded);
 #else
-        decoded = Array.Empty<QrDecoded>();
-        return false;
+        if (stream is null) throw new ArgumentNullException(nameof(stream));
+        var data = RenderIO.ReadBinary(stream);
+        if (!TryDecodeImageFallback(data, options, cancellationToken: default, out var single, out _)) {
+            decoded = Array.Empty<QrDecoded>();
+            return false;
+        }
+        decoded = new[] { single };
+        return true;
 #endif
     }
 
@@ -612,8 +621,14 @@ public static class QrImageDecoder {
         var data = RenderIO.ReadBinary(stream);
         return TryDecodeAllImageCore(data, imageOptions, options, cancellationToken, out decoded);
 #else
-        decoded = Array.Empty<QrDecoded>();
-        return false;
+        if (stream is null) throw new ArgumentNullException(nameof(stream));
+        var data = RenderIO.ReadBinary(stream);
+        if (!TryDecodeImageFallback(data, options, cancellationToken, out var single, out _)) {
+            decoded = Array.Empty<QrDecoded>();
+            return false;
+        }
+        decoded = new[] { single };
+        return true;
 #endif
     }
 
@@ -691,6 +706,209 @@ public static class QrImageDecoder {
             budgetCts?.Dispose();
             budgetScope?.Dispose();
         }
+    }
+#endif
+
+#if !NET8_0_OR_GREATER
+    private static bool TryDecodeImageFallback(byte[] image, QrPixelDecodeOptions? options, CancellationToken cancellationToken, out QrDecoded decoded, out QrPixelDecodeInfo info) {
+        if (image is null) throw new ArgumentNullException(nameof(image));
+        decoded = null!;
+        info = default;
+        if (cancellationToken.IsCancellationRequested) return false;
+
+        if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) {
+            return false;
+        }
+
+        var stride = width * 4;
+        return TryDecodeFallback(rgba, width, height, stride, PixelFormat.Rgba32, options, cancellationToken, out decoded, out info);
+    }
+
+    private static bool TryDecodeAllFallback(byte[] pixels, int width, int height, int stride, PixelFormat format, QrPixelDecodeOptions? options, CancellationToken cancellationToken, out QrDecoded[] decoded) {
+        decoded = Array.Empty<QrDecoded>();
+        if (!TryDecodeFallback(pixels, width, height, stride, format, options, cancellationToken, out var single, out _)) {
+            return false;
+        }
+        decoded = new[] { single };
+        return true;
+    }
+
+    private static bool TryDecodeFallback(byte[] pixels, int width, int height, int stride, PixelFormat format, QrPixelDecodeOptions? options, CancellationToken cancellationToken, out QrDecoded decoded, out QrPixelDecodeInfo info) {
+        decoded = null!;
+        info = default;
+        if (pixels is null) throw new ArgumentNullException(nameof(pixels));
+        if (width <= 0 || height <= 0 || stride < width * 4) return false;
+        if (cancellationToken.IsCancellationRequested) return false;
+
+        var rgba = format == PixelFormat.Rgba32 ? pixels : ConvertBgraToRgba(pixels, width, height, stride);
+        ApplyMaxDimension(ref rgba, ref width, ref height, ref stride, options);
+        if (cancellationToken.IsCancellationRequested) return false;
+
+        var grayscale = BuildGrayscale(rgba, width, height, stride);
+        var threshold = ComputeMeanThreshold(grayscale);
+        if (!TryFindDarkBounds(grayscale, width, height, threshold, out var minX, out var minY, out var maxX, out var maxY)) {
+            return false;
+        }
+
+        var dimension = EstimateDimension(grayscale, width, minX, minY, maxX, maxY, threshold);
+        if (dimension < 21) return false;
+
+        var modules = SampleModules(grayscale, width, height, minX, minY, maxX, maxY, threshold, dimension);
+        if (cancellationToken.IsCancellationRequested) return false;
+
+        if (QrDecoder.TryDecode(modules, out decoded, out var moduleInfo)) {
+            info = new QrPixelDecodeInfo(1, threshold, invert: false, candidateCount: 0, candidateTriplesTried: 0, dimension, moduleInfo);
+            return true;
+        }
+
+        var inverted = modules.Clone();
+        inverted.Invert();
+        var ok = QrDecoder.TryDecode(inverted, out decoded, out moduleInfo);
+        info = new QrPixelDecodeInfo(1, threshold, invert: true, candidateCount: 0, candidateTriplesTried: 0, dimension, moduleInfo);
+        return ok;
+    }
+
+    private static void ApplyMaxDimension(ref byte[] rgba, ref int width, ref int height, ref int stride, QrPixelDecodeOptions? options) {
+        var maxDim = options?.MaxDimension ?? 0;
+        if (maxDim <= 0) return;
+
+        var currentMax = width > height ? width : height;
+        if (currentMax <= maxDim) return;
+
+        var scale = maxDim / (double)currentMax;
+        var dstWidth = Math.Max(1, (int)Math.Round(width * scale));
+        var dstHeight = Math.Max(1, (int)Math.Round(height * scale));
+        var background = new CodeGlyphX.Rendering.Png.Rgba32(255, 255, 255, 255);
+        rgba = ImageScaler.ResizeToFitNearest(rgba, width, height, stride, dstWidth, dstHeight, background, preserveAspectRatio: true);
+        width = dstWidth;
+        height = dstHeight;
+        stride = width * 4;
+    }
+
+    private static byte[] ConvertBgraToRgba(byte[] pixels, int width, int height, int stride) {
+        var rgba = new byte[checked(width * height * 4)];
+        var dst = 0;
+        for (var y = 0; y < height; y++) {
+            var row = y * stride;
+            for (var x = 0; x < width; x++) {
+                var i = row + (x * 4);
+                rgba[dst + 0] = pixels[i + 2];
+                rgba[dst + 1] = pixels[i + 1];
+                rgba[dst + 2] = pixels[i + 0];
+                rgba[dst + 3] = pixels[i + 3];
+                dst += 4;
+            }
+        }
+        return rgba;
+    }
+
+    private static byte[] BuildGrayscale(byte[] rgba, int width, int height, int stride) {
+        var gray = new byte[checked(width * height)];
+        var dst = 0;
+        for (var y = 0; y < height; y++) {
+            var row = y * stride;
+            for (var x = 0; x < width; x++) {
+                var i = row + (x * 4);
+                var r = rgba[i + 0];
+                var g = rgba[i + 1];
+                var b = rgba[i + 2];
+                var lum = (299 * r) + (587 * g) + (114 * b);
+                gray[dst++] = (byte)(lum / 1000);
+            }
+        }
+        return gray;
+    }
+
+    private static byte ComputeMeanThreshold(byte[] gray) {
+        long sum = 0;
+        for (var i = 0; i < gray.Length; i++) sum += gray[i];
+        var mean = (int)(sum / Math.Max(1, gray.Length));
+        var adjusted = mean - 8;
+        if (adjusted < 0) adjusted = 0;
+        if (adjusted > 255) adjusted = 255;
+        return (byte)adjusted;
+    }
+
+    private static bool TryFindDarkBounds(byte[] gray, int width, int height, byte threshold, out int minX, out int minY, out int maxX, out int maxY) {
+        minX = width;
+        minY = height;
+        maxX = -1;
+        maxY = -1;
+
+        var idx = 0;
+        for (var y = 0; y < height; y++) {
+            for (var x = 0; x < width; x++, idx++) {
+                if (gray[idx] >= threshold) continue;
+                if (x < minX) minX = x;
+                if (y < minY) minY = y;
+                if (x > maxX) maxX = x;
+                if (y > maxY) maxY = y;
+            }
+        }
+
+        return maxX >= minX && maxY >= minY;
+    }
+
+    private static int EstimateDimension(byte[] gray, int width, int minX, int minY, int maxX, int maxY, byte threshold) {
+        var boxWidth = (maxX - minX) + 1;
+        var boxHeight = (maxY - minY) + 1;
+        if (boxWidth < 21 || boxHeight < 21) return 0;
+
+        var midY = minY + (boxHeight / 2);
+        var rowStart = (midY * width) + minX;
+        var rowEnd = rowStart + boxWidth;
+        var runs = new List<int>(64);
+        var lastDark = gray[rowStart] < threshold;
+        var run = 0;
+        for (var i = rowStart; i < rowEnd; i++) {
+            var dark = gray[i] < threshold;
+            if (dark == lastDark) {
+                run++;
+                continue;
+            }
+            if (run > 0) runs.Add(run);
+            run = 1;
+            lastDark = dark;
+        }
+        if (run > 0) runs.Add(run);
+        if (runs.Count == 0) return 0;
+
+        runs.Sort();
+        var take = runs.Count < 12 ? runs.Count : 12;
+        var smallSum = 0;
+        for (var i = 0; i < take; i++) smallSum += runs[i];
+        var moduleSize = Math.Max(1, smallSum / Math.Max(1, take));
+
+        var rawDim = (int)Math.Round(boxWidth / (double)moduleSize);
+        var version = ClampInt((int)Math.Round((rawDim - 17) / 4.0), 1, 40);
+        return (version * 4) + 17;
+    }
+
+    private static BitMatrix SampleModules(byte[] gray, int width, int height, int minX, int minY, int maxX, int maxY, byte threshold, int dimension) {
+        var matrix = new BitMatrix(dimension, dimension);
+        var boxWidth = (maxX - minX) + 1;
+        var boxHeight = (maxY - minY) + 1;
+        var stepX = boxWidth / (double)dimension;
+        var stepY = boxHeight / (double)dimension;
+
+        for (var y = 0; y < dimension; y++) {
+            var cy = minY + ((y + 0.5) * stepY);
+            var py = ClampInt((int)Math.Round(cy), 0, height - 1);
+            for (var x = 0; x < dimension; x++) {
+                var cx = minX + ((x + 0.5) * stepX);
+                var px = ClampInt((int)Math.Round(cx), 0, width - 1);
+                var idx = (py * width) + px;
+                matrix[x, y] = gray[idx] < threshold;
+            }
+        }
+
+        return matrix;
+    }
+
+    private static int ClampInt(int value, int min, int max) {
+        if (value < min) return min;
+        if (value > max) return max;
+        return value;
     }
 #endif
 
