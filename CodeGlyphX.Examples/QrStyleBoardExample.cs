@@ -55,6 +55,22 @@ internal static class QrStyleBoardExample {
                 eyes: Eye(QrPngEyeFrameStyle.Target, R(0, 255, 213), R(255, 59, 255)),
                 canvas: CanvasGradient(R(18, 18, 28), R(48, 23, 72)))),
 
+            new("Neon Glow", StyleDocs("neon-glow"), () => BaseSticker(
+                fg: R(0, 255, 240),
+                palette: Palette(QrPngPaletteMode.Cycle, 0, R(0, 255, 240), R(0, 170, 255), R(255, 92, 255)),
+                shape: QrPngModuleShape.Dot,
+                eyes: EyeGlow(R(0, 255, 240), R(255, 92, 255), R(0, 200, 255, 200)),
+                scaleMap: ScaleMap(QrPngModuleScaleMode.Radial, 0.82, 1.0),
+                canvas: CanvasGradient(R(8, 10, 28), R(28, 18, 64)))),
+
+            new("Liquid Glass", StyleDocs("liquid-glass"), () => BaseSticker(
+                fg: R(120, 210, 255),
+                palette: Palette(QrPngPaletteMode.Cycle, 0, R(120, 210, 255), R(160, 160, 255), R(210, 170, 255)),
+                shape: QrPngModuleShape.ConnectedRounded,
+                eyes: EyeGlow(R(120, 210, 255), R(210, 170, 255), R(120, 210, 255, 190)),
+                scaleMap: ScaleMap(QrPngModuleScaleMode.Radial, 0.86, 1.0),
+                canvas: CanvasGradient(R(14, 18, 46), R(32, 26, 82)))),
+
             new("Candy Checker", StyleDocs("candy-checker"), () => BaseSticker(
                 fg: R(255, 107, 107),
                 palette: Palette(QrPngPaletteMode.Checker, 0, R(255, 107, 107), R(255, 217, 61)),
@@ -69,6 +85,14 @@ internal static class QrStyleBoardExample {
                 eyes: Eye(QrPngEyeFrameStyle.DoubleRing, R(121, 134, 255), R(255, 174, 206)),
                 scaleMap: ScaleMap(QrPngModuleScaleMode.Radial, 0.65, 1.0),
                 canvas: CanvasPattern(R(245, 248, 255), Pattern(QrPngBackgroundPatternType.Checker, R(121, 134, 255, 20))))),
+
+            new("Inset Rings", StyleDocs("inset-rings"), () => BaseSticker(
+                fg: R(96, 120, 255),
+                palette: Palette(QrPngPaletteMode.Rings, 0, R(96, 120, 255), R(140, 110, 255), R(120, 210, 255)),
+                shape: QrPngModuleShape.Squircle,
+                eyes: EyeInsetRing(R(96, 120, 255), R(120, 210, 255)),
+                scaleMap: ScaleMap(QrPngModuleScaleMode.Radial, 0.78, 1.0),
+                canvas: CanvasGradient(R(18, 20, 60), R(36, 28, 96)))),
 
             new("Ocean Grid", StyleDocs("ocean-grid"), () => BaseSticker(
                 fg: R(0, 133, 255),
@@ -91,6 +115,14 @@ internal static class QrStyleBoardExample {
                 eyes: Eye(QrPngEyeFrameStyle.Bracket, R(24, 230, 145), R(52, 147, 255)),
                 scaleMap: ScaleMap(QrPngModuleScaleMode.Rings, 0.7, 1.0),
                 canvas: CanvasGradient(R(7, 21, 28), R(9, 42, 54)))),
+
+            new("Cut Corner Tech", StyleDocs("cut-corner-tech"), () => BaseSticker(
+                fg: R(80, 220, 255),
+                palette: Palette(QrPngPaletteMode.Random, 5120, R(80, 220, 255), R(100, 140, 255), R(220, 120, 255)),
+                shape: QrPngModuleShape.Rounded,
+                eyes: EyeCutCorner(R(80, 220, 255), R(220, 120, 255)),
+                scaleMap: ScaleMap(QrPngModuleScaleMode.Radial, 0.78, 1.0),
+                canvas: CanvasGradient(R(10, 18, 40), R(22, 38, 72)))),
 
             new("Sunset Sticker", StyleDocs("sunset-sticker"), () => BaseSticker(
                 fg: R(255, 93, 93),
@@ -158,6 +190,22 @@ internal static class QrStyleBoardExample {
                 eyes: Eye(QrPngEyeFrameStyle.Badge, R(30, 30, 30), R(80, 80, 80)),
                 canvas: CanvasPattern(R(255, 255, 255), Pattern(QrPngBackgroundPatternType.Grid, R(30, 30, 30, 18))))),
 
+            new("Connected Melt", StyleDocs("connected-melt"), () => BaseSticker(
+                fg: R(88, 120, 255),
+                palette: Palette(QrPngPaletteMode.Cycle, 0, R(88, 120, 255), R(120, 96, 255), R(88, 210, 255)),
+                shape: QrPngModuleShape.ConnectedRounded,
+                eyes: Eye(QrPngEyeFrameStyle.Target, R(88, 120, 255), R(88, 210, 255)),
+                scaleMap: ScaleMap(QrPngModuleScaleMode.Radial, 0.86, 1.0),
+                canvas: CanvasGradient(R(14, 18, 42), R(28, 20, 76)))),
+
+            new("Minimal Mono", StyleDocs("minimal-mono"), () => BaseSticker(
+                fg: R(18, 18, 18),
+                palette: null,
+                shape: QrPngModuleShape.ConnectedRounded,
+                eyes: EyeGlow(R(18, 18, 18), R(18, 18, 18), R(120, 120, 120, 150)),
+                scaleMap: ScaleMap(QrPngModuleScaleMode.Radial, 0.9, 1.0),
+                canvas: CanvasBorder(R(255, 255, 255), R(18, 18, 18)))),
+
             new("Center Pop", StyleDocs("center-pop"), () => BaseSticker(
                 fg: R(35, 54, 89),
                 palette: Palette(QrPngPaletteMode.Cycle, 0, R(35, 54, 89), R(60, 90, 140)),
@@ -215,6 +263,29 @@ internal static class QrStyleBoardExample {
             OuterCornerRadiusPx = 6,
             InnerCornerRadiusPx = 4,
         };
+    }
+
+    private static QrPngEyeOptions EyeGlow(Rgba32 outer, Rgba32 inner, Rgba32? glow = null) {
+        var eyes = Eye(QrPngEyeFrameStyle.Glow, outer, inner);
+        eyes.GlowRadiusPx = 28;
+        eyes.GlowAlpha = 125;
+        eyes.GlowColor = glow ?? outer;
+        return eyes;
+    }
+
+    private static QrPngEyeOptions EyeInsetRing(Rgba32 outer, Rgba32 inner) {
+        var eyes = Eye(QrPngEyeFrameStyle.InsetRing, outer, inner);
+        eyes.InnerScale = 0.92;
+        return eyes;
+    }
+
+    private static QrPngEyeOptions EyeCutCorner(Rgba32 outer, Rgba32 inner) {
+        var eyes = Eye(QrPngEyeFrameStyle.CutCorner, outer, inner);
+        eyes.OuterShape = QrPngModuleShape.Square;
+        eyes.InnerShape = QrPngModuleShape.Rounded;
+        eyes.OuterCornerRadiusPx = 0;
+        eyes.InnerCornerRadiusPx = 4;
+        return eyes;
     }
 
     private static QrPngPaletteOptions Palette(QrPngPaletteMode mode, int seed, params Rgba32[] colors) {

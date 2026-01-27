@@ -253,6 +253,7 @@ public static class SvgQrRenderer {
         if (scale <= 0) return;
         if (scale > 1.0) scale = 1.0;
 
+        if (shape == QrPngModuleShape.ConnectedRounded) shape = QrPngModuleShape.Rounded;
         if (shape == QrPngModuleShape.Dot) scale *= QrPngShapeDefaults.DotScale;
         if (shape == QrPngModuleShape.DotGrid) {
             AppendDotGrid(sb, cellX, cellY, cellSize, scale, fill);

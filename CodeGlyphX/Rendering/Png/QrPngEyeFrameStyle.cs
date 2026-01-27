@@ -24,4 +24,16 @@ public enum QrPngEyeFrameStyle {
     /// Bold badge frame with thicker border.
     /// </summary>
     Badge,
+    /// <summary>
+    /// Single frame with a soft glow halo behind it.
+    /// </summary>
+    Glow,
+    /// <summary>
+    /// Outer ring with an inset inner ring and a clear center.
+    /// </summary>
+    InsetRing,
+    /// <summary>
+    /// Square frame with corners cut away for a tech-like look.
+    /// </summary>
+    CutCorner,
 }

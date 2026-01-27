@@ -625,6 +625,34 @@ public static partial class QrEasy {
     }
 
     /// <summary>
+    /// Renders a QR code as console-friendly ASCII using scan-oriented defaults.
+    /// </summary>
+    public static string RenderAsciiConsole(
+        string payload,
+        int scale = 4,
+        bool useAnsiColors = true,
+        bool trueColor = true,
+        Rgba32? darkColor = null,
+        QrEasyOptions? options = null) {
+        var preset = AsciiPresets.Console(scale, useAnsiColors, trueColor, darkColor);
+        return RenderAscii(payload, preset, options);
+    }
+
+    /// <summary>
+    /// Renders a QR code as console-friendly ASCII using scan-oriented defaults for a payload with embedded defaults.
+    /// </summary>
+    public static string RenderAsciiConsole(
+        QrPayloadData payload,
+        int scale = 4,
+        bool useAnsiColors = true,
+        bool trueColor = true,
+        Rgba32? darkColor = null,
+        QrEasyOptions? options = null) {
+        var preset = AsciiPresets.Console(scale, useAnsiColors, trueColor, darkColor);
+        return RenderAscii(payload, preset, options);
+    }
+
+    /// <summary>
     /// Renders a QR code to a raw RGBA pixel buffer (no PNG encoding).
     /// </summary>
     public static byte[] RenderPixels(string payload, out int widthPx, out int heightPx, out int stride, QrEasyOptions? options = null) {

@@ -1,4 +1,5 @@
 using System;
+using System.Buffers;
 using System.IO;
 using CodeGlyphX.Rendering;
 
@@ -49,6 +50,9 @@ public static partial class QrPngRenderer {
         QrPngRenderOptions opts,
         int offsetX,
         int offsetY,
+        int qrOriginX,
+        int qrOriginY,
+        int qrSizePx,
         int ex,
         int ey) {
         var moduleSize = opts.ModuleSize;
@@ -78,8 +82,85 @@ public static partial class QrPngRenderer {
         var innerColor = eye.InnerColor ?? opts.Foreground;
         var outerGradient = eye.OuterGradient;
         var innerGradient = eye.InnerGradient;
+        var qrX0 = qrOriginX;
+        var qrY0 = qrOriginY;
+        var qrX1 = qrOriginX + qrSizePx;
+        var qrY1 = qrOriginY + qrSizePx;
 
         switch (eye.FrameStyle) {
+            case QrPngEyeFrameStyle.Glow:
+                var glowRadiusPx = eye.GlowRadiusPx > 0 ? eye.GlowRadiusPx : Math.Max(moduleSize * 2, moduleSize + 2);
+                var glowBase = eye.GlowColor ?? outerColor;
+                var glowAlpha = (int)eye.GlowAlpha;
+                if (glowBase.A < 255) {
+                    glowAlpha = glowAlpha * glowBase.A / 255;
+                }
+                if (glowRadiusPx > 0 && glowAlpha > 0) {
+                    var glowColor = new Rgba32(glowBase.R, glowBase.G, glowBase.B, (byte)Math.Min(255, glowAlpha));
+                    DrawEyeGlow(
+                        scanlines,
+                        widthPx,
+                        heightPx,
+                        stride,
+                        outerX,
+                        outerY,
+                        outerScaled,
+                        glowRadiusPx,
+                        glowColor,
+                        qrX0,
+                        qrY0,
+                        qrX1,
+                        qrY1);
+                }
+                goto default;
+            case QrPngEyeFrameStyle.InsetRing:
+                if (outerGradient is null) {
+                    FillShape(scanlines, widthPx, heightPx, stride, outerX, outerY, outerScaled, outerScaled, outerColor, eye.OuterShape, eye.OuterCornerRadiusPx);
+                } else {
+                    FillShapeGradient(scanlines, widthPx, heightPx, stride, outerX, outerY, outerScaled, outerScaled, outerGradient, eye.OuterShape, eye.OuterCornerRadiusPx);
+                }
+                FillShape(scanlines, widthPx, heightPx, stride, innerX, innerY, innerScaled, innerScaled, opts.Background, eye.OuterShape, eye.InnerCornerRadiusPx);
+
+                var insetPadding = Math.Max(1, (int)Math.Round(moduleSize * 0.8));
+                var insetSize = Math.Max(1, innerScaled - insetPadding * 2);
+                var insetX = innerX + (innerScaled - insetSize) / 2;
+                var insetY = innerY + (innerScaled - insetSize) / 2;
+                if (insetSize > 0) {
+                    if (innerGradient is null) {
+                        FillShape(scanlines, widthPx, heightPx, stride, insetX, insetY, insetSize, insetSize, innerColor, eye.InnerShape, eye.InnerCornerRadiusPx);
+                    } else {
+                        FillShapeGradient(scanlines, widthPx, heightPx, stride, insetX, insetY, insetSize, insetSize, innerGradient, eye.InnerShape, eye.InnerCornerRadiusPx);
+                    }
+                }
+
+                var maxHoleSize = insetSize - 2;
+                if (maxHoleSize > 0) {
+                    var holeSize = Math.Max(1, Math.Min(dotScaled, maxHoleSize));
+                    var holeX = x0 + (outerSize - holeSize) / 2;
+                    var holeY = y0 + (outerSize - holeSize) / 2;
+                    FillShape(scanlines, widthPx, heightPx, stride, holeX, holeY, holeSize, holeSize, opts.Background, eye.InnerShape, eye.InnerCornerRadiusPx);
+                }
+                break;
+            case QrPngEyeFrameStyle.CutCorner:
+                if (outerGradient is null) {
+                    FillShape(scanlines, widthPx, heightPx, stride, outerX, outerY, outerScaled, outerScaled, outerColor, eye.OuterShape, eye.OuterCornerRadiusPx);
+                } else {
+                    FillShapeGradient(scanlines, widthPx, heightPx, stride, outerX, outerY, outerScaled, outerScaled, outerGradient, eye.OuterShape, eye.OuterCornerRadiusPx);
+                }
+                FillShape(scanlines, widthPx, heightPx, stride, innerX, innerY, innerScaled, innerScaled, opts.Background, eye.OuterShape, eye.InnerCornerRadiusPx);
+
+                if (dotScaled > 0) {
+                    if (innerGradient is null) {
+                        FillShape(scanlines, widthPx, heightPx, stride, dotX, dotY, dotScaled, dotScaled, innerColor, eye.InnerShape, eye.InnerCornerRadiusPx);
+                    } else {
+                        FillShapeGradient(scanlines, widthPx, heightPx, stride, dotX, dotY, dotScaled, dotScaled, innerGradient, eye.InnerShape, eye.InnerCornerRadiusPx);
+                    }
+                }
+
+                var cutSize = Math.Max(1, (int)Math.Round(moduleSize * 1.6));
+                cutSize = Math.Min(cutSize, Math.Max(1, outerScaled / 3));
+                CutCorners(scanlines, widthPx, heightPx, stride, outerX, outerY, outerScaled, cutSize, opts.Background);
+                break;
             case QrPngEyeFrameStyle.DoubleRing:
             case QrPngEyeFrameStyle.Target:
                 if (outerGradient is null) {
@@ -158,6 +239,91 @@ public static partial class QrPngRenderer {
         }
     }
 
+    private static void DrawEyeGlow(
+        byte[] scanlines,
+        int widthPx,
+        int heightPx,
+        int stride,
+        int x,
+        int y,
+        int size,
+        int glowRadiusPx,
+        Rgba32 glowColor,
+        int qrX0,
+        int qrY0,
+        int qrX1,
+        int qrY1) {
+        if (size <= 0 || glowRadiusPx <= 0 || glowColor.A == 0) return;
+
+        var rectX0 = x;
+        var rectY0 = y;
+        var rectX1 = x + size - 1;
+        var rectY1 = y + size - 1;
+
+        var minX = Math.Max(qrX0, rectX0 - glowRadiusPx);
+        var minY = Math.Max(qrY0, rectY0 - glowRadiusPx);
+        var maxX = Math.Min(qrX1 - 1, rectX1 + glowRadiusPx);
+        var maxY = Math.Min(qrY1 - 1, rectY1 + glowRadiusPx);
+        if (minX > maxX || minY > maxY) return;
+
+        minX = Math.Max(0, minX);
+        minY = Math.Max(0, minY);
+        maxX = Math.Min(widthPx - 1, maxX);
+        maxY = Math.Min(heightPx - 1, maxY);
+        if (minX > maxX || minY > maxY) return;
+
+        for (var py = minY; py <= maxY; py++) {
+            for (var px = minX; px <= maxX; px++) {
+                var cx = px < rectX0 ? rectX0 : px > rectX1 ? rectX1 : px;
+                var cy = py < rectY0 ? rectY0 : py > rectY1 ? rectY1 : py;
+                var dx = px - cx;
+                var dy = py - cy;
+                var dist = Math.Sqrt(dx * dx + dy * dy);
+                if (dist > glowRadiusPx) continue;
+
+                var t = 1.0 - dist / glowRadiusPx;
+                var a = (int)Math.Round(glowColor.A * t);
+                if (a <= 0) continue;
+
+                BlendPixel(scanlines, stride, px, py, new Rgba32(glowColor.R, glowColor.G, glowColor.B, (byte)Math.Min(255, a)));
+            }
+        }
+    }
+
+    private static void CutCorners(
+        byte[] scanlines,
+        int widthPx,
+        int heightPx,
+        int stride,
+        int x,
+        int y,
+        int size,
+        int cutSize,
+        Rgba32 background) {
+        if (size <= 0 || cutSize <= 0) return;
+        var cut = Math.Min(cutSize, size / 2);
+        if (cut <= 0) return;
+
+        for (var dy = 0; dy < cut; dy++) {
+            var rowLimit = cut - dy;
+            for (var dx = 0; dx < rowLimit; dx++) {
+                var tlX = x + dx;
+                var tlY = y + dy;
+                var trX = x + size - 1 - dx;
+                var trY = y + dy;
+                var blX = x + dx;
+                var blY = y + size - 1 - dy;
+                var brX = x + size - 1 - dx;
+                var brY = y + size - 1 - dy;
+
+                if ((uint)tlX < (uint)widthPx && (uint)tlY < (uint)heightPx) BlendPixel(scanlines, stride, tlX, tlY, background);
+                if ((uint)trX < (uint)widthPx && (uint)trY < (uint)heightPx) BlendPixel(scanlines, stride, trX, trY, background);
+                if ((uint)blX < (uint)widthPx && (uint)blY < (uint)heightPx) BlendPixel(scanlines, stride, blX, blY, background);
+                if ((uint)brX < (uint)widthPx && (uint)brY < (uint)heightPx) BlendPixel(scanlines, stride, brX, brY, background);
+            }
+        }
+    }
+
     private static void DrawBracketFrame(
         byte[] scanlines,
         int widthPx,
@@ -204,6 +370,7 @@ public static partial class QrPngRenderer {
                 FillEllipse(scanlines, widthPx, heightPx, stride, x, y, w, h, color);
                 return;
             case QrPngModuleShape.Rounded:
+            case QrPngModuleShape.ConnectedRounded:
                 FillRoundedRect(scanlines, widthPx, heightPx, stride, x, y, w, h, color, radius);
                 return;
             case QrPngModuleShape.Diamond:
@@ -247,6 +414,7 @@ public static partial class QrPngRenderer {
                 FillEllipseGradient(scanlines, widthPx, heightPx, stride, x, y, w, h, gradient);
                 return;
             case QrPngModuleShape.Rounded:
+            case QrPngModuleShape.ConnectedRounded:
                 FillRoundedRectGradient(scanlines, widthPx, heightPx, stride, x, y, w, h, gradient, radius);
                 return;
             case QrPngModuleShape.Diamond:
@@ -1066,29 +1234,50 @@ public static partial class QrPngRenderer {
         var scaledWidth = (int)scaledWidthLong;
         var scaledHeight = (int)scaledHeightLong;
         var scaledStride = (int)scaledStrideLong;
-        var temp = new byte[(int)lengthLong];
+        var length = (int)lengthLong;
+        var temp = ArrayPool<byte>.Shared.Rent(length);
 
-        var scaledOpts = CreateScaledBackgroundOptions(opts, scale);
-        var scaledQrOffsetX = checked(qrOffsetX * scale);
-        var scaledQrOffsetY = checked(qrOffsetY * scale);
-        var scaledQrFullPx = checked(qrFullPx * scale);
+        try {
+            var scaledOpts = CreateScaledBackgroundOptions(opts, scale);
+            var scaledQrOffsetX = checked(qrOffsetX * scale);
+            var scaledQrOffsetY = checked(qrOffsetY * scale);
+            var scaledQrFullPx = checked(qrFullPx * scale);
 
-        if (scaledOpts.Canvas is null) {
-            if (scaledOpts.BackgroundGradient is null) {
-                PngRenderHelpers.FillBackground(temp, scaledWidth, scaledHeight, scaledStride, scaledOpts.Background);
+            if (scaledOpts.Canvas is null) {
+                if (scaledOpts.BackgroundGradient is null) {
+                    PngRenderHelpers.FillBackground(temp, scaledWidth, scaledHeight, scaledStride, scaledOpts.Background);
+                } else {
+                    FillBackgroundGradient(temp, scaledWidth, scaledHeight, scaledStride, scaledOpts.BackgroundGradient);
+                }
+                if (scaledOpts.BackgroundPattern is not null) {
+                    var quietZonePx = scaledOpts.QuietZone * scaledOpts.ModuleSize;
+                    var qrSizePx = Math.Max(0, scaledQrFullPx - quietZonePx * 2);
+                    DrawCanvasPattern(
+                        temp,
+                        scaledWidth,
+                        scaledHeight,
+                        scaledStride,
+                        scaledQrOffsetX,
+                        scaledQrOffsetY,
+                        scaledQrFullPx,
+                        scaledQrFullPx,
+                        scaledOpts.ModuleSize,
+                        0,
+                        quietZonePx,
+                        qrSizePx,
+                        scaledOpts.ProtectQuietZone,
+                        scaledOpts.BackgroundPattern);
+                }
             } else {
-                FillBackgroundGradient(temp, scaledWidth, scaledHeight, scaledStride, scaledOpts.BackgroundGradient);
+                PngRenderHelpers.FillBackground(temp, scaledWidth, scaledHeight, scaledStride, Rgba32.Transparent);
+                DrawCanvas(temp, scaledWidth, scaledHeight, scaledStride, scaledOpts, scaledQrOffsetX, scaledQrOffsetY, scaledQrFullPx);
+                FillQrBackground(temp, scaledWidth, scaledHeight, scaledStride, scaledOpts, scaledQrOffsetX, scaledQrOffsetY, scaledQrFullPx);
             }
-            if (scaledOpts.BackgroundPattern is not null) {
-                DrawCanvasPattern(temp, scaledWidth, scaledHeight, scaledStride, scaledQrOffsetX, scaledQrOffsetY, scaledQrFullPx, scaledQrFullPx, scaledOpts.ModuleSize, 0, scaledOpts.BackgroundPattern);
-            }
-        } else {
-            PngRenderHelpers.FillBackground(temp, scaledWidth, scaledHeight, scaledStride, Rgba32.Transparent);
-            DrawCanvas(temp, scaledWidth, scaledHeight, scaledStride, scaledOpts, scaledQrOffsetX, scaledQrOffsetY, scaledQrFullPx);
-            FillQrBackground(temp, scaledWidth, scaledHeight, scaledStride, scaledOpts, scaledQrOffsetX, scaledQrOffsetY, scaledQrFullPx);
-        }
 
-        DownsampleScanlines(temp, scaledWidth, scaledHeight, scaledStride, scanlines, widthPx, heightPx, stride, scale);
+            DownsampleScanlines(temp, scaledWidth, scaledHeight, scaledStride, scanlines, widthPx, heightPx, stride, scale);
+        } finally {
+            ArrayPool<byte>.Shared.Return(temp);
+        }
     }
 
     private static QrPngRenderOptions CreateScaledBackgroundOptions(QrPngRenderOptions opts, int scale) {
@@ -1100,6 +1289,8 @@ public static partial class QrPngRenderer {
             BackgroundGradient = opts.BackgroundGradient,
             BackgroundPattern = ScalePattern(opts.BackgroundPattern, scale),
             BackgroundSupersample = 1,
+            ProtectFunctionalPatterns = opts.ProtectFunctionalPatterns,
+            ProtectQuietZone = opts.ProtectQuietZone,
             Canvas = ScaleCanvas(opts.Canvas, scale),
         };
     }
