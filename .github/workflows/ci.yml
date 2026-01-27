@@ -87,6 +87,14 @@ jobs:
         if: runner.os == 'Windows'
         run: dotnet build CodeGlyphX/CodeGlyphX.csproj -c Release -f net472 --no-restore
 
+      - name: Build Tests (net472)
+        if: runner.os == 'Windows'
+        run: dotnet build CodeGlyphX.Tests/CodeGlyphX.Tests.csproj -c Release -f net472 --no-restore
+
+      - name: Test (net472 smoke)
+        if: runner.os == 'Windows'
+        run: dotnet test CodeGlyphX.Tests/CodeGlyphX.Tests.csproj -c Release -f net472 --no-restore --no-build
+
   website-build:
     name: Website Build (PR)
     runs-on: ubuntu-latest
