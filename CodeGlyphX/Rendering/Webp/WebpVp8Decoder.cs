@@ -25,6 +25,7 @@ internal static class WebpVp8Decoder {
     private const int CoeffTokenCount = 12;
     private const int BlockScaffoldBlocksPerPartition = 4;
     private const int BlockScaffoldMaxTokensPerBlock = CoefficientsPerBlock;
+    private const int MacroblockSize = 16;
     private const int BlockSize = 4;
     private const int MacroblockScaffoldWidth = 8;
     private const int MacroblockScaffoldHeight = 8;
@@ -87,6 +88,7 @@ internal static class WebpVp8Decoder {
         _ = TryReadTokenPartitions(payload, out _);
         _ = TryReadTokenScaffold(payload, out _);
         _ = TryReadBlockTokenScaffold(payload, out _);
+        _ = TryReadMacroblockHeaderScaffold(payload, out _);
         _ = TryReadMacroblockScaffold(payload, out _);
         _ = TryReadMacroblockRgbaScaffold(payload, out _);
 
@@ -488,6 +490,65 @@ internal static class WebpVp8Decoder {
             totalBlocksRead,
             totalTokensRead,
             totalBytesConsumed);
+        return true;
+    }
+
+    internal static bool TryReadMacroblockHeaderScaffold(ReadOnlySpan<byte> payload, out WebpVp8MacroblockHeaderScaffoldSet headers) {
+        headers = default;
+        if (!TryReadHeader(payload, out var header)) return false;
+        if (!TryReadFrameHeader(payload, out var frameHeader)) return false;
+        if (!TryGetBoolCodedData(payload, out var boolData)) return false;
+        if ((uint)frameHeader.BytesConsumed >= (uint)boolData.Length) return false;
+
+        var macroblockCols = GetMacroblockDimension(header.Width);
+        var macroblockRows = GetMacroblockDimension(header.Height);
+        if (macroblockCols <= 0 || macroblockRows <= 0) return false;
+
+        var macroblockCountLong = (long)macroblockCols * macroblockRows;
+        if (macroblockCountLong <= 0 || macroblockCountLong > int.MaxValue) return false;
+        var macroblockCount = (int)macroblockCountLong;
+
+        var slice = boolData.Slice(frameHeader.BytesConsumed);
+        if (slice.Length < 2) return false;
+
+        var decoder = new WebpVp8BoolDecoder(slice);
+        var macroblocks = new WebpVp8MacroblockHeaderScaffold[macroblockCount];
+        var skipCount = 0;
+        var segmentCounts = new int[SegmentCount];
+
+        for (var index = 0; index < macroblocks.Length; index++) {
+            var x = index % macroblockCols;
+            var y = index / macroblockCols;
+
+            var segmentId = 0;
+            if (frameHeader.Segmentation.Enabled && frameHeader.Segmentation.UpdateMap) {
+                if (!TryReadSegmentId(decoder, frameHeader.Segmentation.SegmentProbabilities, out segmentId)) {
+                    return false;
+                }
+            }
+
+            var skipCoefficients = false;
+            if (frameHeader.NoCoefficientSkip) {
+                var probability = frameHeader.SkipProbability;
+                if ((uint)probability > 255) return false;
+                if (!decoder.TryReadBool(probability, out skipCoefficients)) return false;
+            }
+
+            if (skipCoefficients) skipCount++;
+            if ((uint)segmentId < segmentCounts.Length) {
+                segmentCounts[segmentId]++;
+            }
+
+            macroblocks[index] = new WebpVp8MacroblockHeaderScaffold(index, x, y, segmentId, skipCoefficients);
+        }
+
+        headers = new WebpVp8MacroblockHeaderScaffoldSet(
+            macroblockCols,
+            macroblockRows,
+            macroblocks,
+            decoder.BytesConsumed,
+            skipCount,
+            segmentCounts);
         return true;
     }
 
@@ -1029,6 +1090,45 @@ internal static class WebpVp8Decoder {
         }
     }
 
+    private static bool TryReadSegmentId(WebpVp8BoolDecoder decoder, int[] probabilities, out int segmentId) {
+        segmentId = 0;
+        if (probabilities.Length < SegmentProbCount) return false;
+
+        // VP8 segmentation tree for four segments using three probabilities:
+        // prob0 -> (0) seg0, (1) go to prob1
+        // prob1 -> (0) seg1, (1) go to prob2
+        // prob2 -> (0) seg2, (1) seg3
+        var prob0 = NormalizeSegmentProbability(probabilities[0]);
+        if (!decoder.TryReadBool(prob0, out var bit0)) return false;
+        if (!bit0) {
+            segmentId = 0;
+            return true;
+        }
+
+        var prob1 = NormalizeSegmentProbability(probabilities[1]);
+        if (!decoder.TryReadBool(prob1, out var bit1)) return false;
+        if (!bit1) {
+            segmentId = 1;
+            return true;
+        }
+
+        var prob2 = NormalizeSegmentProbability(probabilities[2]);
+        if (!decoder.TryReadBool(prob2, out var bit2)) return false;
+        segmentId = bit2 ? 3 : 2;
+        return true;
+    }
+
+    private static int NormalizeSegmentProbability(int probability) {
+        // -1 means "not present" in our parse scaffold; use a neutral default.
+        if (probability < 0 || probability > 255) return 128;
+        return probability;
+    }
+
+    private static int GetMacroblockDimension(int pixels) {
+        if (pixels <= 0) return 0;
+        return (pixels + MacroblockSize - 1) / MacroblockSize;
+    }
+
     private static byte GetChromaSampleNearest(byte[] chromaPlane, int width, int height, int x, int y) {
         if (chromaPlane.Length == 0 || width <= 0 || height <= 0) return 128;
         if (x < 0) x = 0;
@@ -1526,6 +1626,46 @@ internal readonly struct WebpVp8BlockTokenScaffoldSet {
     public int TotalBlocksRead { get; }
     public int TotalTokensRead { get; }
     public int TotalBytesConsumed { get; }
+}
+
+internal readonly struct WebpVp8MacroblockHeaderScaffold {
+    public WebpVp8MacroblockHeaderScaffold(int index, int x, int y, int segmentId, bool skipCoefficients) {
+        Index = index;
+        X = x;
+        Y = y;
+        SegmentId = segmentId;
+        SkipCoefficients = skipCoefficients;
+    }
+
+    public int Index { get; }
+    public int X { get; }
+    public int Y { get; }
+    public int SegmentId { get; }
+    public bool SkipCoefficients { get; }
+}
+
+internal readonly struct WebpVp8MacroblockHeaderScaffoldSet {
+    public WebpVp8MacroblockHeaderScaffoldSet(
+        int macroblockCols,
+        int macroblockRows,
+        WebpVp8MacroblockHeaderScaffold[] macroblocks,
+        int boolBytesConsumed,
+        int skipCount,
+        int[] segmentCounts) {
+        MacroblockCols = macroblockCols;
+        MacroblockRows = macroblockRows;
+        Macroblocks = macroblocks;
+        BoolBytesConsumed = boolBytesConsumed;
+        SkipCount = skipCount;
+        SegmentCounts = segmentCounts;
+    }
+
+    public int MacroblockCols { get; }
+    public int MacroblockRows { get; }
+    public WebpVp8MacroblockHeaderScaffold[] Macroblocks { get; }
+    public int BoolBytesConsumed { get; }
+    public int SkipCount { get; }
+    public int[] SegmentCounts { get; }
 }
 
 internal readonly struct WebpVp8MacroblockScaffold {
