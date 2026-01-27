@@ -177,6 +177,20 @@ public sealed class QrNet472SmokeTests {
         Assert.Equal(Payload, decoded.Text);
     }
 
+    [Fact]
+    public void Net472_QrImageDecoder_Decodes_Rotated90_Pixels() {
+        var qr = QrCodeEncoder.EncodeText(Payload);
+        var pixels = QrPngRenderer.RenderPixels(qr.Modules, new QrPngRenderOptions {
+            ModuleSize = 10,
+            QuietZone = 6
+        }, out var width, out var height, out var stride);
+
+        var rotated = Rotate90(pixels, width, height, stride, out var rw, out var rh, out var rstride);
+        var ok = QrImageDecoder.TryDecode(rotated, rw, rh, rstride, PixelFormat.Rgba32, out var decoded);
+        Assert.True(ok);
+        Assert.Equal(Payload, decoded.Text);
+    }
+
     private static void AddLightNoise(byte[] rgba, int width, int height, int stride) {
         var rng = new Random(12345);
         for (var y = 0; y < height; y++) {
@@ -205,6 +219,29 @@ public sealed class QrNet472SmokeTests {
             Buffer.BlockCopy(rgba, y * stride, scanlines, rowStart + 1, stride);
         }
         return PngWriter.WriteRgba8(width, height, scanlines, scanlines.Length);
+    }
+
+    private static byte[] Rotate90(byte[] pixels, int width, int height, int stride, out int outWidth, out int outHeight, out int outStride) {
+        outWidth = height;
+        outHeight = width;
+        outStride = outWidth * 4;
+        var rotated = new byte[outHeight * outStride];
+
+        for (var y = 0; y < height; y++) {
+            var row = y * stride;
+            for (var x = 0; x < width; x++) {
+                var src = row + x * 4;
+                var nx = height - 1 - y;
+                var ny = x;
+                var dst = ny * outStride + nx * 4;
+                rotated[dst + 0] = pixels[src + 0];
+                rotated[dst + 1] = pixels[src + 1];
+                rotated[dst + 2] = pixels[src + 2];
+                rotated[dst + 3] = pixels[src + 3];
+            }
+        }
+
+        return rotated;
     }
 
 }

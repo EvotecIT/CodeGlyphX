@@ -978,7 +978,7 @@ public static class QrImageDecoder {
         var mean = ComputeMean(grayscale);
         var thresholds = BuildThresholds(mean);
         for (var t = 0; t < thresholds.Length; t++) {
-            if (TryDecodeWithThreshold(grayscale, width, height, thresholds[t], cancellationToken, out decoded, out info)) {
+            if (TryDecodeWithThreshold(grayscale, width, height, thresholds[t], options, cancellationToken, out decoded, out info)) {
                 return true;
             }
         }
@@ -1088,20 +1088,20 @@ public static class QrImageDecoder {
         return maxX >= minX && maxY >= minY;
     }
 
-    private static bool TryDecodeWithThreshold(byte[] gray, int width, int height, byte threshold, CancellationToken cancellationToken, out QrDecoded decoded, out QrPixelDecodeInfo info) {
+    private static bool TryDecodeWithThreshold(byte[] gray, int width, int height, byte threshold, QrPixelDecodeOptions? options, CancellationToken cancellationToken, out QrDecoded decoded, out QrPixelDecodeInfo info) {
         decoded = null!;
         info = default;
 
-        if (TryDecodeWithThresholdCore(gray, width, height, threshold, cancellationToken, out decoded, out info)) {
+        if (TryDecodeWithThresholdCore(gray, width, height, threshold, options, cancellationToken, out decoded, out info)) {
             return true;
         }
 
         var inverted = InvertGrayscale(gray);
         var invertedThreshold = (byte)ClampByte(255 - threshold);
-        return TryDecodeWithThresholdCore(inverted, width, height, invertedThreshold, cancellationToken, out decoded, out info);
+        return TryDecodeWithThresholdCore(inverted, width, height, invertedThreshold, options, cancellationToken, out decoded, out info);
     }
 
-    private static bool TryDecodeWithThresholdCore(byte[] gray, int width, int height, byte threshold, CancellationToken cancellationToken, out QrDecoded decoded, out QrPixelDecodeInfo info) {
+    private static bool TryDecodeWithThresholdCore(byte[] gray, int width, int height, byte threshold, QrPixelDecodeOptions? options, CancellationToken cancellationToken, out QrDecoded decoded, out QrPixelDecodeInfo info) {
         decoded = null!;
         info = default;
 
@@ -1136,14 +1136,14 @@ public static class QrImageDecoder {
                 var modules = SampleModules(gray, width, height, adjMinX, adjMinY, adjMaxX, adjMaxY, threshold, dimension);
                 if (cancellationToken.IsCancellationRequested) return false;
 
-                if (QrDecoder.TryDecode(modules, out decoded, out var moduleInfo)) {
+                if (TryDecodeModules(modules, options, cancellationToken, out decoded, out var moduleInfo)) {
                     info = new QrPixelDecodeInfo(1, threshold, invert: false, candidateCount: 0, candidateTriplesTried: 0, dimension, moduleInfo);
                     return true;
                 }
 
                 var inverted = modules.Clone();
                 inverted.Invert();
-                if (QrDecoder.TryDecode(inverted, out decoded, out moduleInfo)) {
+                if (TryDecodeModules(inverted, options, cancellationToken, out decoded, out moduleInfo)) {
                     info = new QrPixelDecodeInfo(1, threshold, invert: true, candidateCount: 0, candidateTriplesTried: 0, dimension, moduleInfo);
                     return true;
                 }
@@ -1151,6 +1151,80 @@ public static class QrImageDecoder {
         }
 
         return false;
+    }
+
+    private static bool TryDecodeModules(BitMatrix modules, QrPixelDecodeOptions? options, CancellationToken cancellationToken, out QrDecoded decoded, out QrDecodeInfo moduleInfo) {
+        if (cancellationToken.IsCancellationRequested) {
+            decoded = null!;
+            moduleInfo = default;
+            return false;
+        }
+
+        if (QrDecoder.TryDecode(modules, out decoded, out moduleInfo)) {
+            return true;
+        }
+
+        if (options?.DisableTransforms == true) {
+            return false;
+        }
+
+        var rot90 = Rotate90(modules);
+        if (QrDecoder.TryDecode(rot90, out decoded, out moduleInfo)) return true;
+        var rot180 = Rotate180(modules);
+        if (QrDecoder.TryDecode(rot180, out decoded, out moduleInfo)) return true;
+        var rot270 = Rotate270(modules);
+        if (QrDecoder.TryDecode(rot270, out decoded, out moduleInfo)) return true;
+
+        var mirror = MirrorX(modules);
+        if (QrDecoder.TryDecode(mirror, out decoded, out moduleInfo)) return true;
+        var mirror90 = Rotate90(mirror);
+        if (QrDecoder.TryDecode(mirror90, out decoded, out moduleInfo)) return true;
+        var mirror180 = Rotate180(mirror);
+        if (QrDecoder.TryDecode(mirror180, out decoded, out moduleInfo)) return true;
+        var mirror270 = Rotate270(mirror);
+        if (QrDecoder.TryDecode(mirror270, out decoded, out moduleInfo)) return true;
+
+        return false;
+    }
+
+    private static BitMatrix Rotate90(BitMatrix matrix) {
+        var result = new BitMatrix(matrix.Height, matrix.Width);
+        for (var y = 0; y < matrix.Height; y++) {
+            for (var x = 0; x < matrix.Width; x++) {
+                result[matrix.Height - 1 - y, x] = matrix[x, y];
+            }
+        }
+        return result;
+    }
+
+    private static BitMatrix Rotate180(BitMatrix matrix) {
+        var result = new BitMatrix(matrix.Width, matrix.Height);
+        for (var y = 0; y < matrix.Height; y++) {
+            for (var x = 0; x < matrix.Width; x++) {
+                result[matrix.Width - 1 - x, matrix.Height - 1 - y] = matrix[x, y];
+            }
+        }
+        return result;
+    }
+
+    private static BitMatrix Rotate270(BitMatrix matrix) {
+        var result = new BitMatrix(matrix.Height, matrix.Width);
+        for (var y = 0; y < matrix.Height; y++) {
+            for (var x = 0; x < matrix.Width; x++) {
+                result[y, matrix.Width - 1 - x] = matrix[x, y];
+            }
+        }
+        return result;
+    }
+
+    private static BitMatrix MirrorX(BitMatrix matrix) {
+        var result = new BitMatrix(matrix.Width, matrix.Height);
+        for (var y = 0; y < matrix.Height; y++) {
+            for (var x = 0; x < matrix.Width; x++) {
+                result[matrix.Width - 1 - x, y] = matrix[x, y];
+            }
+        }
+        return result;
     }
 
     private static int EstimateDimension(byte[] gray, int width, int minX, int minY, int maxX, int maxY, byte threshold) {
