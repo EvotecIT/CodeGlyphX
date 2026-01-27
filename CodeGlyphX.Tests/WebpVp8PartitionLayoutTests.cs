@@ -1,0 +1,120 @@
+using System;
+using CodeGlyphX.Rendering.Webp;
+using Xunit;
+
+namespace CodeGlyphX.Tests;
+
+public sealed class WebpVp8PartitionLayoutTests
+{
+    [Fact]
+    public void TryReadPartitionLayout_ValidSizes_AreParsedConsistently()
+    {
+        var boolData = new byte[]
+        {
+            0x9A, 0xBC, 0xDE, 0xF0, 0x12, 0x34, 0x56, 0x78,
+            0x89, 0xAB, 0xCD, 0xEF, 0x10, 0x32, 0x54, 0x76,
+        };
+
+        var firstPartitionOnly = BuildKeyframePayload(width: 48, height: 32, boolData);
+        Assert.True(WebpVp8Decoder.TryReadFrameHeader(firstPartitionOnly, out var frameHeader));
+
+        var dctCount = frameHeader.DctPartitionCount;
+        var explicitSizes = new int[Math.Max(0, dctCount - 1)];
+        for (var i = 0; i < explicitSizes.Length; i++)
+        {
+            explicitSizes[i] = 5 + i;
+        }
+
+        const int lastSize = 11;
+        var payload = BuildKeyframePayloadWithPartitions(48, 32, boolData, explicitSizes, lastSize);
+
+        var success = WebpVp8Decoder.TryReadPartitionLayout(payload, out var layout);
+
+        Assert.True(success);
+        Assert.Equal(3, layout.FirstPartitionOffset);
+        Assert.Equal(7 + boolData.Length, layout.FirstPartitionSize);
+        Assert.Equal(3 * (dctCount - 1), layout.SizeTableBytes);
+        Assert.Equal(layout.FirstPartitionOffset + layout.FirstPartitionSize, layout.SizeTableOffset);
+        Assert.Equal(layout.SizeTableOffset + layout.SizeTableBytes, layout.DctDataOffset);
+
+        Assert.Equal(dctCount, layout.DctPartitionSizes.Length);
+        for (var i = 0; i < explicitSizes.Length; i++)
+        {
+            Assert.Equal(explicitSizes[i], layout.DctPartitionSizes[i]);
+        }
+
+        Assert.Equal(lastSize, layout.DctPartitionSizes[dctCount - 1]);
+        Assert.Equal(Sum(layout.DctPartitionSizes), payload.Length - layout.DctDataOffset);
+    }
+
+    private static byte[] BuildKeyframePayload(int width, int height, byte[] boolData)
+    {
+        const int keyframeHeaderSize = 7;
+        var partitionSize = keyframeHeaderSize + boolData.Length;
+        var payloadLength = 3 + partitionSize;
+        var payload = new byte[payloadLength];
+
+        var frameTag = (partitionSize << 5) | (1 << 4);
+        payload[0] = (byte)(frameTag & 0xFF);
+        payload[1] = (byte)((frameTag >> 8) & 0xFF);
+        payload[2] = (byte)((frameTag >> 16) & 0xFF);
+
+        payload[3] = 0x9D;
+        payload[4] = 0x01;
+        payload[5] = 0x2A;
+
+        payload[6] = (byte)(width & 0xFF);
+        payload[7] = (byte)((width >> 8) & 0x3F);
+        payload[8] = (byte)(height & 0xFF);
+        payload[9] = (byte)((height >> 8) & 0x3F);
+
+        boolData.CopyTo(payload.AsSpan(10));
+        return payload;
+    }
+
+    private static byte[] BuildKeyframePayloadWithPartitions(
+        int width,
+        int height,
+        byte[] boolData,
+        int[] explicitSizes,
+        int lastSize)
+    {
+        var firstPartition = BuildKeyframePayload(width, height, boolData);
+
+        Assert.True(WebpVp8Decoder.TryReadFrameHeader(firstPartition, out var frameHeader));
+        var dctCount = frameHeader.DctPartitionCount;
+        Assert.Equal(Math.Max(0, dctCount - 1), explicitSizes.Length);
+
+        var sizeTableBytes = 3 * (dctCount - 1);
+        var dctDataLength = lastSize + Sum(explicitSizes);
+        var payload = new byte[firstPartition.Length + sizeTableBytes + dctDataLength];
+        firstPartition.CopyTo(payload, 0);
+
+        var sizeTableOffset = firstPartition.Length;
+        for (var i = 0; i < explicitSizes.Length; i++)
+        {
+            WriteU24LE(payload, sizeTableOffset + (i * 3), explicitSizes[i]);
+        }
+
+        return payload;
+    }
+
+    private static void WriteU24LE(byte[] data, int offset, int value)
+    {
+        data[offset] = (byte)(value & 0xFF);
+        data[offset + 1] = (byte)((value >> 8) & 0xFF);
+        data[offset + 2] = (byte)((value >> 16) & 0xFF);
+    }
+
+    private static int Sum(int[] values)
+    {
+        var sum = 0;
+        for (var i = 0; i < values.Length; i++)
+        {
+            sum += values[i];
+        }
+
+        return sum;
+    }
+}
+

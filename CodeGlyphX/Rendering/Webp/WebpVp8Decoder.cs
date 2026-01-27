@@ -24,6 +24,7 @@ internal static class WebpVp8Decoder {
         if (!TryReadHeader(payload, out var header)) return false;
         _ = TryReadControlHeader(payload, out _);
         _ = TryReadFrameHeader(payload, out _);
+        _ = TryReadPartitionLayout(payload, out _);
 
         // Parsing-only scaffold for now.
         width = header.Width;
@@ -131,6 +132,59 @@ internal static class WebpVp8Decoder {
             noCoefficientSkipBit,
             skipProbability,
             decoder.BytesConsumed);
+        return true;
+    }
+
+    internal static bool TryReadPartitionLayout(ReadOnlySpan<byte> payload, out WebpVp8PartitionLayout layout) {
+        layout = default;
+        if (!TryReadHeader(payload, out var header)) return false;
+        if (!TryReadFrameHeader(payload, out var frameHeader)) return false;
+
+        var firstPartitionOffset = FrameTagBytes;
+        var firstPartitionSize = header.PartitionSize;
+        if (firstPartitionSize < KeyframeHeaderBytes) return false;
+
+        var firstPartitionEndLong = (long)firstPartitionOffset + firstPartitionSize;
+        if (firstPartitionEndLong > payload.Length) return false;
+        if (firstPartitionEndLong > int.MaxValue) return false;
+        var firstPartitionEnd = (int)firstPartitionEndLong;
+
+        var dctPartitionCount = frameHeader.DctPartitionCount;
+        if (dctPartitionCount <= 0) return false;
+
+        var sizeTableBytesLong = 3L * (dctPartitionCount - 1);
+        if (sizeTableBytesLong > int.MaxValue) return false;
+        var sizeTableBytes = (int)sizeTableBytesLong;
+        var sizeTableOffset = firstPartitionEnd;
+        var dctDataOffsetLong = (long)sizeTableOffset + sizeTableBytes;
+        if (dctDataOffsetLong > payload.Length) return false;
+        if (dctDataOffsetLong > int.MaxValue) return false;
+        var dctDataOffset = (int)dctDataOffsetLong;
+
+        var dctSizes = new int[dctPartitionCount];
+        long sum = 0;
+        for (var i = 0; i < dctPartitionCount - 1; i++) {
+            var entryOffset = sizeTableOffset + (i * 3);
+            var size = ReadU24LE(payload, entryOffset);
+            if (size < 0) return false;
+            dctSizes[i] = size;
+            sum += size;
+            if (sum > payload.Length) return false;
+        }
+
+        var remainingLong = payload.Length - dctDataOffset - sum;
+        if (remainingLong < 0) return false;
+        if (remainingLong > int.MaxValue) return false;
+        dctSizes[dctPartitionCount - 1] = (int)remainingLong;
+
+        layout = new WebpVp8PartitionLayout(
+            firstPartitionOffset,
+            firstPartitionSize,
+            sizeTableOffset,
+            sizeTableBytes,
+            dctDataOffset,
+            dctSizes,
+            payload.Length - dctDataOffset);
         return true;
     }
 
@@ -438,4 +492,31 @@ internal readonly struct WebpVp8FrameHeader {
     public bool NoCoefficientSkip { get; }
     public int SkipProbability { get; }
     public int BytesConsumed { get; }
+}
+
+internal readonly struct WebpVp8PartitionLayout {
+    public WebpVp8PartitionLayout(
+        int firstPartitionOffset,
+        int firstPartitionSize,
+        int sizeTableOffset,
+        int sizeTableBytes,
+        int dctDataOffset,
+        int[] dctPartitionSizes,
+        int dctBytesAvailable) {
+        FirstPartitionOffset = firstPartitionOffset;
+        FirstPartitionSize = firstPartitionSize;
+        SizeTableOffset = sizeTableOffset;
+        SizeTableBytes = sizeTableBytes;
+        DctDataOffset = dctDataOffset;
+        DctPartitionSizes = dctPartitionSizes;
+        DctBytesAvailable = dctBytesAvailable;
+    }
+
+    public int FirstPartitionOffset { get; }
+    public int FirstPartitionSize { get; }
+    public int SizeTableOffset { get; }
+    public int SizeTableBytes { get; }
+    public int DctDataOffset { get; }
+    public int[] DctPartitionSizes { get; }
+    public int DctBytesAvailable { get; }
 }
