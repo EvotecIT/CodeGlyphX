@@ -112,6 +112,15 @@ public sealed class RendererFormatTests {
     }
 
     [Fact]
+    public void Qr_Ascii_ConsoleWrapper_Uses_Preset() {
+        var payload = "https://example.com";
+        var ascii = QrEasy.RenderAsciiConsole(payload, scale: 3);
+
+        Assert.Contains("█", ascii, StringComparison.Ordinal);
+        Assert.Contains("\u001b[", ascii, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void Qr_Ascii_Scale_Increases_Output_Size() {
         var payload = "https://example.com";
         var baseAscii = QrEasy.RenderAscii(payload, new MatrixAsciiRenderOptions {
