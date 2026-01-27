@@ -192,6 +192,21 @@ public sealed class QrNet472SmokeTests {
     }
 
     [Fact]
+    public void Net472_QrImageDecoder_DisableTransforms_Fails_On_Rotation() {
+        var qr = QrCodeEncoder.EncodeText(Payload);
+        var pixels = QrPngRenderer.RenderPixels(qr.Modules, new QrPngRenderOptions {
+            ModuleSize = 10,
+            QuietZone = 6
+        }, out var width, out var height, out var stride);
+
+        var rotated = Rotate90(pixels, width, height, stride, out var rw, out var rh, out var rstride);
+        var ok = QrImageDecoder.TryDecode(rotated, rw, rh, rstride, PixelFormat.Rgba32, new QrPixelDecodeOptions {
+            DisableTransforms = true
+        }, out _);
+        Assert.False(ok);
+    }
+
+    [Fact]
     public void Net472_QrImageDecoder_Decodes_Mirrored_Pixels() {
         var qr = QrCodeEncoder.EncodeText(Payload);
         var pixels = QrPngRenderer.RenderPixels(qr.Modules, new QrPngRenderOptions {
