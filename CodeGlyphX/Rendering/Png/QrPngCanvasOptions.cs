@@ -47,6 +47,11 @@ public sealed class QrPngCanvasOptions {
     public QrPngCanvasVignetteOptions? Vignette { get; set; }
 
     /// <summary>
+    /// Optional grain/noise texture drawn on the canvas (QR-safe by default).
+    /// </summary>
+    public QrPngCanvasGrainOptions? Grain { get; set; }
+
+    /// <summary>
     /// Border thickness in pixels (0 = no border).
     /// </summary>
     public int BorderPx { get; set; }
@@ -80,5 +85,6 @@ public sealed class QrPngCanvasOptions {
         Splash?.Validate();
         Halo?.Validate();
         Vignette?.Validate();
+        Grain?.Validate();
     }
 }

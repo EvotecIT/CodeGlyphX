@@ -1365,6 +1365,7 @@ public static partial class QrPngRenderer {
             Splash = ScaleSplash(canvas.Splash, scale),
             Halo = ScaleHalo(canvas.Halo, scale),
             Vignette = ScaleVignette(canvas.Vignette, scale),
+            Grain = ScaleGrain(canvas.Grain, scale),
             BorderPx = canvas.BorderPx * scale,
             BorderColor = canvas.BorderColor,
             ShadowOffsetX = canvas.ShadowOffsetX * scale,
@@ -1409,6 +1410,20 @@ public static partial class QrPngRenderer {
             Strength = vignette.Strength,
             ProtectQrArea = vignette.ProtectQrArea,
             QrAreaAlphaMax = vignette.QrAreaAlphaMax,
+        };
+    }
+
+    private static QrPngCanvasGrainOptions? ScaleGrain(QrPngCanvasGrainOptions? grain, int scale) {
+        if (grain is null) return null;
+        return new QrPngCanvasGrainOptions {
+            Color = grain.Color,
+            Density = grain.Density,
+            PixelSizePx = Math.Max(1, grain.PixelSizePx * scale),
+            AlphaJitter = grain.AlphaJitter,
+            Seed = grain.Seed,
+            BandPx = Math.Max(0, grain.BandPx * scale),
+            ProtectQrArea = grain.ProtectQrArea,
+            QrAreaAlphaMax = grain.QrAreaAlphaMax,
         };
     }
 

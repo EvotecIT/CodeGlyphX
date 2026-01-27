@@ -534,6 +534,21 @@ public static partial class QrPngRenderer {
             DrawCanvasFill(scanlines, widthPx, heightPx, stride, canvas, canvasX, canvasY, canvasW, canvasH, opts.ModuleSize, radius);
         }
 
+        if (canvas.Grain is { Density: > 0 } grain && grain.Color.A != 0) {
+            DrawCanvasGrain(
+                scanlines,
+                stride,
+                canvasX,
+                canvasY,
+                canvasW,
+                canvasH,
+                radius,
+                qrOffsetX,
+                qrOffsetY,
+                qrFullPx,
+                grain);
+        }
+
         if (canvas.Vignette is { BandPx: > 0 } vignette && vignette.Color.A != 0 && vignette.Strength > 0) {
             DrawCanvasVignette(
                 scanlines,
@@ -1081,6 +1096,103 @@ public static partial class QrPngRenderer {
                 qrX1,
                 qrY1,
                 qrAreaAlphaMax: 0);
+        }
+    }
+
+    private static void DrawCanvasGrain(
+        byte[] scanlines,
+        int stride,
+        int canvasX,
+        int canvasY,
+        int canvasW,
+        int canvasH,
+        int canvasRadius,
+        int qrX,
+        int qrY,
+        int qrSize,
+        QrPngCanvasGrainOptions grain) {
+        if (grain.Density <= 0 || grain.PixelSizePx <= 0 || grain.Color.A == 0) return;
+
+        var canvasX1 = canvasX + canvasW - 1;
+        var canvasY1 = canvasY + canvasH - 1;
+        var canvasR = Math.Max(0, canvasRadius);
+        var canvasR2 = canvasR * canvasR;
+
+        var qrX0 = qrX;
+        var qrY0 = qrY;
+        var qrX1 = qrX + qrSize - 1;
+        var qrY1 = qrY + qrSize - 1;
+
+        var step = Math.Max(1, grain.PixelSizePx);
+        var band = Math.Max(0, grain.BandPx);
+        var density = Clamp01(grain.Density);
+        var jitter = Clamp01(grain.AlphaJitter);
+        if (density <= 0) return;
+
+        var seed = grain.Seed != 0
+            ? grain.Seed
+            : unchecked(Environment.TickCount ^ Hash(canvasX, canvasY, canvasW, canvasH) ^ 0x62e2ac0f);
+
+        for (var y = canvasY; y <= canvasY1; y += step) {
+            var cellH = Math.Min(step, canvasY1 - y + 1);
+            for (var x = canvasX; x <= canvasX1; x += step) {
+                var cellW = Math.Min(step, canvasX1 - x + 1);
+                var midX = x + cellW / 2;
+                var midY = y + cellH / 2;
+
+                if (canvasR > 0 && !InsideRounded(midX, midY, canvasX, canvasY, canvasX1, canvasY1, canvasR, canvasR2)) continue;
+
+                if (band > 0) {
+                    var distLeft = midX - canvasX;
+                    var distRight = canvasX1 - midX;
+                    var distTop = midY - canvasY;
+                    var distBottom = canvasY1 - midY;
+                    var distToEdge = Math.Min(Math.Min(distLeft, distRight), Math.Min(distTop, distBottom));
+                    if (distToEdge >= band) continue;
+                }
+
+                var cellX = (midX - canvasX) / step;
+                var cellY = (midY - canvasY) / step;
+                var presenceHash = (uint)Hash(cellX, cellY, seed);
+                var presence = presenceHash / (double)uint.MaxValue;
+                if (presence > density) continue;
+
+                var jitterHash = (uint)Hash(cellX, cellY, seed ^ unchecked((int)0x9e3779b9));
+                var jitterT = jitterHash / (double)uint.MaxValue;
+                var alphaScale = 1.0 - jitter * jitterT;
+                if (alphaScale <= 0) continue;
+
+                var baseColor = grain.Color;
+                var alpha = baseColor.A * alphaScale;
+                if (alpha <= 0.5) continue;
+
+                var insideQrMid = midX >= qrX0 && midX <= qrX1 && midY >= qrY0 && midY <= qrY1;
+                if (insideQrMid && grain.ProtectQrArea) continue;
+
+                var cappedAlpha = alpha > 255 ? 255 : alpha;
+                if (insideQrMid && grain.QrAreaAlphaMax > 0 && cappedAlpha > grain.QrAreaAlphaMax) {
+                    cappedAlpha = grain.QrAreaAlphaMax;
+                }
+                if (cappedAlpha <= 0) continue;
+
+                var drawColor = new Rgba32(baseColor.R, baseColor.G, baseColor.B, (byte)cappedAlpha);
+
+                var yMax = y + cellH - 1;
+                var xMax = x + cellW - 1;
+                for (var py = y; py <= yMax; py++) {
+                    for (var px = x; px <= xMax; px++) {
+                        if (canvasR > 0 && !InsideRounded(px, py, canvasX, canvasY, canvasX1, canvasY1, canvasR, canvasR2)) continue;
+                        var insideQr = px >= qrX0 && px <= qrX1 && py >= qrY0 && py <= qrY1;
+                        if (insideQr && grain.ProtectQrArea) continue;
+                        if (insideQr && grain.QrAreaAlphaMax > 0 && drawColor.A > grain.QrAreaAlphaMax) {
+                            var capped = new Rgba32(drawColor.R, drawColor.G, drawColor.B, grain.QrAreaAlphaMax);
+                            BlendPixel(scanlines, stride, px, py, capped);
+                        } else {
+                            BlendPixel(scanlines, stride, px, py, drawColor);
+                        }
+                    }
+                }
+            }
         }
     }
 

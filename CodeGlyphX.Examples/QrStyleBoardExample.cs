@@ -185,6 +185,24 @@ internal static class QrStyleBoardExample {
                 pattern: Speckle(R(255, 255, 255, 64), seed: 6006, sizePx: 7, thicknessPx: 2, variation: 0.8, density: 0.9),
                 canvas: CanvasGradientVignette(R(242, 246, 255), R(210, 220, 244), R(8, 12, 26, 120), bandPx: 88, strength: 1.0))),
 
+            new("Grain Paper", StyleDocs("grain-paper"), () => BaseSticker(
+                fg: R(52, 58, 74),
+                palette: Palette(QrPngPaletteMode.Cycle, 0, R(52, 58, 74), R(92, 100, 128), R(160, 170, 210)),
+                shape: QrPngModuleShape.ConnectedRounded,
+                eyes: EyeGlow(R(52, 58, 74), R(160, 170, 210), R(80, 90, 130, 150)),
+                scaleMap: ScaleMap(QrPngModuleScaleMode.Radial, 0.86, 1.0, 9191),
+                pattern: Speckle(R(255, 255, 255, 58), seed: 7272, sizePx: 7, thicknessPx: 2, variation: 0.78, density: 0.9),
+                canvas: CanvasGradientTexture(
+                    R(246, 244, 236),
+                    R(230, 226, 214),
+                    grainColor: R(60, 52, 44, 70),
+                    grainDensity: 0.28,
+                    grainPixelSize: 2,
+                    grainSeed: 13371337,
+                    vignetteColor: R(28, 24, 18, 90),
+                    vignetteBandPx: 96,
+                    vignetteStrength: 1.0))),
+
             new("Eye Accents", StyleDocs("eye-accents"), () => BaseSticker(
                 fg: R(30, 190, 255),
                 palette: Palette(QrPngPaletteMode.Cycle, 0, R(30, 190, 255), R(90, 240, 200), R(255, 130, 210)),
@@ -496,6 +514,36 @@ internal static class QrStyleBoardExample {
             Strength = strength,
             ProtectQrArea = true,
         };
+        return canvas;
+    }
+
+    private static QrPngCanvasOptions CanvasGradientTexture(
+        Rgba32 start,
+        Rgba32 end,
+        Rgba32 grainColor,
+        double grainDensity,
+        int grainPixelSize,
+        int grainSeed,
+        Rgba32? vignetteColor = null,
+        int vignetteBandPx = 84,
+        double vignetteStrength = 1.0) {
+        var canvas = CanvasGradient(start, end);
+        canvas.Grain = new QrPngCanvasGrainOptions {
+            Color = grainColor,
+            Density = grainDensity,
+            PixelSizePx = grainPixelSize,
+            AlphaJitter = 0.6,
+            Seed = grainSeed,
+            ProtectQrArea = true,
+        };
+        if (vignetteColor is not null) {
+            canvas.Vignette = new QrPngCanvasVignetteOptions {
+                Color = vignetteColor.Value,
+                BandPx = vignetteBandPx,
+                Strength = vignetteStrength,
+                ProtectQrArea = true,
+            };
+        }
         return canvas;
     }
 
