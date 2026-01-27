@@ -1,6 +1,7 @@
 using System;
 using System.Buffers;
 using System.IO;
+using System.IO.Compression;
 
 namespace CodeGlyphX.Rendering.Png;
 
@@ -17,22 +18,34 @@ internal static class PngWriter {
     public static byte[] WriteRgba8(int width, int height, byte[] scanlinesWithFilter) {
         var idatLength = GetZlibStoredLength(scanlinesWithFilter.Length);
         using var ms = new MemoryStream(EstimateTotalLength(idatLength, hasPlte: false));
-        WriteRgba8(ms, width, height, scanlinesWithFilter, scanlinesWithFilter.Length);
+        WriteRgba8(ms, width, height, scanlinesWithFilter, scanlinesWithFilter.Length, compressionLevel: 0);
         return ms.ToArray();
     }
 
     public static byte[] WriteRgba8(int width, int height, byte[] scanlinesWithFilter, int length) {
         var idatLength = GetZlibStoredLength(length);
         using var ms = new MemoryStream(EstimateTotalLength(idatLength, hasPlte: false));
-        WriteRgba8(ms, width, height, scanlinesWithFilter, length);
+        WriteRgba8(ms, width, height, scanlinesWithFilter, length, compressionLevel: 0);
+        return ms.ToArray();
+    }
+
+    public static byte[] WriteRgba8(int width, int height, byte[] scanlinesWithFilter, int length, int compressionLevel) {
+        var normalizedLevel = NormalizeCompressionLevel(compressionLevel);
+        var idatLength = normalizedLevel <= 0 ? GetZlibStoredLength(length) : Math.Max(length, 0);
+        using var ms = new MemoryStream(EstimateTotalLength(idatLength, hasPlte: false));
+        WriteRgba8(ms, width, height, scanlinesWithFilter, length, normalizedLevel);
         return ms.ToArray();
     }
 
     public static void WriteRgba8(Stream stream, int width, int height, byte[] scanlinesWithFilter) {
-        WriteRgba8(stream, width, height, scanlinesWithFilter, scanlinesWithFilter.Length);
+        WriteRgba8(stream, width, height, scanlinesWithFilter, scanlinesWithFilter.Length, compressionLevel: 0);
     }
 
     public static void WriteRgba8(Stream stream, int width, int height, byte[] scanlinesWithFilter, int length) {
+        WriteRgba8(stream, width, height, scanlinesWithFilter, length, compressionLevel: 0);
+    }
+
+    public static void WriteRgba8(Stream stream, int width, int height, byte[] scanlinesWithFilter, int length, int compressionLevel) {
         if (width <= 0) throw new ArgumentOutOfRangeException(nameof(width));
         if (height <= 0) throw new ArgumentOutOfRangeException(nameof(height));
         if (scanlinesWithFilter is null) throw new ArgumentNullException(nameof(scanlinesWithFilter));
@@ -46,12 +59,22 @@ internal static class PngWriter {
         stream.Write(Signature, 0, Signature.Length);
         WriteChunk(stream, "IHDR", BuildIHDR(width, height, bitDepth: 8, colorType: 6));
 
-        var idatLength = GetZlibStoredLength(length);
-        WriteChunk(stream, "IDAT", idatLength, (Stream s, ref uint crc) => WriteZlibStored(s, scanlinesWithFilter, length, ref crc));
+        var normalizedLevel = NormalizeCompressionLevel(compressionLevel);
+        if (normalizedLevel <= 0) {
+            var idatLength = GetZlibStoredLength(length);
+            WriteChunk(stream, "IDAT", idatLength, (Stream s, ref uint crc) => WriteZlibStored(s, scanlinesWithFilter, length, ref crc));
+        } else {
+            var compressed = ZlibCompress(scanlinesWithFilter, length, normalizedLevel);
+            WriteChunk(stream, "IDAT", compressed);
+        }
         WriteChunk(stream, "IEND", Array.Empty<byte>());
     }
 
     public static void WriteRgba8(Stream stream, int width, int height, RowWriter fillRow) {
+        WriteRgba8(stream, width, height, fillRow, compressionLevel: 0);
+    }
+
+    public static void WriteRgba8(Stream stream, int width, int height, RowWriter fillRow, int compressionLevel) {
         if (width <= 0) throw new ArgumentOutOfRangeException(nameof(width));
         if (height <= 0) throw new ArgumentOutOfRangeException(nameof(height));
         if (fillRow is null) throw new ArgumentNullException(nameof(fillRow));
@@ -63,19 +86,46 @@ internal static class PngWriter {
         stream.Write(Signature, 0, Signature.Length);
         WriteChunk(stream, "IHDR", BuildIHDR(width, height, bitDepth: 8, colorType: 6));
 
-        var idatLength = GetZlibStoredLength(length);
-        WriteChunk(stream, "IDAT", idatLength, (Stream s, ref uint crc) => WriteZlibStoredRows(s, height, rowLength, fillRow, ref crc));
+        var normalizedLevel = NormalizeCompressionLevel(compressionLevel);
+        if (normalizedLevel <= 0) {
+            var idatLength = GetZlibStoredLength(length);
+            WriteChunk(stream, "IDAT", idatLength, (Stream s, ref uint crc) => WriteZlibStoredRows(s, height, rowLength, fillRow, ref crc));
+        } else {
+            var scanlines = ArrayPool<byte>.Shared.Rent(length);
+            try {
+                for (var y = 0; y < height; y++) {
+                    fillRow(y, scanlines, rowLength);
+                }
+                // Apply a lightweight adaptive filter pass before deflate to improve compression.
+                PngRenderHelpers.ApplyAdaptiveFilterHeuristic(scanlines, height, stride);
+                var compressed = ZlibCompress(scanlines, length, normalizedLevel);
+                WriteChunk(stream, "IDAT", compressed);
+            } finally {
+                ArrayPool<byte>.Shared.Return(scanlines);
+            }
+        }
         WriteChunk(stream, "IEND", Array.Empty<byte>());
     }
-
     public static byte[] WriteGray1(int width, int height, byte[] scanlinesWithFilter, int length) {
         var idatLength = GetZlibStoredLength(length);
         using var ms = new MemoryStream(EstimateTotalLength(idatLength, hasPlte: false));
-        WriteGray1(ms, width, height, scanlinesWithFilter, length);
+        WriteGray1(ms, width, height, scanlinesWithFilter, length, compressionLevel: 0);
+        return ms.ToArray();
+    }
+
+    public static byte[] WriteGray1(int width, int height, byte[] scanlinesWithFilter, int length, int compressionLevel) {
+        var normalizedLevel = NormalizeCompressionLevel(compressionLevel);
+        var idatLength = normalizedLevel <= 0 ? GetZlibStoredLength(length) : Math.Max(length, 0);
+        using var ms = new MemoryStream(EstimateTotalLength(idatLength, hasPlte: false));
+        WriteGray1(ms, width, height, scanlinesWithFilter, length, normalizedLevel);
         return ms.ToArray();
     }
 
     public static void WriteGray1(Stream stream, int width, int height, byte[] scanlinesWithFilter, int length) {
+        WriteGray1(stream, width, height, scanlinesWithFilter, length, compressionLevel: 0);
+    }
+
+    public static void WriteGray1(Stream stream, int width, int height, byte[] scanlinesWithFilter, int length, int compressionLevel) {
         if (width <= 0) throw new ArgumentOutOfRangeException(nameof(width));
         if (height <= 0) throw new ArgumentOutOfRangeException(nameof(height));
         if (scanlinesWithFilter is null) throw new ArgumentNullException(nameof(scanlinesWithFilter));
@@ -89,19 +139,37 @@ internal static class PngWriter {
         stream.Write(Signature, 0, Signature.Length);
         WriteChunk(stream, "IHDR", BuildIHDR(width, height, bitDepth: 1, colorType: 0));
 
-        var idatLength = GetZlibStoredLength(length);
-        WriteChunk(stream, "IDAT", idatLength, (Stream s, ref uint crc) => WriteZlibStored(s, scanlinesWithFilter, length, ref crc));
+        var normalizedLevel = NormalizeCompressionLevel(compressionLevel);
+        if (normalizedLevel <= 0) {
+            var idatLength = GetZlibStoredLength(length);
+            WriteChunk(stream, "IDAT", idatLength, (Stream s, ref uint crc) => WriteZlibStored(s, scanlinesWithFilter, length, ref crc));
+        } else {
+            var compressed = ZlibCompress(scanlinesWithFilter, length, normalizedLevel);
+            WriteChunk(stream, "IDAT", compressed);
+        }
         WriteChunk(stream, "IEND", Array.Empty<byte>());
     }
 
     public static byte[] WriteIndexed1(int width, int height, byte[] scanlinesWithFilter, int length, byte[] palette) {
         var idatLength = GetZlibStoredLength(length);
         using var ms = new MemoryStream(EstimateTotalLength(idatLength, hasPlte: true));
-        WriteIndexed1(ms, width, height, scanlinesWithFilter, length, palette);
+        WriteIndexed1(ms, width, height, scanlinesWithFilter, length, palette, compressionLevel: 0);
+        return ms.ToArray();
+    }
+
+    public static byte[] WriteIndexed1(int width, int height, byte[] scanlinesWithFilter, int length, byte[] palette, int compressionLevel) {
+        var normalizedLevel = NormalizeCompressionLevel(compressionLevel);
+        var idatLength = normalizedLevel <= 0 ? GetZlibStoredLength(length) : Math.Max(length, 0);
+        using var ms = new MemoryStream(EstimateTotalLength(idatLength, hasPlte: true));
+        WriteIndexed1(ms, width, height, scanlinesWithFilter, length, palette, normalizedLevel);
         return ms.ToArray();
     }
 
     public static void WriteIndexed1(Stream stream, int width, int height, byte[] scanlinesWithFilter, int length, byte[] palette) {
+        WriteIndexed1(stream, width, height, scanlinesWithFilter, length, palette, compressionLevel: 0);
+    }
+
+    public static void WriteIndexed1(Stream stream, int width, int height, byte[] scanlinesWithFilter, int length, byte[] palette, int compressionLevel) {
         if (width <= 0) throw new ArgumentOutOfRangeException(nameof(width));
         if (height <= 0) throw new ArgumentOutOfRangeException(nameof(height));
         if (scanlinesWithFilter is null) throw new ArgumentNullException(nameof(scanlinesWithFilter));
@@ -118,8 +186,14 @@ internal static class PngWriter {
         WriteChunk(stream, "IHDR", BuildIHDR(width, height, bitDepth: 1, colorType: 3));
         WriteChunk(stream, "PLTE", palette);
 
-        var idatLength = GetZlibStoredLength(length);
-        WriteChunk(stream, "IDAT", idatLength, (Stream s, ref uint crc) => WriteZlibStored(s, scanlinesWithFilter, length, ref crc));
+        var normalizedLevel = NormalizeCompressionLevel(compressionLevel);
+        if (normalizedLevel <= 0) {
+            var idatLength = GetZlibStoredLength(length);
+            WriteChunk(stream, "IDAT", idatLength, (Stream s, ref uint crc) => WriteZlibStored(s, scanlinesWithFilter, length, ref crc));
+        } else {
+            var compressed = ZlibCompress(scanlinesWithFilter, length, normalizedLevel);
+            WriteChunk(stream, "IDAT", compressed);
+        }
         WriteChunk(stream, "IEND", Array.Empty<byte>());
     }
 
@@ -287,6 +361,69 @@ internal static class PngWriter {
             a %= AdlerMod;
             b %= AdlerMod;
         }
+    }
+
+    private static int NormalizeCompressionLevel(int level) {
+        if (level < 0) return 0;
+        if (level > 9) return 9;
+        return level;
+    }
+
+    private static CompressionLevel MapCompressionLevel(int level) {
+#if NET8_0_OR_GREATER
+        if (level <= 3) return CompressionLevel.Fastest;
+        if (level >= 8) return CompressionLevel.SmallestSize;
+        return CompressionLevel.Optimal;
+#else
+        return level <= 3 ? CompressionLevel.Fastest : CompressionLevel.Optimal;
+#endif
+    }
+
+    private static byte[] ZlibCompress(byte[] buffer, int length, int level) {
+        var normalized = NormalizeCompressionLevel(level);
+        if (normalized <= 0) {
+            throw new ArgumentOutOfRangeException(nameof(level));
+        }
+
+        using var ms = new MemoryStream();
+#if NET8_0_OR_GREATER
+        using (var z = new ZLibStream(ms, MapCompressionLevel(normalized), leaveOpen: true)) {
+            z.Write(buffer, 0, length);
+        }
+#else
+        WriteZlibHeader(ms, normalized);
+        using (var deflate = new DeflateStream(ms, MapCompressionLevel(normalized), leaveOpen: true)) {
+            deflate.Write(buffer, 0, length);
+        }
+        var adler = ComputeAdler32(buffer, length);
+        WriteUInt32BE(ms, adler);
+#endif
+        return ms.ToArray();
+    }
+
+#if !NET8_0_OR_GREATER
+    private static void WriteZlibHeader(Stream stream, int level) {
+        stream.WriteByte(0x78);
+        var flg = level <= 3 ? (byte)0x01 : level >= 7 ? (byte)0xDA : (byte)0x9C;
+        stream.WriteByte(flg);
+    }
+#endif
+
+    private static uint ComputeAdler32(byte[] buffer, int length) {
+        uint a = 1;
+        uint b = 0;
+        var offset = 0;
+        while (offset < length) {
+            var n = Math.Min(AdlerNmax, length - offset);
+            var limit = offset + n;
+            while (offset < limit) {
+                a += buffer[offset++];
+                b += a;
+            }
+            a %= AdlerMod;
+            b %= AdlerMod;
+        }
+        return (b << 16) | a;
     }
 
     private static void WriteUInt32BE(Stream s, uint value) {

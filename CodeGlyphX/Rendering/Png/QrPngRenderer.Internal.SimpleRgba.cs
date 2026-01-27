@@ -35,7 +35,10 @@ public static partial class QrPngRenderer {
         var scanlines = ArrayPool<byte>.Shared.Rent(length);
         try {
             RenderSimpleScanlines(modules, opts, widthPx, heightPx, stride, scanlines);
-            return PngWriter.WriteRgba8(widthPx, heightPx, scanlines, length);
+            if (opts.PngCompressionLevel > 0) {
+                PngRenderHelpers.ApplyAdaptiveFilterHeuristic(scanlines, heightPx, stride);
+            }
+            return PngWriter.WriteRgba8(widthPx, heightPx, scanlines, length, opts.PngCompressionLevel);
         } finally {
             ArrayPool<byte>.Shared.Return(scanlines);
         }
@@ -165,25 +168,26 @@ public static partial class QrPngRenderer {
         var originPx = quiet * moduleSize;
         var qrSizePx = size * moduleSize;
         var yIn = y - originPx;
-        if (yIn < 0 || yIn >= qrSizePx) return;
+        if (yIn >= 0 && yIn < qrSizePx) {
+            var my = yIn / moduleSize;
+            var px = originPx;
+            var mx = 0;
+            while (mx < size) {
+                if (!modules[mx, my]) {
+                    mx++;
+                    px += moduleSize;
+                    continue;
+                }
 
-        var my = yIn / moduleSize;
-        var px = originPx;
-        var mx = 0;
-        while (mx < size) {
-            if (!modules[mx, my]) {
+                var runStart = mx;
                 mx++;
-                px += moduleSize;
-                continue;
+                while (mx < size && modules[mx, my]) mx++;
+                var runSize = mx - runStart;
+                PngRenderHelpers.FillRowPixels(rowBuffer, 1 + px * 4, runSize * moduleSize, foreground);
+                px += runSize * moduleSize;
             }
-
-            var runStart = mx;
-            mx++;
-            while (mx < size && modules[mx, my]) mx++;
-            var runSize = mx - runStart;
-            PngRenderHelpers.FillRowPixels(rowBuffer, 1 + px * 4, runSize * moduleSize, foreground);
-            px += runSize * moduleSize;
         }
+
     }
 
     private static Rgba32 CompositeForeground(Rgba32 foreground, Rgba32 background) {
