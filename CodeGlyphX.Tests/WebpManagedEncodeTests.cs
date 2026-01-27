@@ -1,3 +1,4 @@
+using System;
 using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Webp;
 using Xunit;
@@ -64,6 +65,12 @@ public sealed class WebpManagedEncodeTests {
         Assert.Equal(width, decodedWidth);
         Assert.Equal(height, decodedHeight);
         Assert.Equal(rgba, decoded);
+
+        var payload = ExtractVp8lPayload(webp);
+        var reader = new WebpBitReader(payload);
+        Assert.True(WebpVp8lDecoder.TryReadHeader(ref reader, out _));
+        Assert.Equal(1, reader.ReadBits(1)); // has transform
+        Assert.Equal(3, reader.ReadBits(2)); // color indexing
     }
 
     [Fact]
@@ -161,5 +168,91 @@ public sealed class WebpManagedEncodeTests {
         Assert.Equal(width, decodedWidth);
         Assert.Equal(height, decodedHeight);
         Assert.Equal(rgba, decoded);
+    }
+
+    [Fact]
+    public void Webp_ManagedEncode_Vp8L_NoTransform_WhenPaletteTooLarge() {
+        const int width = 20;
+        const int height = 1;
+        const int stride = width * 4;
+
+        var rgba = new byte[height * stride];
+        for (var x = 0; x < width; x++) {
+            var i = x * 4;
+            rgba[i] = (byte)(x * 7);
+            rgba[i + 1] = (byte)(255 - (x * 7));
+            rgba[i + 2] = (byte)(x * 3);
+            rgba[i + 3] = 255;
+        }
+
+        var webp = WebpWriter.WriteRgba32(width, height, rgba, stride);
+
+        var payload = ExtractVp8lPayload(webp);
+        var reader = new WebpBitReader(payload);
+        Assert.True(WebpVp8lDecoder.TryReadHeader(ref reader, out _));
+        Assert.Equal(0, reader.ReadBits(1)); // no transforms
+    }
+
+    [Fact]
+    public void Webp_ManagedEncode_Vp8L_ColorIndexingPalette_RoundTripsAlphaPalette() {
+        const int width = 8;
+        const int height = 1;
+        const int stride = width * 4;
+
+        var rgba = new byte[] {
+            0, 0, 0, 0,
+            255, 0, 0, 255,
+            0, 255, 0, 255,
+            0, 0, 255, 255,
+            0, 0, 0, 0,
+            255, 0, 0, 255,
+            0, 255, 0, 255,
+            0, 0, 255, 255
+        };
+
+        var webp = WebpWriter.WriteRgba32(width, height, rgba, stride);
+
+        Assert.True(ImageReader.TryDecodeRgba32(webp, out var decoded, out var decodedWidth, out var decodedHeight));
+        Assert.Equal(width, decodedWidth);
+        Assert.Equal(height, decodedHeight);
+        Assert.Equal(rgba, decoded);
+    }
+
+    private static byte[] ExtractVp8lPayload(byte[] webp) {
+        Assert.True(WebpReader.IsWebp(webp));
+        Assert.True(webp.Length >= 12);
+
+        var riffSize = ReadU32LE(webp, 4);
+        var riffLimit = webp.Length;
+        var declaredLimit = 8L + riffSize;
+        if (declaredLimit > 0 && declaredLimit < riffLimit) {
+            riffLimit = (int)declaredLimit;
+        }
+
+        var offset = 12;
+        while (offset + 8 <= riffLimit) {
+            var fourCc = ReadU32LE(webp, offset);
+            var chunkSize = ReadU32LE(webp, offset + 4);
+            var dataOffset = offset + 8;
+            var chunkLength = (int)chunkSize;
+
+            if (fourCc == 0x4C385056) { // "VP8L"
+                var payload = new byte[chunkLength];
+                Array.Copy(webp, dataOffset, payload, 0, chunkLength);
+                return payload;
+            }
+
+            var padded = chunkLength + (chunkLength & 1);
+            offset = dataOffset + padded;
+        }
+
+        throw new InvalidOperationException("VP8L payload not found.");
+    }
+
+    private static uint ReadU32LE(byte[] data, int offset) {
+        return (uint)(data[offset]
+            | (data[offset + 1] << 8)
+            | (data[offset + 2] << 16)
+            | (data[offset + 3] << 24));
     }
 }
