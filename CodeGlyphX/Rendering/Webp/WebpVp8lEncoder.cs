@@ -158,7 +158,7 @@ internal static class WebpVp8lEncoder {
         var pixels = new int[pixelCount];
         FillArgbPixels(rgba, width, height, stride, pixels);
 
-        var tokens = BuildRunLengthTokens(pixels);
+        var tokens = BuildSmallDistanceTokens(pixels);
         if (!TryWriteTokensWithPrefixCodes(writer, tokens, out reason)) {
             // Fall back to literal-only encoding if our constrained backref path
             // cannot be expressed with the current prefix-code strategy.
@@ -347,28 +347,41 @@ internal static class WebpVp8lEncoder {
         return tokens;
     }
 
-    private static Token[] BuildRunLengthTokens(ReadOnlySpan<int> pixels) {
+    private static Token[] BuildSmallDistanceTokens(ReadOnlySpan<int> pixels) {
         if (pixels.Length == 0) return Array.Empty<Token>();
 
         var list = new List<Token>(pixels.Length);
         var pos = 0;
+        const int maxDistance = 8;
+        const int minMatchLength = 3;
         while (pos < pixels.Length) {
-            var pixel = pixels[pos];
+            var bestLength = 0;
+            var bestDistance = 0;
 
-            var run = 1;
-            var next = pos + 1;
-            while (next < pixels.Length && pixels[next] == pixel && run < 4096) {
-                run++;
-                next++;
+            var remaining = pixels.Length - pos;
+            var maxLen = remaining < 4096 ? remaining : 4096;
+
+            for (var distance = 1; distance <= maxDistance; distance++) {
+                if (pos < distance) continue;
+
+                var length = 0;
+                while (length < maxLen && pixels[pos + length] == pixels[pos - distance + length]) {
+                    length++;
+                }
+
+                if (length >= minMatchLength && length > bestLength) {
+                    bestLength = length;
+                    bestDistance = distance;
+                }
             }
 
-            if (run >= 3 && pos > 0 && pixels[pos - 1] == pixel) {
-                list.Add(Token.BackReference(distance: 1, length: run));
-                pos += run;
+            if (bestLength >= minMatchLength) {
+                list.Add(Token.BackReference(bestDistance, bestLength));
+                pos += bestLength;
                 continue;
             }
 
-            list.Add(Token.Literal(pixel));
+            list.Add(Token.Literal(pixels[pos]));
             pos++;
         }
 
@@ -407,7 +420,7 @@ internal static class WebpVp8lEncoder {
         if (!TryWriteChannelPrefixCode(writer, LiteralAlphabetSize, uniqueA, fixedLiteralCount: LiteralAlphabetSize, out var alphaBook, out reason)) return false;
 
         if (hasBackrefs) {
-            if (!TryWriteDistancePrefixCodeForDistanceOne(writer, out var distanceBook, out reason)) return false;
+            if (!TryWriteDistancePrefixCodeForSmallDistances(writer, out var distanceBook, out reason)) return false;
             return TryEncodeTokens(writer, tokens, greenBook, redBook, blueBook, alphaBook, distanceBook, out reason);
         }
 
@@ -590,12 +603,12 @@ internal static class WebpVp8lEncoder {
         return true;
     }
 
-    private static bool TryWriteDistancePrefixCodeForDistanceOne(WebpBitWriter writer, out Codebook distanceBook, out string reason) {
+    private static bool TryWriteDistancePrefixCodeForSmallDistances(WebpBitWriter writer, out Codebook distanceBook, out string reason) {
         reason = string.Empty;
         distanceBook = default;
 
-        // Distance prefix 13 with extra bits 24 yields distance code 121,
-        // which maps to distance 1 in the managed decoder.
+        // Distance prefix 13 (extra bits = 5) can express distance codes 97..128.
+        // By choosing distanceCode = 120 + distance we can reach distances 1..8.
         const int distancePrefix = 13;
         WriteSimplePrefixCode(writer, symbols: new byte[] { (byte)distancePrefix });
         return TryBuildSimpleCodebook(alphabetSize: 40, symbols: new byte[] { (byte)distancePrefix }, out distanceBook, out reason);
@@ -655,8 +668,8 @@ internal static class WebpVp8lEncoder {
                 writer.WriteBits(lengthExtraValue, lengthExtraBits);
             }
 
-            if (token.Distance != 1) {
-                reason = "Only distance=1 back-references are supported in this encoder step.";
+            if (token.Distance is < 1 or > 8) {
+                reason = "Only distances 1..8 are supported in this encoder step.";
                 return false;
             }
 
@@ -666,8 +679,10 @@ internal static class WebpVp8lEncoder {
             }
 
             // Distance prefix 13 => extraBits=5, offset=96, value=offset+extra+1.
-            // Use distance code 121 (extra=24) so the managed distance map returns 1.
-            writer.WriteBits(24, 5);
+            // We choose distanceCode = 120 + distance to map to the requested distance.
+            var distanceCode = 120 + token.Distance;
+            var distanceExtra = distanceCode - 97;
+            writer.WriteBits(distanceExtra, 5);
         }
 
         return true;
