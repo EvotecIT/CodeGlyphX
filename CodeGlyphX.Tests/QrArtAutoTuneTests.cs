@@ -142,6 +142,91 @@ public sealed class QrArtAutoTuneTests {
         Assert.Equal(originalAccentStripeCount, options.Eyes.AccentStripeCount);
     }
 
+    [Fact]
+    public void Art_AutoTune_Engages_Strong_Clamp_When_MinScore_Is_High() {
+        var payload = "https://example.com/auto-tune-strong-clamp";
+        var options = new QrEasyOptions {
+            Art = QrArt.Theme(QrArtTheme.PaintSplash, QrArtVariant.Bold, intensity: 98, safetyMode: QrArtSafetyMode.Safe),
+            ArtAutoTune = true,
+            ArtAutoTuneMinScore = 99,
+            ModuleSize = 1,
+            QuietZone = 1,
+            ProtectFunctionalPatterns = false,
+            ProtectQuietZone = false,
+            ModuleShape = QrPngModuleShape.Rounded,
+            ModuleScale = 0.78,
+            ModuleScaleMap = new QrPngModuleScaleMapOptions {
+                Mode = QrPngModuleScaleMode.Random,
+                MinScale = 0.62,
+                MaxScale = 0.72,
+                Seed = 2026,
+                ApplyToEyes = true,
+            },
+            ForegroundPattern = new QrPngForegroundPatternOptions {
+                Type = QrPngForegroundPatternType.SpeckleDots,
+                Color = new Rgba32(15, 60, 140, 220),
+                SizePx = 10,
+                ThicknessPx = 4,
+                Seed = 19,
+                Variation = 0.9,
+                Density = 0.95,
+                SnapToModuleSize = true,
+                ModuleStep = 1,
+                ApplyToModules = true,
+                ApplyToEyes = true,
+            },
+            Canvas = new QrPngCanvasOptions {
+                PaddingPx = 36,
+                Splash = new QrPngCanvasSplashOptions {
+                    Color = new Rgba32(20, 120, 220, 210),
+                    Count = 64,
+                    MinRadiusPx = 16,
+                    MaxRadiusPx = 66,
+                    SpreadPx = 40,
+                    Placement = QrPngCanvasSplashPlacement.CanvasEdges,
+                    EdgeBandPx = 120,
+                    DripChance = 1.0,
+                    DripLengthPx = 60,
+                    DripWidthPx = 14,
+                    Seed = 2601,
+                    ProtectQrArea = false,
+                    QrAreaAlphaMax = 220,
+                },
+            },
+            Eyes = new QrPngEyeOptions {
+                UseFrame = true,
+                SparkleCount = 80,
+                AccentRingCount = 16,
+                AccentRayCount = 80,
+                AccentStripeCount = 80,
+                SparkleColor = new Rgba32(255, 255, 255, 220),
+                AccentRingColor = new Rgba32(255, 255, 255, 220),
+                AccentRayColor = new Rgba32(255, 255, 255, 220),
+                AccentStripeColor = new Rgba32(255, 255, 255, 220),
+            },
+        };
+
+        var qr = QrEasy.Encode(payload, options);
+        var render = BuildRender(options, qr);
+
+        Assert.True(render.ModuleScale >= 0.97, $"Strong clamp should raise ModuleScale (was {render.ModuleScale:0.00}).");
+        Assert.NotNull(render.ModuleScaleMap);
+        Assert.True(render.ModuleScaleMap!.MinScale >= 0.97, $"Strong clamp should raise MinScale (was {render.ModuleScaleMap.MinScale:0.00}).");
+
+        Assert.NotNull(render.ForegroundPattern);
+        Assert.Equal(1, render.ForegroundPattern!.ThicknessPx);
+        Assert.True(render.ForegroundPattern.Color.A <= 88, $"Strong clamp should cap pattern alpha (was {render.ForegroundPattern.Color.A}).");
+
+        Assert.NotNull(render.Canvas?.Splash);
+        Assert.True(render.Canvas!.Splash!.Count <= 16, $"Strong clamp should cap splash count (was {render.Canvas.Splash.Count}).");
+
+        Assert.NotNull(render.Eyes);
+        Assert.True(render.Eyes!.SparkleCount <= 22, $"Strong clamp should cap sparkle count (was {render.Eyes.SparkleCount}).");
+        Assert.True(render.Eyes.AccentRingCount <= 4, $"Strong clamp should cap accent ring count (was {render.Eyes.AccentRingCount}).");
+        Assert.True(render.Eyes.AccentRayCount <= 14, $"Strong clamp should cap accent ray count (was {render.Eyes.AccentRayCount}).");
+        Assert.True(render.Eyes.AccentStripeCount <= 18, $"Strong clamp should cap accent stripe count (was {render.Eyes.AccentStripeCount}).");
+    }
+
     private static QrPngRenderOptions BuildRender(QrEasyOptions options, QrCode qr) {
         var cloneMethod = typeof(QrEasy).GetMethod(
             "CloneOptions",
