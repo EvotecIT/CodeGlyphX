@@ -16,10 +16,7 @@ public sealed class QrDecodingSamplesSweepTests {
         "qr-art-drip-variants.png",
         "qr-art-solid-bg-grid.png",
         "qr-art-gear-illustration-grid.png",
-        "qr-illustration-template.jpg",
-        "qr-screenshot-1.png",
-        "qr-screenshot-2.png",
-        "qr-screenshot-3.png"
+        "qr-illustration-template.jpg"
     };
 
     private static readonly HashSet<string> SupportedExtensions = new(StringComparer.OrdinalIgnoreCase) {
@@ -42,10 +39,11 @@ public sealed class QrDecodingSamplesSweepTests {
 
         Assert.NotEmpty(files);
 
-        var options = new QrPixelDecodeOptions {
+        var baseOptions = new QrPixelDecodeOptions {
             Profile = QrDecodeProfile.Robust,
             MaxDimension = 2200,
-            BudgetMilliseconds = 2500,
+            BudgetMilliseconds = 5000,
+            AutoCrop = true,
             AggressiveSampling = true,
             StylizedSampling = true,
             EnableTileScan = true
@@ -54,6 +52,20 @@ public sealed class QrDecodingSamplesSweepTests {
         foreach (var file in files) {
             var bytes = File.ReadAllBytes(file);
             Assert.True(ImageReader.TryDecodeRgba32(bytes, out var rgba, out var width, out var height), $"Failed to decode sample image: {file}");
+
+            var options = baseOptions;
+            if (Path.GetFileName(file).Contains("screenshot", StringComparison.OrdinalIgnoreCase)) {
+                options = new QrPixelDecodeOptions {
+                    Profile = QrDecodeProfile.Robust,
+                    MaxDimension = 3200,
+                    BudgetMilliseconds = 12000,
+                    AutoCrop = true,
+                    AggressiveSampling = true,
+                    StylizedSampling = true,
+                    EnableTileScan = true,
+                    TileGrid = 6
+                };
+            }
 
             if (!QrDecoder.TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, out var results, out var infoAll, options)) {
                 if (QrDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out var decoded, out var infoSingle, options)) {
