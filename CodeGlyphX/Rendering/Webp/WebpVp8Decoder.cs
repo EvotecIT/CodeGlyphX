@@ -1359,9 +1359,9 @@ internal static class WebpVp8Decoder {
         return samples[index];
     }
 
-    private static int[] BuildBlockResidual(WebpVp8BlockTokenScaffold block) {
+    private static int[] BuildBlockResidual(WebpVp8BlockTokenScaffold block, bool overrideDc, int dcValue) {
         var coefficients = new int[CoefficientsPerBlock];
-        coefficients[0] = block.Result.DequantDc;
+        coefficients[0] = overrideDc ? dcValue : block.Result.DequantDc;
         for (var i = 1; i < CoefficientsPerBlock; i++) {
             coefficients[i] = block.Result.DequantAc[i - 1];
         }
@@ -1377,8 +1377,10 @@ internal static class WebpVp8Decoder {
         int dstY,
         WebpVp8BlockTokenScaffold block,
         bool is4x4,
-        int mode) {
-        var residual = BuildBlockResidual(block);
+        int mode,
+        bool overrideDc,
+        int dcValue) {
+        var residual = BuildBlockResidual(block, overrideDc, dcValue);
         Span<byte> top = stackalloc byte[BlockSize];
         Span<byte> left = stackalloc byte[BlockSize];
 
@@ -1448,6 +1450,21 @@ internal static class WebpVp8Decoder {
                 plane[rowOffset + px] = ClampToByte(value);
             }
         }
+    }
+
+    private static int[] BuildY2DcOverrides(WebpVp8BlockTokenScaffold[] blocks) {
+        if (blocks is null || blocks.Length == 0) return Array.Empty<int>();
+
+        var dcCoefficients = new int[MacroblockSubBlockCount];
+        var count = 0;
+        for (var i = 0; i < blocks.Length && count < dcCoefficients.Length; i++) {
+            if (blocks[i].BlockType != BlockTypeY) continue;
+            dcCoefficients[count] = blocks[i].Result.DequantDc;
+            count++;
+        }
+
+        if (count < dcCoefficients.Length) return Array.Empty<int>();
+        return InverseTransform4x4(dcCoefficients);
     }
 
     private static byte PredictDownRight(ReadOnlySpan<byte> top, ReadOnlySpan<byte> left, byte topLeft, int x, int y) {
@@ -1546,6 +1563,7 @@ internal static class WebpVp8Decoder {
         var blocksPlacedV = 0;
         var blocksPlacedTotal = 0;
         var header = macroblock.Header;
+        var y2Overrides = header.Is4x4 ? Array.Empty<int>() : BuildY2DcOverrides(blocks);
 
         for (var b = 0; b < blocks.Length && blocksPlacedTotal < (MacroblockScaffoldLumaBlocks + (MacroblockScaffoldChromaBlocks * 2)); b++) {
             var block = blocks[b];
@@ -1568,7 +1586,9 @@ internal static class WebpVp8Decoder {
                         dstY,
                         block,
                         header.Is4x4,
-                        yMode);
+                        yMode,
+                        !header.Is4x4 && blocksPlacedY < y2Overrides.Length,
+                        blocksPlacedY < y2Overrides.Length ? y2Overrides[blocksPlacedY] : 0);
                     blocksPlacedY++;
                     blocksPlacedTotal++;
                     break;
@@ -1584,7 +1604,9 @@ internal static class WebpVp8Decoder {
                             dstY,
                             block,
                             is4x4: false,
-                            header.UvMode);
+                            header.UvMode,
+                            overrideDc: false,
+                            dcValue: 0);
                         blocksPlacedU++;
                         blocksPlacedTotal++;
                     }
@@ -1602,7 +1624,9 @@ internal static class WebpVp8Decoder {
                             dstY,
                             block,
                             is4x4: false,
-                            header.UvMode);
+                            header.UvMode,
+                            overrideDc: false,
+                            dcValue: 0);
                         blocksPlacedV++;
                         blocksPlacedTotal++;
                     }
