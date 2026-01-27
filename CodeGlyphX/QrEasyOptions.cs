@@ -108,6 +108,16 @@ public sealed class QrEasyOptions {
     public QrPngModuleScaleMapOptions? ModuleScaleMap { get; set; }
 
     /// <summary>
+    /// When true, keeps non-eye functional patterns at a stable, scan-friendly style.
+    /// </summary>
+    public bool ProtectFunctionalPatterns { get; set; } = true;
+
+    /// <summary>
+    /// When true and a background pattern is enabled, preserves a clean quiet zone.
+    /// </summary>
+    public bool ProtectQuietZone { get; set; } = true;
+
+    /// <summary>
     /// Overrides the module corner radius in pixels.
     /// </summary>
     public int? ModuleCornerRadiusPx { get; set; }
