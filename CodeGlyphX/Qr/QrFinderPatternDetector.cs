@@ -545,8 +545,8 @@ internal static class QrFinderPatternDetector {
         var total = stateCount[0] + stateCount[1] + stateCount[2] + stateCount[3] + stateCount[4];
         if (total < 7) return false;
         if (stateCount[0] == 0 || stateCount[1] == 0 || stateCount[2] == 0 || stateCount[3] == 0 || stateCount[4] == 0) return false;
-        var outerLimit = aggressive ? 8 : 5;   // 0.8x or 0.5x, scaled by 10.
-        var centerLimit = aggressive ? 28 : 15; // 2.8x or 1.5x, scaled by 10.
+        var outerLimit = aggressive ? 16 : 5;   // 1.6x or 0.5x, scaled by 10.
+        var centerLimit = aggressive ? 45 : 15; // 4.5x or 1.5x, scaled by 10.
 
         var diff0 = 7 * stateCount[0] - total;
         if (diff0 < 0) diff0 = -diff0;
@@ -574,8 +574,8 @@ internal static class QrFinderPatternDetector {
         var total = s0 + s1 + s2 + s3 + s4;
         if (total < 7) return false;
         if (s0 == 0 || s1 == 0 || s2 == 0 || s3 == 0 || s4 == 0) return false;
-        var outerLimit = aggressive ? 8 : 5;
-        var centerLimit = aggressive ? 28 : 15;
+        var outerLimit = aggressive ? 16 : 5;
+        var centerLimit = aggressive ? 45 : 15;
 
         var diff0 = 7 * s0 - total;
         if (diff0 < 0) diff0 = -diff0;

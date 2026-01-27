@@ -105,4 +105,9 @@ public sealed partial class QrPngRenderOptions {
     /// Optional debug overlay options.
     /// </summary>
     public QrPngDebugOptions? Debug { get; set; }
+
+    /// <summary>
+    /// PNG compression level (0 = stored/uncompressed, 1-9 = compressed).
+    /// </summary>
+    public int PngCompressionLevel { get; set; }
 }

@@ -20,7 +20,7 @@ public static partial class MatrixPngRenderer {
         var scanlines = ArrayPool<byte>.Shared.Rent(length);
         try {
             RenderBinaryScanlines(modules, opts, scanlines, length, widthPx, heightPx, invert);
-            png = PngWriter.WriteGray1(widthPx, heightPx, scanlines, length);
+            png = PngWriter.WriteGray1(widthPx, heightPx, scanlines, length, opts.PngCompressionLevel);
             return true;
         } finally {
             ArrayPool<byte>.Shared.Return(scanlines);
@@ -40,7 +40,7 @@ public static partial class MatrixPngRenderer {
         var scanlines = ArrayPool<byte>.Shared.Rent(length);
         try {
             RenderBinaryScanlines(modules, opts, scanlines, length, widthPx, heightPx, invert);
-            PngWriter.WriteGray1(stream, widthPx, heightPx, scanlines, length);
+            PngWriter.WriteGray1(stream, widthPx, heightPx, scanlines, length, opts.PngCompressionLevel);
             return true;
         } finally {
             ArrayPool<byte>.Shared.Return(scanlines);
@@ -61,7 +61,7 @@ public static partial class MatrixPngRenderer {
         var scanlines = ArrayPool<byte>.Shared.Rent(length);
         try {
             RenderBinaryScanlines(modules, opts, scanlines, length, widthPx, heightPx, invert: false);
-            png = PngWriter.WriteIndexed1(widthPx, heightPx, scanlines, length, palette);
+            png = PngWriter.WriteIndexed1(widthPx, heightPx, scanlines, length, palette, opts.PngCompressionLevel);
             return true;
         } finally {
             ArrayPool<byte>.Shared.Return(scanlines);
@@ -81,7 +81,7 @@ public static partial class MatrixPngRenderer {
         var scanlines = ArrayPool<byte>.Shared.Rent(length);
         try {
             RenderBinaryScanlines(modules, opts, scanlines, length, widthPx, heightPx, invert: false);
-            PngWriter.WriteIndexed1(stream, widthPx, heightPx, scanlines, length, palette);
+            PngWriter.WriteIndexed1(stream, widthPx, heightPx, scanlines, length, palette, opts.PngCompressionLevel);
             return true;
         } finally {
             ArrayPool<byte>.Shared.Return(scanlines);

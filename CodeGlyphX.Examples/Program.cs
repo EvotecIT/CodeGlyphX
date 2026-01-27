@@ -19,7 +19,17 @@ internal static class Program {
             return;
         }
 
+        var runDecodeSamples = Environment.GetEnvironmentVariable("CODEGLYPHX_DECODE_SAMPLES");
+        if (!string.IsNullOrEmpty(runDecodeSamples) &&
+            (string.Equals(runDecodeSamples, "1", StringComparison.OrdinalIgnoreCase) ||
+             string.Equals(runDecodeSamples, "true", StringComparison.OrdinalIgnoreCase))) {
+            runner.Run("QR (decode samples)", QrDecodeSamplesExample.Run);
+            runner.PrintSummary();
+            return;
+        }
+
         runner.Run("QR (basic)", QrGenerationExample.Run);
+        runner.Run("QR (ascii console)", QrAsciiExample.Run);
         runner.Run("QR (payloads)", QrPayloadsExample.Run);
         runner.Run("QR (styling)", QrFancyExample.Run);
         runner.Run("QR (style board)", QrStyleBoardExample.Run);

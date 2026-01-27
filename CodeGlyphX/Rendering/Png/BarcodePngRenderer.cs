@@ -19,7 +19,10 @@ public static partial class BarcodePngRenderer {
         var scanlines = ArrayPool<byte>.Shared.Rent(length);
         try {
             RenderScanlines(barcode, opts, out widthPx, out heightPx, out stride, scanlines);
-            return PngWriter.WriteRgba8(widthPx, heightPx, scanlines, length);
+            if (opts.PngCompressionLevel > 0) {
+                PngRenderHelpers.ApplyAdaptiveFilterHeuristic(scanlines, heightPx, stride);
+            }
+            return PngWriter.WriteRgba8(widthPx, heightPx, scanlines, length, opts.PngCompressionLevel);
         } finally {
             ArrayPool<byte>.Shared.Return(scanlines);
         }
@@ -38,7 +41,10 @@ public static partial class BarcodePngRenderer {
         var scanlines = ArrayPool<byte>.Shared.Rent(length);
         try {
             RenderScanlines(barcode, opts, out widthPx, out heightPx, out stride, scanlines);
-            PngWriter.WriteRgba8(stream, widthPx, heightPx, scanlines, length);
+            if (opts.PngCompressionLevel > 0) {
+                PngRenderHelpers.ApplyAdaptiveFilterHeuristic(scanlines, heightPx, stride);
+            }
+            PngWriter.WriteRgba8(stream, widthPx, heightPx, scanlines, length, opts.PngCompressionLevel);
         } finally {
             ArrayPool<byte>.Shared.Return(scanlines);
         }

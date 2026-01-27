@@ -59,6 +59,11 @@ public sealed partial class QrPixelDecodeOptions {
     public bool AggressiveSampling { get; set; } = false;
 
     /// <summary>
+    /// Enables stylized sampling tuned for QR art (opt-in, slower).
+    /// </summary>
+    public bool StylizedSampling { get; set; } = false;
+
+    /// <summary>
     /// Fast preset (lower accuracy, fewer transforms).
     /// </summary>
     public static QrPixelDecodeOptions Fast() {
@@ -83,7 +88,7 @@ public sealed partial class QrPixelDecodeOptions {
     /// Stylized preset (adds aggressive sampling for QR art).
     /// </summary>
     public static QrPixelDecodeOptions Stylized() {
-        return new QrPixelDecodeOptions { Profile = QrDecodeProfile.Robust, AggressiveSampling = true };
+        return new QrPixelDecodeOptions { Profile = QrDecodeProfile.Robust, AggressiveSampling = true, StylizedSampling = true };
     }
 
     /// <summary>

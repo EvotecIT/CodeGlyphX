@@ -91,9 +91,10 @@ public partial class Playground {
                 {
                     Profile = QrDecodeProfile.Robust,
                     AggressiveSampling = true,
+                    StylizedSampling = true,
                     BudgetMilliseconds = DecodeMaxMilliseconds,
                     MaxDimension = DecodeDownscale ? DecodeMaxDimension : 0,
-                    EnableTileScan = !DecodeStopAfterFirst
+                    EnableTileScan = true
                 };
                 if (DecodeStopAfterFirst)
                 {
@@ -103,6 +104,16 @@ public partial class Playground {
                         found = true;
                         DecodeStatus = $"Decode finished in {sw.ElapsedMilliseconds} ms";
                         return;
+                    }
+                    if (QrDecoder.TryDecodeAll(rgba, width, height, stride, PixelFormat.Rgba32, out var qrAll, qrOptions, token))
+                    {
+                        if (qrAll.Length > 0)
+                        {
+                            AddDecodeResult("QR", qrAll[0].Text);
+                            found = true;
+                            DecodeStatus = $"Decode finished in {sw.ElapsedMilliseconds} ms";
+                            return;
+                        }
                     }
                 }
                 else

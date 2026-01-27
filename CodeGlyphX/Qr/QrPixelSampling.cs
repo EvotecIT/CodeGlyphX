@@ -7,6 +7,7 @@ namespace CodeGlyphX.Qr;
 internal static class QrPixelSampling {
     private static readonly double[] PhaseOffsetsCoarse = { -0.35, -0.15, 0.0, 0.15, 0.35 };
     private static readonly double[] ScaleFactors = { 0.94, 0.97, 1.0, 1.03, 1.06 };
+    private static readonly double[] ScaleFactorsWide = { 0.9, 0.95, 1.0, 1.05, 1.1 };
 
     public static void RefineTransform(
         QrGrayImage image,
@@ -49,6 +50,68 @@ internal static class QrPixelSampling {
                 FindBestPhase(image, invert, tlX, tlY, svxX, svxY, svyX, svyY, dimension, out var phX, out var phY, out var dist, out var timing);
 
                 // Prefer lower format distance, then higher timing alternation. Break ties by staying closer to the original scale.
+                var scalePenalty = Math.Abs(scaleX - 1.0) + Math.Abs(scaleY - 1.0);
+
+                if (dist < bestDist ||
+                    (dist == bestDist && timing > bestTiming) ||
+                    (dist == bestDist && timing == bestTiming && scalePenalty < bestScalePenalty)) {
+                    bestDist = dist;
+                    bestTiming = timing;
+                    bestScalePenalty = scalePenalty;
+
+                    bestVxX = svxX;
+                    bestVxY = svxY;
+                    bestVyX = svyX;
+                    bestVyY = svyY;
+                    bestPhaseX = phX;
+                    bestPhaseY = phY;
+                }
+
+                if (bestDist == 0 && bestTiming > (dimension - 16) * 2 - 4 && bestScalePenalty <= scaleEpsilon) return;
+            }
+        }
+    }
+
+    public static void RefineTransformWide(
+        QrGrayImage image,
+        bool invert,
+        double tlX,
+        double tlY,
+        double vxX,
+        double vxY,
+        double vyX,
+        double vyY,
+        int dimension,
+        out double bestVxX,
+        out double bestVxY,
+        out double bestVyX,
+        out double bestVyY,
+        out double bestPhaseX,
+        out double bestPhaseY) {
+        bestVxX = vxX;
+        bestVxY = vxY;
+        bestVyX = vyX;
+        bestVyY = vyY;
+        bestPhaseX = 0;
+        bestPhaseY = 0;
+
+        var bestDist = int.MaxValue;
+        var bestTiming = int.MinValue;
+        var bestScalePenalty = double.PositiveInfinity;
+        const double scaleEpsilon = 1e-6;
+
+        for (var sy = 0; sy < ScaleFactorsWide.Length; sy++) {
+            var scaleY = ScaleFactorsWide[sy];
+            var svyX = vyX * scaleY;
+            var svyY = vyY * scaleY;
+
+            for (var sx = 0; sx < ScaleFactorsWide.Length; sx++) {
+                var scaleX = ScaleFactorsWide[sx];
+                var svxX = vxX * scaleX;
+                var svxY = vxY * scaleX;
+
+                FindBestPhase(image, invert, tlX, tlY, svxX, svxY, svyX, svyY, dimension, out var phX, out var phY, out var dist, out var timing);
+
                 var scalePenalty = Math.Abs(scaleX - 1.0) + Math.Abs(scaleY - 1.0);
 
                 if (dist < bestDist ||
@@ -1871,6 +1934,8 @@ internal static class QrPixelSampling {
 
     internal static double GetSampleDelta5x5ForModule(double moduleSizePx) => GetSampleDelta5x5(moduleSizePx);
 
+    internal static double GetSampleDeltaRingForModule(double moduleSizePx) => GetSampleDeltaRing(moduleSizePx);
+
     private static double GetSampleDelta(double moduleSizePx) {
         if (!(moduleSizePx > 0)) return 0.85;
 
@@ -1912,6 +1977,19 @@ internal static class QrPixelSampling {
 
         // If modules are tiny, fall back to a small but non-zero delta.
         if (d < 0.20) d = 0.20;
+
+        return d;
+    }
+
+    private static double GetSampleDeltaRing(double moduleSizePx) {
+        if (!(moduleSizePx > 0)) return 0.9;
+
+        // Sample closer to the module edge to handle hollow/stylized shapes.
+        var d = moduleSizePx * 0.42;
+        if (d < 0.35) d = 0.35;
+
+        var max = moduleSizePx * 0.49;
+        if (d > max) d = max;
 
         return d;
     }

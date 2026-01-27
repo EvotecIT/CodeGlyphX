@@ -20,6 +20,8 @@ public static partial class JpegReader {
             throw new FormatException("Invalid baseline JPEG scan parameters.");
         }
 
+        EnsureStandardHuffmanTables(dcTables, acTables);
+
         var maxH = frame.MaxH;
         var maxV = frame.MaxV;
         var mcuWidth = maxH * 8;
@@ -61,7 +63,7 @@ public static partial class JpegReader {
                     var compIndex = scan.ComponentIndices[0];
                     var state = states[compIndex];
                     DecodeBlock(
-                        reader,
+                        ref reader,
                         dcTables[state.Component.DcTable],
                         acTables[state.Component.AcTable],
                         quantTables[state.Component.QuantId],
@@ -76,7 +78,7 @@ public static partial class JpegReader {
                         var blocks = state.Component.H * state.Component.V;
                         for (var b = 0; b < blocks; b++) {
                             DecodeBlock(
-                                reader,
+                                ref reader,
                                 dcTables[state.Component.DcTable],
                                 acTables[state.Component.AcTable],
                                 quantTables[state.Component.QuantId],
@@ -114,7 +116,8 @@ public static partial class JpegReader {
         HuffmanTable[] dcTables,
         HuffmanTable[] acTables,
         int restartInterval) {
-        var reader = new JpegBitReader(scanData);
+        EnsureStandardHuffmanTables(dcTables, acTables);
+        var reader = new JpegBitReader(scanData, allowTruncated: true);
         var mcuIndex = 0;
         var eobRun = 0;
         var isSingle = scan.ComponentIndices.Length == 1;
@@ -138,7 +141,7 @@ public static partial class JpegReader {
                 if (isSingle) {
                     var compIndex = scan.ComponentIndices[0];
                     DecodeProgressiveBlock(
-                        reader,
+                        ref reader,
                         scan,
                         state.Components[compIndex],
                         dcTables,
@@ -156,7 +159,7 @@ public static partial class JpegReader {
                             var blockX = mx * compState.Component.H + (b % compState.Component.H);
                             var blockY = my * compState.Component.V + (b / compState.Component.H);
                             DecodeProgressiveBlock(
-                                reader,
+                                ref reader,
                                 scan,
                                 compState,
                                 dcTables,
@@ -183,7 +186,7 @@ public static partial class JpegReader {
     }
 
     private static void DecodeProgressiveBlock(
-        JpegBitReader reader,
+        ref JpegBitReader reader,
         ScanHeader scan,
         ProgressiveComponentState state,
         HuffmanTable[] dcTables,
@@ -200,7 +203,7 @@ public static partial class JpegReader {
             var dcTable = dcTables[state.Component.DcTable];
             if (!dcTable.IsValid) throw new FormatException("Missing JPEG DC Huffman table.");
             if (scan.Ah == 0) {
-                var t = DecodeHuffman(reader, dcTable);
+                var t = DecodeHuffman(ref reader, dcTable, useFast: false);
                 var diff = t == 0 ? 0 : Extend(reader.ReadBits(t), t);
                 var dc = state.PrevDc + (diff << scan.Al);
                 state.PrevDc = dc;
@@ -221,14 +224,14 @@ public static partial class JpegReader {
         if (!acTable.IsValid) throw new FormatException("Missing JPEG AC Huffman table.");
 
         if (scan.Ah == 0) {
-            DecodeProgressiveAcFirst(reader, scan, state, acTable, quant, baseIndex, ref eobRun);
+            DecodeProgressiveAcFirst(ref reader, scan, state, acTable, quant, baseIndex, ref eobRun);
         } else {
-            DecodeProgressiveAcRefine(reader, scan, state, acTable, quant, baseIndex, ref eobRun);
+            DecodeProgressiveAcRefine(ref reader, scan, state, acTable, quant, baseIndex, ref eobRun);
         }
     }
 
     private static void DecodeProgressiveAcFirst(
-        JpegBitReader reader,
+        ref JpegBitReader reader,
         ScanHeader scan,
         ProgressiveComponentState state,
         HuffmanTable acTable,
@@ -242,7 +245,7 @@ public static partial class JpegReader {
 
         var k = (int)scan.Ss;
         while (k <= scan.Se) {
-            var rs = DecodeHuffman(reader, acTable);
+            var rs = DecodeHuffman(ref reader, acTable, useFast: false);
             if (rs == 0) {
                 eobRun = 0;
                 break;
@@ -269,7 +272,7 @@ public static partial class JpegReader {
     }
 
     private static void DecodeProgressiveAcRefine(
-        JpegBitReader reader,
+        ref JpegBitReader reader,
         ScanHeader scan,
         ProgressiveComponentState state,
         HuffmanTable acTable,
@@ -279,14 +282,14 @@ public static partial class JpegReader {
         var k = (int)scan.Ss;
         if (eobRun > 0) {
             for (; k <= scan.Se; k++) {
-                RefineCoefficient(reader, state.Coeffs, baseIndex + ZigZag[k], scan.Al, quant[ZigZag[k]]);
+                RefineCoefficient(ref reader, state.Coeffs, baseIndex + ZigZag[k], scan.Al, quant[ZigZag[k]]);
             }
             eobRun--;
             return;
         }
 
         while (k <= scan.Se) {
-            var rs = DecodeHuffman(reader, acTable);
+            var rs = DecodeHuffman(ref reader, acTable, useFast: false);
             var r = rs >> 4;
             var s = rs & 0x0F;
 
@@ -295,7 +298,7 @@ public static partial class JpegReader {
                     var zeros = 16;
                     while (zeros > 0 && k <= scan.Se) {
                         var index = baseIndex + ZigZag[k];
-                        RefineCoefficient(reader, state.Coeffs, index, scan.Al, quant[ZigZag[k]]);
+                        RefineCoefficient(ref reader, state.Coeffs, index, scan.Al, quant[ZigZag[k]]);
                         if (state.Coeffs[index] == 0) zeros--;
                         k++;
                     }
@@ -305,14 +308,14 @@ public static partial class JpegReader {
                 eobRun = (1 << r) - 1;
                 if (r > 0) eobRun += reader.ReadBits(r);
                 for (; k <= scan.Se; k++) {
-                    RefineCoefficient(reader, state.Coeffs, baseIndex + ZigZag[k], scan.Al, quant[ZigZag[k]]);
+                    RefineCoefficient(ref reader, state.Coeffs, baseIndex + ZigZag[k], scan.Al, quant[ZigZag[k]]);
                 }
                 break;
             }
 
             while (r > 0 && k <= scan.Se) {
                 var index = baseIndex + ZigZag[k];
-                RefineCoefficient(reader, state.Coeffs, index, scan.Al, quant[ZigZag[k]]);
+                RefineCoefficient(ref reader, state.Coeffs, index, scan.Al, quant[ZigZag[k]]);
                 if (state.Coeffs[index] == 0) r--;
                 k++;
             }
@@ -331,7 +334,7 @@ public static partial class JpegReader {
         }
     }
 
-    private static void RefineCoefficient(JpegBitReader reader, int[] coeffs, int index, int al, int quant) {
+    private static void RefineCoefficient(ref JpegBitReader reader, int[] coeffs, int index, int al, int quant) {
         if (coeffs[index] == 0) return;
         var bit = reader.ReadBit();
         if (bit == 0) return;

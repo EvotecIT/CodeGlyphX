@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace CodeGlyphX.Payloads;
 
@@ -47,4 +48,31 @@ public static class QrParsedData {
 
     /// <summary>PayPal payment payload (PayPal.Me).</summary>
     public sealed record PayPal(string Handle, decimal? Amount, string? Currency, string Url);
+
+    /// <summary>Crypto/payment URI payload (bitcoin:, monero:, etc.).</summary>
+    public sealed record Crypto(string Scheme, string Address, decimal? Amount, string? Label, string? Message, IReadOnlyDictionary<string, string> Parameters);
+
+    /// <summary>EMVCo merchant-presented payment payload.</summary>
+    public sealed record EmvCoMerchant(
+        string PayloadFormatIndicator,
+        string? MerchantCategoryCode,
+        string? TransactionCurrency,
+        decimal? TransactionAmount,
+        string? CountryCode,
+        string? MerchantName,
+        string? MerchantCity,
+        IReadOnlyDictionary<string, string> Fields,
+        bool CrcValid);
+
+    /// <summary>Lightning payment invoice (BOLT11/12).</summary>
+    public sealed record Lightning(string Invoice, string? NetworkPrefix);
+
+    /// <summary>EIP-681 Ethereum payment request.</summary>
+    public sealed record Eip681(
+        string Address,
+        long? ChainId,
+        decimal? AmountEther,
+        decimal? ValueWei,
+        string? Function,
+        IReadOnlyDictionary<string, string> Parameters);
 }

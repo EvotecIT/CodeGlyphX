@@ -37,9 +37,7 @@ public static class SvgQrRenderer {
 
         var hasAdvanced = opts.ModuleShape != QrPngModuleShape.Square ||
                           Math.Abs(opts.ModuleScale - 1.0) > 0.0001 ||
-                          opts.ModuleCornerRadiusPx != 0 ||
-                          opts.ForegroundGradient is not null ||
-                          opts.Eyes is not null;
+                          opts.ModuleCornerRadiusPx != 0;
 
         var fgGradId = opts.ForegroundGradient is not null ? "fg" : null;
         var eyeOuterIds = opts.Eyes?.OuterGradient is not null ? new[] { "eye-outer-0", "eye-outer-1", "eye-outer-2" } : null;
@@ -65,7 +63,7 @@ public static class SvgQrRenderer {
         }
 
         var useFrame = opts.Eyes is not null && opts.Eyes.UseFrame;
-        var usePath = !hasAdvanced && !useFrame;
+        var usePath = !hasAdvanced && (opts.Eyes is null || useFrame);
 
         if (usePath) {
             var fill = fgGradId is null ? opts.DarkColor : $"url(#{fgGradId})";
@@ -74,6 +72,7 @@ public static class SvgQrRenderer {
                 var outY = y + opts.QuietZone;
                 var runStart = -1;
                 for (var x = 0; x < size; x++) {
+                    if (useFrame && IsInEye(x, y, size)) continue;
                     var dark = modules[x, y];
                     if (dark && runStart < 0) runStart = x;
                     if ((!dark || x == size - 1) && runStart >= 0) {

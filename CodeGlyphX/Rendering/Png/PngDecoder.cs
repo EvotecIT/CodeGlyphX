@@ -1,5 +1,6 @@
 using System;
 using System.Buffers;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 
@@ -30,7 +31,11 @@ internal static class PngDecoder {
         var filter = 0;
         var interlace = 0;
 
-        var idat = new MemoryStream();
+        var idatCount = 0;
+        var idatTotal = 0;
+        var singleIdatOffset = 0;
+        var singleIdatLength = 0;
+        List<(int Offset, int Length)>? idatSegments = null;
         byte[]? palette = null;
         byte[]? transparency = null;
         var localOffset = Signature.Length;
@@ -63,7 +68,18 @@ internal static class PngDecoder {
                 transparency = new byte[len];
                 Buffer.BlockCopy(png, dataOffset, transparency, 0, (int)len);
             } else if (MatchType(png, typeOffset, "IDAT")) {
-                idat.Write(png, dataOffset, (int)len);
+                var chunkLength = checked((int)len);
+                if (chunkLength > 0) {
+                    idatTotal = checked(idatTotal + chunkLength);
+                }
+                if (idatCount == 0) {
+                    singleIdatOffset = dataOffset;
+                    singleIdatLength = chunkLength;
+                } else {
+                    idatSegments ??= new List<(int, int)>(4) { (singleIdatOffset, singleIdatLength) };
+                    idatSegments.Add((dataOffset, chunkLength));
+                }
+                idatCount++;
             } else if (MatchType(png, typeOffset, "IEND")) {
                 break;
             }
@@ -106,11 +122,30 @@ internal static class PngDecoder {
             : GetAdam7ExpectedSize(width, height, bitDepth, channels);
         var scanlines = ArrayPool<byte>.Shared.Rent(expected);
 
-        if (idat.Length == 0) throw new FormatException("Missing IDAT.");
+        if (idatCount == 0 || idatTotal == 0) throw new FormatException("Missing IDAT.");
 
+        byte[]? idatBuffer = null;
+        Stream? idatStream = null;
         try {
-            idat.Position = 0;
-            using (var z = CreateZLibStream(idat)) {
+            if (idatCount == 1) {
+                idatStream = new MemoryStream(png, singleIdatOffset, singleIdatLength, writable: false);
+            } else {
+                idatBuffer = ArrayPool<byte>.Shared.Rent(idatTotal);
+                var writeOffset = 0;
+                if (idatSegments is not null) {
+                    for (var i = 0; i < idatSegments.Count; i++) {
+                        var segment = idatSegments[i];
+                        Buffer.BlockCopy(png, segment.Offset, idatBuffer, writeOffset, segment.Length);
+                        writeOffset += segment.Length;
+                    }
+                } else if (singleIdatLength > 0) {
+                    Buffer.BlockCopy(png, singleIdatOffset, idatBuffer, 0, singleIdatLength);
+                    writeOffset = singleIdatLength;
+                }
+                idatStream = new MemoryStream(idatBuffer, 0, idatTotal, writable: false);
+            }
+
+            using (var z = CreateZLibStream(idatStream)) {
                 ReadExact(z, scanlines, expected);
             }
 
@@ -120,6 +155,10 @@ internal static class PngDecoder {
 
             return ExpandToRgba(raw, width, height, colorType, bitDepth, palette, transparency);
         } finally {
+            idatStream?.Dispose();
+            if (idatBuffer is not null) {
+                ArrayPool<byte>.Shared.Return(idatBuffer);
+            }
             ArrayPool<byte>.Shared.Return(scanlines);
         }
     }
@@ -184,33 +223,38 @@ internal static class PngDecoder {
                 throw new FormatException("Invalid Adam7 scanline data.");
             }
 
-            var passRaw = new byte[checked(passHeight * passRowBytes)];
-            Unfilter(scanlines.Slice(offset, passExpected), passRaw, passRowBytes, passHeight, bytesPerPixel);
-            offset += passExpected;
+            var passRawLength = checked(passHeight * passRowBytes);
+            var passRaw = ArrayPool<byte>.Shared.Rent(passRawLength);
+            try {
+                Unfilter(scanlines.Slice(offset, passExpected), passRaw, passRowBytes, passHeight, bytesPerPixel);
+                offset += passExpected;
 
-            if (bitDepth >= 8) {
-                for (var y = 0; y < passHeight; y++) {
-                    var srcRow = y * passRowBytes;
-                    var dstY = pass.StartY + y * pass.StepY;
-                    var dstRow = dstY * rowBytes;
-                    for (var x = 0; x < passWidth; x++) {
-                        var src = srcRow + x * bytesPerPixel;
-                        var dstX = pass.StartX + x * pass.StepX;
-                        var dst = dstRow + dstX * bytesPerPixel;
-                        Buffer.BlockCopy(passRaw, src, raw, dst, bytesPerPixel);
+                if (bitDepth >= 8) {
+                    for (var y = 0; y < passHeight; y++) {
+                        var srcRow = y * passRowBytes;
+                        var dstY = pass.StartY + y * pass.StepY;
+                        var dstRow = dstY * rowBytes;
+                        for (var x = 0; x < passWidth; x++) {
+                            var src = srcRow + x * bytesPerPixel;
+                            var dstX = pass.StartX + x * pass.StepX;
+                            var dst = dstRow + dstX * bytesPerPixel;
+                            Buffer.BlockCopy(passRaw, src, raw, dst, bytesPerPixel);
+                        }
+                    }
+                } else {
+                    for (var y = 0; y < passHeight; y++) {
+                        var srcRow = y * passRowBytes;
+                        var dstY = pass.StartY + y * pass.StepY;
+                        var dstRow = dstY * rowBytes;
+                        for (var x = 0; x < passWidth; x++) {
+                            var sample = ReadPackedSample(passRaw, srcRow, x, bitDepth);
+                            var dstX = pass.StartX + x * pass.StepX;
+                            WritePackedSample(raw, dstRow, dstX, bitDepth, sample);
+                        }
                     }
                 }
-            } else {
-                for (var y = 0; y < passHeight; y++) {
-                    var srcRow = y * passRowBytes;
-                    var dstY = pass.StartY + y * pass.StepY;
-                    var dstRow = dstY * rowBytes;
-                    for (var x = 0; x < passWidth; x++) {
-                        var sample = ReadPackedSample(passRaw, srcRow, x, bitDepth);
-                        var dstX = pass.StartX + x * pass.StepX;
-                        WritePackedSample(raw, dstRow, dstX, bitDepth, sample);
-                    }
-                }
+            } finally {
+                ArrayPool<byte>.Shared.Return(passRaw);
             }
         }
 

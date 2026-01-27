@@ -122,6 +122,14 @@ public sealed partial class QrPngRenderOptions {
     }
 
     /// <summary>
+    /// Sets the PNG compression level (0 = stored/uncompressed, 1-9 = compressed).
+    /// </summary>
+    public QrPngRenderOptions WithPngCompressionLevel(int level) {
+        PngCompressionLevel = level;
+        return this;
+    }
+
+    /// <summary>
     /// Sets the logo overlay options.
     /// </summary>
     public QrPngRenderOptions WithLogo(QrPngLogoOptions? logo) {
@@ -176,6 +184,14 @@ public sealed partial class MatrixPngRenderOptions {
     /// </summary>
     public MatrixPngRenderOptions WithBackground(Rgba32 color) {
         Background = color;
+        return this;
+    }
+
+    /// <summary>
+    /// Sets the PNG compression level (0 = stored/uncompressed, 1-9 = compressed).
+    /// </summary>
+    public MatrixPngRenderOptions WithPngCompressionLevel(int level) {
+        PngCompressionLevel = level;
         return this;
     }
 }
@@ -250,6 +266,14 @@ public sealed partial class BarcodePngRenderOptions {
     /// </summary>
     public BarcodePngRenderOptions WithLabelColor(Rgba32 color) {
         LabelColor = color;
+        return this;
+    }
+
+    /// <summary>
+    /// Sets the PNG compression level (0 = stored/uncompressed, 1-9 = compressed).
+    /// </summary>
+    public BarcodePngRenderOptions WithPngCompressionLevel(int level) {
+        PngCompressionLevel = level;
         return this;
     }
 }

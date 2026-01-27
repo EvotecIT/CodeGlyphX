@@ -35,5 +35,13 @@ public enum QrPayloadType {
     /// <summary>Bookmark payload.</summary>
     Bookmark,
     /// <summary>PayPal payment payload.</summary>
-    PayPal
+    PayPal,
+    /// <summary>Crypto/payment URI payload.</summary>
+    Crypto,
+    /// <summary>EMVCo merchant-presented payment payload.</summary>
+    EmvCoMerchant,
+    /// <summary>Lightning payment invoice (BOLT11/12).</summary>
+    Lightning,
+    /// <summary>EIP-681 Ethereum payment request.</summary>
+    Eip681
 }

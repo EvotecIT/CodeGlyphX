@@ -80,6 +80,14 @@ public sealed partial class QrPixelDecodeOptions {
     }
 
     /// <summary>
+    /// Enables or disables stylized sampling for QR art.
+    /// </summary>
+    public QrPixelDecodeOptions WithStylizedSampling(bool enabled = true) {
+        StylizedSampling = enabled;
+        return this;
+    }
+
+    /// <summary>
     /// Enables tile-based scanning for multiple QR codes.
     /// </summary>
     public QrPixelDecodeOptions WithTileScan(bool enabled = true, int tileGrid = 0) {
