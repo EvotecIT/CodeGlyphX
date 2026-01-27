@@ -11,6 +11,10 @@ internal static class WebpVp8Decoder {
     private const int DimensionBytes = 4;
     private const int MinimumHeaderBytes = FrameTagBytes + StartCodeBytes + DimensionBytes; // 10
     private const int KeyframeHeaderBytes = StartCodeBytes + DimensionBytes; // 7
+    private const int SegmentCount = 4;
+    private const int SegmentProbCount = 3;
+    private const int LoopFilterDeltaCount = 4;
+    private const int QuantDeltaCount = 5;
 
     internal static bool TryDecode(ReadOnlySpan<byte> payload, out byte[] rgba, out int width, out int height) {
         rgba = Array.Empty<byte>();
@@ -19,6 +23,7 @@ internal static class WebpVp8Decoder {
 
         if (!TryReadHeader(payload, out var header)) return false;
         _ = TryReadControlHeader(payload, out _);
+        _ = TryReadFrameHeader(payload, out _);
 
         // Parsing-only scaffold for now.
         width = header.Width;
@@ -90,6 +95,47 @@ internal static class WebpVp8Decoder {
         if (boolData.Length < 2) return false;
 
         var decoder = new WebpVp8BoolDecoder(boolData);
+        return TryReadControlHeader(decoder, out controlHeader);
+    }
+
+    internal static bool TryReadFrameHeader(ReadOnlySpan<byte> payload, out WebpVp8FrameHeader frameHeader) {
+        frameHeader = default;
+        if (!TryGetBoolCodedData(payload, out var boolData)) return false;
+        if (boolData.Length < 2) return false;
+
+        var decoder = new WebpVp8BoolDecoder(boolData);
+        if (!TryReadControlHeader(decoder, out var controlHeader)) return false;
+        if (!TryReadSegmentation(decoder, out var segmentation)) return false;
+        if (!TryReadLoopFilter(decoder, out var loopFilter)) return false;
+
+        if (!decoder.TryReadLiteral(2, out var partitionBits)) return false;
+        if (partitionBits < 0 || partitionBits > 3) return false;
+        var dctPartitionCount = 1 << partitionBits;
+
+        if (!TryReadQuantization(decoder, out var quantization)) return false;
+        if (!decoder.TryReadBool(128, out var refreshEntropyProbsBit)) return false;
+        if (!decoder.TryReadBool(128, out var noCoefficientSkipBit)) return false;
+
+        var skipProbability = 0;
+        if (noCoefficientSkipBit) {
+            if (!decoder.TryReadLiteral(8, out skipProbability)) return false;
+        }
+
+        frameHeader = new WebpVp8FrameHeader(
+            controlHeader,
+            segmentation,
+            loopFilter,
+            quantization,
+            dctPartitionCount,
+            refreshEntropyProbsBit,
+            noCoefficientSkipBit,
+            skipProbability,
+            decoder.BytesConsumed);
+        return true;
+    }
+
+    private static bool TryReadControlHeader(WebpVp8BoolDecoder decoder, out WebpVp8ControlHeader controlHeader) {
+        controlHeader = default;
         if (!decoder.TryReadBool(probability: 128, out var colorSpaceBit)) return false;
         if (!decoder.TryReadBool(probability: 128, out var clampTypeBit)) return false;
 
@@ -97,6 +143,140 @@ internal static class WebpVp8Decoder {
             colorSpaceBit ? 1 : 0,
             clampTypeBit ? 1 : 0,
             decoder.BytesConsumed);
+        return true;
+    }
+
+    private static bool TryReadSegmentation(WebpVp8BoolDecoder decoder, out WebpVp8Segmentation segmentation) {
+        segmentation = default;
+        if (!decoder.TryReadBool(128, out var segmentationEnabledBit)) return false;
+
+        var enabled = segmentationEnabledBit;
+        var updateMap = false;
+        var updateData = false;
+        var absoluteDeltas = false;
+        var quantizerDeltas = new int[SegmentCount];
+        var filterDeltas = new int[SegmentCount];
+        var segmentProbabilities = new int[SegmentProbCount];
+
+        for (var i = 0; i < segmentProbabilities.Length; i++) {
+            segmentProbabilities[i] = -1;
+        }
+
+        if (enabled) {
+            if (!decoder.TryReadBool(128, out var updateMapBit)) return false;
+            if (!decoder.TryReadBool(128, out var updateDataBit)) return false;
+            updateMap = updateMapBit;
+            updateData = updateDataBit;
+
+            if (updateData) {
+                if (!decoder.TryReadBool(128, out var absoluteDeltasBit)) return false;
+                absoluteDeltas = absoluteDeltasBit;
+
+                for (var i = 0; i < SegmentCount; i++) {
+                    if (!decoder.TryReadBool(128, out var updateQuantizerBit)) return false;
+                    if (updateQuantizerBit) {
+                        if (!decoder.TryReadSignedLiteral(7, out quantizerDeltas[i])) return false;
+                    }
+                }
+
+                for (var i = 0; i < SegmentCount; i++) {
+                    if (!decoder.TryReadBool(128, out var updateFilterBit)) return false;
+                    if (updateFilterBit) {
+                        if (!decoder.TryReadSignedLiteral(6, out filterDeltas[i])) return false;
+                    }
+                }
+            }
+
+            if (updateMap) {
+                for (var i = 0; i < SegmentProbCount; i++) {
+                    if (!decoder.TryReadBool(128, out var updateProbabilityBit)) return false;
+                    if (updateProbabilityBit) {
+                        if (!decoder.TryReadLiteral(8, out segmentProbabilities[i])) return false;
+                    }
+                }
+            }
+        }
+
+        segmentation = new WebpVp8Segmentation(
+            enabled,
+            updateMap,
+            updateData,
+            absoluteDeltas,
+            quantizerDeltas,
+            filterDeltas,
+            segmentProbabilities);
+        return true;
+    }
+
+    private static bool TryReadLoopFilter(WebpVp8BoolDecoder decoder, out WebpVp8LoopFilter loopFilter) {
+        loopFilter = default;
+        if (!decoder.TryReadBool(128, out var filterTypeBit)) return false;
+        if (!decoder.TryReadLiteral(6, out var level)) return false;
+        if (!decoder.TryReadLiteral(3, out var sharpness)) return false;
+        if (level < 0 || level > 63) return false;
+        if (sharpness < 0 || sharpness > 7) return false;
+
+        if (!decoder.TryReadBool(128, out var deltaEnabledBit)) return false;
+        var deltaEnabled = deltaEnabledBit;
+        var deltaUpdate = false;
+        var refDeltas = new int[LoopFilterDeltaCount];
+        var refDeltasUpdated = new bool[LoopFilterDeltaCount];
+        var modeDeltas = new int[LoopFilterDeltaCount];
+        var modeDeltasUpdated = new bool[LoopFilterDeltaCount];
+
+        if (deltaEnabled) {
+            if (!decoder.TryReadBool(128, out var deltaUpdateBit)) return false;
+            deltaUpdate = deltaUpdateBit;
+
+            if (deltaUpdate) {
+                for (var i = 0; i < LoopFilterDeltaCount; i++) {
+                    if (!decoder.TryReadBool(128, out var updateRefDeltaBit)) return false;
+                    if (updateRefDeltaBit) {
+                        if (!decoder.TryReadSignedLiteral(6, out refDeltas[i])) return false;
+                        refDeltasUpdated[i] = true;
+                    }
+                }
+
+                for (var i = 0; i < LoopFilterDeltaCount; i++) {
+                    if (!decoder.TryReadBool(128, out var updateModeDeltaBit)) return false;
+                    if (updateModeDeltaBit) {
+                        if (!decoder.TryReadSignedLiteral(6, out modeDeltas[i])) return false;
+                        modeDeltasUpdated[i] = true;
+                    }
+                }
+            }
+        }
+
+        loopFilter = new WebpVp8LoopFilter(
+            filterTypeBit ? 1 : 0,
+            level,
+            sharpness,
+            deltaEnabled,
+            deltaUpdate,
+            refDeltas,
+            refDeltasUpdated,
+            modeDeltas,
+            modeDeltasUpdated);
+        return true;
+    }
+
+    private static bool TryReadQuantization(WebpVp8BoolDecoder decoder, out WebpVp8Quantization quantization) {
+        quantization = default;
+        if (!decoder.TryReadLiteral(7, out var baseQIndex)) return false;
+        if (baseQIndex < 0 || baseQIndex > 127) return false;
+
+        var deltas = new int[QuantDeltaCount];
+        var deltasUpdated = new bool[QuantDeltaCount];
+
+        for (var i = 0; i < QuantDeltaCount; i++) {
+            if (!decoder.TryReadBool(128, out var updateDeltaBit)) return false;
+            if (updateDeltaBit) {
+                if (!decoder.TryReadSignedLiteral(4, out deltas[i])) return false;
+                deltasUpdated[i] = true;
+            }
+        }
+
+        quantization = new WebpVp8Quantization(baseQIndex, deltas, deltasUpdated);
         return true;
     }
 
@@ -152,5 +332,110 @@ internal readonly struct WebpVp8ControlHeader {
 
     public int ColorSpace { get; }
     public int ClampType { get; }
+    public int BytesConsumed { get; }
+}
+
+internal readonly struct WebpVp8Segmentation {
+    public WebpVp8Segmentation(
+        bool enabled,
+        bool updateMap,
+        bool updateData,
+        bool absoluteDeltas,
+        int[] quantizerDeltas,
+        int[] filterDeltas,
+        int[] segmentProbabilities) {
+        Enabled = enabled;
+        UpdateMap = updateMap;
+        UpdateData = updateData;
+        AbsoluteDeltas = absoluteDeltas;
+        QuantizerDeltas = quantizerDeltas;
+        FilterDeltas = filterDeltas;
+        SegmentProbabilities = segmentProbabilities;
+    }
+
+    public bool Enabled { get; }
+    public bool UpdateMap { get; }
+    public bool UpdateData { get; }
+    public bool AbsoluteDeltas { get; }
+    public int[] QuantizerDeltas { get; }
+    public int[] FilterDeltas { get; }
+    public int[] SegmentProbabilities { get; }
+}
+
+internal readonly struct WebpVp8LoopFilter {
+    public WebpVp8LoopFilter(
+        int filterType,
+        int level,
+        int sharpness,
+        bool deltaEnabled,
+        bool deltaUpdate,
+        int[] refDeltas,
+        bool[] refDeltasUpdated,
+        int[] modeDeltas,
+        bool[] modeDeltasUpdated) {
+        FilterType = filterType;
+        Level = level;
+        Sharpness = sharpness;
+        DeltaEnabled = deltaEnabled;
+        DeltaUpdate = deltaUpdate;
+        RefDeltas = refDeltas;
+        RefDeltasUpdated = refDeltasUpdated;
+        ModeDeltas = modeDeltas;
+        ModeDeltasUpdated = modeDeltasUpdated;
+    }
+
+    public int FilterType { get; }
+    public int Level { get; }
+    public int Sharpness { get; }
+    public bool DeltaEnabled { get; }
+    public bool DeltaUpdate { get; }
+    public int[] RefDeltas { get; }
+    public bool[] RefDeltasUpdated { get; }
+    public int[] ModeDeltas { get; }
+    public bool[] ModeDeltasUpdated { get; }
+}
+
+internal readonly struct WebpVp8Quantization {
+    public WebpVp8Quantization(int baseQIndex, int[] deltas, bool[] deltasUpdated) {
+        BaseQIndex = baseQIndex;
+        Deltas = deltas;
+        DeltasUpdated = deltasUpdated;
+    }
+
+    public int BaseQIndex { get; }
+    public int[] Deltas { get; }
+    public bool[] DeltasUpdated { get; }
+}
+
+internal readonly struct WebpVp8FrameHeader {
+    public WebpVp8FrameHeader(
+        WebpVp8ControlHeader controlHeader,
+        WebpVp8Segmentation segmentation,
+        WebpVp8LoopFilter loopFilter,
+        WebpVp8Quantization quantization,
+        int dctPartitionCount,
+        bool refreshEntropyProbs,
+        bool noCoefficientSkip,
+        int skipProbability,
+        int bytesConsumed) {
+        ControlHeader = controlHeader;
+        Segmentation = segmentation;
+        LoopFilter = loopFilter;
+        Quantization = quantization;
+        DctPartitionCount = dctPartitionCount;
+        RefreshEntropyProbs = refreshEntropyProbs;
+        NoCoefficientSkip = noCoefficientSkip;
+        SkipProbability = skipProbability;
+        BytesConsumed = bytesConsumed;
+    }
+
+    public WebpVp8ControlHeader ControlHeader { get; }
+    public WebpVp8Segmentation Segmentation { get; }
+    public WebpVp8LoopFilter LoopFilter { get; }
+    public WebpVp8Quantization Quantization { get; }
+    public int DctPartitionCount { get; }
+    public bool RefreshEntropyProbs { get; }
+    public bool NoCoefficientSkip { get; }
+    public int SkipProbability { get; }
     public int BytesConsumed { get; }
 }

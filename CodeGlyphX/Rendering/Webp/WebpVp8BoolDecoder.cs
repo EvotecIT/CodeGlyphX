@@ -79,6 +79,49 @@ internal sealed class WebpVp8BoolDecoder
         return true;
     }
 
+    public bool TryReadLiteral(int bits, out int value)
+    {
+        value = 0;
+        if (bits <= 0 || bits > 31)
+        {
+            return false;
+        }
+
+        var result = 0;
+        for (var i = bits - 1; i >= 0; i--)
+        {
+            if (!TryReadBool(probability: 128, out var bit))
+            {
+                return false;
+            }
+
+            if (bit)
+            {
+                result |= 1 << i;
+            }
+        }
+
+        value = result;
+        return true;
+    }
+
+    public bool TryReadSignedLiteral(int bits, out int value)
+    {
+        value = 0;
+        if (!TryReadLiteral(bits, out var magnitude))
+        {
+            return false;
+        }
+
+        if (!TryReadBool(probability: 128, out var signBit))
+        {
+            return false;
+        }
+
+        value = signBit ? -magnitude : magnitude;
+        return true;
+    }
+
     private int ReadByte()
     {
         if (_offset >= _data.Length)
