@@ -8,7 +8,7 @@ public sealed class WebpVp8TokenScaffoldTests
     [Fact]
     public void TryReadTokenScaffold_ValidPayload_ReadsScaffoldTokensPerPartition()
     {
-        const int expectedTokensPerPartition = 4;
+        const int expectedTokensPerPartition = 8;
         var boolData = CreateBoolData(length: 4096);
         var firstPartitionOnly = BuildKeyframePayload(width: 72, height: 48, boolData);
         Assert.True(WebpVp8Decoder.TryReadFrameHeader(firstPartitionOnly, out var frameHeader));
@@ -133,4 +133,3 @@ public sealed class WebpVp8TokenScaffoldTests
         return sum;
     }
 }
-

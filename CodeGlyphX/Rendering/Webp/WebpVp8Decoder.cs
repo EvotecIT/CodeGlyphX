@@ -20,8 +20,16 @@ internal static class WebpVp8Decoder {
     private const int CoeffPrevContexts = 3;
     private const int CoeffEntropyNodes = 11;
     private const int CoeffUpdateProbability = 128;
-    private const int TokenScaffoldTokensPerPartition = 4;
+    private const int CoefficientsPerBlock = 16;
+    private const int TokenScaffoldTokensPerPartition = 8;
     private const int TokenScaffoldTreeDepth = 3;
+    private static readonly int[] CoeffBandTable = new[]
+    {
+        0, 1, 2, 3,
+        6, 4, 5, 6,
+        6, 6, 6, 6,
+        6, 7, 7, 7,
+    };
 
     internal static bool TryDecode(ReadOnlySpan<byte> payload, out byte[] rgba, out int width, out int height) {
         rgba = Array.Empty<byte>();
@@ -252,7 +260,14 @@ internal static class WebpVp8Decoder {
             var tokens = new int[TokenScaffoldTokensPerPartition];
             var tokensRead = 0;
             for (var t = 0; t < tokens.Length; t++) {
-                if (!TryReadScaffoldCoefficientToken(decoder, frameHeader.CoefficientProbabilities, out var tokenCode)) {
+                var coefficientIndex = t % CoefficientsPerBlock;
+                var band = CoeffBandTable[coefficientIndex];
+                if (!TryReadScaffoldCoefficientToken(
+                    decoder,
+                    frameHeader.CoefficientProbabilities,
+                    band,
+                    prevContext: 0,
+                    out var tokenCode)) {
                     return false;
                 }
 
@@ -460,12 +475,14 @@ internal static class WebpVp8Decoder {
     private static bool TryReadScaffoldCoefficientToken(
         WebpVp8BoolDecoder decoder,
         WebpVp8CoefficientProbabilities probabilities,
+        int band,
+        int prevContext,
         out int tokenCode) {
         tokenCode = 0;
         var code = 0;
 
         for (var depth = 0; depth < TokenScaffoldTreeDepth; depth++) {
-            var index = GetCoeffIndex(blockType: 0, band: 0, prev: 0, node: depth);
+            var index = GetCoeffIndex(blockType: 0, band, prevContext, node: depth);
             var probability = probabilities.Probabilities[index];
             if ((uint)probability > 255) return false;
             if (!decoder.TryReadBool(probability, out var bit)) return false;
