@@ -193,7 +193,13 @@ public sealed class WebpManagedEncodeTests {
         var hasTransform = reader.ReadBits(1);
         Assert.True(hasTransform == 0 || hasTransform == 1);
         if (hasTransform == 1) {
-            Assert.Equal(0, reader.ReadBits(2)); // predictor transform
+            var firstTransform = reader.ReadBits(2);
+            if (firstTransform == 2) {
+                Assert.Equal(1, reader.ReadBits(1)); // another transform follows
+                Assert.Equal(0, reader.ReadBits(2)); // predictor transform
+            } else {
+                Assert.Equal(0, firstTransform); // predictor transform
+            }
         }
     }
 

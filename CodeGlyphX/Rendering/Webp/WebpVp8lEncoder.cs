@@ -178,6 +178,10 @@ internal static class WebpVp8lEncoder {
         var pixelCount = checked(width * height);
         var pixels = new int[pixelCount];
         FillArgbPixels(rgba, width, height, stride, pixels);
+        var useSubtractGreen = ShouldApplySubtractGreen(pixels);
+        if (useSubtractGreen) {
+            ApplySubtractGreen(pixels);
+        }
 
         var modes = ChoosePredictorModes(pixels, width, height, sizeBits, transformWidth, transformHeight);
         var predictorRgba = BuildPredictorImage(modes, transformWidth, transformHeight);
@@ -193,8 +197,13 @@ internal static class WebpVp8lEncoder {
         var writer = new WebpBitWriter();
         WriteHeader(writer, width, height, alphaUsed);
 
-        // Transform section: predictor transform with embedded predictor image.
+        // Transform section: optional subtract-green, then predictor transform.
         writer.WriteBits(1, 1); // has transform
+        if (useSubtractGreen) {
+            writer.WriteBits(2, 2); // subtract-green transform
+            writer.WriteBits(1, 1); // another transform follows
+        }
+
         writer.WriteBits(0, 2); // predictor transform
         writer.WriteBits(sizeBits - 2, 3);
         writer.Append(predictorWriter);
@@ -474,6 +483,39 @@ internal static class WebpVp8lEncoder {
         }
 
         return modes;
+    }
+
+    private static bool ShouldApplySubtractGreen(int[] pixels) {
+        if (pixels.Length == 0) return false;
+
+        const int sampleLimit = 4096;
+        var uniqueOriginal = new HashSet<int>();
+        var uniqueTransformed = new HashSet<int>();
+
+        var step = pixels.Length <= sampleLimit ? 1 : Math.Max(1, pixels.Length / sampleLimit);
+        for (var i = 0; i < pixels.Length; i += step) {
+            var pixel = pixels[i];
+            uniqueOriginal.Add(pixel);
+            uniqueTransformed.Add(ApplySubtractGreen(pixel));
+        }
+
+        return uniqueTransformed.Count + 4 < uniqueOriginal.Count;
+    }
+
+    private static void ApplySubtractGreen(int[] pixels) {
+        for (var i = 0; i < pixels.Length; i++) {
+            pixels[i] = ApplySubtractGreen(pixels[i]);
+        }
+    }
+
+    private static int ApplySubtractGreen(int pixel) {
+        var a = (byte)(pixel >> 24);
+        var r = (byte)(pixel >> 16);
+        var g = (byte)(pixel >> 8);
+        var b = (byte)pixel;
+        r = (byte)(r - g);
+        b = (byte)(b - g);
+        return PackArgb(r, g, b, a);
     }
 
     private static byte[] BuildPredictorImage(int[] modes, int width, int height) {
