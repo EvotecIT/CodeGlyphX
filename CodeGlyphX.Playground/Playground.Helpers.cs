@@ -127,6 +127,8 @@ public partial class Playground {
         {
             "Grid" => QrPngBackgroundPatternType.Grid,
             "Checker" => QrPngBackgroundPatternType.Checker,
+            "DiagonalStripes" => QrPngBackgroundPatternType.DiagonalStripes,
+            "Crosshatch" => QrPngBackgroundPatternType.Crosshatch,
             _ => QrPngBackgroundPatternType.Dots
         };
     }

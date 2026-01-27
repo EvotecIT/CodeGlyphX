@@ -27,6 +27,21 @@ public sealed class QrPngForegroundPatternOptions {
     public int ThicknessPx { get; set; } = 1;
 
     /// <summary>
+    /// Random seed used by jittered pattern variants such as <see cref="QrPngForegroundPatternType.SpeckleDots"/>.
+    /// </summary>
+    public int Seed { get; set; }
+
+    /// <summary>
+    /// Variation amount (0..1) used by jittered pattern variants.
+    /// </summary>
+    public double Variation { get; set; } = 0.65;
+
+    /// <summary>
+    /// Dot density (0..1) used by jittered pattern variants.
+    /// </summary>
+    public double Density { get; set; } = 0.9;
+
+    /// <summary>
     /// When true, pattern cell size snaps to a multiple of the QR module size.
     /// </summary>
     public bool SnapToModuleSize { get; set; }
@@ -50,6 +65,7 @@ public sealed class QrPngForegroundPatternOptions {
         if (SizePx <= 0) throw new ArgumentOutOfRangeException(nameof(SizePx));
         if (ThicknessPx < 0) throw new ArgumentOutOfRangeException(nameof(ThicknessPx));
         if (ModuleStep <= 0) throw new ArgumentOutOfRangeException(nameof(ModuleStep));
+        if (Variation is < 0 or > 1.0) throw new ArgumentOutOfRangeException(nameof(Variation));
+        if (Density is < 0 or > 1.0) throw new ArgumentOutOfRangeException(nameof(Density));
     }
 }
-

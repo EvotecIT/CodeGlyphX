@@ -1,7 +1,7 @@
 {
   "windows": {
     "quick": {
-      "generatedUtc": "2026-01-24T11:41:47.0013230Z",
+      "generatedUtc": "2026-01-24T11:41:47.001323Z",
       "schemaVersion": 1,
       "os": "windows",
       "framework": "net8.0",
@@ -943,54 +943,36 @@
   },
   "linux": {
     "quick": {
-      "generatedUtc": "2026-01-22T23:04:32.829577+01:00",
+      "generatedUtc": "2026-01-27T14:16:09.1385475Z",
       "schemaVersion": 1,
       "os": "linux",
       "framework": "net8.0",
       "configuration": "Release",
       "runMode": "quick",
       "runModeDetails": "Run mode: Quick (warmupCount=1, iterationCount=3, invocationCount=1).",
+      "runModeSource": "explicit",
       "publish": false,
-      "artifacts": "/mnt/c/Support/GitHub/CodeMatrix/Build/BenchmarkResults/linux-20260122-230352",
+      "artifacts": "/tmp/cgx-psquick-smoke/linux-20260127-151049",
       "meta": {
         "commit": null,
         "branch": null,
-        "dotnetSdk": null,
-        "runtime": null,
-        "osDescription": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
-        "osArchitecture": "x86_64",
-        "processArchitecture": "x86_64",
+        "dotnetSdk": "10.0.100",
+        "runtime": ".NET 9.0.10",
+        "osDescription": "Ubuntu 24.04.3 LTS",
+        "osArchitecture": "X64",
+        "processArchitecture": "X64",
         "machineName": "EVOMONSTER",
         "processorCount": 32
       },
-      "missingComparisons": [
-        "Aztec (Encode)",
-        "Code 128 (Encode)",
-        "Code 39 (Encode)",
-        "Code 93 (Encode)",
-        "Data Matrix (Encode)",
-        "EAN-13 (Encode)",
-        "PDF417 (Encode)",
-        "QR (Encode)",
-        "UPC-A (Encode)"
-      ],
-      "missingComparisonIds": [
-        "AztecCompareBenchmarks",
-        "Code128CompareBenchmarks",
-        "Code39CompareBenchmarks",
-        "Code93CompareBenchmarks",
-        "DataMatrixCompareBenchmarks",
-        "EanCompareBenchmarks",
-        "Pdf417CompareBenchmarks",
-        "QrCompareBenchmarks",
-        "UpcACompareBenchmarks"
-      ],
+      "missingComparisons": [],
+      "missingComparisonIds": [],
       "howToRead": [
         "Mean: average time per operation. Lower is better.",
         "Allocated: managed memory allocated per operation. Lower is better.",
-        "CodeGlyphX vs Fastest: CodeGlyphX mean divided by the fastest mean for that scenario. 1 x means CodeGlyphX is fastest; 1.5 x means ~50% slower.",
-        "CodeGlyphX Alloc vs Fastest: CodeGlyphX allocated divided by the fastest allocation for that scenario. 1 x means CodeGlyphX allocates the least; higher is more allocations.",
+        "CodeGlyphX vs Fastest: CodeGlyphX mean divided by the fastest mean for that scenario. 1 x (fastest) means CodeGlyphX is fastest; 1.5 x means ~50% slower.",
+        "CodeGlyphX Alloc vs Fastest: CodeGlyphX allocated divided by the allocation of the fastest-time vendor for that scenario. Lower than 1 x means fewer allocations than the fastest-time vendor.",
         "Rating: good/ok/bad based on time + allocation ratios (good <=1.1x and <=1.25x alloc, ok <=1.5x and <=2.0x alloc).",
+        "Δ lines in comparison tables show vendor ratios vs CodeGlyphX (time / alloc).",
         "Quick runs use fewer iterations for fast feedback; Full runs use BenchmarkDotNet defaults and are recommended for publishing."
       ],
       "notes": [
@@ -1001,9 +983,516 @@
         "Barcoder uses Barcoder.Renderer.Image (ImageSharp renderer).",
         "QRCoder uses PngByteQRCode (managed PNG output, no external renderer).",
         "QR decode comparisons use raw RGBA32 bytes (ZXing via RGBLuminanceSource).",
-        "QR decode clean uses CodeGlyphX Balanced; noisy uses CodeGlyphX Robust with aggressive sampling/limits; ZXing uses default (clean) and TryHarder (noisy)."
+        "QR decode clean uses CodeGlyphX Balanced; noisy uses CodeGlyphX Robust with aggressive sampling/limits; ZXing uses default (clean) and TryHarder (noisy).",
+        "QR pack runner (quick): CodeGlyphX expected=98 % (misses: art-jess3-grid)"
       ],
-      "summary": []
+      "summary": [
+        {
+          "codeGlyphXAlloc": "61.34 KB",
+          "fastestVendor": "CodeGlyphX",
+          "codeGlyphXLeadOverRunnerUpText": "",
+          "codeGlyphXLeadOverRunnerUp": null,
+          "benchmark": "Aztec (Encode)",
+          "runnerUpMean": null,
+          "deltas": {
+            "ZXing.Net": "",
+            "Barcoder": "",
+            "QRCoder": ""
+          },
+          "codeGlyphXAllocVsFastest": 1.0,
+          "codeGlyphXVsFastestText": "1 x (fastest)",
+          "fastestMean": "270.8 μs",
+          "scenario": "Aztec PNG",
+          "runnerUpVendor": null,
+          "vendors": {
+            "CodeGlyphX": {
+              "meanNs": 270800.0,
+              "mean": "270.8 μs",
+              "allocated": "61.34 KB"
+            }
+          },
+          "codeGlyphXMean": "270.8 μs",
+          "rating": "good",
+          "codeGlyphXAllocVsFastestText": "1 x",
+          "codeGlyphXVsFastest": 1.0
+        },
+        {
+          "codeGlyphXAlloc": "14.44 KB",
+          "fastestVendor": "CodeGlyphX",
+          "codeGlyphXLeadOverRunnerUpText": "",
+          "codeGlyphXLeadOverRunnerUp": null,
+          "benchmark": "Code 128 (Encode)",
+          "runnerUpMean": null,
+          "deltas": {
+            "ZXing.Net": "",
+            "Barcoder": "",
+            "QRCoder": ""
+          },
+          "codeGlyphXAllocVsFastest": 1.0,
+          "codeGlyphXVsFastestText": "1 x (fastest)",
+          "fastestMean": "150.3 μs",
+          "scenario": "Code128 PNG",
+          "runnerUpVendor": null,
+          "vendors": {
+            "CodeGlyphX": {
+              "meanNs": 150300.0,
+              "mean": "150.3 μs",
+              "allocated": "14.44 KB"
+            }
+          },
+          "codeGlyphXMean": "150.3 μs",
+          "rating": "good",
+          "codeGlyphXAllocVsFastestText": "1 x",
+          "codeGlyphXVsFastest": 1.0
+        },
+        {
+          "codeGlyphXAlloc": "10.02 KB",
+          "fastestVendor": "CodeGlyphX",
+          "codeGlyphXLeadOverRunnerUpText": "",
+          "codeGlyphXLeadOverRunnerUp": null,
+          "benchmark": "Code 39 (Encode)",
+          "runnerUpMean": null,
+          "deltas": {
+            "ZXing.Net": "",
+            "Barcoder": "",
+            "QRCoder": ""
+          },
+          "codeGlyphXAllocVsFastest": 1.0,
+          "codeGlyphXVsFastestText": "1 x (fastest)",
+          "fastestMean": "128.0 μs",
+          "scenario": "Code39 PNG",
+          "runnerUpVendor": null,
+          "vendors": {
+            "CodeGlyphX": {
+              "meanNs": 128000.0,
+              "mean": "128.0 μs",
+              "allocated": "10.02 KB"
+            }
+          },
+          "codeGlyphXMean": "128.0 μs",
+          "rating": "good",
+          "codeGlyphXAllocVsFastestText": "1 x",
+          "codeGlyphXVsFastest": 1.0
+        },
+        {
+          "codeGlyphXAlloc": "8.14 KB",
+          "fastestVendor": "CodeGlyphX",
+          "codeGlyphXLeadOverRunnerUpText": "",
+          "codeGlyphXLeadOverRunnerUp": null,
+          "benchmark": "Code 93 (Encode)",
+          "runnerUpMean": null,
+          "deltas": {
+            "ZXing.Net": "",
+            "Barcoder": "",
+            "QRCoder": ""
+          },
+          "codeGlyphXAllocVsFastest": 1.0,
+          "codeGlyphXVsFastestText": "1 x (fastest)",
+          "fastestMean": "144.5 μs",
+          "scenario": "Code93 PNG",
+          "runnerUpVendor": null,
+          "vendors": {
+            "CodeGlyphX": {
+              "meanNs": 144500.0,
+              "mean": "144.5 μs",
+              "allocated": "8.14 KB"
+            }
+          },
+          "codeGlyphXMean": "144.5 μs",
+          "rating": "good",
+          "codeGlyphXAllocVsFastestText": "1 x",
+          "codeGlyphXVsFastest": 1.0
+        },
+        {
+          "codeGlyphXAlloc": "15.53 KB",
+          "fastestVendor": "CodeGlyphX",
+          "codeGlyphXLeadOverRunnerUpText": "",
+          "codeGlyphXLeadOverRunnerUp": null,
+          "benchmark": "Data Matrix (Encode)",
+          "runnerUpMean": null,
+          "deltas": {
+            "ZXing.Net": "",
+            "Barcoder": "",
+            "QRCoder": ""
+          },
+          "codeGlyphXAllocVsFastest": 1.0,
+          "codeGlyphXVsFastestText": "1 x (fastest)",
+          "fastestMean": "200.9 μs",
+          "scenario": "Data Matrix PNG (medium)",
+          "runnerUpVendor": null,
+          "vendors": {
+            "CodeGlyphX": {
+              "meanNs": 200900.0,
+              "mean": "200.9 μs",
+              "allocated": "15.53 KB"
+            }
+          },
+          "codeGlyphXMean": "200.9 μs",
+          "rating": "good",
+          "codeGlyphXAllocVsFastestText": "1 x",
+          "codeGlyphXVsFastest": 1.0
+        },
+        {
+          "codeGlyphXAlloc": "6.85 KB",
+          "fastestVendor": "CodeGlyphX",
+          "codeGlyphXLeadOverRunnerUpText": "",
+          "codeGlyphXLeadOverRunnerUp": null,
+          "benchmark": "EAN-13 (Encode)",
+          "runnerUpMean": null,
+          "deltas": {
+            "ZXing.Net": "",
+            "Barcoder": "",
+            "QRCoder": ""
+          },
+          "codeGlyphXAllocVsFastest": 1.0,
+          "codeGlyphXVsFastestText": "1 x (fastest)",
+          "fastestMean": "168.9 μs",
+          "scenario": "EAN-13 PNG",
+          "runnerUpVendor": null,
+          "vendors": {
+            "CodeGlyphX": {
+              "meanNs": 168900.0,
+              "mean": "168.9 μs",
+              "allocated": "6.85 KB"
+            }
+          },
+          "codeGlyphXMean": "168.9 μs",
+          "rating": "good",
+          "codeGlyphXAllocVsFastestText": "1 x",
+          "codeGlyphXVsFastest": 1.0
+        },
+        {
+          "codeGlyphXAlloc": "49.91 KB",
+          "fastestVendor": "CodeGlyphX",
+          "codeGlyphXLeadOverRunnerUpText": "",
+          "codeGlyphXLeadOverRunnerUp": null,
+          "benchmark": "PDF417 (Encode)",
+          "runnerUpMean": null,
+          "deltas": {
+            "ZXing.Net": "",
+            "Barcoder": "",
+            "QRCoder": ""
+          },
+          "codeGlyphXAllocVsFastest": 1.0,
+          "codeGlyphXVsFastestText": "1 x (fastest)",
+          "fastestMean": "907.9 μs",
+          "scenario": "PDF417 PNG",
+          "runnerUpVendor": null,
+          "vendors": {
+            "CodeGlyphX": {
+              "meanNs": 907900.0,
+              "mean": "907.9 μs",
+              "allocated": "49.91 KB"
+            }
+          },
+          "codeGlyphXMean": "907.9 μs",
+          "rating": "good",
+          "codeGlyphXAllocVsFastestText": "1 x",
+          "codeGlyphXVsFastest": 1.0
+        },
+        {
+          "codeGlyphXAlloc": "14.27 KB",
+          "fastestVendor": "CodeGlyphX",
+          "codeGlyphXLeadOverRunnerUpText": "",
+          "codeGlyphXLeadOverRunnerUp": null,
+          "benchmark": "QR (Encode)",
+          "runnerUpMean": null,
+          "deltas": {
+            "ZXing.Net": "",
+            "Barcoder": "",
+            "QRCoder": ""
+          },
+          "codeGlyphXAllocVsFastest": 1.0,
+          "codeGlyphXVsFastestText": "1 x (fastest)",
+          "fastestMean": "614.1 μs",
+          "scenario": "QR PNG (medium)",
+          "runnerUpVendor": null,
+          "vendors": {
+            "CodeGlyphX": {
+              "meanNs": 614100.0,
+              "mean": "614.1 μs",
+              "allocated": "14.27 KB"
+            }
+          },
+          "codeGlyphXMean": "614.1 μs",
+          "rating": "good",
+          "codeGlyphXAllocVsFastestText": "1 x",
+          "codeGlyphXVsFastest": 1.0
+        },
+        {
+          "codeGlyphXAlloc": "3.91 KB",
+          "fastestVendor": "CodeGlyphX",
+          "codeGlyphXLeadOverRunnerUpText": "",
+          "codeGlyphXLeadOverRunnerUp": null,
+          "benchmark": "QR Decode (Clean)",
+          "runnerUpMean": null,
+          "deltas": {
+            "ZXing.Net": "",
+            "Barcoder": "",
+            "QRCoder": ""
+          },
+          "codeGlyphXAllocVsFastest": 1.0,
+          "codeGlyphXVsFastestText": "1 x (fastest)",
+          "fastestMean": "956.5 μs",
+          "scenario": "QR Decode (clean)",
+          "runnerUpVendor": null,
+          "vendors": {
+            "CodeGlyphX": {
+              "meanNs": 956500.0,
+              "mean": "956.5 μs",
+              "allocated": "3.91 KB"
+            }
+          },
+          "codeGlyphXMean": "956.5 μs",
+          "rating": "good",
+          "codeGlyphXAllocVsFastestText": "1 x",
+          "codeGlyphXVsFastest": 1.0
+        },
+        {
+          "codeGlyphXAlloc": "160.77 KB",
+          "fastestVendor": "CodeGlyphX",
+          "codeGlyphXLeadOverRunnerUpText": "",
+          "codeGlyphXLeadOverRunnerUp": null,
+          "benchmark": "QR Decode (Noisy)",
+          "runnerUpMean": null,
+          "deltas": {
+            "ZXing.Net": "",
+            "Barcoder": "",
+            "QRCoder": ""
+          },
+          "codeGlyphXAllocVsFastest": 1.0,
+          "codeGlyphXVsFastestText": "1 x (fastest)",
+          "fastestMean": "41.20 ms",
+          "scenario": "QR Decode (noisy)",
+          "runnerUpVendor": null,
+          "vendors": {
+            "CodeGlyphX": {
+              "meanNs": 41200000.0,
+              "mean": "41.20 ms",
+              "allocated": "160.77 KB"
+            }
+          },
+          "codeGlyphXMean": "41.20 ms",
+          "rating": "good",
+          "codeGlyphXAllocVsFastestText": "1 x",
+          "codeGlyphXVsFastest": 1.0
+        },
+        {
+          "codeGlyphXAlloc": "2.68 KB",
+          "fastestVendor": "CodeGlyphX",
+          "codeGlyphXLeadOverRunnerUpText": "",
+          "codeGlyphXLeadOverRunnerUp": null,
+          "benchmark": "QR Decode (Stress)",
+          "runnerUpMean": null,
+          "deltas": {
+            "ZXing.Net": "",
+            "Barcoder": "",
+            "QRCoder": ""
+          },
+          "codeGlyphXAllocVsFastest": 1.0,
+          "codeGlyphXVsFastestText": "1 x (fastest)",
+          "fastestMean": "353.4 μs",
+          "scenario": "QR Decode (fancy)",
+          "runnerUpVendor": null,
+          "vendors": {
+            "CodeGlyphX": {
+              "meanNs": 353400.0,
+              "mean": "353.4 μs",
+              "allocated": "2.68 KB"
+            }
+          },
+          "codeGlyphXMean": "353.4 μs",
+          "rating": "good",
+          "codeGlyphXAllocVsFastestText": "1 x",
+          "codeGlyphXVsFastest": 1.0
+        },
+        {
+          "codeGlyphXAlloc": "45.09 KB",
+          "fastestVendor": "CodeGlyphX",
+          "codeGlyphXLeadOverRunnerUpText": "",
+          "codeGlyphXLeadOverRunnerUp": null,
+          "benchmark": "QR Decode (Stress)",
+          "runnerUpMean": null,
+          "deltas": {
+            "ZXing.Net": "",
+            "Barcoder": "",
+            "QRCoder": ""
+          },
+          "codeGlyphXAllocVsFastest": 1.0,
+          "codeGlyphXVsFastestText": "1 x (fastest)",
+          "fastestMean": "11,185.1 μs",
+          "scenario": "QR Decode (no quiet zone)",
+          "runnerUpVendor": null,
+          "vendors": {
+            "CodeGlyphX": {
+              "meanNs": 11185100.0,
+              "mean": "11,185.1 μs",
+              "allocated": "45.09 KB"
+            }
+          },
+          "codeGlyphXMean": "11,185.1 μs",
+          "rating": "good",
+          "codeGlyphXAllocVsFastestText": "1 x",
+          "codeGlyphXVsFastest": 1.0
+        },
+        {
+          "codeGlyphXAlloc": "1.88 KB",
+          "fastestVendor": "CodeGlyphX",
+          "codeGlyphXLeadOverRunnerUpText": "",
+          "codeGlyphXLeadOverRunnerUp": null,
+          "benchmark": "QR Decode (Stress)",
+          "runnerUpMean": null,
+          "deltas": {
+            "ZXing.Net": "",
+            "Barcoder": "",
+            "QRCoder": ""
+          },
+          "codeGlyphXAllocVsFastest": 1.0,
+          "codeGlyphXVsFastestText": "1 x (fastest)",
+          "fastestMean": "557.4 μs",
+          "scenario": "QR Decode (resampled)",
+          "runnerUpVendor": null,
+          "vendors": {
+            "CodeGlyphX": {
+              "meanNs": 557400.0,
+              "mean": "557.4 μs",
+              "allocated": "1.88 KB"
+            }
+          },
+          "codeGlyphXMean": "557.4 μs",
+          "rating": "good",
+          "codeGlyphXAllocVsFastestText": "1 x",
+          "codeGlyphXVsFastest": 1.0
+        },
+        {
+          "codeGlyphXAlloc": "7.16 KB",
+          "fastestVendor": "CodeGlyphX",
+          "codeGlyphXLeadOverRunnerUpText": "",
+          "codeGlyphXLeadOverRunnerUp": null,
+          "benchmark": "UPC-A (Encode)",
+          "runnerUpMean": null,
+          "deltas": {
+            "ZXing.Net": "",
+            "Barcoder": "",
+            "QRCoder": ""
+          },
+          "codeGlyphXAllocVsFastest": 1.0,
+          "codeGlyphXVsFastestText": "1 x (fastest)",
+          "fastestMean": "197.3 μs",
+          "scenario": "UPC-A PNG",
+          "runnerUpVendor": null,
+          "vendors": {
+            "CodeGlyphX": {
+              "meanNs": 197300.0,
+              "mean": "197.3 μs",
+              "allocated": "7.16 KB"
+            }
+          },
+          "codeGlyphXMean": "197.3 μs",
+          "rating": "good",
+          "codeGlyphXAllocVsFastestText": "1 x",
+          "codeGlyphXVsFastest": 1.0
+        }
+      ],
+      "packRunner": {
+        "reportPath": "/tmp/cgx-psquick-smoke/linux-20260127-151049/pack-runner/qr-decode-packs-quick.json",
+        "generatedUtc": "2026-01-27T14:11:19.2732196Z",
+        "mode": "quick",
+        "packs": [
+          {
+            "name": "art",
+            "scenarioCount": 4,
+            "engines": [
+              {
+                "name": "CodeGlyphX",
+                "isExternal": false,
+                "runs": 8.0,
+                "decodeRate": 0.875,
+                "expectedRate": 0.875,
+                "medianMs": 2910.0688,
+                "p95Ms": 9471.7427,
+                "failingScenarios": [
+                  "art-jess3-grid"
+                ]
+              }
+            ]
+          },
+          {
+            "name": "ideal",
+            "scenarioCount": 4,
+            "engines": [
+              {
+                "name": "CodeGlyphX",
+                "isExternal": false,
+                "runs": 12.0,
+                "decodeRate": 1.0,
+                "expectedRate": 1.0,
+                "medianMs": 1446.0706,
+                "p95Ms": 1579.5812,
+                "failingScenarios": []
+              }
+            ]
+          },
+          {
+            "name": "multi",
+            "scenarioCount": 1,
+            "engines": [
+              {
+                "name": "CodeGlyphX",
+                "isExternal": false,
+                "runs": 3.0,
+                "decodeRate": 1.0,
+                "expectedRate": 1.0,
+                "medianMs": 5683.2641,
+                "p95Ms": 5684.814,
+                "failingScenarios": []
+              }
+            ]
+          },
+          {
+            "name": "screenshot",
+            "scenarioCount": 3,
+            "engines": [
+              {
+                "name": "CodeGlyphX",
+                "isExternal": false,
+                "runs": 9.0,
+                "decodeRate": 1.0,
+                "expectedRate": 1.0,
+                "medianMs": 4269.6355,
+                "p95Ms": 4432.9162,
+                "failingScenarios": []
+              }
+            ]
+          },
+          {
+            "name": "stress",
+            "scenarioCount": 4,
+            "engines": [
+              {
+                "name": "CodeGlyphX",
+                "isExternal": false,
+                "runs": 12.0,
+                "decodeRate": 1.0,
+                "expectedRate": 1.0,
+                "medianMs": 2149.8542,
+                "p95Ms": 3327.857,
+                "failingScenarios": []
+              }
+            ]
+          }
+        ],
+        "engines": {
+          "name": "CodeGlyphX",
+          "isExternal": false,
+          "runs": 44.0,
+          "decodeRate": 0.9772727272727273,
+          "expectedRate": 0.9772727272727273,
+          "failingScenarios": "art-jess3-grid",
+          "failingPacks": "art"
+        },
+        "note": "QR pack runner (quick): CodeGlyphX expected=98 % (misses: art-jess3-grid)"
+      }
     },
     "full": null
   },

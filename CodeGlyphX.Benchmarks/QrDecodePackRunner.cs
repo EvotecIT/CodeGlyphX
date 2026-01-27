@@ -35,7 +35,8 @@ internal static class QrDecodePackRunner {
         QrDecodeScenarioPacks.Ideal,
         QrDecodeScenarioPacks.Stress,
         QrDecodeScenarioPacks.Screenshot,
-        QrDecodeScenarioPacks.Multi
+        QrDecodeScenarioPacks.Multi,
+        QrDecodeScenarioPacks.Art
     };
 
     public static bool TryParseArgs(string[] args, out QrDecodePackRunnerOptions options, out string[] remainingArgs) {

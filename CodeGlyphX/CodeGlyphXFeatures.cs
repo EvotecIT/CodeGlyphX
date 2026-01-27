@@ -4,6 +4,13 @@ namespace CodeGlyphX;
 /// Runtime feature flags for CodeGlyphX capabilities.
 /// </summary>
 public static class CodeGlyphXFeatures {
+#if NET8_0_OR_GREATER
+    // Test hook: allows exercising the legacy QR fallback on net8+.
+    internal static bool ForceQrFallbackForTests { get; set; }
+#else
+    internal static bool ForceQrFallbackForTests => false;
+#endif
+
     /// <summary>
     /// True when the high-performance QR pixel pipeline is available (net8+).
     /// </summary>
@@ -13,6 +20,19 @@ public static class CodeGlyphXFeatures {
             return true;
 #else
             return false;
+#endif
+        }
+    }
+
+    /// <summary>
+    /// True when the legacy QR pixel fallback path is active (non-net8 targets).
+    /// </summary>
+    public static bool SupportsQrPixelDecodeFallback {
+        get {
+#if NET8_0_OR_GREATER
+            return false;
+#else
+            return true;
 #endif
         }
     }
