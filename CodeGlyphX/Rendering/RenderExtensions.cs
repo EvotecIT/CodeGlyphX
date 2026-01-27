@@ -151,6 +151,11 @@ public static class RenderExtensions {
     public static string ToBmpDataUri(this byte[] data) => data.ToDataUri("image/bmp");
 
     /// <summary>
+    /// Encodes WebP bytes as a Base64 data URI.
+    /// </summary>
+    public static string ToWebpDataUri(this byte[] data) => data.ToDataUri("image/webp");
+
+    /// <summary>
     /// Encodes SVG content as a Base64 data URI.
     /// </summary>
     public static string ToSvgDataUri(this string svg, Encoding? encoding = null) {
