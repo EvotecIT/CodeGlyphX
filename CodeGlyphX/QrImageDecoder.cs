@@ -27,6 +27,9 @@ public static class QrImageDecoder {
     /// </summary>
     public static bool TryDecode(byte[] pixels, int width, int height, int stride, PixelFormat format, out QrDecoded decoded) {
 #if NET8_0_OR_GREATER
+        if (CodeGlyphXFeatures.ForceQrFallbackForTests) {
+            return TryDecodeFallback(pixels, width, height, stride, format, options: null, cancellationToken: default, out decoded, out _);
+        }
         return global::CodeGlyphX.Qr.QrPixelDecoder.TryDecode(pixels, width, height, stride, format, out decoded);
 #else
         return TryDecodeFallback(pixels, width, height, stride, format, options: null, cancellationToken: default, out decoded, out _);
@@ -38,6 +41,9 @@ public static class QrImageDecoder {
     /// </summary>
     public static bool TryDecode(byte[] pixels, int width, int height, int stride, PixelFormat format, QrPixelDecodeOptions? options, out QrDecoded decoded) {
 #if NET8_0_OR_GREATER
+        if (CodeGlyphXFeatures.ForceQrFallbackForTests) {
+            return TryDecodeFallback(pixels, width, height, stride, format, options, cancellationToken: default, out decoded, out _);
+        }
         return global::CodeGlyphX.Qr.QrPixelDecoder.TryDecode(pixels, width, height, stride, format, options, out decoded);
 #else
         return TryDecodeFallback(pixels, width, height, stride, format, options, cancellationToken: default, out decoded, out _);
@@ -49,6 +55,9 @@ public static class QrImageDecoder {
     /// </summary>
     public static bool TryDecode(byte[] pixels, int width, int height, int stride, PixelFormat format, QrPixelDecodeOptions? options, CancellationToken cancellationToken, out QrDecoded decoded) {
 #if NET8_0_OR_GREATER
+        if (CodeGlyphXFeatures.ForceQrFallbackForTests) {
+            return TryDecodeFallback(pixels, width, height, stride, format, options, cancellationToken, out decoded, out _);
+        }
         return global::CodeGlyphX.Qr.QrPixelDecoder.TryDecode(pixels, width, height, stride, format, options, cancellationToken, out decoded);
 #else
         return TryDecodeFallback(pixels, width, height, stride, format, options, cancellationToken, out decoded, out _);
@@ -60,6 +69,9 @@ public static class QrImageDecoder {
     /// </summary>
     public static bool TryDecodeAll(byte[] pixels, int width, int height, int stride, PixelFormat format, out QrDecoded[] decoded) {
 #if NET8_0_OR_GREATER
+        if (CodeGlyphXFeatures.ForceQrFallbackForTests) {
+            return TryDecodeAllFallback(pixels, width, height, stride, format, options: null, cancellationToken: default, out decoded);
+        }
         return global::CodeGlyphX.Qr.QrPixelDecoder.TryDecodeAll(pixels, width, height, stride, format, out decoded);
 #else
         return TryDecodeAllFallback(pixels, width, height, stride, format, options: null, cancellationToken: default, out decoded);
@@ -71,6 +83,9 @@ public static class QrImageDecoder {
     /// </summary>
     public static bool TryDecodeAll(byte[] pixels, int width, int height, int stride, PixelFormat format, QrPixelDecodeOptions? options, out QrDecoded[] decoded) {
 #if NET8_0_OR_GREATER
+        if (CodeGlyphXFeatures.ForceQrFallbackForTests) {
+            return TryDecodeAllFallback(pixels, width, height, stride, format, options, cancellationToken: default, out decoded);
+        }
         return global::CodeGlyphX.Qr.QrPixelDecoder.TryDecodeAll(pixels, width, height, stride, format, options, out decoded);
 #else
         return TryDecodeAllFallback(pixels, width, height, stride, format, options, cancellationToken: default, out decoded);
@@ -82,6 +97,9 @@ public static class QrImageDecoder {
     /// </summary>
     public static bool TryDecodeAll(byte[] pixels, int width, int height, int stride, PixelFormat format, QrPixelDecodeOptions? options, CancellationToken cancellationToken, out QrDecoded[] decoded) {
 #if NET8_0_OR_GREATER
+        if (CodeGlyphXFeatures.ForceQrFallbackForTests) {
+            return TryDecodeAllFallback(pixels, width, height, stride, format, options, cancellationToken, out decoded);
+        }
         return global::CodeGlyphX.Qr.QrPixelDecoder.TryDecodeAll(pixels, width, height, stride, format, options, cancellationToken, out decoded);
 #else
         return TryDecodeAllFallback(pixels, width, height, stride, format, options, cancellationToken, out decoded);
@@ -94,6 +112,9 @@ public static class QrImageDecoder {
     public static bool TryDecodeImage(byte[] image, out QrDecoded decoded) {
 #if NET8_0_OR_GREATER
         if (image is null) throw new ArgumentNullException(nameof(image));
+        if (CodeGlyphXFeatures.ForceQrFallbackForTests) {
+            return TryDecodeImageFallback(image, options: null, cancellationToken: default, out decoded, out _);
+        }
         if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) {
             decoded = null!;
             return false;
@@ -110,6 +131,9 @@ public static class QrImageDecoder {
     public static bool TryDecodeImage(byte[] image, out QrDecoded decoded, out QrPixelDecodeInfo info, QrPixelDecodeOptions? options = null) {
 #if NET8_0_OR_GREATER
         if (image is null) throw new ArgumentNullException(nameof(image));
+        if (CodeGlyphXFeatures.ForceQrFallbackForTests) {
+            return TryDecodeImageFallback(image, options, cancellationToken: default, out decoded, out info);
+        }
         if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) {
             decoded = null!;
             info = default;
@@ -127,6 +151,9 @@ public static class QrImageDecoder {
     public static bool TryDecodeImage(byte[] image, out QrDecoded decoded, out QrPixelDecodeInfo info, QrPixelDecodeOptions? options, CancellationToken cancellationToken) {
 #if NET8_0_OR_GREATER
         if (image is null) throw new ArgumentNullException(nameof(image));
+        if (CodeGlyphXFeatures.ForceQrFallbackForTests) {
+            return TryDecodeImageFallback(image, options, cancellationToken, out decoded, out info);
+        }
         if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) {
             decoded = null!;
             info = default;
@@ -181,6 +208,9 @@ public static class QrImageDecoder {
     public static bool TryDecodeImage(byte[] image, QrPixelDecodeOptions? options, out QrDecoded decoded) {
 #if NET8_0_OR_GREATER
         if (image is null) throw new ArgumentNullException(nameof(image));
+        if (CodeGlyphXFeatures.ForceQrFallbackForTests) {
+            return TryDecodeImageFallback(image, options, cancellationToken: default, out decoded, out _);
+        }
         if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) {
             decoded = null!;
             return false;
@@ -402,6 +432,10 @@ public static class QrImageDecoder {
     public static bool TryDecodeImage(Stream stream, out QrDecoded decoded, out QrPixelDecodeInfo info, QrPixelDecodeOptions? options = null) {
 #if NET8_0_OR_GREATER
         if (stream is null) throw new ArgumentNullException(nameof(stream));
+        if (CodeGlyphXFeatures.ForceQrFallbackForTests) {
+            var data = RenderIO.ReadBinary(stream);
+            return TryDecodeImageFallback(data, options, cancellationToken: default, out decoded, out info);
+        }
         var rgba = ImageReader.DecodeRgba32(stream, out var width, out var height);
         return QrDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, out info, options);
 #else
@@ -417,6 +451,10 @@ public static class QrImageDecoder {
     public static bool TryDecodeImage(Stream stream, QrPixelDecodeOptions? options, out QrDecoded decoded) {
 #if NET8_0_OR_GREATER
         if (stream is null) throw new ArgumentNullException(nameof(stream));
+        if (CodeGlyphXFeatures.ForceQrFallbackForTests) {
+            var data = RenderIO.ReadBinary(stream);
+            return TryDecodeImageFallback(data, options, cancellationToken: default, out decoded, out _);
+        }
         var rgba = ImageReader.DecodeRgba32(stream, out var width, out var height);
         return global::CodeGlyphX.Qr.QrPixelDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, options, out decoded);
 #else
@@ -501,6 +539,14 @@ public static class QrImageDecoder {
             }
 
             info = DecodeResultHelpers.EnsureDimensions(info, formatKnown, width, height);
+
+            if (CodeGlyphXFeatures.ForceQrFallbackForTests) {
+                if (TryDecodeFallback(rgba, width, height, width * 4, PixelFormat.Rgba32, options, token, out var decodedFallback, out _)) {
+                    return new DecodeResult<QrDecoded>(decodedFallback, info, stopwatch.Elapsed);
+                }
+                var fallbackFailure = DecodeResultHelpers.FailureForDecode(token);
+                return new DecodeResult<QrDecoded>(fallbackFailure, info, stopwatch.Elapsed);
+            }
 
             if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, imageOptions, token)) {
                 return new DecodeResult<QrDecoded>(DecodeFailureReason.Cancelled, info, stopwatch.Elapsed);
@@ -639,6 +685,9 @@ public static class QrImageDecoder {
         var token = ImageDecodeHelper.ApplyBudget(cancellationToken, imageOptions, out var budgetCts, out var budgetScope);
         try {
             if (token.IsCancellationRequested) return false;
+            if (CodeGlyphXFeatures.ForceQrFallbackForTests) {
+                return TryDecodeImageFallback(image, options, token, out decoded, out _);
+            }
             if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) return false;
             if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, imageOptions, token)) return false;
             return global::CodeGlyphX.Qr.QrPixelDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, options, token, out decoded);
@@ -655,6 +704,9 @@ public static class QrImageDecoder {
         var token = ImageDecodeHelper.ApplyBudget(cancellationToken, imageOptions, out var budgetCts, out var budgetScope);
         try {
             if (token.IsCancellationRequested) return false;
+            if (CodeGlyphXFeatures.ForceQrFallbackForTests) {
+                return TryDecodeImageFallback(image, options, token, out decoded, out info);
+            }
             if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) return false;
             if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, imageOptions, token)) return false;
             return QrDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, out info, options, token);
@@ -669,6 +721,9 @@ public static class QrImageDecoder {
         var token = ImageDecodeHelper.ApplyBudget(cancellationToken, imageOptions, out var budgetCts, out var budgetScope);
         try {
             if (token.IsCancellationRequested) return false;
+            if (CodeGlyphXFeatures.ForceQrFallbackForTests) {
+                return TryDecodeImageFallback(image.ToArray(), options, token, out decoded, out _);
+            }
             if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) return false;
             if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, imageOptions, token)) return false;
             return global::CodeGlyphX.Qr.QrPixelDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, options, token, out decoded);
@@ -684,6 +739,9 @@ public static class QrImageDecoder {
         var token = ImageDecodeHelper.ApplyBudget(cancellationToken, imageOptions, out var budgetCts, out var budgetScope);
         try {
             if (token.IsCancellationRequested) return false;
+            if (CodeGlyphXFeatures.ForceQrFallbackForTests) {
+                return TryDecodeImageFallback(image.ToArray(), options, token, out decoded, out info);
+            }
             if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) return false;
             if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, imageOptions, token)) return false;
             return QrDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, out info, options, token);
@@ -699,6 +757,11 @@ public static class QrImageDecoder {
         var token = ImageDecodeHelper.ApplyBudget(cancellationToken, imageOptions, out var budgetCts, out var budgetScope);
         try {
             if (token.IsCancellationRequested) return false;
+            if (CodeGlyphXFeatures.ForceQrFallbackForTests) {
+                if (!TryDecodeImageFallback(image, options, token, out var single, out _)) return false;
+                decoded = new[] { single };
+                return true;
+            }
             if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) return false;
             if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, imageOptions, token)) return false;
             return global::CodeGlyphX.Qr.QrPixelDecoder.TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, options, token, out decoded);
@@ -709,7 +772,6 @@ public static class QrImageDecoder {
     }
 #endif
 
-#if !NET8_0_OR_GREATER
     private static bool TryDecodeImageFallback(byte[] image, QrPixelDecodeOptions? options, CancellationToken cancellationToken, out QrDecoded decoded, out QrPixelDecodeInfo info) {
         if (image is null) throw new ArgumentNullException(nameof(image));
         decoded = null!;
@@ -750,22 +812,49 @@ public static class QrImageDecoder {
             return false;
         }
 
-        var dimension = EstimateDimension(grayscale, width, minX, minY, maxX, maxY, threshold);
-        if (dimension < 21) return false;
+        var dimensionEstimate = EstimateDimension(grayscale, width, minX, minY, maxX, maxY, threshold);
+        var versionEstimate = dimensionEstimate >= 21 ? ClampInt((dimensionEstimate - 17) / 4, 1, 40) : 1;
+        var moduleSize = EstimateModuleSize(grayscale, width, height, minX, minY, maxX, maxY, threshold);
+        if (moduleSize <= 0) moduleSize = 1;
 
-        var modules = SampleModules(grayscale, width, height, minX, minY, maxX, maxY, threshold, dimension);
-        if (cancellationToken.IsCancellationRequested) return false;
+        var padHalf = moduleSize / 2;
+        var pads = new[] { 0, padHalf, moduleSize, moduleSize * 2 };
+        var versions = new[] {
+            ClampInt(versionEstimate - 3, 1, 40),
+            ClampInt(versionEstimate - 2, 1, 40),
+            ClampInt(versionEstimate - 1, 1, 40),
+            versionEstimate,
+            ClampInt(versionEstimate + 1, 1, 40),
+            ClampInt(versionEstimate + 2, 1, 40),
+            ClampInt(versionEstimate + 3, 1, 40)
+        };
 
-        if (QrDecoder.TryDecode(modules, out decoded, out var moduleInfo)) {
-            info = new QrPixelDecodeInfo(1, threshold, invert: false, candidateCount: 0, candidateTriplesTried: 0, dimension, moduleInfo);
-            return true;
+        foreach (var pad in pads) {
+            var adjMinX = ClampInt(minX - pad, 0, width - 1);
+            var adjMinY = ClampInt(minY - pad, 0, height - 1);
+            var adjMaxX = ClampInt(maxX + pad, 0, width - 1);
+            var adjMaxY = ClampInt(maxY + pad, 0, height - 1);
+
+            foreach (var version in versions) {
+                var dimension = (version * 4) + 17;
+                var modules = SampleModules(grayscale, width, height, adjMinX, adjMinY, adjMaxX, adjMaxY, threshold, dimension);
+                if (cancellationToken.IsCancellationRequested) return false;
+
+                if (QrDecoder.TryDecode(modules, out decoded, out var moduleInfo)) {
+                    info = new QrPixelDecodeInfo(1, threshold, invert: false, candidateCount: 0, candidateTriplesTried: 0, dimension, moduleInfo);
+                    return true;
+                }
+
+                var inverted = modules.Clone();
+                inverted.Invert();
+                if (QrDecoder.TryDecode(inverted, out decoded, out moduleInfo)) {
+                    info = new QrPixelDecodeInfo(1, threshold, invert: true, candidateCount: 0, candidateTriplesTried: 0, dimension, moduleInfo);
+                    return true;
+                }
+            }
         }
 
-        var inverted = modules.Clone();
-        inverted.Invert();
-        var ok = QrDecoder.TryDecode(inverted, out decoded, out moduleInfo);
-        info = new QrPixelDecodeInfo(1, threshold, invert: true, candidateCount: 0, candidateTriplesTried: 0, dimension, moduleInfo);
-        return ok;
+        return false;
     }
 
     private static void ApplyMaxDimension(ref byte[] rgba, ref int width, ref int height, ref int stride, QrPixelDecodeOptions? options) {
@@ -884,6 +973,49 @@ public static class QrImageDecoder {
         return (version * 4) + 17;
     }
 
+    private static int EstimateModuleSize(byte[] gray, int width, int height, int minX, int minY, int maxX, int maxY, byte threshold) {
+        var boxWidth = (maxX - minX) + 1;
+        var boxHeight = (maxY - minY) + 1;
+        if (boxWidth <= 0 || boxHeight <= 0) return 1;
+
+        var midY = minY + (boxHeight / 2);
+        if (midY < 0) midY = 0;
+        if (midY >= height) midY = height - 1;
+
+        var rowStart = midY * width;
+        var runs = new List<int>(128);
+        var lastDark = gray[rowStart] < threshold;
+        var run = 0;
+        for (var x = 0; x < width; x++) {
+            var dark = gray[rowStart + x] < threshold;
+            if (dark == lastDark) {
+                run++;
+                continue;
+            }
+            if (run > 0) runs.Add(run);
+            run = 1;
+            lastDark = dark;
+        }
+        if (run > 0) runs.Add(run);
+        if (runs.Count == 0) return 1;
+
+        runs.Sort();
+        var baseline = runs[0];
+        var limit = baseline * 8;
+        var filtered = new List<int>(32);
+        for (var i = 0; i < runs.Count && filtered.Count < 32; i++) {
+            var value = runs[i];
+            if (value > limit) break;
+            filtered.Add(value);
+        }
+        if (filtered.Count == 0) return Math.Max(1, baseline);
+
+        filtered.Sort();
+        var mid = filtered.Count / 2;
+        var median = filtered[mid];
+        return Math.Max(1, median);
+    }
+
     private static BitMatrix SampleModules(byte[] gray, int width, int height, int minX, int minY, int maxX, int maxY, byte threshold, int dimension) {
         var matrix = new BitMatrix(dimension, dimension);
         var boxWidth = (maxX - minX) + 1;
@@ -910,13 +1042,15 @@ public static class QrImageDecoder {
         if (value > max) return max;
         return value;
     }
-#endif
 
 #if NET8_0_OR_GREATER
     /// <summary>
     /// Attempts to decode a QR code from a raw pixel buffer.
     /// </summary>
     public static bool TryDecode(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat format, out QrDecoded decoded) {
+        if (CodeGlyphXFeatures.ForceQrFallbackForTests) {
+            return TryDecodeFallback(pixels.ToArray(), width, height, stride, format, options: null, cancellationToken: default, out decoded, out _);
+        }
         return global::CodeGlyphX.Qr.QrPixelDecoder.TryDecode(pixels, width, height, stride, format, out decoded);
     }
 
@@ -924,6 +1058,9 @@ public static class QrImageDecoder {
     /// Attempts to decode a QR code from a raw pixel buffer.
     /// </summary>
     public static bool TryDecode(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat format, QrPixelDecodeOptions? options, out QrDecoded decoded) {
+        if (CodeGlyphXFeatures.ForceQrFallbackForTests) {
+            return TryDecodeFallback(pixels.ToArray(), width, height, stride, format, options, cancellationToken: default, out decoded, out _);
+        }
         return global::CodeGlyphX.Qr.QrPixelDecoder.TryDecode(pixels, width, height, stride, format, options, out decoded);
     }
 
@@ -931,6 +1068,9 @@ public static class QrImageDecoder {
     /// Attempts to decode all QR codes from a raw pixel buffer.
     /// </summary>
     public static bool TryDecodeAll(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat format, out QrDecoded[] decoded) {
+        if (CodeGlyphXFeatures.ForceQrFallbackForTests) {
+            return TryDecodeAllFallback(pixels.ToArray(), width, height, stride, format, options: null, cancellationToken: default, out decoded);
+        }
         return global::CodeGlyphX.Qr.QrPixelDecoder.TryDecodeAll(pixels, width, height, stride, format, out decoded);
     }
 
@@ -938,6 +1078,9 @@ public static class QrImageDecoder {
     /// Attempts to decode all QR codes from a raw pixel buffer.
     /// </summary>
     public static bool TryDecodeAll(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat format, QrPixelDecodeOptions? options, out QrDecoded[] decoded) {
+        if (CodeGlyphXFeatures.ForceQrFallbackForTests) {
+            return TryDecodeAllFallback(pixels.ToArray(), width, height, stride, format, options, cancellationToken: default, out decoded);
+        }
         return global::CodeGlyphX.Qr.QrPixelDecoder.TryDecodeAll(pixels, width, height, stride, format, options, out decoded);
     }
 #endif
