@@ -565,7 +565,26 @@ internal static class WebpVp8Decoder {
         if (blocks.Partitions.Length != partitionCount) return false;
         if (headers.Macroblocks.Length == 0) return false;
 
+        var macroblocksPerPartition = new int[partitionCount];
+        for (var i = 0; i < headers.Macroblocks.Length; i++) {
+            var partitionIndex = GetTokenPartitionForRow(headers.Macroblocks[i].Y, partitionCount);
+            if ((uint)partitionIndex < (uint)macroblocksPerPartition.Length) {
+                macroblocksPerPartition[partitionIndex]++;
+            }
+        }
+
         var blockCursors = new int[partitionCount];
+        var partitionTokenTotals = new int[partitionCount];
+        var partitionByteTotals = new int[partitionCount];
+        var partitionTokensConsumed = new int[partitionCount];
+        var partitionBytesConsumed = new int[partitionCount];
+        for (var p = 0; p < partitionCount; p++) {
+            var tokensPerMacroblock = Math.Max(0, blocks.Partitions[p].TokensRead);
+            var macroblockCount = macroblocksPerPartition[p];
+            partitionTokenTotals[p] = tokensPerMacroblock * Math.Max(1, macroblockCount);
+            partitionByteTotals[p] = Math.Max(0, blocks.Partitions[p].BytesConsumed);
+        }
+
         var macroblocks = new WebpVp8MacroblockTokenScaffold[headers.Macroblocks.Length];
         var totalBlocksAssigned = 0;
         var totalTokensRead = 0;
@@ -587,16 +606,33 @@ internal static class WebpVp8Decoder {
                 macroblockTokensRead += assignedBlocks[b].TokensRead;
             }
 
+            var partitionTokensBefore = partitionTokensConsumed[partitionIndex];
+            var partitionBytesBefore = partitionBytesConsumed[partitionIndex];
+            var macroblockBytesConsumed = ComputePartitionByteShare(
+                partitionByteTotals[partitionIndex],
+                partitionBytesConsumed[partitionIndex],
+                partitionTokenTotals[partitionIndex],
+                partitionTokensConsumed[partitionIndex],
+                macroblockTokensRead);
+            partitionTokensConsumed[partitionIndex] += macroblockTokensRead;
+            partitionBytesConsumed[partitionIndex] += macroblockBytesConsumed;
+            var partitionTokensAfter = partitionTokensConsumed[partitionIndex];
+            var partitionBytesAfter = partitionBytesConsumed[partitionIndex];
+
             macroblocks[i] = new WebpVp8MacroblockTokenScaffold(
                 header,
                 partitionIndex,
-                partition.BytesConsumed,
+                partitionBytesBefore,
+                macroblockBytesConsumed,
+                partitionBytesAfter,
+                partitionTokensBefore,
+                partitionTokensAfter,
                 assignedBlocks,
                 macroblockTokensRead);
 
             totalBlocksAssigned += assignedBlocks.Length;
             totalTokensRead += macroblockTokensRead;
-            totalBytesConsumed += partition.BytesConsumed;
+            totalBytesConsumed += macroblockBytesConsumed;
         }
 
         scaffold = new WebpVp8MacroblockTokenScaffoldSet(
@@ -1193,6 +1229,31 @@ internal static class WebpVp8Decoder {
         return macroblockRow % partitionCount;
     }
 
+    private static int ComputePartitionByteShare(
+        int totalBytes,
+        int bytesConsumed,
+        int totalTokens,
+        int tokensConsumed,
+        int tokensForMacroblock) {
+        if (totalBytes <= 0) return 0;
+        if (bytesConsumed >= totalBytes) return 0;
+        if (tokensForMacroblock <= 0) return 0;
+
+        var remainingBytes = totalBytes - bytesConsumed;
+        if (remainingBytes <= 0) return 0;
+        if (totalTokens <= 0) return remainingBytes;
+
+        var remainingTokens = totalTokens - tokensConsumed;
+        if (remainingTokens <= 0) return 0;
+        if (tokensForMacroblock >= remainingTokens) return remainingBytes;
+
+        var proportional = (int)((long)remainingBytes * tokensForMacroblock / remainingTokens);
+        if (proportional <= 0 && remainingBytes > 0) proportional = 1;
+        if (proportional > remainingBytes) proportional = remainingBytes;
+        if (proportional < 0) proportional = 0;
+        return proportional;
+    }
+
     private static int GetNextPartitionBlockIndex(int partitionIndex, int blockCount, int[] cursors) {
         if ((uint)partitionIndex >= (uint)cursors.Length) return 0;
         if (blockCount <= 0) return 0;
@@ -1745,19 +1806,31 @@ internal readonly struct WebpVp8MacroblockTokenScaffold {
     public WebpVp8MacroblockTokenScaffold(
         WebpVp8MacroblockHeaderScaffold header,
         int partitionIndex,
+        int partitionBytesBefore,
         int partitionBytesConsumed,
+        int partitionBytesAfter,
+        int partitionTokensBefore,
+        int partitionTokensAfter,
         WebpVp8BlockTokenScaffold[] blocks,
         int tokensRead) {
         Header = header;
         PartitionIndex = partitionIndex;
+        PartitionBytesBefore = partitionBytesBefore;
         PartitionBytesConsumed = partitionBytesConsumed;
+        PartitionBytesAfter = partitionBytesAfter;
+        PartitionTokensBefore = partitionTokensBefore;
+        PartitionTokensAfter = partitionTokensAfter;
         Blocks = blocks;
         TokensRead = tokensRead;
     }
 
     public WebpVp8MacroblockHeaderScaffold Header { get; }
     public int PartitionIndex { get; }
+    public int PartitionBytesBefore { get; }
     public int PartitionBytesConsumed { get; }
+    public int PartitionBytesAfter { get; }
+    public int PartitionTokensBefore { get; }
+    public int PartitionTokensAfter { get; }
     public WebpVp8BlockTokenScaffold[] Blocks { get; }
     public int TokensRead { get; }
 }
