@@ -74,6 +74,14 @@ public sealed partial class QrPngRenderOptions {
     }
 
     /// <summary>
+    /// Sets the foreground pattern overlay.
+    /// </summary>
+    public QrPngRenderOptions WithForegroundPattern(QrPngForegroundPatternOptions? pattern) {
+        ForegroundPattern = pattern;
+        return this;
+    }
+
+    /// <summary>
     /// Sets palette overrides for specific zones.
     /// </summary>
     public QrPngRenderOptions WithForegroundPaletteZones(QrPngPaletteZoneOptions? zones) {

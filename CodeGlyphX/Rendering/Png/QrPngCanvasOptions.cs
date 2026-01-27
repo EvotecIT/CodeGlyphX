@@ -32,6 +32,11 @@ public sealed class QrPngCanvasOptions {
     public QrPngBackgroundPatternOptions? Pattern { get; set; }
 
     /// <summary>
+    /// Optional paint splash/drip overlay (kept outside the QR area).
+    /// </summary>
+    public QrPngCanvasSplashOptions? Splash { get; set; }
+
+    /// <summary>
     /// Border thickness in pixels (0 = no border).
     /// </summary>
     public int BorderPx { get; set; }
@@ -62,5 +67,6 @@ public sealed class QrPngCanvasOptions {
         if (BorderPx < 0) throw new ArgumentOutOfRangeException(nameof(BorderPx));
         BackgroundGradient?.Validate();
         Pattern?.Validate();
+        Splash?.Validate();
     }
 }

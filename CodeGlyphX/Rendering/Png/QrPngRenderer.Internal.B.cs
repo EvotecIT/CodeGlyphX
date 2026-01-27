@@ -383,6 +383,7 @@ public static partial class QrPngRenderer {
                 FillMaskShape(scanlines, widthPx, heightPx, stride, x, y, w, h, color, shape, radius);
                 return;
             case QrPngModuleShape.Squircle:
+            case QrPngModuleShape.ConnectedSquircle:
                 FillSquircle(scanlines, widthPx, heightPx, stride, x, y, w, h, color);
                 return;
             case QrPngModuleShape.Dot:
@@ -427,6 +428,7 @@ public static partial class QrPngRenderer {
                 FillMaskShapeGradient(scanlines, widthPx, heightPx, stride, x, y, w, h, gradient, shape, radius);
                 return;
             case QrPngModuleShape.Squircle:
+            case QrPngModuleShape.ConnectedSquircle:
                 FillSquircleGradient(scanlines, widthPx, heightPx, stride, x, y, w, h, gradient);
                 return;
             case QrPngModuleShape.Dot:
@@ -1315,11 +1317,29 @@ public static partial class QrPngRenderer {
             Background = canvas.Background,
             BackgroundGradient = canvas.BackgroundGradient,
             Pattern = ScalePattern(canvas.Pattern, scale),
+            Splash = ScaleSplash(canvas.Splash, scale),
             BorderPx = canvas.BorderPx * scale,
             BorderColor = canvas.BorderColor,
             ShadowOffsetX = canvas.ShadowOffsetX * scale,
             ShadowOffsetY = canvas.ShadowOffsetY * scale,
             ShadowColor = canvas.ShadowColor
+        };
+    }
+
+    private static QrPngCanvasSplashOptions? ScaleSplash(QrPngCanvasSplashOptions? splash, int scale) {
+        if (splash is null) return null;
+        return new QrPngCanvasSplashOptions {
+            Color = splash.Color,
+            Colors = splash.Colors,
+            Count = splash.Count,
+            MinRadiusPx = Math.Max(1, splash.MinRadiusPx * scale),
+            MaxRadiusPx = Math.Max(1, splash.MaxRadiusPx * scale),
+            SpreadPx = Math.Max(0, splash.SpreadPx * scale),
+            Seed = splash.Seed,
+            DripChance = splash.DripChance,
+            DripLengthPx = Math.Max(0, splash.DripLengthPx * scale),
+            DripWidthPx = Math.Max(0, splash.DripWidthPx * scale),
+            ProtectQrArea = splash.ProtectQrArea,
         };
     }
 
