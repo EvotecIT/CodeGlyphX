@@ -158,6 +158,14 @@ internal static class QrStyleBoardExample {
                 eyes: Eye(QrPngEyeFrameStyle.Badge, R(30, 30, 30), R(80, 80, 80)),
                 canvas: CanvasPattern(R(255, 255, 255), Pattern(QrPngBackgroundPatternType.Grid, R(30, 30, 30, 18))))),
 
+            new("Connected Melt", StyleDocs("connected-melt"), () => BaseSticker(
+                fg: R(88, 120, 255),
+                palette: Palette(QrPngPaletteMode.Cycle, 0, R(88, 120, 255), R(120, 96, 255), R(88, 210, 255)),
+                shape: QrPngModuleShape.ConnectedRounded,
+                eyes: Eye(QrPngEyeFrameStyle.Target, R(88, 120, 255), R(88, 210, 255)),
+                scaleMap: ScaleMap(QrPngModuleScaleMode.Radial, 0.86, 1.0),
+                canvas: CanvasGradient(R(14, 18, 42), R(28, 20, 76)))),
+
             new("Center Pop", StyleDocs("center-pop"), () => BaseSticker(
                 fg: R(35, 54, 89),
                 palette: Palette(QrPngPaletteMode.Cycle, 0, R(35, 54, 89), R(60, 90, 140)),
