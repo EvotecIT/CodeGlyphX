@@ -486,6 +486,42 @@ public sealed class QrPngRendererTests {
         Assert.Equal(0, rgba[p + 2]);
     }
 
+    [Fact]
+    public void Render_With_Functional_Protection_Preserves_Gradient_On_Eyes_When_Eyes_Not_Configured() {
+        var qr = QrCodeEncoder.EncodeText("HELLO", QrErrorCorrectionLevel.H);
+        var size = qr.Size;
+
+        var opts = new QrPngRenderOptions {
+            ModuleSize = 6,
+            QuietZone = 4,
+            Foreground = Rgba32.Black,
+            Background = Rgba32.White,
+            ProtectFunctionalPatterns = true,
+            ForegroundGradient = new QrPngGradientOptions {
+                Type = QrPngGradientType.Horizontal,
+                StartColor = new Rgba32(255, 0, 0),
+                EndColor = new Rgba32(0, 255, 0),
+            },
+        };
+
+        var png = QrPngRenderer.Render(qr.Modules, opts);
+        var (rgba, _, _, stride) = PngTestDecoder.DecodeRgba32(png);
+
+        var moduleY = opts.QuietZone + 0;
+        var leftModuleX = opts.QuietZone + 0;
+        var rightModuleX = opts.QuietZone + (size - 1);
+
+        var leftPx = leftModuleX * opts.ModuleSize + opts.ModuleSize / 2;
+        var rightPx = rightModuleX * opts.ModuleSize + opts.ModuleSize / 2;
+        var py = moduleY * opts.ModuleSize + opts.ModuleSize / 2;
+
+        var left = py * stride + leftPx * 4;
+        var right = py * stride + rightPx * 4;
+
+        Assert.True(rgba[left + 0] > rgba[left + 1]);
+        Assert.True(rgba[right + 1] > rgba[right + 0]);
+    }
+
     [Theory]
     [InlineData(QrPngModuleShape.Diamond)]
     [InlineData(QrPngModuleShape.Squircle)]

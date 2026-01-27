@@ -95,8 +95,8 @@ public static partial class QrPngRenderer {
             ? BuildModuleMask(opts.ModuleSize, QrPngModuleShape.Square, 1.0, cornerRadiusPx: 0)
             : mask;
         var functionalMaskSolid = functionalMask == mask ? maskSolid : IsSolidMask(functionalMask);
-        var functionMask = opts.ProtectFunctionalPatterns && TryGetVersion(size, out var version)
-            ? BuildFunctionMask(version, size)
+        var functionMask = opts.ProtectFunctionalPatterns && QrStructureAnalysis.TryGetVersionFromSize(size, out var version)
+            ? QrStructureAnalysis.BuildFunctionMask(version, size)
             : null;
         var useFrame = opts.Eyes is not null && opts.Eyes.UseFrame;
         var background = opts.Background;
@@ -108,7 +108,10 @@ public static partial class QrPngRenderer {
         var scaleMapInfo = opts.ModuleScaleMap is null ? (ModuleScaleMapInfo?)null : new ModuleScaleMapInfo(opts.ModuleScaleMap, size);
         var scaleMaskCache = scaleMapInfo.HasValue ? new Dictionary<int, MaskInfo>(8) : null;
         var connectedMaskCache = connectedRounded ? new Dictionary<int, MaskInfo>(32) : null;
-        var detectEyes = opts.Eyes is not null || paletteInfo.HasValue || zoneInfo.HasValue || scaleMapInfo.HasValue || functionMask is not null;
+        // Eye detection is needed for styling decisions (eyes/palettes/scale maps),
+        // but we keep it decoupled from functional protection so gradients can still
+        // apply to eyes when no eye-specific styling is configured.
+        var detectEyesForStyling = opts.Eyes is not null || paletteInfo.HasValue || zoneInfo.HasValue || scaleMapInfo.HasValue;
         var eyeOuterGradient = opts.Eyes?.OuterGradient;
         var eyeInnerGradient = opts.Eyes?.InnerGradient;
         var eyeOuterGradientInfo = eyeOuterGradient is null ? (GradientInfo?)null : new GradientInfo(eyeOuterGradient, 7 * opts.ModuleSize - 1, 7 * opts.ModuleSize - 1);
@@ -120,14 +123,20 @@ public static partial class QrPngRenderer {
                 var eyeKind = EyeKind.None;
                 var eyeX = 0;
                 var eyeY = 0;
-                if (detectEyes && TryGetEye(mx, my, size, out eyeX, out eyeY, out var kind)) {
+                var isEye = false;
+                if (detectEyesForStyling && TryGetEye(mx, my, size, out eyeX, out eyeY, out var kind)) {
                     eyeKind = kind;
+                    isEye = true;
+                } else if (functionMask is not null && TryGetEye(mx, my, size, out _, out _, out var protectKind)) {
+                    // When only functional protection is enabled, still recognize eyes
+                    // so we do not apply non-eye protection to finder patterns.
+                    isEye = protectKind != EyeKind.None;
                 }
 
                 if (useFrame && eyeKind != EyeKind.None) continue;
 
                 var isFunctional = functionMask is not null && functionMask[mx, my];
-                var protectFunctional = isFunctional && eyeKind == EyeKind.None;
+                var protectFunctional = isFunctional && !isEye;
 
                 var useMask = protectFunctional
                     ? functionalMask
@@ -598,74 +607,6 @@ public static partial class QrPngRenderer {
         }
     }
 
-    private static bool TryGetVersion(int size, out int version) {
-        version = (size - 17) / 4;
-        return version is >= 1 and <= 40 && version * 4 + 17 == size;
-    }
-
-    private static BitMatrix BuildFunctionMask(int version, int size) {
-        var isFunction = new BitMatrix(size, size);
-
-        MarkFinder(0, 0, isFunction);
-        MarkFinder(size - 7, 0, isFunction);
-        MarkFinder(0, size - 7, isFunction);
-
-        for (var i = 0; i < size; i++) {
-            isFunction[6, i] = true;
-            isFunction[i, 6] = true;
-        }
-
-        var align = QrTables.GetAlignmentPatternPositions(version);
-        for (var i = 0; i < align.Length; i++) {
-            for (var j = 0; j < align.Length; j++) {
-                if ((i == 0 && j == 0) || (i == 0 && j == align.Length - 1) || (i == align.Length - 1 && j == 0)) {
-                    continue;
-                }
-                MarkAlignment(align[i], align[j], isFunction);
-            }
-        }
-
-        isFunction[8, size - 8] = true;
-
-        for (var i = 0; i <= 5; i++) isFunction[8, i] = true;
-        isFunction[8, 7] = true;
-        isFunction[8, 8] = true;
-        isFunction[7, 8] = true;
-        for (var i = 9; i < 15; i++) isFunction[14 - i, 8] = true;
-        for (var i = 0; i < 8; i++) isFunction[size - 1 - i, 8] = true;
-        for (var i = 8; i < 15; i++) isFunction[8, size - 15 + i] = true;
-
-        if (version >= 7) {
-            for (var i = 0; i < 18; i++) {
-                var a = size - 11 + (i % 3);
-                var b = i / 3;
-                isFunction[a, b] = true;
-                isFunction[b, a] = true;
-            }
-        }
-
-        return isFunction;
-    }
-
-    private static void MarkFinder(int x, int y, BitMatrix isFunction) {
-        for (var dy = -1; dy <= 7; dy++) {
-            for (var dx = -1; dx <= 7; dx++) {
-                var xx = x + dx;
-                var yy = y + dy;
-                if ((uint)xx >= (uint)isFunction.Width || (uint)yy >= (uint)isFunction.Height) continue;
-                isFunction[xx, yy] = true;
-            }
-        }
-    }
-
-    private static void MarkAlignment(int x, int y, BitMatrix isFunction) {
-        for (var dy = -2; dy <= 2; dy++) {
-            for (var dx = -2; dx <= 2; dx++) {
-                isFunction[x + dx, y + dy] = true;
-            }
-        }
-    }
-
     private static MaskInfo GetScaleMask(Dictionary<int, MaskInfo> cache, int moduleSize, QrPngModuleShape shape, double scale, int radius) {
         var key = QuantizeScaleKey(scale);
         if (!cache.TryGetValue(key, out var info)) {
@@ -781,7 +722,7 @@ public static partial class QrPngRenderer {
         double scale,
         int cornerRadiusPx,
         int neighborMask) {
-        var key = HashCode.Combine(QuantizeScaleKey(scale), cornerRadiusPx, neighborMask & 0xF);
+        var key = Hash(QuantizeScaleKey(scale), cornerRadiusPx, neighborMask & 0xF);
         if (!cache.TryGetValue(key, out var info)) {
             var mask = BuildConnectedRoundedMask(moduleSize, scale, cornerRadiusPx, neighborMask);
             info = new MaskInfo(mask, IsSolidMask(mask));
