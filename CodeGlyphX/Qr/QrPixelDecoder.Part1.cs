@@ -214,7 +214,7 @@ internal static partial class QrPixelDecoder {
                     allowAdaptiveThreshold = false;
                     allowBlur = false;
                 }
-                if (options.MaxMilliseconds <= 800 && !options.AggressiveSampling) {
+                if (options.MaxMilliseconds <= 800 && !options.AggressiveSampling && !options.StylizedSampling) {
                     aggressiveSampling = false;
                 }
             }

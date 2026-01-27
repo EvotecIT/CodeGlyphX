@@ -59,7 +59,11 @@ internal static class QrFinderPatternDetector {
             using var full = new PooledList<FinderPattern>(8);
             FindCandidatesWithStep(image, invert, rowStep: 1, full, aggressive, shouldStop, maxCandidates, requireDiagonalCheck);
             for (var i = 0; i < full.Count; i++) {
-                AddOrMerge(pooled, full[i]);
+                var candidate = full[i];
+                var weight = candidate.Count <= 1 ? 1 : Math.Min(candidate.Count, 8);
+                for (var w = 0; w < weight; w++) {
+                    AddOrMerge(pooled, new FinderPattern(candidate.X, candidate.Y, candidate.ModuleSize, 1));
+                }
             }
         }
 
