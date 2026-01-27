@@ -87,6 +87,7 @@ internal static class WebpVp8Decoder {
         _ = TryReadTokenScaffold(payload, out _);
         _ = TryReadBlockTokenScaffold(payload, out _);
         _ = TryReadMacroblockScaffold(payload, out _);
+        _ = TryReadMacroblockRgbaScaffold(payload, out _);
 
         // Parsing-only scaffold for now.
         width = header.Width;
@@ -567,6 +568,37 @@ internal static class WebpVp8Decoder {
         return true;
     }
 
+    internal static bool TryReadMacroblockRgbaScaffold(ReadOnlySpan<byte> payload, out WebpVp8RgbaScaffold rgbaScaffold) {
+        rgbaScaffold = default;
+        if (!TryReadMacroblockScaffold(payload, out var macroblock)) return false;
+
+        var width = macroblock.Width;
+        var height = macroblock.Height;
+        var rgba = new byte[width * height * 4];
+
+        for (var y = 0; y < height; y++) {
+            var chromaY = y >> 1;
+            for (var x = 0; x < width; x++) {
+                var yIndex = (y * width) + x;
+                var ySample = macroblock.YPlane[yIndex];
+
+                var chromaX = x >> 1;
+                var uSample = GetChromaSampleNearest(macroblock.UPlane, macroblock.ChromaWidth, macroblock.ChromaHeight, chromaX, chromaY);
+                var vSample = GetChromaSampleNearest(macroblock.VPlane, macroblock.ChromaWidth, macroblock.ChromaHeight, chromaX, chromaY);
+
+                var (r, g, b) = ConvertYuvToRgb(ySample, uSample, vSample);
+                var dst = yIndex * 4;
+                rgba[dst + 0] = r;
+                rgba[dst + 1] = g;
+                rgba[dst + 2] = b;
+                rgba[dst + 3] = 255;
+            }
+        }
+
+        rgbaScaffold = new WebpVp8RgbaScaffold(width, height, rgba, macroblock.BlocksPlacedTotal);
+        return true;
+    }
+
     private static bool TryReadControlHeader(WebpVp8BoolDecoder decoder, out WebpVp8ControlHeader controlHeader) {
         controlHeader = default;
         if (!decoder.TryReadBool(probability: 128, out var colorSpaceBit)) return false;
@@ -920,6 +952,27 @@ internal static class WebpVp8Decoder {
                 plane[planeRowOffset + px] = block[blockRowOffset + x];
             }
         }
+    }
+
+    private static byte GetChromaSampleNearest(byte[] chromaPlane, int width, int height, int x, int y) {
+        if (chromaPlane.Length == 0 || width <= 0 || height <= 0) return 128;
+        if (x < 0) x = 0;
+        if (y < 0) y = 0;
+        if (x >= width) x = width - 1;
+        if (y >= height) y = height - 1;
+        return chromaPlane[(y * width) + x];
+    }
+
+    private static (byte R, byte G, byte B) ConvertYuvToRgb(byte y, byte u, byte v) {
+        var yy = y;
+        var uu = u - 128;
+        var vv = v - 128;
+
+        var r = yy + (int)(1.402 * vv);
+        var g = yy - (int)(0.344136 * uu) - (int)(0.714136 * vv);
+        var b = yy + (int)(1.772 * uu);
+
+        return (ClampToByte(r), ClampToByte(g), ClampToByte(b));
     }
 
     private static int GetCoeffIndex(int blockType, int band, int prev, int node) {
@@ -1434,4 +1487,18 @@ internal readonly struct WebpVp8MacroblockScaffold {
     public int BlocksPlacedV { get; }
     public int BlocksPlacedTotal { get; }
     public int BlocksAvailable { get; }
+}
+
+internal readonly struct WebpVp8RgbaScaffold {
+    public WebpVp8RgbaScaffold(int width, int height, byte[] rgba, int blocksPlaced) {
+        Width = width;
+        Height = height;
+        Rgba = rgba;
+        BlocksPlaced = blocksPlaced;
+    }
+
+    public int Width { get; }
+    public int Height { get; }
+    public byte[] Rgba { get; }
+    public int BlocksPlaced { get; }
 }
