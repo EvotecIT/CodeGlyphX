@@ -3,16 +3,9 @@
 This list contains **only work we still want to do** (no already‑done items).
 
 ## Now — Benchmarks & Clarity (days → weeks)
-- Benchmark scenarios: extend **stress + realism packs** (scaled/resampled UI shots, higher noise/antialias, long payloads, quiet‑zone variants). Clearly label “ideal” vs “stress” in reports.
-- Benchmark controls: add scenario packs + filters so quick runs stay short while full runs include stress cases.
-- Benchmark reliability: enforce minimum iteration time for quick runs (or increase ops); keep quick/full guidance current; capture environment metadata in reports.
-- Reporting clarity: add pack labels + “what these results mean” disclaimers per pack.
+- Benchmark scenarios: extend **stress + realism packs** (more scaled/resampled UI shots, higher noise/antialias, long payloads, quiet‑zone variants).
 - Decoder robustness: close remaining heavy-illustration failures in `Assets/DecodingSamples` (targets: qr-art-facebook-splash-grid.png, qr-art-montage-grid.png, qr-art-stripe-eye-grid.png, qr-art-drip-variants.png, qr-art-solid-bg-grid.png, qr-art-gear-illustration-grid.png).
 - Decoder robustness: add multi-scale search + adaptive binarization tuned for large, stylized QR inputs; document tradeoffs and expected decode times.
-- Benchmark scenarios: add stylized art decode pack to stress runs with pass-rate + timing summaries.
-
-## Now — Platform/UX Decisions (days → weeks)
-- net472 parity: document what’s missing vs net8/10 and decide what can be back‑ported without hurting perf.
 
 ## Next — Performance & AOT (weeks)
 - Mask-specialized decode traversal to remove per-cell mask math in QR data extraction.
@@ -54,7 +47,6 @@ This list contains **only work we still want to do** (no already‑done items).
 ## DX & Docs (ongoing)
 - Keep “quick vs full” benchmark guidance and preflight steps in README/docs.
 - Decision guide: “which symbology to pick” + “which target framework to pick”.
-- CI: add PR website build check (compile + static output) before merge.
 - Publish a supported format matrix + known gaps; keep docs/FAQ in sync.
 
 ## Additional symbologies (weeks)
