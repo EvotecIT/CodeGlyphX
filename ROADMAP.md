@@ -71,8 +71,9 @@ This list contains **only work we still want to do** (no already‑done items).
 
 ## Image formats (weeks)
 - WebP **decode** (lossless + VP8).
-- WebP decode status (2026-01-27): ✅ container detection + dimension parsing (VP8X / VP8L / VP8).
-- WebP decode status (2026-01-27): ⚠️ temporary native `libwebp` fallback for decode.
-- WebP decode status (2026-01-27): 🔜 managed decoder track — VP8L (lossless) first, then VP8.
+- WebP decode status (2026-01-27): container detection + dimension parsing (VP8X / VP8L / VP8).
+- WebP decode status (2026-01-27): temporary native `libwebp` fallback for decode.
+- WebP decode status (2026-01-27): managed decoder track — VP8L (lossless) first, then VP8.
+- WebP decode status (2026-01-27): managed VP8L scaffolding — LSB bit reader + header parser + tests.
 - Optional: WebP **encode** (lossless first).
 - Expand the image format corpus (JPEG progressive/CMYK, GIF variants, BMP/ICO edge cases) and add a scheduled CI run.
