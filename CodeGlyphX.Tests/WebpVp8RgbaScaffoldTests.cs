@@ -30,7 +30,7 @@ public sealed class WebpVp8RgbaScaffoldTests
         Assert.Equal(16, rgba.Width);
         Assert.Equal(16, rgba.Height);
         Assert.Equal(16 * 16 * 4, rgba.Rgba.Length);
-        Assert.InRange(rgba.BlocksPlaced, 1, 4);
+        Assert.InRange(rgba.BlocksPlaced, 1, 24);
 
         Assert.Equal(expected.R, rgba.Rgba[0]);
         Assert.Equal(expected.G, rgba.Rgba[1]);

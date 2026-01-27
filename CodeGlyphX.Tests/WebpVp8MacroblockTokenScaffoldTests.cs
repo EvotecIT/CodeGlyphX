@@ -97,7 +97,7 @@ public sealed class WebpVp8MacroblockTokenScaffoldTests
         var nonSkippedMacroblocksPerPartition = new int[dctCount];
         for (var p = 0; p < dctCount; p++)
         {
-            var tokensPerMacroblock = blockScaffold.Partitions[p].TokensRead;
+            var tokensPerMacroblock = blockScaffold.Partitions[p].TokensRead * 6;
 
             var nonSkippedCount = 0;
             var rowBudgets = partitionRowBudgets[p];
@@ -123,7 +123,7 @@ public sealed class WebpVp8MacroblockTokenScaffoldTests
         Assert.Equal(headers.MacroblockRows, scaffold.MacroblockRows);
         Assert.Equal(dctCount, scaffold.PartitionCount);
         Assert.Equal(expectedMacroblocks, scaffold.Macroblocks.Length);
-        Assert.Equal(expectedMacroblocks * 4, scaffold.TotalBlocksAssigned);
+        Assert.Equal(expectedMacroblocks * 24, scaffold.TotalBlocksAssigned);
         Assert.InRange(scaffold.TotalTokensRead, 0, scaffold.TotalBlocksAssigned * 16);
         Assert.InRange(scaffold.TotalBytesConsumed, 0, totalPartitionBytes);
         Assert.Equal(usedPartitionBytes, scaffold.TotalBytesConsumed);
@@ -144,7 +144,7 @@ public sealed class WebpVp8MacroblockTokenScaffoldTests
 
             Assert.Equal(lastBytesAfter[macroblock.PartitionIndex], macroblock.PartitionBytesBefore);
             Assert.Equal(lastTokensAfter[macroblock.PartitionIndex], macroblock.PartitionTokensBefore);
-            Assert.Equal(4, macroblock.Blocks.Length);
+            Assert.Equal(24, macroblock.Blocks.Length);
 
             if (macroblock.Header.SkipCoefficients || rowNonSkipped == 0)
             {
