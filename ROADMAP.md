@@ -77,5 +77,6 @@ This list contains **only work we still want to do** (no already‑done items).
 - WebP decode status (2026-01-27): managed VP8L scaffolding — LSB bit reader + header parser + tests.
 - WebP decode status (2026-01-27): managed VP8L scaffolding — prefix-code parsing (simple + normal) + tests.
 - WebP decode status (2026-01-27): managed VP8L minimal decode — literal-only subset (no cache, no backrefs, no meta).
+- WebP decode status (2026-01-27): managed VP8L minimal decode — adds backrefs + distance mapping (still no cache/meta).
 - Optional: WebP **encode** (lossless first).
 - Expand the image format corpus (JPEG progressive/CMYK, GIF variants, BMP/ICO edge cases) and add a scheduled CI run.

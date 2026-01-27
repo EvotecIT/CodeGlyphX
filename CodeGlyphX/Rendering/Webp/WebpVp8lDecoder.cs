@@ -7,6 +7,29 @@ namespace CodeGlyphX.Rendering.Webp;
 /// </summary>
 internal static class WebpVp8lDecoder {
     private const int TransformSubtractGreen = 2;
+    private const int LiteralAlphabetSize = 256;
+    private const int LengthPrefixCount = 24;
+    private const int GreenAlphabetBase = LiteralAlphabetSize + LengthPrefixCount;
+    private const int MaxBackwardLength = 4096;
+    private const int DistanceMapSize = 120;
+
+    private static readonly (int xi, int yi)[] DistanceMap = {
+        (0, 1), (1, 0), (1, 1), (-1, 1), (0, 2), (2, 0), (1, 2), (-1, 2),
+        (2, 1), (-2, 1), (2, 2), (-2, 2), (0, 3), (3, 0), (1, 3), (-1, 3),
+        (3, 1), (-3, 1), (2, 3), (-2, 3), (3, 2), (-3, 2), (0, 4), (4, 0),
+        (1, 4), (-1, 4), (4, 1), (-4, 1), (3, 3), (-3, 3), (2, 4), (-2, 4),
+        (4, 2), (-4, 2), (0, 5), (3, 4), (-3, 4), (4, 3), (-4, 3), (5, 0),
+        (1, 5), (-1, 5), (5, 1), (-5, 1), (2, 5), (-2, 5), (5, 2), (-5, 2),
+        (4, 4), (-4, 4), (3, 5), (-3, 5), (5, 3), (-5, 3), (0, 6), (6, 0),
+        (1, 6), (-1, 6), (6, 1), (-6, 1), (2, 6), (-2, 6), (6, 2), (-6, 2),
+        (4, 5), (-4, 5), (5, 4), (-5, 4), (3, 6), (-3, 6), (6, 3), (-6, 3),
+        (0, 7), (7, 0), (1, 7), (-1, 7), (5, 5), (-5, 5), (7, 1), (-7, 1),
+        (4, 6), (-4, 6), (6, 4), (-6, 4), (2, 7), (-2, 7), (7, 2), (-7, 2),
+        (3, 7), (-3, 7), (7, 3), (-7, 3), (5, 6), (-5, 6), (6, 5), (-6, 5),
+        (8, 0), (4, 7), (-4, 7), (7, 4), (-7, 4), (8, 1), (8, 2), (6, 6),
+        (-6, 6), (8, 3), (5, 7), (-5, 7), (7, 5), (-7, 5), (8, 4), (6, 7),
+        (-6, 7), (7, 6), (-7, 6), (8, 5), (7, 7), (-7, 7), (8, 6), (8, 7),
+    };
 
     /// <summary>
     /// Attempts to decode a VP8L payload. Currently parses only the header and a
@@ -41,11 +64,10 @@ internal static class WebpVp8lDecoder {
         var metaPrefixFlag = reader.ReadBits(1);
         if (metaPrefixFlag != 0) return false;
 
-        var literalAlphabetSize = 256;
-        var greenAlphabetSize = literalAlphabetSize + 24 + colorCacheSize;
-        if (!TryReadPrefixCodesGroup(ref reader, greenAlphabetSize, literalAlphabetSize, out var group)) return false;
+        var greenAlphabetSize = GreenAlphabetBase + colorCacheSize;
+        if (!TryReadPrefixCodesGroup(ref reader, greenAlphabetSize, LiteralAlphabetSize, out var group)) return false;
 
-        if (!TryDecodeLiteralOnly(ref reader, header, group, out rgba)) {
+        if (!TryDecodeNoCacheNoMeta(ref reader, header, group, out rgba)) {
             rgba = Array.Empty<byte>();
             return false;
         }
@@ -120,7 +142,7 @@ internal static class WebpVp8lDecoder {
         return true;
     }
 
-    private static bool TryDecodeLiteralOnly(
+    private static bool TryDecodeNoCacheNoMeta(
         ref WebpBitReader reader,
         WebpVp8lHeader header,
         WebpPrefixCodesGroup group,
@@ -128,34 +150,134 @@ internal static class WebpVp8lDecoder {
         rgba = Array.Empty<byte>();
 
         var pixelCount = checked(header.Width * header.Height);
-        var buffer = new byte[checked(pixelCount * 4)];
+        var transformed = new int[pixelCount];
+        var pos = 0;
+        while (pos < pixelCount) {
+            var symbol = group.Green.DecodeSymbol(ref reader);
+            if (symbol < 0) return false;
+
+            if (symbol < LiteralAlphabetSize) {
+                if (!TryReadLiteral(ref reader, group, symbol, out var pixel)) return false;
+                transformed[pos++] = pixel;
+                continue;
+            }
+
+            var lengthPrefix = symbol - LiteralAlphabetSize;
+            if (lengthPrefix < 0 || lengthPrefix >= LengthPrefixCount) return false;
+            if (!TryDecodePrefixValue(ref reader, lengthPrefix, out var length)) return false;
+            if (length <= 0 || length > MaxBackwardLength) return false;
+
+            var distancePrefix = group.Distance.DecodeSymbol(ref reader);
+            if (distancePrefix < 0 || distancePrefix >= 40) return false;
+            if (!TryDecodePrefixValue(ref reader, distancePrefix, out var distanceCode)) return false;
+            if (!TryMapDistanceCode(distanceCode, header.Width, out var distance)) return false;
+
+            var nextPos = CopyLz77(transformed, pos, distance, length, pixelCount);
+            if (nextPos < 0) return false;
+            pos = nextPos;
+        }
+
+        rgba = ConvertToRgba(transformed, header.SubtractGreenTransformUsed);
+        return true;
+    }
+
+    private static bool TryReadLiteral(ref WebpBitReader reader, WebpPrefixCodesGroup group, int green, out int pixel) {
+        pixel = 0;
+
+        var red = group.Red.DecodeSymbol(ref reader);
+        var blue = group.Blue.DecodeSymbol(ref reader);
+        var alpha = group.Alpha.DecodeSymbol(ref reader);
+        if (red < 0 || blue < 0 || alpha < 0) return false;
+        if (red >= LiteralAlphabetSize || blue >= LiteralAlphabetSize || alpha >= LiteralAlphabetSize) return false;
+        if (green < 0 || green >= LiteralAlphabetSize) return false;
+
+        pixel = PackArgb(alpha, red, green, blue);
+        return true;
+    }
+
+    private static byte[] ConvertToRgba(int[] transformed, bool subtractGreen) {
+        var rgba = new byte[checked(transformed.Length * 4)];
         var offset = 0;
-        for (var i = 0; i < pixelCount; i++) {
-            var green = group.Green.DecodeSymbol(ref reader);
-            var red = group.Red.DecodeSymbol(ref reader);
-            var blue = group.Blue.DecodeSymbol(ref reader);
-            var alpha = group.Alpha.DecodeSymbol(ref reader);
-            if (green < 0 || red < 0 || blue < 0 || alpha < 0) return false;
-            if (green >= 256 || red >= 256 || blue >= 256 || alpha >= 256) return false;
+        for (var i = 0; i < transformed.Length; i++) {
+            var argb = transformed[i];
+            var a = (byte)(argb >> 24);
+            var r = (byte)(argb >> 16);
+            var g = (byte)(argb >> 8);
+            var b = (byte)argb;
 
-            var g = (byte)green;
-            var r = (byte)red;
-            var b = (byte)blue;
-            var a = (byte)alpha;
-
-            if (header.SubtractGreenTransformUsed) {
+            if (subtractGreen) {
                 r = (byte)(r + g);
                 b = (byte)(b + g);
             }
 
-            buffer[offset++] = r;
-            buffer[offset++] = g;
-            buffer[offset++] = b;
-            buffer[offset++] = a;
+            rgba[offset++] = r;
+            rgba[offset++] = g;
+            rgba[offset++] = b;
+            rgba[offset++] = a;
+        }
+        return rgba;
+    }
+
+    private static int PackArgb(int a, int r, int g, int b) {
+        return ((a & 0xFF) << 24)
+            | ((r & 0xFF) << 16)
+            | ((g & 0xFF) << 8)
+            | (b & 0xFF);
+    }
+
+    internal static bool TryDecodePrefixValue(ref WebpBitReader reader, int prefixCode, out int value) {
+        value = 0;
+        if (prefixCode < 0) return false;
+
+        if (prefixCode < 4) {
+            value = prefixCode + 1;
+            return true;
         }
 
-        rgba = buffer;
+        var extraBits = (prefixCode - 2) >> 1;
+        if (extraBits < 0 || extraBits > 24) return false;
+        var offset = (2 + (prefixCode & 1)) << extraBits;
+        var extra = reader.ReadBits(extraBits);
+        if (extra < 0) return false;
+        value = offset + extra + 1;
+        return value > 0;
+    }
+
+    internal static bool TryMapDistanceCode(int distanceCode, int width, out int distance) {
+        distance = 0;
+        if (distanceCode <= 0 || width <= 0) return false;
+
+        if (distanceCode > DistanceMapSize) {
+            distance = distanceCode - DistanceMapSize;
+            return distance > 0;
+        }
+
+        var index = distanceCode - 1;
+        if ((uint)index >= (uint)DistanceMap.Length) return false;
+        var (xi, yi) = DistanceMap[index];
+        var mapped = xi + (long)yi * width;
+        if (mapped < 1) mapped = 1;
+        if (mapped > int.MaxValue) return false;
+        distance = (int)mapped;
         return true;
+    }
+
+    internal static int CopyLz77(int[] buffer, int pos, int distance, int length, int pixelCount) {
+        if (buffer is null) return -1;
+        if (pos < 0 || pos > pixelCount) return -1;
+        if (distance <= 0 || length <= 0) return -1;
+
+        var src = pos - distance;
+        if (src < 0) return -1;
+
+        var remaining = pixelCount - pos;
+        if (remaining <= 0) return pos;
+        if (length > remaining) length = remaining;
+
+        for (var i = 0; i < length; i++) {
+            buffer[pos + i] = buffer[src + i];
+        }
+        return pos + length;
     }
 }
 
