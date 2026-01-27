@@ -27,6 +27,11 @@ internal static class WebpVp8Decoder {
     private const int BlockScaffoldMaxTokensPerBlock = CoefficientsPerBlock;
     private const int IdctCospi8Sqrt2Minus1 = 20091;
     private const int IdctSinpi8Sqrt2 = 35468;
+    private const int Intra16x16ModeCount = 4;
+    private const int IntraUvModeCount = 4;
+    private const int Intra4x4ModeCount = 10;
+    private const int YModeBPred = 4;
+    private const int MacroblockSubBlockCount = 16;
     private const int MacroblockSize = 16;
     private const int BlockSize = 4;
     private const int MacroblockScaffoldWidth = MacroblockSize;
@@ -85,6 +90,7 @@ internal static class WebpVp8Decoder {
         -10, 20,
         -11, -12,
     };
+    private static readonly int[] EmptySubblockModes = Array.Empty<int>();
 
     internal static bool TryDecode(ReadOnlySpan<byte> payload, out byte[] rgba, out int width, out int height) {
         rgba = Array.Empty<byte>();
@@ -550,7 +556,35 @@ internal static class WebpVp8Decoder {
                 segmentCounts[segmentId]++;
             }
 
-            macroblocks[index] = new WebpVp8MacroblockHeaderScaffold(index, x, y, segmentId, skipCoefficients);
+            if (!TryReadScaffoldMode(decoder, Intra16x16ModeCount + 1, out var yMode)) {
+                return false;
+            }
+
+            var is4x4 = yMode == YModeBPred;
+            var subblockModes = EmptySubblockModes;
+            if (is4x4) {
+                subblockModes = new int[MacroblockSubBlockCount];
+                for (var b = 0; b < subblockModes.Length; b++) {
+                    if (!TryReadScaffoldMode(decoder, Intra4x4ModeCount, out subblockModes[b])) {
+                        return false;
+                    }
+                }
+            }
+
+            if (!TryReadScaffoldMode(decoder, IntraUvModeCount, out var uvMode)) {
+                return false;
+            }
+
+            macroblocks[index] = new WebpVp8MacroblockHeaderScaffold(
+                index,
+                x,
+                y,
+                segmentId,
+                skipCoefficients,
+                yMode,
+                uvMode,
+                is4x4,
+                subblockModes);
         }
 
         headers = new WebpVp8MacroblockHeaderScaffoldSet(
@@ -1122,6 +1156,27 @@ internal static class WebpVp8Decoder {
         if (tokenCode <= 1) return 0;
         if (tokenCode <= 5) return CoeffTokenBaseMagnitude[tokenCode];
         return CoeffTokenBaseMagnitude[tokenCode] + extraBitsValue;
+    }
+
+    private static bool TryReadScaffoldMode(WebpVp8BoolDecoder decoder, int modeCount, out int mode) {
+        mode = 0;
+        if (modeCount <= 0) return false;
+
+        var bitsNeeded = 0;
+        var maxValue = 1;
+        while (maxValue < modeCount && bitsNeeded < 8) {
+            bitsNeeded++;
+            maxValue <<= 1;
+        }
+
+        var value = 0;
+        for (var i = 0; i < bitsNeeded; i++) {
+            if (!decoder.TryReadBool(128, out var bit)) return false;
+            value = (value << 1) | (bit ? 1 : 0);
+        }
+
+        mode = value % modeCount;
+        return true;
     }
 
     private static bool TryReadSignedMagnitude(WebpVp8BoolDecoder decoder, int magnitude, out int coefficientValue) {
@@ -2251,12 +2306,25 @@ internal readonly struct WebpVp8BlockTokenScaffoldSet {
 }
 
 internal readonly struct WebpVp8MacroblockHeaderScaffold {
-    public WebpVp8MacroblockHeaderScaffold(int index, int x, int y, int segmentId, bool skipCoefficients) {
+    public WebpVp8MacroblockHeaderScaffold(
+        int index,
+        int x,
+        int y,
+        int segmentId,
+        bool skipCoefficients,
+        int yMode,
+        int uvMode,
+        bool is4x4,
+        int[] subblockModes) {
         Index = index;
         X = x;
         Y = y;
         SegmentId = segmentId;
         SkipCoefficients = skipCoefficients;
+        YMode = yMode;
+        UvMode = uvMode;
+        Is4x4 = is4x4;
+        SubblockModes = subblockModes ?? Array.Empty<int>();
     }
 
     public int Index { get; }
@@ -2264,6 +2332,10 @@ internal readonly struct WebpVp8MacroblockHeaderScaffold {
     public int Y { get; }
     public int SegmentId { get; }
     public bool SkipCoefficients { get; }
+    public int YMode { get; }
+    public int UvMode { get; }
+    public bool Is4x4 { get; }
+    public int[] SubblockModes { get; }
 }
 
 internal readonly struct WebpVp8MacroblockHeaderScaffoldSet {

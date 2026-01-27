@@ -58,7 +58,21 @@ public sealed class WebpVp8MacroblockHeaderScaffoldTests
             Assert.InRange(macroblock.X, 0, headers.MacroblockCols - 1);
             Assert.InRange(macroblock.Y, 0, headers.MacroblockRows - 1);
             Assert.InRange(macroblock.SegmentId, 0, headers.SegmentCounts.Length - 1);
+            Assert.InRange(macroblock.YMode, 0, 4);
+            Assert.InRange(macroblock.UvMode, 0, 3);
+
+            if (macroblock.Is4x4)
+            {
+                Assert.Equal(16, macroblock.SubblockModes.Length);
+                for (var b = 0; b < macroblock.SubblockModes.Length; b++)
+                {
+                    Assert.InRange(macroblock.SubblockModes[b], 0, 9);
+                }
+            }
+            else
+            {
+                Assert.Empty(macroblock.SubblockModes);
+            }
         }
     }
 }
-
