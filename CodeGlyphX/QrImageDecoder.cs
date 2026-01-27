@@ -361,8 +361,7 @@ public static class QrImageDecoder {
         }
         return global::CodeGlyphX.Qr.QrPixelDecoder.TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded);
 #else
-        decoded = Array.Empty<QrDecoded>();
-        return false;
+        return TryDecodeAllImageFallback(image, imageOptions: null, options: null, cancellationToken: default, out decoded);
 #endif
     }
 
@@ -378,12 +377,7 @@ public static class QrImageDecoder {
         }
         return global::CodeGlyphX.Qr.QrPixelDecoder.TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, options, out decoded);
 #else
-        if (!TryDecodeImageFallback(image, options, cancellationToken: default, out var single, out _)) {
-            decoded = Array.Empty<QrDecoded>();
-            return false;
-        }
-        decoded = new[] { single };
-        return true;
+        return TryDecodeAllImageFallback(image, imageOptions: null, options, cancellationToken: default, out decoded);
 #endif
     }
 
@@ -401,12 +395,7 @@ public static class QrImageDecoder {
 #if NET8_0_OR_GREATER
         return TryDecodeAllImageCore(image, imageOptions, options, cancellationToken, out decoded);
 #else
-        if (!TryDecodeImageFallback(image, imageOptions, options, cancellationToken, out var single, out _)) {
-            decoded = Array.Empty<QrDecoded>();
-            return false;
-        }
-        decoded = new[] { single };
-        return true;
+        return TryDecodeAllImageFallback(image, imageOptions, options, cancellationToken, out decoded);
 #endif
     }
 
@@ -625,12 +614,7 @@ public static class QrImageDecoder {
 #else
         if (stream is null) throw new ArgumentNullException(nameof(stream));
         var data = RenderIO.ReadBinary(stream);
-        if (!TryDecodeImageFallback(data, options: null, cancellationToken: default, out var single, out _)) {
-            decoded = Array.Empty<QrDecoded>();
-            return false;
-        }
-        decoded = new[] { single };
-        return true;
+        return TryDecodeAllImageFallback(data, imageOptions: null, options: null, cancellationToken: default, out decoded);
 #endif
     }
 
@@ -645,12 +629,7 @@ public static class QrImageDecoder {
 #else
         if (stream is null) throw new ArgumentNullException(nameof(stream));
         var data = RenderIO.ReadBinary(stream);
-        if (!TryDecodeImageFallback(data, options, cancellationToken: default, out var single, out _)) {
-            decoded = Array.Empty<QrDecoded>();
-            return false;
-        }
-        decoded = new[] { single };
-        return true;
+        return TryDecodeAllImageFallback(data, imageOptions: null, options, cancellationToken: default, out decoded);
 #endif
     }
 
@@ -672,12 +651,7 @@ public static class QrImageDecoder {
 #else
         if (stream is null) throw new ArgumentNullException(nameof(stream));
         var data = RenderIO.ReadBinary(stream);
-        if (!TryDecodeImageFallback(data, imageOptions, options, cancellationToken, out var single, out _)) {
-            decoded = Array.Empty<QrDecoded>();
-            return false;
-        }
-        decoded = new[] { single };
-        return true;
+        return TryDecodeAllImageFallback(data, imageOptions, options, cancellationToken, out decoded);
 #endif
     }
 
@@ -792,6 +766,27 @@ public static class QrImageDecoder {
         }
     }
 
+    private static bool TryDecodeAllImageFallback(byte[] image, ImageDecodeOptions? imageOptions, QrPixelDecodeOptions? options, CancellationToken cancellationToken, out QrDecoded[] decoded) {
+        if (image is null) throw new ArgumentNullException(nameof(image));
+        var mergedOptions = MergeDecodeOptions(imageOptions, options);
+        var token = ApplyBudget(cancellationToken, imageOptions, mergedOptions, out var budgetCts, out var budgetScope);
+        try {
+            if (token.IsCancellationRequested) {
+                decoded = Array.Empty<QrDecoded>();
+                return false;
+            }
+            if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) {
+                decoded = Array.Empty<QrDecoded>();
+                return false;
+            }
+            var stride = width * 4;
+            return TryDecodeAllFallback(rgba, width, height, stride, PixelFormat.Rgba32, mergedOptions, token, out decoded);
+        } finally {
+            budgetCts?.Dispose();
+            budgetScope?.Dispose();
+        }
+    }
+
     private static QrPixelDecodeOptions? MergeDecodeOptions(ImageDecodeOptions? imageOptions, QrPixelDecodeOptions? options) {
         if (imageOptions is null) return options;
         if (imageOptions.MaxDimension <= 0 && imageOptions.MaxMilliseconds <= 0) return options;
@@ -871,11 +866,101 @@ public static class QrImageDecoder {
 
     private static bool TryDecodeAllFallback(byte[] pixels, int width, int height, int stride, PixelFormat format, QrPixelDecodeOptions? options, CancellationToken cancellationToken, out QrDecoded[] decoded) {
         decoded = Array.Empty<QrDecoded>();
+        if (options?.EnableTileScan == true) {
+            if (TryDecodeAllTilesFallback(pixels, width, height, stride, format, options, cancellationToken, out decoded)) {
+                return decoded.Length > 0;
+            }
+        }
         if (!TryDecodeFallback(pixels, width, height, stride, format, options, cancellationToken, out var single, out _)) {
             return false;
         }
         decoded = new[] { single };
         return true;
+    }
+
+    private static bool TryDecodeAllTilesFallback(byte[] pixels, int width, int height, int stride, PixelFormat format, QrPixelDecodeOptions options, CancellationToken cancellationToken, out QrDecoded[] decoded) {
+        decoded = Array.Empty<QrDecoded>();
+        if (pixels is null) throw new ArgumentNullException(nameof(pixels));
+        if (width <= 0 || height <= 0 || stride < width * 4) return false;
+        if (cancellationToken.IsCancellationRequested) return false;
+
+        var rgba = format == PixelFormat.Rgba32 ? pixels : ConvertBgraToRgba(pixels, width, height, stride);
+        ApplyMaxDimension(ref rgba, ref width, ref height, ref stride, options);
+        if (cancellationToken.IsCancellationRequested) return false;
+
+        var tileGrid = options.TileGrid;
+        if (tileGrid < 2 || tileGrid > 4) {
+            var maxSide = width > height ? width : height;
+            tileGrid = maxSide <= 800 ? 2 : 3;
+        }
+
+        var tileOptions = CloneOptions(options);
+        tileOptions.MaxDimension = 0;
+        tileOptions.EnableTileScan = false;
+        tileOptions.TileGrid = 0;
+
+        var overlap = Math.Max(16, Math.Min(width, height) / 40);
+        var tileWidth = Math.Max(1, width / tileGrid);
+        var tileHeight = Math.Max(1, height / tileGrid);
+        var seen = new HashSet<string>(StringComparer.Ordinal);
+        var list = new List<QrDecoded>(tileGrid * tileGrid);
+
+        for (var ty = 0; ty < tileGrid; ty++) {
+            var baseY0 = ty * tileHeight;
+            var baseY1 = ty == tileGrid - 1 ? height : (ty + 1) * tileHeight;
+            var y0 = baseY0 > overlap ? baseY0 - overlap : 0;
+            var y1 = baseY1 + overlap;
+            if (y1 > height) y1 = height;
+            var th = y1 - y0;
+            if (th <= 0) continue;
+
+            for (var tx = 0; tx < tileGrid; tx++) {
+                if (cancellationToken.IsCancellationRequested) {
+                    decoded = Array.Empty<QrDecoded>();
+                    return false;
+                }
+
+                var baseX0 = tx * tileWidth;
+                var baseX1 = tx == tileGrid - 1 ? width : (tx + 1) * tileWidth;
+                var x0 = baseX0 > overlap ? baseX0 - overlap : 0;
+                var x1 = baseX1 + overlap;
+                if (x1 > width) x1 = width;
+                var tw = x1 - x0;
+                if (tw <= 0) continue;
+
+                var tile = CropRgba(rgba, width, height, stride, x0, y0, tw, th);
+                if (!TryDecodeFallback(tile, tw, th, tw * 4, PixelFormat.Rgba32, tileOptions, cancellationToken, out var result, out _)) {
+                    continue;
+                }
+
+                var text = result.Text;
+                if (string.IsNullOrEmpty(text) || !seen.Add(text)) continue;
+                list.Add(result);
+            }
+        }
+
+        decoded = list.ToArray();
+        return decoded.Length > 0;
+    }
+
+    private static byte[] CropRgba(byte[] rgba, int width, int height, int stride, int x, int y, int cropWidth, int cropHeight) {
+        if (cropWidth <= 0 || cropHeight <= 0) return Array.Empty<byte>();
+        var x0 = ClampInt(x, 0, width - 1);
+        var y0 = ClampInt(y, 0, height - 1);
+        var x1 = ClampInt(x0 + cropWidth, x0 + 1, width);
+        var y1 = ClampInt(y0 + cropHeight, y0 + 1, height);
+        var w = x1 - x0;
+        var h = y1 - y0;
+        var destStride = w * 4;
+        var dest = new byte[h * destStride];
+
+        for (var row = 0; row < h; row++) {
+            var srcIndex = (y0 + row) * stride + (x0 * 4);
+            var dstIndex = row * destStride;
+            Buffer.BlockCopy(rgba, srcIndex, dest, dstIndex, destStride);
+        }
+
+        return dest;
     }
 
     private static bool TryDecodeFallback(byte[] pixels, int width, int height, int stride, PixelFormat format, QrPixelDecodeOptions? options, CancellationToken cancellationToken, out QrDecoded decoded, out QrPixelDecodeInfo info) {
@@ -902,15 +987,14 @@ public static class QrImageDecoder {
 
         var padHalf = moduleSize / 2;
         var pads = new[] { 0, padHalf, moduleSize, moduleSize * 2 };
-        var versions = new[] {
-            ClampInt(versionEstimate - 3, 1, 40),
-            ClampInt(versionEstimate - 2, 1, 40),
-            ClampInt(versionEstimate - 1, 1, 40),
-            versionEstimate,
-            ClampInt(versionEstimate + 1, 1, 40),
-            ClampInt(versionEstimate + 2, 1, 40),
-            ClampInt(versionEstimate + 3, 1, 40)
-        };
+        var versionList = new List<int>(13) { versionEstimate };
+        for (var offset = 1; offset <= 6; offset++) {
+            var lower = versionEstimate - offset;
+            var upper = versionEstimate + offset;
+            if (lower >= 1) versionList.Add(lower);
+            if (upper <= 40) versionList.Add(upper);
+        }
+        var versions = versionList.ToArray();
 
         foreach (var pad in pads) {
             var adjMinX = ClampInt(minX - pad, 0, width - 1);

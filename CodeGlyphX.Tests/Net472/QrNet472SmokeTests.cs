@@ -143,6 +143,25 @@ public sealed class QrNet472SmokeTests {
         Assert.Equal("net472", CodeGlyphXFeatures.TargetFramework);
     }
 
+    [Fact]
+    public void Net472_QrImageDecoder_TileScan_Succeeds_On_Single() {
+        var qr = QrCodeEncoder.EncodeText(Payload);
+        var png = QrPngRenderer.Render(qr.Modules, new QrPngRenderOptions {
+            ModuleSize = 14,
+            QuietZone = 6
+        });
+
+        var opts = new QrPixelDecodeOptions {
+            EnableTileScan = true,
+            TileGrid = 2,
+            MaxDimension = 1200
+        };
+
+        var ok = QrImageDecoder.TryDecodeAllImage(png, imageOptions: null, opts, out var decoded);
+        Assert.True(ok);
+        Assert.Contains(decoded, d => d.Text == Payload);
+    }
+
     private static void AddLightNoise(byte[] rgba, int width, int height, int stride) {
         var rng = new Random(12345);
         for (var y = 0; y < height; y++) {
@@ -172,4 +191,5 @@ public sealed class QrNet472SmokeTests {
         }
         return PngWriter.WriteRgba8(width, height, scanlines, scanlines.Length);
     }
+
 }
