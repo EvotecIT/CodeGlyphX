@@ -3,6 +3,38 @@ using System;
 namespace CodeGlyphX.Rendering.Jpeg;
 
 public static partial class JpegReader {
+    private const int HuffmanFastBits = 9;
+    private const int ConstBits = 13;
+    private const int Pass1Bits = 2;
+    private static readonly int[] CrToR = new int[256];
+    private static readonly int[] CrToG = new int[256];
+    private static readonly int[] CbToG = new int[256];
+    private static readonly int[] CbToB = new int[256];
+
+    // Fixed-point constants from the IJG islow integer IDCT implementation.
+    private const long Fix0_298631336 = 2446;
+    private const long Fix0_390180644 = 3196;
+    private const long Fix0_541196100 = 4433;
+    private const long Fix0_765366865 = 6270;
+    private const long Fix0_899976223 = 7373;
+    private const long Fix1_175875602 = 9633;
+    private const long Fix1_501321110 = 12299;
+    private const long Fix1_847759065 = 15137;
+    private const long Fix1_961570560 = 16069;
+    private const long Fix2_053119869 = 16819;
+    private const long Fix2_562915447 = 20995;
+    private const long Fix3_072711026 = 25172;
+
+    static JpegReader() {
+        for (var i = 0; i < 256; i++) {
+            var d = i - 128;
+            CrToR[i] = (91881 * d + 32768) >> 16;
+            CrToG[i] = (46802 * d + 32768) >> 16;
+            CbToG[i] = (22554 * d + 32768) >> 16;
+            CbToB[i] = (116130 * d + 32768) >> 16;
+        }
+    }
+
     private static byte[] ComposeRgba(JpegFrame frame, BaselineComponentState[] states, int? adobeTransform) {
         var rgba = new byte[frame.Width * frame.Height * 4];
         var maxH = frame.MaxH;
@@ -49,9 +81,7 @@ public static partial class JpegReader {
                         var yVal = SampleComponent(states, ycckY, x, y, maxH, maxV, 128);
                         var cbVal = SampleComponent(states, ycckCb, x, y, maxH, maxV, 128);
                         var crVal = SampleComponent(states, ycckCr, x, y, maxH, maxV, 128);
-                        r = ClampToByte(yVal + (1.402 * (crVal - 128)));
-                        g = ClampToByte(yVal - (0.344136 * (cbVal - 128)) - (0.714136 * (crVal - 128)));
-                        b = ClampToByte(yVal + (1.772 * (cbVal - 128)));
+                        YccToRgb(yVal, cbVal, crVal, out r, out g, out b);
                     } else {
                         var c = SampleComponent(states, cIndex, x, y, maxH, maxV, 0);
                         var m = SampleComponent(states, mIndex, x, y, maxH, maxV, 0);
@@ -125,9 +155,7 @@ public static partial class JpegReader {
                     var cbVal = SampleComponent(states, cbIndex, x, y, maxH, maxV, 128);
                     var crVal = SampleComponent(states, crIndex, x, y, maxH, maxV, 128);
 
-                    r = ClampToByte(yVal + (1.402 * (crVal - 128)));
-                    g = ClampToByte(yVal - (0.344136 * (cbVal - 128)) - (0.714136 * (crVal - 128)));
-                    b = ClampToByte(yVal + (1.772 * (cbVal - 128)));
+                    YccToRgb(yVal, cbVal, crVal, out r, out g, out b);
                 }
 
                 var p = (y * frame.Width + x) * 4;
@@ -139,6 +167,15 @@ public static partial class JpegReader {
         }
 
         return rgba;
+    }
+
+    private static void YccToRgb(int y, int cb, int cr, out byte r, out byte g, out byte b) {
+        var rVal = y + CrToR[cr];
+        var gVal = y - CbToG[cb] - CrToG[cr];
+        var bVal = y + CbToB[cb];
+        r = ClampToByte(rVal);
+        g = ClampToByte(gVal);
+        b = ClampToByte(bVal);
     }
 
     private static int SampleComponent(
@@ -158,7 +195,7 @@ public static partial class JpegReader {
     }
 
     private static void DecodeBlock(
-        JpegBitReader reader,
+        ref JpegBitReader reader,
         HuffmanTable dcTable,
         HuffmanTable acTable,
         int[] quant,
@@ -167,7 +204,7 @@ public static partial class JpegReader {
         int[] pixels) {
         Array.Clear(coeffs, 0, 64);
 
-        var t = DecodeHuffman(reader, dcTable);
+        var t = DecodeHuffman(ref reader, dcTable, useFast: true);
         var diff = t == 0 ? 0 : Extend(reader.ReadBits(t), t);
         var dc = prevDc + diff;
         prevDc = dc;
@@ -175,7 +212,7 @@ public static partial class JpegReader {
 
         var k = 1;
         while (k < 64) {
-            var rs = DecodeHuffman(reader, acTable);
+            var rs = DecodeHuffman(ref reader, acTable, useFast: true);
             if (rs == 0) break;
             var r = rs >> 4;
             var s = rs & 0x0F;
@@ -198,17 +235,28 @@ public static partial class JpegReader {
         InverseDct(coeffs, pixels);
     }
 
-    private static int DecodeHuffman(JpegBitReader reader, HuffmanTable table) {
-        var code = 0;
-        for (var i = 1; i <= 16; i++) {
-            code = (code << 1) | reader.ReadBit();
-            if (table.MaxCode[i] < 0) continue;
-            if (code <= table.MaxCode[i]) {
-                var index = table.ValPtr[i] + (code - table.MinCode[i]);
-                return table.Values[index];
+    private static int DecodeHuffman(ref JpegBitReader reader, HuffmanTable table, bool useFast) {
+        if (useFast && table.Fast is not null && reader.HasBits(HuffmanFastBits)) {
+            var peek = reader.PeekBits(HuffmanFastBits);
+            var entry = table.Fast[peek];
+            if (entry >= 0) {
+                var size = entry >> 8;
+                reader.SkipBits(size);
+                return entry & 0xFF;
             }
         }
-        throw new FormatException("Invalid JPEG Huffman code.");
+
+        var node = 0;
+        while (true) {
+            var bit = reader.ReadBit();
+            node = bit == 0 ? table.Left[node] : table.Right[node];
+            if (node < 0) {
+                if (reader.AllowTruncated) return 0;
+                throw new FormatException("Invalid JPEG Huffman code.");
+            }
+            var symbol = table.Symbols[node];
+            if (symbol >= 0) return symbol;
+        }
     }
 
     private static int Extend(int value, int bits) {
@@ -231,41 +279,209 @@ public static partial class JpegReader {
     }
 
     private static void InverseDct(int[] input, int[] output) {
-        Span<double> temp = stackalloc double[64];
-        for (var y = 0; y < 8; y++) {
-            var row = y * 8;
-            for (var x = 0; x < 8; x++) {
-                double sum = 0;
-                for (var u = 0; u < 8; u++) {
-                    var cu = u == 0 ? 0.7071067811865476 : 1.0;
-                    sum += cu * input[row + u] * IdctCos[x, u];
-                }
-                temp[row + x] = sum * 0.5;
+        Span<int> workspace = stackalloc int[64];
+
+        // Pass 1: process columns into the workspace (scaled by Pass1Bits).
+        for (var ctr = 0; ctr < 8; ctr++) {
+            var c0 = input[ctr];
+            var c1 = input[ctr + 8];
+            var c2 = input[ctr + 16];
+            var c3 = input[ctr + 24];
+            var c4 = input[ctr + 32];
+            var c5 = input[ctr + 40];
+            var c6 = input[ctr + 48];
+            var c7 = input[ctr + 56];
+
+            if (c1 == 0 && c2 == 0 && c3 == 0 && c4 == 0 && c5 == 0 && c6 == 0 && c7 == 0) {
+                var dc = c0 << Pass1Bits;
+                workspace[ctr] = dc;
+                workspace[ctr + 8] = dc;
+                workspace[ctr + 16] = dc;
+                workspace[ctr + 24] = dc;
+                workspace[ctr + 32] = dc;
+                workspace[ctr + 40] = dc;
+                workspace[ctr + 48] = dc;
+                workspace[ctr + 56] = dc;
+                continue;
             }
+
+            long tmp0;
+            long tmp1;
+            long tmp2;
+            long tmp3;
+            long tmp10;
+            long tmp11;
+            long tmp12;
+            long tmp13;
+            long z1;
+            long z2;
+            long z3;
+            long z4;
+            long z5;
+
+            // Even part.
+            z2 = c2;
+            z3 = c6;
+            z1 = (z2 + z3) * Fix0_541196100;
+            tmp2 = z1 + z3 * -Fix1_847759065;
+            tmp3 = z1 + z2 * Fix0_765366865;
+
+            tmp0 = (c0 + c4) << ConstBits;
+            tmp1 = (c0 - c4) << ConstBits;
+
+            tmp10 = tmp0 + tmp3;
+            tmp13 = tmp0 - tmp3;
+            tmp11 = tmp1 + tmp2;
+            tmp12 = tmp1 - tmp2;
+
+            // Odd part.
+            tmp0 = c7;
+            tmp1 = c5;
+            tmp2 = c3;
+            tmp3 = c1;
+
+            z1 = tmp0 + tmp3;
+            z2 = tmp1 + tmp2;
+            z3 = tmp0 + tmp2;
+            z4 = tmp1 + tmp3;
+            z5 = (z3 + z4) * Fix1_175875602;
+
+            tmp0 *= Fix0_298631336;
+            tmp1 *= Fix2_053119869;
+            tmp2 *= Fix3_072711026;
+            tmp3 *= Fix1_501321110;
+            z1 *= -Fix0_899976223;
+            z2 *= -Fix2_562915447;
+            z3 *= -Fix1_961570560;
+            z4 *= -Fix0_390180644;
+
+            z3 += z5;
+            z4 += z5;
+
+            tmp0 += z1 + z3;
+            tmp1 += z2 + z4;
+            tmp2 += z2 + z3;
+            tmp3 += z1 + z4;
+
+            workspace[ctr] = Descale(tmp10 + tmp3, ConstBits - Pass1Bits);
+            workspace[ctr + 56] = Descale(tmp10 - tmp3, ConstBits - Pass1Bits);
+            workspace[ctr + 8] = Descale(tmp11 + tmp2, ConstBits - Pass1Bits);
+            workspace[ctr + 48] = Descale(tmp11 - tmp2, ConstBits - Pass1Bits);
+            workspace[ctr + 16] = Descale(tmp12 + tmp1, ConstBits - Pass1Bits);
+            workspace[ctr + 40] = Descale(tmp12 - tmp1, ConstBits - Pass1Bits);
+            workspace[ctr + 24] = Descale(tmp13 + tmp0, ConstBits - Pass1Bits);
+            workspace[ctr + 32] = Descale(tmp13 - tmp0, ConstBits - Pass1Bits);
         }
 
-        for (var x = 0; x < 8; x++) {
-            for (var y = 0; y < 8; y++) {
-                double sum = 0;
-                for (var v = 0; v < 8; v++) {
-                    var cv = v == 0 ? 0.7071067811865476 : 1.0;
-                    sum += cv * temp[v * 8 + x] * IdctCos[y, v];
-                }
-                output[y * 8 + x] = ClampToInt(sum * 0.5 + 128.0);
+        // Pass 2: process rows from the workspace into final pixels.
+        for (var ctr = 0; ctr < 8; ctr++) {
+            var row = ctr * 8;
+            var w0 = workspace[row];
+            var w1 = workspace[row + 1];
+            var w2 = workspace[row + 2];
+            var w3 = workspace[row + 3];
+            var w4 = workspace[row + 4];
+            var w5 = workspace[row + 5];
+            var w6 = workspace[row + 6];
+            var w7 = workspace[row + 7];
+
+            if (w1 == 0 && w2 == 0 && w3 == 0 && w4 == 0 && w5 == 0 && w6 == 0 && w7 == 0) {
+                var dc = Descale(w0, Pass1Bits + 3) + 128;
+                var clamped = ClampToByte(dc);
+                output[row] = clamped;
+                output[row + 1] = clamped;
+                output[row + 2] = clamped;
+                output[row + 3] = clamped;
+                output[row + 4] = clamped;
+                output[row + 5] = clamped;
+                output[row + 6] = clamped;
+                output[row + 7] = clamped;
+                continue;
             }
+
+            long tmp0;
+            long tmp1;
+            long tmp2;
+            long tmp3;
+            long tmp10;
+            long tmp11;
+            long tmp12;
+            long tmp13;
+            long z1;
+            long z2;
+            long z3;
+            long z4;
+            long z5;
+
+            // Even part.
+            z2 = w2;
+            z3 = w6;
+            z1 = (z2 + z3) * Fix0_541196100;
+            tmp2 = z1 + z3 * -Fix1_847759065;
+            tmp3 = z1 + z2 * Fix0_765366865;
+
+            tmp0 = (w0 + w4) << ConstBits;
+            tmp1 = (w0 - w4) << ConstBits;
+
+            tmp10 = tmp0 + tmp3;
+            tmp13 = tmp0 - tmp3;
+            tmp11 = tmp1 + tmp2;
+            tmp12 = tmp1 - tmp2;
+
+            // Odd part.
+            tmp0 = w7;
+            tmp1 = w5;
+            tmp2 = w3;
+            tmp3 = w1;
+
+            z1 = tmp0 + tmp3;
+            z2 = tmp1 + tmp2;
+            z3 = tmp0 + tmp2;
+            z4 = tmp1 + tmp3;
+            z5 = (z3 + z4) * Fix1_175875602;
+
+            tmp0 *= Fix0_298631336;
+            tmp1 *= Fix2_053119869;
+            tmp2 *= Fix3_072711026;
+            tmp3 *= Fix1_501321110;
+            z1 *= -Fix0_899976223;
+            z2 *= -Fix2_562915447;
+            z3 *= -Fix1_961570560;
+            z4 *= -Fix0_390180644;
+
+            z3 += z5;
+            z4 += z5;
+
+            tmp0 += z1 + z3;
+            tmp1 += z2 + z4;
+            tmp2 += z2 + z3;
+            tmp3 += z1 + z4;
+
+            var shift = ConstBits + Pass1Bits + 3;
+            output[row] = ClampToByte(Descale(tmp10 + tmp3, shift) + 128);
+            output[row + 7] = ClampToByte(Descale(tmp10 - tmp3, shift) + 128);
+            output[row + 1] = ClampToByte(Descale(tmp11 + tmp2, shift) + 128);
+            output[row + 6] = ClampToByte(Descale(tmp11 - tmp2, shift) + 128);
+            output[row + 2] = ClampToByte(Descale(tmp12 + tmp1, shift) + 128);
+            output[row + 5] = ClampToByte(Descale(tmp12 - tmp1, shift) + 128);
+            output[row + 3] = ClampToByte(Descale(tmp13 + tmp0, shift) + 128);
+            output[row + 4] = ClampToByte(Descale(tmp13 - tmp0, shift) + 128);
         }
     }
 
-    private static byte ClampToByte(double value) {
+    private static byte ClampToByte(int value) {
         if (value <= 0) return 0;
         if (value >= 255) return 255;
-        return (byte)(value + 0.5);
+        return (byte)value;
     }
 
-    private static int ClampToInt(double value) {
-        if (value <= 0) return 0;
-        if (value >= 255) return 255;
-        return (int)(value + 0.5);
+    private static int Descale(long value, int shift) {
+        if (shift <= 0) return (int)value;
+        var round = 1L << (shift - 1);
+        if (value >= 0) {
+            return (int)((value + round) >> shift);
+        }
+        return (int)(-(((-value) + round) >> shift));
     }
 
     private static JpegFrame ParseFrameHeader(ReadOnlySpan<byte> data) {
@@ -644,40 +860,65 @@ public static partial class JpegReader {
     }
 
     private struct HuffmanTable {
-        public int[] MinCode;
-        public int[] MaxCode;
-        public int[] ValPtr;
-        public byte[] Values;
+        public int[] Left;
+        public int[] Right;
+        public int[] Symbols;
+        public short[]? Fast;
         public bool IsValid;
 
         public static HuffmanTable Build(ReadOnlySpan<byte> counts, byte[] values) {
-            var minCode = new int[17];
-            var maxCode = new int[17];
-            var valPtr = new int[17];
-            for (var i = 0; i < 17; i++) {
-                minCode[i] = -1;
-                maxCode[i] = -1;
-            }
+            var left = new int[512];
+            var right = new int[512];
+            var symbols = new int[512];
+            var fast = new short[1 << HuffmanFastBits];
+            Array.Fill(left, -1);
+            Array.Fill(right, -1);
+            Array.Fill(symbols, -1);
+            Array.Fill(fast, (short)-1);
 
+            var next = 1;
             var code = 0;
             var k = 0;
             for (var i = 1; i <= 16; i++) {
                 var count = counts[i - 1];
-                if (count != 0) {
-                    minCode[i] = code;
-                    valPtr[i] = k;
-                    code += count;
-                    maxCode[i] = code - 1;
-                    k += count;
+                for (var j = 0; j < count; j++) {
+                    var symbol = values[k++];
+                    var node = 0;
+                    for (var bit = i - 1; bit >= 0; bit--) {
+                        var b = (code >> bit) & 1;
+                        if (b == 0) {
+                            if (left[node] < 0) {
+                                if (next >= left.Length) throw new FormatException("Invalid JPEG Huffman tree.");
+                                left[node] = next++;
+                            }
+                            node = left[node];
+                        } else {
+                            if (right[node] < 0) {
+                                if (next >= right.Length) throw new FormatException("Invalid JPEG Huffman tree.");
+                                right[node] = next++;
+                            }
+                            node = right[node];
+                        }
+                    }
+                    symbols[node] = symbol;
+                    if (i <= HuffmanFastBits) {
+                        var fill = 1 << (HuffmanFastBits - i);
+                        var start = code << (HuffmanFastBits - i);
+                        var entry = (short)((i << 8) | symbol);
+                        for (var f = 0; f < fill; f++) {
+                            fast[start + f] = entry;
+                        }
+                    }
+                    code++;
                 }
                 code <<= 1;
             }
 
             return new HuffmanTable {
-                MinCode = minCode,
-                MaxCode = maxCode,
-                ValPtr = valPtr,
-                Values = values,
+                Left = left,
+                Right = right,
+                Symbols = symbols,
+                Fast = fast,
                 IsValid = true
             };
         }
@@ -685,24 +926,54 @@ public static partial class JpegReader {
 
     private ref struct JpegBitReader {
         private readonly ReadOnlySpan<byte> _data;
+        private readonly bool _allowTruncated;
         private int _pos;
         private int _bitBuffer;
         private int _bitCount;
 
         public bool RestartMarkerSeen;
 
-        public JpegBitReader(ReadOnlySpan<byte> data) {
+        public JpegBitReader(ReadOnlySpan<byte> data, bool allowTruncated = false) {
             _data = data;
+            _allowTruncated = allowTruncated;
             _pos = 0;
             _bitBuffer = 0;
             _bitCount = 0;
             RestartMarkerSeen = false;
         }
 
+        public bool AllowTruncated => _allowTruncated;
+
+        public bool HasBits(int count) {
+            return _bitCount >= count;
+        }
+
+        public int PeekBits(int count) {
+            if (count == 0) return 0;
+            EnsureBits(count);
+            return (_bitBuffer >> (_bitCount - count)) & ((1 << count) - 1);
+        }
+
+        public void SkipBits(int count) {
+            if (count == 0) return;
+            _bitCount -= count;
+            if (_bitCount <= 0) {
+                _bitCount = 0;
+                _bitBuffer = 0;
+            } else {
+                _bitBuffer &= (1 << _bitCount) - 1;
+            }
+        }
+
         public int ReadBit() {
             EnsureBits(1);
             var bit = (_bitBuffer >> (_bitCount - 1)) & 1;
             _bitCount--;
+            if (_bitCount == 0) {
+                _bitBuffer = 0;
+            } else {
+                _bitBuffer &= (1 << _bitCount) - 1;
+            }
             return bit;
         }
 
@@ -711,8 +982,14 @@ public static partial class JpegReader {
             EnsureBits(count);
             var value = (_bitBuffer >> (_bitCount - count)) & ((1 << count) - 1);
             _bitCount -= count;
+            if (_bitCount == 0) {
+                _bitBuffer = 0;
+            } else {
+                _bitBuffer &= (1 << _bitCount) - 1;
+            }
             return value;
         }
+
 
         public void ExpectRestartMarker() {
             _bitBuffer = 0;
@@ -745,7 +1022,10 @@ public static partial class JpegReader {
             while (_pos < _data.Length) {
                 var b = _data[_pos++];
                 if (b != 0xFF) return b;
-                if (_pos >= _data.Length) throw new FormatException("Unexpected JPEG end.");
+                if (_pos >= _data.Length) {
+                    if (_allowTruncated) return 0;
+                    throw new FormatException("Unexpected JPEG end.");
+                }
                 var marker = _data[_pos++];
                 if (marker == 0x00) return 0xFF;
                 if (marker >= 0xD0 && marker <= 0xD7) {
@@ -754,6 +1034,7 @@ public static partial class JpegReader {
                 }
                 throw new FormatException("Unexpected JPEG marker in scan.");
             }
+            if (_allowTruncated) return 0;
             throw new FormatException("Unexpected JPEG end.");
         }
     }
