@@ -66,9 +66,26 @@ public sealed class QrPngEyeOptions {
     /// </summary>
     public QrPngGradientOptions? InnerGradient { get; set; }
 
+    /// <summary>
+    /// Optional glow radius in pixels when <see cref="FrameStyle"/> is <see cref="QrPngEyeFrameStyle.Glow"/>.
+    /// A value of 0 uses a reasonable default based on module size.
+    /// </summary>
+    public int GlowRadiusPx { get; set; }
+
+    /// <summary>
+    /// Optional glow color override. Defaults to the outer eye color.
+    /// </summary>
+    public Rgba32? GlowColor { get; set; }
+
+    /// <summary>
+    /// Maximum glow alpha (0..255) when <see cref="FrameStyle"/> is <see cref="QrPngEyeFrameStyle.Glow"/>.
+    /// </summary>
+    public byte GlowAlpha { get; set; } = 110;
+
     internal void Validate() {
         if (OuterScale is <= 0 or > 1.0) throw new ArgumentOutOfRangeException(nameof(OuterScale));
         if (InnerScale is <= 0 or > 1.0) throw new ArgumentOutOfRangeException(nameof(InnerScale));
+        if (GlowRadiusPx < 0) throw new ArgumentOutOfRangeException(nameof(GlowRadiusPx));
         OuterGradient?.Validate();
         InnerGradient?.Validate();
     }

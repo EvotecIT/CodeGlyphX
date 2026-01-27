@@ -17,6 +17,10 @@ public enum QrPngModuleShape {
     /// </summary>
     Rounded,
     /// <summary>
+    /// Rounded modules that connect to adjacent dark modules.
+    /// </summary>
+    ConnectedRounded,
+    /// <summary>
     /// Diamond-shaped modules.
     /// </summary>
     Diamond,

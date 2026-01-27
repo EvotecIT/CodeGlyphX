@@ -33,6 +33,14 @@ public enum QrArtWarningKind {
     /// </summary>
     ModuleScaleTooSmall,
     /// <summary>
+    /// Functional patterns are not protected while decorative styling is enabled.
+    /// </summary>
+    FunctionalPatternsUnprotected,
+    /// <summary>
+    /// Background pattern may be drawn into the quiet zone.
+    /// </summary>
+    QuietZonePatterned,
+    /// <summary>
     /// Logo covers too much of the QR area.
     /// </summary>
     LogoTooLarge,
@@ -126,6 +134,22 @@ public static class QrArtSafety {
         }
         if (minScale < 0.8) {
             Add(QrArtWarningKind.ModuleScaleTooSmall, "Module scale below 0.8 can weaken timing/finder clarity.", 10);
+        }
+
+        var hasDecorativeModules = options.ModuleShape != QrPngModuleShape.Square
+            || options.ModuleScale < 1.0
+            || options.ModuleScaleMap is not null
+            || options.ForegroundGradient is not null
+            || options.ForegroundPalette is not null
+            || options.ForegroundPaletteZones is not null
+            || options.Eyes is not null;
+
+        if (!options.ProtectFunctionalPatterns && hasDecorativeModules) {
+            Add(QrArtWarningKind.FunctionalPatternsUnprotected, "Decorative styling without functional pattern protection can reduce scan reliability.", 15);
+        }
+
+        if (options.BackgroundPattern is not null && options.QuietZone > 0 && !options.ProtectQuietZone) {
+            Add(QrArtWarningKind.QuietZonePatterned, "Background patterns should avoid the quiet zone to preserve scan detection.", 20);
         }
 
         var bg = options.BackgroundGradient is null
