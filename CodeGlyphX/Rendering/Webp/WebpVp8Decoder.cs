@@ -273,11 +273,13 @@ internal static class WebpVp8Decoder {
 
             var tokens = new int[TokenScaffoldTokensPerPartition];
             var prevContexts = new int[TokenScaffoldTokensPerPartition];
+            var tokenInfos = new WebpVp8TokenInfo[TokenScaffoldTokensPerPartition];
             var tokensRead = 0;
             var prevContext = 0;
             for (var t = 0; t < tokens.Length; t++) {
                 var coefficientIndex = t % CoefficientsPerBlock;
                 var band = CoeffBandTable[coefficientIndex];
+                var prevBefore = prevContext;
                 if (!TryReadScaffoldCoefficientToken(
                     decoder,
                     frameHeader.CoefficientProbabilities,
@@ -291,13 +293,9 @@ internal static class WebpVp8Decoder {
                 prevContexts[t] = prevContext;
                 tokensRead++;
 
-                // Scaffold-only context evolution aligned to token classes:
-                // eob/zero => 0, one => 1, others => 2.
-                prevContext = tokenCode switch {
-                    0 or 1 => 0,
-                    2 => 1,
-                    _ => 2,
-                };
+                var tokenInfo = ClassifyToken(tokenCode, band, prevBefore);
+                tokenInfos[t] = tokenInfo;
+                prevContext = tokenInfo.PrevContextAfter;
             }
 
             partitionScaffolds[i] = new WebpVp8TokenPartitionScaffold(
@@ -306,6 +304,7 @@ internal static class WebpVp8Decoder {
                 decoder.BytesConsumed,
                 tokens,
                 prevContexts,
+                tokenInfos,
                 tokensRead);
 
             totalTokensRead += tokensRead;
@@ -528,6 +527,18 @@ internal static class WebpVp8Decoder {
         if ((uint)token >= CoeffTokenCount) return false;
         tokenCode = token;
         return true;
+    }
+
+    private static WebpVp8TokenInfo ClassifyToken(int tokenCode, int band, int prevContextBefore) {
+        var hasMore = tokenCode != 0;
+        var isNonZero = tokenCode >= 2;
+        var prevContextAfter = tokenCode switch {
+            0 or 1 => 0,
+            2 => 1,
+            _ => 2,
+        };
+
+        return new WebpVp8TokenInfo(tokenCode, band, prevContextBefore, prevContextAfter, hasMore, isNonZero);
     }
 
     private static int GetCoeffIndex(int blockType, int band, int prev, int node) {
@@ -769,12 +780,14 @@ internal readonly struct WebpVp8TokenPartitionScaffold {
         int bytesConsumed,
         int[] tokens,
         int[] prevContexts,
+        WebpVp8TokenInfo[] tokenInfos,
         int tokensRead) {
         Offset = offset;
         Size = size;
         BytesConsumed = bytesConsumed;
         Tokens = tokens;
         PrevContexts = prevContexts;
+        TokenInfos = tokenInfos;
         TokensRead = tokensRead;
     }
 
@@ -783,6 +796,7 @@ internal readonly struct WebpVp8TokenPartitionScaffold {
     public int BytesConsumed { get; }
     public int[] Tokens { get; }
     public int[] PrevContexts { get; }
+    public WebpVp8TokenInfo[] TokenInfos { get; }
     public int TokensRead { get; }
 }
 
@@ -798,4 +812,28 @@ internal readonly struct WebpVp8TokenScaffold {
     public WebpVp8TokenPartitionScaffold[] Partitions { get; }
     public int TotalTokensRead { get; }
     public int TotalBytesConsumed { get; }
+}
+
+internal readonly struct WebpVp8TokenInfo {
+    public WebpVp8TokenInfo(
+        int tokenCode,
+        int band,
+        int prevContextBefore,
+        int prevContextAfter,
+        bool hasMore,
+        bool isNonZero) {
+        TokenCode = tokenCode;
+        Band = band;
+        PrevContextBefore = prevContextBefore;
+        PrevContextAfter = prevContextAfter;
+        HasMore = hasMore;
+        IsNonZero = isNonZero;
+    }
+
+    public int TokenCode { get; }
+    public int Band { get; }
+    public int PrevContextBefore { get; }
+    public int PrevContextAfter { get; }
+    public bool HasMore { get; }
+    public bool IsNonZero { get; }
 }
