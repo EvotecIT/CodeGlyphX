@@ -61,6 +61,12 @@ public sealed class QrPngCanvasSplashOptions {
     /// </summary>
     public bool ProtectQrArea { get; set; } = true;
 
+    /// <summary>
+    /// Maximum alpha allowed inside the QR area when <see cref="ProtectQrArea"/> is false.
+    /// Set to 0 to apply no alpha limit.
+    /// </summary>
+    public byte QrAreaAlphaMax { get; set; }
+
     internal void Validate() {
         if (Count < 0) throw new ArgumentOutOfRangeException(nameof(Count));
         if (MinRadiusPx < 1) throw new ArgumentOutOfRangeException(nameof(MinRadiusPx));

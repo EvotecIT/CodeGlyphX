@@ -528,6 +528,59 @@ public sealed class QrPngRendererTests {
     }
 
     [Fact]
+    public void Render_With_Eye_Sparkles_Draws_On_Canvas_Outside_Qr() {
+        var qr = QrCodeEncoder.EncodeText("HELLO", QrErrorCorrectionLevel.H);
+        var moduleSize = 8;
+        var quietZone = 4;
+        var padding = 26;
+
+        var opts = new QrPngRenderOptions {
+            ModuleSize = moduleSize,
+            QuietZone = quietZone,
+            Foreground = Rgba32.Black,
+            Background = Rgba32.White,
+            Canvas = new QrPngCanvasOptions {
+                PaddingPx = padding,
+                CornerRadiusPx = 0,
+                Background = Rgba32.White,
+            },
+            Eyes = new QrPngEyeOptions {
+                SparkleCount = 20,
+                SparkleRadiusPx = 3,
+                SparkleSpreadPx = 28,
+                SparkleSeed = 4242,
+                SparkleColor = new Rgba32(0, 0, 0, 200),
+            },
+        };
+
+        var png = QrPngRenderer.Render(qr.Modules, opts);
+        var (rgba, width, height, stride) = PngTestDecoder.DecodeRgba32(png);
+
+        var qrFullPx = (qr.Size + quietZone * 2) * moduleSize;
+        var qrX0 = padding;
+        var qrY0 = padding;
+        var qrX1 = qrX0 + qrFullPx - 1;
+        var qrY1 = qrY0 + qrFullPx - 1;
+
+        var foundSparkle = false;
+        for (var y = 0; y < height && !foundSparkle; y++) {
+            for (var x = 0; x < width; x++) {
+                if (x >= qrX0 && x <= qrX1 && y >= qrY0 && y <= qrY1) continue;
+                var p = y * stride + x * 4;
+                var r = rgba[p + 0];
+                var g = rgba[p + 1];
+                var b = rgba[p + 2];
+                if (r != 255 || g != 255 || b != 255) {
+                    foundSparkle = true;
+                    break;
+                }
+            }
+        }
+
+        Assert.True(foundSparkle, "Expected at least one sparkle-colored pixel outside the QR area.");
+    }
+
+    [Fact]
     public void Render_With_Eye_InsetRing_Leaves_Center_Light_And_Ring_Dark() {
         var qr = QrCodeEncoder.EncodeText("HELLO", QrErrorCorrectionLevel.H);
 

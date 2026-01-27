@@ -82,10 +82,48 @@ public sealed class QrPngEyeOptions {
     /// </summary>
     public byte GlowAlpha { get; set; } = 110;
 
+    /// <summary>
+    /// Optional sparkle count drawn around the eyes on the canvas.
+    /// </summary>
+    public int SparkleCount { get; set; }
+
+    /// <summary>
+    /// Sparkle radius in pixels.
+    /// </summary>
+    public int SparkleRadiusPx { get; set; } = 3;
+
+    /// <summary>
+    /// How far sparkles can extend beyond the eye ring (in pixels).
+    /// </summary>
+    public int SparkleSpreadPx { get; set; } = 20;
+
+    /// <summary>
+    /// Sparkle color override. Defaults to the outer eye color.
+    /// </summary>
+    public Rgba32? SparkleColor { get; set; }
+
+    /// <summary>
+    /// Random seed for sparkle placement. Use 0 to auto-randomize per render.
+    /// </summary>
+    public int SparkleSeed { get; set; }
+
+    /// <summary>
+    /// When true (default), sparkles do not draw inside the QR area.
+    /// </summary>
+    public bool SparkleProtectQrArea { get; set; } = true;
+
+    /// <summary>
+    /// When false (default), sparkles render only when a canvas is enabled.
+    /// </summary>
+    public bool SparkleAllowOnQrBackground { get; set; }
+
     internal void Validate() {
         if (OuterScale is <= 0 or > 1.0) throw new ArgumentOutOfRangeException(nameof(OuterScale));
         if (InnerScale is <= 0 or > 1.0) throw new ArgumentOutOfRangeException(nameof(InnerScale));
         if (GlowRadiusPx < 0) throw new ArgumentOutOfRangeException(nameof(GlowRadiusPx));
+        if (SparkleCount < 0) throw new ArgumentOutOfRangeException(nameof(SparkleCount));
+        if (SparkleRadiusPx < 0) throw new ArgumentOutOfRangeException(nameof(SparkleRadiusPx));
+        if (SparkleSpreadPx < 0) throw new ArgumentOutOfRangeException(nameof(SparkleSpreadPx));
         OuterGradient?.Validate();
         InnerGradient?.Validate();
     }

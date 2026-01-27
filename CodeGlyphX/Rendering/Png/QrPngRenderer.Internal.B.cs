@@ -1340,6 +1340,7 @@ public static partial class QrPngRenderer {
             DripLengthPx = Math.Max(0, splash.DripLengthPx * scale),
             DripWidthPx = Math.Max(0, splash.DripWidthPx * scale),
             ProtectQrArea = splash.ProtectQrArea,
+            QrAreaAlphaMax = splash.QrAreaAlphaMax,
         };
     }
 

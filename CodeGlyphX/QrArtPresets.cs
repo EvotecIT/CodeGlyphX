@@ -394,6 +394,11 @@ public static class QrArtPresets {
             InnerCornerRadiusPx = 4,
             OuterColor = new Rgba32(24, 44, 132),
             InnerColor = new Rgba32(46, 170, 188),
+            SparkleCount = 22,
+            SparkleRadiusPx = 3,
+            SparkleSpreadPx = 24,
+            SparkleSeed = 90210,
+            SparkleColor = new Rgba32(70, 190, 210, 140),
         };
         opts.Canvas = new QrPngCanvasOptions {
             PaddingPx = 26,

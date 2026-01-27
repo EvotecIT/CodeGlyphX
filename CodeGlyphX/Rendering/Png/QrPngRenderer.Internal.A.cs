@@ -80,6 +80,12 @@ public static partial class QrPngRenderer {
             DrawCanvas(buffer, widthPx, heightPx, stride, opts, qrOffsetX, qrOffsetY, qrFullPx);
             FillQrBackground(buffer, widthPx, heightPx, stride, opts, qrOffsetX, qrOffsetY, qrFullPx);
         }
+
+        if (opts.Eyes is { SparkleCount: > 0 } eyesSparkle
+            && (opts.Canvas is not null || eyesSparkle.SparkleAllowOnQrBackground)) {
+            DrawEyeSparkles(buffer, widthPx, heightPx, stride, opts, qrOffsetX, qrOffsetY, qrFullPx, qrSizePx, size);
+        }
+
         var connectedShape = opts.ModuleShape;
         var connectedMode = connectedShape is QrPngModuleShape.ConnectedRounded or QrPngModuleShape.ConnectedSquircle;
         var baseModuleShape = connectedMode
@@ -566,6 +572,111 @@ public static partial class QrPngRenderer {
         }
     }
 
+    private static void DrawEyeSparkles(
+        byte[] scanlines,
+        int widthPx,
+        int heightPx,
+        int stride,
+        QrPngRenderOptions opts,
+        int qrOffsetX,
+        int qrOffsetY,
+        int qrFullPx,
+        int qrSizePx,
+        int size) {
+        var eyes = opts.Eyes;
+        if (eyes is null || eyes.SparkleCount <= 0 || eyes.SparkleRadiusPx <= 0) return;
+
+        var moduleSize = opts.ModuleSize;
+        if (moduleSize <= 0) return;
+
+        var pad = opts.Canvas is null ? 0 : Math.Max(0, opts.Canvas.PaddingPx);
+        var canvasX = qrOffsetX - pad;
+        var canvasY = qrOffsetY - pad;
+        var canvasW = qrFullPx + pad * 2;
+        var canvasH = canvasW;
+        var canvasX1 = canvasX + canvasW - 1;
+        var canvasY1 = canvasY + canvasH - 1;
+        var canvasRadius = opts.Canvas is null ? 0 : Math.Max(0, opts.Canvas.CornerRadiusPx);
+        var canvasRadiusSq = canvasRadius * canvasRadius;
+
+        var qrX0 = qrOffsetX;
+        var qrY0 = qrOffsetY;
+        var qrX1 = qrOffsetX + qrFullPx - 1;
+        var qrY1 = qrOffsetY + qrFullPx - 1;
+
+        var seed = eyes.SparkleSeed != 0
+            ? eyes.SparkleSeed
+            : unchecked(Environment.TickCount ^ Hash(qrOffsetX, qrOffsetY, qrFullPx, size));
+        var rand = new Random(seed);
+
+        var sparkleColor = eyes.SparkleColor ?? eyes.OuterColor ?? opts.Foreground;
+        if (eyes.SparkleColor is null && sparkleColor.A > 180) {
+            sparkleColor = new Rgba32(sparkleColor.R, sparkleColor.G, sparkleColor.B, 160);
+        }
+        if (sparkleColor.A == 0) return;
+
+        var sparkleRadius = Math.Max(1, eyes.SparkleRadiusPx);
+        var sparkleSpread = Math.Max(0, eyes.SparkleSpreadPx);
+        var eyeRadiusPx = (int)Math.Round(3.5 * moduleSize);
+        var baseMinRing = eyeRadiusPx + sparkleRadius;
+
+        for (var i = 0; i < eyes.SparkleCount; i++) {
+            var eyeIndex = rand.Next(3);
+            var eyeModuleX = eyeIndex switch {
+                0 => 0,
+                1 => size - 7,
+                _ => 0,
+            };
+            var eyeModuleY = eyeIndex switch {
+                0 => 0,
+                1 => 0,
+                _ => size - 7,
+            };
+
+            var eyeBaseX = qrOffsetX + (eyeModuleX + opts.QuietZone) * moduleSize;
+            var eyeBaseY = qrOffsetY + (eyeModuleY + opts.QuietZone) * moduleSize;
+            var eyeCenterX = eyeBaseX + 3 * moduleSize + moduleSize / 2;
+            var eyeCenterY = eyeBaseY + 3 * moduleSize + moduleSize / 2;
+
+            var minRing = baseMinRing;
+            if (opts.Canvas is not null && eyes.SparkleProtectQrArea) {
+                var edgeDistance = Math.Min(
+                    Math.Min(eyeCenterX - qrX0, qrX1 - eyeCenterX),
+                    Math.Min(eyeCenterY - qrY0, qrY1 - eyeCenterY));
+                minRing = Math.Max(minRing, edgeDistance + sparkleRadius + 2);
+            }
+            var maxRing = minRing + sparkleSpread;
+
+            var angle = rand.NextDouble() * Math.PI * 2.0;
+            var ring = NextBetween(rand, minRing, maxRing);
+            var cx = (int)Math.Round(eyeCenterX + Math.Cos(angle) * ring);
+            var cy = (int)Math.Round(eyeCenterY + Math.Sin(angle) * ring);
+
+            cx = Clamp(cx, canvasX + sparkleRadius, canvasX1 - sparkleRadius);
+            cy = Clamp(cy, canvasY + sparkleRadius, canvasY1 - sparkleRadius);
+
+            FillSplashCircle(
+                scanlines,
+                stride,
+                cx,
+                cy,
+                sparkleRadius,
+                sparkleColor,
+                canvasX,
+                canvasY,
+                canvasX1,
+                canvasY1,
+                canvasRadius,
+                canvasRadiusSq,
+                eyes.SparkleProtectQrArea,
+                qrX0,
+                qrY0,
+                qrX1,
+                qrY1,
+                qrAreaAlphaMax: 0);
+        }
+    }
+
     private static void DrawCanvasSplash(
         byte[] scanlines,
         int stride,
@@ -650,7 +761,8 @@ public static partial class QrPngRenderer {
                 qrX0,
                 qrY0,
                 qrX1,
-                qrY1);
+                qrY1,
+                splash.QrAreaAlphaMax);
 
             if (splash.DripChance > 0 && splash.DripLengthPx > 0 && rand.NextDouble() < splash.DripChance) {
                 var dripLength = NextBetween(rand, Math.Max(4, splash.DripLengthPx / 2), splash.DripLengthPx);
@@ -678,7 +790,8 @@ public static partial class QrPngRenderer {
                     qrX0,
                     qrY0,
                     qrX1,
-                    qrY1);
+                    qrY1,
+                    splash.QrAreaAlphaMax);
             }
         }
     }
@@ -700,7 +813,8 @@ public static partial class QrPngRenderer {
         int qrX0,
         int qrY0,
         int qrX1,
-        int qrY1) {
+        int qrY1,
+        int qrAreaAlphaMax) {
         var r = Math.Max(1, radius);
         var r2 = r * r;
         var x0 = Math.Max(canvasX0, cx - r);
@@ -715,8 +829,15 @@ public static partial class QrPngRenderer {
                 var dx = x - cx;
                 if (dx * dx + dy2 > r2) continue;
                 if (canvasRadius > 0 && !InsideRounded(x, y, canvasX0, canvasY0, canvasX1, canvasY1, canvasRadius, canvasRadiusSq)) continue;
-                if (protectQr && x >= qrX0 && x <= qrX1 && y >= qrY0 && y <= qrY1) continue;
-                BlendPixel(scanlines, stride, x, y, color);
+                var insideQr = x >= qrX0 && x <= qrX1 && y >= qrY0 && y <= qrY1;
+                if (insideQr && protectQr) continue;
+
+                var drawColor = color;
+                if (insideQr && qrAreaAlphaMax > 0 && drawColor.A > qrAreaAlphaMax) {
+                    drawColor = new Rgba32(drawColor.R, drawColor.G, drawColor.B, (byte)qrAreaAlphaMax);
+                }
+
+                BlendPixel(scanlines, stride, x, y, drawColor);
             }
         }
     }
@@ -739,7 +860,8 @@ public static partial class QrPngRenderer {
         int qrX0,
         int qrY0,
         int qrX1,
-        int qrY1) {
+        int qrY1,
+        int qrAreaAlphaMax) {
         var safeRx = Math.Max(1, rx);
         var safeRy = Math.Max(1, ry);
         var x0 = Math.Max(canvasX0, cx - safeRx);
@@ -757,8 +879,15 @@ public static partial class QrPngRenderer {
                 var dx2 = dx * (double)dx;
                 if (dx2 / rx2 + dy2 / ry2 > 1.0) continue;
                 if (canvasRadius > 0 && !InsideRounded(x, y, canvasX0, canvasY0, canvasX1, canvasY1, canvasRadius, canvasRadiusSq)) continue;
-                if (protectQr && x >= qrX0 && x <= qrX1 && y >= qrY0 && y <= qrY1) continue;
-                BlendPixel(scanlines, stride, x, y, color);
+                var insideQr = x >= qrX0 && x <= qrX1 && y >= qrY0 && y <= qrY1;
+                if (insideQr && protectQr) continue;
+
+                var drawColor = color;
+                if (insideQr && qrAreaAlphaMax > 0 && drawColor.A > qrAreaAlphaMax) {
+                    drawColor = new Rgba32(drawColor.R, drawColor.G, drawColor.B, (byte)qrAreaAlphaMax);
+                }
+
+                BlendPixel(scanlines, stride, x, y, drawColor);
             }
         }
     }
