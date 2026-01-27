@@ -12,6 +12,9 @@ public sealed class WebpVp8HeaderTests {
         Assert.Equal(5, header.Width);
         Assert.Equal(3, header.Height);
         Assert.True(header.ShowFrame);
+        Assert.Equal(7, header.PartitionSize);
+        Assert.Equal(0, header.HorizontalScale);
+        Assert.Equal(0, header.VerticalScale);
         Assert.Equal(80, header.BitsConsumed);
     }
 
@@ -25,15 +28,25 @@ public sealed class WebpVp8HeaderTests {
         Assert.False(WebpVp8Decoder.TryReadHeader(payload, out _));
     }
 
-    private static byte[] BuildKeyframePayload(int width, int height) {
-        var payload = new byte[10];
+    [Fact]
+    public void Vp8_FirstPartition_IsExtractedUsingDeclaredSize() {
+        var payload = BuildKeyframePayload(width: 5, height: 3, partitionSize: 9);
 
-        // Frame tag (3 bytes, little-endian):
-        // frame_type=0 (keyframe), version=0, show_frame=1, partition_size=0
-        // => value has bit 4 set.
-        payload[0] = 0x10;
-        payload[1] = 0x00;
-        payload[2] = 0x00;
+        Assert.True(WebpVp8Decoder.TryGetFirstPartition(payload, out var firstPartition));
+        Assert.Equal(9, firstPartition.Length);
+        Assert.Equal(0x9D, firstPartition[0]);
+        Assert.Equal(0x2A, firstPartition[2]);
+    }
+
+    private static byte[] BuildKeyframePayload(int width, int height, int partitionSize = 7) {
+        if (partitionSize < 7) partitionSize = 7;
+        var payload = new byte[3 + partitionSize];
+
+        // Frame tag (3 bytes, little-endian).
+        var frameTag = (partitionSize << 5) | (1 << 4); // show_frame=1
+        payload[0] = (byte)(frameTag & 0xFF);
+        payload[1] = (byte)((frameTag >> 8) & 0xFF);
+        payload[2] = (byte)((frameTag >> 16) & 0xFF);
 
         // Start code.
         payload[3] = 0x9D;
@@ -49,4 +62,3 @@ public sealed class WebpVp8HeaderTests {
         return payload;
     }
 }
-

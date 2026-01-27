@@ -10,6 +10,7 @@ internal static class WebpVp8Decoder {
     private const int StartCodeBytes = 3;
     private const int DimensionBytes = 4;
     private const int MinimumHeaderBytes = FrameTagBytes + StartCodeBytes + DimensionBytes; // 10
+    private const int KeyframeHeaderBytes = StartCodeBytes + DimensionBytes; // 7
 
     internal static bool TryDecode(ReadOnlySpan<byte> payload, out byte[] rgba, out int width, out int height) {
         rgba = Array.Empty<byte>();
@@ -35,6 +36,7 @@ internal static class WebpVp8Decoder {
         var version = (frameTag >> 1) & 0x7;
         var showFrame = (frameTag >> 4) & 1;
         var partitionSize = frameTag >> 5;
+        if (partitionSize < KeyframeHeaderBytes) return false;
 
         // Keyframe start code.
         if (payload[3] != 0x9D || payload[4] != 0x01 || payload[5] != 0x2A) return false;
@@ -43,6 +45,8 @@ internal static class WebpVp8Decoder {
         var heightRaw = ReadU16LE(payload, 8);
         var width = widthRaw & 0x3FFF;
         var height = heightRaw & 0x3FFF;
+        var horizontalScale = (widthRaw >> 14) & 0x3;
+        var verticalScale = (heightRaw >> 14) & 0x3;
         if (width <= 0 || height <= 0) return false;
 
         header = new WebpVp8Header(
@@ -51,7 +55,22 @@ internal static class WebpVp8Decoder {
             version,
             showFrame != 0,
             partitionSize,
+            horizontalScale,
+            verticalScale,
             bitsConsumed: MinimumHeaderBytes * 8);
+        return true;
+    }
+
+    internal static bool TryGetFirstPartition(ReadOnlySpan<byte> payload, out ReadOnlySpan<byte> firstPartition) {
+        firstPartition = default;
+        if (!TryReadHeader(payload, out var header)) return false;
+
+        var offset = FrameTagBytes;
+        var length = header.PartitionSize;
+        if (offset < 0 || length < 0) return false;
+        if (offset + length > payload.Length) return false;
+
+        firstPartition = payload.Slice(offset, length);
         return true;
     }
 
@@ -69,12 +88,22 @@ internal static class WebpVp8Decoder {
 }
 
 internal readonly struct WebpVp8Header {
-    public WebpVp8Header(int width, int height, int version, bool showFrame, int partitionSize, int bitsConsumed) {
+    public WebpVp8Header(
+        int width,
+        int height,
+        int version,
+        bool showFrame,
+        int partitionSize,
+        int horizontalScale,
+        int verticalScale,
+        int bitsConsumed) {
         Width = width;
         Height = height;
         Version = version;
         ShowFrame = showFrame;
         PartitionSize = partitionSize;
+        HorizontalScale = horizontalScale;
+        VerticalScale = verticalScale;
         BitsConsumed = bitsConsumed;
     }
 
@@ -83,6 +112,7 @@ internal readonly struct WebpVp8Header {
     public int Version { get; }
     public bool ShowFrame { get; }
     public int PartitionSize { get; }
+    public int HorizontalScale { get; }
+    public int VerticalScale { get; }
     public int BitsConsumed { get; }
 }
-
