@@ -81,6 +81,7 @@ public sealed class RendererFormatTests {
     [Fact]
     public void Qr_ArtPresets_Render_Png_Format() {
         var payload = "https://example.com/art";
+#pragma warning disable CS0618 // QrArtPresets is deprecated in favor of QrArt.Theme + QrEasyOptions.Art.
         var presets = new[] {
             QrArtPresets.NeonGlowSafe(),
             QrArtPresets.LiquidGlassSafe(),
@@ -91,6 +92,7 @@ public sealed class RendererFormatTests {
             QrArtPresets.PaintSplashSafe(),
             QrArtPresets.PaintSplashPastelSafe(),
         };
+#pragma warning restore CS0618
 
         foreach (var preset in presets) {
             var png = QrEasy.RenderPng(payload, preset);

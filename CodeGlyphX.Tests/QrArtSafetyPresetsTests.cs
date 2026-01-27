@@ -7,6 +7,7 @@ public sealed class QrArtSafetyPresetsTests {
     [Fact]
     public void Art_Presets_Are_Scan_Safe_By_Default() {
         var payload = "https://example.com/scan-safe";
+#pragma warning disable CS0618 // QrArtPresets is deprecated in favor of QrArt.Theme + QrEasyOptions.Art.
         var presets = new[] {
             ("NeonGlowSafe", QrArtPresets.NeonGlowSafe()),
             ("LiquidGlassSafe", QrArtPresets.LiquidGlassSafe()),
@@ -17,6 +18,7 @@ public sealed class QrArtSafetyPresetsTests {
             ("PaintSplashSafe", QrArtPresets.PaintSplashSafe()),
             ("PaintSplashPastelSafe", QrArtPresets.PaintSplashPastelSafe()),
         };
+#pragma warning restore CS0618
 
         foreach (var (name, preset) in presets) {
             var report = QrEasy.EvaluateSafety(payload, preset);

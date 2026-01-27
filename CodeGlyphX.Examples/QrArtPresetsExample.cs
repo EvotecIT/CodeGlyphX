@@ -10,6 +10,7 @@ internal static class QrArtPresetsExample {
         var dir = Path.Combine(outputDir, "qr-art-presets");
         Directory.CreateDirectory(dir);
 
+#pragma warning disable CS0618 // QrArtPresets is deprecated in favor of QrArt.Theme + QrEasyOptions.Art.
         Save(dir, payload, "art-neon-glow-safe.png", QrArtPresets.NeonGlowSafe());
         Save(dir, payload, "art-neon-glow-bold.png", QrArtPresets.NeonGlowBold());
 
@@ -33,6 +34,7 @@ internal static class QrArtPresetsExample {
 
         Save(dir, payload, "art-paint-splash-pastel-safe.png", QrArtPresets.PaintSplashPastelSafe());
         Save(dir, payload, "art-paint-splash-pastel-bold.png", QrArtPresets.PaintSplashPastelBold());
+#pragma warning restore CS0618
 
         Save(dir, payload, "art-api-neon-glow.png", new QrEasyOptions {
             Art = QrArt.Theme(QrArtTheme.NeonGlow, QrArtVariant.Safe, intensity: 60)

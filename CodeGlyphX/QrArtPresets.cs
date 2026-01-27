@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Png;
 
@@ -11,6 +12,8 @@ public static class QrArtPresets {
     /// <summary>
     /// High-contrast neon glow on a dark canvas.
     /// </summary>
+    [Obsolete("Use QrArt.Theme(...) + QrEasyOptions.Art instead.", false)]
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public static QrEasyOptions NeonGlow() {
         var opts = BaseArt();
         opts.Foreground = new Rgba32(0, 96, 92);
@@ -74,6 +77,8 @@ public static class QrArtPresets {
     /// <summary>
     /// Soft, glassy gradients with smooth squircles.
     /// </summary>
+    [Obsolete("Use QrArt.Theme(...) + QrEasyOptions.Art instead.", false)]
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public static QrEasyOptions LiquidGlass() {
         var opts = BaseArt();
         opts.Foreground = new Rgba32(24, 68, 160);
@@ -139,6 +144,8 @@ public static class QrArtPresets {
     /// <summary>
     /// Connected squircles with a bold, modern glow.
     /// </summary>
+    [Obsolete("Use QrArt.Theme(...) + QrEasyOptions.Art instead.", false)]
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public static QrEasyOptions ConnectedSquircleGlow() {
         var opts = BaseArt();
         opts.Foreground = new Rgba32(60, 72, 180);
@@ -199,6 +206,8 @@ public static class QrArtPresets {
     /// <summary>
     /// Techy cut-corner eyes with structured palettes.
     /// </summary>
+    [Obsolete("Use QrArt.Theme(...) + QrEasyOptions.Art instead.", false)]
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public static QrEasyOptions CutCornerTech() {
         var opts = BaseArt();
         opts.Foreground = new Rgba32(20, 32, 62);
@@ -281,6 +290,8 @@ public static class QrArtPresets {
     /// <summary>
     /// Inset-ring eyes with orderly ring palettes.
     /// </summary>
+    [Obsolete("Use QrArt.Theme(...) + QrEasyOptions.Art instead.", false)]
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public static QrEasyOptions InsetRings() {
         var opts = BaseArt();
         opts.Foreground = new Rgba32(28, 60, 150);
@@ -341,6 +352,8 @@ public static class QrArtPresets {
     /// <summary>
     /// Stripe-textured eyes with calm module styling.
     /// </summary>
+    [Obsolete("Use QrArt.Theme(...) + QrEasyOptions.Art instead.", false)]
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public static QrEasyOptions StripeEyes() {
         var opts = BaseArt();
         opts.Foreground = new Rgba32(26, 46, 128);
@@ -402,6 +415,8 @@ public static class QrArtPresets {
     /// <summary>
     /// Paint-splash canvas with crisp, scan-friendly modules.
     /// </summary>
+    [Obsolete("Use QrArt.Theme(...) + QrEasyOptions.Art instead.", false)]
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public static QrEasyOptions PaintSplash() {
         var opts = BaseArt();
         opts.Foreground = new Rgba32(18, 36, 92);
@@ -472,6 +487,8 @@ public static class QrArtPresets {
     /// <summary>
     /// Pastel paint-splash canvas with a softer palette.
     /// </summary>
+    [Obsolete("Use QrArt.Theme(...) + QrEasyOptions.Art instead.", false)]
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public static QrEasyOptions PaintSplashPastel() {
         var opts = BaseArt();
         opts.Foreground = new Rgba32(20, 40, 98);
@@ -542,11 +559,15 @@ public static class QrArtPresets {
     /// <summary>
     /// Explicit scan-safe variant of <see cref="NeonGlow"/>.
     /// </summary>
+    [Obsolete("Use QrArt.Theme(...) + QrEasyOptions.Art instead.", false)]
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public static QrEasyOptions NeonGlowSafe() => NeonGlow();
 
     /// <summary>
     /// Bolder variant of <see cref="NeonGlow"/> with stronger effects.
     /// </summary>
+    [Obsolete("Use QrArt.Theme(...) + QrEasyOptions.Art instead.", false)]
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public static QrEasyOptions NeonGlowBold() {
         var opts = NeonGlowSafe();
         opts.ModuleScale = 0.93;
@@ -572,11 +593,15 @@ public static class QrArtPresets {
     /// <summary>
     /// Explicit scan-safe variant of <see cref="LiquidGlass"/>.
     /// </summary>
+    [Obsolete("Use QrArt.Theme(...) + QrEasyOptions.Art instead.", false)]
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public static QrEasyOptions LiquidGlassSafe() => LiquidGlass();
 
     /// <summary>
     /// Bolder variant of <see cref="LiquidGlass"/> with punchier gradients.
     /// </summary>
+    [Obsolete("Use QrArt.Theme(...) + QrEasyOptions.Art instead.", false)]
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public static QrEasyOptions LiquidGlassBold() {
         var opts = LiquidGlassSafe();
         opts.ModuleScale = 0.94;
@@ -602,11 +627,15 @@ public static class QrArtPresets {
     /// <summary>
     /// Explicit scan-safe variant of <see cref="ConnectedSquircleGlow"/>.
     /// </summary>
+    [Obsolete("Use QrArt.Theme(...) + QrEasyOptions.Art instead.", false)]
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public static QrEasyOptions ConnectedSquircleGlowSafe() => ConnectedSquircleGlow();
 
     /// <summary>
     /// Bolder variant of <see cref="ConnectedSquircleGlow"/> with denser rings.
     /// </summary>
+    [Obsolete("Use QrArt.Theme(...) + QrEasyOptions.Art instead.", false)]
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public static QrEasyOptions ConnectedSquircleGlowBold() {
         var opts = ConnectedSquircleGlowSafe();
         opts.ModuleScale = 0.94;
@@ -628,11 +657,15 @@ public static class QrArtPresets {
     /// <summary>
     /// Explicit scan-safe variant of <see cref="CutCornerTech"/>.
     /// </summary>
+    [Obsolete("Use QrArt.Theme(...) + QrEasyOptions.Art instead.", false)]
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public static QrEasyOptions CutCornerTechSafe() => CutCornerTech();
 
     /// <summary>
     /// Bolder variant of <see cref="CutCornerTech"/> with tighter modules.
     /// </summary>
+    [Obsolete("Use QrArt.Theme(...) + QrEasyOptions.Art instead.", false)]
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public static QrEasyOptions CutCornerTechBold() {
         var opts = CutCornerTechSafe();
         opts.ModuleScale = 0.88;
@@ -646,11 +679,15 @@ public static class QrArtPresets {
     /// <summary>
     /// Explicit scan-safe variant of <see cref="InsetRings"/>.
     /// </summary>
+    [Obsolete("Use QrArt.Theme(...) + QrEasyOptions.Art instead.", false)]
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public static QrEasyOptions InsetRingsSafe() => InsetRings();
 
     /// <summary>
     /// Bolder variant of <see cref="InsetRings"/> with stronger ring contrast.
     /// </summary>
+    [Obsolete("Use QrArt.Theme(...) + QrEasyOptions.Art instead.", false)]
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public static QrEasyOptions InsetRingsBold() {
         var opts = InsetRingsSafe();
         opts.ModuleScale = 0.93;
@@ -670,11 +707,15 @@ public static class QrArtPresets {
     /// <summary>
     /// Explicit scan-safe variant of <see cref="StripeEyes"/>.
     /// </summary>
+    [Obsolete("Use QrArt.Theme(...) + QrEasyOptions.Art instead.", false)]
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public static QrEasyOptions StripeEyesSafe() => StripeEyes();
 
     /// <summary>
     /// Bolder variant of <see cref="StripeEyes"/> that also textures modules.
     /// </summary>
+    [Obsolete("Use QrArt.Theme(...) + QrEasyOptions.Art instead.", false)]
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public static QrEasyOptions StripeEyesBold() {
         var opts = StripeEyesSafe();
         opts.ModuleScale = 0.94;
@@ -696,11 +737,15 @@ public static class QrArtPresets {
     /// <summary>
     /// Explicit scan-safe variant of <see cref="PaintSplash"/>.
     /// </summary>
+    [Obsolete("Use QrArt.Theme(...) + QrEasyOptions.Art instead.", false)]
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public static QrEasyOptions PaintSplashSafe() => PaintSplash();
 
     /// <summary>
     /// Bolder variant of <see cref="PaintSplash"/> with denser splashes.
     /// </summary>
+    [Obsolete("Use QrArt.Theme(...) + QrEasyOptions.Art instead.", false)]
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public static QrEasyOptions PaintSplashBold() {
         var opts = PaintSplashSafe();
         opts.ModuleScale = 0.95;
@@ -729,11 +774,15 @@ public static class QrArtPresets {
     /// <summary>
     /// Explicit scan-safe variant of <see cref="PaintSplashPastel"/>.
     /// </summary>
+    [Obsolete("Use QrArt.Theme(...) + QrEasyOptions.Art instead.", false)]
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public static QrEasyOptions PaintSplashPastelSafe() => PaintSplashPastel();
 
     /// <summary>
     /// Bolder variant of <see cref="PaintSplashPastel"/> with denser splashes.
     /// </summary>
+    [Obsolete("Use QrArt.Theme(...) + QrEasyOptions.Art instead.", false)]
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public static QrEasyOptions PaintSplashPastelBold() {
         var opts = PaintSplashPastelSafe();
         opts.ModuleScale = 0.95;

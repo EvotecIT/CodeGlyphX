@@ -298,6 +298,7 @@ public static partial class QrEasy {
     }
 
     private static QrEasyOptions SelectArtPreset(QrArtOptions art) {
+#pragma warning disable CS0618 // QrArtPresets is deprecated in favor of the high-level art API.
         return art.Theme switch {
             QrArtTheme.NeonGlow => art.Variant == QrArtVariant.Bold ? QrArtPresets.NeonGlowBold() : QrArtPresets.NeonGlowSafe(),
             QrArtTheme.LiquidGlass => art.Variant == QrArtVariant.Bold ? QrArtPresets.LiquidGlassBold() : QrArtPresets.LiquidGlassSafe(),
@@ -312,6 +313,7 @@ public static partial class QrEasy {
             },
             _ => QrArtPresets.PaintSplashSafe(),
         };
+#pragma warning restore CS0618
     }
 
     private static void ApplyArtDefaults(QrPngRenderOptions render, QrEasyOptions preset) {
