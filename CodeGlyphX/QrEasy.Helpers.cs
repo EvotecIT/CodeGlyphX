@@ -1,6 +1,7 @@
 using System;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using CodeGlyphX.Payloads;
 using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Ascii;
@@ -806,14 +807,10 @@ public static partial class QrEasy {
     }
 
     private static bool HasLowContrastWarnings(QrArtSafetyReport report) {
-        foreach (var warning in report.Warnings) {
-            if (warning.Kind == QrArtWarningKind.LowContrast
-                || warning.Kind == QrArtWarningKind.LowContrastGradient
-                || warning.Kind == QrArtWarningKind.LowContrastPalette) {
-                return true;
-            }
-        }
-        return false;
+        return report.Warnings.Any(static warning =>
+            warning.Kind == QrArtWarningKind.LowContrast
+            || warning.Kind == QrArtWarningKind.LowContrastGradient
+            || warning.Kind == QrArtWarningKind.LowContrastPalette);
     }
 
     private static void ApplyLowContrastFallback(QrPngRenderOptions render) {
