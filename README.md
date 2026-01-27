@@ -71,6 +71,11 @@ Notes:
 - net8+ uses the full QR pixel pipeline; `net472`/`netstandard2.0` use a limited fallback for QR image decode via `QrImageDecoder` and byte[] overloads.
 - Runtime checks are available via `CodeGlyphXFeatures` (e.g., `SupportsQrPixelDecode`, `SupportsQrPixelDebug`).
 
+net472 capability notes (QR from images):
+- ✅ Clean/generated PNG/JPEG QR renders (including large module sizes)
+- ⚠️ Multi-code screenshots, heavy styling/art, blur, warp, and low-contrast scenes are best-effort
+- ✅ Recommended: run the quick smoke checklist in `Build/Net472-SmokeTest.md`
+
 Choosing a target:
 - Pick `net8.0`/`net10.0` when you need the most robust QR pixel decode from images/screenshots, pixel debug rendering, Span APIs, or maximum throughput.
 - Pick `net472`/`netstandard2.0` for legacy apps; QR image decode is available via a best-effort fallback, but it is less robust on heavily styled/artistic inputs.
