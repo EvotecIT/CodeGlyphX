@@ -23,6 +23,8 @@ internal static class WebpVp8Decoder {
     private const int CoefficientsPerBlock = 16;
     private const int TokenScaffoldTokensPerPartition = 8;
     private const int CoeffTokenCount = 12;
+    private const int BlockScaffoldBlocksPerPartition = 2;
+    private const int BlockScaffoldMaxTokensPerBlock = CoefficientsPerBlock;
     private static readonly int[] CoeffBandTable = new[]
     {
         0, 1, 2, 3,
@@ -56,6 +58,7 @@ internal static class WebpVp8Decoder {
         _ = TryReadPartitionLayout(payload, out _);
         _ = TryReadTokenPartitions(payload, out _);
         _ = TryReadTokenScaffold(payload, out _);
+        _ = TryReadBlockTokenScaffold(payload, out _);
 
         // Parsing-only scaffold for now.
         width = header.Width;
@@ -314,6 +317,99 @@ internal static class WebpVp8Decoder {
         scaffold = new WebpVp8TokenScaffold(
             tokenPartitions.DataOffset,
             partitionScaffolds,
+            totalTokensRead,
+            totalBytesConsumed);
+        return true;
+    }
+
+    internal static bool TryReadBlockTokenScaffold(ReadOnlySpan<byte> payload, out WebpVp8BlockTokenScaffoldSet scaffold) {
+        scaffold = default;
+        if (!TryReadFrameHeader(payload, out var frameHeader)) return false;
+        if (!TryReadTokenPartitions(payload, out var tokenPartitions)) return false;
+
+        var partitionScaffolds = new WebpVp8BlockPartitionScaffold[tokenPartitions.Partitions.Length];
+        var totalBlocksRead = 0;
+        var totalTokensRead = 0;
+        var totalBytesConsumed = 0;
+
+        for (var i = 0; i < tokenPartitions.Partitions.Length; i++) {
+            var info = tokenPartitions.Partitions[i];
+            if (info.Size < 2) return false;
+
+            var slice = payload.Slice(info.Offset, info.Size);
+            var decoder = new WebpVp8BoolDecoder(slice);
+            if (!decoder.TryReadBool(128, out _)) return false;
+
+            var blocks = new WebpVp8BlockTokenScaffold[BlockScaffoldBlocksPerPartition];
+            var blocksRead = 0;
+            var partitionTokensRead = 0;
+
+            for (var blockIndex = 0; blockIndex < blocks.Length; blockIndex++) {
+                var tokenInfos = new WebpVp8BlockTokenInfo[BlockScaffoldMaxTokensPerBlock];
+                var tokensRead = 0;
+                var coefficientIndex = 0;
+                var prevContext = 0;
+                var reachedEob = false;
+
+                while (coefficientIndex < CoefficientsPerBlock && tokensRead < tokenInfos.Length) {
+                    var band = CoeffBandTable[coefficientIndex];
+                    var prevBefore = prevContext;
+                    if (!TryReadScaffoldCoefficientToken(
+                        decoder,
+                        frameHeader.CoefficientProbabilities,
+                        band,
+                        prevContext,
+                        out var tokenCode)) {
+                        return false;
+                    }
+
+                    var tokenInfo = ClassifyToken(tokenCode, band, prevBefore);
+                    tokenInfos[tokensRead] = new WebpVp8BlockTokenInfo(
+                        coefficientIndex,
+                        tokenInfo.TokenCode,
+                        tokenInfo.Band,
+                        tokenInfo.PrevContextBefore,
+                        tokenInfo.PrevContextAfter,
+                        tokenInfo.HasMore,
+                        tokenInfo.IsNonZero);
+
+                    tokensRead++;
+                    partitionTokensRead++;
+                    prevContext = tokenInfo.PrevContextAfter;
+
+                    if (!tokenInfo.HasMore) {
+                        reachedEob = true;
+                        break;
+                    }
+
+                    coefficientIndex++;
+                }
+
+                blocks[blockIndex] = new WebpVp8BlockTokenScaffold(
+                    blockIndex,
+                    tokenInfos,
+                    tokensRead,
+                    reachedEob);
+                blocksRead++;
+            }
+
+            partitionScaffolds[i] = new WebpVp8BlockPartitionScaffold(
+                info.Offset,
+                info.Size,
+                decoder.BytesConsumed,
+                blocks,
+                blocksRead,
+                partitionTokensRead);
+
+            totalBlocksRead += blocksRead;
+            totalTokensRead += partitionTokensRead;
+            totalBytesConsumed += decoder.BytesConsumed;
+        }
+
+        scaffold = new WebpVp8BlockTokenScaffoldSet(
+            tokenPartitions.DataOffset,
+            partitionScaffolds,
+            totalBlocksRead,
             totalTokensRead,
             totalBytesConsumed);
         return true;
@@ -836,4 +932,90 @@ internal readonly struct WebpVp8TokenInfo {
     public int PrevContextAfter { get; }
     public bool HasMore { get; }
     public bool IsNonZero { get; }
+}
+
+internal readonly struct WebpVp8BlockTokenInfo {
+    public WebpVp8BlockTokenInfo(
+        int coefficientIndex,
+        int tokenCode,
+        int band,
+        int prevContextBefore,
+        int prevContextAfter,
+        bool hasMore,
+        bool isNonZero) {
+        CoefficientIndex = coefficientIndex;
+        TokenCode = tokenCode;
+        Band = band;
+        PrevContextBefore = prevContextBefore;
+        PrevContextAfter = prevContextAfter;
+        HasMore = hasMore;
+        IsNonZero = isNonZero;
+    }
+
+    public int CoefficientIndex { get; }
+    public int TokenCode { get; }
+    public int Band { get; }
+    public int PrevContextBefore { get; }
+    public int PrevContextAfter { get; }
+    public bool HasMore { get; }
+    public bool IsNonZero { get; }
+}
+
+internal readonly struct WebpVp8BlockTokenScaffold {
+    public WebpVp8BlockTokenScaffold(int blockIndex, WebpVp8BlockTokenInfo[] tokens, int tokensRead, bool reachedEob) {
+        BlockIndex = blockIndex;
+        Tokens = tokens;
+        TokensRead = tokensRead;
+        ReachedEob = reachedEob;
+    }
+
+    public int BlockIndex { get; }
+    public WebpVp8BlockTokenInfo[] Tokens { get; }
+    public int TokensRead { get; }
+    public bool ReachedEob { get; }
+}
+
+internal readonly struct WebpVp8BlockPartitionScaffold {
+    public WebpVp8BlockPartitionScaffold(
+        int offset,
+        int size,
+        int bytesConsumed,
+        WebpVp8BlockTokenScaffold[] blocks,
+        int blocksRead,
+        int tokensRead) {
+        Offset = offset;
+        Size = size;
+        BytesConsumed = bytesConsumed;
+        Blocks = blocks;
+        BlocksRead = blocksRead;
+        TokensRead = tokensRead;
+    }
+
+    public int Offset { get; }
+    public int Size { get; }
+    public int BytesConsumed { get; }
+    public WebpVp8BlockTokenScaffold[] Blocks { get; }
+    public int BlocksRead { get; }
+    public int TokensRead { get; }
+}
+
+internal readonly struct WebpVp8BlockTokenScaffoldSet {
+    public WebpVp8BlockTokenScaffoldSet(
+        int dataOffset,
+        WebpVp8BlockPartitionScaffold[] partitions,
+        int totalBlocksRead,
+        int totalTokensRead,
+        int totalBytesConsumed) {
+        DataOffset = dataOffset;
+        Partitions = partitions;
+        TotalBlocksRead = totalBlocksRead;
+        TotalTokensRead = totalTokensRead;
+        TotalBytesConsumed = totalBytesConsumed;
+    }
+
+    public int DataOffset { get; }
+    public WebpVp8BlockPartitionScaffold[] Partitions { get; }
+    public int TotalBlocksRead { get; }
+    public int TotalTokensRead { get; }
+    public int TotalBytesConsumed { get; }
 }
