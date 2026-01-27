@@ -789,6 +789,18 @@ public static class QrArtPresets {
             opts.Canvas.Splash.DripLengthPx = 36;
             opts.Canvas.Splash.MaxRadiusPx = Math.Max(opts.Canvas.Splash.MaxRadiusPx, 54);
         }
+        if (opts.Eyes is not null) {
+            opts.Eyes.OuterColors = new[] {
+                new Rgba32(20, 44, 120),
+                new Rgba32(168, 52, 132),
+                new Rgba32(44, 118, 64),
+            };
+            opts.Eyes.InnerColors = new[] {
+                new Rgba32(26, 164, 182),
+                new Rgba32(214, 72, 150),
+                new Rgba32(110, 190, 70),
+            };
+        }
         return opts;
     }
 

@@ -343,6 +343,45 @@ public sealed class QrPngRendererTests {
     }
 
     [Fact]
+    public void Render_With_PerEye_Colors_Applies_Different_Colors_Per_Finder() {
+        var qr = QrCodeEncoder.EncodeText("HELLO", QrErrorCorrectionLevel.H);
+        var size = qr.Size;
+
+        var opts = new QrPngRenderOptions {
+            ModuleSize = 8,
+            QuietZone = 4,
+            Foreground = Rgba32.Black,
+            Background = Rgba32.White,
+            Eyes = new QrPngEyeOptions {
+                OuterColors = new[] {
+                    new Rgba32(255, 0, 0),
+                    new Rgba32(0, 255, 0),
+                    new Rgba32(0, 0, 255),
+                },
+            },
+        };
+
+        var png = QrPngRenderer.Render(qr.Modules, opts);
+        var (rgba, _, _, stride) = PngTestDecoder.DecodeRgba32(png);
+
+        var sampleX0 = (opts.QuietZone + 0) * opts.ModuleSize + opts.ModuleSize / 2;
+        var sampleY0 = (opts.QuietZone + 0) * opts.ModuleSize + opts.ModuleSize / 2;
+        var p0 = sampleY0 * stride + sampleX0 * 4;
+
+        var sampleX1 = (opts.QuietZone + (size - 7)) * opts.ModuleSize + opts.ModuleSize / 2;
+        var sampleY1 = (opts.QuietZone + 0) * opts.ModuleSize + opts.ModuleSize / 2;
+        var p1 = sampleY1 * stride + sampleX1 * 4;
+
+        var sampleX2 = (opts.QuietZone + 0) * opts.ModuleSize + opts.ModuleSize / 2;
+        var sampleY2 = (opts.QuietZone + (size - 7)) * opts.ModuleSize + opts.ModuleSize / 2;
+        var p2 = sampleY2 * stride + sampleX2 * 4;
+
+        Assert.True(rgba[p0 + 0] > rgba[p0 + 1] && rgba[p0 + 0] > rgba[p0 + 2], "Top-left eye should be red-dominant.");
+        Assert.True(rgba[p1 + 1] > rgba[p1 + 0] && rgba[p1 + 1] > rgba[p1 + 2], "Top-right eye should be green-dominant.");
+        Assert.True(rgba[p2 + 2] > rgba[p2 + 0] && rgba[p2 + 2] > rgba[p2 + 1], "Bottom-left eye should be blue-dominant.");
+    }
+
+    [Fact]
     public void Render_With_Eye_Frame_Draws_Ring_And_Dot() {
         var qr = QrCodeEncoder.EncodeText("HELLO", QrErrorCorrectionLevel.H);
 

@@ -52,9 +52,19 @@ public sealed class QrPngEyeOptions {
     public Rgba32? OuterColor { get; set; }
 
     /// <summary>
+    /// Optional per-eye outer colors (TopLeft, TopRight, BottomLeft).
+    /// </summary>
+    public Rgba32[]? OuterColors { get; set; }
+
+    /// <summary>
     /// Optional inner eye color override.
     /// </summary>
     public Rgba32? InnerColor { get; set; }
+
+    /// <summary>
+    /// Optional per-eye inner colors (TopLeft, TopRight, BottomLeft).
+    /// </summary>
+    public Rgba32[]? InnerColors { get; set; }
 
     /// <summary>
     /// Optional gradient for the outer frame.
@@ -124,6 +134,8 @@ public sealed class QrPngEyeOptions {
         if (SparkleCount < 0) throw new ArgumentOutOfRangeException(nameof(SparkleCount));
         if (SparkleRadiusPx < 0) throw new ArgumentOutOfRangeException(nameof(SparkleRadiusPx));
         if (SparkleSpreadPx < 0) throw new ArgumentOutOfRangeException(nameof(SparkleSpreadPx));
+        if (OuterColors is { Length: not 3 }) throw new ArgumentOutOfRangeException(nameof(OuterColors), "OuterColors must have exactly 3 entries.");
+        if (InnerColors is { Length: not 3 }) throw new ArgumentOutOfRangeException(nameof(InnerColors), "InnerColors must have exactly 3 entries.");
         OuterGradient?.Validate();
         InnerGradient?.Validate();
     }

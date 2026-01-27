@@ -152,6 +152,7 @@ public static partial class QrPngRenderer {
 
                 var isFunctional = functionMask is not null && functionMask[mx, my];
                 var protectFunctional = isFunctional && !isEye;
+                var eyeIndex = eyeKind == EyeKind.None ? -1 : GetEyeIndex(eyeX, eyeY, size);
 
                 var useMask = protectFunctional
                     ? functionalMask
@@ -162,8 +163,8 @@ public static partial class QrPngRenderer {
                 var useColor = protectFunctional
                     ? opts.Foreground
                     : eyeKind switch {
-                        EyeKind.Outer => opts.Eyes?.OuterColor ?? opts.Foreground,
-                        EyeKind.Inner => opts.Eyes?.InnerColor ?? opts.Foreground,
+                        EyeKind.Outer => GetEyeOuterColor(opts, eyeIndex),
+                        EyeKind.Inner => GetEyeInnerColor(opts, eyeIndex),
                         _ => opts.Foreground,
                     };
                 PaletteInfo? palette = null;
@@ -624,11 +625,8 @@ public static partial class QrPngRenderer {
             : unchecked(Environment.TickCount ^ Hash(qrOffsetX, qrOffsetY, qrFullPx, size));
         var rand = new Random(seed);
 
-        var sparkleColor = eyes.SparkleColor ?? eyes.OuterColor ?? opts.Foreground;
-        if (eyes.SparkleColor is null && sparkleColor.A > 180) {
-            sparkleColor = new Rgba32(sparkleColor.R, sparkleColor.G, sparkleColor.B, 160);
-        }
-        if (sparkleColor.A == 0) return;
+        var sparkleOverride = eyes.SparkleColor;
+        if (sparkleOverride is not null && sparkleOverride.Value.A == 0) return;
 
         var sparkleRadius = Math.Max(1, eyes.SparkleRadiusPx);
         var sparkleSpread = Math.Max(0, eyes.SparkleSpreadPx);
@@ -652,6 +650,12 @@ public static partial class QrPngRenderer {
             var eyeBaseY = qrOffsetY + (eyeModuleY + opts.QuietZone) * moduleSize;
             var eyeCenterX = eyeBaseX + 3 * moduleSize + moduleSize / 2;
             var eyeCenterY = eyeBaseY + 3 * moduleSize + moduleSize / 2;
+
+            var sparkleColor = sparkleOverride ?? GetEyeOuterColor(opts, eyeIndex);
+            if (sparkleOverride is null && sparkleColor.A > 180) {
+                sparkleColor = new Rgba32(sparkleColor.R, sparkleColor.G, sparkleColor.B, 160);
+            }
+            if (sparkleColor.A == 0) continue;
 
             var minRing = baseMinRing;
             if (opts.Canvas is not null && eyes.SparkleProtectQrArea) {
