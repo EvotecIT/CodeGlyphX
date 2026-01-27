@@ -95,11 +95,66 @@ public sealed class QrParsedPayloadTests {
     }
 
     [Fact]
+    public void Parse_EmvCoMerchant_WithValidCrc() {
+        var payload = BuildEmvCoPayload(
+            Tlv("00", "01"),
+            Tlv("52", "4111"),
+            Tlv("53", "840"),
+            Tlv("54", "12.34"),
+            Tlv("58", "US"),
+            Tlv("59", "Test Store"),
+            Tlv("60", "NYC"));
+
+        Assert.True(QrPayloadParser.TryParse(payload, out var parsed));
+        Assert.Equal(QrPayloadType.EmvCoMerchant, parsed.Type);
+        Assert.True(parsed.TryGet<QrParsedData.EmvCoMerchant>(out var emv));
+        Assert.True(emv.CrcValid);
+        Assert.Equal("01", emv.PayloadFormatIndicator);
+        Assert.Equal("4111", emv.MerchantCategoryCode);
+        Assert.Equal("840", emv.TransactionCurrency);
+        Assert.True(emv.TransactionAmount.HasValue);
+        Assert.Equal(12.34m, emv.TransactionAmount.Value);
+        Assert.Equal("US", emv.CountryCode);
+        Assert.Equal("Test Store", emv.MerchantName);
+        Assert.Equal("NYC", emv.MerchantCity);
+    }
+
+    [Fact]
     public void Parse_Strict_InvalidEmail_FailsValidation() {
         var raw = "mailto:invalid";
         var ok = QrPayloadParser.TryParse(raw, new QrPayloadParseOptions { Strict = true }, out _, out var validation);
         Assert.False(ok);
         Assert.False(validation.IsValid);
         Assert.NotEmpty(validation.Errors);
+    }
+
+    private static string Tlv(string tag, string value) {
+        return tag + value.Length.ToString("00") + value;
+    }
+
+    private static string BuildEmvCoPayload(params string[] tlvs) {
+        var core = string.Concat(tlvs);
+        var withPlaceholder = core + "6304" + "0000";
+        var crc = ComputeCrc16CcittFalse(withPlaceholder);
+        return core + "6304" + crc;
+    }
+
+    private static string ComputeCrc16CcittFalse(string text) {
+        const ushort poly = 0x1021;
+        ushort crc = 0xFFFF;
+
+        for (var i = 0; i < text.Length; i++) {
+            var b = (byte)text[i];
+            crc ^= (ushort)(b << 8);
+            for (var bit = 0; bit < 8; bit++) {
+                if ((crc & 0x8000) != 0) {
+                    crc = (ushort)((crc << 1) ^ poly);
+                } else {
+                    crc <<= 1;
+                }
+            }
+        }
+
+        return crc.ToString("X4");
     }
 }

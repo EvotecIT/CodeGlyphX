@@ -37,5 +37,7 @@ public enum QrPayloadType {
     /// <summary>PayPal payment payload.</summary>
     PayPal,
     /// <summary>Crypto/payment URI payload.</summary>
-    Crypto
+    Crypto,
+    /// <summary>EMVCo merchant-presented payment payload.</summary>
+    EmvCoMerchant
 }

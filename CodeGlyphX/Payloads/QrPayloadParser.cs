@@ -84,6 +84,11 @@ public static class QrPayloadParser {
             return true;
         }
 
+        if (TryParseEmvCoMerchant(raw, out var emvCo)) {
+            parsed = new QrParsedPayload(QrPayloadType.EmvCoMerchant, raw, emvCo);
+            return true;
+        }
+
         if (TryParsePayPal(raw, out var paypal)) {
             parsed = new QrParsedPayload(QrPayloadType.PayPal, raw, paypal);
             return true;
@@ -179,6 +184,101 @@ public static class QrPayloadParser {
         if (!TryNormalizePayPalUrl(raw, out var url, out var handle, out var amount, out var currency)) return false;
         paypal = new QrParsedData.PayPal(handle, amount, currency, url);
         return true;
+    }
+
+    private static bool TryParseEmvCoMerchant(string raw, out QrParsedData.EmvCoMerchant merchant) {
+        merchant = null!;
+        if (raw.Length < 16) return false;
+
+        if (!TryParseEmvCoTlv(raw, out var fields, out var crcValueStart, out var crcValue)) {
+            return false;
+        }
+
+        if (!fields.TryGetValue("00", out var pfi) || !string.Equals(pfi, "01", StringComparison.Ordinal)) {
+            return false;
+        }
+
+        var crcValid = false;
+        if (crcValueStart >= 0 && !string.IsNullOrEmpty(crcValue)) {
+            var crcInput = raw.Substring(0, crcValueStart) + "0000";
+            var computed = ComputeEmvCoCrc16(crcInput);
+            crcValid = string.Equals(computed, crcValue, StringComparison.OrdinalIgnoreCase);
+        }
+
+        fields.TryGetValue("52", out var mcc);
+        fields.TryGetValue("53", out var currency);
+        fields.TryGetValue("58", out var country);
+        fields.TryGetValue("59", out var name);
+        fields.TryGetValue("60", out var city);
+
+        decimal? amount = null;
+        if (fields.TryGetValue("54", out var amountText)) {
+            if (decimal.TryParse(amountText, NumberStyles.Float, CultureInfo.InvariantCulture, out var parsedAmount)) {
+                amount = parsedAmount;
+            }
+        }
+
+        merchant = new QrParsedData.EmvCoMerchant(
+            pfi,
+            string.IsNullOrEmpty(mcc) ? null : mcc,
+            string.IsNullOrEmpty(currency) ? null : currency,
+            amount,
+            string.IsNullOrEmpty(country) ? null : country,
+            string.IsNullOrEmpty(name) ? null : name,
+            string.IsNullOrEmpty(city) ? null : city,
+            fields,
+            crcValid);
+        return true;
+    }
+
+    private static bool TryParseEmvCoTlv(string raw, out Dictionary<string, string> fields, out int crcValueStart, out string? crcValue) {
+        fields = new Dictionary<string, string>(StringComparer.Ordinal);
+        crcValueStart = -1;
+        crcValue = null;
+
+        var i = 0;
+        while (i + 4 <= raw.Length) {
+            var tag = raw.Substring(i, 2);
+            var lenText = raw.Substring(i + 2, 2);
+            if (!int.TryParse(lenText, NumberStyles.None, CultureInfo.InvariantCulture, out var len)) {
+                return false;
+            }
+
+            var valueStart = i + 4;
+            var valueEnd = valueStart + len;
+            if (len < 0 || valueEnd > raw.Length) return false;
+
+            var value = raw.Substring(valueStart, len);
+            fields[tag] = value;
+
+            if (tag == "63" && len == 4) {
+                crcValueStart = valueStart;
+                crcValue = value;
+            }
+
+            i = valueEnd;
+        }
+
+        return i == raw.Length;
+    }
+
+    private static string ComputeEmvCoCrc16(string text) {
+        const ushort poly = 0x1021;
+        ushort crc = 0xFFFF;
+
+        for (var i = 0; i < text.Length; i++) {
+            var b = (byte)text[i];
+            crc ^= (ushort)(b << 8);
+            for (var bit = 0; bit < 8; bit++) {
+                if ((crc & 0x8000) != 0) {
+                    crc = (ushort)((crc << 1) ^ poly);
+                } else {
+                    crc <<= 1;
+                }
+            }
+        }
+
+        return crc.ToString("X4", CultureInfo.InvariantCulture);
     }
 
     private static bool TryParseCrypto(string raw, out QrParsedData.Crypto crypto) {
@@ -804,6 +904,15 @@ public static class QrPayloadParser {
                 if (string.IsNullOrWhiteSpace(crypto.Scheme)) validation.Add("Crypto scheme is missing.");
                 if (string.IsNullOrWhiteSpace(crypto.Address)) validation.Add("Crypto address is missing.");
                 if (crypto.Amount.HasValue && crypto.Amount.Value <= 0m) validation.Add("Crypto amount must be positive.");
+                break;
+            case QrPayloadType.EmvCoMerchant:
+                if (!parsed.TryGet<QrParsedData.EmvCoMerchant>(out var emv)) break;
+                if (!string.Equals(emv.PayloadFormatIndicator, "01", StringComparison.Ordinal)) {
+                    validation.Add("EMVCo payload format indicator is invalid.");
+                }
+                if (emv.TransactionAmount.HasValue && emv.TransactionAmount.Value <= 0m) {
+                    validation.Add("EMVCo amount must be positive.");
+                }
                 break;
             case QrPayloadType.Url:
                 if (!QrPayloadValidation.IsValidUrl(parsed.Raw)) validation.Add("URL is invalid.");
