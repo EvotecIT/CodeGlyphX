@@ -6,7 +6,7 @@ using System.Text;
 namespace CodeGlyphX.Rendering.Webp;
 
 /// <summary>
-/// Managed VP8L lossless encoder scaffold (literal-only, no transforms/LZ77).
+/// Managed VP8L lossless encoder (subset) for RGBA images.
 /// </summary>
 internal static class WebpVp8lEncoder {
     private const int LiteralAlphabetSize = 256;
@@ -63,17 +63,46 @@ internal static class WebpVp8lEncoder {
             return false;
         }
 
-        // Prefer a small palette transform when it applies; fall back to
-        // literal-only encoding without transforms.
-        if (TryEncodeWithColorIndexing(rgba, width, height, stride, out webp, out reason)) {
-            return true;
+        var best = Array.Empty<byte>();
+        var bestLength = int.MaxValue;
+        var bestReason = "Managed WebP encode failed.";
+        var succeeded = false;
+
+        if (TryEncodeWithColorIndexing(rgba, width, height, stride, out var candidate, out var candidateReason)) {
+            succeeded = true;
+            best = candidate;
+            bestLength = candidate.Length;
+        } else if (!string.IsNullOrEmpty(candidateReason)) {
+            bestReason = candidateReason;
         }
 
-        if (TryEncodeWithPredictorTransform(rgba, width, height, stride, out webp, out reason)) {
-            return true;
+        if (TryEncodeWithPredictorTransform(rgba, width, height, stride, out candidate, out candidateReason)) {
+            if (!succeeded || candidate.Length < bestLength) {
+                best = candidate;
+                bestLength = candidate.Length;
+                succeeded = true;
+            }
+        } else if (!succeeded && !string.IsNullOrEmpty(candidateReason)) {
+            bestReason = candidateReason;
         }
 
-        return TryEncodeWithoutTransforms(rgba, width, height, stride, out webp, out reason);
+        if (TryEncodeWithoutTransforms(rgba, width, height, stride, out candidate, out candidateReason)) {
+            if (!succeeded || candidate.Length < bestLength) {
+                best = candidate;
+                bestLength = candidate.Length;
+                succeeded = true;
+            }
+        } else if (!succeeded && !string.IsNullOrEmpty(candidateReason)) {
+            bestReason = candidateReason;
+        }
+
+        if (!succeeded) {
+            reason = bestReason;
+            return false;
+        }
+
+        webp = best;
+        return true;
     }
 
     private static bool TryEncodeWithoutTransforms(
@@ -111,11 +140,6 @@ internal static class WebpVp8lEncoder {
         reason = string.Empty;
 
         if (!TryCollectPalette(rgba, width, height, stride, MaxPaletteSize, out var palette)) {
-            return false;
-        }
-
-        // For very small palettes simple literal coding is already tiny.
-        if (palette.Length <= 2) {
             return false;
         }
 

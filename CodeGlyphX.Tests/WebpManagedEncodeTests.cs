@@ -69,8 +69,16 @@ public sealed class WebpManagedEncodeTests {
         var payload = ExtractVp8lPayload(webp);
         var reader = new WebpBitReader(payload);
         Assert.True(WebpVp8lDecoder.TryReadHeader(ref reader, out _));
-        Assert.Equal(1, reader.ReadBits(1)); // has transform
-        Assert.Equal(3, reader.ReadBits(2)); // color indexing
+        var hasTransform = reader.ReadBits(1);
+        Assert.True(hasTransform == 0 || hasTransform == 1);
+        if (hasTransform == 1) {
+            var firstTransform = reader.ReadBits(2);
+            if (firstTransform == 2) {
+                Assert.Equal(1, reader.ReadBits(1)); // another transform follows
+                firstTransform = reader.ReadBits(2);
+            }
+            Assert.True(firstTransform == 0 || firstTransform == 3);
+        }
     }
 
     [Fact]
