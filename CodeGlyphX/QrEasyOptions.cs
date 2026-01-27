@@ -98,6 +98,16 @@ public sealed class QrEasyOptions {
     public QrArtOptions? Art { get; set; }
 
     /// <summary>
+    /// When true, applies scan-safety auto-tuning for art-heavy styles.
+    /// </summary>
+    public bool ArtAutoTune { get; set; } = true;
+
+    /// <summary>
+    /// Minimum safety score target (0..100) for art auto-tuning.
+    /// </summary>
+    public int ArtAutoTuneMinScore { get; set; } = 80;
+
+    /// <summary>
     /// Overrides the module shape (when set).
     /// </summary>
     public QrPngModuleShape? ModuleShape { get; set; }

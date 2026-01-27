@@ -80,6 +80,24 @@ public static partial class QrPngRenderer {
             DrawCanvas(buffer, widthPx, heightPx, stride, opts, qrOffsetX, qrOffsetY, qrFullPx);
             FillQrBackground(buffer, widthPx, heightPx, stride, opts, qrOffsetX, qrOffsetY, qrFullPx);
         }
+
+        if (opts.Eyes is { SparkleCount: > 0 } eyesSparkle
+            && (opts.Canvas is not null || eyesSparkle.SparkleAllowOnQrBackground)) {
+            DrawEyeSparkles(buffer, widthPx, heightPx, stride, opts, qrOffsetX, qrOffsetY, qrFullPx, qrSizePx, size);
+        }
+        if (opts.Eyes is { AccentRingCount: > 0 } eyesAccents
+            && (opts.Canvas is not null || eyesAccents.AccentRingAllowOnQrBackground)) {
+            DrawEyeAccentRings(buffer, widthPx, heightPx, stride, opts, qrOffsetX, qrOffsetY, qrFullPx, qrSizePx, size);
+        }
+        if (opts.Eyes is { AccentRayCount: > 0 } eyesRays
+            && (opts.Canvas is not null || eyesRays.AccentRayAllowOnQrBackground)) {
+            DrawEyeAccentRays(buffer, widthPx, heightPx, stride, opts, qrOffsetX, qrOffsetY, qrFullPx, qrSizePx, size);
+        }
+        if (opts.Eyes is { AccentStripeCount: > 0 } eyesStripes
+            && (opts.Canvas is not null || eyesStripes.AccentStripeAllowOnQrBackground)) {
+            DrawEyeAccentStripes(buffer, widthPx, heightPx, stride, opts, qrOffsetX, qrOffsetY, qrFullPx, qrSizePx, size);
+        }
+
         var connectedShape = opts.ModuleShape;
         var connectedMode = connectedShape is QrPngModuleShape.ConnectedRounded or QrPngModuleShape.ConnectedSquircle;
         var baseModuleShape = connectedMode
@@ -125,6 +143,8 @@ public static partial class QrPngRenderer {
         var eyeInnerGradient = opts.Eyes?.InnerGradient;
         var eyeOuterGradientInfo = eyeOuterGradient is null ? (GradientInfo?)null : new GradientInfo(eyeOuterGradient, 7 * opts.ModuleSize - 1, 7 * opts.ModuleSize - 1);
         var eyeInnerGradientInfo = eyeInnerGradient is null ? (GradientInfo?)null : new GradientInfo(eyeInnerGradient, 3 * opts.ModuleSize - 1, 3 * opts.ModuleSize - 1);
+        var eyeOuterGradientInfos = BuildEyeGradientInfos(opts.Eyes?.OuterGradients, opts.ModuleSize, eyeModules: 7);
+        var eyeInnerGradientInfos = BuildEyeGradientInfos(opts.Eyes?.InnerGradients, opts.ModuleSize, eyeModules: 3);
 
         for (var my = 0; my < size; my++) {
             for (var mx = 0; mx < size; mx++) {
@@ -146,6 +166,7 @@ public static partial class QrPngRenderer {
 
                 var isFunctional = functionMask is not null && functionMask[mx, my];
                 var protectFunctional = isFunctional && !isEye;
+                var eyeIndex = eyeKind == EyeKind.None ? -1 : GetEyeIndex(eyeX, eyeY, size);
 
                 var useMask = protectFunctional
                     ? functionalMask
@@ -156,8 +177,8 @@ public static partial class QrPngRenderer {
                 var useColor = protectFunctional
                     ? opts.Foreground
                     : eyeKind switch {
-                        EyeKind.Outer => opts.Eyes?.OuterColor ?? opts.Foreground,
-                        EyeKind.Inner => opts.Eyes?.InnerColor ?? opts.Foreground,
+                        EyeKind.Outer => GetEyeOuterColor(opts, eyeIndex),
+                        EyeKind.Inner => GetEyeInnerColor(opts, eyeIndex),
                         _ => opts.Foreground,
                     };
                 PaletteInfo? palette = null;
@@ -213,7 +234,9 @@ public static partial class QrPngRenderer {
                 }
 
                 if (!useFrame && eyeKind != EyeKind.None) {
-                    var eyeGrad = eyeKind == EyeKind.Outer ? eyeOuterGradientInfo : eyeInnerGradientInfo;
+                    var eyeGrad = eyeKind == EyeKind.Outer
+                        ? GetEyeGradientInfo(eyeOuterGradientInfos, eyeOuterGradientInfo, eyeIndex)
+                        : GetEyeGradientInfo(eyeInnerGradientInfos, eyeInnerGradientInfo, eyeIndex);
                     if (eyeGrad is not null) {
                         var boxX = qrOffsetX + (eyeX + opts.QuietZone) * opts.ModuleSize;
                         var boxY = qrOffsetY + (eyeY + opts.QuietZone) * opts.ModuleSize;
@@ -230,7 +253,10 @@ public static partial class QrPngRenderer {
                             usePattern,
                             useMask,
                             boxX,
-                            boxY);
+                            boxY,
+                            qrOriginX,
+                            qrOriginY,
+                            qrSizePx);
                         continue;
                     }
                 }
@@ -278,6 +304,24 @@ public static partial class QrPngRenderer {
         return buffer;
     }
 
+    private static GradientInfo?[]? BuildEyeGradientInfos(QrPngGradientOptions[]? gradients, int moduleSize, int eyeModules) {
+        if (gradients is null || gradients.Length != 3 || moduleSize <= 0) return null;
+        var sizePx = eyeModules * moduleSize - 1;
+        var infos = new GradientInfo?[3];
+        for (var i = 0; i < 3; i++) {
+            var gradient = gradients[i];
+            infos[i] = gradient is null ? null : new GradientInfo(gradient, sizePx, sizePx);
+        }
+        return infos;
+    }
+
+    private static GradientInfo? GetEyeGradientInfo(GradientInfo?[]? infos, GradientInfo? fallback, int eyeIndex) {
+        if (eyeIndex is >= 0 and <= 2 && infos is { Length: 3 }) {
+            return infos[eyeIndex] ?? fallback;
+        }
+        return fallback;
+    }
+
     private static void DrawModuleSolid(byte[] scanlines, int stride, int moduleSize, int mx, int my, int quietZone, int offsetX, int offsetY, Rgba32 color) {
         var x0 = offsetX + (mx + quietZone) * moduleSize;
         var y0 = offsetY + (my + quietZone) * moduleSize;
@@ -317,7 +361,7 @@ public static partial class QrPngRenderer {
                     ? color
                     : GetGradientColor(gradient.Value, x0 + sx, y0 + sy, originX, originY);
 
-                if (pattern is not null && ShouldDrawForegroundPattern(pattern, moduleSize, x0 + sx, y0 + sy)) {
+                if (pattern is not null && ShouldDrawForegroundPattern(pattern, moduleSize, x0 + sx, y0 + sy, originX, originY, qrSizePx)) {
                     outColor = ComposeOver(pattern.Color, outColor);
                 }
 
@@ -356,7 +400,10 @@ public static partial class QrPngRenderer {
         QrPngForegroundPatternOptions? pattern,
         bool[] mask,
         int boxX,
-        int boxY) {
+        int boxY,
+        int originX,
+        int originY,
+        int qrSizePx) {
         var x0 = offsetX + (mx + quietZone) * moduleSize;
         var y0 = offsetY + (my + quietZone) * moduleSize;
         for (var sy = 0; sy < moduleSize; sy++) {
@@ -368,7 +415,7 @@ public static partial class QrPngRenderer {
                     continue;
                 }
                 var outColor = GetGradientColorInBox(gradient, x0 + sx, y0 + sy, boxX, boxY);
-                if (pattern is not null && ShouldDrawForegroundPattern(pattern, moduleSize, x0 + sx, y0 + sy)) {
+                if (pattern is not null && ShouldDrawForegroundPattern(pattern, moduleSize, x0 + sx, y0 + sy, originX, originY, qrSizePx)) {
                     outColor = ComposeOver(pattern.Color, outColor);
                 }
 
@@ -491,6 +538,51 @@ public static partial class QrPngRenderer {
             DrawCanvasFill(scanlines, widthPx, heightPx, stride, canvas, canvasX, canvasY, canvasW, canvasH, opts.ModuleSize, radius);
         }
 
+        if (canvas.Grain is { Density: > 0 } grain && grain.Color.A != 0) {
+            DrawCanvasGrain(
+                scanlines,
+                stride,
+                canvasX,
+                canvasY,
+                canvasW,
+                canvasH,
+                radius,
+                qrOffsetX,
+                qrOffsetY,
+                qrFullPx,
+                grain);
+        }
+
+        if (canvas.Vignette is { BandPx: > 0 } vignette && vignette.Color.A != 0 && vignette.Strength > 0) {
+            DrawCanvasVignette(
+                scanlines,
+                stride,
+                canvasX,
+                canvasY,
+                canvasW,
+                canvasH,
+                radius,
+                qrOffsetX,
+                qrOffsetY,
+                qrFullPx,
+                vignette);
+        }
+
+        if (canvas.Halo is { RadiusPx: > 0 } halo && halo.Color.A != 0) {
+            DrawCanvasHalo(
+                scanlines,
+                stride,
+                canvasX,
+                canvasY,
+                canvasW,
+                canvasH,
+                radius,
+                qrOffsetX,
+                qrOffsetY,
+                qrFullPx,
+                halo);
+        }
+
         if (canvas.Splash is not null && canvas.Splash.Color.A != 0 && canvas.Splash.Count > 0) {
             DrawCanvasSplash(
                 scanlines,
@@ -566,6 +658,809 @@ public static partial class QrPngRenderer {
         }
     }
 
+    private static void DrawEyeSparkles(
+        byte[] scanlines,
+        int widthPx,
+        int heightPx,
+        int stride,
+        QrPngRenderOptions opts,
+        int qrOffsetX,
+        int qrOffsetY,
+        int qrFullPx,
+        int qrSizePx,
+        int size) {
+        var eyes = opts.Eyes;
+        if (eyes is null || eyes.SparkleCount <= 0 || eyes.SparkleRadiusPx <= 0) return;
+
+        var moduleSize = opts.ModuleSize;
+        if (moduleSize <= 0) return;
+
+        var pad = opts.Canvas is null ? 0 : Math.Max(0, opts.Canvas.PaddingPx);
+        var canvasX = qrOffsetX - pad;
+        var canvasY = qrOffsetY - pad;
+        var canvasW = qrFullPx + pad * 2;
+        var canvasH = canvasW;
+        var canvasX1 = canvasX + canvasW - 1;
+        var canvasY1 = canvasY + canvasH - 1;
+        var canvasRadius = opts.Canvas is null ? 0 : Math.Max(0, opts.Canvas.CornerRadiusPx);
+        var canvasRadiusSq = canvasRadius * canvasRadius;
+
+        var qrX0 = qrOffsetX;
+        var qrY0 = qrOffsetY;
+        var qrX1 = qrOffsetX + qrFullPx - 1;
+        var qrY1 = qrOffsetY + qrFullPx - 1;
+
+        var seed = eyes.SparkleSeed != 0
+            ? eyes.SparkleSeed
+            : unchecked(Environment.TickCount ^ Hash(qrOffsetX, qrOffsetY, qrFullPx, size));
+        var rand = new Random(seed);
+
+        var sparkleOverride = eyes.SparkleColor;
+        if (sparkleOverride is not null && sparkleOverride.Value.A == 0) return;
+
+        var sparkleRadius = Math.Max(1, eyes.SparkleRadiusPx);
+        var sparkleSpread = Math.Max(0, eyes.SparkleSpreadPx);
+        var eyeRadiusPx = (int)Math.Round(3.5 * moduleSize);
+        var baseMinRing = eyeRadiusPx + sparkleRadius;
+
+        for (var i = 0; i < eyes.SparkleCount; i++) {
+            var eyeIndex = rand.Next(3);
+            var eyeModuleX = eyeIndex switch {
+                0 => 0,
+                1 => size - 7,
+                _ => 0,
+            };
+            var eyeModuleY = eyeIndex switch {
+                0 => 0,
+                1 => 0,
+                _ => size - 7,
+            };
+
+            var eyeBaseX = qrOffsetX + (eyeModuleX + opts.QuietZone) * moduleSize;
+            var eyeBaseY = qrOffsetY + (eyeModuleY + opts.QuietZone) * moduleSize;
+            var eyeCenterX = eyeBaseX + 3 * moduleSize + moduleSize / 2;
+            var eyeCenterY = eyeBaseY + 3 * moduleSize + moduleSize / 2;
+
+            var sparkleColor = sparkleOverride ?? GetEyeOuterColor(opts, eyeIndex);
+            if (sparkleOverride is null && sparkleColor.A > 180) {
+                sparkleColor = new Rgba32(sparkleColor.R, sparkleColor.G, sparkleColor.B, 160);
+            }
+            if (sparkleColor.A == 0) continue;
+
+            var minRing = baseMinRing;
+            if (opts.Canvas is not null && eyes.SparkleProtectQrArea) {
+                var edgeDistance = Math.Min(
+                    Math.Min(eyeCenterX - qrX0, qrX1 - eyeCenterX),
+                    Math.Min(eyeCenterY - qrY0, qrY1 - eyeCenterY));
+                minRing = Math.Max(minRing, edgeDistance + sparkleRadius + 2);
+            }
+            var maxRing = minRing + sparkleSpread;
+
+            var angle = rand.NextDouble() * Math.PI * 2.0;
+            var ring = NextBetween(rand, minRing, maxRing);
+            var cx = (int)Math.Round(eyeCenterX + Math.Cos(angle) * ring);
+            var cy = (int)Math.Round(eyeCenterY + Math.Sin(angle) * ring);
+
+            cx = Clamp(cx, canvasX + sparkleRadius, canvasX1 - sparkleRadius);
+            cy = Clamp(cy, canvasY + sparkleRadius, canvasY1 - sparkleRadius);
+
+            FillSplashCircle(
+                scanlines,
+                stride,
+                cx,
+                cy,
+                sparkleRadius,
+                sparkleColor,
+                canvasX,
+                canvasY,
+                canvasX1,
+                canvasY1,
+                canvasRadius,
+                canvasRadiusSq,
+                eyes.SparkleProtectQrArea,
+                qrX0,
+                qrY0,
+                qrX1,
+                qrY1,
+                qrAreaAlphaMax: 0);
+        }
+    }
+
+    private static void DrawEyeAccentRings(
+        byte[] scanlines,
+        int widthPx,
+        int heightPx,
+        int stride,
+        QrPngRenderOptions opts,
+        int qrOffsetX,
+        int qrOffsetY,
+        int qrFullPx,
+        int qrSizePx,
+        int size) {
+        var eyes = opts.Eyes;
+        if (eyes is null || eyes.AccentRingCount <= 0 || eyes.AccentRingThicknessPx <= 0) return;
+
+        var moduleSize = opts.ModuleSize;
+        if (moduleSize <= 0) return;
+
+        var pad = opts.Canvas is null ? 0 : Math.Max(0, opts.Canvas.PaddingPx);
+        var canvasX = qrOffsetX - pad;
+        var canvasY = qrOffsetY - pad;
+        var canvasW = qrFullPx + pad * 2;
+        var canvasH = canvasW;
+        var canvasX1 = canvasX + canvasW - 1;
+        var canvasY1 = canvasY + canvasH - 1;
+        var canvasRadius = opts.Canvas is null ? 0 : Math.Max(0, opts.Canvas.CornerRadiusPx);
+        var canvasRadiusSq = canvasRadius * canvasRadius;
+
+        var qrX0 = qrOffsetX;
+        var qrY0 = qrOffsetY;
+        var qrX1 = qrOffsetX + qrFullPx - 1;
+        var qrY1 = qrOffsetY + qrFullPx - 1;
+
+        var seed = eyes.AccentRingSeed != 0
+            ? eyes.AccentRingSeed
+            : unchecked(Environment.TickCount ^ Hash(qrOffsetX, qrOffsetY, qrFullPx, size ^ 0x5f3759df));
+        var rand = new Random(seed);
+
+        var accentOverride = eyes.AccentRingColor;
+        if (accentOverride is not null && accentOverride.Value.A == 0) return;
+
+        var thickness = Math.Max(1, eyes.AccentRingThicknessPx);
+        var halfThickness = Math.Max(1, thickness / 2);
+        var spread = Math.Max(0, eyes.AccentRingSpreadPx);
+        var jitter = Math.Max(0, eyes.AccentRingJitterPx);
+        var eyeRadiusPx = (int)Math.Round(3.5 * moduleSize);
+        var baseMinRing = eyeRadiusPx + halfThickness + 1;
+
+        for (var i = 0; i < eyes.AccentRingCount; i++) {
+            var eyeIndex = rand.Next(3);
+            var eyeModuleX = eyeIndex switch {
+                0 => 0,
+                1 => size - 7,
+                _ => 0,
+            };
+            var eyeModuleY = eyeIndex switch {
+                0 => 0,
+                1 => 0,
+                _ => size - 7,
+            };
+
+            var eyeBaseX = qrOffsetX + (eyeModuleX + opts.QuietZone) * moduleSize;
+            var eyeBaseY = qrOffsetY + (eyeModuleY + opts.QuietZone) * moduleSize;
+            var eyeCenterX = eyeBaseX + 3 * moduleSize + moduleSize / 2;
+            var eyeCenterY = eyeBaseY + 3 * moduleSize + moduleSize / 2;
+
+            var accentColor = accentOverride ?? GetEyeOuterColor(opts, eyeIndex);
+            if (accentOverride is null && accentColor.A > 150) {
+                accentColor = new Rgba32(accentColor.R, accentColor.G, accentColor.B, 120);
+            }
+            if (accentColor.A == 0) continue;
+
+            var minRing = baseMinRing;
+            if (opts.Canvas is not null && eyes.AccentRingProtectQrArea) {
+                var edgeDistance = Math.Min(
+                    Math.Min(eyeCenterX - qrX0, qrX1 - eyeCenterX),
+                    Math.Min(eyeCenterY - qrY0, qrY1 - eyeCenterY));
+                minRing = Math.Max(minRing, edgeDistance + halfThickness + 2);
+            }
+            var maxRing = minRing + spread;
+
+            var ring = NextBetween(rand, minRing, maxRing);
+            if (jitter > 0) {
+                ring += rand.Next(-jitter, jitter + 1);
+            }
+            ring = Math.Max(minRing, ring);
+
+            DrawRingStroke(
+                scanlines,
+                stride,
+                eyeCenterX,
+                eyeCenterY,
+                ring,
+                thickness,
+                accentColor,
+                canvasX,
+                canvasY,
+                canvasX1,
+                canvasY1,
+                canvasRadius,
+                canvasRadiusSq,
+                eyes.AccentRingProtectQrArea,
+                qrX0,
+                qrY0,
+                qrX1,
+                qrY1);
+        }
+    }
+
+    private static void DrawRingStroke(
+        byte[] scanlines,
+        int stride,
+        int cx,
+        int cy,
+        int radius,
+        int thickness,
+        Rgba32 color,
+        int canvasX0,
+        int canvasY0,
+        int canvasX1,
+        int canvasY1,
+        int canvasRadius,
+        int canvasRadiusSq,
+        bool protectQr,
+        int qrX0,
+        int qrY0,
+        int qrX1,
+        int qrY1) {
+        var outer = Math.Max(1, radius);
+        var inner = Math.Max(0, outer - Math.Max(1, thickness));
+        var outerSq = outer * outer;
+        var innerSq = inner * inner;
+
+        var x0 = Math.Max(canvasX0, cx - outer);
+        var y0 = Math.Max(canvasY0, cy - outer);
+        var x1 = Math.Min(canvasX1, cx + outer);
+        var y1 = Math.Min(canvasY1, cy + outer);
+
+        for (var y = y0; y <= y1; y++) {
+            var dy = y - cy;
+            var dy2 = dy * dy;
+            for (var x = x0; x <= x1; x++) {
+                var dx = x - cx;
+                var dist2 = dx * dx + dy2;
+                if (dist2 > outerSq || dist2 < innerSq) continue;
+                if (canvasRadius > 0 && !InsideRounded(x, y, canvasX0, canvasY0, canvasX1, canvasY1, canvasRadius, canvasRadiusSq)) continue;
+                if (protectQr && x >= qrX0 && x <= qrX1 && y >= qrY0 && y <= qrY1) continue;
+                BlendPixel(scanlines, stride, x, y, color);
+            }
+        }
+    }
+
+    private static void DrawEyeAccentRays(
+        byte[] scanlines,
+        int widthPx,
+        int heightPx,
+        int stride,
+        QrPngRenderOptions opts,
+        int qrOffsetX,
+        int qrOffsetY,
+        int qrFullPx,
+        int qrSizePx,
+        int size) {
+        var eyes = opts.Eyes;
+        if (eyes is null || eyes.AccentRayCount <= 0 || eyes.AccentRayThicknessPx <= 0 || eyes.AccentRayLengthPx <= 0) return;
+
+        var moduleSize = opts.ModuleSize;
+        if (moduleSize <= 0) return;
+
+        var pad = opts.Canvas is null ? 0 : Math.Max(0, opts.Canvas.PaddingPx);
+        var canvasX = qrOffsetX - pad;
+        var canvasY = qrOffsetY - pad;
+        var canvasW = qrFullPx + pad * 2;
+        var canvasH = canvasW;
+        var canvasX1 = canvasX + canvasW - 1;
+        var canvasY1 = canvasY + canvasH - 1;
+        var canvasRadius = opts.Canvas is null ? 0 : Math.Max(0, opts.Canvas.CornerRadiusPx);
+        var canvasRadiusSq = canvasRadius * canvasRadius;
+
+        var qrX0 = qrOffsetX;
+        var qrY0 = qrOffsetY;
+        var qrX1 = qrOffsetX + qrFullPx - 1;
+        var qrY1 = qrOffsetY + qrFullPx - 1;
+
+        var seed = eyes.AccentRaySeed != 0
+            ? eyes.AccentRaySeed
+            : unchecked(Environment.TickCount ^ Hash(qrOffsetX, qrOffsetY, qrFullPx, size ^ 0x6a09e667));
+        var rand = new Random(seed);
+
+        var accentOverride = eyes.AccentRayColor;
+        if (accentOverride is not null && accentOverride.Value.A == 0) return;
+
+        var thickness = Math.Max(1, eyes.AccentRayThicknessPx);
+        var halfThickness = Math.Max(1, thickness / 2);
+        var baseLength = Math.Max(1, eyes.AccentRayLengthPx);
+        var spread = Math.Max(0, eyes.AccentRaySpreadPx);
+        var jitter = Math.Max(0, eyes.AccentRayJitterPx);
+        var lengthJitter = Math.Max(0, eyes.AccentRayLengthJitterPx);
+        var eyeRadiusPx = (int)Math.Round(3.5 * moduleSize);
+        var baseMinRing = eyeRadiusPx + halfThickness + 2;
+
+        for (var i = 0; i < eyes.AccentRayCount; i++) {
+            var eyeIndex = rand.Next(3);
+            var eyeModuleX = eyeIndex switch {
+                0 => 0,
+                1 => size - 7,
+                _ => 0,
+            };
+            var eyeModuleY = eyeIndex switch {
+                0 => 0,
+                1 => 0,
+                _ => size - 7,
+            };
+
+            var eyeBaseX = qrOffsetX + (eyeModuleX + opts.QuietZone) * moduleSize;
+            var eyeBaseY = qrOffsetY + (eyeModuleY + opts.QuietZone) * moduleSize;
+            var eyeCenterX = eyeBaseX + 3 * moduleSize + moduleSize / 2;
+            var eyeCenterY = eyeBaseY + 3 * moduleSize + moduleSize / 2;
+
+            var accentColor = accentOverride ?? GetEyeOuterColor(opts, eyeIndex);
+            if (accentOverride is null && accentColor.A > 160) {
+                accentColor = new Rgba32(accentColor.R, accentColor.G, accentColor.B, 128);
+            }
+            if (accentColor.A == 0) continue;
+
+            var minRing = baseMinRing;
+            if (opts.Canvas is not null && eyes.AccentRayProtectQrArea) {
+                var edgeDistance = Math.Min(
+                    Math.Min(eyeCenterX - qrX0, qrX1 - eyeCenterX),
+                    Math.Min(eyeCenterY - qrY0, qrY1 - eyeCenterY));
+                minRing = Math.Max(minRing, edgeDistance + halfThickness + 3);
+            }
+            var maxRing = minRing + spread;
+
+            var ring = NextBetween(rand, minRing, maxRing);
+            if (jitter > 0) {
+                ring += rand.Next(-jitter, jitter + 1);
+            }
+            ring = Math.Max(minRing, ring);
+
+            var angle = rand.NextDouble() * Math.PI * 2.0;
+            var dirX = Math.Cos(angle);
+            var dirY = Math.Sin(angle);
+
+            var startX = (int)Math.Round(eyeCenterX + dirX * ring);
+            var startY = (int)Math.Round(eyeCenterY + dirY * ring);
+
+            var rayLength = baseLength;
+            if (lengthJitter > 0) {
+                rayLength += rand.Next(-lengthJitter, lengthJitter + 1);
+            }
+            rayLength = Math.Max(halfThickness + 2, rayLength);
+
+            var endX = (int)Math.Round(startX + dirX * rayLength);
+            var endY = (int)Math.Round(startY + dirY * rayLength);
+
+            startX = Clamp(startX, canvasX + halfThickness, canvasX1 - halfThickness);
+            startY = Clamp(startY, canvasY + halfThickness, canvasY1 - halfThickness);
+            endX = Clamp(endX, canvasX + halfThickness, canvasX1 - halfThickness);
+            endY = Clamp(endY, canvasY + halfThickness, canvasY1 - halfThickness);
+
+            DrawRayStroke(
+                scanlines,
+                stride,
+                startX,
+                startY,
+                endX,
+                endY,
+                thickness,
+                accentColor,
+                canvasX,
+                canvasY,
+                canvasX1,
+                canvasY1,
+                canvasRadius,
+                canvasRadiusSq,
+                eyes.AccentRayProtectQrArea,
+                qrX0,
+                qrY0,
+                qrX1,
+                qrY1);
+        }
+    }
+
+    private static void DrawEyeAccentStripes(
+        byte[] scanlines,
+        int widthPx,
+        int heightPx,
+        int stride,
+        QrPngRenderOptions opts,
+        int qrOffsetX,
+        int qrOffsetY,
+        int qrFullPx,
+        int qrSizePx,
+        int size) {
+        var eyes = opts.Eyes;
+        if (eyes is null || eyes.AccentStripeCount <= 0 || eyes.AccentStripeThicknessPx <= 0 || eyes.AccentStripeLengthPx <= 0) return;
+
+        var moduleSize = opts.ModuleSize;
+        if (moduleSize <= 0) return;
+
+        var pad = opts.Canvas is null ? 0 : Math.Max(0, opts.Canvas.PaddingPx);
+        var canvasX = qrOffsetX - pad;
+        var canvasY = qrOffsetY - pad;
+        var canvasW = qrFullPx + pad * 2;
+        var canvasH = canvasW;
+        var canvasX1 = canvasX + canvasW - 1;
+        var canvasY1 = canvasY + canvasH - 1;
+        var canvasRadius = opts.Canvas is null ? 0 : Math.Max(0, opts.Canvas.CornerRadiusPx);
+        var canvasRadiusSq = canvasRadius * canvasRadius;
+
+        var qrX0 = qrOffsetX;
+        var qrY0 = qrOffsetY;
+        var qrX1 = qrOffsetX + qrFullPx - 1;
+        var qrY1 = qrOffsetY + qrFullPx - 1;
+
+        var seed = eyes.AccentStripeSeed != 0
+            ? eyes.AccentStripeSeed
+            : unchecked(Environment.TickCount ^ Hash(qrOffsetX, qrOffsetY, qrFullPx, size ^ 0x243f6a88));
+        var rand = new Random(seed);
+
+        var accentOverride = eyes.AccentStripeColor;
+        if (accentOverride is not null && accentOverride.Value.A == 0) return;
+
+        var thickness = Math.Max(1, eyes.AccentStripeThicknessPx);
+        var halfThickness = Math.Max(1, thickness / 2);
+        var baseLength = Math.Max(halfThickness + 2, eyes.AccentStripeLengthPx);
+        var spread = Math.Max(0, eyes.AccentStripeSpreadPx);
+        var jitter = Math.Max(0, eyes.AccentStripeJitterPx);
+        var lengthJitter = Math.Max(0, eyes.AccentStripeLengthJitterPx);
+        var eyeRadiusPx = (int)Math.Round(3.5 * moduleSize);
+        var baseMinRing = eyeRadiusPx + halfThickness + 2;
+
+        for (var i = 0; i < eyes.AccentStripeCount; i++) {
+            var eyeIndex = rand.Next(3);
+            var eyeModuleX = eyeIndex switch {
+                0 => 0,
+                1 => size - 7,
+                _ => 0,
+            };
+            var eyeModuleY = eyeIndex switch {
+                0 => 0,
+                1 => 0,
+                _ => size - 7,
+            };
+
+            var eyeBaseX = qrOffsetX + (eyeModuleX + opts.QuietZone) * moduleSize;
+            var eyeBaseY = qrOffsetY + (eyeModuleY + opts.QuietZone) * moduleSize;
+            var eyeCenterX = eyeBaseX + 3 * moduleSize + moduleSize / 2;
+            var eyeCenterY = eyeBaseY + 3 * moduleSize + moduleSize / 2;
+
+            var accentColor = accentOverride ?? GetEyeOuterColor(opts, eyeIndex);
+            if (accentOverride is null && accentColor.A > 160) {
+                accentColor = new Rgba32(accentColor.R, accentColor.G, accentColor.B, 128);
+            }
+            if (accentColor.A == 0) continue;
+
+            var minRing = baseMinRing;
+            if (opts.Canvas is not null && eyes.AccentStripeProtectQrArea) {
+                var edgeDistance = Math.Min(
+                    Math.Min(eyeCenterX - qrX0, qrX1 - eyeCenterX),
+                    Math.Min(eyeCenterY - qrY0, qrY1 - eyeCenterY));
+                minRing = Math.Max(minRing, edgeDistance + halfThickness + 3);
+            }
+            var maxRing = minRing + spread;
+
+            var ring = NextBetween(rand, minRing, maxRing);
+            if (jitter > 0) {
+                ring += rand.Next(-jitter, jitter + 1);
+            }
+            ring = Math.Max(minRing, ring);
+
+            var angle = rand.NextDouble() * Math.PI * 2.0;
+            var dirX = Math.Cos(angle);
+            var dirY = Math.Sin(angle);
+
+            var stripeLength = baseLength;
+            if (lengthJitter > 0) {
+                stripeLength += rand.Next(-lengthJitter, lengthJitter + 1);
+            }
+            stripeLength = Math.Max(halfThickness + 2, stripeLength);
+            var halfLength = stripeLength * 0.5;
+
+            // Place the stripe at the ring radius and orient it tangentially to the circle.
+            var midX = eyeCenterX + dirX * ring;
+            var midY = eyeCenterY + dirY * ring;
+            var tangentX = -dirY;
+            var tangentY = dirX;
+
+            var startX = (int)Math.Round(midX - tangentX * halfLength);
+            var startY = (int)Math.Round(midY - tangentY * halfLength);
+            var endX = (int)Math.Round(midX + tangentX * halfLength);
+            var endY = (int)Math.Round(midY + tangentY * halfLength);
+
+            startX = Clamp(startX, canvasX + halfThickness, canvasX1 - halfThickness);
+            startY = Clamp(startY, canvasY + halfThickness, canvasY1 - halfThickness);
+            endX = Clamp(endX, canvasX + halfThickness, canvasX1 - halfThickness);
+            endY = Clamp(endY, canvasY + halfThickness, canvasY1 - halfThickness);
+
+            DrawRayStroke(
+                scanlines,
+                stride,
+                startX,
+                startY,
+                endX,
+                endY,
+                thickness,
+                accentColor,
+                canvasX,
+                canvasY,
+                canvasX1,
+                canvasY1,
+                canvasRadius,
+                canvasRadiusSq,
+                eyes.AccentStripeProtectQrArea,
+                qrX0,
+                qrY0,
+                qrX1,
+                qrY1);
+        }
+    }
+
+    private static void DrawRayStroke(
+        byte[] scanlines,
+        int stride,
+        int x0,
+        int y0,
+        int x1,
+        int y1,
+        int thickness,
+        Rgba32 color,
+        int canvasX0,
+        int canvasY0,
+        int canvasX1,
+        int canvasY1,
+        int canvasRadius,
+        int canvasRadiusSq,
+        bool protectQr,
+        int qrX0,
+        int qrY0,
+        int qrX1,
+        int qrY1) {
+        var dx = x1 - x0;
+        var dy = y1 - y0;
+        var dist = Math.Sqrt(dx * (double)dx + dy * (double)dy);
+        var brush = Math.Max(1, thickness / 2);
+        var stepDenom = Math.Max(1.0, brush * 0.6);
+        var steps = Math.Max(1, (int)Math.Ceiling(dist / stepDenom));
+
+        for (var i = 0; i <= steps; i++) {
+            var t = i / (double)steps;
+            var px = (int)Math.Round(x0 + dx * t);
+            var py = (int)Math.Round(y0 + dy * t);
+
+            FillSplashCircle(
+                scanlines,
+                stride,
+                px,
+                py,
+                brush,
+                color,
+                canvasX0,
+                canvasY0,
+                canvasX1,
+                canvasY1,
+                canvasRadius,
+                canvasRadiusSq,
+                protectQr,
+                qrX0,
+                qrY0,
+                qrX1,
+                qrY1,
+                qrAreaAlphaMax: 0);
+        }
+    }
+
+    private static void DrawCanvasGrain(
+        byte[] scanlines,
+        int stride,
+        int canvasX,
+        int canvasY,
+        int canvasW,
+        int canvasH,
+        int canvasRadius,
+        int qrX,
+        int qrY,
+        int qrSize,
+        QrPngCanvasGrainOptions grain) {
+        if (grain.Density <= 0 || grain.PixelSizePx <= 0 || grain.Color.A == 0) return;
+
+        var canvasX1 = canvasX + canvasW - 1;
+        var canvasY1 = canvasY + canvasH - 1;
+        var canvasR = Math.Max(0, canvasRadius);
+        var canvasR2 = canvasR * canvasR;
+
+        var qrX0 = qrX;
+        var qrY0 = qrY;
+        var qrX1 = qrX + qrSize - 1;
+        var qrY1 = qrY + qrSize - 1;
+
+        var step = Math.Max(1, grain.PixelSizePx);
+        var band = Math.Max(0, grain.BandPx);
+        var density = Clamp01(grain.Density);
+        var jitter = Clamp01(grain.AlphaJitter);
+        if (density <= 0) return;
+
+        var seed = grain.Seed != 0
+            ? grain.Seed
+            : unchecked(Environment.TickCount ^ Hash(canvasX, canvasY, canvasW, canvasH) ^ 0x62e2ac0f);
+
+        for (var y = canvasY; y <= canvasY1; y += step) {
+            var cellH = Math.Min(step, canvasY1 - y + 1);
+            for (var x = canvasX; x <= canvasX1; x += step) {
+                var cellW = Math.Min(step, canvasX1 - x + 1);
+                var midX = x + cellW / 2;
+                var midY = y + cellH / 2;
+
+                if (canvasR > 0 && !InsideRounded(midX, midY, canvasX, canvasY, canvasX1, canvasY1, canvasR, canvasR2)) continue;
+
+                if (band > 0) {
+                    var distLeft = midX - canvasX;
+                    var distRight = canvasX1 - midX;
+                    var distTop = midY - canvasY;
+                    var distBottom = canvasY1 - midY;
+                    var distToEdge = Math.Min(Math.Min(distLeft, distRight), Math.Min(distTop, distBottom));
+                    if (distToEdge >= band) continue;
+                }
+
+                var cellX = (midX - canvasX) / step;
+                var cellY = (midY - canvasY) / step;
+                var presenceHash = (uint)Hash(cellX, cellY, seed);
+                var presence = presenceHash / (double)uint.MaxValue;
+                if (presence > density) continue;
+
+                var jitterHash = (uint)Hash(cellX, cellY, seed ^ unchecked((int)0x9e3779b9));
+                var jitterT = jitterHash / (double)uint.MaxValue;
+                var alphaScale = 1.0 - jitter * jitterT;
+                if (alphaScale <= 0) continue;
+
+                var baseColor = grain.Color;
+                var alpha = baseColor.A * alphaScale;
+                if (alpha <= 0.5) continue;
+
+                var insideQrMid = midX >= qrX0 && midX <= qrX1 && midY >= qrY0 && midY <= qrY1;
+                if (insideQrMid && grain.ProtectQrArea) continue;
+
+                var cappedAlpha = alpha > 255 ? 255 : alpha;
+                if (insideQrMid && grain.QrAreaAlphaMax > 0 && cappedAlpha > grain.QrAreaAlphaMax) {
+                    cappedAlpha = grain.QrAreaAlphaMax;
+                }
+                if (cappedAlpha <= 0) continue;
+
+                var drawColor = new Rgba32(baseColor.R, baseColor.G, baseColor.B, (byte)cappedAlpha);
+
+                var yMax = y + cellH - 1;
+                var xMax = x + cellW - 1;
+                for (var py = y; py <= yMax; py++) {
+                    for (var px = x; px <= xMax; px++) {
+                        if (canvasR > 0 && !InsideRounded(px, py, canvasX, canvasY, canvasX1, canvasY1, canvasR, canvasR2)) continue;
+                        var insideQr = px >= qrX0 && px <= qrX1 && py >= qrY0 && py <= qrY1;
+                        if (insideQr && grain.ProtectQrArea) continue;
+                        if (insideQr && grain.QrAreaAlphaMax > 0 && drawColor.A > grain.QrAreaAlphaMax) {
+                            var capped = new Rgba32(drawColor.R, drawColor.G, drawColor.B, grain.QrAreaAlphaMax);
+                            BlendPixel(scanlines, stride, px, py, capped);
+                        } else {
+                            BlendPixel(scanlines, stride, px, py, drawColor);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private static void DrawCanvasVignette(
+        byte[] scanlines,
+        int stride,
+        int canvasX,
+        int canvasY,
+        int canvasW,
+        int canvasH,
+        int canvasRadius,
+        int qrX,
+        int qrY,
+        int qrSize,
+        QrPngCanvasVignetteOptions vignette) {
+        if (vignette.BandPx <= 0 || vignette.Color.A == 0 || vignette.Strength <= 0) return;
+
+        var canvasX1 = canvasX + canvasW - 1;
+        var canvasY1 = canvasY + canvasH - 1;
+        var canvasR = Math.Max(0, canvasRadius);
+        var canvasR2 = canvasR * canvasR;
+        var band = Math.Max(1, vignette.BandPx);
+        var strength = vignette.Strength <= 0 ? 0 : vignette.Strength >= 2 ? 2 : vignette.Strength;
+        if (strength <= 0) return;
+
+        var qrX0 = qrX;
+        var qrY0 = qrY;
+        var qrX1 = qrX + qrSize - 1;
+        var qrY1 = qrY + qrSize - 1;
+
+        var baseColor = vignette.Color;
+        var baseAlpha = baseColor.A * strength;
+        if (baseAlpha <= 0) return;
+
+        for (var y = canvasY; y <= canvasY1; y++) {
+            for (var x = canvasX; x <= canvasX1; x++) {
+                if (canvasR > 0 && !InsideRounded(x, y, canvasX, canvasY, canvasX1, canvasY1, canvasR, canvasR2)) continue;
+
+                var distLeft = x - canvasX;
+                var distRight = canvasX1 - x;
+                var distTop = y - canvasY;
+                var distBottom = canvasY1 - y;
+                var distToEdge = Math.Min(Math.Min(distLeft, distRight), Math.Min(distTop, distBottom));
+                if (distToEdge >= band) continue;
+
+                var t = 1.0 - distToEdge / (double)band;
+                var falloff = t * t;
+                var alpha = baseAlpha * falloff;
+                if (alpha <= 0.5) continue;
+
+                var insideQr = x >= qrX0 && x <= qrX1 && y >= qrY0 && y <= qrY1;
+                if (insideQr && vignette.ProtectQrArea) continue;
+
+                var cappedAlpha = alpha > 255 ? 255 : alpha;
+                if (insideQr && vignette.QrAreaAlphaMax > 0 && cappedAlpha > vignette.QrAreaAlphaMax) {
+                    cappedAlpha = vignette.QrAreaAlphaMax;
+                }
+                if (cappedAlpha <= 0) continue;
+
+                var drawColor = new Rgba32(baseColor.R, baseColor.G, baseColor.B, (byte)cappedAlpha);
+                BlendPixel(scanlines, stride, x, y, drawColor);
+            }
+        }
+    }
+
+    private static void DrawCanvasHalo(
+        byte[] scanlines,
+        int stride,
+        int canvasX,
+        int canvasY,
+        int canvasW,
+        int canvasH,
+        int canvasRadius,
+        int qrX,
+        int qrY,
+        int qrSize,
+        QrPngCanvasHaloOptions halo) {
+        if (halo.RadiusPx <= 0 || halo.Color.A == 0) return;
+
+        var canvasX1 = canvasX + canvasW - 1;
+        var canvasY1 = canvasY + canvasH - 1;
+        var radius = Math.Max(1, halo.RadiusPx);
+        var radiusSq = radius * radius;
+        var canvasR = Math.Max(0, canvasRadius);
+        var canvasR2 = canvasR * canvasR;
+
+        var qrX0 = qrX;
+        var qrY0 = qrY;
+        var qrX1 = qrX + qrSize - 1;
+        var qrY1 = qrY + qrSize - 1;
+
+        var minX = Math.Max(canvasX, qrX0 - radius);
+        var minY = Math.Max(canvasY, qrY0 - radius);
+        var maxX = Math.Min(canvasX1, qrX1 + radius);
+        var maxY = Math.Min(canvasY1, qrY1 + radius);
+        if (minX > maxX || minY > maxY) return;
+
+        for (var y = minY; y <= maxY; y++) {
+            for (var x = minX; x <= maxX; x++) {
+                if (canvasR > 0 && !InsideRounded(x, y, canvasX, canvasY, canvasX1, canvasY1, canvasR, canvasR2)) continue;
+
+                var insideQr = x >= qrX0 && x <= qrX1 && y >= qrY0 && y <= qrY1;
+                if (insideQr && halo.ProtectQrArea) continue;
+
+                var nearestX = x < qrX0 ? qrX0 : x > qrX1 ? qrX1 : x;
+                var nearestY = y < qrY0 ? qrY0 : y > qrY1 ? qrY1 : y;
+                var dx = x - nearestX;
+                var dy = y - nearestY;
+                var distSq = dx * dx + dy * dy;
+                if (distSq > radiusSq) continue;
+
+                var dist = Math.Sqrt(distSq);
+                var t = 1.0 - dist / radius;
+                var alpha = (int)Math.Round(halo.Color.A * t * t);
+                if (alpha <= 0) continue;
+
+                if (insideQr && halo.QrAreaAlphaMax > 0 && alpha > halo.QrAreaAlphaMax) {
+                    alpha = halo.QrAreaAlphaMax;
+                }
+
+                var drawColor = new Rgba32(halo.Color.R, halo.Color.G, halo.Color.B, (byte)Math.Min(255, alpha));
+                BlendPixel(scanlines, stride, x, y, drawColor);
+            }
+        }
+    }
+
     private static void DrawCanvasSplash(
         byte[] scanlines,
         int stride,
@@ -592,7 +1487,11 @@ public static partial class QrPngRenderer {
         var minR = Math.Max(1, splash.MinRadiusPx);
         var maxR = Math.Max(minR, splash.MaxRadiusPx);
         var spread = Math.Max(0, splash.SpreadPx);
-        var rand = new Random(splash.Seed);
+        var placement = splash.Placement;
+        var seed = splash.Seed != 0
+            ? splash.Seed
+            : unchecked(Environment.TickCount ^ Hash(canvasX, canvasY, canvasW, canvasH));
+        var rand = new Random(seed);
         var palette = splash.Colors;
         var paletteLen = palette?.Length ?? 0;
 
@@ -601,6 +1500,14 @@ public static partial class QrPngRenderer {
         var bandY0 = qrY0 - spread;
         var bandY1 = qrY1 + spread;
 
+        var edgeBand = Math.Max(0, splash.EdgeBandPx);
+        if (placement == QrPngCanvasSplashPlacement.CanvasEdges) {
+            var derivedBand = Math.Max(spread + maxR, maxR + 12);
+            edgeBand = edgeBand > 0 ? edgeBand : derivedBand;
+            var maxBand = Math.Max(1, Math.Min(canvasW, canvasH) / 2);
+            edgeBand = Math.Min(edgeBand, maxBand);
+        }
+
         for (var i = 0; i < splash.Count; i++) {
             var blobColor = paletteLen > 0 ? palette![rand.Next(paletteLen)] : splash.Color;
             var blobR = NextBetween(rand, minR, maxR);
@@ -608,23 +1515,56 @@ public static partial class QrPngRenderer {
 
             var cx = 0;
             var cy = 0;
-            switch (side) {
-                case 0: // north
-                    cx = NextBetween(rand, bandX0, bandX1);
-                    cy = qrY0 - NextBetween(rand, blobR, blobR + spread);
-                    break;
-                case 1: // east
-                    cx = qrX1 + NextBetween(rand, blobR, blobR + spread);
-                    cy = NextBetween(rand, bandY0, bandY1);
-                    break;
-                case 2: // south
-                    cx = NextBetween(rand, bandX0, bandX1);
-                    cy = qrY1 + NextBetween(rand, blobR, blobR + spread);
-                    break;
-                default: // west
-                    cx = qrX0 - NextBetween(rand, blobR, blobR + spread);
-                    cy = NextBetween(rand, bandY0, bandY1);
-                    break;
+            var dripDirX = 0;
+            var dripDirY = 0;
+
+            if (placement == QrPngCanvasSplashPlacement.CanvasEdges) {
+                var band = Math.Max(blobR + 2, edgeBand);
+                switch (side) {
+                    case 0: // north edge (drip down into canvas)
+                        cx = NextBetween(rand, canvasX + blobR, canvasX1 - blobR);
+                        cy = canvasY + NextBetween(rand, blobR, band);
+                        dripDirY = 1;
+                        break;
+                    case 1: // east edge (drip left into canvas)
+                        cx = canvasX1 - NextBetween(rand, blobR, band);
+                        cy = NextBetween(rand, canvasY + blobR, canvasY1 - blobR);
+                        dripDirX = -1;
+                        break;
+                    case 2: // south edge (drip up into canvas)
+                        cx = NextBetween(rand, canvasX + blobR, canvasX1 - blobR);
+                        cy = canvasY1 - NextBetween(rand, blobR, band);
+                        dripDirY = -1;
+                        break;
+                    default: // west edge (drip right into canvas)
+                        cx = canvasX + NextBetween(rand, blobR, band);
+                        cy = NextBetween(rand, canvasY + blobR, canvasY1 - blobR);
+                        dripDirX = 1;
+                        break;
+                }
+            } else {
+                switch (side) {
+                    case 0: // north of QR (drip upward, away from QR)
+                        cx = NextBetween(rand, bandX0, bandX1);
+                        cy = qrY0 - NextBetween(rand, blobR, blobR + spread);
+                        dripDirY = -1;
+                        break;
+                    case 1: // east of QR (drip outward to the right)
+                        cx = qrX1 + NextBetween(rand, blobR, blobR + spread);
+                        cy = NextBetween(rand, bandY0, bandY1);
+                        dripDirX = 1;
+                        break;
+                    case 2: // south of QR (drip downward, away from QR)
+                        cx = NextBetween(rand, bandX0, bandX1);
+                        cy = qrY1 + NextBetween(rand, blobR, blobR + spread);
+                        dripDirY = 1;
+                        break;
+                    default: // west of QR (drip outward to the left)
+                        cx = qrX0 - NextBetween(rand, blobR, blobR + spread);
+                        cy = NextBetween(rand, bandY0, bandY1);
+                        dripDirX = -1;
+                        break;
+                }
             }
 
             cx = Clamp(cx, canvasX + blobR, canvasX1 - blobR);
@@ -647,21 +1587,29 @@ public static partial class QrPngRenderer {
                 qrX0,
                 qrY0,
                 qrX1,
-                qrY1);
+                qrY1,
+                splash.QrAreaAlphaMax);
 
             if (splash.DripChance > 0 && splash.DripLengthPx > 0 && rand.NextDouble() < splash.DripChance) {
                 var dripLength = NextBetween(rand, Math.Max(4, splash.DripLengthPx / 2), splash.DripLengthPx);
                 var dripWidth = Math.Max(1, splash.DripWidthPx);
-                var dripCx = cx + rand.Next(-blobR / 3, blobR / 3 + 1);
-                var dripCy = cy + blobR / 2 + dripLength / 2;
-                var rx = Math.Max(1, dripWidth / 2);
-                var ry = Math.Max(2, dripLength / 2);
+                var perpX = -dripDirY;
+                var perpY = dripDirX;
+                var drift = rand.Next(-blobR / 3, blobR / 3 + 1);
+                var dripMidX = cx + dripDirX * (blobR + dripLength / 2) + perpX * drift;
+                var dripMidY = cy + dripDirY * (blobR + dripLength / 2) + perpY * drift;
+
+                var rx = dripDirX != 0 ? Math.Max(2, dripLength / 2) : Math.Max(1, dripWidth / 2);
+                var ry = dripDirY != 0 ? Math.Max(2, dripLength / 2) : Math.Max(1, dripWidth / 2);
+
+                dripMidX = Clamp(dripMidX, canvasX + rx, canvasX1 - rx);
+                dripMidY = Clamp(dripMidY, canvasY + ry, canvasY1 - ry);
 
                 FillSplashEllipse(
                     scanlines,
                     stride,
-                    dripCx,
-                    dripCy,
+                    dripMidX,
+                    dripMidY,
                     rx,
                     ry,
                     blobColor,
@@ -675,7 +1623,8 @@ public static partial class QrPngRenderer {
                     qrX0,
                     qrY0,
                     qrX1,
-                    qrY1);
+                    qrY1,
+                    splash.QrAreaAlphaMax);
             }
         }
     }
@@ -697,7 +1646,8 @@ public static partial class QrPngRenderer {
         int qrX0,
         int qrY0,
         int qrX1,
-        int qrY1) {
+        int qrY1,
+        int qrAreaAlphaMax) {
         var r = Math.Max(1, radius);
         var r2 = r * r;
         var x0 = Math.Max(canvasX0, cx - r);
@@ -712,8 +1662,15 @@ public static partial class QrPngRenderer {
                 var dx = x - cx;
                 if (dx * dx + dy2 > r2) continue;
                 if (canvasRadius > 0 && !InsideRounded(x, y, canvasX0, canvasY0, canvasX1, canvasY1, canvasRadius, canvasRadiusSq)) continue;
-                if (protectQr && x >= qrX0 && x <= qrX1 && y >= qrY0 && y <= qrY1) continue;
-                BlendPixel(scanlines, stride, x, y, color);
+                var insideQr = x >= qrX0 && x <= qrX1 && y >= qrY0 && y <= qrY1;
+                if (insideQr && protectQr) continue;
+
+                var drawColor = color;
+                if (insideQr && qrAreaAlphaMax > 0 && drawColor.A > qrAreaAlphaMax) {
+                    drawColor = new Rgba32(drawColor.R, drawColor.G, drawColor.B, (byte)qrAreaAlphaMax);
+                }
+
+                BlendPixel(scanlines, stride, x, y, drawColor);
             }
         }
     }
@@ -736,7 +1693,8 @@ public static partial class QrPngRenderer {
         int qrX0,
         int qrY0,
         int qrX1,
-        int qrY1) {
+        int qrY1,
+        int qrAreaAlphaMax) {
         var safeRx = Math.Max(1, rx);
         var safeRy = Math.Max(1, ry);
         var x0 = Math.Max(canvasX0, cx - safeRx);
@@ -754,8 +1712,15 @@ public static partial class QrPngRenderer {
                 var dx2 = dx * (double)dx;
                 if (dx2 / rx2 + dy2 / ry2 > 1.0) continue;
                 if (canvasRadius > 0 && !InsideRounded(x, y, canvasX0, canvasY0, canvasX1, canvasY1, canvasRadius, canvasRadiusSq)) continue;
-                if (protectQr && x >= qrX0 && x <= qrX1 && y >= qrY0 && y <= qrY1) continue;
-                BlendPixel(scanlines, stride, x, y, color);
+                var insideQr = x >= qrX0 && x <= qrX1 && y >= qrY0 && y <= qrY1;
+                if (insideQr && protectQr) continue;
+
+                var drawColor = color;
+                if (insideQr && qrAreaAlphaMax > 0 && drawColor.A > qrAreaAlphaMax) {
+                    drawColor = new Rgba32(drawColor.R, drawColor.G, drawColor.B, (byte)qrAreaAlphaMax);
+                }
+
+                BlendPixel(scanlines, stride, x, y, drawColor);
             }
         }
     }
@@ -816,6 +1781,9 @@ public static partial class QrPngRenderer {
                 var draw = pattern.Type switch {
                     QrPngBackgroundPatternType.Grid => (localX % size) < thickness || (localY % size) < thickness,
                     QrPngBackgroundPatternType.Checker => (((localX / size) + (localY / size)) & 1) == 0,
+                    QrPngBackgroundPatternType.DiagonalStripes => PositiveMod(localX + localY, size) < thickness,
+                    QrPngBackgroundPatternType.Crosshatch =>
+                        PositiveMod(localX + localY, size) < thickness || PositiveMod(localX - localY, size) < thickness,
                     _ => IsDot(localX, localY, size, thickness),
                 };
 
@@ -833,7 +1801,7 @@ public static partial class QrPngRenderer {
         return dx * dx + dy * dy <= radius * radius;
     }
 
-    private static bool ShouldDrawForegroundPattern(QrPngForegroundPatternOptions pattern, int moduleSize, int px, int py) {
+    private static bool ShouldDrawForegroundPattern(QrPngForegroundPatternOptions pattern, int moduleSize, int px, int py, int originX, int originY, int qrSizePx) {
         var size = Math.Max(1, pattern.SizePx);
         if (pattern.SnapToModuleSize && moduleSize > 0) {
             var step = Math.Max(1, pattern.ModuleStep);
@@ -843,15 +1811,31 @@ public static partial class QrPngRenderer {
         var thickness = Math.Max(1, pattern.ThicknessPx);
         if (thickness > size) thickness = size;
 
-        var localX = PositiveMod(px, size);
-        var localY = PositiveMod(py, size);
+        var relX = px - originX;
+        var relY = py - originY;
+        var localX = PositiveMod(relX, size);
+        var localY = PositiveMod(relY, size);
 
         return pattern.Type switch {
+            QrPngForegroundPatternType.SpeckleDots => ShouldDrawSpeckleDot(pattern, px, py, size, thickness, localX, localY, originX, originY),
+            QrPngForegroundPatternType.HalftoneDots => ShouldDrawHalftoneDot(pattern, px, py, size, thickness, localX, localY, originX, originY, qrSizePx),
             QrPngForegroundPatternType.DiagonalStripes => PositiveMod(localX + localY, size) < thickness,
             QrPngForegroundPatternType.Crosshatch =>
                 PositiveMod(localX + localY, size) < thickness || PositiveMod(localX - localY, size) < thickness,
+            QrPngForegroundPatternType.Starburst => IsStarburst(localX, localY, size, thickness),
             _ => IsForegroundDot(localX, localY, size, thickness),
         };
+    }
+
+    private static bool IsStarburst(int localX, int localY, int cellSize, int thicknessPx) {
+        var center = (cellSize - 1) / 2.0;
+        var dx = Math.Abs(localX - center);
+        var dy = Math.Abs(localY - center);
+        var t = Math.Max(0.5, thicknessPx);
+
+        // Cardinal rays and diagonal rays.
+        if (dx <= t || dy <= t) return true;
+        return Math.Abs(dx - dy) <= t;
     }
 
     private static bool IsForegroundDot(int localX, int localY, int cellSize, int radiusPx) {
@@ -860,6 +1844,103 @@ public static partial class QrPngRenderer {
         var dy = localY - center;
         var radius = Math.Min(radiusPx, cellSize / 2.0);
         return dx * dx + dy * dy <= radius * radius;
+    }
+
+    private static bool ShouldDrawSpeckleDot(QrPngForegroundPatternOptions pattern, int px, int py, int size, int thickness, int localX, int localY, int originX, int originY) {
+        var density = Clamp01(pattern.Density);
+        if (density <= 0) return false;
+
+        var variation = Clamp01(pattern.Variation);
+        var relX = px - originX;
+        var relY = py - originY;
+        var cellX = (relX - localX) / size;
+        var cellY = (relY - localY) / size;
+        var seed = pattern.Seed;
+
+        var presenceHash = (uint)Hash(cellX, cellY, seed);
+        var presence = presenceHash / (double)uint.MaxValue;
+        if (presence > density) return false;
+
+        var jitterHashX = (uint)Hash(cellX, cellY, seed ^ unchecked((int)0x9e3779b9));
+        var jitterHashY = (uint)Hash(cellX, cellY, seed ^ unchecked((int)0x7f4a7c15));
+        var radiusHash = (uint)Hash(cellX, cellY, seed ^ unchecked((int)0x85ebca6b));
+
+        var jitterRange = variation * size * 0.35;
+        var jitterX = (jitterHashX / (double)uint.MaxValue * 2.0 - 1.0) * jitterRange;
+        var jitterY = (jitterHashY / (double)uint.MaxValue * 2.0 - 1.0) * jitterRange;
+
+        var center = (size - 1) / 2.0;
+        var cx = center + jitterX;
+        var cy = center + jitterY;
+
+        var baseRadius = Math.Max(0.75, thickness);
+        var radiusScale = 1.0 + (variation * 0.9) * ((radiusHash / (double)uint.MaxValue) - 0.5);
+        var radius = Math.Max(0.75, baseRadius * radiusScale);
+
+        var dx = localX - cx;
+        var dy = localY - cy;
+        return dx * dx + dy * dy <= radius * radius;
+    }
+
+    private static bool ShouldDrawHalftoneDot(QrPngForegroundPatternOptions pattern, int px, int py, int size, int thickness, int localX, int localY, int originX, int originY, int qrSizePx) {
+        var density = Clamp01(pattern.Density);
+        if (density <= 0) return false;
+
+        var strength = Clamp01(pattern.Variation);
+        var relX = px - originX;
+        var relY = py - originY;
+        var cellX = (relX - localX) / size;
+        var cellY = (relY - localY) / size;
+        var seed = pattern.Seed;
+
+        var radialT = ComputeRadialT(px, py, originX, originY, qrSizePx);
+        var densityScaled = density * (1.0 - 0.55 * strength * radialT);
+        if (densityScaled <= 0.02) return false;
+
+        var presenceHash = (uint)Hash(cellX, cellY, seed ^ unchecked((int)0x27d4eb2f));
+        var presence = presenceHash / (double)uint.MaxValue;
+        if (presence > densityScaled) return false;
+
+        var jitterHashX = (uint)Hash(cellX, cellY, seed ^ unchecked((int)0x9e3779b9));
+        var jitterHashY = (uint)Hash(cellX, cellY, seed ^ unchecked((int)0x7f4a7c15));
+        var radiusHash = (uint)Hash(cellX, cellY, seed ^ unchecked((int)0x85ebca6b));
+
+        var jitterRange = strength * size * 0.22;
+        var jitterX = (jitterHashX / (double)uint.MaxValue * 2.0 - 1.0) * jitterRange;
+        var jitterY = (jitterHashY / (double)uint.MaxValue * 2.0 - 1.0) * jitterRange;
+
+        var center = (size - 1) / 2.0;
+        var cx = center + jitterX;
+        var cy = center + jitterY;
+
+        var baseRadius = Math.Max(0.75, thickness);
+        var radialScale = 1.0 - 0.65 * strength * radialT;
+        if (radialScale < 0.35) radialScale = 0.35;
+        var jitterScale = 1.0 + strength * 0.6 * ((radiusHash / (double)uint.MaxValue) - 0.5);
+        var radius = baseRadius * radialScale * jitterScale;
+        if (radius < 0.75) radius = 0.75;
+
+        var dx = localX - cx;
+        var dy = localY - cy;
+        return dx * dx + dy * dy <= radius * radius;
+    }
+
+    private static double ComputeRadialT(int px, int py, int originX, int originY, int qrSizePx) {
+        if (qrSizePx <= 0) return 0;
+        var centerX = originX + qrSizePx / 2.0;
+        var centerY = originY + qrSizePx / 2.0;
+        var dx = px - centerX;
+        var dy = py - centerY;
+        var dist = Math.Sqrt(dx * dx + dy * dy);
+        var maxDist = Math.Sqrt(2.0) * (qrSizePx / 2.0);
+        if (maxDist <= 0) return 0;
+        return Clamp01(dist / maxDist);
+    }
+
+    private static double Clamp01(double value) {
+        if (value <= 0) return 0;
+        if (value >= 1) return 1;
+        return value;
     }
 
     private static int PositiveMod(int value, int modulus) {

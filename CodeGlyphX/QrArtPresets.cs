@@ -37,7 +37,10 @@ public static class QrArtPresets {
             },
         };
         opts.ForegroundPattern = new QrPngForegroundPatternOptions {
-            Type = QrPngForegroundPatternType.StippleDots,
+            Type = QrPngForegroundPatternType.SpeckleDots,
+            Seed = 90210,
+            Variation = 0.82,
+            Density = 0.94,
             Color = new Rgba32(0, 48, 46, 120),
             SizePx = 5,
             ThicknessPx = 1,
@@ -97,7 +100,10 @@ public static class QrArtPresets {
             EndColor = new Rgba32(28, 52, 150),
         };
         opts.ForegroundPattern = new QrPngForegroundPatternOptions {
-            Type = QrPngForegroundPatternType.StippleDots,
+            Type = QrPngForegroundPatternType.SpeckleDots,
+            Seed = 2141,
+            Variation = 0.68,
+            Density = 0.92,
             Color = new Rgba32(18, 50, 120, 96),
             SizePx = 6,
             ThicknessPx = 1,
@@ -169,7 +175,10 @@ public static class QrArtPresets {
             },
         };
         opts.ForegroundPattern = new QrPngForegroundPatternOptions {
-            Type = QrPngForegroundPatternType.StippleDots,
+            Type = QrPngForegroundPatternType.SpeckleDots,
+            Seed = 7717,
+            Variation = 0.74,
+            Density = 0.9,
             Color = new Rgba32(44, 54, 150, 96),
             SizePx = 6,
             ThicknessPx = 1,
@@ -315,7 +324,10 @@ public static class QrArtPresets {
             },
         };
         opts.ForegroundPattern = new QrPngForegroundPatternOptions {
-            Type = QrPngForegroundPatternType.StippleDots,
+            Type = QrPngForegroundPatternType.SpeckleDots,
+            Seed = 4422,
+            Variation = 0.7,
+            Density = 0.9,
             Color = new Rgba32(18, 42, 120, 92),
             SizePx = 6,
             ThicknessPx = 1,
@@ -394,6 +406,19 @@ public static class QrArtPresets {
             InnerCornerRadiusPx = 4,
             OuterColor = new Rgba32(24, 44, 132),
             InnerColor = new Rgba32(46, 170, 188),
+            SparkleCount = 22,
+            SparkleRadiusPx = 3,
+            SparkleSpreadPx = 24,
+            SparkleSeed = 90210,
+            SparkleColor = new Rgba32(70, 190, 210, 140),
+            AccentStripeCount = 24,
+            AccentStripeLengthPx = 26,
+            AccentStripeThicknessPx = 4,
+            AccentStripeSpreadPx = 32,
+            AccentStripeJitterPx = 6,
+            AccentStripeLengthJitterPx = 8,
+            AccentStripeSeed = 424242,
+            AccentStripeColor = new Rgba32(24, 44, 132, 124),
         };
         opts.Canvas = new QrPngCanvasOptions {
             PaddingPx = 26,
@@ -587,6 +612,22 @@ public static class QrArtPresets {
             opts.Eyes.GlowRadiusPx = 28;
             opts.Eyes.GlowAlpha = 120;
         }
+        if (opts.ForegroundPattern is not null) {
+            opts.ForegroundPattern.Type = QrPngForegroundPatternType.Starburst;
+            opts.ForegroundPattern.ApplyToEyes = true;
+            opts.ForegroundPattern.SnapToModuleSize = true;
+            opts.ForegroundPattern.ModuleStep = 2;
+            opts.ForegroundPattern.SizePx = 8;
+            opts.ForegroundPattern.ThicknessPx = 1;
+            opts.ForegroundPattern.Color = new Rgba32(0, 140, 220, 92);
+        }
+        if (opts.Canvas is not null) {
+            opts.Canvas.Halo = new QrPngCanvasHaloOptions {
+                Color = new Rgba32(0, 176, 230, 120),
+                RadiusPx = 44,
+                ProtectQrArea = true,
+            };
+        }
         return opts;
     }
 
@@ -767,6 +808,18 @@ public static class QrArtPresets {
             opts.Canvas.Splash.DripChance = 0.55;
             opts.Canvas.Splash.DripLengthPx = 36;
             opts.Canvas.Splash.MaxRadiusPx = Math.Max(opts.Canvas.Splash.MaxRadiusPx, 54);
+        }
+        if (opts.Eyes is not null) {
+            opts.Eyes.OuterColors = new[] {
+                new Rgba32(20, 44, 120),
+                new Rgba32(168, 52, 132),
+                new Rgba32(44, 118, 64),
+            };
+            opts.Eyes.InnerColors = new[] {
+                new Rgba32(26, 164, 182),
+                new Rgba32(214, 72, 150),
+                new Rgba32(110, 190, 70),
+            };
         }
         return opts;
     }
