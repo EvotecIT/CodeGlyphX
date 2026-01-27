@@ -12,7 +12,7 @@ public sealed class WebpVp8ImageMacroblockTilingScaffoldTests
         const int expectedWidth = 33;
         const int expectedHeight = 33;
         const int macroblockPixelSize = 8;
-        const int maxSeed = 256;
+        const int maxSeed = 512;
 
         var foundDistinctMacroblocks = false;
 
@@ -46,7 +46,7 @@ public sealed class WebpVp8ImageMacroblockTilingScaffoldTests
                 continue;
             }
 
-            if (macroblockTokens.MacroblockCols < 2 || macroblockTokens.MacroblockRows < 1)
+            if (macroblockTokens.MacroblockCols < 3 || macroblockTokens.MacroblockRows < 1)
             {
                 continue;
             }
@@ -57,10 +57,14 @@ public sealed class WebpVp8ImageMacroblockTilingScaffoldTests
             var macroblock1 = WebpVp8Decoder.BuildMacroblockScaffold(
                 macroblockTokens.Macroblocks[1].Blocks,
                 macroblockTokens.TotalBlocksAssigned);
+            var macroblock2 = WebpVp8Decoder.BuildMacroblockScaffold(
+                macroblockTokens.Macroblocks[2].Blocks,
+                macroblockTokens.TotalBlocksAssigned);
             var rgba0 = WebpVp8Decoder.ConvertMacroblockScaffoldToRgba(macroblock0);
             var rgba1 = WebpVp8Decoder.ConvertMacroblockScaffoldToRgba(macroblock1);
+            var rgba2 = WebpVp8Decoder.ConvertMacroblockScaffoldToRgba(macroblock2);
 
-            if (!PixelsDiffer(rgba0, rgba1))
+            if (!PixelsDiffer(rgba0, rgba1) || !PixelsDiffer(rgba0, rgba2))
             {
                 continue;
             }
@@ -74,11 +78,16 @@ public sealed class WebpVp8ImageMacroblockTilingScaffoldTests
 
             var pixel00 = ReadPixel(rgba, width, x: 0, y: 0);
             var pixel10 = ReadPixel(rgba, width, x: macroblockPixelSize, y: 0);
+            var pixel30 = ReadPixel(rgba, width, x: macroblockPixelSize * 3, y: 0);
             var expected00 = ReadPixel(rgba0, macroblockPixelSize, x: 0, y: 0);
             var expected10 = ReadPixel(rgba1, macroblockPixelSize, x: 0, y: 0);
+            var expected30 = ReadPixel(rgba2, macroblockPixelSize, x: 0, y: 0);
 
             Assert.Equal(expected00, pixel00);
             Assert.Equal(expected10, pixel10);
+            // x=24 (tileX=3) should clamp to the last macroblock column (index 2),
+            // not wrap back to column 0.
+            Assert.Equal(expected30, pixel30);
 
             foundDistinctMacroblocks = true;
             break;
@@ -111,4 +120,3 @@ public sealed class WebpVp8ImageMacroblockTilingScaffoldTests
         return (rgba[index + 0], rgba[index + 1], rgba[index + 2], rgba[index + 3]);
     }
 }
-

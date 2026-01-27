@@ -780,10 +780,10 @@ internal static class WebpVp8Decoder {
 
         for (var tileY = 0; tileY < tileRows; tileY++) {
             var dstBlockY = tileY * macroblockHeight;
-            var sourceY = tileY % macroblockTokens.MacroblockRows;
+            var sourceY = ClampIndex(tileY, macroblockTokens.MacroblockRows);
             for (var tileX = 0; tileX < tileCols; tileX++) {
                 var dstBlockX = tileX * macroblockWidth;
-                var sourceX = tileX % macroblockTokens.MacroblockCols;
+                var sourceX = ClampIndex(tileX, macroblockTokens.MacroblockCols);
                 var sourceIndex = (sourceY * macroblockTokens.MacroblockCols) + sourceX;
                 if ((uint)sourceIndex >= (uint)macroblockRgbaCache.Length) return false;
 
@@ -1297,6 +1297,13 @@ internal static class WebpVp8Decoder {
                 output[dstIndex + 3] = macroblockRgba[srcIndex + 3];
             }
         }
+    }
+
+    private static int ClampIndex(int index, int maxExclusive) {
+        if (maxExclusive <= 0) return 0;
+        if (index < 0) return 0;
+        if (index >= maxExclusive) return maxExclusive - 1;
+        return index;
     }
 
     private static bool TryReadSegmentId(WebpVp8BoolDecoder decoder, int[] probabilities, out int segmentId) {
