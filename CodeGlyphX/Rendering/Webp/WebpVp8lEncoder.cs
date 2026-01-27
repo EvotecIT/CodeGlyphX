@@ -14,6 +14,8 @@ internal static class WebpVp8lEncoder {
     private const int GreenAlphabetBase = LiteralAlphabetSize + LengthPrefixCount; // 280
     private const int MaxPrefixBits = 15;
     private const int MaxPaletteSize = 16;
+    private const int MaxBackwardDistance = 4096;
+    private const int DistanceMapSize = 120;
 
     public static bool TryEncodeLiteralRgba32(
         ReadOnlySpan<byte> rgba,
@@ -352,21 +354,24 @@ internal static class WebpVp8lEncoder {
 
         var list = new List<Token>(pixels.Length);
         var pos = 0;
-        const int maxDistance = 72;
-        const int maxMatchLength = 128;
+        var maxDistance = Math.Min(MaxBackwardDistance, pixels.Length);
+        const int maxMatchLength = 256;
         while (pos < pixels.Length) {
             var bestLength = 0;
             var bestDistance = 0;
             var bestScore = int.MinValue;
 
             var remaining = pixels.Length - pos;
-            var maxLen = remaining < 4096 ? remaining : 4096;
+            var maxLen = remaining < MaxBackwardDistance ? remaining : MaxBackwardDistance;
             if (maxLen > maxMatchLength) maxLen = maxMatchLength;
 
-            for (var distance = 1; distance <= maxDistance; distance++) {
-                if (pos < distance) continue;
+            var maxSearchDistance = pos < maxDistance ? pos : maxDistance;
+            for (var distance = 1; distance <= maxSearchDistance; distance++) {
 
-                var requiredLength = distance <= 8 ? 3 : (distance <= 32 ? 4 : 5);
+                var requiredLength = distance <= 8 ? 3
+                    : distance <= 64 ? 4
+                    : distance <= 256 ? 5
+                    : 6;
 
                 var length = 0;
                 while (length < maxLen && pixels[pos + length] == pixels[pos - distance + length]) {
@@ -615,12 +620,9 @@ internal static class WebpVp8lEncoder {
         reason = string.Empty;
         distanceBook = default;
 
-        // Use a two-symbol simple code with prefixes 13 and 14:
-        // - prefix 13 (extra bits = 5) covers distance codes 97..128 => distances 1..8
-        // - prefix 14 (extra bits = 6) covers distance codes 129..192 => distances 9..72
-        var symbols = new byte[] { 13, 14 };
-        WriteSimplePrefixCode(writer, symbols);
-        return TryBuildSimpleCodebook(alphabetSize: 40, symbols, out distanceBook, out reason);
+        var lengths = BuildFixedDistanceCodeLengths();
+        WriteNormalPrefixCodeWithFixedLengths(writer, lengths);
+        return TryBuildCodebookFromLengths(lengths, out distanceBook, out reason);
     }
 
     private static bool TryEncodeTokens(
@@ -677,29 +679,24 @@ internal static class WebpVp8lEncoder {
                 writer.WriteBits(lengthExtraValue, lengthExtraBits);
             }
 
-            if (token.Distance is < 1 or > 72) {
-                reason = "Only distances 1..72 are supported in this encoder step.";
+            if (token.Distance is < 1 or > MaxBackwardDistance) {
+                reason = $"Only distances 1..{MaxBackwardDistance} are supported in this encoder step.";
                 return false;
             }
 
-            // Choose a distance prefix that can encode the desired distance code.
-            var distanceCode = 120 + token.Distance;
-            var distancePrefix = distanceCode <= 128 ? 13 : 14;
+            var distanceCode = DistanceMapSize + token.Distance;
+            if (!TryEncodePrefixValue(distanceCode, maxPrefix: 39, out var distancePrefix, out var distanceExtraBits, out var distanceExtraValue)) {
+                reason = "Distance code could not be encoded.";
+                return false;
+            }
 
             if (!distanceBook.TryWrite(writer, distancePrefix)) {
                 reason = "Distance prefix symbol not present in prefix code.";
                 return false;
             }
 
-            // Encode the distance code using the chosen prefix.
-            if (distancePrefix == 13) {
-                // Prefix 13 => extraBits=5, offset=96, codes 97..128.
-                var distanceExtra = distanceCode - 97;
-                writer.WriteBits(distanceExtra, 5);
-            } else {
-                // Prefix 14 => extraBits=6, offset=128, codes 129..192.
-                var distanceExtra = distanceCode - 129;
-                writer.WriteBits(distanceExtra, 6);
+            if (distanceExtraBits > 0) {
+                writer.WriteBits(distanceExtraValue, distanceExtraBits);
             }
         }
 
@@ -936,6 +933,70 @@ internal static class WebpVp8lEncoder {
         var codes = BuildCanonicalCodewords(lengths, MaxPrefixBits);
         codebook = new Codebook(codes, singleSymbol: -1);
         return true;
+    }
+
+    private static bool TryBuildFixedNormalCodebookAnyCount(int alphabetSize, int fixedLiteralCount, out Codebook codebook, out string reason) {
+        reason = string.Empty;
+        codebook = default;
+
+        if (alphabetSize <= 0) {
+            reason = "Alphabet size must be positive.";
+            return false;
+        }
+        if (fixedLiteralCount <= 0 || fixedLiteralCount > alphabetSize) {
+            reason = "Fixed literal count exceeds alphabet size.";
+            return false;
+        }
+
+        var lengths = new byte[alphabetSize];
+        for (var i = 0; i < fixedLiteralCount; i++) {
+            lengths[i] = 8;
+        }
+
+        if (!WebpPrefixCode.TryBuild(lengths, MaxPrefixBits, out _)) {
+            reason = "Failed to build fixed normal prefix code.";
+            return false;
+        }
+
+        var codes = BuildCanonicalCodewords(lengths, MaxPrefixBits);
+        codebook = new Codebook(codes, singleSymbol: -1);
+        return true;
+    }
+
+    private static byte[] BuildFixedDistanceCodeLengths() {
+        var lengths = new byte[40];
+        for (var i = 0; i < lengths.Length; i++) {
+            lengths[i] = (byte)(i < 24 ? 5 : 6);
+        }
+        return lengths;
+    }
+
+    private static void WriteNormalPrefixCodeWithFixedLengths(WebpBitWriter writer, ReadOnlySpan<byte> lengths) {
+        // Normal prefix code flag.
+        writer.WriteBits(0, 1);
+
+        // We need code-length symbols 5 and 6, so include up to symbol 6 in order.
+        const int numCodeLengthCodes = 10; // 17,18,0,1,2,3,4,5,16,6
+        writer.WriteBits(numCodeLengthCodes - 4, 4);
+
+        // Code-length code lengths: only symbols 5 and 6 have length 1.
+        writer.WriteBits(0, 3); // 17
+        writer.WriteBits(0, 3); // 18
+        writer.WriteBits(0, 3); // 0
+        writer.WriteBits(0, 3); // 1
+        writer.WriteBits(0, 3); // 2
+        writer.WriteBits(0, 3); // 3
+        writer.WriteBits(0, 3); // 4
+        writer.WriteBits(1, 3); // 5
+        writer.WriteBits(0, 3); // 16
+        writer.WriteBits(1, 3); // 6
+
+        // use_max_symbol = false (max symbol is full alphabet size).
+        writer.WriteBits(0, 1);
+
+        for (var i = 0; i < lengths.Length; i++) {
+            writer.WriteBits(lengths[i] == 5 ? 0 : 1, 1);
+        }
     }
 
     private static Codeword[] BuildCanonicalCodewords(ReadOnlySpan<byte> lengths, int maxBits) {
