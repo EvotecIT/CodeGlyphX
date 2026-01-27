@@ -16,6 +16,8 @@ internal static class WebpVp8lEncoder {
     private const int MaxPaletteSize = 16;
     private const int MaxBackwardDistance = 4096;
     private const int DistanceMapSize = 120;
+    private const int MaxColorCacheBits = 11;
+    private const uint ColorCacheHashMultiplier = 0x1e35a7bd;
     private static readonly (int xi, int yi)[] DistanceMap = {
         (0, 1), (1, 0), (1, 1), (-1, 1), (0, 2), (2, 0), (1, 2), (-1, 2),
         (2, 1), (-2, 1), (2, 2), (-2, 2), (0, 3), (3, 0), (1, 3), (-1, 3),
@@ -224,20 +226,30 @@ internal static class WebpVp8lEncoder {
         out string reason) {
         reason = string.Empty;
 
-        // No color cache, no meta prefix codes.
-        writer.WriteBits(0, 1);
-        writer.WriteBits(0, 1);
-
         var pixelCount = checked(width * height);
         var pixels = new int[pixelCount];
         FillArgbPixels(rgba, width, height, stride, pixels);
 
-        var tokens = BuildSmallDistanceTokens(pixels);
-        if (!TryWriteTokensWithPrefixCodes(writer, tokens, width, out reason)) {
+        var colorCacheBits = ChooseColorCacheBits(pixels);
+        var colorCacheSize = colorCacheBits == 0 ? 0 : 1 << colorCacheBits;
+
+        // Color cache flag + bits, then no meta prefix codes.
+        if (colorCacheBits > 0) {
+            writer.WriteBits(1, 1);
+            writer.WriteBits(colorCacheBits, 4);
+        } else {
+            writer.WriteBits(0, 1);
+        }
+        writer.WriteBits(0, 1);
+
+        var tokens = colorCacheBits > 0
+            ? BuildTokensWithColorCache(pixels, width, colorCacheBits)
+            : BuildSmallDistanceTokens(pixels);
+        if (!TryWriteTokensWithPrefixCodes(writer, tokens, width, colorCacheSize, out reason)) {
             // Fall back to literal-only encoding if our constrained backref path
             // cannot be expressed with the current prefix-code strategy.
             tokens = BuildLiteralTokens(pixels);
-            return TryWriteTokensWithPrefixCodes(writer, tokens, width, out reason);
+            return TryWriteTokensWithPrefixCodes(writer, tokens, width, colorCacheSize: 0, out reason);
         }
 
         return true;
@@ -610,6 +622,80 @@ internal static class WebpVp8lEncoder {
         return tokens;
     }
 
+    private static Token[] BuildTokensWithColorCache(ReadOnlySpan<int> pixels, int width, int colorCacheBits) {
+        if (pixels.Length == 0) return Array.Empty<Token>();
+        if (colorCacheBits is < 1 or > MaxColorCacheBits) return BuildSmallDistanceTokens(pixels);
+
+        var cacheSize = 1 << colorCacheBits;
+        var cache = new int[cacheSize];
+        var cacheValid = new bool[cacheSize];
+        var list = new List<Token>(pixels.Length);
+
+        var pos = 0;
+        var maxDistance = Math.Min(MaxBackwardDistance, pixels.Length);
+        const int maxMatchLength = 256;
+        while (pos < pixels.Length) {
+            var pixel = pixels[pos];
+            var cacheIndex = GetColorCacheIndex(pixel, colorCacheBits);
+            if (cacheValid[cacheIndex] && cache[cacheIndex] == pixel) {
+                list.Add(Token.CacheIndex(cacheIndex));
+                cache[cacheIndex] = pixel;
+                cacheValid[cacheIndex] = true;
+                pos++;
+                continue;
+            }
+
+            var bestLength = 0;
+            var bestDistance = 0;
+            var bestScore = int.MinValue;
+
+            var remaining = pixels.Length - pos;
+            var maxLen = remaining < MaxBackwardDistance ? remaining : MaxBackwardDistance;
+            if (maxLen > maxMatchLength) maxLen = maxMatchLength;
+
+            var maxSearchDistance = pos < maxDistance ? pos : maxDistance;
+            for (var distance = 1; distance <= maxSearchDistance; distance++) {
+                var requiredLength = distance <= 8 ? 3
+                    : distance <= 64 ? 4
+                    : distance <= 256 ? 5
+                    : 6;
+
+                var length = 0;
+                while (length < maxLen && pixels[pos + length] == pixels[pos - distance + length]) {
+                    length++;
+                }
+
+                if (length < requiredLength) continue;
+
+                var score = length - requiredLength;
+                if (score > bestScore || (score == bestScore && distance < bestDistance)) {
+                    bestScore = score;
+                    bestLength = length;
+                    bestDistance = distance;
+                }
+            }
+
+            if (bestLength > 0) {
+                list.Add(Token.BackReference(bestDistance, bestLength));
+                for (var i = 0; i < bestLength; i++) {
+                    var copied = pixels[pos + i];
+                    var idx = GetColorCacheIndex(copied, colorCacheBits);
+                    cache[idx] = copied;
+                    cacheValid[idx] = true;
+                }
+                pos += bestLength;
+                continue;
+            }
+
+            list.Add(Token.Literal(pixel));
+            cache[cacheIndex] = pixel;
+            cacheValid[cacheIndex] = true;
+            pos++;
+        }
+
+        return list.ToArray();
+    }
+
     private static Token[] BuildSmallDistanceTokens(ReadOnlySpan<int> pixels) {
         if (pixels.Length == 0) return Array.Empty<Token>();
 
@@ -662,10 +748,53 @@ internal static class WebpVp8lEncoder {
         return list.ToArray();
     }
 
+    private static int ChooseColorCacheBits(ReadOnlySpan<int> pixels) {
+        if (pixels.Length < 16) return 0;
+
+        var bestBits = 0;
+        var bestHits = 0;
+        for (var bits = 4; bits <= 7; bits++) {
+            var hits = CountColorCacheHits(pixels, bits);
+            if (hits > bestHits) {
+                bestHits = hits;
+                bestBits = bits;
+            }
+        }
+
+        if (bestBits == 0) return 0;
+        var threshold = pixels.Length / 8;
+        return bestHits >= threshold ? bestBits : 0;
+    }
+
+    private static int CountColorCacheHits(ReadOnlySpan<int> pixels, int colorCacheBits) {
+        if (colorCacheBits is < 1 or > MaxColorCacheBits) return 0;
+        var cacheSize = 1 << colorCacheBits;
+        var cache = new int[cacheSize];
+        var valid = new bool[cacheSize];
+        var hits = 0;
+        for (var i = 0; i < pixels.Length; i++) {
+            var pixel = pixels[i];
+            var index = GetColorCacheIndex(pixel, colorCacheBits);
+            if (valid[index] && cache[index] == pixel) {
+                hits++;
+            } else {
+                cache[index] = pixel;
+                valid[index] = true;
+            }
+        }
+        return hits;
+    }
+
+    private static int GetColorCacheIndex(int pixel, int colorCacheBits) {
+        var hash = (uint)pixel * ColorCacheHashMultiplier;
+        return (int)(hash >> (32 - colorCacheBits));
+    }
+
     private static bool TryWriteTokensWithPrefixCodes(
         WebpBitWriter writer,
         ReadOnlySpan<Token> tokens,
         int width,
+        int colorCacheSize,
         out string reason) {
         reason = string.Empty;
 
@@ -680,10 +809,13 @@ internal static class WebpVp8lEncoder {
         }
 
         var hasBackrefs = lengthPrefixes.Length > 0;
+        var cacheIndexes = Array.Empty<int>();
+        var hasColorCache = colorCacheSize > 0 && TryCollectCacheIndexes(tokens, colorCacheSize, out cacheIndexes);
 
         Codebook greenBook;
-        if (hasBackrefs) {
-            if (!TryWriteGreenPrefixCodeWithBackrefs(writer, uniqueG, lengthPrefixes, out greenBook, out reason)) {
+        if (hasBackrefs || hasColorCache) {
+            var cacheSymbols = hasColorCache ? cacheIndexes : Array.Empty<int>();
+            if (!TryWriteGreenPrefixCodeWithExtras(writer, uniqueG, lengthPrefixes, cacheSymbols, colorCacheSize, out greenBook, out reason)) {
                 return false;
             }
         } else {
@@ -760,6 +892,22 @@ internal static class WebpVp8lEncoder {
         return true;
     }
 
+    private static bool TryCollectCacheIndexes(ReadOnlySpan<Token> tokens, int colorCacheSize, out int[] cacheIndexes) {
+        var set = new HashSet<int>();
+        for (var i = 0; i < tokens.Length; i++) {
+            var token = tokens[i];
+            if (token.Kind != TokenKind.CacheIndex) continue;
+            if (token.CacheIndexValue is < 0 or >= 4096) continue;
+            if (token.CacheIndexValue >= colorCacheSize) continue;
+            set.Add(token.CacheIndexValue);
+        }
+
+        cacheIndexes = new int[set.Count];
+        set.CopyTo(cacheIndexes);
+        Array.Sort(cacheIndexes);
+        return true;
+    }
+
     private static byte[] BuildSymbolList(bool[] seen) {
         var count = 0;
         for (var i = 0; i < seen.Length; i++) {
@@ -775,10 +923,12 @@ internal static class WebpVp8lEncoder {
         return symbols;
     }
 
-    private static bool TryWriteGreenPrefixCodeWithBackrefs(
+    private static bool TryWriteGreenPrefixCodeWithExtras(
         WebpBitWriter writer,
         ReadOnlySpan<byte> literalGreens,
         ReadOnlySpan<int> lengthPrefixes,
+        ReadOnlySpan<int> cacheIndexes,
+        int colorCacheSize,
         out Codebook greenBook,
         out string reason) {
         reason = string.Empty;
@@ -791,8 +941,14 @@ internal static class WebpVp8lEncoder {
         for (var i = 0; i < lengthPrefixes.Length; i++) {
             required.Add(LiteralAlphabetSize + lengthPrefixes[i]);
         }
+        for (var i = 0; i < cacheIndexes.Length; i++) {
+            var index = cacheIndexes[i];
+            if (index < 0 || (colorCacheSize > 0 && index >= colorCacheSize)) continue;
+            required.Add(GreenAlphabetBase + index);
+        }
 
-        if (!TryBuildZeroOrEightLengths(GreenAlphabetBase, required, out var lengths, out reason)) {
+        var greenAlphabetSize = GreenAlphabetBase + (colorCacheSize > 0 ? colorCacheSize : 0);
+        if (!TryBuildZeroOrEightLengths(greenAlphabetSize, required, out var lengths, out reason)) {
             return false;
         }
 
@@ -929,6 +1085,15 @@ internal static class WebpVp8lEncoder {
                 continue;
             }
 
+            if (token.Kind == TokenKind.CacheIndex) {
+                var cacheGreenSymbol = GreenAlphabetBase + token.CacheIndexValue;
+                if (!greenBook.TryWrite(writer, cacheGreenSymbol)) {
+                    reason = "Green cache symbol not present in prefix code.";
+                    return false;
+                }
+                continue;
+            }
+
             if (!TryEncodePrefixValue(token.Length, maxPrefix: LengthPrefixCount - 1, out var lengthPrefix, out var lengthExtraBits, out var lengthExtraValue)) {
                 reason = "Back-reference length is not encodable.";
                 return false;
@@ -1022,25 +1187,29 @@ internal static class WebpVp8lEncoder {
     }
 
     private readonly struct Token {
-        private Token(TokenKind kind, int literalArgb, int length, int distance) {
+        private Token(TokenKind kind, int literalArgb, int length, int distance, int cacheIndex) {
             Kind = kind;
             LiteralArgb = literalArgb;
             Length = length;
             Distance = distance;
+            CacheIndexValue = cacheIndex;
         }
 
         public TokenKind Kind { get; }
         public int LiteralArgb { get; }
         public int Length { get; }
         public int Distance { get; }
+        public int CacheIndexValue { get; }
 
-        public static Token Literal(int argb) => new Token(TokenKind.Literal, argb, length: 0, distance: 0);
-        public static Token BackReference(int distance, int length) => new Token(TokenKind.BackReference, literalArgb: 0, length, distance);
+        public static Token Literal(int argb) => new Token(TokenKind.Literal, argb, length: 0, distance: 0, cacheIndex: 0);
+        public static Token BackReference(int distance, int length) => new Token(TokenKind.BackReference, literalArgb: 0, length, distance, cacheIndex: 0);
+        public static Token CacheIndex(int cacheIndex) => new Token(TokenKind.CacheIndex, literalArgb: 0, length: 0, distance: 0, cacheIndex);
     }
 
     private enum TokenKind {
         Literal = 0,
-        BackReference = 1
+        BackReference = 1,
+        CacheIndex = 2
     }
 
     private static bool TryCollectUniqueChannelValues(
