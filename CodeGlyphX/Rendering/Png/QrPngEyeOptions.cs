@@ -227,6 +227,57 @@ public sealed class QrPngEyeOptions {
     /// </summary>
     public bool AccentRayAllowOnQrBackground { get; set; }
 
+    /// <summary>
+    /// Optional accent stripe count drawn around the eyes on the canvas.
+    /// Stripes are short tangential strokes that hug the eye perimeter.
+    /// </summary>
+    public int AccentStripeCount { get; set; }
+
+    /// <summary>
+    /// Accent stripe length in pixels.
+    /// </summary>
+    public int AccentStripeLengthPx { get; set; } = 28;
+
+    /// <summary>
+    /// Accent stripe stroke thickness in pixels.
+    /// </summary>
+    public int AccentStripeThicknessPx { get; set; } = 4;
+
+    /// <summary>
+    /// How far accent stripes can extend beyond the eye ring (in pixels).
+    /// </summary>
+    public int AccentStripeSpreadPx { get; set; } = 30;
+
+    /// <summary>
+    /// Small jitter applied to stripe radius (in pixels).
+    /// </summary>
+    public int AccentStripeJitterPx { get; set; } = 7;
+
+    /// <summary>
+    /// Small jitter applied to stripe length (in pixels).
+    /// </summary>
+    public int AccentStripeLengthJitterPx { get; set; } = 8;
+
+    /// <summary>
+    /// Accent stripe color override. Defaults to the outer eye color with a softer alpha.
+    /// </summary>
+    public Rgba32? AccentStripeColor { get; set; }
+
+    /// <summary>
+    /// Random seed for accent stripe placement. Use 0 to auto-randomize per render.
+    /// </summary>
+    public int AccentStripeSeed { get; set; }
+
+    /// <summary>
+    /// When true (default), accent stripes do not draw inside the QR area.
+    /// </summary>
+    public bool AccentStripeProtectQrArea { get; set; } = true;
+
+    /// <summary>
+    /// When false (default), accent stripes render only when a canvas is enabled.
+    /// </summary>
+    public bool AccentStripeAllowOnQrBackground { get; set; }
+
     internal void Validate() {
         if (OuterScale is <= 0 or > 1.0) throw new ArgumentOutOfRangeException(nameof(OuterScale));
         if (InnerScale is <= 0 or > 1.0) throw new ArgumentOutOfRangeException(nameof(InnerScale));
@@ -244,6 +295,12 @@ public sealed class QrPngEyeOptions {
         if (AccentRaySpreadPx < 0) throw new ArgumentOutOfRangeException(nameof(AccentRaySpreadPx));
         if (AccentRayJitterPx < 0) throw new ArgumentOutOfRangeException(nameof(AccentRayJitterPx));
         if (AccentRayLengthJitterPx < 0) throw new ArgumentOutOfRangeException(nameof(AccentRayLengthJitterPx));
+        if (AccentStripeCount < 0) throw new ArgumentOutOfRangeException(nameof(AccentStripeCount));
+        if (AccentStripeLengthPx < 0) throw new ArgumentOutOfRangeException(nameof(AccentStripeLengthPx));
+        if (AccentStripeThicknessPx < 0) throw new ArgumentOutOfRangeException(nameof(AccentStripeThicknessPx));
+        if (AccentStripeSpreadPx < 0) throw new ArgumentOutOfRangeException(nameof(AccentStripeSpreadPx));
+        if (AccentStripeJitterPx < 0) throw new ArgumentOutOfRangeException(nameof(AccentStripeJitterPx));
+        if (AccentStripeLengthJitterPx < 0) throw new ArgumentOutOfRangeException(nameof(AccentStripeLengthJitterPx));
         if (OuterColors is { Length: not 3 }) throw new ArgumentOutOfRangeException(nameof(OuterColors), "OuterColors must have exactly 3 entries.");
         if (InnerColors is { Length: not 3 }) throw new ArgumentOutOfRangeException(nameof(InnerColors), "InnerColors must have exactly 3 entries.");
         if (OuterGradients is { Length: not 3 }) throw new ArgumentOutOfRangeException(nameof(OuterGradients), "OuterGradients must have exactly 3 entries.");

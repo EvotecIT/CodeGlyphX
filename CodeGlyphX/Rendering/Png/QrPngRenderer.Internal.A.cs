@@ -93,6 +93,10 @@ public static partial class QrPngRenderer {
             && (opts.Canvas is not null || eyesRays.AccentRayAllowOnQrBackground)) {
             DrawEyeAccentRays(buffer, widthPx, heightPx, stride, opts, qrOffsetX, qrOffsetY, qrFullPx, qrSizePx, size);
         }
+        if (opts.Eyes is { AccentStripeCount: > 0 } eyesStripes
+            && (opts.Canvas is not null || eyesStripes.AccentStripeAllowOnQrBackground)) {
+            DrawEyeAccentStripes(buffer, widthPx, heightPx, stride, opts, qrOffsetX, qrOffsetY, qrFullPx, qrSizePx, size);
+        }
 
         var connectedShape = opts.ModuleShape;
         var connectedMode = connectedShape is QrPngModuleShape.ConnectedRounded or QrPngModuleShape.ConnectedSquircle;
@@ -1038,6 +1042,144 @@ public static partial class QrPngRenderer {
                 canvasRadius,
                 canvasRadiusSq,
                 eyes.AccentRayProtectQrArea,
+                qrX0,
+                qrY0,
+                qrX1,
+                qrY1);
+        }
+    }
+
+    private static void DrawEyeAccentStripes(
+        byte[] scanlines,
+        int widthPx,
+        int heightPx,
+        int stride,
+        QrPngRenderOptions opts,
+        int qrOffsetX,
+        int qrOffsetY,
+        int qrFullPx,
+        int qrSizePx,
+        int size) {
+        var eyes = opts.Eyes;
+        if (eyes is null || eyes.AccentStripeCount <= 0 || eyes.AccentStripeThicknessPx <= 0 || eyes.AccentStripeLengthPx <= 0) return;
+
+        var moduleSize = opts.ModuleSize;
+        if (moduleSize <= 0) return;
+
+        var pad = opts.Canvas is null ? 0 : Math.Max(0, opts.Canvas.PaddingPx);
+        var canvasX = qrOffsetX - pad;
+        var canvasY = qrOffsetY - pad;
+        var canvasW = qrFullPx + pad * 2;
+        var canvasH = canvasW;
+        var canvasX1 = canvasX + canvasW - 1;
+        var canvasY1 = canvasY + canvasH - 1;
+        var canvasRadius = opts.Canvas is null ? 0 : Math.Max(0, opts.Canvas.CornerRadiusPx);
+        var canvasRadiusSq = canvasRadius * canvasRadius;
+
+        var qrX0 = qrOffsetX;
+        var qrY0 = qrOffsetY;
+        var qrX1 = qrOffsetX + qrFullPx - 1;
+        var qrY1 = qrOffsetY + qrFullPx - 1;
+
+        var seed = eyes.AccentStripeSeed != 0
+            ? eyes.AccentStripeSeed
+            : unchecked(Environment.TickCount ^ Hash(qrOffsetX, qrOffsetY, qrFullPx, size ^ 0x243f6a88));
+        var rand = new Random(seed);
+
+        var accentOverride = eyes.AccentStripeColor;
+        if (accentOverride is not null && accentOverride.Value.A == 0) return;
+
+        var thickness = Math.Max(1, eyes.AccentStripeThicknessPx);
+        var halfThickness = Math.Max(1, thickness / 2);
+        var baseLength = Math.Max(halfThickness + 2, eyes.AccentStripeLengthPx);
+        var spread = Math.Max(0, eyes.AccentStripeSpreadPx);
+        var jitter = Math.Max(0, eyes.AccentStripeJitterPx);
+        var lengthJitter = Math.Max(0, eyes.AccentStripeLengthJitterPx);
+        var eyeRadiusPx = (int)Math.Round(3.5 * moduleSize);
+        var baseMinRing = eyeRadiusPx + halfThickness + 2;
+
+        for (var i = 0; i < eyes.AccentStripeCount; i++) {
+            var eyeIndex = rand.Next(3);
+            var eyeModuleX = eyeIndex switch {
+                0 => 0,
+                1 => size - 7,
+                _ => 0,
+            };
+            var eyeModuleY = eyeIndex switch {
+                0 => 0,
+                1 => 0,
+                _ => size - 7,
+            };
+
+            var eyeBaseX = qrOffsetX + (eyeModuleX + opts.QuietZone) * moduleSize;
+            var eyeBaseY = qrOffsetY + (eyeModuleY + opts.QuietZone) * moduleSize;
+            var eyeCenterX = eyeBaseX + 3 * moduleSize + moduleSize / 2;
+            var eyeCenterY = eyeBaseY + 3 * moduleSize + moduleSize / 2;
+
+            var accentColor = accentOverride ?? GetEyeOuterColor(opts, eyeIndex);
+            if (accentOverride is null && accentColor.A > 160) {
+                accentColor = new Rgba32(accentColor.R, accentColor.G, accentColor.B, 128);
+            }
+            if (accentColor.A == 0) continue;
+
+            var minRing = baseMinRing;
+            if (opts.Canvas is not null && eyes.AccentStripeProtectQrArea) {
+                var edgeDistance = Math.Min(
+                    Math.Min(eyeCenterX - qrX0, qrX1 - eyeCenterX),
+                    Math.Min(eyeCenterY - qrY0, qrY1 - eyeCenterY));
+                minRing = Math.Max(minRing, edgeDistance + halfThickness + 3);
+            }
+            var maxRing = minRing + spread;
+
+            var ring = NextBetween(rand, minRing, maxRing);
+            if (jitter > 0) {
+                ring += rand.Next(-jitter, jitter + 1);
+            }
+            ring = Math.Max(minRing, ring);
+
+            var angle = rand.NextDouble() * Math.PI * 2.0;
+            var dirX = Math.Cos(angle);
+            var dirY = Math.Sin(angle);
+
+            var stripeLength = baseLength;
+            if (lengthJitter > 0) {
+                stripeLength += rand.Next(-lengthJitter, lengthJitter + 1);
+            }
+            stripeLength = Math.Max(halfThickness + 2, stripeLength);
+            var halfLength = stripeLength * 0.5;
+
+            // Place the stripe at the ring radius and orient it tangentially to the circle.
+            var midX = eyeCenterX + dirX * ring;
+            var midY = eyeCenterY + dirY * ring;
+            var tangentX = -dirY;
+            var tangentY = dirX;
+
+            var startX = (int)Math.Round(midX - tangentX * halfLength);
+            var startY = (int)Math.Round(midY - tangentY * halfLength);
+            var endX = (int)Math.Round(midX + tangentX * halfLength);
+            var endY = (int)Math.Round(midY + tangentY * halfLength);
+
+            startX = Clamp(startX, canvasX + halfThickness, canvasX1 - halfThickness);
+            startY = Clamp(startY, canvasY + halfThickness, canvasY1 - halfThickness);
+            endX = Clamp(endX, canvasX + halfThickness, canvasX1 - halfThickness);
+            endY = Clamp(endY, canvasY + halfThickness, canvasY1 - halfThickness);
+
+            DrawRayStroke(
+                scanlines,
+                stride,
+                startX,
+                startY,
+                endX,
+                endY,
+                thickness,
+                accentColor,
+                canvasX,
+                canvasY,
+                canvasX1,
+                canvasY1,
+                canvasRadius,
+                canvasRadiusSq,
+                eyes.AccentStripeProtectQrArea,
                 qrX0,
                 qrY0,
                 qrX1,

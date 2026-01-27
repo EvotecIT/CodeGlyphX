@@ -292,6 +292,24 @@ internal static class QrStyleBoardExample {
                 pattern: Halftone(R(255, 255, 255, 86), seed: 1900, sizePx: 10, thicknessPx: 3, variation: 0.94, density: 0.96),
                 canvas: CanvasGradient(R(8, 22, 40), R(20, 56, 88)))),
 
+            new("Eye Stripes", StyleDocs("eye-stripes"), () => BaseSticker(
+                fg: R(34, 96, 220),
+                palette: Palette(QrPngPaletteMode.Cycle, 0, R(34, 96, 220), R(70, 182, 255), R(170, 120, 255)),
+                shape: QrPngModuleShape.ConnectedRounded,
+                eyes: EyeAccentStripes(R(34, 96, 220), R(255, 255, 255), R(255, 255, 255, 152), seed: 60606),
+                scaleMap: ScaleMap(QrPngModuleScaleMode.Radial, 0.84, 1.0, 6060),
+                pattern: Speckle(R(255, 255, 255, 58), seed: 6161, sizePx: 7, thicknessPx: 2, variation: 0.8, density: 0.9),
+                canvas: CanvasGradientTexture(
+                    R(238, 244, 255),
+                    R(218, 228, 255),
+                    grainColor: R(40, 60, 120, 66),
+                    grainDensity: 0.26,
+                    grainPixelSize: 2,
+                    grainSeed: 606060,
+                    vignetteColor: R(10, 20, 60, 80),
+                    vignetteBandPx: 92,
+                    vignetteStrength: 1.0))),
+
             new("Mint Board", StyleDocs("mint-board"), () => BaseSticker(
                 fg: R(0, 156, 121),
                 palette: Palette(QrPngPaletteMode.Checker, 0, R(0, 156, 121), R(99, 224, 181)),
@@ -424,6 +442,26 @@ internal static class QrStyleBoardExample {
         eyes.GlowRadiusPx = 28;
         eyes.GlowAlpha = 125;
         eyes.GlowColor = glow ?? outer;
+        return eyes;
+    }
+
+    private static QrPngEyeOptions EyeAccentStripes(Rgba32 outer, Rgba32 inner, Rgba32 stripeColor, int seed) {
+        var eyes = Eye(QrPngEyeFrameStyle.Target, outer, inner);
+        eyes.OuterCornerRadiusPx = 7;
+        eyes.InnerCornerRadiusPx = 4;
+        eyes.AccentStripeCount = 26;
+        eyes.AccentStripeLengthPx = 28;
+        eyes.AccentStripeThicknessPx = 4;
+        eyes.AccentStripeSpreadPx = 36;
+        eyes.AccentStripeJitterPx = 6;
+        eyes.AccentStripeLengthJitterPx = 8;
+        eyes.AccentStripeSeed = seed;
+        eyes.AccentStripeColor = stripeColor;
+        eyes.SparkleCount = 8;
+        eyes.SparkleRadiusPx = 3;
+        eyes.SparkleSpreadPx = 24;
+        eyes.SparkleSeed = seed ^ 0x55aa55aa;
+        eyes.SparkleColor = R(255, 255, 255, 176);
         return eyes;
     }
 

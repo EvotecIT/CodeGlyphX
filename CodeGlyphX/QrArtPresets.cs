@@ -411,6 +411,14 @@ public static class QrArtPresets {
             SparkleSpreadPx = 24,
             SparkleSeed = 90210,
             SparkleColor = new Rgba32(70, 190, 210, 140),
+            AccentStripeCount = 24,
+            AccentStripeLengthPx = 26,
+            AccentStripeThicknessPx = 4,
+            AccentStripeSpreadPx = 32,
+            AccentStripeJitterPx = 6,
+            AccentStripeLengthJitterPx = 8,
+            AccentStripeSeed = 424242,
+            AccentStripeColor = new Rgba32(24, 44, 132, 124),
         };
         opts.Canvas = new QrPngCanvasOptions {
             PaddingPx = 26,

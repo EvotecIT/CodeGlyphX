@@ -451,10 +451,21 @@ public static partial class QrEasy {
         if (!opts.ArtAutoTune) return;
 
         var paletteIsArt = render.ForegroundPalette?.Colors is { Length: > 2 } || render.ForegroundPaletteZones is not null;
+        var canvasIsArt = render.Canvas?.Splash is not null
+            || render.Canvas?.Halo is not null
+            || render.Canvas?.Pattern is not null
+            || render.Canvas?.Vignette is not null
+            || render.Canvas?.Grain is not null;
+        var eyes = render.Eyes;
+        var eyesIsArt = eyes is not null && (
+            eyes.SparkleCount > 0
+            || eyes.AccentRingCount > 0
+            || eyes.AccentRayCount > 0
+            || eyes.AccentStripeCount > 0);
         var hasArtHints = opts.Art is not null
             || render.ForegroundPattern is not null
-            || render.Canvas?.Splash is not null
-            || render.Canvas?.Halo is not null
+            || canvasIsArt
+            || eyesIsArt
             || paletteIsArt;
 
         if (!hasArtHints) return;
@@ -502,6 +513,52 @@ public static partial class QrEasy {
             };
             if (halo.QrAreaAlphaMax == 0 || halo.QrAreaAlphaMax > haloAlphaCap) {
                 halo.QrAreaAlphaMax = haloAlphaCap;
+            }
+        }
+        if (render.Eyes is not null) {
+            var eye = render.Eyes;
+            eye.SparkleProtectQrArea = true;
+            eye.AccentRingProtectQrArea = true;
+            eye.AccentRayProtectQrArea = true;
+            eye.AccentStripeProtectQrArea = true;
+
+            eye.SparkleCount = safetyMode switch {
+                QrArtSafetyMode.Safe => Math.Min(eye.SparkleCount, 28),
+                QrArtSafetyMode.Balanced => Math.Min(eye.SparkleCount, 36),
+                _ => Math.Min(eye.SparkleCount, 44),
+            };
+            eye.AccentRingCount = safetyMode switch {
+                QrArtSafetyMode.Safe => Math.Min(eye.AccentRingCount, 6),
+                QrArtSafetyMode.Balanced => Math.Min(eye.AccentRingCount, 8),
+                _ => Math.Min(eye.AccentRingCount, 10),
+            };
+            eye.AccentRayCount = safetyMode switch {
+                QrArtSafetyMode.Safe => Math.Min(eye.AccentRayCount, 18),
+                QrArtSafetyMode.Balanced => Math.Min(eye.AccentRayCount, 26),
+                _ => Math.Min(eye.AccentRayCount, 34),
+            };
+            eye.AccentStripeCount = safetyMode switch {
+                QrArtSafetyMode.Safe => Math.Min(eye.AccentStripeCount, 22),
+                QrArtSafetyMode.Balanced => Math.Min(eye.AccentStripeCount, 30),
+                _ => Math.Min(eye.AccentStripeCount, 38),
+            };
+
+            var eyeAlphaCap = safetyMode switch {
+                QrArtSafetyMode.Safe => (byte)128,
+                QrArtSafetyMode.Balanced => (byte)148,
+                _ => (byte)176,
+            };
+            if (eye.SparkleColor is not null) {
+                eye.SparkleColor = WithAlpha(eye.SparkleColor.Value, Math.Min(eye.SparkleColor.Value.A, eyeAlphaCap));
+            }
+            if (eye.AccentRingColor is not null) {
+                eye.AccentRingColor = WithAlpha(eye.AccentRingColor.Value, Math.Min(eye.AccentRingColor.Value.A, eyeAlphaCap));
+            }
+            if (eye.AccentRayColor is not null) {
+                eye.AccentRayColor = WithAlpha(eye.AccentRayColor.Value, Math.Min(eye.AccentRayColor.Value.A, eyeAlphaCap));
+            }
+            if (eye.AccentStripeColor is not null) {
+                eye.AccentStripeColor = WithAlpha(eye.AccentStripeColor.Value, Math.Min(eye.AccentStripeColor.Value.A, eyeAlphaCap));
             }
         }
 
@@ -597,6 +654,52 @@ public static partial class QrEasy {
             };
             if (halo.QrAreaAlphaMax == 0 || halo.QrAreaAlphaMax > alphaCap) {
                 halo.QrAreaAlphaMax = alphaCap;
+            }
+        }
+        if (render.Eyes is not null) {
+            var eye = render.Eyes;
+            eye.SparkleProtectQrArea = true;
+            eye.AccentRingProtectQrArea = true;
+            eye.AccentRayProtectQrArea = true;
+            eye.AccentStripeProtectQrArea = true;
+
+            eye.SparkleCount = safetyMode switch {
+                QrArtSafetyMode.Safe => Math.Min(eye.SparkleCount, 22),
+                QrArtSafetyMode.Balanced => Math.Min(eye.SparkleCount, 30),
+                _ => Math.Min(eye.SparkleCount, 38),
+            };
+            eye.AccentRingCount = safetyMode switch {
+                QrArtSafetyMode.Safe => Math.Min(eye.AccentRingCount, 4),
+                QrArtSafetyMode.Balanced => Math.Min(eye.AccentRingCount, 6),
+                _ => Math.Min(eye.AccentRingCount, 8),
+            };
+            eye.AccentRayCount = safetyMode switch {
+                QrArtSafetyMode.Safe => Math.Min(eye.AccentRayCount, 14),
+                QrArtSafetyMode.Balanced => Math.Min(eye.AccentRayCount, 22),
+                _ => Math.Min(eye.AccentRayCount, 30),
+            };
+            eye.AccentStripeCount = safetyMode switch {
+                QrArtSafetyMode.Safe => Math.Min(eye.AccentStripeCount, 18),
+                QrArtSafetyMode.Balanced => Math.Min(eye.AccentStripeCount, 26),
+                _ => Math.Min(eye.AccentStripeCount, 34),
+            };
+
+            var eyeAlphaCap = safetyMode switch {
+                QrArtSafetyMode.Safe => (byte)112,
+                QrArtSafetyMode.Balanced => (byte)132,
+                _ => (byte)160,
+            };
+            if (eye.SparkleColor is not null) {
+                eye.SparkleColor = WithAlpha(eye.SparkleColor.Value, Math.Min(eye.SparkleColor.Value.A, eyeAlphaCap));
+            }
+            if (eye.AccentRingColor is not null) {
+                eye.AccentRingColor = WithAlpha(eye.AccentRingColor.Value, Math.Min(eye.AccentRingColor.Value.A, eyeAlphaCap));
+            }
+            if (eye.AccentRayColor is not null) {
+                eye.AccentRayColor = WithAlpha(eye.AccentRayColor.Value, Math.Min(eye.AccentRayColor.Value.A, eyeAlphaCap));
+            }
+            if (eye.AccentStripeColor is not null) {
+                eye.AccentStripeColor = WithAlpha(eye.AccentStripeColor.Value, Math.Min(eye.AccentStripeColor.Value.A, eyeAlphaCap));
             }
         }
     }
