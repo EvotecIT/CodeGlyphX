@@ -32,6 +32,16 @@ internal static class WebpVp8Decoder {
         6, 6, 6, 6,
         6, 7, 7, 7,
     };
+    private static readonly int[] CoeffTokenExtraBits = new[]
+    {
+        0, 0, 0, 0, 0, 0,
+        1, 2, 3, 4, 5, 11,
+    };
+    private static readonly int[] CoeffTokenBaseMagnitude = new[]
+    {
+        0, 0, 1, 2, 3, 4,
+        5, 7, 11, 19, 35, 67,
+    };
     private static readonly int[] CoeffTokenTree = new[]
     {
         -1, 2,
@@ -346,6 +356,7 @@ internal static class WebpVp8Decoder {
 
             for (var blockIndex = 0; blockIndex < blocks.Length; blockIndex++) {
                 var tokenInfos = new WebpVp8BlockTokenInfo[BlockScaffoldMaxTokensPerBlock];
+                var coefficients = new int[CoefficientsPerBlock];
                 var tokensRead = 0;
                 var coefficientIndex = 0;
                 var prevContext = 0;
@@ -364,6 +375,10 @@ internal static class WebpVp8Decoder {
                     }
 
                     var tokenInfo = ClassifyToken(tokenCode, band, prevBefore);
+                    if (!TryReadTokenExtraBits(decoder, tokenCode, out var extraBitsValue)) return false;
+                    var magnitude = ComputeTokenMagnitude(tokenCode, extraBitsValue);
+                    if (!TryReadSignedMagnitude(decoder, magnitude, out var coefficientValue)) return false;
+                    coefficients[coefficientIndex] = coefficientValue;
                     tokenInfos[tokensRead] = new WebpVp8BlockTokenInfo(
                         coefficientIndex,
                         tokenInfo.TokenCode,
@@ -371,7 +386,9 @@ internal static class WebpVp8Decoder {
                         tokenInfo.PrevContextBefore,
                         tokenInfo.PrevContextAfter,
                         tokenInfo.HasMore,
-                        tokenInfo.IsNonZero);
+                        tokenInfo.IsNonZero,
+                        extraBitsValue,
+                        coefficientValue);
 
                     tokensRead++;
                     partitionTokensRead++;
@@ -387,6 +404,7 @@ internal static class WebpVp8Decoder {
 
                 blocks[blockIndex] = new WebpVp8BlockTokenScaffold(
                     blockIndex,
+                    coefficients,
                     tokenInfos,
                     tokensRead,
                     reachedEob);
@@ -635,6 +653,30 @@ internal static class WebpVp8Decoder {
         };
 
         return new WebpVp8TokenInfo(tokenCode, band, prevContextBefore, prevContextAfter, hasMore, isNonZero);
+    }
+
+    private static bool TryReadTokenExtraBits(WebpVp8BoolDecoder decoder, int tokenCode, out int extraBitsValue) {
+        extraBitsValue = 0;
+        if ((uint)tokenCode >= CoeffTokenExtraBits.Length) return false;
+
+        var bitCount = CoeffTokenExtraBits[tokenCode];
+        if (bitCount == 0) return true;
+        return decoder.TryReadLiteral(bitCount, out extraBitsValue);
+    }
+
+    private static int ComputeTokenMagnitude(int tokenCode, int extraBitsValue) {
+        if ((uint)tokenCode >= CoeffTokenBaseMagnitude.Length) return 0;
+        if (tokenCode <= 1) return 0;
+        if (tokenCode <= 5) return CoeffTokenBaseMagnitude[tokenCode];
+        return CoeffTokenBaseMagnitude[tokenCode] + extraBitsValue;
+    }
+
+    private static bool TryReadSignedMagnitude(WebpVp8BoolDecoder decoder, int magnitude, out int coefficientValue) {
+        coefficientValue = magnitude;
+        if (magnitude == 0) return true;
+        if (!decoder.TryReadBool(128, out var signBit)) return false;
+        coefficientValue = signBit ? -magnitude : magnitude;
+        return true;
     }
 
     private static int GetCoeffIndex(int blockType, int band, int prev, int node) {
@@ -942,7 +984,9 @@ internal readonly struct WebpVp8BlockTokenInfo {
         int prevContextBefore,
         int prevContextAfter,
         bool hasMore,
-        bool isNonZero) {
+        bool isNonZero,
+        int extraBitsValue,
+        int coefficientValue) {
         CoefficientIndex = coefficientIndex;
         TokenCode = tokenCode;
         Band = band;
@@ -950,6 +994,8 @@ internal readonly struct WebpVp8BlockTokenInfo {
         PrevContextAfter = prevContextAfter;
         HasMore = hasMore;
         IsNonZero = isNonZero;
+        ExtraBitsValue = extraBitsValue;
+        CoefficientValue = coefficientValue;
     }
 
     public int CoefficientIndex { get; }
@@ -959,17 +1005,26 @@ internal readonly struct WebpVp8BlockTokenInfo {
     public int PrevContextAfter { get; }
     public bool HasMore { get; }
     public bool IsNonZero { get; }
+    public int ExtraBitsValue { get; }
+    public int CoefficientValue { get; }
 }
 
 internal readonly struct WebpVp8BlockTokenScaffold {
-    public WebpVp8BlockTokenScaffold(int blockIndex, WebpVp8BlockTokenInfo[] tokens, int tokensRead, bool reachedEob) {
+    public WebpVp8BlockTokenScaffold(
+        int blockIndex,
+        int[] coefficients,
+        WebpVp8BlockTokenInfo[] tokens,
+        int tokensRead,
+        bool reachedEob) {
         BlockIndex = blockIndex;
+        Coefficients = coefficients;
         Tokens = tokens;
         TokensRead = tokensRead;
         ReachedEob = reachedEob;
     }
 
     public int BlockIndex { get; }
+    public int[] Coefficients { get; }
     public WebpVp8BlockTokenInfo[] Tokens { get; }
     public int TokensRead { get; }
     public bool ReachedEob { get; }

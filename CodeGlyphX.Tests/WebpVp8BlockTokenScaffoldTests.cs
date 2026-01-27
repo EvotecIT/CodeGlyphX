@@ -1,3 +1,4 @@
+using System;
 using CodeGlyphX.Rendering.Webp;
 using Xunit;
 
@@ -5,6 +6,9 @@ namespace CodeGlyphX.Tests;
 
 public sealed class WebpVp8BlockTokenScaffoldTests
 {
+    private static readonly int[] TokenExtraBits = new[] { 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 5, 11 };
+    private static readonly int[] TokenBaseMagnitude = new[] { 0, 0, 1, 2, 3, 4, 5, 7, 11, 19, 35, 67 };
+
     [Fact]
     public void TryReadBlockTokenScaffold_ValidPayload_ProducesBlockShapedCursorData()
     {
@@ -41,6 +45,7 @@ public sealed class WebpVp8BlockTokenScaffoldTests
             {
                 var block = partition.Blocks[b];
                 Assert.Equal(b, block.BlockIndex);
+                Assert.Equal(16, block.Coefficients.Length);
                 Assert.Equal(16, block.Tokens.Length);
                 Assert.InRange(block.TokensRead, 1, 16);
 
@@ -56,6 +61,21 @@ public sealed class WebpVp8BlockTokenScaffoldTests
                     Assert.InRange(token.TokenCode, 0, 11);
                     Assert.Equal(token.TokenCode != 0, token.HasMore);
                     Assert.Equal(token.TokenCode >= 2, token.IsNonZero);
+                    Assert.True(token.ExtraBitsValue >= 0);
+
+                    var extraBits = TokenExtraBits[token.TokenCode];
+                    if (extraBits > 0)
+                    {
+                        Assert.InRange(token.ExtraBitsValue, 0, (1 << extraBits) - 1);
+                    }
+                    else
+                    {
+                        Assert.Equal(0, token.ExtraBitsValue);
+                    }
+
+                    var expectedMagnitude = ComputeExpectedMagnitude(token.TokenCode, token.ExtraBitsValue);
+                    Assert.Equal(expectedMagnitude, Math.Abs(token.CoefficientValue));
+                    Assert.Equal(token.CoefficientValue, block.Coefficients[token.CoefficientIndex]);
 
                     if (!token.HasMore)
                     {
@@ -72,6 +92,21 @@ public sealed class WebpVp8BlockTokenScaffoldTests
                 }
             }
         }
+    }
+
+    private static int ComputeExpectedMagnitude(int tokenCode, int extraBitsValue)
+    {
+        if (tokenCode <= 1)
+        {
+            return 0;
+        }
+
+        if (tokenCode <= 5)
+        {
+            return TokenBaseMagnitude[tokenCode];
+        }
+
+        return TokenBaseMagnitude[tokenCode] + extraBitsValue;
     }
 
     private static byte[] CreateBoolData(int length)
@@ -169,4 +204,3 @@ public sealed class WebpVp8BlockTokenScaffoldTests
         return sum;
     }
 }
-
