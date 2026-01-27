@@ -1756,12 +1756,20 @@ public static partial class QrPngRenderer {
         int qrY,
         int qrSize,
         QrPngCanvasFrameOptions frame) {
-        var inset = Math.Max(0, opts.Canvas?.BorderPx ?? 0);
+        var canvas = opts.Canvas;
+        if (canvas is null) return;
+
+        var inset = Math.Max(0, canvas.BorderPx);
         var innerCanvasX = canvasX + inset;
         var innerCanvasY = canvasY + inset;
         var innerCanvasW = canvasW - inset * 2;
         var innerCanvasH = canvasH - inset * 2;
         if (innerCanvasW <= 0 || innerCanvasH <= 0) return;
+
+        var innerCanvasRadius = Math.Max(0, canvas.CornerRadiusPx - inset);
+        var innerCanvasX1 = innerCanvasX + innerCanvasW - 1;
+        var innerCanvasY1 = innerCanvasY + innerCanvasH - 1;
+        var innerCanvasRadiusSq = innerCanvasRadius * innerCanvasRadius;
 
         var leftPad = qrX - innerCanvasX;
         var topPad = qrY - innerCanvasY;
@@ -1783,10 +1791,31 @@ public static partial class QrPngRenderer {
         var outerY = qrY - outerGap;
 
         var baseRadius = ClampRadius(frame.RadiusPx, outerSize);
-        var innerRadius = ClampRadius(baseRadius - thickness, qrSize + gap * 2);
+        var innerSize = qrSize + gap * 2;
+        var innerX = qrX - gap;
+        var innerY = qrY - gap;
+        var innerRadius = ClampRadius(baseRadius - thickness, innerSize);
 
-        FillRoundedRect(scanlines, widthPx, heightPx, stride, outerX, outerY, outerSize, outerSize, frame.Color, baseRadius);
-        DrawCanvasFill(scanlines, widthPx, heightPx, stride, opts.Canvas!, outerX + thickness, outerY + thickness, outerSize - thickness * 2, outerSize - thickness * 2, opts.ModuleSize, innerRadius);
+        DrawCanvasFrameRing(
+            scanlines,
+            widthPx,
+            heightPx,
+            stride,
+            innerCanvasX,
+            innerCanvasY,
+            innerCanvasX1,
+            innerCanvasY1,
+            innerCanvasRadius,
+            innerCanvasRadiusSq,
+            outerX,
+            outerY,
+            outerSize,
+            baseRadius,
+            innerX,
+            innerY,
+            innerSize,
+            innerRadius,
+            frame.Color);
 
         var innerColor = frame.InnerColor ?? frame.Color;
         if (innerColor.A == 0 || frame.InnerThicknessPx <= 0) return;
@@ -1804,10 +1833,77 @@ public static partial class QrPngRenderer {
 
         var insetToInnerOuter = outerGap - innerOuterGap;
         var innerOuterRadius = ClampRadius(baseRadius - insetToInnerOuter, innerOuterSize);
-        var innerInnerRadius = ClampRadius(innerOuterRadius - innerThickness, qrSize + innerGap * 2);
+        var innerInnerSize = qrSize + innerGap * 2;
+        var innerInnerX = qrX - innerGap;
+        var innerInnerY = qrY - innerGap;
+        var innerInnerRadius = ClampRadius(innerOuterRadius - innerThickness, innerInnerSize);
 
-        FillRoundedRect(scanlines, widthPx, heightPx, stride, innerOuterX, innerOuterY, innerOuterSize, innerOuterSize, innerColor, innerOuterRadius);
-        DrawCanvasFill(scanlines, widthPx, heightPx, stride, opts.Canvas!, innerOuterX + innerThickness, innerOuterY + innerThickness, innerOuterSize - innerThickness * 2, innerOuterSize - innerThickness * 2, opts.ModuleSize, innerInnerRadius);
+        DrawCanvasFrameRing(
+            scanlines,
+            widthPx,
+            heightPx,
+            stride,
+            innerCanvasX,
+            innerCanvasY,
+            innerCanvasX1,
+            innerCanvasY1,
+            innerCanvasRadius,
+            innerCanvasRadiusSq,
+            innerOuterX,
+            innerOuterY,
+            innerOuterSize,
+            innerOuterRadius,
+            innerInnerX,
+            innerInnerY,
+            innerInnerSize,
+            innerInnerRadius,
+            innerColor);
+    }
+
+    private static void DrawCanvasFrameRing(
+        byte[] scanlines,
+        int widthPx,
+        int heightPx,
+        int stride,
+        int clipX0,
+        int clipY0,
+        int clipX1,
+        int clipY1,
+        int clipRadius,
+        int clipRadiusSq,
+        int outerX,
+        int outerY,
+        int outerSize,
+        int outerRadius,
+        int innerX,
+        int innerY,
+        int innerSize,
+        int innerRadius,
+        Rgba32 color) {
+        if (color.A == 0) return;
+
+        var outerX1 = outerX + outerSize - 1;
+        var outerY1 = outerY + outerSize - 1;
+        var innerX1 = innerX + innerSize - 1;
+        var innerY1 = innerY + innerSize - 1;
+        var outerRadiusSq = outerRadius * outerRadius;
+        var innerRadiusSq = innerRadius * innerRadius;
+
+        var minX = Math.Max(0, outerX);
+        var minY = Math.Max(0, outerY);
+        var maxX = Math.Min(widthPx - 1, outerX1);
+        var maxY = Math.Min(heightPx - 1, outerY1);
+        if (minX > maxX || minY > maxY) return;
+
+        for (var y = minY; y <= maxY; y++) {
+            for (var x = minX; x <= maxX; x++) {
+                if (outerRadius > 0 && !InsideRounded(x, y, outerX, outerY, outerX1, outerY1, outerRadius, outerRadiusSq)) continue;
+                if (innerSize > 0 && InsideRounded(x, y, innerX, innerY, innerX1, innerY1, innerRadius, innerRadiusSq)) continue;
+                if (clipRadius > 0 && !InsideRounded(x, y, clipX0, clipY0, clipX1, clipY1, clipRadius, clipRadiusSq)) continue;
+
+                BlendPixel(scanlines, stride, x, y, color);
+            }
+        }
     }
 
     private static int ClampRadius(int radius, int size) {
