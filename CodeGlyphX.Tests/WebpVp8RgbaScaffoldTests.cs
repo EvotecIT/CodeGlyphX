@@ -27,9 +27,9 @@ public sealed class WebpVp8RgbaScaffoldTests
         var success = WebpVp8Decoder.TryReadMacroblockRgbaScaffold(payload, out var rgba);
 
         Assert.True(success);
-        Assert.Equal(8, rgba.Width);
-        Assert.Equal(8, rgba.Height);
-        Assert.Equal(8 * 8 * 4, rgba.Rgba.Length);
+        Assert.Equal(16, rgba.Width);
+        Assert.Equal(16, rgba.Height);
+        Assert.Equal(16 * 16 * 4, rgba.Rgba.Length);
         Assert.InRange(rgba.BlocksPlaced, 1, 4);
 
         Assert.Equal(expected.R, rgba.Rgba[0]);

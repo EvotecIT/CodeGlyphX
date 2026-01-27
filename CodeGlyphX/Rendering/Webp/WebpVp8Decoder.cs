@@ -27,11 +27,15 @@ internal static class WebpVp8Decoder {
     private const int BlockScaffoldMaxTokensPerBlock = CoefficientsPerBlock;
     private const int MacroblockSize = 16;
     private const int BlockSize = 4;
-    private const int MacroblockScaffoldWidth = 8;
-    private const int MacroblockScaffoldHeight = 8;
+    private const int MacroblockScaffoldWidth = MacroblockSize;
+    private const int MacroblockScaffoldHeight = MacroblockSize;
+    private const int MacroblockScaffoldSourceWidth = 8;
+    private const int MacroblockScaffoldSourceHeight = 8;
     private const int MacroblockScaffoldMaxBlocks = 4;
-    private const int MacroblockScaffoldChromaWidth = 4;
-    private const int MacroblockScaffoldChromaHeight = 4;
+    private const int MacroblockScaffoldChromaWidth = MacroblockSize / 2;
+    private const int MacroblockScaffoldChromaHeight = MacroblockSize / 2;
+    private const int MacroblockScaffoldSourceChromaWidth = 4;
+    private const int MacroblockScaffoldSourceChromaHeight = 4;
     private const int MacroblockScaffoldBlocksPerMacroblock = 4;
     private static readonly byte[] ScaffoldSignature = new byte[] { (byte)'S', (byte)'C', (byte)'F', (byte)'0' };
     private const int BlockTypeY2 = 0;
@@ -1168,9 +1172,9 @@ internal static class WebpVp8Decoder {
     internal static WebpVp8MacroblockScaffold BuildMacroblockScaffold(WebpVp8BlockTokenScaffold[] blocks, int blocksAvailable) {
         if (blocks is null || blocks.Length == 0) return default;
 
-        var yPlane = new byte[MacroblockScaffoldWidth * MacroblockScaffoldHeight];
-        var uPlane = new byte[MacroblockScaffoldChromaWidth * MacroblockScaffoldChromaHeight];
-        var vPlane = new byte[MacroblockScaffoldChromaWidth * MacroblockScaffoldChromaHeight];
+        var sourceYPlane = new byte[MacroblockScaffoldSourceWidth * MacroblockScaffoldSourceHeight];
+        var sourceUPlane = new byte[MacroblockScaffoldSourceChromaWidth * MacroblockScaffoldSourceChromaHeight];
+        var sourceVPlane = new byte[MacroblockScaffoldSourceChromaWidth * MacroblockScaffoldSourceChromaHeight];
         var blocksPlacedY = 0;
         var blocksPlacedU = 0;
         var blocksPlacedV = 0;
@@ -1186,9 +1190,9 @@ internal static class WebpVp8Decoder {
                         block.BlockPixels.Samples,
                         block.BlockPixels.Width,
                         block.BlockPixels.Height,
-                        yPlane,
-                        MacroblockScaffoldWidth,
-                        MacroblockScaffoldHeight,
+                        sourceYPlane,
+                        MacroblockScaffoldSourceWidth,
+                        MacroblockScaffoldSourceHeight,
                         dstX,
                         dstY);
                     blocksPlacedY++;
@@ -1201,9 +1205,9 @@ internal static class WebpVp8Decoder {
                             block.BlockPixels.Samples,
                             block.BlockPixels.Width,
                             block.BlockPixels.Height,
-                            uPlane,
-                            MacroblockScaffoldChromaWidth,
-                            MacroblockScaffoldChromaHeight,
+                            sourceUPlane,
+                            MacroblockScaffoldSourceChromaWidth,
+                            MacroblockScaffoldSourceChromaHeight,
                             dstX: 0,
                             dstY: 0);
                         blocksPlacedU++;
@@ -1218,9 +1222,9 @@ internal static class WebpVp8Decoder {
                             block.BlockPixels.Samples,
                             block.BlockPixels.Width,
                             block.BlockPixels.Height,
-                            vPlane,
-                            MacroblockScaffoldChromaWidth,
-                            MacroblockScaffoldChromaHeight,
+                            sourceVPlane,
+                            MacroblockScaffoldSourceChromaWidth,
+                            MacroblockScaffoldSourceChromaHeight,
                             dstX: 0,
                             dstY: 0);
                         blocksPlacedV++;
@@ -1231,6 +1235,25 @@ internal static class WebpVp8Decoder {
                 }
             }
         }
+
+        var yPlane = UpscalePlaneNearest(
+            sourceYPlane,
+            MacroblockScaffoldSourceWidth,
+            MacroblockScaffoldSourceHeight,
+            MacroblockScaffoldWidth,
+            MacroblockScaffoldHeight);
+        var uPlane = UpscalePlaneNearest(
+            sourceUPlane,
+            MacroblockScaffoldSourceChromaWidth,
+            MacroblockScaffoldSourceChromaHeight,
+            MacroblockScaffoldChromaWidth,
+            MacroblockScaffoldChromaHeight);
+        var vPlane = UpscalePlaneNearest(
+            sourceVPlane,
+            MacroblockScaffoldSourceChromaWidth,
+            MacroblockScaffoldSourceChromaHeight,
+            MacroblockScaffoldChromaWidth,
+            MacroblockScaffoldChromaHeight);
 
         return new WebpVp8MacroblockScaffold(
             MacroblockScaffoldWidth,
@@ -1300,6 +1323,31 @@ internal static class WebpVp8Decoder {
                 output[dstIndex + 1] = rgba[srcIndex + 1];
                 output[dstIndex + 2] = rgba[srcIndex + 2];
                 output[dstIndex + 3] = rgba[srcIndex + 3];
+            }
+        }
+
+        return output;
+    }
+
+    private static byte[] UpscalePlaneNearest(byte[] plane, int width, int height, int targetWidth, int targetHeight) {
+        if (plane is null || plane.Length == 0) return Array.Empty<byte>();
+        if (width <= 0 || height <= 0) return Array.Empty<byte>();
+        if (targetWidth <= 0 || targetHeight <= 0) return Array.Empty<byte>();
+        if (width == targetWidth && height == targetHeight) return (byte[])plane.Clone();
+
+        var output = new byte[targetWidth * targetHeight];
+
+        for (var y = 0; y < targetHeight; y++) {
+            var srcY = (y * height) / targetHeight;
+            if (srcY >= height) srcY = height - 1;
+            var srcRowOffset = srcY * width;
+            var dstRowOffset = y * targetWidth;
+
+            for (var x = 0; x < targetWidth; x++) {
+                var srcX = (x * width) / targetWidth;
+                if (srcX >= width) srcX = width - 1;
+
+                output[dstRowOffset + x] = plane[srcRowOffset + srcX];
             }
         }
 

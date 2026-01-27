@@ -31,20 +31,22 @@ public sealed class WebpVp8MacroblockScaffoldTests
         var success = WebpVp8Decoder.TryReadMacroblockScaffold(payload, out var macroblock);
 
         Assert.True(success);
-        Assert.Equal(8, macroblock.Width);
-        Assert.Equal(8, macroblock.Height);
-        Assert.Equal(4, macroblock.ChromaWidth);
-        Assert.Equal(4, macroblock.ChromaHeight);
-        Assert.Equal(64, macroblock.YPlane.Length);
-        Assert.Equal(16, macroblock.UPlane.Length);
-        Assert.Equal(16, macroblock.VPlane.Length);
+        Assert.Equal(16, macroblock.Width);
+        Assert.Equal(16, macroblock.Height);
+        Assert.Equal(8, macroblock.ChromaWidth);
+        Assert.Equal(8, macroblock.ChromaHeight);
+        Assert.Equal(16 * 16, macroblock.YPlane.Length);
+        Assert.Equal(8 * 8, macroblock.UPlane.Length);
+        Assert.Equal(8 * 8, macroblock.VPlane.Length);
         Assert.InRange(macroblock.BlocksPlacedY, 1, 4);
         Assert.Equal(1, macroblock.BlocksPlacedU);
         Assert.Equal(1, macroblock.BlocksPlacedV);
         Assert.InRange(macroblock.BlocksPlacedTotal, 1, 4);
         Assert.True(macroblock.BlocksAvailable >= macroblock.BlocksPlacedTotal);
         Assert.Equal(ySample0, macroblock.YPlane[0]);
-        Assert.Equal(ySample1, macroblock.YPlane[4]);
+        // Block 1 starts at x=4 in the 8x8 source scaffold; after 2x upscale,
+        // it lands at x=8 in the 16x16 macroblock scaffold.
+        Assert.Equal(ySample1, macroblock.YPlane[8]);
         Assert.Equal(uSample0, macroblock.UPlane[0]);
         Assert.Equal(vSample0, macroblock.VPlane[0]);
 
