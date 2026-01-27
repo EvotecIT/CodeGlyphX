@@ -52,6 +52,11 @@ public sealed class QrPngCanvasOptions {
     public QrPngCanvasGrainOptions? Grain { get; set; }
 
     /// <summary>
+    /// Optional decorative frame drawn around the QR bounds (kept outside the QR area).
+    /// </summary>
+    public QrPngCanvasFrameOptions? Frame { get; set; }
+
+    /// <summary>
     /// Border thickness in pixels (0 = no border).
     /// </summary>
     public int BorderPx { get; set; }
@@ -86,5 +91,6 @@ public sealed class QrPngCanvasOptions {
         Halo?.Validate();
         Vignette?.Validate();
         Grain?.Validate();
+        Frame?.Validate();
     }
 }

@@ -71,6 +71,29 @@ internal static class QrStyleBoardExample {
                 scaleMap: ScaleMap(QrPngModuleScaleMode.Radial, 0.86, 1.0),
                 canvas: CanvasGradient(R(14, 18, 46), R(32, 26, 82)))),
 
+            new("Card Frame", StyleDocs("card-frame"), () => BaseSticker(
+                fg: R(24, 48, 120),
+                palette: Palette(QrPngPaletteMode.Cycle, 0, R(24, 48, 120), R(52, 102, 220), R(110, 180, 255)),
+                shape: QrPngModuleShape.ConnectedRounded,
+                eyes: Eye(QrPngEyeFrameStyle.Badge, R(24, 48, 120), R(110, 180, 255)),
+                scaleMap: ScaleMap(QrPngModuleScaleMode.Radial, 0.9, 1.0, 26026),
+                canvas: CanvasCardFrame(
+                    start: R(245, 248, 255),
+                    end: R(224, 235, 255),
+                    frameColor: R(28, 64, 180, 220),
+                    innerFrameColor: R(120, 190, 255, 210)))),
+
+            new("Sticker Frame", StyleDocs("sticker-frame"), () => BaseSticker(
+                fg: R(18, 36, 66),
+                palette: Palette(QrPngPaletteMode.Cycle, 0, R(18, 36, 66), R(0, 150, 136), R(255, 111, 97)),
+                shape: QrPngModuleShape.ConnectedSquircle,
+                eyes: EyeGlow(R(18, 36, 66), R(0, 150, 136), R(255, 111, 97, 180)),
+                scaleMap: ScaleMap(QrPngModuleScaleMode.Radial, 0.9, 1.0, 27027),
+                canvas: CanvasStickerFrame(
+                    background: R(250, 252, 255),
+                    frameColor: R(18, 36, 66, 220),
+                    accentColor: R(0, 150, 136, 220)))),
+
             new("Candy Checker", StyleDocs("candy-checker"), () => BaseSticker(
                 fg: R(255, 107, 107),
                 palette: Palette(QrPngPaletteMode.Checker, 0, R(255, 107, 107), R(255, 217, 61)),
@@ -690,6 +713,54 @@ internal static class QrStyleBoardExample {
             ShadowOffsetX = 4,
             ShadowOffsetY = 6,
             ShadowColor = R(0, 0, 0, 45),
+        };
+    }
+
+    private static QrPngCanvasOptions CanvasCardFrame(Rgba32 start, Rgba32 end, Rgba32 frameColor, Rgba32 innerFrameColor) {
+        return new QrPngCanvasOptions {
+            PaddingPx = 44,
+            CornerRadiusPx = 32,
+            BackgroundGradient = new QrPngGradientOptions {
+                Type = QrPngGradientType.DiagonalDown,
+                StartColor = start,
+                EndColor = end,
+            },
+            BorderPx = 2,
+            BorderColor = R(255, 255, 255, 36),
+            Frame = new QrPngCanvasFrameOptions {
+                ThicknessPx = 16,
+                GapPx = 12,
+                RadiusPx = 28,
+                Color = frameColor,
+                InnerThicknessPx = 4,
+                InnerGapPx = 4,
+                InnerColor = innerFrameColor,
+            },
+            ShadowOffsetX = 8,
+            ShadowOffsetY = 12,
+            ShadowColor = R(0, 0, 0, 70),
+        };
+    }
+
+    private static QrPngCanvasOptions CanvasStickerFrame(Rgba32 background, Rgba32 frameColor, Rgba32 accentColor) {
+        return new QrPngCanvasOptions {
+            PaddingPx = 42,
+            CornerRadiusPx = 36,
+            Background = background,
+            BorderPx = 6,
+            BorderColor = R(255, 255, 255),
+            Frame = new QrPngCanvasFrameOptions {
+                ThicknessPx = 12,
+                GapPx = 10,
+                RadiusPx = 30,
+                Color = frameColor,
+                InnerThicknessPx = 3,
+                InnerGapPx = 3,
+                InnerColor = accentColor,
+            },
+            ShadowOffsetX = 10,
+            ShadowOffsetY = 14,
+            ShadowColor = R(0, 0, 0, 64),
         };
     }
 

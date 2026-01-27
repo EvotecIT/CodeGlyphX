@@ -597,6 +597,23 @@ public static partial class QrPngRenderer {
                 qrFullPx,
                 canvas.Splash);
         }
+
+        if (canvas.Frame is { ThicknessPx: > 0 } frame && frame.Color.A != 0) {
+            DrawCanvasFrame(
+                scanlines,
+                widthPx,
+                heightPx,
+                stride,
+                opts,
+                canvasX,
+                canvasY,
+                canvasW,
+                canvasH,
+                qrOffsetX,
+                qrOffsetY,
+                qrFullPx,
+                frame);
+        }
     }
 
     private static void DrawCanvasFill(
@@ -1723,6 +1740,81 @@ public static partial class QrPngRenderer {
                 BlendPixel(scanlines, stride, x, y, drawColor);
             }
         }
+    }
+
+    private static void DrawCanvasFrame(
+        byte[] scanlines,
+        int widthPx,
+        int heightPx,
+        int stride,
+        QrPngRenderOptions opts,
+        int canvasX,
+        int canvasY,
+        int canvasW,
+        int canvasH,
+        int qrX,
+        int qrY,
+        int qrSize,
+        QrPngCanvasFrameOptions frame) {
+        var inset = Math.Max(0, opts.Canvas?.BorderPx ?? 0);
+        var innerCanvasX = canvasX + inset;
+        var innerCanvasY = canvasY + inset;
+        var innerCanvasW = canvasW - inset * 2;
+        var innerCanvasH = canvasH - inset * 2;
+        if (innerCanvasW <= 0 || innerCanvasH <= 0) return;
+
+        var leftPad = qrX - innerCanvasX;
+        var topPad = qrY - innerCanvasY;
+        var rightPad = innerCanvasX + innerCanvasW - (qrX + qrSize);
+        var bottomPad = innerCanvasY + innerCanvasH - (qrY + qrSize);
+        var maxPad = Math.Min(Math.Min(leftPad, rightPad), Math.Min(topPad, bottomPad));
+        if (maxPad <= 1) return;
+
+        var maxGap = Math.Max(0, maxPad - 1);
+        var gap = Clamp(frame.GapPx, 0, maxGap);
+
+        var maxThickness = Math.Max(0, maxPad - gap);
+        var thickness = Clamp(frame.ThicknessPx, 0, maxThickness);
+        if (thickness <= 0) return;
+
+        var outerGap = gap + thickness;
+        var outerSize = qrSize + outerGap * 2;
+        var outerX = qrX - outerGap;
+        var outerY = qrY - outerGap;
+
+        var baseRadius = ClampRadius(frame.RadiusPx, outerSize);
+        var innerRadius = ClampRadius(baseRadius - thickness, qrSize + gap * 2);
+
+        FillRoundedRect(scanlines, widthPx, heightPx, stride, outerX, outerY, outerSize, outerSize, frame.Color, baseRadius);
+        DrawCanvasFill(scanlines, widthPx, heightPx, stride, opts.Canvas!, outerX + thickness, outerY + thickness, outerSize - thickness * 2, outerSize - thickness * 2, opts.ModuleSize, innerRadius);
+
+        var innerColor = frame.InnerColor ?? frame.Color;
+        if (innerColor.A == 0 || frame.InnerThicknessPx <= 0) return;
+
+        var innerGapCap = Math.Max(0, gap - 1);
+        var innerGap = Clamp(frame.InnerGapPx, 0, innerGapCap);
+        var innerAvailable = Math.Max(0, gap - innerGap);
+        var innerThickness = Clamp(frame.InnerThicknessPx, 0, innerAvailable);
+        if (innerThickness <= 0) return;
+
+        var innerOuterGap = innerGap + innerThickness;
+        var innerOuterSize = qrSize + innerOuterGap * 2;
+        var innerOuterX = qrX - innerOuterGap;
+        var innerOuterY = qrY - innerOuterGap;
+
+        var insetToInnerOuter = outerGap - innerOuterGap;
+        var innerOuterRadius = ClampRadius(baseRadius - insetToInnerOuter, innerOuterSize);
+        var innerInnerRadius = ClampRadius(innerOuterRadius - innerThickness, qrSize + innerGap * 2);
+
+        FillRoundedRect(scanlines, widthPx, heightPx, stride, innerOuterX, innerOuterY, innerOuterSize, innerOuterSize, innerColor, innerOuterRadius);
+        DrawCanvasFill(scanlines, widthPx, heightPx, stride, opts.Canvas!, innerOuterX + innerThickness, innerOuterY + innerThickness, innerOuterSize - innerThickness * 2, innerOuterSize - innerThickness * 2, opts.ModuleSize, innerInnerRadius);
+    }
+
+    private static int ClampRadius(int radius, int size) {
+        if (size <= 0) return 0;
+        var maxRadius = size / 2;
+        if (radius < 0) return 0;
+        return radius > maxRadius ? maxRadius : radius;
     }
 
     private static int NextBetween(Random rand, int minInclusive, int maxInclusive) {
