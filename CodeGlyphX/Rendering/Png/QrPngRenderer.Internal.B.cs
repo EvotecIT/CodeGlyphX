@@ -205,6 +205,7 @@ public static partial class QrPngRenderer {
                 FillEllipse(scanlines, widthPx, heightPx, stride, x, y, w, h, color);
                 return;
             case QrPngModuleShape.Rounded:
+            case QrPngModuleShape.ConnectedRounded:
                 FillRoundedRect(scanlines, widthPx, heightPx, stride, x, y, w, h, color, radius);
                 return;
             case QrPngModuleShape.Diamond:
@@ -248,6 +249,7 @@ public static partial class QrPngRenderer {
                 FillEllipseGradient(scanlines, widthPx, heightPx, stride, x, y, w, h, gradient);
                 return;
             case QrPngModuleShape.Rounded:
+            case QrPngModuleShape.ConnectedRounded:
                 FillRoundedRectGradient(scanlines, widthPx, heightPx, stride, x, y, w, h, gradient, radius);
                 return;
             case QrPngModuleShape.Diamond:

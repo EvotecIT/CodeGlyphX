@@ -159,6 +159,51 @@ public sealed class QrPngRendererTests {
     }
 
     [Fact]
+    public void Render_With_ConnectedRounded_Connects_Adjacent_Modules() {
+        var matrix = new BitMatrix(2, 2);
+        matrix[0, 0] = true;
+        matrix[1, 0] = true;
+
+        const int moduleSize = 12;
+        const int sampleY = moduleSize / 2;
+        const int sampleX = moduleSize - 1;
+
+        var rounded = new QrPngRenderOptions {
+            ModuleSize = moduleSize,
+            QuietZone = 0,
+            Foreground = Rgba32.Black,
+            Background = Rgba32.White,
+            ModuleShape = QrPngModuleShape.Rounded,
+            ModuleScale = 0.6,
+        };
+
+        var connected = new QrPngRenderOptions {
+            ModuleSize = moduleSize,
+            QuietZone = 0,
+            Foreground = Rgba32.Black,
+            Background = Rgba32.White,
+            ModuleShape = QrPngModuleShape.ConnectedRounded,
+            ModuleScale = 0.6,
+        };
+
+        var roundedPng = QrPngRenderer.Render(matrix, rounded);
+        var (roundedRgba, _, _, roundedStride) = PngTestDecoder.DecodeRgba32(roundedPng);
+        var connectedPng = QrPngRenderer.Render(matrix, connected);
+        var (connectedRgba, _, _, connectedStride) = PngTestDecoder.DecodeRgba32(connectedPng);
+
+        var roundedIndex = sampleY * roundedStride + sampleX * 4;
+        var connectedIndex = sampleY * connectedStride + sampleX * 4;
+
+        Assert.Equal(255, roundedRgba[roundedIndex + 0]);
+        Assert.Equal(255, roundedRgba[roundedIndex + 1]);
+        Assert.Equal(255, roundedRgba[roundedIndex + 2]);
+
+        Assert.Equal(0, connectedRgba[connectedIndex + 0]);
+        Assert.Equal(0, connectedRgba[connectedIndex + 1]);
+        Assert.Equal(0, connectedRgba[connectedIndex + 2]);
+    }
+
+    [Fact]
     public void Render_With_Foreground_Palette_Checker_Alternates_Modules() {
         var matrix = new BitMatrix(2, 2);
         matrix[0, 0] = true;
