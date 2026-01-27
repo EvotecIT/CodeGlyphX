@@ -33,6 +33,7 @@ internal static class WebpVp8lDecoder {
             colorCacheBits = reader.ReadBits(4);
             if (colorCacheBits is < 1 or > 11) return false;
         }
+        if (colorCacheBits != 0) return false;
         var colorCacheSize = colorCacheBits == 0 ? 0 : 1 << colorCacheBits;
 
         // Meta prefix codes flag (1 bit). A value of 1 indicates an entropy image
@@ -42,9 +43,14 @@ internal static class WebpVp8lDecoder {
 
         var literalAlphabetSize = 256;
         var greenAlphabetSize = literalAlphabetSize + 24 + colorCacheSize;
-        if (!TryReadPrefixCodesGroup(ref reader, greenAlphabetSize, literalAlphabetSize, out _)) return false;
+        if (!TryReadPrefixCodesGroup(ref reader, greenAlphabetSize, literalAlphabetSize, out var group)) return false;
 
-        return false;
+        if (!TryDecodeLiteralOnly(ref reader, header, group, out rgba)) {
+            rgba = Array.Empty<byte>();
+            return false;
+        }
+
+        return true;
     }
 
     internal static bool TryReadHeader(ReadOnlySpan<byte> payload, out WebpVp8lHeader header) {
@@ -111,6 +117,44 @@ internal static class WebpVp8lDecoder {
         if (!WebpPrefixCodeReader.TryReadPrefixCode(ref reader, alphabetSize: 40, out var distance)) return false;
 
         group = new WebpPrefixCodesGroup(green, red, blue, alpha, distance);
+        return true;
+    }
+
+    private static bool TryDecodeLiteralOnly(
+        ref WebpBitReader reader,
+        WebpVp8lHeader header,
+        WebpPrefixCodesGroup group,
+        out byte[] rgba) {
+        rgba = Array.Empty<byte>();
+
+        var pixelCount = checked(header.Width * header.Height);
+        var buffer = new byte[checked(pixelCount * 4)];
+        var offset = 0;
+        for (var i = 0; i < pixelCount; i++) {
+            var green = group.Green.DecodeSymbol(ref reader);
+            var red = group.Red.DecodeSymbol(ref reader);
+            var blue = group.Blue.DecodeSymbol(ref reader);
+            var alpha = group.Alpha.DecodeSymbol(ref reader);
+            if (green < 0 || red < 0 || blue < 0 || alpha < 0) return false;
+            if (green >= 256 || red >= 256 || blue >= 256 || alpha >= 256) return false;
+
+            var g = (byte)green;
+            var r = (byte)red;
+            var b = (byte)blue;
+            var a = (byte)alpha;
+
+            if (header.SubtractGreenTransformUsed) {
+                r = (byte)(r + g);
+                b = (byte)(b + g);
+            }
+
+            buffer[offset++] = r;
+            buffer[offset++] = g;
+            buffer[offset++] = b;
+            buffer[offset++] = a;
+        }
+
+        rgba = buffer;
         return true;
     }
 }
