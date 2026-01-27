@@ -16,6 +16,23 @@ internal static class WebpVp8lEncoder {
     private const int MaxPaletteSize = 16;
     private const int MaxBackwardDistance = 4096;
     private const int DistanceMapSize = 120;
+    private static readonly (int xi, int yi)[] DistanceMap = {
+        (0, 1), (1, 0), (1, 1), (-1, 1), (0, 2), (2, 0), (1, 2), (-1, 2),
+        (2, 1), (-2, 1), (2, 2), (-2, 2), (0, 3), (3, 0), (1, 3), (-1, 3),
+        (3, 1), (-3, 1), (2, 3), (-2, 3), (3, 2), (-3, 2), (0, 4), (4, 0),
+        (1, 4), (-1, 4), (4, 1), (-4, 1), (3, 3), (-3, 3), (2, 4), (-2, 4),
+        (4, 2), (-4, 2), (0, 5), (3, 4), (-3, 4), (4, 3), (-4, 3), (5, 0),
+        (1, 5), (-1, 5), (5, 1), (-5, 1), (2, 5), (-2, 5), (5, 2), (-5, 2),
+        (4, 4), (-4, 4), (3, 5), (-3, 5), (5, 3), (-5, 3), (0, 6), (6, 0),
+        (1, 6), (-1, 6), (6, 1), (-6, 1), (2, 6), (-2, 6), (6, 2), (-6, 2),
+        (4, 5), (-4, 5), (5, 4), (-5, 4), (3, 6), (-3, 6), (6, 3), (-6, 3),
+        (0, 7), (7, 0), (1, 7), (-1, 7), (5, 5), (-5, 5), (7, 1), (-7, 1),
+        (4, 6), (-4, 6), (6, 4), (-6, 4), (2, 7), (-2, 7), (7, 2), (-7, 2),
+        (3, 7), (-3, 7), (7, 3), (-7, 3), (5, 6), (-5, 6), (6, 5), (-6, 5),
+        (8, 0), (4, 7), (-4, 7), (7, 4), (-7, 4), (8, 1), (8, 2), (6, 6),
+        (-6, 6), (8, 3), (5, 7), (-5, 7), (7, 5), (-7, 5), (8, 4), (6, 7),
+        (-6, 7), (7, 6), (-7, 6), (8, 5), (7, 7), (-7, 7), (8, 6), (8, 7),
+    };
 
     public static bool TryEncodeLiteralRgba32(
         ReadOnlySpan<byte> rgba,
@@ -161,11 +178,11 @@ internal static class WebpVp8lEncoder {
         FillArgbPixels(rgba, width, height, stride, pixels);
 
         var tokens = BuildSmallDistanceTokens(pixels);
-        if (!TryWriteTokensWithPrefixCodes(writer, tokens, out reason)) {
+        if (!TryWriteTokensWithPrefixCodes(writer, tokens, width, out reason)) {
             // Fall back to literal-only encoding if our constrained backref path
             // cannot be expressed with the current prefix-code strategy.
             tokens = BuildLiteralTokens(pixels);
-            return TryWriteTokensWithPrefixCodes(writer, tokens, out reason);
+            return TryWriteTokensWithPrefixCodes(writer, tokens, width, out reason);
         }
 
         return true;
@@ -404,6 +421,7 @@ internal static class WebpVp8lEncoder {
     private static bool TryWriteTokensWithPrefixCodes(
         WebpBitWriter writer,
         ReadOnlySpan<Token> tokens,
+        int width,
         out string reason) {
         reason = string.Empty;
 
@@ -434,11 +452,11 @@ internal static class WebpVp8lEncoder {
 
         if (hasBackrefs) {
             if (!TryWriteDistancePrefixCodeForBackrefs(writer, out var distanceBook, out reason)) return false;
-            return TryEncodeTokens(writer, tokens, greenBook, redBook, blueBook, alphaBook, distanceBook, out reason);
+            return TryEncodeTokens(writer, tokens, width, greenBook, redBook, blueBook, alphaBook, distanceBook, out reason);
         }
 
         WriteSimplePrefixCode(writer, symbols: new byte[] { 0 }); // distance unused
-        return TryEncodeTokens(writer, tokens, greenBook, redBook, blueBook, alphaBook, distanceBook: default, out reason);
+        return TryEncodeTokens(writer, tokens, width, greenBook, redBook, blueBook, alphaBook, distanceBook: default, out reason);
     }
 
     private static bool TryCollectLiteralChannelValues(
@@ -628,6 +646,7 @@ internal static class WebpVp8lEncoder {
     private static bool TryEncodeTokens(
         WebpBitWriter writer,
         ReadOnlySpan<Token> tokens,
+        int width,
         Codebook greenBook,
         Codebook redBook,
         Codebook blueBook,
@@ -635,6 +654,7 @@ internal static class WebpVp8lEncoder {
         Codebook distanceBook,
         out string reason) {
         reason = string.Empty;
+        var distanceCodeMap = BuildDistanceCodeMap(width);
 
         for (var i = 0; i < tokens.Length; i++) {
             var token = tokens[i];
@@ -684,7 +704,7 @@ internal static class WebpVp8lEncoder {
                 return false;
             }
 
-            var distanceCode = DistanceMapSize + token.Distance;
+            var distanceCode = ResolveDistanceCode(distanceCodeMap, token.Distance);
             if (!TryEncodePrefixValue(distanceCode, maxPrefix: 39, out var distancePrefix, out var distanceExtraBits, out var distanceExtraValue)) {
                 reason = "Distance code could not be encoded.";
                 return false;
@@ -733,6 +753,28 @@ internal static class WebpVp8lEncoder {
         }
 
         return false;
+    }
+
+    private static int[] BuildDistanceCodeMap(int width) {
+        if (width <= 0) return Array.Empty<int>();
+        var map = new int[MaxBackwardDistance + 1];
+        for (var i = 0; i < DistanceMap.Length; i++) {
+            var (xi, yi) = DistanceMap[i];
+            var mapped = xi + (long)yi * width;
+            if (mapped <= 0 || mapped > MaxBackwardDistance) continue;
+            var distance = (int)mapped;
+            if (map[distance] == 0) {
+                map[distance] = i + 1;
+            }
+        }
+        return map;
+    }
+
+    private static int ResolveDistanceCode(int[] distanceCodeMap, int distance) {
+        if (distanceCodeMap.Length > distance && distanceCodeMap[distance] > 0) {
+            return distanceCodeMap[distance];
+        }
+        return DistanceMapSize + distance;
     }
 
     private readonly struct Token {
