@@ -63,4 +63,16 @@ public static class QrParsedData {
         string? MerchantCity,
         IReadOnlyDictionary<string, string> Fields,
         bool CrcValid);
+
+    /// <summary>Lightning payment invoice (BOLT11/12).</summary>
+    public sealed record Lightning(string Invoice, string? NetworkPrefix);
+
+    /// <summary>EIP-681 Ethereum payment request.</summary>
+    public sealed record Eip681(
+        string Address,
+        long? ChainId,
+        decimal? AmountEther,
+        decimal? ValueWei,
+        string? Function,
+        IReadOnlyDictionary<string, string> Parameters);
 }

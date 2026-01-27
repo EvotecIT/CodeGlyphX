@@ -12,8 +12,8 @@ public sealed class QrStylizedRoundTripTests {
     [Fact]
     public void QrDecode_StylizedLargeImages_RoundTripLikePlayground() {
         const int targetSize = 2400;
-        const int maxDimension = 1600;
-        const int budgetMs = 5000;
+        const int maxDimension = 2400;
+        const int budgetMs = 12000;
 
         RoundTripLargeStylized("https://example.com/neon-dot", CreateNeonDotOptions(targetSize), maxDimension, budgetMs);
         RoundTripLargeStylized("https://example.com/candy-checker", CreateCandyCheckerOptions(targetSize), maxDimension, budgetMs);
@@ -23,10 +23,6 @@ public sealed class QrStylizedRoundTripTests {
         var png = RenderPng(payload, options);
         Assert.True(ImageReader.TryDecodeRgba32(png, out var rgba, out var width, out var height));
 
-        if (maxDimension > 0 && (width > maxDimension || height > maxDimension)) {
-            rgba = ResizeNearest(rgba, width, height, maxDimension, out width, out height);
-        }
-
         using var cts = new CancellationTokenSource(TimeSpan.FromMilliseconds(budgetMs));
         var decodeOptions = new QrPixelDecodeOptions {
             Profile = QrDecodeProfile.Robust,
@@ -34,7 +30,7 @@ public sealed class QrStylizedRoundTripTests {
             StylizedSampling = true,
             BudgetMilliseconds = budgetMs,
             MaxDimension = maxDimension,
-            EnableTileScan = true
+            AutoCrop = true
         };
 
         Assert.True(

@@ -89,6 +89,16 @@ public static class QrPayloadParser {
             return true;
         }
 
+        if (TryParseLightning(raw, out var lightning)) {
+            parsed = new QrParsedPayload(QrPayloadType.Lightning, raw, lightning);
+            return true;
+        }
+
+        if (TryParseEip681(raw, out var eip681)) {
+            parsed = new QrParsedPayload(QrPayloadType.Eip681, raw, eip681);
+            return true;
+        }
+
         if (TryParsePayPal(raw, out var paypal)) {
             parsed = new QrParsedPayload(QrPayloadType.PayPal, raw, paypal);
             return true;
@@ -281,6 +291,127 @@ public static class QrPayloadParser {
         return crc.ToString("X4", CultureInfo.InvariantCulture);
     }
 
+    private static bool TryParseLightning(string raw, out QrParsedData.Lightning lightning) {
+        lightning = null!;
+        if (string.IsNullOrWhiteSpace(raw)) return false;
+
+        var invoice = raw.Trim();
+        if (invoice.StartsWith("lightning:", StringComparison.OrdinalIgnoreCase)) {
+            invoice = invoice.Substring("lightning:".Length);
+            if (invoice.StartsWith("//", StringComparison.Ordinal)) invoice = invoice.Substring(2);
+        } else {
+            var lowerBare = invoice.ToLowerInvariant();
+            if (!lowerBare.StartsWith("lnbc", StringComparison.Ordinal) &&
+                !lowerBare.StartsWith("lntb", StringComparison.Ordinal) &&
+                !lowerBare.StartsWith("lnbcrt", StringComparison.Ordinal) &&
+                !lowerBare.StartsWith("lnurl", StringComparison.Ordinal)) {
+                return false;
+            }
+        }
+
+        var queryIndex = invoice.IndexOf('?');
+        if (queryIndex >= 0) invoice = invoice.Substring(0, queryIndex);
+        invoice = invoice.Trim();
+        if (invoice.Length < 6) return false;
+
+        var lower = invoice.ToLowerInvariant();
+        var i = 2;
+        while (i < lower.Length && char.IsLetter(lower[i])) i++;
+        var networkPrefix = i > 2 ? lower.Substring(2, i - 2) : null;
+
+        lightning = new QrParsedData.Lightning(invoice, networkPrefix);
+        return true;
+    }
+
+    private static bool TryParseEip681(string raw, out QrParsedData.Eip681 eip681) {
+        eip681 = null!;
+        var colon = raw.IndexOf(':');
+        if (colon <= 0) return false;
+
+        var scheme = raw.Substring(0, colon).Trim().ToLowerInvariant();
+        if (scheme.Length == 0) return false;
+        if (!scheme.Equals("ethereum", StringComparison.Ordinal) && !scheme.Equals("eth", StringComparison.Ordinal)) {
+            return false;
+        }
+
+        var rest = raw.Substring(colon + 1).Trim();
+        if (rest.StartsWith("//", StringComparison.Ordinal)) rest = rest.Substring(2);
+        if (rest.Length == 0) return false;
+
+        var queryIndex = rest.IndexOf('?');
+        var path = (queryIndex >= 0 ? rest.Substring(0, queryIndex) : rest).Trim();
+        var query = queryIndex >= 0 && queryIndex < rest.Length - 1 ? rest.Substring(queryIndex + 1) : string.Empty;
+        if (path.Length == 0) return false;
+
+        var slashIndex = path.IndexOf('/');
+        var addressAndChain = slashIndex > 0 ? path.Substring(0, slashIndex) : path;
+        var function = slashIndex > 0 && slashIndex < path.Length - 1 ? path.Substring(slashIndex + 1) : null;
+
+        var atIndex = addressAndChain.IndexOf('@');
+        var addressPart = atIndex > 0 ? addressAndChain.Substring(0, atIndex) : addressAndChain;
+        var chainText = atIndex > 0 && atIndex < addressAndChain.Length - 1 ? addressAndChain.Substring(atIndex + 1) : null;
+
+        var hasPayPrefix = false;
+        if (addressPart.StartsWith("pay-", StringComparison.OrdinalIgnoreCase)) {
+            addressPart = addressPart.Substring(4);
+            hasPayPrefix = true;
+        }
+
+        var address = addressPart.Trim();
+        if (address.Length == 0) return false;
+
+        long? chainId = null;
+        if (!string.IsNullOrEmpty(chainText) &&
+            long.TryParse(chainText, NumberStyles.Integer, CultureInfo.InvariantCulture, out var parsedChainId)) {
+            chainId = parsedChainId;
+        }
+
+        var parameters = string.IsNullOrEmpty(query)
+            ? new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+            : ParseQueryParameters(query);
+
+        var hasParameters = parameters.Count > 0;
+        if (!hasPayPrefix && chainId is null && function is null && !hasParameters) {
+            return false;
+        }
+
+        decimal? valueWei = null;
+        if (TryGetParameter(parameters, "value", out var valueText) &&
+            decimal.TryParse(valueText, NumberStyles.Float, CultureInfo.InvariantCulture, out var parsedWei)) {
+            valueWei = parsedWei;
+        }
+
+        decimal? amountEther = null;
+        if (TryGetParameter(parameters, "amount", out var amountText) &&
+            decimal.TryParse(amountText, NumberStyles.Float, CultureInfo.InvariantCulture, out var parsedAmount)) {
+            amountEther = parsedAmount;
+        }
+
+        if (!amountEther.HasValue && valueWei.HasValue) {
+            const decimal weiPerEther = 1_000_000_000_000_000_000m;
+            amountEther = valueWei.Value / weiPerEther;
+        }
+
+        eip681 = new QrParsedData.Eip681(address, chainId, amountEther, valueWei, function, parameters);
+        return true;
+    }
+
+    private static Dictionary<string, string> ParseQueryParameters(string query) {
+        var parameters = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        if (string.IsNullOrEmpty(query)) return parameters;
+
+        var parts = query.Split('&');
+        for (var i = 0; i < parts.Length; i++) {
+            var part = parts[i];
+            if (string.IsNullOrEmpty(part)) continue;
+            SplitOnce(part, '=', out var key, out var value);
+            if (string.IsNullOrEmpty(key)) continue;
+            parameters[key] = value is null ? string.Empty : Uri.UnescapeDataString(value);
+        }
+
+        return parameters;
+    }
+
     private static bool TryParseCrypto(string raw, out QrParsedData.Crypto crypto) {
         crypto = null!;
         var colon = raw.IndexOf(':');
@@ -298,18 +429,9 @@ public static class QrPayloadParser {
         var address = (queryIndex >= 0 ? rest.Substring(0, queryIndex) : rest).Trim();
         if (address.Length == 0) return false;
 
-        var parameters = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-        if (queryIndex >= 0 && queryIndex < rest.Length - 1) {
-            var query = rest.Substring(queryIndex + 1);
-            var parts = query.Split('&');
-            for (var i = 0; i < parts.Length; i++) {
-                var part = parts[i];
-                if (string.IsNullOrEmpty(part)) continue;
-                SplitOnce(part, '=', out var key, out var value);
-                if (string.IsNullOrEmpty(key)) continue;
-                parameters[key] = value is null ? string.Empty : Uri.UnescapeDataString(value);
-            }
-        }
+        var parameters = queryIndex >= 0 && queryIndex < rest.Length - 1
+            ? ParseQueryParameters(rest.Substring(queryIndex + 1))
+            : new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
         decimal? amount = null;
         if (TryGetParameter(parameters, "amount", out var amountText) ||
@@ -913,6 +1035,19 @@ public static class QrPayloadParser {
                 if (emv.TransactionAmount.HasValue && emv.TransactionAmount.Value <= 0m) {
                     validation.Add("EMVCo amount must be positive.");
                 }
+                break;
+            case QrPayloadType.Lightning:
+                if (!parsed.TryGet<QrParsedData.Lightning>(out var lightning)) break;
+                if (string.IsNullOrWhiteSpace(lightning.Invoice) || !lightning.Invoice.StartsWith("ln", StringComparison.OrdinalIgnoreCase)) {
+                    validation.Add("Lightning invoice is invalid.");
+                }
+                break;
+            case QrPayloadType.Eip681:
+                if (!parsed.TryGet<QrParsedData.Eip681>(out var eip681)) break;
+                if (string.IsNullOrWhiteSpace(eip681.Address)) validation.Add("EIP-681 address is missing.");
+                if (eip681.ChainId.HasValue && eip681.ChainId.Value <= 0) validation.Add("EIP-681 chain id must be positive.");
+                if (eip681.AmountEther.HasValue && eip681.AmountEther.Value <= 0m) validation.Add("EIP-681 amount must be positive.");
+                if (eip681.ValueWei.HasValue && eip681.ValueWei.Value <= 0m) validation.Add("EIP-681 value must be positive.");
                 break;
             case QrPayloadType.Url:
                 if (!QrPayloadValidation.IsValidUrl(parsed.Raw)) validation.Add("URL is invalid.");
