@@ -177,6 +177,56 @@ public sealed class QrPngEyeOptions {
     /// </summary>
     public bool AccentRingAllowOnQrBackground { get; set; }
 
+    /// <summary>
+    /// Optional accent ray count drawn around the eyes on the canvas.
+    /// </summary>
+    public int AccentRayCount { get; set; }
+
+    /// <summary>
+    /// Accent ray length in pixels.
+    /// </summary>
+    public int AccentRayLengthPx { get; set; } = 42;
+
+    /// <summary>
+    /// Accent ray stroke thickness in pixels.
+    /// </summary>
+    public int AccentRayThicknessPx { get; set; } = 5;
+
+    /// <summary>
+    /// How far accent rays can start beyond the eye ring (in pixels).
+    /// </summary>
+    public int AccentRaySpreadPx { get; set; } = 36;
+
+    /// <summary>
+    /// Small jitter applied to ray start radius (in pixels).
+    /// </summary>
+    public int AccentRayJitterPx { get; set; } = 8;
+
+    /// <summary>
+    /// Small jitter applied to ray length (in pixels).
+    /// </summary>
+    public int AccentRayLengthJitterPx { get; set; } = 10;
+
+    /// <summary>
+    /// Accent ray color override. Defaults to the outer eye color with a softer alpha.
+    /// </summary>
+    public Rgba32? AccentRayColor { get; set; }
+
+    /// <summary>
+    /// Random seed for accent ray placement. Use 0 to auto-randomize per render.
+    /// </summary>
+    public int AccentRaySeed { get; set; }
+
+    /// <summary>
+    /// When true (default), accent rays do not draw inside the QR area.
+    /// </summary>
+    public bool AccentRayProtectQrArea { get; set; } = true;
+
+    /// <summary>
+    /// When false (default), accent rays render only when a canvas is enabled.
+    /// </summary>
+    public bool AccentRayAllowOnQrBackground { get; set; }
+
     internal void Validate() {
         if (OuterScale is <= 0 or > 1.0) throw new ArgumentOutOfRangeException(nameof(OuterScale));
         if (InnerScale is <= 0 or > 1.0) throw new ArgumentOutOfRangeException(nameof(InnerScale));
@@ -188,6 +238,12 @@ public sealed class QrPngEyeOptions {
         if (AccentRingThicknessPx < 0) throw new ArgumentOutOfRangeException(nameof(AccentRingThicknessPx));
         if (AccentRingSpreadPx < 0) throw new ArgumentOutOfRangeException(nameof(AccentRingSpreadPx));
         if (AccentRingJitterPx < 0) throw new ArgumentOutOfRangeException(nameof(AccentRingJitterPx));
+        if (AccentRayCount < 0) throw new ArgumentOutOfRangeException(nameof(AccentRayCount));
+        if (AccentRayLengthPx < 0) throw new ArgumentOutOfRangeException(nameof(AccentRayLengthPx));
+        if (AccentRayThicknessPx < 0) throw new ArgumentOutOfRangeException(nameof(AccentRayThicknessPx));
+        if (AccentRaySpreadPx < 0) throw new ArgumentOutOfRangeException(nameof(AccentRaySpreadPx));
+        if (AccentRayJitterPx < 0) throw new ArgumentOutOfRangeException(nameof(AccentRayJitterPx));
+        if (AccentRayLengthJitterPx < 0) throw new ArgumentOutOfRangeException(nameof(AccentRayLengthJitterPx));
         if (OuterColors is { Length: not 3 }) throw new ArgumentOutOfRangeException(nameof(OuterColors), "OuterColors must have exactly 3 entries.");
         if (InnerColors is { Length: not 3 }) throw new ArgumentOutOfRangeException(nameof(InnerColors), "InnerColors must have exactly 3 entries.");
         if (OuterGradients is { Length: not 3 }) throw new ArgumentOutOfRangeException(nameof(OuterGradients), "OuterGradients must have exactly 3 entries.");

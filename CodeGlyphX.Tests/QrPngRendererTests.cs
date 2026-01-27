@@ -816,6 +816,62 @@ public sealed class QrPngRendererTests {
     }
 
     [Fact]
+    public void Render_With_Eye_AccentRays_Draws_On_Canvas_Outside_Qr() {
+        var qr = QrCodeEncoder.EncodeText("HELLO", QrErrorCorrectionLevel.H);
+        var moduleSize = 8;
+        var quietZone = 4;
+        var padding = 26;
+
+        var opts = new QrPngRenderOptions {
+            ModuleSize = moduleSize,
+            QuietZone = quietZone,
+            Foreground = Rgba32.Black,
+            Background = Rgba32.White,
+            Canvas = new QrPngCanvasOptions {
+                PaddingPx = padding,
+                CornerRadiusPx = 0,
+                Background = Rgba32.White,
+            },
+            Eyes = new QrPngEyeOptions {
+                AccentRayCount = 10,
+                AccentRayLengthPx = 52,
+                AccentRayThicknessPx = 6,
+                AccentRaySpreadPx = 44,
+                AccentRayJitterPx = 6,
+                AccentRayLengthJitterPx = 12,
+                AccentRaySeed = 20260128,
+                AccentRayColor = new Rgba32(0, 0, 0, 190),
+            },
+        };
+
+        var png = QrPngRenderer.Render(qr.Modules, opts);
+        var (rgba, width, height, stride) = PngTestDecoder.DecodeRgba32(png);
+
+        var qrFullPx = (qr.Size + quietZone * 2) * moduleSize;
+        var qrX0 = padding;
+        var qrY0 = padding;
+        var qrX1 = qrX0 + qrFullPx - 1;
+        var qrY1 = qrY0 + qrFullPx - 1;
+
+        var foundAccent = false;
+        for (var y = 0; y < height && !foundAccent; y++) {
+            for (var x = 0; x < width; x++) {
+                if (x >= qrX0 && x <= qrX1 && y >= qrY0 && y <= qrY1) continue;
+                var p = y * stride + x * 4;
+                var r = rgba[p + 0];
+                var g = rgba[p + 1];
+                var b = rgba[p + 2];
+                if (r != 255 || g != 255 || b != 255) {
+                    foundAccent = true;
+                    break;
+                }
+            }
+        }
+
+        Assert.True(foundAccent, "Expected accent ray pixels outside the QR area.");
+    }
+
+    [Fact]
     public void Render_With_Canvas_Halo_Draws_Outside_Qr_Bounds() {
         var qr = QrCodeEncoder.EncodeText("HELLO", QrErrorCorrectionLevel.H);
         var moduleSize = 8;
