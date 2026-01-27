@@ -70,6 +70,9 @@ public static class WebpReader {
     /// </summary>
     public static byte[] DecodeRgba32(ReadOnlySpan<byte> data, out int width, out int height) {
         if (!IsWebp(data)) throw new FormatException("Invalid WebP container.");
+        if (WebpManagedDecoder.TryDecodeRgba32(data, out var managedRgba, out width, out height)) {
+            return managedRgba;
+        }
         if (!IsNativeAvailable) {
             throw new FormatException("WebP decode requires native libwebp (temporary fallback until managed decode is implemented).");
         }
