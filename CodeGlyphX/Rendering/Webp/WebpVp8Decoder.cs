@@ -1650,6 +1650,34 @@ internal static class WebpVp8Decoder {
         }
     }
 
+    internal static void ApplyLoopFilterForTest(
+        WebpVp8LoopFilter loopFilter,
+        WebpVp8Segmentation segmentation,
+        WebpVp8MacroblockHeaderScaffold[] macroblocks,
+        bool[] macroblockHasCoefficients,
+        int width,
+        int height,
+        byte[] yPlane,
+        byte[] uPlane,
+        byte[] vPlane,
+        int chromaWidth,
+        int chromaHeight,
+        bool isKeyframe) {
+        ApplyLoopFilter(
+            loopFilter,
+            segmentation,
+            macroblocks,
+            macroblockHasCoefficients,
+            width,
+            height,
+            yPlane,
+            uPlane,
+            vPlane,
+            chromaWidth,
+            chromaHeight,
+            isKeyframe);
+    }
+
     private static bool TryCalculateLoopFilterParameters(
         WebpVp8LoopFilter loopFilter,
         WebpVp8Segmentation segmentation,
