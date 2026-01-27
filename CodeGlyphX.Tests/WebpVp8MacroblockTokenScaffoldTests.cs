@@ -43,12 +43,17 @@ public sealed class WebpVp8MacroblockTokenScaffoldTests
             macroblocksPerPartition[partitionIndex] += expectedCols;
         }
         var totalPartitionBytes = 0;
+        var usedPartitionBytes = 0;
         for (var p = 0; p < dctCount; p++)
         {
             partitionByteTotals[p] = blockScaffold.Partitions[p].BytesConsumed;
             var tokensPerMacroblock = blockScaffold.Partitions[p].TokensRead;
             partitionTokenTotals[p] = tokensPerMacroblock * System.Math.Max(1, macroblocksPerPartition[p]);
             totalPartitionBytes += partitionByteTotals[p];
+            if (macroblocksPerPartition[p] > 0)
+            {
+                usedPartitionBytes += partitionByteTotals[p];
+            }
         }
 
         var success = WebpVp8Decoder.TryReadMacroblockTokenScaffold(payload, out var scaffold);
@@ -61,6 +66,7 @@ public sealed class WebpVp8MacroblockTokenScaffoldTests
         Assert.Equal(expectedMacroblocks * 4, scaffold.TotalBlocksAssigned);
         Assert.InRange(scaffold.TotalTokensRead, scaffold.TotalBlocksAssigned, scaffold.TotalBlocksAssigned * 16);
         Assert.InRange(scaffold.TotalBytesConsumed, 0, totalPartitionBytes);
+        Assert.Equal(usedPartitionBytes, scaffold.TotalBytesConsumed);
 
         var lastBytesAfter = new int[dctCount];
         var lastTokensAfter = new int[dctCount];
@@ -92,5 +98,17 @@ public sealed class WebpVp8MacroblockTokenScaffoldTests
         }
 
         Assert.Equal(scaffold.TotalBytesConsumed, bytesSum);
+
+        for (var p = 0; p < dctCount; p++)
+        {
+            if (macroblocksPerPartition[p] > 0)
+            {
+                Assert.Equal(partitionByteTotals[p], lastBytesAfter[p]);
+            }
+            else
+            {
+                Assert.Equal(0, lastBytesAfter[p]);
+            }
+        }
     }
 }

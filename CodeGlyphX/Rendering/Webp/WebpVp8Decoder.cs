@@ -566,6 +566,14 @@ internal static class WebpVp8Decoder {
         if (blocks.Partitions.Length != partitionCount) return false;
         if (headers.Macroblocks.Length == 0) return false;
 
+        var rowsPerPartition = new int[partitionCount];
+        for (var row = 0; row < headers.MacroblockRows; row++) {
+            var partitionIndex = GetTokenPartitionForRow(row, partitionCount);
+            if ((uint)partitionIndex < (uint)rowsPerPartition.Length) {
+                rowsPerPartition[partitionIndex]++;
+            }
+        }
+
         var macroblocksPerPartition = new int[partitionCount];
         for (var i = 0; i < headers.Macroblocks.Length; i++) {
             var partitionIndex = GetTokenPartitionForRow(headers.Macroblocks[i].Y, partitionCount);
@@ -577,13 +585,37 @@ internal static class WebpVp8Decoder {
         var blockCursors = new int[partitionCount];
         var partitionTokenTotals = new int[partitionCount];
         var partitionByteTotals = new int[partitionCount];
+        var partitionRowByteBudgets = new int[partitionCount][];
         var partitionTokensConsumed = new int[partitionCount];
         var partitionBytesConsumed = new int[partitionCount];
+        var partitionCurrentRowIndex = new int[partitionCount];
+        var partitionRowTokensConsumed = new int[partitionCount];
+        var partitionRowBytesConsumed = new int[partitionCount];
+        for (var p = 0; p < partitionCurrentRowIndex.Length; p++) {
+            partitionCurrentRowIndex[p] = -1;
+        }
+
         for (var p = 0; p < partitionCount; p++) {
             var tokensPerMacroblock = Math.Max(0, blocks.Partitions[p].TokensRead);
             var macroblockCount = macroblocksPerPartition[p];
             partitionTokenTotals[p] = tokensPerMacroblock * Math.Max(1, macroblockCount);
-            partitionByteTotals[p] = Math.Max(0, blocks.Partitions[p].BytesConsumed);
+            var totalBytes = Math.Max(0, blocks.Partitions[p].BytesConsumed);
+            partitionByteTotals[p] = totalBytes;
+
+            var rowCount = rowsPerPartition[p];
+            if (rowCount <= 0) {
+                partitionRowByteBudgets[p] = Array.Empty<int>();
+                continue;
+            }
+
+            var budgets = new int[rowCount];
+            var baseBytesPerRow = totalBytes / rowCount;
+            var remainder = totalBytes % rowCount;
+            for (var r = 0; r < budgets.Length; r++) {
+                budgets[r] = baseBytesPerRow + (r < remainder ? 1 : 0);
+            }
+
+            partitionRowByteBudgets[p] = budgets;
         }
 
         var macroblocks = new WebpVp8MacroblockTokenScaffold[headers.Macroblocks.Length];
@@ -610,14 +642,30 @@ internal static class WebpVp8Decoder {
                 macroblockTokensRead += segmentBlock.TokensRead;
             }
 
+            if (header.X == 0) {
+                partitionCurrentRowIndex[partitionIndex]++;
+                partitionRowTokensConsumed[partitionIndex] = 0;
+                partitionRowBytesConsumed[partitionIndex] = 0;
+            }
+
+            var partitionRowIndex = partitionCurrentRowIndex[partitionIndex];
+            var rowBudgets = partitionRowByteBudgets[partitionIndex];
+            if ((uint)partitionRowIndex >= (uint)rowBudgets.Length) return false;
+
+            var tokensPerMacroblock = Math.Max(0, blocks.Partitions[partitionIndex].TokensRead);
+            var rowTokenTotal = tokensPerMacroblock * headers.MacroblockCols;
+            var rowByteTotal = rowBudgets[partitionRowIndex];
+
             var partitionTokensBefore = partitionTokensConsumed[partitionIndex];
             var partitionBytesBefore = partitionBytesConsumed[partitionIndex];
             var macroblockBytesConsumed = ComputePartitionByteShare(
-                partitionByteTotals[partitionIndex],
-                partitionBytesConsumed[partitionIndex],
-                partitionTokenTotals[partitionIndex],
-                partitionTokensConsumed[partitionIndex],
+                rowByteTotal,
+                partitionRowBytesConsumed[partitionIndex],
+                rowTokenTotal,
+                partitionRowTokensConsumed[partitionIndex],
                 macroblockTokensRead);
+            partitionRowTokensConsumed[partitionIndex] += macroblockTokensRead;
+            partitionRowBytesConsumed[partitionIndex] += macroblockBytesConsumed;
             partitionTokensConsumed[partitionIndex] += macroblockTokensRead;
             partitionBytesConsumed[partitionIndex] += macroblockBytesConsumed;
             var partitionTokensAfter = partitionTokensConsumed[partitionIndex];
