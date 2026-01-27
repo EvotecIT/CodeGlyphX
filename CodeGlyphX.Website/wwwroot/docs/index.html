@@ -270,6 +270,17 @@ if (QrImageDecoder.TryDecodeImage(imageBytes, out var result))
             </table>
             <p class="text-muted">QR pixel decode APIs are net8+ only (e.g., <code>QrImageDecoder.TryDecodeImage(...)</code> and <code>QrDecoder.TryDecode(...)</code> from pixels).</p>
             <p class="text-muted">You can check capabilities at runtime via <code>CodeGlyphXFeatures</code> (for example, <code>SupportsQrPixelDecode</code> and <code>SupportsQrPixelDebug</code>).</p>
+            <h3>net472 parity and guidance</h3>
+            <p class="text-muted">On <code>net472</code> and <code>netstandard2.0</code>, all encoders, payload helpers, renderers, and module-grid decoders behave the same as net8+. The main intentional gaps are QR pixel decode, QR pixel debug rendering, and Span-based overloads.</p>
+            <pre class="code-block">if (CodeGlyphXFeatures.SupportsQrPixelDecode &&
+    QrImageDecoder.TryDecodeImage(bytes, QrPixelDecodeOptions.Screen(), out var decoded))
+{
+    Console.WriteLine(decoded.Text);
+}
+else
+{
+    // net472 fallback: decode from module grids or use a net8+ worker.
+}</pre>
             <p class="text-muted"><strong>Choosing a target:</strong> pick <code>net8.0+</code> for QR image decoding, pixel debug tools, Span APIs, and maximum throughput. Pick <code>net472</code>/<code>netstandard2.0</code> for legacy apps that only need encoding, rendering, and module-grid decode.</p>
         </section>
 

@@ -71,6 +71,32 @@ Notes:
 - `QrImageDecoder.TryDecodeImage(...)` and `QrDecoder.TryDecode(...)` from pixels are net8+ only.
 - Runtime checks are available via `CodeGlyphXFeatures` (e.g., `SupportsQrPixelDecode`, `SupportsQrPixelDebug`).
 
+### net472 parity and guidance
+
+What works the same as net8+/net10+ on `net472`:
+- All encoders, payload helpers, renderers, and file codecs.
+- Module-grid decode (BitMatrix) across supported symbologies.
+- Pixel decode for 1D barcodes and 2D matrix codes other than QR.
+
+What is intentionally limited on `net472`:
+- QR pixel decode from raw pixels/images (`QrImageDecoder` / pixel-based `QrDecoder`) returns `false`.
+- QR pixel debug rendering throws `PlatformNotSupportedException`.
+- Span-based overloads are not available (use the `byte[]` overloads).
+
+Recommended pattern for shared code:
+
+```csharp
+if (CodeGlyphXFeatures.SupportsQrPixelDecode &&
+    QrImageDecoder.TryDecodeImage(bytes, QrPixelDecodeOptions.Screen(), out var decoded))
+{
+    Console.WriteLine(decoded.Text);
+}
+else
+{
+    // net472 fallback: decode from module grids or run QR pixel decode on a net8+ worker.
+}
+```
+
 Choosing a target:
 - Pick `net8.0`/`net10.0` when you need QR pixel decode from images/screenshots, pixel debug rendering, Span APIs, or maximum throughput.
 - Pick `net472`/`netstandard2.0` for legacy apps that only need encoding, rendering, and module-grid decode (QR pixel decode from images is unavailable).
