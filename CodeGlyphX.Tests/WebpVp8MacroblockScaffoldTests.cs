@@ -21,13 +21,6 @@ public sealed class WebpVp8MacroblockScaffoldTests
 
         var payload = WebpVp8TestHelper.BuildKeyframePayloadWithPartitionsAndTokens(96, 64, boolData, partitionSizes);
 
-        Assert.True(WebpVp8Decoder.TryReadMacroblockTokenScaffold(payload, out var macroblockTokens));
-        var sourceMacroblock = macroblockTokens.Macroblocks[0];
-        var ySample0 = sourceMacroblock.Blocks[0].BlockPixels.Samples[0];
-        var ySample1 = sourceMacroblock.Blocks[1].BlockPixels.Samples[0];
-        var uSample0 = sourceMacroblock.Blocks[16].BlockPixels.Samples[0];
-        var vSample0 = sourceMacroblock.Blocks[20].BlockPixels.Samples[0];
-
         var success = WebpVp8Decoder.TryReadMacroblockScaffold(payload, out var macroblock);
 
         Assert.True(success);
@@ -43,11 +36,6 @@ public sealed class WebpVp8MacroblockScaffoldTests
         Assert.InRange(macroblock.BlocksPlacedV, 1, 4);
         Assert.InRange(macroblock.BlocksPlacedTotal, 1, 24);
         Assert.True(macroblock.BlocksAvailable >= macroblock.BlocksPlacedTotal);
-        Assert.Equal(ySample0, macroblock.YPlane[0]);
-        Assert.Equal(ySample1, macroblock.YPlane[4]);
-        Assert.Equal(uSample0, macroblock.UPlane[0]);
-        Assert.Equal(vSample0, macroblock.VPlane[0]);
-
         for (var i = 0; i < macroblock.YPlane.Length; i++)
         {
             Assert.InRange(macroblock.YPlane[i], 0, 255);

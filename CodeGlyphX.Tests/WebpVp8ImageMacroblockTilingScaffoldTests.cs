@@ -57,13 +57,13 @@ public sealed class WebpVp8ImageMacroblockTilingScaffoldTests
             }
 
             var macroblock0 = WebpVp8Decoder.BuildMacroblockScaffold(
-                macroblockTokens.Macroblocks[0].Blocks,
+                macroblockTokens.Macroblocks[0],
                 macroblockTokens.TotalBlocksAssigned);
             var macroblock1 = WebpVp8Decoder.BuildMacroblockScaffold(
-                macroblockTokens.Macroblocks[1].Blocks,
+                macroblockTokens.Macroblocks[1],
                 macroblockTokens.TotalBlocksAssigned);
             var macroblock2 = WebpVp8Decoder.BuildMacroblockScaffold(
-                macroblockTokens.Macroblocks[2].Blocks,
+                macroblockTokens.Macroblocks[2],
                 macroblockTokens.TotalBlocksAssigned);
             var rgba0 = WebpVp8Decoder.ConvertMacroblockScaffoldToRgba(macroblock0);
             var rgba1 = WebpVp8Decoder.ConvertMacroblockScaffoldToRgba(macroblock1);

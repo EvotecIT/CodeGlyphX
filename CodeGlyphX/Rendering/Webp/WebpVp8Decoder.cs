@@ -829,7 +829,7 @@ internal static class WebpVp8Decoder {
         macroblock = default;
         if (!TryReadMacroblockTokenScaffold(payload, out var macroblockTokens)) return false;
         if (macroblockTokens.Macroblocks.Length == 0) return false;
-        macroblock = BuildMacroblockScaffold(macroblockTokens.Macroblocks[0].Blocks, macroblockTokens.TotalBlocksAssigned);
+        macroblock = BuildMacroblockScaffold(macroblockTokens.Macroblocks[0], macroblockTokens.TotalBlocksAssigned);
         return macroblock.Width > 0 && macroblock.Height > 0;
     }
 
@@ -861,7 +861,7 @@ internal static class WebpVp8Decoder {
 
         var macroblockRgbaCache = new byte[macroblockTokens.Macroblocks.Length][];
         for (var i = 0; i < macroblockTokens.Macroblocks.Length; i++) {
-            var macroblock = BuildMacroblockScaffold(macroblockTokens.Macroblocks[i].Blocks, macroblockTokens.TotalBlocksAssigned);
+            var macroblock = BuildMacroblockScaffold(macroblockTokens.Macroblocks[i], macroblockTokens.TotalBlocksAssigned);
             var macroblockRgba = ConvertMacroblockScaffoldToRgba(macroblock);
             macroblockRgbaCache[i] = UpscaleRgbaNearest(
                 macroblockRgba,
@@ -1330,7 +1330,110 @@ internal static class WebpVp8Decoder {
         }
     }
 
-    internal static WebpVp8MacroblockScaffold BuildMacroblockScaffold(WebpVp8BlockTokenScaffold[] blocks, int blocksAvailable) {
+    private static int GetSubblockMode(int[] modes, int index) {
+        if (modes is null || modes.Length == 0) return 0;
+        if ((uint)index >= (uint)modes.Length) return 0;
+        return modes[index];
+    }
+
+    private static int GetPredictionKind(bool is4x4, int mode) {
+        if (is4x4) {
+            return mode switch {
+                0 => 0, // DC_PRED
+                1 => 3, // TM_PRED
+                2 => 1, // VE_PRED
+                3 => 2, // HE_PRED
+                _ => 0,
+            };
+        }
+
+        return mode switch {
+            0 => 0, // DC_PRED
+            1 => 1, // V_PRED
+            2 => 2, // H_PRED
+            3 => 3, // TM_PRED
+            _ => 0,
+        };
+    }
+
+    private static byte GetPlaneSampleOrDefault(byte[] plane, int width, int height, int x, int y, byte fallback) {
+        if ((uint)x >= (uint)width || (uint)y >= (uint)height) return fallback;
+        return plane[(y * width) + x];
+    }
+
+    private static int[] BuildBlockResidual(WebpVp8BlockTokenScaffold block) {
+        var coefficients = new int[CoefficientsPerBlock];
+        coefficients[0] = block.Result.DequantDc;
+        for (var i = 1; i < CoefficientsPerBlock; i++) {
+            coefficients[i] = block.Result.DequantAc[i - 1];
+        }
+
+        return InverseTransform4x4(coefficients);
+    }
+
+    private static void ApplyPredictionBlock(
+        byte[] plane,
+        int planeWidth,
+        int planeHeight,
+        int dstX,
+        int dstY,
+        WebpVp8BlockTokenScaffold block,
+        bool is4x4,
+        int mode) {
+        var residual = BuildBlockResidual(block);
+        Span<byte> top = stackalloc byte[BlockSize];
+        Span<byte> left = stackalloc byte[BlockSize];
+
+        var hasTop = dstY > 0;
+        var hasLeft = dstX > 0;
+
+        for (var i = 0; i < BlockSize; i++) {
+            top[i] = GetPlaneSampleOrDefault(plane, planeWidth, planeHeight, dstX + i, dstY - 1, 128);
+            left[i] = GetPlaneSampleOrDefault(plane, planeWidth, planeHeight, dstX - 1, dstY + i, 128);
+        }
+
+        var topLeft = GetPlaneSampleOrDefault(plane, planeWidth, planeHeight, dstX - 1, dstY - 1, 128);
+        var predictionKind = GetPredictionKind(is4x4, mode);
+
+        var dc = 128;
+        if (predictionKind == 0) {
+            var sum = 0;
+            var count = 0;
+            if (hasTop) {
+                sum += top[0] + top[1] + top[2] + top[3];
+                count += BlockSize;
+            }
+            if (hasLeft) {
+                sum += left[0] + left[1] + left[2] + left[3];
+                count += BlockSize;
+            }
+            if (count > 0) {
+                dc = (sum + (count >> 1)) / count;
+            }
+        }
+
+        for (var y = 0; y < BlockSize; y++) {
+            var py = dstY + y;
+            if ((uint)py >= (uint)planeHeight) continue;
+            var rowOffset = py * planeWidth;
+            var residualRow = y * BlockSize;
+            for (var x = 0; x < BlockSize; x++) {
+                var px = dstX + x;
+                if ((uint)px >= (uint)planeWidth) continue;
+                var predicted = predictionKind switch {
+                    1 => top[x],
+                    2 => left[y],
+                    3 => ClampToByte(left[y] + top[x] - topLeft),
+                    _ => (byte)dc,
+                };
+                var value = predicted + residual[residualRow + x];
+                plane[rowOffset + px] = ClampToByte(value);
+            }
+        }
+    }
+
+    internal static WebpVp8MacroblockScaffold BuildMacroblockScaffold(WebpVp8MacroblockTokenScaffold macroblock, int blocksAvailable) {
+        var blocks = macroblock.Blocks;
         if (blocks is null || blocks.Length == 0) return default;
 
         var sourceYPlane = new byte[MacroblockScaffoldSourceWidth * MacroblockScaffoldSourceHeight];
@@ -1340,6 +1443,7 @@ internal static class WebpVp8Decoder {
         var blocksPlacedU = 0;
         var blocksPlacedV = 0;
         var blocksPlacedTotal = 0;
+        var header = macroblock.Header;
 
         for (var b = 0; b < blocks.Length && blocksPlacedTotal < (MacroblockScaffoldLumaBlocks + (MacroblockScaffoldChromaBlocks * 2)); b++) {
             var block = blocks[b];
@@ -1351,15 +1455,18 @@ internal static class WebpVp8Decoder {
                     }
 
                     var (dstX, dstY) = GetMacroblockLumaOffset(blocksPlacedY);
-                    CopyBlockToPlane(
-                        block.BlockPixels.Samples,
-                        block.BlockPixels.Width,
-                        block.BlockPixels.Height,
+                    var yMode = header.Is4x4
+                        ? GetSubblockMode(header.SubblockModes, blocksPlacedY)
+                        : header.YMode;
+                    ApplyPredictionBlock(
                         sourceYPlane,
                         MacroblockScaffoldSourceWidth,
                         MacroblockScaffoldSourceHeight,
                         dstX,
-                        dstY);
+                        dstY,
+                        block,
+                        header.Is4x4,
+                        yMode);
                     blocksPlacedY++;
                     blocksPlacedTotal++;
                     break;
@@ -1367,15 +1474,15 @@ internal static class WebpVp8Decoder {
                 case BlockTypeU: {
                     if (blocksPlacedU < MacroblockScaffoldChromaBlocks) {
                         var (dstX, dstY) = GetMacroblockChromaOffset(blocksPlacedU);
-                        CopyBlockToPlane(
-                            block.BlockPixels.Samples,
-                            block.BlockPixels.Width,
-                            block.BlockPixels.Height,
+                        ApplyPredictionBlock(
                             sourceUPlane,
                             MacroblockScaffoldSourceChromaWidth,
                             MacroblockScaffoldSourceChromaHeight,
                             dstX,
-                            dstY);
+                            dstY,
+                            block,
+                            is4x4: false,
+                            header.UvMode);
                         blocksPlacedU++;
                         blocksPlacedTotal++;
                     }
@@ -1385,15 +1492,15 @@ internal static class WebpVp8Decoder {
                 case BlockTypeV: {
                     if (blocksPlacedV < MacroblockScaffoldChromaBlocks) {
                         var (dstX, dstY) = GetMacroblockChromaOffset(blocksPlacedV);
-                        CopyBlockToPlane(
-                            block.BlockPixels.Samples,
-                            block.BlockPixels.Width,
-                            block.BlockPixels.Height,
+                        ApplyPredictionBlock(
                             sourceVPlane,
                             MacroblockScaffoldSourceChromaWidth,
                             MacroblockScaffoldSourceChromaHeight,
                             dstX,
-                            dstY);
+                            dstY,
+                            block,
+                            is4x4: false,
+                            header.UvMode);
                         blocksPlacedV++;
                         blocksPlacedTotal++;
                     }
