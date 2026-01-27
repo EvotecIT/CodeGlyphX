@@ -34,7 +34,13 @@ public sealed class WebpVp8TokenScaffoldTests
             Assert.Equal(partitionSizes[i], partition.Size);
             Assert.Equal(expectedTokensPerPartition, partition.TokensRead);
             Assert.Equal(expectedTokensPerPartition, partition.Tokens.Length);
+            Assert.Equal(expectedTokensPerPartition, partition.PrevContexts.Length);
             Assert.InRange(partition.BytesConsumed, 2, partition.Size);
+
+            for (var t = 0; t < partition.PrevContexts.Length; t++)
+            {
+                Assert.InRange(partition.PrevContexts[t], 0, 2);
+            }
         }
     }
 

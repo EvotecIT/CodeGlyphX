@@ -258,7 +258,9 @@ internal static class WebpVp8Decoder {
             if (!decoder.TryReadBool(128, out _)) return false;
 
             var tokens = new int[TokenScaffoldTokensPerPartition];
+            var prevContexts = new int[TokenScaffoldTokensPerPartition];
             var tokensRead = 0;
+            var prevContext = 0;
             for (var t = 0; t < tokens.Length; t++) {
                 var coefficientIndex = t % CoefficientsPerBlock;
                 var band = CoeffBandTable[coefficientIndex];
@@ -266,13 +268,18 @@ internal static class WebpVp8Decoder {
                     decoder,
                     frameHeader.CoefficientProbabilities,
                     band,
-                    prevContext: 0,
+                    prevContext,
                     out var tokenCode)) {
                     return false;
                 }
 
                 tokens[t] = tokenCode;
+                prevContexts[t] = prevContext;
                 tokensRead++;
+
+                // Scaffold-only context evolution: zero keeps context at 0,
+                // larger tokens push us into higher non-zero contexts.
+                prevContext = tokenCode == 0 ? 0 : (tokenCode >= 4 ? 2 : 1);
             }
 
             partitionScaffolds[i] = new WebpVp8TokenPartitionScaffold(
@@ -280,6 +287,7 @@ internal static class WebpVp8Decoder {
                 info.Size,
                 decoder.BytesConsumed,
                 tokens,
+                prevContexts,
                 tokensRead);
 
             totalTokensRead += tokensRead;
@@ -726,11 +734,18 @@ internal readonly struct WebpVp8TokenPartitions {
 }
 
 internal readonly struct WebpVp8TokenPartitionScaffold {
-    public WebpVp8TokenPartitionScaffold(int offset, int size, int bytesConsumed, int[] tokens, int tokensRead) {
+    public WebpVp8TokenPartitionScaffold(
+        int offset,
+        int size,
+        int bytesConsumed,
+        int[] tokens,
+        int[] prevContexts,
+        int tokensRead) {
         Offset = offset;
         Size = size;
         BytesConsumed = bytesConsumed;
         Tokens = tokens;
+        PrevContexts = prevContexts;
         TokensRead = tokensRead;
     }
 
@@ -738,6 +753,7 @@ internal readonly struct WebpVp8TokenPartitionScaffold {
     public int Size { get; }
     public int BytesConsumed { get; }
     public int[] Tokens { get; }
+    public int[] PrevContexts { get; }
     public int TokensRead { get; }
 }
 
