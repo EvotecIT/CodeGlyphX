@@ -14,6 +14,7 @@ internal readonly record struct DecodeEngineResult(bool Success, int Count, stri
 internal interface IQrDecodeEngine {
     string Name { get; }
     bool IsExternal { get; }
+    IReadOnlyList<string> Aliases { get; }
     DecodeEngineResult Decode(QrDecodeScenarioData data, QrPixelDecodeOptions options);
 }
 
@@ -31,6 +32,7 @@ internal static class QrDecodeEngines {
     private sealed class CodeGlyphXEngine : IQrDecodeEngine {
         public string Name => "CodeGlyphX";
         public bool IsExternal => false;
+        public IReadOnlyList<string> Aliases { get; } = new[] { "codeglyphx", "cgx", "self", "ours" };
 
         public DecodeEngineResult Decode(QrDecodeScenarioData data, QrPixelDecodeOptions options) {
             QrDecoded[] decoded;
@@ -72,6 +74,7 @@ internal static class QrDecodeEngines {
 
         public string Name => "ZXing.Net";
         public bool IsExternal => true;
+        public IReadOnlyList<string> Aliases { get; } = new[] { "zxing", "zxingnet", "zxing.net", "zx" };
 
         public DecodeEngineResult Decode(QrDecodeScenarioData data, QrPixelDecodeOptions options) {
             var result = _reader.Decode(data.Rgba, data.Width, data.Height, RGBLuminanceSource.BitmapFormat.RGBA32);
@@ -84,4 +87,3 @@ internal static class QrDecodeEngines {
     }
 #endif
 }
-
