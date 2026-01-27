@@ -20,7 +20,7 @@ public sealed class QrScreenshotDecodeTests {
             BudgetMilliseconds = 12000,
             AutoCrop = true,
             AggressiveSampling = true,
-            StylizedSampling = true,
+            StylizedSampling = false,
             EnableTileScan = true,
             TileGrid = 6
         };
