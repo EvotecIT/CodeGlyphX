@@ -975,49 +975,11 @@ public static class QrImageDecoder {
         if (cancellationToken.IsCancellationRequested) return false;
 
         var grayscale = BuildGrayscale(rgba, width, height, stride);
-        var threshold = ComputeMeanThreshold(grayscale);
-        if (!TryFindDarkBounds(grayscale, width, height, threshold, out var minX, out var minY, out var maxX, out var maxY)) {
-            return false;
-        }
-
-        var dimensionEstimate = EstimateDimension(grayscale, width, minX, minY, maxX, maxY, threshold);
-        var versionEstimate = dimensionEstimate >= 21 ? ClampInt((dimensionEstimate - 17) / 4, 1, 40) : 1;
-        var moduleSize = EstimateModuleSize(grayscale, width, height, minX, minY, maxX, maxY, threshold);
-        if (moduleSize <= 0) moduleSize = 1;
-
-        var padHalf = moduleSize / 2;
-        var pads = new[] { 0, padHalf, moduleSize, moduleSize * 2 };
-        var versionList = new List<int>(13) { versionEstimate };
-        for (var offset = 1; offset <= 6; offset++) {
-            var lower = versionEstimate - offset;
-            var upper = versionEstimate + offset;
-            if (lower >= 1) versionList.Add(lower);
-            if (upper <= 40) versionList.Add(upper);
-        }
-        var versions = versionList.ToArray();
-
-        foreach (var pad in pads) {
-            var adjMinX = ClampInt(minX - pad, 0, width - 1);
-            var adjMinY = ClampInt(minY - pad, 0, height - 1);
-            var adjMaxX = ClampInt(maxX + pad, 0, width - 1);
-            var adjMaxY = ClampInt(maxY + pad, 0, height - 1);
-
-            foreach (var version in versions) {
-                var dimension = (version * 4) + 17;
-                var modules = SampleModules(grayscale, width, height, adjMinX, adjMinY, adjMaxX, adjMaxY, threshold, dimension);
-                if (cancellationToken.IsCancellationRequested) return false;
-
-                if (QrDecoder.TryDecode(modules, out decoded, out var moduleInfo)) {
-                    info = new QrPixelDecodeInfo(1, threshold, invert: false, candidateCount: 0, candidateTriplesTried: 0, dimension, moduleInfo);
-                    return true;
-                }
-
-                var inverted = modules.Clone();
-                inverted.Invert();
-                if (QrDecoder.TryDecode(inverted, out decoded, out moduleInfo)) {
-                    info = new QrPixelDecodeInfo(1, threshold, invert: true, candidateCount: 0, candidateTriplesTried: 0, dimension, moduleInfo);
-                    return true;
-                }
+        var mean = ComputeMean(grayscale);
+        var thresholds = BuildThresholds(mean);
+        for (var t = 0; t < thresholds.Length; t++) {
+            if (TryDecodeWithThreshold(grayscale, width, height, thresholds[t], cancellationToken, out decoded, out info)) {
+                return true;
             }
         }
 
@@ -1075,14 +1037,27 @@ public static class QrImageDecoder {
         return gray;
     }
 
-    private static byte ComputeMeanThreshold(byte[] gray) {
+    private static int ComputeMean(byte[] gray) {
         long sum = 0;
         for (var i = 0; i < gray.Length; i++) sum += gray[i];
-        var mean = (int)(sum / Math.Max(1, gray.Length));
-        var adjusted = mean - 8;
-        if (adjusted < 0) adjusted = 0;
-        if (adjusted > 255) adjusted = 255;
-        return (byte)adjusted;
+        return (int)(sum / Math.Max(1, gray.Length));
+    }
+
+    private static byte[] BuildThresholds(int mean) {
+        var thresholds = new List<byte>(3);
+        AddThreshold(thresholds, mean - 12);
+        AddThreshold(thresholds, mean - 4);
+        AddThreshold(thresholds, mean + 4);
+        if (thresholds.Count == 0) thresholds.Add((byte)ClampByte(mean));
+        return thresholds.ToArray();
+    }
+
+    private static void AddThreshold(List<byte> thresholds, int value) {
+        var clamped = (byte)ClampByte(value);
+        for (var i = 0; i < thresholds.Count; i++) {
+            if (thresholds[i] == clamped) return;
+        }
+        thresholds.Add(clamped);
     }
 
     private static bool TryFindDarkBounds(byte[] gray, int width, int height, byte threshold, out int minX, out int minY, out int maxX, out int maxY) {
@@ -1103,6 +1078,58 @@ public static class QrImageDecoder {
         }
 
         return maxX >= minX && maxY >= minY;
+    }
+
+    private static bool TryDecodeWithThreshold(byte[] gray, int width, int height, byte threshold, CancellationToken cancellationToken, out QrDecoded decoded, out QrPixelDecodeInfo info) {
+        decoded = null!;
+        info = default;
+
+        if (!TryFindDarkBounds(gray, width, height, threshold, out var minX, out var minY, out var maxX, out var maxY)) {
+            return false;
+        }
+
+        var dimensionEstimate = EstimateDimension(gray, width, minX, minY, maxX, maxY, threshold);
+        var versionEstimate = dimensionEstimate >= 21 ? ClampInt((dimensionEstimate - 17) / 4, 1, 40) : 1;
+        var moduleSize = EstimateModuleSize(gray, width, height, minX, minY, maxX, maxY, threshold);
+        if (moduleSize <= 0) moduleSize = 1;
+
+        var padHalf = moduleSize / 2;
+        var pads = new[] { 0, padHalf, moduleSize, moduleSize * 2 };
+        var versionList = new List<int>(13) { versionEstimate };
+        for (var offset = 1; offset <= 6; offset++) {
+            var lower = versionEstimate - offset;
+            var upper = versionEstimate + offset;
+            if (lower >= 1) versionList.Add(lower);
+            if (upper <= 40) versionList.Add(upper);
+        }
+        var versions = versionList.ToArray();
+
+        foreach (var pad in pads) {
+            var adjMinX = ClampInt(minX - pad, 0, width - 1);
+            var adjMinY = ClampInt(minY - pad, 0, height - 1);
+            var adjMaxX = ClampInt(maxX + pad, 0, width - 1);
+            var adjMaxY = ClampInt(maxY + pad, 0, height - 1);
+
+            foreach (var version in versions) {
+                var dimension = (version * 4) + 17;
+                var modules = SampleModules(gray, width, height, adjMinX, adjMinY, adjMaxX, adjMaxY, threshold, dimension);
+                if (cancellationToken.IsCancellationRequested) return false;
+
+                if (QrDecoder.TryDecode(modules, out decoded, out var moduleInfo)) {
+                    info = new QrPixelDecodeInfo(1, threshold, invert: false, candidateCount: 0, candidateTriplesTried: 0, dimension, moduleInfo);
+                    return true;
+                }
+
+                var inverted = modules.Clone();
+                inverted.Invert();
+                if (QrDecoder.TryDecode(inverted, out decoded, out moduleInfo)) {
+                    info = new QrPixelDecodeInfo(1, threshold, invert: true, candidateCount: 0, candidateTriplesTried: 0, dimension, moduleInfo);
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     private static int EstimateDimension(byte[] gray, int width, int minX, int minY, int maxX, int maxY, byte threshold) {
@@ -1207,6 +1234,12 @@ public static class QrImageDecoder {
     private static int ClampInt(int value, int min, int max) {
         if (value < min) return min;
         if (value > max) return max;
+        return value;
+    }
+
+    private static int ClampByte(int value) {
+        if (value < 0) return 0;
+        if (value > 255) return 255;
         return value;
     }
 
