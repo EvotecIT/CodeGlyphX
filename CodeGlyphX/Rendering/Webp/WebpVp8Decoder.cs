@@ -30,6 +30,7 @@ internal static class WebpVp8Decoder {
         _ = TryReadControlHeader(payload, out _);
         _ = TryReadFrameHeader(payload, out _);
         _ = TryReadPartitionLayout(payload, out _);
+        _ = TryReadTokenPartitions(payload, out _);
 
         // Parsing-only scaffold for now.
         width = header.Width;
@@ -192,6 +193,39 @@ internal static class WebpVp8Decoder {
             dctDataOffset,
             dctSizes,
             payload.Length - dctDataOffset);
+        return true;
+    }
+
+    internal static bool TryReadTokenPartitions(ReadOnlySpan<byte> payload, out WebpVp8TokenPartitions partitions) {
+        partitions = default;
+        if (!TryReadPartitionLayout(payload, out var layout)) return false;
+        if (layout.DctPartitionSizes.Length == 0) return false;
+
+        var infos = new WebpVp8TokenPartitionInfo[layout.DctPartitionSizes.Length];
+        var offset = layout.DctDataOffset;
+        long sum = 0;
+
+        for (var i = 0; i < infos.Length; i++) {
+            var size = layout.DctPartitionSizes[i];
+            if (size < 0) return false;
+
+            var endLong = (long)offset + size;
+            if (endLong > payload.Length) return false;
+            if (endLong > int.MaxValue) return false;
+
+            var slice = payload.Slice(offset, size);
+            if (slice.Length < 2) return false;
+
+            var decoder = new WebpVp8BoolDecoder(slice);
+            if (!decoder.TryReadBool(128, out _)) return false;
+
+            infos[i] = new WebpVp8TokenPartitionInfo(offset, size, decoder.BytesConsumed);
+
+            offset = (int)endLong;
+            sum += size;
+        }
+
+        partitions = new WebpVp8TokenPartitions(layout.DctDataOffset, infos, (int)sum);
         return true;
     }
 
@@ -579,4 +613,28 @@ internal readonly struct WebpVp8PartitionLayout {
     public int DctDataOffset { get; }
     public int[] DctPartitionSizes { get; }
     public int DctBytesAvailable { get; }
+}
+
+internal readonly struct WebpVp8TokenPartitionInfo {
+    public WebpVp8TokenPartitionInfo(int offset, int size, int headerBytesConsumed) {
+        Offset = offset;
+        Size = size;
+        HeaderBytesConsumed = headerBytesConsumed;
+    }
+
+    public int Offset { get; }
+    public int Size { get; }
+    public int HeaderBytesConsumed { get; }
+}
+
+internal readonly struct WebpVp8TokenPartitions {
+    public WebpVp8TokenPartitions(int dataOffset, WebpVp8TokenPartitionInfo[] partitions, int totalBytes) {
+        DataOffset = dataOffset;
+        Partitions = partitions;
+        TotalBytes = totalBytes;
+    }
+
+    public int DataOffset { get; }
+    public WebpVp8TokenPartitionInfo[] Partitions { get; }
+    public int TotalBytes { get; }
 }
