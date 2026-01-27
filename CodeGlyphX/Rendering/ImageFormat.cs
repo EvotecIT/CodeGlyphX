@@ -60,4 +60,8 @@ public enum ImageFormat {
     /// ICO image (embedded PNG/BMP).
     /// </summary>
     Ico,
+    /// <summary>
+    /// WebP image (decoded via native libwebp when available).
+    /// </summary>
+    Webp,
 }
