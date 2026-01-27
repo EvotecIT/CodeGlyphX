@@ -2,6 +2,12 @@
 
 This list contains **only work we still want to do** (no already‑done items).
 
+## Recently completed (for context)
+- Benchmark controls + filters for quick vs full runs, plus report clarity/metadata.
+- net472 parity documentation (feature matrix + guidance).
+- Added stylized art decode pack to scenario runs with pass‑rate + timing summaries.
+- CI: PR website build check (static output) before merge.
+
 ## Now — Benchmarks & Clarity (days → weeks)
 - Benchmark scenarios: extend **stress + realism packs** (more scaled/resampled UI shots, higher noise/antialias, long payloads, quiet‑zone variants).
 - Decoder robustness: close remaining heavy-illustration failures in `Assets/DecodingSamples` (targets: qr-art-facebook-splash-grid.png, qr-art-montage-grid.png, qr-art-stripe-eye-grid.png, qr-art-drip-variants.png, qr-art-solid-bg-grid.png, qr-art-gear-illustration-grid.png).
