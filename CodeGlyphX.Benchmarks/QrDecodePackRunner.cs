@@ -133,7 +133,7 @@ internal static class QrDecodePackRunner {
         remainingArgs = remaining.ToArray();
         if (!runRequested) return false;
 
-        var resolvedMode = mode ?? QrPackMode.Quick;
+        var resolvedMode = mode ?? ResolveModeFromBenchQuickEnv() ?? QrPackMode.Quick;
         var resolvedIterations = iterations ?? (resolvedMode == QrPackMode.Quick ? 3 : 5);
         var resolvedMinIterMs = minIterMs ?? (resolvedMode == QrPackMode.Quick ? 400 : 800);
         var resolvedOpsCap = opsCap ?? 12;
@@ -588,6 +588,20 @@ internal static class QrDecodePackRunner {
     private static QrPackMode ParseMode(string? value) {
         if (string.Equals(value, "full", StringComparison.OrdinalIgnoreCase)) return QrPackMode.Full;
         return QrPackMode.Quick;
+    }
+
+    private static QrPackMode? ResolveModeFromBenchQuickEnv() {
+        var benchQuick = Environment.GetEnvironmentVariable("BENCH_QUICK");
+        if (string.IsNullOrWhiteSpace(benchQuick)) return null;
+        if (string.Equals(benchQuick, "true", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(benchQuick, "1", StringComparison.OrdinalIgnoreCase)) {
+            return QrPackMode.Quick;
+        }
+        if (string.Equals(benchQuick, "false", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(benchQuick, "0", StringComparison.OrdinalIgnoreCase)) {
+            return QrPackMode.Full;
+        }
+        return null;
     }
 
     private sealed class ReportModel {
