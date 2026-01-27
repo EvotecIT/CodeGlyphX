@@ -31,6 +31,49 @@ public static partial class QrPngRenderer {
         return false;
     }
 
+    private static int GetEyeIndex(int ex, int ey, int size) {
+        if (ex == 0 && ey == 0) return 0; // top-left
+        if (ex == size - 7 && ey == 0) return 1; // top-right
+        if (ex == 0 && ey == size - 7) return 2; // bottom-left
+        return -1;
+    }
+
+    private static Rgba32 GetEyeOuterColor(QrPngRenderOptions opts, int eyeIndex) {
+        var eye = opts.Eyes;
+        if (eye is null) return opts.Foreground;
+        if (eyeIndex is >= 0 and <= 2 && eye.OuterColors is { Length: 3 } colors) {
+            return colors[eyeIndex];
+        }
+        return eye.OuterColor ?? opts.Foreground;
+    }
+
+    private static Rgba32 GetEyeInnerColor(QrPngRenderOptions opts, int eyeIndex) {
+        var eye = opts.Eyes;
+        if (eye is null) return opts.Foreground;
+        if (eyeIndex is >= 0 and <= 2 && eye.InnerColors is { Length: 3 } colors) {
+            return colors[eyeIndex];
+        }
+        return eye.InnerColor ?? opts.Foreground;
+    }
+
+    private static QrPngGradientOptions? GetEyeOuterGradient(QrPngRenderOptions opts, int eyeIndex) {
+        var eye = opts.Eyes;
+        if (eye is null) return null;
+        if (eyeIndex is >= 0 and <= 2 && eye.OuterGradients is { Length: 3 } gradients) {
+            return gradients[eyeIndex];
+        }
+        return eye.OuterGradient;
+    }
+
+    private static QrPngGradientOptions? GetEyeInnerGradient(QrPngRenderOptions opts, int eyeIndex) {
+        var eye = opts.Eyes;
+        if (eye is null) return null;
+        if (eyeIndex is >= 0 and <= 2 && eye.InnerGradients is { Length: 3 } gradients) {
+            return gradients[eyeIndex];
+        }
+        return eye.InnerGradient;
+    }
+
     private static bool IsInEye(int x, int y, int ex, int ey) {
         return x >= ex && x < ex + 7 && y >= ey && y < ey + 7;
     }
@@ -78,10 +121,12 @@ public static partial class QrPngRenderer {
         var dotX = x0 + (outerSize - dotScaled) / 2;
         var dotY = y0 + (outerSize - dotScaled) / 2;
 
-        var outerColor = eye.OuterColor ?? opts.Foreground;
-        var innerColor = eye.InnerColor ?? opts.Foreground;
-        var outerGradient = eye.OuterGradient;
-        var innerGradient = eye.InnerGradient;
+        var size = moduleSize > 0 ? qrSizePx / moduleSize : 0;
+        var eyeIndex = GetEyeIndex(ex, ey, size);
+        var outerColor = GetEyeOuterColor(opts, eyeIndex);
+        var innerColor = GetEyeInnerColor(opts, eyeIndex);
+        var outerGradient = GetEyeOuterGradient(opts, eyeIndex);
+        var innerGradient = GetEyeInnerGradient(opts, eyeIndex);
         var qrX0 = qrOriginX;
         var qrY0 = qrOriginY;
         var qrX1 = qrOriginX + qrSizePx;
@@ -1318,11 +1363,24 @@ public static partial class QrPngRenderer {
             BackgroundGradient = canvas.BackgroundGradient,
             Pattern = ScalePattern(canvas.Pattern, scale),
             Splash = ScaleSplash(canvas.Splash, scale),
+            Halo = ScaleHalo(canvas.Halo, scale),
+            Vignette = ScaleVignette(canvas.Vignette, scale),
+            Grain = ScaleGrain(canvas.Grain, scale),
             BorderPx = canvas.BorderPx * scale,
             BorderColor = canvas.BorderColor,
             ShadowOffsetX = canvas.ShadowOffsetX * scale,
             ShadowOffsetY = canvas.ShadowOffsetY * scale,
             ShadowColor = canvas.ShadowColor
+        };
+    }
+
+    private static QrPngCanvasHaloOptions? ScaleHalo(QrPngCanvasHaloOptions? halo, int scale) {
+        if (halo is null) return null;
+        return new QrPngCanvasHaloOptions {
+            Color = halo.Color,
+            RadiusPx = Math.Max(0, halo.RadiusPx * scale),
+            ProtectQrArea = halo.ProtectQrArea,
+            QrAreaAlphaMax = halo.QrAreaAlphaMax,
         };
     }
 
@@ -1335,11 +1393,39 @@ public static partial class QrPngRenderer {
             MinRadiusPx = Math.Max(1, splash.MinRadiusPx * scale),
             MaxRadiusPx = Math.Max(1, splash.MaxRadiusPx * scale),
             SpreadPx = Math.Max(0, splash.SpreadPx * scale),
+            Placement = splash.Placement,
+            EdgeBandPx = Math.Max(0, splash.EdgeBandPx * scale),
             Seed = splash.Seed,
             DripChance = splash.DripChance,
             DripLengthPx = Math.Max(0, splash.DripLengthPx * scale),
             DripWidthPx = Math.Max(0, splash.DripWidthPx * scale),
             ProtectQrArea = splash.ProtectQrArea,
+            QrAreaAlphaMax = splash.QrAreaAlphaMax,
+        };
+    }
+
+    private static QrPngCanvasVignetteOptions? ScaleVignette(QrPngCanvasVignetteOptions? vignette, int scale) {
+        if (vignette is null) return null;
+        return new QrPngCanvasVignetteOptions {
+            Color = vignette.Color,
+            BandPx = Math.Max(0, vignette.BandPx * scale),
+            Strength = vignette.Strength,
+            ProtectQrArea = vignette.ProtectQrArea,
+            QrAreaAlphaMax = vignette.QrAreaAlphaMax,
+        };
+    }
+
+    private static QrPngCanvasGrainOptions? ScaleGrain(QrPngCanvasGrainOptions? grain, int scale) {
+        if (grain is null) return null;
+        return new QrPngCanvasGrainOptions {
+            Color = grain.Color,
+            Density = grain.Density,
+            PixelSizePx = Math.Max(1, grain.PixelSizePx * scale),
+            AlphaJitter = grain.AlphaJitter,
+            Seed = grain.Seed,
+            BandPx = Math.Max(0, grain.BandPx * scale),
+            ProtectQrArea = grain.ProtectQrArea,
+            QrAreaAlphaMax = grain.QrAreaAlphaMax,
         };
     }
 

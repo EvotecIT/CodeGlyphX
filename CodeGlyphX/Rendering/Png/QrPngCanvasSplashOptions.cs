@@ -37,9 +37,20 @@ public sealed class QrPngCanvasSplashOptions {
     public int SpreadPx { get; set; } = 22;
 
     /// <summary>
-    /// Random seed used to place splashes.
+    /// Where splashes are placed. Defaults to <see cref="QrPngCanvasSplashPlacement.AroundQr"/>.
     /// </summary>
-    public int Seed { get; set; } = 12345;
+    public QrPngCanvasSplashPlacement Placement { get; set; } = QrPngCanvasSplashPlacement.AroundQr;
+
+    /// <summary>
+    /// Optional edge band width (in pixels) when <see cref="Placement"/> is <see cref="QrPngCanvasSplashPlacement.CanvasEdges"/>.
+    /// When 0, a sensible band is derived from splash size and spread.
+    /// </summary>
+    public int EdgeBandPx { get; set; }
+
+    /// <summary>
+    /// Random seed used to place splashes. Use 0 to auto-randomize per render.
+    /// </summary>
+    public int Seed { get; set; }
 
     /// <summary>
     /// Chance (0..1) that a splash will include a downward drip.
@@ -61,11 +72,18 @@ public sealed class QrPngCanvasSplashOptions {
     /// </summary>
     public bool ProtectQrArea { get; set; } = true;
 
+    /// <summary>
+    /// Maximum alpha allowed inside the QR area when <see cref="ProtectQrArea"/> is false.
+    /// Set to 0 to apply no alpha limit.
+    /// </summary>
+    public byte QrAreaAlphaMax { get; set; }
+
     internal void Validate() {
         if (Count < 0) throw new ArgumentOutOfRangeException(nameof(Count));
         if (MinRadiusPx < 1) throw new ArgumentOutOfRangeException(nameof(MinRadiusPx));
         if (MaxRadiusPx < MinRadiusPx) throw new ArgumentOutOfRangeException(nameof(MaxRadiusPx));
         if (SpreadPx < 0) throw new ArgumentOutOfRangeException(nameof(SpreadPx));
+        if (EdgeBandPx < 0) throw new ArgumentOutOfRangeException(nameof(EdgeBandPx));
         if (DripChance is < 0 or > 1) throw new ArgumentOutOfRangeException(nameof(DripChance));
         if (DripLengthPx < 0) throw new ArgumentOutOfRangeException(nameof(DripLengthPx));
         if (DripWidthPx < 0) throw new ArgumentOutOfRangeException(nameof(DripWidthPx));
