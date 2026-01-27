@@ -93,6 +93,11 @@ public sealed class QrEasyOptions {
     public QrRenderStyle Style { get; set; } = QrRenderStyle.Default;
 
     /// <summary>
+    /// High-level QR art options (theme + variant + intensity).
+    /// </summary>
+    public QrArtOptions? Art { get; set; }
+
+    /// <summary>
     /// Overrides the module shape (when set).
     /// </summary>
     public QrPngModuleShape? ModuleShape { get; set; }

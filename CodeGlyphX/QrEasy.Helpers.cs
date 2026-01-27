@@ -71,6 +71,11 @@ public static partial class QrEasy {
             };
         }
 
+        if (opts.Art is not null) {
+            opts.Art.Validate();
+            ApplyArt(render, opts.Art);
+        }
+
         if (opts.ModuleShape.HasValue) render.ModuleShape = opts.ModuleShape.Value;
         if (opts.ModuleScale.HasValue) render.ModuleScale = opts.ModuleScale.Value;
         if (opts.ModuleCornerRadiusPx.HasValue) render.ModuleCornerRadiusPx = opts.ModuleCornerRadiusPx.Value;
@@ -220,6 +225,7 @@ public static partial class QrEasy {
             BackgroundPattern = opts.BackgroundPattern,
             BackgroundSupersample = opts.BackgroundSupersample,
             Style = opts.Style,
+            Art = opts.Art,
             ModuleShape = opts.ModuleShape,
             ModuleScale = opts.ModuleScale,
             ModuleScaleMap = opts.ModuleScaleMap,
@@ -284,12 +290,149 @@ public static partial class QrEasy {
         };
     }
 
+    private static void ApplyArt(QrPngRenderOptions render, QrArtOptions art) {
+        var preset = SelectArtPreset(art);
+        ApplyArtDefaults(render, preset);
+        ApplyArtIntensity(render, art);
+        ApplyArtSafetyMode(render, art);
+    }
+
+    private static QrEasyOptions SelectArtPreset(QrArtOptions art) {
+        return art.Theme switch {
+            QrArtTheme.NeonGlow => art.Variant == QrArtVariant.Bold ? QrArtPresets.NeonGlowBold() : QrArtPresets.NeonGlowSafe(),
+            QrArtTheme.LiquidGlass => art.Variant == QrArtVariant.Bold ? QrArtPresets.LiquidGlassBold() : QrArtPresets.LiquidGlassSafe(),
+            QrArtTheme.ConnectedSquircleGlow => art.Variant == QrArtVariant.Bold ? QrArtPresets.ConnectedSquircleGlowBold() : QrArtPresets.ConnectedSquircleGlowSafe(),
+            QrArtTheme.CutCornerTech => art.Variant == QrArtVariant.Bold ? QrArtPresets.CutCornerTechBold() : QrArtPresets.CutCornerTechSafe(),
+            QrArtTheme.InsetRings => art.Variant == QrArtVariant.Bold ? QrArtPresets.InsetRingsBold() : QrArtPresets.InsetRingsSafe(),
+            QrArtTheme.StripeEyes => art.Variant == QrArtVariant.Bold ? QrArtPresets.StripeEyesBold() : QrArtPresets.StripeEyesSafe(),
+            QrArtTheme.PaintSplash => art.Variant switch {
+                QrArtVariant.Pastel => art.SafetyMode == QrArtSafetyMode.Bold ? QrArtPresets.PaintSplashPastelBold() : QrArtPresets.PaintSplashPastelSafe(),
+                QrArtVariant.Bold => QrArtPresets.PaintSplashBold(),
+                _ => QrArtPresets.PaintSplashSafe(),
+            },
+            _ => QrArtPresets.PaintSplashSafe(),
+        };
+    }
+
+    private static void ApplyArtDefaults(QrPngRenderOptions render, QrEasyOptions preset) {
+        render.Foreground = preset.Foreground;
+        render.Background = preset.Background;
+        if (preset.BackgroundGradient is not null) render.BackgroundGradient = preset.BackgroundGradient;
+        if (preset.BackgroundPattern is not null) render.BackgroundPattern = preset.BackgroundPattern;
+        if (preset.ModuleShape.HasValue) render.ModuleShape = preset.ModuleShape.Value;
+        if (preset.ModuleScale.HasValue) render.ModuleScale = preset.ModuleScale.Value;
+        if (preset.ModuleCornerRadiusPx.HasValue) render.ModuleCornerRadiusPx = preset.ModuleCornerRadiusPx.Value;
+        if (preset.ModuleScaleMap is not null) render.ModuleScaleMap = preset.ModuleScaleMap;
+        if (preset.ForegroundGradient is not null) render.ForegroundGradient = preset.ForegroundGradient;
+        if (preset.ForegroundPalette is not null) render.ForegroundPalette = preset.ForegroundPalette;
+        if (preset.ForegroundPattern is not null) render.ForegroundPattern = preset.ForegroundPattern;
+        if (preset.ForegroundPaletteZones is not null) render.ForegroundPaletteZones = preset.ForegroundPaletteZones;
+        if (preset.Eyes is not null) render.Eyes = preset.Eyes;
+        if (preset.Canvas is not null) render.Canvas = preset.Canvas;
+        render.ProtectFunctionalPatterns = preset.ProtectFunctionalPatterns;
+        render.ProtectQuietZone = preset.ProtectQuietZone;
+    }
+
+    private static void ApplyArtIntensity(QrPngRenderOptions render, QrArtOptions art) {
+        var t = Clamp01(art.Intensity / 100.0);
+        var scaleDelta = (t - 0.5) * 0.04;
+        render.ModuleScale = Clamp(render.ModuleScale + scaleDelta, 0.88, 1.0);
+
+        if (render.ModuleScaleMap is not null) {
+            var min = Clamp(render.ModuleScaleMap.MinScale + scaleDelta, 0.85, 1.0);
+            var max = Clamp(render.ModuleScaleMap.MaxScale + scaleDelta * 0.5, 0.9, 1.0);
+            if (min > max) min = max;
+            render.ModuleScaleMap.MinScale = min;
+            render.ModuleScaleMap.MaxScale = max;
+        }
+
+        if (render.ForegroundPattern is not null) {
+            var alphaFactor = Lerp(0.75, 1.35, t);
+            var newAlpha = ClampToByte(render.ForegroundPattern.Color.A * alphaFactor);
+            render.ForegroundPattern.Color = WithAlpha(render.ForegroundPattern.Color, newAlpha);
+            if (t > 0.66) {
+                render.ForegroundPattern.ThicknessPx = Math.Min(render.ForegroundPattern.ThicknessPx + 1, Math.Max(2, render.ForegroundPattern.SizePx / 2));
+            } else if (t < 0.33 && render.ForegroundPattern.ThicknessPx > 1) {
+                render.ForegroundPattern.ThicknessPx -= 1;
+            }
+        }
+
+        if (render.Canvas?.Splash is not null) {
+            var splash = render.Canvas.Splash;
+            splash.Count = Math.Max(0, (int)Math.Round(Lerp(splash.Count * 0.7, splash.Count * 1.6, t)));
+            splash.DripChance = Clamp(Lerp(splash.DripChance * 0.8, splash.DripChance * 1.4, t), 0, 1);
+
+            var splashAlphaFactor = Lerp(0.85, 1.25, t);
+            splash.Color = WithAlpha(splash.Color, ClampToByte(splash.Color.A * splashAlphaFactor));
+            if (splash.Colors is { Length: > 0 }) {
+                for (var i = 0; i < splash.Colors.Length; i++) {
+                    var color = splash.Colors[i];
+                    splash.Colors[i] = WithAlpha(color, ClampToByte(color.A * splashAlphaFactor));
+                }
+            }
+        }
+    }
+
+    private static void ApplyArtSafetyMode(QrPngRenderOptions render, QrArtOptions art) {
+        render.ProtectFunctionalPatterns = true;
+        render.ProtectQuietZone = true;
+        render.QuietZone = Math.Max(render.QuietZone, 4);
+
+        var minScale = art.SafetyMode switch {
+            QrArtSafetyMode.Safe => 0.94,
+            QrArtSafetyMode.Balanced => 0.9,
+            _ => 0.86,
+        };
+
+        render.ModuleScale = Math.Max(render.ModuleScale, minScale);
+        if (render.ModuleScaleMap is not null) {
+            render.ModuleScaleMap.MinScale = Math.Max(render.ModuleScaleMap.MinScale, minScale);
+            if (render.ModuleScaleMap.MinScale > render.ModuleScaleMap.MaxScale) {
+                render.ModuleScaleMap.MaxScale = render.ModuleScaleMap.MinScale;
+            }
+        }
+
+        if (render.ForegroundPattern is not null && art.SafetyMode == QrArtSafetyMode.Safe) {
+            render.ForegroundPattern.Color = WithAlpha(render.ForegroundPattern.Color, Math.Min(render.ForegroundPattern.Color.A, (byte)140));
+        }
+
+        if (render.Canvas?.Splash is not null) {
+            render.Canvas.Splash.ProtectQrArea = true;
+            if (art.SafetyMode == QrArtSafetyMode.Safe) {
+                render.Canvas.Splash.Count = Math.Min(render.Canvas.Splash.Count, 20);
+                render.Canvas.Splash.DripChance = Math.Min(render.Canvas.Splash.DripChance, 0.6);
+            }
+        }
+    }
+
     private static QrErrorCorrectionLevel GuessEcc(string payload, bool hasLogo) {
         if (hasLogo) return QrErrorCorrectionLevel.H;
         return payload.StartsWith("otpauth://", StringComparison.OrdinalIgnoreCase)
             ? QrErrorCorrectionLevel.H
             : QrErrorCorrectionLevel.M;
     }
+
+    private static double Clamp01(double value) => Clamp(value, 0, 1);
+
+    private static double Clamp(double value, double min, double max) {
+        if (value < min) return min;
+        if (value > max) return max;
+        return value;
+    }
+
+    private static byte ClampToByte(double value) {
+        if (value <= 0) return 0;
+        if (value >= 255) return 255;
+        return (byte)Math.Round(value);
+    }
+
+    private static double Lerp(double a, double b, double t) {
+        if (t <= 0) return a;
+        if (t >= 1) return b;
+        return a + (b - a) * t;
+    }
+
+    private static Rgba32 WithAlpha(Rgba32 color, byte alpha) => new(color.R, color.G, color.B, alpha);
 
     private static Rgba32 Blend(Rgba32 a, Rgba32 b, double t) {
         if (t <= 0) return a;
