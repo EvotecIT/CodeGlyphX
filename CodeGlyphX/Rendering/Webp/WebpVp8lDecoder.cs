@@ -61,18 +61,39 @@ internal static class WebpVp8lDecoder {
         var colorCache = colorCacheBits == 0 ? null : new int[colorCacheSize];
 
         // Meta prefix codes flag (1 bit). A value of 1 indicates an entropy image
-        // we cannot parse yet without full prefix-code support.
         var metaPrefixFlag = reader.ReadBits(1);
-        if (metaPrefixFlag != 0) return false;
+        if (metaPrefixFlag < 0) return false;
+
+        var prefixBits = 0;
+        var metaGroups = Array.Empty<int>();
+        var metaWidth = 0;
+        var groupCount = 1;
+        if (metaPrefixFlag != 0) {
+            var prefixBitsCode = reader.ReadBits(3);
+            if (prefixBitsCode < 0) return false;
+            prefixBits = prefixBitsCode + 2;
+
+            var blockSize = 1 << prefixBits;
+            metaWidth = (header.Width + blockSize - 1) >> prefixBits;
+            var metaHeight = (header.Height + blockSize - 1) >> prefixBits;
+            if (metaWidth <= 0 || metaHeight <= 0) return false;
+
+            if (!TryDecodeMetaImage(ref reader, metaWidth, metaHeight, out metaGroups, out groupCount)) return false;
+        }
 
         var greenAlphabetSize = GreenAlphabetBase + colorCacheSize;
-        if (!TryReadPrefixCodesGroup(ref reader, greenAlphabetSize, LiteralAlphabetSize, out var group)) return false;
+        var groups = new WebpPrefixCodesGroup[groupCount];
+        for (var i = 0; i < groupCount; i++) {
+            if (!TryReadPrefixCodesGroup(ref reader, greenAlphabetSize, LiteralAlphabetSize, out var group)) return false;
+            groups[i] = group;
+        }
 
-        if (!TryDecodeNoMeta(ref reader, header, group, colorCache, colorCacheBits, out rgba)) {
+        if (!TryDecodeImageNoMeta(ref reader, header, groups, metaGroups, metaWidth, prefixBits, colorCache, colorCacheBits, out var transformed)) {
             rgba = Array.Empty<byte>();
             return false;
         }
 
+        rgba = ConvertToRgba(transformed, header.SubtractGreenTransformUsed);
         return true;
     }
 
@@ -143,25 +164,33 @@ internal static class WebpVp8lDecoder {
         return true;
     }
 
-    private static bool TryDecodeNoMeta(
+    private static bool TryDecodeImageNoMeta(
         ref WebpBitReader reader,
         WebpVp8lHeader header,
-        WebpPrefixCodesGroup group,
+        WebpPrefixCodesGroup[] groups,
+        int[] metaGroups,
+        int metaWidth,
+        int prefixBits,
         int[]? colorCache,
         int colorCacheBits,
-        out byte[] rgba) {
-        rgba = Array.Empty<byte>();
+        out int[] transformed) {
+        transformed = Array.Empty<int>();
+        if (groups is null || groups.Length == 0) return false;
 
         var pixelCount = checked(header.Width * header.Height);
-        var transformed = new int[pixelCount];
+        var buffer = new int[pixelCount];
         var pos = 0;
         while (pos < pixelCount) {
+            var groupIndex = GetGroupIndex(pos, header.Width, groups.Length, metaGroups, metaWidth, prefixBits);
+            if (groupIndex < 0) return false;
+            var group = groups[groupIndex];
+
             var symbol = group.Green.DecodeSymbol(ref reader);
             if (symbol < 0) return false;
 
             if (symbol < LiteralAlphabetSize) {
                 if (!TryReadLiteral(ref reader, group, symbol, out var pixel)) return false;
-                transformed[pos++] = pixel;
+                buffer[pos++] = pixel;
                 InsertColorCache(colorCache, colorCacheBits, pixel);
                 continue;
             }
@@ -171,7 +200,7 @@ internal static class WebpVp8lDecoder {
                 var cacheIndex = symbol - GreenAlphabetBase;
                 if ((uint)cacheIndex >= (uint)colorCache.Length) return false;
                 var pixel = colorCache[cacheIndex];
-                transformed[pos++] = pixel;
+                buffer[pos++] = pixel;
                 InsertColorCache(colorCache, colorCacheBits, pixel);
                 continue;
             }
@@ -186,12 +215,12 @@ internal static class WebpVp8lDecoder {
             if (!TryDecodePrefixValue(ref reader, distancePrefix, out var distanceCode)) return false;
             if (!TryMapDistanceCode(distanceCode, header.Width, out var distance)) return false;
 
-            var nextPos = CopyLz77(transformed, pos, distance, length, pixelCount, colorCache, colorCacheBits);
+            var nextPos = CopyLz77(buffer, pos, distance, length, pixelCount, colorCache, colorCacheBits);
             if (nextPos < 0) return false;
             pos = nextPos;
         }
 
-        rgba = ConvertToRgba(transformed, header.SubtractGreenTransformUsed);
+        transformed = buffer;
         return true;
     }
 
@@ -237,6 +266,66 @@ internal static class WebpVp8lDecoder {
             | ((r & 0xFF) << 16)
             | ((g & 0xFF) << 8)
             | (b & 0xFF);
+    }
+
+    private static int GetGroupIndex(
+        int pos,
+        int width,
+        int groupCount,
+        int[] metaGroups,
+        int metaWidth,
+        int prefixBits) {
+        if (groupCount <= 1 || metaGroups.Length == 0) return 0;
+        if (metaWidth <= 0 || prefixBits < 0) return -1;
+
+        var x = pos % width;
+        var y = pos / width;
+        var metaX = x >> prefixBits;
+        var metaY = y >> prefixBits;
+        var metaIndex = metaY * metaWidth + metaX;
+        if ((uint)metaIndex >= (uint)metaGroups.Length) return -1;
+        var groupIndex = metaGroups[metaIndex];
+        if (groupIndex < 0 || groupIndex >= groupCount) return -1;
+        return groupIndex;
+    }
+
+    private static bool TryDecodeMetaImage(
+        ref WebpBitReader reader,
+        int expectedWidth,
+        int expectedHeight,
+        out int[] metaGroups,
+        out int groupCount) {
+        metaGroups = Array.Empty<int>();
+        groupCount = 1;
+
+        if (!TryReadHeader(ref reader, out var header)) return false;
+        if (header.Width != expectedWidth || header.Height != expectedHeight) return false;
+        if (header.TransformMask != 0) return false;
+
+        var colorCacheFlag = reader.ReadBits(1);
+        if (colorCacheFlag != 0) return false;
+        var metaPrefixFlag = reader.ReadBits(1);
+        if (metaPrefixFlag != 0) return false;
+
+        var greenAlphabetSize = GreenAlphabetBase;
+        if (!TryReadPrefixCodesGroup(ref reader, greenAlphabetSize, LiteralAlphabetSize, out var group)) return false;
+        var groups = new[] { group };
+
+        if (!TryDecodeImageNoMeta(ref reader, header, groups, metaGroups: Array.Empty<int>(), metaWidth: 0, prefixBits: 0, colorCache: null, colorCacheBits: 0, out var transformed)) {
+            return false;
+        }
+
+        var maxGroup = 0;
+        metaGroups = new int[transformed.Length];
+        for (var i = 0; i < transformed.Length; i++) {
+            var green = (transformed[i] >> 8) & 0xFF;
+            metaGroups[i] = green;
+            if (green > maxGroup) maxGroup = green;
+        }
+
+        if (maxGroup >= 256) return false;
+        groupCount = maxGroup + 1;
+        return groupCount > 0;
     }
 
     internal static int ComputeColorCacheIndex(int pixel, int cacheBits) {
