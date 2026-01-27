@@ -156,7 +156,7 @@ public static partial class QrPngRenderer {
 
                 if (!protectFunctional
                     && scaleMapInfo.HasValue
-                    && (eyeKind == EyeKind.None || (scaleMapInfo.Value.ApplyToEyes && opts.Eyes is null))) {
+                    && (eyeKind == EyeKind.None || scaleMapInfo.Value.ApplyToEyes)) {
                     var scale = ClampScale(opts.ModuleScale * GetScaleFactor(scaleMapInfo.Value, mx, my));
                     var maskInfo = GetScaleMask(scaleMaskCache!, opts.ModuleSize, opts.ModuleShape, scale, opts.ModuleCornerRadiusPx);
                     useMask = maskInfo.Mask;

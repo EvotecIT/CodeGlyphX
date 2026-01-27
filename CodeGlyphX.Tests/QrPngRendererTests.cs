@@ -352,6 +352,57 @@ public sealed class QrPngRendererTests {
     }
 
     [Fact]
+    public void Render_With_ScaleMap_ApplyToEyes_Affects_Eye_Modules() {
+        var qr = QrCodeEncoder.EncodeText("HELLO", QrErrorCorrectionLevel.H);
+
+        var scaleMap = new QrPngModuleScaleMapOptions {
+            Mode = QrPngModuleScaleMode.Checker,
+            MinScale = 0.4,
+            MaxScale = 0.4,
+            ApplyToEyes = false,
+        };
+
+        var optsNoEyes = new QrPngRenderOptions {
+            ModuleSize = 10,
+            QuietZone = 4,
+            Foreground = Rgba32.Black,
+            Background = Rgba32.White,
+            ModuleScaleMap = scaleMap,
+        };
+
+        var pngNoEyes = QrPngRenderer.Render(qr.Modules, optsNoEyes);
+        var (rgbaNoEyes, _, _, strideNoEyes) = PngTestDecoder.DecodeRgba32(pngNoEyes);
+
+        scaleMap.ApplyToEyes = true;
+        var optsEyes = new QrPngRenderOptions {
+            ModuleSize = 10,
+            QuietZone = 4,
+            Foreground = Rgba32.Black,
+            Background = Rgba32.White,
+            ModuleScaleMap = scaleMap,
+        };
+
+        var pngEyes = QrPngRenderer.Render(qr.Modules, optsEyes);
+        var (rgbaEyes, _, _, strideEyes) = PngTestDecoder.DecodeRgba32(pngEyes);
+
+        var moduleX = optsEyes.QuietZone + 1;
+        var moduleY = optsEyes.QuietZone + 0;
+        var px = moduleX * optsEyes.ModuleSize + 1;
+        var py = moduleY * optsEyes.ModuleSize + 1;
+
+        var pNoEyes = py * strideNoEyes + px * 4;
+        var pEyes = py * strideEyes + px * 4;
+
+        Assert.Equal(0, rgbaNoEyes[pNoEyes + 0]);
+        Assert.Equal(0, rgbaNoEyes[pNoEyes + 1]);
+        Assert.Equal(0, rgbaNoEyes[pNoEyes + 2]);
+
+        Assert.Equal(255, rgbaEyes[pEyes + 0]);
+        Assert.Equal(255, rgbaEyes[pEyes + 1]);
+        Assert.Equal(255, rgbaEyes[pEyes + 2]);
+    }
+
+    [Fact]
     public void Render_With_Functional_Protection_Preserves_Dark_Module_Color_And_Coverage() {
         var qr = QrCodeEncoder.EncodeText("HELLO", QrErrorCorrectionLevel.H);
         var size = qr.Size;
