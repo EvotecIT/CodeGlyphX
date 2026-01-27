@@ -37,6 +37,11 @@ public sealed class QrPngCanvasOptions {
     public QrPngCanvasSplashOptions? Splash { get; set; }
 
     /// <summary>
+    /// Optional halo/glow drawn around the QR bounds (outside by default).
+    /// </summary>
+    public QrPngCanvasHaloOptions? Halo { get; set; }
+
+    /// <summary>
     /// Border thickness in pixels (0 = no border).
     /// </summary>
     public int BorderPx { get; set; }
@@ -68,5 +73,6 @@ public sealed class QrPngCanvasOptions {
         BackgroundGradient?.Validate();
         Pattern?.Validate();
         Splash?.Validate();
+        Halo?.Validate();
     }
 }

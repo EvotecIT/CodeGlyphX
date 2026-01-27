@@ -1318,11 +1318,22 @@ public static partial class QrPngRenderer {
             BackgroundGradient = canvas.BackgroundGradient,
             Pattern = ScalePattern(canvas.Pattern, scale),
             Splash = ScaleSplash(canvas.Splash, scale),
+            Halo = ScaleHalo(canvas.Halo, scale),
             BorderPx = canvas.BorderPx * scale,
             BorderColor = canvas.BorderColor,
             ShadowOffsetX = canvas.ShadowOffsetX * scale,
             ShadowOffsetY = canvas.ShadowOffsetY * scale,
             ShadowColor = canvas.ShadowColor
+        };
+    }
+
+    private static QrPngCanvasHaloOptions? ScaleHalo(QrPngCanvasHaloOptions? halo, int scale) {
+        if (halo is null) return null;
+        return new QrPngCanvasHaloOptions {
+            Color = halo.Color,
+            RadiusPx = Math.Max(0, halo.RadiusPx * scale),
+            ProtectQrArea = halo.ProtectQrArea,
+            QrAreaAlphaMax = halo.QrAreaAlphaMax,
         };
     }
 

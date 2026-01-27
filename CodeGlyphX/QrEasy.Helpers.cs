@@ -421,6 +421,7 @@ public static partial class QrEasy {
         var hasArtHints = opts.Art is not null
             || opts.ForegroundPattern is not null
             || opts.Canvas?.Splash is not null
+            || opts.Canvas?.Halo is not null
             || paletteIsArt;
 
         if (!hasLogo && !hasArtHints) return opts;
@@ -453,6 +454,7 @@ public static partial class QrEasy {
         var hasArtHints = opts.Art is not null
             || render.ForegroundPattern is not null
             || render.Canvas?.Splash is not null
+            || render.Canvas?.Halo is not null
             || paletteIsArt;
 
         if (!hasArtHints) return;
@@ -483,6 +485,24 @@ public static partial class QrEasy {
 
         if (render.Canvas?.Splash is not null) {
             render.Canvas.Splash.ProtectQrArea = true;
+        }
+        if (render.Canvas?.Halo is not null) {
+            var halo = render.Canvas.Halo;
+            halo.ProtectQrArea = true;
+            var haloRadiusMax = safetyMode switch {
+                QrArtSafetyMode.Safe => 48,
+                QrArtSafetyMode.Balanced => 64,
+                _ => 80,
+            };
+            halo.RadiusPx = Math.Min(halo.RadiusPx, haloRadiusMax);
+            var haloAlphaCap = safetyMode switch {
+                QrArtSafetyMode.Safe => (byte)96,
+                QrArtSafetyMode.Balanced => (byte)120,
+                _ => (byte)160,
+            };
+            if (halo.QrAreaAlphaMax == 0 || halo.QrAreaAlphaMax > haloAlphaCap) {
+                halo.QrAreaAlphaMax = haloAlphaCap;
+            }
         }
 
         var report = QrArtSafety.Evaluate(qr, render);
@@ -559,6 +579,24 @@ public static partial class QrEasy {
                     var color = splash.Colors[i];
                     splash.Colors[i] = WithAlpha(color, Math.Min(color.A, (byte)96));
                 }
+            }
+        }
+
+        if (render.Canvas?.Halo is not null) {
+            var halo = render.Canvas.Halo;
+            halo.ProtectQrArea = true;
+            halo.RadiusPx = safetyMode switch {
+                QrArtSafetyMode.Safe => Math.Min(halo.RadiusPx, 40),
+                QrArtSafetyMode.Balanced => Math.Min(halo.RadiusPx, 56),
+                _ => Math.Min(halo.RadiusPx, 72),
+            };
+            var alphaCap = safetyMode switch {
+                QrArtSafetyMode.Safe => (byte)80,
+                QrArtSafetyMode.Balanced => (byte)104,
+                _ => (byte)140,
+            };
+            if (halo.QrAreaAlphaMax == 0 || halo.QrAreaAlphaMax > alphaCap) {
+                halo.QrAreaAlphaMax = alphaCap;
             }
         }
     }

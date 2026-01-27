@@ -497,6 +497,21 @@ public static partial class QrPngRenderer {
             DrawCanvasFill(scanlines, widthPx, heightPx, stride, canvas, canvasX, canvasY, canvasW, canvasH, opts.ModuleSize, radius);
         }
 
+        if (canvas.Halo is { RadiusPx: > 0 } halo && halo.Color.A != 0) {
+            DrawCanvasHalo(
+                scanlines,
+                stride,
+                canvasX,
+                canvasY,
+                canvasW,
+                canvasH,
+                radius,
+                qrOffsetX,
+                qrOffsetY,
+                qrFullPx,
+                halo);
+        }
+
         if (canvas.Splash is not null && canvas.Splash.Color.A != 0 && canvas.Splash.Count > 0) {
             DrawCanvasSplash(
                 scanlines,
@@ -674,6 +689,67 @@ public static partial class QrPngRenderer {
                 qrX1,
                 qrY1,
                 qrAreaAlphaMax: 0);
+        }
+    }
+
+    private static void DrawCanvasHalo(
+        byte[] scanlines,
+        int stride,
+        int canvasX,
+        int canvasY,
+        int canvasW,
+        int canvasH,
+        int canvasRadius,
+        int qrX,
+        int qrY,
+        int qrSize,
+        QrPngCanvasHaloOptions halo) {
+        if (halo.RadiusPx <= 0 || halo.Color.A == 0) return;
+
+        var canvasX1 = canvasX + canvasW - 1;
+        var canvasY1 = canvasY + canvasH - 1;
+        var radius = Math.Max(1, halo.RadiusPx);
+        var radiusSq = radius * radius;
+        var canvasR = Math.Max(0, canvasRadius);
+        var canvasR2 = canvasR * canvasR;
+
+        var qrX0 = qrX;
+        var qrY0 = qrY;
+        var qrX1 = qrX + qrSize - 1;
+        var qrY1 = qrY + qrSize - 1;
+
+        var minX = Math.Max(canvasX, qrX0 - radius);
+        var minY = Math.Max(canvasY, qrY0 - radius);
+        var maxX = Math.Min(canvasX1, qrX1 + radius);
+        var maxY = Math.Min(canvasY1, qrY1 + radius);
+        if (minX > maxX || minY > maxY) return;
+
+        for (var y = minY; y <= maxY; y++) {
+            for (var x = minX; x <= maxX; x++) {
+                if (canvasR > 0 && !InsideRounded(x, y, canvasX, canvasY, canvasX1, canvasY1, canvasR, canvasR2)) continue;
+
+                var insideQr = x >= qrX0 && x <= qrX1 && y >= qrY0 && y <= qrY1;
+                if (insideQr && halo.ProtectQrArea) continue;
+
+                var nearestX = x < qrX0 ? qrX0 : x > qrX1 ? qrX1 : x;
+                var nearestY = y < qrY0 ? qrY0 : y > qrY1 ? qrY1 : y;
+                var dx = x - nearestX;
+                var dy = y - nearestY;
+                var distSq = dx * dx + dy * dy;
+                if (distSq > radiusSq) continue;
+
+                var dist = Math.Sqrt(distSq);
+                var t = 1.0 - dist / radius;
+                var alpha = (int)Math.Round(halo.Color.A * t * t);
+                if (alpha <= 0) continue;
+
+                if (insideQr && halo.QrAreaAlphaMax > 0 && alpha > halo.QrAreaAlphaMax) {
+                    alpha = halo.QrAreaAlphaMax;
+                }
+
+                var drawColor = new Rgba32(halo.Color.R, halo.Color.G, halo.Color.B, (byte)Math.Min(255, alpha));
+                BlendPixel(scanlines, stride, x, y, drawColor);
+            }
         }
     }
 

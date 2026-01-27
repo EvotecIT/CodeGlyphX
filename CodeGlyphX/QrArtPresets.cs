@@ -601,6 +601,13 @@ public static class QrArtPresets {
             opts.ForegroundPattern.ThicknessPx = 1;
             opts.ForegroundPattern.Color = new Rgba32(0, 140, 220, 92);
         }
+        if (opts.Canvas is not null) {
+            opts.Canvas.Halo = new QrPngCanvasHaloOptions {
+                Color = new Rgba32(0, 176, 230, 120),
+                RadiusPx = 44,
+                ProtectQrArea = true,
+            };
+        }
         return opts;
     }
 
