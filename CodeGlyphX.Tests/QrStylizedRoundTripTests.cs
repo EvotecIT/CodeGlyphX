@@ -19,6 +19,16 @@ public sealed class QrStylizedRoundTripTests {
         RoundTripLargeStylized("https://example.com/candy-checker", CreateCandyCheckerOptions(targetSize), maxDimension, budgetMs);
     }
 
+    [Fact]
+    public void QrDecode_NewArtPresets_RoundTrip() {
+        const int targetSize = 1600;
+        const int maxDimension = 1600;
+        const int budgetMs = 9000;
+
+        RoundTripLargeStylized("https://example.com/connected-melt", CreateConnectedMeltOptions(targetSize), maxDimension, budgetMs);
+        RoundTripLargeStylized("https://example.com/neon-glow", CreateNeonGlowOptions(targetSize), maxDimension, budgetMs);
+    }
+
     private static void RoundTripLargeStylized(string payload, QrEasyOptions options, int maxDimension, int budgetMs) {
         var png = RenderPng(payload, options);
         Assert.True(ImageReader.TryDecodeRgba32(png, out var rgba, out var width, out var height));
@@ -127,6 +137,101 @@ public sealed class QrStylizedRoundTripTests {
                     ThicknessPx = 1,
                     SnapToModuleSize = true,
                     ModuleStep = 2
+                }
+            }
+        };
+    }
+
+    private static QrEasyOptions CreateConnectedMeltOptions(int targetSizePx) {
+        return new QrEasyOptions {
+            ErrorCorrectionLevel = QrErrorCorrectionLevel.H,
+            TargetSizePx = targetSizePx,
+            TargetSizeIncludesQuietZone = true,
+            ModuleSize = 10,
+            QuietZone = 4,
+            Foreground = R(88, 120, 255),
+            Background = R(255, 255, 255),
+            BackgroundSupersample = 2,
+            ModuleShape = QrPngModuleShape.ConnectedRounded,
+            ModuleScale = 0.9,
+            ModuleScaleMap = new QrPngModuleScaleMapOptions {
+                Mode = QrPngModuleScaleMode.Radial,
+                MinScale = 0.86,
+                MaxScale = 1.0,
+                RingSize = 2,
+            },
+            ForegroundPalette = new QrPngPaletteOptions {
+                Mode = QrPngPaletteMode.Cycle,
+                RingSize = 2,
+                ApplyToEyes = false,
+                Colors = new[] { R(88, 120, 255), R(120, 96, 255), R(88, 210, 255) }
+            },
+            Eyes = new QrPngEyeOptions {
+                UseFrame = true,
+                FrameStyle = QrPngEyeFrameStyle.Target,
+                OuterShape = QrPngModuleShape.Rounded,
+                InnerShape = QrPngModuleShape.Circle,
+                OuterColor = R(88, 120, 255),
+                InnerColor = R(88, 210, 255),
+                OuterCornerRadiusPx = 6,
+                InnerCornerRadiusPx = 4,
+            },
+            Canvas = new QrPngCanvasOptions {
+                PaddingPx = 24,
+                CornerRadiusPx = 26,
+                BackgroundGradient = new QrPngGradientOptions {
+                    Type = QrPngGradientType.DiagonalDown,
+                    StartColor = R(14, 18, 42),
+                    EndColor = R(28, 20, 76),
+                }
+            }
+        };
+    }
+
+    private static QrEasyOptions CreateNeonGlowOptions(int targetSizePx) {
+        return new QrEasyOptions {
+            ErrorCorrectionLevel = QrErrorCorrectionLevel.H,
+            TargetSizePx = targetSizePx,
+            TargetSizeIncludesQuietZone = true,
+            ModuleSize = 10,
+            QuietZone = 4,
+            Foreground = R(0, 255, 240),
+            Background = R(255, 255, 255),
+            BackgroundSupersample = 2,
+            ModuleShape = QrPngModuleShape.Dot,
+            ModuleScale = 0.9,
+            ModuleScaleMap = new QrPngModuleScaleMapOptions {
+                Mode = QrPngModuleScaleMode.Radial,
+                MinScale = 0.82,
+                MaxScale = 1.0,
+                RingSize = 2,
+            },
+            ForegroundPalette = new QrPngPaletteOptions {
+                Mode = QrPngPaletteMode.Cycle,
+                RingSize = 2,
+                ApplyToEyes = false,
+                Colors = new[] { R(0, 255, 240), R(0, 170, 255), R(255, 92, 255) }
+            },
+            Eyes = new QrPngEyeOptions {
+                UseFrame = true,
+                FrameStyle = QrPngEyeFrameStyle.Glow,
+                OuterShape = QrPngModuleShape.Rounded,
+                InnerShape = QrPngModuleShape.Circle,
+                OuterColor = R(0, 255, 240),
+                InnerColor = R(255, 92, 255),
+                OuterCornerRadiusPx = 6,
+                InnerCornerRadiusPx = 4,
+                GlowRadiusPx = 30,
+                GlowAlpha = 130,
+                GlowColor = R(0, 200, 255, 200),
+            },
+            Canvas = new QrPngCanvasOptions {
+                PaddingPx = 24,
+                CornerRadiusPx = 26,
+                BackgroundGradient = new QrPngGradientOptions {
+                    Type = QrPngGradientType.DiagonalDown,
+                    StartColor = R(8, 10, 28),
+                    EndColor = R(28, 18, 64),
                 }
             }
         };

@@ -397,6 +397,92 @@ public sealed class QrPngRendererTests {
     }
 
     [Fact]
+    public void Render_With_Eye_Glow_Adds_Halo_On_Light_Modules_Near_Eye() {
+        var qr = QrCodeEncoder.EncodeText("HELLO", QrErrorCorrectionLevel.H);
+        var size = qr.Size;
+
+        var baseEyes = new QrPngEyeOptions {
+            UseFrame = true,
+            FrameStyle = QrPngEyeFrameStyle.Single,
+            OuterShape = QrPngModuleShape.Rounded,
+            InnerShape = QrPngModuleShape.Circle,
+            OuterColor = new Rgba32(0, 220, 255),
+            InnerColor = new Rgba32(0, 220, 255),
+            OuterCornerRadiusPx = 6,
+            InnerCornerRadiusPx = 4,
+        };
+
+        var glowEyes = new QrPngEyeOptions {
+            UseFrame = true,
+            FrameStyle = QrPngEyeFrameStyle.Glow,
+            OuterShape = baseEyes.OuterShape,
+            InnerShape = baseEyes.InnerShape,
+            OuterColor = baseEyes.OuterColor,
+            InnerColor = baseEyes.InnerColor,
+            OuterCornerRadiusPx = baseEyes.OuterCornerRadiusPx,
+            InnerCornerRadiusPx = baseEyes.InnerCornerRadiusPx,
+            GlowRadiusPx = 40,
+            GlowAlpha = 140,
+        };
+
+        var optsBase = new QrPngRenderOptions {
+            ModuleSize = 8,
+            QuietZone = 4,
+            Foreground = Rgba32.Black,
+            Background = Rgba32.White,
+            Eyes = baseEyes,
+        };
+
+        var optsGlow = new QrPngRenderOptions {
+            ModuleSize = optsBase.ModuleSize,
+            QuietZone = optsBase.QuietZone,
+            Foreground = optsBase.Foreground,
+            Background = optsBase.Background,
+            Eyes = glowEyes,
+        };
+
+        var pngBase = QrPngRenderer.Render(qr.Modules, optsBase);
+        var (rgbaBase, _, _, strideBase) = PngTestDecoder.DecodeRgba32(pngBase);
+        var pngGlow = QrPngRenderer.Render(qr.Modules, optsGlow);
+        var (rgbaGlow, _, _, strideGlow) = PngTestDecoder.DecodeRgba32(pngGlow);
+
+        var found = false;
+        var mx = 0;
+        var my = 0;
+        var searchMax = Math.Min(size - 1, 14);
+        for (var y = 0; y <= searchMax && !found; y++) {
+            for (var x = 7; x <= searchMax; x++) {
+                if (qr.Modules[x, y]) continue;
+                mx = x;
+                my = y;
+                found = true;
+                break;
+            }
+        }
+        Assert.True(found);
+
+        var px = (optsBase.QuietZone + mx) * optsBase.ModuleSize + optsBase.ModuleSize / 2;
+        var py = (optsBase.QuietZone + my) * optsBase.ModuleSize + optsBase.ModuleSize / 2;
+
+        var pBase = py * strideBase + px * 4;
+        var pGlow = py * strideGlow + px * 4;
+
+        var baseR = rgbaBase[pBase + 0];
+        var baseG = rgbaBase[pBase + 1];
+        var baseB = rgbaBase[pBase + 2];
+        var glowR = rgbaGlow[pGlow + 0];
+        var glowG = rgbaGlow[pGlow + 1];
+        var glowB = rgbaGlow[pGlow + 2];
+
+        var baseIsWhite = baseR == 255 && baseG == 255 && baseB == 255;
+        var glowDiffers = baseR != glowR || baseG != glowG || baseB != glowB;
+        var glowNotWhite = glowR != 255 || glowG != 255 || glowB != 255;
+
+        Assert.True(baseIsWhite);
+        Assert.True(glowDiffers && glowNotWhite);
+    }
+
+    [Fact]
     public void Render_With_ScaleMap_ApplyToEyes_Affects_Eye_Modules() {
         var qr = QrCodeEncoder.EncodeText("HELLO", QrErrorCorrectionLevel.H);
 

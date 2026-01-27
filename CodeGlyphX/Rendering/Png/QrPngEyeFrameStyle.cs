@@ -24,4 +24,8 @@ public enum QrPngEyeFrameStyle {
     /// Bold badge frame with thicker border.
     /// </summary>
     Badge,
+    /// <summary>
+    /// Single frame with a soft glow halo behind it.
+    /// </summary>
+    Glow,
 }

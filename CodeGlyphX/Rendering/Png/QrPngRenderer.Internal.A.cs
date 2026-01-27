@@ -233,9 +233,9 @@ public static partial class QrPngRenderer {
         }
 
         if (useFrame && opts.Eyes is not null) {
-            DrawEyeFrame(buffer, widthPx, heightPx, stride, opts, qrOffsetX, qrOffsetY, 0, 0);
-            DrawEyeFrame(buffer, widthPx, heightPx, stride, opts, qrOffsetX, qrOffsetY, size - 7, 0);
-            DrawEyeFrame(buffer, widthPx, heightPx, stride, opts, qrOffsetX, qrOffsetY, 0, size - 7);
+            DrawEyeFrame(buffer, widthPx, heightPx, stride, opts, qrOffsetX, qrOffsetY, qrOriginX, qrOriginY, qrSizePx, 0, 0);
+            DrawEyeFrame(buffer, widthPx, heightPx, stride, opts, qrOffsetX, qrOffsetY, qrOriginX, qrOriginY, qrSizePx, size - 7, 0);
+            DrawEyeFrame(buffer, widthPx, heightPx, stride, opts, qrOffsetX, qrOffsetY, qrOriginX, qrOriginY, qrSizePx, 0, size - 7);
         }
 
         if (opts.Logo is not null) {

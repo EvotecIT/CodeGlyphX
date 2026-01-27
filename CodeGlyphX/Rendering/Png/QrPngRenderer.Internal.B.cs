@@ -50,6 +50,9 @@ public static partial class QrPngRenderer {
         QrPngRenderOptions opts,
         int offsetX,
         int offsetY,
+        int qrOriginX,
+        int qrOriginY,
+        int qrSizePx,
         int ex,
         int ey) {
         var moduleSize = opts.ModuleSize;
@@ -79,8 +82,37 @@ public static partial class QrPngRenderer {
         var innerColor = eye.InnerColor ?? opts.Foreground;
         var outerGradient = eye.OuterGradient;
         var innerGradient = eye.InnerGradient;
+        var qrX0 = qrOriginX;
+        var qrY0 = qrOriginY;
+        var qrX1 = qrOriginX + qrSizePx;
+        var qrY1 = qrOriginY + qrSizePx;
 
         switch (eye.FrameStyle) {
+            case QrPngEyeFrameStyle.Glow:
+                var glowRadiusPx = eye.GlowRadiusPx > 0 ? eye.GlowRadiusPx : Math.Max(moduleSize * 2, moduleSize + 2);
+                var glowBase = eye.GlowColor ?? outerColor;
+                var glowAlpha = (int)eye.GlowAlpha;
+                if (glowBase.A < 255) {
+                    glowAlpha = glowAlpha * glowBase.A / 255;
+                }
+                if (glowRadiusPx > 0 && glowAlpha > 0) {
+                    var glowColor = new Rgba32(glowBase.R, glowBase.G, glowBase.B, (byte)Math.Min(255, glowAlpha));
+                    DrawEyeGlow(
+                        scanlines,
+                        widthPx,
+                        heightPx,
+                        stride,
+                        outerX,
+                        outerY,
+                        outerScaled,
+                        glowRadiusPx,
+                        glowColor,
+                        qrX0,
+                        qrY0,
+                        qrX1,
+                        qrY1);
+                }
+                goto default;
             case QrPngEyeFrameStyle.DoubleRing:
             case QrPngEyeFrameStyle.Target:
                 if (outerGradient is null) {
@@ -156,6 +188,57 @@ public static partial class QrPngRenderer {
                     }
                 }
                 break;
+        }
+    }
+
+    private static void DrawEyeGlow(
+        byte[] scanlines,
+        int widthPx,
+        int heightPx,
+        int stride,
+        int x,
+        int y,
+        int size,
+        int glowRadiusPx,
+        Rgba32 glowColor,
+        int qrX0,
+        int qrY0,
+        int qrX1,
+        int qrY1) {
+        if (size <= 0 || glowRadiusPx <= 0 || glowColor.A == 0) return;
+
+        var rectX0 = x;
+        var rectY0 = y;
+        var rectX1 = x + size - 1;
+        var rectY1 = y + size - 1;
+
+        var minX = Math.Max(qrX0, rectX0 - glowRadiusPx);
+        var minY = Math.Max(qrY0, rectY0 - glowRadiusPx);
+        var maxX = Math.Min(qrX1 - 1, rectX1 + glowRadiusPx);
+        var maxY = Math.Min(qrY1 - 1, rectY1 + glowRadiusPx);
+        if (minX > maxX || minY > maxY) return;
+
+        minX = Math.Max(0, minX);
+        minY = Math.Max(0, minY);
+        maxX = Math.Min(widthPx - 1, maxX);
+        maxY = Math.Min(heightPx - 1, maxY);
+        if (minX > maxX || minY > maxY) return;
+
+        for (var py = minY; py <= maxY; py++) {
+            for (var px = minX; px <= maxX; px++) {
+                var cx = px < rectX0 ? rectX0 : px > rectX1 ? rectX1 : px;
+                var cy = py < rectY0 ? rectY0 : py > rectY1 ? rectY1 : py;
+                var dx = px - cx;
+                var dy = py - cy;
+                var dist = Math.Sqrt(dx * dx + dy * dy);
+                if (dist > glowRadiusPx) continue;
+
+                var t = 1.0 - dist / glowRadiusPx;
+                var a = (int)Math.Round(glowColor.A * t);
+                if (a <= 0) continue;
+
+                BlendPixel(scanlines, stride, px, py, new Rgba32(glowColor.R, glowColor.G, glowColor.B, (byte)Math.Min(255, a)));
+            }
         }
     }
 
