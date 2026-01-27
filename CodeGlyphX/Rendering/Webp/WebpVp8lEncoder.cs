@@ -11,7 +11,6 @@ internal static class WebpVp8lEncoder {
     private const int LiteralAlphabetSize = 256;
     private const int LengthPrefixCount = 24;
     private const int GreenAlphabetBase = LiteralAlphabetSize + LengthPrefixCount; // 280
-    private const int DistanceAlphabetSize = 40;
     private const int MaxPrefixBits = 15;
 
     public static bool TryEncodeLiteralRgba32(
@@ -62,18 +61,13 @@ internal static class WebpVp8lEncoder {
         bitWriter.WriteBits(0, 1);
         bitWriter.WriteBits(0, 1);
 
-        // Prefix codes group: simple codes only (one or two symbols).
-        WriteSimplePrefixCode(bitWriter, uniqueG);
-        WriteSimplePrefixCode(bitWriter, uniqueR);
-        WriteSimplePrefixCode(bitWriter, uniqueB);
-        WriteSimplePrefixCode(bitWriter, uniqueA);
+        // Prefix codes group: per-channel choose simple codes when possible,
+        // otherwise fall back to a fixed normal-prefix-code layout.
+        if (!TryWriteChannelPrefixCode(bitWriter, GreenAlphabetBase, uniqueG, fixedLiteralCount: LiteralAlphabetSize, out var greenBook, out reason)) return false;
+        if (!TryWriteChannelPrefixCode(bitWriter, LiteralAlphabetSize, uniqueR, fixedLiteralCount: LiteralAlphabetSize, out var redBook, out reason)) return false;
+        if (!TryWriteChannelPrefixCode(bitWriter, LiteralAlphabetSize, uniqueB, fixedLiteralCount: LiteralAlphabetSize, out var blueBook, out reason)) return false;
+        if (!TryWriteChannelPrefixCode(bitWriter, LiteralAlphabetSize, uniqueA, fixedLiteralCount: LiteralAlphabetSize, out var alphaBook, out reason)) return false;
         WriteSimplePrefixCode(bitWriter, symbols: new byte[] { 0 }); // distance
-
-        // Build canonical codebooks for encoding symbols.
-        if (!TryBuildSimpleCodebook(GreenAlphabetBase, uniqueG, out var greenBook, out reason)) return false;
-        if (!TryBuildSimpleCodebook(LiteralAlphabetSize, uniqueR, out var redBook, out reason)) return false;
-        if (!TryBuildSimpleCodebook(LiteralAlphabetSize, uniqueB, out var blueBook, out reason)) return false;
-        if (!TryBuildSimpleCodebook(LiteralAlphabetSize, uniqueA, out var alphaBook, out reason)) return false;
 
         // Encode literal pixels (no LZ77, no cache, no transforms).
         for (var y = 0; y < height; y++) {
@@ -129,11 +123,6 @@ internal static class WebpVp8lEncoder {
                 if (!seen[value]) {
                     seen[value] = true;
                     count++;
-                    if (count > 2) {
-                        symbols = Array.Empty<byte>();
-                        reason = "Managed VP8L encoder currently supports up to 2 unique values per channel.";
-                        return false;
-                    }
                 }
                 src += 4;
             }
@@ -155,6 +144,25 @@ internal static class WebpVp8lEncoder {
         return true;
     }
 
+    private static bool TryWriteChannelPrefixCode(
+        WebpBitWriter writer,
+        int alphabetSize,
+        ReadOnlySpan<byte> uniqueSymbols,
+        int fixedLiteralCount,
+        out Codebook codebook,
+        out string reason) {
+        reason = string.Empty;
+        codebook = default;
+
+        if (uniqueSymbols.Length <= 2) {
+            WriteSimplePrefixCode(writer, uniqueSymbols);
+            return TryBuildSimpleCodebook(alphabetSize, uniqueSymbols, out codebook, out reason);
+        }
+
+        WriteFixedNormalPrefixCode(writer, alphabetSize, fixedLiteralCount);
+        return TryBuildFixedNormalCodebook(alphabetSize, fixedLiteralCount, out codebook, out reason);
+    }
+
     private static void WriteSimplePrefixCode(WebpBitWriter writer, ReadOnlySpan<byte> symbols) {
         // Simple prefix code flag.
         writer.WriteBits(1, 1);
@@ -167,6 +175,40 @@ internal static class WebpVp8lEncoder {
         writer.WriteBits(symbols[0], 8);
         if (twoSymbols != 0) {
             writer.WriteBits(symbols[1], 8);
+        }
+    }
+
+    private static void WriteFixedNormalPrefixCode(WebpBitWriter writer, int alphabetSize, int fixedLiteralCount) {
+        // Normal prefix code flag.
+        writer.WriteBits(0, 1);
+
+        // Provide 12 code-length code lengths so we can reach symbol 8 in the order.
+        const int numCodeLengthCodes = 12;
+        writer.WriteBits(numCodeLengthCodes - 4, 4);
+
+        // Code-length-code order prefix (first 12 symbols):
+        // 17, 18, 0, 1, 2, 3, 4, 5, 16, 6, 7, 8
+        // We define a trivial code-length code with just symbols {0, 8}.
+        writer.WriteBits(0, 3); // 17
+        writer.WriteBits(0, 3); // 18
+        writer.WriteBits(1, 3); // 0
+        writer.WriteBits(0, 3); // 1
+        writer.WriteBits(0, 3); // 2
+        writer.WriteBits(0, 3); // 3
+        writer.WriteBits(0, 3); // 4
+        writer.WriteBits(0, 3); // 5
+        writer.WriteBits(0, 3); // 16
+        writer.WriteBits(0, 3); // 6
+        writer.WriteBits(0, 3); // 7
+        writer.WriteBits(1, 3); // 8
+
+        // use_max_symbol = false (max symbol is full alphabet size).
+        writer.WriteBits(0, 1);
+
+        // Encode code lengths: 0 => bit 0, 8 => bit 1.
+        for (var symbol = 0; symbol < alphabetSize; symbol++) {
+            var len = symbol < fixedLiteralCount ? 8 : 0;
+            writer.WriteBits(len == 0 ? 0 : 1, 1);
         }
     }
 
@@ -201,6 +243,38 @@ internal static class WebpVp8lEncoder {
         if (nonZeroCount == 1) {
             codebook = new Codebook(Array.Empty<Codeword>(), singleSymbol: symbols[0]);
             return true;
+        }
+
+        var codes = BuildCanonicalCodewords(lengths, MaxPrefixBits);
+        codebook = new Codebook(codes, singleSymbol: -1);
+        return true;
+    }
+
+    private static bool TryBuildFixedNormalCodebook(int alphabetSize, int fixedLiteralCount, out Codebook codebook, out string reason) {
+        reason = string.Empty;
+        codebook = default;
+
+        if (alphabetSize <= 0) {
+            reason = "Alphabet size must be positive.";
+            return false;
+        }
+        if (fixedLiteralCount != LiteralAlphabetSize) {
+            reason = "Fixed normal prefix codes currently require exactly 256 literal symbols.";
+            return false;
+        }
+        if (fixedLiteralCount > alphabetSize) {
+            reason = "Fixed literal count exceeds alphabet size.";
+            return false;
+        }
+
+        var lengths = new byte[alphabetSize];
+        for (var i = 0; i < fixedLiteralCount; i++) {
+            lengths[i] = 8;
+        }
+
+        if (!WebpPrefixCode.TryBuild(lengths, MaxPrefixBits, out _)) {
+            reason = "Failed to build fixed normal prefix code.";
+            return false;
         }
 
         var codes = BuildCanonicalCodewords(lengths, MaxPrefixBits);
@@ -314,4 +388,3 @@ internal static class WebpVp8lEncoder {
         public int Length { get; }
     }
 }
-

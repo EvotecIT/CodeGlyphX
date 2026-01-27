@@ -12,7 +12,7 @@ public static class WebpWriter {
     /// <remarks>
     /// Current limitations:
     /// - No transforms or LZ77/back-references.
-    /// - Up to 2 unique values per channel (suited to binary/QR-style images).
+    /// - Uses literal-only coding with simple or fixed normal prefix codes.
     /// </remarks>
     public static byte[] WriteRgba32(int width, int height, ReadOnlySpan<byte> rgba, int stride) {
         if (WebpVp8lEncoder.TryEncodeLiteralRgba32(rgba, width, height, stride, out var webp, out var reason)) {
@@ -30,4 +30,3 @@ public static class WebpWriter {
         return WriteRgba32(width, height, rgba.AsSpan(), stride);
     }
 }
-

@@ -59,7 +59,9 @@ public static class WebpReader {
             if (fourCc == FourCcVp8 && TryReadVp8Size(chunk, out width, out height)) return true;
 
             var padded = chunkLength + (chunkLength & 1);
-            offset = dataOffset + padded;
+            var nextOffset = (long)dataOffset + padded;
+            if (nextOffset < 0 || nextOffset > riffLimit || nextOffset > int.MaxValue) return false;
+            offset = (int)nextOffset;
         }
 
         return false;
@@ -79,7 +81,7 @@ public static class WebpReader {
 
         var buffer = data.ToArray();
         if (!WebpNative.TryDecodeRgba32(buffer, out var rgba, out width, out height)) {
-            throw new FormatException("WebP decode is not available (native libwebp not found or decode failed).");
+            throw new FormatException("WebP decode failed using native libwebp (temporary fallback until managed decode is implemented).");
         }
         return rgba;
     }
@@ -140,7 +142,9 @@ public static class WebpReader {
     }
 
     private static class WebpNative {
-        public static bool IsAvailable => ProbeNativeAvailability();
+        private static readonly Lazy<bool> _isAvailable = new Lazy<bool>(ProbeNativeAvailability);
+
+        public static bool IsAvailable => _isAvailable.Value;
 
         public static bool TryDecodeRgba32(byte[] data, out byte[] rgba, out int width, out int height) {
             rgba = Array.Empty<byte>();
