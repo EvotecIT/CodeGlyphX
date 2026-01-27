@@ -23,6 +23,7 @@ internal sealed class QrDecodePackRunnerOptions {
     public required HashSet<string> Packs { get; init; }
     public required IReadOnlyList<IQrDecodeEngine> Engines { get; init; }
     public required QrReportFormats ReportFormats { get; init; }
+    public string? ReportsDirectory { get; init; }
     public required int Iterations { get; init; }
     public required int MinIterationMilliseconds { get; init; }
     public required int OpsCap { get; init; }
@@ -49,6 +50,7 @@ internal static class QrDecodePackRunner {
         int? minIterMs = null;
         int? opsCap = null;
         QrReportFormats? formats = null;
+        string? reportsDir = null;
 
         for (var i = 0; i < args.Length; i++) {
             var arg = args[i];
@@ -98,6 +100,13 @@ internal static class QrDecodePackRunner {
                 continue;
             }
 
+            if ((string.Equals(arg, "--reports-dir", StringComparison.OrdinalIgnoreCase) ||
+                 string.Equals(arg, "--reports-path", StringComparison.OrdinalIgnoreCase)) && i + 1 < args.Length) {
+                runRequested = true;
+                reportsDir = args[++i];
+                continue;
+            }
+
             if (string.Equals(arg, "--format", StringComparison.OrdinalIgnoreCase) && i + 1 < args.Length) {
                 runRequested = true;
                 formats = ParseFormats(args[++i], formats);
@@ -139,6 +148,7 @@ internal static class QrDecodePackRunner {
         var resolvedOpsCap = opsCap ?? 12;
         var externalRunsCap = resolvedMode == QrPackMode.Quick ? 2 : 3;
         var resolvedFormats = (formats ?? QrReportFormats.Text) | QrReportFormats.Text;
+        reportsDir ??= Environment.GetEnvironmentVariable("CODEGLYPHX_PACK_REPORTS_DIR");
 
         var packs = ResolvePacks(packList, resolvedMode);
         var availableEngines = QrDecodeEngines.Create();
@@ -148,6 +158,7 @@ internal static class QrDecodePackRunner {
             Packs = packs,
             Engines = engines,
             ReportFormats = resolvedFormats,
+            ReportsDirectory = reportsDir,
             Iterations = resolvedIterations,
             MinIterationMilliseconds = resolvedMinIterMs,
             OpsCap = resolvedOpsCap,
@@ -179,9 +190,17 @@ internal static class QrDecodePackRunner {
         var report = BuildReport(options, results, nowUtc);
         Console.WriteLine(report);
 
-        var reportsDir = RepoFiles.EnsureReportDirectory();
+        var hasCustomReportsDir = !string.IsNullOrWhiteSpace(options.ReportsDirectory);
+        var reportsDir = hasCustomReportsDir
+            ? Path.GetFullPath(options.ReportsDirectory!)
+            : RepoFiles.EnsureReportDirectory();
+        Directory.CreateDirectory(reportsDir);
+
+        var modeName = options.Mode.ToString().ToLowerInvariant();
         var stamp = nowUtc.ToString("yyyyMMdd-HHmmss");
-        var baseName = $"qr-decode-packs-{stamp}-{options.Mode.ToString().ToLowerInvariant()}";
+        var baseName = hasCustomReportsDir
+            ? $"qr-decode-packs-{modeName}"
+            : $"qr-decode-packs-{stamp}-{modeName}";
         var reportPath = Path.Combine(reportsDir, baseName + ".txt");
         File.WriteAllText(reportPath, report, Encoding.UTF8);
 

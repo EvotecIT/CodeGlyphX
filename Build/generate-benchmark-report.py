@@ -2,6 +2,7 @@
 import argparse
 import csv
 import datetime as dt
+import json
 import os
 import platform
 import re
@@ -663,6 +664,156 @@ def parse_mean_to_ns(value: str):
     return number * scale
 
 
+def find_pack_runner_report(artifacts_path: Path, run_mode: str):
+    pack_dir = artifacts_path / "pack-runner"
+    if not pack_dir.exists():
+        return None
+    preferred = pack_dir / f"qr-decode-packs-{run_mode}.json"
+    if preferred.exists():
+        return preferred
+    candidates = []
+    for path in pack_dir.glob(f"qr-decode-packs-*-{run_mode}.json"):
+        try:
+            mtime = path.stat().st_mtime
+        except OSError:
+            mtime = 0
+        candidates.append((mtime, path))
+    if not candidates:
+        return None
+    candidates.sort(key=lambda item: item[0], reverse=True)
+    return candidates[0][1]
+
+
+def load_pack_runner_payload(artifacts_path: Path, run_mode: str):
+    report_path = find_pack_runner_report(artifacts_path, run_mode)
+    if not report_path:
+        return None
+
+    raw = json.loads(report_path.read_text(encoding="utf-8-sig"))
+
+    def get_field(obj: dict, *names, default=None):
+        if not isinstance(obj, dict):
+            return default
+        for name in names:
+            if name in obj:
+                return obj[name]
+        return default
+
+    packs_raw = get_field(raw, "Packs", "packs", default=[]) or []
+    engines_acc: dict[str, dict] = {}
+    pack_summaries = []
+
+    for pack in packs_raw:
+        pack_name = get_field(pack, "Name", "name", default="unknown")
+        scenario_count = int(get_field(pack, "ScenarioCount", "scenarioCount", default=0) or 0)
+        engines_raw = get_field(pack, "Engines", "engines", default=[]) or []
+        engine_summaries = []
+
+        for engine in engines_raw:
+            engine_name = get_field(engine, "Name", "name", default="unknown")
+            is_external = bool(get_field(engine, "IsExternal", "isExternal", default=False))
+            runs = float(get_field(engine, "Runs", "runs", default=0) or 0)
+            decode_rate = float(get_field(engine, "DecodeRate", "decodeRate", default=0) or 0)
+            expected_rate = float(get_field(engine, "ExpectedRate", "expectedRate", default=0) or 0)
+            median_ms = float(get_field(engine, "MedianMs", "medianMs", default=0) or 0)
+            p95_ms = float(get_field(engine, "P95Ms", "p95Ms", default=0) or 0)
+
+            scenarios = get_field(engine, "Scenarios", "scenarios", default=[]) or []
+            failing_scenarios = []
+            for scenario in scenarios:
+                scenario_expected = float(get_field(scenario, "ExpectedRate", "expectedRate", default=1) or 1)
+                if scenario_expected >= 0.9999:
+                    continue
+                scenario_name = get_field(scenario, "Name", "name", default=None)
+                if scenario_name:
+                    failing_scenarios.append(scenario_name)
+
+            engine_summaries.append(
+                {
+                    "name": engine_name,
+                    "isExternal": is_external,
+                    "runs": runs,
+                    "decodeRate": decode_rate,
+                    "expectedRate": expected_rate,
+                    "medianMs": median_ms,
+                    "p95Ms": p95_ms,
+                    "failingScenarios": failing_scenarios,
+                }
+            )
+
+            acc = engines_acc.get(engine_name)
+            if not acc:
+                acc = {
+                    "name": engine_name,
+                    "isExternal": is_external,
+                    "runs": 0.0,
+                    "decodeWeighted": 0.0,
+                    "expectedWeighted": 0.0,
+                    "failingScenarios": set(),
+                    "failingPacks": set(),
+                }
+                engines_acc[engine_name] = acc
+            acc["runs"] += runs
+            acc["decodeWeighted"] += decode_rate * runs
+            acc["expectedWeighted"] += expected_rate * runs
+            if failing_scenarios:
+                acc["failingScenarios"].update(failing_scenarios)
+                acc["failingPacks"].add(pack_name)
+
+        pack_summaries.append(
+            {
+                "name": pack_name,
+                "scenarioCount": scenario_count,
+                "engines": engine_summaries,
+            }
+        )
+
+    engines_summary = []
+    for acc in engines_acc.values():
+        runs = acc["runs"] or 0.0
+        decode_rate = acc["decodeWeighted"] / runs if runs else None
+        expected_rate = acc["expectedWeighted"] / runs if runs else None
+        engines_summary.append(
+            {
+                "name": acc["name"],
+                "isExternal": acc["isExternal"],
+                "runs": runs,
+                "decodeRate": decode_rate,
+                "expectedRate": expected_rate,
+                "failingScenarios": sorted(acc["failingScenarios"]),
+                "failingPacks": sorted(acc["failingPacks"]),
+            }
+        )
+
+    def fmt_pct(value: float | None):
+        if value is None:
+            return "n/a"
+        return f"{value * 100.0:.0f}%"
+
+    engines_for_note = sorted(engines_summary, key=lambda e: (e["isExternal"], e["name"]))
+    note_bits = []
+    for engine in engines_for_note:
+        bit = f"{engine['name']} expected={fmt_pct(engine['expectedRate'])}"
+        failing = engine["failingScenarios"][:4]
+        if failing:
+            bit += " (misses: " + ", ".join(failing) + ")"
+        note_bits.append(bit)
+
+    note = None
+    if note_bits:
+        note = f"QR pack runner ({run_mode}): " + "; ".join(note_bits)
+
+    payload = {
+        "reportPath": str(report_path),
+        "generatedUtc": get_field(raw, "DateUtc", "dateUtc", default=None),
+        "mode": run_mode,
+        "packs": pack_summaries,
+        "engines": engines_for_note,
+        "note": note,
+    }
+    return payload
+
+
 def write_json(
     path: Path,
     artifacts_path: Path,
@@ -686,6 +837,7 @@ def write_json(
     baseline = build_baseline_payload(baseline_files)
     comparisons = build_comparisons_payload(compare_files)
     summary_rows, summary_items = build_summary(compare_files) if compare_files else ([], [])
+    pack_runner = load_pack_runner_payload(artifacts_path, run_mode)
 
     notes = [
         run_mode_details,
@@ -697,6 +849,8 @@ def write_json(
         "QR decode comparisons use raw RGBA32 bytes (ZXing via RGBLuminanceSource).",
         "QR decode clean uses CodeGlyphX Balanced; noisy uses CodeGlyphX Robust with aggressive sampling/limits; ZXing uses default (clean) and TryHarder (noisy).",
     ]
+    if pack_runner and pack_runner.get("note"):
+        notes.append(pack_runner["note"])
 
     payload = {
         "generatedUtc": dt.datetime.now(dt.timezone.utc).isoformat(),
@@ -724,6 +878,7 @@ def write_json(
         "summary": summary_items,
         "baseline": baseline,
         "comparisons": comparisons,
+        "packRunner": pack_runner,
     }
 
     if not path.exists():
@@ -778,6 +933,7 @@ def write_json(
         "howToRead": payload["howToRead"],
         "notes": payload["notes"],
         "summary": payload["summary"],
+        "packRunner": payload.get("packRunner"),
     }
     summary_data[os_name][run_mode] = summary_payload
     summary_path.write_text(__import__("json").dumps(summary_data, indent=2), encoding="utf-8")
