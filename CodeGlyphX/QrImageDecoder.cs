@@ -1037,6 +1037,14 @@ public static class QrImageDecoder {
         return gray;
     }
 
+    private static byte[] InvertGrayscale(byte[] gray) {
+        var inverted = new byte[gray.Length];
+        for (var i = 0; i < gray.Length; i++) {
+            inverted[i] = (byte)(255 - gray[i]);
+        }
+        return inverted;
+    }
+
     private static int ComputeMean(byte[] gray) {
         long sum = 0;
         for (var i = 0; i < gray.Length; i++) sum += gray[i];
@@ -1081,6 +1089,19 @@ public static class QrImageDecoder {
     }
 
     private static bool TryDecodeWithThreshold(byte[] gray, int width, int height, byte threshold, CancellationToken cancellationToken, out QrDecoded decoded, out QrPixelDecodeInfo info) {
+        decoded = null!;
+        info = default;
+
+        if (TryDecodeWithThresholdCore(gray, width, height, threshold, cancellationToken, out decoded, out info)) {
+            return true;
+        }
+
+        var inverted = InvertGrayscale(gray);
+        var invertedThreshold = (byte)ClampByte(255 - threshold);
+        return TryDecodeWithThresholdCore(inverted, width, height, invertedThreshold, cancellationToken, out decoded, out info);
+    }
+
+    private static bool TryDecodeWithThresholdCore(byte[] gray, int width, int height, byte threshold, CancellationToken cancellationToken, out QrDecoded decoded, out QrPixelDecodeInfo info) {
         decoded = null!;
         info = default;
 

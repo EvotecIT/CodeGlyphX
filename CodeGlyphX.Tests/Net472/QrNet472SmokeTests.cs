@@ -162,6 +162,21 @@ public sealed class QrNet472SmokeTests {
         Assert.Contains(decoded, d => d.Text == Payload);
     }
 
+    [Fact]
+    public void Net472_QrImageDecoder_Decodes_Inverted_Colors() {
+        var qr = QrCodeEncoder.EncodeText(Payload);
+        var png = QrPngRenderer.Render(qr.Modules, new QrPngRenderOptions {
+            ModuleSize = 12,
+            QuietZone = 6,
+            Foreground = new CodeGlyphX.Rendering.Png.Rgba32(255, 255, 255, 255),
+            Background = new CodeGlyphX.Rendering.Png.Rgba32(0, 0, 0, 255)
+        });
+
+        var ok = QrImageDecoder.TryDecodeImage(png, out var decoded);
+        Assert.True(ok);
+        Assert.Equal(Payload, decoded.Text);
+    }
+
     private static void AddLightNoise(byte[] rgba, int width, int height, int stride) {
         var rng = new Random(12345);
         for (var y = 0; y < height; y++) {
