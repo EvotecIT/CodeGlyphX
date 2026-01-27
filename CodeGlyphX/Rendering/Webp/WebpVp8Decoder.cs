@@ -25,6 +25,8 @@ internal static class WebpVp8Decoder {
     private const int CoeffTokenCount = 12;
     private const int BlockScaffoldBlocksPerPartition = 4;
     private const int BlockScaffoldMaxTokensPerBlock = CoefficientsPerBlock;
+    private const int IdctCospi8Sqrt2Minus1 = 20091;
+    private const int IdctSinpi8Sqrt2 = 35468;
     private const int MacroblockSize = 16;
     private const int BlockSize = 4;
     private const int MacroblockScaffoldWidth = MacroblockSize;
@@ -1164,18 +1166,70 @@ internal static class WebpVp8Decoder {
 
     private static WebpVp8BlockPixelScaffold BuildScaffoldBlockPixels(WebpVp8BlockResult result) {
         var samples = new byte[BlockSize * BlockSize];
-
-        // Very small inverse-transform placeholder: DC sets the baseline,
-        // first AC (if present) adds a tiny alternating influence.
-        var baseSample = ClampToByte(128 + (result.DequantDc / 8));
-        var acInfluence = result.DequantAc.Length > 0 ? result.DequantAc[0] / 16 : 0;
-
-        for (var i = 0; i < samples.Length; i++) {
-            var signedInfluence = (i & 1) == 0 ? acInfluence : -acInfluence;
-            samples[i] = ClampToByte(baseSample + signedInfluence);
+        var dequantizedCoefficients = new int[CoefficientsPerBlock];
+        dequantizedCoefficients[0] = result.DequantDc;
+        for (var i = 1; i < CoefficientsPerBlock; i++) {
+            dequantizedCoefficients[i] = result.DequantAc[i - 1];
         }
 
-        return new WebpVp8BlockPixelScaffold(BlockSize, BlockSize, samples, baseSample, acInfluence);
+        var residual = InverseTransform4x4(dequantizedCoefficients);
+        var baseSample = 128;
+        for (var i = 0; i < samples.Length; i++) {
+            samples[i] = ClampToByte(baseSample + residual[i]);
+        }
+
+        var acInfluence = residual.Length > 1 ? residual[1] : 0;
+        return new WebpVp8BlockPixelScaffold(BlockSize, BlockSize, samples, (byte)baseSample, acInfluence);
+    }
+
+    private static int[] InverseTransform4x4(int[] input) {
+        var output = new int[CoefficientsPerBlock];
+        var temp = new int[CoefficientsPerBlock];
+
+        for (var i = 0; i < BlockSize; i++) {
+            var ip0 = input[i];
+            var ip4 = input[i + 4];
+            var ip8 = input[i + 8];
+            var ip12 = input[i + 12];
+
+            var a1 = ip0 + ip8;
+            var b1 = ip0 - ip8;
+            var temp1 = (ip4 * IdctSinpi8Sqrt2) >> 16;
+            var temp2 = ip12 + ((ip12 * IdctCospi8Sqrt2Minus1) >> 16);
+            var c1 = temp1 - temp2;
+            temp1 = ip4 + ((ip4 * IdctCospi8Sqrt2Minus1) >> 16);
+            temp2 = (ip12 * IdctSinpi8Sqrt2) >> 16;
+            var d1 = temp1 + temp2;
+
+            temp[i] = a1 + d1;
+            temp[i + 12] = a1 - d1;
+            temp[i + 4] = b1 + c1;
+            temp[i + 8] = b1 - c1;
+        }
+
+        for (var i = 0; i < BlockSize; i++) {
+            var baseIndex = i * BlockSize;
+            var t0 = temp[baseIndex];
+            var t1 = temp[baseIndex + 1];
+            var t2 = temp[baseIndex + 2];
+            var t3 = temp[baseIndex + 3];
+
+            var a1 = t0 + t2;
+            var b1 = t0 - t2;
+            var temp1 = (t1 * IdctSinpi8Sqrt2) >> 16;
+            var temp2 = t3 + ((t3 * IdctCospi8Sqrt2Minus1) >> 16);
+            var c1 = temp1 - temp2;
+            temp1 = t1 + ((t1 * IdctCospi8Sqrt2Minus1) >> 16);
+            temp2 = (t3 * IdctSinpi8Sqrt2) >> 16;
+            var d1 = temp1 + temp2;
+
+            output[baseIndex] = (a1 + d1 + 4) >> 3;
+            output[baseIndex + 3] = (a1 - d1 + 4) >> 3;
+            output[baseIndex + 1] = (b1 + c1 + 4) >> 3;
+            output[baseIndex + 2] = (b1 - c1 + 4) >> 3;
+        }
+
+        return output;
     }
 
     private static byte ClampToByte(int value) {
