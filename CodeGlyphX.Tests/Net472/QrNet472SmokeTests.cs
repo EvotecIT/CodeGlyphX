@@ -41,5 +41,33 @@ public sealed class QrNet472SmokeTests {
         Assert.True(ok);
         Assert.Equal(Payload, decoded.Text);
     }
-}
 
+    [Fact]
+    public void Net472_QrImageDecoder_ImageOptions_ByteArray_Overload_Works() {
+        var qr = QrCodeEncoder.EncodeText(Payload);
+        var png = QrPngRenderer.Render(qr.Modules, new QrPngRenderOptions {
+            ModuleSize = 24,
+            QuietZone = 8
+        });
+
+        var imageOptions = ImageDecodeOptions.Screen(maxMilliseconds: 600, maxDimension: 900);
+        var ok = QrImageDecoder.TryDecodeImage(png, imageOptions, options: null, out var decoded);
+        Assert.True(ok);
+        Assert.Equal(Payload, decoded.Text);
+    }
+
+    [Fact]
+    public void Net472_QrImageDecoder_ImageOptions_Stream_Overload_Works() {
+        var qr = QrCodeEncoder.EncodeText(Payload);
+        var png = QrPngRenderer.Render(qr.Modules, new QrPngRenderOptions {
+            ModuleSize = 20,
+            QuietZone = 6
+        });
+
+        using var stream = new System.IO.MemoryStream(png);
+        var imageOptions = ImageDecodeOptions.Screen(maxMilliseconds: 600, maxDimension: 1000);
+        var ok = QrImageDecoder.TryDecodeImage(stream, imageOptions, options: null, out var decoded);
+        Assert.True(ok);
+        Assert.Equal(Payload, decoded.Text);
+    }
+}

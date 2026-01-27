@@ -179,8 +179,7 @@ public static class QrImageDecoder {
 #if NET8_0_OR_GREATER
         return TryDecodeImageCore(image, imageOptions, options, cancellationToken, out decoded);
 #else
-        decoded = null!;
-        return false;
+        return TryDecodeImageFallback(image, imageOptions, options, cancellationToken, out decoded, out _);
 #endif
     }
 
@@ -198,7 +197,7 @@ public static class QrImageDecoder {
 #if NET8_0_OR_GREATER
         return TryDecodeImageCore(image, imageOptions, options, cancellationToken, out decoded, out info);
 #else
-        return TryDecodeImageFallback(image, options, cancellationToken, out decoded, out info);
+        return TryDecodeImageFallback(image, imageOptions, options, cancellationToken, out decoded, out info);
 #endif
     }
 
@@ -298,7 +297,7 @@ public static class QrImageDecoder {
 #if NET8_0_OR_GREATER
         return TryDecodeImageCore(image, imageOptions, options, cancellationToken, out decoded);
 #else
-        return TryDecodeImageFallback(image.ToArray(), options, cancellationToken, out decoded, out _);
+        return TryDecodeImageFallback(image.ToArray(), imageOptions, options, cancellationToken, out decoded, out _);
 #endif
     }
 
@@ -316,7 +315,7 @@ public static class QrImageDecoder {
 #if NET8_0_OR_GREATER
         return TryDecodeImageCore(image, imageOptions, options, cancellationToken, out decoded, out info);
 #else
-        return TryDecodeImageFallback(image.ToArray(), options, cancellationToken, out decoded, out info);
+        return TryDecodeImageFallback(image.ToArray(), imageOptions, options, cancellationToken, out decoded, out info);
 #endif
     }
 
@@ -402,7 +401,7 @@ public static class QrImageDecoder {
 #if NET8_0_OR_GREATER
         return TryDecodeAllImageCore(image, imageOptions, options, cancellationToken, out decoded);
 #else
-        if (!TryDecodeImageFallback(image, options, cancellationToken, out var single, out _)) {
+        if (!TryDecodeImageFallback(image, imageOptions, options, cancellationToken, out var single, out _)) {
             decoded = Array.Empty<QrDecoded>();
             return false;
         }
@@ -482,7 +481,7 @@ public static class QrImageDecoder {
 #else
         if (stream is null) throw new ArgumentNullException(nameof(stream));
         var data = RenderIO.ReadBinary(stream);
-        return TryDecodeImageFallback(data, options, cancellationToken, out decoded, out _);
+        return TryDecodeImageFallback(data, imageOptions, options, cancellationToken, out decoded, out _);
 #endif
     }
 
@@ -504,7 +503,7 @@ public static class QrImageDecoder {
 #else
         if (stream is null) throw new ArgumentNullException(nameof(stream));
         var data = RenderIO.ReadBinary(stream);
-        return TryDecodeImageFallback(data, options, cancellationToken, out decoded, out info);
+        return TryDecodeImageFallback(data, imageOptions, options, cancellationToken, out decoded, out info);
 #endif
     }
 
@@ -541,7 +540,11 @@ public static class QrImageDecoder {
             info = DecodeResultHelpers.EnsureDimensions(info, formatKnown, width, height);
 
             if (CodeGlyphXFeatures.ForceQrFallbackForTests) {
-                if (TryDecodeFallback(rgba, width, height, width * 4, PixelFormat.Rgba32, options, token, out var decodedFallback, out _)) {
+                if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, imageOptions, token)) {
+                    return new DecodeResult<QrDecoded>(DecodeFailureReason.Cancelled, info, stopwatch.Elapsed);
+                }
+                var mergedOptions = MergeDecodeOptions(imageOptions, options);
+                if (TryDecodeFallback(rgba, width, height, width * 4, PixelFormat.Rgba32, mergedOptions, token, out var decodedFallback, out _)) {
                     return new DecodeResult<QrDecoded>(decodedFallback, info, stopwatch.Elapsed);
                 }
                 var fallbackFailure = DecodeResultHelpers.FailureForDecode(token);
@@ -669,7 +672,7 @@ public static class QrImageDecoder {
 #else
         if (stream is null) throw new ArgumentNullException(nameof(stream));
         var data = RenderIO.ReadBinary(stream);
-        if (!TryDecodeImageFallback(data, options, cancellationToken, out var single, out _)) {
+        if (!TryDecodeImageFallback(data, imageOptions, options, cancellationToken, out var single, out _)) {
             decoded = Array.Empty<QrDecoded>();
             return false;
         }
@@ -686,7 +689,7 @@ public static class QrImageDecoder {
         try {
             if (token.IsCancellationRequested) return false;
             if (CodeGlyphXFeatures.ForceQrFallbackForTests) {
-                return TryDecodeImageFallback(image, options, token, out decoded, out _);
+                return TryDecodeImageFallback(image, imageOptions, options, token, out decoded, out _);
             }
             if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) return false;
             if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, imageOptions, token)) return false;
@@ -705,7 +708,7 @@ public static class QrImageDecoder {
         try {
             if (token.IsCancellationRequested) return false;
             if (CodeGlyphXFeatures.ForceQrFallbackForTests) {
-                return TryDecodeImageFallback(image, options, token, out decoded, out info);
+                return TryDecodeImageFallback(image, imageOptions, options, token, out decoded, out info);
             }
             if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) return false;
             if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, imageOptions, token)) return false;
@@ -722,7 +725,7 @@ public static class QrImageDecoder {
         try {
             if (token.IsCancellationRequested) return false;
             if (CodeGlyphXFeatures.ForceQrFallbackForTests) {
-                return TryDecodeImageFallback(image.ToArray(), options, token, out decoded, out _);
+                return TryDecodeImageFallback(image.ToArray(), imageOptions, options, token, out decoded, out _);
             }
             if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) return false;
             if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, imageOptions, token)) return false;
@@ -740,7 +743,7 @@ public static class QrImageDecoder {
         try {
             if (token.IsCancellationRequested) return false;
             if (CodeGlyphXFeatures.ForceQrFallbackForTests) {
-                return TryDecodeImageFallback(image.ToArray(), options, token, out decoded, out info);
+                return TryDecodeImageFallback(image.ToArray(), imageOptions, options, token, out decoded, out info);
             }
             if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) return false;
             if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, imageOptions, token)) return false;
@@ -758,7 +761,7 @@ public static class QrImageDecoder {
         try {
             if (token.IsCancellationRequested) return false;
             if (CodeGlyphXFeatures.ForceQrFallbackForTests) {
-                if (!TryDecodeImageFallback(image, options, token, out var single, out _)) return false;
+                if (!TryDecodeImageFallback(image, imageOptions, options, token, out var single, out _)) return false;
                 decoded = new[] { single };
                 return true;
             }
@@ -771,6 +774,86 @@ public static class QrImageDecoder {
         }
     }
 #endif
+
+    private static bool TryDecodeImageFallback(byte[] image, ImageDecodeOptions? imageOptions, QrPixelDecodeOptions? options, CancellationToken cancellationToken, out QrDecoded decoded, out QrPixelDecodeInfo info) {
+        if (image is null) throw new ArgumentNullException(nameof(image));
+        var mergedOptions = MergeDecodeOptions(imageOptions, options);
+        var token = ApplyBudget(cancellationToken, imageOptions, mergedOptions, out var budgetCts, out var budgetScope);
+        try {
+            if (token.IsCancellationRequested) {
+                decoded = null!;
+                info = default;
+                return false;
+            }
+            return TryDecodeImageFallback(image, mergedOptions, token, out decoded, out info);
+        } finally {
+            budgetCts?.Dispose();
+            budgetScope?.Dispose();
+        }
+    }
+
+    private static QrPixelDecodeOptions? MergeDecodeOptions(ImageDecodeOptions? imageOptions, QrPixelDecodeOptions? options) {
+        if (imageOptions is null) return options;
+        if (imageOptions.MaxDimension <= 0 && imageOptions.MaxMilliseconds <= 0) return options;
+
+        var merged = options is null ? new QrPixelDecodeOptions() : CloneOptions(options);
+        if (imageOptions.MaxDimension > 0 && (merged.MaxDimension <= 0 || merged.MaxDimension > imageOptions.MaxDimension)) {
+            merged.MaxDimension = imageOptions.MaxDimension;
+        }
+        if (imageOptions.MaxDimension <= 0 && merged.MaxDimension < 0) {
+            merged.MaxDimension = 0;
+        }
+        if (imageOptions.MaxMilliseconds > 0 && merged.MaxMilliseconds <= 0) {
+            merged.MaxMilliseconds = imageOptions.MaxMilliseconds;
+        }
+        return merged;
+    }
+
+    private static QrPixelDecodeOptions CloneOptions(QrPixelDecodeOptions options) {
+        return new QrPixelDecodeOptions {
+            Profile = options.Profile,
+            MaxDimension = options.MaxDimension,
+            MaxScale = options.MaxScale,
+            MaxMilliseconds = options.MaxMilliseconds,
+            BudgetMilliseconds = options.BudgetMilliseconds,
+            AutoCrop = options.AutoCrop,
+            EnableTileScan = options.EnableTileScan,
+            TileGrid = options.TileGrid,
+            DisableTransforms = options.DisableTransforms,
+            AggressiveSampling = options.AggressiveSampling,
+            StylizedSampling = options.StylizedSampling
+        };
+    }
+
+    private static CancellationToken ApplyBudget(CancellationToken cancellationToken, ImageDecodeOptions? imageOptions, QrPixelDecodeOptions? options, out CancellationTokenSource? budgetCts, out IDisposable? budgetScope) {
+        budgetCts = null;
+        budgetScope = null;
+        var budgetMs = GetBudgetMs(imageOptions, options);
+        if (budgetMs <= 0) return cancellationToken;
+
+        budgetScope = Internal.DecodeBudget.Begin(budgetMs);
+        if (cancellationToken.CanBeCanceled) {
+            budgetCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+            budgetCts.CancelAfter(budgetMs);
+            return budgetCts.Token;
+        }
+
+        budgetCts = new CancellationTokenSource(budgetMs);
+        return budgetCts.Token;
+    }
+
+    private static int GetBudgetMs(ImageDecodeOptions? imageOptions, QrPixelDecodeOptions? options) {
+        var budgetMs = 0;
+        Consider(imageOptions?.MaxMilliseconds ?? 0, ref budgetMs);
+        Consider(options?.BudgetMilliseconds ?? 0, ref budgetMs);
+        Consider(options?.MaxMilliseconds ?? 0, ref budgetMs);
+        return budgetMs;
+    }
+
+    private static void Consider(int value, ref int budgetMs) {
+        if (value <= 0) return;
+        budgetMs = budgetMs <= 0 ? value : Math.Min(budgetMs, value);
+    }
 
     private static bool TryDecodeImageFallback(byte[] image, QrPixelDecodeOptions? options, CancellationToken cancellationToken, out QrDecoded decoded, out QrPixelDecodeInfo info) {
         if (image is null) throw new ArgumentNullException(nameof(image));
