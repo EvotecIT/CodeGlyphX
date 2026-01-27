@@ -1,4 +1,5 @@
 using System;
+using System.Buffers;
 using System.IO;
 using CodeGlyphX.Rendering;
 
@@ -1066,45 +1067,50 @@ public static partial class QrPngRenderer {
         var scaledWidth = (int)scaledWidthLong;
         var scaledHeight = (int)scaledHeightLong;
         var scaledStride = (int)scaledStrideLong;
-        var temp = new byte[(int)lengthLong];
+        var length = (int)lengthLong;
+        var temp = ArrayPool<byte>.Shared.Rent(length);
 
-        var scaledOpts = CreateScaledBackgroundOptions(opts, scale);
-        var scaledQrOffsetX = checked(qrOffsetX * scale);
-        var scaledQrOffsetY = checked(qrOffsetY * scale);
-        var scaledQrFullPx = checked(qrFullPx * scale);
+        try {
+            var scaledOpts = CreateScaledBackgroundOptions(opts, scale);
+            var scaledQrOffsetX = checked(qrOffsetX * scale);
+            var scaledQrOffsetY = checked(qrOffsetY * scale);
+            var scaledQrFullPx = checked(qrFullPx * scale);
 
-        if (scaledOpts.Canvas is null) {
-            if (scaledOpts.BackgroundGradient is null) {
-                PngRenderHelpers.FillBackground(temp, scaledWidth, scaledHeight, scaledStride, scaledOpts.Background);
+            if (scaledOpts.Canvas is null) {
+                if (scaledOpts.BackgroundGradient is null) {
+                    PngRenderHelpers.FillBackground(temp, scaledWidth, scaledHeight, scaledStride, scaledOpts.Background);
+                } else {
+                    FillBackgroundGradient(temp, scaledWidth, scaledHeight, scaledStride, scaledOpts.BackgroundGradient);
+                }
+                if (scaledOpts.BackgroundPattern is not null) {
+                    var quietZonePx = scaledOpts.QuietZone * scaledOpts.ModuleSize;
+                    var qrSizePx = Math.Max(0, scaledQrFullPx - quietZonePx * 2);
+                    DrawCanvasPattern(
+                        temp,
+                        scaledWidth,
+                        scaledHeight,
+                        scaledStride,
+                        scaledQrOffsetX,
+                        scaledQrOffsetY,
+                        scaledQrFullPx,
+                        scaledQrFullPx,
+                        scaledOpts.ModuleSize,
+                        0,
+                        quietZonePx,
+                        qrSizePx,
+                        scaledOpts.ProtectQuietZone,
+                        scaledOpts.BackgroundPattern);
+                }
             } else {
-                FillBackgroundGradient(temp, scaledWidth, scaledHeight, scaledStride, scaledOpts.BackgroundGradient);
+                PngRenderHelpers.FillBackground(temp, scaledWidth, scaledHeight, scaledStride, Rgba32.Transparent);
+                DrawCanvas(temp, scaledWidth, scaledHeight, scaledStride, scaledOpts, scaledQrOffsetX, scaledQrOffsetY, scaledQrFullPx);
+                FillQrBackground(temp, scaledWidth, scaledHeight, scaledStride, scaledOpts, scaledQrOffsetX, scaledQrOffsetY, scaledQrFullPx);
             }
-            if (scaledOpts.BackgroundPattern is not null) {
-                var quietZonePx = scaledOpts.QuietZone * scaledOpts.ModuleSize;
-                var qrSizePx = Math.Max(0, scaledQrFullPx - quietZonePx * 2);
-                DrawCanvasPattern(
-                    temp,
-                    scaledWidth,
-                    scaledHeight,
-                    scaledStride,
-                    scaledQrOffsetX,
-                    scaledQrOffsetY,
-                    scaledQrFullPx,
-                    scaledQrFullPx,
-                    scaledOpts.ModuleSize,
-                    0,
-                    quietZonePx,
-                    qrSizePx,
-                    scaledOpts.ProtectQuietZone,
-                    scaledOpts.BackgroundPattern);
-            }
-        } else {
-            PngRenderHelpers.FillBackground(temp, scaledWidth, scaledHeight, scaledStride, Rgba32.Transparent);
-            DrawCanvas(temp, scaledWidth, scaledHeight, scaledStride, scaledOpts, scaledQrOffsetX, scaledQrOffsetY, scaledQrFullPx);
-            FillQrBackground(temp, scaledWidth, scaledHeight, scaledStride, scaledOpts, scaledQrOffsetX, scaledQrOffsetY, scaledQrFullPx);
-        }
 
-        DownsampleScanlines(temp, scaledWidth, scaledHeight, scaledStride, scanlines, widthPx, heightPx, stride, scale);
+            DownsampleScanlines(temp, scaledWidth, scaledHeight, scaledStride, scanlines, widthPx, heightPx, stride, scale);
+        } finally {
+            ArrayPool<byte>.Shared.Return(temp);
+        }
     }
 
     private static QrPngRenderOptions CreateScaledBackgroundOptions(QrPngRenderOptions opts, int scale) {
