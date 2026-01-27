@@ -593,6 +593,8 @@ public static partial class QrPngRenderer {
         var maxR = Math.Max(minR, splash.MaxRadiusPx);
         var spread = Math.Max(0, splash.SpreadPx);
         var rand = new Random(splash.Seed);
+        var palette = splash.Colors;
+        var paletteLen = palette?.Length ?? 0;
 
         var bandX0 = qrX0 - spread;
         var bandX1 = qrX1 + spread;
@@ -600,6 +602,7 @@ public static partial class QrPngRenderer {
         var bandY1 = qrY1 + spread;
 
         for (var i = 0; i < splash.Count; i++) {
+            var blobColor = paletteLen > 0 ? palette![rand.Next(paletteLen)] : splash.Color;
             var blobR = NextBetween(rand, minR, maxR);
             var side = rand.Next(4);
 
@@ -633,7 +636,7 @@ public static partial class QrPngRenderer {
                 cx,
                 cy,
                 blobR,
-                splash.Color,
+                blobColor,
                 canvasX,
                 canvasY,
                 canvasX1,
@@ -661,7 +664,7 @@ public static partial class QrPngRenderer {
                     dripCy,
                     rx,
                     ry,
-                    splash.Color,
+                    blobColor,
                     canvasX,
                     canvasY,
                     canvasX1,

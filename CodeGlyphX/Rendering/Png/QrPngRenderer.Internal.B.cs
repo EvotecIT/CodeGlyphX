@@ -1330,6 +1330,7 @@ public static partial class QrPngRenderer {
         if (splash is null) return null;
         return new QrPngCanvasSplashOptions {
             Color = splash.Color,
+            Colors = splash.Colors,
             Count = splash.Count,
             MinRadiusPx = Math.Max(1, splash.MinRadiusPx * scale),
             MaxRadiusPx = Math.Max(1, splash.MaxRadiusPx * scale),

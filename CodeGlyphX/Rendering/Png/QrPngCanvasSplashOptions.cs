@@ -12,6 +12,11 @@ public sealed class QrPngCanvasSplashOptions {
     public Rgba32 Color { get; set; } = new(48, 96, 220, 92);
 
     /// <summary>
+    /// Optional multi-color splash palette. When set, a random entry is used per splash.
+    /// </summary>
+    public Rgba32[]? Colors { get; set; }
+
+    /// <summary>
     /// Number of splash blobs to draw.
     /// </summary>
     public int Count { get; set; } = 10;
@@ -64,6 +69,6 @@ public sealed class QrPngCanvasSplashOptions {
         if (DripChance is < 0 or > 1) throw new ArgumentOutOfRangeException(nameof(DripChance));
         if (DripLengthPx < 0) throw new ArgumentOutOfRangeException(nameof(DripLengthPx));
         if (DripWidthPx < 0) throw new ArgumentOutOfRangeException(nameof(DripWidthPx));
+        if (Colors is { Length: 0 }) throw new ArgumentOutOfRangeException(nameof(Colors));
     }
 }
-

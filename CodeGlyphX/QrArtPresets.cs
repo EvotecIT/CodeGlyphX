@@ -444,6 +444,12 @@ public static class QrArtPresets {
             },
             Splash = new QrPngCanvasSplashOptions {
                 Color = new Rgba32(40, 150, 210, 96),
+                Colors = new[] {
+                    new Rgba32(40, 150, 210, 92),
+                    new Rgba32(214, 72, 150, 92),
+                    new Rgba32(110, 190, 70, 92),
+                    new Rgba32(230, 96, 54, 92),
+                },
                 Count = 11,
                 MinRadiusPx = 16,
                 MaxRadiusPx = 46,
@@ -633,6 +639,15 @@ public static class QrArtPresets {
             opts.ModuleScaleMap.RingSize = 1;
         }
         if (opts.Canvas?.Splash is not null) {
+            opts.Canvas.Splash.Color = new Rgba32(40, 150, 210, 120);
+            if (opts.Canvas.Splash.Colors is not null) {
+                opts.Canvas.Splash.Colors = new[] {
+                    new Rgba32(40, 150, 210, 112),
+                    new Rgba32(214, 72, 150, 112),
+                    new Rgba32(110, 190, 70, 112),
+                    new Rgba32(230, 96, 54, 112),
+                };
+            }
             opts.Canvas.Splash.Count = 16;
             opts.Canvas.Splash.DripChance = 0.55;
             opts.Canvas.Splash.DripLengthPx = 36;
