@@ -99,6 +99,12 @@ internal static class WebpVp8lEncoder {
         var encodedWidth = widthBits == 0 ? width : (width + group - 1) >> widthBits;
         var encodedStride = checked(encodedWidth * 4);
 
+        // If indexing does not shrink the main image width, the palette
+        // transform overhead is not worth it for this minimal encoder.
+        if (encodedWidth >= width) {
+            return false;
+        }
+
         var indexedRgba = BuildIndexedImageRgba(rgba, width, height, stride, palette, widthBits, encodedWidth);
         var paletteDeltasRgba = BuildPaletteDeltaRgba(palette);
 

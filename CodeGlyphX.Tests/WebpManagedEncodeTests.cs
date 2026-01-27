@@ -65,4 +65,28 @@ public sealed class WebpManagedEncodeTests {
         Assert.Equal(height, decodedHeight);
         Assert.Equal(rgba, decoded);
     }
+
+    [Fact]
+    public void Webp_ManagedEncode_Vp8L_FallsBackWhenPaletteTooLarge() {
+        const int width = 17;
+        const int height = 1;
+        const int stride = width * 4;
+
+        var rgba = new byte[height * stride];
+        for (var x = 0; x < width; x++) {
+            var v = (byte)(x * 8);
+            var i = x * 4;
+            rgba[i] = v;
+            rgba[i + 1] = v;
+            rgba[i + 2] = v;
+            rgba[i + 3] = 255;
+        }
+
+        var webp = WebpWriter.WriteRgba32(width, height, rgba, stride);
+
+        Assert.True(ImageReader.TryDecodeRgba32(webp, out var decoded, out var decodedWidth, out var decodedHeight));
+        Assert.Equal(width, decodedWidth);
+        Assert.Equal(height, decodedHeight);
+        Assert.Equal(rgba, decoded);
+    }
 }
