@@ -101,6 +101,27 @@ internal static class QrStyleBoardExample {
                 eyes: Eye(QrPngEyeFrameStyle.Single, R(0, 133, 255), R(0, 201, 255)),
                 canvas: CanvasPattern(R(10, 24, 45), Pattern(QrPngBackgroundPatternType.Grid, R(0, 133, 255, 24))))),
 
+            new("Stripe Frame", StyleDocs("stripe-frame"), () => BaseSticker(
+                fg: R(24, 84, 220),
+                palette: Palette(QrPngPaletteMode.Cycle, 0, R(24, 84, 220), R(40, 176, 255), R(120, 90, 255)),
+                shape: QrPngModuleShape.ConnectedRounded,
+                eyes: EyeGlow(R(24, 84, 220), R(120, 90, 255), R(40, 176, 255, 170)),
+                scaleMap: ScaleMap(QrPngModuleScaleMode.Radial, 0.86, 1.0, 2222),
+                pattern: Speckle(R(255, 255, 255, 58), seed: 2323, sizePx: 7, thicknessPx: 2, variation: 0.82, density: 0.92),
+                canvas: CanvasPattern(
+                    R(246, 248, 255),
+                    Pattern(QrPngBackgroundPatternType.DiagonalStripes, R(24, 84, 220, 24), sizePx: 16, thicknessPx: 2, moduleStep: 3)))),
+
+            new("Crosshatch Pop", StyleDocs("crosshatch-pop"), () => BaseSticker(
+                fg: R(16, 22, 38),
+                palette: Palette(QrPngPaletteMode.Cycle, 0, R(16, 22, 38), R(0, 173, 181), R(255, 93, 143)),
+                shape: QrPngModuleShape.Rounded,
+                eyes: Eye(QrPngEyeFrameStyle.DoubleRing, R(16, 22, 38), R(0, 173, 181)),
+                scaleMap: ScaleMap(QrPngModuleScaleMode.Rings, 0.72, 1.0, 2424),
+                canvas: CanvasPattern(
+                    R(255, 255, 255),
+                    Pattern(QrPngBackgroundPatternType.Crosshatch, R(16, 22, 38, 18), sizePx: 18, thicknessPx: 2, moduleStep: 3)))),
+
             new("Mono Badge", StyleDocs("mono-badge"), () => BaseSticker(
                 fg: R(0, 0, 0),
                 palette: null,
@@ -478,14 +499,20 @@ internal static class QrStyleBoardExample {
         };
     }
 
-    private static QrPngBackgroundPatternOptions Pattern(QrPngBackgroundPatternType type, Rgba32 color) {
+    private static QrPngBackgroundPatternOptions Pattern(
+        QrPngBackgroundPatternType type,
+        Rgba32 color,
+        int sizePx = 14,
+        int thicknessPx = 1,
+        bool snapToModuleSize = true,
+        int moduleStep = 2) {
         return new QrPngBackgroundPatternOptions {
             Type = type,
             Color = color,
-            SizePx = 14,
-            ThicknessPx = 1,
-            SnapToModuleSize = true,
-            ModuleStep = 2
+            SizePx = sizePx,
+            ThicknessPx = thicknessPx,
+            SnapToModuleSize = snapToModuleSize,
+            ModuleStep = moduleStep,
         };
     }
 

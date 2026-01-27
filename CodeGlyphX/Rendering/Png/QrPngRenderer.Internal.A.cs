@@ -1590,6 +1590,9 @@ public static partial class QrPngRenderer {
                 var draw = pattern.Type switch {
                     QrPngBackgroundPatternType.Grid => (localX % size) < thickness || (localY % size) < thickness,
                     QrPngBackgroundPatternType.Checker => (((localX / size) + (localY / size)) & 1) == 0,
+                    QrPngBackgroundPatternType.DiagonalStripes => PositiveMod(localX + localY, size) < thickness,
+                    QrPngBackgroundPatternType.Crosshatch =>
+                        PositiveMod(localX + localY, size) < thickness || PositiveMod(localX - localY, size) < thickness,
                     _ => IsDot(localX, localY, size, thickness),
                 };
 
