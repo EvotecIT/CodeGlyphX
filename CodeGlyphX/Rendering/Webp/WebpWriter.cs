@@ -13,6 +13,7 @@ public static class WebpWriter {
     /// Current limitations:
     /// - No transforms or LZ77/back-references.
     /// - Uses literal-only coding with simple or fixed normal prefix codes.
+    /// - When the image has a palette of up to 16 colors, a color-indexing transform is used.
     /// </remarks>
     public static byte[] WriteRgba32(int width, int height, ReadOnlySpan<byte> rgba, int stride) {
         if (WebpVp8lEncoder.TryEncodeLiteralRgba32(rgba, width, height, stride, out var webp, out var reason)) {

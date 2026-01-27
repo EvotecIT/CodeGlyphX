@@ -11,6 +11,11 @@ internal sealed class WebpBitWriter {
     private int _bitPos;
 
     /// <summary>
+    /// Gets the number of bits written so far.
+    /// </summary>
+    public int BitLength => _bitPos;
+
+    /// <summary>
     /// Writes <paramref name="count"/> bits from <paramref name="value"/> LSB-first.
     /// </summary>
     public void WriteBits(int value, int count) {
@@ -28,8 +33,21 @@ internal sealed class WebpBitWriter {
     }
 
     /// <summary>
+    /// Appends the exact bit sequence from another writer.
+    /// </summary>
+    public void Append(WebpBitWriter other) {
+        if (other is null) throw new ArgumentNullException(nameof(other));
+        var bits = other._bitPos;
+        for (var i = 0; i < bits; i++) {
+            var byteIndex = i >> 3;
+            var bitIndex = i & 7;
+            var bit = (other._bytes[byteIndex] >> bitIndex) & 1;
+            WriteBits(bit, 1);
+        }
+    }
+
+    /// <summary>
     /// Returns the written bytes.
     /// </summary>
     public byte[] ToArray() => _bytes.ToArray();
 }
-

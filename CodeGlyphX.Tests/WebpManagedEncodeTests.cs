@@ -43,4 +43,26 @@ public sealed class WebpManagedEncodeTests {
         Assert.Equal(height, decodedHeight);
         Assert.Equal(rgba, decoded);
     }
+
+    [Fact]
+    public void Webp_ManagedEncode_Vp8L_ColorIndexingPalette_RoundTripsSmallPalette() {
+        const int width = 5;
+        const int height = 1;
+        const int stride = width * 4;
+
+        var rgba = new byte[] {
+            0, 0, 0, 255,
+            32, 32, 32, 255,
+            64, 64, 64, 255,
+            96, 96, 96, 255,
+            128, 128, 128, 255
+        };
+
+        var webp = WebpWriter.WriteRgba32(width, height, rgba, stride);
+
+        Assert.True(ImageReader.TryDecodeRgba32(webp, out var decoded, out var decodedWidth, out var decodedHeight));
+        Assert.Equal(width, decodedWidth);
+        Assert.Equal(height, decodedHeight);
+        Assert.Equal(rgba, decoded);
+    }
 }
