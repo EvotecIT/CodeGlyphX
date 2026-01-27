@@ -40,12 +40,23 @@ internal static class WebpVp8lDecoder {
     }
 
     private readonly struct WebpTransform {
-        public WebpTransform(WebpTransformType type, int sizeBits = 0, int width = 0, int height = 0, int[]? data = null) {
+        public WebpTransform(
+            WebpTransformType type,
+            int sizeBits = 0,
+            int width = 0,
+            int height = 0,
+            int[]? data = null,
+            int widthBits = 0,
+            int widthBefore = 0,
+            int encodedWidth = 0) {
             Type = type;
             SizeBits = sizeBits;
             Width = width;
             Height = height;
             Data = data ?? Array.Empty<int>();
+            WidthBits = widthBits;
+            WidthBefore = widthBefore;
+            EncodedWidth = encodedWidth;
         }
 
         public WebpTransformType Type { get; }
@@ -53,6 +64,9 @@ internal static class WebpVp8lDecoder {
         public int Width { get; }
         public int Height { get; }
         public int[] Data { get; }
+        public int WidthBits { get; }
+        public int WidthBefore { get; }
+        public int EncodedWidth { get; }
     }
 
     /// <summary>
@@ -70,9 +84,9 @@ internal static class WebpVp8lDecoder {
         width = header.Width;
         height = header.Height;
 
-        if (!TryReadTransforms(ref reader, width, height, out var transforms)) return false;
-        if (!TryDecodeImageCore(ref reader, width, height, depth: 0, out var transformed)) return false;
-        if (!ApplyTransforms(transformed, width, height, transforms)) return false;
+        if (!TryReadTransforms(ref reader, width, height, depth: 0, out var transforms, out var dataWidth, out var dataHeight)) return false;
+        if (!TryDecodeImageCore(ref reader, dataWidth, dataHeight, depth: 0, out var transformed)) return false;
+        if (!ApplyTransforms(ref transformed, width, height, dataWidth, dataHeight, transforms)) return false;
 
         rgba = ConvertToRgba(transformed);
         return true;
@@ -109,10 +123,21 @@ internal static class WebpVp8lDecoder {
         return true;
     }
 
-    private static bool TryReadTransforms(ref WebpBitReader reader, int width, int height, out WebpTransform[] transforms) {
+    private static bool TryReadTransforms(
+        ref WebpBitReader reader,
+        int width,
+        int height,
+        int depth,
+        out WebpTransform[] transforms,
+        out int dataWidth,
+        out int dataHeight) {
         transforms = Array.Empty<WebpTransform>();
+        dataWidth = width;
+        dataHeight = height;
         var seenMask = 0;
         var list = new List<WebpTransform>(4);
+        var currentWidth = width;
+        var currentHeight = height;
 
         while (true) {
             var hasTransform = reader.ReadBits(1);
@@ -133,20 +158,29 @@ internal static class WebpVp8lDecoder {
                     list.Add(new WebpTransform(WebpTransformType.SubtractGreen));
                     break;
                 case WebpTransformType.Predictor:
-                    if (!TryReadPredictorTransform(ref reader, width, height, out var predictor)) return false;
+                    if (!TryReadPredictorTransform(ref reader, currentWidth, currentHeight, depth, out var predictor)) return false;
                     list.Add(predictor);
                     break;
+                case WebpTransformType.Color:
+                    if (!TryReadColorTransform(ref reader, currentWidth, currentHeight, depth, out var colorTransform)) return false;
+                    list.Add(colorTransform);
+                    break;
+                case WebpTransformType.ColorIndexing:
+                    if (!TryReadColorIndexingTransform(ref reader, currentWidth, currentHeight, depth, out var indexing, out currentWidth)) return false;
+                    list.Add(indexing);
+                    break;
                 default:
-                    // Color transform and color indexing are not managed yet.
                     return false;
             }
         }
 
         transforms = list.ToArray();
+        dataWidth = currentWidth;
+        dataHeight = currentHeight;
         return true;
     }
 
-    private static bool TryReadPredictorTransform(ref WebpBitReader reader, int width, int height, out WebpTransform transform) {
+    private static bool TryReadPredictorTransform(ref WebpBitReader reader, int width, int height, int depth, out WebpTransform transform) {
         transform = default;
 
         var sizeBitsCode = reader.ReadBits(3);
@@ -158,7 +192,7 @@ internal static class WebpVp8lDecoder {
         var transformHeight = (height + blockSize - 1) >> sizeBits;
         if (transformWidth <= 0 || transformHeight <= 0) return false;
 
-        if (!TryDecodeImageNoTransforms(ref reader, transformWidth, transformHeight, depth: 1, out var predictorPixels)) return false;
+        if (!TryDecodeImageNoTransforms(ref reader, transformWidth, transformHeight, depth + 1, out var predictorPixels)) return false;
         var modes = new int[predictorPixels.Length];
         for (var i = 0; i < predictorPixels.Length; i++) {
             var green = (predictorPixels[i] >> 8) & 0xFF;
@@ -167,6 +201,86 @@ internal static class WebpVp8lDecoder {
 
         transform = new WebpTransform(WebpTransformType.Predictor, sizeBits, transformWidth, transformHeight, modes);
         return true;
+    }
+
+    private static bool TryReadColorTransform(ref WebpBitReader reader, int width, int height, int depth, out WebpTransform transform) {
+        transform = default;
+
+        var sizeBitsCode = reader.ReadBits(3);
+        if (sizeBitsCode < 0) return false;
+        var sizeBits = sizeBitsCode + 2;
+        var blockSize = 1 << sizeBits;
+
+        var transformWidth = (width + blockSize - 1) >> sizeBits;
+        var transformHeight = (height + blockSize - 1) >> sizeBits;
+        if (transformWidth <= 0 || transformHeight <= 0) return false;
+
+        if (!TryDecodeImageNoTransforms(ref reader, transformWidth, transformHeight, depth + 1, out var transformPixels)) return false;
+        transform = new WebpTransform(WebpTransformType.Color, sizeBits, transformWidth, transformHeight, transformPixels);
+        return true;
+    }
+
+    private static bool TryReadColorIndexingTransform(
+        ref WebpBitReader reader,
+        int currentWidth,
+        int currentHeight,
+        int depth,
+        out WebpTransform transform,
+        out int nextWidth) {
+        transform = default;
+        nextWidth = currentWidth;
+
+        var colorTableSizeMinus1 = reader.ReadBits(8);
+        if (colorTableSizeMinus1 < 0) return false;
+        var colorTableSize = colorTableSizeMinus1 + 1;
+        if (colorTableSize <= 0) return false;
+
+        if (!TryDecodeImageNoTransforms(ref reader, colorTableSize, 1, depth + 1, out var paletteDeltas)) return false;
+        var palette = BuildColorTableFromDeltas(paletteDeltas);
+
+        var widthBits = GetColorIndexWidthBits(colorTableSize);
+        var widthBefore = currentWidth;
+        if (widthBits > 0) {
+            var group = 1 << widthBits;
+            nextWidth = (currentWidth + group - 1) >> widthBits;
+        }
+
+        transform = new WebpTransform(
+            WebpTransformType.ColorIndexing,
+            widthBits: widthBits,
+            widthBefore: widthBefore,
+            encodedWidth: nextWidth,
+            data: palette);
+        return true;
+    }
+
+    private static int[] BuildColorTableFromDeltas(int[] paletteDeltas) {
+        var palette = new int[paletteDeltas.Length];
+
+        var a = 0;
+        var r = 0;
+        var g = 0;
+        var b = 0;
+
+        for (var i = 0; i < paletteDeltas.Length; i++) {
+            var delta = paletteDeltas[i];
+
+            a = (a + ((delta >> 24) & 0xFF)) & 0xFF;
+            r = (r + ((delta >> 16) & 0xFF)) & 0xFF;
+            g = (g + ((delta >> 8) & 0xFF)) & 0xFF;
+            b = (b + (delta & 0xFF)) & 0xFF;
+
+            palette[i] = PackArgb(a, r, g, b);
+        }
+
+        return palette;
+    }
+
+    private static int GetColorIndexWidthBits(int colorTableSize) {
+        if (colorTableSize <= 2) return 3;
+        if (colorTableSize <= 4) return 2;
+        if (colorTableSize <= 16) return 1;
+        return 0;
     }
 
     private static bool TryDecodeImageCore(ref WebpBitReader reader, int width, int height, int depth, out int[] transformed) {
@@ -331,8 +445,16 @@ internal static class WebpVp8lDecoder {
         return true;
     }
 
-    private static bool ApplyTransforms(int[] pixels, int width, int height, WebpTransform[] transforms) {
+    private static bool ApplyTransforms(
+        ref int[] pixels,
+        int originalWidth,
+        int originalHeight,
+        int dataWidth,
+        int dataHeight,
+        WebpTransform[] transforms) {
         if (transforms.Length == 0) return true;
+        var currentWidth = dataWidth;
+        var currentHeight = dataHeight;
         for (var i = transforms.Length - 1; i >= 0; i--) {
             var transform = transforms[i];
             switch (transform.Type) {
@@ -340,13 +462,21 @@ internal static class WebpVp8lDecoder {
                     ApplySubtractGreen(pixels);
                     break;
                 case WebpTransformType.Predictor:
-                    if (!ApplyPredictorTransform(pixels, width, height, transform)) return false;
+                    if (!ApplyPredictorTransform(pixels, currentWidth, currentHeight, transform)) return false;
+                    break;
+                case WebpTransformType.Color:
+                    if (!ApplyColorTransform(pixels, currentWidth, currentHeight, transform)) return false;
+                    break;
+                case WebpTransformType.ColorIndexing:
+                    if (!ApplyColorIndexingTransform(pixels, currentWidth, currentHeight, transform, out var expanded)) return false;
+                    pixels = expanded;
+                    currentWidth = transform.WidthBefore;
                     break;
                 default:
                     return false;
             }
         }
-        return true;
+        return currentWidth == originalWidth && currentHeight == originalHeight;
     }
 
     private static void ApplySubtractGreen(int[] pixels) {
@@ -382,6 +512,90 @@ internal static class WebpVp8lDecoder {
         return true;
     }
 
+    private static bool ApplyColorTransform(int[] pixels, int width, int height, WebpTransform transform) {
+        if (transform.Data.Length == 0) return false;
+        if (transform.Width <= 0 || transform.Height <= 0) return false;
+
+        var sizeBits = transform.SizeBits;
+        var transformWidth = transform.Width;
+        var elements = transform.Data;
+
+        for (var y = 0; y < height; y++) {
+            var rowStart = y * width;
+            for (var x = 0; x < width; x++) {
+                var index = rowStart + x;
+                var element = GetTransformElement(elements, transformWidth, sizeBits, x, y);
+
+                var g2r = unchecked((sbyte)(element & 0xFF));
+                var g2b = unchecked((sbyte)((element >> 8) & 0xFF));
+                var r2b = unchecked((sbyte)((element >> 16) & 0xFF));
+
+                var argb = pixels[index];
+                var a = (byte)(argb >> 24);
+                var r = (byte)(argb >> 16);
+                var g = (byte)(argb >> 8);
+                var b = (byte)argb;
+
+                r = (byte)(r + ColorTransformDelta(g2r, g));
+                b = (byte)(b + ColorTransformDelta(g2b, g));
+                b = (byte)(b + ColorTransformDelta(r2b, r));
+
+                pixels[index] = PackArgb(a, r, g, b);
+            }
+        }
+        return true;
+    }
+
+    private static bool ApplyColorIndexingTransform(
+        int[] pixels,
+        int currentWidth,
+        int currentHeight,
+        WebpTransform transform,
+        out int[] expanded) {
+        expanded = Array.Empty<int>();
+        var palette = transform.Data;
+        if (palette.Length == 0) return false;
+        if (transform.WidthBefore <= 0 || transform.EncodedWidth <= 0) return false;
+        if (currentWidth != transform.EncodedWidth) return false;
+
+        var widthBefore = transform.WidthBefore;
+        var widthBits = transform.WidthBits;
+        var pixelCount = checked(widthBefore * currentHeight);
+        var output = new int[pixelCount];
+
+        if (widthBits == 0) {
+            for (var i = 0; i < pixels.Length; i++) {
+                var green = (pixels[i] >> 8) & 0xFF;
+                if ((uint)green >= (uint)palette.Length) return false;
+                output[i] = palette[green];
+            }
+            expanded = output;
+            return true;
+        }
+
+        var indicesPerPixel = 1 << widthBits;
+        var bitsPerIndex = 8 >> widthBits;
+        var indexMask = (1 << bitsPerIndex) - 1;
+        for (var y = 0; y < currentHeight; y++) {
+            var rowStart = y * currentWidth;
+            for (var xSub = 0; xSub < currentWidth; xSub++) {
+                var argb = pixels[rowStart + xSub];
+                var packed = (argb >> 8) & 0xFF;
+                var baseX = xSub << widthBits;
+                for (var i = 0; i < indicesPerPixel; i++) {
+                    var x = baseX + i;
+                    if (x >= widthBefore) break;
+                    var index = (packed >> (i * bitsPerIndex)) & indexMask;
+                    if ((uint)index >= (uint)palette.Length) return false;
+                    output[(y * widthBefore) + x] = palette[index];
+                }
+            }
+        }
+
+        expanded = output;
+        return true;
+    }
+
     private static int GetPredictorMode(int[] modes, int transformWidth, int sizeBits, int x, int y) {
         var blockX = x >> sizeBits;
         var blockY = y >> sizeBits;
@@ -390,6 +604,14 @@ internal static class WebpVp8lDecoder {
         var mode = modes[blockIndex];
         if (mode < 0) mode = 0;
         return mode % 14;
+    }
+
+    private static int GetTransformElement(int[] elements, int transformWidth, int sizeBits, int x, int y) {
+        var blockX = x >> sizeBits;
+        var blockY = y >> sizeBits;
+        var blockIndex = blockY * transformWidth + blockX;
+        if ((uint)blockIndex >= (uint)elements.Length) return elements[0];
+        return elements[blockIndex];
     }
 
     private static int PredictPixel(int[] pixels, int width, int x, int y, int mode) {
@@ -421,6 +643,10 @@ internal static class WebpVp8lDecoder {
             13 => ClampAddSubtractHalf(Average2(left, top), topLeft),
             _ => left
         };
+    }
+
+    private static int ColorTransformDelta(sbyte transform, byte channel) {
+        return (transform * channel) >> 5;
     }
 
     private static int AddPixelsModulo(int residual, int predicted) {
