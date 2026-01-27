@@ -16,5 +16,8 @@ public enum QrPngForegroundPatternType {
     /// Two diagonal stripe sets forming a crosshatch.
     /// </summary>
     Crosshatch,
+    /// <summary>
+    /// Eight-direction starburst rays (cardinal + diagonal).
+    /// </summary>
+    Starburst,
 }
-

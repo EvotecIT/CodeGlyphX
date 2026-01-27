@@ -592,7 +592,10 @@ public static partial class QrPngRenderer {
         var minR = Math.Max(1, splash.MinRadiusPx);
         var maxR = Math.Max(minR, splash.MaxRadiusPx);
         var spread = Math.Max(0, splash.SpreadPx);
-        var rand = new Random(splash.Seed);
+        var seed = splash.Seed != 0
+            ? splash.Seed
+            : unchecked(Environment.TickCount ^ Hash(canvasX, canvasY, canvasW, canvasH));
+        var rand = new Random(seed);
         var palette = splash.Colors;
         var paletteLen = palette?.Length ?? 0;
 
@@ -850,8 +853,20 @@ public static partial class QrPngRenderer {
             QrPngForegroundPatternType.DiagonalStripes => PositiveMod(localX + localY, size) < thickness,
             QrPngForegroundPatternType.Crosshatch =>
                 PositiveMod(localX + localY, size) < thickness || PositiveMod(localX - localY, size) < thickness,
+            QrPngForegroundPatternType.Starburst => IsStarburst(localX, localY, size, thickness),
             _ => IsForegroundDot(localX, localY, size, thickness),
         };
+    }
+
+    private static bool IsStarburst(int localX, int localY, int cellSize, int thicknessPx) {
+        var center = (cellSize - 1) / 2.0;
+        var dx = Math.Abs(localX - center);
+        var dy = Math.Abs(localY - center);
+        var t = Math.Max(0.5, thicknessPx);
+
+        // Cardinal rays and diagonal rays.
+        if (dx <= t || dy <= t) return true;
+        return Math.Abs(dx - dy) <= t;
     }
 
     private static bool IsForegroundDot(int localX, int localY, int cellSize, int radiusPx) {

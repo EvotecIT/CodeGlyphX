@@ -587,6 +587,15 @@ public static class QrArtPresets {
             opts.Eyes.GlowRadiusPx = 28;
             opts.Eyes.GlowAlpha = 120;
         }
+        if (opts.ForegroundPattern is not null) {
+            opts.ForegroundPattern.Type = QrPngForegroundPatternType.Starburst;
+            opts.ForegroundPattern.ApplyToEyes = true;
+            opts.ForegroundPattern.SnapToModuleSize = true;
+            opts.ForegroundPattern.ModuleStep = 2;
+            opts.ForegroundPattern.SizePx = 8;
+            opts.ForegroundPattern.ThicknessPx = 1;
+            opts.ForegroundPattern.Color = new Rgba32(0, 140, 220, 92);
+        }
         return opts;
     }
 

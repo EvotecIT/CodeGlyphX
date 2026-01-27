@@ -37,9 +37,9 @@ public sealed class QrPngCanvasSplashOptions {
     public int SpreadPx { get; set; } = 22;
 
     /// <summary>
-    /// Random seed used to place splashes.
+    /// Random seed used to place splashes. Use 0 to auto-randomize per render.
     /// </summary>
-    public int Seed { get; set; } = 12345;
+    public int Seed { get; set; }
 
     /// <summary>
     /// Chance (0..1) that a splash will include a downward drip.
