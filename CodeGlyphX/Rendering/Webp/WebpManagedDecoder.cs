@@ -19,11 +19,18 @@ internal static class WebpManagedDecoder {
         height = 0;
         if (!WebpReader.IsWebp(data)) return false;
 
-        if (!TryFindVp8lChunk(data, out var vp8lPayload)) return false;
-        return WebpVp8lDecoder.TryDecode(vp8lPayload, out rgba, out width, out height);
+        if (TryFindChunk(data, FourCcVp8L, out var vp8lPayload)) {
+            return WebpVp8lDecoder.TryDecode(vp8lPayload, out rgba, out width, out height);
+        }
+
+        if (TryFindChunk(data, FourCcVp8, out var vp8Payload)) {
+            return WebpVp8Decoder.TryDecode(vp8Payload, out rgba, out width, out height);
+        }
+
+        return false;
     }
 
-    private static bool TryFindVp8lChunk(ReadOnlySpan<byte> data, out ReadOnlySpan<byte> payload) {
+    private static bool TryFindChunk(ReadOnlySpan<byte> data, uint targetFourCc, out ReadOnlySpan<byte> payload) {
         payload = default;
         if (data.Length < 12) return false;
 
@@ -46,7 +53,7 @@ internal static class WebpManagedDecoder {
             if (dataOffset < 0 || dataOffset > riffLimit) return false;
             if (dataOffset + chunkLength > riffLimit) return false;
 
-            if (fourCc == FourCcVp8L) {
+            if (fourCc == targetFourCc) {
                 payload = data.Slice(dataOffset, chunkLength);
                 return true;
             }
@@ -59,6 +66,7 @@ internal static class WebpManagedDecoder {
     }
 
     private const uint FourCcVp8L = 0x4C385056; // "VP8L"
+    private const uint FourCcVp8 = 0x20385056;  // "VP8 "
 
     private static uint ReadU32LE(ReadOnlySpan<byte> span, int offset) {
         if (offset < 0 || offset + 4 > span.Length) return 0;
