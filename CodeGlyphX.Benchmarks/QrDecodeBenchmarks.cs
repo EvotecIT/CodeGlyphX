@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Jobs;
 using CodeGlyphX.Rendering;
@@ -129,7 +128,7 @@ public class QrDecodeBenchmarks
 
     private static void LoadRgba(string relativePath, out byte[] rgba, out int width, out int height)
     {
-        var bytes = ReadRepoFile(relativePath);
+        var bytes = RepoFiles.ReadRepoFile(relativePath);
         if (!ImageReader.TryDecodeRgba32(bytes, out rgba, out width, out height))
         {
             throw new InvalidOperationException($"Failed to decode image '{relativePath}'.");
@@ -164,11 +163,11 @@ public class QrDecodeBenchmarks
 
         var downW = Math.Max(1, (int)Math.Round(baseWidth * 0.62));
         var downH = Math.Max(1, (int)Math.Round(baseHeight * 0.62));
-        var down = ResampleBilinear(baseRgba, baseWidth, baseHeight, downW, downH);
+        var down = QrDecodeImageOps.ResampleBilinear(baseRgba, baseWidth, baseHeight, downW, downH);
 
         var upW = Math.Max(1, (int)Math.Round(baseWidth * 1.12));
         var upH = Math.Max(1, (int)Math.Round(baseHeight * 1.12));
-        var up = ResampleBilinear(down, downW, downH, upW, upH);
+        var up = QrDecodeImageOps.ResampleBilinear(down, downW, downH, upW, upH);
 
         rgba = up;
         width = upW;
@@ -190,80 +189,4 @@ public class QrDecodeBenchmarks
         }
     }
 
-    private static byte[] ResampleBilinear(byte[] src, int srcWidth, int srcHeight, int dstWidth, int dstHeight)
-    {
-        if (srcWidth <= 0 || srcHeight <= 0 || dstWidth <= 0 || dstHeight <= 0)
-        {
-            throw new ArgumentOutOfRangeException("Invalid resample dimensions.");
-        }
-
-        var dst = new byte[checked(dstWidth * dstHeight * 4)];
-        var scaleX = srcWidth / (double)dstWidth;
-        var scaleY = srcHeight / (double)dstHeight;
-
-        for (var y = 0; y < dstHeight; y++)
-        {
-            var sy = (y + 0.5) * scaleY - 0.5;
-            if (sy < 0) sy = 0;
-            var y0 = (int)sy;
-            var y1 = Math.Min(y0 + 1, srcHeight - 1);
-            var wy = sy - y0;
-            var row0 = y0 * srcWidth * 4;
-            var row1 = y1 * srcWidth * 4;
-
-            for (var x = 0; x < dstWidth; x++)
-            {
-                var sx = (x + 0.5) * scaleX - 0.5;
-                if (sx < 0) sx = 0;
-                var x0 = (int)sx;
-                var x1 = Math.Min(x0 + 1, srcWidth - 1);
-                var wx = sx - x0;
-
-                var p00 = row0 + x0 * 4;
-                var p10 = row0 + x1 * 4;
-                var p01 = row1 + x0 * 4;
-                var p11 = row1 + x1 * 4;
-
-                var dstIndex = (y * dstWidth + x) * 4;
-                for (var c = 0; c < 4; c++)
-                {
-                    var v00 = src[p00 + c];
-                    var v10 = src[p10 + c];
-                    var v01 = src[p01 + c];
-                    var v11 = src[p11 + c];
-
-                    var v0 = v00 + (v10 - v00) * wx;
-                    var v1 = v01 + (v11 - v01) * wx;
-                    var v = v0 + (v1 - v0) * wy;
-                    var value = (int)Math.Round(v);
-                    if (value < 0) value = 0;
-                    else if (value > 255) value = 255;
-                    dst[dstIndex + c] = (byte)value;
-                }
-            }
-        }
-
-        return dst;
-    }
-
-    private static byte[] ReadRepoFile(string relativePath)
-    {
-        if (string.IsNullOrWhiteSpace(relativePath))
-        {
-            throw new ArgumentException("Path is required.", nameof(relativePath));
-        }
-
-        var dir = new DirectoryInfo(AppContext.BaseDirectory);
-        for (var i = 0; i < 10 && dir is not null; i++)
-        {
-            var candidate = Path.Combine(dir.FullName, relativePath);
-            if (File.Exists(candidate))
-            {
-                return File.ReadAllBytes(candidate);
-            }
-            dir = dir.Parent;
-        }
-
-        throw new FileNotFoundException($"Could not locate sample file '{relativePath}'.");
-    }
 }

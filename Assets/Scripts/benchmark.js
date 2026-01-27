@@ -368,6 +368,90 @@
     container.innerHTML = html;
   }
 
+  function formatPercent(value) {
+    if (value === null || value === undefined || Number.isNaN(value)) return 'n/a';
+    const pct = Math.round(value * 100);
+    return pct + '%';
+  }
+
+  function renderPackRunner(entry) {
+    const container = document.querySelector('[data-benchmark-pack-runner]');
+    if (!container) return;
+
+    const pack = entry && entry.packRunner;
+    if (!pack || !pack.packs || !pack.packs.length) {
+      container.innerHTML = '<p class="benchmark-no-data">No QR reliability data available for this mode.</p>';
+      return;
+    }
+
+    const engines = pack.engines || [];
+    const packs = pack.packs || [];
+    let html = '';
+
+    if (engines.length) {
+      html += '<div class="pack-runner-engines">';
+      engines.forEach(function(engine) {
+        const expected = formatPercent(engine.expectedRate);
+        const fails = (engine.failingScenarios || []).slice(0, 4);
+        html += '<div class="pack-engine-card' + (engine.isExternal ? ' pack-engine-external' : '') + '">';
+        html += '<div class="pack-engine-name">' + escapeHtml(engine.name || 'unknown') + '</div>';
+        html += '<div class="pack-engine-rate">expected ' + escapeHtml(expected) + '</div>';
+        if (fails.length) {
+          html += '<div class="pack-engine-fails">misses: ' + escapeHtml(fails.join(', ')) + '</div>';
+        }
+        html += '</div>';
+      });
+      html += '</div>';
+    }
+
+    const engineNames = [];
+    packs.forEach(function(p) {
+      (p.engines || []).forEach(function(e) {
+        if (engineNames.indexOf(e.name) === -1) engineNames.push(e.name);
+      });
+    });
+    engineNames.sort();
+
+    html += '<div class="pack-runner-table-wrap">';
+    html += '<table class="bench-table pack-runner-table">';
+    html += '<thead><tr><th>Pack</th><th>Scenarios</th>';
+    engineNames.forEach(function(name) {
+      html += '<th>' + escapeHtml(name) + '</th>';
+    });
+    html += '</tr></thead><tbody>';
+
+    packs.forEach(function(p) {
+      const byEngine = {};
+      (p.engines || []).forEach(function(e) { byEngine[e.name] = e; });
+
+      html += '<tr>';
+      html += '<td>' + escapeHtml(p.name || '') + '</td>';
+      html += '<td>' + escapeHtml(String(p.scenarioCount || 0)) + '</td>';
+
+      engineNames.forEach(function(name) {
+        const e = byEngine[name];
+        if (!e) {
+          html += '<td class="bench-na">-</td>';
+          return;
+        }
+        const expected = formatPercent(e.expectedRate);
+        const failClass = (e.expectedRate || 0) < 0.9999 ? 'pack-rate-bad' : 'pack-rate-good';
+        html += '<td class="' + failClass + '">';
+        html += '<div>' + escapeHtml(expected) + '</div>';
+        if (e.failingScenarios && e.failingScenarios.length) {
+          const sampleFails = e.failingScenarios.slice(0, 3).join(', ');
+          html += '<div class="bench-dim">misses: ' + escapeHtml(sampleFails) + '</div>';
+        }
+        html += '</td>';
+      });
+
+      html += '</tr>';
+    });
+
+    html += '</tbody></table></div>';
+    container.innerHTML = html;
+  }
+
   function renderNotes(entry) {
     const container = document.querySelector('[data-benchmark-notes]');
     if (!container || !entry || !entry.notes || !entry.notes.length) return;
@@ -496,6 +580,7 @@
     renderDetails(detailEntry);
     renderBaseline(detailEntry);
     renderEnvironment(entry);
+    renderPackRunner(entry);
     renderNotes(entry);
   }
 

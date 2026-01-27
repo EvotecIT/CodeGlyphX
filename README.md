@@ -182,7 +182,7 @@ Runs wherever .NET runs (Windows, Linux, macOS). WPF controls are Windows-only.
 Latest benchmark tables are generated into `BENCHMARK.md` (and `Assets/Data/benchmark*.json`).
 Benchmarks below were run on 2026-01-19 (Linux Ubuntu 24.04, Ryzen 9 9950X, .NET 8.0.22). Your results will vary.
 Benchmarks run on identical hardware with default settings.
-Quick runs use fewer iterations but include the same scenario list as full runs.
+Quick runs use fewer iterations but include the same scenario list as full runs (for BenchmarkDotNet tables). The QR pack runner uses a smaller quick pack set and adds art/stylized packs in full mode.
 
 ### QR (Encode)
 
