@@ -154,47 +154,16 @@ internal static class WebpVp8lEncoder {
         writer.WriteBits(0, 1);
         writer.WriteBits(0, 1);
 
-        if (!TryCollectUniqueChannelValues(rgba, width, height, stride, channelOffset: 0, out var uniqueR, out reason)) return false;
-        if (!TryCollectUniqueChannelValues(rgba, width, height, stride, channelOffset: 1, out var uniqueG, out reason)) return false;
-        if (!TryCollectUniqueChannelValues(rgba, width, height, stride, channelOffset: 2, out var uniqueB, out reason)) return false;
-        if (!TryCollectUniqueChannelValues(rgba, width, height, stride, channelOffset: 3, out var uniqueA, out reason)) return false;
+        var pixelCount = checked(width * height);
+        var pixels = new int[pixelCount];
+        FillArgbPixels(rgba, width, height, stride, pixels);
 
-        // Prefix codes group: per-channel choose simple codes when possible,
-        // otherwise fall back to a fixed normal-prefix-code layout.
-        if (!TryWriteChannelPrefixCode(writer, GreenAlphabetBase, uniqueG, fixedLiteralCount: LiteralAlphabetSize, out var greenBook, out reason)) return false;
-        if (!TryWriteChannelPrefixCode(writer, LiteralAlphabetSize, uniqueR, fixedLiteralCount: LiteralAlphabetSize, out var redBook, out reason)) return false;
-        if (!TryWriteChannelPrefixCode(writer, LiteralAlphabetSize, uniqueB, fixedLiteralCount: LiteralAlphabetSize, out var blueBook, out reason)) return false;
-        if (!TryWriteChannelPrefixCode(writer, LiteralAlphabetSize, uniqueA, fixedLiteralCount: LiteralAlphabetSize, out var alphaBook, out reason)) return false;
-        WriteSimplePrefixCode(writer, symbols: new byte[] { 0 }); // distance
-
-        // Encode literal pixels (no LZ77, no cache, no transforms).
-        for (var y = 0; y < height; y++) {
-            var src = y * stride;
-            for (var x = 0; x < width; x++) {
-                var r = rgba[src];
-                var g = rgba[src + 1];
-                var b = rgba[src + 2];
-                var a = rgba[src + 3];
-
-                if (!greenBook.TryWrite(writer, g)) {
-                    reason = "Green channel symbol not present in prefix code.";
-                    return false;
-                }
-                if (!redBook.TryWrite(writer, r)) {
-                    reason = "Red channel symbol not present in prefix code.";
-                    return false;
-                }
-                if (!blueBook.TryWrite(writer, b)) {
-                    reason = "Blue channel symbol not present in prefix code.";
-                    return false;
-                }
-                if (!alphaBook.TryWrite(writer, a)) {
-                    reason = "Alpha channel symbol not present in prefix code.";
-                    return false;
-                }
-
-                src += 4;
-            }
+        var tokens = BuildRunLengthTokens(pixels);
+        if (!TryWriteTokensWithPrefixCodes(writer, tokens, out reason)) {
+            // Fall back to literal-only encoding if our constrained backref path
+            // cannot be expressed with the current prefix-code strategy.
+            tokens = BuildLiteralTokens(pixels);
+            return TryWriteTokensWithPrefixCodes(writer, tokens, out reason);
         }
 
         return true;
@@ -357,6 +326,405 @@ internal static class WebpVp8lEncoder {
             | ((r & 0xFF) << 16)
             | ((g & 0xFF) << 8)
             | (b & 0xFF);
+    }
+
+    private static void FillArgbPixels(ReadOnlySpan<byte> rgba, int width, int height, int stride, Span<int> pixels) {
+        var pos = 0;
+        for (var y = 0; y < height; y++) {
+            var src = y * stride;
+            for (var x = 0; x < width; x++) {
+                pixels[pos++] = PackArgb(rgba[src], rgba[src + 1], rgba[src + 2], rgba[src + 3]);
+                src += 4;
+            }
+        }
+    }
+
+    private static Token[] BuildLiteralTokens(ReadOnlySpan<int> pixels) {
+        var tokens = new Token[pixels.Length];
+        for (var i = 0; i < pixels.Length; i++) {
+            tokens[i] = Token.Literal(pixels[i]);
+        }
+        return tokens;
+    }
+
+    private static Token[] BuildRunLengthTokens(ReadOnlySpan<int> pixels) {
+        if (pixels.Length == 0) return Array.Empty<Token>();
+
+        var list = new List<Token>(pixels.Length);
+        var pos = 0;
+        while (pos < pixels.Length) {
+            var pixel = pixels[pos];
+
+            var run = 1;
+            var next = pos + 1;
+            while (next < pixels.Length && pixels[next] == pixel && run < 4096) {
+                run++;
+                next++;
+            }
+
+            if (run >= 3 && pos > 0 && pixels[pos - 1] == pixel) {
+                list.Add(Token.BackReference(distance: 1, length: run));
+                pos += run;
+                continue;
+            }
+
+            list.Add(Token.Literal(pixel));
+            pos++;
+        }
+
+        return list.ToArray();
+    }
+
+    private static bool TryWriteTokensWithPrefixCodes(
+        WebpBitWriter writer,
+        ReadOnlySpan<Token> tokens,
+        out string reason) {
+        reason = string.Empty;
+
+        if (!TryCollectLiteralChannelValues(tokens, out var uniqueR, out var uniqueG, out var uniqueB, out var uniqueA)) {
+            reason = "Failed to collect literal channel values.";
+            return false;
+        }
+
+        if (!TryCollectLengthPrefixes(tokens, out var lengthPrefixes)) {
+            reason = "Failed to compute length prefixes for back-references.";
+            return false;
+        }
+
+        var hasBackrefs = lengthPrefixes.Length > 0;
+
+        Codebook greenBook;
+        if (hasBackrefs) {
+            if (!TryWriteGreenPrefixCodeWithBackrefs(writer, uniqueG, lengthPrefixes, out greenBook, out reason)) {
+                return false;
+            }
+        } else {
+            if (!TryWriteChannelPrefixCode(writer, GreenAlphabetBase, uniqueG, fixedLiteralCount: LiteralAlphabetSize, out greenBook, out reason)) return false;
+        }
+
+        if (!TryWriteChannelPrefixCode(writer, LiteralAlphabetSize, uniqueR, fixedLiteralCount: LiteralAlphabetSize, out var redBook, out reason)) return false;
+        if (!TryWriteChannelPrefixCode(writer, LiteralAlphabetSize, uniqueB, fixedLiteralCount: LiteralAlphabetSize, out var blueBook, out reason)) return false;
+        if (!TryWriteChannelPrefixCode(writer, LiteralAlphabetSize, uniqueA, fixedLiteralCount: LiteralAlphabetSize, out var alphaBook, out reason)) return false;
+
+        if (hasBackrefs) {
+            if (!TryWriteDistancePrefixCodeForDistanceOne(writer, out var distanceBook, out reason)) return false;
+            return TryEncodeTokens(writer, tokens, greenBook, redBook, blueBook, alphaBook, distanceBook, out reason);
+        }
+
+        WriteSimplePrefixCode(writer, symbols: new byte[] { 0 }); // distance unused
+        return TryEncodeTokens(writer, tokens, greenBook, redBook, blueBook, alphaBook, distanceBook: default, out reason);
+    }
+
+    private static bool TryCollectLiteralChannelValues(
+        ReadOnlySpan<Token> tokens,
+        out byte[] uniqueR,
+        out byte[] uniqueG,
+        out byte[] uniqueB,
+        out byte[] uniqueA) {
+        var seenR = new bool[256];
+        var seenG = new bool[256];
+        var seenB = new bool[256];
+        var seenA = new bool[256];
+
+        var any = false;
+        for (var i = 0; i < tokens.Length; i++) {
+            var token = tokens[i];
+            if (token.Kind != TokenKind.Literal) continue;
+            any = true;
+            var argb = token.LiteralArgb;
+            seenA[(argb >> 24) & 0xFF] = true;
+            seenR[(argb >> 16) & 0xFF] = true;
+            seenG[(argb >> 8) & 0xFF] = true;
+            seenB[argb & 0xFF] = true;
+        }
+
+        if (!any) {
+            uniqueR = Array.Empty<byte>();
+            uniqueG = Array.Empty<byte>();
+            uniqueB = Array.Empty<byte>();
+            uniqueA = Array.Empty<byte>();
+            return false;
+        }
+
+        uniqueR = BuildSymbolList(seenR);
+        uniqueG = BuildSymbolList(seenG);
+        uniqueB = BuildSymbolList(seenB);
+        uniqueA = BuildSymbolList(seenA);
+        return uniqueR.Length > 0 && uniqueG.Length > 0 && uniqueB.Length > 0 && uniqueA.Length > 0;
+    }
+
+    private static bool TryCollectLengthPrefixes(ReadOnlySpan<Token> tokens, out int[] lengthPrefixes) {
+        var set = new HashSet<int>();
+        for (var i = 0; i < tokens.Length; i++) {
+            var token = tokens[i];
+            if (token.Kind != TokenKind.BackReference) continue;
+
+            if (!TryEncodePrefixValue(token.Length, maxPrefix: LengthPrefixCount - 1, out var prefix, out _, out _)) {
+                lengthPrefixes = Array.Empty<int>();
+                return false;
+            }
+            set.Add(prefix);
+        }
+
+        lengthPrefixes = new int[set.Count];
+        set.CopyTo(lengthPrefixes);
+        Array.Sort(lengthPrefixes);
+        return true;
+    }
+
+    private static byte[] BuildSymbolList(bool[] seen) {
+        var count = 0;
+        for (var i = 0; i < seen.Length; i++) {
+            if (seen[i]) count++;
+        }
+
+        var symbols = new byte[count];
+        var idx = 0;
+        for (var i = 0; i < seen.Length; i++) {
+            if (!seen[i]) continue;
+            symbols[idx++] = (byte)i;
+        }
+        return symbols;
+    }
+
+    private static bool TryWriteGreenPrefixCodeWithBackrefs(
+        WebpBitWriter writer,
+        ReadOnlySpan<byte> literalGreens,
+        ReadOnlySpan<int> lengthPrefixes,
+        out Codebook greenBook,
+        out string reason) {
+        reason = string.Empty;
+        greenBook = default;
+
+        var required = new HashSet<int>();
+        for (var i = 0; i < literalGreens.Length; i++) {
+            required.Add(literalGreens[i]);
+        }
+        for (var i = 0; i < lengthPrefixes.Length; i++) {
+            required.Add(LiteralAlphabetSize + lengthPrefixes[i]);
+        }
+
+        if (!TryBuildZeroOrEightLengths(GreenAlphabetBase, required, out var lengths, out reason)) {
+            return false;
+        }
+
+        WriteNormalPrefixCodeZeroOrEight(writer, lengths);
+        if (!TryBuildCodebookFromLengths(lengths, out greenBook, out reason)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private static bool TryBuildZeroOrEightLengths(
+        int alphabetSize,
+        HashSet<int> required,
+        out byte[] lengths,
+        out string reason) {
+        lengths = new byte[alphabetSize];
+        reason = string.Empty;
+
+        if (required.Count > LiteralAlphabetSize) {
+            reason = "Required green symbols exceed the 0/8-length strategy limit.";
+            return false;
+        }
+
+        var selected = new HashSet<int>(required);
+        for (var sym = 0; sym < alphabetSize && selected.Count < LiteralAlphabetSize; sym++) {
+            selected.Add(sym);
+        }
+
+        if (selected.Count != LiteralAlphabetSize) {
+            reason = "Unable to select exactly 256 symbols for 0/8-length coding.";
+            return false;
+        }
+
+        foreach (var sym in selected) {
+            lengths[sym] = 8;
+        }
+
+        return true;
+    }
+
+    private static void WriteNormalPrefixCodeZeroOrEight(WebpBitWriter writer, ReadOnlySpan<byte> lengths) {
+        // Normal prefix code flag.
+        writer.WriteBits(0, 1);
+
+        // Provide 12 code-length code lengths so we can reach symbol 8 in the order.
+        const int numCodeLengthCodes = 12;
+        writer.WriteBits(numCodeLengthCodes - 4, 4);
+
+        // Code-length code with just symbols {0, 8}.
+        writer.WriteBits(0, 3); // 17
+        writer.WriteBits(0, 3); // 18
+        writer.WriteBits(1, 3); // 0
+        writer.WriteBits(0, 3); // 1
+        writer.WriteBits(0, 3); // 2
+        writer.WriteBits(0, 3); // 3
+        writer.WriteBits(0, 3); // 4
+        writer.WriteBits(0, 3); // 5
+        writer.WriteBits(0, 3); // 16
+        writer.WriteBits(0, 3); // 6
+        writer.WriteBits(0, 3); // 7
+        writer.WriteBits(1, 3); // 8
+
+        // use_max_symbol = false (max symbol is full alphabet size).
+        writer.WriteBits(0, 1);
+
+        for (var i = 0; i < lengths.Length; i++) {
+            writer.WriteBits(lengths[i] == 0 ? 0 : 1, 1);
+        }
+    }
+
+    private static bool TryBuildCodebookFromLengths(ReadOnlySpan<byte> lengths, out Codebook codebook, out string reason) {
+        reason = string.Empty;
+        codebook = default;
+
+        if (!WebpPrefixCode.TryBuild(lengths, MaxPrefixBits, out _)) {
+            reason = "Failed to build prefix code from generated lengths.";
+            return false;
+        }
+
+        var codes = BuildCanonicalCodewords(lengths, MaxPrefixBits);
+        codebook = new Codebook(codes, singleSymbol: -1);
+        return true;
+    }
+
+    private static bool TryWriteDistancePrefixCodeForDistanceOne(WebpBitWriter writer, out Codebook distanceBook, out string reason) {
+        reason = string.Empty;
+        distanceBook = default;
+
+        // Distance prefix 13 with extra bits 24 yields distance code 121,
+        // which maps to distance 1 in the managed decoder.
+        const int distancePrefix = 13;
+        WriteSimplePrefixCode(writer, symbols: new byte[] { (byte)distancePrefix });
+        return TryBuildSimpleCodebook(alphabetSize: 40, symbols: new byte[] { (byte)distancePrefix }, out distanceBook, out reason);
+    }
+
+    private static bool TryEncodeTokens(
+        WebpBitWriter writer,
+        ReadOnlySpan<Token> tokens,
+        Codebook greenBook,
+        Codebook redBook,
+        Codebook blueBook,
+        Codebook alphaBook,
+        Codebook distanceBook,
+        out string reason) {
+        reason = string.Empty;
+
+        for (var i = 0; i < tokens.Length; i++) {
+            var token = tokens[i];
+            if (token.Kind == TokenKind.Literal) {
+                var argb = token.LiteralArgb;
+                var a = (argb >> 24) & 0xFF;
+                var r = (argb >> 16) & 0xFF;
+                var g = (argb >> 8) & 0xFF;
+                var b = argb & 0xFF;
+
+                if (!greenBook.TryWrite(writer, g)) {
+                    reason = "Green channel symbol not present in prefix code.";
+                    return false;
+                }
+                if (!redBook.TryWrite(writer, r)) {
+                    reason = "Red channel symbol not present in prefix code.";
+                    return false;
+                }
+                if (!blueBook.TryWrite(writer, b)) {
+                    reason = "Blue channel symbol not present in prefix code.";
+                    return false;
+                }
+                if (!alphaBook.TryWrite(writer, a)) {
+                    reason = "Alpha channel symbol not present in prefix code.";
+                    return false;
+                }
+
+                continue;
+            }
+
+            if (!TryEncodePrefixValue(token.Length, maxPrefix: LengthPrefixCount - 1, out var lengthPrefix, out var lengthExtraBits, out var lengthExtraValue)) {
+                reason = "Back-reference length is not encodable.";
+                return false;
+            }
+
+            var greenSymbol = LiteralAlphabetSize + lengthPrefix;
+            if (!greenBook.TryWrite(writer, greenSymbol)) {
+                reason = "Green length-prefix symbol not present in prefix code.";
+                return false;
+            }
+            if (lengthExtraBits > 0) {
+                writer.WriteBits(lengthExtraValue, lengthExtraBits);
+            }
+
+            if (token.Distance != 1) {
+                reason = "Only distance=1 back-references are supported in this encoder step.";
+                return false;
+            }
+
+            if (!distanceBook.TryWrite(writer, 13)) {
+                reason = "Distance prefix symbol not present in prefix code.";
+                return false;
+            }
+
+            // Distance prefix 13 => extraBits=5, offset=96, value=offset+extra+1.
+            // Use distance code 121 (extra=24) so the managed distance map returns 1.
+            writer.WriteBits(24, 5);
+        }
+
+        return true;
+    }
+
+    private static bool TryEncodePrefixValue(int value, int maxPrefix, out int prefix, out int extraBits, out int extraValue) {
+        prefix = 0;
+        extraBits = 0;
+        extraValue = 0;
+        if (value <= 0) return false;
+
+        for (var p = 0; p <= maxPrefix; p++) {
+            if (p < 4) {
+                var v = p + 1;
+                if (v == value) {
+                    prefix = p;
+                    return true;
+                }
+                continue;
+            }
+
+            var bits = (p - 2) >> 1;
+            if (bits < 0 || bits > 24) return false;
+            var offset = (2 + (p & 1)) << bits;
+            var min = offset + 1;
+            var max = offset + (1 << bits);
+            if (value < min || value > max) continue;
+
+            prefix = p;
+            extraBits = bits;
+            extraValue = value - min;
+            return true;
+        }
+
+        return false;
+    }
+
+    private readonly struct Token {
+        private Token(TokenKind kind, int literalArgb, int length, int distance) {
+            Kind = kind;
+            LiteralArgb = literalArgb;
+            Length = length;
+            Distance = distance;
+        }
+
+        public TokenKind Kind { get; }
+        public int LiteralArgb { get; }
+        public int Length { get; }
+        public int Distance { get; }
+
+        public static Token Literal(int argb) => new Token(TokenKind.Literal, argb, length: 0, distance: 0);
+        public static Token BackReference(int distance, int length) => new Token(TokenKind.BackReference, literalArgb: 0, length, distance);
+    }
+
+    private enum TokenKind {
+        Literal = 0,
+        BackReference = 1
     }
 
     private static bool TryCollectUniqueChannelValues(
