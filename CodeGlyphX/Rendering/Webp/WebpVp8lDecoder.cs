@@ -27,16 +27,22 @@ internal static class WebpVp8lDecoder {
         // decode the entropy-coded image yet.
         var colorCacheFlag = reader.ReadBits(1);
         if (colorCacheFlag < 0) return false;
+        var colorCacheBits = 0;
         if (colorCacheFlag != 0) {
             // color_cache_code_bits is 4 bits in the lossless bitstream.
-            var cacheBits = reader.ReadBits(4);
-            if (cacheBits is < 1 or > 11) return false;
+            colorCacheBits = reader.ReadBits(4);
+            if (colorCacheBits is < 1 or > 11) return false;
         }
+        var colorCacheSize = colorCacheBits == 0 ? 0 : 1 << colorCacheBits;
 
         // Meta prefix codes flag (1 bit). A value of 1 indicates an entropy image
         // we cannot parse yet without full prefix-code support.
         var metaPrefixFlag = reader.ReadBits(1);
         if (metaPrefixFlag != 0) return false;
+
+        var literalAlphabetSize = 256;
+        var greenAlphabetSize = literalAlphabetSize + 24 + colorCacheSize;
+        if (!TryReadPrefixCodesGroup(ref reader, greenAlphabetSize, literalAlphabetSize, out _)) return false;
 
         return false;
     }
@@ -90,6 +96,23 @@ internal static class WebpVp8lDecoder {
             reader.BitsConsumed);
         return true;
     }
+
+    private static bool TryReadPrefixCodesGroup(
+        ref WebpBitReader reader,
+        int greenAlphabetSize,
+        int literalAlphabetSize,
+        out WebpPrefixCodesGroup group) {
+        group = default;
+
+        if (!WebpPrefixCodeReader.TryReadPrefixCode(ref reader, greenAlphabetSize, out var green)) return false;
+        if (!WebpPrefixCodeReader.TryReadPrefixCode(ref reader, literalAlphabetSize, out var red)) return false;
+        if (!WebpPrefixCodeReader.TryReadPrefixCode(ref reader, literalAlphabetSize, out var blue)) return false;
+        if (!WebpPrefixCodeReader.TryReadPrefixCode(ref reader, literalAlphabetSize, out var alpha)) return false;
+        if (!WebpPrefixCodeReader.TryReadPrefixCode(ref reader, alphabetSize: 40, out var distance)) return false;
+
+        group = new WebpPrefixCodesGroup(green, red, blue, alpha, distance);
+        return true;
+    }
 }
 
 internal readonly struct WebpVp8lHeader {
@@ -110,3 +133,23 @@ internal readonly struct WebpVp8lHeader {
     public bool SubtractGreenTransformUsed => (TransformMask & (1 << 2)) != 0;
 }
 
+internal readonly struct WebpPrefixCodesGroup {
+    public WebpPrefixCodesGroup(
+        WebpPrefixCode green,
+        WebpPrefixCode red,
+        WebpPrefixCode blue,
+        WebpPrefixCode alpha,
+        WebpPrefixCode distance) {
+        Green = green;
+        Red = red;
+        Blue = blue;
+        Alpha = alpha;
+        Distance = distance;
+    }
+
+    public WebpPrefixCode Green { get; }
+    public WebpPrefixCode Red { get; }
+    public WebpPrefixCode Blue { get; }
+    public WebpPrefixCode Alpha { get; }
+    public WebpPrefixCode Distance { get; }
+}

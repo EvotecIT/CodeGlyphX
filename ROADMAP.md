@@ -75,5 +75,6 @@ This list contains **only work we still want to do** (no already‑done items).
 - WebP decode status (2026-01-27): temporary native `libwebp` fallback for decode.
 - WebP decode status (2026-01-27): managed decoder track — VP8L (lossless) first, then VP8.
 - WebP decode status (2026-01-27): managed VP8L scaffolding — LSB bit reader + header parser + tests.
+- WebP decode status (2026-01-27): managed VP8L scaffolding — prefix-code parsing (simple + normal) + tests.
 - Optional: WebP **encode** (lossless first).
 - Expand the image format corpus (JPEG progressive/CMYK, GIF variants, BMP/ICO edge cases) and add a scheduled CI run.
