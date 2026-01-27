@@ -56,6 +56,24 @@ public static partial class QrPngRenderer {
         return eye.InnerColor ?? opts.Foreground;
     }
 
+    private static QrPngGradientOptions? GetEyeOuterGradient(QrPngRenderOptions opts, int eyeIndex) {
+        var eye = opts.Eyes;
+        if (eye is null) return null;
+        if (eyeIndex is >= 0 and <= 2 && eye.OuterGradients is { Length: 3 } gradients) {
+            return gradients[eyeIndex];
+        }
+        return eye.OuterGradient;
+    }
+
+    private static QrPngGradientOptions? GetEyeInnerGradient(QrPngRenderOptions opts, int eyeIndex) {
+        var eye = opts.Eyes;
+        if (eye is null) return null;
+        if (eyeIndex is >= 0 and <= 2 && eye.InnerGradients is { Length: 3 } gradients) {
+            return gradients[eyeIndex];
+        }
+        return eye.InnerGradient;
+    }
+
     private static bool IsInEye(int x, int y, int ex, int ey) {
         return x >= ex && x < ex + 7 && y >= ey && y < ey + 7;
     }
@@ -107,8 +125,8 @@ public static partial class QrPngRenderer {
         var eyeIndex = GetEyeIndex(ex, ey, size);
         var outerColor = GetEyeOuterColor(opts, eyeIndex);
         var innerColor = GetEyeInnerColor(opts, eyeIndex);
-        var outerGradient = eye.OuterGradient;
-        var innerGradient = eye.InnerGradient;
+        var outerGradient = GetEyeOuterGradient(opts, eyeIndex);
+        var innerGradient = GetEyeInnerGradient(opts, eyeIndex);
         var qrX0 = qrOriginX;
         var qrY0 = qrOriginY;
         var qrX1 = qrOriginX + qrSizePx;

@@ -72,9 +72,19 @@ public sealed class QrPngEyeOptions {
     public QrPngGradientOptions? OuterGradient { get; set; }
 
     /// <summary>
+    /// Optional per-eye outer gradients (TopLeft, TopRight, BottomLeft).
+    /// </summary>
+    public QrPngGradientOptions[]? OuterGradients { get; set; }
+
+    /// <summary>
     /// Optional gradient for the inner dot.
     /// </summary>
     public QrPngGradientOptions? InnerGradient { get; set; }
+
+    /// <summary>
+    /// Optional per-eye inner gradients (TopLeft, TopRight, BottomLeft).
+    /// </summary>
+    public QrPngGradientOptions[]? InnerGradients { get; set; }
 
     /// <summary>
     /// Optional glow radius in pixels when <see cref="FrameStyle"/> is <see cref="QrPngEyeFrameStyle.Glow"/>.
@@ -136,7 +146,19 @@ public sealed class QrPngEyeOptions {
         if (SparkleSpreadPx < 0) throw new ArgumentOutOfRangeException(nameof(SparkleSpreadPx));
         if (OuterColors is { Length: not 3 }) throw new ArgumentOutOfRangeException(nameof(OuterColors), "OuterColors must have exactly 3 entries.");
         if (InnerColors is { Length: not 3 }) throw new ArgumentOutOfRangeException(nameof(InnerColors), "InnerColors must have exactly 3 entries.");
+        if (OuterGradients is { Length: not 3 }) throw new ArgumentOutOfRangeException(nameof(OuterGradients), "OuterGradients must have exactly 3 entries.");
+        if (InnerGradients is { Length: not 3 }) throw new ArgumentOutOfRangeException(nameof(InnerGradients), "InnerGradients must have exactly 3 entries.");
         OuterGradient?.Validate();
         InnerGradient?.Validate();
+        if (OuterGradients is { Length: 3 }) {
+            foreach (var gradient in OuterGradients) {
+                gradient?.Validate();
+            }
+        }
+        if (InnerGradients is { Length: 3 }) {
+            foreach (var gradient in InnerGradients) {
+                gradient?.Validate();
+            }
+        }
     }
 }

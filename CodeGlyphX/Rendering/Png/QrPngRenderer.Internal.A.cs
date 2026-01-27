@@ -131,6 +131,8 @@ public static partial class QrPngRenderer {
         var eyeInnerGradient = opts.Eyes?.InnerGradient;
         var eyeOuterGradientInfo = eyeOuterGradient is null ? (GradientInfo?)null : new GradientInfo(eyeOuterGradient, 7 * opts.ModuleSize - 1, 7 * opts.ModuleSize - 1);
         var eyeInnerGradientInfo = eyeInnerGradient is null ? (GradientInfo?)null : new GradientInfo(eyeInnerGradient, 3 * opts.ModuleSize - 1, 3 * opts.ModuleSize - 1);
+        var eyeOuterGradientInfos = BuildEyeGradientInfos(opts.Eyes?.OuterGradients, opts.ModuleSize, eyeModules: 7);
+        var eyeInnerGradientInfos = BuildEyeGradientInfos(opts.Eyes?.InnerGradients, opts.ModuleSize, eyeModules: 3);
 
         for (var my = 0; my < size; my++) {
             for (var mx = 0; mx < size; mx++) {
@@ -220,7 +222,9 @@ public static partial class QrPngRenderer {
                 }
 
                 if (!useFrame && eyeKind != EyeKind.None) {
-                    var eyeGrad = eyeKind == EyeKind.Outer ? eyeOuterGradientInfo : eyeInnerGradientInfo;
+                    var eyeGrad = eyeKind == EyeKind.Outer
+                        ? GetEyeGradientInfo(eyeOuterGradientInfos, eyeOuterGradientInfo, eyeIndex)
+                        : GetEyeGradientInfo(eyeInnerGradientInfos, eyeInnerGradientInfo, eyeIndex);
                     if (eyeGrad is not null) {
                         var boxX = qrOffsetX + (eyeX + opts.QuietZone) * opts.ModuleSize;
                         var boxY = qrOffsetY + (eyeY + opts.QuietZone) * opts.ModuleSize;
@@ -283,6 +287,24 @@ public static partial class QrPngRenderer {
         }
 
         return buffer;
+    }
+
+    private static GradientInfo?[]? BuildEyeGradientInfos(QrPngGradientOptions[]? gradients, int moduleSize, int eyeModules) {
+        if (gradients is null || gradients.Length != 3 || moduleSize <= 0) return null;
+        var sizePx = eyeModules * moduleSize - 1;
+        var infos = new GradientInfo?[3];
+        for (var i = 0; i < 3; i++) {
+            var gradient = gradients[i];
+            infos[i] = gradient is null ? null : new GradientInfo(gradient, sizePx, sizePx);
+        }
+        return infos;
+    }
+
+    private static GradientInfo? GetEyeGradientInfo(GradientInfo?[]? infos, GradientInfo? fallback, int eyeIndex) {
+        if (eyeIndex is >= 0 and <= 2 && infos is { Length: 3 }) {
+            return infos[eyeIndex] ?? fallback;
+        }
+        return fallback;
     }
 
     private static void DrawModuleSolid(byte[] scanlines, int stride, int moduleSize, int mx, int my, int quietZone, int offsetX, int offsetY, Rgba32 color) {
