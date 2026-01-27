@@ -25,4 +25,9 @@ public sealed partial class MatrixPngRenderOptions {
     /// Background color.
     /// </summary>
     public Rgba32 Background { get; set; } = RenderDefaults.QrBackground;
+
+    /// <summary>
+    /// PNG compression level (0 = stored/uncompressed, 1-9 = compressed).
+    /// </summary>
+    public int PngCompressionLevel { get; set; }
 }

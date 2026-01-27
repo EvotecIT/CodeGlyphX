@@ -577,8 +577,13 @@ internal static partial class QrPixelDecoder {
         var tileBudgetMs = 0;
         var baseBudgetMs = budgetMilliseconds;
         if (enableTileScan && budgetMilliseconds > 0) {
-            tileBudgetMs = Math.Max(300, budgetMilliseconds / 3);
-            baseBudgetMs = Math.Max(300, budgetMilliseconds - tileBudgetMs);
+            if (budgetMilliseconds <= 4000) {
+                tileBudgetMs = Math.Max(300, budgetMilliseconds / 3);
+                baseBudgetMs = Math.Max(300, budgetMilliseconds - tileBudgetMs);
+            } else {
+                tileBudgetMs = Math.Max(400, budgetMilliseconds / 2);
+                baseBudgetMs = Math.Max(400, budgetMilliseconds - tileBudgetMs);
+            }
         }
         var budget = new DecodeBudget(baseBudgetMs, cancellationToken);
         if (budget.IsExpired || budget.IsNearDeadline(120)) return false;
@@ -593,34 +598,44 @@ internal static partial class QrPixelDecoder {
             }
             var seen = new HashSet<byte[]>(ByteArrayComparer.Instance);
             using var list = new PooledList<QrDecoded>(4);
+            var baseExpired = false;
 
             CollectAllFromImage(baseImage, settings, list, seen, accept, budget, pool);
             if (budget.IsExpired) {
-                if (list.Count == 0) return false;
-                results = list.ToArray();
-                return true;
-            }
-
-            if (options?.AggressiveSampling == true && scaleStart > 1 && list.Count == 0 && !budget.IsNearDeadline(200)) {
-                CollectAllAtScale(pixels, width, height, stride, fmt, scale: 1, settings, list, seen, accept, budget, pool);
-                if (budget.IsExpired) {
+                if (!enableTileScan) {
                     if (list.Count == 0) return false;
                     results = list.ToArray();
                     return true;
                 }
+                baseExpired = true;
+            }
+
+            if (!baseExpired && options?.AggressiveSampling == true && scaleStart > 1 && list.Count == 0 && !budget.IsNearDeadline(200)) {
+                CollectAllAtScale(pixels, width, height, stride, fmt, scale: 1, settings, list, seen, accept, budget, pool);
+                if (budget.IsExpired) {
+                    if (!enableTileScan) {
+                        if (list.Count == 0) return false;
+                        results = list.ToArray();
+                        return true;
+                    }
+                    baseExpired = true;
+                }
             }
 
             var skipExtraPasses = enableTileScan && list.Count > 0;
-            if (!skipExtraPasses) {
+            if (!baseExpired && !skipExtraPasses) {
                 var range = baseImage.Max - baseImage.Min;
                 if (settings.AllowContrastStretch && range < 48) {
                     var stretched = baseImage.WithContrastStretch(48, pool);
                     if (!ReferenceEquals(stretched.Gray, baseImage.Gray)) {
                         CollectAllFromImage(stretched, settings, list, seen, accept, budget, pool);
                         if (budget.IsExpired) {
-                            if (list.Count == 0) return false;
-                            results = list.ToArray();
-                            return true;
+                            if (!enableTileScan) {
+                                if (list.Count == 0) return false;
+                                results = list.ToArray();
+                                return true;
+                            }
+                            baseExpired = true;
                         }
                     }
                 }
@@ -650,6 +665,27 @@ internal static partial class QrPixelDecoder {
                     ? Math.Max(4, Math.Min(width, height) / 60)
                     : Math.Max(8, Math.Min(width, height) / 40);
                 var minTile = options?.AggressiveSampling == true ? 24 : 48;
+                var tileOptions = options;
+                if (options is not null && tileBudgetMs > 0) {
+                    var gridBudget = options.AggressiveSampling == true ? maxGrid : grid;
+                    var divisor = Math.Max(1, gridBudget * gridBudget);
+                    var perTileBudget = Math.Max(200, tileBudgetMs / divisor);
+                    if (perTileBudget > 0 && options.BudgetMilliseconds != perTileBudget) {
+                        tileOptions = new QrPixelDecodeOptions {
+                            Profile = options.Profile,
+                            MaxDimension = options.MaxDimension,
+                            MaxScale = options.MaxScale,
+                            MaxMilliseconds = options.MaxMilliseconds,
+                            BudgetMilliseconds = perTileBudget,
+                            AutoCrop = options.AutoCrop,
+                            EnableTileScan = false,
+                            TileGrid = options.TileGrid,
+                            DisableTransforms = options.DisableTransforms,
+                            AggressiveSampling = options.AggressiveSampling,
+                            StylizedSampling = options.StylizedSampling
+                        };
+                    }
+                }
                 var tileW = width / grid;
                 var tileH = height / grid;
                 for (var ty = 0; ty < grid; ty++) {
@@ -676,15 +712,21 @@ internal static partial class QrPixelDecoder {
                         if (tileBudget.IsNearDeadline(120)) break;
 
                         var tileSpan = pixels.Slice((int)startIndex, (int)requiredLen);
-                        if (TryDecode(tileSpan, tw, th, stride, fmt, options, accept, cancellationToken, out var decoded, out _)) {
-                            AddResult(list, seen, decoded, accept);
+                        if (TryDecode(tileSpan, tw, th, stride, fmt, tileOptions, cancellationToken, out var decodedSingle, out _)) {
+                            AddResult(list, seen, decodedSingle, accept);
+                        } else if (TryDecodeAll(tileSpan, tw, th, stride, fmt, tileOptions, accept, cancellationToken, allowTileScan: false, out var decodedList) && decodedList.Length > 0) {
+                            for (var i = 0; i < decodedList.Length; i++) {
+                                AddResult(list, seen, decodedList[i], accept);
+                            }
                         }
                     }
                     if (tileBudget.IsExpired) break;
                 }
 
-                if (options?.AggressiveSampling == true && list.Count == 0 && !tileBudget.IsExpired && grid < maxGrid) {
+                if (options?.AggressiveSampling == true && !tileBudget.IsExpired && grid < maxGrid) {
+                    var hadResults = list.Count > 0;
                     for (var extraGrid = grid + 1; extraGrid <= maxGrid; extraGrid++) {
+                        var beforeCount = list.Count;
                         if (tileBudget.IsExpired) break;
                         var extraTileW = width / extraGrid;
                         var extraTileH = height / extraGrid;
@@ -712,13 +754,22 @@ internal static partial class QrPixelDecoder {
                                 if (tileBudget.IsNearDeadline(120)) break;
 
                                 var tileSpan = pixels.Slice((int)startIndex, (int)requiredLen);
-                                if (TryDecode(tileSpan, tw, th, stride, fmt, options, accept, cancellationToken, out var decoded, out _)) {
-                                    AddResult(list, seen, decoded, accept);
+                                if (TryDecode(tileSpan, tw, th, stride, fmt, tileOptions, cancellationToken, out var decodedSingle, out _)) {
+                                    AddResult(list, seen, decodedSingle, accept);
+                                } else if (TryDecodeAll(tileSpan, tw, th, stride, fmt, tileOptions, accept, cancellationToken, allowTileScan: false, out var decodedList) && decodedList.Length > 0) {
+                                    for (var i = 0; i < decodedList.Length; i++) {
+                                        AddResult(list, seen, decodedList[i], accept);
+                                    }
                                 }
                             }
                             if (tileBudget.IsExpired) break;
                         }
-                        if (list.Count > 0 || tileBudget.IsExpired) break;
+                        if (tileBudget.IsExpired) break;
+                        if (list.Count > beforeCount) {
+                            hadResults = true;
+                        } else if (hadResults) {
+                            break;
+                        }
                     }
                 }
             }

@@ -5,14 +5,14 @@ namespace CodeGlyphX.Rendering.Jpeg;
 
 internal static class JpegWriter {
     private static readonly byte[] ZigZag = {
-        0, 1, 5, 6, 14, 15, 27, 28,
-        2, 4, 7, 13, 16, 26, 29, 42,
-        3, 8, 12, 17, 25, 30, 41, 43,
-        9, 11, 18, 24, 31, 40, 44, 53,
-        10, 19, 23, 32, 39, 45, 52, 54,
-        20, 22, 33, 38, 46, 51, 55, 60,
-        21, 34, 37, 47, 50, 56, 59, 61,
-        35, 36, 48, 49, 57, 58, 62, 63,
+        0, 1, 8, 16, 9, 2, 3, 10,
+        17, 24, 32, 25, 18, 11, 4, 5,
+        12, 19, 26, 33, 40, 48, 41, 34,
+        27, 20, 13, 6, 7, 14, 21, 28,
+        35, 42, 49, 56, 57, 50, 43, 36,
+        29, 22, 15, 23, 30, 37, 44, 51,
+        58, 59, 52, 45, 38, 31, 39, 46,
+        53, 60, 61, 54, 47, 55, 62, 63,
     };
 
     private static readonly byte[] StdLumaQuant = {
@@ -116,19 +116,34 @@ internal static class JpegWriter {
         var dcChroma = DcChromaTable;
         var acChroma = AcChromaTable;
 
+        var grayscale = IsGrayscale(rgba, width, height, stride, rowOffset, rowStride);
+
         WriteMarker(stream, 0xFFD8);
         WriteApp0(stream);
         WriteDqt(stream, 0, qY);
-        WriteDqt(stream, 1, qC);
-        WriteSof0(stream, width, height);
-        WriteDht(stream, 0, 0, DcLumaBits, DcValues);
-        WriteDht(stream, 1, 0, AcLumaBits, AcLumaValues);
-        WriteDht(stream, 0, 1, DcChromaBits, DcValues);
-        WriteDht(stream, 1, 1, AcChromaBits, AcChromaValues);
-        WriteSos(stream);
+        if (!grayscale) {
+            WriteDqt(stream, 1, qC);
+        }
+        if (grayscale) {
+            WriteSof0Gray(stream, width, height);
+            WriteDht(stream, 0, 0, DcLumaBits, DcValues);
+            WriteDht(stream, 1, 0, AcLumaBits, AcLumaValues);
+            WriteSosGray(stream);
+        } else {
+            WriteSof0(stream, width, height);
+            WriteDht(stream, 0, 0, DcLumaBits, DcValues);
+            WriteDht(stream, 1, 0, AcLumaBits, AcLumaValues);
+            WriteDht(stream, 0, 1, DcChromaBits, DcValues);
+            WriteDht(stream, 1, 1, AcChromaBits, AcChromaValues);
+            WriteSos(stream);
+        }
 
         var bw = new BitWriter(stream);
-        EncodeImage(bw, width, height, rgba, stride, rowOffset, rowStride, qY, qC, dcLuma, acLuma, dcChroma, acChroma);
+        if (grayscale) {
+            EncodeImageGray(bw, width, height, rgba, stride, rowOffset, rowStride, qY, dcLuma, acLuma);
+        } else {
+            EncodeImage(bw, width, height, rgba, stride, rowOffset, rowStride, qY, qC, dcLuma, acLuma, dcChroma, acChroma);
+        }
         bw.Flush();
 
         WriteMarker(stream, 0xFFD9);
@@ -164,6 +179,29 @@ internal static class JpegWriter {
                 EncodeBlock(bw, blockY, qY, dcY, acY, ref prevY, temp);
                 EncodeBlock(bw, blockCb, qC, dcC, acC, ref prevCb, temp);
                 EncodeBlock(bw, blockCr, qC, dcC, acC, ref prevCr, temp);
+            }
+        }
+    }
+
+    private static void EncodeImageGray(
+        BitWriter bw,
+        int width,
+        int height,
+        byte[] rgba,
+        int stride,
+        int rowOffset,
+        int rowStride,
+        int[] qY,
+        HuffmanTable dcY,
+        HuffmanTable acY) {
+        var blockY = new int[64];
+        var temp = new int[64];
+        var prevY = 0;
+
+        for (var by = 0; by < height; by += 8) {
+            for (var bx = 0; bx < width; bx += 8) {
+                LoadBlockLuma(rgba, stride, rowOffset, rowStride, width, height, bx, by, blockY);
+                EncodeBlock(bw, blockY, qY, dcY, acY, ref prevY, temp);
             }
         }
     }
@@ -207,6 +245,43 @@ internal static class JpegWriter {
                 yBlock[i] = yv - 128;
                 cbBlock[i] = cb - 128;
                 crBlock[i] = cr - 128;
+                i++;
+            }
+        }
+    }
+
+    private static void LoadBlockLuma(
+        byte[] rgba,
+        int stride,
+        int rowOffset,
+        int rowStride,
+        int width,
+        int height,
+        int bx,
+        int by,
+        int[] yBlock) {
+        var i = 0;
+        for (var y = 0; y < 8; y++) {
+            var py = by + y;
+            if (py >= height) py = height - 1;
+            var row = py * rowStride + rowOffset;
+            for (var x = 0; x < 8; x++) {
+                var px = bx + x;
+                if (px >= width) px = width - 1;
+                var p = row + px * 4;
+                var r = rgba[p + 0];
+                var g = rgba[p + 1];
+                var b = rgba[p + 2];
+                var a = rgba[p + 3];
+                if (a != 255) {
+                    var inv = 255 - a;
+                    r = (byte)((r * a + 255 * inv + 127) / 255);
+                    g = (byte)((g * a + 255 * inv + 127) / 255);
+                    b = (byte)((b * a + 255 * inv + 127) / 255);
+                }
+
+                var yv = (77 * r + 150 * g + 29 * b + 128) >> 8;
+                yBlock[i] = yv - 128;
                 i++;
             }
         }
@@ -269,7 +344,7 @@ internal static class JpegWriter {
                     }
                 }
                 var coeff = 0.25 * cu * cv * sum;
-                var idx = u * 8 + v;
+                var idx = v * 8 + u;
                 output[idx] = (int)Math.Round(coeff / quant[idx]);
             }
         }
@@ -346,6 +421,18 @@ internal static class JpegWriter {
         s.WriteByte(1);
     }
 
+    private static void WriteSof0Gray(Stream s, int width, int height) {
+        WriteMarker(s, 0xFFC0);
+        WriteUInt16(s, 11);
+        s.WriteByte(8);
+        WriteUInt16(s, (ushort)height);
+        WriteUInt16(s, (ushort)width);
+        s.WriteByte(1);
+        s.WriteByte(1);
+        s.WriteByte(0x11);
+        s.WriteByte(0);
+    }
+
     private static void WriteDht(Stream s, int tableClass, int tableId, byte[] bits, byte[] values) {
         WriteMarker(s, 0xFFC4);
         WriteUInt16(s, (ushort)(2 + 1 + 16 + values.Length));
@@ -367,6 +454,38 @@ internal static class JpegWriter {
         s.WriteByte(0);
         s.WriteByte(63);
         s.WriteByte(0);
+    }
+
+    private static void WriteSosGray(Stream s) {
+        WriteMarker(s, 0xFFDA);
+        WriteUInt16(s, 8);
+        s.WriteByte(1);
+        s.WriteByte(1);
+        s.WriteByte(0x00);
+        s.WriteByte(0);
+        s.WriteByte(63);
+        s.WriteByte(0);
+    }
+
+    private static bool IsGrayscale(byte[] rgba, int width, int height, int stride, int rowOffset, int rowStride) {
+        for (var y = 0; y < height; y++) {
+            var row = y * rowStride + rowOffset;
+            for (var x = 0; x < width; x++) {
+                var p = row + x * 4;
+                var r = rgba[p + 0];
+                var g = rgba[p + 1];
+                var b = rgba[p + 2];
+                var a = rgba[p + 3];
+                if (a != 255) {
+                    var inv = 255 - a;
+                    r = (byte)((r * a + 255 * inv + 127) / 255);
+                    g = (byte)((g * a + 255 * inv + 127) / 255);
+                    b = (byte)((b * a + 255 * inv + 127) / 255);
+                }
+                if (r != g || r != b) return false;
+            }
+        }
+        return true;
     }
 
     private static HuffmanTable BuildHuffmanTable(byte[] bits, byte[] values) {

@@ -50,4 +50,9 @@ public sealed partial class BarcodePngRenderOptions {
     /// Label color.
     /// </summary>
     public Rgba32 LabelColor { get; set; } = RenderDefaults.BarcodeForeground;
+
+    /// <summary>
+    /// PNG compression level (0 = stored/uncompressed, 1-9 = compressed).
+    /// </summary>
+    public int PngCompressionLevel { get; set; }
 }

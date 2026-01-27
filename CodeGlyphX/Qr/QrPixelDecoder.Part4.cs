@@ -424,16 +424,18 @@ internal static partial class QrPixelDecoder {
             candidates.Sort(static (a, b) => b.Count.CompareTo(a.Count));
         }
         var tightBudget = budget.Enabled && budget.MaxMilliseconds <= 800;
-        var nLimit = maxCandidatesOverride > 0 ? maxCandidatesOverride : (budget.Enabled ? (aggressive ? 16 : 8) : (aggressive ? 20 : 12));
+        var nLimit = maxCandidatesOverride > 0
+            ? maxCandidatesOverride
+            : (budget.Enabled ? (aggressive ? 24 : 8) : (aggressive ? 32 : 12));
         var n = Math.Min(candidates.Count, tightBudget ? 5 : nLimit);
         var triedTriples = 0;
         var bboxAttempts = 0;
-        var maxTriples = maxTriplesOverride > 0 ? maxTriplesOverride : (aggressive ? 160 : 40);
+        var maxTriples = maxTriplesOverride > 0 ? maxTriplesOverride : (aggressive ? 240 : 40);
         if (budget.Enabled && maxTriplesOverride <= 0) {
-            maxTriples = Math.Min(maxTriples, aggressive ? 80 : 20);
+            maxTriples = Math.Min(maxTriples, aggressive ? 160 : 20);
         }
         if (tightBudget && candidates.Count > 12) {
-            maxTriples = Math.Min(maxTriples, aggressive ? 24 : 12);
+            maxTriples = Math.Min(maxTriples, aggressive ? 32 : 12);
         }
 
         for (var i = 0; i < n - 2; i++) {
