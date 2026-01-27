@@ -352,14 +352,16 @@ internal static class WebpVp8lEncoder {
 
         var list = new List<Token>(pixels.Length);
         var pos = 0;
-        const int maxDistance = 8;
+        const int maxDistance = 72;
         const int minMatchLength = 3;
+        const int maxMatchLength = 128;
         while (pos < pixels.Length) {
             var bestLength = 0;
             var bestDistance = 0;
 
             var remaining = pixels.Length - pos;
             var maxLen = remaining < 4096 ? remaining : 4096;
+            if (maxLen > maxMatchLength) maxLen = maxMatchLength;
 
             for (var distance = 1; distance <= maxDistance; distance++) {
                 if (pos < distance) continue;
@@ -420,7 +422,7 @@ internal static class WebpVp8lEncoder {
         if (!TryWriteChannelPrefixCode(writer, LiteralAlphabetSize, uniqueA, fixedLiteralCount: LiteralAlphabetSize, out var alphaBook, out reason)) return false;
 
         if (hasBackrefs) {
-            if (!TryWriteDistancePrefixCodeForSmallDistances(writer, out var distanceBook, out reason)) return false;
+            if (!TryWriteDistancePrefixCodeForBackrefs(writer, out var distanceBook, out reason)) return false;
             return TryEncodeTokens(writer, tokens, greenBook, redBook, blueBook, alphaBook, distanceBook, out reason);
         }
 
@@ -603,15 +605,16 @@ internal static class WebpVp8lEncoder {
         return true;
     }
 
-    private static bool TryWriteDistancePrefixCodeForSmallDistances(WebpBitWriter writer, out Codebook distanceBook, out string reason) {
+    private static bool TryWriteDistancePrefixCodeForBackrefs(WebpBitWriter writer, out Codebook distanceBook, out string reason) {
         reason = string.Empty;
         distanceBook = default;
 
-        // Distance prefix 13 (extra bits = 5) can express distance codes 97..128.
-        // By choosing distanceCode = 120 + distance we can reach distances 1..8.
-        const int distancePrefix = 13;
-        WriteSimplePrefixCode(writer, symbols: new byte[] { (byte)distancePrefix });
-        return TryBuildSimpleCodebook(alphabetSize: 40, symbols: new byte[] { (byte)distancePrefix }, out distanceBook, out reason);
+        // Use a two-symbol simple code with prefixes 13 and 14:
+        // - prefix 13 (extra bits = 5) covers distance codes 97..128 => distances 1..8
+        // - prefix 14 (extra bits = 6) covers distance codes 129..192 => distances 9..72
+        var symbols = new byte[] { 13, 14 };
+        WriteSimplePrefixCode(writer, symbols);
+        return TryBuildSimpleCodebook(alphabetSize: 40, symbols, out distanceBook, out reason);
     }
 
     private static bool TryEncodeTokens(
@@ -668,21 +671,30 @@ internal static class WebpVp8lEncoder {
                 writer.WriteBits(lengthExtraValue, lengthExtraBits);
             }
 
-            if (token.Distance is < 1 or > 8) {
-                reason = "Only distances 1..8 are supported in this encoder step.";
+            if (token.Distance is < 1 or > 72) {
+                reason = "Only distances 1..72 are supported in this encoder step.";
                 return false;
             }
 
-            if (!distanceBook.TryWrite(writer, 13)) {
+            // Choose a distance prefix that can encode the desired distance code.
+            var distanceCode = 120 + token.Distance;
+            var distancePrefix = distanceCode <= 128 ? 13 : 14;
+
+            if (!distanceBook.TryWrite(writer, distancePrefix)) {
                 reason = "Distance prefix symbol not present in prefix code.";
                 return false;
             }
 
-            // Distance prefix 13 => extraBits=5, offset=96, value=offset+extra+1.
-            // We choose distanceCode = 120 + distance to map to the requested distance.
-            var distanceCode = 120 + token.Distance;
-            var distanceExtra = distanceCode - 97;
-            writer.WriteBits(distanceExtra, 5);
+            // Encode the distance code using the chosen prefix.
+            if (distancePrefix == 13) {
+                // Prefix 13 => extraBits=5, offset=96, codes 97..128.
+                var distanceExtra = distanceCode - 97;
+                writer.WriteBits(distanceExtra, 5);
+            } else {
+                // Prefix 14 => extraBits=6, offset=128, codes 129..192.
+                var distanceExtra = distanceCode - 129;
+                writer.WriteBits(distanceExtra, 6);
+            }
         }
 
         return true;
