@@ -345,6 +345,7 @@ public partial class Playground {
         {
             return "Imports CodeGlyphX" + nl
                 + "Imports CodeGlyphX.Rendering" + nl
+                + "Imports CodeGlyphX.Rendering.Png" + nl
                 + "Imports System.IO" + nl + nl
                 + "Dim bytes = File.ReadAllBytes(\"image.png\")" + nl
                 + "Dim qr As QrDecoded" + nl
@@ -401,7 +402,8 @@ public partial class Playground {
                 }
 
                 var sb = new System.Text.StringBuilder();
-                sb.Append("Imports CodeGlyphX").Append(nl).Append(nl);
+                sb.Append("Imports CodeGlyphX").Append(nl);
+                sb.Append("Imports CodeGlyphX.Rendering.Png").Append(nl).Append(nl);
                 sb.Append("Dim options = New QrEasyOptions With {").Append(nl);
                 sb.Append(string.Join("," + nl, lines)).Append(nl);
                 sb.Append("}").Append(nl).Append(nl);
