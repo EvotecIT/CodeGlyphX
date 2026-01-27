@@ -46,6 +46,11 @@ public sealed class WebpVp8ImageMacroblockTilingScaffoldTests
                 continue;
             }
 
+            var tileCols = (expectedWidth + macroblockPixelSize - 1) / macroblockPixelSize;
+            var tileRows = (expectedHeight + macroblockPixelSize - 1) / macroblockPixelSize;
+            Assert.Equal(tileCols, macroblockTokens.MacroblockCols);
+            Assert.Equal(tileRows, macroblockTokens.MacroblockRows);
+
             if (macroblockTokens.MacroblockCols < 3 || macroblockTokens.MacroblockRows < 1)
             {
                 continue;

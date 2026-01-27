@@ -771,6 +771,7 @@ internal static class WebpVp8Decoder {
 
         var tileCols = (header.Width + macroblockWidth - 1) / macroblockWidth;
         var tileRows = (header.Height + macroblockHeight - 1) / macroblockHeight;
+        var gridMatchesMacroblocks = tileCols == macroblockTokens.MacroblockCols && tileRows == macroblockTokens.MacroblockRows;
 
         var macroblockRgbaCache = new byte[macroblockTokens.Macroblocks.Length][];
         for (var i = 0; i < macroblockTokens.Macroblocks.Length; i++) {
@@ -786,10 +787,10 @@ internal static class WebpVp8Decoder {
 
         for (var tileY = 0; tileY < tileRows; tileY++) {
             var dstBlockY = tileY * macroblockHeight;
-            var sourceY = ClampIndex(tileY, macroblockTokens.MacroblockRows);
+            var sourceY = gridMatchesMacroblocks ? tileY : ClampIndex(tileY, macroblockTokens.MacroblockRows);
             for (var tileX = 0; tileX < tileCols; tileX++) {
                 var dstBlockX = tileX * macroblockWidth;
-                var sourceX = ClampIndex(tileX, macroblockTokens.MacroblockCols);
+                var sourceX = gridMatchesMacroblocks ? tileX : ClampIndex(tileX, macroblockTokens.MacroblockCols);
                 var sourceIndex = (sourceY * macroblockTokens.MacroblockCols) + sourceX;
                 if ((uint)sourceIndex >= (uint)macroblockRgbaCache.Length) return false;
 
