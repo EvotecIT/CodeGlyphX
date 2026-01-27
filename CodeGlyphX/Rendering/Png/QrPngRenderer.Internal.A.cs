@@ -85,6 +85,10 @@ public static partial class QrPngRenderer {
             && (opts.Canvas is not null || eyesSparkle.SparkleAllowOnQrBackground)) {
             DrawEyeSparkles(buffer, widthPx, heightPx, stride, opts, qrOffsetX, qrOffsetY, qrFullPx, qrSizePx, size);
         }
+        if (opts.Eyes is { AccentRingCount: > 0 } eyesAccents
+            && (opts.Canvas is not null || eyesAccents.AccentRingAllowOnQrBackground)) {
+            DrawEyeAccentRings(buffer, widthPx, heightPx, stride, opts, qrOffsetX, qrOffsetY, qrFullPx, qrSizePx, size);
+        }
 
         var connectedShape = opts.ModuleShape;
         var connectedMode = connectedShape is QrPngModuleShape.ConnectedRounded or QrPngModuleShape.ConnectedSquircle;
@@ -721,6 +725,157 @@ public static partial class QrPngRenderer {
                 qrX1,
                 qrY1,
                 qrAreaAlphaMax: 0);
+        }
+    }
+
+    private static void DrawEyeAccentRings(
+        byte[] scanlines,
+        int widthPx,
+        int heightPx,
+        int stride,
+        QrPngRenderOptions opts,
+        int qrOffsetX,
+        int qrOffsetY,
+        int qrFullPx,
+        int qrSizePx,
+        int size) {
+        var eyes = opts.Eyes;
+        if (eyes is null || eyes.AccentRingCount <= 0 || eyes.AccentRingThicknessPx <= 0) return;
+
+        var moduleSize = opts.ModuleSize;
+        if (moduleSize <= 0) return;
+
+        var pad = opts.Canvas is null ? 0 : Math.Max(0, opts.Canvas.PaddingPx);
+        var canvasX = qrOffsetX - pad;
+        var canvasY = qrOffsetY - pad;
+        var canvasW = qrFullPx + pad * 2;
+        var canvasH = canvasW;
+        var canvasX1 = canvasX + canvasW - 1;
+        var canvasY1 = canvasY + canvasH - 1;
+        var canvasRadius = opts.Canvas is null ? 0 : Math.Max(0, opts.Canvas.CornerRadiusPx);
+        var canvasRadiusSq = canvasRadius * canvasRadius;
+
+        var qrX0 = qrOffsetX;
+        var qrY0 = qrOffsetY;
+        var qrX1 = qrOffsetX + qrFullPx - 1;
+        var qrY1 = qrOffsetY + qrFullPx - 1;
+
+        var seed = eyes.AccentRingSeed != 0
+            ? eyes.AccentRingSeed
+            : unchecked(Environment.TickCount ^ Hash(qrOffsetX, qrOffsetY, qrFullPx, size ^ 0x5f3759df));
+        var rand = new Random(seed);
+
+        var accentOverride = eyes.AccentRingColor;
+        if (accentOverride is not null && accentOverride.Value.A == 0) return;
+
+        var thickness = Math.Max(1, eyes.AccentRingThicknessPx);
+        var halfThickness = Math.Max(1, thickness / 2);
+        var spread = Math.Max(0, eyes.AccentRingSpreadPx);
+        var jitter = Math.Max(0, eyes.AccentRingJitterPx);
+        var eyeRadiusPx = (int)Math.Round(3.5 * moduleSize);
+        var baseMinRing = eyeRadiusPx + halfThickness + 1;
+
+        for (var i = 0; i < eyes.AccentRingCount; i++) {
+            var eyeIndex = rand.Next(3);
+            var eyeModuleX = eyeIndex switch {
+                0 => 0,
+                1 => size - 7,
+                _ => 0,
+            };
+            var eyeModuleY = eyeIndex switch {
+                0 => 0,
+                1 => 0,
+                _ => size - 7,
+            };
+
+            var eyeBaseX = qrOffsetX + (eyeModuleX + opts.QuietZone) * moduleSize;
+            var eyeBaseY = qrOffsetY + (eyeModuleY + opts.QuietZone) * moduleSize;
+            var eyeCenterX = eyeBaseX + 3 * moduleSize + moduleSize / 2;
+            var eyeCenterY = eyeBaseY + 3 * moduleSize + moduleSize / 2;
+
+            var accentColor = accentOverride ?? GetEyeOuterColor(opts, eyeIndex);
+            if (accentOverride is null && accentColor.A > 150) {
+                accentColor = new Rgba32(accentColor.R, accentColor.G, accentColor.B, 120);
+            }
+            if (accentColor.A == 0) continue;
+
+            var minRing = baseMinRing;
+            if (opts.Canvas is not null && eyes.AccentRingProtectQrArea) {
+                var edgeDistance = Math.Min(
+                    Math.Min(eyeCenterX - qrX0, qrX1 - eyeCenterX),
+                    Math.Min(eyeCenterY - qrY0, qrY1 - eyeCenterY));
+                minRing = Math.Max(minRing, edgeDistance + halfThickness + 2);
+            }
+            var maxRing = minRing + spread;
+
+            var ring = NextBetween(rand, minRing, maxRing);
+            if (jitter > 0) {
+                ring += rand.Next(-jitter, jitter + 1);
+            }
+            ring = Math.Max(minRing, ring);
+
+            DrawRingStroke(
+                scanlines,
+                stride,
+                eyeCenterX,
+                eyeCenterY,
+                ring,
+                thickness,
+                accentColor,
+                canvasX,
+                canvasY,
+                canvasX1,
+                canvasY1,
+                canvasRadius,
+                canvasRadiusSq,
+                eyes.AccentRingProtectQrArea,
+                qrX0,
+                qrY0,
+                qrX1,
+                qrY1);
+        }
+    }
+
+    private static void DrawRingStroke(
+        byte[] scanlines,
+        int stride,
+        int cx,
+        int cy,
+        int radius,
+        int thickness,
+        Rgba32 color,
+        int canvasX0,
+        int canvasY0,
+        int canvasX1,
+        int canvasY1,
+        int canvasRadius,
+        int canvasRadiusSq,
+        bool protectQr,
+        int qrX0,
+        int qrY0,
+        int qrX1,
+        int qrY1) {
+        var outer = Math.Max(1, radius);
+        var inner = Math.Max(0, outer - Math.Max(1, thickness));
+        var outerSq = outer * outer;
+        var innerSq = inner * inner;
+
+        var x0 = Math.Max(canvasX0, cx - outer);
+        var y0 = Math.Max(canvasY0, cy - outer);
+        var x1 = Math.Min(canvasX1, cx + outer);
+        var y1 = Math.Min(canvasY1, cy + outer);
+
+        for (var y = y0; y <= y1; y++) {
+            var dy = y - cy;
+            var dy2 = dy * dy;
+            for (var x = x0; x <= x1; x++) {
+                var dx = x - cx;
+                var dist2 = dx * dx + dy2;
+                if (dist2 > outerSq || dist2 < innerSq) continue;
+                if (canvasRadius > 0 && !InsideRounded(x, y, canvasX0, canvasY0, canvasX1, canvasY1, canvasRadius, canvasRadiusSq)) continue;
+                if (protectQr && x >= qrX0 && x <= qrX1 && y >= qrY0 && y <= qrY1) continue;
+                BlendPixel(scanlines, stride, x, y, color);
+            }
         }
     }
 

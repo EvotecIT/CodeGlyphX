@@ -137,6 +137,46 @@ public sealed class QrPngEyeOptions {
     /// </summary>
     public bool SparkleAllowOnQrBackground { get; set; }
 
+    /// <summary>
+    /// Optional accent ring count drawn around the eyes on the canvas.
+    /// </summary>
+    public int AccentRingCount { get; set; }
+
+    /// <summary>
+    /// Accent ring stroke thickness in pixels.
+    /// </summary>
+    public int AccentRingThicknessPx { get; set; } = 4;
+
+    /// <summary>
+    /// How far accent rings can extend beyond the eye ring (in pixels).
+    /// </summary>
+    public int AccentRingSpreadPx { get; set; } = 28;
+
+    /// <summary>
+    /// Small jitter applied to ring radius (in pixels).
+    /// </summary>
+    public int AccentRingJitterPx { get; set; } = 6;
+
+    /// <summary>
+    /// Accent ring color override. Defaults to the outer eye color with a softer alpha.
+    /// </summary>
+    public Rgba32? AccentRingColor { get; set; }
+
+    /// <summary>
+    /// Random seed for accent ring placement. Use 0 to auto-randomize per render.
+    /// </summary>
+    public int AccentRingSeed { get; set; }
+
+    /// <summary>
+    /// When true (default), accent rings do not draw inside the QR area.
+    /// </summary>
+    public bool AccentRingProtectQrArea { get; set; } = true;
+
+    /// <summary>
+    /// When false (default), accent rings render only when a canvas is enabled.
+    /// </summary>
+    public bool AccentRingAllowOnQrBackground { get; set; }
+
     internal void Validate() {
         if (OuterScale is <= 0 or > 1.0) throw new ArgumentOutOfRangeException(nameof(OuterScale));
         if (InnerScale is <= 0 or > 1.0) throw new ArgumentOutOfRangeException(nameof(InnerScale));
@@ -144,6 +184,10 @@ public sealed class QrPngEyeOptions {
         if (SparkleCount < 0) throw new ArgumentOutOfRangeException(nameof(SparkleCount));
         if (SparkleRadiusPx < 0) throw new ArgumentOutOfRangeException(nameof(SparkleRadiusPx));
         if (SparkleSpreadPx < 0) throw new ArgumentOutOfRangeException(nameof(SparkleSpreadPx));
+        if (AccentRingCount < 0) throw new ArgumentOutOfRangeException(nameof(AccentRingCount));
+        if (AccentRingThicknessPx < 0) throw new ArgumentOutOfRangeException(nameof(AccentRingThicknessPx));
+        if (AccentRingSpreadPx < 0) throw new ArgumentOutOfRangeException(nameof(AccentRingSpreadPx));
+        if (AccentRingJitterPx < 0) throw new ArgumentOutOfRangeException(nameof(AccentRingJitterPx));
         if (OuterColors is { Length: not 3 }) throw new ArgumentOutOfRangeException(nameof(OuterColors), "OuterColors must have exactly 3 entries.");
         if (InnerColors is { Length: not 3 }) throw new ArgumentOutOfRangeException(nameof(InnerColors), "InnerColors must have exactly 3 entries.");
         if (OuterGradients is { Length: not 3 }) throw new ArgumentOutOfRangeException(nameof(OuterGradients), "OuterGradients must have exactly 3 entries.");
