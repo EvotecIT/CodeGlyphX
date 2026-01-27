@@ -167,6 +167,15 @@ internal static class QrStyleBoardExample {
                 pattern: Speckle(R(0, 80, 120, 96), seed: 4242, sizePx: 7, thicknessPx: 2, variation: 0.84, density: 0.94),
                 canvas: CanvasGradient(R(8, 20, 36), R(16, 44, 72)))),
 
+            new("Halftone Bloom", StyleDocs("halftone-bloom"), () => BaseSticker(
+                fg: R(92, 90, 255),
+                palette: Palette(QrPngPaletteMode.Cycle, 0, R(92, 90, 255), R(190, 120, 255), R(120, 210, 255)),
+                shape: QrPngModuleShape.ConnectedRounded,
+                eyes: EyeGlow(R(92, 90, 255), R(190, 120, 255), R(120, 210, 255, 170)),
+                scaleMap: ScaleMap(QrPngModuleScaleMode.Radial, 0.82, 1.0, 2468),
+                pattern: Halftone(R(255, 255, 255, 92), seed: 8080, sizePx: 10, thicknessPx: 3, variation: 0.96, density: 0.97),
+                canvas: CanvasGradient(R(18, 16, 60), R(46, 26, 98)))),
+
             new("Mint Board", StyleDocs("mint-board"), () => BaseSticker(
                 fg: R(0, 156, 121),
                 palette: Palette(QrPngPaletteMode.Checker, 0, R(0, 156, 121), R(99, 224, 181)),
@@ -349,6 +358,20 @@ internal static class QrStyleBoardExample {
     private static QrPngForegroundPatternOptions Speckle(Rgba32 color, int seed, int sizePx = 6, int thicknessPx = 1, double variation = 0.78, double density = 0.92, bool applyToEyes = false) {
         return new QrPngForegroundPatternOptions {
             Type = QrPngForegroundPatternType.SpeckleDots,
+            Color = color,
+            Seed = seed,
+            Variation = variation,
+            Density = density,
+            SizePx = sizePx,
+            ThicknessPx = thicknessPx,
+            ApplyToModules = true,
+            ApplyToEyes = applyToEyes,
+        };
+    }
+
+    private static QrPngForegroundPatternOptions Halftone(Rgba32 color, int seed, int sizePx = 8, int thicknessPx = 2, double variation = 0.9, double density = 0.95, bool applyToEyes = false) {
+        return new QrPngForegroundPatternOptions {
+            Type = QrPngForegroundPatternType.HalftoneDots,
             Color = color,
             Seed = seed,
             Variation = variation,

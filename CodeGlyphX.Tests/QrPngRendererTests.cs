@@ -144,6 +144,57 @@ public sealed class QrPngRendererTests {
     }
 
     [Fact]
+    public void Render_With_HalftonePattern_Is_Stronger_Near_Center() {
+        var matrix = new BitMatrix(1, 1);
+        matrix[0, 0] = true;
+
+        var opts = new QrPngRenderOptions {
+            ModuleSize = 200,
+            QuietZone = 0,
+            Foreground = Rgba32.Black,
+            Background = Rgba32.White,
+            ForegroundPattern = new QrPngForegroundPatternOptions {
+                Type = QrPngForegroundPatternType.HalftoneDots,
+                Color = new Rgba32(255, 255, 255, 140),
+                Seed = 2026,
+                Variation = 1.0,
+                Density = 1.0,
+                SizePx = 16,
+                ThicknessPx = 5,
+                ApplyToModules = true,
+                ApplyToEyes = true,
+            },
+        };
+
+        var png = QrPngRenderer.Render(matrix, opts);
+        var (rgba, width, height, stride) = PngTestDecoder.DecodeRgba32(png);
+
+        static long SumLuma(byte[] rgba, int stride, int x0, int y0, int size) {
+            long sum = 0;
+            var x1 = x0 + size;
+            var y1 = y0 + size;
+            for (var y = y0; y < y1; y++) {
+                var row = y * stride;
+                for (var x = x0; x < x1; x++) {
+                    var idx = row + x * 4;
+                    sum += rgba[idx + 0];
+                    sum += rgba[idx + 1];
+                    sum += rgba[idx + 2];
+                }
+            }
+            return sum;
+        }
+
+        var regionSize = 48;
+        var corner = SumLuma(rgba, stride, 0, 0, regionSize);
+        var centerX = Math.Max(0, (width - regionSize) / 2);
+        var centerY = Math.Max(0, (height - regionSize) / 2);
+        var center = SumLuma(rgba, stride, centerX, centerY, regionSize);
+
+        Assert.True(center > corner, "Expected halftone to brighten the center more than the corners.");
+    }
+
+    [Fact]
     public void Render_With_Background_Pattern_Draws_Overlay() {
         var matrix = new BitMatrix(1, 1);
         matrix[0, 0] = true;

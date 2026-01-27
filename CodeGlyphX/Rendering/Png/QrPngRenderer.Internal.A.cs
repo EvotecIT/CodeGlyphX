@@ -241,7 +241,10 @@ public static partial class QrPngRenderer {
                             usePattern,
                             useMask,
                             boxX,
-                            boxY);
+                            boxY,
+                            qrOriginX,
+                            qrOriginY,
+                            qrSizePx);
                         continue;
                     }
                 }
@@ -346,7 +349,7 @@ public static partial class QrPngRenderer {
                     ? color
                     : GetGradientColor(gradient.Value, x0 + sx, y0 + sy, originX, originY);
 
-                if (pattern is not null && ShouldDrawForegroundPattern(pattern, moduleSize, x0 + sx, y0 + sy)) {
+                if (pattern is not null && ShouldDrawForegroundPattern(pattern, moduleSize, x0 + sx, y0 + sy, originX, originY, qrSizePx)) {
                     outColor = ComposeOver(pattern.Color, outColor);
                 }
 
@@ -385,7 +388,10 @@ public static partial class QrPngRenderer {
         QrPngForegroundPatternOptions? pattern,
         bool[] mask,
         int boxX,
-        int boxY) {
+        int boxY,
+        int originX,
+        int originY,
+        int qrSizePx) {
         var x0 = offsetX + (mx + quietZone) * moduleSize;
         var y0 = offsetY + (my + quietZone) * moduleSize;
         for (var sy = 0; sy < moduleSize; sy++) {
@@ -397,7 +403,7 @@ public static partial class QrPngRenderer {
                     continue;
                 }
                 var outColor = GetGradientColorInBox(gradient, x0 + sx, y0 + sy, boxX, boxY);
-                if (pattern is not null && ShouldDrawForegroundPattern(pattern, moduleSize, x0 + sx, y0 + sy)) {
+                if (pattern is not null && ShouldDrawForegroundPattern(pattern, moduleSize, x0 + sx, y0 + sy, originX, originY, qrSizePx)) {
                     outColor = ComposeOver(pattern.Color, outColor);
                 }
 
@@ -1067,7 +1073,7 @@ public static partial class QrPngRenderer {
         return dx * dx + dy * dy <= radius * radius;
     }
 
-    private static bool ShouldDrawForegroundPattern(QrPngForegroundPatternOptions pattern, int moduleSize, int px, int py) {
+    private static bool ShouldDrawForegroundPattern(QrPngForegroundPatternOptions pattern, int moduleSize, int px, int py, int originX, int originY, int qrSizePx) {
         var size = Math.Max(1, pattern.SizePx);
         if (pattern.SnapToModuleSize && moduleSize > 0) {
             var step = Math.Max(1, pattern.ModuleStep);
@@ -1077,11 +1083,14 @@ public static partial class QrPngRenderer {
         var thickness = Math.Max(1, pattern.ThicknessPx);
         if (thickness > size) thickness = size;
 
-        var localX = PositiveMod(px, size);
-        var localY = PositiveMod(py, size);
+        var relX = px - originX;
+        var relY = py - originY;
+        var localX = PositiveMod(relX, size);
+        var localY = PositiveMod(relY, size);
 
         return pattern.Type switch {
-            QrPngForegroundPatternType.SpeckleDots => ShouldDrawSpeckleDot(pattern, px, py, size, thickness, localX, localY),
+            QrPngForegroundPatternType.SpeckleDots => ShouldDrawSpeckleDot(pattern, px, py, size, thickness, localX, localY, originX, originY),
+            QrPngForegroundPatternType.HalftoneDots => ShouldDrawHalftoneDot(pattern, px, py, size, thickness, localX, localY, originX, originY, qrSizePx),
             QrPngForegroundPatternType.DiagonalStripes => PositiveMod(localX + localY, size) < thickness,
             QrPngForegroundPatternType.Crosshatch =>
                 PositiveMod(localX + localY, size) < thickness || PositiveMod(localX - localY, size) < thickness,
@@ -1109,13 +1118,15 @@ public static partial class QrPngRenderer {
         return dx * dx + dy * dy <= radius * radius;
     }
 
-    private static bool ShouldDrawSpeckleDot(QrPngForegroundPatternOptions pattern, int px, int py, int size, int thickness, int localX, int localY) {
+    private static bool ShouldDrawSpeckleDot(QrPngForegroundPatternOptions pattern, int px, int py, int size, int thickness, int localX, int localY, int originX, int originY) {
         var density = Clamp01(pattern.Density);
         if (density <= 0) return false;
 
         var variation = Clamp01(pattern.Variation);
-        var cellX = (px - localX) / size;
-        var cellY = (py - localY) / size;
+        var relX = px - originX;
+        var relY = py - originY;
+        var cellX = (relX - localX) / size;
+        var cellY = (relY - localY) / size;
         var seed = pattern.Seed;
 
         var presenceHash = (uint)Hash(cellX, cellY, seed);
@@ -1141,6 +1152,61 @@ public static partial class QrPngRenderer {
         var dx = localX - cx;
         var dy = localY - cy;
         return dx * dx + dy * dy <= radius * radius;
+    }
+
+    private static bool ShouldDrawHalftoneDot(QrPngForegroundPatternOptions pattern, int px, int py, int size, int thickness, int localX, int localY, int originX, int originY, int qrSizePx) {
+        var density = Clamp01(pattern.Density);
+        if (density <= 0) return false;
+
+        var strength = Clamp01(pattern.Variation);
+        var relX = px - originX;
+        var relY = py - originY;
+        var cellX = (relX - localX) / size;
+        var cellY = (relY - localY) / size;
+        var seed = pattern.Seed;
+
+        var radialT = ComputeRadialT(px, py, originX, originY, qrSizePx);
+        var densityScaled = density * (1.0 - 0.55 * strength * radialT);
+        if (densityScaled <= 0.02) return false;
+
+        var presenceHash = (uint)Hash(cellX, cellY, seed ^ unchecked((int)0x27d4eb2f));
+        var presence = presenceHash / (double)uint.MaxValue;
+        if (presence > densityScaled) return false;
+
+        var jitterHashX = (uint)Hash(cellX, cellY, seed ^ unchecked((int)0x9e3779b9));
+        var jitterHashY = (uint)Hash(cellX, cellY, seed ^ unchecked((int)0x7f4a7c15));
+        var radiusHash = (uint)Hash(cellX, cellY, seed ^ unchecked((int)0x85ebca6b));
+
+        var jitterRange = strength * size * 0.22;
+        var jitterX = (jitterHashX / (double)uint.MaxValue * 2.0 - 1.0) * jitterRange;
+        var jitterY = (jitterHashY / (double)uint.MaxValue * 2.0 - 1.0) * jitterRange;
+
+        var center = (size - 1) / 2.0;
+        var cx = center + jitterX;
+        var cy = center + jitterY;
+
+        var baseRadius = Math.Max(0.75, thickness);
+        var radialScale = 1.0 - 0.65 * strength * radialT;
+        if (radialScale < 0.35) radialScale = 0.35;
+        var jitterScale = 1.0 + strength * 0.6 * ((radiusHash / (double)uint.MaxValue) - 0.5);
+        var radius = baseRadius * radialScale * jitterScale;
+        if (radius < 0.75) radius = 0.75;
+
+        var dx = localX - cx;
+        var dy = localY - cy;
+        return dx * dx + dy * dy <= radius * radius;
+    }
+
+    private static double ComputeRadialT(int px, int py, int originX, int originY, int qrSizePx) {
+        if (qrSizePx <= 0) return 0;
+        var centerX = originX + qrSizePx / 2.0;
+        var centerY = originY + qrSizePx / 2.0;
+        var dx = px - centerX;
+        var dy = py - centerY;
+        var dist = Math.Sqrt(dx * dx + dy * dy);
+        var maxDist = Math.Sqrt(2.0) * (qrSizePx / 2.0);
+        if (maxDist <= 0) return 0;
+        return Clamp01(dist / maxDist);
     }
 
     private static double Clamp01(double value) {

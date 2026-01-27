@@ -13,6 +13,10 @@ public enum QrPngForegroundPatternType {
     /// </summary>
     SpeckleDots,
     /// <summary>
+    /// Radial halftone dots that are stronger near the center and lighter near edges.
+    /// </summary>
+    HalftoneDots,
+    /// <summary>
     /// Diagonal stripes.
     /// </summary>
     DiagonalStripes,
