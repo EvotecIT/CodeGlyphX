@@ -470,6 +470,76 @@ public static class QrArtPresets {
     }
 
     /// <summary>
+    /// Pastel paint-splash canvas with a softer palette.
+    /// </summary>
+    public static QrEasyOptions PaintSplashPastel() {
+        var opts = BaseArt();
+        opts.Foreground = new Rgba32(20, 40, 98);
+        opts.Background = new Rgba32(250, 252, 255);
+        opts.ModuleShape = QrPngModuleShape.ConnectedSquircle;
+        opts.ModuleScale = 0.96;
+        opts.ModuleScaleMap = new QrPngModuleScaleMapOptions {
+            Mode = QrPngModuleScaleMode.Radial,
+            MinScale = 0.94,
+            MaxScale = 1.0,
+            RingSize = 2,
+        };
+        opts.ForegroundPalette = new QrPngPaletteOptions {
+            Mode = QrPngPaletteMode.Cycle,
+            RingSize = 2,
+            ApplyToEyes = false,
+            Colors = new[] {
+                new Rgba32(20, 40, 98),
+                new Rgba32(32, 72, 144),
+                new Rgba32(24, 108, 140),
+            },
+        };
+        opts.Eyes = new QrPngEyeOptions {
+            UseFrame = true,
+            FrameStyle = QrPngEyeFrameStyle.Target,
+            OuterShape = QrPngModuleShape.Rounded,
+            InnerShape = QrPngModuleShape.Circle,
+            OuterCornerRadiusPx = 6,
+            InnerCornerRadiusPx = 4,
+            OuterColor = new Rgba32(28, 60, 136),
+            InnerColor = new Rgba32(60, 174, 186),
+        };
+        opts.Canvas = new QrPngCanvasOptions {
+            PaddingPx = 30,
+            CornerRadiusPx = 30,
+            BackgroundGradient = new QrPngGradientOptions {
+                Type = QrPngGradientType.DiagonalDown,
+                StartColor = new Rgba32(244, 248, 255),
+                EndColor = new Rgba32(226, 236, 255),
+            },
+            Splash = new QrPngCanvasSplashOptions {
+                Color = new Rgba32(96, 132, 210, 92),
+                Colors = new[] {
+                    new Rgba32(96, 132, 210, 92),
+                    new Rgba32(190, 110, 200, 92),
+                    new Rgba32(110, 186, 140, 92),
+                    new Rgba32(214, 152, 104, 92),
+                },
+                Count = 12,
+                MinRadiusPx = 16,
+                MaxRadiusPx = 48,
+                SpreadPx = 30,
+                Seed = 7331,
+                DripChance = 0.45,
+                DripLengthPx = 30,
+                DripWidthPx = 9,
+                ProtectQrArea = true,
+            },
+            BorderPx = 1,
+            BorderColor = new Rgba32(255, 255, 255, 214),
+            ShadowOffsetX = 6,
+            ShadowOffsetY = 8,
+            ShadowColor = new Rgba32(36, 66, 140, 52),
+        };
+        return opts;
+    }
+
+    /// <summary>
     /// Explicit scan-safe variant of <see cref="NeonGlow"/>.
     /// </summary>
     public static QrEasyOptions NeonGlowSafe() => NeonGlow();
@@ -652,6 +722,39 @@ public static class QrArtPresets {
             opts.Canvas.Splash.DripChance = 0.55;
             opts.Canvas.Splash.DripLengthPx = 36;
             opts.Canvas.Splash.MaxRadiusPx = Math.Max(opts.Canvas.Splash.MaxRadiusPx, 54);
+        }
+        return opts;
+    }
+
+    /// <summary>
+    /// Explicit scan-safe variant of <see cref="PaintSplashPastel"/>.
+    /// </summary>
+    public static QrEasyOptions PaintSplashPastelSafe() => PaintSplashPastel();
+
+    /// <summary>
+    /// Bolder variant of <see cref="PaintSplashPastel"/> with denser splashes.
+    /// </summary>
+    public static QrEasyOptions PaintSplashPastelBold() {
+        var opts = PaintSplashPastelSafe();
+        opts.ModuleScale = 0.95;
+        if (opts.ModuleScaleMap is not null) {
+            opts.ModuleScaleMap.MinScale = 0.92;
+            opts.ModuleScaleMap.RingSize = 1;
+        }
+        if (opts.Canvas?.Splash is not null) {
+            opts.Canvas.Splash.Color = new Rgba32(96, 132, 210, 112);
+            if (opts.Canvas.Splash.Colors is not null) {
+                opts.Canvas.Splash.Colors = new[] {
+                    new Rgba32(96, 132, 210, 108),
+                    new Rgba32(190, 110, 200, 108),
+                    new Rgba32(110, 186, 140, 108),
+                    new Rgba32(214, 152, 104, 108),
+                };
+            }
+            opts.Canvas.Splash.Count = 18;
+            opts.Canvas.Splash.DripChance = 0.6;
+            opts.Canvas.Splash.DripLengthPx = 38;
+            opts.Canvas.Splash.MaxRadiusPx = Math.Max(opts.Canvas.Splash.MaxRadiusPx, 56);
         }
         return opts;
     }

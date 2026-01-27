@@ -15,6 +15,7 @@ public sealed class QrArtSafetyPresetsTests {
             ("InsetRingsSafe", QrArtPresets.InsetRingsSafe()),
             ("StripeEyesSafe", QrArtPresets.StripeEyesSafe()),
             ("PaintSplashSafe", QrArtPresets.PaintSplashSafe()),
+            ("PaintSplashPastelSafe", QrArtPresets.PaintSplashPastelSafe()),
         };
 
         foreach (var (name, preset) in presets) {

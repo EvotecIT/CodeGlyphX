@@ -30,6 +30,9 @@ internal static class QrArtPresetsExample {
 
         Save(dir, payload, "art-paint-splash-safe.png", QrArtPresets.PaintSplashSafe());
         Save(dir, payload, "art-paint-splash-bold.png", QrArtPresets.PaintSplashBold());
+
+        Save(dir, payload, "art-paint-splash-pastel-safe.png", QrArtPresets.PaintSplashPastelSafe());
+        Save(dir, payload, "art-paint-splash-pastel-bold.png", QrArtPresets.PaintSplashPastelBold());
     }
 
     private static void Save(string dir, string payload, string fileName, QrEasyOptions options) {
