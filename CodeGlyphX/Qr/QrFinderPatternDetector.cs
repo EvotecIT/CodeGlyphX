@@ -53,26 +53,24 @@ internal static class QrFinderPatternDetector {
         output.Clear();
 
         using var pooled = new PooledList<FinderPattern>(8);
-        var step = rowStepOverride > 0 ? rowStepOverride : GetRowStep(image);
+        var step = rowStepOverride > 0 ? rowStepOverride : GetRowStep(image, aggressive);
         FindCandidatesWithStep(image, invert, step, pooled, aggressive, shouldStop, maxCandidates, requireDiagonalCheck);
-            if (allowFullScan && step > 1 && pooled.Count < 3) {
-                using var full = new PooledList<FinderPattern>(8);
-                FindCandidatesWithStep(image, invert, rowStep: 1, full, aggressive, shouldStop, maxCandidates, requireDiagonalCheck);
-                if (full.Count > pooled.Count) {
-                    output.EnsureCapacity(full.Count);
-                    full.CopyTo(output);
-                    return;
-                }
+        if (allowFullScan && step > 1 && (pooled.Count < 3 || aggressive)) {
+            using var full = new PooledList<FinderPattern>(8);
+            FindCandidatesWithStep(image, invert, rowStep: 1, full, aggressive, shouldStop, maxCandidates, requireDiagonalCheck);
+            for (var i = 0; i < full.Count; i++) {
+                AddOrMerge(pooled, full[i]);
             }
+        }
 
         pooled.CopyTo(output);
     }
 
-    private static int GetRowStep(QrGrayImage image) {
+    private static int GetRowStep(QrGrayImage image, bool aggressive) {
         var minDim = image.Width < image.Height ? image.Width : image.Height;
-        if (minDim >= 1400) return 3;
-        if (minDim >= 900) return 2;
-        return 1;
+        var step = minDim >= 1400 ? 3 : minDim >= 900 ? 2 : 1;
+        if (aggressive && step > 1) step--;
+        return step;
     }
 
     private static void FindCandidatesWithStep(QrGrayImage image, bool invert, int rowStep, PooledList<FinderPattern> possibleCenters, bool aggressive, Func<bool>? shouldStop, int maxCandidates, bool requireDiagonalCheck) {
@@ -545,8 +543,8 @@ internal static class QrFinderPatternDetector {
         var total = stateCount[0] + stateCount[1] + stateCount[2] + stateCount[3] + stateCount[4];
         if (total < 7) return false;
         if (stateCount[0] == 0 || stateCount[1] == 0 || stateCount[2] == 0 || stateCount[3] == 0 || stateCount[4] == 0) return false;
-        var outerLimit = aggressive ? 16 : 5;   // 1.6x or 0.5x, scaled by 10.
-        var centerLimit = aggressive ? 45 : 15; // 4.5x or 1.5x, scaled by 10.
+        var outerLimit = aggressive ? 20 : 5;   // 2.0x or 0.5x, scaled by 10.
+        var centerLimit = aggressive ? 60 : 15; // 6.0x or 1.5x, scaled by 10.
 
         var diff0 = 7 * stateCount[0] - total;
         if (diff0 < 0) diff0 = -diff0;
@@ -574,8 +572,8 @@ internal static class QrFinderPatternDetector {
         var total = s0 + s1 + s2 + s3 + s4;
         if (total < 7) return false;
         if (s0 == 0 || s1 == 0 || s2 == 0 || s3 == 0 || s4 == 0) return false;
-        var outerLimit = aggressive ? 16 : 5;
-        var centerLimit = aggressive ? 45 : 15;
+        var outerLimit = aggressive ? 20 : 5;
+        var centerLimit = aggressive ? 60 : 15;
 
         var diff0 = 7 * s0 - total;
         if (diff0 < 0) diff0 = -diff0;

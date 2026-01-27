@@ -185,6 +185,14 @@ internal static partial class QrPixelDecoder {
             }
             if (options.StylizedSampling) {
                 stylizedSampling = true;
+                aggressiveSampling = true;
+                minContrast = Math.Max(2, minContrast - 6);
+                allowExtraThresholds = true;
+                allowAdaptiveThreshold = true;
+                allowBlur = true;
+                if (collectMaxScale < maxScale) {
+                    collectMaxScale = maxScale;
+                }
             }
             if (options.MaxMilliseconds > 0) {
                 if (options.MaxMilliseconds <= 400) {

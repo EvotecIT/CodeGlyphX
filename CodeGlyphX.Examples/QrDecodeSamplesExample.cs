@@ -17,7 +17,7 @@ internal static class QrDecodeSamplesExample {
             .OrderBy(path => path, StringComparer.OrdinalIgnoreCase)
             .ToArray();
 
-        var options = new QrPixelDecodeOptions {
+        var baseOptions = new QrPixelDecodeOptions {
             Profile = QrDecodeProfile.Robust,
             MaxDimension = 2400,
             BudgetMilliseconds = 2500,
@@ -29,7 +29,7 @@ internal static class QrDecodeSamplesExample {
         var lines = new List<string> {
             $"SampleDir: {sampleDir}",
             $"Files: {files.Length}",
-            $"Options: Profile={options.Profile}, MaxDimension={options.MaxDimension}, BudgetMilliseconds={options.BudgetMilliseconds}, AggressiveSampling={options.AggressiveSampling}, StylizedSampling={options.StylizedSampling}, EnableTileScan={options.EnableTileScan}",
+            $"Options: Profile={baseOptions.Profile}, MaxDimension={baseOptions.MaxDimension}, BudgetMilliseconds={baseOptions.BudgetMilliseconds}, AggressiveSampling={baseOptions.AggressiveSampling}, StylizedSampling={baseOptions.StylizedSampling}, EnableTileScan={baseOptions.EnableTileScan}",
             string.Empty
         };
         var debugOutputs = ReadBoolEnv("CODEGLYPHX_DECODE_SAMPLES_DEBUG", false);
@@ -41,6 +41,7 @@ internal static class QrDecodeSamplesExample {
         foreach (var file in files) {
             var bytes = File.ReadAllBytes(file);
             var name = Path.GetFileName(file);
+            var options = SelectOptionsForSample(name, baseOptions);
 
             if (QrImageDecoder.TryDecodeAllImage(bytes, options, out var decoded) && decoded.Length > 0) {
                 var texts = decoded
@@ -78,6 +79,36 @@ internal static class QrDecodeSamplesExample {
         var outputPath = Path.Combine(outputDir, "qr-decode-samples.txt");
         File.WriteAllLines(outputPath, lines, Encoding.UTF8);
         Console.WriteLine(string.Join(Environment.NewLine, lines));
+    }
+
+    private static QrPixelDecodeOptions SelectOptionsForSample(string fileName, QrPixelDecodeOptions baseOptions) {
+        if (fileName.Contains("screenshot", StringComparison.OrdinalIgnoreCase)) {
+            return new QrPixelDecodeOptions {
+                Profile = QrDecodeProfile.Robust,
+                MaxDimension = 3200,
+                BudgetMilliseconds = 12000,
+                AutoCrop = true,
+                AggressiveSampling = true,
+                StylizedSampling = true,
+                EnableTileScan = true,
+                TileGrid = 6
+            };
+        }
+
+        if (fileName.StartsWith("qr-art-", StringComparison.OrdinalIgnoreCase)) {
+            return new QrPixelDecodeOptions {
+                Profile = QrDecodeProfile.Robust,
+                MaxDimension = 3200,
+                BudgetMilliseconds = 8000,
+                AutoCrop = true,
+                AggressiveSampling = true,
+                StylizedSampling = true,
+                EnableTileScan = true,
+                TileGrid = 4
+            };
+        }
+
+        return baseOptions;
     }
 
     private static bool ReadBoolEnv(string name, bool fallback) {
