@@ -23,7 +23,12 @@ else
             <button class="code-tab @(SelectedPlatform == "Maui" ? "active" : "")" @onclick="@(() => SetPlatform("Maui"))">MAUI</button>
         </div>
 
-        <pre class="code-block" @key="@_codeBlockKey">@GetPlatformExample()</pre>
+        <div class="code-tabs">
+            <button class="code-tab @(SelectedLanguage == Playground.CodeLanguage.CSharp ? "active" : "")" @onclick="@(() => SetLanguage(Playground.CodeLanguage.CSharp))">C#</button>
+            <button class="code-tab @(SelectedLanguage == Playground.CodeLanguage.Vb ? "active" : "")" @onclick="@(() => SetLanguage(Playground.CodeLanguage.Vb))">VB.NET</button>
+        </div>
+
+        <pre class="code-block @GetLanguageCssClass()" @key="@_codeBlockKey">@GetPlatformExample()</pre>
     </div>
 }
 
@@ -32,11 +37,19 @@ else
     public Playground? Host { get; set; }
 
     private string SelectedPlatform { get; set; } = "Console";
+    private Playground.CodeLanguage SelectedLanguage { get; set; } = Playground.CodeLanguage.CSharp;
     private int _codeBlockKey = 0;
 
     private void SetPlatform(string platform)
     {
         SelectedPlatform = platform;
+        _codeBlockKey++; // Force new element to avoid JS-modified DOM conflicts
+        StateHasChanged();
+    }
+
+    private void SetLanguage(Playground.CodeLanguage language)
+    {
+        SelectedLanguage = language;
         _codeBlockKey++; // Force new element to avoid JS-modified DOM conflicts
         StateHasChanged();
     }
@@ -50,19 +63,30 @@ else
     {
         if (Host is null) return "";
 
-        var baseCode = Host.GetCodeExample();
+        var baseCode = Host.GetCodeExample(SelectedLanguage);
 
         return SelectedPlatform switch
         {
-            "AspNet" => GetAspNetExample(baseCode),
-            "Blazor" => GetBlazorExample(baseCode),
-            "Maui" => GetMauiExample(baseCode),
+            "AspNet" => GetAspNetExample(SelectedLanguage, baseCode),
+            "Blazor" => GetBlazorExample(SelectedLanguage, baseCode),
+            "Maui" => GetMauiExample(SelectedLanguage, baseCode),
             _ => baseCode
         };
     }
 
-    private string GetAspNetExample(string baseCode)
+    private string GetAspNetExample(Playground.CodeLanguage language, string baseCode)
     {
+        if (Host?.SelectedMode == "Decode")
+        {
+            if (language == Playground.CodeLanguage.Vb)
+            {
+                return baseCode;
+            }
+        }
+        else if (language == Playground.CodeLanguage.Vb)
+        {
+            return GetAspNetExampleVb();
+        }
         var nl = "\n";
 
         if (Host?.SelectedMode == "Decode")
@@ -140,8 +164,19 @@ else
         }
     }
 
-    private string GetBlazorExample(string baseCode)
+    private string GetBlazorExample(Playground.CodeLanguage language, string baseCode)
     {
+        if (Host?.SelectedMode == "Decode")
+        {
+            if (language == Playground.CodeLanguage.Vb)
+            {
+                return baseCode;
+            }
+        }
+        else if (language == Playground.CodeLanguage.Vb)
+        {
+            return "// VB.NET isn't supported in Blazor components yet; showing C#." + "\n" + GetBlazorExample(Playground.CodeLanguage.CSharp, baseCode);
+        }
         var nl = "\n";
 
         if (Host?.SelectedMode == "Decode")
@@ -222,8 +257,19 @@ else
         }
     }
 
-    private string GetMauiExample(string baseCode)
+    private string GetMauiExample(Playground.CodeLanguage language, string baseCode)
     {
+        if (Host?.SelectedMode == "Decode")
+        {
+            if (language == Playground.CodeLanguage.Vb)
+            {
+                return baseCode;
+            }
+        }
+        else if (language == Playground.CodeLanguage.Vb)
+        {
+            return GetMauiExampleVb();
+        }
         var nl = "\n";
 
         if (Host?.SelectedMode == "Decode")
@@ -294,5 +340,123 @@ else
         }
     }
 
+    private string GetAspNetExampleVb()
+    {
+        var nl = "\n";
+        var category = Host?.SelectedCategory ?? "QR";
+
+        if (category == "QR" || category == "SpecialQR")
+        {
+            return "' ASP.NET Core Controller example" + nl
+                + "Imports CodeGlyphX" + nl
+                + "Imports Microsoft.AspNetCore.Mvc" + nl + nl
+                + "Public Class QrController" + nl
+                + "    Inherits ControllerBase" + nl + nl
+                + "    <HttpGet(\"qr/{text}\")>" + nl
+                + "    Public Function GetQrCode(text As String) As IActionResult" + nl
+                + "        Dim png = QR.ToPng(text)" + nl
+                + "        Return File(png, \"image/png\", \"qrcode.png\")" + nl
+                + "    End Function" + nl
+                + "End Class";
+        }
+        else if (category == "Barcode")
+        {
+            return "' ASP.NET Core Controller example" + nl
+                + "Imports CodeGlyphX" + nl
+                + "Imports Microsoft.AspNetCore.Mvc" + nl + nl
+                + "Public Class BarcodeController" + nl
+                + "    Inherits ControllerBase" + nl + nl
+                + "    <HttpGet(\"barcode/{text}\")>" + nl
+                + "    Public Function GetBarcode(text As String) As IActionResult" + nl
+                + "        Dim png = Barcode.Png(BarcodeType." + (Host?.GetBarcodeTypeEnumName() ?? "Code128") + ", text)" + nl
+                + "        Return File(png, \"image/png\", \"barcode.png\")" + nl
+                + "    End Function" + nl
+                + "End Class";
+        }
+        else
+        {
+            var method = Host?.SelectedMatrixType switch
+            {
+                "Pdf417" => "Pdf417Code",
+                "Aztec" => "AztecCode",
+                _ => "DataMatrixCode"
+            };
+            return "' ASP.NET Core Controller example" + nl
+                + "Imports CodeGlyphX" + nl
+                + "Imports Microsoft.AspNetCore.Mvc" + nl + nl
+                + "Public Class MatrixController" + nl
+                + "    Inherits ControllerBase" + nl + nl
+                + "    <HttpGet(\"matrix/{text}\")>" + nl
+                + "    Public Function GetMatrix(text As String) As IActionResult" + nl
+                + "        Dim png = " + method + ".ToPng(text)" + nl
+                + "        Return File(png, \"image/png\", \"matrix.png\")" + nl
+                + "    End Function" + nl
+                + "End Class";
+        }
+    }
+
+    private string GetMauiExampleVb()
+    {
+        var nl = "\n";
+        var category = Host?.SelectedCategory ?? "QR";
+
+        if (category == "QR" || category == "SpecialQR")
+        {
+            return "' .NET MAUI - Display QR code in Image control" + nl
+                + "Imports CodeGlyphX" + nl
+                + "Imports System.IO" + nl + nl
+                + "' In your ViewModel or code-behind:" + nl
+                + "Dim png = QR.ToPng(\"" + EscapeForVbString(Host?.Content ?? "https://example.com") + "\")" + nl
+                + "QrImage.Source = ImageSource.FromStream(Function() New MemoryStream(png))" + nl + nl
+                + "' XAML:" + nl
+                + "' <Image x:Name=\"QrImage\" WidthRequest=\"200\" HeightRequest=\"200\" />";
+        }
+        else if (category == "Barcode")
+        {
+            return "' .NET MAUI - Display barcode in Image control" + nl
+                + "Imports CodeGlyphX" + nl
+                + "Imports System.IO" + nl + nl
+                + "' In your ViewModel or code-behind:" + nl
+                + "Dim png = Barcode.Png(BarcodeType." + (Host?.GetBarcodeTypeEnumName() ?? "Code128") + ", \"" + EscapeForVbString(Host?.BarcodeContent ?? "12345") + "\")" + nl
+                + "BarcodeImage.Source = ImageSource.FromStream(Function() New MemoryStream(png))" + nl + nl
+                + "' XAML:" + nl
+                + "' <Image x:Name=\"BarcodeImage\" WidthRequest=\"300\" HeightRequest=\"100\" />";
+        }
+        else
+        {
+            var method = Host?.SelectedMatrixType switch
+            {
+                "Pdf417" => "Pdf417Code",
+                "Aztec" => "AztecCode",
+                _ => "DataMatrixCode"
+            };
+            return "' .NET MAUI - Display matrix code in Image control" + nl
+                + "Imports CodeGlyphX" + nl
+                + "Imports System.IO" + nl + nl
+                + "' In your ViewModel or code-behind:" + nl
+                + "Dim png = " + method + ".ToPng(\"" + EscapeForVbString(Host?.MatrixContent ?? "Data") + "\")" + nl
+                + "MatrixImage.Source = ImageSource.FromStream(Function() New MemoryStream(png))" + nl + nl
+                + "' XAML:" + nl
+                + "' <Image x:Name=\"MatrixImage\" WidthRequest=\"200\" HeightRequest=\"200\" />";
+        }
+    }
+
+    private string GetLanguageCssClass()
+    {
+        if (Host?.SelectedMode == "Decode")
+        {
+            return SelectedLanguage == Playground.CodeLanguage.Vb ? "language-vbnet" : "language-csharp";
+        }
+
+        if (SelectedPlatform == "Blazor" && SelectedLanguage == Playground.CodeLanguage.Vb)
+        {
+            return "language-csharp";
+        }
+
+        return SelectedLanguage == Playground.CodeLanguage.Vb ? "language-vbnet" : "language-csharp";
+    }
+
     private static string EscapeForComment(string s) => s.Replace("\\", "\\\\").Replace("\"", "\\\"");
+
+    private static string EscapeForVbString(string s) => s.Replace("\"", "\"\"");
 }
