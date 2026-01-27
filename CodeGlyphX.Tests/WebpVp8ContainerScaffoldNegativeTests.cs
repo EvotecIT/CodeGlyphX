@@ -29,9 +29,9 @@ public sealed class WebpVp8ContainerScaffoldNegativeTests
 
         var success = WebpManagedDecoder.TryDecodeRgba32(webp, out var rgba, out var width, out var height);
 
-        Assert.False(success);
-        Assert.Empty(rgba);
-        Assert.Equal(0, width);
-        Assert.Equal(0, height);
+        Assert.True(success);
+        Assert.Equal(8, width);
+        Assert.Equal(8, height);
+        Assert.Equal(8 * 8 * 4, rgba.Length);
     }
 }
