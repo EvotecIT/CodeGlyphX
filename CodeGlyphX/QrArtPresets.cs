@@ -12,13 +12,13 @@ public static class QrArtPresets {
     /// </summary>
     public static QrEasyOptions NeonGlow() {
         var opts = BaseArt();
-        opts.Foreground = new Rgba32(0, 255, 240);
-        opts.Background = new Rgba32(252, 254, 255);
+        opts.Foreground = new Rgba32(0, 96, 92);
+        opts.Background = new Rgba32(250, 252, 255);
         opts.ModuleShape = QrPngModuleShape.Dot;
-        opts.ModuleScale = 0.92;
+        opts.ModuleScale = 0.96;
         opts.ModuleScaleMap = new QrPngModuleScaleMapOptions {
             Mode = QrPngModuleScaleMode.Radial,
-            MinScale = 0.86,
+            MinScale = 0.92,
             MaxScale = 1.0,
             RingSize = 2,
         };
@@ -27,9 +27,9 @@ public static class QrArtPresets {
             RingSize = 2,
             ApplyToEyes = false,
             Colors = new[] {
-                new Rgba32(0, 255, 240),
-                new Rgba32(0, 168, 255),
-                new Rgba32(255, 92, 255),
+                new Rgba32(0, 96, 92),
+                new Rgba32(0, 72, 156),
+                new Rgba32(120, 40, 160),
             },
         };
         opts.Eyes = new QrPngEyeOptions {
@@ -37,13 +37,13 @@ public static class QrArtPresets {
             FrameStyle = QrPngEyeFrameStyle.Glow,
             OuterShape = QrPngModuleShape.Rounded,
             InnerShape = QrPngModuleShape.Circle,
-            OuterColor = new Rgba32(0, 255, 240),
-            InnerColor = new Rgba32(255, 92, 255),
+            OuterColor = new Rgba32(0, 90, 140),
+            InnerColor = new Rgba32(120, 40, 160),
             OuterCornerRadiusPx = 6,
             InnerCornerRadiusPx = 4,
-            GlowRadiusPx = 34,
-            GlowAlpha = 140,
-            GlowColor = new Rgba32(0, 210, 255, 220),
+            GlowRadiusPx = 22,
+            GlowAlpha = 96,
+            GlowColor = new Rgba32(0, 170, 220, 160),
         };
         opts.Canvas = new QrPngCanvasOptions {
             PaddingPx = 28,
@@ -67,20 +67,20 @@ public static class QrArtPresets {
     /// </summary>
     public static QrEasyOptions LiquidGlass() {
         var opts = BaseArt();
-        opts.Foreground = new Rgba32(32, 98, 255);
-        opts.Background = new Rgba32(248, 251, 255);
+        opts.Foreground = new Rgba32(24, 68, 160);
+        opts.Background = new Rgba32(246, 250, 255);
         opts.ModuleShape = QrPngModuleShape.Squircle;
-        opts.ModuleScale = 0.94;
+        opts.ModuleScale = 0.96;
         opts.ModuleScaleMap = new QrPngModuleScaleMapOptions {
             Mode = QrPngModuleScaleMode.Rings,
-            MinScale = 0.9,
+            MinScale = 0.94,
             MaxScale = 1.0,
             RingSize = 3,
         };
         opts.ForegroundGradient = new QrPngGradientOptions {
             Type = QrPngGradientType.DiagonalDown,
-            StartColor = new Rgba32(38, 190, 255),
-            EndColor = new Rgba32(66, 84, 255),
+            StartColor = new Rgba32(24, 120, 180),
+            EndColor = new Rgba32(28, 52, 150),
         };
         opts.Eyes = new QrPngEyeOptions {
             UseFrame = true,
@@ -91,8 +91,8 @@ public static class QrArtPresets {
             InnerCornerRadiusPx = 4,
             OuterGradient = new QrPngGradientOptions {
                 Type = QrPngGradientType.Radial,
-                StartColor = new Rgba32(102, 224, 255),
-                EndColor = new Rgba32(48, 96, 255),
+                StartColor = new Rgba32(56, 150, 200),
+                EndColor = new Rgba32(28, 72, 176),
             },
             InnerColor = new Rgba32(255, 255, 255),
         };
@@ -124,13 +124,13 @@ public static class QrArtPresets {
     /// </summary>
     public static QrEasyOptions ConnectedSquircleGlow() {
         var opts = BaseArt();
-        opts.Foreground = new Rgba32(110, 120, 255);
+        opts.Foreground = new Rgba32(60, 72, 180);
         opts.Background = new Rgba32(250, 252, 255);
         opts.ModuleShape = QrPngModuleShape.ConnectedSquircle;
-        opts.ModuleScale = 0.94;
+        opts.ModuleScale = 0.96;
         opts.ModuleScaleMap = new QrPngModuleScaleMapOptions {
             Mode = QrPngModuleScaleMode.Radial,
-            MinScale = 0.9,
+            MinScale = 0.94,
             MaxScale = 1.0,
             RingSize = 2,
         };
@@ -139,9 +139,9 @@ public static class QrArtPresets {
             RingSize = 2,
             ApplyToEyes = false,
             Colors = new[] {
-                new Rgba32(110, 120, 255),
-                new Rgba32(140, 96, 255),
-                new Rgba32(90, 210, 255),
+                new Rgba32(60, 72, 180),
+                new Rgba32(80, 56, 180),
+                new Rgba32(36, 120, 164),
             },
         };
         opts.Eyes = new QrPngEyeOptions {
@@ -151,8 +151,8 @@ public static class QrArtPresets {
             InnerShape = QrPngModuleShape.Circle,
             OuterCornerRadiusPx = 6,
             InnerCornerRadiusPx = 4,
-            OuterColor = new Rgba32(120, 128, 255),
-            InnerColor = new Rgba32(90, 210, 255),
+            OuterColor = new Rgba32(72, 82, 190),
+            InnerColor = new Rgba32(40, 130, 170),
         };
         opts.Canvas = new QrPngCanvasOptions {
             PaddingPx = 28,
@@ -186,9 +186,9 @@ public static class QrArtPresets {
             RingSize = 2,
             ApplyToEyes = false,
             Colors = new[] {
-                new Rgba32(34, 54, 110),
-                new Rgba32(72, 104, 214),
-                new Rgba32(26, 170, 220),
+                new Rgba32(24, 38, 86),
+                new Rgba32(40, 60, 140),
+                new Rgba32(18, 98, 140),
             },
         };
         opts.ForegroundPaletteZones = new QrPngPaletteZoneOptions {
@@ -198,7 +198,7 @@ public static class QrArtPresets {
                 ApplyToEyes = true,
                 Colors = new[] {
                     new Rgba32(22, 36, 84),
-                    new Rgba32(80, 120, 255),
+                    new Rgba32(40, 60, 140),
                 },
             },
             CenterSize = 11,
@@ -207,8 +207,8 @@ public static class QrArtPresets {
                 RingSize = 1,
                 ApplyToEyes = false,
                 Colors = new[] {
-                    new Rgba32(44, 210, 255),
-                    new Rgba32(110, 120, 255),
+                    new Rgba32(20, 92, 140),
+                    new Rgba32(44, 60, 140),
                 },
             },
         };
@@ -250,13 +250,13 @@ public static class QrArtPresets {
     /// </summary>
     public static QrEasyOptions InsetRings() {
         var opts = BaseArt();
-        opts.Foreground = new Rgba32(44, 80, 180);
+        opts.Foreground = new Rgba32(28, 60, 150);
         opts.Background = new Rgba32(248, 250, 255);
         opts.ModuleShape = QrPngModuleShape.Squircle;
-        opts.ModuleScale = 0.93;
+        opts.ModuleScale = 0.95;
         opts.ModuleScaleMap = new QrPngModuleScaleMapOptions {
             Mode = QrPngModuleScaleMode.Rings,
-            MinScale = 0.9,
+            MinScale = 0.94,
             MaxScale = 1.0,
             RingSize = 1,
         };
@@ -265,9 +265,9 @@ public static class QrArtPresets {
             RingSize = 1,
             ApplyToEyes = false,
             Colors = new[] {
-                new Rgba32(44, 80, 180),
-                new Rgba32(82, 112, 214),
-                new Rgba32(28, 170, 220),
+                new Rgba32(28, 60, 150),
+                new Rgba32(48, 80, 170),
+                new Rgba32(16, 98, 140),
             },
         };
         opts.Eyes = new QrPngEyeOptions {
@@ -277,7 +277,7 @@ public static class QrArtPresets {
             InnerShape = QrPngModuleShape.Circle,
             OuterCornerRadiusPx = 7,
             InnerCornerRadiusPx = 4,
-            OuterColor = new Rgba32(36, 64, 150),
+            OuterColor = new Rgba32(24, 52, 140),
             InnerColor = new Rgba32(255, 255, 255),
         };
         opts.Canvas = new QrPngCanvasOptions {
