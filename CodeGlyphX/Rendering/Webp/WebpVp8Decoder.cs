@@ -25,6 +25,10 @@ internal static class WebpVp8Decoder {
     private const int CoeffTokenCount = 12;
     private const int BlockScaffoldBlocksPerPartition = 2;
     private const int BlockScaffoldMaxTokensPerBlock = CoefficientsPerBlock;
+    private const int BlockSize = 4;
+    private const int MacroblockScaffoldWidth = 8;
+    private const int MacroblockScaffoldHeight = 8;
+    private const int MacroblockScaffoldMaxBlocks = 4;
     private const int BlockTypeY2 = 0;
     private const int BlockTypeY = 1;
     private const int BlockTypeU = 2;
@@ -80,6 +84,7 @@ internal static class WebpVp8Decoder {
         _ = TryReadTokenPartitions(payload, out _);
         _ = TryReadTokenScaffold(payload, out _);
         _ = TryReadBlockTokenScaffold(payload, out _);
+        _ = TryReadMacroblockScaffold(payload, out _);
 
         // Parsing-only scaffold for now.
         width = header.Width;
@@ -473,6 +478,40 @@ internal static class WebpVp8Decoder {
         return true;
     }
 
+    internal static bool TryReadMacroblockScaffold(ReadOnlySpan<byte> payload, out WebpVp8MacroblockScaffold macroblock) {
+        macroblock = default;
+        if (!TryReadBlockTokenScaffold(payload, out var blocks)) return false;
+
+        var yPlane = new byte[MacroblockScaffoldWidth * MacroblockScaffoldHeight];
+        var blocksPlaced = 0;
+
+        for (var p = 0; p < blocks.Partitions.Length && blocksPlaced < MacroblockScaffoldMaxBlocks; p++) {
+            var partition = blocks.Partitions[p];
+            for (var b = 0; b < partition.Blocks.Length && blocksPlaced < MacroblockScaffoldMaxBlocks; b++) {
+                var block = partition.Blocks[b];
+                var (dstX, dstY) = GetMacroblockBlockOffset(blocksPlaced);
+                CopyBlockToPlane(
+                    block.BlockPixels.Samples,
+                    block.BlockPixels.Width,
+                    block.BlockPixels.Height,
+                    yPlane,
+                    MacroblockScaffoldWidth,
+                    MacroblockScaffoldHeight,
+                    dstX,
+                    dstY);
+                blocksPlaced++;
+            }
+        }
+
+        macroblock = new WebpVp8MacroblockScaffold(
+            MacroblockScaffoldWidth,
+            MacroblockScaffoldHeight,
+            yPlane,
+            blocksPlaced,
+            blocks.TotalBlocksRead);
+        return true;
+    }
+
     private static bool TryReadControlHeader(WebpVp8BoolDecoder decoder, out WebpVp8ControlHeader controlHeader) {
         controlHeader = default;
         if (!decoder.TryReadBool(probability: 128, out var colorSpaceBit)) return false;
@@ -776,8 +815,7 @@ internal static class WebpVp8Decoder {
     }
 
     private static WebpVp8BlockPixelScaffold BuildScaffoldBlockPixels(WebpVp8BlockResult result) {
-        const int blockSize = 4;
-        var samples = new byte[blockSize * blockSize];
+        var samples = new byte[BlockSize * BlockSize];
 
         // Very small inverse-transform placeholder: DC sets the baseline,
         // first AC (if present) adds a tiny alternating influence.
@@ -789,13 +827,44 @@ internal static class WebpVp8Decoder {
             samples[i] = ClampToByte(baseSample + signedInfluence);
         }
 
-        return new WebpVp8BlockPixelScaffold(blockSize, blockSize, samples, baseSample, acInfluence);
+        return new WebpVp8BlockPixelScaffold(BlockSize, BlockSize, samples, baseSample, acInfluence);
     }
 
     private static byte ClampToByte(int value) {
         if (value < byte.MinValue) return byte.MinValue;
         if (value > byte.MaxValue) return byte.MaxValue;
         return (byte)value;
+    }
+
+    private static (int X, int Y) GetMacroblockBlockOffset(int blockIndex) {
+        // Tile up to four 4x4 blocks into an 8x8 scaffold:
+        // 0 -> (0,0), 1 -> (4,0), 2 -> (0,4), 3 -> (4,4)
+        var x = (blockIndex & 1) * BlockSize;
+        var y = ((blockIndex >> 1) & 1) * BlockSize;
+        return (x, y);
+    }
+
+    private static void CopyBlockToPlane(
+        byte[] block,
+        int blockWidth,
+        int blockHeight,
+        byte[] plane,
+        int planeWidth,
+        int planeHeight,
+        int dstX,
+        int dstY) {
+        for (var y = 0; y < blockHeight; y++) {
+            var py = dstY + y;
+            if ((uint)py >= planeHeight) continue;
+            var blockRowOffset = y * blockWidth;
+            var planeRowOffset = py * planeWidth;
+
+            for (var x = 0; x < blockWidth; x++) {
+                var px = dstX + x;
+                if ((uint)px >= planeWidth) continue;
+                plane[planeRowOffset + px] = block[blockRowOffset + x];
+            }
+        }
     }
 
     private static int GetCoeffIndex(int blockType, int band, int prev, int node) {
@@ -1268,4 +1337,20 @@ internal readonly struct WebpVp8BlockTokenScaffoldSet {
     public int TotalBlocksRead { get; }
     public int TotalTokensRead { get; }
     public int TotalBytesConsumed { get; }
+}
+
+internal readonly struct WebpVp8MacroblockScaffold {
+    public WebpVp8MacroblockScaffold(int width, int height, byte[] yPlane, int blocksPlaced, int blocksAvailable) {
+        Width = width;
+        Height = height;
+        YPlane = yPlane;
+        BlocksPlaced = blocksPlaced;
+        BlocksAvailable = blocksAvailable;
+    }
+
+    public int Width { get; }
+    public int Height { get; }
+    public byte[] YPlane { get; }
+    public int BlocksPlaced { get; }
+    public int BlocksAvailable { get; }
 }
