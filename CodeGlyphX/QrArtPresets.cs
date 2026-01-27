@@ -297,6 +297,134 @@ public static class QrArtPresets {
         return opts;
     }
 
+    /// <summary>
+    /// Explicit scan-safe variant of <see cref="NeonGlow"/>.
+    /// </summary>
+    public static QrEasyOptions NeonGlowSafe() => NeonGlow();
+
+    /// <summary>
+    /// Bolder variant of <see cref="NeonGlow"/> with stronger effects.
+    /// </summary>
+    public static QrEasyOptions NeonGlowBold() {
+        var opts = NeonGlowSafe();
+        opts.ModuleScale = 0.93;
+        if (opts.ModuleScaleMap is not null) {
+            opts.ModuleScaleMap.MinScale = 0.90;
+            opts.ModuleScaleMap.RingSize = 1;
+        }
+        if (opts.ForegroundPalette is not null) {
+            opts.ForegroundPalette.RingSize = 1;
+            opts.ForegroundPalette.Colors = new[] {
+                new Rgba32(0, 92, 88),
+                new Rgba32(0, 78, 170),
+                new Rgba32(136, 46, 188),
+            };
+        }
+        if (opts.Eyes is not null) {
+            opts.Eyes.GlowRadiusPx = 28;
+            opts.Eyes.GlowAlpha = 120;
+        }
+        return opts;
+    }
+
+    /// <summary>
+    /// Explicit scan-safe variant of <see cref="LiquidGlass"/>.
+    /// </summary>
+    public static QrEasyOptions LiquidGlassSafe() => LiquidGlass();
+
+    /// <summary>
+    /// Bolder variant of <see cref="LiquidGlass"/> with punchier gradients.
+    /// </summary>
+    public static QrEasyOptions LiquidGlassBold() {
+        var opts = LiquidGlassSafe();
+        opts.ModuleScale = 0.94;
+        if (opts.ModuleScaleMap is not null) {
+            opts.ModuleScaleMap.MinScale = 0.90;
+            opts.ModuleScaleMap.RingSize = 2;
+        }
+        opts.ForegroundGradient = new QrPngGradientOptions {
+            Type = QrPngGradientType.DiagonalDown,
+            StartColor = new Rgba32(28, 132, 196),
+            EndColor = new Rgba32(34, 62, 168),
+        };
+        if (opts.Eyes is not null) {
+            opts.Eyes.OuterGradient = new QrPngGradientOptions {
+                Type = QrPngGradientType.Radial,
+                StartColor = new Rgba32(64, 166, 214),
+                EndColor = new Rgba32(34, 82, 188),
+            };
+        }
+        return opts;
+    }
+
+    /// <summary>
+    /// Explicit scan-safe variant of <see cref="ConnectedSquircleGlow"/>.
+    /// </summary>
+    public static QrEasyOptions ConnectedSquircleGlowSafe() => ConnectedSquircleGlow();
+
+    /// <summary>
+    /// Bolder variant of <see cref="ConnectedSquircleGlow"/> with denser rings.
+    /// </summary>
+    public static QrEasyOptions ConnectedSquircleGlowBold() {
+        var opts = ConnectedSquircleGlowSafe();
+        opts.ModuleScale = 0.94;
+        if (opts.ModuleScaleMap is not null) {
+            opts.ModuleScaleMap.MinScale = 0.90;
+            opts.ModuleScaleMap.RingSize = 1;
+        }
+        if (opts.ForegroundPalette is not null) {
+            opts.ForegroundPalette.RingSize = 1;
+            opts.ForegroundPalette.Colors = new[] {
+                new Rgba32(58, 70, 184),
+                new Rgba32(90, 60, 184),
+                new Rgba32(40, 128, 176),
+            };
+        }
+        return opts;
+    }
+
+    /// <summary>
+    /// Explicit scan-safe variant of <see cref="CutCornerTech"/>.
+    /// </summary>
+    public static QrEasyOptions CutCornerTechSafe() => CutCornerTech();
+
+    /// <summary>
+    /// Bolder variant of <see cref="CutCornerTech"/> with tighter modules.
+    /// </summary>
+    public static QrEasyOptions CutCornerTechBold() {
+        var opts = CutCornerTechSafe();
+        opts.ModuleScale = 0.88;
+        opts.ModuleCornerRadiusPx = 5;
+        if (opts.ForegroundPalette is not null) {
+            opts.ForegroundPalette.RingSize = 1;
+        }
+        return opts;
+    }
+
+    /// <summary>
+    /// Explicit scan-safe variant of <see cref="InsetRings"/>.
+    /// </summary>
+    public static QrEasyOptions InsetRingsSafe() => InsetRings();
+
+    /// <summary>
+    /// Bolder variant of <see cref="InsetRings"/> with stronger ring contrast.
+    /// </summary>
+    public static QrEasyOptions InsetRingsBold() {
+        var opts = InsetRingsSafe();
+        opts.ModuleScale = 0.93;
+        if (opts.ModuleScaleMap is not null) {
+            opts.ModuleScaleMap.MinScale = 0.90;
+        }
+        if (opts.ForegroundPalette is not null) {
+            opts.ForegroundPalette.Colors = new[] {
+                new Rgba32(26, 58, 156),
+                new Rgba32(54, 86, 184),
+                new Rgba32(18, 108, 152),
+            };
+        }
+        return opts;
+    }
+
     private static QrEasyOptions BaseArt() {
         return new QrEasyOptions {
             ErrorCorrectionLevel = QrErrorCorrectionLevel.H,

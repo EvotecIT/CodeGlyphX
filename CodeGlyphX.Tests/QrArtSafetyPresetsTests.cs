@@ -8,11 +8,11 @@ public sealed class QrArtSafetyPresetsTests {
     public void Art_Presets_Are_Scan_Safe_By_Default() {
         var payload = "https://example.com/scan-safe";
         var presets = new[] {
-            ("NeonGlow", QrArtPresets.NeonGlow()),
-            ("LiquidGlass", QrArtPresets.LiquidGlass()),
-            ("ConnectedSquircleGlow", QrArtPresets.ConnectedSquircleGlow()),
-            ("CutCornerTech", QrArtPresets.CutCornerTech()),
-            ("InsetRings", QrArtPresets.InsetRings()),
+            ("NeonGlowSafe", QrArtPresets.NeonGlowSafe()),
+            ("LiquidGlassSafe", QrArtPresets.LiquidGlassSafe()),
+            ("ConnectedSquircleGlowSafe", QrArtPresets.ConnectedSquircleGlowSafe()),
+            ("CutCornerTechSafe", QrArtPresets.CutCornerTechSafe()),
+            ("InsetRingsSafe", QrArtPresets.InsetRingsSafe()),
         };
 
         foreach (var (name, preset) in presets) {

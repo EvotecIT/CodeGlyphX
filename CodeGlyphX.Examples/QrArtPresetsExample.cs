@@ -10,11 +10,20 @@ internal static class QrArtPresetsExample {
         var dir = Path.Combine(outputDir, "qr-art-presets");
         Directory.CreateDirectory(dir);
 
-        Save(dir, payload, "art-neon-glow.png", QrArtPresets.NeonGlow());
-        Save(dir, payload, "art-liquid-glass.png", QrArtPresets.LiquidGlass());
-        Save(dir, payload, "art-connected-squircle-glow.png", QrArtPresets.ConnectedSquircleGlow());
-        Save(dir, payload, "art-cut-corner-tech.png", QrArtPresets.CutCornerTech());
-        Save(dir, payload, "art-inset-rings.png", QrArtPresets.InsetRings());
+        Save(dir, payload, "art-neon-glow-safe.png", QrArtPresets.NeonGlowSafe());
+        Save(dir, payload, "art-neon-glow-bold.png", QrArtPresets.NeonGlowBold());
+
+        Save(dir, payload, "art-liquid-glass-safe.png", QrArtPresets.LiquidGlassSafe());
+        Save(dir, payload, "art-liquid-glass-bold.png", QrArtPresets.LiquidGlassBold());
+
+        Save(dir, payload, "art-connected-squircle-glow-safe.png", QrArtPresets.ConnectedSquircleGlowSafe());
+        Save(dir, payload, "art-connected-squircle-glow-bold.png", QrArtPresets.ConnectedSquircleGlowBold());
+
+        Save(dir, payload, "art-cut-corner-tech-safe.png", QrArtPresets.CutCornerTechSafe());
+        Save(dir, payload, "art-cut-corner-tech-bold.png", QrArtPresets.CutCornerTechBold());
+
+        Save(dir, payload, "art-inset-rings-safe.png", QrArtPresets.InsetRingsSafe());
+        Save(dir, payload, "art-inset-rings-bold.png", QrArtPresets.InsetRingsBold());
     }
 
     private static void Save(string dir, string payload, string fileName, QrEasyOptions options) {
