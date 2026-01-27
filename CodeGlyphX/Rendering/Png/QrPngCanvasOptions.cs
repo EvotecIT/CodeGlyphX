@@ -42,6 +42,11 @@ public sealed class QrPngCanvasOptions {
     public QrPngCanvasHaloOptions? Halo { get; set; }
 
     /// <summary>
+    /// Optional edge vignette drawn on the canvas (QR-safe by default).
+    /// </summary>
+    public QrPngCanvasVignetteOptions? Vignette { get; set; }
+
+    /// <summary>
     /// Border thickness in pixels (0 = no border).
     /// </summary>
     public int BorderPx { get; set; }
@@ -74,5 +79,6 @@ public sealed class QrPngCanvasOptions {
         Pattern?.Validate();
         Splash?.Validate();
         Halo?.Validate();
+        Vignette?.Validate();
     }
 }

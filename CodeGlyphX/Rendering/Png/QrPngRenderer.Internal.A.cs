@@ -534,6 +534,21 @@ public static partial class QrPngRenderer {
             DrawCanvasFill(scanlines, widthPx, heightPx, stride, canvas, canvasX, canvasY, canvasW, canvasH, opts.ModuleSize, radius);
         }
 
+        if (canvas.Vignette is { BandPx: > 0 } vignette && vignette.Color.A != 0 && vignette.Strength > 0) {
+            DrawCanvasVignette(
+                scanlines,
+                stride,
+                canvasX,
+                canvasY,
+                canvasW,
+                canvasH,
+                radius,
+                qrOffsetX,
+                qrOffsetY,
+                qrFullPx,
+                vignette);
+        }
+
         if (canvas.Halo is { RadiusPx: > 0 } halo && halo.Color.A != 0) {
             DrawCanvasHalo(
                 scanlines,
@@ -1066,6 +1081,68 @@ public static partial class QrPngRenderer {
                 qrX1,
                 qrY1,
                 qrAreaAlphaMax: 0);
+        }
+    }
+
+    private static void DrawCanvasVignette(
+        byte[] scanlines,
+        int stride,
+        int canvasX,
+        int canvasY,
+        int canvasW,
+        int canvasH,
+        int canvasRadius,
+        int qrX,
+        int qrY,
+        int qrSize,
+        QrPngCanvasVignetteOptions vignette) {
+        if (vignette.BandPx <= 0 || vignette.Color.A == 0 || vignette.Strength <= 0) return;
+
+        var canvasX1 = canvasX + canvasW - 1;
+        var canvasY1 = canvasY + canvasH - 1;
+        var canvasR = Math.Max(0, canvasRadius);
+        var canvasR2 = canvasR * canvasR;
+        var band = Math.Max(1, vignette.BandPx);
+        var strength = vignette.Strength <= 0 ? 0 : vignette.Strength >= 2 ? 2 : vignette.Strength;
+        if (strength <= 0) return;
+
+        var qrX0 = qrX;
+        var qrY0 = qrY;
+        var qrX1 = qrX + qrSize - 1;
+        var qrY1 = qrY + qrSize - 1;
+
+        var baseColor = vignette.Color;
+        var baseAlpha = baseColor.A * strength;
+        if (baseAlpha <= 0) return;
+
+        for (var y = canvasY; y <= canvasY1; y++) {
+            for (var x = canvasX; x <= canvasX1; x++) {
+                if (canvasR > 0 && !InsideRounded(x, y, canvasX, canvasY, canvasX1, canvasY1, canvasR, canvasR2)) continue;
+
+                var distLeft = x - canvasX;
+                var distRight = canvasX1 - x;
+                var distTop = y - canvasY;
+                var distBottom = canvasY1 - y;
+                var distToEdge = Math.Min(Math.Min(distLeft, distRight), Math.Min(distTop, distBottom));
+                if (distToEdge >= band) continue;
+
+                var t = 1.0 - distToEdge / (double)band;
+                var falloff = t * t;
+                var alpha = baseAlpha * falloff;
+                if (alpha <= 0.5) continue;
+
+                var insideQr = x >= qrX0 && x <= qrX1 && y >= qrY0 && y <= qrY1;
+                if (insideQr && vignette.ProtectQrArea) continue;
+
+                var cappedAlpha = alpha > 255 ? 255 : alpha;
+                if (insideQr && vignette.QrAreaAlphaMax > 0 && cappedAlpha > vignette.QrAreaAlphaMax) {
+                    cappedAlpha = vignette.QrAreaAlphaMax;
+                }
+                if (cappedAlpha <= 0) continue;
+
+                var drawColor = new Rgba32(baseColor.R, baseColor.G, baseColor.B, (byte)cappedAlpha);
+                BlendPixel(scanlines, stride, x, y, drawColor);
+            }
         }
     }
 

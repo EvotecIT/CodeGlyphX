@@ -176,6 +176,15 @@ internal static class QrStyleBoardExample {
                 pattern: Halftone(R(255, 255, 255, 92), seed: 8080, sizePx: 10, thicknessPx: 3, variation: 0.96, density: 0.97),
                 canvas: CanvasGradient(R(18, 16, 60), R(46, 26, 98)))),
 
+            new("Vignette Noir", StyleDocs("vignette-noir"), () => BaseSticker(
+                fg: R(28, 34, 54),
+                palette: Palette(QrPngPaletteMode.Cycle, 0, R(28, 34, 54), R(60, 74, 108), R(120, 150, 220)),
+                shape: QrPngModuleShape.ConnectedRounded,
+                eyes: EyeGlow(R(28, 34, 54), R(120, 150, 220), R(40, 70, 120, 160)),
+                scaleMap: ScaleMap(QrPngModuleScaleMode.Radial, 0.84, 1.0, 7341),
+                pattern: Speckle(R(255, 255, 255, 64), seed: 6006, sizePx: 7, thicknessPx: 2, variation: 0.8, density: 0.9),
+                canvas: CanvasGradientVignette(R(242, 246, 255), R(210, 220, 244), R(8, 12, 26, 120), bandPx: 88, strength: 1.0))),
+
             new("Eye Accents", StyleDocs("eye-accents"), () => BaseSticker(
                 fg: R(30, 190, 255),
                 palette: Palette(QrPngPaletteMode.Cycle, 0, R(30, 190, 255), R(90, 240, 200), R(255, 130, 210)),
@@ -477,6 +486,17 @@ internal static class QrStyleBoardExample {
             ShadowOffsetY = 8,
             ShadowColor = R(0, 0, 0, 60),
         };
+    }
+
+    private static QrPngCanvasOptions CanvasGradientVignette(Rgba32 start, Rgba32 end, Rgba32 vignetteColor, int bandPx = 72, double strength = 1.0) {
+        var canvas = CanvasGradient(start, end);
+        canvas.Vignette = new QrPngCanvasVignetteOptions {
+            Color = vignetteColor,
+            BandPx = bandPx,
+            Strength = strength,
+            ProtectQrArea = true,
+        };
+        return canvas;
     }
 
     private static QrPngCanvasOptions CanvasPattern(Rgba32 background, QrPngBackgroundPatternOptions pattern) {

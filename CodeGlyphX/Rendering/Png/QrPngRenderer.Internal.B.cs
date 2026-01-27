@@ -1364,6 +1364,7 @@ public static partial class QrPngRenderer {
             Pattern = ScalePattern(canvas.Pattern, scale),
             Splash = ScaleSplash(canvas.Splash, scale),
             Halo = ScaleHalo(canvas.Halo, scale),
+            Vignette = ScaleVignette(canvas.Vignette, scale),
             BorderPx = canvas.BorderPx * scale,
             BorderColor = canvas.BorderColor,
             ShadowOffsetX = canvas.ShadowOffsetX * scale,
@@ -1397,6 +1398,17 @@ public static partial class QrPngRenderer {
             DripWidthPx = Math.Max(0, splash.DripWidthPx * scale),
             ProtectQrArea = splash.ProtectQrArea,
             QrAreaAlphaMax = splash.QrAreaAlphaMax,
+        };
+    }
+
+    private static QrPngCanvasVignetteOptions? ScaleVignette(QrPngCanvasVignetteOptions? vignette, int scale) {
+        if (vignette is null) return null;
+        return new QrPngCanvasVignetteOptions {
+            Color = vignette.Color,
+            BandPx = Math.Max(0, vignette.BandPx * scale),
+            Strength = vignette.Strength,
+            ProtectQrArea = vignette.ProtectQrArea,
+            QrAreaAlphaMax = vignette.QrAreaAlphaMax,
         };
     }
 
