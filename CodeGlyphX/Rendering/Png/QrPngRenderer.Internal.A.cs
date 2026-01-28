@@ -695,7 +695,9 @@ public static partial class QrPngRenderer {
                 canvas.Splash);
         }
 
-        if (canvas.Frame is { ThicknessPx: > 0 } frame && (frame.Color.A != 0 || frame.Gradient is not null || frame.InnerGradient is not null)) {
+        if (canvas.Frame is { ThicknessPx: > 0 } frame
+            && (frame.Color.A != 0 || frame.Gradient is not null || frame.InnerGradient is not null
+                || frame.EdgePattern is not null || frame.InnerEdgePattern is not null)) {
             DrawCanvasFrame(
                 scanlines,
                 widthPx,
@@ -712,7 +714,8 @@ public static partial class QrPngRenderer {
                 frame);
         }
 
-        if (canvas.Band is { BandPx: > 0 } band && (band.Color.A != 0 || band.Gradient is not null)) {
+        if (canvas.Band is { BandPx: > 0 } band
+            && (band.Color.A != 0 || band.Gradient is not null || band.EdgePattern is not null)) {
             DrawCanvasBand(
                 scanlines,
                 widthPx,
@@ -729,7 +732,8 @@ public static partial class QrPngRenderer {
                 band);
         }
 
-        if (canvas.Badge is not null && (canvas.Badge.Color.A != 0 || canvas.Badge.Gradient is not null)) {
+        if (canvas.Badge is not null
+            && (canvas.Badge.Color.A != 0 || canvas.Badge.Gradient is not null || canvas.Badge.EdgePattern is not null)) {
             DrawCanvasBadge(
                 scanlines,
                 widthPx,
@@ -1977,8 +1981,9 @@ public static partial class QrPngRenderer {
 
         var innerColor = frame.InnerColor ?? frame.Color;
         var innerGradient = frame.InnerGradient ?? frame.Gradient;
+        var innerPattern = frame.InnerEdgePattern;
         if (frame.InnerThicknessPx <= 0) return;
-        if (innerColor.A == 0 && innerGradient is null) return;
+        if (innerColor.A == 0 && innerGradient is null && innerPattern is null) return;
 
         var innerGapCap = Math.Max(0, gap - 1);
         var innerGap = Clamp(frame.InnerGapPx, 0, innerGapCap);
@@ -2000,31 +2005,33 @@ public static partial class QrPngRenderer {
 
         var innerGradientInfo = innerGradient is null ? (GradientInfo?)null : new GradientInfo(innerGradient, innerOuterSize - 1, innerOuterSize - 1);
 
-        DrawCanvasFrameRing(
-            scanlines,
-            widthPx,
-            heightPx,
-            stride,
-            innerCanvasX,
-            innerCanvasY,
-            innerCanvasX1,
-            innerCanvasY1,
-            innerCanvasRadius,
-            innerCanvasRadiusSq,
-            innerOuterX,
-            innerOuterY,
-            innerOuterSize,
-            innerOuterRadius,
-            innerInnerX,
-            innerInnerY,
-            innerInnerSize,
-            innerInnerRadius,
-            innerColor,
-            innerGradientInfo,
-            innerOuterX,
-            innerOuterY);
+        if (innerColor.A != 0 || innerGradientInfo is not null) {
+            DrawCanvasFrameRing(
+                scanlines,
+                widthPx,
+                heightPx,
+                stride,
+                innerCanvasX,
+                innerCanvasY,
+                innerCanvasX1,
+                innerCanvasY1,
+                innerCanvasRadius,
+                innerCanvasRadiusSq,
+                innerOuterX,
+                innerOuterY,
+                innerOuterSize,
+                innerOuterRadius,
+                innerInnerX,
+                innerInnerY,
+                innerInnerSize,
+                innerInnerRadius,
+                innerColor,
+                innerGradientInfo,
+                innerOuterX,
+                innerOuterY);
+        }
 
-        if (frame.InnerEdgePattern is not null) {
+        if (innerPattern is not null) {
             DrawEdgePatternOnRing(
                 scanlines,
                 stride,
@@ -2043,7 +2050,7 @@ public static partial class QrPngRenderer {
                 innerInnerSize,
                 innerInnerRadius,
                 innerThickness,
-                frame.InnerEdgePattern);
+                innerPattern);
         }
     }
 
@@ -2224,14 +2231,20 @@ public static partial class QrPngRenderer {
         QrPngCanvasEdgePatternOptions pattern) {
         if (pattern.Color.A == 0) return;
         if (ringThickness <= 0) return;
+        if (pattern.ThicknessPx <= 0) return;
+        if (pattern.Type != QrPngCanvasEdgePatternType.Dots && pattern.DashPx <= 0) return;
 
         var thickness = Math.Max(1, pattern.ThicknessPx);
         var dash = pattern.Type == QrPngCanvasEdgePatternType.Dots
             ? 0
             : Math.Max(thickness, pattern.DashPx);
+        if (pattern.Type == QrPngCanvasEdgePatternType.Stitches) {
+            dash = Math.Max(thickness, Math.Max(1, pattern.DashPx / 2));
+        }
         var spacing = Math.Max(0, pattern.SpacingPx);
-        var step = Math.Max(1, spacing + (pattern.Type == QrPngCanvasEdgePatternType.Dots ? thickness * 2 : dash));
+        var step = Math.Max(1, spacing + (pattern.Type == QrPngCanvasEdgePatternType.Dots ? thickness * 2 : dash + (pattern.Type == QrPngCanvasEdgePatternType.Stitches ? dash : 0)));
         var inset = Clamp(pattern.InsetPx, 0, Math.Max(0, ringThickness - 1));
+        var stitchOffset = pattern.Type == QrPngCanvasEdgePatternType.Stitches ? step / 2 : 0;
 
         var x0 = outerX + outerRadius;
         var x1 = outerX + outerSize - 1 - outerRadius;
@@ -2247,21 +2260,31 @@ public static partial class QrPngRenderer {
             for (var x = x0; x <= x1; x += step) {
                 if (pattern.Type == QrPngCanvasEdgePatternType.Dots) {
                     DrawDotOnRing(scanlines, stride, x, topY, thickness, outerX, outerY, outerSize, outerRadius, innerX, innerY, innerSize, innerRadius, clipX0, clipY0, clipX1, clipY1, clipRadius, clipRadiusSq, pattern.Color);
-                    DrawDotOnRing(scanlines, stride, x, bottomY, thickness, outerX, outerY, outerSize, outerRadius, innerX, innerY, innerSize, innerRadius, clipX0, clipY0, clipX1, clipY1, clipRadius, clipRadiusSq, pattern.Color);
                 } else {
                     DrawDashOnRing(scanlines, stride, x, topY, dash, thickness, true, outerX, outerY, outerSize, outerRadius, innerX, innerY, innerSize, innerRadius, clipX0, clipY0, clipX1, clipY1, clipRadius, clipRadiusSq, pattern.Color);
+                }
+            }
+            for (var x = x0 + stitchOffset; x <= x1; x += step) {
+                if (pattern.Type == QrPngCanvasEdgePatternType.Dots) {
+                    DrawDotOnRing(scanlines, stride, x, bottomY, thickness, outerX, outerY, outerSize, outerRadius, innerX, innerY, innerSize, innerRadius, clipX0, clipY0, clipX1, clipY1, clipRadius, clipRadiusSq, pattern.Color);
+                } else {
                     DrawDashOnRing(scanlines, stride, x, bottomY, dash, thickness, true, outerX, outerY, outerSize, outerRadius, innerX, innerY, innerSize, innerRadius, clipX0, clipY0, clipX1, clipY1, clipRadius, clipRadiusSq, pattern.Color);
                 }
             }
         }
 
         if (y0 <= y1) {
-            for (var y = y0; y <= y1; y += step) {
+            for (var y = y0 + stitchOffset; y <= y1; y += step) {
                 if (pattern.Type == QrPngCanvasEdgePatternType.Dots) {
                     DrawDotOnRing(scanlines, stride, leftX, y, thickness, outerX, outerY, outerSize, outerRadius, innerX, innerY, innerSize, innerRadius, clipX0, clipY0, clipX1, clipY1, clipRadius, clipRadiusSq, pattern.Color);
-                    DrawDotOnRing(scanlines, stride, rightX, y, thickness, outerX, outerY, outerSize, outerRadius, innerX, innerY, innerSize, innerRadius, clipX0, clipY0, clipX1, clipY1, clipRadius, clipRadiusSq, pattern.Color);
                 } else {
                     DrawDashOnRing(scanlines, stride, leftX, y, dash, thickness, false, outerX, outerY, outerSize, outerRadius, innerX, innerY, innerSize, innerRadius, clipX0, clipY0, clipX1, clipY1, clipRadius, clipRadiusSq, pattern.Color);
+                }
+            }
+            for (var y = y0; y <= y1; y += step) {
+                if (pattern.Type == QrPngCanvasEdgePatternType.Dots) {
+                    DrawDotOnRing(scanlines, stride, rightX, y, thickness, outerX, outerY, outerSize, outerRadius, innerX, innerY, innerSize, innerRadius, clipX0, clipY0, clipX1, clipY1, clipRadius, clipRadiusSq, pattern.Color);
+                } else {
                     DrawDashOnRing(scanlines, stride, rightX, y, dash, thickness, false, outerX, outerY, outerSize, outerRadius, innerX, innerY, innerSize, innerRadius, clipX0, clipY0, clipX1, clipY1, clipRadius, clipRadiusSq, pattern.Color);
                 }
             }
@@ -2285,14 +2308,21 @@ public static partial class QrPngRenderer {
         QrPngCanvasEdgePatternOptions pattern) {
         if (pattern.Color.A == 0) return;
         if (w <= 0 || h <= 0) return;
+        if (pattern.ThicknessPx <= 0) return;
+        if (pattern.Type != QrPngCanvasEdgePatternType.Dots && pattern.DashPx <= 0) return;
 
         var thickness = Math.Max(1, pattern.ThicknessPx);
         var dash = pattern.Type == QrPngCanvasEdgePatternType.Dots
             ? 0
             : Math.Max(thickness, pattern.DashPx);
+        if (pattern.Type == QrPngCanvasEdgePatternType.Stitches) {
+            dash = Math.Max(thickness, Math.Max(1, pattern.DashPx / 2));
+        }
         var spacing = Math.Max(0, pattern.SpacingPx);
-        var step = Math.Max(1, spacing + (pattern.Type == QrPngCanvasEdgePatternType.Dots ? thickness * 2 : dash));
-        var inset = Clamp(pattern.InsetPx, 0, Math.Max(0, thickness - 1));
+        var step = Math.Max(1, spacing + (pattern.Type == QrPngCanvasEdgePatternType.Dots ? thickness * 2 : dash + (pattern.Type == QrPngCanvasEdgePatternType.Stitches ? dash : 0)));
+        var maxInset = Math.Max(0, Math.Min(w, h) / 2 - 1);
+        var inset = Clamp(pattern.InsetPx, 0, maxInset);
+        var stitchOffset = pattern.Type == QrPngCanvasEdgePatternType.Stitches ? step / 2 : 0;
 
         var x1 = x + w - 1;
         var y1 = y + h - 1;
@@ -2310,21 +2340,31 @@ public static partial class QrPngRenderer {
             for (var px = x0; px <= xEnd; px += step) {
                 if (pattern.Type == QrPngCanvasEdgePatternType.Dots) {
                     DrawDotClipped(scanlines, stride, px, topY, thickness, x, y, w, h, radius, clipX0, clipY0, clipX1, clipY1, clipRadius, clipRadiusSq, pattern.Color);
-                    DrawDotClipped(scanlines, stride, px, bottomY, thickness, x, y, w, h, radius, clipX0, clipY0, clipX1, clipY1, clipRadius, clipRadiusSq, pattern.Color);
                 } else {
                     DrawDashClipped(scanlines, stride, px, topY, dash, thickness, true, x, y, w, h, radius, clipX0, clipY0, clipX1, clipY1, clipRadius, clipRadiusSq, pattern.Color);
+                }
+            }
+            for (var px = x0 + stitchOffset; px <= xEnd; px += step) {
+                if (pattern.Type == QrPngCanvasEdgePatternType.Dots) {
+                    DrawDotClipped(scanlines, stride, px, bottomY, thickness, x, y, w, h, radius, clipX0, clipY0, clipX1, clipY1, clipRadius, clipRadiusSq, pattern.Color);
+                } else {
                     DrawDashClipped(scanlines, stride, px, bottomY, dash, thickness, true, x, y, w, h, radius, clipX0, clipY0, clipX1, clipY1, clipRadius, clipRadiusSq, pattern.Color);
                 }
             }
         }
 
         if (y0 <= yEnd) {
-            for (var py = y0; py <= yEnd; py += step) {
+            for (var py = y0 + stitchOffset; py <= yEnd; py += step) {
                 if (pattern.Type == QrPngCanvasEdgePatternType.Dots) {
                     DrawDotClipped(scanlines, stride, leftX, py, thickness, x, y, w, h, radius, clipX0, clipY0, clipX1, clipY1, clipRadius, clipRadiusSq, pattern.Color);
-                    DrawDotClipped(scanlines, stride, rightX, py, thickness, x, y, w, h, radius, clipX0, clipY0, clipX1, clipY1, clipRadius, clipRadiusSq, pattern.Color);
                 } else {
                     DrawDashClipped(scanlines, stride, leftX, py, dash, thickness, false, x, y, w, h, radius, clipX0, clipY0, clipX1, clipY1, clipRadius, clipRadiusSq, pattern.Color);
+                }
+            }
+            for (var py = y0; py <= yEnd; py += step) {
+                if (pattern.Type == QrPngCanvasEdgePatternType.Dots) {
+                    DrawDotClipped(scanlines, stride, rightX, py, thickness, x, y, w, h, radius, clipX0, clipY0, clipX1, clipY1, clipRadius, clipRadiusSq, pattern.Color);
+                } else {
                     DrawDashClipped(scanlines, stride, rightX, py, dash, thickness, false, x, y, w, h, radius, clipX0, clipY0, clipX1, clipY1, clipRadius, clipRadiusSq, pattern.Color);
                 }
             }
@@ -2407,17 +2447,18 @@ public static partial class QrPngRenderer {
         var outerRadiusSq = outerRadius * outerRadius;
         var innerRadiusSq = innerRadius * innerRadius;
 
+        var halfLow = (thickness - 1) / 2;
+        var halfHigh = thickness / 2;
+
         if (horizontal) {
-            var half = thickness / 2;
-            for (var y = startY - half; y <= startY + half; y++) {
+            for (var y = startY - halfLow; y <= startY + halfHigh; y++) {
                 for (var x = startX; x < startX + length; x++) {
                     if (!IsInsideRingPixel(x, y, outerX, outerY, outerX1, outerY1, outerRadius, outerRadiusSq, innerX, innerY, innerX1, innerY1, innerRadius, innerRadiusSq, clipX0, clipY0, clipX1, clipY1, clipRadius, clipRadiusSq)) continue;
                     BlendPixel(scanlines, stride, x, y, color);
                 }
             }
         } else {
-            var half = thickness / 2;
-            for (var x = startX - half; x <= startX + half; x++) {
+            for (var x = startX - halfLow; x <= startX + halfHigh; x++) {
                 for (var y = startY; y < startY + length; y++) {
                     if (!IsInsideRingPixel(x, y, outerX, outerY, outerX1, outerY1, outerRadius, outerRadiusSq, innerX, innerY, innerX1, innerY1, innerRadius, innerRadiusSq, clipX0, clipY0, clipX1, clipY1, clipRadius, clipRadiusSq)) continue;
                     BlendPixel(scanlines, stride, x, y, color);
@@ -2490,9 +2531,11 @@ public static partial class QrPngRenderer {
         var rectY1 = y + h - 1;
         var radiusSq = radius * radius;
 
+        var halfLow = (thickness - 1) / 2;
+        var halfHigh = thickness / 2;
+
         if (horizontal) {
-            var half = thickness / 2;
-            for (var py = startY - half; py <= startY + half; py++) {
+            for (var py = startY - halfLow; py <= startY + halfHigh; py++) {
                 for (var px = startX; px < startX + length; px++) {
                     if (radius > 0 && !InsideRounded(px, py, x, y, rectX1, rectY1, radius, radiusSq)) continue;
                     if (clipRadius > 0 && !InsideRounded(px, py, clipX0, clipY0, clipX1, clipY1, clipRadius, clipRadiusSq)) continue;
@@ -2500,8 +2543,7 @@ public static partial class QrPngRenderer {
                 }
             }
         } else {
-            var half = thickness / 2;
-            for (var px = startX - half; px <= startX + half; px++) {
+            for (var px = startX - halfLow; px <= startX + halfHigh; px++) {
                 for (var py = startY; py < startY + length; py++) {
                     if (radius > 0 && !InsideRounded(px, py, x, y, rectX1, rectY1, radius, radiusSq)) continue;
                     if (clipRadius > 0 && !InsideRounded(px, py, clipX0, clipY0, clipX1, clipY1, clipRadius, clipRadiusSq)) continue;
