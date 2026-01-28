@@ -462,15 +462,11 @@ body:has(.page-playground) {
     min-width: 0;
 }
 
-/* Focus styles for page headings targeted by FocusOnNavigate.
-   Hide outline for mouse/touch clicks, show for keyboard navigation. */
-:is(.hero, .showcase-hero, .docs-content, .docs-static, .faq-hero, .pricing-hero) h1:focus:not(:focus-visible) {
+/* Headings receive programmatic focus from Blazor's FocusOnNavigate for
+   screen-reader announcements. They are non-interactive, so suppress the
+   browser's default focus ring entirely. */
+:is(.hero, .showcase-hero, .docs-content, .docs-static, .faq-hero, .pricing-hero) h1 {
     outline: none;
-}
-
-:is(.hero, .showcase-hero, .docs-content, .docs-static, .faq-hero, .pricing-hero) h1:focus-visible {
-    outline: 2px solid var(--primary-light);
-    outline-offset: 4px;
 }
 
 .hero-tagline {
