@@ -16,4 +16,12 @@ public enum QrPngBackgroundPatternType {
     /// Checkerboard.
     /// </summary>
     Checker,
+    /// <summary>
+    /// Diagonal stripe bands.
+    /// </summary>
+    DiagonalStripes,
+    /// <summary>
+    /// Two diagonal stripe sets forming a crosshatch.
+    /// </summary>
+    Crosshatch,
 }

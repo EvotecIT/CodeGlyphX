@@ -268,6 +268,185 @@ function Try-Parse-Mean([string]$value, [ref]$nanoseconds) {
     return $false
 }
 
+function Get-PackRunnerReportPath([string]$artifactsPath, [string]$runMode) {
+    if ([string]::IsNullOrWhiteSpace($artifactsPath) -or [string]::IsNullOrWhiteSpace($runMode)) { return $null }
+    $packDir = Join-Path $artifactsPath "pack-runner"
+    if (-not (Test-Path $packDir)) { return $null }
+
+    $preferred = Join-Path $packDir "qr-decode-packs-$runMode.json"
+    if (Test-Path $preferred) { return $preferred }
+
+    $candidates = Get-ChildItem -Path $packDir -Filter "qr-decode-packs-*-$runMode.json" -ErrorAction SilentlyContinue |
+        Sort-Object LastWriteTimeUtc -Descending
+    if ($candidates -and $candidates.Count -gt 0) {
+        return $candidates[0].FullName
+    }
+    return $null
+}
+
+function Get-PackRunnerPayload([string]$artifactsPath, [string]$runMode) {
+    $reportPath = Get-PackRunnerReportPath -artifactsPath $artifactsPath -runMode $runMode
+    if (-not $reportPath) { return $null }
+
+    $raw = Get-Content -Path $reportPath -Raw -Encoding UTF8 | ConvertFrom-Json
+
+    function Get-Field([object]$obj, [string[]]$names, $default = $null) {
+        if (-not $obj) { return $default }
+        foreach ($name in $names) {
+            if ($obj.PSObject.Properties.Name -contains $name) {
+                return $obj.$name
+            }
+        }
+        return $default
+    }
+
+    $packsRaw = Get-Field $raw @("Packs", "packs") @()
+    if (-not $packsRaw) { $packsRaw = @() }
+
+    $enginesAcc = @{}
+    $packSummaries = @()
+
+    foreach ($pack in $packsRaw) {
+        $packName = [string](Get-Field $pack @("Name", "name") "unknown")
+        $scenarioCount = [int](Get-Field $pack @("ScenarioCount", "scenarioCount") 0)
+        $enginesRaw = Get-Field $pack @("Engines", "engines") @()
+        if (-not $enginesRaw) { $enginesRaw = @() }
+
+        $engineSummaries = @()
+        foreach ($engine in $enginesRaw) {
+            $engineName = [string](Get-Field $engine @("Name", "name") "unknown")
+            $isExternal = [bool](Get-Field $engine @("IsExternal", "isExternal") $false)
+            $runs = [double](Get-Field $engine @("Runs", "runs") 0)
+            $decodeRate = [double](Get-Field $engine @("DecodeRate", "decodeRate") 0)
+            $expectedRate = [double](Get-Field $engine @("ExpectedRate", "expectedRate") 0)
+            $medianMs = [double](Get-Field $engine @("MedianMs", "medianMs") 0)
+            $p95Ms = [double](Get-Field $engine @("P95Ms", "p95Ms") 0)
+
+            $scenariosRaw = Get-Field $engine @("Scenarios", "scenarios") @()
+            if (-not $scenariosRaw) { $scenariosRaw = @() }
+            $failingScenarios = New-Object System.Collections.Generic.List[string]
+            foreach ($scenario in $scenariosRaw) {
+                $scenarioExpected = [double](Get-Field $scenario @("ExpectedRate", "expectedRate") 1)
+                if ($scenarioExpected -ge 0.9999) { continue }
+                $scenarioName = [string](Get-Field $scenario @("Name", "name") $null)
+                if (-not [string]::IsNullOrWhiteSpace($scenarioName)) {
+                    $failingScenarios.Add($scenarioName)
+                }
+            }
+
+            $engineSummaries += [pscustomobject]@{
+                name = $engineName
+                isExternal = $isExternal
+                runs = $runs
+                decodeRate = $decodeRate
+                expectedRate = $expectedRate
+                medianMs = $medianMs
+                p95Ms = $p95Ms
+                failingScenarios = $failingScenarios.ToArray()
+            }
+
+            if (-not $enginesAcc.ContainsKey($engineName)) {
+                $enginesAcc[$engineName] = @{
+                    name = $engineName
+                    isExternal = $isExternal
+                    runs = 0.0
+                    decodeWeighted = 0.0
+                    expectedWeighted = 0.0
+                    failingScenarios = (New-Object "System.Collections.Generic.HashSet[string]")
+                    failingPacks = (New-Object "System.Collections.Generic.HashSet[string]")
+                }
+            }
+
+            $acc = $enginesAcc[$engineName]
+            $acc.runs += $runs
+            $acc.decodeWeighted += $decodeRate * $runs
+            $acc.expectedWeighted += $expectedRate * $runs
+            if ($failingScenarios.Count -gt 0) {
+                foreach ($fs in $failingScenarios) { [void]$acc.failingScenarios.Add($fs) }
+                [void]$acc.failingPacks.Add($packName)
+            }
+        }
+
+        $packSummaries += [pscustomobject]@{
+            name = $packName
+            scenarioCount = $scenarioCount
+            engines = $engineSummaries
+        }
+    }
+
+    $engineSummariesAcc = @()
+    foreach ($entry in $enginesAcc.GetEnumerator()) {
+        $acc = $entry.Value
+        $runs = [double]$acc.runs
+        $decodeRate = $null
+        $expectedRate = $null
+        if ($runs -gt 0) {
+            $decodeRate = $acc.decodeWeighted / $runs
+            $expectedRate = $acc.expectedWeighted / $runs
+        }
+        $failingScenariosSet = $acc.failingScenarios
+        if ($failingScenariosSet -isnot [System.Collections.Generic.HashSet[string]]) {
+            $failingScenariosSet = New-Object "System.Collections.Generic.HashSet[string]"
+            foreach ($fs in @($acc.failingScenarios)) {
+                if (-not [string]::IsNullOrWhiteSpace([string]$fs)) {
+                    [void]$failingScenariosSet.Add([string]$fs)
+                }
+            }
+        }
+        $failingPacksSet = $acc.failingPacks
+        if ($failingPacksSet -isnot [System.Collections.Generic.HashSet[string]]) {
+            $failingPacksSet = New-Object "System.Collections.Generic.HashSet[string]"
+            foreach ($fp in @($acc.failingPacks)) {
+                if (-not [string]::IsNullOrWhiteSpace([string]$fp)) {
+                    [void]$failingPacksSet.Add([string]$fp)
+                }
+            }
+        }
+        $failingScenariosArr = @($failingScenariosSet)
+        $failingPacksArr = @($failingPacksSet)
+        $engineSummariesAcc += [pscustomobject]@{
+            name = $acc.name
+            isExternal = $acc.isExternal
+            runs = $runs
+            decodeRate = $decodeRate
+            expectedRate = $expectedRate
+            failingScenarios = ($failingScenariosArr | Sort-Object)
+            failingPacks = ($failingPacksArr | Sort-Object)
+        }
+    }
+
+    $engineSummariesOrdered = $engineSummariesAcc | Sort-Object @{ Expression = { $_.isExternal } }, @{ Expression = { $_.name } }
+
+    function Format-Pct([double]$value) {
+        if ($null -eq $value) { return "n/a" }
+        return ("{0:P0}" -f $value)
+    }
+
+    $noteBits = @()
+    foreach ($engine in $engineSummariesOrdered) {
+        $bit = "$($engine.name) expected=$(Format-Pct $engine.expectedRate)"
+        $fails = @($engine.failingScenarios | Select-Object -First 4)
+        if ($fails.Count -gt 0) {
+            $bit += " (misses: $($fails -join ', '))"
+        }
+        $noteBits += $bit
+    }
+
+    $note = $null
+    if ($noteBits.Count -gt 0) {
+        $note = "QR pack runner ($runMode): " + ($noteBits -join "; ")
+    }
+
+    return [pscustomobject]@{
+        reportPath = $reportPath
+        generatedUtc = (Get-Field $raw @("DateUtc", "dateUtc") $null)
+        mode = $runMode
+        packs = $packSummaries
+        engines = $engineSummariesOrdered
+        note = $note
+    }
+}
+
 function Format-MeanAllocCell([object]$entry, [string]$deltaText = $null) {
     if (-not $entry) { return "" }
     $mean = Normalize-MeanText $entry["mean"]
@@ -428,6 +607,7 @@ if (-not [string]::IsNullOrWhiteSpace($runModeWarning)) {
 }
 
 $runModeLabel = Format-RunModeLabel $runModeNormalized $runModeSource $requestedRunMode
+$packRunnerPayload = Get-PackRunnerPayload -artifactsPath $ArtifactsPath -runMode $runModeNormalized
 
 $publishFlag = if ($Publish) {
     $true
@@ -478,6 +658,9 @@ $lines.Add("- Benchmarks run under controlled, ideal conditions on a single mach
 $lines.Add("")
 $lines.Add("### Notes")
 $lines.Add("- $runModeLabel")
+if ($packRunnerPayload -and -not [string]::IsNullOrWhiteSpace($packRunnerPayload.note)) {
+    $lines.Add("- $($packRunnerPayload.note)")
+}
 $lines.Add("- Quick runs include the same scenario set as Full runs; run time is driven by iteration counts.")
 $lines.Add("- Comparisons target PNG output and include encode+render (not encode-only).")
 $lines.Add("- Module size and quiet zone are matched to CodeGlyphX defaults where possible; image size is derived from CodeGlyphX modules.")
@@ -836,6 +1019,20 @@ foreach ($file in $baselineFiles | Sort-Object Name) {
     })
 }
 
+$notesList = @(
+    $runModeLabel,
+    "Comparisons target PNG output and include encode+render (not encode-only).",
+    "Module size and quiet zone are matched to CodeGlyphX defaults where possible; image size is derived from CodeGlyphX modules.",
+    "ZXing.Net uses ZXing.Net.Bindings.ImageSharp.V3 (ImageSharp 3.x renderer).",
+    "Barcoder uses Barcoder.Renderer.Image (ImageSharp renderer).",
+    "QRCoder uses PngByteQRCode (managed PNG output, no external renderer).",
+    "QR decode comparisons use raw RGBA32 bytes (ZXing via RGBLuminanceSource).",
+    "QR decode clean uses CodeGlyphX Balanced; noisy uses CodeGlyphX Robust with aggressive sampling/limits; ZXing uses default (clean) and TryHarder (noisy)."
+)
+if ($packRunnerPayload -and -not [string]::IsNullOrWhiteSpace($packRunnerPayload.note)) {
+    $notesList += $packRunnerPayload.note
+}
+
 $jsonDoc = @{
     generatedUtc = (Get-Date).ToUniversalTime().ToString("o")
     schemaVersion = 1
@@ -859,19 +1056,11 @@ $jsonDoc = @{
         "Δ lines in comparison tables show vendor ratios vs CodeGlyphX (time / alloc).",
         "Quick runs use fewer iterations for fast feedback; Full runs use BenchmarkDotNet defaults and are recommended for publishing."
     )
-    notes = @(
-        $runModeLabel,
-        "Comparisons target PNG output and include encode+render (not encode-only).",
-        "Module size and quiet zone are matched to CodeGlyphX defaults where possible; image size is derived from CodeGlyphX modules.",
-        "ZXing.Net uses ZXing.Net.Bindings.ImageSharp.V3 (ImageSharp 3.x renderer).",
-        "Barcoder uses Barcoder.Renderer.Image (ImageSharp renderer).",
-        "QRCoder uses PngByteQRCode (managed PNG output, no external renderer).",
-        "QR decode comparisons use raw RGBA32 bytes (ZXing via RGBLuminanceSource).",
-        "QR decode clean uses CodeGlyphX Balanced; noisy uses CodeGlyphX Robust with aggressive sampling/limits; ZXing uses default (clean) and TryHarder (noisy)."
-    )
+    notes = $notesList
     summary = $summaryItems
     baseline = $jsonBaseline
     comparisons = $jsonSections
+    packRunner = $packRunnerPayload
 }
 
 $jsonSkeleton = @{
@@ -881,7 +1070,7 @@ $jsonSkeleton = @{
 }
 
 if (-not (Test-Path $jsonOutput)) {
-    Write-TextUtf8NoBom $jsonOutput ($jsonSkeleton | ConvertTo-Json -Depth 8)
+    Write-TextUtf8NoBom $jsonOutput ($jsonSkeleton | ConvertTo-Json -Depth 12)
 }
 
 $jsonText = Get-Content -Path $jsonOutput -Raw -Encoding UTF8
@@ -903,12 +1092,12 @@ foreach ($os in @("windows", "linux", "macos")) {
 }
 
 $jsonAll.$osName.$runModeNormalized = $jsonDoc
-$jsonOut = $jsonAll | ConvertTo-Json -Depth 8
+$jsonOut = $jsonAll | ConvertTo-Json -Depth 12
 Write-TextUtf8NoBom $jsonOutput $jsonOut
 
 $summaryOutput = Join-Path $PSScriptRoot "..\Assets\Data\benchmark-summary.json"
 if (-not (Test-Path $summaryOutput)) {
-    Write-TextUtf8NoBom $summaryOutput ($jsonSkeleton | ConvertTo-Json -Depth 8)
+    Write-TextUtf8NoBom $summaryOutput ($jsonSkeleton | ConvertTo-Json -Depth 12)
 }
 $summaryText = Get-Content -Path $summaryOutput -Raw -Encoding UTF8
 $summaryAll = $summaryText | ConvertFrom-Json
@@ -943,8 +1132,9 @@ $summaryAll.$osName.$runModeNormalized = [pscustomobject]@{
     howToRead = $jsonDoc.howToRead
     notes = $jsonDoc.notes
     summary = $jsonDoc.summary
+    packRunner = $jsonDoc.packRunner
 }
-$summaryOut = $summaryAll | ConvertTo-Json -Depth 8
+$summaryOut = $summaryAll | ConvertTo-Json -Depth 12
 Write-TextUtf8NoBom $summaryOutput $summaryOut
 
 # Summary output is already stored under Assets/Data for website ingestion.

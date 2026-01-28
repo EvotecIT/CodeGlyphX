@@ -36,8 +36,12 @@ jobs:
       - name: Restore Core
         run: dotnet restore CodeGlyphX/CodeGlyphX.csproj
 
-      - name: Restore Tests
-        run: dotnet restore CodeGlyphX.Tests/CodeGlyphX.Tests.csproj
+      - name: Restore Tests (net8.0)
+        run: dotnet restore CodeGlyphX.Tests/CodeGlyphX.Tests.csproj -p:TargetFramework=net8.0
+
+      - name: Restore Tests (net472)
+        if: runner.os == 'Windows'
+        run: dotnet restore CodeGlyphX.Tests/CodeGlyphX.Tests.csproj -p:TargetFramework=net472
 
       - name: Restore Examples
         run: dotnet restore CodeGlyphX.Examples/CodeGlyphX.Examples.csproj
@@ -86,6 +90,14 @@ jobs:
       - name: Build Core (net472)
         if: runner.os == 'Windows'
         run: dotnet build CodeGlyphX/CodeGlyphX.csproj -c Release -f net472 --no-restore
+
+      - name: Build Tests (net472)
+        if: runner.os == 'Windows'
+        run: dotnet build CodeGlyphX.Tests/CodeGlyphX.Tests.csproj -c Release -f net472 --no-restore
+
+      - name: Test (net472 smoke)
+        if: runner.os == 'Windows'
+        run: dotnet test CodeGlyphX.Tests/CodeGlyphX.Tests.csproj -c Release -f net472 --no-restore --no-build
 
   website-build:
     name: Website Build (PR)

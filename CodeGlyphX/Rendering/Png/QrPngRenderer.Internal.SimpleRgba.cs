@@ -15,6 +15,7 @@ public static partial class QrPngRenderer {
             && opts.BackgroundSupersample == 1
             && opts.ForegroundGradient is null
             && opts.ForegroundPalette is null
+            && opts.ForegroundPattern is null
             && opts.ForegroundPaletteZones is null
             && opts.ModuleScaleMap is null
             && opts.Eyes is null

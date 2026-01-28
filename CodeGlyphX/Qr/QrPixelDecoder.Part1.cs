@@ -185,6 +185,15 @@ internal static partial class QrPixelDecoder {
             }
             if (options.StylizedSampling) {
                 stylizedSampling = true;
+                aggressiveSampling = true;
+                minContrast = Math.Max(2, minContrast - 6);
+                allowExtraThresholds = true;
+                allowAdaptiveThreshold = true;
+                allowBlur = true;
+                if (collectMaxScale < maxScale) {
+                    var boostedCollect = maxScale <= 3 ? maxScale : Math.Min(maxScale, collectMaxScale + 1);
+                    collectMaxScale = boostedCollect;
+                }
             }
             if (options.MaxMilliseconds > 0) {
                 if (options.MaxMilliseconds <= 400) {
@@ -205,7 +214,7 @@ internal static partial class QrPixelDecoder {
                     allowAdaptiveThreshold = false;
                     allowBlur = false;
                 }
-                if (options.MaxMilliseconds <= 800 && !options.AggressiveSampling) {
+                if (options.MaxMilliseconds <= 800 && !options.AggressiveSampling && !options.StylizedSampling) {
                     aggressiveSampling = false;
                 }
             }
@@ -1074,7 +1083,8 @@ internal static partial class QrPixelDecoder {
         if (w <= 0 || h <= 0) return;
 
         var minDim = Math.Min(w, h);
-        var tileSize = Math.Clamp(minDim / 3, 64, minDim);
+        var tileMin = minDim < 64 ? minDim : 64;
+        var tileSize = Math.Clamp(minDim / 3, tileMin, minDim);
         var step = Math.Max(16, tileSize / 2);
         var thresholds = image.ThresholdMap;
         var threshold = image.Threshold;

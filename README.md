@@ -54,7 +54,7 @@ dotnet add package CodeGlyphX
 
 ## Target Framework Feature Matrix
 
-CodeGlyphX targets `netstandard2.0`, `net472`, `net8.0`, and `net10.0`. Most features are available everywhere, but the QR pixel pipeline and Span-based APIs are net8+ only.
+CodeGlyphX targets `netstandard2.0`, `net472`, `net8.0`, and `net10.0`. Most features are available everywhere, but the full QR pixel pipeline and Span-based APIs are net8+ only.
 
 | Feature | net8.0 / net10.0 | net472 / netstandard2.0 |
 | --- | --- | --- |
@@ -62,18 +62,49 @@ CodeGlyphX targets `netstandard2.0`, `net472`, `net8.0`, and `net10.0`. Most fea
 | Decode from module grids (BitMatrix) | ✅ | ✅ |
 | Renderers + image file codecs (PNG/JPEG/SVG/PDF/etc) | ✅ | ✅ |
 | 1D/2D pixel decode (Barcode/DataMatrix/PDF417/Aztec) | ✅ | ✅ |
-| QR pixel decode from raw pixels / screenshots | ✅ | ⚠️ Not available (returns false) |
+| QR pixel decode from raw pixels / screenshots | ✅ | ⚠️ Limited fallback (clean/generated images) |
 | QR pixel debug rendering | ✅ | ✖ |
 | Span-based overloads | ✅ | ✖ (byte[] only) |
 
 Notes:
 - `netstandard2.0` and `net472` require `System.Memory` 4.5.5 (automatically pulled by NuGet).
-- `QrImageDecoder.TryDecodeImage(...)` and `QrDecoder.TryDecode(...)` from pixels are net8+ only.
-- Runtime checks are available via `CodeGlyphXFeatures` (e.g., `SupportsQrPixelDecode`, `SupportsQrPixelDebug`).
+- net8+ uses the full QR pixel pipeline; `net472`/`netstandard2.0` use a limited fallback for QR image decode via `QrImageDecoder` and byte[] overloads.
+- Runtime checks are available via `CodeGlyphXFeatures` (e.g., `SupportsQrPixelDecode`, `SupportsQrPixelDecodeFallback`, `SupportsQrPixelDebug`).
+
+net472 capability notes (QR from images):
+- ✅ Clean/generated PNG/JPEG QR renders (including large module sizes)
+- ⚠️ Multi-code screenshots, heavy styling/art, blur, warp, and low-contrast scenes are best-effort
+- ✅ Recommended: run the quick smoke checklist in `Build/Net472-SmokeTest.md`
+
+### net472 parity and guidance
+
+What works the same as net8+/net10+ on `net472`:
+- All encoders, payload helpers, renderers, and file codecs.
+- Module-grid decode (BitMatrix) across supported symbologies.
+- Pixel decode for 1D barcodes and 2D matrix codes other than QR.
+
+What is intentionally limited on `net472`:
+- QR pixel decode from raw pixels/images (`QrImageDecoder` / pixel-based `QrDecoder`) returns `false`.
+- QR pixel debug rendering throws `PlatformNotSupportedException`.
+- Span-based overloads are not available (use the `byte[]` overloads).
+
+Recommended pattern for shared code:
+
+```csharp
+if (CodeGlyphXFeatures.SupportsQrPixelDecode &&
+    QrImageDecoder.TryDecodeImage(bytes, QrPixelDecodeOptions.Screen(), out var decoded))
+{
+    Console.WriteLine(decoded.Text);
+}
+else
+{
+    // net472 fallback: decode from module grids or run QR pixel decode on a net8+ worker.
+}
+```
 
 Choosing a target:
-- Pick `net8.0`/`net10.0` when you need QR pixel decode from images/screenshots, pixel debug rendering, Span APIs, or maximum throughput.
-- Pick `net472`/`netstandard2.0` for legacy apps that only need encoding, rendering, and module-grid decode (QR pixel decode from images is unavailable).
+- Pick `net8.0`/`net10.0` when you need the most robust QR pixel decode from images/screenshots, pixel debug rendering, Span APIs, or maximum throughput.
+- Pick `net472`/`netstandard2.0` for legacy apps; QR image decode is available via a best-effort fallback, but it is less robust on heavily styled/artistic inputs.
 
 ## Decode (unified)
 
@@ -182,7 +213,7 @@ Runs wherever .NET runs (Windows, Linux, macOS). WPF controls are Windows-only.
 Latest benchmark tables are generated into `BENCHMARK.md` (and `Assets/Data/benchmark*.json`).
 Benchmarks below were run on 2026-01-19 (Linux Ubuntu 24.04, Ryzen 9 9950X, .NET 8.0.22). Your results will vary.
 Benchmarks run on identical hardware with default settings.
-Quick runs use fewer iterations but include the same scenario list as full runs.
+Quick runs use fewer iterations but include the same scenario list as full runs (for BenchmarkDotNet tables). The QR pack runner uses a smaller quick pack set and adds art/stylized packs in full mode.
 
 ### QR (Encode)
 

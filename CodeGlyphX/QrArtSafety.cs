@@ -33,6 +33,14 @@ public enum QrArtWarningKind {
     /// </summary>
     ModuleScaleTooSmall,
     /// <summary>
+    /// Functional patterns are not protected while decorative styling is enabled.
+    /// </summary>
+    FunctionalPatternsUnprotected,
+    /// <summary>
+    /// Background pattern may be drawn into the quiet zone.
+    /// </summary>
+    QuietZonePatterned,
+    /// <summary>
     /// Logo covers too much of the QR area.
     /// </summary>
     LogoTooLarge,
@@ -128,23 +136,52 @@ public static class QrArtSafety {
             Add(QrArtWarningKind.ModuleScaleTooSmall, "Module scale below 0.8 can weaken timing/finder clarity.", 10);
         }
 
+        var hasDecorativeModules = options.ModuleShape != QrPngModuleShape.Square
+            || options.ModuleScale < 1.0
+            || options.ModuleScaleMap is not null
+            || options.ForegroundGradient is not null
+            || options.ForegroundPalette is not null
+            || options.ForegroundPattern is not null
+            || options.ForegroundPaletteZones is not null
+            || options.Eyes is not null;
+
+        if (!options.ProtectFunctionalPatterns && hasDecorativeModules) {
+            Add(QrArtWarningKind.FunctionalPatternsUnprotected, "Decorative styling without functional pattern protection can reduce scan reliability.", 15);
+        }
+
+        if (options.BackgroundPattern is not null && options.QuietZone > 0 && !options.ProtectQuietZone) {
+            Add(QrArtWarningKind.QuietZonePatterned, "Background patterns should avoid the quiet zone to preserve scan detection.", 20);
+        }
+
         var bg = options.BackgroundGradient is null
             ? new[] { options.Background }
             : new[] { options.BackgroundGradient.StartColor, options.BackgroundGradient.EndColor };
+        var pattern = options.ForegroundPattern;
+        var patternActive = pattern is not null && pattern.Color.A != 0 && pattern.ThicknessPx > 0;
 
         if (options.ForegroundPalette is not null || options.ForegroundPaletteZones is not null) {
             var palettes = CollectPalettes(options.ForegroundPalette, options.ForegroundPaletteZones);
-            var min = MinContrast(palettes, bg);
+            var colors = patternActive
+                ? AddPatternVariants(palettes, pattern!)
+                : palettes;
+            var min = MinContrast(colors, bg);
             if (min < 4.5) {
                 Add(QrArtWarningKind.LowContrastPalette, "Palette includes low-contrast colors against the background.", 30);
             }
         } else if (options.ForegroundGradient is null) {
-            var contrast = MinContrast(new[] { options.Foreground }, bg);
+            var colors = patternActive
+                ? new[] { options.Foreground, ComposeOver(pattern!.Color, options.Foreground) }
+                : new[] { options.Foreground };
+            var contrast = MinContrast(colors, bg);
             if (contrast < 4.5) {
                 Add(QrArtWarningKind.LowContrast, $"Foreground/background contrast {contrast:0.00} is low.", 30);
             }
         } else {
-            var min = MinContrast(new[] { options.ForegroundGradient.StartColor, options.ForegroundGradient.EndColor }, bg);
+            var gradientColors = new[] { options.ForegroundGradient.StartColor, options.ForegroundGradient.EndColor };
+            var colors = patternActive
+                ? AddPatternVariants(gradientColors, pattern!)
+                : gradientColors;
+            var min = MinContrast(colors, bg);
             if (min < 4.5) {
                 Add(QrArtWarningKind.LowContrastGradient, "Gradient includes low-contrast colors against the background.", 30);
             }
@@ -195,6 +232,37 @@ public static class QrArtSafety {
             }
         }
         return min;
+    }
+
+    private static Rgba32[] AddPatternVariants(Rgba32[] colors, QrPngForegroundPatternOptions pattern) {
+        var list = new List<Rgba32>(colors.Length * 2);
+        for (var i = 0; i < colors.Length; i++) {
+            var color = colors[i];
+            list.Add(color);
+            list.Add(ComposeOver(pattern.Color, color));
+        }
+        return list.ToArray();
+    }
+
+    private static Rgba32 ComposeOver(Rgba32 top, Rgba32 bottom) {
+        var ta = top.A;
+        if (ta == 0) return bottom;
+        if (ta == 255 && bottom.A == 255) return top;
+
+        var ba = bottom.A;
+        var inv = 255 - ta;
+        var outA = ta + (ba * inv + 127) / 255;
+        if (outA <= 0) return new Rgba32(0, 0, 0, 0);
+
+        var outRPre = top.R * ta + (int)((bottom.R * ba * (long)inv + 127) / 255);
+        var outGPre = top.G * ta + (int)((bottom.G * ba * (long)inv + 127) / 255);
+        var outBPre = top.B * ta + (int)((bottom.B * ba * (long)inv + 127) / 255);
+
+        var outR = (outRPre + outA / 2) / outA;
+        var outG = (outGPre + outA / 2) / outA;
+        var outB = (outBPre + outA / 2) / outA;
+
+        return new Rgba32((byte)outR, (byte)outG, (byte)outB, (byte)outA);
     }
 
     private static Rgba32[] CollectPalettes(QrPngPaletteOptions? basePalette, QrPngPaletteZoneOptions? zones) {

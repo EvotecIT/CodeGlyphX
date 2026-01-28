@@ -221,7 +221,7 @@ if (QrImageDecoder.TryDecodeImage(imageBytes, out var result))
             </ul>
 
             <h2>Feature Availability</h2>
-            <p>Most features are available across all targets, but the QR pixel pipeline and Span-based APIs are net8+ only.</p>
+            <p>Most features are available across all targets, but the full QR pixel pipeline and Span-based APIs are net8+ only.</p>
             <table style="width: 100%; border-collapse: collapse; margin: 1rem 0;">
                 <thead>
                     <tr style="border-bottom: 1px solid var(--border);">
@@ -254,7 +254,7 @@ if (QrImageDecoder.TryDecodeImage(imageBytes, out var result))
                     <tr style="border-bottom: 1px solid var(--border);">
                         <td style="padding: 0.75rem;">QR pixel decode from raw pixels / screenshots</td>
                         <td style="padding: 0.75rem;">Yes</td>
-                        <td style="padding: 0.75rem;">No (returns false)</td>
+                        <td style="padding: 0.75rem;">Limited fallback (clean/generated)</td>
                     </tr>
                     <tr style="border-bottom: 1px solid var(--border);">
                         <td style="padding: 0.75rem;">QR pixel debug rendering</td>
@@ -268,9 +268,10 @@ if (QrImageDecoder.TryDecodeImage(imageBytes, out var result))
                     </tr>
                 </tbody>
             </table>
-            <p class="text-muted">QR pixel decode APIs are net8+ only (e.g., <code>QrImageDecoder.TryDecodeImage(...)</code> and <code>QrDecoder.TryDecode(...)</code> from pixels).</p>
-            <p class="text-muted">You can check capabilities at runtime via <code>CodeGlyphXFeatures</code> (for example, <code>SupportsQrPixelDecode</code> and <code>SupportsQrPixelDebug</code>).</p>
-            <p class="text-muted"><strong>Choosing a target:</strong> pick <code>net8.0+</code> for QR image decoding, pixel debug tools, Span APIs, and maximum throughput. Pick <code>net472</code>/<code>netstandard2.0</code> for legacy apps that only need encoding, rendering, and module-grid decode.</p>
+            <p class="text-muted">net8+ provides the full QR pixel pipeline; <code>net472</code>/<code>netstandard2.0</code> use a limited fallback for QR image decode via <code>QrImageDecoder.TryDecodeImage(...)</code> and byte[] overloads.</p>
+            <p class="text-muted">You can check capabilities at runtime via <code>CodeGlyphXFeatures</code> (for example, <code>SupportsQrPixelDecode</code>, <code>SupportsQrPixelDecodeFallback</code>, and <code>SupportsQrPixelDebug</code>).</p>
+            <p class="text-muted"><strong>net472 QR decode expectations:</strong> clean/generated PNG/JPEG renders are supported; multi-code screenshots and heavily styled/artistic inputs remain best-effort. Use the quick smoke checklist in <code>Build/Net472-SmokeTest.md</code>.</p>
+            <p class="text-muted"><strong>Choosing a target:</strong> pick <code>net8.0+</code> for the most robust QR image decoding, pixel debug tools, Span APIs, and maximum throughput. Pick <code>net472</code>/<code>netstandard2.0</code> for legacy apps; QR image decode is available via a best-effort fallback but is less reliable on heavily styled/artistic inputs.</p>
         </section>
 
         <section id="quickstart">
@@ -1318,4 +1319,3 @@ if (docsOverlay && docsSidebar) {
   </script>
 </body>
 </html>
-

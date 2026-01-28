@@ -93,6 +93,21 @@ public sealed class QrEasyOptions {
     public QrRenderStyle Style { get; set; } = QrRenderStyle.Default;
 
     /// <summary>
+    /// High-level QR art options (theme + variant + intensity).
+    /// </summary>
+    public QrArtOptions? Art { get; set; }
+
+    /// <summary>
+    /// When true, applies scan-safety auto-tuning for art-heavy styles.
+    /// </summary>
+    public bool ArtAutoTune { get; set; } = true;
+
+    /// <summary>
+    /// Minimum safety score target (0..100) for art auto-tuning.
+    /// </summary>
+    public int ArtAutoTuneMinScore { get; set; } = 80;
+
+    /// <summary>
     /// Overrides the module shape (when set).
     /// </summary>
     public QrPngModuleShape? ModuleShape { get; set; }
@@ -108,6 +123,16 @@ public sealed class QrEasyOptions {
     public QrPngModuleScaleMapOptions? ModuleScaleMap { get; set; }
 
     /// <summary>
+    /// When true, keeps non-eye functional patterns at a stable, scan-friendly style.
+    /// </summary>
+    public bool ProtectFunctionalPatterns { get; set; } = true;
+
+    /// <summary>
+    /// When true and a background pattern is enabled, preserves a clean quiet zone.
+    /// </summary>
+    public bool ProtectQuietZone { get; set; } = true;
+
+    /// <summary>
     /// Overrides the module corner radius in pixels.
     /// </summary>
     public int? ModuleCornerRadiusPx { get; set; }
@@ -121,6 +146,11 @@ public sealed class QrEasyOptions {
     /// Overrides the foreground palette.
     /// </summary>
     public QrPngPaletteOptions? ForegroundPalette { get; set; }
+
+    /// <summary>
+    /// Overrides the foreground pattern overlay.
+    /// </summary>
+    public QrPngForegroundPatternOptions? ForegroundPattern { get; set; }
 
     /// <summary>
     /// Overrides palette zones.

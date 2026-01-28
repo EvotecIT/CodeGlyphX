@@ -39,10 +39,15 @@ New-Item -ItemType Directory -Force -Path $artifactsPath | Out-Null
 $benchQuick = -not $Full
 $runMode = if ($benchQuick) { "quick" } else { "full" }
 $quickProps = @()
-$quickEnv = @{}
+$quickEnv = @{ BENCH_QUICK = if ($benchQuick) { "true" } else { "false" } }
 if ($benchQuick) {
     $quickProps += "/p:BenchQuick=true"
-    $quickEnv["BENCH_QUICK"] = "true"
+}
+
+# Keep the default quick run focused on compare suites so it stays fast.
+$baseFilterBound = $PSBoundParameters.ContainsKey("BaseFilter")
+if ($benchQuick -and -not $baseFilterBound) {
+    $BaseFilter = "*CompareBenchmarks*"
 }
 
 $expectedCompare = @(
@@ -163,10 +168,64 @@ function Invoke-Preflight {
     }
 }
 
+function Invoke-PackRunner {
+    param(
+        [string[]]$MsBuildProps,
+        [hashtable]$EnvVars,
+        [string]$Label
+    )
+
+    Write-Host ""
+    Write-Host "== $Label =="
+
+    $reportsDir = Join-Path $artifactsPath "pack-runner"
+    New-Item -ItemType Directory -Force -Path $reportsDir | Out-Null
+
+    $packEnv = @{}
+    if ($EnvVars) {
+        foreach ($key in $EnvVars.Keys) {
+            $packEnv[$key] = $EnvVars[$key]
+        }
+    }
+    $packEnv["CODEGLYPHX_PACK_REPORTS_DIR"] = $reportsDir
+    $packEnv["BENCH_QUICK"] = if ($benchQuick) { "true" } else { "false" }
+
+    $previous = @{}
+    foreach ($key in $packEnv.Keys) {
+        $previous[$key] = [System.Environment]::GetEnvironmentVariable($key)
+        [System.Environment]::SetEnvironmentVariable($key, $packEnv[$key])
+    }
+
+    try {
+        $args = @(
+            "run",
+            "-c", $Configuration,
+            "--framework", $Framework,
+            "--project", $projectPath
+        )
+        if ($MsBuildProps) {
+            $args += $MsBuildProps
+        }
+        $args += @("--", "--pack-runner", "--mode", $runMode, "--format", "json", "--reports-dir", $reportsDir)
+        & dotnet @args
+        if ($LASTEXITCODE -ne 0) {
+            throw "dotnet run failed: $Label"
+        }
+    } finally {
+        foreach ($key in $packEnv.Keys) {
+            [System.Environment]::SetEnvironmentVariable($key, $previous[$key])
+        }
+    }
+}
+
 Push-Location $repoRoot
 try {
+    $packProps = @()
+    $packEnvVars = @{}
     if (-not $NoBase) {
         Invoke-Benchmark -MsBuildProps $quickProps -Filter $BaseFilter -Label "Baseline (CodeGlyphX only)" -EnvVars $quickEnv
+        $packProps = @($quickProps)
+        foreach ($key in $quickEnv.Keys) { $packEnvVars[$key] = $quickEnv[$key] }
     }
 
     if (-not $NoCompare) {
@@ -194,6 +253,9 @@ try {
         }
 
         Invoke-Benchmark -MsBuildProps $props -Filter $CompareFilter -Label "External comparisons" -EnvVars $envVars
+        $packProps = @($props)
+        $packEnvVars = @{}
+        foreach ($key in $envVars.Keys) { $packEnvVars[$key] = $envVars[$key] }
 
         $resultsPath = Join-Path $artifactsPath "results"
         $shouldEnforceCompare = -not $AllowPartial -and $CompareFilter -eq "*Compare*"
@@ -211,6 +273,7 @@ try {
             }
         }
     }
+    Invoke-PackRunner -MsBuildProps $packProps -EnvVars $packEnvVars -Label "QR decode pack runner"
 } finally {
     Pop-Location
 }

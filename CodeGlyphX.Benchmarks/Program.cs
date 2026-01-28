@@ -17,8 +17,14 @@ public class Program
             Environment.Exit(exitCode);
         }
 
+        if (QrDecodePackRunner.TryParseArgs(filteredArgs, out var packOptions, out var remainingArgs))
+        {
+            var exitCode = QrDecodePackRunner.Run(packOptions);
+            Environment.Exit(exitCode);
+        }
+
         // Run all benchmarks
-        BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly).Run(filteredArgs);
+        BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly).Run(remainingArgs);
 
         // Or run specific benchmark:
         // BenchmarkRunner.Run<QrCodeBenchmarks>();

@@ -79,6 +79,106 @@ public sealed class RendererFormatTests {
     }
 
     [Fact]
+    public void Qr_ArtPresets_Render_Png_Format() {
+        var payload = "https://example.com/art";
+#pragma warning disable CS0618 // QrArtPresets is deprecated in favor of QrArt.Theme + QrEasyOptions.Art.
+        var presets = new[] {
+            QrArtPresets.NeonGlowSafe(),
+            QrArtPresets.LiquidGlassSafe(),
+            QrArtPresets.ConnectedSquircleGlowSafe(),
+            QrArtPresets.CutCornerTechSafe(),
+            QrArtPresets.InsetRingsSafe(),
+            QrArtPresets.StripeEyesSafe(),
+            QrArtPresets.PaintSplashSafe(),
+            QrArtPresets.PaintSplashPastelSafe(),
+        };
+#pragma warning restore CS0618
+
+        foreach (var preset in presets) {
+            var png = QrEasy.RenderPng(payload, preset);
+            Assert.True(ImageReader.TryDetectFormat(png, out var format));
+            Assert.Equal(ImageFormat.Png, format);
+        }
+    }
+
+    [Fact]
+    public void Qr_ArtApi_Render_Png_Format() {
+        var payload = "https://example.com/art-api";
+        var arts = new[] {
+            QrArt.Theme(QrArtTheme.NeonGlow, QrArtVariant.Safe, intensity: 60),
+            QrArt.Theme(QrArtTheme.StripeEyes, QrArtVariant.Safe, intensity: 58),
+            QrArt.Theme(QrArtTheme.PaintSplash, QrArtVariant.Pastel, intensity: 62),
+        };
+
+        foreach (var art in arts) {
+            var png = QrEasy.RenderPng(payload, new QrEasyOptions { Art = art });
+            Assert.True(ImageReader.TryDetectFormat(png, out var format));
+            Assert.Equal(ImageFormat.Png, format);
+        }
+    }
+
+    [Fact]
+    public void Qr_Ascii_UnicodeBlocks_Uses_Block_Glyphs() {
+        var payload = "https://example.com";
+        var ascii = QrEasy.RenderAscii(payload, new MatrixAsciiRenderOptions {
+            QuietZone = 1,
+            UseUnicodeBlocks = true
+        });
+
+        Assert.Contains("█", ascii, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Qr_Ascii_AnsiColors_Emits_Escape_Codes() {
+        var payload = "https://example.com";
+        var ascii = QrEasy.RenderAscii(payload, new MatrixAsciiRenderOptions {
+            QuietZone = 1,
+            UseUnicodeBlocks = true,
+            UseAnsiColors = true,
+            UseAnsiTrueColor = false
+        });
+
+        Assert.Contains("\u001b[", ascii, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Qr_Ascii_ConsolePreset_Is_Scan_Friendly() {
+        var payload = "https://example.com";
+        var ascii = QrEasy.RenderAscii(payload, AsciiPresets.Console(scale: 3));
+
+        Assert.Contains("█", ascii, StringComparison.Ordinal);
+        Assert.Contains("\u001b[", ascii, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Qr_Ascii_ConsoleWrapper_Uses_Preset() {
+        var payload = "https://example.com";
+        var ascii = QrEasy.RenderAsciiConsole(payload, scale: 3);
+
+        Assert.Contains("█", ascii, StringComparison.Ordinal);
+        Assert.Contains("\u001b[", ascii, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Qr_Ascii_Scale_Increases_Output_Size() {
+        var payload = "https://example.com";
+        var baseAscii = QrEasy.RenderAscii(payload, new MatrixAsciiRenderOptions {
+            QuietZone = 1,
+            ModuleWidth = 1,
+            ModuleHeight = 1,
+            Scale = 1
+        });
+        var scaledAscii = QrEasy.RenderAscii(payload, new MatrixAsciiRenderOptions {
+            QuietZone = 1,
+            ModuleWidth = 1,
+            ModuleHeight = 1,
+            Scale = 2
+        });
+
+        Assert.True(scaledAscii.Length > baseAscii.Length);
+    }
+
+    [Fact]
     public void Qr_Ico_Respects_MultiSize_Options() {
         var payload = "https://example.com";
         var opts = new QrEasyOptions {

@@ -11,6 +11,8 @@ COMPARE_QRCODER=0
 COMPARE_BARCODER=0
 BASE_FILTER="*"
 COMPARE_FILTER="*Compare*"
+BASE_FILTER_SET=0
+COMPARE_FILTER_SET=0
 BENCH_QUICK=1
 ALLOW_PARTIAL=0
 SKIP_PREFLIGHT=0
@@ -48,8 +50,8 @@ while [[ $# -gt 0 ]]; do
     --compare-zxing) COMPARE_ZXING=1; shift ;;
     --compare-qrcoder) COMPARE_QRCODER=1; shift ;;
     --compare-barcoder) COMPARE_BARCODER=1; shift ;;
-    --base-filter) BASE_FILTER="$2"; shift 2 ;;
-    --compare-filter) COMPARE_FILTER="$2"; shift 2 ;;
+    --base-filter) BASE_FILTER="$2"; BASE_FILTER_SET=1; shift 2 ;;
+    --compare-filter) COMPARE_FILTER="$2"; COMPARE_FILTER_SET=1; shift 2 ;;
     --full) BENCH_QUICK=0; shift ;;
     --allow-partial) ALLOW_PARTIAL=1; shift ;;
     --skip-preflight) SKIP_PREFLIGHT=1; shift ;;
@@ -57,6 +59,11 @@ while [[ $# -gt 0 ]]; do
     *) echo "Unknown option: $1"; usage; exit 1 ;;
   esac
 done
+
+# Keep the default quick run focused on compare suites so it stays fast.
+if [[ $BENCH_QUICK -eq 1 && $BASE_FILTER_SET -eq 0 ]]; then
+  BASE_FILTER="*CompareBenchmarks*"
+fi
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_PATH="$SCRIPT_DIR/../CodeGlyphX.Benchmarks/CodeGlyphX.Benchmarks.csproj"
@@ -99,6 +106,40 @@ run_bench() {
   return 0
 }
 
+run_pack_runner() {
+  local label="$1"
+  local env_prefix="$2"
+  shift 2
+  local props=("$@")
+
+  local mode_arg="quick"
+  if [[ $BENCH_QUICK -eq 0 ]]; then
+    mode_arg="full"
+  fi
+
+  local reports_dir="$ARTIFACTS_PATH/pack-runner"
+  mkdir -p "$reports_dir"
+
+  echo ""
+  echo "== $label =="
+  local args=(run -c "$CONFIGURATION" --framework "$FRAMEWORK" --project "$PROJECT_PATH")
+  if [[ ${#props[@]} -gt 0 ]]; then
+    args+=("${props[@]}")
+  fi
+  args+=(-- --pack-runner --mode "$mode_arg" --format json --reports-dir "$reports_dir")
+
+  local pack_env="$env_prefix"
+  pack_env+="CODEGLYPHX_PACK_REPORTS_DIR=\"$reports_dir\" "
+  pack_env+="BENCH_QUICK=$([[ $BENCH_QUICK -eq 1 ]] && echo true || echo false) "
+
+  if [[ -n "$pack_env" ]]; then
+    eval "$pack_env dotnet \"\${args[@]}\""
+  else
+    dotnet "${args[@]}"
+  fi
+  return 0
+}
+
 run_preflight() {
   local env_prefix="$1"
   shift
@@ -121,20 +162,21 @@ run_preflight() {
 
 if [[ $NO_BASE -eq 0 ]]; then
   base_props=()
-  base_env=""
+  base_env="BENCH_QUICK=$([[ $BENCH_QUICK -eq 1 ]] && echo true || echo false) "
   if [[ $BENCH_QUICK -eq 1 ]]; then
     base_props+=("/p:BenchQuick=true")
-    base_env="BENCH_QUICK=true "
   fi
   run_bench "Baseline (CodeGlyphX only)" "$BASE_FILTER" "$base_env" "${base_props[@]}"
 fi
 
+PACK_PROPS=()
+PACK_ENV_PREFIX=""
+
 if [[ $NO_COMPARE -eq 0 ]]; then
   props=()
-  env_prefix=""
+  env_prefix="BENCH_QUICK=$([[ $BENCH_QUICK -eq 1 ]] && echo true || echo false) "
   if [[ $BENCH_QUICK -eq 1 ]]; then
     props+=("/p:BenchQuick=true")
-    env_prefix+="BENCH_QUICK=true "
   fi
   if [[ $COMPARE_ZXING -eq 1 || $COMPARE_QRCODER -eq 1 || $COMPARE_BARCODER -eq 1 ]]; then
     [[ $COMPARE_ZXING -eq 1 ]] && props+=("/p:CompareZXing=true")
@@ -151,7 +193,14 @@ if [[ $NO_COMPARE -eq 0 ]]; then
     run_preflight "$env_prefix" "${props[@]}"
   fi
   run_bench "External comparisons" "$COMPARE_FILTER" "$env_prefix" "${props[@]}"
+  PACK_PROPS=("${props[@]}")
+  PACK_ENV_PREFIX="$env_prefix"
+elif [[ $NO_BASE -eq 0 ]]; then
+  PACK_PROPS=("${base_props[@]}")
+  PACK_ENV_PREFIX="$base_env"
 fi
+
+run_pack_runner "QR decode pack runner" "$PACK_ENV_PREFIX" "${PACK_PROPS[@]}"
 
 REPORT_SCRIPT="$SCRIPT_DIR/generate-benchmark-report.py"
 if command -v python3 >/dev/null 2>&1 && [[ -f "$REPORT_SCRIPT" ]]; then

@@ -62,6 +62,11 @@ public sealed partial class QrPngRenderOptions {
     public QrPngPaletteOptions? ForegroundPalette { get; set; }
 
     /// <summary>
+    /// Optional pattern overlay for foreground modules.
+    /// </summary>
+    public QrPngForegroundPatternOptions? ForegroundPattern { get; set; }
+
+    /// <summary>
     /// Optional palette overrides for specific zones.
     /// </summary>
     public QrPngPaletteZoneOptions? ForegroundPaletteZones { get; set; }
@@ -85,6 +90,17 @@ public sealed partial class QrPngRenderOptions {
     /// Optional per-module scale mapping.
     /// </summary>
     public QrPngModuleScaleMapOptions? ModuleScaleMap { get; set; }
+
+    /// <summary>
+    /// When true, keeps non-eye functional patterns (timing/alignment/format/version/dark module)
+    /// at full scale and a stable foreground color for scan reliability.
+    /// </summary>
+    public bool ProtectFunctionalPatterns { get; set; } = true;
+
+    /// <summary>
+    /// When true and a background pattern is enabled, skips drawing the pattern inside the quiet zone.
+    /// </summary>
+    public bool ProtectQuietZone { get; set; } = true;
 
     /// <summary>
     /// Gets or sets the corner radius in pixels for <see cref="QrPngModuleShape.Rounded"/>.

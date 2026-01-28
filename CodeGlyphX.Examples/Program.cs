@@ -19,6 +19,15 @@ internal static class Program {
             return;
         }
 
+        var runHardArtDiagnostics = Environment.GetEnvironmentVariable("CODEGLYPHX_DECODE_HARD_ART");
+        if (!string.IsNullOrEmpty(runHardArtDiagnostics) &&
+            (string.Equals(runHardArtDiagnostics, "1", StringComparison.OrdinalIgnoreCase) ||
+             string.Equals(runHardArtDiagnostics, "true", StringComparison.OrdinalIgnoreCase))) {
+            runner.Run("QR (hard art diagnostics)", QrHardArtDiagnosticsExample.Run);
+            runner.PrintSummary();
+            return;
+        }
+
         var runDecodeSamples = Environment.GetEnvironmentVariable("CODEGLYPHX_DECODE_SAMPLES");
         if (!string.IsNullOrEmpty(runDecodeSamples) &&
             (string.Equals(runDecodeSamples, "1", StringComparison.OrdinalIgnoreCase) ||
@@ -32,6 +41,9 @@ internal static class Program {
         runner.Run("QR (ascii console)", QrAsciiExample.Run);
         runner.Run("QR (payloads)", QrPayloadsExample.Run);
         runner.Run("QR (styling)", QrFancyExample.Run);
+        runner.Run("QR (art presets)", QrArtPresetsExample.Run);
+        runner.Run("QR (connected)", QrConnectedExample.Run);
+        runner.Run("QR (glow eyes)", QrGlowExample.Run);
         runner.Run("QR (style board)", QrStyleBoardExample.Run);
         runner.Run("QR (print)", QrPrintExample.Run);
         runner.Run("QR (logo)", EvotecExamples.Run);
