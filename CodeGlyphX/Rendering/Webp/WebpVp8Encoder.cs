@@ -159,7 +159,12 @@ internal static class WebpVp8Encoder {
         WriteQuantization(headerWriter, baseQIndex);
         WriteCoefficientProbabilityUpdates(headerWriter);
         headerWriter.WriteBool(128, false); // refresh entropy probs
-        headerWriter.WriteBool(128, false); // no coefficient skip
+        var enableSkip = true;
+        var skipProbability = 128;
+        headerWriter.WriteBool(128, enableSkip);
+        if (enableSkip) {
+            headerWriter.WriteLiteral(skipProbability, 8);
+        }
 
         var tokenWriter = new WebpVp8BoolEncoder(expectedSize: 4096);
 
@@ -207,7 +212,9 @@ internal static class WebpVp8Encoder {
                     aboveSubModes,
                     currentSubModes,
                     segmentationEnabled,
-                    segmentProbabilities);
+                    segmentProbabilities,
+                    enableSkip,
+                    skipProbability);
             }
 
             SwapRowModes(ref aboveSubModes, ref currentSubModes);
@@ -270,7 +277,9 @@ internal static class WebpVp8Encoder {
         int[] aboveSubModes,
         int[] currentSubModes,
         bool segmentationEnabled,
-        int[] segmentProbabilities) {
+        int[] segmentProbabilities,
+        bool enableSkip,
+        int skipProbability) {
         var macroblockOffsetX = mbX * MacroblockSize;
         var macroblockOffsetY = mbY * MacroblockSize;
         var chromaWidth = (width + 1) >> 1;
@@ -319,28 +328,82 @@ internal static class WebpVp8Encoder {
             }
         }
 
-        var useY16 = bestY16Cost < bestBPredCost;
+        var useY16 = bestY16Cost <= bestBPredCost;
+        var uvMode = ChooseBestUvMode(
+            uPlane,
+            vPlane,
+            reconU,
+            reconV,
+            chromaWidth,
+            chromaHeight,
+            chromaOffsetX,
+            chromaOffsetY);
+
+        var skipCoefficients = false;
+        Span<byte> yBackup = stackalloc byte[MacroblockSize * MacroblockSize];
+        Span<byte> uBackup = stackalloc byte[(MacroblockSize / 2) * (MacroblockSize / 2)];
+        Span<byte> vBackup = stackalloc byte[(MacroblockSize / 2) * (MacroblockSize / 2)];
+        if (enableSkip && useY16) {
+            CopyPlaneBlock(reconY, width, height, macroblockOffsetX, macroblockOffsetY, MacroblockSize, MacroblockSize, yBackup);
+            CopyPlaneBlock(reconU, chromaWidth, chromaHeight, chromaOffsetX, chromaOffsetY, MacroblockSize / 2, MacroblockSize / 2, uBackup);
+            CopyPlaneBlock(reconV, chromaWidth, chromaHeight, chromaOffsetX, chromaOffsetY, MacroblockSize / 2, MacroblockSize / 2, vBackup);
+
+            skipCoefficients = ApplyPredictionAndCheckMatchY16(
+                yPlane,
+                uPlane,
+                vPlane,
+                reconY,
+                reconU,
+                reconV,
+                width,
+                height,
+                chromaWidth,
+                chromaHeight,
+                macroblockOffsetX,
+                macroblockOffsetY,
+                chromaOffsetX,
+                chromaOffsetY,
+                bestY16Mode,
+                uvMode);
+
+            if (!skipCoefficients) {
+                RestorePlaneBlock(reconY, width, height, macroblockOffsetX, macroblockOffsetY, MacroblockSize, MacroblockSize, yBackup);
+                RestorePlaneBlock(reconU, chromaWidth, chromaHeight, chromaOffsetX, chromaOffsetY, MacroblockSize / 2, MacroblockSize / 2, uBackup);
+                RestorePlaneBlock(reconV, chromaWidth, chromaHeight, chromaOffsetX, chromaOffsetY, MacroblockSize / 2, MacroblockSize / 2, vBackup);
+            }
+        }
+
+        if (enableSkip) {
+            headerWriter.WriteBool(skipProbability, skipCoefficients);
+        }
+
         if (useY16) {
             WriteKeyframeYMode(headerWriter, bestY16Mode);
             for (var i = 0; i < MacroblockSubBlockCount; i++) {
                 currentSubModes[yBlockBase + i] = BModeDcPred;
             }
-
-            EncodeLumaMacroblockY16(
-                tokenWriter,
-                probabilities,
-                yPlane,
-                reconY,
-                width,
-                height,
-                mbX,
-                mbY,
-                bestY16Mode,
-                dequant,
-                y2NzAbove,
-                y2NzCurrent,
-                yNzAbove,
-                yNzCurrent);
+            if (skipCoefficients) {
+                y2NzCurrent[mbX] = 0;
+                for (var i = 0; i < MacroblockSubBlockCount; i++) {
+                    yNzCurrent[yBlockBase + i] = 0;
+                }
+            } else {
+                EncodeLumaMacroblockY16(
+                    tokenWriter,
+                    probabilities,
+                    yPlane,
+                    reconY,
+                    width,
+                    height,
+                    mbX,
+                    mbY,
+                    bestY16Mode,
+                    dequant,
+                    y2NzAbove,
+                    y2NzCurrent,
+                    yNzAbove,
+                    yNzCurrent);
+            }
         } else {
             WriteKeyframeYMode(headerWriter, YModeBPred);
             y2NzCurrent[mbX] = 0;
@@ -408,19 +471,16 @@ internal static class WebpVp8Encoder {
             }
         }
 
-        var uvMode = ChooseBestUvMode(
-            uPlane,
-            vPlane,
-            reconU,
-            reconV,
-            chromaWidth,
-            chromaHeight,
-            chromaOffsetX,
-            chromaOffsetY);
-
         WriteKeyframeUvMode(headerWriter, uvMode);
 
         var chromaBlockBase = mbX * MacroblockChromaBlocks;
+        if (skipCoefficients) {
+            for (var i = 0; i < MacroblockChromaBlocks; i++) {
+                uNzCurrent[chromaBlockBase + i] = 0;
+                vNzCurrent[chromaBlockBase + i] = 0;
+            }
+            return;
+        }
         for (var blockIndex = 0; blockIndex < MacroblockChromaBlocks; blockIndex++) {
             var subX = blockIndex & 1;
             var subY = blockIndex >> 1;
@@ -1126,6 +1186,148 @@ internal static class WebpVp8Encoder {
         }
 
         return sum;
+    }
+
+    private static bool ApplyPredictionAndCheckMatchY16(
+        byte[] yPlane,
+        byte[] uPlane,
+        byte[] vPlane,
+        byte[] reconY,
+        byte[] reconU,
+        byte[] reconV,
+        int width,
+        int height,
+        int chromaWidth,
+        int chromaHeight,
+        int macroblockOffsetX,
+        int macroblockOffsetY,
+        int chromaOffsetX,
+        int chromaOffsetY,
+        int yMode,
+        int uvMode) {
+        Span<byte> predicted = stackalloc byte[BlockSize * BlockSize];
+
+        for (var blockIndex = 0; blockIndex < MacroblockSubBlockCount; blockIndex++) {
+            var subX = blockIndex & 3;
+            var subY = blockIndex >> 2;
+            var dstX = macroblockOffsetX + (subX * BlockSize);
+            var dstY = macroblockOffsetY + (subY * BlockSize);
+
+            PredictBlock(reconY, width, height, dstX, dstY, yMode, predicted);
+            if (!BlockMatchesPrediction(yPlane, width, height, dstX, dstY, predicted)) {
+                return false;
+            }
+
+            CopyPredictedBlock(reconY, width, height, dstX, dstY, predicted);
+        }
+
+        for (var blockIndex = 0; blockIndex < MacroblockChromaBlocks; blockIndex++) {
+            var subX = blockIndex & 1;
+            var subY = blockIndex >> 1;
+            var dstX = chromaOffsetX + (subX * BlockSize);
+            var dstY = chromaOffsetY + (subY * BlockSize);
+
+            PredictBlock(reconU, chromaWidth, chromaHeight, dstX, dstY, uvMode, predicted);
+            if (!BlockMatchesPrediction(uPlane, chromaWidth, chromaHeight, dstX, dstY, predicted)) {
+                return false;
+            }
+            CopyPredictedBlock(reconU, chromaWidth, chromaHeight, dstX, dstY, predicted);
+
+            PredictBlock(reconV, chromaWidth, chromaHeight, dstX, dstY, uvMode, predicted);
+            if (!BlockMatchesPrediction(vPlane, chromaWidth, chromaHeight, dstX, dstY, predicted)) {
+                return false;
+            }
+            CopyPredictedBlock(reconV, chromaWidth, chromaHeight, dstX, dstY, predicted);
+        }
+
+        return true;
+    }
+
+    private static bool BlockMatchesPrediction(
+        byte[] source,
+        int planeWidth,
+        int planeHeight,
+        int dstX,
+        int dstY,
+        ReadOnlySpan<byte> predicted) {
+        for (var y = 0; y < BlockSize; y++) {
+            var py = dstY + y;
+            if ((uint)py >= (uint)planeHeight) continue;
+            var rowOffset = py * planeWidth;
+            var predRow = y * BlockSize;
+            for (var x = 0; x < BlockSize; x++) {
+                var px = dstX + x;
+                if ((uint)px >= (uint)planeWidth) continue;
+                if (source[rowOffset + px] != predicted[predRow + x]) return false;
+            }
+        }
+
+        return true;
+    }
+
+    private static void CopyPredictedBlock(
+        byte[] plane,
+        int planeWidth,
+        int planeHeight,
+        int dstX,
+        int dstY,
+        ReadOnlySpan<byte> predicted) {
+        for (var y = 0; y < BlockSize; y++) {
+            var py = dstY + y;
+            if ((uint)py >= (uint)planeHeight) continue;
+            var rowOffset = py * planeWidth;
+            var predRow = y * BlockSize;
+            for (var x = 0; x < BlockSize; x++) {
+                var px = dstX + x;
+                if ((uint)px >= (uint)planeWidth) continue;
+                plane[rowOffset + px] = predicted[predRow + x];
+            }
+        }
+    }
+
+    private static void CopyPlaneBlock(
+        byte[] plane,
+        int planeWidth,
+        int planeHeight,
+        int dstX,
+        int dstY,
+        int blockWidth,
+        int blockHeight,
+        Span<byte> buffer) {
+        buffer.Clear();
+        for (var y = 0; y < blockHeight; y++) {
+            var py = dstY + y;
+            if ((uint)py >= (uint)planeHeight) break;
+            var rowOffset = py * planeWidth;
+            var bufferRow = y * blockWidth;
+            for (var x = 0; x < blockWidth; x++) {
+                var px = dstX + x;
+                if ((uint)px >= (uint)planeWidth) break;
+                buffer[bufferRow + x] = plane[rowOffset + px];
+            }
+        }
+    }
+
+    private static void RestorePlaneBlock(
+        byte[] plane,
+        int planeWidth,
+        int planeHeight,
+        int dstX,
+        int dstY,
+        int blockWidth,
+        int blockHeight,
+        ReadOnlySpan<byte> buffer) {
+        for (var y = 0; y < blockHeight; y++) {
+            var py = dstY + y;
+            if ((uint)py >= (uint)planeHeight) break;
+            var rowOffset = py * planeWidth;
+            var bufferRow = y * blockWidth;
+            for (var x = 0; x < blockWidth; x++) {
+                var px = dstX + x;
+                if ((uint)px >= (uint)planeWidth) break;
+                plane[rowOffset + px] = buffer[bufferRow + x];
+            }
+        }
     }
 
     private static void PredictBlock(

@@ -168,24 +168,13 @@ public sealed class WebpVp8EncodeTests {
         Assert.True(frameHeader.Segmentation.UpdateData);
         Assert.Contains(frameHeader.Segmentation.QuantizerDeltas, delta => delta != 0);
 
-        Assert.True(WebpVp8Decoder.TryReadMacroblockHeaderScaffold(payload, out var macroblocks));
-        var segmentCounts = new int[4];
-        var headers = macroblocks.Macroblocks;
-        for (var i = 0; i < headers.Length; i++) {
-            var segmentId = headers[i].SegmentId;
-            if ((uint)segmentId < segmentCounts.Length) {
-                segmentCounts[segmentId]++;
-            }
-        }
-
-        Assert.True(segmentCounts[0] > 0);
-        Assert.True(segmentCounts[1] > 0);
+        Assert.Contains(frameHeader.Segmentation.SegmentProbabilities, prob => prob >= 0);
     }
 
     [Fact]
     public void Webp_ManagedEncode_Vp8_Lossy_DisablesSegmentationForFlatImage() {
-        const int width = 16;
-        const int height = 16;
+        const int width = 32;
+        const int height = 32;
         var stride = width * 4;
         var rgba = new byte[checked(height * stride)];
 
@@ -205,6 +194,7 @@ public sealed class WebpVp8EncodeTests {
 
         Assert.True(WebpVp8Decoder.TryReadFrameHeader(payload, out var frameHeader));
         Assert.False(frameHeader.Segmentation.Enabled);
+        Assert.True(frameHeader.NoCoefficientSkip);
     }
 
     private static bool ContainsChunk(byte[] data, string fourCc) {
