@@ -447,7 +447,7 @@ QR payload helpers generate well-known structured strings so scanners can trigge
 | --- | --- | --- | --- |
 | PNG | ✅ | ✅ | Color types 0/2/3/4/6, bit depths 1/2/4/8/16, tRNS, Adam7 |
 | JPEG | ✅ | ✅ | Baseline + progressive (8-bit, Huffman), EXIF orientation, CMYK/YCCK |
-| WebP | ✅ | ✅ | Decode: managed VP8L/VP8 + VP8+ALPH (external corpus validation in progress). Animated WebP decodes first frame only. Encode: VP8L lossless subset + animated VP8L; lossy uses managed VP8 intra-only (4x4/16x16) with ALPH for alpha (VP8L fallback on failure). Managed decode enforces a size cap. |
+| WebP | ✅ | ✅ | Decode: managed VP8L/VP8 + VP8+ALPH (external corpus validation in progress). ImageReader returns the first animation frame; WebpReader can decode raw frames or composited canvas frames. Encode: VP8L lossless subset + animated VP8L/VP8 (lossy intra-only); lossy uses managed VP8 intra-only (4x4/16x16) with ALPH for alpha (VP8L fallback on failure). Managed decode enforces a size cap. |
 | BMP | ✅ | ✅ | 1/4/8/16/24/32-bit, RLE4/RLE8, bitfields |
 | GIF | No | ✅ | First frame only, transparency via GCE |
 | TIFF | No | ✅ | Baseline, strips, uncompressed/PackBits/LZW/Deflate, 8/16-bit, predictor 2 |
@@ -468,8 +468,9 @@ QR payload helpers generate well-known structured strings so scanners can trigge
 
 ### Known gaps / not supported (decode)
 
-- Animated WebP returns the first frame only (no multi-frame output)
+- ImageReader returns the first animation frame only; use WebpReader.DecodeAnimationFrames for raw frames or WebpReader.DecodeAnimationCanvasFrames for composited frames
 - Managed lossy WebP encode uses VP8 intra-only (4x4/16x16) with ALPH for alpha (VP8L fallback on failure)
+- Managed VP8 decode supports keyframes only; interframes (if present) are not supported
 - Managed WebP decode enforces a size limit (256 MB).
 - AVIF, HEIC, JPEG2000, PSD
 - Animated GIF (first frame only)
