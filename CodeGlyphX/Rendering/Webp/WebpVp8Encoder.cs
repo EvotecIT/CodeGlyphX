@@ -109,16 +109,14 @@ internal static class WebpVp8Encoder {
             return false;
         }
 
-        if (ComputeAlphaUsed(rgba, width, height, stride)) {
-            reason = "VP8 lossy encoding does not support alpha.";
-            return false;
-        }
+        var alphaUsed = ComputeAlphaUsed(rgba, width, height, stride);
 
         if (!TryEncodeVp8Payload(rgba, width, height, stride, quality, out var payload, out reason)) {
             return false;
         }
 
-        webp = WriteWebpContainer(payload);
+        var alphPayload = alphaUsed ? BuildAlphPayload(rgba, width, height, stride) : Array.Empty<byte>();
+        webp = WriteWebpContainer(payload, alphPayload, width, height);
         return true;
     }
 
@@ -1454,6 +1452,20 @@ internal static class WebpVp8Encoder {
         return false;
     }
 
+    private static byte[] BuildAlphPayload(ReadOnlySpan<byte> rgba, int width, int height, int stride) {
+        var alpha = new byte[checked(width * height + 1)];
+        alpha[0] = 0x00; // compression=0 (raw), filter=0, preprocessing=0
+        var dst = 1;
+        for (var y = 0; y < height; y++) {
+            var offset = y * stride + 3;
+            for (var x = 0; x < width; x++) {
+                alpha[dst++] = rgba[offset];
+                offset += 4;
+            }
+        }
+        return alpha;
+    }
+
     private static byte[] BuildKeyframeHeader(int width, int height) {
         var header = new byte[7];
         header[0] = 0x9D;
@@ -1473,11 +1485,21 @@ internal static class WebpVp8Encoder {
         return bytes;
     }
 
-    private static byte[] WriteWebpContainer(byte[] vp8Payload) {
+    private static byte[] WriteWebpContainer(byte[] vp8Payload, byte[] alphPayload, int width, int height) {
         using var ms = new MemoryStream();
         WriteAscii(ms, "RIFF");
         WriteU32LE(ms, 0);
         WriteAscii(ms, "WEBP");
+
+        if (alphPayload is { Length: > 0 }) {
+            var vp8x = new byte[10];
+            vp8x[0] = 0x02; // alpha
+            WriteU24LE(vp8x, 4, width - 1);
+            WriteU24LE(vp8x, 7, height - 1);
+            WriteChunk(ms, "VP8X", vp8x);
+            WriteChunk(ms, "ALPH", alphPayload);
+        }
+
         WriteChunk(ms, "VP8 ", vp8Payload);
 
         var bytes = ms.ToArray();
@@ -1507,6 +1529,12 @@ internal static class WebpVp8Encoder {
     private static void WriteU16LE(byte[] buffer, int offset, int value) {
         buffer[offset] = (byte)(value & 0xFF);
         buffer[offset + 1] = (byte)((value >> 8) & 0xFF);
+    }
+
+    private static void WriteU24LE(byte[] buffer, int offset, int value) {
+        buffer[offset] = (byte)(value & 0xFF);
+        buffer[offset + 1] = (byte)((value >> 8) & 0xFF);
+        buffer[offset + 2] = (byte)((value >> 16) & 0xFF);
     }
 
     private static void WriteU32LE(Stream stream, uint value) {

@@ -37,7 +37,7 @@ public static class WebpWriter {
     /// Encodes an RGBA32 buffer as a lossy WebP using a managed VP8 (lossy) bitstream when possible.
     /// </summary>
     /// <remarks>
-    /// Falls back to VP8L with pre-quantized RGB when VP8 lossy encoding is unavailable (for example, alpha input).
+    /// Falls back to VP8L with pre-quantized RGB when VP8 lossy encoding is unavailable.
     /// </remarks>
     public static byte[] WriteRgba32Lossy(int width, int height, ReadOnlySpan<byte> rgba, int stride, int quality) {
         if (quality is < 0 or > 100) throw new ArgumentOutOfRangeException(nameof(quality));

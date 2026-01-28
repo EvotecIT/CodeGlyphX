@@ -19673,7 +19673,7 @@
             Encodes an RGBA32 buffer as a lossy WebP using a managed VP8 (lossy) bitstream when possible.
             </summary>
             <remarks>
-            Falls back to VP8L with pre-quantized RGB when VP8 lossy encoding is unavailable (for example, alpha input).
+            Falls back to VP8L with pre-quantized RGB when VP8 lossy encoding is unavailable.
             </remarks>
         </member>
         <member name="M:CodeGlyphX.Rendering.Webp.WebpWriter.WriteRgba32Lossy(System.Int32,System.Int32,System.Byte[],System.Int32,System.Int32)">
