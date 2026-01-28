@@ -1650,8 +1650,7 @@ public sealed class QrPngRendererTests {
         }
 
         Assert.True(maxX >= 0, "Expected badge pixels outside the QR bounds.");
-        Assert.True(maxX - minX == 0, "Expected no ribbon tails outside the badge bounds.");
-        Assert.True(maxY - minY == 0, "Expected no ribbon tails outside the badge bounds.");
+        Assert.True(maxX - minX == 0 && maxY - minY == 0, "Expected no ribbon tails outside the badge bounds.");
     }
 
     [Fact]
