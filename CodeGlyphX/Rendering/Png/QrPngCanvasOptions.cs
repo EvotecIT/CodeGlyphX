@@ -57,6 +57,11 @@ public sealed class QrPngCanvasOptions {
     public QrPngCanvasFrameOptions? Frame { get; set; }
 
     /// <summary>
+    /// Optional decorative band drawn outside the QR bounds (quiet-zone ring).
+    /// </summary>
+    public QrPngCanvasBandOptions? Band { get; set; }
+
+    /// <summary>
     /// Optional badge/tab/ribbon drawn outside the QR bounds.
     /// </summary>
     public QrPngCanvasBadgeOptions? Badge { get; set; }
@@ -97,6 +102,7 @@ public sealed class QrPngCanvasOptions {
         Vignette?.Validate();
         Grain?.Validate();
         Frame?.Validate();
+        Band?.Validate();
         Badge?.Validate();
     }
 }

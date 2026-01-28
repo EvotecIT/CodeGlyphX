@@ -124,6 +124,22 @@ public static partial class QR {
         }
 
         /// <summary>
+        /// Sets module shape map.
+        /// </summary>
+        public QrBuilder WithModuleShapeMap(QrPngModuleShapeMapOptions? map) {
+            Options.ModuleShapeMap = map;
+            return this;
+        }
+
+        /// <summary>
+        /// Sets per-module jitter options.
+        /// </summary>
+        public QrBuilder WithModuleJitter(QrPngModuleJitterOptions? jitter) {
+            Options.ModuleJitter = jitter;
+            return this;
+        }
+
+        /// <summary>
         /// Sets module corner radius in pixels.
         /// </summary>
         public QrBuilder WithModuleCornerRadiusPx(int radiusPx) {

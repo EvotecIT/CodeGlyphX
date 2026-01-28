@@ -17,6 +17,12 @@ public sealed class QrPngForegroundPatternOptions {
     public Rgba32 Color { get; set; } = new(0, 0, 0, 48);
 
     /// <summary>
+    /// Gets or sets the pattern blend mode.
+    /// </summary>
+    public QrPngForegroundPatternBlendMode BlendMode { get; set; } = QrPngForegroundPatternBlendMode.Overlay;
+
+
+    /// <summary>
     /// Gets or sets the pattern cell size in pixels.
     /// </summary>
     public int SizePx { get; set; } = 6;
