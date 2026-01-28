@@ -349,7 +349,7 @@ public static partial class AztecCode {
     }
 
     /// <summary>
-    /// Saves Aztec to a file based on extension (.png/.svg/.svgz/.html/.jpg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps).
+    /// Saves Aztec to a file based on extension (.png/.webp/.svg/.svgz/.html/.jpg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps).
     /// Defaults to PNG when no extension is provided.
     /// </summary>
     public static string Save(string text, string path, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, string? title = null) {
@@ -376,6 +376,8 @@ public static partial class AztecCode {
             case ".jpg":
             case ".jpeg":
                 return RenderIO.WriteBinary(path, Jpeg(text, encodeOptions, renderOptions));
+            case ".webp":
+                return RenderIO.WriteBinary(path, Webp(text, encodeOptions, renderOptions));
             case ".bmp":
                 return RenderIO.WriteBinary(path, Bmp(text, encodeOptions, renderOptions));
             case ".ppm":
