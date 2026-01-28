@@ -373,7 +373,7 @@ Based on public docs as of 2026-01-18. Capabilities depend on optional renderer 
 - [x] 1D barcode encode + decode
 - [x] Data Matrix + MicroPDF417 + PDF417 encode + decode
 - [x] Matrix barcode encoding (Data Matrix / MicroPDF417 / PDF417 / KIX / GS1 DataBar) with dedicated matrix renderers
-- [x] SVG / SVGZ / HTML / PNG / JPEG / BMP / PPM / PBM / PGM / PAM / XBM / XPM / TGA / ICO / PDF / EPS / ASCII renderers
+- [x] SVG / SVGZ / HTML / PNG / JPEG / WebP / BMP / PPM / PBM / PGM / PAM / XBM / XPM / TGA / ICO / PDF / EPS / ASCII renderers
 - [x] Image decode: PNG / JPEG / WebP / GIF / BMP / PPM / PBM / PGM / PAM / XBM / XPM / TGA / ICO / TIFF
 - [x] Base64 + data URI helpers for rendered outputs
 - [x] Payload helpers (URL, WiFi, Email, Phone, SMS, Contact, Calendar, OTP, Social)
@@ -395,7 +395,7 @@ For other matrix barcodes (e.g., KIX/Royal Mail 4‑State), use the `Matrix*` re
 | --- | --- | --- |
 | PNG | `.png` | Raster |
 | JPEG | `.jpg`, `.jpeg` | Raster, quality via options |
-| WebP | `.webp` | Raster, quality via options (lossless when quality &gt;= 100) |
+| WebP | `.webp` | Raster, quality via options (lossless at quality 100) |
 | BMP | `.bmp` | Raster |
 | PPM | `.ppm` | Raster (portable pixmap) |
 | PBM | `.pbm` | Raster (portable bitmap) |

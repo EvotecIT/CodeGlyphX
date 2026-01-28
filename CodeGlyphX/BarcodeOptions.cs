@@ -38,7 +38,7 @@ public sealed class BarcodeOptions {
     public int JpegQuality { get; set; } = 90;
 
     /// <summary>
-    /// WebP quality (0..100). Values &gt;= 100 use lossless VP8L.
+    /// WebP quality (0..100). A value of 100 uses lossless VP8L.
     /// </summary>
     public int WebpQuality { get; set; } = 100;
 
