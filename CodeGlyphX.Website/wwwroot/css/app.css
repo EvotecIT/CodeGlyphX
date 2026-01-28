@@ -462,12 +462,23 @@ body:has(.page-playground) {
     min-width: 0;
 }
 
+/* Focus styles for all page headings targeted by FocusOnNavigate */
 .hero h1:focus,
-.hero h1:focus-visible {
+.hero h1:focus-visible,
+.showcase-hero h1:focus,
+.showcase-hero h1:focus-visible,
+.docs-content h1:focus,
+.docs-content h1:focus-visible,
+.docs-static h1:focus,
+.docs-static h1:focus-visible,
+.faq-hero h1:focus,
+.faq-hero h1:focus-visible,
+.support-hero h1:focus,
+.support-hero h1:focus-visible {
     outline: none;
 }
 
-body.using-keyboard .hero h1:focus-visible {
+body.using-keyboard :is(.hero, .showcase-hero, .docs-content, .docs-static, .faq-hero, .support-hero) h1:focus-visible {
     outline: 2px solid var(--primary-light);
     outline-offset: 4px;
 }
@@ -1660,15 +1671,7 @@ code.signature:focus-within .copy-btn {
     color: transparent;
 }
 
-.showcase-hero h1:focus,
-.showcase-hero h1:focus-visible {
-    outline: none;
-}
-
-body.using-keyboard .showcase-hero h1:focus-visible {
-    outline: 2px solid var(--primary-light);
-    outline-offset: 4px;
-}
+/* Focus styles consolidated above */
 
 .showcase-hero p {
     color: var(--text-muted);
@@ -2450,31 +2453,7 @@ body.using-keyboard .showcase-hero h1:focus-visible {
     min-width: 0;
 }
 
-.docs-content h1:focus {
-    outline: none;
-}
-
-.docs-content h1:focus-visible {
-    outline: none;
-}
-
-body.using-keyboard .docs-content h1:focus-visible {
-    outline: 2px solid var(--primary-light);
-    outline-offset: 4px;
-}
-
-.docs-static h1:focus {
-    outline: none;
-}
-
-.docs-static h1:focus-visible {
-    outline: none;
-}
-
-body.using-keyboard .docs-static h1:focus-visible {
-    outline: 2px solid var(--primary-light);
-    outline-offset: 4px;
-}
+/* Focus styles consolidated above */
 
 .docs-content h1 {
     font-size: clamp(2.25rem, 4vw, 3rem);
@@ -3305,15 +3284,7 @@ section {
     color: transparent;
 }
 
-.faq-hero h1:focus,
-.faq-hero h1:focus-visible {
-    outline: none;
-}
-
-body.using-keyboard .faq-hero h1:focus-visible {
-    outline: 2px solid var(--primary-light);
-    outline-offset: 4px;
-}
+/* Focus styles consolidated above */
 
 .faq-hero p {
     color: var(--text-muted);
@@ -3996,15 +3967,7 @@ body.using-keyboard .faq-hero h1:focus-visible {
     background-clip: text;
 }
 
-.support-hero h1:focus,
-.support-hero h1:focus-visible {
-    outline: none;
-}
-
-body.using-keyboard .support-hero h1:focus-visible {
-    outline: 2px solid var(--primary);
-    outline-offset: 4px;
-}
+/* Focus styles consolidated above */
 
 .support-hero p {
     font-size: 1.15rem;
