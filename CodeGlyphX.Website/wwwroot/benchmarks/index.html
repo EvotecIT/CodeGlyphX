@@ -172,6 +172,16 @@
     </section>
 
     <section class="benchmark-section">
+        <h2>Platform</h2>
+        <div class="benchmark-os-selector">
+            <button class="benchmark-os-btn active" data-os="windows">Windows</button>
+            <button class="benchmark-os-btn" data-os="linux">Linux</button>
+            <button class="benchmark-os-btn" data-os="macos">macOS</button>
+        </div>
+        <p class="benchmark-os-note" data-os-note></p>
+    </section>
+
+    <section class="benchmark-section">
         <h2>Run Mode</h2>
         <div class="benchmark-mode-selector">
             <button class="benchmark-mode-btn active" data-mode="quick">Quick</button>
@@ -555,6 +565,18 @@ if (navToggle) {
     return data?.[os]?.[mode] ?? null;
   }
 
+  function hasEntryData(entry) {
+    return !!(entry && (entry.summary?.length || entry.comparisons?.length));
+  }
+
+  function hasDataFor(os, mode) {
+    return hasEntryData(getEntry(summaryData, os, mode)) || hasEntryData(getEntry(detailData, os, mode));
+  }
+
+  function getAvailableModes(os) {
+    return ['full', 'quick'].filter(function(mode) { return hasDataFor(os, mode); });
+  }
+
   function findBestEntry(data) {
     // Priority: windows full > windows quick > linux full > linux quick > macos
     const order = [
@@ -564,7 +586,7 @@ if (navToggle) {
     ];
     for (let i = 0; i < order.length; i++) {
       const entry = getEntry(data, order[i][0], order[i][1]);
-      if (entry && (entry.summary?.length || entry.comparisons?.length)) {
+      if (hasEntryData(entry)) {
         currentOs = order[i][0];
         currentMode = order[i][1];
         return entry;
@@ -588,6 +610,14 @@ if (navToggle) {
     return mode.charAt(0).toUpperCase() + mode.slice(1);
   }
 
+  function formatOs(os) {
+    if (!os) return 'Unknown';
+    if (os === 'macos') return 'macOS';
+    if (os === 'windows') return 'Windows';
+    if (os === 'linux') return 'Linux';
+    return os;
+  }
+
   function renderMeta(entry) {
     const container = document.querySelector('[data-benchmark-meta]');
     if (!container) return;
@@ -607,15 +637,55 @@ if (navToggle) {
     container.innerHTML = html;
   }
 
+  function renderOsSelector(summaryData, detailData) {
+    const buttons = document.querySelectorAll('.benchmark-os-btn');
+    const noteEl = document.querySelector('[data-os-note]');
+    let noteText = '';
+
+    buttons.forEach(function(btn) {
+      const os = btn.dataset.os;
+      const availableModes = getAvailableModes(os);
+      const hasData = availableModes.length > 0;
+
+      btn.disabled = !hasData;
+      btn.classList.toggle('active', os === currentOs);
+
+      if (!hasData) {
+        btn.title = 'No benchmark data available for ' + formatOs(os);
+      } else {
+        btn.title = '';
+      }
+
+      if (os === currentOs) {
+        if (hasData) {
+          noteText = 'Available modes: ' + availableModes.map(formatMode).join(', ');
+        } else {
+          noteText = 'No benchmark data available yet.';
+        }
+      }
+
+      btn.onclick = function() {
+        if (this.disabled) return;
+        currentOs = os;
+        if (!availableModes.includes(currentMode)) {
+          currentMode = availableModes[0];
+        }
+        renderAll();
+      };
+    });
+
+    if (noteEl) {
+      noteEl.textContent = noteText || 'No benchmark data available yet.';
+    }
+  }
+
   function renderModeSelector(summaryData, detailData) {
     const buttons = document.querySelectorAll('.benchmark-mode-btn');
     const noteEl = document.querySelector('[data-mode-note]');
 
     buttons.forEach(function(btn) {
       const mode = btn.dataset.mode;
-      const summaryEntry = getEntry(summaryData, currentOs, mode);
-      const detailEntry = getEntry(detailData, currentOs, mode);
-      const hasData = summaryEntry?.summary?.length || detailEntry?.comparisons?.length;
+      const hasData = hasDataFor(currentOs, mode);
 
       btn.disabled = !hasData;
       btn.classList.toggle('active', mode === currentMode);
@@ -1094,6 +1164,7 @@ if (navToggle) {
     const entry = summaryEntry || detailEntry;
 
     renderMeta(entry);
+    renderOsSelector(summaryData, detailData);
     renderModeSelector(summaryData, detailData);
     renderSummaryTable(summaryEntry);
     renderCharts(summaryEntry);
