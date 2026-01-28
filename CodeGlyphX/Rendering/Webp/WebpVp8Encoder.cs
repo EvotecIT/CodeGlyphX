@@ -1453,9 +1453,8 @@ internal static class WebpVp8Encoder {
     }
 
     private static byte[] BuildAlphPayload(ReadOnlySpan<byte> rgba, int width, int height, int stride) {
-        var alpha = new byte[checked(width * height + 1)];
-        alpha[0] = 0x00; // compression=0 (raw), filter=0, preprocessing=0
-        var dst = 1;
+        var alpha = new byte[checked(width * height)];
+        var dst = 0;
         for (var y = 0; y < height; y++) {
             var offset = y * stride + 3;
             for (var x = 0; x < width; x++) {
@@ -1463,7 +1462,80 @@ internal static class WebpVp8Encoder {
                 offset += 4;
             }
         }
-        return alpha;
+
+        var filter = ChooseAlphaFilter(alpha, width, height);
+        var payload = new byte[alpha.Length + 1];
+        payload[0] = (byte)((filter & 0x3) << 2); // compression=0 (raw), filter, preprocessing=0
+        if (filter == 0) {
+            Buffer.BlockCopy(alpha, 0, payload, 1, alpha.Length);
+            return payload;
+        }
+
+        ApplyAlphaFilterEncode(alpha, width, height, filter, payload, 1);
+        return payload;
+    }
+
+    private static int ChooseAlphaFilter(byte[] alpha, int width, int height) {
+        var bestFilter = 0;
+        var bestCost = ComputeAlphaFilterCost(alpha, width, height, filter: 0);
+        for (var filter = 1; filter <= 3; filter++) {
+            var cost = ComputeAlphaFilterCost(alpha, width, height, filter);
+            if (cost < bestCost) {
+                bestCost = cost;
+                bestFilter = filter;
+            }
+        }
+
+        return bestFilter;
+    }
+
+    private static long ComputeAlphaFilterCost(byte[] alpha, int width, int height, int filter) {
+        if (filter == 0) {
+            long sum = 0;
+            for (var i = 0; i < alpha.Length; i++) {
+                sum += alpha[i];
+            }
+            return sum;
+        }
+
+        long cost = 0;
+        for (var y = 0; y < height; y++) {
+            var row = y * width;
+            for (var x = 0; x < width; x++) {
+                var index = row + x;
+                var predictor = GetAlphaPredictor(alpha, width, x, y, filter);
+                var diff = alpha[index] - predictor;
+                if (diff < 0) diff = -diff;
+                cost += diff;
+            }
+        }
+
+        return cost;
+    }
+
+    private static void ApplyAlphaFilterEncode(byte[] alpha, int width, int height, int filter, byte[] output, int offset) {
+        for (var y = 0; y < height; y++) {
+            var row = y * width;
+            for (var x = 0; x < width; x++) {
+                var index = row + x;
+                var predictor = GetAlphaPredictor(alpha, width, x, y, filter);
+                output[offset + index] = unchecked((byte)(alpha[index] - predictor));
+            }
+        }
+    }
+
+    private static byte GetAlphaPredictor(byte[] alpha, int width, int x, int y, int filter) {
+        var index = (y * width) + x;
+        var left = x > 0 ? alpha[index - 1] : (byte)0;
+        var up = y > 0 ? alpha[index - width] : (byte)0;
+        var upLeft = (x > 0 && y > 0) ? alpha[index - width - 1] : (byte)0;
+
+        return filter switch {
+            1 => left,
+            2 => up,
+            3 => ClampToByte(left + up - upLeft),
+            _ => (byte)0
+        };
     }
 
     private static byte[] BuildKeyframeHeader(int width, int height) {
