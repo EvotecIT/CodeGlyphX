@@ -601,6 +601,13 @@ QR.Save(QrPayloads.OneTimePassword(
                         <td style="padding: 0.75rem;">Baseline + progressive, EXIF, CMYK/YCCK</td>
                     </tr>
                     <tr style="border-bottom: 1px solid var(--border);">
+                        <td style="padding: 0.75rem;">WebP</td>
+                        <td style="padding: 0.75rem;"><code>.webp</code></td>
+                        <td style="padding: 0.75rem;">Yes</td>
+                        <td style="padding: 0.75rem;">Yes</td>
+                        <td style="padding: 0.75rem;">Lossless VP8L + VP8 lossy intra, animation supported</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid var(--border);">
                         <td style="padding: 0.75rem;">BMP</td>
                         <td style="padding: 0.75rem;"><code>.bmp</code></td>
                         <td style="padding: 0.75rem;">Yes</td>
@@ -1002,7 +1009,7 @@ var decodeResult = QrImageDecoder.DecodeImage(stream);</pre>
 
             <h2>Supported Formats for Decoding</h2>
             <ul style="color: var(--text-muted); margin-left: 1.5rem;">
-                <li><strong>Images:</strong> PNG, JPEG, BMP, GIF, TIFF, PPM/PGM/PBM/PAM, TGA, ICO/CUR, XBM, XPM</li>
+                <li><strong>Images:</strong> PNG, JPEG, WebP, BMP, GIF, TIFF, PPM/PGM/PBM/PAM, TGA, ICO/CUR, XBM, XPM</li>
                 <li><strong>QR Codes:</strong> Standard QR, Micro QR</li>
                 <li><strong>1D Barcodes:</strong> Code 128, Code 39/93, EAN/UPC, ITF, Codabar, MSI, Telepen, Plessey, more</li>
                 <li><strong>2D Matrix:</strong> Data Matrix, PDF417, Aztec</li>
@@ -1010,7 +1017,7 @@ var decodeResult = QrImageDecoder.DecodeImage(stream);</pre>
 
             <h2>Known Gaps (Decoding)</h2>
             <ul style="color: var(--text-muted); margin-left: 1.5rem;">
-                <li>WebP, AVIF, HEIC, JPEG2000, PSD</li>
+                <li>AVIF, HEIC, JPEG2000, PSD</li>
                 <li>Animated GIF (first frame only)</li>
                 <li>Multi-page / tiled TIFF and mixed sample sizes</li>
                 <li>PDF/PS decode (rasterize first)</li>

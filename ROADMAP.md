@@ -35,6 +35,7 @@ This list is mostly **work we still want to do**. The "Recently completed" secti
 - Added stylized art decode pack to scenario runs with pass‑rate + timing summaries.
 - CI: PR website build check (static output) before merge.
 - Managed WebP VP8 lossy encode (intra), alpha (ALPH), segmentation, and skip-coefficient support. [formats][webp]
+- End-to-end WebP output across QR/Barcode/Matrix APIs (Save/Render + extension routing) + WebP quality options. [formats][webp][dx]
 
 ## Milestones (priority, no dates)
 ### P0 — Reliability & clarity
@@ -53,7 +54,6 @@ This list is mostly **work we still want to do**. The "Recently completed" secti
 - Preset schema + v1 packs/shape sets/palettes. [style]
 
 ### P2 — Platform breadth & UX
-- WebP decode + encode (lossless + VP8 lossy intra complete; remaining: VP8 inter if encountered). [formats][webp]
 - Expand format corpus (JPEG progressive/CMYK, GIF variants, BMP/ICO edge cases) and schedule periodic **local** full runs. [formats]
 - AOT evaluation + documentation of safe paths. [aot]
 - Add symbology packs + golden vectors (MaxiCode, rMQR, etc.). [symbology][tests]
