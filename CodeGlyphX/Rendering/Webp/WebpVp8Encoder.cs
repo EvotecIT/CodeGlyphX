@@ -16,6 +16,7 @@ internal static class WebpVp8Encoder {
     private const int YModeBPred = 4;
     private const int BModeDcPred = 0;
     private const int ModeDcPred = 0;
+    private const int BlockTypeY2 = 0;
     private const int BlockTypeY = 1;
     private const int BlockTypeU = 2;
     private const int BlockTypeV = 3;
@@ -30,6 +31,7 @@ internal static class WebpVp8Encoder {
 
     // Precompute a forward transform that matches the decoder's inverse transform.
     private static readonly double[,] ForwardTransform = BuildForwardTransformMatrix();
+    private static readonly double[,] ForwardWalshTransform = BuildForwardWalshTransformMatrix();
 
     private static readonly int[] CoeffBandTable =
     {
@@ -163,6 +165,8 @@ internal static class WebpVp8Encoder {
         var currentSubModes = new int[macroblockCols * MacroblockSubBlockCount];
         var yNzAbove = new byte[macroblockCols * MacroblockSubBlockCount];
         var yNzCurrent = new byte[macroblockCols * MacroblockSubBlockCount];
+        var y2NzAbove = new byte[macroblockCols];
+        var y2NzCurrent = new byte[macroblockCols];
         var uNzAbove = new byte[macroblockCols * MacroblockChromaBlocks];
         var uNzCurrent = new byte[macroblockCols * MacroblockChromaBlocks];
         var vNzAbove = new byte[macroblockCols * MacroblockChromaBlocks];
@@ -187,6 +191,8 @@ internal static class WebpVp8Encoder {
                     col,
                     row,
                     dequant,
+                    y2NzAbove,
+                    y2NzCurrent,
                     yNzAbove,
                     yNzCurrent,
                     uNzAbove,
@@ -198,6 +204,7 @@ internal static class WebpVp8Encoder {
             }
 
             SwapRowModes(ref aboveSubModes, ref currentSubModes);
+            SwapRowContexts(ref y2NzAbove, ref y2NzCurrent);
             SwapRowContexts(ref yNzAbove, ref yNzCurrent);
             SwapRowContexts(ref uNzAbove, ref uNzCurrent);
             SwapRowContexts(ref vNzAbove, ref vNzCurrent);
@@ -244,6 +251,8 @@ internal static class WebpVp8Encoder {
         int mbX,
         int mbY,
         DequantFactors dequant,
+        byte[] y2NzAbove,
+        byte[] y2NzCurrent,
         byte[] yNzAbove,
         byte[] yNzCurrent,
         byte[] uNzAbove,
@@ -259,69 +268,125 @@ internal static class WebpVp8Encoder {
         var chromaOffsetX = mbX * (MacroblockSize / 2);
         var chromaOffsetY = mbY * (MacroblockSize / 2);
 
-        WriteKeyframeYMode(headerWriter, YModeBPred);
-
         var yBlockBase = mbX * MacroblockSubBlockCount;
+
+        long bestBPredCost = 0;
         for (var blockIndex = 0; blockIndex < MacroblockSubBlockCount; blockIndex++) {
             var subX = blockIndex & 3;
             var subY = blockIndex >> 2;
-            var initialContext = 0;
-
-            if (subY == 0) {
-                if (mbY > 0) initialContext += yNzAbove[yBlockBase + 12 + subX];
-            } else {
-                initialContext += yNzCurrent[yBlockBase + ((subY - 1) * 4) + subX];
-            }
-
-            if (subX == 0) {
-                if (mbX > 0) initialContext += yNzCurrent[yBlockBase - MacroblockSubBlockCount + (subY * 4) + 3];
-            } else {
-                initialContext += yNzCurrent[yBlockBase + (subY * 4) + subX - 1];
-            }
-
-            if (initialContext > 2) initialContext = 2;
-
-            var aboveMode = BModeDcPred;
-            if (subY == 0) {
-                if (mbY > 0) {
-                    aboveMode = aboveSubModes[yBlockBase + 12 + subX];
-                }
-            } else {
-                aboveMode = currentSubModes[yBlockBase + ((subY - 1) * 4) + subX];
-            }
-
-            var leftMode = BModeDcPred;
-            if (subX == 0) {
-                if (mbX > 0) {
-                    leftMode = currentSubModes[yBlockBase - MacroblockSubBlockCount + (subY * 4) + 3];
-                }
-            } else {
-                leftMode = currentSubModes[yBlockBase + (subY * 4) + subX - 1];
-            }
-
             var dstX = macroblockOffsetX + (subX * BlockSize);
             var dstY = macroblockOffsetY + (subY * BlockSize);
-            var mode = ChooseBestBlockMode(yPlane, reconY, width, height, dstX, dstY);
+            ChooseBestBlockMode(yPlane, reconY, width, height, dstX, dstY, out var cost);
+            bestBPredCost += cost;
+        }
 
-            WriteKeyframeBMode(headerWriter, aboveMode, leftMode, mode);
-            currentSubModes[yBlockBase + blockIndex] = mode;
+        var bestY16Mode = ModeDcPred;
+        long bestY16Cost = long.MaxValue;
+        Span<byte> predicted = stackalloc byte[BlockSize * BlockSize];
+        for (var mode = 0; mode <= 3; mode++) {
+            long cost = 0;
+            for (var blockIndex = 0; blockIndex < MacroblockSubBlockCount; blockIndex++) {
+                var subX = blockIndex & 3;
+                var subY = blockIndex >> 2;
+                var dstX = macroblockOffsetX + (subX * BlockSize);
+                var dstY = macroblockOffsetY + (subY * BlockSize);
+                PredictBlock(reconY, width, height, dstX, dstY, mode, predicted);
+                cost += ComputePredictionCost(yPlane, width, height, dstX, dstY, predicted);
+            }
 
-            var hasNonZero = EncodeBlock(
+            if (cost < bestY16Cost) {
+                bestY16Cost = cost;
+                bestY16Mode = mode;
+            }
+        }
+
+        var useY16 = bestY16Cost < bestBPredCost;
+        if (useY16) {
+            WriteKeyframeYMode(headerWriter, bestY16Mode);
+            for (var i = 0; i < MacroblockSubBlockCount; i++) {
+                currentSubModes[yBlockBase + i] = BModeDcPred;
+            }
+
+            EncodeLumaMacroblockY16(
                 tokenWriter,
                 probabilities,
-                BlockTypeY,
-                initialContext,
                 yPlane,
                 reconY,
                 width,
                 height,
-                dstX,
-                dstY,
-                mode,
-                dequant.Y1Dc,
-                dequant.Y1Ac);
+                mbX,
+                mbY,
+                bestY16Mode,
+                dequant,
+                y2NzAbove,
+                y2NzCurrent,
+                yNzAbove,
+                yNzCurrent);
+        } else {
+            WriteKeyframeYMode(headerWriter, YModeBPred);
+            y2NzCurrent[mbX] = 0;
 
-            yNzCurrent[yBlockBase + blockIndex] = hasNonZero ? (byte)1 : (byte)0;
+            for (var blockIndex = 0; blockIndex < MacroblockSubBlockCount; blockIndex++) {
+                var subX = blockIndex & 3;
+                var subY = blockIndex >> 2;
+                var initialContext = 0;
+
+                if (subY == 0) {
+                    if (mbY > 0) initialContext += yNzAbove[yBlockBase + 12 + subX];
+                } else {
+                    initialContext += yNzCurrent[yBlockBase + ((subY - 1) * 4) + subX];
+                }
+
+                if (subX == 0) {
+                    if (mbX > 0) initialContext += yNzCurrent[yBlockBase - MacroblockSubBlockCount + (subY * 4) + 3];
+                } else {
+                    initialContext += yNzCurrent[yBlockBase + (subY * 4) + subX - 1];
+                }
+
+                if (initialContext > 2) initialContext = 2;
+
+                var aboveMode = BModeDcPred;
+                if (subY == 0) {
+                    if (mbY > 0) {
+                        aboveMode = aboveSubModes[yBlockBase + 12 + subX];
+                    }
+                } else {
+                    aboveMode = currentSubModes[yBlockBase + ((subY - 1) * 4) + subX];
+                }
+
+                var leftMode = BModeDcPred;
+                if (subX == 0) {
+                    if (mbX > 0) {
+                        leftMode = currentSubModes[yBlockBase - MacroblockSubBlockCount + (subY * 4) + 3];
+                    }
+                } else {
+                    leftMode = currentSubModes[yBlockBase + (subY * 4) + subX - 1];
+                }
+
+                var dstX = macroblockOffsetX + (subX * BlockSize);
+                var dstY = macroblockOffsetY + (subY * BlockSize);
+                var mode = ChooseBestBlockMode(yPlane, reconY, width, height, dstX, dstY, out _);
+
+                WriteKeyframeBMode(headerWriter, aboveMode, leftMode, mode);
+                currentSubModes[yBlockBase + blockIndex] = mode;
+
+                var hasNonZero = EncodeBlock(
+                    tokenWriter,
+                    probabilities,
+                    BlockTypeY,
+                    initialContext,
+                    yPlane,
+                    reconY,
+                    width,
+                    height,
+                    dstX,
+                    dstY,
+                    mode,
+                    dequant.Y1Dc,
+                    dequant.Y1Ac);
+
+                yNzCurrent[yBlockBase + blockIndex] = hasNonZero ? (byte)1 : (byte)0;
+            }
         }
 
         var uvMode = ChooseBestUvMode(
@@ -415,6 +480,147 @@ internal static class WebpVp8Encoder {
                 dequant.UvAc);
 
             vNzCurrent[chromaBlockBase + blockIndex] = hasNonZeroV ? (byte)1 : (byte)0;
+        }
+    }
+
+    private static void EncodeLumaMacroblockY16(
+        WebpVp8BoolEncoder tokenWriter,
+        int[] probabilities,
+        byte[] yPlane,
+        byte[] reconY,
+        int width,
+        int height,
+        int mbX,
+        int mbY,
+        int mode,
+        DequantFactors dequant,
+        byte[] y2NzAbove,
+        byte[] y2NzCurrent,
+        byte[] yNzAbove,
+        byte[] yNzCurrent) {
+        var macroblockOffsetX = mbX * MacroblockSize;
+        var macroblockOffsetY = mbY * MacroblockSize;
+        var yBlockBase = mbX * MacroblockSubBlockCount;
+
+        var dcValues = new double[MacroblockSubBlockCount];
+        var yQuant = new int[MacroblockSubBlockCount * CoefficientsPerBlock];
+
+        Span<byte> predicted = stackalloc byte[BlockSize * BlockSize];
+        Span<int> residual = stackalloc int[CoefficientsPerBlock];
+        Span<double> coeffs = stackalloc double[CoefficientsPerBlock];
+
+        for (var blockIndex = 0; blockIndex < MacroblockSubBlockCount; blockIndex++) {
+            var subX = blockIndex & 3;
+            var subY = blockIndex >> 2;
+            var dstX = macroblockOffsetX + (subX * BlockSize);
+            var dstY = macroblockOffsetY + (subY * BlockSize);
+
+            PredictBlock(reconY, width, height, dstX, dstY, mode, predicted);
+
+            FillResidual(yPlane, width, height, dstX, dstY, predicted, residual);
+
+            ComputeCoefficients(residual, coeffs);
+
+            dcValues[blockIndex] = coeffs[0];
+            var offset = blockIndex * CoefficientsPerBlock;
+            yQuant[offset] = 0;
+            for (var i = 1; i < CoefficientsPerBlock; i++) {
+                yQuant[offset + i] = ClampCoefficient(QuantizeDouble(coeffs[i], dequant.Y1Ac));
+            }
+
+            var qdc = ClampCoefficient(QuantizeDouble(coeffs[0], dequant.Y1Dc));
+            var dequantCoeffs = new int[CoefficientsPerBlock];
+            dequantCoeffs[0] = qdc * dequant.Y1Dc;
+            for (var i = 1; i < CoefficientsPerBlock; i++) {
+                dequantCoeffs[i] = yQuant[offset + i] * dequant.Y1Ac;
+            }
+
+            var residualDecoded = InverseTransform4x4(dequantCoeffs);
+            UpdateReconstruction(reconY, width, height, dstX, dstY, predicted, residualDecoded);
+        }
+
+        Span<double> y2Coeff = stackalloc double[CoefficientsPerBlock];
+        ComputeWalshCoefficients(dcValues, y2Coeff);
+
+        var y2Quant = new int[CoefficientsPerBlock];
+        for (var i = 0; i < CoefficientsPerBlock; i++) {
+            var dequantFactor = i == 0 ? dequant.Y2Dc : dequant.Y2Ac;
+            y2Quant[i] = ClampCoefficient(QuantizeDouble(y2Coeff[i], dequantFactor));
+        }
+
+        var y2InitialContext = 0;
+        if (mbY > 0) y2InitialContext += y2NzAbove[mbX];
+        if (mbX > 0) y2InitialContext += y2NzCurrent[mbX - 1];
+        if (y2InitialContext > 2) y2InitialContext = 2;
+
+        var hasNonZeroY2 = EncodeBlockCoefficients(
+            tokenWriter,
+            probabilities,
+            BlockTypeY2,
+            y2InitialContext,
+            y2Quant);
+        y2NzCurrent[mbX] = hasNonZeroY2 ? (byte)1 : (byte)0;
+
+        for (var blockIndex = 0; blockIndex < MacroblockSubBlockCount; blockIndex++) {
+            var subX = blockIndex & 3;
+            var subY = blockIndex >> 2;
+            var initialContext = 0;
+
+            if (subY == 0) {
+                if (mbY > 0) initialContext += yNzAbove[yBlockBase + 12 + subX];
+            } else {
+                initialContext += yNzCurrent[yBlockBase + ((subY - 1) * 4) + subX];
+            }
+
+            if (subX == 0) {
+                if (mbX > 0) initialContext += yNzCurrent[yBlockBase - MacroblockSubBlockCount + (subY * 4) + 3];
+            } else {
+                initialContext += yNzCurrent[yBlockBase + (subY * 4) + subX - 1];
+            }
+
+            if (initialContext > 2) initialContext = 2;
+
+            var offset = blockIndex * CoefficientsPerBlock;
+            var coeffTokens = new int[CoefficientsPerBlock];
+            coeffTokens[0] = 0;
+            for (var i = 1; i < CoefficientsPerBlock; i++) {
+                coeffTokens[i] = yQuant[offset + i];
+            }
+
+            var hasNonZero = EncodeBlockCoefficients(
+                tokenWriter,
+                probabilities,
+                BlockTypeY,
+                initialContext,
+                coeffTokens);
+
+            yNzCurrent[yBlockBase + blockIndex] = hasNonZero ? (byte)1 : (byte)0;
+        }
+
+        var y2Dequant = new int[CoefficientsPerBlock];
+        for (var i = 0; i < CoefficientsPerBlock; i++) {
+            var dequantFactor = i == 0 ? dequant.Y2Dc : dequant.Y2Ac;
+            y2Dequant[i] = y2Quant[i] * dequantFactor;
+        }
+
+        var dcOverride = InverseWalshTransform4x4(y2Dequant);
+        for (var blockIndex = 0; blockIndex < MacroblockSubBlockCount; blockIndex++) {
+            var subX = blockIndex & 3;
+            var subY = blockIndex >> 2;
+            var dstX = macroblockOffsetX + (subX * BlockSize);
+            var dstY = macroblockOffsetY + (subY * BlockSize);
+
+            PredictBlock(reconY, width, height, dstX, dstY, mode, predicted);
+
+            var offset = blockIndex * CoefficientsPerBlock;
+            var dequantCoeffs = new int[CoefficientsPerBlock];
+            dequantCoeffs[0] = dcOverride[blockIndex];
+            for (var i = 1; i < CoefficientsPerBlock; i++) {
+                dequantCoeffs[i] = yQuant[offset + i] * dequant.Y1Ac;
+            }
+
+            var residualDecoded = InverseTransform4x4(dequantCoeffs);
+            UpdateReconstruction(reconY, width, height, dstX, dstY, predicted, residualDecoded);
         }
     }
 
@@ -753,9 +959,10 @@ internal static class WebpVp8Encoder {
         int planeWidth,
         int planeHeight,
         int dstX,
-        int dstY) {
+        int dstY,
+        out int bestCost) {
         var bestMode = ModeDcPred;
-        var bestCost = int.MaxValue;
+        bestCost = int.MaxValue;
         Span<byte> predicted = stackalloc byte[BlockSize * BlockSize];
 
         for (var mode = 0; mode < Intra4x4ModeCount; mode++) {
@@ -961,6 +1168,16 @@ internal static class WebpVp8Encoder {
         }
     }
 
+    private static void ComputeWalshCoefficients(ReadOnlySpan<double> dcValues, Span<double> coefficients) {
+        for (var i = 0; i < CoefficientsPerBlock; i++) {
+            var sum = 0.0;
+            for (var j = 0; j < CoefficientsPerBlock; j++) {
+                sum += ForwardWalshTransform[i, j] * dcValues[j];
+            }
+            coefficients[i] = sum;
+        }
+    }
+
     private static int QuantizeDouble(double value, int dequant) {
         if (dequant <= 0) return 0;
         var scaled = value / dequant;
@@ -1103,6 +1320,53 @@ internal static class WebpVp8Encoder {
             output[baseIndex + 3] = (a1 - d1 + 4) >> 3;
             output[baseIndex + 1] = (b1 + c1 + 4) >> 3;
             output[baseIndex + 2] = (b1 - c1 + 4) >> 3;
+        }
+
+        return output;
+    }
+
+    private static int[] InverseWalshTransform4x4(int[] input) {
+        var temp = new int[CoefficientsPerBlock];
+        var output = new int[CoefficientsPerBlock];
+
+        for (var i = 0; i < BlockSize; i++) {
+            var ip0 = input[i];
+            var ip4 = input[i + 4];
+            var ip8 = input[i + 8];
+            var ip12 = input[i + 12];
+
+            var a1 = ip0 + ip12;
+            var b1 = ip4 + ip8;
+            var c1 = ip4 - ip8;
+            var d1 = ip0 - ip12;
+
+            temp[i] = a1 + b1;
+            temp[i + 4] = c1 + d1;
+            temp[i + 8] = a1 - b1;
+            temp[i + 12] = d1 - c1;
+        }
+
+        for (var i = 0; i < BlockSize; i++) {
+            var baseIndex = i * BlockSize;
+            var t0 = temp[baseIndex];
+            var t1 = temp[baseIndex + 1];
+            var t2 = temp[baseIndex + 2];
+            var t3 = temp[baseIndex + 3];
+
+            var a1 = t0 + t3;
+            var b1 = t1 + t2;
+            var c1 = t1 - t2;
+            var d1 = t0 - t3;
+
+            var a2 = a1 + b1;
+            var b2 = c1 + d1;
+            var c2 = a1 - b1;
+            var d2 = d1 - c1;
+
+            output[baseIndex] = (a2 + 3) >> 3;
+            output[baseIndex + 1] = (b2 + 3) >> 3;
+            output[baseIndex + 2] = (c2 + 3) >> 3;
+            output[baseIndex + 3] = (d2 + 3) >> 3;
         }
 
         return output;
@@ -1258,6 +1522,20 @@ internal static class WebpVp8Encoder {
             var coeffs = new int[CoefficientsPerBlock];
             coeffs[j] = 1;
             var residual = InverseTransform4x4(coeffs);
+            for (var i = 0; i < CoefficientsPerBlock; i++) {
+                inverseMatrix[i, j] = residual[i];
+            }
+        }
+
+        return InvertMatrix(inverseMatrix);
+    }
+
+    private static double[,] BuildForwardWalshTransformMatrix() {
+        var inverseMatrix = new double[CoefficientsPerBlock, CoefficientsPerBlock];
+        for (var j = 0; j < CoefficientsPerBlock; j++) {
+            var coeffs = new int[CoefficientsPerBlock];
+            coeffs[j] = 1;
+            var residual = InverseWalshTransform4x4(coeffs);
             for (var i = 0; i < CoefficientsPerBlock; i++) {
                 inverseMatrix[i, j] = residual[i];
             }
