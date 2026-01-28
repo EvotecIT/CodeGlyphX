@@ -1538,6 +1538,121 @@ public sealed class QrPngRendererTests {
     }
 
     [Fact]
+    public void Render_With_Zero_Size_Badge_Skips_Drawing() {
+        var matrix = new BitMatrix(21, 21);
+        var moduleSize = 6;
+        var quietZone = 4;
+        var padding = 20;
+
+        var opts = new QrPngRenderOptions {
+            ModuleSize = moduleSize,
+            QuietZone = quietZone,
+            Foreground = Rgba32.Black,
+            Background = Rgba32.White,
+            Canvas = new QrPngCanvasOptions {
+                PaddingPx = padding,
+                Background = Rgba32.White,
+                Badge = new QrPngCanvasBadgeOptions {
+                    Shape = QrPngCanvasBadgeShape.Badge,
+                    Position = QrPngCanvasBadgePosition.Top,
+                    WidthPx = 0,
+                    HeightPx = 24,
+                    GapPx = 8,
+                    Color = new Rgba32(200, 20, 60, 220),
+                },
+            },
+        };
+
+        var png = QrPngRenderer.Render(matrix, opts);
+        var (rgba, width, height, stride) = PngTestDecoder.DecodeRgba32(png);
+
+        var qrFullPx = (matrix.Width + quietZone * 2) * moduleSize;
+        var qrX0 = padding;
+        var qrY0 = padding;
+        var qrX1 = qrX0 + qrFullPx - 1;
+        var qrY1 = qrY0 + qrFullPx - 1;
+
+        var foundBadge = false;
+        for (var y = 0; y < height && !foundBadge; y++) {
+            for (var x = 0; x < width; x++) {
+                if (x >= qrX0 && x <= qrX1 && y >= qrY0 && y <= qrY1) continue;
+                var p = y * stride + x * 4;
+                var r = rgba[p + 0];
+                var g = rgba[p + 1];
+                var b = rgba[p + 2];
+                if (r != 255 || g != 255 || b != 255) {
+                    foundBadge = true;
+                    break;
+                }
+            }
+        }
+
+        Assert.False(foundBadge, "Did not expect badge pixels outside the QR bounds.");
+    }
+
+    [Fact]
+    public void Render_With_Tiny_Ribbon_Badge_Skips_Tails() {
+        var matrix = new BitMatrix(21, 21);
+        var moduleSize = 5;
+        var quietZone = 4;
+        var padding = 12;
+
+        var opts = new QrPngRenderOptions {
+            ModuleSize = moduleSize,
+            QuietZone = quietZone,
+            Foreground = Rgba32.Black,
+            Background = Rgba32.White,
+            Canvas = new QrPngCanvasOptions {
+                PaddingPx = padding,
+                Background = Rgba32.White,
+                Badge = new QrPngCanvasBadgeOptions {
+                    Shape = QrPngCanvasBadgeShape.Ribbon,
+                    Position = QrPngCanvasBadgePosition.Top,
+                    WidthPx = 1,
+                    HeightPx = 1,
+                    GapPx = 6,
+                    TailPx = 20,
+                    CornerRadiusPx = 0,
+                    Color = new Rgba32(180, 30, 80, 220),
+                },
+            },
+        };
+
+        var png = QrPngRenderer.Render(matrix, opts);
+        var (rgba, width, height, stride) = PngTestDecoder.DecodeRgba32(png);
+
+        var qrFullPx = (matrix.Width + quietZone * 2) * moduleSize;
+        var qrX0 = padding;
+        var qrY0 = padding;
+        var qrX1 = qrX0 + qrFullPx - 1;
+        var qrY1 = qrY0 + qrFullPx - 1;
+
+        var minX = width;
+        var minY = height;
+        var maxX = -1;
+        var maxY = -1;
+
+        for (var y = 0; y < height; y++) {
+            for (var x = 0; x < width; x++) {
+                if (x >= qrX0 && x <= qrX1 && y >= qrY0 && y <= qrY1) continue;
+                var p = y * stride + x * 4;
+                var r = rgba[p + 0];
+                var g = rgba[p + 1];
+                var b = rgba[p + 2];
+                if (r == 255 && g == 255 && b == 255) continue;
+
+                if (x < minX) minX = x;
+                if (y < minY) minY = y;
+                if (x > maxX) maxX = x;
+                if (y > maxY) maxY = y;
+            }
+        }
+
+        Assert.True(maxX >= 0, "Expected badge pixels outside the QR bounds.");
+        Assert.True(maxX - minX == 0 && maxY - minY == 0, "Expected no ribbon tails outside the badge bounds.");
+    }
+
+    [Fact]
     public void Render_With_Eye_InsetRing_Leaves_Center_Light_And_Ring_Dark() {
         var qr = QrCodeEncoder.EncodeText("HELLO", QrErrorCorrectionLevel.H);
 

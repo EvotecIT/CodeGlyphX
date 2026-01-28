@@ -2614,9 +2614,11 @@ public static partial class QrPngRenderer {
         var rightPad = innerCanvasX + innerCanvasW - (qrX + qrSize);
         var bottomPad = innerCanvasY + innerCanvasH - (qrY + qrSize);
 
+        if (badge.WidthPx <= 0 || badge.HeightPx <= 0) return;
+
         var gap = Math.Max(0, badge.GapPx);
-        var desiredW = Math.Max(1, badge.WidthPx);
-        var desiredH = Math.Max(1, badge.HeightPx);
+        var desiredW = badge.WidthPx;
+        var desiredH = badge.HeightPx;
         var offset = badge.OffsetPx;
 
         var x = 0;
@@ -2755,7 +2757,10 @@ public static partial class QrPngRenderer {
             tail = Math.Min(tail, tailMax);
             if (tail <= 0) return;
 
-            var tailWidth = Math.Max(6, Math.Min(w / 3, h * 2));
+            var tailBase = Math.Max(4, Math.Min(w / 3, h * 2));
+            var maxTailWidth = Math.Max(1, w / 2);
+            var tailWidth = Math.Min(maxTailWidth, tailBase);
+            if (tailWidth < 2) return;
             var leftBaseX0 = x;
             var leftBaseX1 = x + tailWidth;
             var rightBaseX0 = x + w - tailWidth;
@@ -2800,7 +2805,10 @@ public static partial class QrPngRenderer {
             tail = Math.Min(tail, tailMax);
             if (tail <= 0) return;
 
-            var tailHeight = Math.Max(6, Math.Min(h / 3, w * 2));
+            var tailBase = Math.Max(4, Math.Min(h / 3, w * 2));
+            var maxTailHeight = Math.Max(1, h / 2);
+            var tailHeight = Math.Min(maxTailHeight, tailBase);
+            if (tailHeight < 2) return;
             var topBaseY0 = y;
             var topBaseY1 = y + tailHeight;
             var bottomBaseY0 = y + h - tailHeight;
