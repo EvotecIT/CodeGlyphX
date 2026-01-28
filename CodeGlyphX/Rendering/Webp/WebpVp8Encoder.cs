@@ -758,7 +758,7 @@ internal static class WebpVp8Encoder {
         var bestCost = int.MaxValue;
         Span<byte> predicted = stackalloc byte[BlockSize * BlockSize];
 
-        for (var mode = 0; mode <= 3; mode++) {
+        for (var mode = 0; mode < Intra4x4ModeCount; mode++) {
             PredictBlock(recon, planeWidth, planeHeight, dstX, dstY, mode, predicted);
             var cost = ComputePredictionCost(source, planeWidth, planeHeight, dstX, dstY, predicted);
             if (cost < bestCost) {
@@ -853,7 +853,7 @@ internal static class WebpVp8Encoder {
 
         var topLeft = GetPlaneSampleOrDefault(plane, planeWidth, planeHeight, dstX - 1, dstY - 1, 128);
         var predictionKind = mode;
-        if (predictionKind < 0 || predictionKind > 3) predictionKind = ModeDcPred;
+        if (predictionKind < 0 || predictionKind >= Intra4x4ModeCount) predictionKind = ModeDcPred;
 
         var dc = 128;
         if (predictionKind == ModeDcPred) {
@@ -872,15 +872,35 @@ internal static class WebpVp8Encoder {
             }
         }
 
+        Span<byte> topExt = stackalloc byte[BlockSize * 2];
+        Span<byte> leftExt = stackalloc byte[BlockSize * 2];
+        for (var i = 0; i < topExt.Length; i++) {
+            topExt[i] = i < BlockSize ? top[i] : top[BlockSize - 1];
+            leftExt[i] = i < BlockSize ? left[i] : left[BlockSize - 1];
+        }
+
         for (var y = 0; y < BlockSize; y++) {
             var rowOffset = y * BlockSize;
             for (var x = 0; x < BlockSize; x++) {
-                var predictedSample = predictionKind switch {
-                    1 => top[x],
-                    2 => left[y],
-                    3 => ClampToByte(left[y] + top[x] - topLeft),
-                    _ => (byte)dc,
-                };
+                byte predictedSample;
+                if (predictionKind <= 3) {
+                    predictedSample = predictionKind switch {
+                        1 => top[x],
+                        2 => left[y],
+                        3 => ClampToByte(left[y] + top[x] - topLeft),
+                        _ => (byte)dc,
+                    };
+                } else {
+                    predictedSample = predictionKind switch {
+                        4 => PredictDownRight(topExt, leftExt, topLeft, x, y),
+                        5 => PredictVerticalRight(topExt, topLeft, x, y),
+                        6 => PredictDownLeft(topExt, x, y),
+                        7 => PredictVerticalLeft(topExt, x, y),
+                        8 => PredictHorizontalDown(leftExt, topLeft, x, y),
+                        9 => PredictHorizontalUp(leftExt, x, y),
+                        _ => (byte)dc,
+                    };
+                }
                 predicted[rowOffset + x] = predictedSample;
             }
         }
@@ -952,6 +972,90 @@ internal static class WebpVp8Encoder {
         if (value < -MaxCoefficientMagnitude) return -MaxCoefficientMagnitude;
         if (value > MaxCoefficientMagnitude) return MaxCoefficientMagnitude;
         return value;
+    }
+
+    private static byte PredictDownRight(ReadOnlySpan<byte> top, ReadOnlySpan<byte> left, byte topLeft, int x, int y) {
+        if (x == y) return topLeft;
+        if (x > y) {
+            var index = x - y - 1;
+            return GetExtendedSample(top, index, topLeft);
+        }
+
+        var leftIndex = y - x - 1;
+        return GetExtendedSample(left, leftIndex, topLeft);
+    }
+
+    private static byte PredictVerticalRight(ReadOnlySpan<byte> top, byte topLeft, int x, int y) {
+        var shift = y >> 1;
+        if ((y & 1) == 0) {
+            var a = GetExtendedSample(top, x - shift - 1, topLeft);
+            var b = GetExtendedSample(top, x - shift, topLeft);
+            return (byte)((a + b + 1) >> 1);
+        }
+
+        var a0 = GetExtendedSample(top, x - shift - 2, topLeft);
+        var a1 = GetExtendedSample(top, x - shift - 1, topLeft);
+        var a2 = GetExtendedSample(top, x - shift, topLeft);
+        return (byte)((a0 + (2 * a1) + a2 + 2) >> 2);
+    }
+
+    private static byte PredictDownLeft(ReadOnlySpan<byte> top, int x, int y) {
+        var shift = y >> 1;
+        var baseIndex = x + shift + 1;
+        if ((y & 1) == 0) {
+            var a = GetExtendedSample(top, baseIndex, top[0]);
+            var b = GetExtendedSample(top, baseIndex + 1, top[0]);
+            return (byte)((a + b + 1) >> 1);
+        }
+
+        var a0 = GetExtendedSample(top, baseIndex, top[0]);
+        var a1 = GetExtendedSample(top, baseIndex + 1, top[0]);
+        var a2 = GetExtendedSample(top, baseIndex + 2, top[0]);
+        return (byte)((a0 + (2 * a1) + a2 + 2) >> 2);
+    }
+
+    private static byte PredictVerticalLeft(ReadOnlySpan<byte> top, int x, int y) {
+        var shift = y >> 1;
+        var baseIndex = x + shift;
+        if ((y & 1) == 0) {
+            var a = GetExtendedSample(top, baseIndex, top[0]);
+            var b = GetExtendedSample(top, baseIndex + 1, top[0]);
+            return (byte)((a + b + 1) >> 1);
+        }
+
+        var a0 = GetExtendedSample(top, baseIndex, top[0]);
+        var a1 = GetExtendedSample(top, baseIndex + 1, top[0]);
+        var a2 = GetExtendedSample(top, baseIndex + 2, top[0]);
+        return (byte)((a0 + (2 * a1) + a2 + 2) >> 2);
+    }
+
+    private static byte PredictHorizontalDown(ReadOnlySpan<byte> left, byte topLeft, int x, int y) {
+        var shift = x >> 1;
+        if ((x & 1) == 0) {
+            var a = GetExtendedSample(left, y + shift - 1, topLeft);
+            var b = GetExtendedSample(left, y + shift, topLeft);
+            return (byte)((a + b + 1) >> 1);
+        }
+
+        var a0 = GetExtendedSample(left, y + shift - 2, topLeft);
+        var a1 = GetExtendedSample(left, y + shift - 1, topLeft);
+        var a2 = GetExtendedSample(left, y + shift, topLeft);
+        return (byte)((a0 + (2 * a1) + a2 + 2) >> 2);
+    }
+
+    private static byte PredictHorizontalUp(ReadOnlySpan<byte> left, int x, int y) {
+        var shift = x >> 1;
+        var baseIndex = y + shift + 1;
+        if ((x & 1) == 0) {
+            var a = GetExtendedSample(left, baseIndex, left[0]);
+            var b = GetExtendedSample(left, baseIndex + 1, left[0]);
+            return (byte)((a + b + 1) >> 1);
+        }
+
+        var a0 = GetExtendedSample(left, baseIndex, left[0]);
+        var a1 = GetExtendedSample(left, baseIndex + 1, left[0]);
+        var a2 = GetExtendedSample(left, baseIndex + 2, left[0]);
+        return (byte)((a0 + (2 * a1) + a2 + 2) >> 2);
     }
 
     private static int[] InverseTransform4x4(int[] input) {
@@ -1048,6 +1152,12 @@ internal static class WebpVp8Encoder {
     private static byte GetPlaneSampleOrDefault(byte[] plane, int width, int height, int x, int y, byte fallback) {
         if ((uint)x >= (uint)width || (uint)y >= (uint)height) return fallback;
         return plane[(y * width) + x];
+    }
+
+    private static byte GetExtendedSample(ReadOnlySpan<byte> samples, int index, byte fallback) {
+        if (index < 0) return fallback;
+        if (index >= samples.Length) return samples[samples.Length - 1];
+        return samples[index];
     }
 
     private static int GetMacroblockDimension(int pixels) {
