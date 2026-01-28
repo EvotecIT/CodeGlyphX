@@ -50,6 +50,63 @@ internal static class WebpManagedDecoder {
         return false;
     }
 
+    internal static bool TryDecodeAnimationFrames(
+        ReadOnlySpan<byte> data,
+        out WebpAnimationFrame[] frames,
+        out int canvasWidth,
+        out int canvasHeight,
+        out WebpAnimationOptions options) {
+        frames = Array.Empty<WebpAnimationFrame>();
+        canvasWidth = 0;
+        canvasHeight = 0;
+        options = default;
+        if (!WebpReader.IsWebp(data)) return false;
+        if (data.Length > WebpReader.MaxWebpBytes) return false;
+
+        if (!TryEnumerateChunks(data, out var chunkSpan, out var chunks)) return false;
+
+        var background = 0u;
+        var loopCount = 0;
+        if (TryFindChunk(chunkSpan, chunks, FourCcAnim, out var animPayload)) {
+            if (animPayload.Length < 6) return false;
+            background = ReadU32LE(animPayload, 0);
+            loopCount = ReadU16LE(animPayload, 4);
+        }
+
+        if (TryFindChunk(chunkSpan, chunks, FourCcVp8X, out var vp8xPayload)) {
+            if (!TryReadVp8X(vp8xPayload, out canvasWidth, out canvasHeight, out _)) return false;
+        }
+
+        var frameList = new System.Collections.Generic.List<WebpAnimationFrame>();
+        for (var i = 0; i < chunks.Length; i++) {
+            if (chunks[i].FourCc != FourCcAnmf) continue;
+            var payload = chunkSpan.Slice(chunks[i].DataOffset, chunks[i].Length);
+            if (!TryDecodeAnimationFrame(payload, out var frame)) return false;
+
+            if (canvasWidth <= 0 || canvasHeight <= 0) {
+                canvasWidth = frame.Width;
+                canvasHeight = frame.Height;
+            }
+
+            frameList.Add(new WebpAnimationFrame(
+                frame.Rgba,
+                frame.Width,
+                frame.Height,
+                frame.Width * 4,
+                frame.DurationMs,
+                frame.X,
+                frame.Y,
+                frame.Blend,
+                frame.DisposeToBackground));
+        }
+
+        if (frameList.Count == 0) return false;
+
+        options = new WebpAnimationOptions(loopCount, background);
+        frames = frameList.ToArray();
+        return true;
+    }
+
     private static bool TryEnumerateChunks(
         ReadOnlySpan<byte> data,
         out ReadOnlySpan<byte> chunkSpan,
@@ -173,13 +230,15 @@ internal static class WebpManagedDecoder {
         public int Length { get; }
     }
 
-    private readonly struct WebpAnimationFrame {
-        public WebpAnimationFrame(int x, int y, int width, int height, bool blend, byte[] rgba) {
+    private readonly struct WebpAnimationFrameInfo {
+        public WebpAnimationFrameInfo(int x, int y, int width, int height, int durationMs, bool blend, bool disposeToBackground, byte[] rgba) {
             X = x;
             Y = y;
             Width = width;
             Height = height;
+            DurationMs = durationMs;
             Blend = blend;
+            DisposeToBackground = disposeToBackground;
             Rgba = rgba;
         }
 
@@ -187,11 +246,13 @@ internal static class WebpManagedDecoder {
         public int Y { get; }
         public int Width { get; }
         public int Height { get; }
+        public int DurationMs { get; }
         public bool Blend { get; }
+        public bool DisposeToBackground { get; }
         public byte[] Rgba { get; }
     }
 
-    private static bool TryDecodeAnimationFrame(ReadOnlySpan<byte> payload, out WebpAnimationFrame frame) {
+    private static bool TryDecodeAnimationFrame(ReadOnlySpan<byte> payload, out WebpAnimationFrameInfo frame) {
         frame = default;
         if (payload.Length < 16) return false;
 
@@ -201,7 +262,11 @@ internal static class WebpManagedDecoder {
         var height = ReadU24LE(payload, 9) + 1;
         if (width <= 0 || height <= 0) return false;
 
+        var duration = ReadU24LE(payload, 12);
+        if (duration <= 0) duration = 1;
+
         var flags = payload[15];
+        var disposeToBackground = (flags & 0x01) != 0;
         var blend = (flags & 0x02) == 0; // 0 = alpha blend, 1 = no blend
 
         var frameData = payload.Slice(16);
@@ -210,7 +275,7 @@ internal static class WebpManagedDecoder {
         if (TryFindChunk(frameData, chunks, FourCcVp8L, out var vp8lPayload)) {
             if (!WebpVp8lDecoder.TryDecode(vp8lPayload, out var rgba, out var decodedWidth, out var decodedHeight)) return false;
             if (decodedWidth != width || decodedHeight != height) return false;
-            frame = new WebpAnimationFrame(x, y, width, height, blend, rgba);
+            frame = new WebpAnimationFrameInfo(x, y, width, height, duration, blend, disposeToBackground, rgba);
             return true;
         }
 
@@ -223,7 +288,7 @@ internal static class WebpManagedDecoder {
                 ApplyAlphaToRgba(alpha, rgba);
             }
 
-            frame = new WebpAnimationFrame(x, y, width, height, blend, rgba);
+            frame = new WebpAnimationFrameInfo(x, y, width, height, duration, blend, disposeToBackground, rgba);
             return true;
         }
 
@@ -243,7 +308,7 @@ internal static class WebpManagedDecoder {
         }
     }
 
-    private static void ReplaceFrame(byte[] canvas, int canvasWidth, int canvasHeight, WebpAnimationFrame frame) {
+    private static void ReplaceFrame(byte[] canvas, int canvasWidth, int canvasHeight, WebpAnimationFrameInfo frame) {
         var src = frame.Rgba;
         var srcWidth = frame.Width;
         var srcHeight = frame.Height;
@@ -261,7 +326,7 @@ internal static class WebpManagedDecoder {
         }
     }
 
-    private static void AlphaBlendFrame(byte[] canvas, int canvasWidth, int canvasHeight, WebpAnimationFrame frame) {
+    private static void AlphaBlendFrame(byte[] canvas, int canvasWidth, int canvasHeight, WebpAnimationFrameInfo frame) {
         var src = frame.Rgba;
         var srcWidth = frame.Width;
         var srcHeight = frame.Height;
@@ -423,6 +488,11 @@ internal static class WebpManagedDecoder {
         return span[offset]
             | (span[offset + 1] << 8)
             | (span[offset + 2] << 16);
+    }
+
+    private static int ReadU16LE(ReadOnlySpan<byte> span, int offset) {
+        if (offset < 0 || offset + 2 > span.Length) return 0;
+        return span[offset] | (span[offset + 1] << 8);
     }
 
     private static int Clamp(int value) {
