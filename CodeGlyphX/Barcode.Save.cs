@@ -345,7 +345,7 @@ public static partial class Barcode {
     }
 
     /// <summary>
-    /// Saves a barcode to a file based on the file extension (.png/.webp/.svg/.svgz/.html/.jpg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps).
+    /// Saves a barcode to a file based on the file extension (.png/.webp/.svg/.svgz/.svg.gz/.html/.htm/.jpg/.jpeg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps/.ps).
     /// Defaults to PNG when no extension is provided.
     /// </summary>
     public static string Save(BarcodeType type, string content, string path, BarcodeOptions? options = null, string? title = null) {

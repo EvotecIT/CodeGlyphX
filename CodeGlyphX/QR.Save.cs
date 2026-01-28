@@ -545,7 +545,7 @@ public static partial class QR {
     }
 
     /// <summary>
-    /// Saves a QR code to a file based on the file extension (.png/.webp/.svg/.svgz/.html/.jpg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps).
+    /// Saves a QR code to a file based on the file extension (.png/.webp/.svg/.svgz/.svg.gz/.html/.htm/.jpg/.jpeg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps/.ps).
     /// Defaults to PNG when no extension is provided.
     /// </summary>
     public static string Save(string payload, string path, QrEasyOptions? options = null, string? title = null) {
@@ -553,7 +553,7 @@ public static partial class QR {
     }
 
     /// <summary>
-    /// Detects a payload type and saves a QR code to a file based on the file extension (.png/.webp/.svg/.svgz/.html/.jpg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps).
+    /// Detects a payload type and saves a QR code to a file based on the file extension (.png/.webp/.svg/.svgz/.svg.gz/.html/.htm/.jpg/.jpeg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps/.ps).
     /// Defaults to PNG when no extension is provided.
     /// </summary>
     public static string SaveAuto(string payload, string path, QrPayloadDetectOptions? detectOptions = null, QrEasyOptions? options = null, string? title = null) {
@@ -562,7 +562,7 @@ public static partial class QR {
     }
 
     /// <summary>
-    /// Saves a QR code to a file based on the file extension (.png/.webp/.svg/.svgz/.html/.jpg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps).
+    /// Saves a QR code to a file based on the file extension (.png/.webp/.svg/.svgz/.svg.gz/.html/.htm/.jpg/.jpeg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps/.ps).
     /// Defaults to PNG when no extension is provided.
     /// </summary>
     public static string Save(QrPayloadData payload, string path, QrEasyOptions? options = null, string? title = null) {
