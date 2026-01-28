@@ -110,6 +110,11 @@ public static partial class QR {
     public static byte[] Jpeg(string payload, QrEasyOptions? options = null) => QrEasy.RenderJpeg(payload, options);
 
     /// <summary>
+    /// Renders a QR code as WebP.
+    /// </summary>
+    public static byte[] Webp(string payload, QrEasyOptions? options = null) => QrEasy.RenderWebp(payload, options);
+
+    /// <summary>
     /// Detects a payload type and renders a QR code as JPEG.
     /// </summary>
     public static byte[] JpegAuto(string payload, QrPayloadDetectOptions? detectOptions = null, QrEasyOptions? options = null) {
@@ -117,9 +122,21 @@ public static partial class QR {
     }
 
     /// <summary>
+    /// Detects a payload type and renders a QR code as WebP.
+    /// </summary>
+    public static byte[] WebpAuto(string payload, QrPayloadDetectOptions? detectOptions = null, QrEasyOptions? options = null) {
+        return QrEasy.RenderWebpAuto(payload, detectOptions, options);
+    }
+
+    /// <summary>
     /// Renders a QR code as JPEG for a payload with embedded defaults.
     /// </summary>
     public static byte[] Jpeg(QrPayloadData payload, QrEasyOptions? options = null) => QrEasy.RenderJpeg(payload, options);
+
+    /// <summary>
+    /// Renders a QR code as WebP for a payload with embedded defaults.
+    /// </summary>
+    public static byte[] Webp(QrPayloadData payload, QrEasyOptions? options = null) => QrEasy.RenderWebp(payload, options);
 
     /// <summary>
     /// Renders a QR code as BMP.
@@ -366,4 +383,3 @@ public static partial class QR {
         return QrEasy.RenderAscii(payload, asciiOptions, options);
     }
 }
-

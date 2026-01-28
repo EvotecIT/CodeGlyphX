@@ -374,12 +374,12 @@ Based on public docs as of 2026-01-18. Capabilities depend on optional renderer 
 - [x] Data Matrix + MicroPDF417 + PDF417 encode + decode
 - [x] Matrix barcode encoding (Data Matrix / MicroPDF417 / PDF417 / KIX / GS1 DataBar) with dedicated matrix renderers
 - [x] SVG / SVGZ / HTML / PNG / JPEG / BMP / PPM / PBM / PGM / PAM / XBM / XPM / TGA / ICO / PDF / EPS / ASCII renderers
-- [x] Image decode: PNG / JPEG / GIF / BMP / PPM / PBM / PGM / PAM / XBM / XPM / TGA / ICO / TIFF
+- [x] Image decode: PNG / JPEG / WebP / GIF / BMP / PPM / PBM / PGM / PAM / XBM / XPM / TGA / ICO / TIFF
 - [x] Base64 + data URI helpers for rendered outputs
 - [x] Payload helpers (URL, WiFi, Email, Phone, SMS, Contact, Calendar, OTP, Social)
 - [x] WPF controls and demo apps
 - [x] Aztec encode + decode (module matrix + pixel)
-- [x] Aztec render helpers (PNG/SVG/SVGZ/HTML/JPEG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA/ICO/PDF/EPS/ASCII + Save by extension)
+- [x] Aztec render helpers (PNG/SVG/SVGZ/HTML/JPEG/WebP/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA/ICO/PDF/EPS/ASCII + Save by extension)
 
 ## AOT & trimming
 
@@ -395,6 +395,7 @@ For other matrix barcodes (e.g., KIX/Royal Mail 4‑State), use the `Matrix*` re
 | --- | --- | --- |
 | PNG | `.png` | Raster |
 | JPEG | `.jpg`, `.jpeg` | Raster, quality via options |
+| WebP | `.webp` | Raster, quality via options (lossless when quality &gt;= 100) |
 | BMP | `.bmp` | Raster |
 | PPM | `.ppm` | Raster (portable pixmap) |
 | PBM | `.pbm` | Raster (portable bitmap) |

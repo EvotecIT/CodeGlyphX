@@ -18,6 +18,7 @@ using CodeGlyphX.Rendering.Png;
 using CodeGlyphX.Rendering.Svg;
 using CodeGlyphX.Rendering.Svgz;
 using CodeGlyphX.Rendering.Tga;
+using CodeGlyphX.Rendering.Webp;
 using CodeGlyphX.Rendering.Xbm;
 using CodeGlyphX.Rendering.Xpm;
 
@@ -85,6 +86,14 @@ public static partial class DataMatrixCode {
     public static string SaveJpeg(ReadOnlySpan<byte> data, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
         var jpeg = Jpeg(data, mode, options);
         return jpeg.WriteBinary(path);
+    }
+
+    /// <summary>
+    /// Saves Data Matrix WebP to a file for byte payloads.
+    /// </summary>
+    public static string SaveWebp(ReadOnlySpan<byte> data, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var webp = Webp(data, mode, options);
+        return webp.WriteBinary(path);
     }
 
     /// <summary>
@@ -204,6 +213,16 @@ public static partial class DataMatrixCode {
     }
 
     /// <summary>
+    /// Saves Data Matrix WebP to a stream for byte payloads.
+    /// </summary>
+    public static void SaveWebp(ReadOnlySpan<byte> data, Stream stream, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = EncodeBytes(data, mode);
+        var opts = BuildPngOptions(options);
+        var quality = options?.WebpQuality ?? 100;
+        MatrixWebpRenderer.RenderToStream(modules, opts, stream, quality);
+    }
+
+    /// <summary>
     /// Saves Data Matrix BMP to a stream for byte payloads.
     /// </summary>
     public static void SaveBmp(ReadOnlySpan<byte> data, Stream stream, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
@@ -310,7 +329,7 @@ public static partial class DataMatrixCode {
     }
 
     /// <summary>
-    /// Saves Data Matrix to a file for byte payloads based on extension (.png/.svg/.svgz/.html/.jpg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps).
+    /// Saves Data Matrix to a file for byte payloads based on extension (.png/.webp/.svg/.svgz/.html/.jpg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps).
     /// Defaults to PNG when no extension is provided.
     /// </summary>
     public static string Save(ReadOnlySpan<byte> data, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null, string? title = null) {
@@ -325,6 +344,8 @@ public static partial class DataMatrixCode {
         switch (ext.ToLowerInvariant()) {
             case ".png":
                 return SavePng(data, path, mode, options);
+            case ".webp":
+                return SaveWebp(data, path, mode, options);
             case ".svg":
                 return SaveSvg(data, path, mode, options);
             case ".html":

@@ -49,6 +49,12 @@ public static class BarcodeEasy {
         Barcode.Jpeg(type, content, options);
 
     /// <summary>
+    /// Renders a barcode as WebP.
+    /// </summary>
+    public static byte[] RenderWebp(BarcodeType type, string content, BarcodeOptions? options = null) =>
+        Barcode.Webp(type, content, options);
+
+    /// <summary>
     /// Renders a barcode as BMP.
     /// </summary>
     public static byte[] RenderBmp(BarcodeType type, string content, BarcodeOptions? options = null) =>
@@ -151,6 +157,12 @@ public static class BarcodeEasy {
         Barcode.SaveJpeg(type, content, stream, options);
 
     /// <summary>
+    /// Renders a barcode as WebP to a stream.
+    /// </summary>
+    public static void RenderWebpToStream(BarcodeType type, string content, Stream stream, BarcodeOptions? options = null) =>
+        Barcode.SaveWebp(type, content, stream, options);
+
+    /// <summary>
     /// Renders a barcode as BMP to a stream.
     /// </summary>
     public static void RenderBmpToStream(BarcodeType type, string content, Stream stream, BarcodeOptions? options = null) =>
@@ -245,6 +257,12 @@ public static class BarcodeEasy {
     /// </summary>
     public static string RenderJpegToFile(BarcodeType type, string content, string path, BarcodeOptions? options = null) =>
         Barcode.SaveJpeg(type, content, path, options);
+
+    /// <summary>
+    /// Renders a barcode as WebP to a file.
+    /// </summary>
+    public static string RenderWebpToFile(BarcodeType type, string content, string path, BarcodeOptions? options = null) =>
+        Barcode.SaveWebp(type, content, path, options);
 
     /// <summary>
     /// Renders a barcode as BMP to a file.

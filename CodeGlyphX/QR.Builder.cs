@@ -452,6 +452,22 @@ public static partial class QR {
         }
 
         /// <summary>
+        /// Saves WebP to a file.
+        /// </summary>
+        public string SaveWebp(string path) => _payloadData is null ? QR.SaveWebp(_payload, path, Options) : QR.SaveWebp(_payloadData, path, Options);
+
+        /// <summary>
+        /// Saves WebP to a stream.
+        /// </summary>
+        public void SaveWebp(Stream stream) {
+            if (_payloadData is null) {
+                QR.SaveWebp(_payload, stream, Options);
+            } else {
+                QR.SaveWebp(_payloadData, stream, Options);
+            }
+        }
+
+        /// <summary>
         /// Saves BMP to a file.
         /// </summary>
         public string SaveBmp(string path) => _payloadData is null ? QR.SaveBmp(_payload, path, Options) : QR.SaveBmp(_payloadData, path, Options);

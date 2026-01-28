@@ -18,6 +18,7 @@ using CodeGlyphX.Rendering.Png;
 using CodeGlyphX.Rendering.Svg;
 using CodeGlyphX.Rendering.Svgz;
 using CodeGlyphX.Rendering.Tga;
+using CodeGlyphX.Rendering.Webp;
 using CodeGlyphX.Rendering.Xbm;
 using CodeGlyphX.Rendering.Xpm;
 
@@ -109,6 +110,16 @@ public static partial class DataMatrixCode {
         var opts = BuildPngOptions(options);
         var quality = options?.JpegQuality ?? 85;
         return MatrixJpegRenderer.Render(modules, opts, quality);
+    }
+
+    /// <summary>
+    /// Renders Data Matrix as WebP from bytes.
+    /// </summary>
+    public static byte[] Webp(ReadOnlySpan<byte> data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = EncodeBytes(data, mode);
+        var opts = BuildPngOptions(options);
+        var quality = options?.WebpQuality ?? 100;
+        return MatrixWebpRenderer.Render(modules, opts, quality);
     }
 
     /// <summary>
@@ -292,6 +303,16 @@ public static partial class DataMatrixCode {
     }
 
     /// <summary>
+    /// Renders Data Matrix as WebP.
+    /// </summary>
+    public static byte[] Webp(string text, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = Encode(text, mode);
+        var opts = BuildPngOptions(options);
+        var quality = options?.WebpQuality ?? 100;
+        return MatrixWebpRenderer.Render(modules, opts, quality);
+    }
+
+    /// <summary>
     /// Renders Data Matrix as BMP.
     /// </summary>
     public static byte[] Bmp(string text, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
@@ -403,6 +424,16 @@ public static partial class DataMatrixCode {
         var opts = BuildPngOptions(options);
         var quality = options?.JpegQuality ?? 85;
         return MatrixJpegRenderer.Render(modules, opts, quality);
+    }
+
+    /// <summary>
+    /// Renders Data Matrix as WebP from bytes.
+    /// </summary>
+    public static byte[] Webp(byte[] data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = EncodeBytes(data, mode);
+        var opts = BuildPngOptions(options);
+        var quality = options?.WebpQuality ?? 100;
+        return MatrixWebpRenderer.Render(modules, opts, quality);
     }
 
     /// <summary>

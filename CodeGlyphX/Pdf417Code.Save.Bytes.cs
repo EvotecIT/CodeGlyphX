@@ -19,6 +19,7 @@ using CodeGlyphX.Rendering.Png;
 using CodeGlyphX.Rendering.Svg;
 using CodeGlyphX.Rendering.Svgz;
 using CodeGlyphX.Rendering.Tga;
+using CodeGlyphX.Rendering.Webp;
 using CodeGlyphX.Rendering.Xbm;
 using CodeGlyphX.Rendering.Xpm;
 
@@ -102,6 +103,14 @@ public static partial class Pdf417Code {
     public static string SaveJpeg(ReadOnlySpan<byte> data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         var jpeg = Jpeg(data, encodeOptions, renderOptions);
         return jpeg.WriteBinary(path);
+    }
+
+    /// <summary>
+    /// Saves PDF417 WebP to a file for byte payloads.
+    /// </summary>
+    public static string SaveWebp(ReadOnlySpan<byte> data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var webp = Webp(data, encodeOptions, renderOptions);
+        return webp.WriteBinary(path);
     }
 
     /// <summary>
@@ -213,6 +222,16 @@ public static partial class Pdf417Code {
     }
 
     /// <summary>
+    /// Saves PDF417 WebP to a stream for byte payloads.
+    /// </summary>
+    public static void SaveWebp(ReadOnlySpan<byte> data, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = EncodeBytes(data, encodeOptions);
+        var opts = BuildPngOptions(renderOptions);
+        var quality = renderOptions?.WebpQuality ?? 100;
+        MatrixWebpRenderer.RenderToStream(modules, opts, stream, quality);
+    }
+
+    /// <summary>
     /// Saves PDF417 BMP to a stream for byte payloads.
     /// </summary>
     public static void SaveBmp(ReadOnlySpan<byte> data, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
@@ -311,7 +330,7 @@ public static partial class Pdf417Code {
     }
 
     /// <summary>
-    /// Saves PDF417 to a file for byte payloads based on extension (.png/.svg/.svgz/.html/.jpg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps).
+    /// Saves PDF417 to a file for byte payloads based on extension (.png/.webp/.svg/.svgz/.html/.jpg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps).
     /// Defaults to PNG when no extension is provided.
     /// </summary>
     public static string Save(ReadOnlySpan<byte> data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, string? title = null) {
@@ -326,6 +345,8 @@ public static partial class Pdf417Code {
         switch (ext.ToLowerInvariant()) {
             case ".png":
                 return SavePng(data, path, encodeOptions, renderOptions);
+            case ".webp":
+                return SaveWebp(data, path, encodeOptions, renderOptions);
             case ".svg":
                 return SaveSvg(data, path, encodeOptions, renderOptions);
             case ".html":

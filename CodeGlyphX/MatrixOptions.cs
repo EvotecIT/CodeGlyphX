@@ -33,6 +33,11 @@ public sealed class MatrixOptions {
     public int JpegQuality { get; set; } = 85;
 
     /// <summary>
+    /// WebP quality (0..100). Values &gt;= 100 use lossless VP8L.
+    /// </summary>
+    public int WebpQuality { get; set; } = 100;
+
+    /// <summary>
     /// ICO output sizes in pixels (1..256). Defaults to common icon sizes.
     /// </summary>
     public int[]? IcoSizes { get; set; }

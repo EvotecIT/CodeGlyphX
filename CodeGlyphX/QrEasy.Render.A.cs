@@ -18,6 +18,7 @@ using CodeGlyphX.Rendering.Png;
 using CodeGlyphX.Rendering.Svg;
 using CodeGlyphX.Rendering.Svgz;
 using CodeGlyphX.Rendering.Tga;
+using CodeGlyphX.Rendering.Webp;
 using CodeGlyphX.Rendering.Xbm;
 using CodeGlyphX.Rendering.Xpm;
 
@@ -268,12 +269,31 @@ public static partial class QrEasy {
     }
 
     /// <summary>
+    /// Renders a QR code as WebP.
+    /// </summary>
+    public static byte[] RenderWebp(string payload, QrEasyOptions? options = null) {
+        var opts = options is null ? new QrEasyOptions() : CloneOptions(options);
+        var qr = Encode(payload, opts);
+        var render = BuildPngOptions(opts, qr);
+        return QrWebpRenderer.Render(qr.Modules, render, opts.WebpQuality);
+    }
+
+    /// <summary>
     /// Detects a payload type and renders a QR code as JPEG.
     /// </summary>
     public static byte[] RenderJpegAuto(string payload, QrPayloadDetectOptions? detectOptions = null, QrEasyOptions? options = null) {
         if (payload is null) throw new ArgumentNullException(nameof(payload));
         var detected = QrPayloads.Detect(payload, detectOptions);
         return RenderJpeg(detected, options);
+    }
+
+    /// <summary>
+    /// Detects a payload type and renders a QR code as WebP.
+    /// </summary>
+    public static byte[] RenderWebpAuto(string payload, QrPayloadDetectOptions? detectOptions = null, QrEasyOptions? options = null) {
+        if (payload is null) throw new ArgumentNullException(nameof(payload));
+        var detected = QrPayloads.Detect(payload, detectOptions);
+        return RenderWebp(detected, options);
     }
 
     /// <summary>
@@ -284,6 +304,16 @@ public static partial class QrEasy {
         var qr = Encode(payload, opts);
         var render = BuildPngOptions(opts, qr);
         QrJpegRenderer.RenderToStream(qr.Modules, render, stream, opts.JpegQuality);
+    }
+
+    /// <summary>
+    /// Renders a QR code as WebP to a stream.
+    /// </summary>
+    public static void RenderWebpToStream(string payload, Stream stream, QrEasyOptions? options = null) {
+        var opts = options is null ? new QrEasyOptions() : CloneOptions(options);
+        var qr = Encode(payload, opts);
+        var render = BuildPngOptions(opts, qr);
+        QrWebpRenderer.RenderToStream(qr.Modules, render, stream, opts.WebpQuality);
     }
 
     /// <summary>
@@ -299,6 +329,18 @@ public static partial class QrEasy {
     }
 
     /// <summary>
+    /// Renders a QR code as WebP and writes it to a file.
+    /// </summary>
+    /// <param name="payload">Payload text.</param>
+    /// <param name="path">Output file path.</param>
+    /// <param name="options">Optional rendering options.</param>
+    /// <returns>The output file path.</returns>
+    public static string RenderWebpToFile(string payload, string path, QrEasyOptions? options = null) {
+        var webp = RenderWebp(payload, options);
+        return RenderIO.WriteBinary(path, webp);
+    }
+
+    /// <summary>
     /// Renders a QR code as JPEG and writes it to a file for a payload with embedded defaults.
     /// </summary>
     /// <param name="payload">Payload with embedded defaults.</param>
@@ -308,6 +350,18 @@ public static partial class QrEasy {
     public static string RenderJpegToFile(QrPayloadData payload, string path, QrEasyOptions? options = null) {
         var jpeg = RenderJpeg(payload, options);
         return RenderIO.WriteBinary(path, jpeg);
+    }
+
+    /// <summary>
+    /// Renders a QR code as WebP and writes it to a file for a payload with embedded defaults.
+    /// </summary>
+    /// <param name="payload">Payload with embedded defaults.</param>
+    /// <param name="path">Output file path.</param>
+    /// <param name="options">Optional rendering options.</param>
+    /// <returns>The output file path.</returns>
+    public static string RenderWebpToFile(QrPayloadData payload, string path, QrEasyOptions? options = null) {
+        var webp = RenderWebp(payload, options);
+        return RenderIO.WriteBinary(path, webp);
     }
 
     /// <summary>
@@ -322,6 +376,17 @@ public static partial class QrEasy {
     }
 
     /// <summary>
+    /// Renders a QR code as WebP for a payload with embedded defaults.
+    /// </summary>
+    public static byte[] RenderWebp(QrPayloadData payload, QrEasyOptions? options = null) {
+        if (payload is null) throw new ArgumentNullException(nameof(payload));
+        var opts = MergeOptions(payload, options);
+        var qr = Encode(payload.Text, opts);
+        var render = BuildPngOptions(opts, qr);
+        return QrWebpRenderer.Render(qr.Modules, render, opts.WebpQuality);
+    }
+
+    /// <summary>
     /// Renders a QR code as JPEG to a stream for a payload with embedded defaults.
     /// </summary>
     public static void RenderJpegToStream(QrPayloadData payload, Stream stream, QrEasyOptions? options = null) {
@@ -330,6 +395,17 @@ public static partial class QrEasy {
         var qr = Encode(payload.Text, opts);
         var render = BuildPngOptions(opts, qr);
         QrJpegRenderer.RenderToStream(qr.Modules, render, stream, opts.JpegQuality);
+    }
+
+    /// <summary>
+    /// Renders a QR code as WebP to a stream for a payload with embedded defaults.
+    /// </summary>
+    public static void RenderWebpToStream(QrPayloadData payload, Stream stream, QrEasyOptions? options = null) {
+        if (payload is null) throw new ArgumentNullException(nameof(payload));
+        var opts = MergeOptions(payload, options);
+        var qr = Encode(payload.Text, opts);
+        var render = BuildPngOptions(opts, qr);
+        QrWebpRenderer.RenderToStream(qr.Modules, render, stream, opts.WebpQuality);
     }
 
     /// <summary>

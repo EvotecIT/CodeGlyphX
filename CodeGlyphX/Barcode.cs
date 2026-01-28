@@ -17,6 +17,7 @@ using CodeGlyphX.Rendering.Png;
 using CodeGlyphX.Rendering.Svg;
 using CodeGlyphX.Rendering.Svgz;
 using CodeGlyphX.Rendering.Tga;
+using CodeGlyphX.Rendering.Webp;
 using CodeGlyphX.Rendering.Xbm;
 using CodeGlyphX.Rendering.Xpm;
 
@@ -84,6 +85,16 @@ public static partial class Barcode {
         var opts = BuildPngOptions(options);
         var quality = options?.JpegQuality ?? 90;
         return BarcodeJpegRenderer.Render(barcode, opts, quality);
+    }
+
+    /// <summary>
+    /// Renders a barcode as WebP.
+    /// </summary>
+    public static byte[] Webp(BarcodeType type, string content, BarcodeOptions? options = null) {
+        var barcode = Encode(type, content);
+        var opts = BuildPngOptions(options);
+        var quality = options?.WebpQuality ?? 100;
+        return BarcodeWebpRenderer.Render(barcode, opts, quality);
     }
 
     /// <summary>
