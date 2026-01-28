@@ -1561,9 +1561,9 @@ internal static class WebpVp8Encoder {
             return segmentIds;
         }
 
-        var step = baseQIndex / 16;
+        var step = baseQIndex / 16 + spread / 32;
         if (step < 2) step = 2;
-        if (step > 12) step = 12;
+        if (step > 16) step = 16;
 
         quantizerDeltas[0] = ClampSegmentDelta(step * 2);
         quantizerDeltas[1] = ClampSegmentDelta(step);
