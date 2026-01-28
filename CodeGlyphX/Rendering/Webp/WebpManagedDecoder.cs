@@ -72,6 +72,7 @@ internal static class WebpManagedDecoder {
     }
 
     private static bool TryEnumerateChunks(ReadOnlySpan<byte> data, out WebpChunk[] chunks) {
+        chunks = Array.Empty<WebpChunk>();
         var offset = 0;
         var list = new System.Collections.Generic.List<WebpChunk>();
 

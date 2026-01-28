@@ -277,18 +277,21 @@ internal static class WebpVp8lDecoder {
                     break;
                 case WebpTransformType.Predictor:
                     if (!TryReadPredictorTransformWithReason(ref reader, currentWidth, currentHeight, depth, out var predictor, out reason)) {
+                        reason = $"Predictor transform: {reason}";
                         return false;
                     }
                     list.Add(predictor);
                     break;
                 case WebpTransformType.Color:
                     if (!TryReadColorTransformWithReason(ref reader, currentWidth, currentHeight, depth, out var colorTransform, out reason)) {
+                        reason = $"Color transform: {reason}";
                         return false;
                     }
                     list.Add(colorTransform);
                     break;
                 case WebpTransformType.ColorIndexing:
                     if (!TryReadColorIndexingTransformWithReason(ref reader, currentWidth, currentHeight, depth, out var indexing, out currentWidth, out reason)) {
+                        reason = $"Color indexing transform: {reason}";
                         return false;
                     }
                     list.Add(indexing);
@@ -317,7 +320,7 @@ internal static class WebpVp8lDecoder {
         var transformHeight = (height + blockSize - 1) >> sizeBits;
         if (transformWidth <= 0 || transformHeight <= 0) return false;
 
-        if (!TryDecodeImageNoTransforms(ref reader, transformWidth, transformHeight, depth + 1, out var predictorPixels)) return false;
+        if (!TryDecodeImageNoTransforms(ref reader, transformWidth, transformHeight, depth + 1, readMetaPrefix: false, out var predictorPixels)) return false;
         var modes = new int[predictorPixels.Length];
         for (var i = 0; i < predictorPixels.Length; i++) {
             var green = (predictorPixels[i] >> 8) & 0xFF;
@@ -353,9 +356,16 @@ internal static class WebpVp8lDecoder {
             return false;
         }
 
-        if (!TryDecodeImageNoTransformsWithReason(ref reader, transformWidth, transformHeight, depth + 1, out var predictorPixels, out reason)) {
+        var probe = reader;
+        if (!TryDecodeImageNoTransformsWithReason(ref probe, transformWidth, transformHeight, depth + 1, readMetaPrefix: false, out var predictorPixels, out reason)) {
+            var sigProbe = reader;
+            var nextByte = sigProbe.ReadBits(8);
+            if (nextByte >= 0) {
+                reason = $"{reason} (next byte 0x{nextByte:X2})";
+            }
             return false;
         }
+        reader = probe;
 
         var modes = new int[predictorPixels.Length];
         for (var i = 0; i < predictorPixels.Length; i++) {
@@ -379,7 +389,7 @@ internal static class WebpVp8lDecoder {
         var transformHeight = (height + blockSize - 1) >> sizeBits;
         if (transformWidth <= 0 || transformHeight <= 0) return false;
 
-        if (!TryDecodeImageNoTransforms(ref reader, transformWidth, transformHeight, depth + 1, out var transformPixels)) return false;
+        if (!TryDecodeImageNoTransforms(ref reader, transformWidth, transformHeight, depth + 1, readMetaPrefix: false, out var transformPixels)) return false;
         transform = new WebpTransform(WebpTransformType.Color, sizeBits, transformWidth, transformHeight, transformPixels);
         return true;
     }
@@ -409,9 +419,16 @@ internal static class WebpVp8lDecoder {
             return false;
         }
 
-        if (!TryDecodeImageNoTransformsWithReason(ref reader, transformWidth, transformHeight, depth + 1, out var transformPixels, out reason)) {
+        var probe = reader;
+        if (!TryDecodeImageNoTransformsWithReason(ref probe, transformWidth, transformHeight, depth + 1, readMetaPrefix: false, out var transformPixels, out reason)) {
+            var sigProbe = reader;
+            var nextByte = sigProbe.ReadBits(8);
+            if (nextByte >= 0) {
+                reason = $"{reason} (next byte 0x{nextByte:X2})";
+            }
             return false;
         }
+        reader = probe;
 
         transform = new WebpTransform(WebpTransformType.Color, sizeBits, transformWidth, transformHeight, transformPixels);
         return true;
@@ -432,7 +449,7 @@ internal static class WebpVp8lDecoder {
         var colorTableSize = colorTableSizeMinus1 + 1;
         if (colorTableSize <= 0) return false;
 
-        if (!TryDecodeImageNoTransforms(ref reader, colorTableSize, 1, depth + 1, out var paletteDeltas)) return false;
+        if (!TryDecodeImageNoTransforms(ref reader, colorTableSize, 1, depth + 1, readMetaPrefix: false, out var paletteDeltas)) return false;
         var palette = BuildColorTableFromDeltas(paletteDeltas);
 
         var widthBits = GetColorIndexWidthBits(colorTableSize);
@@ -474,9 +491,16 @@ internal static class WebpVp8lDecoder {
             return false;
         }
 
-        if (!TryDecodeImageNoTransformsWithReason(ref reader, colorTableSize, 1, depth + 1, out var paletteDeltas, out reason)) {
+        var probe = reader;
+        if (!TryDecodeImageNoTransformsWithReason(ref probe, colorTableSize, 1, depth + 1, readMetaPrefix: false, out var paletteDeltas, out reason)) {
+            var sigProbe = reader;
+            var nextByte = sigProbe.ReadBits(8);
+            if (nextByte >= 0) {
+                reason = $"{reason} (next byte 0x{nextByte:X2})";
+            }
             return false;
         }
+        reader = probe;
         var palette = BuildColorTableFromDeltas(paletteDeltas);
 
         var widthBits = GetColorIndexWidthBits(colorTableSize);
@@ -525,6 +549,16 @@ internal static class WebpVp8lDecoder {
     }
 
     private static bool TryDecodeImageCore(ref WebpBitReader reader, int width, int height, int depth, out int[] transformed) {
+        return TryDecodeImageCore(ref reader, width, height, depth, readMetaPrefix: true, out transformed);
+    }
+
+    private static bool TryDecodeImageCore(
+        ref WebpBitReader reader,
+        int width,
+        int height,
+        int depth,
+        bool readMetaPrefix,
+        out int[] transformed) {
         transformed = Array.Empty<int>();
         if (depth > 6) return false;
 
@@ -538,8 +572,11 @@ internal static class WebpVp8lDecoder {
         var colorCacheSize = colorCacheBits == 0 ? 0 : 1 << colorCacheBits;
         var colorCache = colorCacheBits == 0 ? null : new int[colorCacheSize];
 
-        var metaPrefixFlag = reader.ReadBits(1);
-        if (metaPrefixFlag < 0) return false;
+        var metaPrefixFlag = 0;
+        if (readMetaPrefix) {
+            metaPrefixFlag = reader.ReadBits(1);
+            if (metaPrefixFlag < 0) return false;
+        }
         var prefixBits = 0;
         var metaGroups = Array.Empty<int>();
         var metaWidth = 0;
@@ -554,7 +591,7 @@ internal static class WebpVp8lDecoder {
             var metaHeight = (height + blockSize - 1) >> prefixBits;
             if (metaWidth <= 0 || metaHeight <= 0) return false;
 
-            if (!TryDecodeImageNoTransforms(ref reader, metaWidth, metaHeight, depth + 1, out var metaPixels)) return false;
+            if (!TryDecodeImageNoTransforms(ref reader, metaWidth, metaHeight, depth + 1, readMetaPrefix: false, out var metaPixels)) return false;
             if (!TryBuildMetaGroups(metaPixels, out metaGroups, out groupCount)) return false;
         }
 
@@ -575,6 +612,17 @@ internal static class WebpVp8lDecoder {
         int depth,
         out int[] transformed,
         out string reason) {
+        return TryDecodeImageCoreWithReason(ref reader, width, height, depth, readMetaPrefix: true, out transformed, out reason);
+    }
+
+    private static bool TryDecodeImageCoreWithReason(
+        ref WebpBitReader reader,
+        int width,
+        int height,
+        int depth,
+        bool readMetaPrefix,
+        out int[] transformed,
+        out string reason) {
         transformed = Array.Empty<int>();
         reason = string.Empty;
         if (depth > 6) {
@@ -591,17 +639,20 @@ internal static class WebpVp8lDecoder {
         if (colorCacheFlag != 0) {
             colorCacheBits = reader.ReadBits(4);
             if (colorCacheBits is < 1 or > 11) {
-                reason = "Invalid color cache bits.";
+                reason = $"Invalid color cache bits ({colorCacheBits}).";
                 return false;
             }
         }
         var colorCacheSize = colorCacheBits == 0 ? 0 : 1 << colorCacheBits;
         var colorCache = colorCacheBits == 0 ? null : new int[colorCacheSize];
 
-        var metaPrefixFlag = reader.ReadBits(1);
-        if (metaPrefixFlag < 0) {
-            reason = "Failed to read meta prefix flag.";
-            return false;
+        var metaPrefixFlag = 0;
+        if (readMetaPrefix) {
+            metaPrefixFlag = reader.ReadBits(1);
+            if (metaPrefixFlag < 0) {
+                reason = "Failed to read meta prefix flag.";
+                return false;
+            }
         }
         var prefixBits = 0;
         var metaGroups = Array.Empty<int>();
@@ -623,7 +674,7 @@ internal static class WebpVp8lDecoder {
                 return false;
             }
 
-            if (!TryDecodeImageNoTransformsWithReason(ref reader, metaWidth, metaHeight, depth + 1, out var metaPixels, out reason)) {
+            if (!TryDecodeImageNoTransformsWithReason(ref reader, metaWidth, metaHeight, depth + 1, readMetaPrefix: false, out var metaPixels, out reason)) {
                 return false;
             }
             if (!TryBuildMetaGroups(metaPixels, out metaGroups, out groupCount)) {
@@ -650,9 +701,51 @@ internal static class WebpVp8lDecoder {
     }
 
     private static bool TryDecodeImageNoTransforms(ref WebpBitReader reader, int expectedWidth, int expectedHeight, int depth, out int[] transformed) {
+        return TryDecodeImageNoTransforms(ref reader, expectedWidth, expectedHeight, depth, readMetaPrefix: true, out transformed);
+    }
+
+    private static bool TryDecodeImageNoTransforms(
+        ref WebpBitReader reader,
+        int expectedWidth,
+        int expectedHeight,
+        int depth,
+        bool readMetaPrefix,
+        out int[] transformed) {
         transformed = Array.Empty<int>();
         if (expectedWidth <= 0 || expectedHeight <= 0) return false;
-        return TryDecodeImageCore(ref reader, expectedWidth, expectedHeight, depth, out transformed);
+
+        var baseReader = reader;
+
+        var probe = baseReader;
+        if (TryDecodeImageCore(ref probe, expectedWidth, expectedHeight, depth, readMetaPrefix, out transformed)) {
+            reader = probe;
+            return true;
+        }
+
+        var transformFlagProbe = baseReader;
+        var hasTransform = transformFlagProbe.ReadBits(1);
+        if (hasTransform == 0 && TryDecodeImageCore(ref transformFlagProbe, expectedWidth, expectedHeight, depth, readMetaPrefix, out transformed)) {
+            reader = transformFlagProbe;
+            return true;
+        }
+
+        var headerProbe = baseReader;
+        if (TryReadHeader(ref headerProbe, out var header) && header.Width == expectedWidth && header.Height == expectedHeight) {
+            var noTransformFlagProbe = headerProbe;
+            if (TryDecodeImageCore(ref noTransformFlagProbe, expectedWidth, expectedHeight, depth, readMetaPrefix, out transformed)) {
+                reader = noTransformFlagProbe;
+                return true;
+            }
+
+            var withTransformFlagProbe = headerProbe;
+            hasTransform = withTransformFlagProbe.ReadBits(1);
+            if (hasTransform == 0 && TryDecodeImageCore(ref withTransformFlagProbe, expectedWidth, expectedHeight, depth, readMetaPrefix, out transformed)) {
+                reader = withTransformFlagProbe;
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private static bool TryDecodeImageNoTransformsWithReason(
@@ -660,6 +753,24 @@ internal static class WebpVp8lDecoder {
         int expectedWidth,
         int expectedHeight,
         int depth,
+        out int[] transformed,
+        out string reason) {
+        return TryDecodeImageNoTransformsWithReason(
+            ref reader,
+            expectedWidth,
+            expectedHeight,
+            depth,
+            readMetaPrefix: true,
+            out transformed,
+            out reason);
+    }
+
+    private static bool TryDecodeImageNoTransformsWithReason(
+        ref WebpBitReader reader,
+        int expectedWidth,
+        int expectedHeight,
+        int depth,
+        bool readMetaPrefix,
         out int[] transformed,
         out string reason) {
         transformed = Array.Empty<int>();
@@ -670,11 +781,38 @@ internal static class WebpVp8lDecoder {
             return false;
         }
 
-        if (!TryDecodeImageCoreWithReason(ref reader, expectedWidth, expectedHeight, depth, out transformed, out reason)) {
-            return false;
+        var baseReader = reader;
+
+        var probe = baseReader;
+        if (TryDecodeImageCoreWithReason(ref probe, expectedWidth, expectedHeight, depth, readMetaPrefix, out transformed, out reason)) {
+            reader = probe;
+            return true;
         }
 
-        return true;
+        var transformFlagProbe = baseReader;
+        var hasTransform = transformFlagProbe.ReadBits(1);
+        if (hasTransform == 0 && TryDecodeImageCoreWithReason(ref transformFlagProbe, expectedWidth, expectedHeight, depth, readMetaPrefix, out transformed, out reason)) {
+            reader = transformFlagProbe;
+            return true;
+        }
+
+        var headerProbe = baseReader;
+        if (TryReadHeader(ref headerProbe, out var header) && header.Width == expectedWidth && header.Height == expectedHeight) {
+            var noTransformFlagProbe = headerProbe;
+            if (TryDecodeImageCoreWithReason(ref noTransformFlagProbe, expectedWidth, expectedHeight, depth, readMetaPrefix, out transformed, out reason)) {
+                reader = noTransformFlagProbe;
+                return true;
+            }
+
+            var withTransformFlagProbe = headerProbe;
+            hasTransform = withTransformFlagProbe.ReadBits(1);
+            if (hasTransform == 0 && TryDecodeImageCoreWithReason(ref withTransformFlagProbe, expectedWidth, expectedHeight, depth, readMetaPrefix, out transformed, out reason)) {
+                reader = withTransformFlagProbe;
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private static bool TryBuildMetaGroups(int[] metaPixels, out int[] metaGroups, out int groupCount) {
@@ -685,11 +823,10 @@ internal static class WebpVp8lDecoder {
         var maxGroup = 0;
         var groups = new int[metaPixels.Length];
         for (var i = 0; i < metaPixels.Length; i++) {
-            var green = (metaPixels[i] >> 8) & 0xFF;
-            groups[i] = green;
-            if (green > maxGroup) maxGroup = green;
+            var metaPrefixCode = (metaPixels[i] >> 8) & 0xFFFF; // red + green
+            groups[i] = metaPrefixCode;
+            if (metaPrefixCode > maxGroup) maxGroup = metaPrefixCode;
         }
-        if (maxGroup >= 256) return false;
 
         metaGroups = groups;
         groupCount = maxGroup + 1;
@@ -722,24 +859,24 @@ internal static class WebpVp8lDecoder {
         group = default;
         reason = string.Empty;
 
-        if (!WebpPrefixCodeReader.TryReadPrefixCode(ref reader, greenAlphabetSize, out var green)) {
-            reason = "Failed to read green prefix code.";
+        if (!WebpPrefixCodeReader.TryReadPrefixCodeWithReason(ref reader, greenAlphabetSize, out var green, out var greenReason)) {
+            reason = $"Failed to read green prefix code: {greenReason}";
             return false;
         }
-        if (!WebpPrefixCodeReader.TryReadPrefixCode(ref reader, literalAlphabetSize, out var red)) {
-            reason = "Failed to read red prefix code.";
+        if (!WebpPrefixCodeReader.TryReadPrefixCodeWithReason(ref reader, literalAlphabetSize, out var red, out var redReason)) {
+            reason = $"Failed to read red prefix code: {redReason}";
             return false;
         }
-        if (!WebpPrefixCodeReader.TryReadPrefixCode(ref reader, literalAlphabetSize, out var blue)) {
-            reason = "Failed to read blue prefix code.";
+        if (!WebpPrefixCodeReader.TryReadPrefixCodeWithReason(ref reader, literalAlphabetSize, out var blue, out var blueReason)) {
+            reason = $"Failed to read blue prefix code: {blueReason}";
             return false;
         }
-        if (!WebpPrefixCodeReader.TryReadPrefixCode(ref reader, literalAlphabetSize, out var alpha)) {
-            reason = "Failed to read alpha prefix code.";
+        if (!WebpPrefixCodeReader.TryReadPrefixCodeWithReason(ref reader, literalAlphabetSize, out var alpha, out var alphaReason)) {
+            reason = $"Failed to read alpha prefix code: {alphaReason}";
             return false;
         }
-        if (!WebpPrefixCodeReader.TryReadPrefixCode(ref reader, alphabetSize: 40, out var distance)) {
-            reason = "Failed to read distance prefix code.";
+        if (!WebpPrefixCodeReader.TryReadPrefixCodeWithReason(ref reader, alphabetSize: 40, out var distance, out var distanceReason)) {
+            reason = $"Failed to read distance prefix code: {distanceReason}";
             return false;
         }
 
