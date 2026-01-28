@@ -17,12 +17,12 @@ public sealed class QrPngCanvasBadgeOptions {
     public QrPngCanvasBadgePosition Position { get; set; } = QrPngCanvasBadgePosition.Top;
 
     /// <summary>
-    /// Badge width in pixels.
+    /// Badge width in pixels (0 disables drawing).
     /// </summary>
     public int WidthPx { get; set; } = 120;
 
     /// <summary>
-    /// Badge height in pixels.
+    /// Badge height in pixels (0 disables drawing).
     /// </summary>
     public int HeightPx { get; set; } = 32;
 
