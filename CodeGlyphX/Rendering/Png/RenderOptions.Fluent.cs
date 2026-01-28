@@ -122,6 +122,23 @@ public sealed partial class QrPngRenderOptions {
     }
 
     /// <summary>
+    /// Sets per-module shape mapping options.
+    /// </summary>
+    public QrPngRenderOptions WithModuleShapeMap(QrPngModuleShapeMapOptions? map) {
+        ModuleShapeMap = map;
+        return this;
+    }
+
+    /// <summary>
+    /// Sets per-module jitter options.
+    /// </summary>
+    public QrPngRenderOptions WithModuleJitter(QrPngModuleJitterOptions? jitter) {
+        ModuleJitter = jitter;
+        return this;
+    }
+
+
+    /// <summary>
     /// Sets the module corner radius in pixels.
     /// </summary>
     public QrPngRenderOptions WithModuleCornerRadiusPx(int radiusPx) {

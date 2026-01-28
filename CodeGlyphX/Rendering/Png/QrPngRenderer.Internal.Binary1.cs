@@ -203,6 +203,8 @@ public static partial class QrPngRenderer {
         if (opts.ForegroundPattern is not null) return false;
         if (opts.ForegroundPaletteZones is not null) return false;
         if (opts.ModuleScaleMap is not null) return false;
+        if (opts.ModuleShapeMap is not null) return false;
+        if (opts.ModuleJitter is not null) return false;
         if (opts.Eyes is not null) return false;
         if (opts.Logo is not null) return false;
         if (opts.Canvas is not null) return false;

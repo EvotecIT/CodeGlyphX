@@ -1432,6 +1432,227 @@ public sealed class QrPngRendererTests {
     }
 
     [Fact]
+    public void Render_With_Canvas_Band_Draws_Outside_Qr_Bounds() {
+        var qr = QrCodeEncoder.EncodeText("HELLO", QrErrorCorrectionLevel.H);
+        var moduleSize = 8;
+        var quietZone = 4;
+        var padding = 28;
+
+        var opts = new QrPngRenderOptions {
+            ModuleSize = moduleSize,
+            QuietZone = quietZone,
+            Foreground = Rgba32.Black,
+            Background = Rgba32.White,
+            Canvas = new QrPngCanvasOptions {
+                PaddingPx = padding,
+                CornerRadiusPx = 20,
+                Background = Rgba32.White,
+                Band = new QrPngCanvasBandOptions {
+                    BandPx = 12,
+                    GapPx = 0,
+                    RadiusPx = 18,
+                    Color = new Rgba32(30, 80, 160, 200),
+                },
+            },
+        };
+
+        var png = QrPngRenderer.Render(qr.Modules, opts);
+        var (rgba, width, height, stride) = PngTestDecoder.DecodeRgba32(png);
+
+        var qrFullPx = (qr.Size + quietZone * 2) * moduleSize;
+        var qrX0 = padding;
+        var qrY0 = padding;
+        var qrX1 = qrX0 + qrFullPx - 1;
+        var qrY1 = qrY0 + qrFullPx - 1;
+
+        var foundBand = false;
+        for (var y = 0; y < height && !foundBand; y++) {
+            for (var x = 0; x < width; x++) {
+                if (x >= qrX0 && x <= qrX1 && y >= qrY0 && y <= qrY1) continue;
+                var p = y * stride + x * 4;
+                var r = rgba[p + 0];
+                var g = rgba[p + 1];
+                var b = rgba[p + 2];
+                if (r != 255 || g != 255 || b != 255) {
+                    foundBand = true;
+                    break;
+                }
+            }
+        }
+
+        Assert.True(foundBand, "Expected band pixels outside the QR bounds.");
+    }
+
+    [Fact]
+    public void Render_With_Canvas_Band_Clamps_To_Padding_And_Stays_Outside_Qr() {
+        var matrix = new BitMatrix(21, 21);
+        var moduleSize = 6;
+        var quietZone = 4;
+        var padding = 12;
+
+        var opts = new QrPngRenderOptions {
+            ModuleSize = moduleSize,
+            QuietZone = quietZone,
+            Foreground = Rgba32.Black,
+            Background = Rgba32.White,
+            Canvas = new QrPngCanvasOptions {
+                PaddingPx = padding,
+                CornerRadiusPx = 16,
+                Background = Rgba32.White,
+                Band = new QrPngCanvasBandOptions {
+                    BandPx = 40,
+                    GapPx = 12,
+                    RadiusPx = 16,
+                    Color = new Rgba32(80, 120, 200, 200),
+                },
+            },
+        };
+
+        var png = QrPngRenderer.Render(matrix, opts);
+        var (rgba, width, height, stride) = PngTestDecoder.DecodeRgba32(png);
+
+        var qrFullPx = (matrix.Width + quietZone * 2) * moduleSize;
+        var qrX0 = padding;
+        var qrY0 = padding;
+        var qrX1 = qrX0 + qrFullPx - 1;
+        var qrY1 = qrY0 + qrFullPx - 1;
+
+        var foundBand = false;
+        for (var y = 0; y < height; y++) {
+            for (var x = 0; x < width; x++) {
+                var p = y * stride + x * 4;
+                var r = rgba[p + 0];
+                var g = rgba[p + 1];
+                var b = rgba[p + 2];
+
+                var insideQr = x >= qrX0 && x <= qrX1 && y >= qrY0 && y <= qrY1;
+                if (insideQr) {
+                    Assert.True(r == 255 && g == 255 && b == 255, "Band should not draw inside the QR bounds.");
+                } else if (r != 255 || g != 255 || b != 255) {
+                    foundBand = true;
+                }
+            }
+        }
+
+        Assert.True(foundBand, "Expected band pixels outside the QR bounds.");
+    }
+
+    [Fact]
+    public void Render_With_Zero_Size_Badge_Skips_Drawing() {
+        var matrix = new BitMatrix(21, 21);
+        var moduleSize = 6;
+        var quietZone = 4;
+        var padding = 20;
+
+        var opts = new QrPngRenderOptions {
+            ModuleSize = moduleSize,
+            QuietZone = quietZone,
+            Foreground = Rgba32.Black,
+            Background = Rgba32.White,
+            Canvas = new QrPngCanvasOptions {
+                PaddingPx = padding,
+                Background = Rgba32.White,
+                Badge = new QrPngCanvasBadgeOptions {
+                    Shape = QrPngCanvasBadgeShape.Badge,
+                    Position = QrPngCanvasBadgePosition.Top,
+                    WidthPx = 0,
+                    HeightPx = 24,
+                    GapPx = 8,
+                    Color = new Rgba32(200, 20, 60, 220),
+                },
+            },
+        };
+
+        var png = QrPngRenderer.Render(matrix, opts);
+        var (rgba, width, height, stride) = PngTestDecoder.DecodeRgba32(png);
+
+        var qrFullPx = (matrix.Width + quietZone * 2) * moduleSize;
+        var qrX0 = padding;
+        var qrY0 = padding;
+        var qrX1 = qrX0 + qrFullPx - 1;
+        var qrY1 = qrY0 + qrFullPx - 1;
+
+        var foundBadge = false;
+        for (var y = 0; y < height && !foundBadge; y++) {
+            for (var x = 0; x < width; x++) {
+                if (x >= qrX0 && x <= qrX1 && y >= qrY0 && y <= qrY1) continue;
+                var p = y * stride + x * 4;
+                var r = rgba[p + 0];
+                var g = rgba[p + 1];
+                var b = rgba[p + 2];
+                if (r != 255 || g != 255 || b != 255) {
+                    foundBadge = true;
+                    break;
+                }
+            }
+        }
+
+        Assert.False(foundBadge, "Did not expect badge pixels outside the QR bounds.");
+    }
+
+    [Fact]
+    public void Render_With_Tiny_Ribbon_Badge_Skips_Tails() {
+        var matrix = new BitMatrix(21, 21);
+        var moduleSize = 5;
+        var quietZone = 4;
+        var padding = 12;
+
+        var opts = new QrPngRenderOptions {
+            ModuleSize = moduleSize,
+            QuietZone = quietZone,
+            Foreground = Rgba32.Black,
+            Background = Rgba32.White,
+            Canvas = new QrPngCanvasOptions {
+                PaddingPx = padding,
+                Background = Rgba32.White,
+                Badge = new QrPngCanvasBadgeOptions {
+                    Shape = QrPngCanvasBadgeShape.Ribbon,
+                    Position = QrPngCanvasBadgePosition.Top,
+                    WidthPx = 1,
+                    HeightPx = 1,
+                    GapPx = 6,
+                    TailPx = 20,
+                    CornerRadiusPx = 0,
+                    Color = new Rgba32(180, 30, 80, 220),
+                },
+            },
+        };
+
+        var png = QrPngRenderer.Render(matrix, opts);
+        var (rgba, width, height, stride) = PngTestDecoder.DecodeRgba32(png);
+
+        var qrFullPx = (matrix.Width + quietZone * 2) * moduleSize;
+        var qrX0 = padding;
+        var qrY0 = padding;
+        var qrX1 = qrX0 + qrFullPx - 1;
+        var qrY1 = qrY0 + qrFullPx - 1;
+
+        var minX = width;
+        var minY = height;
+        var maxX = -1;
+        var maxY = -1;
+
+        for (var y = 0; y < height; y++) {
+            for (var x = 0; x < width; x++) {
+                if (x >= qrX0 && x <= qrX1 && y >= qrY0 && y <= qrY1) continue;
+                var p = y * stride + x * 4;
+                var r = rgba[p + 0];
+                var g = rgba[p + 1];
+                var b = rgba[p + 2];
+                if (r == 255 && g == 255 && b == 255) continue;
+
+                if (x < minX) minX = x;
+                if (y < minY) minY = y;
+                if (x > maxX) maxX = x;
+                if (y > maxY) maxY = y;
+            }
+        }
+
+        Assert.True(maxX >= 0, "Expected badge pixels outside the QR bounds.");
+        Assert.True(maxX - minX == 0 && maxY - minY == 0, "Expected no ribbon tails outside the badge bounds.");
+    }
+
+    [Fact]
     public void Render_With_Eye_InsetRing_Leaves_Center_Light_And_Ring_Dark() {
         var qr = QrCodeEncoder.EncodeText("HELLO", QrErrorCorrectionLevel.H);
 
@@ -1685,5 +1906,146 @@ public sealed class QrPngRendererTests {
         Assert.Equal(0, rgba[p + 0]);
         Assert.Equal(0, rgba[p + 1]);
         Assert.Equal(0, rgba[p + 2]);
+    }
+
+    [Fact]
+    public void Render_With_PatternMask_Reduces_Dark_Pixels() {
+        var matrix = new BitMatrix(1, 1);
+        matrix[0, 0] = true;
+
+        var solidOpts = new QrPngRenderOptions {
+            ModuleSize = 18,
+            QuietZone = 0,
+            Foreground = Rgba32.Black,
+            Background = Rgba32.White,
+        };
+
+        var maskOpts = new QrPngRenderOptions {
+            ModuleSize = 18,
+            QuietZone = 0,
+            Foreground = Rgba32.Black,
+            Background = Rgba32.White,
+            ForegroundPattern = new QrPngForegroundPatternOptions {
+                Type = QrPngForegroundPatternType.StippleDots,
+                SizePx = 4,
+                ThicknessPx = 2,
+                BlendMode = QrPngForegroundPatternBlendMode.Mask,
+                ApplyToModules = true,
+            },
+        };
+
+        var pngSolid = QrPngRenderer.Render(matrix, solidOpts);
+        var (rgbaSolid, widthSolid, heightSolid, strideSolid) = PngTestDecoder.DecodeRgba32(pngSolid);
+        var pngMasked = QrPngRenderer.Render(matrix, maskOpts);
+        var (rgbaMasked, widthMasked, heightMasked, strideMasked) = PngTestDecoder.DecodeRgba32(pngMasked);
+
+        static int CountDark(byte[] rgba, int width, int height, int stride) {
+            var count = 0;
+            for (var y = 0; y < height; y++) {
+                var row = y * stride;
+                for (var x = 0; x < width; x++) {
+                    var idx = row + x * 4;
+                    var r = rgba[idx + 0];
+                    var g = rgba[idx + 1];
+                    var b = rgba[idx + 2];
+                    if (r < 200 || g < 200 || b < 200) count++;
+                }
+            }
+            return count;
+        }
+
+        var solidCount = CountDark(rgbaSolid, widthSolid, heightSolid, strideSolid);
+        var maskedCount = CountDark(rgbaMasked, widthMasked, heightMasked, strideMasked);
+
+        Assert.True(maskedCount < solidCount, "Expected mask mode to reduce filled pixels.");
+    }
+
+    [Fact]
+    public void Render_With_ModuleJitter_Changes_With_Seed() {
+        var matrix = new BitMatrix(1, 1);
+        matrix[0, 0] = true;
+
+        static QrPngRenderOptions OptionsForSeed(int seed) => new() {
+            ModuleSize = 20,
+            QuietZone = 0,
+            Foreground = Rgba32.Black,
+            Background = Rgba32.White,
+            ModuleShape = QrPngModuleShape.Dot,
+            ModuleJitter = new QrPngModuleJitterOptions {
+                MaxOffsetPx = 3,
+                Seed = seed,
+            },
+        };
+
+        static int Fingerprint(byte[] rgba, int width, int height, int stride) {
+            var hash = unchecked((int)2166136261);
+            var length = height * stride;
+            for (var i = 0; i < length; i++) {
+                hash ^= rgba[i];
+                hash = unchecked(hash * 16777619);
+            }
+            return hash;
+        }
+
+        var pngA = QrPngRenderer.Render(matrix, OptionsForSeed(100));
+        var (rgbaA, widthA, heightA, strideA) = PngTestDecoder.DecodeRgba32(pngA);
+        var pngB = QrPngRenderer.Render(matrix, OptionsForSeed(200));
+        var (rgbaB, widthB, heightB, strideB) = PngTestDecoder.DecodeRgba32(pngB);
+
+        Assert.Equal(widthA, widthB);
+        Assert.Equal(heightA, heightB);
+
+        var fpA = Fingerprint(rgbaA, widthA, heightA, strideA);
+        var fpB = Fingerprint(rgbaB, widthB, heightB, strideB);
+        Assert.NotEqual(fpA, fpB);
+    }
+
+    [Fact]
+    public void Render_With_ShapeMap_Produces_Mixed_Shapes() {
+        var matrix = new BitMatrix(2, 2);
+        matrix[0, 0] = true;
+        matrix[1, 0] = true;
+        matrix[0, 1] = true;
+        matrix[1, 1] = true;
+
+        var baseOpts = new QrPngRenderOptions {
+            ModuleSize = 14,
+            QuietZone = 0,
+            Foreground = Rgba32.Black,
+            Background = Rgba32.White,
+            ModuleShape = QrPngModuleShape.Square,
+        };
+
+        var mapOpts = new QrPngRenderOptions {
+            ModuleSize = 14,
+            QuietZone = 0,
+            Foreground = Rgba32.Black,
+            Background = Rgba32.White,
+            ModuleShape = QrPngModuleShape.Square,
+            ModuleShapeMap = new QrPngModuleShapeMapOptions {
+                Mode = QrPngModuleShapeMapMode.Checker,
+                PrimaryShape = QrPngModuleShape.Square,
+                SecondaryShape = QrPngModuleShape.Dot,
+            },
+        };
+
+        var pngBase = QrPngRenderer.Render(matrix, baseOpts);
+        var (rgbaBase, widthBase, heightBase, strideBase) = PngTestDecoder.DecodeRgba32(pngBase);
+        var pngMap = QrPngRenderer.Render(matrix, mapOpts);
+        var (rgbaMap, widthMap, heightMap, strideMap) = PngTestDecoder.DecodeRgba32(pngMap);
+
+        static int Fingerprint(byte[] rgba, int width, int height, int stride) {
+            var hash = unchecked((int)2166136261);
+            var length = height * stride;
+            for (var i = 0; i < length; i++) {
+                hash ^= rgba[i];
+                hash = unchecked(hash * 16777619);
+            }
+            return hash;
+        }
+
+        Assert.Equal(widthBase, widthMap);
+        Assert.Equal(heightBase, heightMap);
+        Assert.NotEqual(Fingerprint(rgbaBase, widthBase, heightBase, strideBase), Fingerprint(rgbaMap, widthMap, heightMap, strideMap));
     }
 }

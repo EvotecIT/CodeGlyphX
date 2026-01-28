@@ -18,6 +18,8 @@ public static partial class QrPngRenderer {
             && opts.ForegroundPattern is null
             && opts.ForegroundPaletteZones is null
             && opts.ModuleScaleMap is null
+            && opts.ModuleShapeMap is null
+            && opts.ModuleJitter is null
             && opts.Eyes is null
             && opts.Logo is null
             && opts.Canvas is null
