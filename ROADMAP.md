@@ -34,6 +34,7 @@ This list is mostly **work we still want to do**. The "Recently completed" secti
 - net472 parity documentation (feature matrix + guidance).
 - Added stylized art decode pack to scenario runs with pass‑rate + timing summaries.
 - CI: PR website build check (static output) before merge.
+- Managed WebP VP8 lossy encode (intra), alpha (ALPH), segmentation, and skip-coefficient support. [formats][webp]
 
 ## Milestones (priority, no dates)
 ### P0 — Reliability & clarity
@@ -52,7 +53,7 @@ This list is mostly **work we still want to do**. The "Recently completed" secti
 - Preset schema + v1 packs/shape sets/palettes. [style]
 
 ### P2 — Platform breadth & UX
-- WebP decode + encode (lossless now; add VP8 lossy + animation). [formats][webp]
+- WebP decode + encode (lossless + VP8 lossy intra complete; remaining: VP8 inter + lossy animation). [formats][webp]
 - Expand format corpus (JPEG progressive/CMYK, GIF variants, BMP/ICO edge cases) and schedule periodic **local** full runs. [formats]
 - AOT evaluation + documentation of safe paths. [aot]
 - Add symbology packs + golden vectors (MaxiCode, rMQR, etc.). [symbology][tests]
@@ -106,7 +107,7 @@ This list is mostly **work we still want to do**. The "Recently completed" secti
 - Website: add marketing gallery + download links (use generated assets, not manual images). [style][ux]
 
 ## Backlog — Image formats
-- WebP: finish managed coverage (multi-frame animation, VP8 lossy encode, broader VP8L features). [formats][webp]
+- WebP: finish managed coverage (VP8 inter, lossy animation frames, broader VP8L features). [formats][webp]
 - Expand format corpus (JPEG progressive/CMYK, GIF variants, BMP/ICO edge cases) and schedule periodic **local** full runs. [formats]
 
 ## Backlog — Platform & runtime
