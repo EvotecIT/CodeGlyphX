@@ -112,15 +112,39 @@ internal static class WebpVp8Decoder {
         height = 0;
 
         if (!TryReadHeader(payload, out var header)) return false;
-        if (!TryDecodeKeyframe(payload, header, out rgba)) return false;
+        if (!TryDecodeKeyframe(payload, header, out rgba, out _)) return false;
 
         width = header.Width;
         height = header.Height;
         return true;
     }
 
-    private static bool TryDecodeKeyframe(ReadOnlySpan<byte> payload, WebpVp8Header header, out byte[] rgba) {
+    internal static bool TryDecodeWithStats(
+        ReadOnlySpan<byte> payload,
+        out byte[] rgba,
+        out int width,
+        out int height,
+        out WebpVp8DecodeStats stats) {
         rgba = Array.Empty<byte>();
+        width = 0;
+        height = 0;
+        stats = default;
+
+        if (!TryReadHeader(payload, out var header)) return false;
+        if (!TryDecodeKeyframe(payload, header, out rgba, out stats)) return false;
+
+        width = header.Width;
+        height = header.Height;
+        return true;
+    }
+
+    private static bool TryDecodeKeyframe(
+        ReadOnlySpan<byte> payload,
+        WebpVp8Header header,
+        out byte[] rgba,
+        out WebpVp8DecodeStats stats) {
+        rgba = Array.Empty<byte>();
+        stats = default;
 
         if (!TryGetBoolCodedData(payload, out var boolData)) return false;
         var headerDecoder = new WebpVp8BoolDecoder(boolData);
@@ -216,6 +240,17 @@ internal static class WebpVp8Decoder {
             SwapRowContexts(ref vNzAbove, ref vNzCurrent);
         }
 
+        var macroblocksWithCoefficients = 0;
+        var skippedMacroblocks = 0;
+        for (var i = 0; i < macroblocks.Length; i++) {
+            if (macroblockHasCoefficients[i]) {
+                macroblocksWithCoefficients++;
+            }
+            if (macroblocks[i].SkipCoefficients) {
+                skippedMacroblocks++;
+            }
+        }
+
         ApplyLoopFilter(
             frameHeader.LoopFilter,
             frameHeader.Segmentation,
@@ -231,6 +266,7 @@ internal static class WebpVp8Decoder {
             isKeyframe: true);
 
         rgba = ConvertPlanesToRgba(width, height, yPlane, uPlane, vPlane, chromaWidth, chromaHeight);
+        stats = new WebpVp8DecodeStats(macroblocks.Length, macroblocksWithCoefficients, skippedMacroblocks);
         return true;
     }
 
@@ -3350,6 +3386,18 @@ internal readonly struct WebpVp8Header {
     public int HorizontalScale { get; }
     public int VerticalScale { get; }
     public int BitsConsumed { get; }
+}
+
+internal readonly struct WebpVp8DecodeStats {
+    public WebpVp8DecodeStats(int macroblockCount, int macroblocksWithCoefficients, int skippedMacroblocks) {
+        MacroblockCount = macroblockCount;
+        MacroblocksWithCoefficients = macroblocksWithCoefficients;
+        SkippedMacroblocks = skippedMacroblocks;
+    }
+
+    public int MacroblockCount { get; }
+    public int MacroblocksWithCoefficients { get; }
+    public int SkippedMacroblocks { get; }
 }
 
 internal readonly struct WebpVp8ControlHeader {

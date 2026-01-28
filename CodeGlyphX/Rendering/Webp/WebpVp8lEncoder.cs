@@ -157,10 +157,8 @@ internal static class WebpVp8lEncoder {
         var indexedRgba = BuildIndexedImageRgba(rgba, width, height, stride, palette, widthBits, encodedWidth);
         var paletteDeltasRgba = BuildPaletteDeltaRgba(palette);
 
-        // Palette subimage: no transform section.
+        // Palette subimage: no header, no transforms.
         var paletteWriter = new WebpBitWriter();
-        var paletteAlphaUsed = PaletteUsesAlpha(palette);
-        WriteHeader(paletteWriter, palette.Length, height: 1, paletteAlphaUsed);
         if (!TryWriteImageCore(paletteWriter, paletteDeltasRgba, palette.Length, height: 1, palette.Length * 4, out reason)) return false;
 
         var alphaUsed = ComputeAlphaUsed(rgba, width, height, stride);
@@ -212,7 +210,6 @@ internal static class WebpVp8lEncoder {
         var residualRgba = BuildResidualImage(pixels, width, height, sizeBits, transformWidth, modes);
 
         var predictorWriter = new WebpBitWriter();
-        WriteHeader(predictorWriter, transformWidth, transformHeight, alphaUsed: false);
         if (!TryWriteImageCore(predictorWriter, predictorRgba, transformWidth, transformHeight, transformWidth * 4, out reason)) {
             return false;
         }

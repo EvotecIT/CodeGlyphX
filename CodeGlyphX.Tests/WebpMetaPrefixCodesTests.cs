@@ -51,13 +51,7 @@ public sealed class WebpMetaPrefixCodesTests {
     }
 
     private static void WriteMetaImage(BitWriterLsb writer) {
-        // Meta image header (2x1).
-        writer.WriteBits(0x2F, 8);
-        writer.WriteBits(2 - 1, 14);
-        writer.WriteBits(1 - 1, 14);
-        writer.WriteBits(0, 1); // alpha hint
-        writer.WriteBits(0, 3); // version
-
+        // Meta image data (2x1), no header and no transforms.
         writer.WriteBits(0, 1); // no color cache
         writer.WriteBits(0, 1); // no meta prefix codes
 

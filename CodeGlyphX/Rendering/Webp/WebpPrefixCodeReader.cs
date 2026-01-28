@@ -131,4 +131,3 @@ internal static class WebpPrefixCodeReader {
         return true;
     }
 }
-

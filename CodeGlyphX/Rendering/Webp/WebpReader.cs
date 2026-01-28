@@ -1,15 +1,10 @@
 using System;
-using System.Runtime.InteropServices;
 
 namespace CodeGlyphX.Rendering.Webp;
 
 /// <summary>
-/// Minimal WebP container parsing plus native decode via libwebp when available.
+/// Minimal WebP container parsing plus managed decode (VP8/VP8L stills).
 /// </summary>
-/// <remarks>
-/// This native decode path is a temporary fallback and should be replaced by a
-/// fully managed decoder when available.
-/// </remarks>
 public static class WebpReader {
     private const uint FourCcRiff = 0x46464952; // "RIFF"
     private const uint FourCcWebp = 0x50424557; // "WEBP"
@@ -68,28 +63,15 @@ public static class WebpReader {
     }
 
     /// <summary>
-    /// Decodes a WebP image to RGBA32 using native libwebp when available.
+    /// Decodes a WebP image to RGBA32 using the managed VP8/VP8L decoder.
     /// </summary>
     public static byte[] DecodeRgba32(ReadOnlySpan<byte> data, out int width, out int height) {
         if (!IsWebp(data)) throw new FormatException("Invalid WebP container.");
         if (WebpManagedDecoder.TryDecodeRgba32(data, out var managedRgba, out width, out height)) {
             return managedRgba;
         }
-        if (!IsNativeAvailable) {
-            throw new FormatException("WebP decode requires native libwebp (temporary fallback until managed decode is implemented).");
-        }
-
-        var buffer = data.ToArray();
-        if (!WebpNative.TryDecodeRgba32(buffer, out var rgba, out width, out height)) {
-            throw new FormatException("WebP decode failed using native libwebp (temporary fallback until managed decode is implemented).");
-        }
-        return rgba;
+        throw new FormatException("Unsupported or invalid WebP. Managed decode supports VP8/VP8L still images and animated WebP (first frame).");
     }
-
-    /// <summary>
-    /// Gets whether native libwebp appears to be available for decode on this machine.
-    /// </summary>
-    public static bool IsNativeAvailable => WebpNative.IsAvailable;
 
     private static bool TryReadVp8XSize(ReadOnlySpan<byte> chunk, out int width, out int height) {
         width = 0;
@@ -141,209 +123,4 @@ public static class WebpReader {
             | (data[offset + 3] << 24));
     }
 
-    private static class WebpNative {
-        private static readonly Lazy<bool> _isAvailable = new Lazy<bool>(ProbeNativeAvailability);
-
-        public static bool IsAvailable => _isAvailable.Value;
-
-        public static bool TryDecodeRgba32(byte[] data, out byte[] rgba, out int width, out int height) {
-            rgba = Array.Empty<byte>();
-            width = 0;
-            height = 0;
-            if (data.Length == 0) return false;
-
-            var decoded = TryDecode(data, out var w, out var h);
-            if (decoded == IntPtr.Zero || w <= 0 || h <= 0) return false;
-
-            try {
-                var pixelBytes = checked(w * h * 4);
-                rgba = new byte[pixelBytes];
-                Marshal.Copy(decoded, rgba, 0, rgba.Length);
-                width = w;
-                height = h;
-                return true;
-            } finally {
-                TryFree(decoded);
-            }
-        }
-
-        private static IntPtr TryDecode(byte[] data, out int width, out int height) {
-            width = 0;
-            height = 0;
-            try {
-                var ptr = WebPDecodeRGBA_libwebp(data, (UIntPtr)(uint)data.Length, out width, out height);
-                if (ptr != IntPtr.Zero && width > 0 && height > 0) return ptr;
-            } catch (DllNotFoundException) {
-            } catch (EntryPointNotFoundException) {
-            } catch (BadImageFormatException) {
-            }
-
-            try {
-                var ptr = WebPDecodeRGBA_so7(data, (UIntPtr)(uint)data.Length, out width, out height);
-                if (ptr != IntPtr.Zero && width > 0 && height > 0) return ptr;
-            } catch (DllNotFoundException) {
-            } catch (EntryPointNotFoundException) {
-            } catch (BadImageFormatException) {
-            }
-
-            try {
-                var ptr = WebPDecodeRGBA_so(data, (UIntPtr)(uint)data.Length, out width, out height);
-                if (ptr != IntPtr.Zero && width > 0 && height > 0) return ptr;
-            } catch (DllNotFoundException) {
-            } catch (EntryPointNotFoundException) {
-            } catch (BadImageFormatException) {
-            }
-
-            try {
-                var ptr = WebPDecodeRGBA_dll(data, (UIntPtr)(uint)data.Length, out width, out height);
-                if (ptr != IntPtr.Zero && width > 0 && height > 0) return ptr;
-            } catch (DllNotFoundException) {
-            } catch (EntryPointNotFoundException) {
-            } catch (BadImageFormatException) {
-            }
-
-            try {
-                var ptr = WebPDecodeRGBA_dylib(data, (UIntPtr)(uint)data.Length, out width, out height);
-                if (ptr != IntPtr.Zero && width > 0 && height > 0) return ptr;
-            } catch (DllNotFoundException) {
-            } catch (EntryPointNotFoundException) {
-            } catch (BadImageFormatException) {
-            }
-
-            width = 0;
-            height = 0;
-            return IntPtr.Zero;
-        }
-
-        private static void TryFree(IntPtr ptr) {
-            if (ptr == IntPtr.Zero) return;
-            try {
-                WebPFree_libwebp(ptr);
-                return;
-            } catch (DllNotFoundException) {
-            } catch (EntryPointNotFoundException) {
-            } catch (BadImageFormatException) {
-            }
-
-            try {
-                WebPFree_so7(ptr);
-                return;
-            } catch (DllNotFoundException) {
-            } catch (EntryPointNotFoundException) {
-            } catch (BadImageFormatException) {
-            }
-
-            try {
-                WebPFree_so(ptr);
-                return;
-            } catch (DllNotFoundException) {
-            } catch (EntryPointNotFoundException) {
-            } catch (BadImageFormatException) {
-            }
-
-            try {
-                WebPFree_dll(ptr);
-                return;
-            } catch (DllNotFoundException) {
-            } catch (EntryPointNotFoundException) {
-            } catch (BadImageFormatException) {
-            }
-
-            try {
-                WebPFree_dylib(ptr);
-            } catch (DllNotFoundException) {
-            } catch (EntryPointNotFoundException) {
-            } catch (BadImageFormatException) {
-            }
-        }
-
-        private static bool ProbeNativeAvailability() {
-            try {
-                var version = WebPGetDecoderVersion_libwebp();
-                if (version != 0) return true;
-            } catch (DllNotFoundException) {
-            } catch (EntryPointNotFoundException) {
-            } catch (BadImageFormatException) {
-            }
-
-            try {
-                var version = WebPGetDecoderVersion_so7();
-                if (version != 0) return true;
-            } catch (DllNotFoundException) {
-            } catch (EntryPointNotFoundException) {
-            } catch (BadImageFormatException) {
-            }
-
-            try {
-                var version = WebPGetDecoderVersion_so();
-                if (version != 0) return true;
-            } catch (DllNotFoundException) {
-            } catch (EntryPointNotFoundException) {
-            } catch (BadImageFormatException) {
-            }
-
-            try {
-                var version = WebPGetDecoderVersion_dll();
-                if (version != 0) return true;
-            } catch (DllNotFoundException) {
-            } catch (EntryPointNotFoundException) {
-            } catch (BadImageFormatException) {
-            }
-
-            try {
-                var version = WebPGetDecoderVersion_dylib();
-                if (version != 0) return true;
-            } catch (DllNotFoundException) {
-            } catch (EntryPointNotFoundException) {
-            } catch (BadImageFormatException) {
-            }
-
-            return false;
-        }
-
-        [DllImport("libwebp", EntryPoint = "WebPGetDecoderVersion")]
-        private static extern int WebPGetDecoderVersion_libwebp();
-
-        [DllImport("libwebp.so.7", EntryPoint = "WebPGetDecoderVersion")]
-        private static extern int WebPGetDecoderVersion_so7();
-
-        [DllImport("libwebp.so", EntryPoint = "WebPGetDecoderVersion")]
-        private static extern int WebPGetDecoderVersion_so();
-
-        [DllImport("libwebp.dll", EntryPoint = "WebPGetDecoderVersion")]
-        private static extern int WebPGetDecoderVersion_dll();
-
-        [DllImport("libwebp.dylib", EntryPoint = "WebPGetDecoderVersion")]
-        private static extern int WebPGetDecoderVersion_dylib();
-
-        [DllImport("libwebp", EntryPoint = "WebPDecodeRGBA")]
-        private static extern IntPtr WebPDecodeRGBA_libwebp(byte[] data, UIntPtr dataSize, out int width, out int height);
-
-        [DllImport("libwebp.so.7", EntryPoint = "WebPDecodeRGBA")]
-        private static extern IntPtr WebPDecodeRGBA_so7(byte[] data, UIntPtr dataSize, out int width, out int height);
-
-        [DllImport("libwebp.so", EntryPoint = "WebPDecodeRGBA")]
-        private static extern IntPtr WebPDecodeRGBA_so(byte[] data, UIntPtr dataSize, out int width, out int height);
-
-        [DllImport("libwebp.dll", EntryPoint = "WebPDecodeRGBA")]
-        private static extern IntPtr WebPDecodeRGBA_dll(byte[] data, UIntPtr dataSize, out int width, out int height);
-
-        [DllImport("libwebp.dylib", EntryPoint = "WebPDecodeRGBA")]
-        private static extern IntPtr WebPDecodeRGBA_dylib(byte[] data, UIntPtr dataSize, out int width, out int height);
-
-        [DllImport("libwebp", EntryPoint = "WebPFree")]
-        private static extern void WebPFree_libwebp(IntPtr pointer);
-
-        [DllImport("libwebp.so.7", EntryPoint = "WebPFree")]
-        private static extern void WebPFree_so7(IntPtr pointer);
-
-        [DllImport("libwebp.so", EntryPoint = "WebPFree")]
-        private static extern void WebPFree_so(IntPtr pointer);
-
-        [DllImport("libwebp.dll", EntryPoint = "WebPFree")]
-        private static extern void WebPFree_dll(IntPtr pointer);
-
-        [DllImport("libwebp.dylib", EntryPoint = "WebPFree")]
-        private static extern void WebPFree_dylib(IntPtr pointer);
-    }
 }

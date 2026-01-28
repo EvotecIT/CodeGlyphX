@@ -41,8 +41,13 @@ internal sealed class WebpPrefixCode {
         }
 
         if (nonZero == 0) {
-            // A fully empty code is not decodable in our current scaffold.
-            return false;
+            // Treat an empty code as a single-symbol code for symbol 0 (per VP8L spec).
+            code = new WebpPrefixCode(
+                left: Array.Empty<int>(),
+                right: Array.Empty<int>(),
+                symbol: Array.Empty<int>(),
+                singleSymbol: 0);
+            return true;
         }
 
         if (!IsValidTree(counts, maxBits, nonZero)) return false;
@@ -155,6 +160,7 @@ internal sealed class WebpPrefixCode {
             weight += (long)count << (maxBits - bits);
             if (weight > full) return false;
         }
-        return weight == full;
+        // WebP allows incomplete trees as long as they are not over-subscribed.
+        return weight > 0 && weight <= full;
     }
 }

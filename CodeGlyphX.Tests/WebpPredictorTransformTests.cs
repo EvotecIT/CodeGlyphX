@@ -62,14 +62,7 @@ public sealed class WebpPredictorTransformTests {
     }
 
     private static void WritePredictorSubImage(BitWriterLsb writer) {
-        // Predictor subimage header (1x1).
-        writer.WriteBits(0x2F, 8);
-        writer.WriteBits(1 - 1, 14);
-        writer.WriteBits(1 - 1, 14);
-        writer.WriteBits(0, 1);
-        writer.WriteBits(0, 3);
-
-        // No color cache, no meta.
+        // Predictor subimage data (1x1), no header and no transforms.
         writer.WriteBits(0, 1);
         writer.WriteBits(0, 1);
 
@@ -157,4 +150,3 @@ public sealed class WebpPredictorTransformTests {
         public byte[] ToArray() => _bytes.ToArray();
     }
 }
-

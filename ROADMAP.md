@@ -70,16 +70,6 @@ This list contains **only work we still want to do** (no already‑done items).
 - Decoder test packs + golden vectors for any newly added symbologies.
 
 ## Image formats (weeks)
-- WebP **decode** (lossless + VP8).
-- WebP decode status (2026-01-27): container detection + dimension parsing (VP8X / VP8L / VP8).
-- WebP decode status (2026-01-27): temporary native `libwebp` fallback for decode.
-- WebP decode status (2026-01-27): managed decoder track — VP8L (lossless) first, then VP8.
-- WebP decode status (2026-01-27): managed VP8L scaffolding — LSB bit reader + header parser + tests.
-- WebP decode status (2026-01-27): managed VP8L scaffolding — prefix-code parsing (simple + normal) + tests.
-- WebP decode status (2026-01-27): managed VP8L minimal decode — literal-only subset (no cache, no backrefs, no meta).
-- WebP decode status (2026-01-27): managed VP8L minimal decode — adds backrefs + distance mapping (still no cache/meta).
-- WebP decode status (2026-01-27): managed VP8L minimal decode — color cache wired in (no meta prefix codes yet).
-- WebP decode status (2026-01-27): managed VP8L minimal decode — meta prefix codes support with entropy image.
-- WebP decode status (2026-01-27): managed VP8L transforms — subtract-green + predictor + color + color indexing (managed).
-- Optional: WebP **encode** (lossless first).
+- WebP decode: expose multi-frame animated output (current decode returns first frame only).
+- WebP encode: expand VP8L encoder beyond the current subset; evaluate VP8 lossy encode.
 - Expand the image format corpus (JPEG progressive/CMYK, GIF variants, BMP/ICO edge cases) and add a scheduled CI run.

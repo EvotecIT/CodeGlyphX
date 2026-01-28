@@ -58,14 +58,7 @@ public sealed class WebpTransformSequenceTests {
     }
 
     private static void WritePaletteSubImage(BitWriterLsb writer) {
-        // Palette subimage header (4x1).
-        writer.WriteBits(0x2F, 8);
-        writer.WriteBits(4 - 1, 14);
-        writer.WriteBits(1 - 1, 14);
-        writer.WriteBits(0, 1);
-        writer.WriteBits(0, 3);
-
-        // No color cache, no meta.
+        // Palette subimage data (4x1), no header and no transforms.
         writer.WriteBits(0, 1);
         writer.WriteBits(0, 1);
 
@@ -169,4 +162,3 @@ public sealed class WebpTransformSequenceTests {
         public byte[] ToArray() => _bytes.ToArray();
     }
 }
-
