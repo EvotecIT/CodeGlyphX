@@ -184,38 +184,28 @@ svg {
     gap: 0.5rem;
 }
 
-/* Theme toggle - 3-button group */
-.theme-toggle {
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-    padding: 0.25rem;
-    background: var(--bg-card);
-    border-radius: 8px;
-}
-
-.theme-toggle button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 32px;
-    height: 32px;
-    padding: 0;
+/* Theme cycle button */
+.theme-cycle-btn {
     background: transparent;
     border: none;
-    border-radius: 6px;
-    color: var(--text-muted);
     cursor: pointer;
+    color: var(--text-muted);
 }
 
-.theme-toggle button.active {
-    background: var(--primary);
-    color: white;
+/* Pricing page icons - prevent flash */
+.pricing-card-icon {
+    width: 48px;
+    height: 48px;
 }
 
-.theme-toggle button svg {
-    width: 18px;
-    height: 18px;
+.pricing-card-icon svg {
+    width: 40px;
+    height: 40px;
+}
+
+.pricing-btn svg {
+    width: 16px;
+    height: 16px;
 }
 
 /* Blazor error UI - hidden by default */

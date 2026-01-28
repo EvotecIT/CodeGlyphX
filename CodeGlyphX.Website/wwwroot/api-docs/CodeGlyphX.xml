@@ -6993,6 +6993,30 @@
         <member name="M:CodeGlyphX.Payloads.QrParsedData.PayPal.#ctor(System.String,System.Nullable{System.Decimal},System.String,System.String)">
             <summary>PayPal payment payload (PayPal.Me).</summary>
         </member>
+        <member name="T:CodeGlyphX.Payloads.QrParsedData.Crypto">
+            <summary>Crypto/payment URI payload (bitcoin:, monero:, etc.).</summary>
+        </member>
+        <member name="M:CodeGlyphX.Payloads.QrParsedData.Crypto.#ctor(System.String,System.String,System.Nullable{System.Decimal},System.String,System.String,System.Collections.Generic.IReadOnlyDictionary{System.String,System.String})">
+            <summary>Crypto/payment URI payload (bitcoin:, monero:, etc.).</summary>
+        </member>
+        <member name="T:CodeGlyphX.Payloads.QrParsedData.EmvCoMerchant">
+            <summary>EMVCo merchant-presented payment payload.</summary>
+        </member>
+        <member name="M:CodeGlyphX.Payloads.QrParsedData.EmvCoMerchant.#ctor(System.String,System.String,System.String,System.Nullable{System.Decimal},System.String,System.String,System.String,System.Collections.Generic.IReadOnlyDictionary{System.String,System.String},System.Boolean)">
+            <summary>EMVCo merchant-presented payment payload.</summary>
+        </member>
+        <member name="T:CodeGlyphX.Payloads.QrParsedData.Lightning">
+            <summary>Lightning payment invoice (BOLT11/12).</summary>
+        </member>
+        <member name="M:CodeGlyphX.Payloads.QrParsedData.Lightning.#ctor(System.String,System.String)">
+            <summary>Lightning payment invoice (BOLT11/12).</summary>
+        </member>
+        <member name="T:CodeGlyphX.Payloads.QrParsedData.Eip681">
+            <summary>EIP-681 Ethereum payment request.</summary>
+        </member>
+        <member name="M:CodeGlyphX.Payloads.QrParsedData.Eip681.#ctor(System.String,System.Nullable{System.Int64},System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.String,System.Collections.Generic.IReadOnlyDictionary{System.String,System.String})">
+            <summary>EIP-681 Ethereum payment request.</summary>
+        </member>
         <member name="T:CodeGlyphX.Payloads.QrParsedPayload">
             <summary>
             Parsed QR payload with detected type and optional raw value.
@@ -8085,6 +8109,18 @@
         </member>
         <member name="F:CodeGlyphX.Payloads.QrPayloadType.PayPal">
             <summary>PayPal payment payload.</summary>
+        </member>
+        <member name="F:CodeGlyphX.Payloads.QrPayloadType.Crypto">
+            <summary>Crypto/payment URI payload.</summary>
+        </member>
+        <member name="F:CodeGlyphX.Payloads.QrPayloadType.EmvCoMerchant">
+            <summary>EMVCo merchant-presented payment payload.</summary>
+        </member>
+        <member name="F:CodeGlyphX.Payloads.QrPayloadType.Lightning">
+            <summary>Lightning payment invoice (BOLT11/12).</summary>
+        </member>
+        <member name="F:CodeGlyphX.Payloads.QrPayloadType.Eip681">
+            <summary>EIP-681 Ethereum payment request.</summary>
         </member>
         <member name="T:CodeGlyphX.Payloads.QrPayloadValidationResult">
             <summary>
@@ -10625,6 +10661,11 @@
             Sets module scale override (0.1..1.0).
             </summary>
         </member>
+        <member name="M:CodeGlyphX.QR.QrBuilder.WithModuleScaleMap(CodeGlyphX.Rendering.Png.QrPngModuleScaleMapOptions)">
+            <summary>
+            Sets module scale map.
+            </summary>
+        </member>
         <member name="M:CodeGlyphX.QR.QrBuilder.WithModuleCornerRadiusPx(System.Int32)">
             <summary>
             Sets module corner radius in pixels.
@@ -10633,6 +10674,26 @@
         <member name="M:CodeGlyphX.QR.QrBuilder.WithForegroundGradient(CodeGlyphX.Rendering.Png.QrPngGradientOptions)">
             <summary>
             Sets the foreground gradient.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QR.QrBuilder.WithBackgroundGradient(CodeGlyphX.Rendering.Png.QrPngGradientOptions)">
+            <summary>
+            Sets the background gradient.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QR.QrBuilder.WithForegroundPalette(CodeGlyphX.Rendering.Png.QrPngPaletteOptions)">
+            <summary>
+            Sets the foreground palette.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QR.QrBuilder.WithCanvas(CodeGlyphX.Rendering.Png.QrPngCanvasOptions)">
+            <summary>
+            Sets the canvas options.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QR.QrBuilder.WithForegroundPaletteZones(CodeGlyphX.Rendering.Png.QrPngPaletteZoneOptions)">
+            <summary>
+            Sets palette overrides for specific zones.
             </summary>
         </member>
         <member name="M:CodeGlyphX.QR.QrBuilder.WithEyes(CodeGlyphX.Rendering.Png.QrPngEyeOptions)">
@@ -12005,6 +12066,166 @@
             Defaults to PNG when no extension is provided.
             </summary>
         </member>
+        <member name="T:CodeGlyphX.QrArt">
+            <summary>
+            High-level QR art helpers.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrArt.Theme(CodeGlyphX.QrArtTheme,CodeGlyphX.QrArtVariant,System.Int32,CodeGlyphX.QrArtSafetyMode)">
+            <summary>
+            Creates a single art configuration using a theme, variant, and intensity.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.QrArtOptions">
+            <summary>
+            High-level QR art options that map to scan-friendly render settings.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.QrArtOptions.Theme">
+            <summary>
+            Theme to apply.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.QrArtOptions.Variant">
+            <summary>
+            Variant to apply within the theme.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.QrArtOptions.Intensity">
+            <summary>
+            Art intensity (0..100). Higher values increase decorative effects.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.QrArtOptions.SafetyMode">
+            <summary>
+            Safety guardrail strength applied after the theme.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.QrArtPresets">
+            <summary>
+            Expressive QR art presets with scan-friendly defaults.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrArtPresets.NeonGlow">
+            <summary>
+            High-contrast neon glow on a dark canvas.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrArtPresets.LiquidGlass">
+            <summary>
+            Soft, glassy gradients with smooth squircles.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrArtPresets.ConnectedSquircleGlow">
+            <summary>
+            Connected squircles with a bold, modern glow.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrArtPresets.CutCornerTech">
+            <summary>
+            Techy cut-corner eyes with structured palettes.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrArtPresets.InsetRings">
+            <summary>
+            Inset-ring eyes with orderly ring palettes.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrArtPresets.StripeEyes">
+            <summary>
+            Stripe-textured eyes with calm module styling.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrArtPresets.PaintSplash">
+            <summary>
+            Paint-splash canvas with crisp, scan-friendly modules.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrArtPresets.PaintSplashPastel">
+            <summary>
+            Pastel paint-splash canvas with a softer palette.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrArtPresets.NeonGlowSafe">
+            <summary>
+            Explicit scan-safe variant of <see cref="M:CodeGlyphX.QrArtPresets.NeonGlow"/>.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrArtPresets.NeonGlowBold">
+            <summary>
+            Bolder variant of <see cref="M:CodeGlyphX.QrArtPresets.NeonGlow"/> with stronger effects.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrArtPresets.LiquidGlassSafe">
+            <summary>
+            Explicit scan-safe variant of <see cref="M:CodeGlyphX.QrArtPresets.LiquidGlass"/>.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrArtPresets.LiquidGlassBold">
+            <summary>
+            Bolder variant of <see cref="M:CodeGlyphX.QrArtPresets.LiquidGlass"/> with punchier gradients.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrArtPresets.ConnectedSquircleGlowSafe">
+            <summary>
+            Explicit scan-safe variant of <see cref="M:CodeGlyphX.QrArtPresets.ConnectedSquircleGlow"/>.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrArtPresets.ConnectedSquircleGlowBold">
+            <summary>
+            Bolder variant of <see cref="M:CodeGlyphX.QrArtPresets.ConnectedSquircleGlow"/> with denser rings.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrArtPresets.CutCornerTechSafe">
+            <summary>
+            Explicit scan-safe variant of <see cref="M:CodeGlyphX.QrArtPresets.CutCornerTech"/>.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrArtPresets.CutCornerTechBold">
+            <summary>
+            Bolder variant of <see cref="M:CodeGlyphX.QrArtPresets.CutCornerTech"/> with tighter modules.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrArtPresets.InsetRingsSafe">
+            <summary>
+            Explicit scan-safe variant of <see cref="M:CodeGlyphX.QrArtPresets.InsetRings"/>.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrArtPresets.InsetRingsBold">
+            <summary>
+            Bolder variant of <see cref="M:CodeGlyphX.QrArtPresets.InsetRings"/> with stronger ring contrast.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrArtPresets.StripeEyesSafe">
+            <summary>
+            Explicit scan-safe variant of <see cref="M:CodeGlyphX.QrArtPresets.StripeEyes"/>.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrArtPresets.StripeEyesBold">
+            <summary>
+            Bolder variant of <see cref="M:CodeGlyphX.QrArtPresets.StripeEyes"/> that also textures modules.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrArtPresets.PaintSplashSafe">
+            <summary>
+            Explicit scan-safe variant of <see cref="M:CodeGlyphX.QrArtPresets.PaintSplash"/>.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrArtPresets.PaintSplashBold">
+            <summary>
+            Bolder variant of <see cref="M:CodeGlyphX.QrArtPresets.PaintSplash"/> with denser splashes.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrArtPresets.PaintSplashPastelSafe">
+            <summary>
+            Explicit scan-safe variant of <see cref="M:CodeGlyphX.QrArtPresets.PaintSplashPastel"/>.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrArtPresets.PaintSplashPastelBold">
+            <summary>
+            Bolder variant of <see cref="M:CodeGlyphX.QrArtPresets.PaintSplashPastel"/> with denser splashes.
+            </summary>
+        </member>
         <member name="T:CodeGlyphX.QrArtWarningKind">
             <summary>
             Warning kinds for QR art safety evaluation.
@@ -12030,9 +12251,24 @@
             Gradient includes colors with low contrast against the background.
             </summary>
         </member>
+        <member name="F:CodeGlyphX.QrArtWarningKind.LowContrastPalette">
+            <summary>
+            Palette includes colors with low contrast against the background.
+            </summary>
+        </member>
         <member name="F:CodeGlyphX.QrArtWarningKind.ModuleScaleTooSmall">
             <summary>
             Module scale is too small (excessive rounding or shrink).
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.QrArtWarningKind.FunctionalPatternsUnprotected">
+            <summary>
+            Functional patterns are not protected while decorative styling is enabled.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.QrArtWarningKind.QuietZonePatterned">
+            <summary>
+            Background pattern may be drawn into the quiet zone.
             </summary>
         </member>
         <member name="F:CodeGlyphX.QrArtWarningKind.LogoTooLarge">
@@ -12095,6 +12331,86 @@
         <member name="M:CodeGlyphX.QrArtSafety.Evaluate(CodeGlyphX.QrCode,CodeGlyphX.Rendering.Png.QrPngRenderOptions)">
             <summary>
             Evaluates a QR render configuration.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.QrArtSafetyMode">
+            <summary>
+            Safety guardrail strength for QR art styling.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.QrArtSafetyMode.Safe">
+            <summary>
+            Strong guardrails for maximum scan reliability.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.QrArtSafetyMode.Balanced">
+            <summary>
+            Balanced guardrails with moderate artistic freedom.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.QrArtSafetyMode.Bold">
+            <summary>
+            Light guardrails that allow bolder styling.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.QrArtTheme">
+            <summary>
+            High-level QR art themes.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.QrArtTheme.NeonGlow">
+            <summary>
+            Neon glow with dotted texture and a dark canvas.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.QrArtTheme.LiquidGlass">
+            <summary>
+            Glassy gradients and smooth squircles.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.QrArtTheme.ConnectedSquircleGlow">
+            <summary>
+            Connected squircles with a modern glow.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.QrArtTheme.CutCornerTech">
+            <summary>
+            Tech-inspired cut-corner eyes and structured palettes.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.QrArtTheme.InsetRings">
+            <summary>
+            Orderly rings with inset-ring eyes.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.QrArtTheme.StripeEyes">
+            <summary>
+            Stripe-textured eyes with calmer modules.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.QrArtTheme.PaintSplash">
+            <summary>
+            Paint splash/drip canvas effects.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.QrArtVariant">
+            <summary>
+            Theme variants for QR art.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.QrArtVariant.Safe">
+            <summary>
+            Scan-friendly default variant.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.QrArtVariant.Bold">
+            <summary>
+            More decorative variant with stronger effects.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.QrArtVariant.Pastel">
+            <summary>
+            Pastel palette variant (when supported by the theme).
             </summary>
         </member>
         <member name="T:CodeGlyphX.QrCode">
@@ -12936,6 +13252,16 @@
             Renders a QR code as ASCII text for a payload with embedded defaults.
             </summary>
         </member>
+        <member name="M:CodeGlyphX.QrEasy.RenderAsciiConsole(System.String,System.Int32,System.Boolean,System.Boolean,System.Nullable{CodeGlyphX.Rendering.Png.Rgba32},CodeGlyphX.QrEasyOptions)">
+            <summary>
+            Renders a QR code as console-friendly ASCII using scan-oriented defaults.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrEasy.RenderAsciiConsole(CodeGlyphX.Payloads.QrPayloadData,System.Int32,System.Boolean,System.Boolean,System.Nullable{CodeGlyphX.Rendering.Png.Rgba32},CodeGlyphX.QrEasyOptions)">
+            <summary>
+            Renders a QR code as console-friendly ASCII using scan-oriented defaults for a payload with embedded defaults.
+            </summary>
+        </member>
         <member name="M:CodeGlyphX.QrEasy.RenderPixels(System.String,System.Int32@,System.Int32@,System.Int32@,CodeGlyphX.QrEasyOptions)">
             <summary>
             Renders a QR code to a raw RGBA pixel buffer (no PNG encoding).
@@ -13016,9 +13342,39 @@
             Background color.
             </summary>
         </member>
+        <member name="P:CodeGlyphX.QrEasyOptions.BackgroundGradient">
+            <summary>
+            Optional background gradient.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.QrEasyOptions.BackgroundPattern">
+            <summary>
+            Optional pattern overlay for the QR background area.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.QrEasyOptions.BackgroundSupersample">
+            <summary>
+            Background supersample factor for gradients/patterns (1 = disabled).
+            </summary>
+        </member>
         <member name="P:CodeGlyphX.QrEasyOptions.Style">
             <summary>
             Style preset for PNG rendering.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.QrEasyOptions.Art">
+            <summary>
+            High-level QR art options (theme + variant + intensity).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.QrEasyOptions.ArtAutoTune">
+            <summary>
+            When true, applies scan-safety auto-tuning for art-heavy styles.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.QrEasyOptions.ArtAutoTuneMinScore">
+            <summary>
+            Minimum safety score target (0..100) for art auto-tuning.
             </summary>
         </member>
         <member name="P:CodeGlyphX.QrEasyOptions.ModuleShape">
@@ -13031,6 +13387,21 @@
             Overrides the module scale (0.1..1.0).
             </summary>
         </member>
+        <member name="P:CodeGlyphX.QrEasyOptions.ModuleScaleMap">
+            <summary>
+            Overrides the module scale map.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.QrEasyOptions.ProtectFunctionalPatterns">
+            <summary>
+            When true, keeps non-eye functional patterns at a stable, scan-friendly style.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.QrEasyOptions.ProtectQuietZone">
+            <summary>
+            When true and a background pattern is enabled, preserves a clean quiet zone.
+            </summary>
+        </member>
         <member name="P:CodeGlyphX.QrEasyOptions.ModuleCornerRadiusPx">
             <summary>
             Overrides the module corner radius in pixels.
@@ -13039,6 +13410,31 @@
         <member name="P:CodeGlyphX.QrEasyOptions.ForegroundGradient">
             <summary>
             Overrides the foreground gradient.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.QrEasyOptions.ForegroundPalette">
+            <summary>
+            Overrides the foreground palette.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.QrEasyOptions.ForegroundPattern">
+            <summary>
+            Overrides the foreground pattern overlay.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.QrEasyOptions.ForegroundPaletteZones">
+            <summary>
+            Overrides palette zones.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.QrEasyOptions.Canvas">
+            <summary>
+            Optional canvas options for sticker-style output.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.QrEasyOptions.Debug">
+            <summary>
+            Optional debug overlay options (PNG only).
             </summary>
         </member>
         <member name="P:CodeGlyphX.QrEasyOptions.Eyes">
@@ -13636,6 +14032,11 @@
             Enables extra thresholding/sampling passes for stylized or noisy QR codes (slower).
             </summary>
         </member>
+        <member name="P:CodeGlyphX.QrPixelDecodeOptions.StylizedSampling">
+            <summary>
+            Enables stylized sampling tuned for QR art (opt-in, slower).
+            </summary>
+        </member>
         <member name="M:CodeGlyphX.QrPixelDecodeOptions.Fast">
             <summary>
             Fast preset (lower accuracy, fewer transforms).
@@ -13704,6 +14105,11 @@
         <member name="M:CodeGlyphX.QrPixelDecodeOptions.WithAggressiveSampling(System.Boolean)">
             <summary>
             Enables or disables aggressive sampling.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrPixelDecodeOptions.WithStylizedSampling(System.Boolean)">
+            <summary>
+            Enables or disables stylized sampling for QR art.
             </summary>
         </member>
         <member name="M:CodeGlyphX.QrPixelDecodeOptions.WithTileScan(System.Boolean,System.Int32)">
@@ -14125,6 +14531,20 @@
             Attempts to decode all QR codes from raw pixel data (best-effort, clean inputs), with diagnostics, profile options, and cancellation.
             </summary>
         </member>
+        <member name="T:CodeGlyphX.Rendering.Ascii.AsciiPresets">
+            <summary>
+            Ready-to-use ASCII render presets tuned for console readability.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Ascii.AsciiPresets.Console(System.Int32,System.Boolean,System.Boolean,System.Nullable{CodeGlyphX.Rendering.Png.Rgba32})">
+            <summary>
+            Creates a console-friendly preset that is much easier to scan from a terminal.
+            </summary>
+            <param name="scale">Scale multiplier applied to module size (try 3-5 for phones).</param>
+            <param name="useAnsiColors">Whether to emit ANSI color escape codes.</param>
+            <param name="trueColor">Whether to use ANSI truecolor (24-bit) output.</param>
+            <param name="darkColor">Optional ANSI color for dark modules.</param>
+        </member>
         <member name="T:CodeGlyphX.Rendering.Ascii.BarcodeAsciiRenderer">
             <summary>
             Renders 1D barcodes as ASCII text.
@@ -14230,6 +14650,11 @@
             Module height in rows.
             </summary>
         </member>
+        <member name="P:CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions.Scale">
+            <summary>
+            Additional scale multiplier applied to both module width and height.
+            </summary>
+        </member>
         <member name="P:CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions.Dark">
             <summary>
             Character(s) used for dark modules.
@@ -14243,6 +14668,41 @@
         <member name="P:CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions.NewLine">
             <summary>
             Line separator used between rows.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions.UseUnicodeBlocks">
+            <summary>
+            When true, prefers Unicode block glyphs (for example, █) when defaults are used.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions.Invert">
+            <summary>
+            When true, swaps dark and light output.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions.UseAnsiColors">
+            <summary>
+            When true, emits ANSI color escape codes for dark (and optionally light) modules.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions.UseAnsiTrueColor">
+            <summary>
+            When true, uses 24-bit ANSI colors; otherwise maps to ANSI 256-color.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions.AnsiDarkColor">
+            <summary>
+            ANSI color for dark modules.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions.AnsiLightColor">
+            <summary>
+            ANSI color for light modules.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions.AnsiColorizeLight">
+            <summary>
+            When true, also colorizes light modules; otherwise leaves them uncolored.
             </summary>
         </member>
         <member name="M:CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions.WithQuietZone(System.Int32)">
@@ -14260,6 +14720,11 @@
             Sets the module height in rows.
             </summary>
         </member>
+        <member name="M:CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions.WithScale(System.Int32)">
+            <summary>
+            Sets an additional scale multiplier applied to both module width and height.
+            </summary>
+        </member>
         <member name="M:CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions.WithDark(System.String)">
             <summary>
             Sets the character(s) used for dark modules.
@@ -14273,6 +14738,41 @@
         <member name="M:CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions.WithNewLine(System.String)">
             <summary>
             Sets the line separator.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions.WithUnicodeBlocks(System.Boolean)">
+            <summary>
+            Enables or disables Unicode block glyphs when defaults are used.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions.WithInvert(System.Boolean)">
+            <summary>
+            Enables or disables inverted output (dark/light swapped).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions.WithAnsiColors(System.Boolean)">
+            <summary>
+            Enables or disables ANSI color escape codes.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions.WithAnsiTrueColor(System.Boolean)">
+            <summary>
+            Enables or disables ANSI truecolor (24-bit) output.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions.WithAnsiDarkColor(CodeGlyphX.Rendering.Png.Rgba32)">
+            <summary>
+            Sets the ANSI color for dark modules.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions.WithAnsiLightColor(CodeGlyphX.Rendering.Png.Rgba32)">
+            <summary>
+            Sets the ANSI color for light modules.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions.WithAnsiColorizeLight(System.Boolean)">
+            <summary>
+            Enables or disables ANSI colorization of light modules.
             </summary>
         </member>
         <member name="T:CodeGlyphX.Rendering.Bmp.BarcodeBmpRenderer">
@@ -15915,6 +16415,11 @@
             Label color.
             </summary>
         </member>
+        <member name="P:CodeGlyphX.Rendering.Png.BarcodePngRenderOptions.PngCompressionLevel">
+            <summary>
+            PNG compression level (0 = stored/uncompressed, 1-9 = compressed).
+            </summary>
+        </member>
         <member name="M:CodeGlyphX.Rendering.Png.BarcodePngRenderOptions.WithModuleSize(System.Int32)">
             <summary>
             Sets the module size in pixels.
@@ -15958,6 +16463,11 @@
         <member name="M:CodeGlyphX.Rendering.Png.BarcodePngRenderOptions.WithLabelColor(CodeGlyphX.Rendering.Png.Rgba32)">
             <summary>
             Sets the label color.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Png.BarcodePngRenderOptions.WithPngCompressionLevel(System.Int32)">
+            <summary>
+            Sets the PNG compression level (0 = stored/uncompressed, 1-9 = compressed).
             </summary>
         </member>
         <member name="T:CodeGlyphX.Rendering.Png.MatrixPngRenderer">
@@ -16027,6 +16537,11 @@
             Background color.
             </summary>
         </member>
+        <member name="P:CodeGlyphX.Rendering.Png.MatrixPngRenderOptions.PngCompressionLevel">
+            <summary>
+            PNG compression level (0 = stored/uncompressed, 1-9 = compressed).
+            </summary>
+        </member>
         <member name="M:CodeGlyphX.Rendering.Png.MatrixPngRenderOptions.WithModuleSize(System.Int32)">
             <summary>
             Sets the module size in pixels.
@@ -16045,6 +16560,11 @@
         <member name="M:CodeGlyphX.Rendering.Png.MatrixPngRenderOptions.WithBackground(CodeGlyphX.Rendering.Png.Rgba32)">
             <summary>
             Sets the background color.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Png.MatrixPngRenderOptions.WithPngCompressionLevel(System.Int32)">
+            <summary>
+            Sets the PNG compression level (0 = stored/uncompressed, 1-9 = compressed).
             </summary>
         </member>
         <member name="T:CodeGlyphX.Rendering.Png.PngReader">
@@ -16080,6 +16600,601 @@
             <param name="height">Image height in pixels.</param>
             <returns>RGBA buffer (width * height * 4 bytes).</returns>
         </member>
+        <member name="T:CodeGlyphX.Rendering.Png.QrPngBackgroundPatternOptions">
+            <summary>
+            Background pattern options for canvas fills.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngBackgroundPatternOptions.Type">
+            <summary>
+            Gets or sets the pattern type.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngBackgroundPatternOptions.Color">
+            <summary>
+            Gets or sets the pattern color (alpha recommended).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngBackgroundPatternOptions.SizePx">
+            <summary>
+            Gets or sets the pattern cell size in pixels.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngBackgroundPatternOptions.ThicknessPx">
+            <summary>
+            Gets or sets the pattern thickness (dot radius or grid line thickness).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngBackgroundPatternOptions.SnapToModuleSize">
+            <summary>
+            When true, pattern cell size snaps to a multiple of the QR module size.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngBackgroundPatternOptions.ModuleStep">
+            <summary>
+            Module size multiplier when <see cref="P:CodeGlyphX.Rendering.Png.QrPngBackgroundPatternOptions.SnapToModuleSize"/> is enabled.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Rendering.Png.QrPngBackgroundPatternType">
+            <summary>
+            Background pattern types.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.Png.QrPngBackgroundPatternType.Dots">
+            <summary>
+            Dotted pattern.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.Png.QrPngBackgroundPatternType.Grid">
+            <summary>
+            Grid lines.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.Png.QrPngBackgroundPatternType.Checker">
+            <summary>
+            Checkerboard.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.Png.QrPngBackgroundPatternType.DiagonalStripes">
+            <summary>
+            Diagonal stripe bands.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.Png.QrPngBackgroundPatternType.Crosshatch">
+            <summary>
+            Two diagonal stripe sets forming a crosshatch.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Rendering.Png.QrPngCanvasBadgeOptions">
+            <summary>
+            Decorative badge/tab/ribbon options drawn outside the QR bounds.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasBadgeOptions.Shape">
+            <summary>
+            Badge shape.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasBadgeOptions.Position">
+            <summary>
+            Badge position relative to the QR bounds.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasBadgeOptions.WidthPx">
+            <summary>
+            Badge width in pixels (0 disables drawing).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasBadgeOptions.HeightPx">
+            <summary>
+            Badge height in pixels (0 disables drawing).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasBadgeOptions.GapPx">
+            <summary>
+            Gap between the QR bounds and the badge.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasBadgeOptions.OffsetPx">
+            <summary>
+            Offset along the edge (horizontal for top/bottom, vertical for left/right).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasBadgeOptions.CornerRadiusPx">
+            <summary>
+            Badge corner radius in pixels.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasBadgeOptions.Color">
+            <summary>
+            Badge color.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasBadgeOptions.TailPx">
+            <summary>
+            Ribbon tail length in pixels (applies to <see cref="F:CodeGlyphX.Rendering.Png.QrPngCanvasBadgeShape.Ribbon"/>).
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Rendering.Png.QrPngCanvasBadgePosition">
+            <summary>
+            Badge anchor position relative to the QR bounds.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.Png.QrPngCanvasBadgePosition.Top">
+            <summary>
+            Above the QR (centered).
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.Png.QrPngCanvasBadgePosition.Bottom">
+            <summary>
+            Below the QR (centered).
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.Png.QrPngCanvasBadgePosition.Left">
+            <summary>
+            Left of the QR (centered).
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.Png.QrPngCanvasBadgePosition.Right">
+            <summary>
+            Right of the QR (centered).
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.Png.QrPngCanvasBadgePosition.TopLeft">
+            <summary>
+            Above-left of the QR.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.Png.QrPngCanvasBadgePosition.TopRight">
+            <summary>
+            Above-right of the QR.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.Png.QrPngCanvasBadgePosition.BottomLeft">
+            <summary>
+            Below-left of the QR.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.Png.QrPngCanvasBadgePosition.BottomRight">
+            <summary>
+            Below-right of the QR.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Rendering.Png.QrPngCanvasBadgeShape">
+            <summary>
+            Badge shapes drawn around the QR bounds.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.Png.QrPngCanvasBadgeShape.Badge">
+            <summary>
+            Rounded badge/pill.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.Png.QrPngCanvasBadgeShape.Tab">
+            <summary>
+            Tab-style rounded rectangle.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.Png.QrPngCanvasBadgeShape.Ribbon">
+            <summary>
+            Ribbon-style badge with optional tails.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Rendering.Png.QrPngCanvasFrameOptions">
+            <summary>
+            Decorative frame options drawn around the QR bounds (outside the QR area).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasFrameOptions.ThicknessPx">
+            <summary>
+            Frame thickness in pixels.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasFrameOptions.GapPx">
+            <summary>
+            Gap between the QR bounds (including quiet zone) and the frame.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasFrameOptions.RadiusPx">
+            <summary>
+            Frame corner radius in pixels.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasFrameOptions.Color">
+            <summary>
+            Frame color.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasFrameOptions.InnerThicknessPx">
+            <summary>
+            Optional inner frame thickness in pixels (0 = disabled).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasFrameOptions.InnerGapPx">
+            <summary>
+            Gap from the QR bounds to the inner frame.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasFrameOptions.InnerColor">
+            <summary>
+            Optional inner frame color. When null, <see cref="P:CodeGlyphX.Rendering.Png.QrPngCanvasFrameOptions.Color"/> is used.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Rendering.Png.QrPngCanvasGrainOptions">
+            <summary>
+            Grain/noise texture options for the canvas background.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasGrainOptions.Color">
+            <summary>
+            Grain color (alpha recommended).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasGrainOptions.Density">
+            <summary>
+            Grain density (0..1).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasGrainOptions.PixelSizePx">
+            <summary>
+            Grain dot size in pixels.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasGrainOptions.AlphaJitter">
+            <summary>
+            Alpha jitter amount (0..1).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasGrainOptions.Seed">
+            <summary>
+            Random seed used to place grain. Use 0 to auto-randomize per render.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasGrainOptions.BandPx">
+            <summary>
+            Optional edge band width in pixels. When greater than 0, grain is limited to the canvas edges.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasGrainOptions.ProtectQrArea">
+            <summary>
+            When true, never draws inside the QR area.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasGrainOptions.QrAreaAlphaMax">
+            <summary>
+            Maximum alpha allowed inside the QR area when <see cref="P:CodeGlyphX.Rendering.Png.QrPngCanvasGrainOptions.ProtectQrArea"/> is false.
+            Set to 0 to apply no alpha limit.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Rendering.Png.QrPngCanvasHaloOptions">
+            <summary>
+            Halo/glow options drawn around the QR bounds on the canvas.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasHaloOptions.Color">
+            <summary>
+            Halo color (alpha recommended).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasHaloOptions.RadiusPx">
+            <summary>
+            Halo radius in pixels.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasHaloOptions.ProtectQrArea">
+            <summary>
+            When true, never draws inside the QR area.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasHaloOptions.QrAreaAlphaMax">
+            <summary>
+            Maximum alpha allowed inside the QR area when <see cref="P:CodeGlyphX.Rendering.Png.QrPngCanvasHaloOptions.ProtectQrArea"/> is false.
+            Set to 0 to apply no alpha limit.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Rendering.Png.QrPngCanvasOptions">
+            <summary>
+            Canvas options for sticker-style QR output.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasOptions.PaddingPx">
+            <summary>
+            Padding around the QR (in pixels).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasOptions.CornerRadiusPx">
+            <summary>
+            Canvas corner radius in pixels.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasOptions.Background">
+            <summary>
+            Canvas background color.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasOptions.BackgroundGradient">
+            <summary>
+            Optional canvas background gradient.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasOptions.Pattern">
+            <summary>
+            Optional background pattern overlay.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasOptions.Splash">
+            <summary>
+            Optional paint splash/drip overlay (kept outside the QR area).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasOptions.Halo">
+            <summary>
+            Optional halo/glow drawn around the QR bounds (outside by default).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasOptions.Vignette">
+            <summary>
+            Optional edge vignette drawn on the canvas (QR-safe by default).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasOptions.Grain">
+            <summary>
+            Optional grain/noise texture drawn on the canvas (QR-safe by default).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasOptions.Frame">
+            <summary>
+            Optional decorative frame drawn around the QR bounds (kept outside the QR area).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasOptions.Badge">
+            <summary>
+            Optional badge/tab/ribbon drawn outside the QR bounds.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasOptions.BorderPx">
+            <summary>
+            Border thickness in pixels (0 = no border).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasOptions.BorderColor">
+            <summary>
+            Border color (defaults to background).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasOptions.ShadowOffsetX">
+            <summary>
+            Shadow offset in pixels (X).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasOptions.ShadowOffsetY">
+            <summary>
+            Shadow offset in pixels (Y).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasOptions.ShadowColor">
+            <summary>
+            Shadow color (alpha recommended).
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Rendering.Png.QrPngCanvasSplashOptions">
+            <summary>
+            Paint splash/drip options for the canvas background.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasSplashOptions.Color">
+            <summary>
+            Splash color (alpha recommended).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasSplashOptions.Colors">
+            <summary>
+            Optional multi-color splash palette. When set, a random entry is used per splash.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasSplashOptions.Count">
+            <summary>
+            Number of splash blobs to draw.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasSplashOptions.MinRadiusPx">
+            <summary>
+            Minimum splash radius in pixels.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasSplashOptions.MaxRadiusPx">
+            <summary>
+            Maximum splash radius in pixels.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasSplashOptions.SpreadPx">
+            <summary>
+            How far splashes can extend beyond the QR bounds.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasSplashOptions.Placement">
+            <summary>
+            Where splashes are placed. Defaults to <see cref="F:CodeGlyphX.Rendering.Png.QrPngCanvasSplashPlacement.AroundQr"/>.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasSplashOptions.EdgeBandPx">
+            <summary>
+            Optional edge band width (in pixels) when <see cref="P:CodeGlyphX.Rendering.Png.QrPngCanvasSplashOptions.Placement"/> is <see cref="F:CodeGlyphX.Rendering.Png.QrPngCanvasSplashPlacement.CanvasEdges"/>.
+            When 0, a sensible band is derived from splash size and spread.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasSplashOptions.Seed">
+            <summary>
+            Random seed used to place splashes. Use 0 to auto-randomize per render.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasSplashOptions.DripChance">
+            <summary>
+            Chance (0..1) that a splash will include a downward drip.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasSplashOptions.DripLengthPx">
+            <summary>
+            Maximum drip length in pixels.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasSplashOptions.DripWidthPx">
+            <summary>
+            Drip width in pixels.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasSplashOptions.ProtectQrArea">
+            <summary>
+            When true, never draws inside the QR area.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasSplashOptions.QrAreaAlphaMax">
+            <summary>
+            Maximum alpha allowed inside the QR area when <see cref="P:CodeGlyphX.Rendering.Png.QrPngCanvasSplashOptions.ProtectQrArea"/> is false.
+            Set to 0 to apply no alpha limit.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Rendering.Png.QrPngCanvasSplashPlacement">
+            <summary>
+            Placement modes for canvas splash blobs.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.Png.QrPngCanvasSplashPlacement.AroundQr">
+            <summary>
+            Default behavior: splashes are placed around the QR bounds.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.Png.QrPngCanvasSplashPlacement.CanvasEdges">
+            <summary>
+            Splashes are placed near the outer canvas edges.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Rendering.Png.QrPngCanvasVignetteOptions">
+            <summary>
+            Edge vignette options for the canvas background.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasVignetteOptions.Color">
+            <summary>
+            Vignette color (alpha recommended).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasVignetteOptions.BandPx">
+            <summary>
+            Vignette band width in pixels.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasVignetteOptions.Strength">
+            <summary>
+            Vignette strength multiplier (0..2).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasVignetteOptions.ProtectQrArea">
+            <summary>
+            When true, never draws inside the QR area.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasVignetteOptions.QrAreaAlphaMax">
+            <summary>
+            Maximum alpha allowed inside the QR area when <see cref="P:CodeGlyphX.Rendering.Png.QrPngCanvasVignetteOptions.ProtectQrArea"/> is false.
+            Set to 0 to apply no alpha limit.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Rendering.Png.QrPngDebugOptions">
+            <summary>
+            Debug overlay options for QR PNG rendering.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngDebugOptions.ShowQuietZone">
+            <summary>
+            Draws the quiet zone boundary.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngDebugOptions.ShowQrBounds">
+            <summary>
+            Draws the QR module area boundary.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngDebugOptions.ShowEyeBounds">
+            <summary>
+            Draws finder (eye) bounds.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngDebugOptions.ShowLogoBounds">
+            <summary>
+            Draws logo bounds (including background padding when enabled).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngDebugOptions.StrokePx">
+            <summary>
+            Stroke thickness in pixels.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngDebugOptions.QuietZoneColor">
+            <summary>
+            Color used for quiet zone bounds.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngDebugOptions.QrBoundsColor">
+            <summary>
+            Color used for QR bounds.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngDebugOptions.EyeBoundsColor">
+            <summary>
+            Color used for eye bounds.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngDebugOptions.LogoBoundsColor">
+            <summary>
+            Color used for logo bounds.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Rendering.Png.QrPngEyeFrameStyle">
+            <summary>
+            Eye (finder) frame styles.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.Png.QrPngEyeFrameStyle.Single">
+            <summary>
+            Single outer frame with inner dot.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.Png.QrPngEyeFrameStyle.DoubleRing">
+            <summary>
+            Two concentric rings (no center dot).
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.Png.QrPngEyeFrameStyle.Target">
+            <summary>
+            Two concentric rings with a center dot.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.Png.QrPngEyeFrameStyle.Bracket">
+            <summary>
+            Corner brackets (L-shapes) around the eye.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.Png.QrPngEyeFrameStyle.Badge">
+            <summary>
+            Bold badge frame with thicker border.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.Png.QrPngEyeFrameStyle.Glow">
+            <summary>
+            Single frame with a soft glow halo behind it.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.Png.QrPngEyeFrameStyle.InsetRing">
+            <summary>
+            Outer ring with an inset inner ring and a clear center.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.Png.QrPngEyeFrameStyle.CutCorner">
+            <summary>
+            Square frame with corners cut away for a tech-like look.
+            </summary>
+        </member>
         <member name="T:CodeGlyphX.Rendering.Png.QrPngEyeOptions">
             <summary>
             Styling overrides for QR finder (eye) patterns.
@@ -16088,6 +17203,11 @@
         <member name="P:CodeGlyphX.Rendering.Png.QrPngEyeOptions.UseFrame">
             <summary>
             Gets or sets whether to draw each eye as a single frame (outer ring + inner dot).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngEyeOptions.FrameStyle">
+            <summary>
+            Gets or sets the eye frame style when <see cref="P:CodeGlyphX.Rendering.Png.QrPngEyeOptions.UseFrame"/> is enabled.
             </summary>
         </member>
         <member name="P:CodeGlyphX.Rendering.Png.QrPngEyeOptions.OuterShape">
@@ -16125,9 +17245,19 @@
             Optional outer eye color override.
             </summary>
         </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngEyeOptions.OuterColors">
+            <summary>
+            Optional per-eye outer colors (TopLeft, TopRight, BottomLeft).
+            </summary>
+        </member>
         <member name="P:CodeGlyphX.Rendering.Png.QrPngEyeOptions.InnerColor">
             <summary>
             Optional inner eye color override.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngEyeOptions.InnerColors">
+            <summary>
+            Optional per-eye inner colors (TopLeft, TopRight, BottomLeft).
             </summary>
         </member>
         <member name="P:CodeGlyphX.Rendering.Png.QrPngEyeOptions.OuterGradient">
@@ -16135,9 +17265,306 @@
             Optional gradient for the outer frame.
             </summary>
         </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngEyeOptions.OuterGradients">
+            <summary>
+            Optional per-eye outer gradients (TopLeft, TopRight, BottomLeft).
+            </summary>
+        </member>
         <member name="P:CodeGlyphX.Rendering.Png.QrPngEyeOptions.InnerGradient">
             <summary>
             Optional gradient for the inner dot.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngEyeOptions.InnerGradients">
+            <summary>
+            Optional per-eye inner gradients (TopLeft, TopRight, BottomLeft).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngEyeOptions.GlowRadiusPx">
+            <summary>
+            Optional glow radius in pixels when <see cref="P:CodeGlyphX.Rendering.Png.QrPngEyeOptions.FrameStyle"/> is <see cref="F:CodeGlyphX.Rendering.Png.QrPngEyeFrameStyle.Glow"/>.
+            A value of 0 uses a reasonable default based on module size.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngEyeOptions.GlowColor">
+            <summary>
+            Optional glow color override. Defaults to the outer eye color.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngEyeOptions.GlowAlpha">
+            <summary>
+            Maximum glow alpha (0..255) when <see cref="P:CodeGlyphX.Rendering.Png.QrPngEyeOptions.FrameStyle"/> is <see cref="F:CodeGlyphX.Rendering.Png.QrPngEyeFrameStyle.Glow"/>.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngEyeOptions.SparkleCount">
+            <summary>
+            Optional sparkle count drawn around the eyes on the canvas.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngEyeOptions.SparkleRadiusPx">
+            <summary>
+            Sparkle radius in pixels.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngEyeOptions.SparkleSpreadPx">
+            <summary>
+            How far sparkles can extend beyond the eye ring (in pixels).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngEyeOptions.SparkleColor">
+            <summary>
+            Sparkle color override. Defaults to the outer eye color.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngEyeOptions.SparkleSeed">
+            <summary>
+            Random seed for sparkle placement. Use 0 to auto-randomize per render.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngEyeOptions.SparkleProtectQrArea">
+            <summary>
+            When true (default), sparkles do not draw inside the QR area.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngEyeOptions.SparkleAllowOnQrBackground">
+            <summary>
+            When false (default), sparkles render only when a canvas is enabled.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngEyeOptions.AccentRingCount">
+            <summary>
+            Optional accent ring count drawn around the eyes on the canvas.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngEyeOptions.AccentRingThicknessPx">
+            <summary>
+            Accent ring stroke thickness in pixels.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngEyeOptions.AccentRingSpreadPx">
+            <summary>
+            How far accent rings can extend beyond the eye ring (in pixels).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngEyeOptions.AccentRingJitterPx">
+            <summary>
+            Small jitter applied to ring radius (in pixels).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngEyeOptions.AccentRingColor">
+            <summary>
+            Accent ring color override. Defaults to the outer eye color with a softer alpha.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngEyeOptions.AccentRingSeed">
+            <summary>
+            Random seed for accent ring placement. Use 0 to auto-randomize per render.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngEyeOptions.AccentRingProtectQrArea">
+            <summary>
+            When true (default), accent rings do not draw inside the QR area.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngEyeOptions.AccentRingAllowOnQrBackground">
+            <summary>
+            When false (default), accent rings render only when a canvas is enabled.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngEyeOptions.AccentRayCount">
+            <summary>
+            Optional accent ray count drawn around the eyes on the canvas.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngEyeOptions.AccentRayLengthPx">
+            <summary>
+            Accent ray length in pixels.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngEyeOptions.AccentRayThicknessPx">
+            <summary>
+            Accent ray stroke thickness in pixels.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngEyeOptions.AccentRaySpreadPx">
+            <summary>
+            How far accent rays can start beyond the eye ring (in pixels).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngEyeOptions.AccentRayJitterPx">
+            <summary>
+            Small jitter applied to ray start radius (in pixels).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngEyeOptions.AccentRayLengthJitterPx">
+            <summary>
+            Small jitter applied to ray length (in pixels).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngEyeOptions.AccentRayColor">
+            <summary>
+            Accent ray color override. Defaults to the outer eye color with a softer alpha.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngEyeOptions.AccentRaySeed">
+            <summary>
+            Random seed for accent ray placement. Use 0 to auto-randomize per render.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngEyeOptions.AccentRayProtectQrArea">
+            <summary>
+            When true (default), accent rays do not draw inside the QR area.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngEyeOptions.AccentRayAllowOnQrBackground">
+            <summary>
+            When false (default), accent rays render only when a canvas is enabled.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngEyeOptions.AccentStripeCount">
+            <summary>
+            Optional accent stripe count drawn around the eyes on the canvas.
+            Stripes are short tangential strokes that hug the eye perimeter.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngEyeOptions.AccentStripeLengthPx">
+            <summary>
+            Accent stripe length in pixels.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngEyeOptions.AccentStripeThicknessPx">
+            <summary>
+            Accent stripe stroke thickness in pixels.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngEyeOptions.AccentStripeSpreadPx">
+            <summary>
+            How far accent stripes can extend beyond the eye ring (in pixels).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngEyeOptions.AccentStripeJitterPx">
+            <summary>
+            Small jitter applied to stripe radius (in pixels).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngEyeOptions.AccentStripeLengthJitterPx">
+            <summary>
+            Small jitter applied to stripe length (in pixels).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngEyeOptions.AccentStripeColor">
+            <summary>
+            Accent stripe color override. Defaults to the outer eye color with a softer alpha.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngEyeOptions.AccentStripeSeed">
+            <summary>
+            Random seed for accent stripe placement. Use 0 to auto-randomize per render.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngEyeOptions.AccentStripeProtectQrArea">
+            <summary>
+            When true (default), accent stripes do not draw inside the QR area.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngEyeOptions.AccentStripeAllowOnQrBackground">
+            <summary>
+            When false (default), accent stripes render only when a canvas is enabled.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Rendering.Png.QrPngForegroundPatternOptions">
+            <summary>
+            Foreground pattern options for styling dark modules.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngForegroundPatternOptions.Type">
+            <summary>
+            Gets or sets the pattern type.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngForegroundPatternOptions.Color">
+            <summary>
+            Gets or sets the pattern color (alpha recommended).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngForegroundPatternOptions.SizePx">
+            <summary>
+            Gets or sets the pattern cell size in pixels.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngForegroundPatternOptions.ThicknessPx">
+            <summary>
+            Gets or sets the pattern thickness (dot radius or stripe thickness).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngForegroundPatternOptions.Seed">
+            <summary>
+            Random seed used by jittered pattern variants such as <see cref="F:CodeGlyphX.Rendering.Png.QrPngForegroundPatternType.SpeckleDots"/>.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngForegroundPatternOptions.Variation">
+            <summary>
+            Variation amount (0..1) used by jittered pattern variants.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngForegroundPatternOptions.Density">
+            <summary>
+            Dot density (0..1) used by jittered pattern variants.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngForegroundPatternOptions.SnapToModuleSize">
+            <summary>
+            When true, pattern cell size snaps to a multiple of the QR module size.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngForegroundPatternOptions.ModuleStep">
+            <summary>
+            Module size multiplier when <see cref="P:CodeGlyphX.Rendering.Png.QrPngForegroundPatternOptions.SnapToModuleSize"/> is enabled.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngForegroundPatternOptions.ApplyToModules">
+            <summary>
+            When true, applies the pattern to non-eye modules.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngForegroundPatternOptions.ApplyToEyes">
+            <summary>
+            When true, applies the pattern to eye (finder) modules.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Rendering.Png.QrPngForegroundPatternType">
+            <summary>
+            Foreground pattern types applied inside dark modules.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.Png.QrPngForegroundPatternType.StippleDots">
+            <summary>
+            Small stipple dots.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.Png.QrPngForegroundPatternType.SpeckleDots">
+            <summary>
+            Organic stipple dots with jittered centers and varied sizes.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.Png.QrPngForegroundPatternType.HalftoneDots">
+            <summary>
+            Radial halftone dots that are stronger near the center and lighter near edges.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.Png.QrPngForegroundPatternType.DiagonalStripes">
+            <summary>
+            Diagonal stripes.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.Png.QrPngForegroundPatternType.Crosshatch">
+            <summary>
+            Two diagonal stripe sets forming a crosshatch.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.Png.QrPngForegroundPatternType.Starburst">
+            <summary>
+            Eight-direction starburst rays (cardinal + diagonal).
             </summary>
         </member>
         <member name="T:CodeGlyphX.Rendering.Png.QrPngGradientOptions">
@@ -16267,6 +17694,71 @@
             <param name="path">PNG file path.</param>
             <returns>Logo options.</returns>
         </member>
+        <member name="T:CodeGlyphX.Rendering.Png.QrPngModuleScaleMapOptions">
+            <summary>
+            Options for per-module scale mapping.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.Png.QrPngModuleScaleMapOptions.DefaultRingSize">
+            <summary>
+            Default ring size (in modules) for <see cref="F:CodeGlyphX.Rendering.Png.QrPngModuleScaleMode.Rings"/>.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngModuleScaleMapOptions.Mode">
+            <summary>
+            Gets or sets the scale map mode.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngModuleScaleMapOptions.MinScale">
+            <summary>
+            Gets or sets the minimum scale factor (0.1..1.0).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngModuleScaleMapOptions.MaxScale">
+            <summary>
+            Gets or sets the maximum scale factor (0.1..1.0).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngModuleScaleMapOptions.RingSize">
+            <summary>
+            Gets or sets the ring size in modules for <see cref="F:CodeGlyphX.Rendering.Png.QrPngModuleScaleMode.Rings"/>.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngModuleScaleMapOptions.Seed">
+            <summary>
+            Gets or sets the random seed for <see cref="F:CodeGlyphX.Rendering.Png.QrPngModuleScaleMode.Random"/>.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngModuleScaleMapOptions.ApplyToEyes">
+            <summary>
+            When true, applies scale mapping to finder (eye) modules.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Rendering.Png.QrPngModuleScaleMode">
+            <summary>
+            Module scale map modes.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.Png.QrPngModuleScaleMode.Rings">
+            <summary>
+            Concentric bands from the center.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.Png.QrPngModuleScaleMode.Radial">
+            <summary>
+            Smooth radial gradient from the center.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.Png.QrPngModuleScaleMode.Random">
+            <summary>
+            Pseudo-random per-module scale.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.Png.QrPngModuleScaleMode.Checker">
+            <summary>
+            Alternating pattern (checkerboard).
+            </summary>
+        </member>
         <member name="T:CodeGlyphX.Rendering.Png.QrPngModuleShape">
             <summary>
             Module shape used by <see cref="T:CodeGlyphX.Rendering.Png.QrPngRenderer"/>.
@@ -16287,14 +17779,44 @@
             Rounded-corner square modules.
             </summary>
         </member>
+        <member name="F:CodeGlyphX.Rendering.Png.QrPngModuleShape.ConnectedRounded">
+            <summary>
+            Rounded modules that connect to adjacent dark modules.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.Png.QrPngModuleShape.ConnectedSquircle">
+            <summary>
+            Squircle modules that connect to adjacent dark modules.
+            </summary>
+        </member>
         <member name="F:CodeGlyphX.Rendering.Png.QrPngModuleShape.Diamond">
             <summary>
             Diamond-shaped modules.
             </summary>
         </member>
+        <member name="F:CodeGlyphX.Rendering.Png.QrPngModuleShape.SoftDiamond">
+            <summary>
+            Soft diamond (rounded diamond) modules.
+            </summary>
+        </member>
         <member name="F:CodeGlyphX.Rendering.Png.QrPngModuleShape.Squircle">
             <summary>
             Squircle (superellipse) modules.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.Png.QrPngModuleShape.Leaf">
+            <summary>
+            Leaf (lens) modules.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.Png.QrPngModuleShape.Wave">
+            <summary>
+            Wavy circle modules.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.Png.QrPngModuleShape.Blob">
+            <summary>
+            Organic blob modules.
             </summary>
         </member>
         <member name="F:CodeGlyphX.Rendering.Png.QrPngModuleShape.Dot">
@@ -16305,6 +17827,91 @@
         <member name="F:CodeGlyphX.Rendering.Png.QrPngModuleShape.DotGrid">
             <summary>
             Dot grid modules (four small dots per cell).
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Rendering.Png.QrPngPaletteMode">
+            <summary>
+            Palette selection modes for QR modules.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.Png.QrPngPaletteMode.Cycle">
+            <summary>
+            Cycles through colors using (x + y) ordering.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.Png.QrPngPaletteMode.Checker">
+            <summary>
+            Alternates colors in a checkerboard pattern.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.Png.QrPngPaletteMode.Random">
+            <summary>
+            Picks colors using a deterministic hash of (x, y, seed).
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.Png.QrPngPaletteMode.Rings">
+            <summary>
+            Assigns colors by ring distance from the center.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Rendering.Png.QrPngPaletteOptions">
+            <summary>
+            Palette options for multi-color QR module rendering.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.Png.QrPngPaletteOptions.DefaultRingSize">
+            <summary>
+            Default ring size (in modules) for <see cref="F:CodeGlyphX.Rendering.Png.QrPngPaletteMode.Rings"/>.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngPaletteOptions.Colors">
+            <summary>
+            Gets or sets the palette colors (required).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngPaletteOptions.Mode">
+            <summary>
+            Gets or sets the palette selection mode.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngPaletteOptions.Seed">
+            <summary>
+            Gets or sets the random seed used by <see cref="F:CodeGlyphX.Rendering.Png.QrPngPaletteMode.Random"/>.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngPaletteOptions.RingSize">
+            <summary>
+            Gets or sets the ring thickness in modules for <see cref="F:CodeGlyphX.Rendering.Png.QrPngPaletteMode.Rings"/>.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngPaletteOptions.ApplyToEyes">
+            <summary>
+            When false, finder (eye) modules keep the foreground color.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Rendering.Png.QrPngPaletteZoneOptions">
+            <summary>
+            Palette overrides for specific QR zones.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngPaletteZoneOptions.CenterPalette">
+            <summary>
+            Palette applied to a centered square zone.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngPaletteZoneOptions.CenterSize">
+            <summary>
+            Center zone size in modules (0 = disabled).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngPaletteZoneOptions.CornerPalette">
+            <summary>
+            Palette applied to the four corners.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngPaletteZoneOptions.CornerSize">
+            <summary>
+            Corner zone size in modules (0 = disabled).
             </summary>
         </member>
         <member name="T:CodeGlyphX.Rendering.Png.QrPngRenderer">
@@ -16354,6 +17961,16 @@
             Options for <see cref="T:CodeGlyphX.Rendering.Png.QrPngRenderer"/>.
             </summary>
         </member>
+        <member name="F:CodeGlyphX.Rendering.Png.QrPngRenderOptions.BackgroundSupersampleMin">
+            <summary>
+            Minimum allowed background supersample factor.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.Png.QrPngRenderOptions.BackgroundSupersampleMax">
+            <summary>
+            Maximum allowed background supersample factor (capped to avoid large memory spikes).
+            </summary>
+        </member>
         <member name="P:CodeGlyphX.Rendering.Png.QrPngRenderOptions.ModuleSize">
             <summary>
             Gets or sets the size of a single QR module in pixels.
@@ -16374,9 +17991,39 @@
             Gets or sets the background (light) color.
             </summary>
         </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngRenderOptions.BackgroundGradient">
+            <summary>
+            Optional gradient for the background.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngRenderOptions.BackgroundPattern">
+            <summary>
+            Optional pattern overlay for the QR background area.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngRenderOptions.BackgroundSupersample">
+            <summary>
+            Background supersample factor for gradients/patterns (1 = disabled, max 4).
+            </summary>
+        </member>
         <member name="P:CodeGlyphX.Rendering.Png.QrPngRenderOptions.ForegroundGradient">
             <summary>
             Optional gradient for the foreground (dark) modules.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngRenderOptions.ForegroundPalette">
+            <summary>
+            Optional multi-color palette for foreground modules.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngRenderOptions.ForegroundPattern">
+            <summary>
+            Optional pattern overlay for foreground modules.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngRenderOptions.ForegroundPaletteZones">
+            <summary>
+            Optional palette overrides for specific zones.
             </summary>
         </member>
         <member name="P:CodeGlyphX.Rendering.Png.QrPngRenderOptions.Eyes">
@@ -16394,6 +18041,22 @@
             Gets or sets the scale of the module inside its cell (0.1..1.0).
             </summary>
         </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngRenderOptions.ModuleScaleMap">
+            <summary>
+            Optional per-module scale mapping.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngRenderOptions.ProtectFunctionalPatterns">
+            <summary>
+            When true, keeps non-eye functional patterns (timing/alignment/format/version/dark module)
+            at full scale and a stable foreground color for scan reliability.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngRenderOptions.ProtectQuietZone">
+            <summary>
+            When true and a background pattern is enabled, skips drawing the pattern inside the quiet zone.
+            </summary>
+        </member>
         <member name="P:CodeGlyphX.Rendering.Png.QrPngRenderOptions.ModuleCornerRadiusPx">
             <summary>
             Gets or sets the corner radius in pixels for <see cref="F:CodeGlyphX.Rendering.Png.QrPngModuleShape.Rounded"/>.
@@ -16402,6 +18065,21 @@
         <member name="P:CodeGlyphX.Rendering.Png.QrPngRenderOptions.Logo">
             <summary>
             Optional logo overlay (centered).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngRenderOptions.Canvas">
+            <summary>
+            Optional canvas options for sticker-style output.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngRenderOptions.Debug">
+            <summary>
+            Optional debug overlay options.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Png.QrPngRenderOptions.PngCompressionLevel">
+            <summary>
+            PNG compression level (0 = stored/uncompressed, 1-9 = compressed).
             </summary>
         </member>
         <member name="M:CodeGlyphX.Rendering.Png.QrPngRenderOptions.WithModuleSize(System.Int32)">
@@ -16424,9 +18102,39 @@
             Sets the background color.
             </summary>
         </member>
+        <member name="M:CodeGlyphX.Rendering.Png.QrPngRenderOptions.WithBackgroundGradient(CodeGlyphX.Rendering.Png.QrPngGradientOptions)">
+            <summary>
+            Sets the background gradient.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Png.QrPngRenderOptions.WithBackgroundPattern(CodeGlyphX.Rendering.Png.QrPngBackgroundPatternOptions)">
+            <summary>
+            Sets the background pattern overlay.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Png.QrPngRenderOptions.WithBackgroundSupersample(System.Int32)">
+            <summary>
+            Sets the background supersample factor (1 = disabled).
+            </summary>
+        </member>
         <member name="M:CodeGlyphX.Rendering.Png.QrPngRenderOptions.WithForegroundGradient(CodeGlyphX.Rendering.Png.QrPngGradientOptions)">
             <summary>
             Sets the foreground gradient.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Png.QrPngRenderOptions.WithForegroundPalette(CodeGlyphX.Rendering.Png.QrPngPaletteOptions)">
+            <summary>
+            Sets the foreground palette.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Png.QrPngRenderOptions.WithForegroundPattern(CodeGlyphX.Rendering.Png.QrPngForegroundPatternOptions)">
+            <summary>
+            Sets the foreground pattern overlay.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Png.QrPngRenderOptions.WithForegroundPaletteZones(CodeGlyphX.Rendering.Png.QrPngPaletteZoneOptions)">
+            <summary>
+            Sets palette overrides for specific zones.
             </summary>
         </member>
         <member name="M:CodeGlyphX.Rendering.Png.QrPngRenderOptions.WithEyes(CodeGlyphX.Rendering.Png.QrPngEyeOptions)">
@@ -16444,14 +18152,34 @@
             Sets the module scale.
             </summary>
         </member>
+        <member name="M:CodeGlyphX.Rendering.Png.QrPngRenderOptions.WithModuleScaleMap(CodeGlyphX.Rendering.Png.QrPngModuleScaleMapOptions)">
+            <summary>
+            Sets per-module scale mapping options.
+            </summary>
+        </member>
         <member name="M:CodeGlyphX.Rendering.Png.QrPngRenderOptions.WithModuleCornerRadiusPx(System.Int32)">
             <summary>
             Sets the module corner radius in pixels.
             </summary>
         </member>
+        <member name="M:CodeGlyphX.Rendering.Png.QrPngRenderOptions.WithPngCompressionLevel(System.Int32)">
+            <summary>
+            Sets the PNG compression level (0 = stored/uncompressed, 1-9 = compressed).
+            </summary>
+        </member>
         <member name="M:CodeGlyphX.Rendering.Png.QrPngRenderOptions.WithLogo(CodeGlyphX.Rendering.Png.QrPngLogoOptions)">
             <summary>
             Sets the logo overlay options.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Png.QrPngRenderOptions.WithCanvas(CodeGlyphX.Rendering.Png.QrPngCanvasOptions)">
+            <summary>
+            Sets the canvas options.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Png.QrPngRenderOptions.WithDebug(CodeGlyphX.Rendering.Png.QrPngDebugOptions)">
+            <summary>
+            Sets the debug overlay options.
             </summary>
         </member>
         <member name="T:CodeGlyphX.Rendering.Png.Rgba32">
