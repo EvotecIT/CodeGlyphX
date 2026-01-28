@@ -134,6 +134,49 @@ public sealed class WebpVp8EncodeTests {
         Assert.True(errorHigh <= errorLow);
     }
 
+    [Fact]
+    public void Webp_ManagedEncode_Vp8_Lossy_UsesSegmentationForMixedVariance() {
+        const int width = 32;
+        const int height = 16;
+        var stride = width * 4;
+        var rgba = new byte[checked(height * stride)];
+
+        for (var y = 0; y < height; y++) {
+            var row = y * stride;
+            for (var x = 0; x < width; x++) {
+                var offset = row + x * 4;
+                var value = x < 16
+                    ? (byte)30
+                    : (byte)(((x + y) & 1) == 0 ? 0 : 255);
+                rgba[offset] = value;
+                rgba[offset + 1] = value;
+                rgba[offset + 2] = value;
+                rgba[offset + 3] = 255;
+            }
+        }
+
+        var webp = WebpWriter.WriteRgba32Lossy(width, height, rgba, stride, quality: 40);
+        Assert.True(TryExtractChunk(webp, "VP8 ", out var payload));
+
+        Assert.True(WebpVp8Decoder.TryReadFrameHeader(payload, out var frameHeader));
+        Assert.True(frameHeader.Segmentation.Enabled);
+        Assert.True(frameHeader.Segmentation.UpdateMap);
+        Assert.True(frameHeader.Segmentation.UpdateData);
+
+        Assert.True(WebpVp8Decoder.TryReadMacroblockHeaderScaffold(payload, out var macroblocks));
+        var segmentCounts = new int[4];
+        var headers = macroblocks.Macroblocks;
+        for (var i = 0; i < headers.Length; i++) {
+            var segmentId = headers[i].SegmentId;
+            if ((uint)segmentId < segmentCounts.Length) {
+                segmentCounts[segmentId]++;
+            }
+        }
+
+        Assert.True(segmentCounts[0] > 0);
+        Assert.True(segmentCounts[1] > 0);
+    }
+
     private static bool ContainsChunk(byte[] data, string fourCc) {
         if (data.Length < 12) return false;
         if (ReadU32LE(data, 0) != 0x46464952) return false; // RIFF
@@ -153,6 +196,39 @@ public sealed class WebpVp8EncodeTests {
             var chunkSize = ReadU32LE(data, offset + 4);
             var dataOffset = offset + 8;
             if (chunkFourCc == target) return true;
+            var padded = (int)chunkSize + ((int)chunkSize & 1);
+            offset = dataOffset + padded;
+        }
+
+        return false;
+    }
+
+    private static bool TryExtractChunk(byte[] data, string fourCc, out byte[] chunkData) {
+        chunkData = Array.Empty<byte>();
+        if (data.Length < 12) return false;
+        if (ReadU32LE(data, 0) != 0x46464952) return false; // RIFF
+        if (ReadU32LE(data, 8) != 0x50424557) return false; // WEBP
+
+        var riffSize = ReadU32LE(data, 4);
+        var riffLimit = data.Length;
+        var declaredLimit = 8L + riffSize;
+        if (declaredLimit > 0 && declaredLimit < riffLimit) {
+            riffLimit = (int)declaredLimit;
+        }
+
+        var target = BitConverter.ToUInt32(System.Text.Encoding.ASCII.GetBytes(fourCc), 0);
+        var offset = 12;
+        while (offset + 8 <= riffLimit) {
+            var chunkFourCc = ReadU32LE(data, offset);
+            var chunkSize = ReadU32LE(data, offset + 4);
+            var dataOffset = offset + 8;
+            if (chunkFourCc == target) {
+                if (dataOffset + chunkSize > data.Length) return false;
+                chunkData = new byte[chunkSize];
+                Buffer.BlockCopy(data, dataOffset, chunkData, 0, (int)chunkSize);
+                return true;
+            }
+
             var padded = (int)chunkSize + ((int)chunkSize & 1);
             offset = dataOffset + padded;
         }
