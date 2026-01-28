@@ -152,7 +152,7 @@ internal static class WebpVp8Encoder {
         var headerWriter = new WebpVp8BoolEncoder(expectedSize: 4096);
         WriteControlHeader(headerWriter);
         WriteSegmentationDisabled(headerWriter);
-        WriteLoopFilterDisabled(headerWriter);
+        WriteLoopFilter(headerWriter, quality);
         headerWriter.WriteLiteral(0, 2); // one DCT partition
         WriteQuantization(headerWriter, baseQIndex);
         WriteCoefficientProbabilityUpdates(headerWriter);
@@ -805,10 +805,17 @@ internal static class WebpVp8Encoder {
         writer.WriteBool(128, false); // segmentation disabled
     }
 
-    private static void WriteLoopFilterDisabled(WebpVp8BoolEncoder writer) {
-        writer.WriteBool(128, false); // filter type
-        writer.WriteLiteral(0, 6); // level
-        writer.WriteLiteral(0, 3); // sharpness
+    private static void WriteLoopFilter(WebpVp8BoolEncoder writer, int quality) {
+        var level = (100 - quality) * 63 / 100;
+        if (level < 0) level = 0;
+        if (level > 63) level = 63;
+
+        var sharpness = quality >= 75 ? 4 : 0;
+        if (sharpness > 7) sharpness = 7;
+
+        writer.WriteBool(128, false); // filter type (normal)
+        writer.WriteLiteral(level, 6);
+        writer.WriteLiteral(sharpness, 3);
         writer.WriteBool(128, false); // delta enabled
     }
 
