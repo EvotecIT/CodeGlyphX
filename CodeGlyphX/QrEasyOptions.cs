@@ -123,6 +123,17 @@ public sealed class QrEasyOptions {
     public QrPngModuleScaleMapOptions? ModuleScaleMap { get; set; }
 
     /// <summary>
+    /// Overrides the module shape map.
+    /// </summary>
+    public QrPngModuleShapeMapOptions? ModuleShapeMap { get; set; }
+
+    /// <summary>
+    /// Overrides per-module jitter options.
+    /// </summary>
+    public QrPngModuleJitterOptions? ModuleJitter { get; set; }
+
+
+    /// <summary>
     /// When true, keeps non-eye functional patterns at a stable, scan-friendly style.
     /// </summary>
     public bool ProtectFunctionalPatterns { get; set; } = true;
