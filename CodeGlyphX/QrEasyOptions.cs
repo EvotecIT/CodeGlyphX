@@ -232,7 +232,12 @@ public sealed class QrEasyOptions {
     /// <summary>
     /// WebP quality (0..100). A value of 100 uses lossless VP8L.
     /// </summary>
-    public int WebpQuality { get; set; } = 100;
+    public int WebpQuality {
+        get => _webpQuality;
+        set => _webpQuality = ClampWebpQuality(value);
+    }
+
+    private int _webpQuality = 100;
 
     /// <summary>
     /// ICO output sizes in pixels (1..256). Defaults to common icon sizes.
@@ -248,4 +253,10 @@ public sealed class QrEasyOptions {
     /// When true, renders HTML using email-safe tables.
     /// </summary>
     public bool HtmlEmailSafeTable { get; set; }
+
+    private static int ClampWebpQuality(int value) {
+        if (value < 0) return 0;
+        if (value > 100) return 100;
+        return value;
+    }
 }

@@ -297,7 +297,7 @@ public static partial class Pdf417Code {
     }
 
     /// <summary>
-    /// Saves PDF417 to a file based on extension (.png/.webp/.svg/.svgz/.html/.jpg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps).
+    /// Saves PDF417 to a file based on extension (.png/.webp/.svg/.svgz/.svg.gz/.html/.htm/.jpg/.jpeg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps/.ps).
     /// Defaults to PNG when no extension is provided.
     /// </summary>
     public static string Save(string text, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, string? title = null) {
@@ -353,7 +353,7 @@ public static partial class Pdf417Code {
     }
 
     /// <summary>
-    /// Saves PDF417 to a file for byte payloads based on extension (.png/.webp/.svg/.svgz/.html/.jpg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps).
+    /// Saves PDF417 to a file for byte payloads based on extension (.png/.webp/.svg/.svgz/.svg.gz/.html/.htm/.jpg/.jpeg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps/.ps).
     /// Defaults to PNG when no extension is provided.
     /// </summary>
     public static string Save(byte[] data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, string? title = null) {
