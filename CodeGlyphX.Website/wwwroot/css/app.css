@@ -1780,8 +1780,9 @@ body.using-keyboard .showcase-hero h1:focus-visible {
     background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(6, 182, 212, 0.1) 100%);
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
-    padding: 3rem 2rem;
+    padding: 3rem 2rem 3.5rem;
     text-align: center;
+    margin-top: 3rem;
 }
 
 .showcase-submit-content h3 {
@@ -1790,10 +1791,11 @@ body.using-keyboard .showcase-hero h1:focus-visible {
     color: var(--text);
 }
 
-.showcase-submit-content p {
+.showcase-submit-content p,
+.showcase-submit > p {
     color: var(--text-muted);
     max-width: 500px;
-    margin: 0 auto 1.5rem;
+    margin: 0 auto 2rem;
 }
 
 .showcase-submit .btn {
@@ -2788,13 +2790,18 @@ section {
     .nav-links {
         display: flex;
         align-items: center;
-        gap: 2rem;
+        gap: 0;
+    }
+
+    .nav-links a {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.875rem;
     }
 
     .nav-actions {
         display: flex;
         align-items: center;
-        gap: 1rem;
+        gap: 0.5rem;
     }
 }
 
@@ -3987,6 +3994,16 @@ body.using-keyboard .faq-hero h1:focus-visible {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+}
+
+.support-hero h1:focus,
+.support-hero h1:focus-visible {
+    outline: none;
+}
+
+body.using-keyboard .support-hero h1:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 4px;
 }
 
 .support-hero p {
