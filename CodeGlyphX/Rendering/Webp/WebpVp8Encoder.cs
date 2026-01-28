@@ -4,7 +4,7 @@ using System.IO;
 namespace CodeGlyphX.Rendering.Webp;
 
 /// <summary>
-/// Managed VP8 lossy encoder (minimal DC-only intra 4x4).
+/// Managed VP8 lossy encoder (minimal intra-only encoder).
 /// </summary>
 internal static class WebpVp8Encoder {
     private const int BlockSize = 4;
@@ -24,6 +24,12 @@ internal static class WebpVp8Encoder {
     private const int CoeffPrevContexts = 3;
     private const int CoeffEntropyNodes = 11;
     private const int CoefficientsPerBlock = 16;
+    private const int IdctCospi8Sqrt2Minus1 = 20091;
+    private const int IdctSinpi8Sqrt2 = 35468;
+    private const int MaxCoefficientMagnitude = 2047;
+
+    // Precompute a forward transform that matches the decoder's inverse transform.
+    private static readonly double[,] ForwardTransform = BuildForwardTransformMatrix();
 
     private static readonly int[] CoeffBandTable =
     {
@@ -166,9 +172,8 @@ internal static class WebpVp8Encoder {
 
         for (var row = 0; row < macroblockRows; row++) {
             for (var col = 0; col < macroblockCols; col++) {
-                WriteMacroblockHeader(headerWriter, row, col, aboveSubModes, currentSubModes);
-
-                EncodeMacroblockTokens(
+                EncodeMacroblock(
+                    headerWriter,
                     tokenWriter,
                     probabilities,
                     yPlane,
@@ -188,6 +193,7 @@ internal static class WebpVp8Encoder {
                     uNzCurrent,
                     vNzAbove,
                     vNzCurrent,
+                    aboveSubModes,
                     currentSubModes);
             }
 
@@ -223,7 +229,8 @@ internal static class WebpVp8Encoder {
         return true;
     }
 
-    private static void EncodeMacroblockTokens(
+    private static void EncodeMacroblock(
+        WebpVp8BoolEncoder headerWriter,
         WebpVp8BoolEncoder tokenWriter,
         int[] probabilities,
         byte[] yPlane,
@@ -243,6 +250,7 @@ internal static class WebpVp8Encoder {
         byte[] uNzCurrent,
         byte[] vNzAbove,
         byte[] vNzCurrent,
+        int[] aboveSubModes,
         int[] currentSubModes) {
         var macroblockOffsetX = mbX * MacroblockSize;
         var macroblockOffsetY = mbY * MacroblockSize;
@@ -250,6 +258,8 @@ internal static class WebpVp8Encoder {
         var chromaHeight = (height + 1) >> 1;
         var chromaOffsetX = mbX * (MacroblockSize / 2);
         var chromaOffsetY = mbY * (MacroblockSize / 2);
+
+        WriteKeyframeYMode(headerWriter, YModeBPred);
 
         var yBlockBase = mbX * MacroblockSubBlockCount;
         for (var blockIndex = 0; blockIndex < MacroblockSubBlockCount; blockIndex++) {
@@ -271,11 +281,32 @@ internal static class WebpVp8Encoder {
 
             if (initialContext > 2) initialContext = 2;
 
+            var aboveMode = BModeDcPred;
+            if (subY == 0) {
+                if (mbY > 0) {
+                    aboveMode = aboveSubModes[yBlockBase + 12 + subX];
+                }
+            } else {
+                aboveMode = currentSubModes[yBlockBase + ((subY - 1) * 4) + subX];
+            }
+
+            var leftMode = BModeDcPred;
+            if (subX == 0) {
+                if (mbX > 0) {
+                    leftMode = currentSubModes[yBlockBase - MacroblockSubBlockCount + (subY * 4) + 3];
+                }
+            } else {
+                leftMode = currentSubModes[yBlockBase + (subY * 4) + subX - 1];
+            }
+
             var dstX = macroblockOffsetX + (subX * BlockSize);
             var dstY = macroblockOffsetY + (subY * BlockSize);
-            var mode = currentSubModes[yBlockBase + blockIndex];
+            var mode = ChooseBestBlockMode(yPlane, reconY, width, height, dstX, dstY);
 
-            var hasNonZero = EncodeDcOnlyBlock(
+            WriteKeyframeBMode(headerWriter, aboveMode, leftMode, mode);
+            currentSubModes[yBlockBase + blockIndex] = mode;
+
+            var hasNonZero = EncodeBlock(
                 tokenWriter,
                 probabilities,
                 BlockTypeY,
@@ -287,10 +318,23 @@ internal static class WebpVp8Encoder {
                 dstX,
                 dstY,
                 mode,
-                dequant.Y1Dc);
+                dequant.Y1Dc,
+                dequant.Y1Ac);
 
             yNzCurrent[yBlockBase + blockIndex] = hasNonZero ? (byte)1 : (byte)0;
         }
+
+        var uvMode = ChooseBestUvMode(
+            uPlane,
+            vPlane,
+            reconU,
+            reconV,
+            chromaWidth,
+            chromaHeight,
+            chromaOffsetX,
+            chromaOffsetY);
+
+        WriteKeyframeUvMode(headerWriter, uvMode);
 
         var chromaBlockBase = mbX * MacroblockChromaBlocks;
         for (var blockIndex = 0; blockIndex < MacroblockChromaBlocks; blockIndex++) {
@@ -315,7 +359,7 @@ internal static class WebpVp8Encoder {
             var dstX = chromaOffsetX + (subX * BlockSize);
             var dstY = chromaOffsetY + (subY * BlockSize);
 
-            var hasNonZeroU = EncodeDcOnlyBlock(
+            var hasNonZeroU = EncodeBlock(
                 tokenWriter,
                 probabilities,
                 BlockTypeU,
@@ -326,8 +370,9 @@ internal static class WebpVp8Encoder {
                 chromaHeight,
                 dstX,
                 dstY,
-                ModeDcPred,
-                dequant.UvDc);
+                uvMode,
+                dequant.UvDc,
+                dequant.UvAc);
 
             uNzCurrent[chromaBlockBase + blockIndex] = hasNonZeroU ? (byte)1 : (byte)0;
         }
@@ -354,7 +399,7 @@ internal static class WebpVp8Encoder {
             var dstX = chromaOffsetX + (subX * BlockSize);
             var dstY = chromaOffsetY + (subY * BlockSize);
 
-            var hasNonZeroV = EncodeDcOnlyBlock(
+            var hasNonZeroV = EncodeBlock(
                 tokenWriter,
                 probabilities,
                 BlockTypeV,
@@ -365,14 +410,15 @@ internal static class WebpVp8Encoder {
                 chromaHeight,
                 dstX,
                 dstY,
-                ModeDcPred,
-                dequant.UvDc);
+                uvMode,
+                dequant.UvDc,
+                dequant.UvAc);
 
             vNzCurrent[chromaBlockBase + blockIndex] = hasNonZeroV ? (byte)1 : (byte)0;
         }
     }
 
-    private static bool EncodeDcOnlyBlock(
+    private static bool EncodeBlock(
         WebpVp8BoolEncoder tokenWriter,
         int[] probabilities,
         int blockType,
@@ -384,20 +430,22 @@ internal static class WebpVp8Encoder {
         int dstX,
         int dstY,
         int mode,
-        int dequantDc) {
+        int dequantDc,
+        int dequantAc) {
         Span<byte> predicted = stackalloc byte[BlockSize * BlockSize];
-        PredictBlockDc(recon, planeWidth, planeHeight, dstX, dstY, predicted);
+        PredictBlock(recon, planeWidth, planeHeight, dstX, dstY, mode, predicted);
 
-        var avgResidual = ComputeAverageResidual(source, planeWidth, planeHeight, dstX, dstY, predicted);
-        var desired = avgResidual * 8;
-        var qdc = Quantize(desired, dequantDc);
-        var dequant = qdc * dequantDc;
-        var residualConstant = (dequant + 4) >> 3;
+        Span<int> residual = stackalloc int[CoefficientsPerBlock];
+        FillResidual(source, planeWidth, planeHeight, dstX, dstY, predicted, residual);
 
-        UpdateReconstruction(recon, planeWidth, planeHeight, dstX, dstY, predicted, residualConstant);
+        Span<double> dequantized = stackalloc double[CoefficientsPerBlock];
+        ComputeCoefficients(residual, dequantized);
 
         var coefficients = new int[CoefficientsPerBlock];
-        coefficients[0] = qdc;
+        for (var i = 0; i < CoefficientsPerBlock; i++) {
+            var dequant = i == 0 ? dequantDc : dequantAc;
+            coefficients[i] = ClampCoefficient(QuantizeDouble(dequantized[i], dequant));
+        }
 
         var hasNonZero = EncodeBlockCoefficients(
             tokenWriter,
@@ -405,6 +453,15 @@ internal static class WebpVp8Encoder {
             blockType,
             initialContext,
             coefficients);
+
+        var dequantCoeffs = new int[CoefficientsPerBlock];
+        for (var i = 0; i < CoefficientsPerBlock; i++) {
+            var dequant = i == 0 ? dequantDc : dequantAc;
+            dequantCoeffs[i] = coefficients[i] * dequant;
+        }
+
+        var residualDecoded = InverseTransform4x4(dequantCoeffs);
+        UpdateReconstruction(recon, planeWidth, planeHeight, dstX, dstY, predicted, residualDecoded);
 
         return hasNonZero;
     }
@@ -531,45 +588,6 @@ internal static class WebpVp8Encoder {
         var left = CoeffTokenTree[nodeValue];
         var right = CoeffTokenTree[nodeValue + 1];
         return ContainsToken(left, token) || ContainsToken(right, token);
-    }
-
-    private static void WriteMacroblockHeader(
-        WebpVp8BoolEncoder headerWriter,
-        int row,
-        int col,
-        int[] aboveSubModes,
-        int[] currentSubModes) {
-        WriteKeyframeYMode(headerWriter, YModeBPred);
-
-        var baseIndex = col * MacroblockSubBlockCount;
-        for (var subY = 0; subY < 4; subY++) {
-            for (var subX = 0; subX < 4; subX++) {
-                var blockIndex = (subY * 4) + subX;
-
-                var aboveMode = BModeDcPred;
-                if (subY == 0) {
-                    if (row > 0) {
-                        aboveMode = aboveSubModes[baseIndex + 12 + subX];
-                    }
-                } else {
-                    aboveMode = currentSubModes[baseIndex + ((subY - 1) * 4) + subX];
-                }
-
-                var leftMode = BModeDcPred;
-                if (subX == 0) {
-                    if (col > 0) {
-                        leftMode = currentSubModes[baseIndex - MacroblockSubBlockCount + (subY * 4) + 3];
-                    }
-                } else {
-                    leftMode = currentSubModes[baseIndex + (subY * 4) + subX - 1];
-                }
-
-                WriteKeyframeBMode(headerWriter, aboveMode, leftMode, BModeDcPred);
-                currentSubModes[baseIndex + blockIndex] = BModeDcPred;
-            }
-        }
-
-        WriteKeyframeUvMode(headerWriter, ModeDcPred);
     }
 
     private static void WriteControlHeader(WebpVp8BoolEncoder writer) {
@@ -729,7 +747,99 @@ internal static class WebpVp8Encoder {
         }
     }
 
-    private static void PredictBlockDc(byte[] plane, int planeWidth, int planeHeight, int dstX, int dstY, Span<byte> predicted) {
+    private static int ChooseBestBlockMode(
+        byte[] source,
+        byte[] recon,
+        int planeWidth,
+        int planeHeight,
+        int dstX,
+        int dstY) {
+        var bestMode = ModeDcPred;
+        var bestCost = int.MaxValue;
+        Span<byte> predicted = stackalloc byte[BlockSize * BlockSize];
+
+        for (var mode = 0; mode <= 3; mode++) {
+            PredictBlock(recon, planeWidth, planeHeight, dstX, dstY, mode, predicted);
+            var cost = ComputePredictionCost(source, planeWidth, planeHeight, dstX, dstY, predicted);
+            if (cost < bestCost) {
+                bestCost = cost;
+                bestMode = mode;
+            }
+        }
+
+        return bestMode;
+    }
+
+    private static int ChooseBestUvMode(
+        byte[] uPlane,
+        byte[] vPlane,
+        byte[] reconU,
+        byte[] reconV,
+        int chromaWidth,
+        int chromaHeight,
+        int chromaOffsetX,
+        int chromaOffsetY) {
+        var bestMode = ModeDcPred;
+        var bestCost = long.MaxValue;
+        Span<byte> predicted = stackalloc byte[BlockSize * BlockSize];
+
+        for (var mode = 0; mode <= 3; mode++) {
+            long cost = 0;
+            for (var blockIndex = 0; blockIndex < MacroblockChromaBlocks; blockIndex++) {
+                var subX = blockIndex & 1;
+                var subY = blockIndex >> 1;
+                var dstX = chromaOffsetX + (subX * BlockSize);
+                var dstY = chromaOffsetY + (subY * BlockSize);
+
+                PredictBlock(reconU, chromaWidth, chromaHeight, dstX, dstY, mode, predicted);
+                cost += ComputePredictionCost(uPlane, chromaWidth, chromaHeight, dstX, dstY, predicted);
+
+                PredictBlock(reconV, chromaWidth, chromaHeight, dstX, dstY, mode, predicted);
+                cost += ComputePredictionCost(vPlane, chromaWidth, chromaHeight, dstX, dstY, predicted);
+            }
+
+            if (cost < bestCost) {
+                bestCost = cost;
+                bestMode = mode;
+            }
+        }
+
+        return bestMode;
+    }
+
+    private static int ComputePredictionCost(
+        byte[] source,
+        int planeWidth,
+        int planeHeight,
+        int dstX,
+        int dstY,
+        ReadOnlySpan<byte> predicted) {
+        var sum = 0;
+        for (var y = 0; y < BlockSize; y++) {
+            var py = dstY + y;
+            if ((uint)py >= (uint)planeHeight) continue;
+            var rowOffset = py * planeWidth;
+            var predRow = y * BlockSize;
+            for (var x = 0; x < BlockSize; x++) {
+                var px = dstX + x;
+                if ((uint)px >= (uint)planeWidth) continue;
+                var diff = source[rowOffset + px] - predicted[predRow + x];
+                if (diff < 0) diff = -diff;
+                sum += diff;
+            }
+        }
+
+        return sum;
+    }
+
+    private static void PredictBlock(
+        byte[] plane,
+        int planeWidth,
+        int planeHeight,
+        int dstX,
+        int dstY,
+        int mode,
+        Span<byte> predicted) {
         Span<byte> top = stackalloc byte[BlockSize];
         Span<byte> left = stackalloc byte[BlockSize];
 
@@ -741,8 +851,12 @@ internal static class WebpVp8Encoder {
             left[i] = GetPlaneSampleOrDefault(plane, planeWidth, planeHeight, dstX - 1, dstY + i, 128);
         }
 
+        var topLeft = GetPlaneSampleOrDefault(plane, planeWidth, planeHeight, dstX - 1, dstY - 1, 128);
+        var predictionKind = mode;
+        if (predictionKind < 0 || predictionKind > 3) predictionKind = ModeDcPred;
+
         var dc = 128;
-        if (hasTop || hasLeft) {
+        if (predictionKind == ModeDcPred) {
             var sum = 0;
             var count = 0;
             if (hasTop) {
@@ -758,35 +872,41 @@ internal static class WebpVp8Encoder {
             }
         }
 
-        predicted.Fill((byte)dc);
+        for (var y = 0; y < BlockSize; y++) {
+            var rowOffset = y * BlockSize;
+            for (var x = 0; x < BlockSize; x++) {
+                var predictedSample = predictionKind switch {
+                    1 => top[x],
+                    2 => left[y],
+                    3 => ClampToByte(left[y] + top[x] - topLeft),
+                    _ => (byte)dc,
+                };
+                predicted[rowOffset + x] = predictedSample;
+            }
+        }
     }
 
-    private static int ComputeAverageResidual(
+    private static void FillResidual(
         byte[] source,
         int planeWidth,
         int planeHeight,
         int dstX,
         int dstY,
-        ReadOnlySpan<byte> predicted) {
-        var sum = 0;
-        var count = 0;
+        ReadOnlySpan<byte> predicted,
+        Span<int> residual) {
+        residual.Clear();
         for (var y = 0; y < BlockSize; y++) {
             var py = dstY + y;
             if ((uint)py >= (uint)planeHeight) continue;
             var rowOffset = py * planeWidth;
             var predRow = y * BlockSize;
+            var resRow = y * BlockSize;
             for (var x = 0; x < BlockSize; x++) {
                 var px = dstX + x;
                 if ((uint)px >= (uint)planeWidth) continue;
-                var value = source[rowOffset + px] - predicted[predRow + x];
-                sum += value;
-                count++;
+                residual[resRow + x] = source[rowOffset + px] - predicted[predRow + x];
             }
         }
-
-        if (count == 0) return 0;
-        if (sum >= 0) return (sum + (count >> 1)) / count;
-        return (sum - (count >> 1)) / count;
     }
 
     private static void UpdateReconstruction(
@@ -796,24 +916,92 @@ internal static class WebpVp8Encoder {
         int dstX,
         int dstY,
         ReadOnlySpan<byte> predicted,
-        int residual) {
+        ReadOnlySpan<int> residual) {
         for (var y = 0; y < BlockSize; y++) {
             var py = dstY + y;
             if ((uint)py >= (uint)planeHeight) continue;
             var rowOffset = py * planeWidth;
             var predRow = y * BlockSize;
+            var resRow = y * BlockSize;
             for (var x = 0; x < BlockSize; x++) {
                 var px = dstX + x;
                 if ((uint)px >= (uint)planeWidth) continue;
-                recon[rowOffset + px] = ClampToByte(predicted[predRow + x] + residual);
+                recon[rowOffset + px] = ClampToByte(predicted[predRow + x] + residual[resRow + x]);
             }
         }
     }
 
-    private static int Quantize(int value, int dequant) {
+    private static void ComputeCoefficients(ReadOnlySpan<int> residual, Span<double> coefficients) {
+        for (var i = 0; i < CoefficientsPerBlock; i++) {
+            var sum = 0.0;
+            for (var j = 0; j < CoefficientsPerBlock; j++) {
+                sum += ForwardTransform[i, j] * residual[j];
+            }
+            coefficients[i] = sum;
+        }
+    }
+
+    private static int QuantizeDouble(double value, int dequant) {
         if (dequant <= 0) return 0;
-        if (value >= 0) return (value + (dequant >> 1)) / dequant;
-        return (value - (dequant >> 1)) / dequant;
+        var scaled = value / dequant;
+        if (scaled >= 0) return (int)Math.Floor(scaled + 0.5);
+        return (int)Math.Ceiling(scaled - 0.5);
+    }
+
+    private static int ClampCoefficient(int value) {
+        if (value < -MaxCoefficientMagnitude) return -MaxCoefficientMagnitude;
+        if (value > MaxCoefficientMagnitude) return MaxCoefficientMagnitude;
+        return value;
+    }
+
+    private static int[] InverseTransform4x4(int[] input) {
+        var output = new int[CoefficientsPerBlock];
+        var temp = new int[CoefficientsPerBlock];
+
+        for (var i = 0; i < BlockSize; i++) {
+            var ip0 = input[i];
+            var ip4 = input[i + 4];
+            var ip8 = input[i + 8];
+            var ip12 = input[i + 12];
+
+            var a1 = ip0 + ip8;
+            var b1 = ip0 - ip8;
+            var temp1 = (ip4 * IdctSinpi8Sqrt2) >> 16;
+            var temp2 = ip12 + ((ip12 * IdctCospi8Sqrt2Minus1) >> 16);
+            var c1 = temp1 - temp2;
+            temp1 = ip4 + ((ip4 * IdctCospi8Sqrt2Minus1) >> 16);
+            temp2 = (ip12 * IdctSinpi8Sqrt2) >> 16;
+            var d1 = temp1 + temp2;
+
+            temp[i] = a1 + d1;
+            temp[i + 12] = a1 - d1;
+            temp[i + 4] = b1 + c1;
+            temp[i + 8] = b1 - c1;
+        }
+
+        for (var i = 0; i < BlockSize; i++) {
+            var baseIndex = i * BlockSize;
+            var t0 = temp[baseIndex];
+            var t1 = temp[baseIndex + 1];
+            var t2 = temp[baseIndex + 2];
+            var t3 = temp[baseIndex + 3];
+
+            var a1 = t0 + t2;
+            var b1 = t0 - t2;
+            var temp1 = (t1 * IdctSinpi8Sqrt2) >> 16;
+            var temp2 = t3 + ((t3 * IdctCospi8Sqrt2Minus1) >> 16);
+            var c1 = temp1 - temp2;
+            temp1 = t1 + ((t1 * IdctCospi8Sqrt2Minus1) >> 16);
+            temp2 = (t3 * IdctSinpi8Sqrt2) >> 16;
+            var d1 = temp1 + temp2;
+
+            output[baseIndex] = (a1 + d1 + 4) >> 3;
+            output[baseIndex + 3] = (a1 - d1 + 4) >> 3;
+            output[baseIndex + 1] = (b1 + c1 + 4) >> 3;
+            output[baseIndex + 2] = (b1 - c1 + 4) >> 3;
+        }
+
+        return output;
     }
 
     private static int QualityToBaseQIndex(int quality) {
@@ -952,6 +1140,83 @@ internal static class WebpVp8Encoder {
         buffer[offset + 1] = (byte)((value >> 8) & 0xFF);
         buffer[offset + 2] = (byte)((value >> 16) & 0xFF);
         buffer[offset + 3] = (byte)((value >> 24) & 0xFF);
+    }
+
+    private static double[,] BuildForwardTransformMatrix() {
+        var inverseMatrix = new double[CoefficientsPerBlock, CoefficientsPerBlock];
+        for (var j = 0; j < CoefficientsPerBlock; j++) {
+            var coeffs = new int[CoefficientsPerBlock];
+            coeffs[j] = 1;
+            var residual = InverseTransform4x4(coeffs);
+            for (var i = 0; i < CoefficientsPerBlock; i++) {
+                inverseMatrix[i, j] = residual[i];
+            }
+        }
+
+        return InvertMatrix(inverseMatrix);
+    }
+
+    private static double[,] InvertMatrix(double[,] matrix) {
+        var size = CoefficientsPerBlock;
+        var augmented = new double[size, size * 2];
+
+        for (var row = 0; row < size; row++) {
+            for (var col = 0; col < size; col++) {
+                augmented[row, col] = matrix[row, col];
+            }
+            augmented[row, size + row] = 1.0;
+        }
+
+        for (var col = 0; col < size; col++) {
+            var pivotRow = col;
+            var pivot = Math.Abs(augmented[pivotRow, col]);
+            for (var row = col + 1; row < size; row++) {
+                var candidate = Math.Abs(augmented[row, col]);
+                if (candidate > pivot) {
+                    pivot = candidate;
+                    pivotRow = row;
+                }
+            }
+
+            if (pivot < 1e-9) {
+                var identity = new double[size, size];
+                for (var i = 0; i < size; i++) {
+                    identity[i, i] = 1.0;
+                }
+                return identity;
+            }
+
+            if (pivotRow != col) {
+                for (var swapCol = 0; swapCol < size * 2; swapCol++) {
+                    var temp = augmented[col, swapCol];
+                    augmented[col, swapCol] = augmented[pivotRow, swapCol];
+                    augmented[pivotRow, swapCol] = temp;
+                }
+            }
+
+            var scale = augmented[col, col];
+            for (var scaleCol = 0; scaleCol < size * 2; scaleCol++) {
+                augmented[col, scaleCol] /= scale;
+            }
+
+            for (var row = 0; row < size; row++) {
+                if (row == col) continue;
+                var factor = augmented[row, col];
+                if (Math.Abs(factor) < 1e-12) continue;
+                for (var reduceCol = 0; reduceCol < size * 2; reduceCol++) {
+                    augmented[row, reduceCol] -= factor * augmented[col, reduceCol];
+                }
+            }
+        }
+
+        var inverse = new double[size, size];
+        for (var row = 0; row < size; row++) {
+            for (var col = 0; col < size; col++) {
+                inverse[row, col] = augmented[row, size + col];
+            }
+        }
+
+        return inverse;
     }
 
     private static void SwapRowContexts(ref byte[] above, ref byte[] current) {

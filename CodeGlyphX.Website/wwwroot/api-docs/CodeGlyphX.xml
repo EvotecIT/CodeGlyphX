@@ -19627,7 +19627,7 @@
         </member>
         <member name="T:CodeGlyphX.Rendering.Webp.WebpVp8Encoder">
             <summary>
-            Managed VP8 lossy encoder (minimal DC-only intra 4x4).
+            Managed VP8 lossy encoder (minimal intra-only encoder).
             </summary>
         </member>
         <member name="T:CodeGlyphX.Rendering.Webp.WebpVp8lDecoder">
