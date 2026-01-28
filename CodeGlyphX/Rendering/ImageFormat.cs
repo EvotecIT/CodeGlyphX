@@ -60,4 +60,8 @@ public enum ImageFormat {
     /// ICO image (embedded PNG/BMP).
     /// </summary>
     Ico,
+    /// <summary>
+    /// WebP image (managed VP8/VP8L stills; first-frame decode for animations).
+    /// </summary>
+    Webp,
 }

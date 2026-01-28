@@ -4,6 +4,7 @@ using CodeGlyphX.Rendering.Gif;
 using CodeGlyphX.Rendering.Ico;
 using CodeGlyphX.Rendering.Tga;
 using CodeGlyphX.Rendering.Tiff;
+using CodeGlyphX.Rendering.Webp;
 
 namespace CodeGlyphX.Rendering;
 
@@ -45,6 +46,8 @@ public static partial class ImageReader {
         width = 0;
         height = 0;
         switch (format) {
+            case ImageFormat.Webp:
+                return WebpReader.TryReadDimensions(data, out width, out height);
             case ImageFormat.Png:
                 return TryReadPngSize(data, out width, out height);
             case ImageFormat.Jpeg:

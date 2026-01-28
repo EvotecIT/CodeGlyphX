@@ -10671,16 +10671,6 @@
             Sets module scale map.
             </summary>
         </member>
-        <member name="M:CodeGlyphX.QR.QrBuilder.WithModuleShapeMap(CodeGlyphX.Rendering.Png.QrPngModuleShapeMapOptions)">
-            <summary>
-            Sets module shape map.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.QR.QrBuilder.WithModuleJitter(CodeGlyphX.Rendering.Png.QrPngModuleJitterOptions)">
-            <summary>
-            Sets per-module jitter options.
-            </summary>
-        </member>
         <member name="M:CodeGlyphX.QR.QrBuilder.WithModuleCornerRadiusPx(System.Int32)">
             <summary>
             Sets module corner radius in pixels.
@@ -12394,61 +12384,6 @@
             Safety guardrail strength applied after the theme.
             </summary>
         </member>
-        <member name="T:CodeGlyphX.QrArtPalettes">
-            <summary>
-            Curated, scan-friendly palette sets for QR art.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.QrArtPalettes.Warm">
-            <summary>
-            Warm palette with high contrast on a light background.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.QrArtPalettes.Cool">
-            <summary>
-            Cool palette with high contrast on a light background.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.QrArtPalettes.Pastel">
-            <summary>
-            Pastel palette with contrast-anchored accents.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.QrArtPalettes.HighContrast">
-            <summary>
-            High-contrast palette suitable for strong scanning reliability.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.QrArtPalettes.Neon">
-            <summary>
-            Neon palette for dark canvases.
-            </summary>
-        </member>
-        <member name="T:CodeGlyphX.QrArtPalette">
-            <summary>
-            Palette bundle with a suggested background/foreground and palette.
-            </summary>
-        </member>
-        <member name="P:CodeGlyphX.QrArtPalette.Background">
-            <summary>
-            Suggested background color.
-            </summary>
-        </member>
-        <member name="P:CodeGlyphX.QrArtPalette.Foreground">
-            <summary>
-            Suggested foreground color.
-            </summary>
-        </member>
-        <member name="P:CodeGlyphX.QrArtPalette.Palette">
-            <summary>
-            Palette options for the foreground.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.QrArtPalette.#ctor(CodeGlyphX.Rendering.Png.Rgba32,CodeGlyphX.Rendering.Png.Rgba32,CodeGlyphX.Rendering.Png.Rgba32[])">
-            <summary>
-            Create a palette bundle.
-            </summary>
-        </member>
         <member name="T:CodeGlyphX.QrArtPresets">
             <summary>
             Expressive QR art presets with scan-friendly defaults.
@@ -13740,16 +13675,6 @@
             Overrides the module scale map.
             </summary>
         </member>
-        <member name="P:CodeGlyphX.QrEasyOptions.ModuleShapeMap">
-            <summary>
-            Overrides the module shape map.
-            </summary>
-        </member>
-        <member name="P:CodeGlyphX.QrEasyOptions.ModuleJitter">
-            <summary>
-            Overrides per-module jitter options.
-            </summary>
-        </member>
         <member name="P:CodeGlyphX.QrEasyOptions.ProtectFunctionalPatterns">
             <summary>
             When true, keeps non-eye functional patterns at a stable, scan-friendly style.
@@ -13884,31 +13809,6 @@
         <member name="F:CodeGlyphX.QrErrorCorrectionLevel.H">
             <summary>
             High (~30%).
-            </summary>
-        </member>
-        <member name="T:CodeGlyphX.QrEyePresets">
-            <summary>
-            Eye-only styling presets for QR codes.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.QrEyePresets.NeonSparkle">
-            <summary>
-            Neon sparkle eyes for dark canvases.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.QrEyePresets.Sunburst">
-            <summary>
-            Sunburst rays around eyes with safe spacing.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.QrEyePresets.MinimalRing">
-            <summary>
-            Minimal ring eyes with subtle accents.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.QrEyePresets.RetroTarget">
-            <summary>
-            Retro target eyes with stripes.
             </summary>
         </member>
         <member name="T:CodeGlyphX.QrFnc1Mode">
@@ -15751,6 +15651,11 @@
             ICO image (embedded PNG/BMP).
             </summary>
         </member>
+        <member name="F:CodeGlyphX.Rendering.ImageFormat.Webp">
+            <summary>
+            WebP image (managed VP8/VP8L stills; first-frame decode for animations).
+            </summary>
+        </member>
         <member name="T:CodeGlyphX.Rendering.ImageInfo">
             <summary>
             Basic image metadata returned by ImageReader.TryReadInfo.
@@ -16787,12 +16692,12 @@
         </member>
         <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasBadgeOptions.WidthPx">
             <summary>
-            Badge width in pixels (0 disables drawing).
+            Badge width in pixels.
             </summary>
         </member>
         <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasBadgeOptions.HeightPx">
             <summary>
-            Badge height in pixels (0 disables drawing).
+            Badge height in pixels.
             </summary>
         </member>
         <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasBadgeOptions.GapPx">
@@ -16813,16 +16718,6 @@
         <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasBadgeOptions.Color">
             <summary>
             Badge color.
-            </summary>
-        </member>
-        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasBadgeOptions.Gradient">
-            <summary>
-            Optional badge gradient (overrides <see cref="P:CodeGlyphX.Rendering.Png.QrPngCanvasBadgeOptions.Color"/> when set).
-            </summary>
-        </member>
-        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasBadgeOptions.EdgePattern">
-            <summary>
-            Optional edge pattern overlay.
             </summary>
         </member>
         <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasBadgeOptions.TailPx">
@@ -16895,96 +16790,6 @@
             Ribbon-style badge with optional tails.
             </summary>
         </member>
-        <member name="T:CodeGlyphX.Rendering.Png.QrPngCanvasBandOptions">
-            <summary>
-            Decorative band drawn outside the QR bounds (often used as a quiet-zone ring).
-            </summary>
-        </member>
-        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasBandOptions.BandPx">
-            <summary>
-            Band thickness in pixels.
-            </summary>
-        </member>
-        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasBandOptions.GapPx">
-            <summary>
-            Gap between the QR bounds (including quiet zone) and the band.
-            </summary>
-        </member>
-        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasBandOptions.RadiusPx">
-            <summary>
-            Band corner radius in pixels.
-            </summary>
-        </member>
-        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasBandOptions.Color">
-            <summary>
-            Band color.
-            </summary>
-        </member>
-        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasBandOptions.Gradient">
-            <summary>
-            Optional band gradient.
-            </summary>
-        </member>
-        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasBandOptions.EdgePattern">
-            <summary>
-            Optional edge pattern overlay.
-            </summary>
-        </member>
-        <member name="T:CodeGlyphX.Rendering.Png.QrPngCanvasEdgePatternOptions">
-            <summary>
-            Edge pattern options for frames and badges.
-            </summary>
-        </member>
-        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasEdgePatternOptions.Type">
-            <summary>
-            Pattern type.
-            </summary>
-        </member>
-        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasEdgePatternOptions.Color">
-            <summary>
-            Pattern color.
-            </summary>
-        </member>
-        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasEdgePatternOptions.ThicknessPx">
-            <summary>
-            Pattern thickness in pixels.
-            </summary>
-        </member>
-        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasEdgePatternOptions.SpacingPx">
-            <summary>
-            Spacing between pattern elements in pixels.
-            </summary>
-        </member>
-        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasEdgePatternOptions.DashPx">
-            <summary>
-            Dash length in pixels (used by dashes/stitches).
-            </summary>
-        </member>
-        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasEdgePatternOptions.InsetPx">
-            <summary>
-            Inset from the outer edge in pixels.
-            </summary>
-        </member>
-        <member name="T:CodeGlyphX.Rendering.Png.QrPngCanvasEdgePatternType">
-            <summary>
-            Edge pattern styles for canvas frames and badges.
-            </summary>
-        </member>
-        <member name="F:CodeGlyphX.Rendering.Png.QrPngCanvasEdgePatternType.Dots">
-            <summary>
-            Round dots along the edge.
-            </summary>
-        </member>
-        <member name="F:CodeGlyphX.Rendering.Png.QrPngCanvasEdgePatternType.Dashes">
-            <summary>
-            Short dashed segments along the edge.
-            </summary>
-        </member>
-        <member name="F:CodeGlyphX.Rendering.Png.QrPngCanvasEdgePatternType.Stitches">
-            <summary>
-            Stitched-style short segments along the edge.
-            </summary>
-        </member>
         <member name="T:CodeGlyphX.Rendering.Png.QrPngCanvasFrameOptions">
             <summary>
             Decorative frame options drawn around the QR bounds (outside the QR area).
@@ -17010,16 +16815,6 @@
             Frame color.
             </summary>
         </member>
-        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasFrameOptions.Gradient">
-            <summary>
-            Optional frame gradient (overrides <see cref="P:CodeGlyphX.Rendering.Png.QrPngCanvasFrameOptions.Color"/> when set).
-            </summary>
-        </member>
-        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasFrameOptions.EdgePattern">
-            <summary>
-            Optional edge pattern overlay.
-            </summary>
-        </member>
         <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasFrameOptions.InnerThicknessPx">
             <summary>
             Optional inner frame thickness in pixels (0 = disabled).
@@ -17033,16 +16828,6 @@
         <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasFrameOptions.InnerColor">
             <summary>
             Optional inner frame color. When null, <see cref="P:CodeGlyphX.Rendering.Png.QrPngCanvasFrameOptions.Color"/> is used.
-            </summary>
-        </member>
-        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasFrameOptions.InnerGradient">
-            <summary>
-            Optional inner frame gradient (overrides <see cref="P:CodeGlyphX.Rendering.Png.QrPngCanvasFrameOptions.InnerColor"/> when set).
-            </summary>
-        </member>
-        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasFrameOptions.InnerEdgePattern">
-            <summary>
-            Optional inner edge pattern overlay.
             </summary>
         </member>
         <member name="T:CodeGlyphX.Rendering.Png.QrPngCanvasGrainOptions">
@@ -17170,11 +16955,6 @@
         <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasOptions.Frame">
             <summary>
             Optional decorative frame drawn around the QR bounds (kept outside the QR area).
-            </summary>
-        </member>
-        <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasOptions.Band">
-            <summary>
-            Optional decorative band drawn outside the QR bounds (quiet-zone ring).
             </summary>
         </member>
         <member name="P:CodeGlyphX.Rendering.Png.QrPngCanvasOptions.Badge">
@@ -17702,26 +17482,6 @@
             When false (default), accent stripes render only when a canvas is enabled.
             </summary>
         </member>
-        <member name="T:CodeGlyphX.Rendering.Png.QrPngForegroundPatternBlendMode">
-            <summary>
-            Blend mode for foreground patterns.
-            </summary>
-        </member>
-        <member name="F:CodeGlyphX.Rendering.Png.QrPngForegroundPatternBlendMode.Overlay">
-            <summary>
-            Overlay the pattern color on top of the module color.
-            </summary>
-        </member>
-        <member name="F:CodeGlyphX.Rendering.Png.QrPngForegroundPatternBlendMode.Mask">
-            <summary>
-            Mask the module so only pattern pixels are drawn (bead/cluster look).
-            </summary>
-        </member>
-        <member name="F:CodeGlyphX.Rendering.Png.QrPngForegroundPatternBlendMode.Replace">
-            <summary>
-            Replace the module color with the pattern color at pattern pixels.
-            </summary>
-        </member>
         <member name="T:CodeGlyphX.Rendering.Png.QrPngForegroundPatternOptions">
             <summary>
             Foreground pattern options for styling dark modules.
@@ -17735,11 +17495,6 @@
         <member name="P:CodeGlyphX.Rendering.Png.QrPngForegroundPatternOptions.Color">
             <summary>
             Gets or sets the pattern color (alpha recommended).
-            </summary>
-        </member>
-        <member name="P:CodeGlyphX.Rendering.Png.QrPngForegroundPatternOptions.BlendMode">
-            <summary>
-            Gets or sets the pattern blend mode.
             </summary>
         </member>
         <member name="P:CodeGlyphX.Rendering.Png.QrPngForegroundPatternOptions.SizePx">
@@ -17949,36 +17704,6 @@
             <param name="path">PNG file path.</param>
             <returns>Logo options.</returns>
         </member>
-        <member name="T:CodeGlyphX.Rendering.Png.QrPngModuleJitterOptions">
-            <summary>
-            Options for per-module jitter offsets (organic placement).
-            </summary>
-        </member>
-        <member name="P:CodeGlyphX.Rendering.Png.QrPngModuleJitterOptions.MaxOffsetPx">
-            <summary>
-            Maximum jitter offset in pixels.
-            </summary>
-        </member>
-        <member name="P:CodeGlyphX.Rendering.Png.QrPngModuleJitterOptions.Seed">
-            <summary>
-            Random seed used to offset modules.
-            </summary>
-        </member>
-        <member name="P:CodeGlyphX.Rendering.Png.QrPngModuleJitterOptions.ApplyToEyes">
-            <summary>
-            When true, applies jitter to eye modules.
-            </summary>
-        </member>
-        <member name="P:CodeGlyphX.Rendering.Png.QrPngModuleJitterOptions.ProtectFunctionalPatterns">
-            <summary>
-            When true, functional patterns keep their original alignment.
-            </summary>
-        </member>
-        <member name="P:CodeGlyphX.Rendering.Png.QrPngModuleJitterOptions.ClampToShape">
-            <summary>
-            When true, limits jitter to stay inside the module cell.
-            </summary>
-        </member>
         <member name="T:CodeGlyphX.Rendering.Png.QrPngModuleScaleMapOptions">
             <summary>
             Options for per-module scale mapping.
@@ -18112,96 +17837,6 @@
         <member name="F:CodeGlyphX.Rendering.Png.QrPngModuleShape.DotGrid">
             <summary>
             Dot grid modules (four small dots per cell).
-            </summary>
-        </member>
-        <member name="T:CodeGlyphX.Rendering.Png.QrPngModuleShapeMapMode">
-            <summary>
-            Modes for mapping module shapes across a QR matrix.
-            </summary>
-        </member>
-        <member name="F:CodeGlyphX.Rendering.Png.QrPngModuleShapeMapMode.Radial">
-            <summary>
-            Radial blend from center to edge using <see cref="P:CodeGlyphX.Rendering.Png.QrPngModuleShapeMapOptions.Split"/>.
-            </summary>
-        </member>
-        <member name="F:CodeGlyphX.Rendering.Png.QrPngModuleShapeMapMode.Rings">
-            <summary>
-            Ring-based alternating shapes.
-            </summary>
-        </member>
-        <member name="F:CodeGlyphX.Rendering.Png.QrPngModuleShapeMapMode.Checker">
-            <summary>
-            Checkerboard alternation.
-            </summary>
-        </member>
-        <member name="F:CodeGlyphX.Rendering.Png.QrPngModuleShapeMapMode.Random">
-            <summary>
-            Random selection between shapes.
-            </summary>
-        </member>
-        <member name="F:CodeGlyphX.Rendering.Png.QrPngModuleShapeMapMode.Corners">
-            <summary>
-            Apply the secondary shape to corner zones.
-            </summary>
-        </member>
-        <member name="T:CodeGlyphX.Rendering.Png.QrPngModuleShapeMapOptions">
-            <summary>
-            Options for per-module shape mapping.
-            </summary>
-        </member>
-        <member name="F:CodeGlyphX.Rendering.Png.QrPngModuleShapeMapOptions.DefaultRingSize">
-            <summary>
-            Default ring size (in modules) for <see cref="F:CodeGlyphX.Rendering.Png.QrPngModuleShapeMapMode.Rings"/>.
-            </summary>
-        </member>
-        <member name="P:CodeGlyphX.Rendering.Png.QrPngModuleShapeMapOptions.Mode">
-            <summary>
-            Gets or sets the shape map mode.
-            </summary>
-        </member>
-        <member name="P:CodeGlyphX.Rendering.Png.QrPngModuleShapeMapOptions.PrimaryShape">
-            <summary>
-            Primary shape (used for the center in radial mode).
-            </summary>
-        </member>
-        <member name="P:CodeGlyphX.Rendering.Png.QrPngModuleShapeMapOptions.SecondaryShape">
-            <summary>
-            Secondary shape (used for the edge in radial mode).
-            </summary>
-        </member>
-        <member name="P:CodeGlyphX.Rendering.Png.QrPngModuleShapeMapOptions.Split">
-            <summary>
-            Split point (0..1) used by <see cref="F:CodeGlyphX.Rendering.Png.QrPngModuleShapeMapMode.Radial"/>.
-            </summary>
-        </member>
-        <member name="P:CodeGlyphX.Rendering.Png.QrPngModuleShapeMapOptions.RingSize">
-            <summary>
-            Ring size in modules for <see cref="F:CodeGlyphX.Rendering.Png.QrPngModuleShapeMapMode.Rings"/>.
-            </summary>
-        </member>
-        <member name="P:CodeGlyphX.Rendering.Png.QrPngModuleShapeMapOptions.Seed">
-            <summary>
-            Random seed used by <see cref="F:CodeGlyphX.Rendering.Png.QrPngModuleShapeMapMode.Random"/>.
-            </summary>
-        </member>
-        <member name="P:CodeGlyphX.Rendering.Png.QrPngModuleShapeMapOptions.SecondaryChance">
-            <summary>
-            Probability (0..1) of choosing the secondary shape in random mode.
-            </summary>
-        </member>
-        <member name="P:CodeGlyphX.Rendering.Png.QrPngModuleShapeMapOptions.CornerSize">
-            <summary>
-            Corner zone size in modules for <see cref="F:CodeGlyphX.Rendering.Png.QrPngModuleShapeMapMode.Corners"/>.
-            </summary>
-        </member>
-        <member name="P:CodeGlyphX.Rendering.Png.QrPngModuleShapeMapOptions.ApplyToEyes">
-            <summary>
-            When true, allows the shape map to affect eye modules.
-            </summary>
-        </member>
-        <member name="P:CodeGlyphX.Rendering.Png.QrPngModuleShapeMapOptions.ProtectFunctionalPatterns">
-            <summary>
-            When true, functional patterns keep the base module shape.
             </summary>
         </member>
         <member name="T:CodeGlyphX.Rendering.Png.QrPngPaletteMode">
@@ -18421,16 +18056,6 @@
             Optional per-module scale mapping.
             </summary>
         </member>
-        <member name="P:CodeGlyphX.Rendering.Png.QrPngRenderOptions.ModuleShapeMap">
-            <summary>
-            Optional per-module shape mapping.
-            </summary>
-        </member>
-        <member name="P:CodeGlyphX.Rendering.Png.QrPngRenderOptions.ModuleJitter">
-            <summary>
-            Optional per-module jitter (organic placement).
-            </summary>
-        </member>
         <member name="P:CodeGlyphX.Rendering.Png.QrPngRenderOptions.ProtectFunctionalPatterns">
             <summary>
             When true, keeps non-eye functional patterns (timing/alignment/format/version/dark module)
@@ -18540,16 +18165,6 @@
         <member name="M:CodeGlyphX.Rendering.Png.QrPngRenderOptions.WithModuleScaleMap(CodeGlyphX.Rendering.Png.QrPngModuleScaleMapOptions)">
             <summary>
             Sets per-module scale mapping options.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.Rendering.Png.QrPngRenderOptions.WithModuleShapeMap(CodeGlyphX.Rendering.Png.QrPngModuleShapeMapOptions)">
-            <summary>
-            Sets per-module shape mapping options.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.Rendering.Png.QrPngRenderOptions.WithModuleJitter(CodeGlyphX.Rendering.Png.QrPngModuleJitterOptions)">
-            <summary>
-            Sets per-module jitter options.
             </summary>
         </member>
         <member name="M:CodeGlyphX.Rendering.Png.QrPngRenderOptions.WithModuleCornerRadiusPx(System.Int32)">
@@ -18962,6 +18577,11 @@
         <member name="M:CodeGlyphX.Rendering.RenderExtensions.ToBmpDataUri(System.Byte[])">
             <summary>
             Encodes BMP bytes as a Base64 data URI.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.RenderExtensions.ToWebpDataUri(System.Byte[])">
+            <summary>
+            Encodes WebP bytes as a Base64 data URI.
             </summary>
         </member>
         <member name="M:CodeGlyphX.Rendering.RenderExtensions.ToSvgDataUri(System.String,System.Text.Encoding)">
@@ -19741,6 +19361,333 @@
         <member name="T:CodeGlyphX.Rendering.Tiff.TiffReader">
             <summary>
             Minimal TIFF decoder for uncompressed baseline images.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Rendering.Webp.BarcodeWebpRenderer">
+            <summary>
+            Renders 1D barcodes to WebP images (lossless VP8L).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Webp.BarcodeWebpRenderer.Render(CodeGlyphX.Barcode1D,CodeGlyphX.Rendering.Png.BarcodePngRenderOptions)">
+            <summary>
+            Renders the barcode to a WebP byte array.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Webp.BarcodeWebpRenderer.RenderToStream(CodeGlyphX.Barcode1D,CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,System.IO.Stream)">
+            <summary>
+            Renders the barcode to a WebP stream.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Webp.BarcodeWebpRenderer.RenderToFile(CodeGlyphX.Barcode1D,CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,System.String)">
+            <summary>
+            Renders the barcode to a WebP file.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Webp.BarcodeWebpRenderer.RenderToFile(CodeGlyphX.Barcode1D,CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,System.String,System.String)">
+            <summary>
+            Renders the barcode to a WebP file under the specified directory.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Rendering.Webp.MatrixWebpRenderer">
+            <summary>
+            Renders generic 2D matrices to WebP images (lossless VP8L).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Webp.MatrixWebpRenderer.Render(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Png.MatrixPngRenderOptions)">
+            <summary>
+            Renders the matrix to a WebP byte array.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Webp.MatrixWebpRenderer.RenderToStream(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Png.MatrixPngRenderOptions,System.IO.Stream)">
+            <summary>
+            Renders the matrix to a WebP stream.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Webp.MatrixWebpRenderer.RenderToFile(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Png.MatrixPngRenderOptions,System.String)">
+            <summary>
+            Renders the matrix to a WebP file.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Webp.MatrixWebpRenderer.RenderToFile(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Png.MatrixPngRenderOptions,System.String,System.String)">
+            <summary>
+            Renders the matrix to a WebP file under the specified directory.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Rendering.Webp.QrWebpRenderer">
+            <summary>
+            Renders QR modules to WebP images (lossless VP8L).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Webp.QrWebpRenderer.Render(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Png.QrPngRenderOptions)">
+            <summary>
+            Renders the QR module matrix to a WebP byte array.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Webp.QrWebpRenderer.RenderToStream(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Png.QrPngRenderOptions,System.IO.Stream)">
+            <summary>
+            Renders the QR module matrix to a WebP stream.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Webp.QrWebpRenderer.RenderToFile(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Png.QrPngRenderOptions,System.String)">
+            <summary>
+            Renders the QR module matrix to a WebP file.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Webp.QrWebpRenderer.RenderToFile(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Png.QrPngRenderOptions,System.String,System.String)">
+            <summary>
+            Renders the QR module matrix to a WebP file under the specified directory.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Rendering.Webp.WebpAnimationFrame">
+            <summary>
+            Describes a single RGBA32 frame for animated WebP encoding.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Webp.WebpAnimationFrame.#ctor(System.Byte[],System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Boolean,System.Boolean)">
+            <summary>
+            Creates a WebP animation frame backed by an RGBA32 buffer.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Webp.WebpAnimationFrame.Rgba">
+            <summary>
+            RGBA32 pixel buffer.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Webp.WebpAnimationFrame.Width">
+            <summary>
+            Frame width in pixels.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Webp.WebpAnimationFrame.Height">
+            <summary>
+            Frame height in pixels.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Webp.WebpAnimationFrame.Stride">
+            <summary>
+            Frame stride in bytes.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Webp.WebpAnimationFrame.DurationMs">
+            <summary>
+            Frame duration in milliseconds.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Webp.WebpAnimationFrame.X">
+            <summary>
+            Frame X offset on the canvas.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Webp.WebpAnimationFrame.Y">
+            <summary>
+            Frame Y offset on the canvas.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Webp.WebpAnimationFrame.Blend">
+            <summary>
+            Whether to alpha-blend the frame over the canvas.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Webp.WebpAnimationFrame.DisposeToBackground">
+            <summary>
+            Whether to dispose to background after the frame.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Rendering.Webp.WebpAnimationOptions">
+            <summary>
+            Options for animated WebP encoding.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Webp.WebpAnimationOptions.#ctor(System.Int32,System.UInt32)">
+            <summary>
+            Creates animation options.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Webp.WebpAnimationOptions.LoopCount">
+            <summary>
+            Loop count (0 = infinite).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Webp.WebpAnimationOptions.BackgroundBgra">
+            <summary>
+            Background color in BGRA byte order.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Rendering.Webp.WebpBitReader">
+            <summary>
+            LSB-first bit reader used by the VP8L lossless bitstream.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Webp.WebpBitReader.BitsConsumed">
+            <summary>
+            Gets the number of bits consumed so far.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Webp.WebpBitReader.ReadBits(System.Int32)">
+            <summary>
+            Attempts to read up to 32 bits (LSB-first). Returns -1 on truncation.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Rendering.Webp.WebpBitWriter">
+            <summary>
+            LSB-first bit writer used by the managed VP8L encoder scaffold.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Webp.WebpBitWriter.BitLength">
+            <summary>
+            Gets the number of bits written so far.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Webp.WebpBitWriter.WriteBits(System.Int32,System.Int32)">
+            <summary>
+            Writes <paramref name="count"/> bits from <paramref name="value"/> LSB-first.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Webp.WebpBitWriter.Append(CodeGlyphX.Rendering.Webp.WebpBitWriter)">
+            <summary>
+            Appends the exact bit sequence from another writer.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Webp.WebpBitWriter.ToArray">
+            <summary>
+            Returns the written bytes.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Rendering.Webp.WebpManagedDecoder">
+            <summary>
+            Managed WebP decoder entry point (VP8 + VP8L still images).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Webp.WebpManagedDecoder.TryDecodeRgba32(System.ReadOnlySpan{System.Byte},System.Byte[]@,System.Int32@,System.Int32@)">
+            <summary>
+            Attempts to decode WebP to RGBA32 using a managed implementation.
+            </summary>
+            <remarks>
+            Supported: VP8 (lossy, keyframe stills) and VP8L (lossless).
+            Supported: VP8 + ALPH alpha chunk and animated WebP (first-frame decode).
+            Not supported: metadata-only containers.
+            The call site prefers this path and does not fall back to native decoding.
+            </remarks>
+        </member>
+        <member name="T:CodeGlyphX.Rendering.Webp.WebpPrefixCode">
+            <summary>
+            Canonical prefix code with LSB-first decoding support.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Webp.WebpPrefixCode.TryBuild(System.ReadOnlySpan{System.Byte},System.Int32,CodeGlyphX.Rendering.Webp.WebpPrefixCode@)">
+            <summary>
+            Builds a canonical prefix code from code lengths.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Webp.WebpPrefixCode.DecodeSymbol(CodeGlyphX.Rendering.Webp.WebpBitReader@)">
+            <summary>
+            Decodes the next symbol from the bitstream.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Rendering.Webp.WebpPrefixCodeReader">
+            <summary>
+            Reads VP8L prefix codes from the bitstream.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Rendering.Webp.WebpReader">
+            <summary>
+            Minimal WebP container parsing plus managed decode (VP8/VP8L stills).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Webp.WebpReader.IsWebp(System.ReadOnlySpan{System.Byte})">
+            <summary>
+            Checks whether the buffer looks like a WebP RIFF container.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Webp.WebpReader.TryReadDimensions(System.ReadOnlySpan{System.Byte},System.Int32@,System.Int32@)">
+            <summary>
+            Attempts to read WebP dimensions from the RIFF container without decoding pixels.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Webp.WebpReader.DecodeRgba32(System.ReadOnlySpan{System.Byte},System.Int32@,System.Int32@)">
+            <summary>
+            Decodes a WebP image to RGBA32 using the managed VP8/VP8L decoder.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Rendering.Webp.WebpVp8BoolDecoder">
+            <summary>
+            Minimal VP8 boolean decoder scaffold for parsing the control header.
+            This is intentionally small and focused; it will be extended as VP8 decoding grows.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Rendering.Webp.WebpVp8BoolEncoder">
+            <summary>
+            VP8 boolean encoder for managed VP8 bitstreams.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Rendering.Webp.WebpVp8Decoder">
+            <summary>
+            Managed VP8 (lossy) decoder scaffold. Currently parses only the keyframe header.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Rendering.Webp.WebpVp8Encoder">
+            <summary>
+            Managed VP8 lossy encoder (minimal intra-only encoder).
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Rendering.Webp.WebpVp8lDecoder">
+            <summary>
+            Managed VP8L lossless decoder.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Webp.WebpVp8lDecoder.TryDecode(System.ReadOnlySpan{System.Byte},System.Byte[]@,System.Int32@,System.Int32@)">
+            <summary>
+            Attempts to decode a VP8L payload to RGBA32 (lossless).
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Rendering.Webp.WebpVp8lEncoder">
+            <summary>
+            Managed VP8L lossless encoder (subset) for RGBA images.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Rendering.Webp.WebpWriter">
+            <summary>
+            Managed WebP writer (VP8L lossless subset + VP8 lossy intra + animation container).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Webp.WebpWriter.WriteRgba32(System.Int32,System.Int32,System.ReadOnlySpan{System.Byte},System.Int32)">
+            <summary>
+            Encodes an RGBA32 buffer as WebP lossless (managed VP8L subset).
+            </summary>
+            <remarks>
+            Current limitations:
+            - VP8L lossless is a managed subset; single prefix-code group (no entropy tiling).
+            - Limited LZ77/back-reference search; favors short distances.
+            - Color indexing is limited to palettes up to 16 colors.
+            - Metadata chunks (VP8X/ICCP/EXIF/XMP) are not written.
+            </remarks>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Webp.WebpWriter.WriteRgba32(System.Int32,System.Int32,System.Byte[],System.Int32)">
+            <summary>
+            Encodes an RGBA32 buffer as WebP lossless (managed VP8L subset).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Webp.WebpWriter.WriteRgba32Lossy(System.Int32,System.Int32,System.ReadOnlySpan{System.Byte},System.Int32,System.Int32)">
+            <summary>
+            Encodes an RGBA32 buffer as a lossy WebP using a managed VP8 (lossy) bitstream when possible.
+            </summary>
+            <remarks>
+            Falls back to VP8L with pre-quantized RGB when VP8 lossy encoding is unavailable.
+            </remarks>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Webp.WebpWriter.WriteRgba32Lossy(System.Int32,System.Int32,System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Encodes an RGBA32 buffer as a lossy WebP by quantizing pixels and using VP8L.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Webp.WebpWriter.WriteAnimationRgba32(System.Int32,System.Int32,System.ReadOnlySpan{CodeGlyphX.Rendering.Webp.WebpAnimationFrame},CodeGlyphX.Rendering.Webp.WebpAnimationOptions)">
+            <summary>
+            Encodes an animated WebP from RGBA32 frames (VP8L frames).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Webp.WebpWriter.WriteAnimationRgba32(System.Int32,System.Int32,CodeGlyphX.Rendering.Webp.WebpAnimationFrame[],CodeGlyphX.Rendering.Webp.WebpAnimationOptions)">
+            <summary>
+            Encodes an animated WebP from RGBA32 frames (VP8L frames).
             </summary>
         </member>
         <member name="T:CodeGlyphX.Rendering.Xbm.BarcodeXbmRenderer">

@@ -1546,6 +1546,7 @@ public sealed class QrPngRendererTests {
         var quietZone = 4;
         var padding = 20;
 
+        var badgeColor = new Rgba32(200, 20, 60, 220);
         var opts = new QrPngRenderOptions {
             ModuleSize = moduleSize,
             QuietZone = quietZone,
@@ -1560,7 +1561,7 @@ public sealed class QrPngRendererTests {
                     WidthPx = 0,
                     HeightPx = 24,
                     GapPx = 8,
-                    Color = new Rgba32(200, 20, 60, 220),
+                    Color = badgeColor,
                 },
             },
         };
@@ -1582,7 +1583,9 @@ public sealed class QrPngRendererTests {
                 var r = rgba[p + 0];
                 var g = rgba[p + 1];
                 var b = rgba[p + 2];
-                if (r != 255 || g != 255 || b != 255) {
+                var a = rgba[p + 3];
+                if (a == 0) continue;
+                if (r == badgeColor.R && g == badgeColor.G && b == badgeColor.B && a == badgeColor.A) {
                     foundBadge = true;
                     break;
                 }
