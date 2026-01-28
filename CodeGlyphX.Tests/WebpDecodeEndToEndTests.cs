@@ -1,7 +1,6 @@
-using System;
-using System.Runtime.InteropServices;
 using CodeGlyphX;
 using CodeGlyphX.Rendering;
+using CodeGlyphX.Rendering.Webp;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -15,7 +14,7 @@ public sealed class WebpDecodeEndToEndTests {
     }
 
     [Fact]
-    public void Webp_EndToEnd_QrDecode_LosslessNative() {
+    public void Webp_EndToEnd_QrDecode_LosslessManaged() {
         const string payload = "WEBP-END-TO-END";
 
         var modules = QrCodeEncoder.EncodeText(payload).Modules;
@@ -23,10 +22,8 @@ public sealed class WebpDecodeEndToEndTests {
         const int quietZone = 4;
 
         var (rgba, width, height, stride) = RenderQrToRgba(modules, moduleSize, quietZone);
-        if (!TryEncodeWebpLossless(rgba, width, height, stride, out var webp, out var reason)) {
-            _output.WriteLine(reason);
-            return;
-        }
+        var webp = WebpWriter.WriteRgba32(width, height, rgba, stride);
+        _output.WriteLine($"Managed WebP bytes: {webp.Length}");
 
         Assert.True(ImageReader.TryDetectFormat(webp, out var format));
         Assert.Equal(ImageFormat.Webp, format);
@@ -95,160 +92,4 @@ public sealed class WebpDecodeEndToEndTests {
             }
         }
     }
-
-    private static bool TryEncodeWebpLossless(byte[] rgba, int width, int height, int stride, out byte[] webp, out string reason) {
-        webp = Array.Empty<byte>();
-        reason = string.Empty;
-        try {
-            webp = EncodeWebpLossless(rgba, width, height, stride);
-            reason = "libwebp lossless encode succeeded.";
-            return true;
-        } catch (DllNotFoundException ex) {
-            reason = $"libwebp not found: {ex.Message}";
-        } catch (EntryPointNotFoundException ex) {
-            reason = $"libwebp encode API not found: {ex.Message}";
-        } catch (BadImageFormatException ex) {
-            reason = $"libwebp incompatible: {ex.Message}";
-        }
-        return false;
-    }
-
-    private static byte[] EncodeWebpLossless(byte[] rgba, int width, int height, int stride) {
-        if (rgba.Length == 0) throw new InvalidOperationException("RGBA buffer is empty.");
-        if (width <= 0 || height <= 0) throw new InvalidOperationException("Invalid image dimensions.");
-
-        var size = TryEncodeLossless(rgba, width, height, stride, out var output);
-        if (size == UIntPtr.Zero || output == IntPtr.Zero) {
-            throw new InvalidOperationException("libwebp lossless encode failed.");
-        }
-
-        try {
-            var length = checked((int)size);
-            var webp = new byte[length];
-            Marshal.Copy(output, webp, 0, length);
-            return webp;
-        } finally {
-            TryFree(output);
-        }
-    }
-
-    private static UIntPtr TryEncodeLossless(byte[] rgba, int width, int height, int stride, out IntPtr output) {
-        output = IntPtr.Zero;
-
-        try {
-            var size = WebPEncodeLosslessRGBA_libwebp(rgba, width, height, stride, out output);
-            if (size != UIntPtr.Zero && output != IntPtr.Zero) return size;
-        } catch (DllNotFoundException) {
-        } catch (EntryPointNotFoundException) {
-        } catch (BadImageFormatException) {
-        }
-
-        try {
-            var size = WebPEncodeLosslessRGBA_so7(rgba, width, height, stride, out output);
-            if (size != UIntPtr.Zero && output != IntPtr.Zero) return size;
-        } catch (DllNotFoundException) {
-        } catch (EntryPointNotFoundException) {
-        } catch (BadImageFormatException) {
-        }
-
-        try {
-            var size = WebPEncodeLosslessRGBA_so(rgba, width, height, stride, out output);
-            if (size != UIntPtr.Zero && output != IntPtr.Zero) return size;
-        } catch (DllNotFoundException) {
-        } catch (EntryPointNotFoundException) {
-        } catch (BadImageFormatException) {
-        }
-
-        try {
-            var size = WebPEncodeLosslessRGBA_dll(rgba, width, height, stride, out output);
-            if (size != UIntPtr.Zero && output != IntPtr.Zero) return size;
-        } catch (DllNotFoundException) {
-        } catch (EntryPointNotFoundException) {
-        } catch (BadImageFormatException) {
-        }
-
-        try {
-            var size = WebPEncodeLosslessRGBA_dylib(rgba, width, height, stride, out output);
-            if (size != UIntPtr.Zero && output != IntPtr.Zero) return size;
-        } catch (DllNotFoundException) {
-        } catch (EntryPointNotFoundException) {
-        } catch (BadImageFormatException) {
-        }
-
-        output = IntPtr.Zero;
-        return UIntPtr.Zero;
-    }
-
-    private static void TryFree(IntPtr ptr) {
-        if (ptr == IntPtr.Zero) return;
-
-        try {
-            WebPFree_libwebp(ptr);
-            return;
-        } catch (DllNotFoundException) {
-        } catch (EntryPointNotFoundException) {
-        } catch (BadImageFormatException) {
-        }
-
-        try {
-            WebPFree_so7(ptr);
-            return;
-        } catch (DllNotFoundException) {
-        } catch (EntryPointNotFoundException) {
-        } catch (BadImageFormatException) {
-        }
-
-        try {
-            WebPFree_so(ptr);
-            return;
-        } catch (DllNotFoundException) {
-        } catch (EntryPointNotFoundException) {
-        } catch (BadImageFormatException) {
-        }
-
-        try {
-            WebPFree_dll(ptr);
-            return;
-        } catch (DllNotFoundException) {
-        } catch (EntryPointNotFoundException) {
-        } catch (BadImageFormatException) {
-        }
-
-        try {
-            WebPFree_dylib(ptr);
-        } catch (DllNotFoundException) {
-        } catch (EntryPointNotFoundException) {
-        } catch (BadImageFormatException) {
-        }
-    }
-
-    [DllImport("libwebp", EntryPoint = "WebPEncodeLosslessRGBA")]
-    private static extern UIntPtr WebPEncodeLosslessRGBA_libwebp(byte[] rgba, int width, int height, int stride, out IntPtr output);
-
-    [DllImport("libwebp.so.7", EntryPoint = "WebPEncodeLosslessRGBA")]
-    private static extern UIntPtr WebPEncodeLosslessRGBA_so7(byte[] rgba, int width, int height, int stride, out IntPtr output);
-
-    [DllImport("libwebp.so", EntryPoint = "WebPEncodeLosslessRGBA")]
-    private static extern UIntPtr WebPEncodeLosslessRGBA_so(byte[] rgba, int width, int height, int stride, out IntPtr output);
-
-    [DllImport("libwebp.dll", EntryPoint = "WebPEncodeLosslessRGBA")]
-    private static extern UIntPtr WebPEncodeLosslessRGBA_dll(byte[] rgba, int width, int height, int stride, out IntPtr output);
-
-    [DllImport("libwebp.dylib", EntryPoint = "WebPEncodeLosslessRGBA")]
-    private static extern UIntPtr WebPEncodeLosslessRGBA_dylib(byte[] rgba, int width, int height, int stride, out IntPtr output);
-
-    [DllImport("libwebp", EntryPoint = "WebPFree")]
-    private static extern void WebPFree_libwebp(IntPtr pointer);
-
-    [DllImport("libwebp.so.7", EntryPoint = "WebPFree")]
-    private static extern void WebPFree_so7(IntPtr pointer);
-
-    [DllImport("libwebp.so", EntryPoint = "WebPFree")]
-    private static extern void WebPFree_so(IntPtr pointer);
-
-    [DllImport("libwebp.dll", EntryPoint = "WebPFree")]
-    private static extern void WebPFree_dll(IntPtr pointer);
-
-    [DllImport("libwebp.dylib", EntryPoint = "WebPFree")]
-    private static extern void WebPFree_dylib(IntPtr pointer);
 }

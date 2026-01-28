@@ -7,6 +7,13 @@ namespace CodeGlyphX.Rendering.Png;
 
 public static partial class QrPngRenderer {
     private static bool TryGetEye(int x, int y, int size, out int ex, out int ey, out EyeKind kind) {
+        if (size < 7) {
+            ex = 0;
+            ey = 0;
+            kind = EyeKind.None;
+            return false;
+        }
+
         if (IsInEye(x, y, 0, 0)) {
             ex = 0;
             ey = 0;

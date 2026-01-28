@@ -100,13 +100,13 @@ public static partial class QrPngRenderer {
             DrawEyeAccentStripes(buffer, widthPx, heightPx, stride, opts, qrOffsetX, qrOffsetY, qrFullPx, qrSizePx, size);
         }
 
-        var baseModuleShape = opts.ModuleShape;
-        var connectedMode = IsConnectedShape(baseModuleShape);
-        if (connectedMode) {
-            baseModuleShape = baseModuleShape == QrPngModuleShape.ConnectedRounded
+        var requestedModuleShape = opts.ModuleShape;
+        var connectedMode = IsConnectedShape(requestedModuleShape);
+        var baseModuleShape = connectedMode
+            ? requestedModuleShape == QrPngModuleShape.ConnectedRounded
                 ? QrPngModuleShape.Rounded
-                : QrPngModuleShape.Squircle;
-        }
+                : QrPngModuleShape.Squircle
+            : requestedModuleShape;
         var mask = BuildModuleMask(opts.ModuleSize, baseModuleShape, opts.ModuleScale, opts.ModuleCornerRadiusPx);
         var maskSolid = IsSolidMask(mask);
         var eyeOuterMask = opts.Eyes is null
@@ -222,7 +222,7 @@ public static partial class QrPngRenderer {
                     }
                 }
 
-                var useShape = baseModuleShape;
+                var useShape = requestedModuleShape;
                 if (applyShapeMap && !isEyeForShapeMap) {
                     useShape = GetShapeForModule(shapeMapInfo!.Value, mx, my, size);
                 }
