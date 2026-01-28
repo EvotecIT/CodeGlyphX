@@ -13,6 +13,8 @@ internal static class WebpVp8Encoder {
     private const int MacroblockChromaBlocks = 4;
     private const int Intra4x4ModeCount = 10;
     private const int IntraUvModeCount = 4;
+    private const int SegmentCount = 4;
+    private const int SegmentProbCount = 3;
     private const int YModeBPred = 4;
     private const int BModeDcPred = 0;
     private const int ModeDcPred = 0;
@@ -132,7 +134,6 @@ internal static class WebpVp8Encoder {
         reason = string.Empty;
 
         var baseQIndex = QualityToBaseQIndex(quality);
-        var dequant = BuildDequantFactors(baseQIndex);
 
         ConvertRgbaToYuv420(rgba, width, height, stride, out var yPlane, out var uPlane, out var vPlane);
 
@@ -147,9 +148,12 @@ internal static class WebpVp8Encoder {
             return false;
         }
 
+        var segmentIds = BuildSegmentMap(yPlane, width, height, macroblockCols, macroblockRows, baseQIndex, out var segmentationEnabled, out var quantizerDeltas, out var segmentProbabilities);
+        var dequantSegments = BuildDequantFactors(baseQIndex, quantizerDeltas, segmentationEnabled);
+
         var headerWriter = new WebpVp8BoolEncoder(expectedSize: 4096);
         WriteControlHeader(headerWriter);
-        WriteSegmentationDisabled(headerWriter);
+        WriteSegmentation(headerWriter, segmentationEnabled, quantizerDeltas, segmentProbabilities);
         WriteLoopFilter(headerWriter, quality);
         headerWriter.WriteLiteral(0, 2); // one DCT partition
         WriteQuantization(headerWriter, baseQIndex);
@@ -174,6 +178,8 @@ internal static class WebpVp8Encoder {
 
         for (var row = 0; row < macroblockRows; row++) {
             for (var col = 0; col < macroblockCols; col++) {
+                var macroblockIndex = (row * macroblockCols) + col;
+                var segmentId = segmentationEnabled && segmentIds.Length > macroblockIndex ? segmentIds[macroblockIndex] : 0;
                 EncodeMacroblock(
                     headerWriter,
                     tokenWriter,
@@ -188,7 +194,8 @@ internal static class WebpVp8Encoder {
                     height,
                     col,
                     row,
-                    dequant,
+                    dequantSegments,
+                    segmentId,
                     y2NzAbove,
                     y2NzCurrent,
                     yNzAbove,
@@ -198,7 +205,9 @@ internal static class WebpVp8Encoder {
                     vNzAbove,
                     vNzCurrent,
                     aboveSubModes,
-                    currentSubModes);
+                    currentSubModes,
+                    segmentationEnabled,
+                    segmentProbabilities);
             }
 
             SwapRowModes(ref aboveSubModes, ref currentSubModes);
@@ -248,7 +257,8 @@ internal static class WebpVp8Encoder {
         int height,
         int mbX,
         int mbY,
-        DequantFactors dequant,
+        DequantFactors[] dequantSegments,
+        int segmentId,
         byte[] y2NzAbove,
         byte[] y2NzCurrent,
         byte[] yNzAbove,
@@ -258,13 +268,24 @@ internal static class WebpVp8Encoder {
         byte[] vNzAbove,
         byte[] vNzCurrent,
         int[] aboveSubModes,
-        int[] currentSubModes) {
+        int[] currentSubModes,
+        bool segmentationEnabled,
+        int[] segmentProbabilities) {
         var macroblockOffsetX = mbX * MacroblockSize;
         var macroblockOffsetY = mbY * MacroblockSize;
         var chromaWidth = (width + 1) >> 1;
         var chromaHeight = (height + 1) >> 1;
         var chromaOffsetX = mbX * (MacroblockSize / 2);
         var chromaOffsetY = mbY * (MacroblockSize / 2);
+
+        if (segmentationEnabled) {
+            WriteSegmentId(headerWriter, segmentProbabilities, segmentId);
+        }
+
+        if ((uint)segmentId >= SegmentCount) segmentId = 0;
+        var dequant = (dequantSegments != null && dequantSegments.Length > segmentId)
+            ? dequantSegments[segmentId]
+            : dequantSegments?[0] ?? BuildDequantFactors(0);
 
         var yBlockBase = mbX * MacroblockSubBlockCount;
 
@@ -799,8 +820,71 @@ internal static class WebpVp8Encoder {
         writer.WriteBool(128, false); // clamp type
     }
 
-    private static void WriteSegmentationDisabled(WebpVp8BoolEncoder writer) {
-        writer.WriteBool(128, false); // segmentation disabled
+    private static void WriteSegmentation(
+        WebpVp8BoolEncoder writer,
+        bool enabled,
+        int[] quantizerDeltas,
+        int[] segmentProbabilities) {
+        writer.WriteBool(128, enabled);
+        if (!enabled) return;
+
+        writer.WriteBool(128, true); // update map
+        writer.WriteBool(128, true); // update data
+        writer.WriteBool(128, false); // absolute deltas disabled
+
+        for (var i = 0; i < SegmentCount; i++) {
+            writer.WriteBool(128, true); // update quantizer for segment
+            var delta = (quantizerDeltas != null && i < quantizerDeltas.Length) ? quantizerDeltas[i] : 0;
+            WriteSignedLiteral(writer, ClampSegmentDelta(delta), 7);
+        }
+
+        for (var i = 0; i < SegmentCount; i++) {
+            writer.WriteBool(128, false); // no filter delta updates
+        }
+
+        for (var i = 0; i < SegmentProbCount; i++) {
+            writer.WriteBool(128, true);
+            var prob = (segmentProbabilities != null && i < segmentProbabilities.Length)
+                ? NormalizeSegmentProbability(segmentProbabilities[i])
+                : 128;
+            writer.WriteLiteral(prob, 8);
+        }
+    }
+
+    private static void WriteSegmentId(WebpVp8BoolEncoder writer, int[] probabilities, int segmentId) {
+        if ((uint)segmentId >= SegmentCount) segmentId = 0;
+        var prob0 = NormalizeSegmentProbability((probabilities != null && probabilities.Length > 0) ? probabilities[0] : 128);
+        if (segmentId == 0) {
+            writer.WriteBool(prob0, false);
+            return;
+        }
+
+        writer.WriteBool(prob0, true);
+        var prob1 = NormalizeSegmentProbability((probabilities != null && probabilities.Length > 1) ? probabilities[1] : 128);
+        if (segmentId == 1) {
+            writer.WriteBool(prob1, false);
+            return;
+        }
+
+        writer.WriteBool(prob1, true);
+        var prob2 = NormalizeSegmentProbability((probabilities != null && probabilities.Length > 2) ? probabilities[2] : 128);
+        var bit2 = segmentId == 3;
+        writer.WriteBool(prob2, bit2);
+    }
+
+    private static int NormalizeSegmentProbability(int probability) {
+        if (probability < 0 || probability > 255) return 128;
+        return probability;
+    }
+
+    private static void WriteSignedLiteral(WebpVp8BoolEncoder writer, int value, int bits) {
+        if (value < 0) {
+            writer.WriteLiteral(-value, bits);
+            writer.WriteBool(128, true);
+        } else {
+            writer.WriteLiteral(value, bits);
+            writer.WriteBool(128, false);
+        }
     }
 
     private static void WriteLoopFilter(WebpVp8BoolEncoder writer, int quality) {
@@ -1383,6 +1467,159 @@ internal static class WebpVp8Encoder {
         return (100 - quality) * 127 / 100;
     }
 
+    private static byte[] BuildSegmentMap(
+        byte[] yPlane,
+        int width,
+        int height,
+        int macroblockCols,
+        int macroblockRows,
+        int baseQIndex,
+        out bool segmentationEnabled,
+        out int[] quantizerDeltas,
+        out int[] segmentProbabilities) {
+        segmentationEnabled = false;
+        quantizerDeltas = new int[SegmentCount];
+        segmentProbabilities = new int[SegmentProbCount] { 128, 128, 128 };
+
+        var macroblockCountLong = (long)macroblockCols * macroblockRows;
+        if (macroblockCountLong <= 0 || macroblockCountLong > int.MaxValue) {
+            return Array.Empty<byte>();
+        }
+
+        var macroblockCount = (int)macroblockCountLong;
+        var segmentIds = new byte[macroblockCount];
+
+        if (macroblockCount <= 1 || baseQIndex < 12) {
+            return segmentIds;
+        }
+
+        var variances = new int[macroblockCount];
+        for (var mbY = 0; mbY < macroblockRows; mbY++) {
+            for (var mbX = 0; mbX < macroblockCols; mbX++) {
+                var index = (mbY * macroblockCols) + mbX;
+                var startX = mbX * MacroblockSize;
+                var startY = mbY * MacroblockSize;
+
+                long sum = 0;
+                long sumSq = 0;
+                var count = 0;
+
+                for (var y = 0; y < MacroblockSize; y++) {
+                    var srcY = startY + y;
+                    if (srcY >= height) break;
+                    var rowOffset = srcY * width;
+                    for (var x = 0; x < MacroblockSize; x++) {
+                        var srcX = startX + x;
+                        if (srcX >= width) break;
+                        var sample = yPlane[rowOffset + srcX];
+                        sum += sample;
+                        sumSq += (long)sample * sample;
+                        count++;
+                    }
+                }
+
+                if (count <= 0) {
+                    variances[index] = 0;
+                    continue;
+                }
+
+                var numerator = (sumSq * count) - (sum * sum);
+                if (numerator < 0) numerator = 0;
+                variances[index] = (int)(numerator / (count * (long)count));
+            }
+        }
+
+        var sorted = (int[])variances.Clone();
+        Array.Sort(sorted);
+        var p25 = sorted[(macroblockCount * 1) / 4];
+        var p50 = sorted[(macroblockCount * 2) / 4];
+        var p75 = sorted[(macroblockCount * 3) / 4];
+
+        if (p75 - p25 < 8) {
+            return segmentIds;
+        }
+
+        var counts = new int[SegmentCount];
+        for (var i = 0; i < variances.Length; i++) {
+            var variance = variances[i];
+            var segmentId = variance <= p25 ? 0
+                : variance <= p50 ? 1
+                : variance <= p75 ? 2
+                : 3;
+            segmentIds[i] = (byte)segmentId;
+            counts[segmentId]++;
+        }
+
+        var usedSegments = 0;
+        for (var i = 0; i < counts.Length; i++) {
+            if (counts[i] > 0) usedSegments++;
+        }
+
+        if (usedSegments < 2) {
+            return segmentIds;
+        }
+
+        var step = baseQIndex / 16;
+        if (step < 2) step = 2;
+        if (step > 12) step = 12;
+
+        quantizerDeltas[0] = ClampSegmentDelta(step * 2);
+        quantizerDeltas[1] = ClampSegmentDelta(step);
+        quantizerDeltas[2] = 0;
+        quantizerDeltas[3] = ClampSegmentDelta(-step);
+
+        segmentProbabilities = BuildSegmentProbabilities(counts);
+        segmentationEnabled = true;
+        return segmentIds;
+    }
+
+    private static int[] BuildSegmentProbabilities(int[] counts) {
+        var probabilities = new int[SegmentProbCount] { 128, 128, 128 };
+        if (counts == null || counts.Length < SegmentCount) return probabilities;
+
+        var total = 0;
+        for (var i = 0; i < SegmentCount; i++) {
+            total += counts[i];
+        }
+
+        if (total <= 0) return probabilities;
+
+        probabilities[0] = ComputeProbability(counts[0], total);
+        var remaining = total - counts[0];
+        probabilities[1] = remaining > 0 ? ComputeProbability(counts[1], remaining) : 128;
+        var remaining2 = remaining - counts[1];
+        probabilities[2] = remaining2 > 0 ? ComputeProbability(counts[2], remaining2) : 128;
+        return probabilities;
+    }
+
+    private static int ComputeProbability(int countFalse, int total) {
+        if (total <= 0) return 128;
+        var numerator = (long)countFalse * 255 + (total / 2);
+        var prob = (int)(numerator / total);
+        if (prob < 0) return 0;
+        if (prob > 255) return 255;
+        return prob;
+    }
+
+    private static DequantFactors[] BuildDequantFactors(int baseQIndex, int[] quantizerDeltas, bool segmentationEnabled) {
+        var factors = new DequantFactors[SegmentCount];
+        if (!segmentationEnabled) {
+            var baseFactors = BuildDequantFactors(baseQIndex);
+            for (var i = 0; i < SegmentCount; i++) {
+                factors[i] = baseFactors;
+            }
+            return factors;
+        }
+
+        for (var i = 0; i < SegmentCount; i++) {
+            var delta = (quantizerDeltas != null && i < quantizerDeltas.Length) ? quantizerDeltas[i] : 0;
+            var qIndex = ClampQIndex(baseQIndex + delta);
+            factors[i] = BuildDequantFactors(qIndex);
+        }
+
+        return factors;
+    }
+
     private static DequantFactors BuildDequantFactors(int baseQIndex) {
         var q = ClampQIndex(baseQIndex);
         var y1Dc = GetDcQuant(q);
@@ -1412,6 +1649,12 @@ internal static class WebpVp8Encoder {
         if (qIndex < 0) return 0;
         if (qIndex > 127) return 127;
         return qIndex;
+    }
+
+    private static int ClampSegmentDelta(int delta) {
+        if (delta < -127) return -127;
+        if (delta > 127) return 127;
+        return delta;
     }
 
     private static int GetCoeffIndex(int blockType, int band, int prev, int node) {
