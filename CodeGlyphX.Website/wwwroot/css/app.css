@@ -473,12 +473,12 @@ body:has(.page-playground) {
 .docs-static h1:focus-visible,
 .faq-hero h1:focus,
 .faq-hero h1:focus-visible,
-.support-hero h1:focus,
-.support-hero h1:focus-visible {
+.pricing-hero h1:focus,
+.pricing-hero h1:focus-visible {
     outline: none;
 }
 
-body.using-keyboard :is(.hero, .showcase-hero, .docs-content, .docs-static, .faq-hero, .support-hero) h1:focus-visible {
+body.using-keyboard :is(.hero, .showcase-hero, .docs-content, .docs-static, .faq-hero, .pricing-hero) h1:focus-visible {
     outline: 2px solid var(--primary-light);
     outline-offset: 4px;
 }
@@ -3947,18 +3947,18 @@ section {
    Support / Pricing Page
    ============================================ */
 
-.support-page {
+.pricing-page {
     max-width: 1200px;
     margin: 0 auto;
     padding: 6rem 2rem 4rem;
 }
 
-.support-hero {
+.pricing-hero {
     text-align: center;
     margin-bottom: 4rem;
 }
 
-.support-hero h1 {
+.pricing-hero h1 {
     font-size: clamp(2rem, 5vw, 3.5rem);
     margin-bottom: 1rem;
     background: linear-gradient(135deg, var(--text) 0%, var(--primary-light) 60%);
@@ -3969,7 +3969,7 @@ section {
 
 /* Focus styles consolidated above */
 
-.support-hero p {
+.pricing-hero p {
     font-size: 1.15rem;
     color: var(--text-muted);
     max-width: 650px;
@@ -4156,7 +4156,7 @@ section {
     color: var(--primary-light);
 }
 
-.support-note {
+.pricing-note {
     max-width: 700px;
     margin: 0 auto;
     text-align: center;
@@ -4166,19 +4166,19 @@ section {
     border-radius: var(--radius-lg);
 }
 
-.support-note h3 {
+.pricing-note h3 {
     font-size: 1.25rem;
     margin-bottom: 1rem;
 }
 
-.support-note p {
+.pricing-note p {
     color: var(--text-muted);
     font-size: 0.95rem;
     line-height: 1.8;
     margin-bottom: 1rem;
 }
 
-.support-note p:last-child {
+.pricing-note p:last-child {
     margin-bottom: 0;
 }
 
@@ -4192,7 +4192,7 @@ section {
 }
 
 @media (max-width: 768px) {
-    .support-page {
+    .pricing-page {
         padding: 5rem 1rem 3rem;
     }
 }

@@ -186,7 +186,7 @@ async function testNavigation(page) {
         { label: 'Home', href: '/', expectedPath: '/', expectedContent: 'Generate QR Codes' },
         { label: 'Playground', href: '/playground/', expectedPath: '/playground/', expectedContent: null },
         { label: 'Docs', href: '/docs/', expectedPath: '/docs/', expectedContent: null },
-        { label: 'Benchmarks', href: '/benchmarks/', expectedPath: '/docs/benchmarks', expectedContent: 'Benchmarks' },
+        { label: 'Benchmarks', href: '/benchmarks/', expectedPath: '/benchmarks/', expectedContent: 'Benchmarks' },
         { label: 'Showcase', href: '/showcase/', expectedPath: '/showcase/', expectedContent: 'Showcase' },
         { label: 'Pricing', href: '/pricing/', expectedPath: '/pricing/', expectedContent: 'Pricing' },
     ];
@@ -479,19 +479,51 @@ async function testPlaygroundInteractions(page, failures) {
 }
 
 async function testBenchmarks(page) {
+    const path = '/benchmarks/';
     const label = 'Benchmarks';
     const failures = [];
     const monitor = attachResourceMonitor(page);
 
     try {
-        // /benchmarks/ redirects to /docs/benchmarks via Blazor SPA routing
-        await page.goto(baseUrl + '/benchmarks/', { waitUntil: 'networkidle', timeout: 30000 });
-        await page.waitForURL('**/docs/benchmarks**', { timeout: timeouts.nav });
-
-        // Verify it landed on docs/benchmarks
-        await page.waitForSelector('.docs-layout', { timeout: timeouts.selector });
-        await expectText(page, 'Benchmarks', failures, label);
+        await page.goto(baseUrl + path, { waitUntil: 'networkidle', timeout: 30000 });
+        await page.waitForSelector('.benchmark-page', { timeout: timeouts.selector });
         await expectStylesheet(page, 'app.css', failures, label);
+
+        await page.waitForFunction(() => {
+            const summary = document.querySelector('[data-benchmark-summary]');
+            return summary && summary.querySelector('table');
+        }, { timeout: timeouts.page });
+
+        const rowCount = await page.$$eval('.bench-summary-table tbody tr', rows => rows.length);
+        if (rowCount === 0) {
+            failures.push({
+                test: 'benchmarks',
+                page: label,
+                error: 'Benchmark summary table has no rows'
+            });
+        }
+
+        const metaExists = await page.locator('.benchmark-meta-grid').count();
+        if (!metaExists) {
+            failures.push({
+                test: 'benchmarks',
+                page: label,
+                error: 'Benchmark meta section did not render'
+            });
+        }
+
+        const tableHandle = await page.$('.bench-table');
+        if (tableHandle) {
+            const borderCollapse = await tableHandle.evaluate(el => getComputedStyle(el).borderCollapse);
+            if (borderCollapse !== 'collapse') {
+                failures.push({
+                    test: 'styles',
+                    page: label,
+                    error: 'Benchmark table styles not applied (border-collapse mismatch)'
+                });
+            }
+        }
+
         await expectNavConsistency(page, failures, label);
     } catch (err) {
         failures.push({
@@ -536,34 +568,6 @@ async function testBenchmarks(page) {
         stylesheet: 'app.css',
         checkNav: true
     }));
-    allFailures.push(...await testStaticPage(page, '/pricing/', 'Pricing', {
-        expectedText: 'Simple, Transparent Pricing',
-        expectedSelector: '.support-page',
-        stylesheet: 'app.css',
-        checkNav: true,
-        afterLoad: async (page, failures) => {
-            // Verify pricing cards render
-            const cardCount = await page.$$eval('.pricing-card', cards => cards.length);
-            if (cardCount < 3) {
-                failures.push({
-                    test: 'pricing-cards',
-                    page: 'Pricing',
-                    error: `Expected at least 3 pricing cards, got ${cardCount}`
-                });
-            }
-            // Verify Free tier exists
-            await expectText(page, '$0', failures, 'Pricing');
-            // Verify sponsor link
-            const sponsorLink = await page.locator('a[href*="sponsors"]').count();
-            if (!sponsorLink) {
-                failures.push({
-                    test: 'pricing-sponsor',
-                    page: 'Pricing',
-                    error: 'Missing GitHub Sponsors link'
-                });
-            }
-        }
-    }));
     allFailures.push(...await testBenchmarks(page));
 
     console.log('\n=== Testing Mobile Layout ===');
@@ -583,6 +587,24 @@ async function testBenchmarks(page) {
         stylesheet: 'app.css',
         checkNav: true
     }));
+    allFailures.push(...await testBlazorApp(page, '/pricing/', 'Pricing', {
+        expectedSelector: '.pricing-page',
+        expectedText: 'Simple, Transparent Pricing',
+        expectedBaseHref: '/',
+        stylesheet: 'app.css',
+        checkNav: true,
+        afterLoad: async (page, failures) => {
+            const cardCount = await page.$$eval('.pricing-card', cards => cards.length);
+            if (cardCount < 3) {
+                failures.push({
+                    test: 'pricing-cards',
+                    page: 'Pricing',
+                    error: `Expected at least 3 pricing cards, got ${cardCount}`
+                });
+            }
+            await expectText(page, '$0', failures, 'Pricing');
+        }
+    }));
     allFailures.push(...await testBlazorApp(page, '/playground/', 'Playground', {
         expectedSelector: '.playground',
         expectedBaseHref: '/playground/',
@@ -594,7 +616,7 @@ async function testBenchmarks(page) {
     console.log('\n=== Testing Blazor Apps Mobile Layout ===');
     allFailures.push(...await testMobileLayout(
         page,
-        ['/docs/', '/playground/'],
+        ['/docs/', '/playground/', '/pricing/'],
         [375, 414],
         10
     ));
