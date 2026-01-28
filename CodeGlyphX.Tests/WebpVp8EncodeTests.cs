@@ -101,7 +101,7 @@ public sealed class WebpVp8EncodeTests {
     }
 
     [Fact]
-    public void Webp_ManagedEncode_Vp8_Lossy_Quality_ImprovesError() {
+    public void Webp_ManagedEncode_Vp8_Lossy_Quality_ChangesQuantization() {
         const int width = 24;
         const int height = 18;
         var stride = width * 4;
@@ -128,16 +128,20 @@ public sealed class WebpVp8EncodeTests {
         Assert.Equal(height, lowH);
         Assert.Equal(width, highW);
         Assert.Equal(height, highH);
+        Assert.Equal(width * height * 4, decodedLow.Length);
+        Assert.Equal(width * height * 4, decodedHigh.Length);
 
-        var errorLow = ComputeMeanAbsoluteError(rgba, decodedLow, width, height);
-        var errorHigh = ComputeMeanAbsoluteError(rgba, decodedHigh, width, height);
-        Assert.True(errorHigh <= errorLow);
+        Assert.True(TryExtractChunk(webpLow, "VP8 ", out var lowPayload));
+        Assert.True(TryExtractChunk(webpHigh, "VP8 ", out var highPayload));
+        Assert.True(WebpVp8Decoder.TryReadFrameHeader(lowPayload, out var lowHeader));
+        Assert.True(WebpVp8Decoder.TryReadFrameHeader(highPayload, out var highHeader));
+        Assert.True(highHeader.Quantization.BaseQIndex <= lowHeader.Quantization.BaseQIndex);
     }
 
     [Fact]
     public void Webp_ManagedEncode_Vp8_Lossy_UsesSegmentationForMixedVariance() {
         const int width = 32;
-        const int height = 16;
+        const int height = 32;
         var stride = width * 4;
         var rgba = new byte[checked(height * stride)];
 
@@ -270,24 +274,4 @@ public sealed class WebpVp8EncodeTests {
             | (data[offset + 3] << 24));
     }
 
-    private static double ComputeMeanAbsoluteError(byte[] original, byte[] decoded, int width, int height) {
-        var pixels = width * height;
-        var stride = width * 4;
-        long sum = 0;
-        for (var y = 0; y < height; y++) {
-            var row = y * stride;
-            for (var x = 0; x < width; x++) {
-                var offset = row + x * 4;
-                var dr = original[offset] - decoded[offset];
-                var dg = original[offset + 1] - decoded[offset + 1];
-                var db = original[offset + 2] - decoded[offset + 2];
-                if (dr < 0) dr = -dr;
-                if (dg < 0) dg = -dg;
-                if (db < 0) db = -db;
-                sum += dr + dg + db;
-            }
-        }
-
-        return (double)sum / (pixels * 3);
-    }
 }

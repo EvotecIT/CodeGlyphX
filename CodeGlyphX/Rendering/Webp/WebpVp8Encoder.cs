@@ -1489,7 +1489,7 @@ internal static class WebpVp8Encoder {
         var macroblockCount = (int)macroblockCountLong;
         var segmentIds = new byte[macroblockCount];
 
-        if (macroblockCount <= 1 || baseQIndex < 12) {
+        if (macroblockCount < 4 || baseQIndex < 12) {
             return segmentIds;
         }
 
@@ -1535,7 +1535,9 @@ internal static class WebpVp8Encoder {
         var p50 = sorted[(macroblockCount * 2) / 4];
         var p75 = sorted[(macroblockCount * 3) / 4];
 
-        if (p75 - p25 < 8) {
+        var spread = p75 - p25;
+        var minSpread = Math.Max(8, baseQIndex / 2);
+        if (spread < minSpread) {
             return segmentIds;
         }
 
