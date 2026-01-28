@@ -340,31 +340,53 @@ internal static class WebpVp8Encoder {
             chromaOffsetY);
 
         var skipCoefficients = false;
+        int[]? bPredModes = null;
         Span<byte> yBackup = stackalloc byte[MacroblockSize * MacroblockSize];
         Span<byte> uBackup = stackalloc byte[(MacroblockSize / 2) * (MacroblockSize / 2)];
         Span<byte> vBackup = stackalloc byte[(MacroblockSize / 2) * (MacroblockSize / 2)];
-        if (enableSkip && useY16) {
+        if (enableSkip) {
             CopyPlaneBlock(reconY, width, height, macroblockOffsetX, macroblockOffsetY, MacroblockSize, MacroblockSize, yBackup);
             CopyPlaneBlock(reconU, chromaWidth, chromaHeight, chromaOffsetX, chromaOffsetY, MacroblockSize / 2, MacroblockSize / 2, uBackup);
             CopyPlaneBlock(reconV, chromaWidth, chromaHeight, chromaOffsetX, chromaOffsetY, MacroblockSize / 2, MacroblockSize / 2, vBackup);
 
-            skipCoefficients = ApplyPredictionAndCheckMatchY16(
-                yPlane,
-                uPlane,
-                vPlane,
-                reconY,
-                reconU,
-                reconV,
-                width,
-                height,
-                chromaWidth,
-                chromaHeight,
-                macroblockOffsetX,
-                macroblockOffsetY,
-                chromaOffsetX,
-                chromaOffsetY,
-                bestY16Mode,
-                uvMode);
+            if (useY16) {
+                skipCoefficients = ApplyPredictionAndCheckMatchY16(
+                    yPlane,
+                    uPlane,
+                    vPlane,
+                    reconY,
+                    reconU,
+                    reconV,
+                    width,
+                    height,
+                    chromaWidth,
+                    chromaHeight,
+                    macroblockOffsetX,
+                    macroblockOffsetY,
+                    chromaOffsetX,
+                    chromaOffsetY,
+                    bestY16Mode,
+                    uvMode);
+            } else {
+                bPredModes = new int[MacroblockSubBlockCount];
+                skipCoefficients = ApplyPredictionAndCheckMatchBPred(
+                    yPlane,
+                    uPlane,
+                    vPlane,
+                    reconY,
+                    reconU,
+                    reconV,
+                    width,
+                    height,
+                    chromaWidth,
+                    chromaHeight,
+                    macroblockOffsetX,
+                    macroblockOffsetY,
+                    chromaOffsetX,
+                    chromaOffsetY,
+                    uvMode,
+                    bPredModes);
+            }
 
             if (!skipCoefficients) {
                 RestorePlaneBlock(reconY, width, height, macroblockOffsetX, macroblockOffsetY, MacroblockSize, MacroblockSize, yBackup);
@@ -408,66 +430,96 @@ internal static class WebpVp8Encoder {
             WriteKeyframeYMode(headerWriter, YModeBPred);
             y2NzCurrent[mbX] = 0;
 
-            for (var blockIndex = 0; blockIndex < MacroblockSubBlockCount; blockIndex++) {
-                var subX = blockIndex & 3;
-                var subY = blockIndex >> 2;
-                var initialContext = 0;
+            if (skipCoefficients && bPredModes != null) {
+                for (var blockIndex = 0; blockIndex < MacroblockSubBlockCount; blockIndex++) {
+                    var subX = blockIndex & 3;
+                    var subY = blockIndex >> 2;
 
-                if (subY == 0) {
-                    if (mbY > 0) initialContext += yNzAbove[yBlockBase + 12 + subX];
-                } else {
-                    initialContext += yNzCurrent[yBlockBase + ((subY - 1) * 4) + subX];
-                }
-
-                if (subX == 0) {
-                    if (mbX > 0) initialContext += yNzCurrent[yBlockBase - MacroblockSubBlockCount + (subY * 4) + 3];
-                } else {
-                    initialContext += yNzCurrent[yBlockBase + (subY * 4) + subX - 1];
-                }
-
-                if (initialContext > 2) initialContext = 2;
-
-                var aboveMode = BModeDcPred;
-                if (subY == 0) {
-                    if (mbY > 0) {
-                        aboveMode = aboveSubModes[yBlockBase + 12 + subX];
+                    var aboveMode = BModeDcPred;
+                    if (subY == 0) {
+                        if (mbY > 0) {
+                            aboveMode = aboveSubModes[yBlockBase + 12 + subX];
+                        }
+                    } else {
+                        aboveMode = bPredModes[((subY - 1) * 4) + subX];
                     }
-                } else {
-                    aboveMode = currentSubModes[yBlockBase + ((subY - 1) * 4) + subX];
-                }
 
-                var leftMode = BModeDcPred;
-                if (subX == 0) {
-                    if (mbX > 0) {
-                        leftMode = currentSubModes[yBlockBase - MacroblockSubBlockCount + (subY * 4) + 3];
+                    var leftMode = BModeDcPred;
+                    if (subX == 0) {
+                        if (mbX > 0) {
+                            leftMode = currentSubModes[yBlockBase - MacroblockSubBlockCount + (subY * 4) + 3];
+                        }
+                    } else {
+                        leftMode = bPredModes[(subY * 4) + subX - 1];
                     }
-                } else {
-                    leftMode = currentSubModes[yBlockBase + (subY * 4) + subX - 1];
+
+                    var mode = bPredModes[blockIndex];
+                    WriteKeyframeBMode(headerWriter, aboveMode, leftMode, mode);
+                    currentSubModes[yBlockBase + blockIndex] = mode;
+                    yNzCurrent[yBlockBase + blockIndex] = 0;
                 }
+            } else {
+                for (var blockIndex = 0; blockIndex < MacroblockSubBlockCount; blockIndex++) {
+                    var subX = blockIndex & 3;
+                    var subY = blockIndex >> 2;
+                    var initialContext = 0;
 
-                var dstX = macroblockOffsetX + (subX * BlockSize);
-                var dstY = macroblockOffsetY + (subY * BlockSize);
-                var mode = ChooseBestBlockMode(yPlane, reconY, width, height, dstX, dstY, out _);
+                    if (subY == 0) {
+                        if (mbY > 0) initialContext += yNzAbove[yBlockBase + 12 + subX];
+                    } else {
+                        initialContext += yNzCurrent[yBlockBase + ((subY - 1) * 4) + subX];
+                    }
 
-                WriteKeyframeBMode(headerWriter, aboveMode, leftMode, mode);
-                currentSubModes[yBlockBase + blockIndex] = mode;
+                    if (subX == 0) {
+                        if (mbX > 0) initialContext += yNzCurrent[yBlockBase - MacroblockSubBlockCount + (subY * 4) + 3];
+                    } else {
+                        initialContext += yNzCurrent[yBlockBase + (subY * 4) + subX - 1];
+                    }
 
-                var hasNonZero = EncodeBlock(
-                    tokenWriter,
-                    probabilities,
-                    BlockTypeY,
-                    initialContext,
-                    yPlane,
-                    reconY,
-                    width,
-                    height,
-                    dstX,
-                    dstY,
-                    mode,
-                    dequant.Y1Dc,
-                    dequant.Y1Ac);
+                    if (initialContext > 2) initialContext = 2;
 
-                yNzCurrent[yBlockBase + blockIndex] = hasNonZero ? (byte)1 : (byte)0;
+                    var aboveMode = BModeDcPred;
+                    if (subY == 0) {
+                        if (mbY > 0) {
+                            aboveMode = aboveSubModes[yBlockBase + 12 + subX];
+                        }
+                    } else {
+                        aboveMode = currentSubModes[yBlockBase + ((subY - 1) * 4) + subX];
+                    }
+
+                    var leftMode = BModeDcPred;
+                    if (subX == 0) {
+                        if (mbX > 0) {
+                            leftMode = currentSubModes[yBlockBase - MacroblockSubBlockCount + (subY * 4) + 3];
+                        }
+                    } else {
+                        leftMode = currentSubModes[yBlockBase + (subY * 4) + subX - 1];
+                    }
+
+                    var dstX = macroblockOffsetX + (subX * BlockSize);
+                    var dstY = macroblockOffsetY + (subY * BlockSize);
+                    var mode = ChooseBestBlockMode(yPlane, reconY, width, height, dstX, dstY, out _);
+
+                    WriteKeyframeBMode(headerWriter, aboveMode, leftMode, mode);
+                    currentSubModes[yBlockBase + blockIndex] = mode;
+
+                    var hasNonZero = EncodeBlock(
+                        tokenWriter,
+                        probabilities,
+                        BlockTypeY,
+                        initialContext,
+                        yPlane,
+                        reconY,
+                        width,
+                        height,
+                        dstX,
+                        dstY,
+                        mode,
+                        dequant.Y1Dc,
+                        dequant.Y1Ac);
+
+                    yNzCurrent[yBlockBase + blockIndex] = hasNonZero ? (byte)1 : (byte)0;
+                }
             }
         }
 
@@ -1220,6 +1272,78 @@ internal static class WebpVp8Encoder {
 
             CopyPredictedBlock(reconY, width, height, dstX, dstY, predicted);
         }
+
+        return ApplyPredictionAndCheckMatchUv(
+            uPlane,
+            vPlane,
+            reconU,
+            reconV,
+            chromaWidth,
+            chromaHeight,
+            chromaOffsetX,
+            chromaOffsetY,
+            uvMode);
+    }
+
+    private static bool ApplyPredictionAndCheckMatchBPred(
+        byte[] yPlane,
+        byte[] uPlane,
+        byte[] vPlane,
+        byte[] reconY,
+        byte[] reconU,
+        byte[] reconV,
+        int width,
+        int height,
+        int chromaWidth,
+        int chromaHeight,
+        int macroblockOffsetX,
+        int macroblockOffsetY,
+        int chromaOffsetX,
+        int chromaOffsetY,
+        int uvMode,
+        int[] outputModes) {
+        Span<byte> predicted = stackalloc byte[BlockSize * BlockSize];
+
+        for (var blockIndex = 0; blockIndex < MacroblockSubBlockCount; blockIndex++) {
+            var subX = blockIndex & 3;
+            var subY = blockIndex >> 2;
+            var dstX = macroblockOffsetX + (subX * BlockSize);
+            var dstY = macroblockOffsetY + (subY * BlockSize);
+
+            var mode = ChooseBestBlockMode(yPlane, reconY, width, height, dstX, dstY, out _);
+            outputModes[blockIndex] = mode;
+
+            PredictBlock(reconY, width, height, dstX, dstY, mode, predicted);
+            if (!BlockMatchesPrediction(yPlane, width, height, dstX, dstY, predicted)) {
+                return false;
+            }
+
+            CopyPredictedBlock(reconY, width, height, dstX, dstY, predicted);
+        }
+
+        return ApplyPredictionAndCheckMatchUv(
+            uPlane,
+            vPlane,
+            reconU,
+            reconV,
+            chromaWidth,
+            chromaHeight,
+            chromaOffsetX,
+            chromaOffsetY,
+            uvMode);
+    }
+
+    private static bool ApplyPredictionAndCheckMatchUv(
+        byte[] uPlane,
+        byte[] vPlane,
+        byte[] reconU,
+        byte[] reconV,
+        int chromaWidth,
+        int chromaHeight,
+        int chromaOffsetX,
+        int chromaOffsetY,
+        int uvMode) {
+        Span<byte> predicted = stackalloc byte[BlockSize * BlockSize];
 
         for (var blockIndex = 0; blockIndex < MacroblockChromaBlocks; blockIndex++) {
             var subX = blockIndex & 1;
