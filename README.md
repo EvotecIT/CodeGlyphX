@@ -30,7 +30,7 @@ Status: Actively developed · Stable core · Expanding format support
 - Reliable QR decoding (ECI, FNC1/GS1, Kanji, structured append, Micro QR)
 - 1D barcode encoding/decoding (Code128/GS1-128, Code39, Code93, Code11, Codabar, MSI, Plessey, EAN/UPC, ITF-14)
 - 2D encoding/decoding (Data Matrix, MicroPDF417, PDF417, Aztec)
-- Renderers (SVG / SVGZ / HTML / PNG / JPEG / BMP / PPM / PBM / PGM / PAM / XBM / XPM / TGA / ICO / PDF / EPS / ASCII) and image decoding (PNG/JPEG/GIF/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA/ICO/TIFF)
+- Renderers (SVG / SVGZ / HTML / PNG / JPEG / WebP / BMP / PPM / PBM / PGM / PAM / XBM / XPM / TGA / ICO / PDF / EPS / ASCII) and image decoding (PNG/JPEG/WebP/GIF/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA/ICO/TIFF)
 - OTP helpers (otpauth://totp + Base32)
 - WPF controls + demo apps
 
@@ -200,8 +200,8 @@ Runs wherever .NET runs (Windows, Linux, macOS). WPF controls are Windows-only.
 | Feature | Windows | Linux | macOS |
 | --- | --- | --- | --- |
 | Core encode/decode (QR/1D/2D) | ✅ | ✅ | ✅ |
-| Renderers (PNG/SVG/SVGZ/HTML/JPEG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA/ICO/PDF/EPS/ASCII) | ✅ | ✅ | ✅ |
-| Image decoding (PNG/JPEG/GIF/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA/ICO/TIFF) | ✅ | ✅ | ✅ |
+| Renderers (PNG/SVG/SVGZ/HTML/JPEG/WebP/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA/ICO/PDF/EPS/ASCII) | ✅ | ✅ | ✅ |
+| Image decoding (PNG/JPEG/WebP/GIF/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA/ICO/TIFF) | ✅ | ✅ | ✅ |
 | WPF controls | ✅ | ❌ | ❌ |
 
 ## Build Status
