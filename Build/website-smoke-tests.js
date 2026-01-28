@@ -568,6 +568,23 @@ async function testBenchmarks(page) {
         stylesheet: 'app.css',
         checkNav: true
     }));
+    allFailures.push(...await testStaticPage(page, '/pricing/', 'Pricing', {
+        expectedText: 'Simple, Transparent Pricing',
+        expectedSelector: '.pricing-page',
+        stylesheet: 'app.css',
+        checkNav: true,
+        afterLoad: async (page, failures) => {
+            const cardCount = await page.$$eval('.pricing-card', cards => cards.length);
+            if (cardCount < 3) {
+                failures.push({
+                    test: 'pricing-cards',
+                    page: 'Pricing',
+                    error: `Expected at least 3 pricing cards, got ${cardCount}`
+                });
+            }
+            await expectText(page, '$0', failures, 'Pricing');
+        }
+    }));
     allFailures.push(...await testBenchmarks(page));
 
     console.log('\n=== Testing Mobile Layout ===');
@@ -587,24 +604,6 @@ async function testBenchmarks(page) {
         stylesheet: 'app.css',
         checkNav: true
     }));
-    allFailures.push(...await testBlazorApp(page, '/pricing/', 'Pricing', {
-        expectedSelector: '.pricing-page',
-        expectedText: 'Simple, Transparent Pricing',
-        expectedBaseHref: '/',
-        stylesheet: 'app.css',
-        checkNav: true,
-        afterLoad: async (page, failures) => {
-            const cardCount = await page.$$eval('.pricing-card', cards => cards.length);
-            if (cardCount < 3) {
-                failures.push({
-                    test: 'pricing-cards',
-                    page: 'Pricing',
-                    error: `Expected at least 3 pricing cards, got ${cardCount}`
-                });
-            }
-            await expectText(page, '$0', failures, 'Pricing');
-        }
-    }));
     allFailures.push(...await testBlazorApp(page, '/playground/', 'Playground', {
         expectedSelector: '.playground',
         expectedBaseHref: '/playground/',
@@ -616,7 +615,7 @@ async function testBenchmarks(page) {
     console.log('\n=== Testing Blazor Apps Mobile Layout ===');
     allFailures.push(...await testMobileLayout(
         page,
-        ['/docs/', '/playground/', '/pricing/'],
+        ['/docs/', '/playground/'],
         [375, 414],
         10
     ));

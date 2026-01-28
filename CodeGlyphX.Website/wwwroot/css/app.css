@@ -462,23 +462,13 @@ body:has(.page-playground) {
     min-width: 0;
 }
 
-/* Focus styles for all page headings targeted by FocusOnNavigate */
-.hero h1:focus,
-.hero h1:focus-visible,
-.showcase-hero h1:focus,
-.showcase-hero h1:focus-visible,
-.docs-content h1:focus,
-.docs-content h1:focus-visible,
-.docs-static h1:focus,
-.docs-static h1:focus-visible,
-.faq-hero h1:focus,
-.faq-hero h1:focus-visible,
-.pricing-hero h1:focus,
-.pricing-hero h1:focus-visible {
+/* Focus styles for page headings targeted by FocusOnNavigate.
+   Hide outline for mouse/touch clicks, show for keyboard navigation. */
+:is(.hero, .showcase-hero, .docs-content, .docs-static, .faq-hero, .pricing-hero) h1:focus:not(:focus-visible) {
     outline: none;
 }
 
-body.using-keyboard :is(.hero, .showcase-hero, .docs-content, .docs-static, .faq-hero, .pricing-hero) h1:focus-visible {
+:is(.hero, .showcase-hero, .docs-content, .docs-static, .faq-hero, .pricing-hero) h1:focus-visible {
     outline: 2px solid var(--primary-light);
     outline-offset: 4px;
 }

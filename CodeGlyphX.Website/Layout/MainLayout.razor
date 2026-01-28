@@ -340,7 +340,8 @@
     {
         return string.Equals(href, "/", StringComparison.OrdinalIgnoreCase) ||
                href.Contains("/benchmarks/", StringComparison.OrdinalIgnoreCase) ||
-               href.Contains("/api/", StringComparison.OrdinalIgnoreCase);
+               href.Contains("/api/", StringComparison.OrdinalIgnoreCase) ||
+               href.Contains("/pricing/", StringComparison.OrdinalIgnoreCase);
     }
 
     private static bool IsExternal(string href)
