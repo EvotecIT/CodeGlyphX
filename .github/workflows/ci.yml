@@ -173,7 +173,7 @@ jobs:
           dotnet-version: '8.0.x'
 
       - name: Restore Tests
-        run: dotnet restore CodeGlyphX.Tests/CodeGlyphX.Tests.csproj
+        run: dotnet restore CodeGlyphX.Tests/CodeGlyphX.Tests.csproj -p:TargetFramework=net8.0
 
       - name: Build Tests (net8.0)
         run: dotnet build CodeGlyphX.Tests/CodeGlyphX.Tests.csproj -c Release -f net8.0 --no-restore

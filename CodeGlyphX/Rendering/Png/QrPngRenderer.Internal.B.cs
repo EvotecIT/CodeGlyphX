@@ -1,12 +1,19 @@
 using System;
 using System.Buffers;
 using System.IO;
+using CodeGlyphX.Qr;
 using CodeGlyphX.Rendering;
 
 namespace CodeGlyphX.Rendering.Png;
 
 public static partial class QrPngRenderer {
     private static bool TryGetEye(int x, int y, int size, out int ex, out int ey, out EyeKind kind) {
+        if (!QrStructureAnalysis.TryGetVersionFromSize(size, out _)) {
+            ex = 0;
+            ey = 0;
+            kind = EyeKind.None;
+            return false;
+        }
         if (IsInEye(x, y, 0, 0)) {
             ex = 0;
             ey = 0;

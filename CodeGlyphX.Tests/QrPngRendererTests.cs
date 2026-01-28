@@ -1363,6 +1363,8 @@ public sealed class QrPngRendererTests {
                 var r = rgba[p + 0];
                 var g = rgba[p + 1];
                 var b = rgba[p + 2];
+                var a = rgba[p + 3];
+                if (a == 0) continue;
                 if (r != 255 || g != 255 || b != 255) {
                     foundBadge = true;
                     break;
@@ -1639,6 +1641,8 @@ public sealed class QrPngRendererTests {
                 var r = rgba[p + 0];
                 var g = rgba[p + 1];
                 var b = rgba[p + 2];
+                var a = rgba[p + 3];
+                if (a == 0) continue;
                 if (r == 255 && g == 255 && b == 255) continue;
 
                 if (x < minX) minX = x;
