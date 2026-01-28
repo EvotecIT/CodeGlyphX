@@ -169,7 +169,7 @@ svg {
 
 .nav-links {
     display: flex;
-    gap: 0;
+    gap: 0.125rem;
 }
 
 .nav-links a {

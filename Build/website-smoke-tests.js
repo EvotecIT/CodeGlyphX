@@ -582,7 +582,18 @@ async function testBenchmarks(page) {
                     error: `Expected at least 3 pricing cards, got ${cardCount}`
                 });
             }
-            await expectText(page, '$0', failures, 'Pricing');
+            // Check for $0 text (may be rendered from HTML entity &#36;0)
+            const hasFreePrice = await page.evaluate(() => {
+                const text = document.body.textContent || '';
+                return text.includes('$0') || text.includes('\u00240');
+            });
+            if (!hasFreePrice) {
+                failures.push({
+                    test: 'pricing-free',
+                    page: 'Pricing',
+                    error: 'Missing free tier price ($0)'
+                });
+            }
         }
     }));
     allFailures.push(...await testBenchmarks(page));
