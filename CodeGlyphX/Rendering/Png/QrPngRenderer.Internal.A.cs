@@ -101,6 +101,7 @@ public static partial class QrPngRenderer {
         }
 
         var baseModuleShape = opts.ModuleShape;
+        var baseConnectedShape = baseModuleShape;
         var connectedMode = IsConnectedShape(baseModuleShape);
         if (connectedMode) {
             baseModuleShape = baseModuleShape == QrPngModuleShape.ConnectedRounded
@@ -223,8 +224,13 @@ public static partial class QrPngRenderer {
                 }
 
                 var useShape = baseModuleShape;
+                var shapeMapApplied = false;
                 if (applyShapeMap && !isEyeForShapeMap) {
                     useShape = GetShapeForModule(shapeMapInfo!.Value, mx, my, size);
+                    shapeMapApplied = true;
+                }
+                if (connectedMode && !shapeMapApplied) {
+                    useShape = baseConnectedShape;
                 }
 
                 var allowEyeOverride = eyeKind != EyeKind.None && (allowShapeMapOnEyes || allowEyeScaleMap);
