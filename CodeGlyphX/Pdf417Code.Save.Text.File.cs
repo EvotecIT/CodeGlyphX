@@ -40,23 +40,6 @@ public static partial class Pdf417Code {
         var png = Png(data, encodeOptions, renderOptions);
         return png.WriteBinary(path);
     }
-
-    /// <summary>
-    /// Saves PDF417 PNG to a stream.
-    /// </summary>
-    public static void SavePng(string text, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
-        var modules = Encode(text, encodeOptions);
-        MatrixPngRenderer.RenderToStream(modules, BuildPngOptions(renderOptions), stream);
-    }
-
-    /// <summary>
-    /// Saves PDF417 PNG to a stream for byte payloads.
-    /// </summary>
-    public static void SavePng(byte[] data, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
-        var modules = EncodeBytes(data, encodeOptions);
-        MatrixPngRenderer.RenderToStream(modules, BuildPngOptions(renderOptions), stream);
-    }
-
     /// <summary>
     /// Saves PDF417 SVG to a file.
     /// </summary>
@@ -88,39 +71,6 @@ public static partial class Pdf417Code {
         var svgz = Svgz(data, encodeOptions, renderOptions);
         return svgz.WriteBinary(path);
     }
-
-    /// <summary>
-    /// Saves PDF417 SVG to a stream.
-    /// </summary>
-    public static void SaveSvg(string text, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
-        var svg = Svg(text, encodeOptions, renderOptions);
-        svg.WriteText(stream);
-    }
-
-    /// <summary>
-    /// Saves PDF417 SVGZ to a stream for text payloads.
-    /// </summary>
-    public static void SaveSvgz(string text, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
-        var modules = Encode(text, encodeOptions);
-        MatrixSvgzRenderer.RenderToStream(modules, BuildSvgOptions(renderOptions), stream);
-    }
-
-    /// <summary>
-    /// Saves PDF417 SVG to a stream for byte payloads.
-    /// </summary>
-    public static void SaveSvg(byte[] data, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
-        var svg = Svg(data, encodeOptions, renderOptions);
-        svg.WriteText(stream);
-    }
-
-    /// <summary>
-    /// Saves PDF417 SVGZ to a stream for byte payloads.
-    /// </summary>
-    public static void SaveSvgz(byte[] data, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
-        var modules = EncodeBytes(data, encodeOptions);
-        MatrixSvgzRenderer.RenderToStream(modules, BuildSvgOptions(renderOptions), stream);
-    }
-
     /// <summary>
     /// Saves PDF417 HTML to a file.
     /// </summary>
@@ -142,29 +92,6 @@ public static partial class Pdf417Code {
         }
         return html.WriteText(path);
     }
-
-    /// <summary>
-    /// Saves PDF417 HTML to a stream.
-    /// </summary>
-    public static void SaveHtml(string text, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, string? title = null) {
-        var html = Html(text, encodeOptions, renderOptions);
-        if (!string.IsNullOrEmpty(title)) {
-            html = html.WrapHtml(title);
-        }
-        html.WriteText(stream);
-    }
-
-    /// <summary>
-    /// Saves PDF417 HTML to a stream for byte payloads.
-    /// </summary>
-    public static void SaveHtml(byte[] data, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, string? title = null) {
-        var html = Html(data, encodeOptions, renderOptions);
-        if (!string.IsNullOrEmpty(title)) {
-            html = html.WrapHtml(title);
-        }
-        html.WriteText(stream);
-    }
-
     /// <summary>
     /// Saves PDF417 JPEG to a file.
     /// </summary>
@@ -280,6 +207,39 @@ public static partial class Pdf417Code {
     }
 
     /// <summary>
+    /// Saves PDF417 ICO to a file for byte payloads.
+    /// </summary>
+    public static string SaveIco(byte[] data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var ico = Ico(data, encodeOptions, renderOptions);
+        return ico.WriteBinary(path);
+    }
+
+    /// <summary>
+    /// Saves PDF417 PDF to a file for byte payloads.
+    /// </summary>
+    /// <param name="data">Payload bytes.</param>
+    /// <param name="path">Output file path.</param>
+    /// <param name="encodeOptions">Encoding options.</param>
+    /// <param name="renderOptions">Rendering options.</param>
+    /// <param name="renderMode">Vector or raster output.</param>
+    public static string SavePdf(byte[] data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, RenderMode renderMode = RenderMode.Vector) {
+        var pdf = Pdf(data, encodeOptions, renderOptions, renderMode);
+        return pdf.WriteBinary(path);
+    }
+
+    /// <summary>
+    /// Saves PDF417 EPS to a file for byte payloads.
+    /// </summary>
+    /// <param name="data">Payload bytes.</param>
+    /// <param name="path">Output file path.</param>
+    /// <param name="encodeOptions">Encoding options.</param>
+    /// <param name="renderOptions">Rendering options.</param>
+    /// <param name="renderMode">Vector or raster output.</param>
+    public static string SaveEps(byte[] data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, RenderMode renderMode = RenderMode.Vector) {
+        var eps = Eps(data, encodeOptions, renderOptions, renderMode);
+        return eps.WriteText(path);
+    }
+    /// <summary>
     /// Saves PDF417 JPEG to a file for byte payloads.
     /// </summary>
     public static string SaveJpeg(byte[] data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
@@ -358,5 +318,4 @@ public static partial class Pdf417Code {
         var tga = Tga(data, encodeOptions, renderOptions);
         return tga.WriteBinary(path);
     }
-
 }

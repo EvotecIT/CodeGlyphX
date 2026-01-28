@@ -41,22 +41,6 @@ public static partial class DataMatrixCode {
     }
 
     /// <summary>
-    /// Saves Data Matrix PNG to a stream.
-    /// </summary>
-    public static void SavePng(string text, Stream stream, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
-        var modules = Encode(text, mode);
-        MatrixPngRenderer.RenderToStream(modules, BuildPngOptions(options), stream);
-    }
-
-    /// <summary>
-    /// Saves Data Matrix PNG to a stream for byte payloads.
-    /// </summary>
-    public static void SavePng(byte[] data, Stream stream, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
-        var modules = EncodeBytes(data, mode);
-        MatrixPngRenderer.RenderToStream(modules, BuildPngOptions(options), stream);
-    }
-
-    /// <summary>
     /// Saves Data Matrix SVG to a file.
     /// </summary>
     public static string SaveSvg(string text, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
@@ -87,39 +71,6 @@ public static partial class DataMatrixCode {
         var svgz = Svgz(data, mode, options);
         return svgz.WriteBinary(path);
     }
-
-    /// <summary>
-    /// Saves Data Matrix SVG to a stream.
-    /// </summary>
-    public static void SaveSvg(string text, Stream stream, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
-        var svg = Svg(text, mode, options);
-        svg.WriteText(stream);
-    }
-
-    /// <summary>
-    /// Saves Data Matrix SVGZ to a stream.
-    /// </summary>
-    public static void SaveSvgz(string text, Stream stream, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
-        var modules = Encode(text, mode);
-        MatrixSvgzRenderer.RenderToStream(modules, BuildSvgOptions(options), stream);
-    }
-
-    /// <summary>
-    /// Saves Data Matrix SVG to a stream for byte payloads.
-    /// </summary>
-    public static void SaveSvg(byte[] data, Stream stream, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
-        var svg = Svg(data, mode, options);
-        svg.WriteText(stream);
-    }
-
-    /// <summary>
-    /// Saves Data Matrix SVGZ to a stream for byte payloads.
-    /// </summary>
-    public static void SaveSvgz(byte[] data, Stream stream, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
-        var modules = EncodeBytes(data, mode);
-        MatrixSvgzRenderer.RenderToStream(modules, BuildSvgOptions(options), stream);
-    }
-
     /// <summary>
     /// Saves Data Matrix HTML to a file.
     /// </summary>
@@ -141,29 +92,6 @@ public static partial class DataMatrixCode {
         }
         return html.WriteText(path);
     }
-
-    /// <summary>
-    /// Saves Data Matrix HTML to a stream.
-    /// </summary>
-    public static void SaveHtml(string text, Stream stream, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null, string? title = null) {
-        var html = Html(text, mode, options);
-        if (!string.IsNullOrEmpty(title)) {
-            html = html.WrapHtml(title);
-        }
-        html.WriteText(stream);
-    }
-
-    /// <summary>
-    /// Saves Data Matrix HTML to a stream for byte payloads.
-    /// </summary>
-    public static void SaveHtml(byte[] data, Stream stream, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null, string? title = null) {
-        var html = Html(data, mode, options);
-        if (!string.IsNullOrEmpty(title)) {
-            html = html.WrapHtml(title);
-        }
-        html.WriteText(stream);
-    }
-
     /// <summary>
     /// Saves Data Matrix JPEG to a file.
     /// </summary>
@@ -277,7 +205,39 @@ public static partial class DataMatrixCode {
         var eps = Eps(text, mode, options, renderMode);
         return eps.WriteText(path);
     }
+    /// <summary>
+    /// Saves Data Matrix ICO to a file for byte payloads.
+    /// </summary>
+    public static string SaveIco(byte[] data, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var ico = Ico(data, mode, options);
+        return ico.WriteBinary(path);
+    }
 
+    /// <summary>
+    /// Saves Data Matrix PDF to a file for byte payloads.
+    /// </summary>
+    /// <param name="data">Payload bytes.</param>
+    /// <param name="path">Output file path.</param>
+    /// <param name="mode">Vector or raster output.</param>
+    /// <param name="options">Optional rendering options.</param>
+    /// <param name="renderMode">Vector or raster output.</param>
+    public static string SavePdf(byte[] data, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null, RenderMode renderMode = RenderMode.Vector) {
+        var pdf = Pdf(data, mode, options, renderMode);
+        return pdf.WriteBinary(path);
+    }
+
+    /// <summary>
+    /// Saves Data Matrix EPS to a file for byte payloads.
+    /// </summary>
+    /// <param name="data">Payload bytes.</param>
+    /// <param name="path">Output file path.</param>
+    /// <param name="mode">Vector or raster output.</param>
+    /// <param name="options">Optional rendering options.</param>
+    /// <param name="renderMode">Vector or raster output.</param>
+    public static string SaveEps(byte[] data, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null, RenderMode renderMode = RenderMode.Vector) {
+        var eps = Eps(data, mode, options, renderMode);
+        return eps.WriteText(path);
+    }
     /// <summary>
     /// Saves Data Matrix JPEG to a file for byte payloads.
     /// </summary>
