@@ -53,7 +53,7 @@ This list is mostly **work we still want to do**. The "Recently completed" secti
 - Preset schema + v1 packs/shape sets/palettes. [style]
 
 ### P2 — Platform breadth & UX
-- WebP decode + encode (lossless + VP8 lossy intra complete; remaining: VP8 inter + lossy animation). [formats][webp]
+- WebP decode + encode (lossless + VP8 lossy intra complete; remaining: VP8 inter). [formats][webp]
 - Expand format corpus (JPEG progressive/CMYK, GIF variants, BMP/ICO edge cases) and schedule periodic **local** full runs. [formats]
 - AOT evaluation + documentation of safe paths. [aot]
 - Add symbology packs + golden vectors (MaxiCode, rMQR, etc.). [symbology][tests]

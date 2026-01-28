@@ -38,6 +38,41 @@ public sealed class WebpAnimationEncodeTests {
         AssertAllPixels(decoded, 255, 0, 0, 255);
     }
 
+    [Fact]
+    public void Webp_AnimationEncode_Lossy_FirstFramePreservesAlpha() {
+        const int width = 4;
+        const int height = 4;
+
+        var frame1 = new WebpAnimationFrame(
+            CreateSolidRgba(width, height, 20, 40, 200, 180),
+            width,
+            height,
+            width * 4,
+            durationMs: 120,
+            blend: false);
+
+        var frame2 = new WebpAnimationFrame(
+            CreateSolidRgba(width, height, 10, 200, 40, 255),
+            width,
+            height,
+            width * 4,
+            durationMs: 120,
+            blend: false);
+
+        var webp = WebpWriter.WriteAnimationRgba32Lossy(
+            width,
+            height,
+            new[] { frame1, frame2 },
+            new WebpAnimationOptions(loopCount: 0, backgroundBgra: 0),
+            quality: 60);
+
+        var decoded = WebpReader.DecodeRgba32(webp, out var decodedWidth, out var decodedHeight);
+        Assert.Equal(width, decodedWidth);
+        Assert.Equal(height, decodedHeight);
+        Assert.Equal(width * height * 4, decoded.Length);
+        AssertAllAlpha(decoded, 180);
+    }
+
     private static byte[] CreateSolidRgba(int width, int height, byte r, byte g, byte b, byte a) {
         var data = new byte[checked(width * height * 4)];
         for (var i = 0; i < data.Length; i += 4) {
@@ -54,6 +89,12 @@ public sealed class WebpAnimationEncodeTests {
             Assert.Equal(r, rgba[i]);
             Assert.Equal(g, rgba[i + 1]);
             Assert.Equal(b, rgba[i + 2]);
+            Assert.Equal(a, rgba[i + 3]);
+        }
+    }
+
+    private static void AssertAllAlpha(byte[] rgba, byte a) {
+        for (var i = 0; i < rgba.Length; i += 4) {
             Assert.Equal(a, rgba[i + 3]);
         }
     }
