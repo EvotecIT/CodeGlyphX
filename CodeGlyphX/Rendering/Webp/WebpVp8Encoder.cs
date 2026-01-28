@@ -160,7 +160,7 @@ internal static class WebpVp8Encoder {
         WriteCoefficientProbabilityUpdates(headerWriter);
         headerWriter.WriteBool(128, false); // refresh entropy probs
         var enableSkip = true;
-        var skipProbability = 128;
+        var skipProbability = ComputeSkipProbability(quality, segmentationEnabled);
         headerWriter.WriteBool(128, enableSkip);
         if (enableSkip) {
             headerWriter.WriteLiteral(skipProbability, 8);
@@ -1791,6 +1791,15 @@ internal static class WebpVp8Encoder {
         if (quality <= 0) return 127;
         if (quality >= 100) return 0;
         return (100 - quality) * 127 / 100;
+    }
+
+    private static int ComputeSkipProbability(int quality, bool segmentationEnabled) {
+        var baseProbability = segmentationEnabled ? 200 : 140;
+        var span = segmentationEnabled ? 40 : 30;
+        var probability = baseProbability + (quality * span / 100);
+        if (probability < 8) return 8;
+        if (probability > 248) return 248;
+        return probability;
     }
 
     private static byte[] BuildSegmentMap(
