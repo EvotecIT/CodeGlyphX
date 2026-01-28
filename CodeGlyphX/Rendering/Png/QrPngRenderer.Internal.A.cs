@@ -100,13 +100,14 @@ public static partial class QrPngRenderer {
             DrawEyeAccentStripes(buffer, widthPx, heightPx, stride, opts, qrOffsetX, qrOffsetY, qrFullPx, qrSizePx, size);
         }
 
-        var requestedModuleShape = opts.ModuleShape;
-        var connectedMode = IsConnectedShape(requestedModuleShape);
-        var baseModuleShape = connectedMode
-            ? requestedModuleShape == QrPngModuleShape.ConnectedRounded
+        var baseModuleShape = opts.ModuleShape;
+        var baseConnectedShape = baseModuleShape;
+        var connectedMode = IsConnectedShape(baseModuleShape);
+        if (connectedMode) {
+            baseModuleShape = baseModuleShape == QrPngModuleShape.ConnectedRounded
                 ? QrPngModuleShape.Rounded
-                : QrPngModuleShape.Squircle
-            : requestedModuleShape;
+                : QrPngModuleShape.Squircle;
+        }
         var mask = BuildModuleMask(opts.ModuleSize, baseModuleShape, opts.ModuleScale, opts.ModuleCornerRadiusPx);
         var maskSolid = IsSolidMask(mask);
         var eyeOuterMask = opts.Eyes is null
@@ -222,9 +223,14 @@ public static partial class QrPngRenderer {
                     }
                 }
 
-                var useShape = requestedModuleShape;
+                var useShape = baseModuleShape;
+                var shapeMapApplied = false;
                 if (applyShapeMap && !isEyeForShapeMap) {
                     useShape = GetShapeForModule(shapeMapInfo!.Value, mx, my, size);
+                    shapeMapApplied = true;
+                }
+                if (connectedMode && !shapeMapApplied) {
+                    useShape = baseConnectedShape;
                 }
 
                 var allowEyeOverride = eyeKind != EyeKind.None && (allowShapeMapOnEyes || allowEyeScaleMap);
