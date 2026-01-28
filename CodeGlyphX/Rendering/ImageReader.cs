@@ -11,6 +11,7 @@ using CodeGlyphX.Rendering.Png;
 using CodeGlyphX.Rendering.Ppm;
 using CodeGlyphX.Rendering.Tiff;
 using CodeGlyphX.Rendering.Tga;
+using CodeGlyphX.Rendering.Webp;
 using CodeGlyphX.Rendering.Xbm;
 using CodeGlyphX.Rendering.Xpm;
 
@@ -37,6 +38,7 @@ public static partial class ImageReader {
         if (data.Length < 2) throw new FormatException("Unknown image format.");
 
         if (IsPng(data)) return PngReader.DecodeRgba32(data, out width, out height);
+        if (WebpReader.IsWebp(data)) return WebpReader.DecodeRgba32(data, out width, out height);
         if (TiffReader.IsTiff(data)) return TiffReader.DecodeRgba32(data, out width, out height);
         if (IcoReader.IsIco(data)) return IcoReader.DecodeRgba32(data, out width, out height);
         if (JpegReader.IsJpeg(data)) return JpegReader.DecodeRgba32(data, out width, out height);
@@ -100,6 +102,7 @@ public static partial class ImageReader {
         if (data.Length < 2) return false;
 
         if (IsPng(data)) { format = ImageFormat.Png; return true; }
+        if (WebpReader.IsWebp(data)) { format = ImageFormat.Webp; return true; }
         if (TiffReader.IsTiff(data)) { format = ImageFormat.Tiff; return true; }
         if (IcoReader.IsIco(data)) { format = ImageFormat.Ico; return true; }
         if (JpegReader.IsJpeg(data)) { format = ImageFormat.Jpeg; return true; }
