@@ -162,6 +162,7 @@ public sealed class WebpVp8EncodeTests {
         Assert.True(frameHeader.Segmentation.Enabled);
         Assert.True(frameHeader.Segmentation.UpdateMap);
         Assert.True(frameHeader.Segmentation.UpdateData);
+        Assert.Contains(frameHeader.Segmentation.QuantizerDeltas, delta => delta != 0);
 
         Assert.True(WebpVp8Decoder.TryReadMacroblockHeaderScaffold(payload, out var macroblocks));
         var segmentCounts = new int[4];
@@ -175,6 +176,31 @@ public sealed class WebpVp8EncodeTests {
 
         Assert.True(segmentCounts[0] > 0);
         Assert.True(segmentCounts[1] > 0);
+    }
+
+    [Fact]
+    public void Webp_ManagedEncode_Vp8_Lossy_DisablesSegmentationForFlatImage() {
+        const int width = 16;
+        const int height = 16;
+        var stride = width * 4;
+        var rgba = new byte[checked(height * stride)];
+
+        for (var y = 0; y < height; y++) {
+            var row = y * stride;
+            for (var x = 0; x < width; x++) {
+                var offset = row + x * 4;
+                rgba[offset] = 42;
+                rgba[offset + 1] = 42;
+                rgba[offset + 2] = 42;
+                rgba[offset + 3] = 255;
+            }
+        }
+
+        var webp = WebpWriter.WriteRgba32Lossy(width, height, rgba, stride, quality: 40);
+        Assert.True(TryExtractChunk(webp, "VP8 ", out var payload));
+
+        Assert.True(WebpVp8Decoder.TryReadFrameHeader(payload, out var frameHeader));
+        Assert.False(frameHeader.Segmentation.Enabled);
     }
 
     private static bool ContainsChunk(byte[] data, string fourCc) {
