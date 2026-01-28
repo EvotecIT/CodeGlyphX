@@ -470,7 +470,7 @@ QR payload helpers generate well-known structured strings so scanners can trigge
 
 - ImageReader returns the first animation frame only; use WebpReader.DecodeAnimationFrames for raw frames or WebpReader.DecodeAnimationCanvasFrames for composited frames
 - Managed lossy WebP encode uses VP8 intra-only (4x4/16x16) with ALPH for alpha (VP8L fallback on failure)
-- VP8 inter (lossy) frames are not supported yet
+- Managed VP8 decode supports keyframes only; interframes (if present) are not supported
 - Managed WebP decode enforces a size limit (256 MB).
 - AVIF, HEIC, JPEG2000, PSD
 - Animated GIF (first frame only)
