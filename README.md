@@ -447,7 +447,7 @@ QR payload helpers generate well-known structured strings so scanners can trigge
 | --- | --- | --- | --- |
 | PNG | ✅ | ✅ | Color types 0/2/3/4/6, bit depths 1/2/4/8/16, tRNS, Adam7 |
 | JPEG | ✅ | ✅ | Baseline + progressive (8-bit, Huffman), EXIF orientation, CMYK/YCCK |
-| WebP | ✅ | ✅ | Decode: managed VP8L/VP8 + VP8+ALPH (external corpus validation in progress). Animated WebP decodes first frame only. Encode: VP8L lossless subset + animated VP8L; lossy uses pre-quantized VP8L (no VP8 yet). |
+| WebP | ✅ | ✅ | Decode: managed VP8L/VP8 + VP8+ALPH (external corpus validation in progress). Animated WebP decodes first frame only. Encode: VP8L lossless subset + animated VP8L; lossy uses managed VP8 (DC-only intra, VP8L fallback for alpha). |
 | BMP | ✅ | ✅ | 1/4/8/16/24/32-bit, RLE4/RLE8, bitfields |
 | GIF | No | ✅ | First frame only, transparency via GCE |
 | TIFF | No | ✅ | Baseline, strips, uncompressed/PackBits/LZW/Deflate, 8/16-bit, predictor 2 |
@@ -469,7 +469,7 @@ QR payload helpers generate well-known structured strings so scanners can trigge
 ### Known gaps / not supported (decode)
 
 - Animated WebP returns the first frame only (no multi-frame output)
-- Managed lossy WebP encode uses pre-quantized VP8L (no VP8 lossy bitstream yet)
+- Managed lossy WebP encode uses VP8 DC-only intra with VP8L fallback for alpha
 - AVIF, HEIC, JPEG2000, PSD
 - Animated GIF (first frame only)
 - Multi-page / tiled TIFF, mixed sample sizes, 12-bit JPEG

@@ -3,7 +3,7 @@ using System;
 namespace CodeGlyphX.Rendering.Webp;
 
 /// <summary>
-/// Managed WebP writer (VP8L lossless subset + animation container).
+/// Managed WebP writer (VP8L lossless subset + minimal VP8 lossy + animation container).
 /// </summary>
 public static class WebpWriter {
     /// <summary>
@@ -34,16 +34,19 @@ public static class WebpWriter {
     }
 
     /// <summary>
-    /// Encodes an RGBA32 buffer as a lossy WebP by quantizing pixels and using VP8L.
+    /// Encodes an RGBA32 buffer as a lossy WebP using a managed VP8 (lossy) bitstream when possible.
     /// </summary>
     /// <remarks>
-    /// This keeps a managed-only pipeline but still emits VP8L (lossless) chunks.
-    /// Loss is introduced by pre-quantizing RGB channels.
+    /// Falls back to VP8L with pre-quantized RGB when VP8 lossy encoding is unavailable (for example, alpha input).
     /// </remarks>
     public static byte[] WriteRgba32Lossy(int width, int height, ReadOnlySpan<byte> rgba, int stride, int quality) {
         if (quality is < 0 or > 100) throw new ArgumentOutOfRangeException(nameof(quality));
         if (quality >= 100) {
             return WriteRgba32(width, height, rgba, stride);
+        }
+
+        if (WebpVp8Encoder.TryEncodeLossyRgba32(rgba, width, height, stride, quality, out var webp, out _)) {
+            return webp;
         }
 
         var quantized = QuantizeRgba(rgba, width, height, stride, quality);
