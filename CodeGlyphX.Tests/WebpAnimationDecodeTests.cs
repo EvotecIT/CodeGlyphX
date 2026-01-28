@@ -90,6 +90,70 @@ public sealed class WebpAnimationDecodeTests {
         Assert.Equal(new byte[] { 5, 6, 7, 255 }, frames[1].Rgba.AsSpan(0, 4).ToArray());
     }
 
+    [Fact]
+    public void Webp_ManagedDecode_AnimatedWebp_DecodesCanvasFrames() {
+        var frame1 = new AnimationFrameSpec(
+            BuildLiteralOnlyVp8lPayload(width: 1, height: 1, r: 10, g: 0, b: 0, a: 128),
+            x: 0,
+            y: 0,
+            width: 1,
+            height: 1,
+            durationMs: 60,
+            blend: false,
+            disposeToBackground: false);
+        var frame2 = new AnimationFrameSpec(
+            BuildLiteralOnlyVp8lPayload(width: 1, height: 1, r: 0, g: 20, b: 0, a: 128),
+            x: 2,
+            y: 0,
+            width: 1,
+            height: 1,
+            durationMs: 60,
+            blend: true,
+            disposeToBackground: true);
+        var frame3 = new AnimationFrameSpec(
+            BuildLiteralOnlyVp8lPayload(width: 1, height: 1, r: 0, g: 0, b: 30, a: 128),
+            x: 0,
+            y: 2,
+            width: 1,
+            height: 1,
+            durationMs: 60,
+            blend: false,
+            disposeToBackground: false);
+
+        var webp = BuildAnimatedWebp(
+            new[] { frame1, frame2, frame3 },
+            canvasWidth: 4,
+            canvasHeight: 4,
+            bgraBackground: 0xFF070809,
+            loopCount: 0);
+
+        Assert.True(WebpReader.TryDecodeAnimationFrames(webp, out var rawFrames, out _, out _, out _));
+        AssertPixel(rawFrames[0].Rgba, rawFrames[0].Width, 0, 0, 10, 0, 0, 128);
+
+        Assert.True(WebpReader.TryDecodeAnimationCanvasFrames(webp, out var frames, out var canvasWidth, out var canvasHeight, out _));
+        Assert.Equal(4, canvasWidth);
+        Assert.Equal(4, canvasHeight);
+        Assert.Equal(3, frames.Length);
+
+        Assert.Equal(canvasWidth, frames[0].Width);
+        Assert.Equal(canvasHeight, frames[0].Height);
+
+        AssertPixel(frames[0].Rgba, canvasWidth, 0, 0, 10, 0, 0, 128);
+        AssertPixel(frames[0].Rgba, canvasWidth, 2, 0, 7, 8, 9, 255);
+        AssertPixel(frames[0].Rgba, canvasWidth, 0, 2, 7, 8, 9, 255);
+        AssertPixel(frames[0].Rgba, canvasWidth, 2, 2, 7, 8, 9, 255);
+
+        AssertPixel(frames[1].Rgba, canvasWidth, 0, 0, 10, 0, 0, 128);
+        AssertPixel(frames[1].Rgba, canvasWidth, 2, 0, 3, 14, 4, 255);
+        AssertPixel(frames[1].Rgba, canvasWidth, 0, 2, 7, 8, 9, 255);
+        AssertPixel(frames[1].Rgba, canvasWidth, 2, 2, 7, 8, 9, 255);
+
+        AssertPixel(frames[2].Rgba, canvasWidth, 0, 0, 10, 0, 0, 128);
+        AssertPixel(frames[2].Rgba, canvasWidth, 2, 0, 7, 8, 9, 255);
+        AssertPixel(frames[2].Rgba, canvasWidth, 0, 2, 0, 0, 30, 128);
+        AssertPixel(frames[2].Rgba, canvasWidth, 2, 2, 7, 8, 9, 255);
+    }
+
     private static byte[] BuildLiteralOnlyVp8lPayload(int width, int height, int r, int g, int b, int a) {
         var writer = new BitWriterLsb();
 
@@ -117,6 +181,14 @@ public sealed class WebpAnimationDecodeTests {
         writer.WriteBits(0, 1);      // one symbol
         writer.WriteBits(1, 1);      // first symbol uses 8 bits
         writer.WriteBits(symbol, 8); // symbol0
+    }
+
+    private static void AssertPixel(byte[] rgba, int width, int x, int y, byte r, byte g, byte b, byte a) {
+        var index = (y * width + x) * 4;
+        Assert.Equal(r, rgba[index]);
+        Assert.Equal(g, rgba[index + 1]);
+        Assert.Equal(b, rgba[index + 2]);
+        Assert.Equal(a, rgba[index + 3]);
     }
 
     private static byte[] BuildAnimatedWebp(

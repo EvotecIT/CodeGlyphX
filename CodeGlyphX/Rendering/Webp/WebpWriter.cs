@@ -80,7 +80,9 @@ public static class WebpWriter {
         for (var i = 0; i < frames.Length; i++) {
             var frame = frames[i];
             ValidateFrame(frame, canvasWidth, canvasHeight);
-            alphaUsed |= ComputeAlphaUsed(frame.Rgba, frame.Width, frame.Height, frame.Stride);
+            if (!alphaUsed) {
+                alphaUsed = ComputeAlphaUsed(frame.Rgba, frame.Width, frame.Height, frame.Stride);
+            }
 
             if (!WebpVp8lEncoder.TryEncodeLiteralRgba32(frame.Rgba, frame.Width, frame.Height, frame.Stride, out var webp, out var reason)) {
                 throw new NotSupportedException($"Managed WebP encode failed for animation frame {i}: {reason}");
@@ -132,7 +134,9 @@ public static class WebpWriter {
         for (var i = 0; i < frames.Length; i++) {
             var frame = frames[i];
             ValidateFrame(frame, canvasWidth, canvasHeight);
-            alphaUsed |= ComputeAlphaUsed(frame.Rgba, frame.Width, frame.Height, frame.Stride);
+            if (!alphaUsed) {
+                alphaUsed = ComputeAlphaUsed(frame.Rgba, frame.Width, frame.Height, frame.Stride);
+            }
 
             if (WebpVp8Encoder.TryEncodeLossyRgba32(frame.Rgba, frame.Width, frame.Height, frame.Stride, quality, out var webp, out _)) {
                 if (!TryExtractVp8Payload(webp, out var vp8Payload, out var alphPayload)) {
@@ -368,13 +372,11 @@ public static class WebpWriter {
         return ms.ToArray();
     }
 
-    private static void WriteChunk(System.IO.Stream stream, string fourCc, ReadOnlySpan<byte> payload) {
+    private static void WriteChunk(System.IO.Stream stream, string fourCc, byte[] payload) {
         WriteAscii(stream, fourCc);
         WriteU32LE(stream, (uint)payload.Length);
-        if (!payload.IsEmpty) {
-            var buffer = new byte[payload.Length];
-            payload.CopyTo(buffer);
-            stream.Write(buffer, 0, buffer.Length);
+        if (payload.Length > 0) {
+            stream.Write(payload, 0, payload.Length);
         }
         if ((payload.Length & 1) != 0) {
             stream.WriteByte(0);

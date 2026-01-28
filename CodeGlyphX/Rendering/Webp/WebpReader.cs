@@ -109,6 +109,38 @@ public static class WebpReader {
         return frames;
     }
 
+    /// <summary>
+    /// Attempts to decode animated WebP frames composited onto the full canvas (managed).
+    /// </summary>
+    public static bool TryDecodeAnimationCanvasFrames(
+        ReadOnlySpan<byte> data,
+        out WebpAnimationFrame[] frames,
+        out int canvasWidth,
+        out int canvasHeight,
+        out WebpAnimationOptions options) {
+        frames = Array.Empty<WebpAnimationFrame>();
+        canvasWidth = 0;
+        canvasHeight = 0;
+        options = default;
+        if (!IsWebp(data)) return false;
+        if (data.Length > MaxWebpBytes) return false;
+        return WebpManagedDecoder.TryDecodeAnimationCanvasFrames(data, out frames, out canvasWidth, out canvasHeight, out options);
+    }
+
+    /// <summary>
+    /// Decodes animated WebP frames composited onto the full canvas (managed).
+    /// </summary>
+    public static WebpAnimationFrame[] DecodeAnimationCanvasFrames(
+        ReadOnlySpan<byte> data,
+        out int canvasWidth,
+        out int canvasHeight,
+        out WebpAnimationOptions options) {
+        if (!TryDecodeAnimationCanvasFrames(data, out var frames, out canvasWidth, out canvasHeight, out options)) {
+            throw new FormatException("Unsupported or invalid animated WebP.");
+        }
+        return frames;
+    }
+
     private static bool TryReadVp8XSize(ReadOnlySpan<byte> chunk, out int width, out int height) {
         width = 0;
         height = 0;
