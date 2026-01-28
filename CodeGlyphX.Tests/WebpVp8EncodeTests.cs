@@ -68,6 +68,39 @@ public sealed class WebpVp8EncodeTests {
     }
 
     [Fact]
+    public void Webp_ManagedEncode_Vp8_Lossy_WithAlpha_RoundTripsAlpha() {
+        const int width = 16;
+        const int height = 14;
+        var stride = width * 4;
+        var rgba = new byte[checked(height * stride)];
+
+        for (var y = 0; y < height; y++) {
+            var row = y * stride;
+            for (var x = 0; x < width; x++) {
+                var offset = row + x * 4;
+                rgba[offset] = (byte)(x * 4 + y * 3);
+                rgba[offset + 1] = (byte)(x * 7 + y * 2);
+                rgba[offset + 2] = (byte)(x * 5 + y * 9);
+                rgba[offset + 3] = (byte)((x * 17 + y * 13) & 0xFF);
+            }
+        }
+
+        var webp = WebpWriter.WriteRgba32Lossy(width, height, rgba, stride, quality: 60);
+        var decoded = WebpReader.DecodeRgba32(webp, out var decodedWidth, out var decodedHeight);
+
+        Assert.Equal(width, decodedWidth);
+        Assert.Equal(height, decodedHeight);
+
+        for (var y = 0; y < height; y++) {
+            var row = y * stride;
+            for (var x = 0; x < width; x++) {
+                var offset = row + x * 4 + 3;
+                Assert.Equal(rgba[offset], decoded[offset]);
+            }
+        }
+    }
+
+    [Fact]
     public void Webp_ManagedEncode_Vp8_Lossy_Quality_ImprovesError() {
         const int width = 24;
         const int height = 18;
