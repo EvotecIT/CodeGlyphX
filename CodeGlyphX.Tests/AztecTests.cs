@@ -1,7 +1,10 @@
+using System;
+using System.IO;
 using System.Threading;
 using CodeGlyphX;
 using CodeGlyphX.Aztec;
 using CodeGlyphX.Rendering.Png;
+using CodeGlyphX.Rendering.Webp;
 using Xunit;
 
 namespace CodeGlyphX.Tests;
@@ -49,6 +52,21 @@ public sealed class AztecTests {
         cts.Cancel();
 
         Assert.False(AztecCode.TryDecode(pixels, width, height, width * 4, PixelFormat.Rgba32, cts.Token, out _));
+    }
+
+    [Fact]
+    public void Aztec_Save_ByExtension_WritesWebp() {
+        var path = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid():N}.webp");
+
+        try {
+            AztecCode.Save("AZTEC-WEBP", path);
+            var bytes = File.ReadAllBytes(path);
+            Assert.True(WebpReader.IsWebp(bytes));
+        } finally {
+            if (File.Exists(path)) {
+                File.Delete(path);
+            }
+        }
     }
 
     private static byte[] Rotate90Rgba(byte[] pixels, int width, int height, out int outWidth, out int outHeight) {

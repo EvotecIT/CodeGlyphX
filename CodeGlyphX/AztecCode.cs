@@ -349,7 +349,7 @@ public static partial class AztecCode {
     }
 
     /// <summary>
-    /// Saves Aztec to a file based on extension (.png/.webp/.svg/.svgz/.html/.jpg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps).
+    /// Saves Aztec to a file based on extension (.png/.webp/.svg/.svgz/.svg.gz/.html/.htm/.jpg/.jpeg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps/.ps/.txt).
     /// Defaults to PNG when no extension is provided.
     /// </summary>
     public static string Save(string text, string path, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, string? title = null) {
