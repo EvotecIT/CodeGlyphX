@@ -61,7 +61,7 @@ public enum ImageFormat {
     /// </summary>
     Ico,
     /// <summary>
-    /// WebP image (decoded via native libwebp when available).
+    /// WebP image (managed VP8/VP8L stills; first-frame decode for animations).
     /// </summary>
     Webp,
 }

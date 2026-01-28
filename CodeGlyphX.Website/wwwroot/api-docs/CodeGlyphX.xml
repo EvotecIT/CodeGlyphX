@@ -15653,7 +15653,7 @@
         </member>
         <member name="F:CodeGlyphX.Rendering.ImageFormat.Webp">
             <summary>
-            WebP image (decoded via native libwebp when available).
+            WebP image (managed VP8/VP8L stills; first-frame decode for animations).
             </summary>
         </member>
         <member name="T:CodeGlyphX.Rendering.ImageInfo">
@@ -19647,7 +19647,7 @@
         </member>
         <member name="T:CodeGlyphX.Rendering.Webp.WebpWriter">
             <summary>
-            Managed WebP writer (VP8L lossless subset + minimal VP8 lossy + animation container).
+            Managed WebP writer (VP8L lossless subset + VP8 lossy intra + animation container).
             </summary>
         </member>
         <member name="M:CodeGlyphX.Rendering.Webp.WebpWriter.WriteRgba32(System.Int32,System.Int32,System.ReadOnlySpan{System.Byte},System.Int32)">
@@ -19656,8 +19656,7 @@
             </summary>
             <remarks>
             Current limitations:
-            - Lossless only (VP8L). No lossy VP8 bitstream.
-            - Single prefix-code group; no entropy tiling.
+            - VP8L lossless is a managed subset; single prefix-code group (no entropy tiling).
             - Limited LZ77/back-reference search; favors short distances.
             - Color indexing is limited to palettes up to 16 colors.
             - Metadata chunks (VP8X/ICCP/EXIF/XMP) are not written.

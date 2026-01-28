@@ -20,6 +20,7 @@ internal static class WebpManagedDecoder {
         width = 0;
         height = 0;
         if (!WebpReader.IsWebp(data)) return false;
+        if (data.Length > WebpReader.MaxWebpBytes) return false;
 
         if (!TryEnumerateChunks(data, out var chunkSpan, out var chunks)) return false;
 
@@ -58,14 +59,15 @@ internal static class WebpManagedDecoder {
         if (data.Length < 12) return false;
 
         var riffSize = ReadU32LE(data, 4);
-        var riffLimit = data.Length;
+        var riffLimit = (long)data.Length;
         var declaredLimit = 8L + riffSize;
         if (declaredLimit > 0 && declaredLimit < riffLimit) {
-            riffLimit = (int)declaredLimit;
+            riffLimit = declaredLimit;
         }
         if (riffLimit < 12) return false;
+        if (riffLimit > int.MaxValue) return false;
 
-        chunkSpan = data.Slice(12, riffLimit - 12);
+        chunkSpan = data.Slice(12, (int)riffLimit - 12);
         if (!TryEnumerateChunks(chunkSpan, out var list)) return false;
         chunks = list;
         return true;
@@ -76,20 +78,22 @@ internal static class WebpManagedDecoder {
         var offset = 0;
         var list = new System.Collections.Generic.List<WebpChunk>();
 
-        while (offset + 8 <= data.Length) {
+        while ((long)offset + 8 <= data.Length) {
             var fourCc = ReadU32LE(data, offset);
             var chunkSize = ReadU32LE(data, offset + 4);
-            var dataOffset = offset + 8;
+            var dataOffset = (long)offset + 8;
 
-            if (chunkSize > int.MaxValue) return false;
-            var chunkLength = (int)chunkSize;
+            var chunkLength = (long)chunkSize;
+            if (chunkLength < 0 || chunkLength > int.MaxValue) return false;
             if (dataOffset < 0 || dataOffset > data.Length) return false;
             if (dataOffset + chunkLength > data.Length) return false;
 
-            list.Add(new WebpChunk(fourCc, dataOffset, chunkLength));
+            list.Add(new WebpChunk(fourCc, (int)dataOffset, (int)chunkLength));
 
             var padded = chunkLength + (chunkLength & 1);
-            offset = dataOffset + padded;
+            var nextOffset = dataOffset + padded;
+            if (nextOffset < 0 || nextOffset > int.MaxValue) return false;
+            offset = (int)nextOffset;
         }
 
         chunks = list.ToArray();

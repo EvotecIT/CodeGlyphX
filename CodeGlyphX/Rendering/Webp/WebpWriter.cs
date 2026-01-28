@@ -3,7 +3,7 @@ using System;
 namespace CodeGlyphX.Rendering.Webp;
 
 /// <summary>
-/// Managed WebP writer (VP8L lossless subset + minimal VP8 lossy + animation container).
+/// Managed WebP writer (VP8L lossless subset + VP8 lossy intra + animation container).
 /// </summary>
 public static class WebpWriter {
     /// <summary>
@@ -11,8 +11,7 @@ public static class WebpWriter {
     /// </summary>
     /// <remarks>
     /// Current limitations:
-    /// - Lossless only (VP8L). No lossy VP8 bitstream.
-    /// - Single prefix-code group; no entropy tiling.
+    /// - VP8L lossless is a managed subset; single prefix-code group (no entropy tiling).
     /// - Limited LZ77/back-reference search; favors short distances.
     /// - Color indexing is limited to palettes up to 16 colors.
     /// - Metadata chunks (VP8X/ICCP/EXIF/XMP) are not written.

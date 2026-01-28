@@ -11,6 +11,7 @@ public static class WebpReader {
     private const uint FourCcVp8X = 0x58385056; // "VP8X"
     private const uint FourCcVp8L = 0x4C385056; // "VP8L"
     private const uint FourCcVp8 = 0x20385056;  // "VP8 "
+    internal const int MaxWebpBytes = 256 * 1024 * 1024;
 
     /// <summary>
     /// Checks whether the buffer looks like a WebP RIFF container.
@@ -27,34 +28,36 @@ public static class WebpReader {
         width = 0;
         height = 0;
         if (!IsWebp(data)) return false;
+        if (data.Length > MaxWebpBytes) return false;
 
         if (data.Length < 12) return false;
         var riffSize = ReadU32LE(data, 4);
-        var riffLimit = data.Length;
+        var riffLimit = (long)data.Length;
         var declaredLimit = 8L + riffSize;
         if (declaredLimit > 0 && declaredLimit < riffLimit) {
-            riffLimit = (int)declaredLimit;
+            riffLimit = declaredLimit;
         }
         if (riffLimit < 12) return false;
 
         var offset = 12;
-        while (offset + 8 <= riffLimit) {
+        while ((long)offset + 8 <= riffLimit) {
             var fourCc = ReadU32LE(data, offset);
             var chunkSize = ReadU32LE(data, offset + 4);
-            var dataOffset = offset + 8;
+            var dataOffset = (long)offset + 8;
 
-            if (chunkSize > int.MaxValue) return false;
-            var chunkLength = (int)chunkSize;
+            var chunkLength = (long)chunkSize;
+            if (chunkLength < 0 || chunkLength > int.MaxValue) return false;
             if (dataOffset < 0 || dataOffset > riffLimit) return false;
             if (dataOffset + chunkLength > riffLimit) return false;
+            if (dataOffset + chunkLength > data.Length) return false;
 
-            var chunk = data.Slice(dataOffset, chunkLength);
+            var chunk = data.Slice((int)dataOffset, (int)chunkLength);
             if (fourCc == FourCcVp8X && TryReadVp8XSize(chunk, out width, out height)) return true;
             if (fourCc == FourCcVp8L && TryReadVp8LSize(chunk, out width, out height)) return true;
             if (fourCc == FourCcVp8 && TryReadVp8Size(chunk, out width, out height)) return true;
 
             var padded = chunkLength + (chunkLength & 1);
-            var nextOffset = (long)dataOffset + padded;
+            var nextOffset = dataOffset + padded;
             if (nextOffset < 0 || nextOffset > riffLimit || nextOffset > int.MaxValue) return false;
             offset = (int)nextOffset;
         }
@@ -67,6 +70,7 @@ public static class WebpReader {
     /// </summary>
     public static byte[] DecodeRgba32(ReadOnlySpan<byte> data, out int width, out int height) {
         if (!IsWebp(data)) throw new FormatException("Invalid WebP container.");
+        if (data.Length > MaxWebpBytes) throw new FormatException("WebP payload exceeds the managed size limit.");
         if (WebpManagedDecoder.TryDecodeRgba32(data, out var managedRgba, out width, out height)) {
             return managedRgba;
         }
