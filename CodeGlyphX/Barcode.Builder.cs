@@ -314,6 +314,16 @@ public static partial class Barcode {
         public void SaveJpeg(Stream stream) => Barcode.SaveJpeg(_type, _content, stream, Options);
 
         /// <summary>
+        /// Saves WebP to a file.
+        /// </summary>
+        public string SaveWebp(string path) => Barcode.SaveWebp(_type, _content, path, Options);
+
+        /// <summary>
+        /// Saves WebP to a stream.
+        /// </summary>
+        public void SaveWebp(Stream stream) => Barcode.SaveWebp(_type, _content, stream, Options);
+
+        /// <summary>
         /// Saves BMP to a file.
         /// </summary>
         public string SaveBmp(string path) => Barcode.SaveBmp(_type, _content, path, Options);

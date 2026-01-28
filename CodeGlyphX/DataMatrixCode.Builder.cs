@@ -221,6 +221,13 @@ public static partial class DataMatrixCode {
         }
 
         /// <summary>
+        /// Saves WebP to a file.
+        /// </summary>
+        public string SaveWebp(string path) {
+            return _text is not null ? DataMatrixCode.SaveWebp(_text, path, _mode, _options) : DataMatrixCode.SaveWebp(_bytes!, path, _mode, _options);
+        }
+
+        /// <summary>
         /// Saves BMP to a file.
         /// </summary>
         public string SaveBmp(string path) {

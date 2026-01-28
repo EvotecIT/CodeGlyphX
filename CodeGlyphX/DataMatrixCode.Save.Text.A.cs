@@ -173,6 +173,14 @@ public static partial class DataMatrixCode {
     }
 
     /// <summary>
+    /// Saves Data Matrix WebP to a file.
+    /// </summary>
+    public static string SaveWebp(string text, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var webp = Webp(text, mode, options);
+        return webp.WriteBinary(path);
+    }
+
+    /// <summary>
     /// Saves Data Matrix BMP to a file.
     /// </summary>
     public static string SaveBmp(string text, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
@@ -276,6 +284,14 @@ public static partial class DataMatrixCode {
     public static string SaveJpeg(byte[] data, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
         var jpeg = Jpeg(data, mode, options);
         return jpeg.WriteBinary(path);
+    }
+
+    /// <summary>
+    /// Saves Data Matrix WebP to a file for byte payloads.
+    /// </summary>
+    public static string SaveWebp(byte[] data, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var webp = Webp(data, mode, options);
+        return webp.WriteBinary(path);
     }
 
     /// <summary>

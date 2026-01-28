@@ -259,6 +259,7 @@ public static partial class QrEasy {
             LogoBackground = opts.LogoBackground,
             LogoCornerRadiusPx = opts.LogoCornerRadiusPx,
             JpegQuality = opts.JpegQuality,
+            WebpQuality = opts.WebpQuality,
             IcoSizes = opts.IcoSizes is null ? null : (int[])opts.IcoSizes.Clone(),
             IcoPreserveAspectRatio = opts.IcoPreserveAspectRatio,
             HtmlEmailSafeTable = opts.HtmlEmailSafeTable,

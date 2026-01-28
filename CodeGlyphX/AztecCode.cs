@@ -18,6 +18,7 @@ using CodeGlyphX.Rendering.Ppm;
 using CodeGlyphX.Rendering.Svg;
 using CodeGlyphX.Rendering.Svgz;
 using CodeGlyphX.Rendering.Tga;
+using CodeGlyphX.Rendering.Webp;
 using CodeGlyphX.Rendering.Xbm;
 using CodeGlyphX.Rendering.Xpm;
 
@@ -129,12 +130,30 @@ public static partial class AztecCode {
     }
 
     /// <summary>
+    /// Renders Aztec to WebP bytes.
+    /// </summary>
+    public static byte[] Webp(string text, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = Encode(text, encodeOptions);
+        var opts = ToPngOptions(renderOptions);
+        return MatrixWebpRenderer.Render(modules, opts, renderOptions?.WebpQuality ?? 100);
+    }
+
+    /// <summary>
     /// Renders Aztec to JPEG bytes.
     /// </summary>
     public static byte[] Jpeg(ReadOnlySpan<byte> data, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         var modules = Encode(data, encodeOptions);
         var opts = ToPngOptions(renderOptions);
         return MatrixJpegRenderer.Render(modules, opts, renderOptions?.JpegQuality ?? 85);
+    }
+
+    /// <summary>
+    /// Renders Aztec to WebP bytes.
+    /// </summary>
+    public static byte[] Webp(ReadOnlySpan<byte> data, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = Encode(data, encodeOptions);
+        var opts = ToPngOptions(renderOptions);
+        return MatrixWebpRenderer.Render(modules, opts, renderOptions?.WebpQuality ?? 100);
     }
 
     /// <summary>

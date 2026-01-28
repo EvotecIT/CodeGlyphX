@@ -174,6 +174,14 @@ public static partial class Pdf417Code {
     }
 
     /// <summary>
+    /// Saves PDF417 WebP to a file.
+    /// </summary>
+    public static string SaveWebp(string text, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var webp = Webp(text, encodeOptions, renderOptions);
+        return webp.WriteBinary(path);
+    }
+
+    /// <summary>
     /// Saves PDF417 BMP to a file.
     /// </summary>
     public static string SaveBmp(string text, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
@@ -277,6 +285,14 @@ public static partial class Pdf417Code {
     public static string SaveJpeg(byte[] data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         var jpeg = Jpeg(data, encodeOptions, renderOptions);
         return jpeg.WriteBinary(path);
+    }
+
+    /// <summary>
+    /// Saves PDF417 WebP to a file for byte payloads.
+    /// </summary>
+    public static string SaveWebp(byte[] data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var webp = Webp(data, encodeOptions, renderOptions);
+        return webp.WriteBinary(path);
     }
 
     /// <summary>

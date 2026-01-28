@@ -281,6 +281,13 @@ public static partial class Pdf417Code {
         }
 
         /// <summary>
+        /// Saves WebP to a file.
+        /// </summary>
+        public string SaveWebp(string path) {
+            return _text is not null ? Pdf417Code.SaveWebp(_text, path, _encodeOptions, _renderOptions) : Pdf417Code.SaveWebp(_bytes!, path, _encodeOptions, _renderOptions);
+        }
+
+        /// <summary>
         /// Saves BMP to a file.
         /// </summary>
         public string SaveBmp(string path) {

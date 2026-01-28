@@ -17,6 +17,7 @@ using CodeGlyphX.Rendering.Png;
 using CodeGlyphX.Rendering.Svg;
 using CodeGlyphX.Rendering.Svgz;
 using CodeGlyphX.Rendering.Tga;
+using CodeGlyphX.Rendering.Webp;
 using CodeGlyphX.Rendering.Xbm;
 using CodeGlyphX.Rendering.Xpm;
 
@@ -94,6 +95,24 @@ public static partial class Barcode {
         var opts = BuildPngOptions(options);
         var quality = options?.JpegQuality ?? 90;
         BarcodeJpegRenderer.RenderToStream(barcode, opts, stream, quality);
+    }
+
+    /// <summary>
+    /// Renders a barcode as WebP and writes it to a file.
+    /// </summary>
+    public static string SaveWebp(BarcodeType type, string content, string path, BarcodeOptions? options = null) {
+        var webp = Webp(type, content, options);
+        return webp.WriteBinary(path);
+    }
+
+    /// <summary>
+    /// Renders a barcode as WebP and writes it to a stream.
+    /// </summary>
+    public static void SaveWebp(BarcodeType type, string content, Stream stream, BarcodeOptions? options = null) {
+        var barcode = Encode(type, content);
+        var opts = BuildPngOptions(options);
+        var quality = options?.WebpQuality ?? 100;
+        BarcodeWebpRenderer.RenderToStream(barcode, opts, stream, quality);
     }
 
     /// <summary>
@@ -326,7 +345,7 @@ public static partial class Barcode {
     }
 
     /// <summary>
-    /// Saves a barcode to a file based on the file extension (.png/.svg/.svgz/.html/.jpg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps).
+    /// Saves a barcode to a file based on the file extension (.png/.webp/.svg/.svgz/.html/.jpg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps).
     /// Defaults to PNG when no extension is provided.
     /// </summary>
     public static string Save(BarcodeType type, string content, string path, BarcodeOptions? options = null, string? title = null) {
@@ -341,6 +360,8 @@ public static partial class Barcode {
         switch (ext.ToLowerInvariant()) {
             case ".png":
                 return SavePng(type, content, path, options);
+            case ".webp":
+                return SaveWebp(type, content, path, options);
             case ".svg":
                 return SaveSvg(type, content, path, options);
             case ".html":

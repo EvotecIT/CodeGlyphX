@@ -19,6 +19,7 @@ using CodeGlyphX.Rendering.Png;
 using CodeGlyphX.Rendering.Svg;
 using CodeGlyphX.Rendering.Svgz;
 using CodeGlyphX.Rendering.Tga;
+using CodeGlyphX.Rendering.Webp;
 using CodeGlyphX.Rendering.Xbm;
 using CodeGlyphX.Rendering.Xpm;
 
@@ -117,6 +118,16 @@ public static partial class Pdf417Code {
         var opts = BuildPngOptions(renderOptions);
         var quality = renderOptions?.JpegQuality ?? 85;
         return MatrixJpegRenderer.Render(modules, opts, quality);
+    }
+
+    /// <summary>
+    /// Renders PDF417 as WebP from bytes.
+    /// </summary>
+    public static byte[] Webp(ReadOnlySpan<byte> data, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = EncodeBytes(data, encodeOptions);
+        var opts = BuildPngOptions(renderOptions);
+        var quality = renderOptions?.WebpQuality ?? 100;
+        return MatrixWebpRenderer.Render(modules, opts, quality);
     }
 
     /// <summary>
@@ -300,6 +311,16 @@ public static partial class Pdf417Code {
     }
 
     /// <summary>
+    /// Renders PDF417 as WebP.
+    /// </summary>
+    public static byte[] Webp(string text, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = Encode(text, encodeOptions);
+        var opts = BuildPngOptions(renderOptions);
+        var quality = renderOptions?.WebpQuality ?? 100;
+        return MatrixWebpRenderer.Render(modules, opts, quality);
+    }
+
+    /// <summary>
     /// Renders PDF417 as BMP.
     /// </summary>
     public static byte[] Bmp(string text, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
@@ -411,6 +432,16 @@ public static partial class Pdf417Code {
         var opts = BuildPngOptions(renderOptions);
         var quality = renderOptions?.JpegQuality ?? 85;
         return MatrixJpegRenderer.Render(modules, opts, quality);
+    }
+
+    /// <summary>
+    /// Renders PDF417 as WebP from bytes.
+    /// </summary>
+    public static byte[] Webp(byte[] data, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = EncodeBytes(data, encodeOptions);
+        var opts = BuildPngOptions(renderOptions);
+        var quality = renderOptions?.WebpQuality ?? 100;
+        return MatrixWebpRenderer.Render(modules, opts, quality);
     }
 
     /// <summary>

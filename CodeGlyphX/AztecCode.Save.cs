@@ -99,6 +99,20 @@ public static partial class AztecCode {
     }
 
     /// <summary>
+    /// Saves Aztec WebP to a file.
+    /// </summary>
+    public static string SaveWebp(string text, string path, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        return RenderIO.WriteBinary(path, Webp(text, encodeOptions, renderOptions));
+    }
+
+    /// <summary>
+    /// Saves Aztec WebP to a stream.
+    /// </summary>
+    public static void SaveWebp(string text, Stream stream, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        RenderIO.WriteBinary(stream, Webp(text, encodeOptions, renderOptions));
+    }
+
+    /// <summary>
     /// Saves Aztec BMP to a file.
     /// </summary>
     public static string SaveBmp(string text, string path, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
@@ -310,6 +324,20 @@ public static partial class AztecCode {
     /// </summary>
     public static void SaveJpeg(ReadOnlySpan<byte> data, Stream stream, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         RenderIO.WriteBinary(stream, Jpeg(data, encodeOptions, renderOptions));
+    }
+
+    /// <summary>
+    /// Saves Aztec WebP to a file.
+    /// </summary>
+    public static string SaveWebp(ReadOnlySpan<byte> data, string path, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        return RenderIO.WriteBinary(path, Webp(data, encodeOptions, renderOptions));
+    }
+
+    /// <summary>
+    /// Saves Aztec WebP to a stream.
+    /// </summary>
+    public static void SaveWebp(ReadOnlySpan<byte> data, Stream stream, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        RenderIO.WriteBinary(stream, Webp(data, encodeOptions, renderOptions));
     }
 
     /// <summary>

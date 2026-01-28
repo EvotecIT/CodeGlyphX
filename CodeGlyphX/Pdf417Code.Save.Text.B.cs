@@ -19,6 +19,7 @@ using CodeGlyphX.Rendering.Png;
 using CodeGlyphX.Rendering.Svg;
 using CodeGlyphX.Rendering.Svgz;
 using CodeGlyphX.Rendering.Tga;
+using CodeGlyphX.Rendering.Webp;
 using CodeGlyphX.Rendering.Xbm;
 using CodeGlyphX.Rendering.Xpm;
 
@@ -67,6 +68,16 @@ public static partial class Pdf417Code {
         var opts = BuildPngOptions(renderOptions);
         var quality = renderOptions?.JpegQuality ?? 85;
         MatrixJpegRenderer.RenderToStream(modules, opts, stream, quality);
+    }
+
+    /// <summary>
+    /// Saves PDF417 WebP to a stream.
+    /// </summary>
+    public static void SaveWebp(string text, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = Encode(text, encodeOptions);
+        var opts = BuildPngOptions(renderOptions);
+        var quality = renderOptions?.WebpQuality ?? 100;
+        MatrixWebpRenderer.RenderToStream(modules, opts, stream, quality);
     }
 
     /// <summary>
@@ -178,6 +189,16 @@ public static partial class Pdf417Code {
     }
 
     /// <summary>
+    /// Saves PDF417 WebP to a stream for byte payloads.
+    /// </summary>
+    public static void SaveWebp(byte[] data, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
+        var modules = EncodeBytes(data, encodeOptions);
+        var opts = BuildPngOptions(renderOptions);
+        var quality = renderOptions?.WebpQuality ?? 100;
+        MatrixWebpRenderer.RenderToStream(modules, opts, stream, quality);
+    }
+
+    /// <summary>
     /// Saves PDF417 BMP to a stream for byte payloads.
     /// </summary>
     public static void SaveBmp(byte[] data, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
@@ -276,7 +297,7 @@ public static partial class Pdf417Code {
     }
 
     /// <summary>
-    /// Saves PDF417 to a file based on extension (.png/.svg/.svgz/.html/.jpg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps).
+    /// Saves PDF417 to a file based on extension (.png/.webp/.svg/.svgz/.html/.jpg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps).
     /// Defaults to PNG when no extension is provided.
     /// </summary>
     public static string Save(string text, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, string? title = null) {
@@ -291,6 +312,8 @@ public static partial class Pdf417Code {
         switch (ext.ToLowerInvariant()) {
             case ".png":
                 return SavePng(text, path, encodeOptions, renderOptions);
+            case ".webp":
+                return SaveWebp(text, path, encodeOptions, renderOptions);
             case ".svg":
                 return SaveSvg(text, path, encodeOptions, renderOptions);
             case ".html":
@@ -330,7 +353,7 @@ public static partial class Pdf417Code {
     }
 
     /// <summary>
-    /// Saves PDF417 to a file for byte payloads based on extension (.png/.svg/.svgz/.html/.jpg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps).
+    /// Saves PDF417 to a file for byte payloads based on extension (.png/.webp/.svg/.svgz/.html/.jpg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps).
     /// Defaults to PNG when no extension is provided.
     /// </summary>
     public static string Save(byte[] data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, string? title = null) {
@@ -345,6 +368,8 @@ public static partial class Pdf417Code {
         switch (ext.ToLowerInvariant()) {
             case ".png":
                 return SavePng(data, path, encodeOptions, renderOptions);
+            case ".webp":
+                return SaveWebp(data, path, encodeOptions, renderOptions);
             case ".svg":
                 return SaveSvg(data, path, encodeOptions, renderOptions);
             case ".html":
