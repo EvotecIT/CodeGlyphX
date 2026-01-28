@@ -181,7 +181,7 @@
         new NavLink("/docs/", "Docs", true),
         new NavLink("/benchmarks/", "Benchmarks", false),
         new NavLink("/showcase/", "Showcase", true),
-        new NavLink("/support/", "Support", true)
+        new NavLink("/pricing/", "Pricing", true)
     };
 
     private static readonly FooterNav DefaultFooter = new FooterNav
@@ -193,7 +193,7 @@
             new NavLink("/docs/", "Docs"),
             new NavLink("/benchmarks/", "Benchmarks"),
             new NavLink("/showcase/", "Showcase"),
-            new NavLink("/support/", "Support")
+            new NavLink("/pricing/", "Pricing")
         },
         Resources = new List<NavLink>
         {
@@ -340,11 +340,8 @@
     {
         return string.Equals(href, "/", StringComparison.OrdinalIgnoreCase) ||
                href.Contains("/benchmarks/", StringComparison.OrdinalIgnoreCase) ||
-               href.Contains("/docs/", StringComparison.OrdinalIgnoreCase) ||
                href.Contains("/api/", StringComparison.OrdinalIgnoreCase) ||
-               href.Contains("/faq/", StringComparison.OrdinalIgnoreCase) ||
-               href.Contains("/showcase/", StringComparison.OrdinalIgnoreCase) ||
-               href.Contains("/support/", StringComparison.OrdinalIgnoreCase);
+               href.Contains("/pricing/", StringComparison.OrdinalIgnoreCase);
     }
 
     private static bool IsExternal(string href)

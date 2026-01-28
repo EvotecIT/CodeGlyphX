@@ -5,7 +5,7 @@
     { "href": "/docs/", "text": "Docs", "spa": true },
     { "href": "/benchmarks/", "text": "Benchmarks", "spa": false },
     { "href": "/showcase/", "text": "Showcase", "spa": true },
-    { "href": "/support/", "text": "Support", "spa": true }
+    { "href": "/pricing/", "text": "Pricing", "spa": true }
   ],
   "footer": {
     "product": [
@@ -14,7 +14,7 @@
       { "href": "/docs/", "text": "Docs" },
       { "href": "/benchmarks/", "text": "Benchmarks" },
       { "href": "/showcase/", "text": "Showcase" },
-      { "href": "/support/", "text": "Support" }
+      { "href": "/pricing/", "text": "Pricing" }
     ],
     "resources": [
       { "href": "/faq/", "text": "FAQ" },

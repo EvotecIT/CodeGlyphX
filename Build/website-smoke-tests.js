@@ -25,7 +25,8 @@ let expectedNav = [
     { href: '/playground/', text: 'Playground' },
     { href: '/docs/', text: 'Docs' },
     { href: '/benchmarks/', text: 'Benchmarks' },
-    { href: '/showcase/', text: 'Showcase' }
+    { href: '/showcase/', text: 'Showcase' },
+    { href: '/pricing/', text: 'Pricing' }
 ];
 
 async function loadNavConfig() {
@@ -185,8 +186,9 @@ async function testNavigation(page) {
         { label: 'Home', href: '/', expectedPath: '/', expectedContent: 'Generate QR Codes' },
         { label: 'Playground', href: '/playground/', expectedPath: '/playground/', expectedContent: null },
         { label: 'Docs', href: '/docs/', expectedPath: '/docs/', expectedContent: null },
-        { label: 'Benchmarks', href: '/benchmarks/', expectedPath: '/benchmarks/', expectedContent: 'Performance Benchmarks' },
+        { label: 'Benchmarks', href: '/benchmarks/', expectedPath: '/benchmarks/', expectedContent: 'Benchmarks' },
         { label: 'Showcase', href: '/showcase/', expectedPath: '/showcase/', expectedContent: 'Showcase' },
+        { label: 'Pricing', href: '/pricing/', expectedPath: '/pricing/', expectedContent: 'Pricing' },
     ];
 
     await page.goto(baseUrl, { waitUntil: 'networkidle', timeout: timeouts.page });
@@ -566,12 +568,40 @@ async function testBenchmarks(page) {
         stylesheet: 'app.css',
         checkNav: true
     }));
+    allFailures.push(...await testStaticPage(page, '/pricing/', 'Pricing', {
+        expectedText: 'Simple, Transparent Pricing',
+        expectedSelector: '.pricing-page',
+        stylesheet: 'app.css',
+        checkNav: true,
+        afterLoad: async (page, failures) => {
+            const cardCount = await page.$$eval('.pricing-card', cards => cards.length);
+            if (cardCount < 3) {
+                failures.push({
+                    test: 'pricing-cards',
+                    page: 'Pricing',
+                    error: `Expected at least 3 pricing cards, got ${cardCount}`
+                });
+            }
+            // Check for $0 text (may be rendered from HTML entity &#36;0)
+            const hasFreePrice = await page.evaluate(() => {
+                const text = document.body.textContent || '';
+                return text.includes('$0') || text.includes('\u00240');
+            });
+            if (!hasFreePrice) {
+                failures.push({
+                    test: 'pricing-free',
+                    page: 'Pricing',
+                    error: 'Missing free tier price ($0)'
+                });
+            }
+        }
+    }));
     allFailures.push(...await testBenchmarks(page));
 
     console.log('\n=== Testing Mobile Layout ===');
     allFailures.push(...await testMobileLayout(
         page,
-        ['/', '/showcase/', '/faq/', '/benchmarks/'],
+        ['/', '/showcase/', '/faq/', '/benchmarks/', '/pricing/'],
         [375, 390, 414],
         5
     ));

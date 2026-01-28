@@ -462,14 +462,11 @@ body:has(.page-playground) {
     min-width: 0;
 }
 
-.hero h1:focus,
-.hero h1:focus-visible {
+/* Headings receive programmatic focus from Blazor's FocusOnNavigate for
+   screen-reader announcements. They are non-interactive, so suppress the
+   browser's default focus ring entirely. */
+:is(.hero, .showcase-hero, .docs-content, .docs-static, .faq-hero, .pricing-hero) h1 {
     outline: none;
-}
-
-body.using-keyboard .hero h1:focus-visible {
-    outline: 2px solid var(--primary-light);
-    outline-offset: 4px;
 }
 
 .hero-tagline {
@@ -1660,15 +1657,7 @@ code.signature:focus-within .copy-btn {
     color: transparent;
 }
 
-.showcase-hero h1:focus,
-.showcase-hero h1:focus-visible {
-    outline: none;
-}
-
-body.using-keyboard .showcase-hero h1:focus-visible {
-    outline: 2px solid var(--primary-light);
-    outline-offset: 4px;
-}
+/* Focus styles consolidated above */
 
 .showcase-hero p {
     color: var(--text-muted);
@@ -1780,8 +1769,9 @@ body.using-keyboard .showcase-hero h1:focus-visible {
     background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(6, 182, 212, 0.1) 100%);
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
-    padding: 3rem 2rem;
+    padding: 3rem 2rem 3.5rem;
     text-align: center;
+    margin-top: 3rem;
 }
 
 .showcase-submit-content h3 {
@@ -1790,10 +1780,11 @@ body.using-keyboard .showcase-hero h1:focus-visible {
     color: var(--text);
 }
 
-.showcase-submit-content p {
+.showcase-submit-content p,
+.showcase-submit > p {
     color: var(--text-muted);
     max-width: 500px;
-    margin: 0 auto 1.5rem;
+    margin: 0 auto 2rem;
 }
 
 .showcase-submit .btn {
@@ -2448,31 +2439,7 @@ body.using-keyboard .showcase-hero h1:focus-visible {
     min-width: 0;
 }
 
-.docs-content h1:focus {
-    outline: none;
-}
-
-.docs-content h1:focus-visible {
-    outline: none;
-}
-
-body.using-keyboard .docs-content h1:focus-visible {
-    outline: 2px solid var(--primary-light);
-    outline-offset: 4px;
-}
-
-.docs-static h1:focus {
-    outline: none;
-}
-
-.docs-static h1:focus-visible {
-    outline: none;
-}
-
-body.using-keyboard .docs-static h1:focus-visible {
-    outline: 2px solid var(--primary-light);
-    outline-offset: 4px;
-}
+/* Focus styles consolidated above */
 
 .docs-content h1 {
     font-size: clamp(2.25rem, 4vw, 3rem);
@@ -2788,13 +2755,18 @@ section {
     .nav-links {
         display: flex;
         align-items: center;
-        gap: 2rem;
+        gap: 0;
+    }
+
+    .nav-links a {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.875rem;
     }
 
     .nav-actions {
         display: flex;
         align-items: center;
-        gap: 1rem;
+        gap: 0.5rem;
     }
 }
 
@@ -3298,15 +3270,7 @@ section {
     color: transparent;
 }
 
-.faq-hero h1:focus,
-.faq-hero h1:focus-visible {
-    outline: none;
-}
-
-body.using-keyboard .faq-hero h1:focus-visible {
-    outline: 2px solid var(--primary-light);
-    outline-offset: 4px;
-}
+/* Focus styles consolidated above */
 
 .faq-hero p {
     color: var(--text-muted);
@@ -3969,18 +3933,18 @@ body.using-keyboard .faq-hero h1:focus-visible {
    Support / Pricing Page
    ============================================ */
 
-.support-page {
+.pricing-page {
     max-width: 1200px;
     margin: 0 auto;
     padding: 6rem 2rem 4rem;
 }
 
-.support-hero {
+.pricing-hero {
     text-align: center;
     margin-bottom: 4rem;
 }
 
-.support-hero h1 {
+.pricing-hero h1 {
     font-size: clamp(2rem, 5vw, 3.5rem);
     margin-bottom: 1rem;
     background: linear-gradient(135deg, var(--text) 0%, var(--primary-light) 60%);
@@ -3989,7 +3953,9 @@ body.using-keyboard .faq-hero h1:focus-visible {
     background-clip: text;
 }
 
-.support-hero p {
+/* Focus styles consolidated above */
+
+.pricing-hero p {
     font-size: 1.15rem;
     color: var(--text-muted);
     max-width: 650px;
@@ -4176,7 +4142,7 @@ body.using-keyboard .faq-hero h1:focus-visible {
     color: var(--primary-light);
 }
 
-.support-note {
+.pricing-note {
     max-width: 700px;
     margin: 0 auto;
     text-align: center;
@@ -4186,19 +4152,19 @@ body.using-keyboard .faq-hero h1:focus-visible {
     border-radius: var(--radius-lg);
 }
 
-.support-note h3 {
+.pricing-note h3 {
     font-size: 1.25rem;
     margin-bottom: 1rem;
 }
 
-.support-note p {
+.pricing-note p {
     color: var(--text-muted);
     font-size: 0.95rem;
     line-height: 1.8;
     margin-bottom: 1rem;
 }
 
-.support-note p:last-child {
+.pricing-note p:last-child {
     margin-bottom: 0;
 }
 
@@ -4212,7 +4178,7 @@ body.using-keyboard .faq-hero h1:focus-visible {
 }
 
 @media (max-width: 768px) {
-    .support-page {
+    .pricing-page {
         padding: 5rem 1rem 3rem;
     }
 }

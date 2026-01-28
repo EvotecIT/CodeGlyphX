@@ -493,6 +493,167 @@ if (-not (Test-Path $showcaseJsonPath)) {
 }
 
 # ============================================================================
+# PRICING PAGE
+# ============================================================================
+Write-Host "Generating Pricing page..." -ForegroundColor Cyan
+
+$pricingContent = @"
+<section class="pricing-page">
+    <div class="pricing-hero">
+        <span class="section-label">Pricing</span>
+        <h1>Simple, Transparent Pricing</h1>
+        <p>CodeGlyphX is free and open source. Sponsorships support ongoing development and give you a voice in the project's direction.</p>
+    </div>
+
+    <div class="pricing-grid">
+        <!-- Free Tier -->
+        <div class="pricing-card">
+            <div class="pricing-card-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" focusable="false">
+                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+            </div>
+            <h2>Free</h2>
+            <div class="pricing-tag">Open Source</div>
+            <div class="pricing-amount">
+                <span class="pricing-currency">&#36;0</span>
+                <span class="pricing-period">forever</span>
+            </div>
+            <p class="pricing-desc">Everything you need. No limits, no paywalls, no feature gating.</p>
+            <ul class="pricing-features">
+                <li>All current features included</li>
+                <li>All future features included</li>
+                <li>No usage limits</li>
+                <li>Apache 2.0 license</li>
+                <li>Community support via GitHub and Discord</li>
+                <li>Full source code access</li>
+            </ul>
+            <a href="https://www.nuget.org/packages/CodeGlyphX" target="_blank" rel="noopener" class="pricing-btn pricing-btn-secondary">
+                Install from NuGet
+            </a>
+        </div>
+
+        <!-- Sponsor Tier -->
+        <div class="pricing-card pricing-card-featured">
+            <div class="pricing-card-badge">Recommended</div>
+            <div class="pricing-card-icon pricing-icon-star">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                </svg>
+            </div>
+            <h2>Sponsor</h2>
+            <div class="pricing-tag">GitHub Sponsors</div>
+            <div class="pricing-amount">
+                <span class="pricing-currency pricing-highlight">Flexible</span>
+            </div>
+            <p class="pricing-desc">Support ongoing development and get a voice in the project's direction.</p>
+            <ul class="pricing-features">
+                <li>Everything in Free</li>
+                <li>Priority feature requests</li>
+                <li>Priority bug reports</li>
+                <li>Recognition on project page</li>
+                <li>Help shape the roadmap</li>
+                <li>Direct support channel</li>
+            </ul>
+            <a href="https://github.com/sponsors/PrzemyslawKlys" target="_blank" rel="noopener" class="pricing-btn pricing-btn-primary">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false" style="width:16px;height:16px;">
+                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                </svg>
+                Become a Sponsor
+            </a>
+        </div>
+
+        <!-- Donation Tier -->
+        <div class="pricing-card">
+            <div class="pricing-card-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" focusable="false">
+                    <path d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/>
+                </svg>
+            </div>
+            <h2>Donate</h2>
+            <div class="pricing-tag">One-Time or Recurring</div>
+            <div class="pricing-amount">
+                <span class="pricing-currency">Any Amount</span>
+            </div>
+            <p class="pricing-desc">Prefer PayPal or need an invoice? We can accommodate businesses and individuals.</p>
+            <ul class="pricing-features">
+                <li>Everything in Free</li>
+                <li>One-time or recurring donations</li>
+                <li>PayPal transfers accepted</li>
+                <li>Invoices available on request</li>
+                <li>Corporate sponsorship options</li>
+                <li>Recognition on project page</li>
+            </ul>
+            <a href="https://paypal.me/PrzemyslawKlys" target="_blank" rel="noopener" class="pricing-btn pricing-btn-secondary">
+                Donate via PayPal
+            </a>
+        </div>
+    </div>
+
+    <div class="pricing-note">
+        <h3>Why Support Open Source?</h3>
+        <p>
+            CodeGlyphX is built and maintained by
+            <a href="https://twitter.com/PrzemyslawKlys" target="_blank">Przemys&#x142;aw K&#x142;ys</a>
+            at <a href="https://evotec.xyz" target="_blank">Evotec Services sp. z o.o.</a>
+            Your sponsorship directly funds development time, testing infrastructure, and documentation.
+            Every contribution helps keep the project actively maintained and growing.
+        </p>
+        <p>
+            <strong>Need an invoice?</strong> Contact us at
+            <a href="mailto:contact@evotec.pl">contact@evotec.pl</a>
+            &mdash; we can provide VAT invoices for corporate sponsors and business donations.
+        </p>
+    </div>
+</section>
+"@
+
+$pricingOpenGraph = @"
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Pricing - CodeGlyphX" />
+  <meta property="og:description" content="CodeGlyphX is free and open source. Sponsorships support ongoing development." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://codeglyphx.com/pricing/" />
+  <meta property="og:image" content="https://codeglyphx.com/codeglyphx-qr-icon.png" />
+  <meta property="og:site_name" content="CodeGlyphX" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Pricing - CodeGlyphX" />
+  <meta name="twitter:description" content="CodeGlyphX is free and open source. Sponsorships support ongoing development." />
+  <meta name="twitter:image" content="https://codeglyphx.com/codeglyphx-qr-icon.png" />
+"@
+
+$pricingBreadcrumbJsonLd = @"
+
+  <script type="application/ld+json">
+  {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://codeglyphx.com/" },
+          { "@type": "ListItem", "position": 2, "name": "Pricing", "item": "https://codeglyphx.com/pricing/" }
+      ]
+  }
+  </script>
+"@
+
+$pricingDir = Join-Path $OutputPath "pricing"
+if (-not (Test-Path $pricingDir)) {
+    New-Item -ItemType Directory -Path $pricingDir -Force | Out-Null
+}
+
+New-StaticPage `
+    -Title "Pricing - CodeGlyphX" `
+    -Description "CodeGlyphX is free and open source. Sponsorships support ongoing development and give you a voice in the project's direction." `
+    -Content $pricingContent `
+    -OutputFile (Join-Path $pricingDir "index.html") `
+    -Canonical "https://codeglyphx.com/pricing/" `
+    -OpenGraph $pricingOpenGraph `
+    -StructuredData $pricingBreadcrumbJsonLd
+
+# ============================================================================
 # BENCHMARKS PAGE
 # ============================================================================
 Write-Host "Generating Benchmarks page..." -ForegroundColor Cyan
