@@ -1535,7 +1535,6 @@ public sealed class QrPngRendererTests {
         }
 
         Assert.True(foundBand, "Expected band pixels outside the QR bounds.");
-        Assert.True(foundBand, "Expected band pixels outside the QR bounds.");
     }
 
     [Fact]
