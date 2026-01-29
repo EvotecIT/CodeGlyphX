@@ -1,15 +1,12 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>QrPngRenderOptions - CodeGlyphX API Reference</title>
-  <meta name="description" content="Options for CodeGlyphX.Rendering.Png.QrPngRenderer." />
-  <link rel="stylesheet" href="../style.css" />
-  <script>(function(){const theme=localStorage.getItem('theme')||'dark';document.documentElement.dataset.theme=theme;})();</script>
+  <title>CodeGlyphX.Rendering.Png.QrPngRenderOptions - CodeGlyphX API Reference</title>
+  <link rel="stylesheet" href="/mnt/c/Support/GitHub/CodeMatrix/CodeGlyphX.Website/wwwroot/css/api-docs.css" />
 </head>
 <body>
-  <div class="page">
 <header class="header">
     <div class="header-content">
         <a href="/" class="brand">
@@ -31,19 +28,31 @@
             <div class="nav-links">
                 <a href="/">Home</a>
                 <a href="/playground/">Playground</a>
-                <a href="/docs/">Documentation</a>
+                <a href="/docs/">Docs</a>
+                <a href="/benchmarks/">Benchmarks</a>
                 <a href="/showcase/">Showcase</a>
+                <a href="/pricing/">Pricing</a>
             </div>
             <div class="nav-actions">
-                <button class="theme-toggle" title="Toggle theme" aria-label="Toggle theme">
-                    <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="5"/>
-                        <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
-                    </svg>
-                    <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
-                    </svg>
-                </button>
+                <div class="theme-toggle" role="group" aria-label="Theme selection">
+                    <button data-theme="auto" title="Auto (system)" aria-label="Auto theme">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="2" y="3" width="20" height="14" rx="2"/>
+                            <path d="M8 21h8M12 17v4"/>
+                        </svg>
+                    </button>
+                    <button data-theme="light" title="Light" aria-label="Light theme">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="5"/>
+                            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+                        </svg>
+                    </button>
+                    <button data-theme="dark" title="Dark" aria-label="Dark theme">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
+                        </svg>
+                    </button>
+                </div>
                 <a href="https://github.com/EvotecIT/CodeGlyphX" target="_blank" rel="noopener" class="nav-icon" title="GitHub" aria-label="GitHub">
                     <svg viewBox="0 0 24 24" fill="currentColor">
                         <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
@@ -59,150 +68,281 @@
         </nav>
     </div>
 </header>
+  <main class="pf-api">
+    <a href="../index.html">← API Index</a>
+    <h1>CodeGlyphX.Rendering.Png.QrPngRenderOptions</h1>
+    <p>Options for .</p>
 
-<main class="type-detail">
-  <nav class="breadcrumb" aria-label="Breadcrumb">
-    <a href="../index.html">API Reference</a>
-    <span class="sep">/</span><span>CodeGlyphX.Rendering.Png</span>
-  </nav>
-  <header class="type-header">
-    <h1>QrPngRenderOptions</h1>
-    <div class="type-meta">Class · CodeGlyphX.Rendering.Png</div>
-  </header>
-  <p class="type-summary">Options for CodeGlyphX.Rendering.Png.QrPngRenderer.</p>
-  <section class="member-section">
-    <h2>Constructors</h2>
-    <div class="member" id="constructor-qrpngrenderoptions-qrpngrenderoptions">
-      <code class="signature">QrPngRenderOptions()</code>
-    </div>
-  </section>
-  <section class="member-section">
-    <h2>Methods</h2>
-    <div class="member" id="method-withmodulesize-qrpngrenderoptions-withmodulesize-int-size">
-      <code class="signature">QrPngRenderOptions WithModuleSize(int size)</code>
-      <p class="member-summary">Sets the module size in pixels.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>size <span class="param-type">int</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-withquietzone-qrpngrenderoptions-withquietzone-int-quietzone">
-      <code class="signature">QrPngRenderOptions WithQuietZone(int quietZone)</code>
-      <p class="member-summary">Sets the quiet zone size in modules.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>quietZone <span class="param-type">int</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-withforeground-qrpngrenderoptions-withforeground-rgba32-color">
-      <code class="signature">QrPngRenderOptions WithForeground(Rgba32 color)</code>
-      <p class="member-summary">Sets the foreground color.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>color <span class="param-type">Rgba32</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-withbackground-qrpngrenderoptions-withbackground-rgba32-color">
-      <code class="signature">QrPngRenderOptions WithBackground(Rgba32 color)</code>
-      <p class="member-summary">Sets the background color.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>color <span class="param-type">Rgba32</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-withforegroundgradient-qrpngrenderoptions-withforegroundgradient-qrpnggradientoptions-gradient">
-      <code class="signature">QrPngRenderOptions WithForegroundGradient(QrPngGradientOptions gradient)</code>
-      <p class="member-summary">Sets the foreground gradient.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>gradient <span class="param-type">QrPngGradientOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-witheyes-qrpngrenderoptions-witheyes-qrpngeyeoptions-eyes">
-      <code class="signature">QrPngRenderOptions WithEyes(QrPngEyeOptions eyes)</code>
-      <p class="member-summary">Sets custom eye (finder) options.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>eyes <span class="param-type">QrPngEyeOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-withmoduleshape-qrpngrenderoptions-withmoduleshape-qrpngmoduleshape-shape">
-      <code class="signature">QrPngRenderOptions WithModuleShape(QrPngModuleShape shape)</code>
-      <p class="member-summary">Sets the module shape.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>shape <span class="param-type">QrPngModuleShape</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-withmodulescale-qrpngrenderoptions-withmodulescale-double-scale">
-      <code class="signature">QrPngRenderOptions WithModuleScale(double scale)</code>
-      <p class="member-summary">Sets the module scale.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>scale <span class="param-type">double</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-withmodulecornerradiuspx-qrpngrenderoptions-withmodulecornerradiuspx-int-radiuspx">
-      <code class="signature">QrPngRenderOptions WithModuleCornerRadiusPx(int radiusPx)</code>
-      <p class="member-summary">Sets the module corner radius in pixels.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>radiusPx <span class="param-type">int</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-withlogo-qrpngrenderoptions-withlogo-qrpnglogooptions-logo">
-      <code class="signature">QrPngRenderOptions WithLogo(QrPngLogoOptions logo)</code>
-      <p class="member-summary">Sets the logo overlay options.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>logo <span class="param-type">QrPngLogoOptions</span></dt>
-      </dl>
-    </div>
-  </section>
-  <section class="member-section">
-    <h2>Propertys</h2>
-    <div class="member" id="property-modulesize-int-modulesize-get-set">
-      <code class="signature">int ModuleSize {get; set; }</code>
-      <p class="member-summary">Gets or sets the size of a single QR module in pixels.</p>
-    </div>
-    <div class="member" id="property-quietzone-int-quietzone-get-set">
-      <code class="signature">int QuietZone {get; set; }</code>
-      <p class="member-summary">Gets or sets the quiet zone size in modules.</p>
-    </div>
-    <div class="member" id="property-foreground-rgba32-foreground-get-set">
-      <code class="signature">Rgba32 Foreground {get; set; }</code>
-      <p class="member-summary">Gets or sets the foreground (dark) color.</p>
-    </div>
-    <div class="member" id="property-background-rgba32-background-get-set">
-      <code class="signature">Rgba32 Background {get; set; }</code>
-      <p class="member-summary">Gets or sets the background (light) color.</p>
-    </div>
-    <div class="member" id="property-foregroundgradient-qrpnggradientoptions-foregroundgradient-get-set">
-      <code class="signature">QrPngGradientOptions ForegroundGradient {get; set; }</code>
-      <p class="member-summary">Optional gradient for the foreground (dark) modules.</p>
-    </div>
-    <div class="member" id="property-eyes-qrpngeyeoptions-eyes-get-set">
-      <code class="signature">QrPngEyeOptions Eyes {get; set; }</code>
-      <p class="member-summary">Optional eye (finder) styling overrides.</p>
-    </div>
-    <div class="member" id="property-moduleshape-qrpngmoduleshape-moduleshape-get-set">
-      <code class="signature">QrPngModuleShape ModuleShape {get; set; }</code>
-      <p class="member-summary">Gets or sets the module shape.</p>
-    </div>
-    <div class="member" id="property-modulescale-double-modulescale-get-set">
-      <code class="signature">double ModuleScale {get; set; }</code>
-      <p class="member-summary">Gets or sets the scale of the module inside its cell (0.1..1.0).</p>
-    </div>
-    <div class="member" id="property-modulecornerradiuspx-int-modulecornerradiuspx-get-set">
-      <code class="signature">int ModuleCornerRadiusPx {get; set; }</code>
-      <p class="member-summary">Gets or sets the corner radius in pixels for CodeGlyphX.Rendering.Png.QrPngModuleShape.Rounded.</p>
-    </div>
-    <div class="member" id="property-logo-qrpnglogooptions-logo-get-set">
-      <code class="signature">QrPngLogoOptions Logo {get; set; }</code>
-      <p class="member-summary">Optional logo overlay (centered).</p>
-    </div>
-  </section>
-</main>
+    <section class="pf-api-section">
+      <h2>Methods</h2>
+      <ul>
+        <li>
+          <strong>WithModuleSize</strong> - Sets the module size in pixels.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.Int32)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>WithQuietZone</strong> - Sets the quiet zone size in modules.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.Int32)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>WithForeground</strong> - Sets the foreground color.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (CodeGlyphX.Rendering.Png.Rgba32)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>WithBackground</strong> - Sets the background color.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (CodeGlyphX.Rendering.Png.Rgba32)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>WithBackgroundGradient</strong> - Sets the background gradient.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (CodeGlyphX.Rendering.Png.QrPngGradientOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>WithBackgroundPattern</strong> - Sets the background pattern overlay.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (CodeGlyphX.Rendering.Png.QrPngBackgroundPatternOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>WithBackgroundSupersample</strong> - Sets the background supersample factor (1 = disabled).
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.Int32)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>WithForegroundGradient</strong> - Sets the foreground gradient.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (CodeGlyphX.Rendering.Png.QrPngGradientOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>WithForegroundPalette</strong> - Sets the foreground palette.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (CodeGlyphX.Rendering.Png.QrPngPaletteOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>WithForegroundPattern</strong> - Sets the foreground pattern overlay.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (CodeGlyphX.Rendering.Png.QrPngForegroundPatternOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>WithForegroundPaletteZones</strong> - Sets palette overrides for specific zones.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (CodeGlyphX.Rendering.Png.QrPngPaletteZoneOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>WithEyes</strong> - Sets custom eye (finder) options.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (CodeGlyphX.Rendering.Png.QrPngEyeOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>WithModuleShape</strong> - Sets the module shape.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (CodeGlyphX.Rendering.Png.QrPngModuleShape)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>WithModuleScale</strong> - Sets the module scale.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.Double)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>WithModuleScaleMap</strong> - Sets per-module scale mapping options.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (CodeGlyphX.Rendering.Png.QrPngModuleScaleMapOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>WithModuleShapeMap</strong> - Sets per-module shape mapping options.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (CodeGlyphX.Rendering.Png.QrPngModuleShapeMapOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>WithModuleJitter</strong> - Sets per-module jitter options.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (CodeGlyphX.Rendering.Png.QrPngModuleJitterOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>WithModuleCornerRadiusPx</strong> - Sets the module corner radius in pixels.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.Int32)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>WithPngCompressionLevel</strong> - Sets the PNG compression level (0 = stored/uncompressed, 1-9 = compressed).
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.Int32)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>WithLogo</strong> - Sets the logo overlay options.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (CodeGlyphX.Rendering.Png.QrPngLogoOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>WithCanvas</strong> - Sets the canvas options.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (CodeGlyphX.Rendering.Png.QrPngCanvasOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>WithDebug</strong> - Sets the debug overlay options.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (CodeGlyphX.Rendering.Png.QrPngDebugOptions)</li>
+            </ul>
+          </div>
+        </li>
+      </ul>
+    </section>
+    <section class="pf-api-section">
+      <h2>Properties</h2>
+      <ul>
+        <li>
+          <strong>ModuleSize</strong> - Gets or sets the size of a single QR module in pixels.
+        </li>
+        <li>
+          <strong>QuietZone</strong> - Gets or sets the quiet zone size in modules.
+        </li>
+        <li>
+          <strong>Foreground</strong> - Gets or sets the foreground (dark) color.
+        </li>
+        <li>
+          <strong>Background</strong> - Gets or sets the background (light) color.
+        </li>
+        <li>
+          <strong>BackgroundGradient</strong> - Optional gradient for the background.
+        </li>
+        <li>
+          <strong>BackgroundPattern</strong> - Optional pattern overlay for the QR background area.
+        </li>
+        <li>
+          <strong>BackgroundSupersample</strong> - Background supersample factor for gradients/patterns (1 = disabled, max 4).
+        </li>
+        <li>
+          <strong>ForegroundGradient</strong> - Optional gradient for the foreground (dark) modules.
+        </li>
+        <li>
+          <strong>ForegroundPalette</strong> - Optional multi-color palette for foreground modules.
+        </li>
+        <li>
+          <strong>ForegroundPattern</strong> - Optional pattern overlay for foreground modules.
+        </li>
+        <li>
+          <strong>ForegroundPaletteZones</strong> - Optional palette overrides for specific zones.
+        </li>
+        <li>
+          <strong>Eyes</strong> - Optional eye (finder) styling overrides.
+        </li>
+        <li>
+          <strong>ModuleShape</strong> - Gets or sets the module shape.
+        </li>
+        <li>
+          <strong>ModuleScale</strong> - Gets or sets the scale of the module inside its cell (0.1..1.0).
+        </li>
+        <li>
+          <strong>ModuleScaleMap</strong> - Optional per-module scale mapping.
+        </li>
+        <li>
+          <strong>ModuleShapeMap</strong> - Optional per-module shape mapping.
+        </li>
+        <li>
+          <strong>ModuleJitter</strong> - Optional per-module jitter (organic placement).
+        </li>
+        <li>
+          <strong>ProtectFunctionalPatterns</strong> - When true, keeps non-eye functional patterns (timing/alignment/format/version/dark module) at full scale and a stable foreground color for scan reliability.
+        </li>
+        <li>
+          <strong>ProtectQuietZone</strong> - When true and a background pattern is enabled, skips drawing the pattern inside the quiet zone.
+        </li>
+        <li>
+          <strong>ModuleCornerRadiusPx</strong> - Gets or sets the corner radius in pixels for .
+        </li>
+        <li>
+          <strong>Logo</strong> - Optional logo overlay (centered).
+        </li>
+        <li>
+          <strong>Canvas</strong> - Optional canvas options for sticker-style output.
+        </li>
+        <li>
+          <strong>Debug</strong> - Optional debug overlay options.
+        </li>
+        <li>
+          <strong>PngCompressionLevel</strong> - PNG compression level (0 = stored/uncompressed, 1-9 = compressed).
+        </li>
+      </ul>
+    </section>
+    <section class="pf-api-section">
+      <h2>Fields</h2>
+      <ul>
+        <li>
+          <strong>BackgroundSupersampleMin</strong> - Minimum allowed background supersample factor.
+        </li>
+        <li>
+          <strong>BackgroundSupersampleMax</strong> - Maximum allowed background supersample factor (capped to avoid large memory spikes).
+        </li>
+      </ul>
+    </section>
+  </main>
 <footer class="footer">
     <div class="footer-content">
         <div class="footer-brand">
@@ -217,20 +357,21 @@
                 <h3>Product</h3>
                 <a href="/">Home</a>
                 <a href="/playground/">Playground</a>
-                <a href="/docs/">Documentation</a>
+                <a href="/docs/">Docs</a>
+                <a href="/benchmarks/">Benchmarks</a>
                 <a href="/showcase/">Showcase</a>
             </div>
             <div class="footer-section">
                 <h3>Resources</h3>
                 <a href="/faq/">FAQ</a>
-                <a href="https://www.nuget.org/packages/CodeGlyphX" target="_blank" rel="noopener">NuGet Package</a>
-                <a href="https://github.com/EvotecIT/CodeGlyphX" target="_blank" rel="noopener">GitHub Repository</a>
-                <a href="https://github.com/EvotecIT/CodeGlyphX/issues" target="_blank" rel="noopener">Report Issue</a>
+                <a href="https://www.nuget.org/packages/CodeGlyphX" target="_blank" rel="noopener" aria-label="NuGet Package (opens in new tab)">NuGet Package</a>
+                <a href="https://github.com/EvotecIT/CodeGlyphX" target="_blank" rel="noopener" aria-label="GitHub Repository (opens in new tab)">GitHub Repository</a>
+                <a href="https://github.com/EvotecIT/CodeGlyphX/issues" target="_blank" rel="noopener" aria-label="Report Issue (opens in new tab)">Report Issue</a>
             </div>
             <div class="footer-section">
                 <h3>Company</h3>
-                <a href="https://evotec.xyz" target="_blank" rel="noopener">Evotec Services</a>
-                <a href="https://evotec.xyz/hub" target="_blank" rel="noopener">Blog</a>
+                <a href="https://evotec.xyz" target="_blank" rel="noopener" aria-label="Evotec Services (opens in new tab)">Evotec Services</a>
+                <a href="https://evotec.xyz/hub" target="_blank" rel="noopener" aria-label="Blog (opens in new tab)">Blog</a>
             </div>
         </div>
         <div class="footer-bottom">
@@ -247,7 +388,5 @@
     </div>
 </footer>
 <script src="/js/site.js"></script>
-
-  </div>
 </body>
 </html>

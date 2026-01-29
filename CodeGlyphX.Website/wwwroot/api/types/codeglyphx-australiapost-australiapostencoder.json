@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "AustraliaPostEncoder",
   "fullName": "CodeGlyphX.AustraliaPost.AustraliaPostEncoder",
   "namespace": "CodeGlyphX.AustraliaPost",
@@ -6,28 +6,21 @@
   "slug": "codeglyphx-australiapost-australiapostencoder",
   "summary": "Encodes Australia Post customer barcodes.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
       "name": "Encode",
-      "kind": "Method",
-      "summary": "Encodes an Australia Post customer barcode into a CodeGlyphX.BitMatrix.",
-      "remarks": "Supported payload lengths:\n 8 (Standard), 13 (Customer 2, C table), 16 (Customer 2, N table),\n 18 (Customer 3, C table), 23 (Customer 3, N table).",
+      "summary": "Encodes an Australia Post customer barcode into a .",
       "returns": null,
       "parameters": [
         {
-          "name": "content",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static BitMatrix Encode(string content)",
-      "xmlId": "M:CodeGlyphX.AustraliaPost.AustraliaPostEncoder.Encode(System.String)",
-      "anchor": "method-encode-static-bitmatrix-encode-string-content"
+      ]
     }
-  ]
+  ],
+  "properties": [],
+  "fields": [],
+  "events": []
 }

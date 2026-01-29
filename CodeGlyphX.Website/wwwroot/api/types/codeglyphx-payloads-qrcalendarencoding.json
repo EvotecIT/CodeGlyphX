@@ -1,55 +1,22 @@
-{
+﻿{
   "name": "QrCalendarEncoding",
   "fullName": "CodeGlyphX.Payloads.QrCalendarEncoding",
   "namespace": "CodeGlyphX.Payloads",
-  "kind": "Enum",
+  "kind": "Class",
   "slug": "codeglyphx-payloads-qrcalendarencoding",
   "summary": "Calendar payload output formats.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
-    {
-      "name": "value__",
-      "kind": "Field",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int value__",
-      "xmlId": "F:CodeGlyphX.Payloads.QrCalendarEncoding.value__",
-      "anchor": "field-value-int-value"
-    },
+  "methods": [],
+  "properties": [],
+  "fields": [
     {
       "name": "Universal",
-      "kind": "Field",
-      "summary": "Simple VEVENT block.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrCalendarEncoding Universal",
-      "xmlId": "F:CodeGlyphX.Payloads.QrCalendarEncoding.Universal",
-      "anchor": "field-universal-qrcalendarencoding-universal"
+      "summary": "Simple VEVENT block."
     },
     {
       "name": "ICalComplete",
-      "kind": "Field",
-      "summary": "Full VCALENDAR wrapper with VEVENT.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrCalendarEncoding ICalComplete",
-      "xmlId": "F:CodeGlyphX.Payloads.QrCalendarEncoding.ICalComplete",
-      "anchor": "field-icalcomplete-qrcalendarencoding-icalcomplete"
+      "summary": "Full VCALENDAR wrapper with VEVENT."
     }
-  ]
+  ],
+  "events": []
 }

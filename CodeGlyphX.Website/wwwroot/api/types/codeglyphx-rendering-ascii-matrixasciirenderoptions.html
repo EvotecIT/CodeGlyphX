@@ -1,15 +1,12 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>MatrixAsciiRenderOptions - CodeGlyphX API Reference</title>
-  <meta name="description" content="Rendering options for ASCII matrix output." />
-  <link rel="stylesheet" href="../style.css" />
-  <script>(function(){const theme=localStorage.getItem('theme')||'dark';document.documentElement.dataset.theme=theme;})();</script>
+  <title>CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions - CodeGlyphX API Reference</title>
+  <link rel="stylesheet" href="/mnt/c/Support/GitHub/CodeMatrix/CodeGlyphX.Website/wwwroot/css/api-docs.css" />
 </head>
 <body>
-  <div class="page">
 <header class="header">
     <div class="header-content">
         <a href="/" class="brand">
@@ -31,19 +28,31 @@
             <div class="nav-links">
                 <a href="/">Home</a>
                 <a href="/playground/">Playground</a>
-                <a href="/docs/">Documentation</a>
+                <a href="/docs/">Docs</a>
+                <a href="/benchmarks/">Benchmarks</a>
                 <a href="/showcase/">Showcase</a>
+                <a href="/pricing/">Pricing</a>
             </div>
             <div class="nav-actions">
-                <button class="theme-toggle" title="Toggle theme" aria-label="Toggle theme">
-                    <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="5"/>
-                        <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
-                    </svg>
-                    <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
-                    </svg>
-                </button>
+                <div class="theme-toggle" role="group" aria-label="Theme selection">
+                    <button data-theme="auto" title="Auto (system)" aria-label="Auto theme">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="2" y="3" width="20" height="14" rx="2"/>
+                            <path d="M8 21h8M12 17v4"/>
+                        </svg>
+                    </button>
+                    <button data-theme="light" title="Light" aria-label="Light theme">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="5"/>
+                            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+                        </svg>
+                    </button>
+                    <button data-theme="dark" title="Dark" aria-label="Dark theme">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
+                        </svg>
+                    </button>
+                </div>
                 <a href="https://github.com/EvotecIT/CodeGlyphX" target="_blank" rel="noopener" class="nav-icon" title="GitHub" aria-label="GitHub">
                     <svg viewBox="0 0 24 24" fill="currentColor">
                         <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
@@ -59,102 +68,176 @@
         </nav>
     </div>
 </header>
+  <main class="pf-api">
+    <a href="../index.html">← API Index</a>
+    <h1>CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions</h1>
+    <p>Rendering options for ASCII matrix output.</p>
 
-<main class="type-detail">
-  <nav class="breadcrumb" aria-label="Breadcrumb">
-    <a href="../index.html">API Reference</a>
-    <span class="sep">/</span><span>CodeGlyphX.Rendering.Ascii</span>
-  </nav>
-  <header class="type-header">
-    <h1>MatrixAsciiRenderOptions</h1>
-    <div class="type-meta">Class · CodeGlyphX.Rendering.Ascii</div>
-  </header>
-  <p class="type-summary">Rendering options for ASCII matrix output.</p>
-  <section class="member-section">
-    <h2>Constructors</h2>
-    <div class="member" id="constructor-matrixasciirenderoptions-matrixasciirenderoptions">
-      <code class="signature">MatrixAsciiRenderOptions()</code>
-    </div>
-  </section>
-  <section class="member-section">
-    <h2>Methods</h2>
-    <div class="member" id="method-withquietzone-matrixasciirenderoptions-withquietzone-int-quietzone">
-      <code class="signature">MatrixAsciiRenderOptions WithQuietZone(int quietZone)</code>
-      <p class="member-summary">Sets the quiet zone size in modules.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>quietZone <span class="param-type">int</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-withmodulewidth-matrixasciirenderoptions-withmodulewidth-int-width">
-      <code class="signature">MatrixAsciiRenderOptions WithModuleWidth(int width)</code>
-      <p class="member-summary">Sets the module width in characters.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>width <span class="param-type">int</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-withmoduleheight-matrixasciirenderoptions-withmoduleheight-int-height">
-      <code class="signature">MatrixAsciiRenderOptions WithModuleHeight(int height)</code>
-      <p class="member-summary">Sets the module height in rows.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>height <span class="param-type">int</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-withdark-matrixasciirenderoptions-withdark-string-dark">
-      <code class="signature">MatrixAsciiRenderOptions WithDark(string dark)</code>
-      <p class="member-summary">Sets the character(s) used for dark modules.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>dark <span class="param-type">string</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-withlight-matrixasciirenderoptions-withlight-string-light">
-      <code class="signature">MatrixAsciiRenderOptions WithLight(string light)</code>
-      <p class="member-summary">Sets the character(s) used for light modules.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>light <span class="param-type">string</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-withnewline-matrixasciirenderoptions-withnewline-string-newline">
-      <code class="signature">MatrixAsciiRenderOptions WithNewLine(string newLine)</code>
-      <p class="member-summary">Sets the line separator.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>newLine <span class="param-type">string</span></dt>
-      </dl>
-    </div>
-  </section>
-  <section class="member-section">
-    <h2>Propertys</h2>
-    <div class="member" id="property-quietzone-int-quietzone-get-set">
-      <code class="signature">int QuietZone {get; set; }</code>
-      <p class="member-summary">Quiet zone size in modules.</p>
-    </div>
-    <div class="member" id="property-modulewidth-int-modulewidth-get-set">
-      <code class="signature">int ModuleWidth {get; set; }</code>
-      <p class="member-summary">Module width in characters.</p>
-    </div>
-    <div class="member" id="property-moduleheight-int-moduleheight-get-set">
-      <code class="signature">int ModuleHeight {get; set; }</code>
-      <p class="member-summary">Module height in rows.</p>
-    </div>
-    <div class="member" id="property-dark-string-dark-get-set">
-      <code class="signature">string Dark {get; set; }</code>
-      <p class="member-summary">Character(s) used for dark modules.</p>
-    </div>
-    <div class="member" id="property-light-string-light-get-set">
-      <code class="signature">string Light {get; set; }</code>
-      <p class="member-summary">Character(s) used for light modules.</p>
-    </div>
-    <div class="member" id="property-newline-string-newline-get-set">
-      <code class="signature">string NewLine {get; set; }</code>
-      <p class="member-summary">Line separator used between rows.</p>
-    </div>
-  </section>
-</main>
+    <section class="pf-api-section">
+      <h2>Methods</h2>
+      <ul>
+        <li>
+          <strong>WithQuietZone</strong> - Sets the quiet zone size in modules.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.Int32)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>WithModuleWidth</strong> - Sets the module width in characters.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.Int32)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>WithModuleHeight</strong> - Sets the module height in rows.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.Int32)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>WithScale</strong> - Sets an additional scale multiplier applied to both module width and height.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.Int32)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>WithDark</strong> - Sets the character(s) used for dark modules.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>WithLight</strong> - Sets the character(s) used for light modules.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>WithNewLine</strong> - Sets the line separator.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>WithUnicodeBlocks</strong> - Enables or disables Unicode block glyphs when defaults are used.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.Boolean)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>WithInvert</strong> - Enables or disables inverted output (dark/light swapped).
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.Boolean)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>WithAnsiColors</strong> - Enables or disables ANSI color escape codes.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.Boolean)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>WithAnsiTrueColor</strong> - Enables or disables ANSI truecolor (24-bit) output.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.Boolean)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>WithAnsiDarkColor</strong> - Sets the ANSI color for dark modules.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (CodeGlyphX.Rendering.Png.Rgba32)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>WithAnsiLightColor</strong> - Sets the ANSI color for light modules.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (CodeGlyphX.Rendering.Png.Rgba32)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>WithAnsiColorizeLight</strong> - Enables or disables ANSI colorization of light modules.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.Boolean)</li>
+            </ul>
+          </div>
+        </li>
+      </ul>
+    </section>
+    <section class="pf-api-section">
+      <h2>Properties</h2>
+      <ul>
+        <li>
+          <strong>QuietZone</strong> - Quiet zone size in modules.
+        </li>
+        <li>
+          <strong>ModuleWidth</strong> - Module width in characters.
+        </li>
+        <li>
+          <strong>ModuleHeight</strong> - Module height in rows.
+        </li>
+        <li>
+          <strong>Scale</strong> - Additional scale multiplier applied to both module width and height.
+        </li>
+        <li>
+          <strong>Dark</strong> - Character(s) used for dark modules.
+        </li>
+        <li>
+          <strong>Light</strong> - Character(s) used for light modules.
+        </li>
+        <li>
+          <strong>NewLine</strong> - Line separator used between rows.
+        </li>
+        <li>
+          <strong>UseUnicodeBlocks</strong> - When true, prefers Unicode block glyphs (for example, █) when defaults are used.
+        </li>
+        <li>
+          <strong>Invert</strong> - When true, swaps dark and light output.
+        </li>
+        <li>
+          <strong>UseAnsiColors</strong> - When true, emits ANSI color escape codes for dark (and optionally light) modules.
+        </li>
+        <li>
+          <strong>UseAnsiTrueColor</strong> - When true, uses 24-bit ANSI colors; otherwise maps to ANSI 256-color.
+        </li>
+        <li>
+          <strong>AnsiDarkColor</strong> - ANSI color for dark modules.
+        </li>
+        <li>
+          <strong>AnsiLightColor</strong> - ANSI color for light modules.
+        </li>
+        <li>
+          <strong>AnsiColorizeLight</strong> - When true, also colorizes light modules; otherwise leaves them uncolored.
+        </li>
+      </ul>
+    </section>
+  </main>
 <footer class="footer">
     <div class="footer-content">
         <div class="footer-brand">
@@ -169,20 +252,21 @@
                 <h3>Product</h3>
                 <a href="/">Home</a>
                 <a href="/playground/">Playground</a>
-                <a href="/docs/">Documentation</a>
+                <a href="/docs/">Docs</a>
+                <a href="/benchmarks/">Benchmarks</a>
                 <a href="/showcase/">Showcase</a>
             </div>
             <div class="footer-section">
                 <h3>Resources</h3>
                 <a href="/faq/">FAQ</a>
-                <a href="https://www.nuget.org/packages/CodeGlyphX" target="_blank" rel="noopener">NuGet Package</a>
-                <a href="https://github.com/EvotecIT/CodeGlyphX" target="_blank" rel="noopener">GitHub Repository</a>
-                <a href="https://github.com/EvotecIT/CodeGlyphX/issues" target="_blank" rel="noopener">Report Issue</a>
+                <a href="https://www.nuget.org/packages/CodeGlyphX" target="_blank" rel="noopener" aria-label="NuGet Package (opens in new tab)">NuGet Package</a>
+                <a href="https://github.com/EvotecIT/CodeGlyphX" target="_blank" rel="noopener" aria-label="GitHub Repository (opens in new tab)">GitHub Repository</a>
+                <a href="https://github.com/EvotecIT/CodeGlyphX/issues" target="_blank" rel="noopener" aria-label="Report Issue (opens in new tab)">Report Issue</a>
             </div>
             <div class="footer-section">
                 <h3>Company</h3>
-                <a href="https://evotec.xyz" target="_blank" rel="noopener">Evotec Services</a>
-                <a href="https://evotec.xyz/hub" target="_blank" rel="noopener">Blog</a>
+                <a href="https://evotec.xyz" target="_blank" rel="noopener" aria-label="Evotec Services (opens in new tab)">Evotec Services</a>
+                <a href="https://evotec.xyz/hub" target="_blank" rel="noopener" aria-label="Blog (opens in new tab)">Blog</a>
             </div>
         </div>
         <div class="footer-bottom">
@@ -199,7 +283,5 @@
     </div>
 </footer>
 <script src="/js/site.js"></script>
-
-  </div>
 </body>
 </html>

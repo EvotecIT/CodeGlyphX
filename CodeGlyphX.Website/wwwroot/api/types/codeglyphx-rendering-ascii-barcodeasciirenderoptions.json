@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "BarcodeAsciiRenderOptions",
   "fullName": "CodeGlyphX.Rendering.Ascii.BarcodeAsciiRenderOptions",
   "namespace": "CodeGlyphX.Rendering.Ascii",
@@ -6,226 +6,106 @@
   "slug": "codeglyphx-rendering-ascii-barcodeasciirenderoptions",
   "summary": "Rendering options for ASCII 1D barcodes.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
-    {
-      "name": "BarcodeAsciiRenderOptions",
-      "kind": "Constructor",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "BarcodeAsciiRenderOptions()",
-      "xmlId": "M:CodeGlyphX.Rendering.Ascii.BarcodeAsciiRenderOptions.#ctor",
-      "anchor": "constructor-barcodeasciirenderoptions-barcodeasciirenderoptions"
-    },
+  "methods": [
     {
       "name": "WithModuleWidth",
-      "kind": "Method",
       "summary": "Sets the module width in characters.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "width",
-          "type": "int",
-          "description": null
+          "name": "arg1",
+          "type": "System.Int32",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "BarcodeAsciiRenderOptions WithModuleWidth(int width)",
-      "xmlId": "M:CodeGlyphX.Rendering.Ascii.BarcodeAsciiRenderOptions.WithModuleWidth(System.Int32)",
-      "anchor": "method-withmodulewidth-barcodeasciirenderoptions-withmodulewidth-int-width"
+      ]
     },
     {
       "name": "WithQuietZone",
-      "kind": "Method",
       "summary": "Sets the quiet zone size in modules.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "quietZone",
-          "type": "int",
-          "description": null
+          "name": "arg1",
+          "type": "System.Int32",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "BarcodeAsciiRenderOptions WithQuietZone(int quietZone)",
-      "xmlId": "M:CodeGlyphX.Rendering.Ascii.BarcodeAsciiRenderOptions.WithQuietZone(System.Int32)",
-      "anchor": "method-withquietzone-barcodeasciirenderoptions-withquietzone-int-quietzone"
+      ]
     },
     {
       "name": "WithHeight",
-      "kind": "Method",
       "summary": "Sets the height in text rows.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "height",
-          "type": "int",
-          "description": null
+          "name": "arg1",
+          "type": "System.Int32",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "BarcodeAsciiRenderOptions WithHeight(int height)",
-      "xmlId": "M:CodeGlyphX.Rendering.Ascii.BarcodeAsciiRenderOptions.WithHeight(System.Int32)",
-      "anchor": "method-withheight-barcodeasciirenderoptions-withheight-int-height"
+      ]
     },
     {
       "name": "WithDark",
-      "kind": "Method",
       "summary": "Sets the character(s) used for bars.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "dark",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "BarcodeAsciiRenderOptions WithDark(string dark)",
-      "xmlId": "M:CodeGlyphX.Rendering.Ascii.BarcodeAsciiRenderOptions.WithDark(System.String)",
-      "anchor": "method-withdark-barcodeasciirenderoptions-withdark-string-dark"
+      ]
     },
     {
       "name": "WithLight",
-      "kind": "Method",
       "summary": "Sets the character(s) used for spaces.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "light",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "BarcodeAsciiRenderOptions WithLight(string light)",
-      "xmlId": "M:CodeGlyphX.Rendering.Ascii.BarcodeAsciiRenderOptions.WithLight(System.String)",
-      "anchor": "method-withlight-barcodeasciirenderoptions-withlight-string-light"
+      ]
     },
     {
       "name": "WithNewLine",
-      "kind": "Method",
       "summary": "Sets the line separator.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "newLine",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "BarcodeAsciiRenderOptions WithNewLine(string newLine)",
-      "xmlId": "M:CodeGlyphX.Rendering.Ascii.BarcodeAsciiRenderOptions.WithNewLine(System.String)",
-      "anchor": "method-withnewline-barcodeasciirenderoptions-withnewline-string-newline"
-    },
+      ]
+    }
+  ],
+  "properties": [
     {
       "name": "ModuleWidth",
-      "kind": "Property",
-      "summary": "Module width in characters.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int ModuleWidth {get; set; }",
-      "xmlId": "P:CodeGlyphX.Rendering.Ascii.BarcodeAsciiRenderOptions.ModuleWidth",
-      "anchor": "property-modulewidth-int-modulewidth-get-set"
+      "summary": "Module width in characters."
     },
     {
       "name": "QuietZone",
-      "kind": "Property",
-      "summary": "Quiet zone size in modules.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int QuietZone {get; set; }",
-      "xmlId": "P:CodeGlyphX.Rendering.Ascii.BarcodeAsciiRenderOptions.QuietZone",
-      "anchor": "property-quietzone-int-quietzone-get-set"
+      "summary": "Quiet zone size in modules."
     },
     {
       "name": "Height",
-      "kind": "Property",
-      "summary": "Height in text rows.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int Height {get; set; }",
-      "xmlId": "P:CodeGlyphX.Rendering.Ascii.BarcodeAsciiRenderOptions.Height",
-      "anchor": "property-height-int-height-get-set"
+      "summary": "Height in text rows."
     },
     {
       "name": "Dark",
-      "kind": "Property",
-      "summary": "Character(s) used for bars.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string Dark {get; set; }",
-      "xmlId": "P:CodeGlyphX.Rendering.Ascii.BarcodeAsciiRenderOptions.Dark",
-      "anchor": "property-dark-string-dark-get-set"
+      "summary": "Character(s) used for bars."
     },
     {
       "name": "Light",
-      "kind": "Property",
-      "summary": "Character(s) used for spaces.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string Light {get; set; }",
-      "xmlId": "P:CodeGlyphX.Rendering.Ascii.BarcodeAsciiRenderOptions.Light",
-      "anchor": "property-light-string-light-get-set"
+      "summary": "Character(s) used for spaces."
     },
     {
       "name": "NewLine",
-      "kind": "Property",
-      "summary": "Line separator used between rows.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string NewLine {get; set; }",
-      "xmlId": "P:CodeGlyphX.Rendering.Ascii.BarcodeAsciiRenderOptions.NewLine",
-      "anchor": "property-newline-string-newline-get-set"
+      "summary": "Line separator used between rows."
     }
-  ]
+  ],
+  "fields": [],
+  "events": []
 }

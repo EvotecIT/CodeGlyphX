@@ -1,0 +1,188 @@
+﻿{
+  "name": "WebpReader",
+  "fullName": "CodeGlyphX.Rendering.Webp.WebpReader",
+  "namespace": "CodeGlyphX.Rendering.Webp",
+  "kind": "Class",
+  "slug": "codeglyphx-rendering-webp-webpreader",
+  "summary": "Minimal WebP container parsing plus managed decode (VP8/VP8L stills).",
+  "remarks": null,
+  "methods": [
+    {
+      "name": "IsWebp",
+      "summary": "Checks whether the buffer looks like a WebP RIFF container.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "arg1",
+          "type": "System.ReadOnlySpan{System.Byte}",
+          "summary": null
+        }
+      ]
+    },
+    {
+      "name": "TryReadDimensions",
+      "summary": "Attempts to read WebP dimensions from the RIFF container without decoding pixels.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "arg1",
+          "type": "System.ReadOnlySpan{System.Byte}",
+          "summary": null
+        },
+        {
+          "name": "arg2",
+          "type": "System.Int32@",
+          "summary": null
+        },
+        {
+          "name": "arg3",
+          "type": "System.Int32@",
+          "summary": null
+        }
+      ]
+    },
+    {
+      "name": "DecodeRgba32",
+      "summary": "Decodes a WebP image to RGBA32 using the managed VP8/VP8L decoder.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "arg1",
+          "type": "System.ReadOnlySpan{System.Byte}",
+          "summary": null
+        },
+        {
+          "name": "arg2",
+          "type": "System.Int32@",
+          "summary": null
+        },
+        {
+          "name": "arg3",
+          "type": "System.Int32@",
+          "summary": null
+        }
+      ]
+    },
+    {
+      "name": "TryDecodeAnimationFrames",
+      "summary": "Attempts to decode animated WebP frames into RGBA32 buffers (managed).",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "arg1",
+          "type": "System.ReadOnlySpan{System.Byte}",
+          "summary": null
+        },
+        {
+          "name": "arg2",
+          "type": "CodeGlyphX.Rendering.Webp.WebpAnimationFrame[]@",
+          "summary": null
+        },
+        {
+          "name": "arg3",
+          "type": "System.Int32@",
+          "summary": null
+        },
+        {
+          "name": "arg4",
+          "type": "System.Int32@",
+          "summary": null
+        },
+        {
+          "name": "arg5",
+          "type": "CodeGlyphX.Rendering.Webp.WebpAnimationOptions@",
+          "summary": null
+        }
+      ]
+    },
+    {
+      "name": "DecodeAnimationFrames",
+      "summary": "Decodes animated WebP frames into RGBA32 buffers (managed).",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "arg1",
+          "type": "System.ReadOnlySpan{System.Byte}",
+          "summary": null
+        },
+        {
+          "name": "arg2",
+          "type": "System.Int32@",
+          "summary": null
+        },
+        {
+          "name": "arg3",
+          "type": "System.Int32@",
+          "summary": null
+        },
+        {
+          "name": "arg4",
+          "type": "CodeGlyphX.Rendering.Webp.WebpAnimationOptions@",
+          "summary": null
+        }
+      ]
+    },
+    {
+      "name": "TryDecodeAnimationCanvasFrames",
+      "summary": "Attempts to decode animated WebP frames composited onto the full canvas (managed).",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "arg1",
+          "type": "System.ReadOnlySpan{System.Byte}",
+          "summary": null
+        },
+        {
+          "name": "arg2",
+          "type": "CodeGlyphX.Rendering.Webp.WebpAnimationFrame[]@",
+          "summary": null
+        },
+        {
+          "name": "arg3",
+          "type": "System.Int32@",
+          "summary": null
+        },
+        {
+          "name": "arg4",
+          "type": "System.Int32@",
+          "summary": null
+        },
+        {
+          "name": "arg5",
+          "type": "CodeGlyphX.Rendering.Webp.WebpAnimationOptions@",
+          "summary": null
+        }
+      ]
+    },
+    {
+      "name": "DecodeAnimationCanvasFrames",
+      "summary": "Decodes animated WebP frames composited onto the full canvas (managed).",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "arg1",
+          "type": "System.ReadOnlySpan{System.Byte}",
+          "summary": null
+        },
+        {
+          "name": "arg2",
+          "type": "System.Int32@",
+          "summary": null
+        },
+        {
+          "name": "arg3",
+          "type": "System.Int32@",
+          "summary": null
+        },
+        {
+          "name": "arg4",
+          "type": "CodeGlyphX.Rendering.Webp.WebpAnimationOptions@",
+          "summary": null
+        }
+      ]
+    }
+  ],
+  "properties": [],
+  "fields": [],
+  "events": []
+}

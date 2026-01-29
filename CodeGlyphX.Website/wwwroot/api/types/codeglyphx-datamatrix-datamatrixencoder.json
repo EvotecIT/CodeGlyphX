@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "DataMatrixEncoder",
   "fullName": "CodeGlyphX.DataMatrix.DataMatrixEncoder",
   "namespace": "CodeGlyphX.DataMatrix",
@@ -6,83 +6,60 @@
   "slug": "codeglyphx-datamatrix-datamatrixencoder",
   "summary": "Encodes Data Matrix (ECC200) symbols.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
       "name": "Encode",
-      "kind": "Method",
       "summary": "Encodes a string into a Data Matrix symbol.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "text",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "mode",
-          "type": "DataMatrixEncodingMode",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static BitMatrix Encode(string text, DataMatrixEncodingMode mode)",
-      "xmlId": "M:CodeGlyphX.DataMatrix.DataMatrixEncoder.Encode(System.String,CodeGlyphX.DataMatrix.DataMatrixEncodingMode)",
-      "anchor": "method-encode-static-bitmatrix-encode-string-text-datamatrixencodingmode-mode"
+      ]
     },
     {
       "name": "EncodeBytes",
-      "kind": "Method",
       "summary": "Encodes raw bytes into a Data Matrix symbol.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "data",
-          "type": "byte[]",
-          "description": null
+          "name": "arg1",
+          "type": "System.Byte[]",
+          "summary": null
         },
         {
-          "name": "mode",
-          "type": "DataMatrixEncodingMode",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static BitMatrix EncodeBytes(byte[] data, DataMatrixEncodingMode mode)",
-      "xmlId": "M:CodeGlyphX.DataMatrix.DataMatrixEncoder.EncodeBytes(System.Byte[],CodeGlyphX.DataMatrix.DataMatrixEncodingMode)",
-      "anchor": "method-encodebytes-static-bitmatrix-encodebytes-byte-data-datamatrixencodingmode-mode"
+      ]
     },
     {
       "name": "EncodeBytes",
-      "kind": "Method",
       "summary": "Encodes raw bytes into a Data Matrix symbol.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "data",
-          "type": "ReadOnlySpan\u003Cbyte\u003E",
-          "description": null
+          "name": "arg1",
+          "type": "System.ReadOnlySpan{System.Byte}",
+          "summary": null
         },
         {
-          "name": "mode",
-          "type": "DataMatrixEncodingMode",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static BitMatrix EncodeBytes(ReadOnlySpan\u003Cbyte\u003E data, DataMatrixEncodingMode mode)",
-      "xmlId": "M:CodeGlyphX.DataMatrix.DataMatrixEncoder.EncodeBytes(System.ReadOnlySpan{System.Byte},CodeGlyphX.DataMatrix.DataMatrixEncodingMode)",
-      "anchor": "method-encodebytes-static-bitmatrix-encodebytes-readonlyspan-byte-data-datamatrixencodingmode-mode"
+      ]
     }
-  ]
+  ],
+  "properties": [],
+  "fields": [],
+  "events": []
 }

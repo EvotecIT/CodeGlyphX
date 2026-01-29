@@ -1,15 +1,12 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>QrEasy - CodeGlyphX API Reference</title>
-  <meta name="description" content="One-line QR generation helpers with sane defaults." />
-  <link rel="stylesheet" href="../style.css" />
-  <script>(function(){const theme=localStorage.getItem('theme')||'dark';document.documentElement.dataset.theme=theme;})();</script>
+  <title>CodeGlyphX.QrEasy - CodeGlyphX API Reference</title>
+  <link rel="stylesheet" href="/mnt/c/Support/GitHub/CodeMatrix/CodeGlyphX.Website/wwwroot/css/api-docs.css" />
 </head>
 <body>
-  <div class="page">
 <header class="header">
     <div class="header-content">
         <a href="/" class="brand">
@@ -31,19 +28,31 @@
             <div class="nav-links">
                 <a href="/">Home</a>
                 <a href="/playground/">Playground</a>
-                <a href="/docs/">Documentation</a>
+                <a href="/docs/">Docs</a>
+                <a href="/benchmarks/">Benchmarks</a>
                 <a href="/showcase/">Showcase</a>
+                <a href="/pricing/">Pricing</a>
             </div>
             <div class="nav-actions">
-                <button class="theme-toggle" title="Toggle theme" aria-label="Toggle theme">
-                    <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="5"/>
-                        <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
-                    </svg>
-                    <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
-                    </svg>
-                </button>
+                <div class="theme-toggle" role="group" aria-label="Theme selection">
+                    <button data-theme="auto" title="Auto (system)" aria-label="Auto theme">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="2" y="3" width="20" height="14" rx="2"/>
+                            <path d="M8 21h8M12 17v4"/>
+                        </svg>
+                    </button>
+                    <button data-theme="light" title="Light" aria-label="Light theme">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="5"/>
+                            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+                        </svg>
+                    </button>
+                    <button data-theme="dark" title="Dark" aria-label="Dark theme">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
+                        </svg>
+                    </button>
+                </div>
                 <a href="https://github.com/EvotecIT/CodeGlyphX" target="_blank" rel="noopener" class="nav-icon" title="GitHub" aria-label="GitHub">
                     <svg viewBox="0 0 24 24" fill="currentColor">
                         <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
@@ -59,1284 +68,1284 @@
         </nav>
     </div>
 </header>
+  <main class="pf-api">
+    <a href="../index.html">← API Index</a>
+    <h1>CodeGlyphX.QrEasy</h1>
+    <p>One-line QR generation helpers with sane defaults.</p>
 
-<main class="type-detail">
-  <nav class="breadcrumb" aria-label="Breadcrumb">
-    <a href="../index.html">API Reference</a>
-    <span class="sep">/</span><span>CodeGlyphX</span>
-  </nav>
-  <header class="type-header">
-    <h1>QrEasy</h1>
-    <div class="type-meta">Class · CodeGlyphX</div>
-  </header>
-  <p class="type-summary">One-line QR generation helpers with sane defaults.</p>
-  <section class="examples">
-    <h2>Examples</h2>
-    <h3>EXAMPLE 1</h3>
-    <pre><code>
-            using CodeGlyphX;
-            var png = QrEasy.RenderPng(&quot;https://example.com&quot;);
-            var svg = QrEasy.RenderSvg(&quot;https://example.com&quot;);</code></pre>
-  </section>
-  <section class="member-section">
-    <h2>Methods</h2>
-    <div class="member" id="method-encode-static-qrcode-encode-string-payload-qreasyoptions-options">
-      <code class="signature">static QrCode Encode(string payload, QrEasyOptions options)</code>
-      <p class="member-summary">Encodes a payload into a CodeGlyphX.QrCode with defaults.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">string</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-encodeauto-static-qrcode-encodeauto-string-payload-qrpayloaddetectoptions-detectoptions-qreasyoptions-options">
-      <code class="signature">static QrCode EncodeAuto(string payload, QrPayloadDetectOptions detectOptions, QrEasyOptions options)</code>
-      <p class="member-summary">Detects a payload type and encodes it into a CodeGlyphX.QrCode.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">string</span></dt>
-        <dt>detectOptions <span class="param-type">QrPayloadDetectOptions</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-encode-static-qrcode-encode-qrpayloaddata-payload-qreasyoptions-options">
-      <code class="signature">static QrCode Encode(QrPayloadData payload, QrEasyOptions options)</code>
-      <p class="member-summary">Encodes a payload with embedded defaults.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">QrPayloadData</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-evaluatesafety-static-qrartsafetyreport-evaluatesafety-string-payload-qreasyoptions-options">
-      <code class="signature">static QrArtSafetyReport EvaluateSafety(string payload, QrEasyOptions options)</code>
-      <p class="member-summary">Evaluates QR art safety for a payload and options.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">string</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-evaluatesafety-static-qrartsafetyreport-evaluatesafety-qrpayloaddata-payload-qreasyoptions-options">
-      <code class="signature">static QrArtSafetyReport EvaluateSafety(QrPayloadData payload, QrEasyOptions options)</code>
-      <p class="member-summary">Evaluates QR art safety for a payload with embedded defaults.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">QrPayloadData</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-renderpng-static-byte-renderpng-string-payload-qreasyoptions-options">
-      <code class="signature">static byte[] RenderPng(string payload, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as PNG.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">string</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-renderpngauto-static-byte-renderpngauto-string-payload-qrpayloaddetectoptions-detectoptions-qreasyoptions-options">
-      <code class="signature">static byte[] RenderPngAuto(string payload, QrPayloadDetectOptions detectOptions, QrEasyOptions options)</code>
-      <p class="member-summary">Detects a payload type and renders a QR code as PNG.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">string</span></dt>
-        <dt>detectOptions <span class="param-type">QrPayloadDetectOptions</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-renderpngtostream-static-void-renderpngtostream-string-payload-stream-stream-qreasyoptions-options">
-      <code class="signature">static void RenderPngToStream(string payload, Stream stream, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as PNG to a stream.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">string</span></dt>
-        <dt>stream <span class="param-type">Stream</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-renderpngtofile-static-string-renderpngtofile-string-payload-string-path-qreasyoptions-options">
-      <code class="signature">static string RenderPngToFile(string payload, string path, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as PNG and writes it to a file.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">string</span></dt>
-        <dd>Payload text.</dd>
-        <dt>path <span class="param-type">string</span></dt>
-        <dd>Output file path.</dd>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-        <dd>Optional rendering options.</dd>
-      </dl>
-      <h4>Returns</h4>
-      <p>The output file path.</p>
-    </div>
-    <div class="member" id="method-renderpngtofile-static-string-renderpngtofile-qrpayloaddata-payload-string-path-qreasyoptions-options">
-      <code class="signature">static string RenderPngToFile(QrPayloadData payload, string path, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as PNG and writes it to a file for a payload with embedded defaults.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">QrPayloadData</span></dt>
-        <dd>Payload with embedded defaults.</dd>
-        <dt>path <span class="param-type">string</span></dt>
-        <dd>Output file path.</dd>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-        <dd>Optional rendering options.</dd>
-      </dl>
-      <h4>Returns</h4>
-      <p>The output file path.</p>
-    </div>
-    <div class="member" id="method-renderpng-static-byte-renderpng-qrpayloaddata-payload-qreasyoptions-options">
-      <code class="signature">static byte[] RenderPng(QrPayloadData payload, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as PNG for a payload with embedded defaults.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">QrPayloadData</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-renderpngtostream-static-void-renderpngtostream-qrpayloaddata-payload-stream-stream-qreasyoptions-options">
-      <code class="signature">static void RenderPngToStream(QrPayloadData payload, Stream stream, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as PNG to a stream for a payload with embedded defaults.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">QrPayloadData</span></dt>
-        <dt>stream <span class="param-type">Stream</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-rendersvg-static-string-rendersvg-string-payload-qreasyoptions-options">
-      <code class="signature">static string RenderSvg(string payload, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as SVG.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">string</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-rendersvgauto-static-string-rendersvgauto-string-payload-qrpayloaddetectoptions-detectoptions-qreasyoptions-options">
-      <code class="signature">static string RenderSvgAuto(string payload, QrPayloadDetectOptions detectOptions, QrEasyOptions options)</code>
-      <p class="member-summary">Detects a payload type and renders a QR code as SVG.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">string</span></dt>
-        <dt>detectOptions <span class="param-type">QrPayloadDetectOptions</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-rendersvgtofile-static-string-rendersvgtofile-string-payload-string-path-qreasyoptions-options">
-      <code class="signature">static string RenderSvgToFile(string payload, string path, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as SVG and writes it to a file.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">string</span></dt>
-        <dd>Payload text.</dd>
-        <dt>path <span class="param-type">string</span></dt>
-        <dd>Output file path.</dd>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-        <dd>Optional rendering options.</dd>
-      </dl>
-      <h4>Returns</h4>
-      <p>The output file path.</p>
-    </div>
-    <div class="member" id="method-rendersvgtofile-static-string-rendersvgtofile-qrpayloaddata-payload-string-path-qreasyoptions-options">
-      <code class="signature">static string RenderSvgToFile(QrPayloadData payload, string path, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as SVG and writes it to a file for a payload with embedded defaults.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">QrPayloadData</span></dt>
-        <dd>Payload with embedded defaults.</dd>
-        <dt>path <span class="param-type">string</span></dt>
-        <dd>Output file path.</dd>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-        <dd>Optional rendering options.</dd>
-      </dl>
-      <h4>Returns</h4>
-      <p>The output file path.</p>
-    </div>
-    <div class="member" id="method-rendersvg-static-string-rendersvg-qrpayloaddata-payload-qreasyoptions-options">
-      <code class="signature">static string RenderSvg(QrPayloadData payload, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as SVG for a payload with embedded defaults.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">QrPayloadData</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-renderhtml-static-string-renderhtml-string-payload-qreasyoptions-options">
-      <code class="signature">static string RenderHtml(string payload, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as HTML (table-based).</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">string</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-renderhtmlauto-static-string-renderhtmlauto-string-payload-qrpayloaddetectoptions-detectoptions-qreasyoptions-options">
-      <code class="signature">static string RenderHtmlAuto(string payload, QrPayloadDetectOptions detectOptions, QrEasyOptions options)</code>
-      <p class="member-summary">Detects a payload type and renders a QR code as HTML.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">string</span></dt>
-        <dt>detectOptions <span class="param-type">QrPayloadDetectOptions</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-renderhtmltofile-static-string-renderhtmltofile-string-payload-string-path-qreasyoptions-options">
-      <code class="signature">static string RenderHtmlToFile(string payload, string path, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as HTML and writes it to a file.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">string</span></dt>
-        <dd>Payload text.</dd>
-        <dt>path <span class="param-type">string</span></dt>
-        <dd>Output file path.</dd>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-        <dd>Optional rendering options.</dd>
-      </dl>
-      <h4>Returns</h4>
-      <p>The output file path.</p>
-    </div>
-    <div class="member" id="method-renderhtmltofile-static-string-renderhtmltofile-qrpayloaddata-payload-string-path-qreasyoptions-options">
-      <code class="signature">static string RenderHtmlToFile(QrPayloadData payload, string path, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as HTML and writes it to a file for a payload with embedded defaults.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">QrPayloadData</span></dt>
-        <dd>Payload with embedded defaults.</dd>
-        <dt>path <span class="param-type">string</span></dt>
-        <dd>Output file path.</dd>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-        <dd>Optional rendering options.</dd>
-      </dl>
-      <h4>Returns</h4>
-      <p>The output file path.</p>
-    </div>
-    <div class="member" id="method-renderhtml-static-string-renderhtml-qrpayloaddata-payload-qreasyoptions-options">
-      <code class="signature">static string RenderHtml(QrPayloadData payload, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as HTML for a payload with embedded defaults.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">QrPayloadData</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-renderjpeg-static-byte-renderjpeg-string-payload-qreasyoptions-options">
-      <code class="signature">static byte[] RenderJpeg(string payload, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as JPEG.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">string</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-renderjpegauto-static-byte-renderjpegauto-string-payload-qrpayloaddetectoptions-detectoptions-qreasyoptions-options">
-      <code class="signature">static byte[] RenderJpegAuto(string payload, QrPayloadDetectOptions detectOptions, QrEasyOptions options)</code>
-      <p class="member-summary">Detects a payload type and renders a QR code as JPEG.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">string</span></dt>
-        <dt>detectOptions <span class="param-type">QrPayloadDetectOptions</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-renderjpegtostream-static-void-renderjpegtostream-string-payload-stream-stream-qreasyoptions-options">
-      <code class="signature">static void RenderJpegToStream(string payload, Stream stream, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as JPEG to a stream.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">string</span></dt>
-        <dt>stream <span class="param-type">Stream</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-renderjpegtofile-static-string-renderjpegtofile-string-payload-string-path-qreasyoptions-options">
-      <code class="signature">static string RenderJpegToFile(string payload, string path, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as JPEG and writes it to a file.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">string</span></dt>
-        <dd>Payload text.</dd>
-        <dt>path <span class="param-type">string</span></dt>
-        <dd>Output file path.</dd>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-        <dd>Optional rendering options.</dd>
-      </dl>
-      <h4>Returns</h4>
-      <p>The output file path.</p>
-    </div>
-    <div class="member" id="method-renderjpegtofile-static-string-renderjpegtofile-qrpayloaddata-payload-string-path-qreasyoptions-options">
-      <code class="signature">static string RenderJpegToFile(QrPayloadData payload, string path, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as JPEG and writes it to a file for a payload with embedded defaults.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">QrPayloadData</span></dt>
-        <dd>Payload with embedded defaults.</dd>
-        <dt>path <span class="param-type">string</span></dt>
-        <dd>Output file path.</dd>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-        <dd>Optional rendering options.</dd>
-      </dl>
-      <h4>Returns</h4>
-      <p>The output file path.</p>
-    </div>
-    <div class="member" id="method-renderjpeg-static-byte-renderjpeg-qrpayloaddata-payload-qreasyoptions-options">
-      <code class="signature">static byte[] RenderJpeg(QrPayloadData payload, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as JPEG for a payload with embedded defaults.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">QrPayloadData</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-renderjpegtostream-static-void-renderjpegtostream-qrpayloaddata-payload-stream-stream-qreasyoptions-options">
-      <code class="signature">static void RenderJpegToStream(QrPayloadData payload, Stream stream, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as JPEG to a stream for a payload with embedded defaults.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">QrPayloadData</span></dt>
-        <dt>stream <span class="param-type">Stream</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-renderbmp-static-byte-renderbmp-string-payload-qreasyoptions-options">
-      <code class="signature">static byte[] RenderBmp(string payload, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as BMP.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">string</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-renderbmpauto-static-byte-renderbmpauto-string-payload-qrpayloaddetectoptions-detectoptions-qreasyoptions-options">
-      <code class="signature">static byte[] RenderBmpAuto(string payload, QrPayloadDetectOptions detectOptions, QrEasyOptions options)</code>
-      <p class="member-summary">Detects a payload type and renders a QR code as BMP.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">string</span></dt>
-        <dt>detectOptions <span class="param-type">QrPayloadDetectOptions</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-renderbmptostream-static-void-renderbmptostream-string-payload-stream-stream-qreasyoptions-options">
-      <code class="signature">static void RenderBmpToStream(string payload, Stream stream, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as BMP to a stream.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">string</span></dt>
-        <dt>stream <span class="param-type">Stream</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-renderbmptofile-static-string-renderbmptofile-string-payload-string-path-qreasyoptions-options">
-      <code class="signature">static string RenderBmpToFile(string payload, string path, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as BMP and writes it to a file.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">string</span></dt>
-        <dt>path <span class="param-type">string</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-renderbmptofile-static-string-renderbmptofile-qrpayloaddata-payload-string-path-qreasyoptions-options">
-      <code class="signature">static string RenderBmpToFile(QrPayloadData payload, string path, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as BMP and writes it to a file for a payload with embedded defaults.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">QrPayloadData</span></dt>
-        <dt>path <span class="param-type">string</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-renderbmp-static-byte-renderbmp-qrpayloaddata-payload-qreasyoptions-options">
-      <code class="signature">static byte[] RenderBmp(QrPayloadData payload, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as BMP for a payload with embedded defaults.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">QrPayloadData</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-renderbmptostream-static-void-renderbmptostream-qrpayloaddata-payload-stream-stream-qreasyoptions-options">
-      <code class="signature">static void RenderBmpToStream(QrPayloadData payload, Stream stream, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as BMP to a stream for a payload with embedded defaults.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">QrPayloadData</span></dt>
-        <dt>stream <span class="param-type">Stream</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-renderppm-static-byte-renderppm-string-payload-qreasyoptions-options">
-      <code class="signature">static byte[] RenderPpm(string payload, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as PPM.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">string</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-renderppmauto-static-byte-renderppmauto-string-payload-qrpayloaddetectoptions-detectoptions-qreasyoptions-options">
-      <code class="signature">static byte[] RenderPpmAuto(string payload, QrPayloadDetectOptions detectOptions, QrEasyOptions options)</code>
-      <p class="member-summary">Detects a payload type and renders a QR code as PPM.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">string</span></dt>
-        <dt>detectOptions <span class="param-type">QrPayloadDetectOptions</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-renderppmtostream-static-void-renderppmtostream-string-payload-stream-stream-qreasyoptions-options">
-      <code class="signature">static void RenderPpmToStream(string payload, Stream stream, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as PPM to a stream.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">string</span></dt>
-        <dt>stream <span class="param-type">Stream</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-renderppmtofile-static-string-renderppmtofile-string-payload-string-path-qreasyoptions-options">
-      <code class="signature">static string RenderPpmToFile(string payload, string path, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as PPM and writes it to a file.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">string</span></dt>
-        <dt>path <span class="param-type">string</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-renderppmtofile-static-string-renderppmtofile-qrpayloaddata-payload-string-path-qreasyoptions-options">
-      <code class="signature">static string RenderPpmToFile(QrPayloadData payload, string path, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as PPM and writes it to a file for a payload with embedded defaults.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">QrPayloadData</span></dt>
-        <dt>path <span class="param-type">string</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-renderppm-static-byte-renderppm-qrpayloaddata-payload-qreasyoptions-options">
-      <code class="signature">static byte[] RenderPpm(QrPayloadData payload, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as PPM for a payload with embedded defaults.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">QrPayloadData</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-renderppmtostream-static-void-renderppmtostream-qrpayloaddata-payload-stream-stream-qreasyoptions-options">
-      <code class="signature">static void RenderPpmToStream(QrPayloadData payload, Stream stream, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as PPM to a stream for a payload with embedded defaults.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">QrPayloadData</span></dt>
-        <dt>stream <span class="param-type">Stream</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-renderpbm-static-byte-renderpbm-string-payload-qreasyoptions-options">
-      <code class="signature">static byte[] RenderPbm(string payload, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as PBM.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">string</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-renderpbmauto-static-byte-renderpbmauto-string-payload-qrpayloaddetectoptions-detectoptions-qreasyoptions-options">
-      <code class="signature">static byte[] RenderPbmAuto(string payload, QrPayloadDetectOptions detectOptions, QrEasyOptions options)</code>
-      <p class="member-summary">Detects a payload type and renders a QR code as PBM.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">string</span></dt>
-        <dt>detectOptions <span class="param-type">QrPayloadDetectOptions</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-renderpbmtostream-static-void-renderpbmtostream-string-payload-stream-stream-qreasyoptions-options">
-      <code class="signature">static void RenderPbmToStream(string payload, Stream stream, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as PBM to a stream.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">string</span></dt>
-        <dt>stream <span class="param-type">Stream</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-renderpbmtofile-static-string-renderpbmtofile-string-payload-string-path-qreasyoptions-options">
-      <code class="signature">static string RenderPbmToFile(string payload, string path, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as PBM and writes it to a file.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">string</span></dt>
-        <dt>path <span class="param-type">string</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-renderpbmtofile-static-string-renderpbmtofile-qrpayloaddata-payload-string-path-qreasyoptions-options">
-      <code class="signature">static string RenderPbmToFile(QrPayloadData payload, string path, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as PBM and writes it to a file for a payload with embedded defaults.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">QrPayloadData</span></dt>
-        <dt>path <span class="param-type">string</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-renderpbm-static-byte-renderpbm-qrpayloaddata-payload-qreasyoptions-options">
-      <code class="signature">static byte[] RenderPbm(QrPayloadData payload, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as PBM for a payload with embedded defaults.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">QrPayloadData</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-renderpbmtostream-static-void-renderpbmtostream-qrpayloaddata-payload-stream-stream-qreasyoptions-options">
-      <code class="signature">static void RenderPbmToStream(QrPayloadData payload, Stream stream, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as PBM to a stream for a payload with embedded defaults.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">QrPayloadData</span></dt>
-        <dt>stream <span class="param-type">Stream</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-renderpgm-static-byte-renderpgm-string-payload-qreasyoptions-options">
-      <code class="signature">static byte[] RenderPgm(string payload, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as PGM.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">string</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-renderpgmauto-static-byte-renderpgmauto-string-payload-qrpayloaddetectoptions-detectoptions-qreasyoptions-options">
-      <code class="signature">static byte[] RenderPgmAuto(string payload, QrPayloadDetectOptions detectOptions, QrEasyOptions options)</code>
-      <p class="member-summary">Detects a payload type and renders a QR code as PGM.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">string</span></dt>
-        <dt>detectOptions <span class="param-type">QrPayloadDetectOptions</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-renderpgmtostream-static-void-renderpgmtostream-string-payload-stream-stream-qreasyoptions-options">
-      <code class="signature">static void RenderPgmToStream(string payload, Stream stream, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as PGM to a stream.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">string</span></dt>
-        <dt>stream <span class="param-type">Stream</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-renderpgmtofile-static-string-renderpgmtofile-string-payload-string-path-qreasyoptions-options">
-      <code class="signature">static string RenderPgmToFile(string payload, string path, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as PGM and writes it to a file.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">string</span></dt>
-        <dt>path <span class="param-type">string</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-renderpgmtofile-static-string-renderpgmtofile-qrpayloaddata-payload-string-path-qreasyoptions-options">
-      <code class="signature">static string RenderPgmToFile(QrPayloadData payload, string path, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as PGM and writes it to a file for a payload with embedded defaults.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">QrPayloadData</span></dt>
-        <dt>path <span class="param-type">string</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-renderpgm-static-byte-renderpgm-qrpayloaddata-payload-qreasyoptions-options">
-      <code class="signature">static byte[] RenderPgm(QrPayloadData payload, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as PGM for a payload with embedded defaults.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">QrPayloadData</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-renderpgmtostream-static-void-renderpgmtostream-qrpayloaddata-payload-stream-stream-qreasyoptions-options">
-      <code class="signature">static void RenderPgmToStream(QrPayloadData payload, Stream stream, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as PGM to a stream for a payload with embedded defaults.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">QrPayloadData</span></dt>
-        <dt>stream <span class="param-type">Stream</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-renderpam-static-byte-renderpam-string-payload-qreasyoptions-options">
-      <code class="signature">static byte[] RenderPam(string payload, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as PAM.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">string</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-renderpamauto-static-byte-renderpamauto-string-payload-qrpayloaddetectoptions-detectoptions-qreasyoptions-options">
-      <code class="signature">static byte[] RenderPamAuto(string payload, QrPayloadDetectOptions detectOptions, QrEasyOptions options)</code>
-      <p class="member-summary">Detects a payload type and renders a QR code as PAM.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">string</span></dt>
-        <dt>detectOptions <span class="param-type">QrPayloadDetectOptions</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-renderpamtostream-static-void-renderpamtostream-string-payload-stream-stream-qreasyoptions-options">
-      <code class="signature">static void RenderPamToStream(string payload, Stream stream, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as PAM to a stream.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">string</span></dt>
-        <dt>stream <span class="param-type">Stream</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-renderpamtofile-static-string-renderpamtofile-string-payload-string-path-qreasyoptions-options">
-      <code class="signature">static string RenderPamToFile(string payload, string path, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as PAM and writes it to a file.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">string</span></dt>
-        <dt>path <span class="param-type">string</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-renderpamtofile-static-string-renderpamtofile-qrpayloaddata-payload-string-path-qreasyoptions-options">
-      <code class="signature">static string RenderPamToFile(QrPayloadData payload, string path, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as PAM and writes it to a file for a payload with embedded defaults.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">QrPayloadData</span></dt>
-        <dt>path <span class="param-type">string</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-renderpam-static-byte-renderpam-qrpayloaddata-payload-qreasyoptions-options">
-      <code class="signature">static byte[] RenderPam(QrPayloadData payload, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as PAM for a payload with embedded defaults.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">QrPayloadData</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-renderpamtostream-static-void-renderpamtostream-qrpayloaddata-payload-stream-stream-qreasyoptions-options">
-      <code class="signature">static void RenderPamToStream(QrPayloadData payload, Stream stream, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as PAM to a stream for a payload with embedded defaults.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">QrPayloadData</span></dt>
-        <dt>stream <span class="param-type">Stream</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-renderxbm-static-string-renderxbm-string-payload-qreasyoptions-options">
-      <code class="signature">static string RenderXbm(string payload, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as XBM.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">string</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-renderxbmauto-static-string-renderxbmauto-string-payload-qrpayloaddetectoptions-detectoptions-qreasyoptions-options">
-      <code class="signature">static string RenderXbmAuto(string payload, QrPayloadDetectOptions detectOptions, QrEasyOptions options)</code>
-      <p class="member-summary">Detects a payload type and renders a QR code as XBM.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">string</span></dt>
-        <dt>detectOptions <span class="param-type">QrPayloadDetectOptions</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-renderxbmtostream-static-void-renderxbmtostream-string-payload-stream-stream-qreasyoptions-options">
-      <code class="signature">static void RenderXbmToStream(string payload, Stream stream, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as XBM to a stream.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">string</span></dt>
-        <dt>stream <span class="param-type">Stream</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-renderxbmtofile-static-string-renderxbmtofile-string-payload-string-path-qreasyoptions-options">
-      <code class="signature">static string RenderXbmToFile(string payload, string path, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as XBM and writes it to a file.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">string</span></dt>
-        <dt>path <span class="param-type">string</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-renderxbmtofile-static-string-renderxbmtofile-qrpayloaddata-payload-string-path-qreasyoptions-options">
-      <code class="signature">static string RenderXbmToFile(QrPayloadData payload, string path, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as XBM and writes it to a file for a payload with embedded defaults.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">QrPayloadData</span></dt>
-        <dt>path <span class="param-type">string</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-renderxbm-static-string-renderxbm-qrpayloaddata-payload-qreasyoptions-options">
-      <code class="signature">static string RenderXbm(QrPayloadData payload, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as XBM for a payload with embedded defaults.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">QrPayloadData</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-renderxbmtostream-static-void-renderxbmtostream-qrpayloaddata-payload-stream-stream-qreasyoptions-options">
-      <code class="signature">static void RenderXbmToStream(QrPayloadData payload, Stream stream, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as XBM to a stream for a payload with embedded defaults.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">QrPayloadData</span></dt>
-        <dt>stream <span class="param-type">Stream</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-renderxpm-static-string-renderxpm-string-payload-qreasyoptions-options">
-      <code class="signature">static string RenderXpm(string payload, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as XPM.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">string</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-renderxpmauto-static-string-renderxpmauto-string-payload-qrpayloaddetectoptions-detectoptions-qreasyoptions-options">
-      <code class="signature">static string RenderXpmAuto(string payload, QrPayloadDetectOptions detectOptions, QrEasyOptions options)</code>
-      <p class="member-summary">Detects a payload type and renders a QR code as XPM.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">string</span></dt>
-        <dt>detectOptions <span class="param-type">QrPayloadDetectOptions</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-renderxpmtostream-static-void-renderxpmtostream-string-payload-stream-stream-qreasyoptions-options">
-      <code class="signature">static void RenderXpmToStream(string payload, Stream stream, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as XPM to a stream.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">string</span></dt>
-        <dt>stream <span class="param-type">Stream</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-renderxpmtofile-static-string-renderxpmtofile-string-payload-string-path-qreasyoptions-options">
-      <code class="signature">static string RenderXpmToFile(string payload, string path, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as XPM and writes it to a file.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">string</span></dt>
-        <dt>path <span class="param-type">string</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-renderxpmtofile-static-string-renderxpmtofile-qrpayloaddata-payload-string-path-qreasyoptions-options">
-      <code class="signature">static string RenderXpmToFile(QrPayloadData payload, string path, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as XPM and writes it to a file for a payload with embedded defaults.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">QrPayloadData</span></dt>
-        <dt>path <span class="param-type">string</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-renderxpm-static-string-renderxpm-qrpayloaddata-payload-qreasyoptions-options">
-      <code class="signature">static string RenderXpm(QrPayloadData payload, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as XPM for a payload with embedded defaults.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">QrPayloadData</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-renderxpmtostream-static-void-renderxpmtostream-qrpayloaddata-payload-stream-stream-qreasyoptions-options">
-      <code class="signature">static void RenderXpmToStream(QrPayloadData payload, Stream stream, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as XPM to a stream for a payload with embedded defaults.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">QrPayloadData</span></dt>
-        <dt>stream <span class="param-type">Stream</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-rendertga-static-byte-rendertga-string-payload-qreasyoptions-options">
-      <code class="signature">static byte[] RenderTga(string payload, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as TGA.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">string</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-rendertgaauto-static-byte-rendertgaauto-string-payload-qrpayloaddetectoptions-detectoptions-qreasyoptions-options">
-      <code class="signature">static byte[] RenderTgaAuto(string payload, QrPayloadDetectOptions detectOptions, QrEasyOptions options)</code>
-      <p class="member-summary">Detects a payload type and renders a QR code as TGA.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">string</span></dt>
-        <dt>detectOptions <span class="param-type">QrPayloadDetectOptions</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-rendertgatostream-static-void-rendertgatostream-string-payload-stream-stream-qreasyoptions-options">
-      <code class="signature">static void RenderTgaToStream(string payload, Stream stream, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as TGA to a stream.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">string</span></dt>
-        <dt>stream <span class="param-type">Stream</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-rendertgatofile-static-string-rendertgatofile-string-payload-string-path-qreasyoptions-options">
-      <code class="signature">static string RenderTgaToFile(string payload, string path, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as TGA and writes it to a file.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">string</span></dt>
-        <dt>path <span class="param-type">string</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-rendertgatofile-static-string-rendertgatofile-qrpayloaddata-payload-string-path-qreasyoptions-options">
-      <code class="signature">static string RenderTgaToFile(QrPayloadData payload, string path, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as TGA and writes it to a file for a payload with embedded defaults.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">QrPayloadData</span></dt>
-        <dt>path <span class="param-type">string</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-rendertga-static-byte-rendertga-qrpayloaddata-payload-qreasyoptions-options">
-      <code class="signature">static byte[] RenderTga(QrPayloadData payload, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as TGA for a payload with embedded defaults.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">QrPayloadData</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-rendertgatostream-static-void-rendertgatostream-qrpayloaddata-payload-stream-stream-qreasyoptions-options">
-      <code class="signature">static void RenderTgaToStream(QrPayloadData payload, Stream stream, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as TGA to a stream for a payload with embedded defaults.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">QrPayloadData</span></dt>
-        <dt>stream <span class="param-type">Stream</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-renderico-static-byte-renderico-string-payload-qreasyoptions-options">
-      <code class="signature">static byte[] RenderIco(string payload, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as ICO.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">string</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-rendericoauto-static-byte-rendericoauto-string-payload-qrpayloaddetectoptions-detectoptions-qreasyoptions-options">
-      <code class="signature">static byte[] RenderIcoAuto(string payload, QrPayloadDetectOptions detectOptions, QrEasyOptions options)</code>
-      <p class="member-summary">Detects a payload type and renders a QR code as ICO.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">string</span></dt>
-        <dt>detectOptions <span class="param-type">QrPayloadDetectOptions</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-rendericotostream-static-void-rendericotostream-string-payload-stream-stream-qreasyoptions-options">
-      <code class="signature">static void RenderIcoToStream(string payload, Stream stream, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as ICO to a stream.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">string</span></dt>
-        <dt>stream <span class="param-type">Stream</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-rendericotofile-static-string-rendericotofile-string-payload-string-path-qreasyoptions-options">
-      <code class="signature">static string RenderIcoToFile(string payload, string path, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as ICO and writes it to a file.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">string</span></dt>
-        <dt>path <span class="param-type">string</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-rendericotofile-static-string-rendericotofile-qrpayloaddata-payload-string-path-qreasyoptions-options">
-      <code class="signature">static string RenderIcoToFile(QrPayloadData payload, string path, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as ICO and writes it to a file for a payload with embedded defaults.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">QrPayloadData</span></dt>
-        <dt>path <span class="param-type">string</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-renderico-static-byte-renderico-qrpayloaddata-payload-qreasyoptions-options">
-      <code class="signature">static byte[] RenderIco(QrPayloadData payload, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as ICO for a payload with embedded defaults.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">QrPayloadData</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-rendericotostream-static-void-rendericotostream-qrpayloaddata-payload-stream-stream-qreasyoptions-options">
-      <code class="signature">static void RenderIcoToStream(QrPayloadData payload, Stream stream, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as ICO to a stream for a payload with embedded defaults.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">QrPayloadData</span></dt>
-        <dt>stream <span class="param-type">Stream</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-rendersvgz-static-byte-rendersvgz-string-payload-qreasyoptions-options">
-      <code class="signature">static byte[] RenderSvgz(string payload, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as SVGZ.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">string</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-rendersvgzauto-static-byte-rendersvgzauto-string-payload-qrpayloaddetectoptions-detectoptions-qreasyoptions-options">
-      <code class="signature">static byte[] RenderSvgzAuto(string payload, QrPayloadDetectOptions detectOptions, QrEasyOptions options)</code>
-      <p class="member-summary">Detects a payload type and renders a QR code as SVGZ.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">string</span></dt>
-        <dt>detectOptions <span class="param-type">QrPayloadDetectOptions</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-rendersvgztostream-static-void-rendersvgztostream-string-payload-stream-stream-qreasyoptions-options">
-      <code class="signature">static void RenderSvgzToStream(string payload, Stream stream, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as SVGZ to a stream.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">string</span></dt>
-        <dt>stream <span class="param-type">Stream</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-rendersvgztofile-static-string-rendersvgztofile-string-payload-string-path-qreasyoptions-options">
-      <code class="signature">static string RenderSvgzToFile(string payload, string path, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as SVGZ and writes it to a file.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">string</span></dt>
-        <dt>path <span class="param-type">string</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-rendersvgztofile-static-string-rendersvgztofile-qrpayloaddata-payload-string-path-qreasyoptions-options">
-      <code class="signature">static string RenderSvgzToFile(QrPayloadData payload, string path, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as SVGZ and writes it to a file for a payload with embedded defaults.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">QrPayloadData</span></dt>
-        <dt>path <span class="param-type">string</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-rendersvgz-static-byte-rendersvgz-qrpayloaddata-payload-qreasyoptions-options">
-      <code class="signature">static byte[] RenderSvgz(QrPayloadData payload, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as SVGZ for a payload with embedded defaults.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">QrPayloadData</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-rendersvgztostream-static-void-rendersvgztostream-qrpayloaddata-payload-stream-stream-qreasyoptions-options">
-      <code class="signature">static void RenderSvgzToStream(QrPayloadData payload, Stream stream, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as SVGZ to a stream for a payload with embedded defaults.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">QrPayloadData</span></dt>
-        <dt>stream <span class="param-type">Stream</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-renderpdf-static-byte-renderpdf-string-payload-qreasyoptions-options-rendermode-mode">
-      <code class="signature">static byte[] RenderPdf(string payload, QrEasyOptions options, RenderMode mode)</code>
-      <p class="member-summary">Renders a QR code as PDF.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">string</span></dt>
-        <dd>The payload text.</dd>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-        <dd>Optional rendering options.</dd>
-        <dt>mode <span class="param-type">RenderMode</span></dt>
-        <dd>Vector or raster output.</dd>
-      </dl>
-    </div>
-    <div class="member" id="method-renderpdfauto-static-byte-renderpdfauto-string-payload-qrpayloaddetectoptions-detectoptions-qreasyoptions-options-rendermode-mode">
-      <code class="signature">static byte[] RenderPdfAuto(string payload, QrPayloadDetectOptions detectOptions, QrEasyOptions options, RenderMode mode)</code>
-      <p class="member-summary">Detects a payload type and renders a QR code as PDF.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">string</span></dt>
-        <dd>The payload text.</dd>
-        <dt>detectOptions <span class="param-type">QrPayloadDetectOptions</span></dt>
-        <dd>Payload detection options.</dd>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-        <dd>Optional rendering options.</dd>
-        <dt>mode <span class="param-type">RenderMode</span></dt>
-        <dd>Vector or raster output.</dd>
-      </dl>
-    </div>
-    <div class="member" id="method-renderpdftostream-static-void-renderpdftostream-string-payload-stream-stream-qreasyoptions-options-rendermode-mode">
-      <code class="signature">static void RenderPdfToStream(string payload, Stream stream, QrEasyOptions options, RenderMode mode)</code>
-      <p class="member-summary">Renders a QR code as PDF to a stream.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">string</span></dt>
-        <dd>The payload text.</dd>
-        <dt>stream <span class="param-type">Stream</span></dt>
-        <dd>Destination stream.</dd>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-        <dd>Optional rendering options.</dd>
-        <dt>mode <span class="param-type">RenderMode</span></dt>
-        <dd>Vector or raster output.</dd>
-      </dl>
-    </div>
-    <div class="member" id="method-renderpdftofile-static-string-renderpdftofile-string-payload-string-path-qreasyoptions-options-rendermode-mode">
-      <code class="signature">static string RenderPdfToFile(string payload, string path, QrEasyOptions options, RenderMode mode)</code>
-      <p class="member-summary">Renders a QR code as PDF and writes it to a file.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">string</span></dt>
-        <dd>The payload text.</dd>
-        <dt>path <span class="param-type">string</span></dt>
-        <dd>Output file path.</dd>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-        <dd>Optional rendering options.</dd>
-        <dt>mode <span class="param-type">RenderMode</span></dt>
-        <dd>Vector or raster output.</dd>
-      </dl>
-    </div>
-    <div class="member" id="method-renderpdftofile-static-string-renderpdftofile-qrpayloaddata-payload-string-path-qreasyoptions-options-rendermode-mode">
-      <code class="signature">static string RenderPdfToFile(QrPayloadData payload, string path, QrEasyOptions options, RenderMode mode)</code>
-      <p class="member-summary">Renders a QR code as PDF and writes it to a file for a payload with embedded defaults.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">QrPayloadData</span></dt>
-        <dd>The payload text.</dd>
-        <dt>path <span class="param-type">string</span></dt>
-        <dd>Output file path.</dd>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-        <dd>Optional rendering options.</dd>
-        <dt>mode <span class="param-type">RenderMode</span></dt>
-        <dd>Vector or raster output.</dd>
-      </dl>
-    </div>
-    <div class="member" id="method-renderpdf-static-byte-renderpdf-qrpayloaddata-payload-qreasyoptions-options-rendermode-mode">
-      <code class="signature">static byte[] RenderPdf(QrPayloadData payload, QrEasyOptions options, RenderMode mode)</code>
-      <p class="member-summary">Renders a QR code as PDF for a payload with embedded defaults.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">QrPayloadData</span></dt>
-        <dd>The payload text.</dd>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-        <dd>Optional rendering options.</dd>
-        <dt>mode <span class="param-type">RenderMode</span></dt>
-        <dd>Vector or raster output.</dd>
-      </dl>
-    </div>
-    <div class="member" id="method-renderpdftostream-static-void-renderpdftostream-qrpayloaddata-payload-stream-stream-qreasyoptions-options-rendermode-mode">
-      <code class="signature">static void RenderPdfToStream(QrPayloadData payload, Stream stream, QrEasyOptions options, RenderMode mode)</code>
-      <p class="member-summary">Renders a QR code as PDF to a stream for a payload with embedded defaults.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">QrPayloadData</span></dt>
-        <dd>The payload text.</dd>
-        <dt>stream <span class="param-type">Stream</span></dt>
-        <dd>Destination stream.</dd>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-        <dd>Optional rendering options.</dd>
-        <dt>mode <span class="param-type">RenderMode</span></dt>
-        <dd>Vector or raster output.</dd>
-      </dl>
-    </div>
-    <div class="member" id="method-rendereps-static-string-rendereps-string-payload-qreasyoptions-options-rendermode-mode">
-      <code class="signature">static string RenderEps(string payload, QrEasyOptions options, RenderMode mode)</code>
-      <p class="member-summary">Renders a QR code as EPS.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">string</span></dt>
-        <dd>The payload text.</dd>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-        <dd>Optional rendering options.</dd>
-        <dt>mode <span class="param-type">RenderMode</span></dt>
-        <dd>Vector or raster output.</dd>
-      </dl>
-    </div>
-    <div class="member" id="method-renderepsauto-static-string-renderepsauto-string-payload-qrpayloaddetectoptions-detectoptions-qreasyoptions-options-rendermode-mode">
-      <code class="signature">static string RenderEpsAuto(string payload, QrPayloadDetectOptions detectOptions, QrEasyOptions options, RenderMode mode)</code>
-      <p class="member-summary">Detects a payload type and renders a QR code as EPS.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">string</span></dt>
-        <dd>The payload text.</dd>
-        <dt>detectOptions <span class="param-type">QrPayloadDetectOptions</span></dt>
-        <dd>Payload detection options.</dd>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-        <dd>Optional rendering options.</dd>
-        <dt>mode <span class="param-type">RenderMode</span></dt>
-        <dd>Vector or raster output.</dd>
-      </dl>
-    </div>
-    <div class="member" id="method-renderepstostream-static-void-renderepstostream-string-payload-stream-stream-qreasyoptions-options-rendermode-mode">
-      <code class="signature">static void RenderEpsToStream(string payload, Stream stream, QrEasyOptions options, RenderMode mode)</code>
-      <p class="member-summary">Renders a QR code as EPS to a stream.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">string</span></dt>
-        <dd>The payload text.</dd>
-        <dt>stream <span class="param-type">Stream</span></dt>
-        <dd>Destination stream.</dd>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-        <dd>Optional rendering options.</dd>
-        <dt>mode <span class="param-type">RenderMode</span></dt>
-        <dd>Vector or raster output.</dd>
-      </dl>
-    </div>
-    <div class="member" id="method-renderepstofile-static-string-renderepstofile-string-payload-string-path-qreasyoptions-options-rendermode-mode">
-      <code class="signature">static string RenderEpsToFile(string payload, string path, QrEasyOptions options, RenderMode mode)</code>
-      <p class="member-summary">Renders a QR code as EPS and writes it to a file.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">string</span></dt>
-        <dd>The payload text.</dd>
-        <dt>path <span class="param-type">string</span></dt>
-        <dd>Output file path.</dd>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-        <dd>Optional rendering options.</dd>
-        <dt>mode <span class="param-type">RenderMode</span></dt>
-        <dd>Vector or raster output.</dd>
-      </dl>
-    </div>
-    <div class="member" id="method-renderepstofile-static-string-renderepstofile-qrpayloaddata-payload-string-path-qreasyoptions-options-rendermode-mode">
-      <code class="signature">static string RenderEpsToFile(QrPayloadData payload, string path, QrEasyOptions options, RenderMode mode)</code>
-      <p class="member-summary">Renders a QR code as EPS and writes it to a file for a payload with embedded defaults.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">QrPayloadData</span></dt>
-        <dd>The payload text.</dd>
-        <dt>path <span class="param-type">string</span></dt>
-        <dd>Output file path.</dd>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-        <dd>Optional rendering options.</dd>
-        <dt>mode <span class="param-type">RenderMode</span></dt>
-        <dd>Vector or raster output.</dd>
-      </dl>
-    </div>
-    <div class="member" id="method-rendereps-static-string-rendereps-qrpayloaddata-payload-qreasyoptions-options-rendermode-mode">
-      <code class="signature">static string RenderEps(QrPayloadData payload, QrEasyOptions options, RenderMode mode)</code>
-      <p class="member-summary">Renders a QR code as EPS for a payload with embedded defaults.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">QrPayloadData</span></dt>
-        <dd>The payload text.</dd>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-        <dd>Optional rendering options.</dd>
-        <dt>mode <span class="param-type">RenderMode</span></dt>
-        <dd>Vector or raster output.</dd>
-      </dl>
-    </div>
-    <div class="member" id="method-renderepstostream-static-void-renderepstostream-qrpayloaddata-payload-stream-stream-qreasyoptions-options-rendermode-mode">
-      <code class="signature">static void RenderEpsToStream(QrPayloadData payload, Stream stream, QrEasyOptions options, RenderMode mode)</code>
-      <p class="member-summary">Renders a QR code as EPS to a stream for a payload with embedded defaults.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">QrPayloadData</span></dt>
-        <dd>The payload text.</dd>
-        <dt>stream <span class="param-type">Stream</span></dt>
-        <dd>Destination stream.</dd>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-        <dd>Optional rendering options.</dd>
-        <dt>mode <span class="param-type">RenderMode</span></dt>
-        <dd>Vector or raster output.</dd>
-      </dl>
-    </div>
-    <div class="member" id="method-renderascii-static-string-renderascii-string-payload-matrixasciirenderoptions-asciioptions-qreasyoptions-options">
-      <code class="signature">static string RenderAscii(string payload, MatrixAsciiRenderOptions asciiOptions, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as ASCII text.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">string</span></dt>
-        <dt>asciiOptions <span class="param-type">MatrixAsciiRenderOptions</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-renderasciiauto-static-string-renderasciiauto-string-payload-qrpayloaddetectoptions-detectoptions-matrixasciirenderoptions-asciioptions-qreasyoptions-options">
-      <code class="signature">static string RenderAsciiAuto(string payload, QrPayloadDetectOptions detectOptions, MatrixAsciiRenderOptions asciiOptions, QrEasyOptions options)</code>
-      <p class="member-summary">Detects a payload type and renders a QR code as ASCII text.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">string</span></dt>
-        <dt>detectOptions <span class="param-type">QrPayloadDetectOptions</span></dt>
-        <dt>asciiOptions <span class="param-type">MatrixAsciiRenderOptions</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-renderascii-static-string-renderascii-qrpayloaddata-payload-matrixasciirenderoptions-asciioptions-qreasyoptions-options">
-      <code class="signature">static string RenderAscii(QrPayloadData payload, MatrixAsciiRenderOptions asciiOptions, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code as ASCII text for a payload with embedded defaults.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">QrPayloadData</span></dt>
-        <dt>asciiOptions <span class="param-type">MatrixAsciiRenderOptions</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-renderpixels-static-byte-renderpixels-string-payload-out-int-widthpx-out-int-heightpx-out-int-stride-qreasyoptions-options">
-      <code class="signature">static byte[] RenderPixels(string payload, out int widthPx, out int heightPx, out int stride, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code to a raw RGBA pixel buffer (no PNG encoding).</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">string</span></dt>
-        <dt>widthPx <span class="param-type">int</span></dt>
-        <dt>heightPx <span class="param-type">int</span></dt>
-        <dt>stride <span class="param-type">int</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-renderpixels-static-byte-renderpixels-qrpayloaddata-payload-out-int-widthpx-out-int-heightpx-out-int-stride-qreasyoptions-options">
-      <code class="signature">static byte[] RenderPixels(QrPayloadData payload, out int widthPx, out int heightPx, out int stride, QrEasyOptions options)</code>
-      <p class="member-summary">Renders a QR code to a raw RGBA pixel buffer (no PNG encoding) for a payload with embedded defaults.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">QrPayloadData</span></dt>
-        <dt>widthPx <span class="param-type">int</span></dt>
-        <dt>heightPx <span class="param-type">int</span></dt>
-        <dt>stride <span class="param-type">int</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-  </section>
-</main>
+    <section class="pf-api-section">
+      <h2>Methods</h2>
+      <ul>
+        <li>
+          <strong>Encode</strong> - Encodes a payload into a with defaults.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>EncodeAuto</strong> - Detects a payload type and encodes it into a .
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (CodeGlyphX.Payloads.QrPayloadDetectOptions)</li>
+              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>Encode</strong> - Encodes a payload with embedded defaults.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>arg2</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>EvaluateSafety</strong> - Evaluates QR art safety for a payload and options.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>EvaluateSafety</strong> - Evaluates QR art safety for a payload with embedded defaults.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>arg2</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderPng</strong> - Renders a QR code as PNG.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderPngAuto</strong> - Detects a payload type and renders a QR code as PNG.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (CodeGlyphX.Payloads.QrPayloadDetectOptions)</li>
+              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderPngToStream</strong> - Renders a QR code as PNG to a stream.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (System.IO.Stream)</li>
+              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderPngToFile</strong> - Renders a QR code as PNG and writes it to a file.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>payload</code> (System.String): Payload text.</li>
+              <li><code>path</code> (System.String): Output file path.</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions): Optional rendering options.</li>
+            </ul>
+          </div>
+          <div class="pf-api-returns">Returns: The output file path.</div>
+        </li>
+        <li>
+          <strong>RenderPngToFile</strong> - Renders a QR code as PNG and writes it to a file for a payload with embedded defaults.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>payload</code> (CodeGlyphX.Payloads.QrPayloadData): Payload with embedded defaults.</li>
+              <li><code>path</code> (System.String): Output file path.</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions): Optional rendering options.</li>
+            </ul>
+          </div>
+          <div class="pf-api-returns">Returns: The output file path.</div>
+        </li>
+        <li>
+          <strong>RenderPng</strong> - Renders a QR code as PNG for a payload with embedded defaults.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>arg2</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderPngToStream</strong> - Renders a QR code as PNG to a stream for a payload with embedded defaults.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>arg2</code> (System.IO.Stream)</li>
+              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderSvg</strong> - Renders a QR code as SVG.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderSvgAuto</strong> - Detects a payload type and renders a QR code as SVG.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (CodeGlyphX.Payloads.QrPayloadDetectOptions)</li>
+              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderSvgToFile</strong> - Renders a QR code as SVG and writes it to a file.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>payload</code> (System.String): Payload text.</li>
+              <li><code>path</code> (System.String): Output file path.</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions): Optional rendering options.</li>
+            </ul>
+          </div>
+          <div class="pf-api-returns">Returns: The output file path.</div>
+        </li>
+        <li>
+          <strong>RenderSvgToFile</strong> - Renders a QR code as SVG and writes it to a file for a payload with embedded defaults.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>payload</code> (CodeGlyphX.Payloads.QrPayloadData): Payload with embedded defaults.</li>
+              <li><code>path</code> (System.String): Output file path.</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions): Optional rendering options.</li>
+            </ul>
+          </div>
+          <div class="pf-api-returns">Returns: The output file path.</div>
+        </li>
+        <li>
+          <strong>RenderSvg</strong> - Renders a QR code as SVG for a payload with embedded defaults.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>arg2</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderHtml</strong> - Renders a QR code as HTML (table-based).
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderHtmlAuto</strong> - Detects a payload type and renders a QR code as HTML.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (CodeGlyphX.Payloads.QrPayloadDetectOptions)</li>
+              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderHtmlToFile</strong> - Renders a QR code as HTML and writes it to a file.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>payload</code> (System.String): Payload text.</li>
+              <li><code>path</code> (System.String): Output file path.</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions): Optional rendering options.</li>
+            </ul>
+          </div>
+          <div class="pf-api-returns">Returns: The output file path.</div>
+        </li>
+        <li>
+          <strong>RenderHtmlToFile</strong> - Renders a QR code as HTML and writes it to a file for a payload with embedded defaults.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>payload</code> (CodeGlyphX.Payloads.QrPayloadData): Payload with embedded defaults.</li>
+              <li><code>path</code> (System.String): Output file path.</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions): Optional rendering options.</li>
+            </ul>
+          </div>
+          <div class="pf-api-returns">Returns: The output file path.</div>
+        </li>
+        <li>
+          <strong>RenderHtml</strong> - Renders a QR code as HTML for a payload with embedded defaults.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>arg2</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderJpeg</strong> - Renders a QR code as JPEG.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderWebp</strong> - Renders a QR code as WebP.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderJpegAuto</strong> - Detects a payload type and renders a QR code as JPEG.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (CodeGlyphX.Payloads.QrPayloadDetectOptions)</li>
+              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderWebpAuto</strong> - Detects a payload type and renders a QR code as WebP.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (CodeGlyphX.Payloads.QrPayloadDetectOptions)</li>
+              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderJpegToStream</strong> - Renders a QR code as JPEG to a stream.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (System.IO.Stream)</li>
+              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderWebpToStream</strong> - Renders a QR code as WebP to a stream.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (System.IO.Stream)</li>
+              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderJpegToFile</strong> - Renders a QR code as JPEG and writes it to a file.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>payload</code> (System.String): Payload text.</li>
+              <li><code>path</code> (System.String): Output file path.</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions): Optional rendering options.</li>
+            </ul>
+          </div>
+          <div class="pf-api-returns">Returns: The output file path.</div>
+        </li>
+        <li>
+          <strong>RenderWebpToFile</strong> - Renders a QR code as WebP and writes it to a file.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>payload</code> (System.String): Payload text.</li>
+              <li><code>path</code> (System.String): Output file path.</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions): Optional rendering options.</li>
+            </ul>
+          </div>
+          <div class="pf-api-returns">Returns: The output file path.</div>
+        </li>
+        <li>
+          <strong>RenderJpegToFile</strong> - Renders a QR code as JPEG and writes it to a file for a payload with embedded defaults.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>payload</code> (CodeGlyphX.Payloads.QrPayloadData): Payload with embedded defaults.</li>
+              <li><code>path</code> (System.String): Output file path.</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions): Optional rendering options.</li>
+            </ul>
+          </div>
+          <div class="pf-api-returns">Returns: The output file path.</div>
+        </li>
+        <li>
+          <strong>RenderWebpToFile</strong> - Renders a QR code as WebP and writes it to a file for a payload with embedded defaults.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>payload</code> (CodeGlyphX.Payloads.QrPayloadData): Payload with embedded defaults.</li>
+              <li><code>path</code> (System.String): Output file path.</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions): Optional rendering options.</li>
+            </ul>
+          </div>
+          <div class="pf-api-returns">Returns: The output file path.</div>
+        </li>
+        <li>
+          <strong>RenderJpeg</strong> - Renders a QR code as JPEG for a payload with embedded defaults.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>arg2</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderWebp</strong> - Renders a QR code as WebP for a payload with embedded defaults.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>arg2</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderJpegToStream</strong> - Renders a QR code as JPEG to a stream for a payload with embedded defaults.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>arg2</code> (System.IO.Stream)</li>
+              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderWebpToStream</strong> - Renders a QR code as WebP to a stream for a payload with embedded defaults.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>arg2</code> (System.IO.Stream)</li>
+              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderBmp</strong> - Renders a QR code as BMP.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderBmpAuto</strong> - Detects a payload type and renders a QR code as BMP.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (CodeGlyphX.Payloads.QrPayloadDetectOptions)</li>
+              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderBmpToStream</strong> - Renders a QR code as BMP to a stream.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (System.IO.Stream)</li>
+              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderBmpToFile</strong> - Renders a QR code as BMP and writes it to a file.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (System.String)</li>
+              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderBmpToFile</strong> - Renders a QR code as BMP and writes it to a file for a payload with embedded defaults.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>arg2</code> (System.String)</li>
+              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderBmp</strong> - Renders a QR code as BMP for a payload with embedded defaults.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>arg2</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderBmpToStream</strong> - Renders a QR code as BMP to a stream for a payload with embedded defaults.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>arg2</code> (System.IO.Stream)</li>
+              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderPpm</strong> - Renders a QR code as PPM.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderPpmAuto</strong> - Detects a payload type and renders a QR code as PPM.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (CodeGlyphX.Payloads.QrPayloadDetectOptions)</li>
+              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderPpmToStream</strong> - Renders a QR code as PPM to a stream.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (System.IO.Stream)</li>
+              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderPpmToFile</strong> - Renders a QR code as PPM and writes it to a file.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (System.String)</li>
+              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderPpmToFile</strong> - Renders a QR code as PPM and writes it to a file for a payload with embedded defaults.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>arg2</code> (System.String)</li>
+              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderPpm</strong> - Renders a QR code as PPM for a payload with embedded defaults.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>arg2</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderPpmToStream</strong> - Renders a QR code as PPM to a stream for a payload with embedded defaults.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>arg2</code> (System.IO.Stream)</li>
+              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderPbm</strong> - Renders a QR code as PBM.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderPbmAuto</strong> - Detects a payload type and renders a QR code as PBM.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (CodeGlyphX.Payloads.QrPayloadDetectOptions)</li>
+              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderPbmToStream</strong> - Renders a QR code as PBM to a stream.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (System.IO.Stream)</li>
+              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderPbmToFile</strong> - Renders a QR code as PBM and writes it to a file.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (System.String)</li>
+              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderPbmToFile</strong> - Renders a QR code as PBM and writes it to a file for a payload with embedded defaults.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>arg2</code> (System.String)</li>
+              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderPbm</strong> - Renders a QR code as PBM for a payload with embedded defaults.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>arg2</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderPbmToStream</strong> - Renders a QR code as PBM to a stream for a payload with embedded defaults.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>arg2</code> (System.IO.Stream)</li>
+              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderPgm</strong> - Renders a QR code as PGM.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderPgmAuto</strong> - Detects a payload type and renders a QR code as PGM.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (CodeGlyphX.Payloads.QrPayloadDetectOptions)</li>
+              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderPgmToStream</strong> - Renders a QR code as PGM to a stream.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (System.IO.Stream)</li>
+              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderPgmToFile</strong> - Renders a QR code as PGM and writes it to a file.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (System.String)</li>
+              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderPgmToFile</strong> - Renders a QR code as PGM and writes it to a file for a payload with embedded defaults.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>arg2</code> (System.String)</li>
+              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderPgm</strong> - Renders a QR code as PGM for a payload with embedded defaults.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>arg2</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderPgmToStream</strong> - Renders a QR code as PGM to a stream for a payload with embedded defaults.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>arg2</code> (System.IO.Stream)</li>
+              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderPam</strong> - Renders a QR code as PAM.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderPamAuto</strong> - Detects a payload type and renders a QR code as PAM.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (CodeGlyphX.Payloads.QrPayloadDetectOptions)</li>
+              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderPamToStream</strong> - Renders a QR code as PAM to a stream.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (System.IO.Stream)</li>
+              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderPamToFile</strong> - Renders a QR code as PAM and writes it to a file.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (System.String)</li>
+              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderPamToFile</strong> - Renders a QR code as PAM and writes it to a file for a payload with embedded defaults.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>arg2</code> (System.String)</li>
+              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderPam</strong> - Renders a QR code as PAM for a payload with embedded defaults.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>arg2</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderPamToStream</strong> - Renders a QR code as PAM to a stream for a payload with embedded defaults.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>arg2</code> (System.IO.Stream)</li>
+              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderXbm</strong> - Renders a QR code as XBM.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderXbmAuto</strong> - Detects a payload type and renders a QR code as XBM.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (CodeGlyphX.Payloads.QrPayloadDetectOptions)</li>
+              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderXbmToStream</strong> - Renders a QR code as XBM to a stream.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (System.IO.Stream)</li>
+              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderXbmToFile</strong> - Renders a QR code as XBM and writes it to a file.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (System.String)</li>
+              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderXbmToFile</strong> - Renders a QR code as XBM and writes it to a file for a payload with embedded defaults.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>arg2</code> (System.String)</li>
+              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderXbm</strong> - Renders a QR code as XBM for a payload with embedded defaults.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>arg2</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderXbmToStream</strong> - Renders a QR code as XBM to a stream for a payload with embedded defaults.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>arg2</code> (System.IO.Stream)</li>
+              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderXpm</strong> - Renders a QR code as XPM.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderXpmAuto</strong> - Detects a payload type and renders a QR code as XPM.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (CodeGlyphX.Payloads.QrPayloadDetectOptions)</li>
+              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderXpmToStream</strong> - Renders a QR code as XPM to a stream.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (System.IO.Stream)</li>
+              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderXpmToFile</strong> - Renders a QR code as XPM and writes it to a file.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (System.String)</li>
+              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderXpmToFile</strong> - Renders a QR code as XPM and writes it to a file for a payload with embedded defaults.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>arg2</code> (System.String)</li>
+              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderXpm</strong> - Renders a QR code as XPM for a payload with embedded defaults.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>arg2</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderXpmToStream</strong> - Renders a QR code as XPM to a stream for a payload with embedded defaults.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>arg2</code> (System.IO.Stream)</li>
+              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderTga</strong> - Renders a QR code as TGA.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderTgaAuto</strong> - Detects a payload type and renders a QR code as TGA.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (CodeGlyphX.Payloads.QrPayloadDetectOptions)</li>
+              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderTgaToStream</strong> - Renders a QR code as TGA to a stream.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (System.IO.Stream)</li>
+              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderTgaToFile</strong> - Renders a QR code as TGA and writes it to a file.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (System.String)</li>
+              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderTgaToFile</strong> - Renders a QR code as TGA and writes it to a file for a payload with embedded defaults.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>arg2</code> (System.String)</li>
+              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderTga</strong> - Renders a QR code as TGA for a payload with embedded defaults.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>arg2</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderTgaToStream</strong> - Renders a QR code as TGA to a stream for a payload with embedded defaults.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>arg2</code> (System.IO.Stream)</li>
+              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderIco</strong> - Renders a QR code as ICO.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderIcoAuto</strong> - Detects a payload type and renders a QR code as ICO.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (CodeGlyphX.Payloads.QrPayloadDetectOptions)</li>
+              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderIcoToStream</strong> - Renders a QR code as ICO to a stream.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (System.IO.Stream)</li>
+              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderIcoToFile</strong> - Renders a QR code as ICO and writes it to a file.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (System.String)</li>
+              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderIcoToFile</strong> - Renders a QR code as ICO and writes it to a file for a payload with embedded defaults.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>arg2</code> (System.String)</li>
+              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderIco</strong> - Renders a QR code as ICO for a payload with embedded defaults.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>arg2</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderIcoToStream</strong> - Renders a QR code as ICO to a stream for a payload with embedded defaults.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>arg2</code> (System.IO.Stream)</li>
+              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderSvgz</strong> - Renders a QR code as SVGZ.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderSvgzAuto</strong> - Detects a payload type and renders a QR code as SVGZ.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (CodeGlyphX.Payloads.QrPayloadDetectOptions)</li>
+              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderSvgzToStream</strong> - Renders a QR code as SVGZ to a stream.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (System.IO.Stream)</li>
+              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderSvgzToFile</strong> - Renders a QR code as SVGZ and writes it to a file.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (System.String)</li>
+              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderSvgzToFile</strong> - Renders a QR code as SVGZ and writes it to a file for a payload with embedded defaults.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>arg2</code> (System.String)</li>
+              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderSvgz</strong> - Renders a QR code as SVGZ for a payload with embedded defaults.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>arg2</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderSvgzToStream</strong> - Renders a QR code as SVGZ to a stream for a payload with embedded defaults.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>arg2</code> (System.IO.Stream)</li>
+              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderPdf</strong> - Renders a QR code as PDF.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>payload</code> (System.String): The payload text.</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions): Optional rendering options.</li>
+              <li><code>mode</code> (CodeGlyphX.Rendering.RenderMode): Vector or raster output.</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderPdfAuto</strong> - Detects a payload type and renders a QR code as PDF.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>payload</code> (System.String): The payload text.</li>
+              <li><code>detectOptions</code> (CodeGlyphX.Payloads.QrPayloadDetectOptions): Payload detection options.</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions): Optional rendering options.</li>
+              <li><code>mode</code> (CodeGlyphX.Rendering.RenderMode): Vector or raster output.</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderPdfToStream</strong> - Renders a QR code as PDF to a stream.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>payload</code> (System.String): The payload text.</li>
+              <li><code>stream</code> (System.IO.Stream): Destination stream.</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions): Optional rendering options.</li>
+              <li><code>mode</code> (CodeGlyphX.Rendering.RenderMode): Vector or raster output.</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderPdfToFile</strong> - Renders a QR code as PDF and writes it to a file.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>payload</code> (System.String): The payload text.</li>
+              <li><code>path</code> (System.String): Output file path.</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions): Optional rendering options.</li>
+              <li><code>mode</code> (CodeGlyphX.Rendering.RenderMode): Vector or raster output.</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderPdfToFile</strong> - Renders a QR code as PDF and writes it to a file for a payload with embedded defaults.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>payload</code> (CodeGlyphX.Payloads.QrPayloadData): The payload text.</li>
+              <li><code>path</code> (System.String): Output file path.</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions): Optional rendering options.</li>
+              <li><code>mode</code> (CodeGlyphX.Rendering.RenderMode): Vector or raster output.</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderPdf</strong> - Renders a QR code as PDF for a payload with embedded defaults.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>payload</code> (CodeGlyphX.Payloads.QrPayloadData): The payload text.</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions): Optional rendering options.</li>
+              <li><code>mode</code> (CodeGlyphX.Rendering.RenderMode): Vector or raster output.</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderPdfToStream</strong> - Renders a QR code as PDF to a stream for a payload with embedded defaults.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>payload</code> (CodeGlyphX.Payloads.QrPayloadData): The payload text.</li>
+              <li><code>stream</code> (System.IO.Stream): Destination stream.</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions): Optional rendering options.</li>
+              <li><code>mode</code> (CodeGlyphX.Rendering.RenderMode): Vector or raster output.</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderEps</strong> - Renders a QR code as EPS.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>payload</code> (System.String): The payload text.</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions): Optional rendering options.</li>
+              <li><code>mode</code> (CodeGlyphX.Rendering.RenderMode): Vector or raster output.</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderEpsAuto</strong> - Detects a payload type and renders a QR code as EPS.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>payload</code> (System.String): The payload text.</li>
+              <li><code>detectOptions</code> (CodeGlyphX.Payloads.QrPayloadDetectOptions): Payload detection options.</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions): Optional rendering options.</li>
+              <li><code>mode</code> (CodeGlyphX.Rendering.RenderMode): Vector or raster output.</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderEpsToStream</strong> - Renders a QR code as EPS to a stream.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>payload</code> (System.String): The payload text.</li>
+              <li><code>stream</code> (System.IO.Stream): Destination stream.</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions): Optional rendering options.</li>
+              <li><code>mode</code> (CodeGlyphX.Rendering.RenderMode): Vector or raster output.</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderEpsToFile</strong> - Renders a QR code as EPS and writes it to a file.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>payload</code> (System.String): The payload text.</li>
+              <li><code>path</code> (System.String): Output file path.</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions): Optional rendering options.</li>
+              <li><code>mode</code> (CodeGlyphX.Rendering.RenderMode): Vector or raster output.</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderEpsToFile</strong> - Renders a QR code as EPS and writes it to a file for a payload with embedded defaults.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>payload</code> (CodeGlyphX.Payloads.QrPayloadData): The payload text.</li>
+              <li><code>path</code> (System.String): Output file path.</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions): Optional rendering options.</li>
+              <li><code>mode</code> (CodeGlyphX.Rendering.RenderMode): Vector or raster output.</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderEps</strong> - Renders a QR code as EPS for a payload with embedded defaults.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>payload</code> (CodeGlyphX.Payloads.QrPayloadData): The payload text.</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions): Optional rendering options.</li>
+              <li><code>mode</code> (CodeGlyphX.Rendering.RenderMode): Vector or raster output.</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderEpsToStream</strong> - Renders a QR code as EPS to a stream for a payload with embedded defaults.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>payload</code> (CodeGlyphX.Payloads.QrPayloadData): The payload text.</li>
+              <li><code>stream</code> (System.IO.Stream): Destination stream.</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions): Optional rendering options.</li>
+              <li><code>mode</code> (CodeGlyphX.Rendering.RenderMode): Vector or raster output.</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderAscii</strong> - Renders a QR code as ASCII text.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions)</li>
+              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderAsciiAuto</strong> - Detects a payload type and renders a QR code as ASCII text.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (CodeGlyphX.Payloads.QrPayloadDetectOptions)</li>
+              <li><code>arg3</code> (CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions)</li>
+              <li><code>arg4</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderAscii</strong> - Renders a QR code as ASCII text for a payload with embedded defaults.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>arg2</code> (CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions)</li>
+              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderAsciiConsole</strong> - Renders a QR code as console-friendly ASCII using scan-oriented defaults.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (System.Int32)</li>
+              <li><code>arg3</code> (System.Boolean)</li>
+              <li><code>arg4</code> (System.Boolean)</li>
+              <li><code>arg5</code> (System.Nullable{CodeGlyphX.Rendering.Png.Rgba32})</li>
+              <li><code>arg6</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderAsciiConsole</strong> - Renders a QR code as console-friendly ASCII using scan-oriented defaults for a payload with embedded defaults.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>arg2</code> (System.Int32)</li>
+              <li><code>arg3</code> (System.Boolean)</li>
+              <li><code>arg4</code> (System.Boolean)</li>
+              <li><code>arg5</code> (System.Nullable{CodeGlyphX.Rendering.Png.Rgba32})</li>
+              <li><code>arg6</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderPixels</strong> - Renders a QR code to a raw RGBA pixel buffer (no PNG encoding).
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (System.Int32@)</li>
+              <li><code>arg3</code> (System.Int32@)</li>
+              <li><code>arg4</code> (System.Int32@)</li>
+              <li><code>arg5</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderPixels</strong> - Renders a QR code to a raw RGBA pixel buffer (no PNG encoding) for a payload with embedded defaults.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>arg2</code> (System.Int32@)</li>
+              <li><code>arg3</code> (System.Int32@)</li>
+              <li><code>arg4</code> (System.Int32@)</li>
+              <li><code>arg5</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+      </ul>
+    </section>
+  </main>
 <footer class="footer">
     <div class="footer-content">
         <div class="footer-brand">
@@ -1351,20 +1360,21 @@
                 <h3>Product</h3>
                 <a href="/">Home</a>
                 <a href="/playground/">Playground</a>
-                <a href="/docs/">Documentation</a>
+                <a href="/docs/">Docs</a>
+                <a href="/benchmarks/">Benchmarks</a>
                 <a href="/showcase/">Showcase</a>
             </div>
             <div class="footer-section">
                 <h3>Resources</h3>
                 <a href="/faq/">FAQ</a>
-                <a href="https://www.nuget.org/packages/CodeGlyphX" target="_blank" rel="noopener">NuGet Package</a>
-                <a href="https://github.com/EvotecIT/CodeGlyphX" target="_blank" rel="noopener">GitHub Repository</a>
-                <a href="https://github.com/EvotecIT/CodeGlyphX/issues" target="_blank" rel="noopener">Report Issue</a>
+                <a href="https://www.nuget.org/packages/CodeGlyphX" target="_blank" rel="noopener" aria-label="NuGet Package (opens in new tab)">NuGet Package</a>
+                <a href="https://github.com/EvotecIT/CodeGlyphX" target="_blank" rel="noopener" aria-label="GitHub Repository (opens in new tab)">GitHub Repository</a>
+                <a href="https://github.com/EvotecIT/CodeGlyphX/issues" target="_blank" rel="noopener" aria-label="Report Issue (opens in new tab)">Report Issue</a>
             </div>
             <div class="footer-section">
                 <h3>Company</h3>
-                <a href="https://evotec.xyz" target="_blank" rel="noopener">Evotec Services</a>
-                <a href="https://evotec.xyz/hub" target="_blank" rel="noopener">Blog</a>
+                <a href="https://evotec.xyz" target="_blank" rel="noopener" aria-label="Evotec Services (opens in new tab)">Evotec Services</a>
+                <a href="https://evotec.xyz/hub" target="_blank" rel="noopener" aria-label="Blog (opens in new tab)">Blog</a>
             </div>
         </div>
         <div class="footer-bottom">
@@ -1381,7 +1391,5 @@
     </div>
 </footer>
 <script src="/js/site.js"></script>
-
-  </div>
 </body>
 </html>

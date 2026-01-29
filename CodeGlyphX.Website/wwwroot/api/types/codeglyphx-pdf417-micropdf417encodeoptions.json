@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "MicroPdf417EncodeOptions",
   "fullName": "CodeGlyphX.Pdf417.MicroPdf417EncodeOptions",
   "namespace": "CodeGlyphX.Pdf417",
@@ -6,78 +6,25 @@
   "slug": "codeglyphx-pdf417-micropdf417encodeoptions",
   "summary": "Options for MicroPDF417 encoding.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
-    {
-      "name": "MicroPdf417EncodeOptions",
-      "kind": "Constructor",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "MicroPdf417EncodeOptions()",
-      "xmlId": "M:CodeGlyphX.Pdf417.MicroPdf417EncodeOptions.#ctor",
-      "anchor": "constructor-micropdf417encodeoptions-micropdf417encodeoptions"
-    },
+  "methods": [],
+  "properties": [
     {
       "name": "Columns",
-      "kind": "Property",
-      "summary": "Fixed number of data columns (1..4). Leave null to auto-select.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "Nullable\u003Cint\u003E Columns {get; set; }",
-      "xmlId": "P:CodeGlyphX.Pdf417.MicroPdf417EncodeOptions.Columns",
-      "anchor": "property-columns-nullable-int-columns-get-set"
+      "summary": "Fixed number of data columns (1..4). Leave null to auto-select."
     },
     {
       "name": "Rows",
-      "kind": "Property",
-      "summary": "Fixed number of rows (4..44). Leave null to auto-select.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "Nullable\u003Cint\u003E Rows {get; set; }",
-      "xmlId": "P:CodeGlyphX.Pdf417.MicroPdf417EncodeOptions.Rows",
-      "anchor": "property-rows-nullable-int-rows-get-set"
+      "summary": "Fixed number of rows (4..44). Leave null to auto-select."
     },
     {
       "name": "Compaction",
-      "kind": "Property",
-      "summary": "High-level compaction mode.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "Pdf417Compaction Compaction {get; set; }",
-      "xmlId": "P:CodeGlyphX.Pdf417.MicroPdf417EncodeOptions.Compaction",
-      "anchor": "property-compaction-pdf417compaction-compaction-get-set"
+      "summary": "High-level compaction mode."
     },
     {
       "name": "TextEncoding",
-      "kind": "Property",
-      "summary": "Text encoding used for byte compaction.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "Encoding TextEncoding {get; set; }",
-      "xmlId": "P:CodeGlyphX.Pdf417.MicroPdf417EncodeOptions.TextEncoding",
-      "anchor": "property-textencoding-encoding-textencoding-get-set"
+      "summary": "Text encoding used for byte compaction."
     }
-  ]
+  ],
+  "fields": [],
+  "events": []
 }

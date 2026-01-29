@@ -1,69 +1,26 @@
-{
+﻿{
   "name": "ReferenceType",
   "fullName": "CodeGlyphX.Payloads.SwissQrCodePayload.Reference.ReferenceType",
-  "namespace": "CodeGlyphX.Payloads",
-  "kind": "Enum",
+  "namespace": "CodeGlyphX.Payloads.SwissQrCodePayload.Reference",
+  "kind": "Class",
   "slug": "codeglyphx-payloads-swissqrcodepayload-reference-referencetype",
   "summary": "Reference type.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
-    {
-      "name": "value__",
-      "kind": "Field",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int value__",
-      "xmlId": "F:CodeGlyphX.Payloads.SwissQrCodePayload.Reference.ReferenceType.value__",
-      "anchor": "field-value-int-value"
-    },
+  "methods": [],
+  "properties": [],
+  "fields": [
     {
       "name": "QRR",
-      "kind": "Field",
-      "summary": "QR reference (QRR).",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "SwissQrCodePayload.Reference.ReferenceType QRR",
-      "xmlId": "F:CodeGlyphX.Payloads.SwissQrCodePayload.Reference.ReferenceType.QRR",
-      "anchor": "field-qrr-swissqrcodepayload-reference-referencetype-qrr"
+      "summary": "QR reference (QRR)."
     },
     {
       "name": "SCOR",
-      "kind": "Field",
-      "summary": "Creditor reference (SCOR).",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "SwissQrCodePayload.Reference.ReferenceType SCOR",
-      "xmlId": "F:CodeGlyphX.Payloads.SwissQrCodePayload.Reference.ReferenceType.SCOR",
-      "anchor": "field-scor-swissqrcodepayload-reference-referencetype-scor"
+      "summary": "Creditor reference (SCOR)."
     },
     {
       "name": "NON",
-      "kind": "Field",
-      "summary": "No reference (NON).",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "SwissQrCodePayload.Reference.ReferenceType NON",
-      "xmlId": "F:CodeGlyphX.Payloads.SwissQrCodePayload.Reference.ReferenceType.NON",
-      "anchor": "field-non-swissqrcodepayload-reference-referencetype-non"
+      "summary": "No reference (NON)."
     }
-  ]
+  ],
+  "events": []
 }

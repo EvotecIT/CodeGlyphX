@@ -1,55 +1,22 @@
-{
+﻿{
   "name": "PixelFormat",
   "fullName": "CodeGlyphX.PixelFormat",
   "namespace": "CodeGlyphX",
-  "kind": "Enum",
+  "kind": "Class",
   "slug": "codeglyphx-pixelformat",
   "summary": "Supported raw pixel formats for QR decoding.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
-    {
-      "name": "value__",
-      "kind": "Field",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int value__",
-      "xmlId": "F:CodeGlyphX.PixelFormat.value__",
-      "anchor": "field-value-int-value"
-    },
+  "methods": [],
+  "properties": [],
+  "fields": [
     {
       "name": "Bgra32",
-      "kind": "Field",
-      "summary": "4 bytes per pixel: B, G, R, A.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "PixelFormat Bgra32",
-      "xmlId": "F:CodeGlyphX.PixelFormat.Bgra32",
-      "anchor": "field-bgra32-pixelformat-bgra32"
+      "summary": "4 bytes per pixel: B, G, R, A."
     },
     {
       "name": "Rgba32",
-      "kind": "Field",
-      "summary": "4 bytes per pixel: R, G, B, A.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "PixelFormat Rgba32",
-      "xmlId": "F:CodeGlyphX.PixelFormat.Rgba32",
-      "anchor": "field-rgba32-pixelformat-rgba32"
+      "summary": "4 bytes per pixel: R, G, B, A."
     }
-  ]
+  ],
+  "events": []
 }

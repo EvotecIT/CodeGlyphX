@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "QrEasy",
   "fullName": "CodeGlyphX.QrEasy",
   "namespace": "CodeGlyphX",
@@ -6,3469 +6,2738 @@
   "slug": "codeglyphx-qreasy",
   "summary": "One-line QR generation helpers with sane defaults.",
   "remarks": null,
-  "examples": [
-    {
-      "title": "EXAMPLE 1",
-      "code": "\n            using CodeGlyphX;\n            var png = QrEasy.RenderPng(\u0022https://example.com\u0022);\n            var svg = QrEasy.RenderSvg(\u0022https://example.com\u0022);",
-      "remarks": null
-    }
-  ],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
       "name": "Encode",
-      "kind": "Method",
-      "summary": "Encodes a payload into a CodeGlyphX.QrCode with defaults.",
-      "remarks": null,
+      "summary": "Encodes a payload into a with defaults.",
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static QrCode Encode(string payload, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.Encode(System.String,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-encode-static-qrcode-encode-string-payload-qreasyoptions-options"
+      ]
     },
     {
       "name": "EncodeAuto",
-      "kind": "Method",
-      "summary": "Detects a payload type and encodes it into a CodeGlyphX.QrCode.",
-      "remarks": null,
+      "summary": "Detects a payload type and encodes it into a .",
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "detectOptions",
-          "type": "QrPayloadDetectOptions",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.Payloads.QrPayloadDetectOptions",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static QrCode EncodeAuto(string payload, QrPayloadDetectOptions detectOptions, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.EncodeAuto(System.String,CodeGlyphX.Payloads.QrPayloadDetectOptions,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-encodeauto-static-qrcode-encodeauto-string-payload-qrpayloaddetectoptions-detectoptions-qreasyoptions-options"
+      ]
     },
     {
       "name": "Encode",
-      "kind": "Method",
       "summary": "Encodes a payload with embedded defaults.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "QrPayloadData",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.Payloads.QrPayloadData",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static QrCode Encode(QrPayloadData payload, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.Encode(CodeGlyphX.Payloads.QrPayloadData,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-encode-static-qrcode-encode-qrpayloaddata-payload-qreasyoptions-options"
+      ]
     },
     {
       "name": "EvaluateSafety",
-      "kind": "Method",
       "summary": "Evaluates QR art safety for a payload and options.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static QrArtSafetyReport EvaluateSafety(string payload, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.EvaluateSafety(System.String,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-evaluatesafety-static-qrartsafetyreport-evaluatesafety-string-payload-qreasyoptions-options"
+      ]
     },
     {
       "name": "EvaluateSafety",
-      "kind": "Method",
       "summary": "Evaluates QR art safety for a payload with embedded defaults.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "QrPayloadData",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.Payloads.QrPayloadData",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static QrArtSafetyReport EvaluateSafety(QrPayloadData payload, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.EvaluateSafety(CodeGlyphX.Payloads.QrPayloadData,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-evaluatesafety-static-qrartsafetyreport-evaluatesafety-qrpayloaddata-payload-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderPng",
-      "kind": "Method",
       "summary": "Renders a QR code as PNG.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static byte[] RenderPng(string payload, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderPng(System.String,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-renderpng-static-byte-renderpng-string-payload-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderPngAuto",
-      "kind": "Method",
       "summary": "Detects a payload type and renders a QR code as PNG.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "detectOptions",
-          "type": "QrPayloadDetectOptions",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.Payloads.QrPayloadDetectOptions",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static byte[] RenderPngAuto(string payload, QrPayloadDetectOptions detectOptions, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderPngAuto(System.String,CodeGlyphX.Payloads.QrPayloadDetectOptions,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-renderpngauto-static-byte-renderpngauto-string-payload-qrpayloaddetectoptions-detectoptions-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderPngToStream",
-      "kind": "Method",
       "summary": "Renders a QR code as PNG to a stream.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "stream",
-          "type": "Stream",
-          "description": null
+          "name": "arg2",
+          "type": "System.IO.Stream",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static void RenderPngToStream(string payload, Stream stream, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderPngToStream(System.String,System.IO.Stream,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-renderpngtostream-static-void-renderpngtostream-string-payload-stream-stream-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderPngToFile",
-      "kind": "Method",
       "summary": "Renders a QR code as PNG and writes it to a file.",
-      "remarks": null,
       "returns": "The output file path.",
       "parameters": [
         {
           "name": "payload",
-          "type": "string",
-          "description": "Payload text."
+          "type": "System.String",
+          "summary": "Payload text."
         },
         {
           "name": "path",
-          "type": "string",
-          "description": "Output file path."
+          "type": "System.String",
+          "summary": "Output file path."
         },
         {
           "name": "options",
-          "type": "QrEasyOptions",
-          "description": "Optional rendering options."
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": "Optional rendering options."
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string RenderPngToFile(string payload, string path, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderPngToFile(System.String,System.String,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-renderpngtofile-static-string-renderpngtofile-string-payload-string-path-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderPngToFile",
-      "kind": "Method",
       "summary": "Renders a QR code as PNG and writes it to a file for a payload with embedded defaults.",
-      "remarks": null,
       "returns": "The output file path.",
       "parameters": [
         {
           "name": "payload",
-          "type": "QrPayloadData",
-          "description": "Payload with embedded defaults."
+          "type": "CodeGlyphX.Payloads.QrPayloadData",
+          "summary": "Payload with embedded defaults."
         },
         {
           "name": "path",
-          "type": "string",
-          "description": "Output file path."
+          "type": "System.String",
+          "summary": "Output file path."
         },
         {
           "name": "options",
-          "type": "QrEasyOptions",
-          "description": "Optional rendering options."
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": "Optional rendering options."
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string RenderPngToFile(QrPayloadData payload, string path, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderPngToFile(CodeGlyphX.Payloads.QrPayloadData,System.String,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-renderpngtofile-static-string-renderpngtofile-qrpayloaddata-payload-string-path-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderPng",
-      "kind": "Method",
       "summary": "Renders a QR code as PNG for a payload with embedded defaults.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "QrPayloadData",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.Payloads.QrPayloadData",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static byte[] RenderPng(QrPayloadData payload, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderPng(CodeGlyphX.Payloads.QrPayloadData,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-renderpng-static-byte-renderpng-qrpayloaddata-payload-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderPngToStream",
-      "kind": "Method",
       "summary": "Renders a QR code as PNG to a stream for a payload with embedded defaults.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "QrPayloadData",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.Payloads.QrPayloadData",
+          "summary": null
         },
         {
-          "name": "stream",
-          "type": "Stream",
-          "description": null
+          "name": "arg2",
+          "type": "System.IO.Stream",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static void RenderPngToStream(QrPayloadData payload, Stream stream, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderPngToStream(CodeGlyphX.Payloads.QrPayloadData,System.IO.Stream,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-renderpngtostream-static-void-renderpngtostream-qrpayloaddata-payload-stream-stream-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderSvg",
-      "kind": "Method",
       "summary": "Renders a QR code as SVG.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string RenderSvg(string payload, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderSvg(System.String,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-rendersvg-static-string-rendersvg-string-payload-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderSvgAuto",
-      "kind": "Method",
       "summary": "Detects a payload type and renders a QR code as SVG.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "detectOptions",
-          "type": "QrPayloadDetectOptions",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.Payloads.QrPayloadDetectOptions",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string RenderSvgAuto(string payload, QrPayloadDetectOptions detectOptions, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderSvgAuto(System.String,CodeGlyphX.Payloads.QrPayloadDetectOptions,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-rendersvgauto-static-string-rendersvgauto-string-payload-qrpayloaddetectoptions-detectoptions-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderSvgToFile",
-      "kind": "Method",
       "summary": "Renders a QR code as SVG and writes it to a file.",
-      "remarks": null,
       "returns": "The output file path.",
       "parameters": [
         {
           "name": "payload",
-          "type": "string",
-          "description": "Payload text."
+          "type": "System.String",
+          "summary": "Payload text."
         },
         {
           "name": "path",
-          "type": "string",
-          "description": "Output file path."
+          "type": "System.String",
+          "summary": "Output file path."
         },
         {
           "name": "options",
-          "type": "QrEasyOptions",
-          "description": "Optional rendering options."
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": "Optional rendering options."
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string RenderSvgToFile(string payload, string path, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderSvgToFile(System.String,System.String,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-rendersvgtofile-static-string-rendersvgtofile-string-payload-string-path-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderSvgToFile",
-      "kind": "Method",
       "summary": "Renders a QR code as SVG and writes it to a file for a payload with embedded defaults.",
-      "remarks": null,
       "returns": "The output file path.",
       "parameters": [
         {
           "name": "payload",
-          "type": "QrPayloadData",
-          "description": "Payload with embedded defaults."
+          "type": "CodeGlyphX.Payloads.QrPayloadData",
+          "summary": "Payload with embedded defaults."
         },
         {
           "name": "path",
-          "type": "string",
-          "description": "Output file path."
+          "type": "System.String",
+          "summary": "Output file path."
         },
         {
           "name": "options",
-          "type": "QrEasyOptions",
-          "description": "Optional rendering options."
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": "Optional rendering options."
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string RenderSvgToFile(QrPayloadData payload, string path, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderSvgToFile(CodeGlyphX.Payloads.QrPayloadData,System.String,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-rendersvgtofile-static-string-rendersvgtofile-qrpayloaddata-payload-string-path-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderSvg",
-      "kind": "Method",
       "summary": "Renders a QR code as SVG for a payload with embedded defaults.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "QrPayloadData",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.Payloads.QrPayloadData",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string RenderSvg(QrPayloadData payload, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderSvg(CodeGlyphX.Payloads.QrPayloadData,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-rendersvg-static-string-rendersvg-qrpayloaddata-payload-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderHtml",
-      "kind": "Method",
       "summary": "Renders a QR code as HTML (table-based).",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string RenderHtml(string payload, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderHtml(System.String,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-renderhtml-static-string-renderhtml-string-payload-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderHtmlAuto",
-      "kind": "Method",
       "summary": "Detects a payload type and renders a QR code as HTML.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "detectOptions",
-          "type": "QrPayloadDetectOptions",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.Payloads.QrPayloadDetectOptions",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string RenderHtmlAuto(string payload, QrPayloadDetectOptions detectOptions, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderHtmlAuto(System.String,CodeGlyphX.Payloads.QrPayloadDetectOptions,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-renderhtmlauto-static-string-renderhtmlauto-string-payload-qrpayloaddetectoptions-detectoptions-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderHtmlToFile",
-      "kind": "Method",
       "summary": "Renders a QR code as HTML and writes it to a file.",
-      "remarks": null,
       "returns": "The output file path.",
       "parameters": [
         {
           "name": "payload",
-          "type": "string",
-          "description": "Payload text."
+          "type": "System.String",
+          "summary": "Payload text."
         },
         {
           "name": "path",
-          "type": "string",
-          "description": "Output file path."
+          "type": "System.String",
+          "summary": "Output file path."
         },
         {
           "name": "options",
-          "type": "QrEasyOptions",
-          "description": "Optional rendering options."
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": "Optional rendering options."
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string RenderHtmlToFile(string payload, string path, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderHtmlToFile(System.String,System.String,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-renderhtmltofile-static-string-renderhtmltofile-string-payload-string-path-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderHtmlToFile",
-      "kind": "Method",
       "summary": "Renders a QR code as HTML and writes it to a file for a payload with embedded defaults.",
-      "remarks": null,
       "returns": "The output file path.",
       "parameters": [
         {
           "name": "payload",
-          "type": "QrPayloadData",
-          "description": "Payload with embedded defaults."
+          "type": "CodeGlyphX.Payloads.QrPayloadData",
+          "summary": "Payload with embedded defaults."
         },
         {
           "name": "path",
-          "type": "string",
-          "description": "Output file path."
+          "type": "System.String",
+          "summary": "Output file path."
         },
         {
           "name": "options",
-          "type": "QrEasyOptions",
-          "description": "Optional rendering options."
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": "Optional rendering options."
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string RenderHtmlToFile(QrPayloadData payload, string path, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderHtmlToFile(CodeGlyphX.Payloads.QrPayloadData,System.String,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-renderhtmltofile-static-string-renderhtmltofile-qrpayloaddata-payload-string-path-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderHtml",
-      "kind": "Method",
       "summary": "Renders a QR code as HTML for a payload with embedded defaults.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "QrPayloadData",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.Payloads.QrPayloadData",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string RenderHtml(QrPayloadData payload, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderHtml(CodeGlyphX.Payloads.QrPayloadData,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-renderhtml-static-string-renderhtml-qrpayloaddata-payload-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderJpeg",
-      "kind": "Method",
       "summary": "Renders a QR code as JPEG.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static byte[] RenderJpeg(string payload, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderJpeg(System.String,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-renderjpeg-static-byte-renderjpeg-string-payload-qreasyoptions-options"
+      ]
+    },
+    {
+      "name": "RenderWebp",
+      "summary": "Renders a QR code as WebP.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
+        },
+        {
+          "name": "arg2",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
+        }
+      ]
     },
     {
       "name": "RenderJpegAuto",
-      "kind": "Method",
       "summary": "Detects a payload type and renders a QR code as JPEG.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "detectOptions",
-          "type": "QrPayloadDetectOptions",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.Payloads.QrPayloadDetectOptions",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static byte[] RenderJpegAuto(string payload, QrPayloadDetectOptions detectOptions, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderJpegAuto(System.String,CodeGlyphX.Payloads.QrPayloadDetectOptions,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-renderjpegauto-static-byte-renderjpegauto-string-payload-qrpayloaddetectoptions-detectoptions-qreasyoptions-options"
+      ]
+    },
+    {
+      "name": "RenderWebpAuto",
+      "summary": "Detects a payload type and renders a QR code as WebP.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
+        },
+        {
+          "name": "arg2",
+          "type": "CodeGlyphX.Payloads.QrPayloadDetectOptions",
+          "summary": null
+        },
+        {
+          "name": "arg3",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
+        }
+      ]
     },
     {
       "name": "RenderJpegToStream",
-      "kind": "Method",
       "summary": "Renders a QR code as JPEG to a stream.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "stream",
-          "type": "Stream",
-          "description": null
+          "name": "arg2",
+          "type": "System.IO.Stream",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static void RenderJpegToStream(string payload, Stream stream, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderJpegToStream(System.String,System.IO.Stream,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-renderjpegtostream-static-void-renderjpegtostream-string-payload-stream-stream-qreasyoptions-options"
+      ]
+    },
+    {
+      "name": "RenderWebpToStream",
+      "summary": "Renders a QR code as WebP to a stream.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
+        },
+        {
+          "name": "arg2",
+          "type": "System.IO.Stream",
+          "summary": null
+        },
+        {
+          "name": "arg3",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
+        }
+      ]
     },
     {
       "name": "RenderJpegToFile",
-      "kind": "Method",
       "summary": "Renders a QR code as JPEG and writes it to a file.",
-      "remarks": null,
       "returns": "The output file path.",
       "parameters": [
         {
           "name": "payload",
-          "type": "string",
-          "description": "Payload text."
+          "type": "System.String",
+          "summary": "Payload text."
         },
         {
           "name": "path",
-          "type": "string",
-          "description": "Output file path."
+          "type": "System.String",
+          "summary": "Output file path."
         },
         {
           "name": "options",
-          "type": "QrEasyOptions",
-          "description": "Optional rendering options."
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": "Optional rendering options."
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string RenderJpegToFile(string payload, string path, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderJpegToFile(System.String,System.String,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-renderjpegtofile-static-string-renderjpegtofile-string-payload-string-path-qreasyoptions-options"
+      ]
+    },
+    {
+      "name": "RenderWebpToFile",
+      "summary": "Renders a QR code as WebP and writes it to a file.",
+      "returns": "The output file path.",
+      "parameters": [
+        {
+          "name": "payload",
+          "type": "System.String",
+          "summary": "Payload text."
+        },
+        {
+          "name": "path",
+          "type": "System.String",
+          "summary": "Output file path."
+        },
+        {
+          "name": "options",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": "Optional rendering options."
+        }
+      ]
     },
     {
       "name": "RenderJpegToFile",
-      "kind": "Method",
       "summary": "Renders a QR code as JPEG and writes it to a file for a payload with embedded defaults.",
-      "remarks": null,
       "returns": "The output file path.",
       "parameters": [
         {
           "name": "payload",
-          "type": "QrPayloadData",
-          "description": "Payload with embedded defaults."
+          "type": "CodeGlyphX.Payloads.QrPayloadData",
+          "summary": "Payload with embedded defaults."
         },
         {
           "name": "path",
-          "type": "string",
-          "description": "Output file path."
+          "type": "System.String",
+          "summary": "Output file path."
         },
         {
           "name": "options",
-          "type": "QrEasyOptions",
-          "description": "Optional rendering options."
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": "Optional rendering options."
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string RenderJpegToFile(QrPayloadData payload, string path, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderJpegToFile(CodeGlyphX.Payloads.QrPayloadData,System.String,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-renderjpegtofile-static-string-renderjpegtofile-qrpayloaddata-payload-string-path-qreasyoptions-options"
+      ]
+    },
+    {
+      "name": "RenderWebpToFile",
+      "summary": "Renders a QR code as WebP and writes it to a file for a payload with embedded defaults.",
+      "returns": "The output file path.",
+      "parameters": [
+        {
+          "name": "payload",
+          "type": "CodeGlyphX.Payloads.QrPayloadData",
+          "summary": "Payload with embedded defaults."
+        },
+        {
+          "name": "path",
+          "type": "System.String",
+          "summary": "Output file path."
+        },
+        {
+          "name": "options",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": "Optional rendering options."
+        }
+      ]
     },
     {
       "name": "RenderJpeg",
-      "kind": "Method",
       "summary": "Renders a QR code as JPEG for a payload with embedded defaults.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "QrPayloadData",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.Payloads.QrPayloadData",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static byte[] RenderJpeg(QrPayloadData payload, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderJpeg(CodeGlyphX.Payloads.QrPayloadData,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-renderjpeg-static-byte-renderjpeg-qrpayloaddata-payload-qreasyoptions-options"
+      ]
+    },
+    {
+      "name": "RenderWebp",
+      "summary": "Renders a QR code as WebP for a payload with embedded defaults.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "arg1",
+          "type": "CodeGlyphX.Payloads.QrPayloadData",
+          "summary": null
+        },
+        {
+          "name": "arg2",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
+        }
+      ]
     },
     {
       "name": "RenderJpegToStream",
-      "kind": "Method",
       "summary": "Renders a QR code as JPEG to a stream for a payload with embedded defaults.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "QrPayloadData",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.Payloads.QrPayloadData",
+          "summary": null
         },
         {
-          "name": "stream",
-          "type": "Stream",
-          "description": null
+          "name": "arg2",
+          "type": "System.IO.Stream",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static void RenderJpegToStream(QrPayloadData payload, Stream stream, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderJpegToStream(CodeGlyphX.Payloads.QrPayloadData,System.IO.Stream,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-renderjpegtostream-static-void-renderjpegtostream-qrpayloaddata-payload-stream-stream-qreasyoptions-options"
+      ]
+    },
+    {
+      "name": "RenderWebpToStream",
+      "summary": "Renders a QR code as WebP to a stream for a payload with embedded defaults.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "arg1",
+          "type": "CodeGlyphX.Payloads.QrPayloadData",
+          "summary": null
+        },
+        {
+          "name": "arg2",
+          "type": "System.IO.Stream",
+          "summary": null
+        },
+        {
+          "name": "arg3",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
+        }
+      ]
     },
     {
       "name": "RenderBmp",
-      "kind": "Method",
       "summary": "Renders a QR code as BMP.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static byte[] RenderBmp(string payload, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderBmp(System.String,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-renderbmp-static-byte-renderbmp-string-payload-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderBmpAuto",
-      "kind": "Method",
       "summary": "Detects a payload type and renders a QR code as BMP.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "detectOptions",
-          "type": "QrPayloadDetectOptions",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.Payloads.QrPayloadDetectOptions",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static byte[] RenderBmpAuto(string payload, QrPayloadDetectOptions detectOptions, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderBmpAuto(System.String,CodeGlyphX.Payloads.QrPayloadDetectOptions,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-renderbmpauto-static-byte-renderbmpauto-string-payload-qrpayloaddetectoptions-detectoptions-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderBmpToStream",
-      "kind": "Method",
       "summary": "Renders a QR code as BMP to a stream.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "stream",
-          "type": "Stream",
-          "description": null
+          "name": "arg2",
+          "type": "System.IO.Stream",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static void RenderBmpToStream(string payload, Stream stream, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderBmpToStream(System.String,System.IO.Stream,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-renderbmptostream-static-void-renderbmptostream-string-payload-stream-stream-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderBmpToFile",
-      "kind": "Method",
       "summary": "Renders a QR code as BMP and writes it to a file.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "path",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string RenderBmpToFile(string payload, string path, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderBmpToFile(System.String,System.String,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-renderbmptofile-static-string-renderbmptofile-string-payload-string-path-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderBmpToFile",
-      "kind": "Method",
       "summary": "Renders a QR code as BMP and writes it to a file for a payload with embedded defaults.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "QrPayloadData",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.Payloads.QrPayloadData",
+          "summary": null
         },
         {
-          "name": "path",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string RenderBmpToFile(QrPayloadData payload, string path, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderBmpToFile(CodeGlyphX.Payloads.QrPayloadData,System.String,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-renderbmptofile-static-string-renderbmptofile-qrpayloaddata-payload-string-path-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderBmp",
-      "kind": "Method",
       "summary": "Renders a QR code as BMP for a payload with embedded defaults.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "QrPayloadData",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.Payloads.QrPayloadData",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static byte[] RenderBmp(QrPayloadData payload, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderBmp(CodeGlyphX.Payloads.QrPayloadData,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-renderbmp-static-byte-renderbmp-qrpayloaddata-payload-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderBmpToStream",
-      "kind": "Method",
       "summary": "Renders a QR code as BMP to a stream for a payload with embedded defaults.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "QrPayloadData",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.Payloads.QrPayloadData",
+          "summary": null
         },
         {
-          "name": "stream",
-          "type": "Stream",
-          "description": null
+          "name": "arg2",
+          "type": "System.IO.Stream",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static void RenderBmpToStream(QrPayloadData payload, Stream stream, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderBmpToStream(CodeGlyphX.Payloads.QrPayloadData,System.IO.Stream,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-renderbmptostream-static-void-renderbmptostream-qrpayloaddata-payload-stream-stream-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderPpm",
-      "kind": "Method",
       "summary": "Renders a QR code as PPM.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static byte[] RenderPpm(string payload, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderPpm(System.String,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-renderppm-static-byte-renderppm-string-payload-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderPpmAuto",
-      "kind": "Method",
       "summary": "Detects a payload type and renders a QR code as PPM.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "detectOptions",
-          "type": "QrPayloadDetectOptions",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.Payloads.QrPayloadDetectOptions",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static byte[] RenderPpmAuto(string payload, QrPayloadDetectOptions detectOptions, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderPpmAuto(System.String,CodeGlyphX.Payloads.QrPayloadDetectOptions,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-renderppmauto-static-byte-renderppmauto-string-payload-qrpayloaddetectoptions-detectoptions-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderPpmToStream",
-      "kind": "Method",
       "summary": "Renders a QR code as PPM to a stream.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "stream",
-          "type": "Stream",
-          "description": null
+          "name": "arg2",
+          "type": "System.IO.Stream",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static void RenderPpmToStream(string payload, Stream stream, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderPpmToStream(System.String,System.IO.Stream,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-renderppmtostream-static-void-renderppmtostream-string-payload-stream-stream-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderPpmToFile",
-      "kind": "Method",
       "summary": "Renders a QR code as PPM and writes it to a file.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "path",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string RenderPpmToFile(string payload, string path, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderPpmToFile(System.String,System.String,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-renderppmtofile-static-string-renderppmtofile-string-payload-string-path-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderPpmToFile",
-      "kind": "Method",
       "summary": "Renders a QR code as PPM and writes it to a file for a payload with embedded defaults.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "QrPayloadData",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.Payloads.QrPayloadData",
+          "summary": null
         },
         {
-          "name": "path",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string RenderPpmToFile(QrPayloadData payload, string path, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderPpmToFile(CodeGlyphX.Payloads.QrPayloadData,System.String,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-renderppmtofile-static-string-renderppmtofile-qrpayloaddata-payload-string-path-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderPpm",
-      "kind": "Method",
       "summary": "Renders a QR code as PPM for a payload with embedded defaults.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "QrPayloadData",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.Payloads.QrPayloadData",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static byte[] RenderPpm(QrPayloadData payload, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderPpm(CodeGlyphX.Payloads.QrPayloadData,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-renderppm-static-byte-renderppm-qrpayloaddata-payload-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderPpmToStream",
-      "kind": "Method",
       "summary": "Renders a QR code as PPM to a stream for a payload with embedded defaults.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "QrPayloadData",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.Payloads.QrPayloadData",
+          "summary": null
         },
         {
-          "name": "stream",
-          "type": "Stream",
-          "description": null
+          "name": "arg2",
+          "type": "System.IO.Stream",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static void RenderPpmToStream(QrPayloadData payload, Stream stream, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderPpmToStream(CodeGlyphX.Payloads.QrPayloadData,System.IO.Stream,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-renderppmtostream-static-void-renderppmtostream-qrpayloaddata-payload-stream-stream-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderPbm",
-      "kind": "Method",
       "summary": "Renders a QR code as PBM.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static byte[] RenderPbm(string payload, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderPbm(System.String,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-renderpbm-static-byte-renderpbm-string-payload-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderPbmAuto",
-      "kind": "Method",
       "summary": "Detects a payload type and renders a QR code as PBM.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "detectOptions",
-          "type": "QrPayloadDetectOptions",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.Payloads.QrPayloadDetectOptions",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static byte[] RenderPbmAuto(string payload, QrPayloadDetectOptions detectOptions, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderPbmAuto(System.String,CodeGlyphX.Payloads.QrPayloadDetectOptions,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-renderpbmauto-static-byte-renderpbmauto-string-payload-qrpayloaddetectoptions-detectoptions-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderPbmToStream",
-      "kind": "Method",
       "summary": "Renders a QR code as PBM to a stream.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "stream",
-          "type": "Stream",
-          "description": null
+          "name": "arg2",
+          "type": "System.IO.Stream",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static void RenderPbmToStream(string payload, Stream stream, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderPbmToStream(System.String,System.IO.Stream,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-renderpbmtostream-static-void-renderpbmtostream-string-payload-stream-stream-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderPbmToFile",
-      "kind": "Method",
       "summary": "Renders a QR code as PBM and writes it to a file.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "path",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string RenderPbmToFile(string payload, string path, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderPbmToFile(System.String,System.String,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-renderpbmtofile-static-string-renderpbmtofile-string-payload-string-path-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderPbmToFile",
-      "kind": "Method",
       "summary": "Renders a QR code as PBM and writes it to a file for a payload with embedded defaults.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "QrPayloadData",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.Payloads.QrPayloadData",
+          "summary": null
         },
         {
-          "name": "path",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string RenderPbmToFile(QrPayloadData payload, string path, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderPbmToFile(CodeGlyphX.Payloads.QrPayloadData,System.String,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-renderpbmtofile-static-string-renderpbmtofile-qrpayloaddata-payload-string-path-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderPbm",
-      "kind": "Method",
       "summary": "Renders a QR code as PBM for a payload with embedded defaults.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "QrPayloadData",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.Payloads.QrPayloadData",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static byte[] RenderPbm(QrPayloadData payload, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderPbm(CodeGlyphX.Payloads.QrPayloadData,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-renderpbm-static-byte-renderpbm-qrpayloaddata-payload-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderPbmToStream",
-      "kind": "Method",
       "summary": "Renders a QR code as PBM to a stream for a payload with embedded defaults.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "QrPayloadData",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.Payloads.QrPayloadData",
+          "summary": null
         },
         {
-          "name": "stream",
-          "type": "Stream",
-          "description": null
+          "name": "arg2",
+          "type": "System.IO.Stream",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static void RenderPbmToStream(QrPayloadData payload, Stream stream, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderPbmToStream(CodeGlyphX.Payloads.QrPayloadData,System.IO.Stream,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-renderpbmtostream-static-void-renderpbmtostream-qrpayloaddata-payload-stream-stream-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderPgm",
-      "kind": "Method",
       "summary": "Renders a QR code as PGM.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static byte[] RenderPgm(string payload, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderPgm(System.String,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-renderpgm-static-byte-renderpgm-string-payload-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderPgmAuto",
-      "kind": "Method",
       "summary": "Detects a payload type and renders a QR code as PGM.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "detectOptions",
-          "type": "QrPayloadDetectOptions",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.Payloads.QrPayloadDetectOptions",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static byte[] RenderPgmAuto(string payload, QrPayloadDetectOptions detectOptions, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderPgmAuto(System.String,CodeGlyphX.Payloads.QrPayloadDetectOptions,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-renderpgmauto-static-byte-renderpgmauto-string-payload-qrpayloaddetectoptions-detectoptions-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderPgmToStream",
-      "kind": "Method",
       "summary": "Renders a QR code as PGM to a stream.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "stream",
-          "type": "Stream",
-          "description": null
+          "name": "arg2",
+          "type": "System.IO.Stream",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static void RenderPgmToStream(string payload, Stream stream, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderPgmToStream(System.String,System.IO.Stream,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-renderpgmtostream-static-void-renderpgmtostream-string-payload-stream-stream-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderPgmToFile",
-      "kind": "Method",
       "summary": "Renders a QR code as PGM and writes it to a file.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "path",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string RenderPgmToFile(string payload, string path, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderPgmToFile(System.String,System.String,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-renderpgmtofile-static-string-renderpgmtofile-string-payload-string-path-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderPgmToFile",
-      "kind": "Method",
       "summary": "Renders a QR code as PGM and writes it to a file for a payload with embedded defaults.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "QrPayloadData",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.Payloads.QrPayloadData",
+          "summary": null
         },
         {
-          "name": "path",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string RenderPgmToFile(QrPayloadData payload, string path, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderPgmToFile(CodeGlyphX.Payloads.QrPayloadData,System.String,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-renderpgmtofile-static-string-renderpgmtofile-qrpayloaddata-payload-string-path-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderPgm",
-      "kind": "Method",
       "summary": "Renders a QR code as PGM for a payload with embedded defaults.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "QrPayloadData",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.Payloads.QrPayloadData",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static byte[] RenderPgm(QrPayloadData payload, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderPgm(CodeGlyphX.Payloads.QrPayloadData,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-renderpgm-static-byte-renderpgm-qrpayloaddata-payload-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderPgmToStream",
-      "kind": "Method",
       "summary": "Renders a QR code as PGM to a stream for a payload with embedded defaults.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "QrPayloadData",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.Payloads.QrPayloadData",
+          "summary": null
         },
         {
-          "name": "stream",
-          "type": "Stream",
-          "description": null
+          "name": "arg2",
+          "type": "System.IO.Stream",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static void RenderPgmToStream(QrPayloadData payload, Stream stream, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderPgmToStream(CodeGlyphX.Payloads.QrPayloadData,System.IO.Stream,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-renderpgmtostream-static-void-renderpgmtostream-qrpayloaddata-payload-stream-stream-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderPam",
-      "kind": "Method",
       "summary": "Renders a QR code as PAM.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static byte[] RenderPam(string payload, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderPam(System.String,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-renderpam-static-byte-renderpam-string-payload-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderPamAuto",
-      "kind": "Method",
       "summary": "Detects a payload type and renders a QR code as PAM.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "detectOptions",
-          "type": "QrPayloadDetectOptions",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.Payloads.QrPayloadDetectOptions",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static byte[] RenderPamAuto(string payload, QrPayloadDetectOptions detectOptions, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderPamAuto(System.String,CodeGlyphX.Payloads.QrPayloadDetectOptions,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-renderpamauto-static-byte-renderpamauto-string-payload-qrpayloaddetectoptions-detectoptions-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderPamToStream",
-      "kind": "Method",
       "summary": "Renders a QR code as PAM to a stream.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "stream",
-          "type": "Stream",
-          "description": null
+          "name": "arg2",
+          "type": "System.IO.Stream",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static void RenderPamToStream(string payload, Stream stream, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderPamToStream(System.String,System.IO.Stream,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-renderpamtostream-static-void-renderpamtostream-string-payload-stream-stream-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderPamToFile",
-      "kind": "Method",
       "summary": "Renders a QR code as PAM and writes it to a file.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "path",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string RenderPamToFile(string payload, string path, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderPamToFile(System.String,System.String,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-renderpamtofile-static-string-renderpamtofile-string-payload-string-path-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderPamToFile",
-      "kind": "Method",
       "summary": "Renders a QR code as PAM and writes it to a file for a payload with embedded defaults.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "QrPayloadData",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.Payloads.QrPayloadData",
+          "summary": null
         },
         {
-          "name": "path",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string RenderPamToFile(QrPayloadData payload, string path, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderPamToFile(CodeGlyphX.Payloads.QrPayloadData,System.String,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-renderpamtofile-static-string-renderpamtofile-qrpayloaddata-payload-string-path-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderPam",
-      "kind": "Method",
       "summary": "Renders a QR code as PAM for a payload with embedded defaults.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "QrPayloadData",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.Payloads.QrPayloadData",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static byte[] RenderPam(QrPayloadData payload, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderPam(CodeGlyphX.Payloads.QrPayloadData,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-renderpam-static-byte-renderpam-qrpayloaddata-payload-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderPamToStream",
-      "kind": "Method",
       "summary": "Renders a QR code as PAM to a stream for a payload with embedded defaults.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "QrPayloadData",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.Payloads.QrPayloadData",
+          "summary": null
         },
         {
-          "name": "stream",
-          "type": "Stream",
-          "description": null
+          "name": "arg2",
+          "type": "System.IO.Stream",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static void RenderPamToStream(QrPayloadData payload, Stream stream, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderPamToStream(CodeGlyphX.Payloads.QrPayloadData,System.IO.Stream,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-renderpamtostream-static-void-renderpamtostream-qrpayloaddata-payload-stream-stream-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderXbm",
-      "kind": "Method",
       "summary": "Renders a QR code as XBM.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string RenderXbm(string payload, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderXbm(System.String,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-renderxbm-static-string-renderxbm-string-payload-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderXbmAuto",
-      "kind": "Method",
       "summary": "Detects a payload type and renders a QR code as XBM.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "detectOptions",
-          "type": "QrPayloadDetectOptions",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.Payloads.QrPayloadDetectOptions",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string RenderXbmAuto(string payload, QrPayloadDetectOptions detectOptions, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderXbmAuto(System.String,CodeGlyphX.Payloads.QrPayloadDetectOptions,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-renderxbmauto-static-string-renderxbmauto-string-payload-qrpayloaddetectoptions-detectoptions-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderXbmToStream",
-      "kind": "Method",
       "summary": "Renders a QR code as XBM to a stream.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "stream",
-          "type": "Stream",
-          "description": null
+          "name": "arg2",
+          "type": "System.IO.Stream",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static void RenderXbmToStream(string payload, Stream stream, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderXbmToStream(System.String,System.IO.Stream,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-renderxbmtostream-static-void-renderxbmtostream-string-payload-stream-stream-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderXbmToFile",
-      "kind": "Method",
       "summary": "Renders a QR code as XBM and writes it to a file.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "path",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string RenderXbmToFile(string payload, string path, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderXbmToFile(System.String,System.String,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-renderxbmtofile-static-string-renderxbmtofile-string-payload-string-path-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderXbmToFile",
-      "kind": "Method",
       "summary": "Renders a QR code as XBM and writes it to a file for a payload with embedded defaults.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "QrPayloadData",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.Payloads.QrPayloadData",
+          "summary": null
         },
         {
-          "name": "path",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string RenderXbmToFile(QrPayloadData payload, string path, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderXbmToFile(CodeGlyphX.Payloads.QrPayloadData,System.String,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-renderxbmtofile-static-string-renderxbmtofile-qrpayloaddata-payload-string-path-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderXbm",
-      "kind": "Method",
       "summary": "Renders a QR code as XBM for a payload with embedded defaults.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "QrPayloadData",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.Payloads.QrPayloadData",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string RenderXbm(QrPayloadData payload, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderXbm(CodeGlyphX.Payloads.QrPayloadData,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-renderxbm-static-string-renderxbm-qrpayloaddata-payload-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderXbmToStream",
-      "kind": "Method",
       "summary": "Renders a QR code as XBM to a stream for a payload with embedded defaults.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "QrPayloadData",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.Payloads.QrPayloadData",
+          "summary": null
         },
         {
-          "name": "stream",
-          "type": "Stream",
-          "description": null
+          "name": "arg2",
+          "type": "System.IO.Stream",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static void RenderXbmToStream(QrPayloadData payload, Stream stream, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderXbmToStream(CodeGlyphX.Payloads.QrPayloadData,System.IO.Stream,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-renderxbmtostream-static-void-renderxbmtostream-qrpayloaddata-payload-stream-stream-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderXpm",
-      "kind": "Method",
       "summary": "Renders a QR code as XPM.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string RenderXpm(string payload, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderXpm(System.String,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-renderxpm-static-string-renderxpm-string-payload-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderXpmAuto",
-      "kind": "Method",
       "summary": "Detects a payload type and renders a QR code as XPM.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "detectOptions",
-          "type": "QrPayloadDetectOptions",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.Payloads.QrPayloadDetectOptions",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string RenderXpmAuto(string payload, QrPayloadDetectOptions detectOptions, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderXpmAuto(System.String,CodeGlyphX.Payloads.QrPayloadDetectOptions,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-renderxpmauto-static-string-renderxpmauto-string-payload-qrpayloaddetectoptions-detectoptions-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderXpmToStream",
-      "kind": "Method",
       "summary": "Renders a QR code as XPM to a stream.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "stream",
-          "type": "Stream",
-          "description": null
+          "name": "arg2",
+          "type": "System.IO.Stream",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static void RenderXpmToStream(string payload, Stream stream, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderXpmToStream(System.String,System.IO.Stream,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-renderxpmtostream-static-void-renderxpmtostream-string-payload-stream-stream-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderXpmToFile",
-      "kind": "Method",
       "summary": "Renders a QR code as XPM and writes it to a file.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "path",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string RenderXpmToFile(string payload, string path, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderXpmToFile(System.String,System.String,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-renderxpmtofile-static-string-renderxpmtofile-string-payload-string-path-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderXpmToFile",
-      "kind": "Method",
       "summary": "Renders a QR code as XPM and writes it to a file for a payload with embedded defaults.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "QrPayloadData",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.Payloads.QrPayloadData",
+          "summary": null
         },
         {
-          "name": "path",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string RenderXpmToFile(QrPayloadData payload, string path, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderXpmToFile(CodeGlyphX.Payloads.QrPayloadData,System.String,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-renderxpmtofile-static-string-renderxpmtofile-qrpayloaddata-payload-string-path-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderXpm",
-      "kind": "Method",
       "summary": "Renders a QR code as XPM for a payload with embedded defaults.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "QrPayloadData",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.Payloads.QrPayloadData",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string RenderXpm(QrPayloadData payload, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderXpm(CodeGlyphX.Payloads.QrPayloadData,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-renderxpm-static-string-renderxpm-qrpayloaddata-payload-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderXpmToStream",
-      "kind": "Method",
       "summary": "Renders a QR code as XPM to a stream for a payload with embedded defaults.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "QrPayloadData",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.Payloads.QrPayloadData",
+          "summary": null
         },
         {
-          "name": "stream",
-          "type": "Stream",
-          "description": null
+          "name": "arg2",
+          "type": "System.IO.Stream",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static void RenderXpmToStream(QrPayloadData payload, Stream stream, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderXpmToStream(CodeGlyphX.Payloads.QrPayloadData,System.IO.Stream,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-renderxpmtostream-static-void-renderxpmtostream-qrpayloaddata-payload-stream-stream-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderTga",
-      "kind": "Method",
       "summary": "Renders a QR code as TGA.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static byte[] RenderTga(string payload, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderTga(System.String,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-rendertga-static-byte-rendertga-string-payload-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderTgaAuto",
-      "kind": "Method",
       "summary": "Detects a payload type and renders a QR code as TGA.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "detectOptions",
-          "type": "QrPayloadDetectOptions",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.Payloads.QrPayloadDetectOptions",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static byte[] RenderTgaAuto(string payload, QrPayloadDetectOptions detectOptions, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderTgaAuto(System.String,CodeGlyphX.Payloads.QrPayloadDetectOptions,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-rendertgaauto-static-byte-rendertgaauto-string-payload-qrpayloaddetectoptions-detectoptions-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderTgaToStream",
-      "kind": "Method",
       "summary": "Renders a QR code as TGA to a stream.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "stream",
-          "type": "Stream",
-          "description": null
+          "name": "arg2",
+          "type": "System.IO.Stream",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static void RenderTgaToStream(string payload, Stream stream, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderTgaToStream(System.String,System.IO.Stream,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-rendertgatostream-static-void-rendertgatostream-string-payload-stream-stream-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderTgaToFile",
-      "kind": "Method",
       "summary": "Renders a QR code as TGA and writes it to a file.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "path",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string RenderTgaToFile(string payload, string path, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderTgaToFile(System.String,System.String,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-rendertgatofile-static-string-rendertgatofile-string-payload-string-path-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderTgaToFile",
-      "kind": "Method",
       "summary": "Renders a QR code as TGA and writes it to a file for a payload with embedded defaults.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "QrPayloadData",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.Payloads.QrPayloadData",
+          "summary": null
         },
         {
-          "name": "path",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string RenderTgaToFile(QrPayloadData payload, string path, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderTgaToFile(CodeGlyphX.Payloads.QrPayloadData,System.String,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-rendertgatofile-static-string-rendertgatofile-qrpayloaddata-payload-string-path-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderTga",
-      "kind": "Method",
       "summary": "Renders a QR code as TGA for a payload with embedded defaults.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "QrPayloadData",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.Payloads.QrPayloadData",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static byte[] RenderTga(QrPayloadData payload, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderTga(CodeGlyphX.Payloads.QrPayloadData,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-rendertga-static-byte-rendertga-qrpayloaddata-payload-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderTgaToStream",
-      "kind": "Method",
       "summary": "Renders a QR code as TGA to a stream for a payload with embedded defaults.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "QrPayloadData",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.Payloads.QrPayloadData",
+          "summary": null
         },
         {
-          "name": "stream",
-          "type": "Stream",
-          "description": null
+          "name": "arg2",
+          "type": "System.IO.Stream",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static void RenderTgaToStream(QrPayloadData payload, Stream stream, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderTgaToStream(CodeGlyphX.Payloads.QrPayloadData,System.IO.Stream,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-rendertgatostream-static-void-rendertgatostream-qrpayloaddata-payload-stream-stream-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderIco",
-      "kind": "Method",
       "summary": "Renders a QR code as ICO.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static byte[] RenderIco(string payload, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderIco(System.String,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-renderico-static-byte-renderico-string-payload-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderIcoAuto",
-      "kind": "Method",
       "summary": "Detects a payload type and renders a QR code as ICO.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "detectOptions",
-          "type": "QrPayloadDetectOptions",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.Payloads.QrPayloadDetectOptions",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static byte[] RenderIcoAuto(string payload, QrPayloadDetectOptions detectOptions, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderIcoAuto(System.String,CodeGlyphX.Payloads.QrPayloadDetectOptions,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-rendericoauto-static-byte-rendericoauto-string-payload-qrpayloaddetectoptions-detectoptions-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderIcoToStream",
-      "kind": "Method",
       "summary": "Renders a QR code as ICO to a stream.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "stream",
-          "type": "Stream",
-          "description": null
+          "name": "arg2",
+          "type": "System.IO.Stream",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static void RenderIcoToStream(string payload, Stream stream, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderIcoToStream(System.String,System.IO.Stream,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-rendericotostream-static-void-rendericotostream-string-payload-stream-stream-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderIcoToFile",
-      "kind": "Method",
       "summary": "Renders a QR code as ICO and writes it to a file.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "path",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string RenderIcoToFile(string payload, string path, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderIcoToFile(System.String,System.String,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-rendericotofile-static-string-rendericotofile-string-payload-string-path-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderIcoToFile",
-      "kind": "Method",
       "summary": "Renders a QR code as ICO and writes it to a file for a payload with embedded defaults.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "QrPayloadData",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.Payloads.QrPayloadData",
+          "summary": null
         },
         {
-          "name": "path",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string RenderIcoToFile(QrPayloadData payload, string path, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderIcoToFile(CodeGlyphX.Payloads.QrPayloadData,System.String,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-rendericotofile-static-string-rendericotofile-qrpayloaddata-payload-string-path-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderIco",
-      "kind": "Method",
       "summary": "Renders a QR code as ICO for a payload with embedded defaults.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "QrPayloadData",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.Payloads.QrPayloadData",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static byte[] RenderIco(QrPayloadData payload, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderIco(CodeGlyphX.Payloads.QrPayloadData,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-renderico-static-byte-renderico-qrpayloaddata-payload-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderIcoToStream",
-      "kind": "Method",
       "summary": "Renders a QR code as ICO to a stream for a payload with embedded defaults.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "QrPayloadData",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.Payloads.QrPayloadData",
+          "summary": null
         },
         {
-          "name": "stream",
-          "type": "Stream",
-          "description": null
+          "name": "arg2",
+          "type": "System.IO.Stream",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static void RenderIcoToStream(QrPayloadData payload, Stream stream, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderIcoToStream(CodeGlyphX.Payloads.QrPayloadData,System.IO.Stream,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-rendericotostream-static-void-rendericotostream-qrpayloaddata-payload-stream-stream-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderSvgz",
-      "kind": "Method",
       "summary": "Renders a QR code as SVGZ.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static byte[] RenderSvgz(string payload, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderSvgz(System.String,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-rendersvgz-static-byte-rendersvgz-string-payload-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderSvgzAuto",
-      "kind": "Method",
       "summary": "Detects a payload type and renders a QR code as SVGZ.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "detectOptions",
-          "type": "QrPayloadDetectOptions",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.Payloads.QrPayloadDetectOptions",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static byte[] RenderSvgzAuto(string payload, QrPayloadDetectOptions detectOptions, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderSvgzAuto(System.String,CodeGlyphX.Payloads.QrPayloadDetectOptions,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-rendersvgzauto-static-byte-rendersvgzauto-string-payload-qrpayloaddetectoptions-detectoptions-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderSvgzToStream",
-      "kind": "Method",
       "summary": "Renders a QR code as SVGZ to a stream.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "stream",
-          "type": "Stream",
-          "description": null
+          "name": "arg2",
+          "type": "System.IO.Stream",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static void RenderSvgzToStream(string payload, Stream stream, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderSvgzToStream(System.String,System.IO.Stream,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-rendersvgztostream-static-void-rendersvgztostream-string-payload-stream-stream-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderSvgzToFile",
-      "kind": "Method",
       "summary": "Renders a QR code as SVGZ and writes it to a file.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "path",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string RenderSvgzToFile(string payload, string path, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderSvgzToFile(System.String,System.String,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-rendersvgztofile-static-string-rendersvgztofile-string-payload-string-path-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderSvgzToFile",
-      "kind": "Method",
       "summary": "Renders a QR code as SVGZ and writes it to a file for a payload with embedded defaults.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "QrPayloadData",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.Payloads.QrPayloadData",
+          "summary": null
         },
         {
-          "name": "path",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string RenderSvgzToFile(QrPayloadData payload, string path, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderSvgzToFile(CodeGlyphX.Payloads.QrPayloadData,System.String,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-rendersvgztofile-static-string-rendersvgztofile-qrpayloaddata-payload-string-path-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderSvgz",
-      "kind": "Method",
       "summary": "Renders a QR code as SVGZ for a payload with embedded defaults.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "QrPayloadData",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.Payloads.QrPayloadData",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static byte[] RenderSvgz(QrPayloadData payload, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderSvgz(CodeGlyphX.Payloads.QrPayloadData,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-rendersvgz-static-byte-rendersvgz-qrpayloaddata-payload-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderSvgzToStream",
-      "kind": "Method",
       "summary": "Renders a QR code as SVGZ to a stream for a payload with embedded defaults.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "QrPayloadData",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.Payloads.QrPayloadData",
+          "summary": null
         },
         {
-          "name": "stream",
-          "type": "Stream",
-          "description": null
+          "name": "arg2",
+          "type": "System.IO.Stream",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static void RenderSvgzToStream(QrPayloadData payload, Stream stream, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderSvgzToStream(CodeGlyphX.Payloads.QrPayloadData,System.IO.Stream,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-rendersvgztostream-static-void-rendersvgztostream-qrpayloaddata-payload-stream-stream-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderPdf",
-      "kind": "Method",
       "summary": "Renders a QR code as PDF.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "payload",
-          "type": "string",
-          "description": "The payload text."
+          "type": "System.String",
+          "summary": "The payload text."
         },
         {
           "name": "options",
-          "type": "QrEasyOptions",
-          "description": "Optional rendering options."
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": "Optional rendering options."
         },
         {
           "name": "mode",
-          "type": "RenderMode",
-          "description": "Vector or raster output."
+          "type": "CodeGlyphX.Rendering.RenderMode",
+          "summary": "Vector or raster output."
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static byte[] RenderPdf(string payload, QrEasyOptions options, RenderMode mode)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderPdf(System.String,CodeGlyphX.QrEasyOptions,CodeGlyphX.Rendering.RenderMode)",
-      "anchor": "method-renderpdf-static-byte-renderpdf-string-payload-qreasyoptions-options-rendermode-mode"
+      ]
     },
     {
       "name": "RenderPdfAuto",
-      "kind": "Method",
       "summary": "Detects a payload type and renders a QR code as PDF.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "payload",
-          "type": "string",
-          "description": "The payload text."
+          "type": "System.String",
+          "summary": "The payload text."
         },
         {
           "name": "detectOptions",
-          "type": "QrPayloadDetectOptions",
-          "description": "Payload detection options."
+          "type": "CodeGlyphX.Payloads.QrPayloadDetectOptions",
+          "summary": "Payload detection options."
         },
         {
           "name": "options",
-          "type": "QrEasyOptions",
-          "description": "Optional rendering options."
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": "Optional rendering options."
         },
         {
           "name": "mode",
-          "type": "RenderMode",
-          "description": "Vector or raster output."
+          "type": "CodeGlyphX.Rendering.RenderMode",
+          "summary": "Vector or raster output."
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static byte[] RenderPdfAuto(string payload, QrPayloadDetectOptions detectOptions, QrEasyOptions options, RenderMode mode)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderPdfAuto(System.String,CodeGlyphX.Payloads.QrPayloadDetectOptions,CodeGlyphX.QrEasyOptions,CodeGlyphX.Rendering.RenderMode)",
-      "anchor": "method-renderpdfauto-static-byte-renderpdfauto-string-payload-qrpayloaddetectoptions-detectoptions-qreasyoptions-options-rendermode-mode"
+      ]
     },
     {
       "name": "RenderPdfToStream",
-      "kind": "Method",
       "summary": "Renders a QR code as PDF to a stream.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "payload",
-          "type": "string",
-          "description": "The payload text."
+          "type": "System.String",
+          "summary": "The payload text."
         },
         {
           "name": "stream",
-          "type": "Stream",
-          "description": "Destination stream."
+          "type": "System.IO.Stream",
+          "summary": "Destination stream."
         },
         {
           "name": "options",
-          "type": "QrEasyOptions",
-          "description": "Optional rendering options."
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": "Optional rendering options."
         },
         {
           "name": "mode",
-          "type": "RenderMode",
-          "description": "Vector or raster output."
+          "type": "CodeGlyphX.Rendering.RenderMode",
+          "summary": "Vector or raster output."
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static void RenderPdfToStream(string payload, Stream stream, QrEasyOptions options, RenderMode mode)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderPdfToStream(System.String,System.IO.Stream,CodeGlyphX.QrEasyOptions,CodeGlyphX.Rendering.RenderMode)",
-      "anchor": "method-renderpdftostream-static-void-renderpdftostream-string-payload-stream-stream-qreasyoptions-options-rendermode-mode"
+      ]
     },
     {
       "name": "RenderPdfToFile",
-      "kind": "Method",
       "summary": "Renders a QR code as PDF and writes it to a file.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "payload",
-          "type": "string",
-          "description": "The payload text."
+          "type": "System.String",
+          "summary": "The payload text."
         },
         {
           "name": "path",
-          "type": "string",
-          "description": "Output file path."
+          "type": "System.String",
+          "summary": "Output file path."
         },
         {
           "name": "options",
-          "type": "QrEasyOptions",
-          "description": "Optional rendering options."
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": "Optional rendering options."
         },
         {
           "name": "mode",
-          "type": "RenderMode",
-          "description": "Vector or raster output."
+          "type": "CodeGlyphX.Rendering.RenderMode",
+          "summary": "Vector or raster output."
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string RenderPdfToFile(string payload, string path, QrEasyOptions options, RenderMode mode)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderPdfToFile(System.String,System.String,CodeGlyphX.QrEasyOptions,CodeGlyphX.Rendering.RenderMode)",
-      "anchor": "method-renderpdftofile-static-string-renderpdftofile-string-payload-string-path-qreasyoptions-options-rendermode-mode"
+      ]
     },
     {
       "name": "RenderPdfToFile",
-      "kind": "Method",
       "summary": "Renders a QR code as PDF and writes it to a file for a payload with embedded defaults.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "payload",
-          "type": "QrPayloadData",
-          "description": "The payload text."
+          "type": "CodeGlyphX.Payloads.QrPayloadData",
+          "summary": "The payload text."
         },
         {
           "name": "path",
-          "type": "string",
-          "description": "Output file path."
+          "type": "System.String",
+          "summary": "Output file path."
         },
         {
           "name": "options",
-          "type": "QrEasyOptions",
-          "description": "Optional rendering options."
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": "Optional rendering options."
         },
         {
           "name": "mode",
-          "type": "RenderMode",
-          "description": "Vector or raster output."
+          "type": "CodeGlyphX.Rendering.RenderMode",
+          "summary": "Vector or raster output."
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string RenderPdfToFile(QrPayloadData payload, string path, QrEasyOptions options, RenderMode mode)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderPdfToFile(CodeGlyphX.Payloads.QrPayloadData,System.String,CodeGlyphX.QrEasyOptions,CodeGlyphX.Rendering.RenderMode)",
-      "anchor": "method-renderpdftofile-static-string-renderpdftofile-qrpayloaddata-payload-string-path-qreasyoptions-options-rendermode-mode"
+      ]
     },
     {
       "name": "RenderPdf",
-      "kind": "Method",
       "summary": "Renders a QR code as PDF for a payload with embedded defaults.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "payload",
-          "type": "QrPayloadData",
-          "description": "The payload text."
+          "type": "CodeGlyphX.Payloads.QrPayloadData",
+          "summary": "The payload text."
         },
         {
           "name": "options",
-          "type": "QrEasyOptions",
-          "description": "Optional rendering options."
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": "Optional rendering options."
         },
         {
           "name": "mode",
-          "type": "RenderMode",
-          "description": "Vector or raster output."
+          "type": "CodeGlyphX.Rendering.RenderMode",
+          "summary": "Vector or raster output."
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static byte[] RenderPdf(QrPayloadData payload, QrEasyOptions options, RenderMode mode)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderPdf(CodeGlyphX.Payloads.QrPayloadData,CodeGlyphX.QrEasyOptions,CodeGlyphX.Rendering.RenderMode)",
-      "anchor": "method-renderpdf-static-byte-renderpdf-qrpayloaddata-payload-qreasyoptions-options-rendermode-mode"
+      ]
     },
     {
       "name": "RenderPdfToStream",
-      "kind": "Method",
       "summary": "Renders a QR code as PDF to a stream for a payload with embedded defaults.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "payload",
-          "type": "QrPayloadData",
-          "description": "The payload text."
+          "type": "CodeGlyphX.Payloads.QrPayloadData",
+          "summary": "The payload text."
         },
         {
           "name": "stream",
-          "type": "Stream",
-          "description": "Destination stream."
+          "type": "System.IO.Stream",
+          "summary": "Destination stream."
         },
         {
           "name": "options",
-          "type": "QrEasyOptions",
-          "description": "Optional rendering options."
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": "Optional rendering options."
         },
         {
           "name": "mode",
-          "type": "RenderMode",
-          "description": "Vector or raster output."
+          "type": "CodeGlyphX.Rendering.RenderMode",
+          "summary": "Vector or raster output."
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static void RenderPdfToStream(QrPayloadData payload, Stream stream, QrEasyOptions options, RenderMode mode)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderPdfToStream(CodeGlyphX.Payloads.QrPayloadData,System.IO.Stream,CodeGlyphX.QrEasyOptions,CodeGlyphX.Rendering.RenderMode)",
-      "anchor": "method-renderpdftostream-static-void-renderpdftostream-qrpayloaddata-payload-stream-stream-qreasyoptions-options-rendermode-mode"
+      ]
     },
     {
       "name": "RenderEps",
-      "kind": "Method",
       "summary": "Renders a QR code as EPS.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "payload",
-          "type": "string",
-          "description": "The payload text."
+          "type": "System.String",
+          "summary": "The payload text."
         },
         {
           "name": "options",
-          "type": "QrEasyOptions",
-          "description": "Optional rendering options."
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": "Optional rendering options."
         },
         {
           "name": "mode",
-          "type": "RenderMode",
-          "description": "Vector or raster output."
+          "type": "CodeGlyphX.Rendering.RenderMode",
+          "summary": "Vector or raster output."
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string RenderEps(string payload, QrEasyOptions options, RenderMode mode)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderEps(System.String,CodeGlyphX.QrEasyOptions,CodeGlyphX.Rendering.RenderMode)",
-      "anchor": "method-rendereps-static-string-rendereps-string-payload-qreasyoptions-options-rendermode-mode"
+      ]
     },
     {
       "name": "RenderEpsAuto",
-      "kind": "Method",
       "summary": "Detects a payload type and renders a QR code as EPS.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "payload",
-          "type": "string",
-          "description": "The payload text."
+          "type": "System.String",
+          "summary": "The payload text."
         },
         {
           "name": "detectOptions",
-          "type": "QrPayloadDetectOptions",
-          "description": "Payload detection options."
+          "type": "CodeGlyphX.Payloads.QrPayloadDetectOptions",
+          "summary": "Payload detection options."
         },
         {
           "name": "options",
-          "type": "QrEasyOptions",
-          "description": "Optional rendering options."
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": "Optional rendering options."
         },
         {
           "name": "mode",
-          "type": "RenderMode",
-          "description": "Vector or raster output."
+          "type": "CodeGlyphX.Rendering.RenderMode",
+          "summary": "Vector or raster output."
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string RenderEpsAuto(string payload, QrPayloadDetectOptions detectOptions, QrEasyOptions options, RenderMode mode)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderEpsAuto(System.String,CodeGlyphX.Payloads.QrPayloadDetectOptions,CodeGlyphX.QrEasyOptions,CodeGlyphX.Rendering.RenderMode)",
-      "anchor": "method-renderepsauto-static-string-renderepsauto-string-payload-qrpayloaddetectoptions-detectoptions-qreasyoptions-options-rendermode-mode"
+      ]
     },
     {
       "name": "RenderEpsToStream",
-      "kind": "Method",
       "summary": "Renders a QR code as EPS to a stream.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "payload",
-          "type": "string",
-          "description": "The payload text."
+          "type": "System.String",
+          "summary": "The payload text."
         },
         {
           "name": "stream",
-          "type": "Stream",
-          "description": "Destination stream."
+          "type": "System.IO.Stream",
+          "summary": "Destination stream."
         },
         {
           "name": "options",
-          "type": "QrEasyOptions",
-          "description": "Optional rendering options."
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": "Optional rendering options."
         },
         {
           "name": "mode",
-          "type": "RenderMode",
-          "description": "Vector or raster output."
+          "type": "CodeGlyphX.Rendering.RenderMode",
+          "summary": "Vector or raster output."
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static void RenderEpsToStream(string payload, Stream stream, QrEasyOptions options, RenderMode mode)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderEpsToStream(System.String,System.IO.Stream,CodeGlyphX.QrEasyOptions,CodeGlyphX.Rendering.RenderMode)",
-      "anchor": "method-renderepstostream-static-void-renderepstostream-string-payload-stream-stream-qreasyoptions-options-rendermode-mode"
+      ]
     },
     {
       "name": "RenderEpsToFile",
-      "kind": "Method",
       "summary": "Renders a QR code as EPS and writes it to a file.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "payload",
-          "type": "string",
-          "description": "The payload text."
+          "type": "System.String",
+          "summary": "The payload text."
         },
         {
           "name": "path",
-          "type": "string",
-          "description": "Output file path."
+          "type": "System.String",
+          "summary": "Output file path."
         },
         {
           "name": "options",
-          "type": "QrEasyOptions",
-          "description": "Optional rendering options."
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": "Optional rendering options."
         },
         {
           "name": "mode",
-          "type": "RenderMode",
-          "description": "Vector or raster output."
+          "type": "CodeGlyphX.Rendering.RenderMode",
+          "summary": "Vector or raster output."
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string RenderEpsToFile(string payload, string path, QrEasyOptions options, RenderMode mode)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderEpsToFile(System.String,System.String,CodeGlyphX.QrEasyOptions,CodeGlyphX.Rendering.RenderMode)",
-      "anchor": "method-renderepstofile-static-string-renderepstofile-string-payload-string-path-qreasyoptions-options-rendermode-mode"
+      ]
     },
     {
       "name": "RenderEpsToFile",
-      "kind": "Method",
       "summary": "Renders a QR code as EPS and writes it to a file for a payload with embedded defaults.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "payload",
-          "type": "QrPayloadData",
-          "description": "The payload text."
+          "type": "CodeGlyphX.Payloads.QrPayloadData",
+          "summary": "The payload text."
         },
         {
           "name": "path",
-          "type": "string",
-          "description": "Output file path."
+          "type": "System.String",
+          "summary": "Output file path."
         },
         {
           "name": "options",
-          "type": "QrEasyOptions",
-          "description": "Optional rendering options."
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": "Optional rendering options."
         },
         {
           "name": "mode",
-          "type": "RenderMode",
-          "description": "Vector or raster output."
+          "type": "CodeGlyphX.Rendering.RenderMode",
+          "summary": "Vector or raster output."
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string RenderEpsToFile(QrPayloadData payload, string path, QrEasyOptions options, RenderMode mode)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderEpsToFile(CodeGlyphX.Payloads.QrPayloadData,System.String,CodeGlyphX.QrEasyOptions,CodeGlyphX.Rendering.RenderMode)",
-      "anchor": "method-renderepstofile-static-string-renderepstofile-qrpayloaddata-payload-string-path-qreasyoptions-options-rendermode-mode"
+      ]
     },
     {
       "name": "RenderEps",
-      "kind": "Method",
       "summary": "Renders a QR code as EPS for a payload with embedded defaults.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "payload",
-          "type": "QrPayloadData",
-          "description": "The payload text."
+          "type": "CodeGlyphX.Payloads.QrPayloadData",
+          "summary": "The payload text."
         },
         {
           "name": "options",
-          "type": "QrEasyOptions",
-          "description": "Optional rendering options."
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": "Optional rendering options."
         },
         {
           "name": "mode",
-          "type": "RenderMode",
-          "description": "Vector or raster output."
+          "type": "CodeGlyphX.Rendering.RenderMode",
+          "summary": "Vector or raster output."
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string RenderEps(QrPayloadData payload, QrEasyOptions options, RenderMode mode)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderEps(CodeGlyphX.Payloads.QrPayloadData,CodeGlyphX.QrEasyOptions,CodeGlyphX.Rendering.RenderMode)",
-      "anchor": "method-rendereps-static-string-rendereps-qrpayloaddata-payload-qreasyoptions-options-rendermode-mode"
+      ]
     },
     {
       "name": "RenderEpsToStream",
-      "kind": "Method",
       "summary": "Renders a QR code as EPS to a stream for a payload with embedded defaults.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "payload",
-          "type": "QrPayloadData",
-          "description": "The payload text."
+          "type": "CodeGlyphX.Payloads.QrPayloadData",
+          "summary": "The payload text."
         },
         {
           "name": "stream",
-          "type": "Stream",
-          "description": "Destination stream."
+          "type": "System.IO.Stream",
+          "summary": "Destination stream."
         },
         {
           "name": "options",
-          "type": "QrEasyOptions",
-          "description": "Optional rendering options."
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": "Optional rendering options."
         },
         {
           "name": "mode",
-          "type": "RenderMode",
-          "description": "Vector or raster output."
+          "type": "CodeGlyphX.Rendering.RenderMode",
+          "summary": "Vector or raster output."
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static void RenderEpsToStream(QrPayloadData payload, Stream stream, QrEasyOptions options, RenderMode mode)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderEpsToStream(CodeGlyphX.Payloads.QrPayloadData,System.IO.Stream,CodeGlyphX.QrEasyOptions,CodeGlyphX.Rendering.RenderMode)",
-      "anchor": "method-renderepstostream-static-void-renderepstostream-qrpayloaddata-payload-stream-stream-qreasyoptions-options-rendermode-mode"
+      ]
     },
     {
       "name": "RenderAscii",
-      "kind": "Method",
       "summary": "Renders a QR code as ASCII text.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "asciiOptions",
-          "type": "MatrixAsciiRenderOptions",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string RenderAscii(string payload, MatrixAsciiRenderOptions asciiOptions, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderAscii(System.String,CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-renderascii-static-string-renderascii-string-payload-matrixasciirenderoptions-asciioptions-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderAsciiAuto",
-      "kind": "Method",
       "summary": "Detects a payload type and renders a QR code as ASCII text.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "detectOptions",
-          "type": "QrPayloadDetectOptions",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.Payloads.QrPayloadDetectOptions",
+          "summary": null
         },
         {
-          "name": "asciiOptions",
-          "type": "MatrixAsciiRenderOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg4",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string RenderAsciiAuto(string payload, QrPayloadDetectOptions detectOptions, MatrixAsciiRenderOptions asciiOptions, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderAsciiAuto(System.String,CodeGlyphX.Payloads.QrPayloadDetectOptions,CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-renderasciiauto-static-string-renderasciiauto-string-payload-qrpayloaddetectoptions-detectoptions-matrixasciirenderoptions-asciioptions-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderAscii",
-      "kind": "Method",
       "summary": "Renders a QR code as ASCII text for a payload with embedded defaults.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "QrPayloadData",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.Payloads.QrPayloadData",
+          "summary": null
         },
         {
-          "name": "asciiOptions",
-          "type": "MatrixAsciiRenderOptions",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string RenderAscii(QrPayloadData payload, MatrixAsciiRenderOptions asciiOptions, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderAscii(CodeGlyphX.Payloads.QrPayloadData,CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-renderascii-static-string-renderascii-qrpayloaddata-payload-matrixasciirenderoptions-asciioptions-qreasyoptions-options"
+      ]
+    },
+    {
+      "name": "RenderAsciiConsole",
+      "summary": "Renders a QR code as console-friendly ASCII using scan-oriented defaults.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
+        },
+        {
+          "name": "arg2",
+          "type": "System.Int32",
+          "summary": null
+        },
+        {
+          "name": "arg3",
+          "type": "System.Boolean",
+          "summary": null
+        },
+        {
+          "name": "arg4",
+          "type": "System.Boolean",
+          "summary": null
+        },
+        {
+          "name": "arg5",
+          "type": "System.Nullable{CodeGlyphX.Rendering.Png.Rgba32}",
+          "summary": null
+        },
+        {
+          "name": "arg6",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
+        }
+      ]
+    },
+    {
+      "name": "RenderAsciiConsole",
+      "summary": "Renders a QR code as console-friendly ASCII using scan-oriented defaults for a payload with embedded defaults.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "arg1",
+          "type": "CodeGlyphX.Payloads.QrPayloadData",
+          "summary": null
+        },
+        {
+          "name": "arg2",
+          "type": "System.Int32",
+          "summary": null
+        },
+        {
+          "name": "arg3",
+          "type": "System.Boolean",
+          "summary": null
+        },
+        {
+          "name": "arg4",
+          "type": "System.Boolean",
+          "summary": null
+        },
+        {
+          "name": "arg5",
+          "type": "System.Nullable{CodeGlyphX.Rendering.Png.Rgba32}",
+          "summary": null
+        },
+        {
+          "name": "arg6",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
+        }
+      ]
     },
     {
       "name": "RenderPixels",
-      "kind": "Method",
       "summary": "Renders a QR code to a raw RGBA pixel buffer (no PNG encoding).",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "widthPx",
-          "type": "int",
-          "description": null
+          "name": "arg2",
+          "type": "System.Int32@",
+          "summary": null
         },
         {
-          "name": "heightPx",
-          "type": "int",
-          "description": null
+          "name": "arg3",
+          "type": "System.Int32@",
+          "summary": null
         },
         {
-          "name": "stride",
-          "type": "int",
-          "description": null
+          "name": "arg4",
+          "type": "System.Int32@",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg5",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static byte[] RenderPixels(string payload, out int widthPx, out int heightPx, out int stride, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderPixels(System.String,System.Int32@,System.Int32@,System.Int32@,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-renderpixels-static-byte-renderpixels-string-payload-out-int-widthpx-out-int-heightpx-out-int-stride-qreasyoptions-options"
+      ]
     },
     {
       "name": "RenderPixels",
-      "kind": "Method",
       "summary": "Renders a QR code to a raw RGBA pixel buffer (no PNG encoding) for a payload with embedded defaults.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "QrPayloadData",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.Payloads.QrPayloadData",
+          "summary": null
         },
         {
-          "name": "widthPx",
-          "type": "int",
-          "description": null
+          "name": "arg2",
+          "type": "System.Int32@",
+          "summary": null
         },
         {
-          "name": "heightPx",
-          "type": "int",
-          "description": null
+          "name": "arg3",
+          "type": "System.Int32@",
+          "summary": null
         },
         {
-          "name": "stride",
-          "type": "int",
-          "description": null
+          "name": "arg4",
+          "type": "System.Int32@",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrEasyOptions",
-          "description": null
+          "name": "arg5",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static byte[] RenderPixels(QrPayloadData payload, out int widthPx, out int heightPx, out int stride, QrEasyOptions options)",
-      "xmlId": "M:CodeGlyphX.QrEasy.RenderPixels(CodeGlyphX.Payloads.QrPayloadData,System.Int32@,System.Int32@,System.Int32@,CodeGlyphX.QrEasyOptions)",
-      "anchor": "method-renderpixels-static-byte-renderpixels-qrpayloaddata-payload-out-int-widthpx-out-int-heightpx-out-int-stride-qreasyoptions-options"
+      ]
     }
-  ]
+  ],
+  "properties": [],
+  "fields": [],
+  "events": []
 }

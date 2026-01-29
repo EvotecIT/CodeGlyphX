@@ -1,83 +1,30 @@
-{
+﻿{
   "name": "QrContactAddressType",
   "fullName": "CodeGlyphX.Payloads.QrContactAddressType",
   "namespace": "CodeGlyphX.Payloads",
-  "kind": "Enum",
+  "kind": "Class",
   "slug": "codeglyphx-payloads-qrcontactaddresstype",
   "summary": "Contact address type.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
-    {
-      "name": "value__",
-      "kind": "Field",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int value__",
-      "xmlId": "F:CodeGlyphX.Payloads.QrContactAddressType.value__",
-      "anchor": "field-value-int-value"
-    },
+  "methods": [],
+  "properties": [],
+  "fields": [
     {
       "name": "Home",
-      "kind": "Field",
-      "summary": "Home address.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrContactAddressType Home",
-      "xmlId": "F:CodeGlyphX.Payloads.QrContactAddressType.Home",
-      "anchor": "field-home-qrcontactaddresstype-home"
+      "summary": "Home address."
     },
     {
       "name": "Work",
-      "kind": "Field",
-      "summary": "Work address.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrContactAddressType Work",
-      "xmlId": "F:CodeGlyphX.Payloads.QrContactAddressType.Work",
-      "anchor": "field-work-qrcontactaddresstype-work"
+      "summary": "Work address."
     },
     {
       "name": "HomePreferred",
-      "kind": "Field",
-      "summary": "Home address, preferred.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrContactAddressType HomePreferred",
-      "xmlId": "F:CodeGlyphX.Payloads.QrContactAddressType.HomePreferred",
-      "anchor": "field-homepreferred-qrcontactaddresstype-homepreferred"
+      "summary": "Home address, preferred."
     },
     {
       "name": "WorkPreferred",
-      "kind": "Field",
-      "summary": "Work address, preferred.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrContactAddressType WorkPreferred",
-      "xmlId": "F:CodeGlyphX.Payloads.QrContactAddressType.WorkPreferred",
-      "anchor": "field-workpreferred-qrcontactaddresstype-workpreferred"
+      "summary": "Work address, preferred."
     }
-  ]
+  ],
+  "events": []
 }

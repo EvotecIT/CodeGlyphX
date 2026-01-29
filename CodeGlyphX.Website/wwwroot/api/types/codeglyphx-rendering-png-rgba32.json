@@ -1,146 +1,70 @@
-{
+﻿{
   "name": "Rgba32",
   "fullName": "CodeGlyphX.Rendering.Png.Rgba32",
   "namespace": "CodeGlyphX.Rendering.Png",
-  "kind": "Struct",
+  "kind": "Class",
   "slug": "codeglyphx-rendering-png-rgba32",
   "summary": "A simple RGBA color value.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
-      "name": "Rgba32",
-      "kind": "Constructor",
-      "summary": "Creates a new CodeGlyphX.Rendering.Png.Rgba32.",
-      "remarks": null,
+      "name": "#ctor",
+      "summary": "Creates a new .",
       "returns": null,
       "parameters": [
         {
-          "name": "r",
-          "type": "byte",
-          "description": null
+          "name": "arg1",
+          "type": "System.Byte",
+          "summary": null
         },
         {
-          "name": "g",
-          "type": "byte",
-          "description": null
+          "name": "arg2",
+          "type": "System.Byte",
+          "summary": null
         },
         {
-          "name": "b",
-          "type": "byte",
-          "description": null
+          "name": "arg3",
+          "type": "System.Byte",
+          "summary": null
         },
         {
-          "name": "a",
-          "type": "byte",
-          "description": null
+          "name": "arg4",
+          "type": "System.Byte",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "Rgba32(byte r, byte g, byte b, byte a)",
-      "xmlId": "M:CodeGlyphX.Rendering.Png.Rgba32.#ctor(System.Byte,System.Byte,System.Byte,System.Byte)",
-      "anchor": "constructor-rgba32-rgba32-byte-r-byte-g-byte-b-byte-a"
-    },
+      ]
+    }
+  ],
+  "properties": [
     {
       "name": "R",
-      "kind": "Property",
-      "summary": "Gets the red channel.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "byte R {get; }",
-      "xmlId": "P:CodeGlyphX.Rendering.Png.Rgba32.R",
-      "anchor": "property-r-byte-r-get"
+      "summary": "Gets the red channel."
     },
     {
       "name": "G",
-      "kind": "Property",
-      "summary": "Gets the green channel.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "byte G {get; }",
-      "xmlId": "P:CodeGlyphX.Rendering.Png.Rgba32.G",
-      "anchor": "property-g-byte-g-get"
+      "summary": "Gets the green channel."
     },
     {
       "name": "B",
-      "kind": "Property",
-      "summary": "Gets the blue channel.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "byte B {get; }",
-      "xmlId": "P:CodeGlyphX.Rendering.Png.Rgba32.B",
-      "anchor": "property-b-byte-b-get"
+      "summary": "Gets the blue channel."
     },
     {
       "name": "A",
-      "kind": "Property",
-      "summary": "Gets the alpha channel.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "byte A {get; }",
-      "xmlId": "P:CodeGlyphX.Rendering.Png.Rgba32.A",
-      "anchor": "property-a-byte-a-get"
+      "summary": "Gets the alpha channel."
     },
     {
       "name": "Black",
-      "kind": "Property",
-      "summary": "Opaque black.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "Rgba32 Black {get; }",
-      "xmlId": "P:CodeGlyphX.Rendering.Png.Rgba32.Black",
-      "anchor": "property-black-rgba32-black-get"
+      "summary": "Opaque black."
     },
     {
       "name": "White",
-      "kind": "Property",
-      "summary": "Opaque white.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "Rgba32 White {get; }",
-      "xmlId": "P:CodeGlyphX.Rendering.Png.Rgba32.White",
-      "anchor": "property-white-rgba32-white-get"
+      "summary": "Opaque white."
     },
     {
       "name": "Transparent",
-      "kind": "Property",
-      "summary": "Transparent (alpha = 0).",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "Rgba32 Transparent {get; }",
-      "xmlId": "P:CodeGlyphX.Rendering.Png.Rgba32.Transparent",
-      "anchor": "property-transparent-rgba32-transparent-get"
+      "summary": "Transparent (alpha = 0)."
     }
-  ]
+  ],
+  "fields": [],
+  "events": []
 }

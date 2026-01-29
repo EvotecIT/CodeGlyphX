@@ -4,8 +4,8 @@
 ## Overview
 CodeGlyphX is a zero-dependency .NET library for generating and decoding QR codes, barcodes, and 2D matrix codes.
 - Package: CodeGlyphX
-- Version: 1.0.0
-- API types: 309
+- Version: 1.1.0
+- API types: 400
 - License: Apache-2.0
 - Targets: .NET 8+, .NET 10+, .NET Standard 2.0, .NET Framework 4.7.2
 

@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "Code32Encoder",
   "fullName": "CodeGlyphX.Code32.Code32Encoder",
   "namespace": "CodeGlyphX.Code32",
@@ -6,28 +6,21 @@
   "slug": "codeglyphx-code32-code32encoder",
   "summary": "Encodes Code 32 (Italian Pharmacode) barcodes.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
       "name": "Encode",
-      "kind": "Method",
-      "summary": "Encodes a Code 32 barcode from 1-8 digits (left-padded to 8, checksum appended) or 9 digits (checksum validated).\n A leading \u0027A\u0027 is allowed and ignored.",
-      "remarks": null,
+      "summary": "Encodes a Code 32 barcode from 1-8 digits (left-padded to 8, checksum appended) or 9 digits (checksum validated). A leading \u0027A\u0027 is allowed and ignored.",
       "returns": null,
       "parameters": [
         {
-          "name": "content",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static Barcode1D Encode(string content)",
-      "xmlId": "M:CodeGlyphX.Code32.Code32Encoder.Encode(System.String)",
-      "anchor": "method-encode-static-barcode1d-encode-string-content"
+      ]
     }
-  ]
+  ],
+  "properties": [],
+  "fields": [],
+  "events": []
 }

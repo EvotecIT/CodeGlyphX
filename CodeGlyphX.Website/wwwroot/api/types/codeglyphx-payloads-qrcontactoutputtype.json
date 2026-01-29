@@ -1,83 +1,30 @@
-{
+﻿{
   "name": "QrContactOutputType",
   "fullName": "CodeGlyphX.Payloads.QrContactOutputType",
   "namespace": "CodeGlyphX.Payloads",
-  "kind": "Enum",
+  "kind": "Class",
   "slug": "codeglyphx-payloads-qrcontactoutputtype",
   "summary": "Contact payload output formats.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
-    {
-      "name": "value__",
-      "kind": "Field",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int value__",
-      "xmlId": "F:CodeGlyphX.Payloads.QrContactOutputType.value__",
-      "anchor": "field-value-int-value"
-    },
+  "methods": [],
+  "properties": [],
+  "fields": [
     {
       "name": "MeCard",
-      "kind": "Field",
-      "summary": "MECARD format.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrContactOutputType MeCard",
-      "xmlId": "F:CodeGlyphX.Payloads.QrContactOutputType.MeCard",
-      "anchor": "field-mecard-qrcontactoutputtype-mecard"
+      "summary": "MECARD format."
     },
     {
       "name": "VCard21",
-      "kind": "Field",
-      "summary": "vCard 2.1 format.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrContactOutputType VCard21",
-      "xmlId": "F:CodeGlyphX.Payloads.QrContactOutputType.VCard21",
-      "anchor": "field-vcard21-qrcontactoutputtype-vcard21"
+      "summary": "vCard 2.1 format."
     },
     {
       "name": "VCard3",
-      "kind": "Field",
-      "summary": "vCard 3.0 format.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrContactOutputType VCard3",
-      "xmlId": "F:CodeGlyphX.Payloads.QrContactOutputType.VCard3",
-      "anchor": "field-vcard3-qrcontactoutputtype-vcard3"
+      "summary": "vCard 3.0 format."
     },
     {
       "name": "VCard4",
-      "kind": "Field",
-      "summary": "vCard 4.0 format.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrContactOutputType VCard4",
-      "xmlId": "F:CodeGlyphX.Payloads.QrContactOutputType.VCard4",
-      "anchor": "field-vcard4-qrcontactoutputtype-vcard4"
+      "summary": "vCard 4.0 format."
     }
-  ]
+  ],
+  "events": []
 }

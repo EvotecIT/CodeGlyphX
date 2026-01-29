@@ -1,15 +1,12 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>QrPayloads - CodeGlyphX API Reference</title>
-  <meta name="description" content="Helpers for building common QR payloads with recommended defaults." />
-  <link rel="stylesheet" href="../style.css" />
-  <script>(function(){const theme=localStorage.getItem('theme')||'dark';document.documentElement.dataset.theme=theme;})();</script>
+  <title>CodeGlyphX.Payloads.QrPayloads - CodeGlyphX API Reference</title>
+  <link rel="stylesheet" href="/mnt/c/Support/GitHub/CodeMatrix/CodeGlyphX.Website/wwwroot/css/api-docs.css" />
 </head>
 <body>
-  <div class="page">
 <header class="header">
     <div class="header-content">
         <a href="/" class="brand">
@@ -31,19 +28,31 @@
             <div class="nav-links">
                 <a href="/">Home</a>
                 <a href="/playground/">Playground</a>
-                <a href="/docs/">Documentation</a>
+                <a href="/docs/">Docs</a>
+                <a href="/benchmarks/">Benchmarks</a>
                 <a href="/showcase/">Showcase</a>
+                <a href="/pricing/">Pricing</a>
             </div>
             <div class="nav-actions">
-                <button class="theme-toggle" title="Toggle theme" aria-label="Toggle theme">
-                    <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="5"/>
-                        <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
-                    </svg>
-                    <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
-                    </svg>
-                </button>
+                <div class="theme-toggle" role="group" aria-label="Theme selection">
+                    <button data-theme="auto" title="Auto (system)" aria-label="Auto theme">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="2" y="3" width="20" height="14" rx="2"/>
+                            <path d="M8 21h8M12 17v4"/>
+                        </svg>
+                    </button>
+                    <button data-theme="light" title="Light" aria-label="Light theme">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="5"/>
+                            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+                        </svg>
+                    </button>
+                    <button data-theme="dark" title="Dark" aria-label="Dark theme">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
+                        </svg>
+                    </button>
+                </div>
                 <a href="https://github.com/EvotecIT/CodeGlyphX" target="_blank" rel="noopener" class="nav-icon" title="GitHub" aria-label="GitHub">
                     <svg viewBox="0 0 24 24" fill="currentColor">
                         <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
@@ -59,565 +68,553 @@
         </nav>
     </div>
 </header>
+  <main class="pf-api">
+    <a href="../index.html">← API Index</a>
+    <h1>CodeGlyphX.Payloads.QrPayloads</h1>
+    <p>Helpers for building common QR payloads with recommended defaults.</p>
 
-<main class="type-detail">
-  <nav class="breadcrumb" aria-label="Breadcrumb">
-    <a href="../index.html">API Reference</a>
-    <span class="sep">/</span><span>CodeGlyphX.Payloads</span>
-  </nav>
-  <header class="type-header">
-    <h1>QrPayloads</h1>
-    <div class="type-meta">Class · CodeGlyphX.Payloads</div>
-  </header>
-  <p class="type-summary">Helpers for building common QR payloads with recommended defaults.</p>
-  <section class="examples">
-    <h2>Examples</h2>
-    <h3>EXAMPLE 1</h3>
-    <pre><code>
-            using CodeGlyphX;
-            using CodeGlyphX.Payloads;
-            QR.Save(QrPayloads.Wifi(&quot;MyNetwork&quot;, &quot;Password123&quot;), &quot;wifi.png&quot;);</code></pre>
-  </section>
-  <section class="member-section">
-    <h2>Methods</h2>
-    <div class="member" id="method-text-static-qrpayloaddata-text-string-text">
-      <code class="signature">static QrPayloadData Text(string text)</code>
-      <p class="member-summary">Builds a plain text payload.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>text <span class="param-type">string</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-url-static-qrpayloaddata-url-string-url">
-      <code class="signature">static QrPayloadData Url(string url)</code>
-      <p class="member-summary">Builds a URL payload.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>url <span class="param-type">string</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-bookmark-static-qrpayloaddata-bookmark-string-url-string-title">
-      <code class="signature">static QrPayloadData Bookmark(string url, string title)</code>
-      <p class="member-summary">Builds a bookmark payload (MEBKM).</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>url <span class="param-type">string</span></dt>
-        <dt>title <span class="param-type">string</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-whatsappmessage-static-qrpayloaddata-whatsappmessage-string-message-string-number">
-      <code class="signature">static QrPayloadData WhatsAppMessage(string message, string number)</code>
-      <p class="member-summary">Builds a WhatsApp message payload.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>message <span class="param-type">string</span></dt>
-        <dt>number <span class="param-type">string</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-wifi-static-qrpayloaddata-wifi-string-ssid-string-password-string-authtype-bool-hidden-bool-escapehexstrings">
-      <code class="signature">static QrPayloadData Wifi(string ssid, string password, string authType, bool hidden, bool escapeHexStrings)</code>
-      <p class="member-summary">Builds a Wi-Fi payload.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>ssid <span class="param-type">string</span></dt>
-        <dt>password <span class="param-type">string</span></dt>
-        <dt>authType <span class="param-type">string</span></dt>
-        <dt>hidden <span class="param-type">bool</span></dt>
-        <dt>escapeHexStrings <span class="param-type">bool</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-email-static-qrpayloaddata-email-string-address-string-subject-string-message-qrmailencoding-encoding">
-      <code class="signature">static QrPayloadData Email(string address, string subject, string message, QrMailEncoding encoding)</code>
-      <p class="member-summary">Builds an email payload.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>address <span class="param-type">string</span></dt>
-        <dt>subject <span class="param-type">string</span></dt>
-        <dt>message <span class="param-type">string</span></dt>
-        <dt>encoding <span class="param-type">QrMailEncoding</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-mms-static-qrpayloaddata-mms-string-number-string-subject-qrmmsencoding-encoding">
-      <code class="signature">static QrPayloadData Mms(string number, string subject, QrMmsEncoding encoding)</code>
-      <p class="member-summary">Builds an MMS payload.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>number <span class="param-type">string</span></dt>
-        <dt>subject <span class="param-type">string</span></dt>
-        <dt>encoding <span class="param-type">QrMmsEncoding</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-sms-static-qrpayloaddata-sms-string-number-string-message-qrsmsencoding-encoding">
-      <code class="signature">static QrPayloadData Sms(string number, string message, QrSmsEncoding encoding)</code>
-      <p class="member-summary">Builds an SMS payload.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>number <span class="param-type">string</span></dt>
-        <dt>message <span class="param-type">string</span></dt>
-        <dt>encoding <span class="param-type">QrSmsEncoding</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-phone-static-qrpayloaddata-phone-string-number">
-      <code class="signature">static QrPayloadData Phone(string number)</code>
-      <p class="member-summary">Builds a phone payload (tel:).</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>number <span class="param-type">string</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-geo-static-qrpayloaddata-geo-string-latitude-string-longitude-qrgeolocationencoding-encoding">
-      <code class="signature">static QrPayloadData Geo(string latitude, string longitude, QrGeolocationEncoding encoding)</code>
-      <p class="member-summary">Builds a geolocation payload.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>latitude <span class="param-type">string</span></dt>
-        <dt>longitude <span class="param-type">string</span></dt>
-        <dt>encoding <span class="param-type">QrGeolocationEncoding</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-calendarevent-static-qrpayloaddata-calendarevent-string-subject-string-description-string-location-datetime-start-datetime-end-bool-alldayevent-qrcalendarencoding-encoding">
-      <code class="signature">static QrPayloadData CalendarEvent(string subject, string description, string location, DateTime start, DateTime end, bool allDayEvent, QrCalendarEncoding encoding)</code>
-      <p class="member-summary">Builds a calendar event payload.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>subject <span class="param-type">string</span></dt>
-        <dt>description <span class="param-type">string</span></dt>
-        <dt>location <span class="param-type">string</span></dt>
-        <dt>start <span class="param-type">DateTime</span></dt>
-        <dt>end <span class="param-type">DateTime</span></dt>
-        <dt>allDayEvent <span class="param-type">bool</span></dt>
-        <dt>encoding <span class="param-type">QrCalendarEncoding</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-contact-static-qrpayloaddata-contact-qrcontactoutputtype-outputtype-string-firstname-string-lastname-string-nickname-string-phone-string-mobilephone-string-workphone-string-email-nullable-datetime-birthday-string-website-string-street-string-housenumber-string-city-string-zipcode-string-country-string-note-string-stateregion-qrcontactaddressorder-addressorder-string-org-string-orgtitle-qrcontactaddresstype-addresstype">
-      <code class="signature">static QrPayloadData Contact(QrContactOutputType outputType, string firstname, string lastname, string nickname, string phone, string mobilePhone, string workPhone, string email, Nullable&lt;DateTime&gt; birthday, string website, string street, string houseNumber, string city, string zipCode, string country, string note, string stateRegion, QrContactAddressOrder addressOrder, string org, string orgTitle, QrContactAddressType addressType)</code>
-      <p class="member-summary">Builds a contact payload (MeCard or vCard).</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>outputType <span class="param-type">QrContactOutputType</span></dt>
-        <dt>firstname <span class="param-type">string</span></dt>
-        <dt>lastname <span class="param-type">string</span></dt>
-        <dt>nickname <span class="param-type">string</span></dt>
-        <dt>phone <span class="param-type">string</span></dt>
-        <dt>mobilePhone <span class="param-type">string</span></dt>
-        <dt>workPhone <span class="param-type">string</span></dt>
-        <dt>email <span class="param-type">string</span></dt>
-        <dt>birthday <span class="param-type">Nullable&lt;DateTime&gt;</span></dt>
-        <dt>website <span class="param-type">string</span></dt>
-        <dt>street <span class="param-type">string</span></dt>
-        <dt>houseNumber <span class="param-type">string</span></dt>
-        <dt>city <span class="param-type">string</span></dt>
-        <dt>zipCode <span class="param-type">string</span></dt>
-        <dt>country <span class="param-type">string</span></dt>
-        <dt>note <span class="param-type">string</span></dt>
-        <dt>stateRegion <span class="param-type">string</span></dt>
-        <dt>addressOrder <span class="param-type">QrContactAddressOrder</span></dt>
-        <dt>org <span class="param-type">string</span></dt>
-        <dt>orgTitle <span class="param-type">string</span></dt>
-        <dt>addressType <span class="param-type">QrContactAddressType</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-skypecall-static-qrpayloaddata-skypecall-string-username">
-      <code class="signature">static QrPayloadData SkypeCall(string username)</code>
-      <p class="member-summary">Builds a Skype call payload.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>username <span class="param-type">string</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-appstoreapple-static-qrpayloaddata-appstoreapple-string-appid-string-countrycode">
-      <code class="signature">static QrPayloadData AppStoreApple(string appId, string countryCode)</code>
-      <p class="member-summary">Builds an Apple App Store payload.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>appId <span class="param-type">string</span></dt>
-        <dt>countryCode <span class="param-type">string</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-appstoregoogleplay-static-qrpayloaddata-appstoregoogleplay-string-packageid">
-      <code class="signature">static QrPayloadData AppStoreGooglePlay(string packageId)</code>
-      <p class="member-summary">Builds a Google Play payload.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>packageId <span class="param-type">string</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-facebookprofile-static-qrpayloaddata-facebookprofile-string-handleorurl">
-      <code class="signature">static QrPayloadData FacebookProfile(string handleOrUrl)</code>
-      <p class="member-summary">Builds a Facebook profile payload.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>handleOrUrl <span class="param-type">string</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-twitterprofile-static-qrpayloaddata-twitterprofile-string-handleorurl">
-      <code class="signature">static QrPayloadData TwitterProfile(string handleOrUrl)</code>
-      <p class="member-summary">Builds a Twitter profile payload.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>handleOrUrl <span class="param-type">string</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-xprofile-static-qrpayloaddata-xprofile-string-handleorurl">
-      <code class="signature">static QrPayloadData XProfile(string handleOrUrl)</code>
-      <p class="member-summary">Builds an X profile payload.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>handleOrUrl <span class="param-type">string</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-tiktokprofile-static-qrpayloaddata-tiktokprofile-string-handleorurl">
-      <code class="signature">static QrPayloadData TikTokProfile(string handleOrUrl)</code>
-      <p class="member-summary">Builds a TikTok profile payload.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>handleOrUrl <span class="param-type">string</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-linkedinprofile-static-qrpayloaddata-linkedinprofile-string-handleorurl">
-      <code class="signature">static QrPayloadData LinkedInProfile(string handleOrUrl)</code>
-      <p class="member-summary">Builds a LinkedIn profile payload.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>handleOrUrl <span class="param-type">string</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-linkedincompany-static-qrpayloaddata-linkedincompany-string-handleorurl">
-      <code class="signature">static QrPayloadData LinkedInCompany(string handleOrUrl)</code>
-      <p class="member-summary">Builds a LinkedIn company payload.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>handleOrUrl <span class="param-type">string</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-upi-static-qrpayloaddata-upi-string-vpa-string-name-string-merchantcode-string-transactionref-string-transactionnote-nullable-decimal-amount-string-currency">
-      <code class="signature">static QrPayloadData Upi(string vpa, string name, string merchantCode, string transactionRef, string transactionNote, Nullable&lt;decimal&gt; amount, string currency)</code>
-      <p class="member-summary">Builds a UPI payment payload.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>vpa <span class="param-type">string</span></dt>
-        <dt>name <span class="param-type">string</span></dt>
-        <dt>merchantCode <span class="param-type">string</span></dt>
-        <dt>transactionRef <span class="param-type">string</span></dt>
-        <dt>transactionNote <span class="param-type">string</span></dt>
-        <dt>amount <span class="param-type">Nullable&lt;decimal&gt;</span></dt>
-        <dt>currency <span class="param-type">string</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-bitcoinlike-static-qrpayloaddata-bitcoinlike-qrbitcoinliketype-type-string-address-nullable-double-amount-string-label-string-message">
-      <code class="signature">static QrPayloadData BitcoinLike(QrBitcoinLikeType type, string address, Nullable&lt;double&gt; amount, string label, string message)</code>
-      <p class="member-summary">Builds a Bitcoin-like URI payload.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>type <span class="param-type">QrBitcoinLikeType</span></dt>
-        <dt>address <span class="param-type">string</span></dt>
-        <dt>amount <span class="param-type">Nullable&lt;double&gt;</span></dt>
-        <dt>label <span class="param-type">string</span></dt>
-        <dt>message <span class="param-type">string</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-monero-static-qrpayloaddata-monero-string-address-nullable-float-amount-string-paymentid-string-recipientname-string-description">
-      <code class="signature">static QrPayloadData Monero(string address, Nullable&lt;float&gt; amount, string paymentId, string recipientName, string description)</code>
-      <p class="member-summary">Builds a Monero URI payload.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>address <span class="param-type">string</span></dt>
-        <dt>amount <span class="param-type">Nullable&lt;float&gt;</span></dt>
-        <dt>paymentId <span class="param-type">string</span></dt>
-        <dt>recipientName <span class="param-type">string</span></dt>
-        <dt>description <span class="param-type">string</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-shadowsocks-static-qrpayloaddata-shadowsocks-string-hostname-int-port-string-password-qrshadowsocksmethod-method-string-tag">
-      <code class="signature">static QrPayloadData ShadowSocks(string hostname, int port, string password, QrShadowSocksMethod method, string tag)</code>
-      <p class="member-summary">Builds a Shadowsocks URI payload.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>hostname <span class="param-type">string</span></dt>
-        <dt>port <span class="param-type">int</span></dt>
-        <dt>password <span class="param-type">string</span></dt>
-        <dt>method <span class="param-type">QrShadowSocksMethod</span></dt>
-        <dt>tag <span class="param-type">string</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-shadowsocks-static-qrpayloaddata-shadowsocks-string-hostname-int-port-string-password-qrshadowsocksmethod-method-dictionary-string-string-parameters-string-tag">
-      <code class="signature">static QrPayloadData ShadowSocks(string hostname, int port, string password, QrShadowSocksMethod method, Dictionary&lt;string, string&gt; parameters, string tag)</code>
-      <p class="member-summary">Builds a Shadowsocks URI payload with parameters.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>hostname <span class="param-type">string</span></dt>
-        <dt>port <span class="param-type">int</span></dt>
-        <dt>password <span class="param-type">string</span></dt>
-        <dt>method <span class="param-type">QrShadowSocksMethod</span></dt>
-        <dt>parameters <span class="param-type">Dictionary&lt;string, string&gt;</span></dt>
-        <dt>tag <span class="param-type">string</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-onetimepassword-static-qrpayloaddata-onetimepassword-otpauthtype-type-string-secretbase32-string-label-string-issuer-otpalgorithm-algorithm-int-digits-nullable-int-period-nullable-int-counter">
-      <code class="signature">static QrPayloadData OneTimePassword(OtpAuthType type, string secretBase32, string label, string issuer, OtpAlgorithm algorithm, int digits, Nullable&lt;int&gt; period, Nullable&lt;int&gt; counter)</code>
-      <p class="member-summary">Builds an otpauth URI payload for HOTP/TOTP.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>type <span class="param-type">OtpAuthType</span></dt>
-        <dt>secretBase32 <span class="param-type">string</span></dt>
-        <dt>label <span class="param-type">string</span></dt>
-        <dt>issuer <span class="param-type">string</span></dt>
-        <dt>algorithm <span class="param-type">OtpAlgorithm</span></dt>
-        <dt>digits <span class="param-type">int</span></dt>
-        <dt>period <span class="param-type">Nullable&lt;int&gt;</span></dt>
-        <dt>counter <span class="param-type">Nullable&lt;int&gt;</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-detect-static-qrpayloaddata-detect-string-input-qrpayloaddetectoptions-options">
-      <code class="signature">static QrPayloadData Detect(string input, QrPayloadDetectOptions options)</code>
-      <p class="member-summary">Detects the most likely payload type from a raw input string.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>input <span class="param-type">string</span></dt>
-        <dt>options <span class="param-type">QrPayloadDetectOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-paypalme-static-qrpayloaddata-paypalme-string-handleorurl-nullable-decimal-amount-string-currency-bool-usehttps">
-      <code class="signature">static QrPayloadData PayPalMe(string handleOrUrl, Nullable&lt;decimal&gt; amount, string currency, bool useHttps)</code>
-      <p class="member-summary">Builds a PayPal.Me payment payload.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>handleOrUrl <span class="param-type">string</span></dt>
-        <dt>amount <span class="param-type">Nullable&lt;decimal&gt;</span></dt>
-        <dt>currency <span class="param-type">string</span></dt>
-        <dt>useHttps <span class="param-type">bool</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-girocode-static-qrpayloaddata-girocode-string-iban-string-bic-string-name-decimal-amount-string-remittanceinformation-qrgirocoderemittancetype-remittancetype-string-purposeofcredittransfer-string-messagetogirocodeuser-qrgirocodeversion-version-qrgirocodeencoding-encoding">
-      <code class="signature">static QrPayloadData Girocode(string iban, string bic, string name, decimal amount, string remittanceInformation, QrGirocodeRemittanceType remittanceType, string purposeOfCreditTransfer, string messageToGirocodeUser, QrGirocodeVersion version, QrGirocodeEncoding encoding)</code>
-      <p class="member-summary">Builds a SEPA Girocode payload.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>iban <span class="param-type">string</span></dt>
-        <dt>bic <span class="param-type">string</span></dt>
-        <dt>name <span class="param-type">string</span></dt>
-        <dt>amount <span class="param-type">decimal</span></dt>
-        <dt>remittanceInformation <span class="param-type">string</span></dt>
-        <dt>remittanceType <span class="param-type">QrGirocodeRemittanceType</span></dt>
-        <dt>purposeOfCreditTransfer <span class="param-type">string</span></dt>
-        <dt>messageToGirocodeUser <span class="param-type">string</span></dt>
-        <dt>version <span class="param-type">QrGirocodeVersion</span></dt>
-        <dt>encoding <span class="param-type">QrGirocodeEncoding</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-bezahlcodecontact-static-qrpayloaddata-bezahlcodecontact-qrbezahlauthoritytype-authority-string-name-string-account-string-bnc-string-iban-string-bic-string-reason">
-      <code class="signature">static QrPayloadData BezahlCodeContact(QrBezahlAuthorityType authority, string name, string account, string bnc, string iban, string bic, string reason)</code>
-      <p class="member-summary">Builds a BezahlCode contact payload.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>authority <span class="param-type">QrBezahlAuthorityType</span></dt>
-        <dt>name <span class="param-type">string</span></dt>
-        <dt>account <span class="param-type">string</span></dt>
-        <dt>bnc <span class="param-type">string</span></dt>
-        <dt>iban <span class="param-type">string</span></dt>
-        <dt>bic <span class="param-type">string</span></dt>
-        <dt>reason <span class="param-type">string</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-bezahlcodesinglepayment-static-qrpayloaddata-bezahlcodesinglepayment-string-name-string-account-string-bnc-decimal-amount-string-reason-string-currency-string-postingkey-nullable-datetime-executiondate">
-      <code class="signature">static QrPayloadData BezahlCodeSinglePayment(string name, string account, string bnc, decimal amount, string reason, string currency, string postingKey, Nullable&lt;DateTime&gt; executionDate)</code>
-      <p class="member-summary">Builds a BezahlCode single payment payload (non-SEPA).</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>name <span class="param-type">string</span></dt>
-        <dt>account <span class="param-type">string</span></dt>
-        <dt>bnc <span class="param-type">string</span></dt>
-        <dt>amount <span class="param-type">decimal</span></dt>
-        <dt>reason <span class="param-type">string</span></dt>
-        <dt>currency <span class="param-type">string</span></dt>
-        <dt>postingKey <span class="param-type">string</span></dt>
-        <dt>executionDate <span class="param-type">Nullable&lt;DateTime&gt;</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-bezahlcodesinglepaymentsepa-static-qrpayloaddata-bezahlcodesinglepaymentsepa-string-name-string-iban-string-bic-decimal-amount-string-reason-string-currency-string-separeference-nullable-datetime-executiondate">
-      <code class="signature">static QrPayloadData BezahlCodeSinglePaymentSepa(string name, string iban, string bic, decimal amount, string reason, string currency, string sepaReference, Nullable&lt;DateTime&gt; executionDate)</code>
-      <p class="member-summary">Builds a BezahlCode single payment payload (SEPA).</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>name <span class="param-type">string</span></dt>
-        <dt>iban <span class="param-type">string</span></dt>
-        <dt>bic <span class="param-type">string</span></dt>
-        <dt>amount <span class="param-type">decimal</span></dt>
-        <dt>reason <span class="param-type">string</span></dt>
-        <dt>currency <span class="param-type">string</span></dt>
-        <dt>sepaReference <span class="param-type">string</span></dt>
-        <dt>executionDate <span class="param-type">Nullable&lt;DateTime&gt;</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-bezahlcodesingledirectdebit-static-qrpayloaddata-bezahlcodesingledirectdebit-string-name-string-account-string-bnc-decimal-amount-string-creditorid-string-mandateid-datetime-dateofsignature-string-reason-string-currency-string-postingkey-nullable-datetime-executiondate">
-      <code class="signature">static QrPayloadData BezahlCodeSingleDirectDebit(string name, string account, string bnc, decimal amount, string creditorId, string mandateId, DateTime dateOfSignature, string reason, string currency, string postingKey, Nullable&lt;DateTime&gt; executionDate)</code>
-      <p class="member-summary">Builds a BezahlCode single direct debit payload (non-SEPA).</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>name <span class="param-type">string</span></dt>
-        <dt>account <span class="param-type">string</span></dt>
-        <dt>bnc <span class="param-type">string</span></dt>
-        <dt>amount <span class="param-type">decimal</span></dt>
-        <dt>creditorId <span class="param-type">string</span></dt>
-        <dt>mandateId <span class="param-type">string</span></dt>
-        <dt>dateOfSignature <span class="param-type">DateTime</span></dt>
-        <dt>reason <span class="param-type">string</span></dt>
-        <dt>currency <span class="param-type">string</span></dt>
-        <dt>postingKey <span class="param-type">string</span></dt>
-        <dt>executionDate <span class="param-type">Nullable&lt;DateTime&gt;</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-bezahlcodesingledirectdebitsepa-static-qrpayloaddata-bezahlcodesingledirectdebitsepa-string-name-string-iban-string-bic-decimal-amount-string-creditorid-string-mandateid-datetime-dateofsignature-string-reason-string-currency-string-separeference-nullable-datetime-executiondate">
-      <code class="signature">static QrPayloadData BezahlCodeSingleDirectDebitSepa(string name, string iban, string bic, decimal amount, string creditorId, string mandateId, DateTime dateOfSignature, string reason, string currency, string sepaReference, Nullable&lt;DateTime&gt; executionDate)</code>
-      <p class="member-summary">Builds a BezahlCode single direct debit payload (SEPA).</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>name <span class="param-type">string</span></dt>
-        <dt>iban <span class="param-type">string</span></dt>
-        <dt>bic <span class="param-type">string</span></dt>
-        <dt>amount <span class="param-type">decimal</span></dt>
-        <dt>creditorId <span class="param-type">string</span></dt>
-        <dt>mandateId <span class="param-type">string</span></dt>
-        <dt>dateOfSignature <span class="param-type">DateTime</span></dt>
-        <dt>reason <span class="param-type">string</span></dt>
-        <dt>currency <span class="param-type">string</span></dt>
-        <dt>sepaReference <span class="param-type">string</span></dt>
-        <dt>executionDate <span class="param-type">Nullable&lt;DateTime&gt;</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-bezahlcodeperiodicsinglepayment-static-qrpayloaddata-bezahlcodeperiodicsinglepayment-string-name-string-account-string-bnc-decimal-amount-qrbezahlperiodicunit-periodicunit-int-periodicunitrotation-datetime-periodicfirstexecutiondate-datetime-periodiclastexecutiondate-string-reason-string-currency-string-postingkey">
-      <code class="signature">static QrPayloadData BezahlCodePeriodicSinglePayment(string name, string account, string bnc, decimal amount, QrBezahlPeriodicUnit periodicUnit, int periodicUnitRotation, DateTime periodicFirstExecutionDate, DateTime periodicLastExecutionDate, string reason, string currency, string postingKey)</code>
-      <p class="member-summary">Builds a BezahlCode periodic single payment payload (non-SEPA).</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>name <span class="param-type">string</span></dt>
-        <dt>account <span class="param-type">string</span></dt>
-        <dt>bnc <span class="param-type">string</span></dt>
-        <dt>amount <span class="param-type">decimal</span></dt>
-        <dt>periodicUnit <span class="param-type">QrBezahlPeriodicUnit</span></dt>
-        <dt>periodicUnitRotation <span class="param-type">int</span></dt>
-        <dt>periodicFirstExecutionDate <span class="param-type">DateTime</span></dt>
-        <dt>periodicLastExecutionDate <span class="param-type">DateTime</span></dt>
-        <dt>reason <span class="param-type">string</span></dt>
-        <dt>currency <span class="param-type">string</span></dt>
-        <dt>postingKey <span class="param-type">string</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-bezahlcodeperiodicsinglepaymentsepa-static-qrpayloaddata-bezahlcodeperiodicsinglepaymentsepa-string-name-string-iban-string-bic-decimal-amount-qrbezahlperiodicunit-periodicunit-int-periodicunitrotation-datetime-periodicfirstexecutiondate-datetime-periodiclastexecutiondate-string-reason-string-currency-string-separeference">
-      <code class="signature">static QrPayloadData BezahlCodePeriodicSinglePaymentSepa(string name, string iban, string bic, decimal amount, QrBezahlPeriodicUnit periodicUnit, int periodicUnitRotation, DateTime periodicFirstExecutionDate, DateTime periodicLastExecutionDate, string reason, string currency, string sepaReference)</code>
-      <p class="member-summary">Builds a BezahlCode periodic single payment payload (SEPA).</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>name <span class="param-type">string</span></dt>
-        <dt>iban <span class="param-type">string</span></dt>
-        <dt>bic <span class="param-type">string</span></dt>
-        <dt>amount <span class="param-type">decimal</span></dt>
-        <dt>periodicUnit <span class="param-type">QrBezahlPeriodicUnit</span></dt>
-        <dt>periodicUnitRotation <span class="param-type">int</span></dt>
-        <dt>periodicFirstExecutionDate <span class="param-type">DateTime</span></dt>
-        <dt>periodicLastExecutionDate <span class="param-type">DateTime</span></dt>
-        <dt>reason <span class="param-type">string</span></dt>
-        <dt>currency <span class="param-type">string</span></dt>
-        <dt>sepaReference <span class="param-type">string</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-russiapaymentorder-static-qrpayloaddata-russiapaymentorder-string-name-string-personalacc-string-bankname-string-bic-string-correspacc-string-payeeinn-string-kpp-decimal-sum-string-purpose">
-      <code class="signature">static QrPayloadData RussiaPaymentOrder(string name, string personalAcc, string bankName, string bic, string correspAcc, string payeeInn, string kpp, decimal sum, string purpose)</code>
-      <p class="member-summary">Builds a Russia payment order payload (ST00012).</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>name <span class="param-type">string</span></dt>
-        <dt>personalAcc <span class="param-type">string</span></dt>
-        <dt>bankName <span class="param-type">string</span></dt>
-        <dt>bic <span class="param-type">string</span></dt>
-        <dt>correspAcc <span class="param-type">string</span></dt>
-        <dt>payeeInn <span class="param-type">string</span></dt>
-        <dt>kpp <span class="param-type">string</span></dt>
-        <dt>sum <span class="param-type">decimal</span></dt>
-        <dt>purpose <span class="param-type">string</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-appstore-static-qrpayloaddata-appstore-string-appidorurl-qrappstoreplatform-platform">
-      <code class="signature">static QrPayloadData AppStore(string appIdOrUrl, QrAppStorePlatform platform)</code>
-      <p class="member-summary">Builds an App Store payload for the given platform.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>appIdOrUrl <span class="param-type">string</span></dt>
-        <dt>platform <span class="param-type">QrAppStorePlatform</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-facebook-static-qrpayloaddata-facebook-string-profileorurl">
-      <code class="signature">static QrPayloadData Facebook(string profileOrUrl)</code>
-      <p class="member-summary">Builds a Facebook profile payload.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>profileOrUrl <span class="param-type">string</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-twitter-static-qrpayloaddata-twitter-string-handleorurl">
-      <code class="signature">static QrPayloadData Twitter(string handleOrUrl)</code>
-      <p class="member-summary">Builds a Twitter/X profile payload.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>handleOrUrl <span class="param-type">string</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-tiktok-static-qrpayloaddata-tiktok-string-handleorurl">
-      <code class="signature">static QrPayloadData TikTok(string handleOrUrl)</code>
-      <p class="member-summary">Builds a TikTok profile payload.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>handleOrUrl <span class="param-type">string</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-linkedin-static-qrpayloaddata-linkedin-string-handleorurl">
-      <code class="signature">static QrPayloadData LinkedIn(string handleOrUrl)</code>
-      <p class="member-summary">Builds a LinkedIn profile payload.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>handleOrUrl <span class="param-type">string</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-slovenianupn-static-qrpayloaddata-slovenianupn-slovenianupnqrpayload-payload">
-      <code class="signature">static QrPayloadData SlovenianUpn(SlovenianUpnQrPayload payload)</code>
-      <p class="member-summary">Builds a Slovenian UPN QR payload.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">SlovenianUpnQrPayload</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-swissqrcode-static-qrpayloaddata-swissqrcode-swissqrcodepayload-payload">
-      <code class="signature">static QrPayloadData SwissQrCode(SwissQrCodePayload payload)</code>
-      <p class="member-summary">Builds a Swiss QR Code payload.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">SwissQrCodePayload</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-russiapaymentorder-static-qrpayloaddata-russiapaymentorder-russiapaymentorderpayload-payload">
-      <code class="signature">static QrPayloadData RussiaPaymentOrder(RussiaPaymentOrderPayload payload)</code>
-      <p class="member-summary">Builds a Russia payment order payload.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>payload <span class="param-type">RussiaPaymentOrderPayload</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-bezahlcode-static-qrpayloaddata-bezahlcode-qrbezahlauthoritytype-authority-string-name-string-account-string-bnc-string-iban-string-bic-string-reason">
-      <code class="signature">static QrPayloadData BezahlCode(QrBezahlAuthorityType authority, string name, string account, string bnc, string iban, string bic, string reason)</code>
-      <p class="member-summary">Builds a BezahlCode payload (contact).</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>authority <span class="param-type">QrBezahlAuthorityType</span></dt>
-        <dt>name <span class="param-type">string</span></dt>
-        <dt>account <span class="param-type">string</span></dt>
-        <dt>bnc <span class="param-type">string</span></dt>
-        <dt>iban <span class="param-type">string</span></dt>
-        <dt>bic <span class="param-type">string</span></dt>
-        <dt>reason <span class="param-type">string</span></dt>
-      </dl>
-    </div>
-  </section>
-</main>
+    <section class="pf-api-section">
+      <h2>Methods</h2>
+      <ul>
+        <li>
+          <strong>Text</strong> - Builds a plain text payload.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>Url</strong> - Builds a URL payload.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>Bookmark</strong> - Builds a bookmark payload (MEBKM).
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (System.String)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>WhatsAppMessage</strong> - Builds a WhatsApp message payload.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (System.String)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>Wifi</strong> - Builds a Wi-Fi payload.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (System.String)</li>
+              <li><code>arg3</code> (System.String)</li>
+              <li><code>arg4</code> (System.Boolean)</li>
+              <li><code>arg5</code> (System.Boolean)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>Email</strong> - Builds an email payload.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (System.String)</li>
+              <li><code>arg3</code> (System.String)</li>
+              <li><code>arg4</code> (CodeGlyphX.Payloads.QrMailEncoding)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>Mms</strong> - Builds an MMS payload.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (System.String)</li>
+              <li><code>arg3</code> (CodeGlyphX.Payloads.QrMmsEncoding)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>Sms</strong> - Builds an SMS payload.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (System.String)</li>
+              <li><code>arg3</code> (CodeGlyphX.Payloads.QrSmsEncoding)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>Phone</strong> - Builds a phone payload (tel:).
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>Geo</strong> - Builds a geolocation payload.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (System.String)</li>
+              <li><code>arg3</code> (CodeGlyphX.Payloads.QrGeolocationEncoding)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>CalendarEvent</strong> - Builds a calendar event payload.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (System.String)</li>
+              <li><code>arg3</code> (System.String)</li>
+              <li><code>arg4</code> (System.DateTime)</li>
+              <li><code>arg5</code> (System.DateTime)</li>
+              <li><code>arg6</code> (System.Boolean)</li>
+              <li><code>arg7</code> (CodeGlyphX.Payloads.QrCalendarEncoding)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>Contact</strong> - Builds a contact payload (MeCard or vCard).
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (CodeGlyphX.Payloads.QrContactOutputType)</li>
+              <li><code>arg2</code> (System.String)</li>
+              <li><code>arg3</code> (System.String)</li>
+              <li><code>arg4</code> (System.String)</li>
+              <li><code>arg5</code> (System.String)</li>
+              <li><code>arg6</code> (System.String)</li>
+              <li><code>arg7</code> (System.String)</li>
+              <li><code>arg8</code> (System.String)</li>
+              <li><code>arg9</code> (System.Nullable{System.DateTime})</li>
+              <li><code>arg10</code> (System.String)</li>
+              <li><code>arg11</code> (System.String)</li>
+              <li><code>arg12</code> (System.String)</li>
+              <li><code>arg13</code> (System.String)</li>
+              <li><code>arg14</code> (System.String)</li>
+              <li><code>arg15</code> (System.String)</li>
+              <li><code>arg16</code> (System.String)</li>
+              <li><code>arg17</code> (System.String)</li>
+              <li><code>arg18</code> (CodeGlyphX.Payloads.QrContactAddressOrder)</li>
+              <li><code>arg19</code> (System.String)</li>
+              <li><code>arg20</code> (System.String)</li>
+              <li><code>arg21</code> (CodeGlyphX.Payloads.QrContactAddressType)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>SkypeCall</strong> - Builds a Skype call payload.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>AppStoreApple</strong> - Builds an Apple App Store payload.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (System.String)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>AppStoreGooglePlay</strong> - Builds a Google Play payload.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>FacebookProfile</strong> - Builds a Facebook profile payload.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>TwitterProfile</strong> - Builds a Twitter profile payload.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>XProfile</strong> - Builds an X profile payload.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>TikTokProfile</strong> - Builds a TikTok profile payload.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>LinkedInProfile</strong> - Builds a LinkedIn profile payload.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>LinkedInCompany</strong> - Builds a LinkedIn company payload.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>Upi</strong> - Builds a UPI payment payload.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (System.String)</li>
+              <li><code>arg3</code> (System.String)</li>
+              <li><code>arg4</code> (System.String)</li>
+              <li><code>arg5</code> (System.String)</li>
+              <li><code>arg6</code> (System.Nullable{System.Decimal})</li>
+              <li><code>arg7</code> (System.String)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>BitcoinLike</strong> - Builds a Bitcoin-like URI payload.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (CodeGlyphX.Payloads.QrBitcoinLikeType)</li>
+              <li><code>arg2</code> (System.String)</li>
+              <li><code>arg3</code> (System.Nullable{System.Double})</li>
+              <li><code>arg4</code> (System.String)</li>
+              <li><code>arg5</code> (System.String)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>Monero</strong> - Builds a Monero URI payload.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (System.Nullable{System.Single})</li>
+              <li><code>arg3</code> (System.String)</li>
+              <li><code>arg4</code> (System.String)</li>
+              <li><code>arg5</code> (System.String)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>ShadowSocks</strong> - Builds a Shadowsocks URI payload.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (System.Int32)</li>
+              <li><code>arg3</code> (System.String)</li>
+              <li><code>arg4</code> (CodeGlyphX.Payloads.QrShadowSocksMethod)</li>
+              <li><code>arg5</code> (System.String)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>ShadowSocks</strong> - Builds a Shadowsocks URI payload with parameters.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (System.Int32)</li>
+              <li><code>arg3</code> (System.String)</li>
+              <li><code>arg4</code> (CodeGlyphX.Payloads.QrShadowSocksMethod)</li>
+              <li><code>arg5</code> (System.Collections.Generic.Dictionary{System.String,System.String})</li>
+              <li><code>arg6</code> (System.String)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>OneTimePassword</strong> - Builds an otpauth URI payload for HOTP/TOTP.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (CodeGlyphX.OtpAuthType)</li>
+              <li><code>arg2</code> (System.String)</li>
+              <li><code>arg3</code> (System.String)</li>
+              <li><code>arg4</code> (System.String)</li>
+              <li><code>arg5</code> (CodeGlyphX.OtpAlgorithm)</li>
+              <li><code>arg6</code> (System.Int32)</li>
+              <li><code>arg7</code> (System.Nullable{System.Int32})</li>
+              <li><code>arg8</code> (System.Nullable{System.Int32})</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>Detect</strong> - Detects the most likely payload type from a raw input string.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (CodeGlyphX.Payloads.QrPayloadDetectOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>PayPalMe</strong> - Builds a PayPal.Me payment payload.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (System.Nullable{System.Decimal})</li>
+              <li><code>arg3</code> (System.String)</li>
+              <li><code>arg4</code> (System.Boolean)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>Girocode</strong> - Builds a SEPA Girocode payload.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (System.String)</li>
+              <li><code>arg3</code> (System.String)</li>
+              <li><code>arg4</code> (System.Decimal)</li>
+              <li><code>arg5</code> (System.String)</li>
+              <li><code>arg6</code> (CodeGlyphX.Payloads.QrGirocodeRemittanceType)</li>
+              <li><code>arg7</code> (System.String)</li>
+              <li><code>arg8</code> (System.String)</li>
+              <li><code>arg9</code> (CodeGlyphX.Payloads.QrGirocodeVersion)</li>
+              <li><code>arg10</code> (CodeGlyphX.Payloads.QrGirocodeEncoding)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>BezahlCodeContact</strong> - Builds a BezahlCode contact payload.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (CodeGlyphX.Payloads.QrBezahlAuthorityType)</li>
+              <li><code>arg2</code> (System.String)</li>
+              <li><code>arg3</code> (System.String)</li>
+              <li><code>arg4</code> (System.String)</li>
+              <li><code>arg5</code> (System.String)</li>
+              <li><code>arg6</code> (System.String)</li>
+              <li><code>arg7</code> (System.String)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>BezahlCodeSinglePayment</strong> - Builds a BezahlCode single payment payload (non-SEPA).
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (System.String)</li>
+              <li><code>arg3</code> (System.String)</li>
+              <li><code>arg4</code> (System.Decimal)</li>
+              <li><code>arg5</code> (System.String)</li>
+              <li><code>arg6</code> (System.String)</li>
+              <li><code>arg7</code> (System.String)</li>
+              <li><code>arg8</code> (System.Nullable{System.DateTime})</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>BezahlCodeSinglePaymentSepa</strong> - Builds a BezahlCode single payment payload (SEPA).
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (System.String)</li>
+              <li><code>arg3</code> (System.String)</li>
+              <li><code>arg4</code> (System.Decimal)</li>
+              <li><code>arg5</code> (System.String)</li>
+              <li><code>arg6</code> (System.String)</li>
+              <li><code>arg7</code> (System.String)</li>
+              <li><code>arg8</code> (System.Nullable{System.DateTime})</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>BezahlCodeSingleDirectDebit</strong> - Builds a BezahlCode single direct debit payload (non-SEPA).
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (System.String)</li>
+              <li><code>arg3</code> (System.String)</li>
+              <li><code>arg4</code> (System.Decimal)</li>
+              <li><code>arg5</code> (System.String)</li>
+              <li><code>arg6</code> (System.String)</li>
+              <li><code>arg7</code> (System.DateTime)</li>
+              <li><code>arg8</code> (System.String)</li>
+              <li><code>arg9</code> (System.String)</li>
+              <li><code>arg10</code> (System.String)</li>
+              <li><code>arg11</code> (System.Nullable{System.DateTime})</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>BezahlCodeSingleDirectDebitSepa</strong> - Builds a BezahlCode single direct debit payload (SEPA).
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (System.String)</li>
+              <li><code>arg3</code> (System.String)</li>
+              <li><code>arg4</code> (System.Decimal)</li>
+              <li><code>arg5</code> (System.String)</li>
+              <li><code>arg6</code> (System.String)</li>
+              <li><code>arg7</code> (System.DateTime)</li>
+              <li><code>arg8</code> (System.String)</li>
+              <li><code>arg9</code> (System.String)</li>
+              <li><code>arg10</code> (System.String)</li>
+              <li><code>arg11</code> (System.Nullable{System.DateTime})</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>BezahlCodePeriodicSinglePayment</strong> - Builds a BezahlCode periodic single payment payload (non-SEPA).
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (System.String)</li>
+              <li><code>arg3</code> (System.String)</li>
+              <li><code>arg4</code> (System.Decimal)</li>
+              <li><code>arg5</code> (CodeGlyphX.Payloads.QrBezahlPeriodicUnit)</li>
+              <li><code>arg6</code> (System.Int32)</li>
+              <li><code>arg7</code> (System.DateTime)</li>
+              <li><code>arg8</code> (System.DateTime)</li>
+              <li><code>arg9</code> (System.String)</li>
+              <li><code>arg10</code> (System.String)</li>
+              <li><code>arg11</code> (System.String)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>BezahlCodePeriodicSinglePaymentSepa</strong> - Builds a BezahlCode periodic single payment payload (SEPA).
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (System.String)</li>
+              <li><code>arg3</code> (System.String)</li>
+              <li><code>arg4</code> (System.Decimal)</li>
+              <li><code>arg5</code> (CodeGlyphX.Payloads.QrBezahlPeriodicUnit)</li>
+              <li><code>arg6</code> (System.Int32)</li>
+              <li><code>arg7</code> (System.DateTime)</li>
+              <li><code>arg8</code> (System.DateTime)</li>
+              <li><code>arg9</code> (System.String)</li>
+              <li><code>arg10</code> (System.String)</li>
+              <li><code>arg11</code> (System.String)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RussiaPaymentOrder</strong> - Builds a Russia payment order payload (ST00012).
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (System.String)</li>
+              <li><code>arg3</code> (System.String)</li>
+              <li><code>arg4</code> (System.String)</li>
+              <li><code>arg5</code> (System.String)</li>
+              <li><code>arg6</code> (System.String)</li>
+              <li><code>arg7</code> (System.String)</li>
+              <li><code>arg8</code> (System.Decimal)</li>
+              <li><code>arg9</code> (System.String)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>AppStore</strong> - Builds an App Store payload for the given platform.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (CodeGlyphX.Payloads.QrAppStorePlatform)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>Facebook</strong> - Builds a Facebook profile payload.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>Twitter</strong> - Builds a Twitter/X profile payload.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>TikTok</strong> - Builds a TikTok profile payload.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>LinkedIn</strong> - Builds a LinkedIn profile payload.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>SlovenianUpn</strong> - Builds a Slovenian UPN QR payload.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (CodeGlyphX.Payloads.SlovenianUpnQrPayload)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>SwissQrCode</strong> - Builds a Swiss QR Code payload.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (CodeGlyphX.Payloads.SwissQrCodePayload)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RussiaPaymentOrder</strong> - Builds a Russia payment order payload.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (CodeGlyphX.Payloads.RussiaPaymentOrderPayload)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>BezahlCode</strong> - Builds a BezahlCode payload (contact).
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (CodeGlyphX.Payloads.QrBezahlAuthorityType)</li>
+              <li><code>arg2</code> (System.String)</li>
+              <li><code>arg3</code> (System.String)</li>
+              <li><code>arg4</code> (System.String)</li>
+              <li><code>arg5</code> (System.String)</li>
+              <li><code>arg6</code> (System.String)</li>
+              <li><code>arg7</code> (System.String)</li>
+            </ul>
+          </div>
+        </li>
+      </ul>
+    </section>
+  </main>
 <footer class="footer">
     <div class="footer-content">
         <div class="footer-brand">
@@ -632,20 +629,21 @@
                 <h3>Product</h3>
                 <a href="/">Home</a>
                 <a href="/playground/">Playground</a>
-                <a href="/docs/">Documentation</a>
+                <a href="/docs/">Docs</a>
+                <a href="/benchmarks/">Benchmarks</a>
                 <a href="/showcase/">Showcase</a>
             </div>
             <div class="footer-section">
                 <h3>Resources</h3>
                 <a href="/faq/">FAQ</a>
-                <a href="https://www.nuget.org/packages/CodeGlyphX" target="_blank" rel="noopener">NuGet Package</a>
-                <a href="https://github.com/EvotecIT/CodeGlyphX" target="_blank" rel="noopener">GitHub Repository</a>
-                <a href="https://github.com/EvotecIT/CodeGlyphX/issues" target="_blank" rel="noopener">Report Issue</a>
+                <a href="https://www.nuget.org/packages/CodeGlyphX" target="_blank" rel="noopener" aria-label="NuGet Package (opens in new tab)">NuGet Package</a>
+                <a href="https://github.com/EvotecIT/CodeGlyphX" target="_blank" rel="noopener" aria-label="GitHub Repository (opens in new tab)">GitHub Repository</a>
+                <a href="https://github.com/EvotecIT/CodeGlyphX/issues" target="_blank" rel="noopener" aria-label="Report Issue (opens in new tab)">Report Issue</a>
             </div>
             <div class="footer-section">
                 <h3>Company</h3>
-                <a href="https://evotec.xyz" target="_blank" rel="noopener">Evotec Services</a>
-                <a href="https://evotec.xyz/hub" target="_blank" rel="noopener">Blog</a>
+                <a href="https://evotec.xyz" target="_blank" rel="noopener" aria-label="Evotec Services (opens in new tab)">Evotec Services</a>
+                <a href="https://evotec.xyz/hub" target="_blank" rel="noopener" aria-label="Blog (opens in new tab)">Blog</a>
             </div>
         </div>
         <div class="footer-bottom">
@@ -662,7 +660,5 @@
     </div>
 </footer>
 <script src="/js/site.js"></script>
-
-  </div>
 </body>
 </html>

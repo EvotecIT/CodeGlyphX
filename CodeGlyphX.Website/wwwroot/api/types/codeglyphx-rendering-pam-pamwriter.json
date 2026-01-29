@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "PamWriter",
   "fullName": "CodeGlyphX.Rendering.Pam.PamWriter",
   "namespace": "CodeGlyphX.Rendering.Pam",
@@ -6,83 +6,127 @@
   "slug": "codeglyphx-rendering-pam-pamwriter",
   "summary": "Writes PAM (P7) images from RGBA buffers.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
       "name": "WriteRgba32",
-      "kind": "Method",
       "summary": "Writes a PAM byte array from an RGBA buffer.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "width",
-          "type": "int",
-          "description": null
+          "name": "arg1",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "height",
-          "type": "int",
-          "description": null
+          "name": "arg2",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "rgba",
-          "type": "ReadOnlySpan\u003Cbyte\u003E",
-          "description": null
+          "name": "arg3",
+          "type": "System.ReadOnlySpan{System.Byte}",
+          "summary": null
         },
         {
-          "name": "stride",
-          "type": "int",
-          "description": null
+          "name": "arg4",
+          "type": "System.Int32",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static byte[] WriteRgba32(int width, int height, ReadOnlySpan\u003Cbyte\u003E rgba, int stride)",
-      "xmlId": "M:CodeGlyphX.Rendering.Pam.PamWriter.WriteRgba32(System.Int32,System.Int32,System.ReadOnlySpan{System.Byte},System.Int32)",
-      "anchor": "method-writergba32-static-byte-writergba32-int-width-int-height-readonlyspan-byte-rgba-int-stride"
+      ]
     },
     {
       "name": "WriteRgba32",
-      "kind": "Method",
       "summary": "Writes a PAM (P7) stream from an RGBA buffer.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "stream",
-          "type": "Stream",
-          "description": null
+          "name": "arg1",
+          "type": "System.IO.Stream",
+          "summary": null
         },
         {
-          "name": "width",
-          "type": "int",
-          "description": null
+          "name": "arg2",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "height",
-          "type": "int",
-          "description": null
+          "name": "arg3",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "rgba",
-          "type": "ReadOnlySpan\u003Cbyte\u003E",
-          "description": null
+          "name": "arg4",
+          "type": "System.ReadOnlySpan{System.Byte}",
+          "summary": null
         },
         {
-          "name": "stride",
-          "type": "int",
-          "description": null
+          "name": "arg5",
+          "type": "System.Int32",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static void WriteRgba32(Stream stream, int width, int height, ReadOnlySpan\u003Cbyte\u003E rgba, int stride)",
-      "xmlId": "M:CodeGlyphX.Rendering.Pam.PamWriter.WriteRgba32(System.IO.Stream,System.Int32,System.Int32,System.ReadOnlySpan{System.Byte},System.Int32)",
-      "anchor": "method-writergba32-static-void-writergba32-stream-stream-int-width-int-height-readonlyspan-byte-rgba-int-stride"
+      ]
+    },
+    {
+      "name": "WriteRgba32Scanlines",
+      "summary": "Writes a PAM byte array from a PNG scanline buffer (filter byte per row).",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "arg1",
+          "type": "System.Int32",
+          "summary": null
+        },
+        {
+          "name": "arg2",
+          "type": "System.Int32",
+          "summary": null
+        },
+        {
+          "name": "arg3",
+          "type": "System.ReadOnlySpan{System.Byte}",
+          "summary": null
+        },
+        {
+          "name": "arg4",
+          "type": "System.Int32",
+          "summary": null
+        }
+      ]
+    },
+    {
+      "name": "WriteRgba32Scanlines",
+      "summary": "Writes a PAM (P7) stream from a PNG scanline buffer (filter byte per row).",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "arg1",
+          "type": "System.IO.Stream",
+          "summary": null
+        },
+        {
+          "name": "arg2",
+          "type": "System.Int32",
+          "summary": null
+        },
+        {
+          "name": "arg3",
+          "type": "System.Int32",
+          "summary": null
+        },
+        {
+          "name": "arg4",
+          "type": "System.ReadOnlySpan{System.Byte}",
+          "summary": null
+        },
+        {
+          "name": "arg5",
+          "type": "System.Int32",
+          "summary": null
+        }
+      ]
     }
-  ]
+  ],
+  "properties": [],
+  "fields": [],
+  "events": []
 }

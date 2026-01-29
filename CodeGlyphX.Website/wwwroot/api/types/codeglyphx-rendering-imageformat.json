@@ -1,223 +1,74 @@
-{
+﻿{
   "name": "ImageFormat",
   "fullName": "CodeGlyphX.Rendering.ImageFormat",
   "namespace": "CodeGlyphX.Rendering",
-  "kind": "Enum",
+  "kind": "Class",
   "slug": "codeglyphx-rendering-imageformat",
-  "summary": "Known image formats supported by CodeGlyphX.Rendering.ImageReader.",
+  "summary": "Known image formats supported by .",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
-    {
-      "name": "value__",
-      "kind": "Field",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int value__",
-      "xmlId": "F:CodeGlyphX.Rendering.ImageFormat.value__",
-      "anchor": "field-value-int-value"
-    },
+  "methods": [],
+  "properties": [],
+  "fields": [
     {
       "name": "Unknown",
-      "kind": "Field",
-      "summary": "Format could not be detected.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "ImageFormat Unknown",
-      "xmlId": "F:CodeGlyphX.Rendering.ImageFormat.Unknown",
-      "anchor": "field-unknown-imageformat-unknown"
+      "summary": "Format could not be detected."
     },
     {
       "name": "Png",
-      "kind": "Field",
-      "summary": "PNG image.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "ImageFormat Png",
-      "xmlId": "F:CodeGlyphX.Rendering.ImageFormat.Png",
-      "anchor": "field-png-imageformat-png"
+      "summary": "PNG image."
     },
     {
       "name": "Jpeg",
-      "kind": "Field",
-      "summary": "JPEG image.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "ImageFormat Jpeg",
-      "xmlId": "F:CodeGlyphX.Rendering.ImageFormat.Jpeg",
-      "anchor": "field-jpeg-imageformat-jpeg"
+      "summary": "JPEG image."
     },
     {
       "name": "Gif",
-      "kind": "Field",
-      "summary": "GIF image.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "ImageFormat Gif",
-      "xmlId": "F:CodeGlyphX.Rendering.ImageFormat.Gif",
-      "anchor": "field-gif-imageformat-gif"
+      "summary": "GIF image."
     },
     {
       "name": "Bmp",
-      "kind": "Field",
-      "summary": "BMP image.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "ImageFormat Bmp",
-      "xmlId": "F:CodeGlyphX.Rendering.ImageFormat.Bmp",
-      "anchor": "field-bmp-imageformat-bmp"
+      "summary": "BMP image."
     },
     {
       "name": "Pbm",
-      "kind": "Field",
-      "summary": "PBM image.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "ImageFormat Pbm",
-      "xmlId": "F:CodeGlyphX.Rendering.ImageFormat.Pbm",
-      "anchor": "field-pbm-imageformat-pbm"
+      "summary": "PBM image."
     },
     {
       "name": "Pgm",
-      "kind": "Field",
-      "summary": "PGM image.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "ImageFormat Pgm",
-      "xmlId": "F:CodeGlyphX.Rendering.ImageFormat.Pgm",
-      "anchor": "field-pgm-imageformat-pgm"
+      "summary": "PGM image."
     },
     {
       "name": "Pam",
-      "kind": "Field",
-      "summary": "PAM image.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "ImageFormat Pam",
-      "xmlId": "F:CodeGlyphX.Rendering.ImageFormat.Pam",
-      "anchor": "field-pam-imageformat-pam"
+      "summary": "PAM image."
     },
     {
       "name": "Ppm",
-      "kind": "Field",
-      "summary": "PPM image.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "ImageFormat Ppm",
-      "xmlId": "F:CodeGlyphX.Rendering.ImageFormat.Ppm",
-      "anchor": "field-ppm-imageformat-ppm"
+      "summary": "PPM image."
     },
     {
       "name": "Tga",
-      "kind": "Field",
-      "summary": "TGA image.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "ImageFormat Tga",
-      "xmlId": "F:CodeGlyphX.Rendering.ImageFormat.Tga",
-      "anchor": "field-tga-imageformat-tga"
+      "summary": "TGA image."
     },
     {
       "name": "Tiff",
-      "kind": "Field",
-      "summary": "TIFF image.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "ImageFormat Tiff",
-      "xmlId": "F:CodeGlyphX.Rendering.ImageFormat.Tiff",
-      "anchor": "field-tiff-imageformat-tiff"
+      "summary": "TIFF image."
     },
     {
       "name": "Xpm",
-      "kind": "Field",
-      "summary": "XPM image.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "ImageFormat Xpm",
-      "xmlId": "F:CodeGlyphX.Rendering.ImageFormat.Xpm",
-      "anchor": "field-xpm-imageformat-xpm"
+      "summary": "XPM image."
     },
     {
       "name": "Xbm",
-      "kind": "Field",
-      "summary": "XBM image.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "ImageFormat Xbm",
-      "xmlId": "F:CodeGlyphX.Rendering.ImageFormat.Xbm",
-      "anchor": "field-xbm-imageformat-xbm"
+      "summary": "XBM image."
     },
     {
       "name": "Ico",
-      "kind": "Field",
-      "summary": "ICO image (embedded PNG/BMP).",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "ImageFormat Ico",
-      "xmlId": "F:CodeGlyphX.Rendering.ImageFormat.Ico",
-      "anchor": "field-ico-imageformat-ico"
+      "summary": "ICO image (embedded PNG/BMP)."
+    },
+    {
+      "name": "Webp",
+      "summary": "WebP image (managed VP8/VP8L stills; first-frame decode for animations)."
     }
-  ]
+  ],
+  "events": []
 }

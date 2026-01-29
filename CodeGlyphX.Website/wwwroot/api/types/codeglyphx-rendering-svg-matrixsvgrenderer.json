@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "MatrixSvgRenderer",
   "fullName": "CodeGlyphX.Rendering.Svg.MatrixSvgRenderer",
   "namespace": "CodeGlyphX.Rendering.Svg",
@@ -6,128 +6,97 @@
   "slug": "codeglyphx-rendering-svg-matrixsvgrenderer",
   "summary": "Renders generic 2D matrices to SVG.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
       "name": "Render",
-      "kind": "Method",
       "summary": "Renders the matrix to an SVG string.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "modules",
-          "type": "BitMatrix",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.BitMatrix",
+          "summary": null
         },
         {
-          "name": "opts",
-          "type": "MatrixSvgRenderOptions",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.Rendering.Svg.MatrixSvgRenderOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string Render(BitMatrix modules, MatrixSvgRenderOptions opts)",
-      "xmlId": "M:CodeGlyphX.Rendering.Svg.MatrixSvgRenderer.Render(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Svg.MatrixSvgRenderOptions)",
-      "anchor": "method-render-static-string-render-bitmatrix-modules-matrixsvgrenderoptions-opts"
+      ]
     },
     {
       "name": "RenderToStream",
-      "kind": "Method",
       "summary": "Renders the matrix to an SVG stream.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "modules",
-          "type": "BitMatrix",
-          "description": "Matrix modules."
+          "type": "CodeGlyphX.BitMatrix",
+          "summary": "Matrix modules."
         },
         {
           "name": "opts",
-          "type": "MatrixSvgRenderOptions",
-          "description": "Rendering options."
+          "type": "CodeGlyphX.Rendering.Svg.MatrixSvgRenderOptions",
+          "summary": "Rendering options."
         },
         {
           "name": "stream",
-          "type": "Stream",
-          "description": "Target stream."
+          "type": "System.IO.Stream",
+          "summary": "Target stream."
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static void RenderToStream(BitMatrix modules, MatrixSvgRenderOptions opts, Stream stream)",
-      "xmlId": "M:CodeGlyphX.Rendering.Svg.MatrixSvgRenderer.RenderToStream(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Svg.MatrixSvgRenderOptions,System.IO.Stream)",
-      "anchor": "method-rendertostream-static-void-rendertostream-bitmatrix-modules-matrixsvgrenderoptions-opts-stream-stream"
+      ]
     },
     {
       "name": "RenderToFile",
-      "kind": "Method",
       "summary": "Renders the matrix to an SVG file.",
-      "remarks": null,
       "returns": "The output file path.",
       "parameters": [
         {
           "name": "modules",
-          "type": "BitMatrix",
-          "description": "Matrix modules."
+          "type": "CodeGlyphX.BitMatrix",
+          "summary": "Matrix modules."
         },
         {
           "name": "opts",
-          "type": "MatrixSvgRenderOptions",
-          "description": "Rendering options."
+          "type": "CodeGlyphX.Rendering.Svg.MatrixSvgRenderOptions",
+          "summary": "Rendering options."
         },
         {
           "name": "path",
-          "type": "string",
-          "description": "Output file path."
+          "type": "System.String",
+          "summary": "Output file path."
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string RenderToFile(BitMatrix modules, MatrixSvgRenderOptions opts, string path)",
-      "xmlId": "M:CodeGlyphX.Rendering.Svg.MatrixSvgRenderer.RenderToFile(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Svg.MatrixSvgRenderOptions,System.String)",
-      "anchor": "method-rendertofile-static-string-rendertofile-bitmatrix-modules-matrixsvgrenderoptions-opts-string-path"
+      ]
     },
     {
       "name": "RenderToFile",
-      "kind": "Method",
       "summary": "Renders the matrix to an SVG file under the specified directory.",
-      "remarks": null,
       "returns": "The output file path.",
       "parameters": [
         {
           "name": "modules",
-          "type": "BitMatrix",
-          "description": "Matrix modules."
+          "type": "CodeGlyphX.BitMatrix",
+          "summary": "Matrix modules."
         },
         {
           "name": "opts",
-          "type": "MatrixSvgRenderOptions",
-          "description": "Rendering options."
+          "type": "CodeGlyphX.Rendering.Svg.MatrixSvgRenderOptions",
+          "summary": "Rendering options."
         },
         {
           "name": "directory",
-          "type": "string",
-          "description": "Output directory."
+          "type": "System.String",
+          "summary": "Output directory."
         },
         {
           "name": "fileName",
-          "type": "string",
-          "description": "Output file name."
+          "type": "System.String",
+          "summary": "Output file name."
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string RenderToFile(BitMatrix modules, MatrixSvgRenderOptions opts, string directory, string fileName)",
-      "xmlId": "M:CodeGlyphX.Rendering.Svg.MatrixSvgRenderer.RenderToFile(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Svg.MatrixSvgRenderOptions,System.String,System.String)",
-      "anchor": "method-rendertofile-static-string-rendertofile-bitmatrix-modules-matrixsvgrenderoptions-opts-string-directory-string-filename"
+      ]
     }
-  ]
+  ],
+  "properties": [],
+  "fields": [],
+  "events": []
 }

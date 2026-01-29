@@ -1,43 +1,36 @@
-{
+﻿{
   "name": "BmpReader",
   "fullName": "CodeGlyphX.Rendering.Bmp.BmpReader",
   "namespace": "CodeGlyphX.Rendering.Bmp",
   "kind": "Class",
   "slug": "codeglyphx-rendering-bmp-bmpreader",
-  "summary": "Decodes BMP images to RGBA buffers (uncompressed 24/32/8-bit).",
+  "summary": "Decodes BMP images to RGBA buffers (1/4/8-bit palette, 16/24/32-bit, RLE4/RLE8, bitfields).",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
       "name": "DecodeRgba32",
-      "kind": "Method",
       "summary": "Decodes a BMP image to an RGBA buffer.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "bmp",
-          "type": "ReadOnlySpan\u003Cbyte\u003E",
-          "description": null
+          "name": "arg1",
+          "type": "System.ReadOnlySpan{System.Byte}",
+          "summary": null
         },
         {
-          "name": "width",
-          "type": "int",
-          "description": null
+          "name": "arg2",
+          "type": "System.Int32@",
+          "summary": null
         },
         {
-          "name": "height",
-          "type": "int",
-          "description": null
+          "name": "arg3",
+          "type": "System.Int32@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static byte[] DecodeRgba32(ReadOnlySpan\u003Cbyte\u003E bmp, out int width, out int height)",
-      "xmlId": "M:CodeGlyphX.Rendering.Bmp.BmpReader.DecodeRgba32(System.ReadOnlySpan{System.Byte},System.Int32@,System.Int32@)",
-      "anchor": "method-decodergba32-static-byte-decodergba32-readonlyspan-byte-bmp-out-int-width-out-int-height"
+      ]
     }
-  ]
+  ],
+  "properties": [],
+  "fields": [],
+  "events": []
 }

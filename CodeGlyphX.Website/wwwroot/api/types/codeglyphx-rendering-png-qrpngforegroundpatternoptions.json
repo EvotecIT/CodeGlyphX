@@ -1,0 +1,62 @@
+﻿{
+  "name": "QrPngForegroundPatternOptions",
+  "fullName": "CodeGlyphX.Rendering.Png.QrPngForegroundPatternOptions",
+  "namespace": "CodeGlyphX.Rendering.Png",
+  "kind": "Class",
+  "slug": "codeglyphx-rendering-png-qrpngforegroundpatternoptions",
+  "summary": "Foreground pattern options for styling dark modules.",
+  "remarks": null,
+  "methods": [],
+  "properties": [
+    {
+      "name": "Type",
+      "summary": "Gets or sets the pattern type."
+    },
+    {
+      "name": "Color",
+      "summary": "Gets or sets the pattern color (alpha recommended)."
+    },
+    {
+      "name": "BlendMode",
+      "summary": "Gets or sets the pattern blend mode."
+    },
+    {
+      "name": "SizePx",
+      "summary": "Gets or sets the pattern cell size in pixels."
+    },
+    {
+      "name": "ThicknessPx",
+      "summary": "Gets or sets the pattern thickness (dot radius or stripe thickness)."
+    },
+    {
+      "name": "Seed",
+      "summary": "Random seed used by jittered pattern variants such as ."
+    },
+    {
+      "name": "Variation",
+      "summary": "Variation amount (0..1) used by jittered pattern variants."
+    },
+    {
+      "name": "Density",
+      "summary": "Dot density (0..1) used by jittered pattern variants."
+    },
+    {
+      "name": "SnapToModuleSize",
+      "summary": "When true, pattern cell size snaps to a multiple of the QR module size."
+    },
+    {
+      "name": "ModuleStep",
+      "summary": "Module size multiplier when is enabled."
+    },
+    {
+      "name": "ApplyToModules",
+      "summary": "When true, applies the pattern to non-eye modules."
+    },
+    {
+      "name": "ApplyToEyes",
+      "summary": "When true, applies the pattern to eye (finder) modules."
+    }
+  ],
+  "fields": [],
+  "events": []
+}

@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "QrPixelDebug",
   "fullName": "CodeGlyphX.QrPixelDebug",
   "namespace": "CodeGlyphX",
@@ -6,398 +6,343 @@
   "slug": "codeglyphx-qrpixeldebug",
   "summary": "Debug visualizations for pixel-based QR decoding.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
       "name": "RenderPng",
-      "kind": "Method",
       "summary": "Renders a debug visualization to a PNG byte array.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "pixels",
-          "type": "byte[]",
-          "description": null
+          "name": "arg1",
+          "type": "System.Byte[]",
+          "summary": null
         },
         {
-          "name": "width",
-          "type": "int",
-          "description": null
+          "name": "arg2",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "height",
-          "type": "int",
-          "description": null
+          "name": "arg3",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "stride",
-          "type": "int",
-          "description": null
+          "name": "arg4",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "format",
-          "type": "PixelFormat",
-          "description": null
+          "name": "arg5",
+          "type": "CodeGlyphX.PixelFormat",
+          "summary": null
         },
         {
-          "name": "mode",
-          "type": "QrPixelDebugMode",
-          "description": null
+          "name": "arg6",
+          "type": "CodeGlyphX.QrPixelDebugMode",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrPixelDebugOptions",
-          "description": null
+          "name": "arg7",
+          "type": "CodeGlyphX.QrPixelDebugOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static byte[] RenderPng(byte[] pixels, int width, int height, int stride, PixelFormat format, QrPixelDebugMode mode, QrPixelDebugOptions options)",
-      "xmlId": "M:CodeGlyphX.QrPixelDebug.RenderPng(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrPixelDebugMode,CodeGlyphX.QrPixelDebugOptions)",
-      "anchor": "method-renderpng-static-byte-renderpng-byte-pixels-int-width-int-height-int-stride-pixelformat-format-qrpixeldebugmode-mode-qrpixeldebugoptions-options"
+      ]
     },
     {
       "name": "RenderToStream",
-      "kind": "Method",
       "summary": "Renders a debug visualization to a PNG stream.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "pixels",
-          "type": "byte[]",
-          "description": null
+          "name": "arg1",
+          "type": "System.Byte[]",
+          "summary": null
         },
         {
-          "name": "width",
-          "type": "int",
-          "description": null
+          "name": "arg2",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "height",
-          "type": "int",
-          "description": null
+          "name": "arg3",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "stride",
-          "type": "int",
-          "description": null
+          "name": "arg4",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "format",
-          "type": "PixelFormat",
-          "description": null
+          "name": "arg5",
+          "type": "CodeGlyphX.PixelFormat",
+          "summary": null
         },
         {
-          "name": "mode",
-          "type": "QrPixelDebugMode",
-          "description": null
+          "name": "arg6",
+          "type": "CodeGlyphX.QrPixelDebugMode",
+          "summary": null
         },
         {
-          "name": "stream",
-          "type": "Stream",
-          "description": null
+          "name": "arg7",
+          "type": "System.IO.Stream",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrPixelDebugOptions",
-          "description": null
+          "name": "arg8",
+          "type": "CodeGlyphX.QrPixelDebugOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static void RenderToStream(byte[] pixels, int width, int height, int stride, PixelFormat format, QrPixelDebugMode mode, Stream stream, QrPixelDebugOptions options)",
-      "xmlId": "M:CodeGlyphX.QrPixelDebug.RenderToStream(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrPixelDebugMode,System.IO.Stream,CodeGlyphX.QrPixelDebugOptions)",
-      "anchor": "method-rendertostream-static-void-rendertostream-byte-pixels-int-width-int-height-int-stride-pixelformat-format-qrpixeldebugmode-mode-stream-stream-qrpixeldebugoptions-options"
+      ]
     },
     {
       "name": "RenderToFile",
-      "kind": "Method",
       "summary": "Renders a debug visualization to a PNG file.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "pixels",
-          "type": "byte[]",
-          "description": null
+          "name": "arg1",
+          "type": "System.Byte[]",
+          "summary": null
         },
         {
-          "name": "width",
-          "type": "int",
-          "description": null
+          "name": "arg2",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "height",
-          "type": "int",
-          "description": null
+          "name": "arg3",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "stride",
-          "type": "int",
-          "description": null
+          "name": "arg4",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "format",
-          "type": "PixelFormat",
-          "description": null
+          "name": "arg5",
+          "type": "CodeGlyphX.PixelFormat",
+          "summary": null
         },
         {
-          "name": "mode",
-          "type": "QrPixelDebugMode",
-          "description": null
+          "name": "arg6",
+          "type": "CodeGlyphX.QrPixelDebugMode",
+          "summary": null
         },
         {
-          "name": "path",
-          "type": "string",
-          "description": null
+          "name": "arg7",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrPixelDebugOptions",
-          "description": null
+          "name": "arg8",
+          "type": "CodeGlyphX.QrPixelDebugOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string RenderToFile(byte[] pixels, int width, int height, int stride, PixelFormat format, QrPixelDebugMode mode, string path, QrPixelDebugOptions options)",
-      "xmlId": "M:CodeGlyphX.QrPixelDebug.RenderToFile(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrPixelDebugMode,System.String,CodeGlyphX.QrPixelDebugOptions)",
-      "anchor": "method-rendertofile-static-string-rendertofile-byte-pixels-int-width-int-height-int-stride-pixelformat-format-qrpixeldebugmode-mode-string-path-qrpixeldebugoptions-options"
+      ]
     },
     {
       "name": "RenderToFile",
-      "kind": "Method",
       "summary": "Renders a debug visualization to a PNG file under the specified directory.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "pixels",
-          "type": "byte[]",
-          "description": null
+          "name": "arg1",
+          "type": "System.Byte[]",
+          "summary": null
         },
         {
-          "name": "width",
-          "type": "int",
-          "description": null
+          "name": "arg2",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "height",
-          "type": "int",
-          "description": null
+          "name": "arg3",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "stride",
-          "type": "int",
-          "description": null
+          "name": "arg4",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "format",
-          "type": "PixelFormat",
-          "description": null
+          "name": "arg5",
+          "type": "CodeGlyphX.PixelFormat",
+          "summary": null
         },
         {
-          "name": "mode",
-          "type": "QrPixelDebugMode",
-          "description": null
+          "name": "arg6",
+          "type": "CodeGlyphX.QrPixelDebugMode",
+          "summary": null
         },
         {
-          "name": "directory",
-          "type": "string",
-          "description": null
+          "name": "arg7",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "fileName",
-          "type": "string",
-          "description": null
+          "name": "arg8",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrPixelDebugOptions",
-          "description": null
+          "name": "arg9",
+          "type": "CodeGlyphX.QrPixelDebugOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string RenderToFile(byte[] pixels, int width, int height, int stride, PixelFormat format, QrPixelDebugMode mode, string directory, string fileName, QrPixelDebugOptions options)",
-      "xmlId": "M:CodeGlyphX.QrPixelDebug.RenderToFile(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrPixelDebugMode,System.String,System.String,CodeGlyphX.QrPixelDebugOptions)",
-      "anchor": "method-rendertofile-static-string-rendertofile-byte-pixels-int-width-int-height-int-stride-pixelformat-format-qrpixeldebugmode-mode-string-directory-string-filename-qrpixeldebugoptions-options"
+      ]
     },
     {
       "name": "RenderPng",
-      "kind": "Method",
       "summary": "Renders a debug visualization to a PNG byte array.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "pixels",
-          "type": "ReadOnlySpan\u003Cbyte\u003E",
-          "description": null
+          "name": "arg1",
+          "type": "System.ReadOnlySpan{System.Byte}",
+          "summary": null
         },
         {
-          "name": "width",
-          "type": "int",
-          "description": null
+          "name": "arg2",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "height",
-          "type": "int",
-          "description": null
+          "name": "arg3",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "stride",
-          "type": "int",
-          "description": null
+          "name": "arg4",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "format",
-          "type": "PixelFormat",
-          "description": null
+          "name": "arg5",
+          "type": "CodeGlyphX.PixelFormat",
+          "summary": null
         },
         {
-          "name": "mode",
-          "type": "QrPixelDebugMode",
-          "description": null
+          "name": "arg6",
+          "type": "CodeGlyphX.QrPixelDebugMode",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrPixelDebugOptions",
-          "description": null
+          "name": "arg7",
+          "type": "CodeGlyphX.QrPixelDebugOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static byte[] RenderPng(ReadOnlySpan\u003Cbyte\u003E pixels, int width, int height, int stride, PixelFormat format, QrPixelDebugMode mode, QrPixelDebugOptions options)",
-      "xmlId": "M:CodeGlyphX.QrPixelDebug.RenderPng(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrPixelDebugMode,CodeGlyphX.QrPixelDebugOptions)",
-      "anchor": "method-renderpng-static-byte-renderpng-readonlyspan-byte-pixels-int-width-int-height-int-stride-pixelformat-format-qrpixeldebugmode-mode-qrpixeldebugoptions-options"
+      ]
     },
     {
       "name": "RenderToStream",
-      "kind": "Method",
       "summary": "Renders a debug visualization to a PNG stream.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "pixels",
-          "type": "ReadOnlySpan\u003Cbyte\u003E",
-          "description": null
+          "name": "arg1",
+          "type": "System.ReadOnlySpan{System.Byte}",
+          "summary": null
         },
         {
-          "name": "width",
-          "type": "int",
-          "description": null
+          "name": "arg2",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "height",
-          "type": "int",
-          "description": null
+          "name": "arg3",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "stride",
-          "type": "int",
-          "description": null
+          "name": "arg4",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "format",
-          "type": "PixelFormat",
-          "description": null
+          "name": "arg5",
+          "type": "CodeGlyphX.PixelFormat",
+          "summary": null
         },
         {
-          "name": "mode",
-          "type": "QrPixelDebugMode",
-          "description": null
+          "name": "arg6",
+          "type": "CodeGlyphX.QrPixelDebugMode",
+          "summary": null
         },
         {
-          "name": "stream",
-          "type": "Stream",
-          "description": null
+          "name": "arg7",
+          "type": "System.IO.Stream",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrPixelDebugOptions",
-          "description": null
+          "name": "arg8",
+          "type": "CodeGlyphX.QrPixelDebugOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static void RenderToStream(ReadOnlySpan\u003Cbyte\u003E pixels, int width, int height, int stride, PixelFormat format, QrPixelDebugMode mode, Stream stream, QrPixelDebugOptions options)",
-      "xmlId": "M:CodeGlyphX.QrPixelDebug.RenderToStream(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrPixelDebugMode,System.IO.Stream,CodeGlyphX.QrPixelDebugOptions)",
-      "anchor": "method-rendertostream-static-void-rendertostream-readonlyspan-byte-pixels-int-width-int-height-int-stride-pixelformat-format-qrpixeldebugmode-mode-stream-stream-qrpixeldebugoptions-options"
+      ]
     },
     {
       "name": "RenderPixels",
-      "kind": "Method",
       "summary": "Renders a debug visualization to raw RGBA pixels (no PNG encoding).",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "pixels",
-          "type": "ReadOnlySpan\u003Cbyte\u003E",
-          "description": null
+          "name": "arg1",
+          "type": "System.ReadOnlySpan{System.Byte}",
+          "summary": null
         },
         {
-          "name": "width",
-          "type": "int",
-          "description": null
+          "name": "arg2",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "height",
-          "type": "int",
-          "description": null
+          "name": "arg3",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "stride",
-          "type": "int",
-          "description": null
+          "name": "arg4",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "format",
-          "type": "PixelFormat",
-          "description": null
+          "name": "arg5",
+          "type": "CodeGlyphX.PixelFormat",
+          "summary": null
         },
         {
-          "name": "mode",
-          "type": "QrPixelDebugMode",
-          "description": null
+          "name": "arg6",
+          "type": "CodeGlyphX.QrPixelDebugMode",
+          "summary": null
         },
         {
-          "name": "widthPx",
-          "type": "int",
-          "description": null
+          "name": "arg7",
+          "type": "System.Int32@",
+          "summary": null
         },
         {
-          "name": "heightPx",
-          "type": "int",
-          "description": null
+          "name": "arg8",
+          "type": "System.Int32@",
+          "summary": null
         },
         {
-          "name": "stridePx",
-          "type": "int",
-          "description": null
+          "name": "arg9",
+          "type": "System.Int32@",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrPixelDebugOptions",
-          "description": null
+          "name": "arg10",
+          "type": "CodeGlyphX.QrPixelDebugOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static byte[] RenderPixels(ReadOnlySpan\u003Cbyte\u003E pixels, int width, int height, int stride, PixelFormat format, QrPixelDebugMode mode, out int widthPx, out int heightPx, out int stridePx, QrPixelDebugOptions options)",
-      "xmlId": "M:CodeGlyphX.QrPixelDebug.RenderPixels(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrPixelDebugMode,System.Int32@,System.Int32@,System.Int32@,CodeGlyphX.QrPixelDebugOptions)",
-      "anchor": "method-renderpixels-static-byte-renderpixels-readonlyspan-byte-pixels-int-width-int-height-int-stride-pixelformat-format-qrpixeldebugmode-mode-out-int-widthpx-out-int-heightpx-out-int-stridepx-qrpixeldebugoptions-options"
+      ]
     }
-  ]
+  ],
+  "properties": [],
+  "fields": [],
+  "events": []
 }

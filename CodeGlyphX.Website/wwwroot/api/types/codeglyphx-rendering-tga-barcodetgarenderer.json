@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "BarcodeTgaRenderer",
   "fullName": "CodeGlyphX.Rendering.Tga.BarcodeTgaRenderer",
   "namespace": "CodeGlyphX.Rendering.Tga",
@@ -6,128 +6,97 @@
   "slug": "codeglyphx-rendering-tga-barcodetgarenderer",
   "summary": "Renders 1D barcodes to TGA.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
       "name": "Render",
-      "kind": "Method",
       "summary": "Renders the barcode to a TGA byte array.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "barcode",
-          "type": "Barcode1D",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.Barcode1D",
+          "summary": null
         },
         {
-          "name": "opts",
-          "type": "BarcodePngRenderOptions",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.Rendering.Png.BarcodePngRenderOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static byte[] Render(Barcode1D barcode, BarcodePngRenderOptions opts)",
-      "xmlId": "M:CodeGlyphX.Rendering.Tga.BarcodeTgaRenderer.Render(CodeGlyphX.Barcode1D,CodeGlyphX.Rendering.Png.BarcodePngRenderOptions)",
-      "anchor": "method-render-static-byte-render-barcode1d-barcode-barcodepngrenderoptions-opts"
+      ]
     },
     {
       "name": "RenderToStream",
-      "kind": "Method",
       "summary": "Renders the barcode to a TGA stream.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "barcode",
-          "type": "Barcode1D",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.Barcode1D",
+          "summary": null
         },
         {
-          "name": "opts",
-          "type": "BarcodePngRenderOptions",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.Rendering.Png.BarcodePngRenderOptions",
+          "summary": null
         },
         {
-          "name": "stream",
-          "type": "Stream",
-          "description": null
+          "name": "arg3",
+          "type": "System.IO.Stream",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static void RenderToStream(Barcode1D barcode, BarcodePngRenderOptions opts, Stream stream)",
-      "xmlId": "M:CodeGlyphX.Rendering.Tga.BarcodeTgaRenderer.RenderToStream(CodeGlyphX.Barcode1D,CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,System.IO.Stream)",
-      "anchor": "method-rendertostream-static-void-rendertostream-barcode1d-barcode-barcodepngrenderoptions-opts-stream-stream"
+      ]
     },
     {
       "name": "RenderToFile",
-      "kind": "Method",
       "summary": "Renders the barcode to a TGA file.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "barcode",
-          "type": "Barcode1D",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.Barcode1D",
+          "summary": null
         },
         {
-          "name": "opts",
-          "type": "BarcodePngRenderOptions",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.Rendering.Png.BarcodePngRenderOptions",
+          "summary": null
         },
         {
-          "name": "path",
-          "type": "string",
-          "description": null
+          "name": "arg3",
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string RenderToFile(Barcode1D barcode, BarcodePngRenderOptions opts, string path)",
-      "xmlId": "M:CodeGlyphX.Rendering.Tga.BarcodeTgaRenderer.RenderToFile(CodeGlyphX.Barcode1D,CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,System.String)",
-      "anchor": "method-rendertofile-static-string-rendertofile-barcode1d-barcode-barcodepngrenderoptions-opts-string-path"
+      ]
     },
     {
       "name": "RenderToFile",
-      "kind": "Method",
       "summary": "Renders the barcode to a TGA file under the specified directory.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "barcode",
-          "type": "Barcode1D",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.Barcode1D",
+          "summary": null
         },
         {
-          "name": "opts",
-          "type": "BarcodePngRenderOptions",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.Rendering.Png.BarcodePngRenderOptions",
+          "summary": null
         },
         {
-          "name": "directory",
-          "type": "string",
-          "description": null
+          "name": "arg3",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "fileName",
-          "type": "string",
-          "description": null
+          "name": "arg4",
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string RenderToFile(Barcode1D barcode, BarcodePngRenderOptions opts, string directory, string fileName)",
-      "xmlId": "M:CodeGlyphX.Rendering.Tga.BarcodeTgaRenderer.RenderToFile(CodeGlyphX.Barcode1D,CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,System.String,System.String)",
-      "anchor": "method-rendertofile-static-string-rendertofile-barcode1d-barcode-barcodepngrenderoptions-opts-string-directory-string-filename"
+      ]
     }
-  ]
+  ],
+  "properties": [],
+  "fields": [],
+  "events": []
 }

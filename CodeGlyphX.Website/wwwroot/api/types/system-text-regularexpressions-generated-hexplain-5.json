@@ -1,0 +1,25 @@
+﻿{
+  "name": "HexPlain_5",
+  "fullName": "System.Text.RegularExpressions.Generated.HexPlain_5",
+  "namespace": "System.Text.RegularExpressions.Generated",
+  "kind": "Class",
+  "slug": "system-text-regularexpressions-generated-hexplain-5",
+  "summary": "Custom -derived type for the HexPlain method.",
+  "remarks": null,
+  "methods": [
+    {
+      "name": "#ctor",
+      "summary": "Initializes the instance.",
+      "returns": null,
+      "parameters": []
+    }
+  ],
+  "properties": [],
+  "fields": [
+    {
+      "name": "Instance",
+      "summary": "Cached, thread-safe singleton instance."
+    }
+  ],
+  "events": []
+}

@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "AustraliaPostDecoder",
   "fullName": "CodeGlyphX.AustraliaPost.AustraliaPostDecoder",
   "namespace": "CodeGlyphX.AustraliaPost",
@@ -6,63 +6,48 @@
   "slug": "codeglyphx-australiapost-australiapostdecoder",
   "summary": "Decodes Australia Post customer barcodes.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
       "name": "TryDecode",
-      "kind": "Method",
-      "summary": "Attempts to decode an Australia Post customer barcode from a CodeGlyphX.BitMatrix.",
-      "remarks": null,
+      "summary": "Attempts to decode an Australia Post customer barcode from a .",
       "returns": null,
       "parameters": [
         {
-          "name": "modules",
-          "type": "BitMatrix",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.BitMatrix",
+          "summary": null
         },
         {
-          "name": "text",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecode(BitMatrix modules, out string text)",
-      "xmlId": "M:CodeGlyphX.AustraliaPost.AustraliaPostDecoder.TryDecode(CodeGlyphX.BitMatrix,System.String@)",
-      "anchor": "method-trydecode-static-bool-trydecode-bitmatrix-modules-out-string-text"
+      ]
     },
     {
       "name": "TryDecode",
-      "kind": "Method",
-      "summary": "Attempts to decode an Australia Post customer barcode from a CodeGlyphX.BitMatrix.",
-      "remarks": "For Customer Barcode 3 (67 bars), numeric-only customer data can be ambiguous between N and C tables.\n Provide to disambiguate if needed.",
+      "summary": "Attempts to decode an Australia Post customer barcode from a .",
       "returns": null,
       "parameters": [
         {
-          "name": "modules",
-          "type": "BitMatrix",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.BitMatrix",
+          "summary": null
         },
         {
-          "name": "preferredCustomerTable",
-          "type": "Nullable\u003CAustraliaPostCustomerEncodingTable\u003E",
-          "description": null
+          "name": "arg2",
+          "type": "System.Nullable{CodeGlyphX.AustraliaPost.AustraliaPostCustomerEncodingTable}",
+          "summary": null
         },
         {
-          "name": "decoded",
-          "type": "AustraliaPostDecoded",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.AustraliaPost.AustraliaPostDecoded@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecode(BitMatrix modules, Nullable\u003CAustraliaPostCustomerEncodingTable\u003E preferredCustomerTable, out AustraliaPostDecoded decoded)",
-      "xmlId": "M:CodeGlyphX.AustraliaPost.AustraliaPostDecoder.TryDecode(CodeGlyphX.BitMatrix,System.Nullable{CodeGlyphX.AustraliaPost.AustraliaPostCustomerEncodingTable},CodeGlyphX.AustraliaPost.AustraliaPostDecoded@)",
-      "anchor": "method-trydecode-static-bool-trydecode-bitmatrix-modules-nullable-australiapostcustomerencodingtable-preferredcustomertable-out-australiapostdecoded-decoded"
+      ]
     }
-  ]
+  ],
+  "properties": [],
+  "fields": [],
+  "events": []
 }

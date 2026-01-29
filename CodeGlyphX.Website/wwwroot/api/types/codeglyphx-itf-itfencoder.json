@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "ItfEncoder",
   "fullName": "CodeGlyphX.Itf.ItfEncoder",
   "namespace": "CodeGlyphX.Itf",
@@ -6,33 +6,26 @@
   "slug": "codeglyphx-itf-itfencoder",
   "summary": "Encodes Interleaved 2 of 5 (ITF) barcodes.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
       "name": "Encode",
-      "kind": "Method",
-      "summary": "Encodes an ITF barcode. The input length must be even.\n If is true, odd-length inputs get a checksum appended and even-length inputs are validated.",
-      "remarks": null,
+      "summary": "Encodes an ITF barcode. The input length must be even. If is true, odd-length inputs get a checksum appended and even-length inputs are validated.",
       "returns": null,
       "parameters": [
         {
-          "name": "content",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "includeChecksum",
-          "type": "bool",
-          "description": null
+          "name": "arg2",
+          "type": "System.Boolean",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static Barcode1D Encode(string content, bool includeChecksum)",
-      "xmlId": "M:CodeGlyphX.Itf.ItfEncoder.Encode(System.String,System.Boolean)",
-      "anchor": "method-encode-static-barcode1d-encode-string-content-bool-includechecksum"
+      ]
     }
-  ]
+  ],
+  "properties": [],
+  "fields": [],
+  "events": []
 }

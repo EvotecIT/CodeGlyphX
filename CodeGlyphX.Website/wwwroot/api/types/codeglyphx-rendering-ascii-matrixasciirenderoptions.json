@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "MatrixAsciiRenderOptions",
   "fullName": "CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions",
   "namespace": "CodeGlyphX.Rendering.Ascii",
@@ -6,226 +6,234 @@
   "slug": "codeglyphx-rendering-ascii-matrixasciirenderoptions",
   "summary": "Rendering options for ASCII matrix output.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
-    {
-      "name": "MatrixAsciiRenderOptions",
-      "kind": "Constructor",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "MatrixAsciiRenderOptions()",
-      "xmlId": "M:CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions.#ctor",
-      "anchor": "constructor-matrixasciirenderoptions-matrixasciirenderoptions"
-    },
+  "methods": [
     {
       "name": "WithQuietZone",
-      "kind": "Method",
       "summary": "Sets the quiet zone size in modules.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "quietZone",
-          "type": "int",
-          "description": null
+          "name": "arg1",
+          "type": "System.Int32",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "MatrixAsciiRenderOptions WithQuietZone(int quietZone)",
-      "xmlId": "M:CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions.WithQuietZone(System.Int32)",
-      "anchor": "method-withquietzone-matrixasciirenderoptions-withquietzone-int-quietzone"
+      ]
     },
     {
       "name": "WithModuleWidth",
-      "kind": "Method",
       "summary": "Sets the module width in characters.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "width",
-          "type": "int",
-          "description": null
+          "name": "arg1",
+          "type": "System.Int32",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "MatrixAsciiRenderOptions WithModuleWidth(int width)",
-      "xmlId": "M:CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions.WithModuleWidth(System.Int32)",
-      "anchor": "method-withmodulewidth-matrixasciirenderoptions-withmodulewidth-int-width"
+      ]
     },
     {
       "name": "WithModuleHeight",
-      "kind": "Method",
       "summary": "Sets the module height in rows.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "height",
-          "type": "int",
-          "description": null
+          "name": "arg1",
+          "type": "System.Int32",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "MatrixAsciiRenderOptions WithModuleHeight(int height)",
-      "xmlId": "M:CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions.WithModuleHeight(System.Int32)",
-      "anchor": "method-withmoduleheight-matrixasciirenderoptions-withmoduleheight-int-height"
+      ]
+    },
+    {
+      "name": "WithScale",
+      "summary": "Sets an additional scale multiplier applied to both module width and height.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "arg1",
+          "type": "System.Int32",
+          "summary": null
+        }
+      ]
     },
     {
       "name": "WithDark",
-      "kind": "Method",
       "summary": "Sets the character(s) used for dark modules.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "dark",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "MatrixAsciiRenderOptions WithDark(string dark)",
-      "xmlId": "M:CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions.WithDark(System.String)",
-      "anchor": "method-withdark-matrixasciirenderoptions-withdark-string-dark"
+      ]
     },
     {
       "name": "WithLight",
-      "kind": "Method",
       "summary": "Sets the character(s) used for light modules.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "light",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "MatrixAsciiRenderOptions WithLight(string light)",
-      "xmlId": "M:CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions.WithLight(System.String)",
-      "anchor": "method-withlight-matrixasciirenderoptions-withlight-string-light"
+      ]
     },
     {
       "name": "WithNewLine",
-      "kind": "Method",
       "summary": "Sets the line separator.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "newLine",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "MatrixAsciiRenderOptions WithNewLine(string newLine)",
-      "xmlId": "M:CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions.WithNewLine(System.String)",
-      "anchor": "method-withnewline-matrixasciirenderoptions-withnewline-string-newline"
+      ]
     },
     {
-      "name": "QuietZone",
-      "kind": "Property",
-      "summary": "Quiet zone size in modules.",
-      "remarks": null,
+      "name": "WithUnicodeBlocks",
+      "summary": "Enables or disables Unicode block glyphs when defaults are used.",
       "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int QuietZone {get; set; }",
-      "xmlId": "P:CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions.QuietZone",
-      "anchor": "property-quietzone-int-quietzone-get-set"
+      "parameters": [
+        {
+          "name": "arg1",
+          "type": "System.Boolean",
+          "summary": null
+        }
+      ]
+    },
+    {
+      "name": "WithInvert",
+      "summary": "Enables or disables inverted output (dark/light swapped).",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "arg1",
+          "type": "System.Boolean",
+          "summary": null
+        }
+      ]
+    },
+    {
+      "name": "WithAnsiColors",
+      "summary": "Enables or disables ANSI color escape codes.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "arg1",
+          "type": "System.Boolean",
+          "summary": null
+        }
+      ]
+    },
+    {
+      "name": "WithAnsiTrueColor",
+      "summary": "Enables or disables ANSI truecolor (24-bit) output.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "arg1",
+          "type": "System.Boolean",
+          "summary": null
+        }
+      ]
+    },
+    {
+      "name": "WithAnsiDarkColor",
+      "summary": "Sets the ANSI color for dark modules.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "arg1",
+          "type": "CodeGlyphX.Rendering.Png.Rgba32",
+          "summary": null
+        }
+      ]
+    },
+    {
+      "name": "WithAnsiLightColor",
+      "summary": "Sets the ANSI color for light modules.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "arg1",
+          "type": "CodeGlyphX.Rendering.Png.Rgba32",
+          "summary": null
+        }
+      ]
+    },
+    {
+      "name": "WithAnsiColorizeLight",
+      "summary": "Enables or disables ANSI colorization of light modules.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "arg1",
+          "type": "System.Boolean",
+          "summary": null
+        }
+      ]
+    }
+  ],
+  "properties": [
+    {
+      "name": "QuietZone",
+      "summary": "Quiet zone size in modules."
     },
     {
       "name": "ModuleWidth",
-      "kind": "Property",
-      "summary": "Module width in characters.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int ModuleWidth {get; set; }",
-      "xmlId": "P:CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions.ModuleWidth",
-      "anchor": "property-modulewidth-int-modulewidth-get-set"
+      "summary": "Module width in characters."
     },
     {
       "name": "ModuleHeight",
-      "kind": "Property",
-      "summary": "Module height in rows.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int ModuleHeight {get; set; }",
-      "xmlId": "P:CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions.ModuleHeight",
-      "anchor": "property-moduleheight-int-moduleheight-get-set"
+      "summary": "Module height in rows."
+    },
+    {
+      "name": "Scale",
+      "summary": "Additional scale multiplier applied to both module width and height."
     },
     {
       "name": "Dark",
-      "kind": "Property",
-      "summary": "Character(s) used for dark modules.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string Dark {get; set; }",
-      "xmlId": "P:CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions.Dark",
-      "anchor": "property-dark-string-dark-get-set"
+      "summary": "Character(s) used for dark modules."
     },
     {
       "name": "Light",
-      "kind": "Property",
-      "summary": "Character(s) used for light modules.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string Light {get; set; }",
-      "xmlId": "P:CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions.Light",
-      "anchor": "property-light-string-light-get-set"
+      "summary": "Character(s) used for light modules."
     },
     {
       "name": "NewLine",
-      "kind": "Property",
-      "summary": "Line separator used between rows.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string NewLine {get; set; }",
-      "xmlId": "P:CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions.NewLine",
-      "anchor": "property-newline-string-newline-get-set"
+      "summary": "Line separator used between rows."
+    },
+    {
+      "name": "UseUnicodeBlocks",
+      "summary": "When true, prefers Unicode block glyphs (for example, \u2588) when defaults are used."
+    },
+    {
+      "name": "Invert",
+      "summary": "When true, swaps dark and light output."
+    },
+    {
+      "name": "UseAnsiColors",
+      "summary": "When true, emits ANSI color escape codes for dark (and optionally light) modules."
+    },
+    {
+      "name": "UseAnsiTrueColor",
+      "summary": "When true, uses 24-bit ANSI colors; otherwise maps to ANSI 256-color."
+    },
+    {
+      "name": "AnsiDarkColor",
+      "summary": "ANSI color for dark modules."
+    },
+    {
+      "name": "AnsiLightColor",
+      "summary": "ANSI color for light modules."
+    },
+    {
+      "name": "AnsiColorizeLight",
+      "summary": "When true, also colorizes light modules; otherwise leaves them uncolored."
     }
-  ]
+  ],
+  "fields": [],
+  "events": []
 }

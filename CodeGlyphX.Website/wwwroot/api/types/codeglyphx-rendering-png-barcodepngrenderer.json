@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "BarcodePngRenderer",
   "fullName": "CodeGlyphX.Rendering.Png.BarcodePngRenderer",
   "namespace": "CodeGlyphX.Rendering.Png",
@@ -6,168 +6,129 @@
   "slug": "codeglyphx-rendering-png-barcodepngrenderer",
   "summary": "Renders 1D barcodes to a PNG image (RGBA8).",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
       "name": "Render",
-      "kind": "Method",
       "summary": "Renders the barcode to a PNG byte array.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "barcode",
-          "type": "Barcode1D",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.Barcode1D",
+          "summary": null
         },
         {
-          "name": "opts",
-          "type": "BarcodePngRenderOptions",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.Rendering.Png.BarcodePngRenderOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static byte[] Render(Barcode1D barcode, BarcodePngRenderOptions opts)",
-      "xmlId": "M:CodeGlyphX.Rendering.Png.BarcodePngRenderer.Render(CodeGlyphX.Barcode1D,CodeGlyphX.Rendering.Png.BarcodePngRenderOptions)",
-      "anchor": "method-render-static-byte-render-barcode1d-barcode-barcodepngrenderoptions-opts"
+      ]
     },
     {
       "name": "RenderToStream",
-      "kind": "Method",
       "summary": "Renders the barcode to a PNG stream.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "barcode",
-          "type": "Barcode1D",
-          "description": "Barcode to render."
+          "type": "CodeGlyphX.Barcode1D",
+          "summary": "Barcode to render."
         },
         {
           "name": "opts",
-          "type": "BarcodePngRenderOptions",
-          "description": "Rendering options."
+          "type": "CodeGlyphX.Rendering.Png.BarcodePngRenderOptions",
+          "summary": "Rendering options."
         },
         {
           "name": "stream",
-          "type": "Stream",
-          "description": "Target stream."
+          "type": "System.IO.Stream",
+          "summary": "Target stream."
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static void RenderToStream(Barcode1D barcode, BarcodePngRenderOptions opts, Stream stream)",
-      "xmlId": "M:CodeGlyphX.Rendering.Png.BarcodePngRenderer.RenderToStream(CodeGlyphX.Barcode1D,CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,System.IO.Stream)",
-      "anchor": "method-rendertostream-static-void-rendertostream-barcode1d-barcode-barcodepngrenderoptions-opts-stream-stream"
+      ]
     },
     {
       "name": "RenderToFile",
-      "kind": "Method",
       "summary": "Renders the barcode to a PNG file.",
-      "remarks": null,
       "returns": "The output file path.",
       "parameters": [
         {
           "name": "barcode",
-          "type": "Barcode1D",
-          "description": "Barcode to render."
+          "type": "CodeGlyphX.Barcode1D",
+          "summary": "Barcode to render."
         },
         {
           "name": "opts",
-          "type": "BarcodePngRenderOptions",
-          "description": "Rendering options."
+          "type": "CodeGlyphX.Rendering.Png.BarcodePngRenderOptions",
+          "summary": "Rendering options."
         },
         {
           "name": "path",
-          "type": "string",
-          "description": "Output file path."
+          "type": "System.String",
+          "summary": "Output file path."
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string RenderToFile(Barcode1D barcode, BarcodePngRenderOptions opts, string path)",
-      "xmlId": "M:CodeGlyphX.Rendering.Png.BarcodePngRenderer.RenderToFile(CodeGlyphX.Barcode1D,CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,System.String)",
-      "anchor": "method-rendertofile-static-string-rendertofile-barcode1d-barcode-barcodepngrenderoptions-opts-string-path"
+      ]
     },
     {
       "name": "RenderToFile",
-      "kind": "Method",
       "summary": "Renders the barcode to a PNG file under the specified directory.",
-      "remarks": null,
       "returns": "The output file path.",
       "parameters": [
         {
           "name": "barcode",
-          "type": "Barcode1D",
-          "description": "Barcode to render."
+          "type": "CodeGlyphX.Barcode1D",
+          "summary": "Barcode to render."
         },
         {
           "name": "opts",
-          "type": "BarcodePngRenderOptions",
-          "description": "Rendering options."
+          "type": "CodeGlyphX.Rendering.Png.BarcodePngRenderOptions",
+          "summary": "Rendering options."
         },
         {
           "name": "directory",
-          "type": "string",
-          "description": "Output directory."
+          "type": "System.String",
+          "summary": "Output directory."
         },
         {
           "name": "fileName",
-          "type": "string",
-          "description": "Output file name."
+          "type": "System.String",
+          "summary": "Output file name."
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string RenderToFile(Barcode1D barcode, BarcodePngRenderOptions opts, string directory, string fileName)",
-      "xmlId": "M:CodeGlyphX.Rendering.Png.BarcodePngRenderer.RenderToFile(CodeGlyphX.Barcode1D,CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,System.String,System.String)",
-      "anchor": "method-rendertofile-static-string-rendertofile-barcode1d-barcode-barcodepngrenderoptions-opts-string-directory-string-filename"
+      ]
     },
     {
       "name": "RenderPixels",
-      "kind": "Method",
       "summary": "Renders the barcode to a raw RGBA pixel buffer (no PNG encoding).",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "barcode",
-          "type": "Barcode1D",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.Barcode1D",
+          "summary": null
         },
         {
-          "name": "opts",
-          "type": "BarcodePngRenderOptions",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.Rendering.Png.BarcodePngRenderOptions",
+          "summary": null
         },
         {
-          "name": "widthPx",
-          "type": "int",
-          "description": null
+          "name": "arg3",
+          "type": "System.Int32@",
+          "summary": null
         },
         {
-          "name": "heightPx",
-          "type": "int",
-          "description": null
+          "name": "arg4",
+          "type": "System.Int32@",
+          "summary": null
         },
         {
-          "name": "stride",
-          "type": "int",
-          "description": null
+          "name": "arg5",
+          "type": "System.Int32@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static byte[] RenderPixels(Barcode1D barcode, BarcodePngRenderOptions opts, out int widthPx, out int heightPx, out int stride)",
-      "xmlId": "M:CodeGlyphX.Rendering.Png.BarcodePngRenderer.RenderPixels(CodeGlyphX.Barcode1D,CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,System.Int32@,System.Int32@,System.Int32@)",
-      "anchor": "method-renderpixels-static-byte-renderpixels-barcode1d-barcode-barcodepngrenderoptions-opts-out-int-widthpx-out-int-heightpx-out-int-stride"
+      ]
     }
-  ]
+  ],
+  "properties": [],
+  "fields": [],
+  "events": []
 }

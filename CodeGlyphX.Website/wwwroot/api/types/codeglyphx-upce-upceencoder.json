@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "UpcEEncoder",
   "fullName": "CodeGlyphX.UpcE.UpcEEncoder",
   "namespace": "CodeGlyphX.UpcE",
@@ -6,33 +6,26 @@
   "slug": "codeglyphx-upce-upceencoder",
   "summary": "Encodes UPC-E barcodes.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
       "name": "Encode",
-      "kind": "Method",
       "summary": "Encodes a UPC-E barcode. Use \u0022\u002BNN\u0022 or \u0022\u002BNNNNN\u0022 to append add-ons.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "content",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "numberSystem",
-          "type": "UpcENumberSystem",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.UpcENumberSystem",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static Barcode1D Encode(string content, UpcENumberSystem numberSystem)",
-      "xmlId": "M:CodeGlyphX.UpcE.UpcEEncoder.Encode(System.String,CodeGlyphX.UpcENumberSystem)",
-      "anchor": "method-encode-static-barcode1d-encode-string-content-upcenumbersystem-numbersystem"
+      ]
     }
-  ]
+  ],
+  "properties": [],
+  "fields": [],
+  "events": []
 }

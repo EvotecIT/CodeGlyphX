@@ -1,343 +1,56 @@
-{
+﻿{
   "name": "Upi",
   "fullName": "CodeGlyphX.Payloads.QrParsedData.Upi",
-  "namespace": "CodeGlyphX.Payloads",
+  "namespace": "CodeGlyphX.Payloads.QrParsedData",
   "kind": "Class",
   "slug": "codeglyphx-payloads-qrparseddata-upi",
   "summary": "UPI payment payload.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
-      "name": "Upi",
-      "kind": "Constructor",
+      "name": "#ctor",
       "summary": "UPI payment payload.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "Vpa",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "Name",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "MerchantCode",
-          "type": "string",
-          "description": null
+          "name": "arg3",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "TransactionRef",
-          "type": "string",
-          "description": null
+          "name": "arg4",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "TransactionNote",
-          "type": "string",
-          "description": null
+          "name": "arg5",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "Amount",
-          "type": "Nullable\u003Cdecimal\u003E",
-          "description": null
+          "name": "arg6",
+          "type": "System.Nullable{System.Decimal}",
+          "summary": null
         },
         {
-          "name": "Currency",
-          "type": "string",
-          "description": null
+          "name": "arg7",
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "Upi(string Vpa, string Name, string MerchantCode, string TransactionRef, string TransactionNote, Nullable\u003Cdecimal\u003E Amount, string Currency)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.Upi.#ctor(System.String,System.String,System.String,System.String,System.String,System.Nullable{System.Decimal},System.String)",
-      "anchor": "constructor-upi-upi-string-vpa-string-name-string-merchantcode-string-transactionref-string-transactionnote-nullable-decimal-amount-string-currency"
-    },
-    {
-      "name": "ToString",
-      "kind": "Method",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string ToString()",
-      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.Upi.ToString",
-      "anchor": "method-tostring-string-tostring"
-    },
-    {
-      "name": "op_Inequality",
-      "kind": "Method",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [
-        {
-          "name": "left",
-          "type": "QrParsedData.Upi",
-          "description": null
-        },
-        {
-          "name": "right",
-          "type": "QrParsedData.Upi",
-          "description": null
-        }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool op_Inequality(QrParsedData.Upi left, QrParsedData.Upi right)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.Upi.op_Inequality(CodeGlyphX.Payloads.QrParsedData.Upi,CodeGlyphX.Payloads.QrParsedData.Upi)",
-      "anchor": "method-op-inequality-static-bool-op-inequality-qrparseddata-upi-left-qrparseddata-upi-right"
-    },
-    {
-      "name": "op_Equality",
-      "kind": "Method",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [
-        {
-          "name": "left",
-          "type": "QrParsedData.Upi",
-          "description": null
-        },
-        {
-          "name": "right",
-          "type": "QrParsedData.Upi",
-          "description": null
-        }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool op_Equality(QrParsedData.Upi left, QrParsedData.Upi right)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.Upi.op_Equality(CodeGlyphX.Payloads.QrParsedData.Upi,CodeGlyphX.Payloads.QrParsedData.Upi)",
-      "anchor": "method-op-equality-static-bool-op-equality-qrparseddata-upi-left-qrparseddata-upi-right"
-    },
-    {
-      "name": "GetHashCode",
-      "kind": "Method",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int GetHashCode()",
-      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.Upi.GetHashCode",
-      "anchor": "method-gethashcode-int-gethashcode"
-    },
-    {
-      "name": "Equals",
-      "kind": "Method",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [
-        {
-          "name": "obj",
-          "type": "object",
-          "description": null
-        }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "bool Equals(object obj)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.Upi.Equals(System.Object)",
-      "anchor": "method-equals-bool-equals-object-obj"
-    },
-    {
-      "name": "Equals",
-      "kind": "Method",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [
-        {
-          "name": "other",
-          "type": "QrParsedData.Upi",
-          "description": null
-        }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "bool Equals(QrParsedData.Upi other)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.Upi.Equals(CodeGlyphX.Payloads.QrParsedData.Upi)",
-      "anchor": "method-equals-bool-equals-qrparseddata-upi-other"
-    },
-    {
-      "name": "\u003CClone\u003E$",
-      "kind": "Method",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrParsedData.Upi \u003CClone\u003E$()",
-      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.Upi.\u003CClone\u003E$",
-      "anchor": "method-clone-qrparseddata-upi-clone"
-    },
-    {
-      "name": "Deconstruct",
-      "kind": "Method",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [
-        {
-          "name": "Vpa",
-          "type": "string",
-          "description": null
-        },
-        {
-          "name": "Name",
-          "type": "string",
-          "description": null
-        },
-        {
-          "name": "MerchantCode",
-          "type": "string",
-          "description": null
-        },
-        {
-          "name": "TransactionRef",
-          "type": "string",
-          "description": null
-        },
-        {
-          "name": "TransactionNote",
-          "type": "string",
-          "description": null
-        },
-        {
-          "name": "Amount",
-          "type": "Nullable\u003Cdecimal\u003E",
-          "description": null
-        },
-        {
-          "name": "Currency",
-          "type": "string",
-          "description": null
-        }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "void Deconstruct(out string Vpa, out string Name, out string MerchantCode, out string TransactionRef, out string TransactionNote, out Nullable\u003Cdecimal\u003E Amount, out string Currency)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.Upi.Deconstruct(System.String@,System.String@,System.String@,System.String@,System.String@,System.Nullable{System.Decimal}@,System.String@)",
-      "anchor": "method-deconstruct-void-deconstruct-out-string-vpa-out-string-name-out-string-merchantcode-out-string-transactionref-out-string-transactionnote-out-nullable-decimal-amount-out-string-currency"
-    },
-    {
-      "name": "Vpa",
-      "kind": "Property",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string Vpa {get; set; }",
-      "xmlId": "P:CodeGlyphX.Payloads.QrParsedData.Upi.Vpa",
-      "anchor": "property-vpa-string-vpa-get-set"
-    },
-    {
-      "name": "Name",
-      "kind": "Property",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string Name {get; set; }",
-      "xmlId": "P:CodeGlyphX.Payloads.QrParsedData.Upi.Name",
-      "anchor": "property-name-string-name-get-set"
-    },
-    {
-      "name": "MerchantCode",
-      "kind": "Property",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string MerchantCode {get; set; }",
-      "xmlId": "P:CodeGlyphX.Payloads.QrParsedData.Upi.MerchantCode",
-      "anchor": "property-merchantcode-string-merchantcode-get-set"
-    },
-    {
-      "name": "TransactionRef",
-      "kind": "Property",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string TransactionRef {get; set; }",
-      "xmlId": "P:CodeGlyphX.Payloads.QrParsedData.Upi.TransactionRef",
-      "anchor": "property-transactionref-string-transactionref-get-set"
-    },
-    {
-      "name": "TransactionNote",
-      "kind": "Property",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string TransactionNote {get; set; }",
-      "xmlId": "P:CodeGlyphX.Payloads.QrParsedData.Upi.TransactionNote",
-      "anchor": "property-transactionnote-string-transactionnote-get-set"
-    },
-    {
-      "name": "Amount",
-      "kind": "Property",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "Nullable\u003Cdecimal\u003E Amount {get; set; }",
-      "xmlId": "P:CodeGlyphX.Payloads.QrParsedData.Upi.Amount",
-      "anchor": "property-amount-nullable-decimal-amount-get-set"
-    },
-    {
-      "name": "Currency",
-      "kind": "Property",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string Currency {get; set; }",
-      "xmlId": "P:CodeGlyphX.Payloads.QrParsedData.Upi.Currency",
-      "anchor": "property-currency-string-currency-get-set"
+      ]
     }
-  ]
+  ],
+  "properties": [],
+  "fields": [],
+  "events": []
 }

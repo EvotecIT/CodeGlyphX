@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "BarcodeDecodeOptions",
   "fullName": "CodeGlyphX.BarcodeDecodeOptions",
   "namespace": "CodeGlyphX",
@@ -6,211 +6,99 @@
   "slug": "codeglyphx-barcodedecodeoptions",
   "summary": "Options controlling how 1D barcode decoding behaves.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
-    {
-      "name": "BarcodeDecodeOptions",
-      "kind": "Constructor",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "BarcodeDecodeOptions()",
-      "xmlId": "M:CodeGlyphX.BarcodeDecodeOptions.#ctor",
-      "anchor": "constructor-barcodedecodeoptions-barcodedecodeoptions"
-    },
+  "methods": [
     {
       "name": "WithCode39Checksum",
-      "kind": "Method",
       "summary": "Sets Code39 checksum handling.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "policy",
-          "type": "Code39ChecksumPolicy",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.Code39ChecksumPolicy",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "BarcodeDecodeOptions WithCode39Checksum(Code39ChecksumPolicy policy)",
-      "xmlId": "M:CodeGlyphX.BarcodeDecodeOptions.WithCode39Checksum(CodeGlyphX.Code39ChecksumPolicy)",
-      "anchor": "method-withcode39checksum-barcodedecodeoptions-withcode39checksum-code39checksumpolicy-policy"
+      ]
     },
     {
       "name": "WithMsiChecksum",
-      "kind": "Method",
       "summary": "Sets MSI checksum handling.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "policy",
-          "type": "MsiChecksumPolicy",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.MsiChecksumPolicy",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "BarcodeDecodeOptions WithMsiChecksum(MsiChecksumPolicy policy)",
-      "xmlId": "M:CodeGlyphX.BarcodeDecodeOptions.WithMsiChecksum(CodeGlyphX.MsiChecksumPolicy)",
-      "anchor": "method-withmsichecksum-barcodedecodeoptions-withmsichecksum-msichecksumpolicy-policy"
+      ]
     },
     {
       "name": "WithCode11Checksum",
-      "kind": "Method",
       "summary": "Sets Code 11 checksum handling.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "policy",
-          "type": "Code11ChecksumPolicy",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.Code11ChecksumPolicy",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "BarcodeDecodeOptions WithCode11Checksum(Code11ChecksumPolicy policy)",
-      "xmlId": "M:CodeGlyphX.BarcodeDecodeOptions.WithCode11Checksum(CodeGlyphX.Code11ChecksumPolicy)",
-      "anchor": "method-withcode11checksum-barcodedecodeoptions-withcode11checksum-code11checksumpolicy-policy"
+      ]
     },
     {
       "name": "WithPlesseyChecksum",
-      "kind": "Method",
       "summary": "Sets Plessey CRC handling.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "policy",
-          "type": "PlesseyChecksumPolicy",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.PlesseyChecksumPolicy",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "BarcodeDecodeOptions WithPlesseyChecksum(PlesseyChecksumPolicy policy)",
-      "xmlId": "M:CodeGlyphX.BarcodeDecodeOptions.WithPlesseyChecksum(CodeGlyphX.PlesseyChecksumPolicy)",
-      "anchor": "method-withplesseychecksum-barcodedecodeoptions-withplesseychecksum-plesseychecksumpolicy-policy"
+      ]
     },
     {
       "name": "WithTileScan",
-      "kind": "Method",
       "summary": "Enables or disables tile scanning for multiple barcodes.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "enabled",
-          "type": "bool",
-          "description": null
+          "name": "arg1",
+          "type": "System.Boolean",
+          "summary": null
         },
         {
-          "name": "tileGrid",
-          "type": "int",
-          "description": null
+          "name": "arg2",
+          "type": "System.Int32",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "BarcodeDecodeOptions WithTileScan(bool enabled, int tileGrid)",
-      "xmlId": "M:CodeGlyphX.BarcodeDecodeOptions.WithTileScan(System.Boolean,System.Int32)",
-      "anchor": "method-withtilescan-barcodedecodeoptions-withtilescan-bool-enabled-int-tilegrid"
-    },
+      ]
+    }
+  ],
+  "properties": [
     {
       "name": "Code39Checksum",
-      "kind": "Property",
-      "summary": "Controls how Code39 checksum characters are handled during decode.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "Code39ChecksumPolicy Code39Checksum {get; set; }",
-      "xmlId": "P:CodeGlyphX.BarcodeDecodeOptions.Code39Checksum",
-      "anchor": "property-code39checksum-code39checksumpolicy-code39checksum-get-set"
+      "summary": "Controls how Code39 checksum characters are handled during decode."
     },
     {
       "name": "MsiChecksum",
-      "kind": "Property",
-      "summary": "Controls how MSI checksum digits are handled during decode.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "MsiChecksumPolicy MsiChecksum {get; set; }",
-      "xmlId": "P:CodeGlyphX.BarcodeDecodeOptions.MsiChecksum",
-      "anchor": "property-msichecksum-msichecksumpolicy-msichecksum-get-set"
+      "summary": "Controls how MSI checksum digits are handled during decode."
     },
     {
       "name": "Code11Checksum",
-      "kind": "Property",
-      "summary": "Controls how Code 11 checksum characters are handled during decode.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "Code11ChecksumPolicy Code11Checksum {get; set; }",
-      "xmlId": "P:CodeGlyphX.BarcodeDecodeOptions.Code11Checksum",
-      "anchor": "property-code11checksum-code11checksumpolicy-code11checksum-get-set"
+      "summary": "Controls how Code 11 checksum characters are handled during decode."
     },
     {
       "name": "PlesseyChecksum",
-      "kind": "Property",
-      "summary": "Controls whether Plessey CRC validation is required during decode.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "PlesseyChecksumPolicy PlesseyChecksum {get; set; }",
-      "xmlId": "P:CodeGlyphX.BarcodeDecodeOptions.PlesseyChecksum",
-      "anchor": "property-plesseychecksum-plesseychecksumpolicy-plesseychecksum-get-set"
+      "summary": "Controls whether Plessey CRC validation is required during decode."
     },
     {
       "name": "EnableTileScan",
-      "kind": "Property",
-      "summary": "Enables tile-based scanning for multiple barcodes in one image.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "bool EnableTileScan {get; set; }",
-      "xmlId": "P:CodeGlyphX.BarcodeDecodeOptions.EnableTileScan",
-      "anchor": "property-enabletilescan-bool-enabletilescan-get-set"
+      "summary": "Enables tile-based scanning for multiple barcodes in one image."
     },
     {
       "name": "TileGrid",
-      "kind": "Property",
-      "summary": "Tile grid size for multi-scan (0 = auto, 2..4 recommended).",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int TileGrid {get; set; }",
-      "xmlId": "P:CodeGlyphX.BarcodeDecodeOptions.TileGrid",
-      "anchor": "property-tilegrid-int-tilegrid-get-set"
+      "summary": "Tile grid size for multi-scan (0 = auto, 2..4 recommended)."
     }
-  ]
+  ],
+  "fields": [],
+  "events": []
 }

@@ -1,367 +1,61 @@
-{
+﻿{
   "name": "MeCard",
   "fullName": "CodeGlyphX.Payloads.QrParsedData.MeCard",
-  "namespace": "CodeGlyphX.Payloads",
+  "namespace": "CodeGlyphX.Payloads.QrParsedData",
   "kind": "Class",
   "slug": "codeglyphx-payloads-qrparseddata-mecard",
   "summary": "MeCard payload.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
-      "name": "MeCard",
-      "kind": "Constructor",
+      "name": "#ctor",
       "summary": "MeCard payload.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "FirstName",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "LastName",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "Phone",
-          "type": "string",
-          "description": null
+          "name": "arg3",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "Email",
-          "type": "string",
-          "description": null
+          "name": "arg4",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "Url",
-          "type": "string",
-          "description": null
+          "name": "arg5",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "Address",
-          "type": "string",
-          "description": null
+          "name": "arg6",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "Note",
-          "type": "string",
-          "description": null
+          "name": "arg7",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "Organization",
-          "type": "string",
-          "description": null
+          "name": "arg8",
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "MeCard(string FirstName, string LastName, string Phone, string Email, string Url, string Address, string Note, string Organization)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.MeCard.#ctor(System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String)",
-      "anchor": "constructor-mecard-mecard-string-firstname-string-lastname-string-phone-string-email-string-url-string-address-string-note-string-organization"
-    },
-    {
-      "name": "ToString",
-      "kind": "Method",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string ToString()",
-      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.MeCard.ToString",
-      "anchor": "method-tostring-string-tostring"
-    },
-    {
-      "name": "op_Inequality",
-      "kind": "Method",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [
-        {
-          "name": "left",
-          "type": "QrParsedData.MeCard",
-          "description": null
-        },
-        {
-          "name": "right",
-          "type": "QrParsedData.MeCard",
-          "description": null
-        }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool op_Inequality(QrParsedData.MeCard left, QrParsedData.MeCard right)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.MeCard.op_Inequality(CodeGlyphX.Payloads.QrParsedData.MeCard,CodeGlyphX.Payloads.QrParsedData.MeCard)",
-      "anchor": "method-op-inequality-static-bool-op-inequality-qrparseddata-mecard-left-qrparseddata-mecard-right"
-    },
-    {
-      "name": "op_Equality",
-      "kind": "Method",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [
-        {
-          "name": "left",
-          "type": "QrParsedData.MeCard",
-          "description": null
-        },
-        {
-          "name": "right",
-          "type": "QrParsedData.MeCard",
-          "description": null
-        }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool op_Equality(QrParsedData.MeCard left, QrParsedData.MeCard right)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.MeCard.op_Equality(CodeGlyphX.Payloads.QrParsedData.MeCard,CodeGlyphX.Payloads.QrParsedData.MeCard)",
-      "anchor": "method-op-equality-static-bool-op-equality-qrparseddata-mecard-left-qrparseddata-mecard-right"
-    },
-    {
-      "name": "GetHashCode",
-      "kind": "Method",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int GetHashCode()",
-      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.MeCard.GetHashCode",
-      "anchor": "method-gethashcode-int-gethashcode"
-    },
-    {
-      "name": "Equals",
-      "kind": "Method",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [
-        {
-          "name": "obj",
-          "type": "object",
-          "description": null
-        }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "bool Equals(object obj)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.MeCard.Equals(System.Object)",
-      "anchor": "method-equals-bool-equals-object-obj"
-    },
-    {
-      "name": "Equals",
-      "kind": "Method",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [
-        {
-          "name": "other",
-          "type": "QrParsedData.MeCard",
-          "description": null
-        }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "bool Equals(QrParsedData.MeCard other)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.MeCard.Equals(CodeGlyphX.Payloads.QrParsedData.MeCard)",
-      "anchor": "method-equals-bool-equals-qrparseddata-mecard-other"
-    },
-    {
-      "name": "\u003CClone\u003E$",
-      "kind": "Method",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrParsedData.MeCard \u003CClone\u003E$()",
-      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.MeCard.\u003CClone\u003E$",
-      "anchor": "method-clone-qrparseddata-mecard-clone"
-    },
-    {
-      "name": "Deconstruct",
-      "kind": "Method",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [
-        {
-          "name": "FirstName",
-          "type": "string",
-          "description": null
-        },
-        {
-          "name": "LastName",
-          "type": "string",
-          "description": null
-        },
-        {
-          "name": "Phone",
-          "type": "string",
-          "description": null
-        },
-        {
-          "name": "Email",
-          "type": "string",
-          "description": null
-        },
-        {
-          "name": "Url",
-          "type": "string",
-          "description": null
-        },
-        {
-          "name": "Address",
-          "type": "string",
-          "description": null
-        },
-        {
-          "name": "Note",
-          "type": "string",
-          "description": null
-        },
-        {
-          "name": "Organization",
-          "type": "string",
-          "description": null
-        }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "void Deconstruct(out string FirstName, out string LastName, out string Phone, out string Email, out string Url, out string Address, out string Note, out string Organization)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.MeCard.Deconstruct(System.String@,System.String@,System.String@,System.String@,System.String@,System.String@,System.String@,System.String@)",
-      "anchor": "method-deconstruct-void-deconstruct-out-string-firstname-out-string-lastname-out-string-phone-out-string-email-out-string-url-out-string-address-out-string-note-out-string-organization"
-    },
-    {
-      "name": "FirstName",
-      "kind": "Property",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string FirstName {get; set; }",
-      "xmlId": "P:CodeGlyphX.Payloads.QrParsedData.MeCard.FirstName",
-      "anchor": "property-firstname-string-firstname-get-set"
-    },
-    {
-      "name": "LastName",
-      "kind": "Property",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string LastName {get; set; }",
-      "xmlId": "P:CodeGlyphX.Payloads.QrParsedData.MeCard.LastName",
-      "anchor": "property-lastname-string-lastname-get-set"
-    },
-    {
-      "name": "Phone",
-      "kind": "Property",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string Phone {get; set; }",
-      "xmlId": "P:CodeGlyphX.Payloads.QrParsedData.MeCard.Phone",
-      "anchor": "property-phone-string-phone-get-set"
-    },
-    {
-      "name": "Email",
-      "kind": "Property",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string Email {get; set; }",
-      "xmlId": "P:CodeGlyphX.Payloads.QrParsedData.MeCard.Email",
-      "anchor": "property-email-string-email-get-set"
-    },
-    {
-      "name": "Url",
-      "kind": "Property",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string Url {get; set; }",
-      "xmlId": "P:CodeGlyphX.Payloads.QrParsedData.MeCard.Url",
-      "anchor": "property-url-string-url-get-set"
-    },
-    {
-      "name": "Address",
-      "kind": "Property",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string Address {get; set; }",
-      "xmlId": "P:CodeGlyphX.Payloads.QrParsedData.MeCard.Address",
-      "anchor": "property-address-string-address-get-set"
-    },
-    {
-      "name": "Note",
-      "kind": "Property",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string Note {get; set; }",
-      "xmlId": "P:CodeGlyphX.Payloads.QrParsedData.MeCard.Note",
-      "anchor": "property-note-string-note-get-set"
-    },
-    {
-      "name": "Organization",
-      "kind": "Property",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string Organization {get; set; }",
-      "xmlId": "P:CodeGlyphX.Payloads.QrParsedData.MeCard.Organization",
-      "anchor": "property-organization-string-organization-get-set"
+      ]
     }
-  ]
+  ],
+  "properties": [],
+  "fields": [],
+  "events": []
 }

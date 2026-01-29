@@ -1,0 +1,34 @@
+﻿{
+  "name": "QrPngCanvasVignetteOptions",
+  "fullName": "CodeGlyphX.Rendering.Png.QrPngCanvasVignetteOptions",
+  "namespace": "CodeGlyphX.Rendering.Png",
+  "kind": "Class",
+  "slug": "codeglyphx-rendering-png-qrpngcanvasvignetteoptions",
+  "summary": "Edge vignette options for the canvas background.",
+  "remarks": null,
+  "methods": [],
+  "properties": [
+    {
+      "name": "Color",
+      "summary": "Vignette color (alpha recommended)."
+    },
+    {
+      "name": "BandPx",
+      "summary": "Vignette band width in pixels."
+    },
+    {
+      "name": "Strength",
+      "summary": "Vignette strength multiplier (0..2)."
+    },
+    {
+      "name": "ProtectQrArea",
+      "summary": "When true, never draws inside the QR area."
+    },
+    {
+      "name": "QrAreaAlphaMax",
+      "summary": "Maximum alpha allowed inside the QR area when is false. Set to 0 to apply no alpha limit."
+    }
+  ],
+  "fields": [],
+  "events": []
+}

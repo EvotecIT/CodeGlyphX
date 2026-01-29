@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "QrPixelDebugOptions",
   "fullName": "CodeGlyphX.QrPixelDebugOptions",
   "namespace": "CodeGlyphX",
@@ -6,176 +6,53 @@
   "slug": "codeglyphx-qrpixeldebugoptions",
   "summary": "Options for QR pixel debug rendering.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
-    {
-      "name": "QrPixelDebugOptions",
-      "kind": "Constructor",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrPixelDebugOptions()",
-      "xmlId": "M:CodeGlyphX.QrPixelDebugOptions.#ctor",
-      "anchor": "constructor-qrpixeldebugoptions-qrpixeldebugoptions"
-    },
+  "methods": [],
+  "properties": [
     {
       "name": "Scale",
-      "kind": "Property",
-      "summary": "Downscale factor applied before analysis (1..8).",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int Scale {get; set; }",
-      "xmlId": "P:CodeGlyphX.QrPixelDebugOptions.Scale",
-      "anchor": "property-scale-int-scale-get-set"
+      "summary": "Downscale factor applied before analysis (1..8)."
     },
     {
       "name": "OutputScale",
-      "kind": "Property",
-      "summary": "Upscale factor for the output visualization (default 1).",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int OutputScale {get; set; }",
-      "xmlId": "P:CodeGlyphX.QrPixelDebugOptions.OutputScale",
-      "anchor": "property-outputscale-int-outputscale-get-set"
+      "summary": "Upscale factor for the output visualization (default 1)."
     },
     {
       "name": "ContrastStretch",
-      "kind": "Property",
-      "summary": "Apply contrast stretch before thresholding.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "bool ContrastStretch {get; set; }",
-      "xmlId": "P:CodeGlyphX.QrPixelDebugOptions.ContrastStretch",
-      "anchor": "property-contraststretch-bool-contraststretch-get-set"
+      "summary": "Apply contrast stretch before thresholding."
     },
     {
       "name": "ContrastStretchMinRange",
-      "kind": "Property",
-      "summary": "Minimum contrast range for stretch (default 40).",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int ContrastStretchMinRange {get; set; }",
-      "xmlId": "P:CodeGlyphX.QrPixelDebugOptions.ContrastStretchMinRange",
-      "anchor": "property-contraststretchminrange-int-contraststretchminrange-get-set"
+      "summary": "Minimum contrast range for stretch (default 40)."
     },
     {
       "name": "BoxBlurRadius",
-      "kind": "Property",
-      "summary": "Apply a box blur before thresholding (radius in pixels).",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int BoxBlurRadius {get; set; }",
-      "xmlId": "P:CodeGlyphX.QrPixelDebugOptions.BoxBlurRadius",
-      "anchor": "property-boxblurradius-int-boxblurradius-get-set"
+      "summary": "Apply a box blur before thresholding (radius in pixels)."
     },
     {
       "name": "NormalizeBackground",
-      "kind": "Property",
-      "summary": "Normalize background gradients using local mean subtraction.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "bool NormalizeBackground {get; set; }",
-      "xmlId": "P:CodeGlyphX.QrPixelDebugOptions.NormalizeBackground",
-      "anchor": "property-normalizebackground-bool-normalizebackground-get-set"
+      "summary": "Normalize background gradients using local mean subtraction."
     },
     {
       "name": "NormalizeWindowSize",
-      "kind": "Property",
-      "summary": "Window size for background normalization (odd \u003E= 3).",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int NormalizeWindowSize {get; set; }",
-      "xmlId": "P:CodeGlyphX.QrPixelDebugOptions.NormalizeWindowSize",
-      "anchor": "property-normalizewindowsize-int-normalizewindowsize-get-set"
+      "summary": "Window size for background normalization (odd \u003E= 3)."
     },
     {
       "name": "AdaptiveThreshold",
-      "kind": "Property",
-      "summary": "Use adaptive thresholding (local window).",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "bool AdaptiveThreshold {get; set; }",
-      "xmlId": "P:CodeGlyphX.QrPixelDebugOptions.AdaptiveThreshold",
-      "anchor": "property-adaptivethreshold-bool-adaptivethreshold-get-set"
+      "summary": "Use adaptive thresholding (local window)."
     },
     {
       "name": "AdaptiveWindowSize",
-      "kind": "Property",
-      "summary": "Window size for adaptive thresholding (odd \u003E= 3).",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int AdaptiveWindowSize {get; set; }",
-      "xmlId": "P:CodeGlyphX.QrPixelDebugOptions.AdaptiveWindowSize",
-      "anchor": "property-adaptivewindowsize-int-adaptivewindowsize-get-set"
+      "summary": "Window size for adaptive thresholding (odd \u003E= 3)."
     },
     {
       "name": "AdaptiveOffset",
-      "kind": "Property",
-      "summary": "Offset subtracted from the local mean (0..255).",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int AdaptiveOffset {get; set; }",
-      "xmlId": "P:CodeGlyphX.QrPixelDebugOptions.AdaptiveOffset",
-      "anchor": "property-adaptiveoffset-int-adaptiveoffset-get-set"
+      "summary": "Offset subtracted from the local mean (0..255)."
     },
     {
       "name": "Invert",
-      "kind": "Property",
-      "summary": "Invert black/white classification for binarized/heatmap outputs.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "bool Invert {get; set; }",
-      "xmlId": "P:CodeGlyphX.QrPixelDebugOptions.Invert",
-      "anchor": "property-invert-bool-invert-get-set"
+      "summary": "Invert black/white classification for binarized/heatmap outputs."
     }
-  ]
+  ],
+  "fields": [],
+  "events": []
 }

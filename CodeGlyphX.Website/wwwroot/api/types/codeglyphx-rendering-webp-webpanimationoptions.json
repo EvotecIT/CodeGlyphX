@@ -1,0 +1,40 @@
+﻿{
+  "name": "WebpAnimationOptions",
+  "fullName": "CodeGlyphX.Rendering.Webp.WebpAnimationOptions",
+  "namespace": "CodeGlyphX.Rendering.Webp",
+  "kind": "Class",
+  "slug": "codeglyphx-rendering-webp-webpanimationoptions",
+  "summary": "Options for animated WebP encoding.",
+  "remarks": null,
+  "methods": [
+    {
+      "name": "#ctor",
+      "summary": "Creates animation options.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "arg1",
+          "type": "System.Int32",
+          "summary": null
+        },
+        {
+          "name": "arg2",
+          "type": "System.UInt32",
+          "summary": null
+        }
+      ]
+    }
+  ],
+  "properties": [
+    {
+      "name": "LoopCount",
+      "summary": "Loop count (0 = infinite)."
+    },
+    {
+      "name": "BackgroundBgra",
+      "summary": "Background color in BGRA byte order."
+    }
+  ],
+  "fields": [],
+  "events": []
+}

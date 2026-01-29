@@ -1,15 +1,12 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>QrShadowSocksMethod - CodeGlyphX API Reference</title>
-  <meta name="description" content="Shadowsocks cipher methods." />
-  <link rel="stylesheet" href="../style.css" />
-  <script>(function(){const theme=localStorage.getItem('theme')||'dark';document.documentElement.dataset.theme=theme;})();</script>
+  <title>CodeGlyphX.Payloads.QrShadowSocksMethod - CodeGlyphX API Reference</title>
+  <link rel="stylesheet" href="/mnt/c/Support/GitHub/CodeMatrix/CodeGlyphX.Website/wwwroot/css/api-docs.css" />
 </head>
 <body>
-  <div class="page">
 <header class="header">
     <div class="header-content">
         <a href="/" class="brand">
@@ -31,19 +28,31 @@
             <div class="nav-links">
                 <a href="/">Home</a>
                 <a href="/playground/">Playground</a>
-                <a href="/docs/">Documentation</a>
+                <a href="/docs/">Docs</a>
+                <a href="/benchmarks/">Benchmarks</a>
                 <a href="/showcase/">Showcase</a>
+                <a href="/pricing/">Pricing</a>
             </div>
             <div class="nav-actions">
-                <button class="theme-toggle" title="Toggle theme" aria-label="Toggle theme">
-                    <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="5"/>
-                        <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
-                    </svg>
-                    <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
-                    </svg>
-                </button>
+                <div class="theme-toggle" role="group" aria-label="Theme selection">
+                    <button data-theme="auto" title="Auto (system)" aria-label="Auto theme">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="2" y="3" width="20" height="14" rx="2"/>
+                            <path d="M8 21h8M12 17v4"/>
+                        </svg>
+                    </button>
+                    <button data-theme="light" title="Light" aria-label="Light theme">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="5"/>
+                            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+                        </svg>
+                    </button>
+                    <button data-theme="dark" title="Dark" aria-label="Dark theme">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
+                        </svg>
+                    </button>
+                </div>
                 <a href="https://github.com/EvotecIT/CodeGlyphX" target="_blank" rel="noopener" class="nav-icon" title="GitHub" aria-label="GitHub">
                     <svg viewBox="0 0 24 24" fill="currentColor">
                         <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
@@ -59,172 +68,128 @@
         </nav>
     </div>
 </header>
+  <main class="pf-api">
+    <a href="../index.html">← API Index</a>
+    <h1>CodeGlyphX.Payloads.QrShadowSocksMethod</h1>
+    <p>Shadowsocks cipher methods.</p>
 
-<main class="type-detail">
-  <nav class="breadcrumb" aria-label="Breadcrumb">
-    <a href="../index.html">API Reference</a>
-    <span class="sep">/</span><span>CodeGlyphX.Payloads</span>
-  </nav>
-  <header class="type-header">
-    <h1>QrShadowSocksMethod</h1>
-    <div class="type-meta">Enum · CodeGlyphX.Payloads</div>
-  </header>
-  <p class="type-summary">Shadowsocks cipher methods.</p>
-  <section class="member-section">
-    <h2>Fields</h2>
-    <div class="member" id="field-value-int-value">
-      <code class="signature">int value__</code>
-    </div>
-    <div class="member" id="field-chacha20ietfpoly1305-qrshadowsocksmethod-chacha20ietfpoly1305">
-      <code class="signature">QrShadowSocksMethod Chacha20IetfPoly1305</code>
-      <p class="member-summary">chacha20-ietf-poly1305.</p>
-    </div>
-    <div class="member" id="field-aes128gcm-qrshadowsocksmethod-aes128gcm">
-      <code class="signature">QrShadowSocksMethod Aes128Gcm</code>
-      <p class="member-summary">aes-128-gcm.</p>
-    </div>
-    <div class="member" id="field-aes192gcm-qrshadowsocksmethod-aes192gcm">
-      <code class="signature">QrShadowSocksMethod Aes192Gcm</code>
-      <p class="member-summary">aes-192-gcm.</p>
-    </div>
-    <div class="member" id="field-aes256gcm-qrshadowsocksmethod-aes256gcm">
-      <code class="signature">QrShadowSocksMethod Aes256Gcm</code>
-      <p class="member-summary">aes-256-gcm.</p>
-    </div>
-    <div class="member" id="field-xchacha20ietfpoly1305-qrshadowsocksmethod-xchacha20ietfpoly1305">
-      <code class="signature">QrShadowSocksMethod XChacha20IetfPoly1305</code>
-      <p class="member-summary">xchacha20-ietf-poly1305.</p>
-    </div>
-    <div class="member" id="field-aes128cfb-qrshadowsocksmethod-aes128cfb">
-      <code class="signature">QrShadowSocksMethod Aes128Cfb</code>
-      <p class="member-summary">aes-128-cfb.</p>
-    </div>
-    <div class="member" id="field-aes192cfb-qrshadowsocksmethod-aes192cfb">
-      <code class="signature">QrShadowSocksMethod Aes192Cfb</code>
-      <p class="member-summary">aes-192-cfb.</p>
-    </div>
-    <div class="member" id="field-aes256cfb-qrshadowsocksmethod-aes256cfb">
-      <code class="signature">QrShadowSocksMethod Aes256Cfb</code>
-      <p class="member-summary">aes-256-cfb.</p>
-    </div>
-    <div class="member" id="field-aes128ctr-qrshadowsocksmethod-aes128ctr">
-      <code class="signature">QrShadowSocksMethod Aes128Ctr</code>
-      <p class="member-summary">aes-128-ctr.</p>
-    </div>
-    <div class="member" id="field-aes192ctr-qrshadowsocksmethod-aes192ctr">
-      <code class="signature">QrShadowSocksMethod Aes192Ctr</code>
-      <p class="member-summary">aes-192-ctr.</p>
-    </div>
-    <div class="member" id="field-aes256ctr-qrshadowsocksmethod-aes256ctr">
-      <code class="signature">QrShadowSocksMethod Aes256Ctr</code>
-      <p class="member-summary">aes-256-ctr.</p>
-    </div>
-    <div class="member" id="field-camellia128cfb-qrshadowsocksmethod-camellia128cfb">
-      <code class="signature">QrShadowSocksMethod Camellia128Cfb</code>
-      <p class="member-summary">camellia-128-cfb.</p>
-    </div>
-    <div class="member" id="field-camellia192cfb-qrshadowsocksmethod-camellia192cfb">
-      <code class="signature">QrShadowSocksMethod Camellia192Cfb</code>
-      <p class="member-summary">camellia-192-cfb.</p>
-    </div>
-    <div class="member" id="field-camellia256cfb-qrshadowsocksmethod-camellia256cfb">
-      <code class="signature">QrShadowSocksMethod Camellia256Cfb</code>
-      <p class="member-summary">camellia-256-cfb.</p>
-    </div>
-    <div class="member" id="field-chacha20ietf-qrshadowsocksmethod-chacha20ietf">
-      <code class="signature">QrShadowSocksMethod Chacha20Ietf</code>
-      <p class="member-summary">chacha20-ietf.</p>
-    </div>
-    <div class="member" id="field-aes256cb-qrshadowsocksmethod-aes256cb">
-      <code class="signature">QrShadowSocksMethod Aes256Cb</code>
-      <p class="member-summary">aes-256-cfb (alias).</p>
-    </div>
-    <div class="member" id="field-aes128ofb-qrshadowsocksmethod-aes128ofb">
-      <code class="signature">QrShadowSocksMethod Aes128Ofb</code>
-      <p class="member-summary">aes-128-ofb.</p>
-    </div>
-    <div class="member" id="field-aes192ofb-qrshadowsocksmethod-aes192ofb">
-      <code class="signature">QrShadowSocksMethod Aes192Ofb</code>
-      <p class="member-summary">aes-192-ofb.</p>
-    </div>
-    <div class="member" id="field-aes256ofb-qrshadowsocksmethod-aes256ofb">
-      <code class="signature">QrShadowSocksMethod Aes256Ofb</code>
-      <p class="member-summary">aes-256-ofb.</p>
-    </div>
-    <div class="member" id="field-aes128cfb1-qrshadowsocksmethod-aes128cfb1">
-      <code class="signature">QrShadowSocksMethod Aes128Cfb1</code>
-      <p class="member-summary">aes-128-cfb1.</p>
-    </div>
-    <div class="member" id="field-aes192cfb1-qrshadowsocksmethod-aes192cfb1">
-      <code class="signature">QrShadowSocksMethod Aes192Cfb1</code>
-      <p class="member-summary">aes-192-cfb1.</p>
-    </div>
-    <div class="member" id="field-aes256cfb1-qrshadowsocksmethod-aes256cfb1">
-      <code class="signature">QrShadowSocksMethod Aes256Cfb1</code>
-      <p class="member-summary">aes-256-cfb1.</p>
-    </div>
-    <div class="member" id="field-aes128cfb8-qrshadowsocksmethod-aes128cfb8">
-      <code class="signature">QrShadowSocksMethod Aes128Cfb8</code>
-      <p class="member-summary">aes-128-cfb8.</p>
-    </div>
-    <div class="member" id="field-aes192cfb8-qrshadowsocksmethod-aes192cfb8">
-      <code class="signature">QrShadowSocksMethod Aes192Cfb8</code>
-      <p class="member-summary">aes-192-cfb8.</p>
-    </div>
-    <div class="member" id="field-aes256cfb8-qrshadowsocksmethod-aes256cfb8">
-      <code class="signature">QrShadowSocksMethod Aes256Cfb8</code>
-      <p class="member-summary">aes-256-cfb8.</p>
-    </div>
-    <div class="member" id="field-chacha20-qrshadowsocksmethod-chacha20">
-      <code class="signature">QrShadowSocksMethod Chacha20</code>
-      <p class="member-summary">chacha20.</p>
-    </div>
-    <div class="member" id="field-bfcfb-qrshadowsocksmethod-bfcfb">
-      <code class="signature">QrShadowSocksMethod BfCfb</code>
-      <p class="member-summary">bf-cfb.</p>
-    </div>
-    <div class="member" id="field-rc4md5-qrshadowsocksmethod-rc4md5">
-      <code class="signature">QrShadowSocksMethod Rc4Md5</code>
-      <p class="member-summary">rc4-md5.</p>
-    </div>
-    <div class="member" id="field-salsa20-qrshadowsocksmethod-salsa20">
-      <code class="signature">QrShadowSocksMethod Salsa20</code>
-      <p class="member-summary">salsa20.</p>
-    </div>
-    <div class="member" id="field-descfb-qrshadowsocksmethod-descfb">
-      <code class="signature">QrShadowSocksMethod DesCfb</code>
-      <p class="member-summary">des-cfb.</p>
-    </div>
-    <div class="member" id="field-ideacfb-qrshadowsocksmethod-ideacfb">
-      <code class="signature">QrShadowSocksMethod IdeaCfb</code>
-      <p class="member-summary">idea-cfb.</p>
-    </div>
-    <div class="member" id="field-rc2cfb-qrshadowsocksmethod-rc2cfb">
-      <code class="signature">QrShadowSocksMethod Rc2Cfb</code>
-      <p class="member-summary">rc2-cfb.</p>
-    </div>
-    <div class="member" id="field-cast5cfb-qrshadowsocksmethod-cast5cfb">
-      <code class="signature">QrShadowSocksMethod Cast5Cfb</code>
-      <p class="member-summary">cast5-cfb.</p>
-    </div>
-    <div class="member" id="field-salsa20ctr-qrshadowsocksmethod-salsa20ctr">
-      <code class="signature">QrShadowSocksMethod Salsa20Ctr</code>
-      <p class="member-summary">salsa20-ctr.</p>
-    </div>
-    <div class="member" id="field-rc4-qrshadowsocksmethod-rc4">
-      <code class="signature">QrShadowSocksMethod Rc4</code>
-      <p class="member-summary">rc4.</p>
-    </div>
-    <div class="member" id="field-seedcfb-qrshadowsocksmethod-seedcfb">
-      <code class="signature">QrShadowSocksMethod SeedCfb</code>
-      <p class="member-summary">seed-cfb.</p>
-    </div>
-    <div class="member" id="field-table-qrshadowsocksmethod-table">
-      <code class="signature">QrShadowSocksMethod Table</code>
-      <p class="member-summary">table (legacy).</p>
-    </div>
-  </section>
-</main>
+    <section class="pf-api-section">
+      <h2>Fields</h2>
+      <ul>
+        <li>
+          <strong>Chacha20IetfPoly1305</strong> - chacha20-ietf-poly1305.
+        </li>
+        <li>
+          <strong>Aes128Gcm</strong> - aes-128-gcm.
+        </li>
+        <li>
+          <strong>Aes192Gcm</strong> - aes-192-gcm.
+        </li>
+        <li>
+          <strong>Aes256Gcm</strong> - aes-256-gcm.
+        </li>
+        <li>
+          <strong>XChacha20IetfPoly1305</strong> - xchacha20-ietf-poly1305.
+        </li>
+        <li>
+          <strong>Aes128Cfb</strong> - aes-128-cfb.
+        </li>
+        <li>
+          <strong>Aes192Cfb</strong> - aes-192-cfb.
+        </li>
+        <li>
+          <strong>Aes256Cfb</strong> - aes-256-cfb.
+        </li>
+        <li>
+          <strong>Aes128Ctr</strong> - aes-128-ctr.
+        </li>
+        <li>
+          <strong>Aes192Ctr</strong> - aes-192-ctr.
+        </li>
+        <li>
+          <strong>Aes256Ctr</strong> - aes-256-ctr.
+        </li>
+        <li>
+          <strong>Camellia128Cfb</strong> - camellia-128-cfb.
+        </li>
+        <li>
+          <strong>Camellia192Cfb</strong> - camellia-192-cfb.
+        </li>
+        <li>
+          <strong>Camellia256Cfb</strong> - camellia-256-cfb.
+        </li>
+        <li>
+          <strong>Chacha20Ietf</strong> - chacha20-ietf.
+        </li>
+        <li>
+          <strong>Aes256Cb</strong> - aes-256-cfb (alias).
+        </li>
+        <li>
+          <strong>Aes128Ofb</strong> - aes-128-ofb.
+        </li>
+        <li>
+          <strong>Aes192Ofb</strong> - aes-192-ofb.
+        </li>
+        <li>
+          <strong>Aes256Ofb</strong> - aes-256-ofb.
+        </li>
+        <li>
+          <strong>Aes128Cfb1</strong> - aes-128-cfb1.
+        </li>
+        <li>
+          <strong>Aes192Cfb1</strong> - aes-192-cfb1.
+        </li>
+        <li>
+          <strong>Aes256Cfb1</strong> - aes-256-cfb1.
+        </li>
+        <li>
+          <strong>Aes128Cfb8</strong> - aes-128-cfb8.
+        </li>
+        <li>
+          <strong>Aes192Cfb8</strong> - aes-192-cfb8.
+        </li>
+        <li>
+          <strong>Aes256Cfb8</strong> - aes-256-cfb8.
+        </li>
+        <li>
+          <strong>Chacha20</strong> - chacha20.
+        </li>
+        <li>
+          <strong>BfCfb</strong> - bf-cfb.
+        </li>
+        <li>
+          <strong>Rc4Md5</strong> - rc4-md5.
+        </li>
+        <li>
+          <strong>Salsa20</strong> - salsa20.
+        </li>
+        <li>
+          <strong>DesCfb</strong> - des-cfb.
+        </li>
+        <li>
+          <strong>IdeaCfb</strong> - idea-cfb.
+        </li>
+        <li>
+          <strong>Rc2Cfb</strong> - rc2-cfb.
+        </li>
+        <li>
+          <strong>Cast5Cfb</strong> - cast5-cfb.
+        </li>
+        <li>
+          <strong>Salsa20Ctr</strong> - salsa20-ctr.
+        </li>
+        <li>
+          <strong>Rc4</strong> - rc4.
+        </li>
+        <li>
+          <strong>SeedCfb</strong> - seed-cfb.
+        </li>
+        <li>
+          <strong>Table</strong> - table (legacy).
+        </li>
+      </ul>
+    </section>
+  </main>
 <footer class="footer">
     <div class="footer-content">
         <div class="footer-brand">
@@ -239,20 +204,21 @@
                 <h3>Product</h3>
                 <a href="/">Home</a>
                 <a href="/playground/">Playground</a>
-                <a href="/docs/">Documentation</a>
+                <a href="/docs/">Docs</a>
+                <a href="/benchmarks/">Benchmarks</a>
                 <a href="/showcase/">Showcase</a>
             </div>
             <div class="footer-section">
                 <h3>Resources</h3>
                 <a href="/faq/">FAQ</a>
-                <a href="https://www.nuget.org/packages/CodeGlyphX" target="_blank" rel="noopener">NuGet Package</a>
-                <a href="https://github.com/EvotecIT/CodeGlyphX" target="_blank" rel="noopener">GitHub Repository</a>
-                <a href="https://github.com/EvotecIT/CodeGlyphX/issues" target="_blank" rel="noopener">Report Issue</a>
+                <a href="https://www.nuget.org/packages/CodeGlyphX" target="_blank" rel="noopener" aria-label="NuGet Package (opens in new tab)">NuGet Package</a>
+                <a href="https://github.com/EvotecIT/CodeGlyphX" target="_blank" rel="noopener" aria-label="GitHub Repository (opens in new tab)">GitHub Repository</a>
+                <a href="https://github.com/EvotecIT/CodeGlyphX/issues" target="_blank" rel="noopener" aria-label="Report Issue (opens in new tab)">Report Issue</a>
             </div>
             <div class="footer-section">
                 <h3>Company</h3>
-                <a href="https://evotec.xyz" target="_blank" rel="noopener">Evotec Services</a>
-                <a href="https://evotec.xyz/hub" target="_blank" rel="noopener">Blog</a>
+                <a href="https://evotec.xyz" target="_blank" rel="noopener" aria-label="Evotec Services (opens in new tab)">Evotec Services</a>
+                <a href="https://evotec.xyz/hub" target="_blank" rel="noopener" aria-label="Blog (opens in new tab)">Blog</a>
             </div>
         </div>
         <div class="footer-bottom">
@@ -269,7 +235,5 @@
     </div>
 </footer>
 <script src="/js/site.js"></script>
-
-  </div>
 </body>
 </html>

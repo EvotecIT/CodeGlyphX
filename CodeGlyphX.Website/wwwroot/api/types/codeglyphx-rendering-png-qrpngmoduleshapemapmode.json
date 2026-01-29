@@ -1,0 +1,34 @@
+﻿{
+  "name": "QrPngModuleShapeMapMode",
+  "fullName": "CodeGlyphX.Rendering.Png.QrPngModuleShapeMapMode",
+  "namespace": "CodeGlyphX.Rendering.Png",
+  "kind": "Class",
+  "slug": "codeglyphx-rendering-png-qrpngmoduleshapemapmode",
+  "summary": "Modes for mapping module shapes across a QR matrix.",
+  "remarks": null,
+  "methods": [],
+  "properties": [],
+  "fields": [
+    {
+      "name": "Radial",
+      "summary": "Radial blend from center to edge using ."
+    },
+    {
+      "name": "Rings",
+      "summary": "Ring-based alternating shapes."
+    },
+    {
+      "name": "Checker",
+      "summary": "Checkerboard alternation."
+    },
+    {
+      "name": "Random",
+      "summary": "Random selection between shapes."
+    },
+    {
+      "name": "Corners",
+      "summary": "Apply the secondary shape to corner zones."
+    }
+  ],
+  "events": []
+}

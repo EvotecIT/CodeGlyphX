@@ -1,0 +1,22 @@
+﻿{
+  "name": "OutputKind",
+  "fullName": "CodeGlyphX.Rendering.OutputKind",
+  "namespace": "CodeGlyphX.Rendering",
+  "kind": "Class",
+  "slug": "codeglyphx-rendering-outputkind",
+  "summary": "Output kind for a rendered asset.",
+  "remarks": null,
+  "methods": [],
+  "properties": [],
+  "fields": [
+    {
+      "name": "Binary",
+      "summary": "Binary output (bytes)."
+    },
+    {
+      "name": "Text",
+      "summary": "Text output (string)."
+    }
+  ],
+  "events": []
+}

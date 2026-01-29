@@ -1,139 +1,46 @@
-{
+﻿{
   "name": "QrBezahlAuthorityType",
   "fullName": "CodeGlyphX.Payloads.QrBezahlAuthorityType",
   "namespace": "CodeGlyphX.Payloads",
-  "kind": "Enum",
+  "kind": "Class",
   "slug": "codeglyphx-payloads-qrbezahlauthoritytype",
   "summary": "BezahlCode authority types.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
-    {
-      "name": "value__",
-      "kind": "Field",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int value__",
-      "xmlId": "F:CodeGlyphX.Payloads.QrBezahlAuthorityType.value__",
-      "anchor": "field-value-int-value"
-    },
+  "methods": [],
+  "properties": [],
+  "fields": [
     {
       "name": "SinglePayment",
-      "kind": "Field",
-      "summary": "Single payment.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrBezahlAuthorityType SinglePayment",
-      "xmlId": "F:CodeGlyphX.Payloads.QrBezahlAuthorityType.SinglePayment",
-      "anchor": "field-singlepayment-qrbezahlauthoritytype-singlepayment"
+      "summary": "Single payment."
     },
     {
       "name": "SinglePaymentSepa",
-      "kind": "Field",
-      "summary": "Single SEPA payment.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrBezahlAuthorityType SinglePaymentSepa",
-      "xmlId": "F:CodeGlyphX.Payloads.QrBezahlAuthorityType.SinglePaymentSepa",
-      "anchor": "field-singlepaymentsepa-qrbezahlauthoritytype-singlepaymentsepa"
+      "summary": "Single SEPA payment."
     },
     {
       "name": "SingleDirectDebit",
-      "kind": "Field",
-      "summary": "Single direct debit.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrBezahlAuthorityType SingleDirectDebit",
-      "xmlId": "F:CodeGlyphX.Payloads.QrBezahlAuthorityType.SingleDirectDebit",
-      "anchor": "field-singledirectdebit-qrbezahlauthoritytype-singledirectdebit"
+      "summary": "Single direct debit."
     },
     {
       "name": "SingleDirectDebitSepa",
-      "kind": "Field",
-      "summary": "Single SEPA direct debit.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrBezahlAuthorityType SingleDirectDebitSepa",
-      "xmlId": "F:CodeGlyphX.Payloads.QrBezahlAuthorityType.SingleDirectDebitSepa",
-      "anchor": "field-singledirectdebitsepa-qrbezahlauthoritytype-singledirectdebitsepa"
+      "summary": "Single SEPA direct debit."
     },
     {
       "name": "PeriodicSinglePayment",
-      "kind": "Field",
-      "summary": "Periodic single payment.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrBezahlAuthorityType PeriodicSinglePayment",
-      "xmlId": "F:CodeGlyphX.Payloads.QrBezahlAuthorityType.PeriodicSinglePayment",
-      "anchor": "field-periodicsinglepayment-qrbezahlauthoritytype-periodicsinglepayment"
+      "summary": "Periodic single payment."
     },
     {
       "name": "PeriodicSinglePaymentSepa",
-      "kind": "Field",
-      "summary": "Periodic SEPA single payment.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrBezahlAuthorityType PeriodicSinglePaymentSepa",
-      "xmlId": "F:CodeGlyphX.Payloads.QrBezahlAuthorityType.PeriodicSinglePaymentSepa",
-      "anchor": "field-periodicsinglepaymentsepa-qrbezahlauthoritytype-periodicsinglepaymentsepa"
+      "summary": "Periodic SEPA single payment."
     },
     {
       "name": "Contact",
-      "kind": "Field",
-      "summary": "Contact payload.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrBezahlAuthorityType Contact",
-      "xmlId": "F:CodeGlyphX.Payloads.QrBezahlAuthorityType.Contact",
-      "anchor": "field-contact-qrbezahlauthoritytype-contact"
+      "summary": "Contact payload."
     },
     {
       "name": "ContactV2",
-      "kind": "Field",
-      "summary": "Contact payload v2.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrBezahlAuthorityType ContactV2",
-      "xmlId": "F:CodeGlyphX.Payloads.QrBezahlAuthorityType.ContactV2",
-      "anchor": "field-contactv2-qrbezahlauthoritytype-contactv2"
+      "summary": "Contact payload v2."
     }
-  ]
+  ],
+  "events": []
 }

@@ -1,71 +1,45 @@
-{
+﻿{
   "name": "Reference",
   "fullName": "CodeGlyphX.Payloads.SwissQrCodePayload.Reference",
-  "namespace": "CodeGlyphX.Payloads",
+  "namespace": "CodeGlyphX.Payloads.SwissQrCodePayload",
   "kind": "Class",
   "slug": "codeglyphx-payloads-swissqrcodepayload-reference",
   "summary": "Reference section.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
-      "name": "Reference",
-      "kind": "Constructor",
+      "name": "#ctor",
       "summary": "Creates a reference section.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "referenceType",
-          "type": "SwissQrCodePayload.Reference.ReferenceType",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.Payloads.SwissQrCodePayload.Reference.ReferenceType",
+          "summary": null
         },
         {
-          "name": "reference",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "referenceTextType",
-          "type": "Nullable\u003CSwissQrCodePayload.Reference.ReferenceTextType\u003E",
-          "description": null
+          "name": "arg3",
+          "type": "System.Nullable{CodeGlyphX.Payloads.SwissQrCodePayload.Reference.ReferenceTextType}",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "Reference(SwissQrCodePayload.Reference.ReferenceType referenceType, string reference, Nullable\u003CSwissQrCodePayload.Reference.ReferenceTextType\u003E referenceTextType)",
-      "xmlId": "M:CodeGlyphX.Payloads.SwissQrCodePayload.Reference.#ctor(CodeGlyphX.Payloads.SwissQrCodePayload.Reference.ReferenceType,System.String,System.Nullable{CodeGlyphX.Payloads.SwissQrCodePayload.Reference.ReferenceTextType})",
-      "anchor": "constructor-reference-reference-swissqrcodepayload-reference-referencetype-referencetype-string-reference-nullable-swissqrcodepayload-reference-referencetexttype-referencetexttype"
-    },
+      ]
+    }
+  ],
+  "properties": [
     {
       "name": "RefType",
-      "kind": "Property",
-      "summary": "Reference type.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "SwissQrCodePayload.Reference.ReferenceType RefType {get; }",
-      "xmlId": "P:CodeGlyphX.Payloads.SwissQrCodePayload.Reference.RefType",
-      "anchor": "property-reftype-swissqrcodepayload-reference-referencetype-reftype-get"
+      "summary": "Reference type."
     },
     {
       "name": "ReferenceText",
-      "kind": "Property",
-      "summary": "Reference text (single line).",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string ReferenceText {get; }",
-      "xmlId": "P:CodeGlyphX.Payloads.SwissQrCodePayload.Reference.ReferenceText",
-      "anchor": "property-referencetext-string-referencetext-get"
+      "summary": "Reference text (single line)."
     }
-  ]
+  ],
+  "fields": [],
+  "events": []
 }

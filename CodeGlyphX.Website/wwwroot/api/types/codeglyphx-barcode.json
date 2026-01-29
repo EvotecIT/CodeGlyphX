@@ -1,3439 +1,2761 @@
-{
+﻿{
   "name": "Barcode",
   "fullName": "CodeGlyphX.Barcode",
   "namespace": "CodeGlyphX",
   "kind": "Class",
   "slug": "codeglyphx-barcode",
   "summary": "Simple barcode helpers with fluent and static APIs.",
-  "remarks": "Use CodeGlyphX.Barcode.Save(CodeGlyphX.BarcodeType,System.String,System.String,CodeGlyphX.BarcodeOptions,System.String) to pick the output format by file extension.",
-  "examples": [
-    {
-      "title": "EXAMPLE 1",
-      "code": "\n            using CodeGlyphX;\n            Barcode.Save(BarcodeType.Code128, \u0022PRODUCT-12345\u0022, \u0022barcode.png\u0022);",
-      "remarks": null
-    }
-  ],
-  "seeAlso": [],
-  "members": [
+  "remarks": "Use to pick the output format by file extension.",
+  "methods": [
     {
       "name": "Create",
-      "kind": "Method",
       "summary": "Starts a fluent barcode builder.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "type",
-          "type": "BarcodeType",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.BarcodeType",
+          "summary": null
         },
         {
-          "name": "content",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "BarcodeOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.BarcodeOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static Barcode.BarcodeBuilder Create(BarcodeType type, string content, BarcodeOptions options)",
-      "xmlId": "M:CodeGlyphX.Barcode.Create(CodeGlyphX.BarcodeType,System.String,CodeGlyphX.BarcodeOptions)",
-      "anchor": "method-create-static-barcode-barcodebuilder-create-barcodetype-type-string-content-barcodeoptions-options"
+      ]
     },
     {
       "name": "Encode",
-      "kind": "Method",
       "summary": "Encodes a 1D barcode.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "type",
-          "type": "BarcodeType",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.BarcodeType",
+          "summary": null
         },
         {
-          "name": "content",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static Barcode1D Encode(BarcodeType type, string content)",
-      "xmlId": "M:CodeGlyphX.Barcode.Encode(CodeGlyphX.BarcodeType,System.String)",
-      "anchor": "method-encode-static-barcode1d-encode-barcodetype-type-string-content"
+      ]
     },
     {
       "name": "Png",
-      "kind": "Method",
       "summary": "Renders a barcode as PNG.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "type",
-          "type": "BarcodeType",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.BarcodeType",
+          "summary": null
         },
         {
-          "name": "content",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "BarcodeOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.BarcodeOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static byte[] Png(BarcodeType type, string content, BarcodeOptions options)",
-      "xmlId": "M:CodeGlyphX.Barcode.Png(CodeGlyphX.BarcodeType,System.String,CodeGlyphX.BarcodeOptions)",
-      "anchor": "method-png-static-byte-png-barcodetype-type-string-content-barcodeoptions-options"
+      ]
     },
     {
       "name": "Svg",
-      "kind": "Method",
       "summary": "Renders a barcode as SVG.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "type",
-          "type": "BarcodeType",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.BarcodeType",
+          "summary": null
         },
         {
-          "name": "content",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "BarcodeOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.BarcodeOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string Svg(BarcodeType type, string content, BarcodeOptions options)",
-      "xmlId": "M:CodeGlyphX.Barcode.Svg(CodeGlyphX.BarcodeType,System.String,CodeGlyphX.BarcodeOptions)",
-      "anchor": "method-svg-static-string-svg-barcodetype-type-string-content-barcodeoptions-options"
+      ]
     },
     {
       "name": "Html",
-      "kind": "Method",
       "summary": "Renders a barcode as HTML.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "type",
-          "type": "BarcodeType",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.BarcodeType",
+          "summary": null
         },
         {
-          "name": "content",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "BarcodeOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.BarcodeOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string Html(BarcodeType type, string content, BarcodeOptions options)",
-      "xmlId": "M:CodeGlyphX.Barcode.Html(CodeGlyphX.BarcodeType,System.String,CodeGlyphX.BarcodeOptions)",
-      "anchor": "method-html-static-string-html-barcodetype-type-string-content-barcodeoptions-options"
+      ]
     },
     {
       "name": "Jpeg",
-      "kind": "Method",
       "summary": "Renders a barcode as JPEG.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "type",
-          "type": "BarcodeType",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.BarcodeType",
+          "summary": null
         },
         {
-          "name": "content",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "BarcodeOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.BarcodeOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static byte[] Jpeg(BarcodeType type, string content, BarcodeOptions options)",
-      "xmlId": "M:CodeGlyphX.Barcode.Jpeg(CodeGlyphX.BarcodeType,System.String,CodeGlyphX.BarcodeOptions)",
-      "anchor": "method-jpeg-static-byte-jpeg-barcodetype-type-string-content-barcodeoptions-options"
+      ]
+    },
+    {
+      "name": "Webp",
+      "summary": "Renders a barcode as WebP.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "arg1",
+          "type": "CodeGlyphX.BarcodeType",
+          "summary": null
+        },
+        {
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
+        },
+        {
+          "name": "arg3",
+          "type": "CodeGlyphX.BarcodeOptions",
+          "summary": null
+        }
+      ]
     },
     {
       "name": "Bmp",
-      "kind": "Method",
       "summary": "Renders a barcode as BMP.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "type",
-          "type": "BarcodeType",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.BarcodeType",
+          "summary": null
         },
         {
-          "name": "content",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "BarcodeOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.BarcodeOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static byte[] Bmp(BarcodeType type, string content, BarcodeOptions options)",
-      "xmlId": "M:CodeGlyphX.Barcode.Bmp(CodeGlyphX.BarcodeType,System.String,CodeGlyphX.BarcodeOptions)",
-      "anchor": "method-bmp-static-byte-bmp-barcodetype-type-string-content-barcodeoptions-options"
+      ]
     },
     {
       "name": "Ppm",
-      "kind": "Method",
       "summary": "Renders a barcode as PPM.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "type",
-          "type": "BarcodeType",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.BarcodeType",
+          "summary": null
         },
         {
-          "name": "content",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "BarcodeOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.BarcodeOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static byte[] Ppm(BarcodeType type, string content, BarcodeOptions options)",
-      "xmlId": "M:CodeGlyphX.Barcode.Ppm(CodeGlyphX.BarcodeType,System.String,CodeGlyphX.BarcodeOptions)",
-      "anchor": "method-ppm-static-byte-ppm-barcodetype-type-string-content-barcodeoptions-options"
+      ]
     },
     {
       "name": "Pbm",
-      "kind": "Method",
       "summary": "Renders a barcode as PBM.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "type",
-          "type": "BarcodeType",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.BarcodeType",
+          "summary": null
         },
         {
-          "name": "content",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "BarcodeOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.BarcodeOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static byte[] Pbm(BarcodeType type, string content, BarcodeOptions options)",
-      "xmlId": "M:CodeGlyphX.Barcode.Pbm(CodeGlyphX.BarcodeType,System.String,CodeGlyphX.BarcodeOptions)",
-      "anchor": "method-pbm-static-byte-pbm-barcodetype-type-string-content-barcodeoptions-options"
+      ]
     },
     {
       "name": "Pgm",
-      "kind": "Method",
       "summary": "Renders a barcode as PGM.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "type",
-          "type": "BarcodeType",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.BarcodeType",
+          "summary": null
         },
         {
-          "name": "content",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "BarcodeOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.BarcodeOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static byte[] Pgm(BarcodeType type, string content, BarcodeOptions options)",
-      "xmlId": "M:CodeGlyphX.Barcode.Pgm(CodeGlyphX.BarcodeType,System.String,CodeGlyphX.BarcodeOptions)",
-      "anchor": "method-pgm-static-byte-pgm-barcodetype-type-string-content-barcodeoptions-options"
+      ]
     },
     {
       "name": "Pam",
-      "kind": "Method",
       "summary": "Renders a barcode as PAM.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "type",
-          "type": "BarcodeType",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.BarcodeType",
+          "summary": null
         },
         {
-          "name": "content",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "BarcodeOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.BarcodeOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static byte[] Pam(BarcodeType type, string content, BarcodeOptions options)",
-      "xmlId": "M:CodeGlyphX.Barcode.Pam(CodeGlyphX.BarcodeType,System.String,CodeGlyphX.BarcodeOptions)",
-      "anchor": "method-pam-static-byte-pam-barcodetype-type-string-content-barcodeoptions-options"
+      ]
     },
     {
       "name": "Xbm",
-      "kind": "Method",
       "summary": "Renders a barcode as XBM.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "type",
-          "type": "BarcodeType",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.BarcodeType",
+          "summary": null
         },
         {
-          "name": "content",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "BarcodeOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.BarcodeOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string Xbm(BarcodeType type, string content, BarcodeOptions options)",
-      "xmlId": "M:CodeGlyphX.Barcode.Xbm(CodeGlyphX.BarcodeType,System.String,CodeGlyphX.BarcodeOptions)",
-      "anchor": "method-xbm-static-string-xbm-barcodetype-type-string-content-barcodeoptions-options"
+      ]
     },
     {
       "name": "Xpm",
-      "kind": "Method",
       "summary": "Renders a barcode as XPM.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "type",
-          "type": "BarcodeType",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.BarcodeType",
+          "summary": null
         },
         {
-          "name": "content",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "BarcodeOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.BarcodeOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string Xpm(BarcodeType type, string content, BarcodeOptions options)",
-      "xmlId": "M:CodeGlyphX.Barcode.Xpm(CodeGlyphX.BarcodeType,System.String,CodeGlyphX.BarcodeOptions)",
-      "anchor": "method-xpm-static-string-xpm-barcodetype-type-string-content-barcodeoptions-options"
+      ]
     },
     {
       "name": "Tga",
-      "kind": "Method",
       "summary": "Renders a barcode as TGA.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "type",
-          "type": "BarcodeType",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.BarcodeType",
+          "summary": null
         },
         {
-          "name": "content",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "BarcodeOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.BarcodeOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static byte[] Tga(BarcodeType type, string content, BarcodeOptions options)",
-      "xmlId": "M:CodeGlyphX.Barcode.Tga(CodeGlyphX.BarcodeType,System.String,CodeGlyphX.BarcodeOptions)",
-      "anchor": "method-tga-static-byte-tga-barcodetype-type-string-content-barcodeoptions-options"
+      ]
     },
     {
       "name": "Ico",
-      "kind": "Method",
       "summary": "Renders a barcode as ICO.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "type",
-          "type": "BarcodeType",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.BarcodeType",
+          "summary": null
         },
         {
-          "name": "content",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "BarcodeOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.BarcodeOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static byte[] Ico(BarcodeType type, string content, BarcodeOptions options)",
-      "xmlId": "M:CodeGlyphX.Barcode.Ico(CodeGlyphX.BarcodeType,System.String,CodeGlyphX.BarcodeOptions)",
-      "anchor": "method-ico-static-byte-ico-barcodetype-type-string-content-barcodeoptions-options"
+      ]
     },
     {
       "name": "Svgz",
-      "kind": "Method",
       "summary": "Renders a barcode as SVGZ.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "type",
-          "type": "BarcodeType",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.BarcodeType",
+          "summary": null
         },
         {
-          "name": "content",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "BarcodeOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.BarcodeOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static byte[] Svgz(BarcodeType type, string content, BarcodeOptions options)",
-      "xmlId": "M:CodeGlyphX.Barcode.Svgz(CodeGlyphX.BarcodeType,System.String,CodeGlyphX.BarcodeOptions)",
-      "anchor": "method-svgz-static-byte-svgz-barcodetype-type-string-content-barcodeoptions-options"
+      ]
     },
     {
       "name": "Pdf",
-      "kind": "Method",
       "summary": "Renders a barcode as PDF.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "type",
-          "type": "BarcodeType",
-          "description": "The barcode type."
+          "type": "CodeGlyphX.BarcodeType",
+          "summary": "The barcode type."
         },
         {
           "name": "content",
-          "type": "string",
-          "description": "The barcode content."
+          "type": "System.String",
+          "summary": "The barcode content."
         },
         {
           "name": "options",
-          "type": "BarcodeOptions",
-          "description": "Optional rendering options."
+          "type": "CodeGlyphX.BarcodeOptions",
+          "summary": "Optional rendering options."
         },
         {
           "name": "mode",
-          "type": "RenderMode",
-          "description": "Vector or raster output."
+          "type": "CodeGlyphX.Rendering.RenderMode",
+          "summary": "Vector or raster output."
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static byte[] Pdf(BarcodeType type, string content, BarcodeOptions options, RenderMode mode)",
-      "xmlId": "M:CodeGlyphX.Barcode.Pdf(CodeGlyphX.BarcodeType,System.String,CodeGlyphX.BarcodeOptions,CodeGlyphX.Rendering.RenderMode)",
-      "anchor": "method-pdf-static-byte-pdf-barcodetype-type-string-content-barcodeoptions-options-rendermode-mode"
+      ]
     },
     {
       "name": "Eps",
-      "kind": "Method",
       "summary": "Renders a barcode as EPS.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "type",
-          "type": "BarcodeType",
-          "description": "The barcode type."
+          "type": "CodeGlyphX.BarcodeType",
+          "summary": "The barcode type."
         },
         {
           "name": "content",
-          "type": "string",
-          "description": "The barcode content."
+          "type": "System.String",
+          "summary": "The barcode content."
         },
         {
           "name": "options",
-          "type": "BarcodeOptions",
-          "description": "Optional rendering options."
+          "type": "CodeGlyphX.BarcodeOptions",
+          "summary": "Optional rendering options."
         },
         {
           "name": "mode",
-          "type": "RenderMode",
-          "description": "Vector or raster output."
+          "type": "CodeGlyphX.Rendering.RenderMode",
+          "summary": "Vector or raster output."
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string Eps(BarcodeType type, string content, BarcodeOptions options, RenderMode mode)",
-      "xmlId": "M:CodeGlyphX.Barcode.Eps(CodeGlyphX.BarcodeType,System.String,CodeGlyphX.BarcodeOptions,CodeGlyphX.Rendering.RenderMode)",
-      "anchor": "method-eps-static-string-eps-barcodetype-type-string-content-barcodeoptions-options-rendermode-mode"
+      ]
     },
     {
       "name": "Ascii",
-      "kind": "Method",
       "summary": "Renders a barcode as ASCII text.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "type",
-          "type": "BarcodeType",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.BarcodeType",
+          "summary": null
         },
         {
-          "name": "content",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "BarcodeAsciiRenderOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.Rendering.Ascii.BarcodeAsciiRenderOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string Ascii(BarcodeType type, string content, BarcodeAsciiRenderOptions options)",
-      "xmlId": "M:CodeGlyphX.Barcode.Ascii(CodeGlyphX.BarcodeType,System.String,CodeGlyphX.Rendering.Ascii.BarcodeAsciiRenderOptions)",
-      "anchor": "method-ascii-static-string-ascii-barcodetype-type-string-content-barcodeasciirenderoptions-options"
+      ]
     },
     {
       "name": "TryDecodePng",
-      "kind": "Method",
       "summary": "Attempts to decode a barcode from PNG bytes.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "png",
-          "type": "byte[]",
-          "description": null
+          "name": "arg1",
+          "type": "System.Byte[]",
+          "summary": null
         },
         {
-          "name": "decoded",
-          "type": "BarcodeDecoded",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.BarcodeDecoded@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecodePng(byte[] png, out BarcodeDecoded decoded)",
-      "xmlId": "M:CodeGlyphX.Barcode.TryDecodePng(System.Byte[],CodeGlyphX.BarcodeDecoded@)",
-      "anchor": "method-trydecodepng-static-bool-trydecodepng-byte-png-out-barcodedecoded-decoded"
+      ]
     },
     {
       "name": "TryDecodePng",
-      "kind": "Method",
       "summary": "Attempts to decode a barcode from PNG bytes, with cancellation.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "png",
-          "type": "byte[]",
-          "description": null
+          "name": "arg1",
+          "type": "System.Byte[]",
+          "summary": null
         },
         {
-          "name": "cancellationToken",
-          "type": "CancellationToken",
-          "description": null
+          "name": "arg2",
+          "type": "System.Threading.CancellationToken",
+          "summary": null
         },
         {
-          "name": "decoded",
-          "type": "BarcodeDecoded",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.BarcodeDecoded@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecodePng(byte[] png, CancellationToken cancellationToken, out BarcodeDecoded decoded)",
-      "xmlId": "M:CodeGlyphX.Barcode.TryDecodePng(System.Byte[],System.Threading.CancellationToken,CodeGlyphX.BarcodeDecoded@)",
-      "anchor": "method-trydecodepng-static-bool-trydecodepng-byte-png-cancellationtoken-cancellationtoken-out-barcodedecoded-decoded"
+      ]
     },
     {
       "name": "TryDecodePng",
-      "kind": "Method",
       "summary": "Attempts to decode a barcode from PNG bytes with an optional expected type hint.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "png",
-          "type": "byte[]",
-          "description": null
+          "name": "arg1",
+          "type": "System.Byte[]",
+          "summary": null
         },
         {
-          "name": "expectedType",
-          "type": "Nullable\u003CBarcodeType\u003E",
-          "description": null
+          "name": "arg2",
+          "type": "System.Nullable{CodeGlyphX.BarcodeType}",
+          "summary": null
         },
         {
-          "name": "decoded",
-          "type": "BarcodeDecoded",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.BarcodeDecoded@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecodePng(byte[] png, Nullable\u003CBarcodeType\u003E expectedType, out BarcodeDecoded decoded)",
-      "xmlId": "M:CodeGlyphX.Barcode.TryDecodePng(System.Byte[],System.Nullable{CodeGlyphX.BarcodeType},CodeGlyphX.BarcodeDecoded@)",
-      "anchor": "method-trydecodepng-static-bool-trydecodepng-byte-png-nullable-barcodetype-expectedtype-out-barcodedecoded-decoded"
+      ]
     },
     {
       "name": "TryDecodePng",
-      "kind": "Method",
       "summary": "Attempts to decode a barcode from PNG bytes with an optional expected type hint and image decode options.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "png",
-          "type": "byte[]",
-          "description": null
+          "name": "arg1",
+          "type": "System.Byte[]",
+          "summary": null
         },
         {
-          "name": "expectedType",
-          "type": "Nullable\u003CBarcodeType\u003E",
-          "description": null
+          "name": "arg2",
+          "type": "System.Nullable{CodeGlyphX.BarcodeType}",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "ImageDecodeOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.ImageDecodeOptions",
+          "summary": null
         },
         {
-          "name": "decoded",
-          "type": "BarcodeDecoded",
-          "description": null
+          "name": "arg4",
+          "type": "CodeGlyphX.BarcodeDecoded@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecodePng(byte[] png, Nullable\u003CBarcodeType\u003E expectedType, ImageDecodeOptions options, out BarcodeDecoded decoded)",
-      "xmlId": "M:CodeGlyphX.Barcode.TryDecodePng(System.Byte[],System.Nullable{CodeGlyphX.BarcodeType},CodeGlyphX.ImageDecodeOptions,CodeGlyphX.BarcodeDecoded@)",
-      "anchor": "method-trydecodepng-static-bool-trydecodepng-byte-png-nullable-barcodetype-expectedtype-imagedecodeoptions-options-out-barcodedecoded-decoded"
+      ]
     },
     {
       "name": "TryDecodePng",
-      "kind": "Method",
       "summary": "Attempts to decode a barcode from PNG bytes with an optional expected type hint, image decode options, and barcode decode options.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "png",
-          "type": "byte[]",
-          "description": null
+          "name": "arg1",
+          "type": "System.Byte[]",
+          "summary": null
         },
         {
-          "name": "expectedType",
-          "type": "Nullable\u003CBarcodeType\u003E",
-          "description": null
+          "name": "arg2",
+          "type": "System.Nullable{CodeGlyphX.BarcodeType}",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "ImageDecodeOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.ImageDecodeOptions",
+          "summary": null
         },
         {
-          "name": "decodeOptions",
-          "type": "BarcodeDecodeOptions",
-          "description": null
+          "name": "arg4",
+          "type": "CodeGlyphX.BarcodeDecodeOptions",
+          "summary": null
         },
         {
-          "name": "decoded",
-          "type": "BarcodeDecoded",
-          "description": null
+          "name": "arg5",
+          "type": "CodeGlyphX.BarcodeDecoded@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecodePng(byte[] png, Nullable\u003CBarcodeType\u003E expectedType, ImageDecodeOptions options, BarcodeDecodeOptions decodeOptions, out BarcodeDecoded decoded)",
-      "xmlId": "M:CodeGlyphX.Barcode.TryDecodePng(System.Byte[],System.Nullable{CodeGlyphX.BarcodeType},CodeGlyphX.ImageDecodeOptions,CodeGlyphX.BarcodeDecodeOptions,CodeGlyphX.BarcodeDecoded@)",
-      "anchor": "method-trydecodepng-static-bool-trydecodepng-byte-png-nullable-barcodetype-expectedtype-imagedecodeoptions-options-barcodedecodeoptions-decodeoptions-out-barcodedecoded-decoded"
+      ]
     },
     {
       "name": "TryDecodePng",
-      "kind": "Method",
       "summary": "Attempts to decode a barcode from PNG bytes with an optional expected type hint, with cancellation.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "png",
-          "type": "byte[]",
-          "description": null
+          "name": "arg1",
+          "type": "System.Byte[]",
+          "summary": null
         },
         {
-          "name": "expectedType",
-          "type": "Nullable\u003CBarcodeType\u003E",
-          "description": null
+          "name": "arg2",
+          "type": "System.Nullable{CodeGlyphX.BarcodeType}",
+          "summary": null
         },
         {
-          "name": "cancellationToken",
-          "type": "CancellationToken",
-          "description": null
+          "name": "arg3",
+          "type": "System.Threading.CancellationToken",
+          "summary": null
         },
         {
-          "name": "decoded",
-          "type": "BarcodeDecoded",
-          "description": null
+          "name": "arg4",
+          "type": "CodeGlyphX.BarcodeDecoded@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecodePng(byte[] png, Nullable\u003CBarcodeType\u003E expectedType, CancellationToken cancellationToken, out BarcodeDecoded decoded)",
-      "xmlId": "M:CodeGlyphX.Barcode.TryDecodePng(System.Byte[],System.Nullable{CodeGlyphX.BarcodeType},System.Threading.CancellationToken,CodeGlyphX.BarcodeDecoded@)",
-      "anchor": "method-trydecodepng-static-bool-trydecodepng-byte-png-nullable-barcodetype-expectedtype-cancellationtoken-cancellationtoken-out-barcodedecoded-decoded"
+      ]
     },
     {
       "name": "TryDecodePng",
-      "kind": "Method",
       "summary": "Attempts to decode a barcode from PNG bytes with an optional expected type hint and image decode options, with cancellation.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "png",
-          "type": "byte[]",
-          "description": null
+          "name": "arg1",
+          "type": "System.Byte[]",
+          "summary": null
         },
         {
-          "name": "expectedType",
-          "type": "Nullable\u003CBarcodeType\u003E",
-          "description": null
+          "name": "arg2",
+          "type": "System.Nullable{CodeGlyphX.BarcodeType}",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "ImageDecodeOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.ImageDecodeOptions",
+          "summary": null
         },
         {
-          "name": "cancellationToken",
-          "type": "CancellationToken",
-          "description": null
+          "name": "arg4",
+          "type": "System.Threading.CancellationToken",
+          "summary": null
         },
         {
-          "name": "decoded",
-          "type": "BarcodeDecoded",
-          "description": null
+          "name": "arg5",
+          "type": "CodeGlyphX.BarcodeDecoded@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecodePng(byte[] png, Nullable\u003CBarcodeType\u003E expectedType, ImageDecodeOptions options, CancellationToken cancellationToken, out BarcodeDecoded decoded)",
-      "xmlId": "M:CodeGlyphX.Barcode.TryDecodePng(System.Byte[],System.Nullable{CodeGlyphX.BarcodeType},CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken,CodeGlyphX.BarcodeDecoded@)",
-      "anchor": "method-trydecodepng-static-bool-trydecodepng-byte-png-nullable-barcodetype-expectedtype-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-barcodedecoded-decoded"
+      ]
     },
     {
       "name": "TryDecodePng",
-      "kind": "Method",
       "summary": "Attempts to decode a barcode from PNG bytes with an optional expected type hint, image decode options, barcode decode options, and cancellation.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "png",
-          "type": "byte[]",
-          "description": null
+          "name": "arg1",
+          "type": "System.Byte[]",
+          "summary": null
         },
         {
-          "name": "expectedType",
-          "type": "Nullable\u003CBarcodeType\u003E",
-          "description": null
+          "name": "arg2",
+          "type": "System.Nullable{CodeGlyphX.BarcodeType}",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "ImageDecodeOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.ImageDecodeOptions",
+          "summary": null
         },
         {
-          "name": "decodeOptions",
-          "type": "BarcodeDecodeOptions",
-          "description": null
+          "name": "arg4",
+          "type": "CodeGlyphX.BarcodeDecodeOptions",
+          "summary": null
         },
         {
-          "name": "cancellationToken",
-          "type": "CancellationToken",
-          "description": null
+          "name": "arg5",
+          "type": "System.Threading.CancellationToken",
+          "summary": null
         },
         {
-          "name": "decoded",
-          "type": "BarcodeDecoded",
-          "description": null
+          "name": "arg6",
+          "type": "CodeGlyphX.BarcodeDecoded@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecodePng(byte[] png, Nullable\u003CBarcodeType\u003E expectedType, ImageDecodeOptions options, BarcodeDecodeOptions decodeOptions, CancellationToken cancellationToken, out BarcodeDecoded decoded)",
-      "xmlId": "M:CodeGlyphX.Barcode.TryDecodePng(System.Byte[],System.Nullable{CodeGlyphX.BarcodeType},CodeGlyphX.ImageDecodeOptions,CodeGlyphX.BarcodeDecodeOptions,System.Threading.CancellationToken,CodeGlyphX.BarcodeDecoded@)",
-      "anchor": "method-trydecodepng-static-bool-trydecodepng-byte-png-nullable-barcodetype-expectedtype-imagedecodeoptions-options-barcodedecodeoptions-decodeoptions-cancellationtoken-cancellationtoken-out-barcodedecoded-decoded"
+      ]
     },
     {
       "name": "TryDecodeImage",
-      "kind": "Method",
       "summary": "Attempts to decode a barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "image",
-          "type": "byte[]",
-          "description": null
+          "name": "arg1",
+          "type": "System.Byte[]",
+          "summary": null
         },
         {
-          "name": "decoded",
-          "type": "BarcodeDecoded",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.BarcodeDecoded@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecodeImage(byte[] image, out BarcodeDecoded decoded)",
-      "xmlId": "M:CodeGlyphX.Barcode.TryDecodeImage(System.Byte[],CodeGlyphX.BarcodeDecoded@)",
-      "anchor": "method-trydecodeimage-static-bool-trydecodeimage-byte-image-out-barcodedecoded-decoded"
+      ]
     },
     {
       "name": "TryDecodeImage",
-      "kind": "Method",
       "summary": "Attempts to decode a barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA), with cancellation.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "image",
-          "type": "byte[]",
-          "description": null
+          "name": "arg1",
+          "type": "System.Byte[]",
+          "summary": null
         },
         {
-          "name": "cancellationToken",
-          "type": "CancellationToken",
-          "description": null
+          "name": "arg2",
+          "type": "System.Threading.CancellationToken",
+          "summary": null
         },
         {
-          "name": "decoded",
-          "type": "BarcodeDecoded",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.BarcodeDecoded@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecodeImage(byte[] image, CancellationToken cancellationToken, out BarcodeDecoded decoded)",
-      "xmlId": "M:CodeGlyphX.Barcode.TryDecodeImage(System.Byte[],System.Threading.CancellationToken,CodeGlyphX.BarcodeDecoded@)",
-      "anchor": "method-trydecodeimage-static-bool-trydecodeimage-byte-image-cancellationtoken-cancellationtoken-out-barcodedecoded-decoded"
+      ]
     },
     {
       "name": "TryDecodeImage",
-      "kind": "Method",
       "summary": "Attempts to decode a barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with an optional expected type hint.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "image",
-          "type": "byte[]",
-          "description": null
+          "name": "arg1",
+          "type": "System.Byte[]",
+          "summary": null
         },
         {
-          "name": "expectedType",
-          "type": "Nullable\u003CBarcodeType\u003E",
-          "description": null
+          "name": "arg2",
+          "type": "System.Nullable{CodeGlyphX.BarcodeType}",
+          "summary": null
         },
         {
-          "name": "decoded",
-          "type": "BarcodeDecoded",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.BarcodeDecoded@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecodeImage(byte[] image, Nullable\u003CBarcodeType\u003E expectedType, out BarcodeDecoded decoded)",
-      "xmlId": "M:CodeGlyphX.Barcode.TryDecodeImage(System.Byte[],System.Nullable{CodeGlyphX.BarcodeType},CodeGlyphX.BarcodeDecoded@)",
-      "anchor": "method-trydecodeimage-static-bool-trydecodeimage-byte-image-nullable-barcodetype-expectedtype-out-barcodedecoded-decoded"
+      ]
     },
     {
       "name": "TryDecodeImage",
-      "kind": "Method",
       "summary": "Attempts to decode a barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with an optional expected type hint and image decode options.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "image",
-          "type": "byte[]",
-          "description": null
+          "name": "arg1",
+          "type": "System.Byte[]",
+          "summary": null
         },
         {
-          "name": "expectedType",
-          "type": "Nullable\u003CBarcodeType\u003E",
-          "description": null
+          "name": "arg2",
+          "type": "System.Nullable{CodeGlyphX.BarcodeType}",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "ImageDecodeOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.ImageDecodeOptions",
+          "summary": null
         },
         {
-          "name": "decoded",
-          "type": "BarcodeDecoded",
-          "description": null
+          "name": "arg4",
+          "type": "CodeGlyphX.BarcodeDecoded@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecodeImage(byte[] image, Nullable\u003CBarcodeType\u003E expectedType, ImageDecodeOptions options, out BarcodeDecoded decoded)",
-      "xmlId": "M:CodeGlyphX.Barcode.TryDecodeImage(System.Byte[],System.Nullable{CodeGlyphX.BarcodeType},CodeGlyphX.ImageDecodeOptions,CodeGlyphX.BarcodeDecoded@)",
-      "anchor": "method-trydecodeimage-static-bool-trydecodeimage-byte-image-nullable-barcodetype-expectedtype-imagedecodeoptions-options-out-barcodedecoded-decoded"
+      ]
     },
     {
       "name": "TryDecodeImage",
-      "kind": "Method",
       "summary": "Attempts to decode a barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with an optional expected type hint, image decode options, and barcode decode options.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "image",
-          "type": "byte[]",
-          "description": null
+          "name": "arg1",
+          "type": "System.Byte[]",
+          "summary": null
         },
         {
-          "name": "expectedType",
-          "type": "Nullable\u003CBarcodeType\u003E",
-          "description": null
+          "name": "arg2",
+          "type": "System.Nullable{CodeGlyphX.BarcodeType}",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "ImageDecodeOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.ImageDecodeOptions",
+          "summary": null
         },
         {
-          "name": "decodeOptions",
-          "type": "BarcodeDecodeOptions",
-          "description": null
+          "name": "arg4",
+          "type": "CodeGlyphX.BarcodeDecodeOptions",
+          "summary": null
         },
         {
-          "name": "decoded",
-          "type": "BarcodeDecoded",
-          "description": null
+          "name": "arg5",
+          "type": "CodeGlyphX.BarcodeDecoded@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecodeImage(byte[] image, Nullable\u003CBarcodeType\u003E expectedType, ImageDecodeOptions options, BarcodeDecodeOptions decodeOptions, out BarcodeDecoded decoded)",
-      "xmlId": "M:CodeGlyphX.Barcode.TryDecodeImage(System.Byte[],System.Nullable{CodeGlyphX.BarcodeType},CodeGlyphX.ImageDecodeOptions,CodeGlyphX.BarcodeDecodeOptions,CodeGlyphX.BarcodeDecoded@)",
-      "anchor": "method-trydecodeimage-static-bool-trydecodeimage-byte-image-nullable-barcodetype-expectedtype-imagedecodeoptions-options-barcodedecodeoptions-decodeoptions-out-barcodedecoded-decoded"
+      ]
     },
     {
       "name": "TryDecodeImage",
-      "kind": "Method",
       "summary": "Attempts to decode a barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with an optional expected type hint, with cancellation.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "image",
-          "type": "byte[]",
-          "description": null
+          "name": "arg1",
+          "type": "System.Byte[]",
+          "summary": null
         },
         {
-          "name": "expectedType",
-          "type": "Nullable\u003CBarcodeType\u003E",
-          "description": null
+          "name": "arg2",
+          "type": "System.Nullable{CodeGlyphX.BarcodeType}",
+          "summary": null
         },
         {
-          "name": "cancellationToken",
-          "type": "CancellationToken",
-          "description": null
+          "name": "arg3",
+          "type": "System.Threading.CancellationToken",
+          "summary": null
         },
         {
-          "name": "decoded",
-          "type": "BarcodeDecoded",
-          "description": null
+          "name": "arg4",
+          "type": "CodeGlyphX.BarcodeDecoded@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecodeImage(byte[] image, Nullable\u003CBarcodeType\u003E expectedType, CancellationToken cancellationToken, out BarcodeDecoded decoded)",
-      "xmlId": "M:CodeGlyphX.Barcode.TryDecodeImage(System.Byte[],System.Nullable{CodeGlyphX.BarcodeType},System.Threading.CancellationToken,CodeGlyphX.BarcodeDecoded@)",
-      "anchor": "method-trydecodeimage-static-bool-trydecodeimage-byte-image-nullable-barcodetype-expectedtype-cancellationtoken-cancellationtoken-out-barcodedecoded-decoded"
+      ]
     },
     {
       "name": "TryDecodeImage",
-      "kind": "Method",
       "summary": "Attempts to decode a barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with an optional expected type hint and image decode options, with cancellation.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "image",
-          "type": "byte[]",
-          "description": null
+          "name": "arg1",
+          "type": "System.Byte[]",
+          "summary": null
         },
         {
-          "name": "expectedType",
-          "type": "Nullable\u003CBarcodeType\u003E",
-          "description": null
+          "name": "arg2",
+          "type": "System.Nullable{CodeGlyphX.BarcodeType}",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "ImageDecodeOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.ImageDecodeOptions",
+          "summary": null
         },
         {
-          "name": "cancellationToken",
-          "type": "CancellationToken",
-          "description": null
+          "name": "arg4",
+          "type": "System.Threading.CancellationToken",
+          "summary": null
         },
         {
-          "name": "decoded",
-          "type": "BarcodeDecoded",
-          "description": null
+          "name": "arg5",
+          "type": "CodeGlyphX.BarcodeDecoded@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecodeImage(byte[] image, Nullable\u003CBarcodeType\u003E expectedType, ImageDecodeOptions options, CancellationToken cancellationToken, out BarcodeDecoded decoded)",
-      "xmlId": "M:CodeGlyphX.Barcode.TryDecodeImage(System.Byte[],System.Nullable{CodeGlyphX.BarcodeType},CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken,CodeGlyphX.BarcodeDecoded@)",
-      "anchor": "method-trydecodeimage-static-bool-trydecodeimage-byte-image-nullable-barcodetype-expectedtype-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-barcodedecoded-decoded"
+      ]
     },
     {
       "name": "TryDecodeImage",
-      "kind": "Method",
       "summary": "Attempts to decode a barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with an optional expected type hint, image decode options, barcode decode options, and cancellation.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "image",
-          "type": "byte[]",
-          "description": null
+          "name": "arg1",
+          "type": "System.Byte[]",
+          "summary": null
         },
         {
-          "name": "expectedType",
-          "type": "Nullable\u003CBarcodeType\u003E",
-          "description": null
+          "name": "arg2",
+          "type": "System.Nullable{CodeGlyphX.BarcodeType}",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "ImageDecodeOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.ImageDecodeOptions",
+          "summary": null
         },
         {
-          "name": "decodeOptions",
-          "type": "BarcodeDecodeOptions",
-          "description": null
+          "name": "arg4",
+          "type": "CodeGlyphX.BarcodeDecodeOptions",
+          "summary": null
         },
         {
-          "name": "cancellationToken",
-          "type": "CancellationToken",
-          "description": null
+          "name": "arg5",
+          "type": "System.Threading.CancellationToken",
+          "summary": null
         },
         {
-          "name": "decoded",
-          "type": "BarcodeDecoded",
-          "description": null
+          "name": "arg6",
+          "type": "CodeGlyphX.BarcodeDecoded@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecodeImage(byte[] image, Nullable\u003CBarcodeType\u003E expectedType, ImageDecodeOptions options, BarcodeDecodeOptions decodeOptions, CancellationToken cancellationToken, out BarcodeDecoded decoded)",
-      "xmlId": "M:CodeGlyphX.Barcode.TryDecodeImage(System.Byte[],System.Nullable{CodeGlyphX.BarcodeType},CodeGlyphX.ImageDecodeOptions,CodeGlyphX.BarcodeDecodeOptions,System.Threading.CancellationToken,CodeGlyphX.BarcodeDecoded@)",
-      "anchor": "method-trydecodeimage-static-bool-trydecodeimage-byte-image-nullable-barcodetype-expectedtype-imagedecodeoptions-options-barcodedecodeoptions-decodeoptions-cancellationtoken-cancellationtoken-out-barcodedecoded-decoded"
+      ]
     },
     {
       "name": "TryDecodeImage",
-      "kind": "Method",
       "summary": "Attempts to decode a barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "image",
-          "type": "ReadOnlySpan\u003Cbyte\u003E",
-          "description": null
+          "name": "arg1",
+          "type": "System.ReadOnlySpan{System.Byte}",
+          "summary": null
         },
         {
-          "name": "decoded",
-          "type": "BarcodeDecoded",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.BarcodeDecoded@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecodeImage(ReadOnlySpan\u003Cbyte\u003E image, out BarcodeDecoded decoded)",
-      "xmlId": "M:CodeGlyphX.Barcode.TryDecodeImage(System.ReadOnlySpan{System.Byte},CodeGlyphX.BarcodeDecoded@)",
-      "anchor": "method-trydecodeimage-static-bool-trydecodeimage-readonlyspan-byte-image-out-barcodedecoded-decoded"
+      ]
     },
     {
       "name": "TryDecodeImage",
-      "kind": "Method",
       "summary": "Attempts to decode a barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA), with cancellation.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "image",
-          "type": "ReadOnlySpan\u003Cbyte\u003E",
-          "description": null
+          "name": "arg1",
+          "type": "System.ReadOnlySpan{System.Byte}",
+          "summary": null
         },
         {
-          "name": "cancellationToken",
-          "type": "CancellationToken",
-          "description": null
+          "name": "arg2",
+          "type": "System.Threading.CancellationToken",
+          "summary": null
         },
         {
-          "name": "decoded",
-          "type": "BarcodeDecoded",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.BarcodeDecoded@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecodeImage(ReadOnlySpan\u003Cbyte\u003E image, CancellationToken cancellationToken, out BarcodeDecoded decoded)",
-      "xmlId": "M:CodeGlyphX.Barcode.TryDecodeImage(System.ReadOnlySpan{System.Byte},System.Threading.CancellationToken,CodeGlyphX.BarcodeDecoded@)",
-      "anchor": "method-trydecodeimage-static-bool-trydecodeimage-readonlyspan-byte-image-cancellationtoken-cancellationtoken-out-barcodedecoded-decoded"
+      ]
     },
     {
       "name": "TryDecodeImage",
-      "kind": "Method",
       "summary": "Attempts to decode a barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with an optional expected type hint.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "image",
-          "type": "ReadOnlySpan\u003Cbyte\u003E",
-          "description": null
+          "name": "arg1",
+          "type": "System.ReadOnlySpan{System.Byte}",
+          "summary": null
         },
         {
-          "name": "expectedType",
-          "type": "Nullable\u003CBarcodeType\u003E",
-          "description": null
+          "name": "arg2",
+          "type": "System.Nullable{CodeGlyphX.BarcodeType}",
+          "summary": null
         },
         {
-          "name": "decoded",
-          "type": "BarcodeDecoded",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.BarcodeDecoded@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecodeImage(ReadOnlySpan\u003Cbyte\u003E image, Nullable\u003CBarcodeType\u003E expectedType, out BarcodeDecoded decoded)",
-      "xmlId": "M:CodeGlyphX.Barcode.TryDecodeImage(System.ReadOnlySpan{System.Byte},System.Nullable{CodeGlyphX.BarcodeType},CodeGlyphX.BarcodeDecoded@)",
-      "anchor": "method-trydecodeimage-static-bool-trydecodeimage-readonlyspan-byte-image-nullable-barcodetype-expectedtype-out-barcodedecoded-decoded"
+      ]
     },
     {
       "name": "TryDecodeImage",
-      "kind": "Method",
       "summary": "Attempts to decode a barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with an optional expected type hint and image decode options.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "image",
-          "type": "ReadOnlySpan\u003Cbyte\u003E",
-          "description": null
+          "name": "arg1",
+          "type": "System.ReadOnlySpan{System.Byte}",
+          "summary": null
         },
         {
-          "name": "expectedType",
-          "type": "Nullable\u003CBarcodeType\u003E",
-          "description": null
+          "name": "arg2",
+          "type": "System.Nullable{CodeGlyphX.BarcodeType}",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "ImageDecodeOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.ImageDecodeOptions",
+          "summary": null
         },
         {
-          "name": "decodeOptions",
-          "type": "BarcodeDecodeOptions",
-          "description": null
+          "name": "arg4",
+          "type": "CodeGlyphX.BarcodeDecodeOptions",
+          "summary": null
         },
         {
-          "name": "decoded",
-          "type": "BarcodeDecoded",
-          "description": null
+          "name": "arg5",
+          "type": "CodeGlyphX.BarcodeDecoded@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecodeImage(ReadOnlySpan\u003Cbyte\u003E image, Nullable\u003CBarcodeType\u003E expectedType, ImageDecodeOptions options, BarcodeDecodeOptions decodeOptions, out BarcodeDecoded decoded)",
-      "xmlId": "M:CodeGlyphX.Barcode.TryDecodeImage(System.ReadOnlySpan{System.Byte},System.Nullable{CodeGlyphX.BarcodeType},CodeGlyphX.ImageDecodeOptions,CodeGlyphX.BarcodeDecodeOptions,CodeGlyphX.BarcodeDecoded@)",
-      "anchor": "method-trydecodeimage-static-bool-trydecodeimage-readonlyspan-byte-image-nullable-barcodetype-expectedtype-imagedecodeoptions-options-barcodedecodeoptions-decodeoptions-out-barcodedecoded-decoded"
+      ]
     },
     {
       "name": "TryDecodeImage",
-      "kind": "Method",
       "summary": "Attempts to decode a barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with an optional expected type hint, image decode options, barcode decode options, and cancellation.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "image",
-          "type": "ReadOnlySpan\u003Cbyte\u003E",
-          "description": null
+          "name": "arg1",
+          "type": "System.ReadOnlySpan{System.Byte}",
+          "summary": null
         },
         {
-          "name": "expectedType",
-          "type": "Nullable\u003CBarcodeType\u003E",
-          "description": null
+          "name": "arg2",
+          "type": "System.Nullable{CodeGlyphX.BarcodeType}",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "ImageDecodeOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.ImageDecodeOptions",
+          "summary": null
         },
         {
-          "name": "decodeOptions",
-          "type": "BarcodeDecodeOptions",
-          "description": null
+          "name": "arg4",
+          "type": "CodeGlyphX.BarcodeDecodeOptions",
+          "summary": null
         },
         {
-          "name": "cancellationToken",
-          "type": "CancellationToken",
-          "description": null
+          "name": "arg5",
+          "type": "System.Threading.CancellationToken",
+          "summary": null
         },
         {
-          "name": "decoded",
-          "type": "BarcodeDecoded",
-          "description": null
+          "name": "arg6",
+          "type": "CodeGlyphX.BarcodeDecoded@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecodeImage(ReadOnlySpan\u003Cbyte\u003E image, Nullable\u003CBarcodeType\u003E expectedType, ImageDecodeOptions options, BarcodeDecodeOptions decodeOptions, CancellationToken cancellationToken, out BarcodeDecoded decoded)",
-      "xmlId": "M:CodeGlyphX.Barcode.TryDecodeImage(System.ReadOnlySpan{System.Byte},System.Nullable{CodeGlyphX.BarcodeType},CodeGlyphX.ImageDecodeOptions,CodeGlyphX.BarcodeDecodeOptions,System.Threading.CancellationToken,CodeGlyphX.BarcodeDecoded@)",
-      "anchor": "method-trydecodeimage-static-bool-trydecodeimage-readonlyspan-byte-image-nullable-barcodetype-expectedtype-imagedecodeoptions-options-barcodedecodeoptions-decodeoptions-cancellationtoken-cancellationtoken-out-barcodedecoded-decoded"
+      ]
     },
     {
       "name": "TryDecodeImage",
-      "kind": "Method",
       "summary": "Attempts to decode a barcode from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "stream",
-          "type": "Stream",
-          "description": null
+          "name": "arg1",
+          "type": "System.IO.Stream",
+          "summary": null
         },
         {
-          "name": "decoded",
-          "type": "BarcodeDecoded",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.BarcodeDecoded@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecodeImage(Stream stream, out BarcodeDecoded decoded)",
-      "xmlId": "M:CodeGlyphX.Barcode.TryDecodeImage(System.IO.Stream,CodeGlyphX.BarcodeDecoded@)",
-      "anchor": "method-trydecodeimage-static-bool-trydecodeimage-stream-stream-out-barcodedecoded-decoded"
+      ]
     },
     {
       "name": "TryDecodeImage",
-      "kind": "Method",
       "summary": "Attempts to decode a barcode from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA), with cancellation.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "stream",
-          "type": "Stream",
-          "description": null
+          "name": "arg1",
+          "type": "System.IO.Stream",
+          "summary": null
         },
         {
-          "name": "cancellationToken",
-          "type": "CancellationToken",
-          "description": null
+          "name": "arg2",
+          "type": "System.Threading.CancellationToken",
+          "summary": null
         },
         {
-          "name": "decoded",
-          "type": "BarcodeDecoded",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.BarcodeDecoded@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecodeImage(Stream stream, CancellationToken cancellationToken, out BarcodeDecoded decoded)",
-      "xmlId": "M:CodeGlyphX.Barcode.TryDecodeImage(System.IO.Stream,System.Threading.CancellationToken,CodeGlyphX.BarcodeDecoded@)",
-      "anchor": "method-trydecodeimage-static-bool-trydecodeimage-stream-stream-cancellationtoken-cancellationtoken-out-barcodedecoded-decoded"
+      ]
     },
     {
       "name": "TryDecodeImage",
-      "kind": "Method",
       "summary": "Attempts to decode a barcode from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with an optional expected type hint.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "stream",
-          "type": "Stream",
-          "description": null
+          "name": "arg1",
+          "type": "System.IO.Stream",
+          "summary": null
         },
         {
-          "name": "expectedType",
-          "type": "Nullable\u003CBarcodeType\u003E",
-          "description": null
+          "name": "arg2",
+          "type": "System.Nullable{CodeGlyphX.BarcodeType}",
+          "summary": null
         },
         {
-          "name": "decoded",
-          "type": "BarcodeDecoded",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.BarcodeDecoded@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecodeImage(Stream stream, Nullable\u003CBarcodeType\u003E expectedType, out BarcodeDecoded decoded)",
-      "xmlId": "M:CodeGlyphX.Barcode.TryDecodeImage(System.IO.Stream,System.Nullable{CodeGlyphX.BarcodeType},CodeGlyphX.BarcodeDecoded@)",
-      "anchor": "method-trydecodeimage-static-bool-trydecodeimage-stream-stream-nullable-barcodetype-expectedtype-out-barcodedecoded-decoded"
+      ]
     },
     {
       "name": "TryDecodeImage",
-      "kind": "Method",
       "summary": "Attempts to decode a barcode from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with an optional expected type hint and image decode options.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "stream",
-          "type": "Stream",
-          "description": null
+          "name": "arg1",
+          "type": "System.IO.Stream",
+          "summary": null
         },
         {
-          "name": "expectedType",
-          "type": "Nullable\u003CBarcodeType\u003E",
-          "description": null
+          "name": "arg2",
+          "type": "System.Nullable{CodeGlyphX.BarcodeType}",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "ImageDecodeOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.ImageDecodeOptions",
+          "summary": null
         },
         {
-          "name": "decoded",
-          "type": "BarcodeDecoded",
-          "description": null
+          "name": "arg4",
+          "type": "CodeGlyphX.BarcodeDecoded@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecodeImage(Stream stream, Nullable\u003CBarcodeType\u003E expectedType, ImageDecodeOptions options, out BarcodeDecoded decoded)",
-      "xmlId": "M:CodeGlyphX.Barcode.TryDecodeImage(System.IO.Stream,System.Nullable{CodeGlyphX.BarcodeType},CodeGlyphX.ImageDecodeOptions,CodeGlyphX.BarcodeDecoded@)",
-      "anchor": "method-trydecodeimage-static-bool-trydecodeimage-stream-stream-nullable-barcodetype-expectedtype-imagedecodeoptions-options-out-barcodedecoded-decoded"
+      ]
     },
     {
       "name": "TryDecodeImage",
-      "kind": "Method",
       "summary": "Attempts to decode a barcode from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with an optional expected type hint, image decode options, and barcode decode options.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "stream",
-          "type": "Stream",
-          "description": null
+          "name": "arg1",
+          "type": "System.IO.Stream",
+          "summary": null
         },
         {
-          "name": "expectedType",
-          "type": "Nullable\u003CBarcodeType\u003E",
-          "description": null
+          "name": "arg2",
+          "type": "System.Nullable{CodeGlyphX.BarcodeType}",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "ImageDecodeOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.ImageDecodeOptions",
+          "summary": null
         },
         {
-          "name": "decodeOptions",
-          "type": "BarcodeDecodeOptions",
-          "description": null
+          "name": "arg4",
+          "type": "CodeGlyphX.BarcodeDecodeOptions",
+          "summary": null
         },
         {
-          "name": "decoded",
-          "type": "BarcodeDecoded",
-          "description": null
+          "name": "arg5",
+          "type": "CodeGlyphX.BarcodeDecoded@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecodeImage(Stream stream, Nullable\u003CBarcodeType\u003E expectedType, ImageDecodeOptions options, BarcodeDecodeOptions decodeOptions, out BarcodeDecoded decoded)",
-      "xmlId": "M:CodeGlyphX.Barcode.TryDecodeImage(System.IO.Stream,System.Nullable{CodeGlyphX.BarcodeType},CodeGlyphX.ImageDecodeOptions,CodeGlyphX.BarcodeDecodeOptions,CodeGlyphX.BarcodeDecoded@)",
-      "anchor": "method-trydecodeimage-static-bool-trydecodeimage-stream-stream-nullable-barcodetype-expectedtype-imagedecodeoptions-options-barcodedecodeoptions-decodeoptions-out-barcodedecoded-decoded"
+      ]
     },
     {
       "name": "TryDecodeImage",
-      "kind": "Method",
       "summary": "Attempts to decode a barcode from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with an optional expected type hint, with cancellation.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "stream",
-          "type": "Stream",
-          "description": null
+          "name": "arg1",
+          "type": "System.IO.Stream",
+          "summary": null
         },
         {
-          "name": "expectedType",
-          "type": "Nullable\u003CBarcodeType\u003E",
-          "description": null
+          "name": "arg2",
+          "type": "System.Nullable{CodeGlyphX.BarcodeType}",
+          "summary": null
         },
         {
-          "name": "cancellationToken",
-          "type": "CancellationToken",
-          "description": null
+          "name": "arg3",
+          "type": "System.Threading.CancellationToken",
+          "summary": null
         },
         {
-          "name": "decoded",
-          "type": "BarcodeDecoded",
-          "description": null
+          "name": "arg4",
+          "type": "CodeGlyphX.BarcodeDecoded@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecodeImage(Stream stream, Nullable\u003CBarcodeType\u003E expectedType, CancellationToken cancellationToken, out BarcodeDecoded decoded)",
-      "xmlId": "M:CodeGlyphX.Barcode.TryDecodeImage(System.IO.Stream,System.Nullable{CodeGlyphX.BarcodeType},System.Threading.CancellationToken,CodeGlyphX.BarcodeDecoded@)",
-      "anchor": "method-trydecodeimage-static-bool-trydecodeimage-stream-stream-nullable-barcodetype-expectedtype-cancellationtoken-cancellationtoken-out-barcodedecoded-decoded"
+      ]
     },
     {
       "name": "TryDecodeImage",
-      "kind": "Method",
       "summary": "Attempts to decode a barcode from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with an optional expected type hint and image decode options, with cancellation.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "stream",
-          "type": "Stream",
-          "description": null
+          "name": "arg1",
+          "type": "System.IO.Stream",
+          "summary": null
         },
         {
-          "name": "expectedType",
-          "type": "Nullable\u003CBarcodeType\u003E",
-          "description": null
+          "name": "arg2",
+          "type": "System.Nullable{CodeGlyphX.BarcodeType}",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "ImageDecodeOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.ImageDecodeOptions",
+          "summary": null
         },
         {
-          "name": "cancellationToken",
-          "type": "CancellationToken",
-          "description": null
+          "name": "arg4",
+          "type": "System.Threading.CancellationToken",
+          "summary": null
         },
         {
-          "name": "decoded",
-          "type": "BarcodeDecoded",
-          "description": null
+          "name": "arg5",
+          "type": "CodeGlyphX.BarcodeDecoded@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecodeImage(Stream stream, Nullable\u003CBarcodeType\u003E expectedType, ImageDecodeOptions options, CancellationToken cancellationToken, out BarcodeDecoded decoded)",
-      "xmlId": "M:CodeGlyphX.Barcode.TryDecodeImage(System.IO.Stream,System.Nullable{CodeGlyphX.BarcodeType},CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken,CodeGlyphX.BarcodeDecoded@)",
-      "anchor": "method-trydecodeimage-static-bool-trydecodeimage-stream-stream-nullable-barcodetype-expectedtype-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-barcodedecoded-decoded"
+      ]
     },
     {
       "name": "TryDecodeImage",
-      "kind": "Method",
       "summary": "Attempts to decode a barcode from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with an optional expected type hint, image decode options, barcode decode options, and cancellation.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "stream",
-          "type": "Stream",
-          "description": null
+          "name": "arg1",
+          "type": "System.IO.Stream",
+          "summary": null
         },
         {
-          "name": "expectedType",
-          "type": "Nullable\u003CBarcodeType\u003E",
-          "description": null
+          "name": "arg2",
+          "type": "System.Nullable{CodeGlyphX.BarcodeType}",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "ImageDecodeOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.ImageDecodeOptions",
+          "summary": null
         },
         {
-          "name": "decodeOptions",
-          "type": "BarcodeDecodeOptions",
-          "description": null
+          "name": "arg4",
+          "type": "CodeGlyphX.BarcodeDecodeOptions",
+          "summary": null
         },
         {
-          "name": "cancellationToken",
-          "type": "CancellationToken",
-          "description": null
+          "name": "arg5",
+          "type": "System.Threading.CancellationToken",
+          "summary": null
         },
         {
-          "name": "decoded",
-          "type": "BarcodeDecoded",
-          "description": null
+          "name": "arg6",
+          "type": "CodeGlyphX.BarcodeDecoded@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecodeImage(Stream stream, Nullable\u003CBarcodeType\u003E expectedType, ImageDecodeOptions options, BarcodeDecodeOptions decodeOptions, CancellationToken cancellationToken, out BarcodeDecoded decoded)",
-      "xmlId": "M:CodeGlyphX.Barcode.TryDecodeImage(System.IO.Stream,System.Nullable{CodeGlyphX.BarcodeType},CodeGlyphX.ImageDecodeOptions,CodeGlyphX.BarcodeDecodeOptions,System.Threading.CancellationToken,CodeGlyphX.BarcodeDecoded@)",
-      "anchor": "method-trydecodeimage-static-bool-trydecodeimage-stream-stream-nullable-barcodetype-expectedtype-imagedecodeoptions-options-barcodedecodeoptions-decodeoptions-cancellationtoken-cancellationtoken-out-barcodedecoded-decoded"
+      ]
     },
     {
       "name": "DecodeImageResult",
-      "kind": "Method",
       "summary": "Decodes a barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) and returns diagnostics.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "image",
-          "type": "byte[]",
-          "description": null
+          "name": "arg1",
+          "type": "System.Byte[]",
+          "summary": null
         },
         {
-          "name": "expectedType",
-          "type": "Nullable\u003CBarcodeType\u003E",
-          "description": null
+          "name": "arg2",
+          "type": "System.Nullable{CodeGlyphX.BarcodeType}",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "ImageDecodeOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.ImageDecodeOptions",
+          "summary": null
         },
         {
-          "name": "decodeOptions",
-          "type": "BarcodeDecodeOptions",
-          "description": null
+          "name": "arg4",
+          "type": "CodeGlyphX.BarcodeDecodeOptions",
+          "summary": null
         },
         {
-          "name": "cancellationToken",
-          "type": "CancellationToken",
-          "description": null
+          "name": "arg5",
+          "type": "System.Threading.CancellationToken",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static DecodeResult\u003CBarcodeDecoded\u003E DecodeImageResult(byte[] image, Nullable\u003CBarcodeType\u003E expectedType, ImageDecodeOptions options, BarcodeDecodeOptions decodeOptions, CancellationToken cancellationToken)",
-      "xmlId": "M:CodeGlyphX.Barcode.DecodeImageResult(System.Byte[],System.Nullable{CodeGlyphX.BarcodeType},CodeGlyphX.ImageDecodeOptions,CodeGlyphX.BarcodeDecodeOptions,System.Threading.CancellationToken)",
-      "anchor": "method-decodeimageresult-static-decoderesult-barcodedecoded-decodeimageresult-byte-image-nullable-barcodetype-expectedtype-imagedecodeoptions-options-barcodedecodeoptions-decodeoptions-cancellationtoken-cancellationtoken"
+      ]
     },
     {
       "name": "DecodeImageResult",
-      "kind": "Method",
       "summary": "Decodes a barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) in a span and returns diagnostics.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "image",
-          "type": "ReadOnlySpan\u003Cbyte\u003E",
-          "description": null
+          "name": "arg1",
+          "type": "System.ReadOnlySpan{System.Byte}",
+          "summary": null
         },
         {
-          "name": "expectedType",
-          "type": "Nullable\u003CBarcodeType\u003E",
-          "description": null
+          "name": "arg2",
+          "type": "System.Nullable{CodeGlyphX.BarcodeType}",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "ImageDecodeOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.ImageDecodeOptions",
+          "summary": null
         },
         {
-          "name": "decodeOptions",
-          "type": "BarcodeDecodeOptions",
-          "description": null
+          "name": "arg4",
+          "type": "CodeGlyphX.BarcodeDecodeOptions",
+          "summary": null
         },
         {
-          "name": "cancellationToken",
-          "type": "CancellationToken",
-          "description": null
+          "name": "arg5",
+          "type": "System.Threading.CancellationToken",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static DecodeResult\u003CBarcodeDecoded\u003E DecodeImageResult(ReadOnlySpan\u003Cbyte\u003E image, Nullable\u003CBarcodeType\u003E expectedType, ImageDecodeOptions options, BarcodeDecodeOptions decodeOptions, CancellationToken cancellationToken)",
-      "xmlId": "M:CodeGlyphX.Barcode.DecodeImageResult(System.ReadOnlySpan{System.Byte},System.Nullable{CodeGlyphX.BarcodeType},CodeGlyphX.ImageDecodeOptions,CodeGlyphX.BarcodeDecodeOptions,System.Threading.CancellationToken)",
-      "anchor": "method-decodeimageresult-static-decoderesult-barcodedecoded-decodeimageresult-readonlyspan-byte-image-nullable-barcodetype-expectedtype-imagedecodeoptions-options-barcodedecodeoptions-decodeoptions-cancellationtoken-cancellationtoken"
+      ]
     },
     {
       "name": "DecodeImageResult",
-      "kind": "Method",
       "summary": "Decodes a barcode from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) and returns diagnostics.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "stream",
-          "type": "Stream",
-          "description": null
+          "name": "arg1",
+          "type": "System.IO.Stream",
+          "summary": null
         },
         {
-          "name": "expectedType",
-          "type": "Nullable\u003CBarcodeType\u003E",
-          "description": null
+          "name": "arg2",
+          "type": "System.Nullable{CodeGlyphX.BarcodeType}",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "ImageDecodeOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.ImageDecodeOptions",
+          "summary": null
         },
         {
-          "name": "decodeOptions",
-          "type": "BarcodeDecodeOptions",
-          "description": null
+          "name": "arg4",
+          "type": "CodeGlyphX.BarcodeDecodeOptions",
+          "summary": null
         },
         {
-          "name": "cancellationToken",
-          "type": "CancellationToken",
-          "description": null
+          "name": "arg5",
+          "type": "System.Threading.CancellationToken",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static DecodeResult\u003CBarcodeDecoded\u003E DecodeImageResult(Stream stream, Nullable\u003CBarcodeType\u003E expectedType, ImageDecodeOptions options, BarcodeDecodeOptions decodeOptions, CancellationToken cancellationToken)",
-      "xmlId": "M:CodeGlyphX.Barcode.DecodeImageResult(System.IO.Stream,System.Nullable{CodeGlyphX.BarcodeType},CodeGlyphX.ImageDecodeOptions,CodeGlyphX.BarcodeDecodeOptions,System.Threading.CancellationToken)",
-      "anchor": "method-decodeimageresult-static-decoderesult-barcodedecoded-decodeimageresult-stream-stream-nullable-barcodetype-expectedtype-imagedecodeoptions-options-barcodedecodeoptions-decodeoptions-cancellationtoken-cancellationtoken"
+      ]
     },
     {
       "name": "DecodeImageBatch",
-      "kind": "Method",
       "summary": "Decodes a batch of barcode images with shared settings and aggregated diagnostics.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "images",
-          "type": "IEnumerable\u003Cbyte[]\u003E",
-          "description": null
+          "name": "arg1",
+          "type": "System.Collections.Generic.IEnumerable{System.Byte[]}",
+          "summary": null
         },
         {
-          "name": "expectedType",
-          "type": "Nullable\u003CBarcodeType\u003E",
-          "description": null
+          "name": "arg2",
+          "type": "System.Nullable{CodeGlyphX.BarcodeType}",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "ImageDecodeOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.ImageDecodeOptions",
+          "summary": null
         },
         {
-          "name": "decodeOptions",
-          "type": "BarcodeDecodeOptions",
-          "description": null
+          "name": "arg4",
+          "type": "CodeGlyphX.BarcodeDecodeOptions",
+          "summary": null
         },
         {
-          "name": "cancellationToken",
-          "type": "CancellationToken",
-          "description": null
+          "name": "arg5",
+          "type": "System.Threading.CancellationToken",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static DecodeBatchResult\u003CBarcodeDecoded\u003E DecodeImageBatch(IEnumerable\u003Cbyte[]\u003E images, Nullable\u003CBarcodeType\u003E expectedType, ImageDecodeOptions options, BarcodeDecodeOptions decodeOptions, CancellationToken cancellationToken)",
-      "xmlId": "M:CodeGlyphX.Barcode.DecodeImageBatch(System.Collections.Generic.IEnumerable{System.Byte[]},System.Nullable{CodeGlyphX.BarcodeType},CodeGlyphX.ImageDecodeOptions,CodeGlyphX.BarcodeDecodeOptions,System.Threading.CancellationToken)",
-      "anchor": "method-decodeimagebatch-static-decodebatchresult-barcodedecoded-decodeimagebatch-ienumerable-byte-images-nullable-barcodetype-expectedtype-imagedecodeoptions-options-barcodedecodeoptions-decodeoptions-cancellationtoken-cancellationtoken"
+      ]
     },
     {
       "name": "TryDecodePngFile",
-      "kind": "Method",
       "summary": "Attempts to decode a barcode from a PNG file.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "path",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "decoded",
-          "type": "BarcodeDecoded",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.BarcodeDecoded@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecodePngFile(string path, out BarcodeDecoded decoded)",
-      "xmlId": "M:CodeGlyphX.Barcode.TryDecodePngFile(System.String,CodeGlyphX.BarcodeDecoded@)",
-      "anchor": "method-trydecodepngfile-static-bool-trydecodepngfile-string-path-out-barcodedecoded-decoded"
+      ]
     },
     {
       "name": "TryDecodePngFile",
-      "kind": "Method",
       "summary": "Attempts to decode a barcode from a PNG file, with cancellation.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "path",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "cancellationToken",
-          "type": "CancellationToken",
-          "description": null
+          "name": "arg2",
+          "type": "System.Threading.CancellationToken",
+          "summary": null
         },
         {
-          "name": "decoded",
-          "type": "BarcodeDecoded",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.BarcodeDecoded@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecodePngFile(string path, CancellationToken cancellationToken, out BarcodeDecoded decoded)",
-      "xmlId": "M:CodeGlyphX.Barcode.TryDecodePngFile(System.String,System.Threading.CancellationToken,CodeGlyphX.BarcodeDecoded@)",
-      "anchor": "method-trydecodepngfile-static-bool-trydecodepngfile-string-path-cancellationtoken-cancellationtoken-out-barcodedecoded-decoded"
+      ]
     },
     {
       "name": "TryDecodePngFile",
-      "kind": "Method",
       "summary": "Attempts to decode a barcode from a PNG file with image decode options.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "path",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "ImageDecodeOptions",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.ImageDecodeOptions",
+          "summary": null
         },
         {
-          "name": "decoded",
-          "type": "BarcodeDecoded",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.BarcodeDecoded@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecodePngFile(string path, ImageDecodeOptions options, out BarcodeDecoded decoded)",
-      "xmlId": "M:CodeGlyphX.Barcode.TryDecodePngFile(System.String,CodeGlyphX.ImageDecodeOptions,CodeGlyphX.BarcodeDecoded@)",
-      "anchor": "method-trydecodepngfile-static-bool-trydecodepngfile-string-path-imagedecodeoptions-options-out-barcodedecoded-decoded"
+      ]
     },
     {
       "name": "TryDecodePngFile",
-      "kind": "Method",
       "summary": "Attempts to decode a barcode from a PNG file with image decode options and barcode decode options.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "path",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "ImageDecodeOptions",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.ImageDecodeOptions",
+          "summary": null
         },
         {
-          "name": "decodeOptions",
-          "type": "BarcodeDecodeOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.BarcodeDecodeOptions",
+          "summary": null
         },
         {
-          "name": "decoded",
-          "type": "BarcodeDecoded",
-          "description": null
+          "name": "arg4",
+          "type": "CodeGlyphX.BarcodeDecoded@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecodePngFile(string path, ImageDecodeOptions options, BarcodeDecodeOptions decodeOptions, out BarcodeDecoded decoded)",
-      "xmlId": "M:CodeGlyphX.Barcode.TryDecodePngFile(System.String,CodeGlyphX.ImageDecodeOptions,CodeGlyphX.BarcodeDecodeOptions,CodeGlyphX.BarcodeDecoded@)",
-      "anchor": "method-trydecodepngfile-static-bool-trydecodepngfile-string-path-imagedecodeoptions-options-barcodedecodeoptions-decodeoptions-out-barcodedecoded-decoded"
+      ]
     },
     {
       "name": "TryDecodePngFile",
-      "kind": "Method",
       "summary": "Attempts to decode a barcode from a PNG file with image decode options, with cancellation.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "path",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "ImageDecodeOptions",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.ImageDecodeOptions",
+          "summary": null
         },
         {
-          "name": "cancellationToken",
-          "type": "CancellationToken",
-          "description": null
+          "name": "arg3",
+          "type": "System.Threading.CancellationToken",
+          "summary": null
         },
         {
-          "name": "decoded",
-          "type": "BarcodeDecoded",
-          "description": null
+          "name": "arg4",
+          "type": "CodeGlyphX.BarcodeDecoded@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecodePngFile(string path, ImageDecodeOptions options, CancellationToken cancellationToken, out BarcodeDecoded decoded)",
-      "xmlId": "M:CodeGlyphX.Barcode.TryDecodePngFile(System.String,CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken,CodeGlyphX.BarcodeDecoded@)",
-      "anchor": "method-trydecodepngfile-static-bool-trydecodepngfile-string-path-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-barcodedecoded-decoded"
+      ]
     },
     {
       "name": "TryDecodePngFile",
-      "kind": "Method",
       "summary": "Attempts to decode a barcode from a PNG file with image decode options, barcode decode options, and cancellation.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "path",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "ImageDecodeOptions",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.ImageDecodeOptions",
+          "summary": null
         },
         {
-          "name": "decodeOptions",
-          "type": "BarcodeDecodeOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.BarcodeDecodeOptions",
+          "summary": null
         },
         {
-          "name": "cancellationToken",
-          "type": "CancellationToken",
-          "description": null
+          "name": "arg4",
+          "type": "System.Threading.CancellationToken",
+          "summary": null
         },
         {
-          "name": "decoded",
-          "type": "BarcodeDecoded",
-          "description": null
+          "name": "arg5",
+          "type": "CodeGlyphX.BarcodeDecoded@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecodePngFile(string path, ImageDecodeOptions options, BarcodeDecodeOptions decodeOptions, CancellationToken cancellationToken, out BarcodeDecoded decoded)",
-      "xmlId": "M:CodeGlyphX.Barcode.TryDecodePngFile(System.String,CodeGlyphX.ImageDecodeOptions,CodeGlyphX.BarcodeDecodeOptions,System.Threading.CancellationToken,CodeGlyphX.BarcodeDecoded@)",
-      "anchor": "method-trydecodepngfile-static-bool-trydecodepngfile-string-path-imagedecodeoptions-options-barcodedecodeoptions-decodeoptions-cancellationtoken-cancellationtoken-out-barcodedecoded-decoded"
+      ]
     },
     {
       "name": "TryDecodePng",
-      "kind": "Method",
       "summary": "Attempts to decode a barcode from a PNG stream.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "stream",
-          "type": "Stream",
-          "description": null
+          "name": "arg1",
+          "type": "System.IO.Stream",
+          "summary": null
         },
         {
-          "name": "decoded",
-          "type": "BarcodeDecoded",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.BarcodeDecoded@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecodePng(Stream stream, out BarcodeDecoded decoded)",
-      "xmlId": "M:CodeGlyphX.Barcode.TryDecodePng(System.IO.Stream,CodeGlyphX.BarcodeDecoded@)",
-      "anchor": "method-trydecodepng-static-bool-trydecodepng-stream-stream-out-barcodedecoded-decoded"
+      ]
     },
     {
       "name": "TryDecodePng",
-      "kind": "Method",
       "summary": "Attempts to decode a barcode from a PNG stream, with cancellation.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "stream",
-          "type": "Stream",
-          "description": null
+          "name": "arg1",
+          "type": "System.IO.Stream",
+          "summary": null
         },
         {
-          "name": "cancellationToken",
-          "type": "CancellationToken",
-          "description": null
+          "name": "arg2",
+          "type": "System.Threading.CancellationToken",
+          "summary": null
         },
         {
-          "name": "decoded",
-          "type": "BarcodeDecoded",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.BarcodeDecoded@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecodePng(Stream stream, CancellationToken cancellationToken, out BarcodeDecoded decoded)",
-      "xmlId": "M:CodeGlyphX.Barcode.TryDecodePng(System.IO.Stream,System.Threading.CancellationToken,CodeGlyphX.BarcodeDecoded@)",
-      "anchor": "method-trydecodepng-static-bool-trydecodepng-stream-stream-cancellationtoken-cancellationtoken-out-barcodedecoded-decoded"
+      ]
     },
     {
       "name": "TryDecodePng",
-      "kind": "Method",
       "summary": "Attempts to decode a barcode from a PNG stream with image decode options.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "stream",
-          "type": "Stream",
-          "description": null
+          "name": "arg1",
+          "type": "System.IO.Stream",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "ImageDecodeOptions",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.ImageDecodeOptions",
+          "summary": null
         },
         {
-          "name": "decoded",
-          "type": "BarcodeDecoded",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.BarcodeDecoded@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecodePng(Stream stream, ImageDecodeOptions options, out BarcodeDecoded decoded)",
-      "xmlId": "M:CodeGlyphX.Barcode.TryDecodePng(System.IO.Stream,CodeGlyphX.ImageDecodeOptions,CodeGlyphX.BarcodeDecoded@)",
-      "anchor": "method-trydecodepng-static-bool-trydecodepng-stream-stream-imagedecodeoptions-options-out-barcodedecoded-decoded"
+      ]
     },
     {
       "name": "TryDecodePng",
-      "kind": "Method",
       "summary": "Attempts to decode a barcode from a PNG stream with image decode options and barcode decode options.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "stream",
-          "type": "Stream",
-          "description": null
+          "name": "arg1",
+          "type": "System.IO.Stream",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "ImageDecodeOptions",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.ImageDecodeOptions",
+          "summary": null
         },
         {
-          "name": "decodeOptions",
-          "type": "BarcodeDecodeOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.BarcodeDecodeOptions",
+          "summary": null
         },
         {
-          "name": "decoded",
-          "type": "BarcodeDecoded",
-          "description": null
+          "name": "arg4",
+          "type": "CodeGlyphX.BarcodeDecoded@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecodePng(Stream stream, ImageDecodeOptions options, BarcodeDecodeOptions decodeOptions, out BarcodeDecoded decoded)",
-      "xmlId": "M:CodeGlyphX.Barcode.TryDecodePng(System.IO.Stream,CodeGlyphX.ImageDecodeOptions,CodeGlyphX.BarcodeDecodeOptions,CodeGlyphX.BarcodeDecoded@)",
-      "anchor": "method-trydecodepng-static-bool-trydecodepng-stream-stream-imagedecodeoptions-options-barcodedecodeoptions-decodeoptions-out-barcodedecoded-decoded"
+      ]
     },
     {
       "name": "TryDecodePng",
-      "kind": "Method",
       "summary": "Attempts to decode a barcode from a PNG stream with image decode options, with cancellation.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "stream",
-          "type": "Stream",
-          "description": null
+          "name": "arg1",
+          "type": "System.IO.Stream",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "ImageDecodeOptions",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.ImageDecodeOptions",
+          "summary": null
         },
         {
-          "name": "cancellationToken",
-          "type": "CancellationToken",
-          "description": null
+          "name": "arg3",
+          "type": "System.Threading.CancellationToken",
+          "summary": null
         },
         {
-          "name": "decoded",
-          "type": "BarcodeDecoded",
-          "description": null
+          "name": "arg4",
+          "type": "CodeGlyphX.BarcodeDecoded@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecodePng(Stream stream, ImageDecodeOptions options, CancellationToken cancellationToken, out BarcodeDecoded decoded)",
-      "xmlId": "M:CodeGlyphX.Barcode.TryDecodePng(System.IO.Stream,CodeGlyphX.ImageDecodeOptions,System.Threading.CancellationToken,CodeGlyphX.BarcodeDecoded@)",
-      "anchor": "method-trydecodepng-static-bool-trydecodepng-stream-stream-imagedecodeoptions-options-cancellationtoken-cancellationtoken-out-barcodedecoded-decoded"
+      ]
     },
     {
       "name": "TryDecodePng",
-      "kind": "Method",
       "summary": "Attempts to decode a barcode from a PNG stream with image decode options, barcode decode options, and cancellation.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "stream",
-          "type": "Stream",
-          "description": null
+          "name": "arg1",
+          "type": "System.IO.Stream",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "ImageDecodeOptions",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.ImageDecodeOptions",
+          "summary": null
         },
         {
-          "name": "decodeOptions",
-          "type": "BarcodeDecodeOptions",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.BarcodeDecodeOptions",
+          "summary": null
         },
         {
-          "name": "cancellationToken",
-          "type": "CancellationToken",
-          "description": null
+          "name": "arg4",
+          "type": "System.Threading.CancellationToken",
+          "summary": null
         },
         {
-          "name": "decoded",
-          "type": "BarcodeDecoded",
-          "description": null
+          "name": "arg5",
+          "type": "CodeGlyphX.BarcodeDecoded@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecodePng(Stream stream, ImageDecodeOptions options, BarcodeDecodeOptions decodeOptions, CancellationToken cancellationToken, out BarcodeDecoded decoded)",
-      "xmlId": "M:CodeGlyphX.Barcode.TryDecodePng(System.IO.Stream,CodeGlyphX.ImageDecodeOptions,CodeGlyphX.BarcodeDecodeOptions,System.Threading.CancellationToken,CodeGlyphX.BarcodeDecoded@)",
-      "anchor": "method-trydecodepng-static-bool-trydecodepng-stream-stream-imagedecodeoptions-options-barcodedecodeoptions-decodeoptions-cancellationtoken-cancellationtoken-out-barcodedecoded-decoded"
+      ]
     },
     {
       "name": "DecodePng",
-      "kind": "Method",
       "summary": "Decodes a barcode from PNG bytes.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "png",
-          "type": "byte[]",
-          "description": null
+          "name": "arg1",
+          "type": "System.Byte[]",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static BarcodeDecoded DecodePng(byte[] png)",
-      "xmlId": "M:CodeGlyphX.Barcode.DecodePng(System.Byte[])",
-      "anchor": "method-decodepng-static-barcodedecoded-decodepng-byte-png"
+      ]
     },
     {
       "name": "DecodePngFile",
-      "kind": "Method",
       "summary": "Decodes a barcode from a PNG file.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "path",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static BarcodeDecoded DecodePngFile(string path)",
-      "xmlId": "M:CodeGlyphX.Barcode.DecodePngFile(System.String)",
-      "anchor": "method-decodepngfile-static-barcodedecoded-decodepngfile-string-path"
+      ]
     },
     {
       "name": "DecodePng",
-      "kind": "Method",
       "summary": "Decodes a barcode from a PNG stream.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "stream",
-          "type": "Stream",
-          "description": null
+          "name": "arg1",
+          "type": "System.IO.Stream",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static BarcodeDecoded DecodePng(Stream stream)",
-      "xmlId": "M:CodeGlyphX.Barcode.DecodePng(System.IO.Stream)",
-      "anchor": "method-decodepng-static-barcodedecoded-decodepng-stream-stream"
+      ]
+    },
+    {
+      "name": "Render",
+      "summary": "Renders a barcode to the requested output format.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "arg1",
+          "type": "CodeGlyphX.BarcodeType",
+          "summary": null
+        },
+        {
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
+        },
+        {
+          "name": "arg3",
+          "type": "CodeGlyphX.Rendering.OutputFormat",
+          "summary": null
+        },
+        {
+          "name": "arg4",
+          "type": "CodeGlyphX.BarcodeOptions",
+          "summary": null
+        },
+        {
+          "name": "arg5",
+          "type": "CodeGlyphX.Rendering.RenderExtras",
+          "summary": null
+        }
+      ]
+    },
+    {
+      "name": "Render",
+      "summary": "Renders a barcode to the requested output format.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "arg1",
+          "type": "CodeGlyphX.Barcode1D",
+          "summary": null
+        },
+        {
+          "name": "arg2",
+          "type": "CodeGlyphX.Rendering.OutputFormat",
+          "summary": null
+        },
+        {
+          "name": "arg3",
+          "type": "CodeGlyphX.BarcodeOptions",
+          "summary": null
+        },
+        {
+          "name": "arg4",
+          "type": "CodeGlyphX.Rendering.RenderExtras",
+          "summary": null
+        }
+      ]
     },
     {
       "name": "SavePng",
-      "kind": "Method",
       "summary": "Renders a barcode as PNG and writes it to a file.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "type",
-          "type": "BarcodeType",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.BarcodeType",
+          "summary": null
         },
         {
-          "name": "content",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "path",
-          "type": "string",
-          "description": null
+          "name": "arg3",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "BarcodeOptions",
-          "description": null
+          "name": "arg4",
+          "type": "CodeGlyphX.BarcodeOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string SavePng(BarcodeType type, string content, string path, BarcodeOptions options)",
-      "xmlId": "M:CodeGlyphX.Barcode.SavePng(CodeGlyphX.BarcodeType,System.String,System.String,CodeGlyphX.BarcodeOptions)",
-      "anchor": "method-savepng-static-string-savepng-barcodetype-type-string-content-string-path-barcodeoptions-options"
+      ]
     },
     {
       "name": "SavePng",
-      "kind": "Method",
       "summary": "Renders a barcode as PNG and writes it to a stream.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "type",
-          "type": "BarcodeType",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.BarcodeType",
+          "summary": null
         },
         {
-          "name": "content",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "stream",
-          "type": "Stream",
-          "description": null
+          "name": "arg3",
+          "type": "System.IO.Stream",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "BarcodeOptions",
-          "description": null
+          "name": "arg4",
+          "type": "CodeGlyphX.BarcodeOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static void SavePng(BarcodeType type, string content, Stream stream, BarcodeOptions options)",
-      "xmlId": "M:CodeGlyphX.Barcode.SavePng(CodeGlyphX.BarcodeType,System.String,System.IO.Stream,CodeGlyphX.BarcodeOptions)",
-      "anchor": "method-savepng-static-void-savepng-barcodetype-type-string-content-stream-stream-barcodeoptions-options"
+      ]
     },
     {
       "name": "SaveSvg",
-      "kind": "Method",
       "summary": "Renders a barcode as SVG and writes it to a file.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "type",
-          "type": "BarcodeType",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.BarcodeType",
+          "summary": null
         },
         {
-          "name": "content",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "path",
-          "type": "string",
-          "description": null
+          "name": "arg3",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "BarcodeOptions",
-          "description": null
+          "name": "arg4",
+          "type": "CodeGlyphX.BarcodeOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string SaveSvg(BarcodeType type, string content, string path, BarcodeOptions options)",
-      "xmlId": "M:CodeGlyphX.Barcode.SaveSvg(CodeGlyphX.BarcodeType,System.String,System.String,CodeGlyphX.BarcodeOptions)",
-      "anchor": "method-savesvg-static-string-savesvg-barcodetype-type-string-content-string-path-barcodeoptions-options"
+      ]
     },
     {
       "name": "SaveSvg",
-      "kind": "Method",
       "summary": "Renders a barcode as SVG and writes it to a stream.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "type",
-          "type": "BarcodeType",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.BarcodeType",
+          "summary": null
         },
         {
-          "name": "content",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "stream",
-          "type": "Stream",
-          "description": null
+          "name": "arg3",
+          "type": "System.IO.Stream",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "BarcodeOptions",
-          "description": null
+          "name": "arg4",
+          "type": "CodeGlyphX.BarcodeOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static void SaveSvg(BarcodeType type, string content, Stream stream, BarcodeOptions options)",
-      "xmlId": "M:CodeGlyphX.Barcode.SaveSvg(CodeGlyphX.BarcodeType,System.String,System.IO.Stream,CodeGlyphX.BarcodeOptions)",
-      "anchor": "method-savesvg-static-void-savesvg-barcodetype-type-string-content-stream-stream-barcodeoptions-options"
+      ]
     },
     {
       "name": "SaveHtml",
-      "kind": "Method",
       "summary": "Renders a barcode as HTML and writes it to a file.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "type",
-          "type": "BarcodeType",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.BarcodeType",
+          "summary": null
         },
         {
-          "name": "content",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "path",
-          "type": "string",
-          "description": null
+          "name": "arg3",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "BarcodeOptions",
-          "description": null
+          "name": "arg4",
+          "type": "CodeGlyphX.BarcodeOptions",
+          "summary": null
         },
         {
-          "name": "title",
-          "type": "string",
-          "description": null
+          "name": "arg5",
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string SaveHtml(BarcodeType type, string content, string path, BarcodeOptions options, string title)",
-      "xmlId": "M:CodeGlyphX.Barcode.SaveHtml(CodeGlyphX.BarcodeType,System.String,System.String,CodeGlyphX.BarcodeOptions,System.String)",
-      "anchor": "method-savehtml-static-string-savehtml-barcodetype-type-string-content-string-path-barcodeoptions-options-string-title"
+      ]
     },
     {
       "name": "SaveHtml",
-      "kind": "Method",
       "summary": "Renders a barcode as HTML and writes it to a stream.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "type",
-          "type": "BarcodeType",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.BarcodeType",
+          "summary": null
         },
         {
-          "name": "content",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "stream",
-          "type": "Stream",
-          "description": null
+          "name": "arg3",
+          "type": "System.IO.Stream",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "BarcodeOptions",
-          "description": null
+          "name": "arg4",
+          "type": "CodeGlyphX.BarcodeOptions",
+          "summary": null
         },
         {
-          "name": "title",
-          "type": "string",
-          "description": null
+          "name": "arg5",
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static void SaveHtml(BarcodeType type, string content, Stream stream, BarcodeOptions options, string title)",
-      "xmlId": "M:CodeGlyphX.Barcode.SaveHtml(CodeGlyphX.BarcodeType,System.String,System.IO.Stream,CodeGlyphX.BarcodeOptions,System.String)",
-      "anchor": "method-savehtml-static-void-savehtml-barcodetype-type-string-content-stream-stream-barcodeoptions-options-string-title"
+      ]
     },
     {
       "name": "SaveJpeg",
-      "kind": "Method",
       "summary": "Renders a barcode as JPEG and writes it to a file.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "type",
-          "type": "BarcodeType",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.BarcodeType",
+          "summary": null
         },
         {
-          "name": "content",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "path",
-          "type": "string",
-          "description": null
+          "name": "arg3",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "BarcodeOptions",
-          "description": null
+          "name": "arg4",
+          "type": "CodeGlyphX.BarcodeOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string SaveJpeg(BarcodeType type, string content, string path, BarcodeOptions options)",
-      "xmlId": "M:CodeGlyphX.Barcode.SaveJpeg(CodeGlyphX.BarcodeType,System.String,System.String,CodeGlyphX.BarcodeOptions)",
-      "anchor": "method-savejpeg-static-string-savejpeg-barcodetype-type-string-content-string-path-barcodeoptions-options"
+      ]
     },
     {
       "name": "SaveJpeg",
-      "kind": "Method",
       "summary": "Renders a barcode as JPEG and writes it to a stream.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "type",
-          "type": "BarcodeType",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.BarcodeType",
+          "summary": null
         },
         {
-          "name": "content",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "stream",
-          "type": "Stream",
-          "description": null
+          "name": "arg3",
+          "type": "System.IO.Stream",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "BarcodeOptions",
-          "description": null
+          "name": "arg4",
+          "type": "CodeGlyphX.BarcodeOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static void SaveJpeg(BarcodeType type, string content, Stream stream, BarcodeOptions options)",
-      "xmlId": "M:CodeGlyphX.Barcode.SaveJpeg(CodeGlyphX.BarcodeType,System.String,System.IO.Stream,CodeGlyphX.BarcodeOptions)",
-      "anchor": "method-savejpeg-static-void-savejpeg-barcodetype-type-string-content-stream-stream-barcodeoptions-options"
+      ]
+    },
+    {
+      "name": "SaveWebp",
+      "summary": "Renders a barcode as WebP and writes it to a file.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "arg1",
+          "type": "CodeGlyphX.BarcodeType",
+          "summary": null
+        },
+        {
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
+        },
+        {
+          "name": "arg3",
+          "type": "System.String",
+          "summary": null
+        },
+        {
+          "name": "arg4",
+          "type": "CodeGlyphX.BarcodeOptions",
+          "summary": null
+        }
+      ]
+    },
+    {
+      "name": "SaveWebp",
+      "summary": "Renders a barcode as WebP and writes it to a stream.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "arg1",
+          "type": "CodeGlyphX.BarcodeType",
+          "summary": null
+        },
+        {
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
+        },
+        {
+          "name": "arg3",
+          "type": "System.IO.Stream",
+          "summary": null
+        },
+        {
+          "name": "arg4",
+          "type": "CodeGlyphX.BarcodeOptions",
+          "summary": null
+        }
+      ]
     },
     {
       "name": "SaveBmp",
-      "kind": "Method",
       "summary": "Renders a barcode as BMP and writes it to a file.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "type",
-          "type": "BarcodeType",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.BarcodeType",
+          "summary": null
         },
         {
-          "name": "content",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "path",
-          "type": "string",
-          "description": null
+          "name": "arg3",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "BarcodeOptions",
-          "description": null
+          "name": "arg4",
+          "type": "CodeGlyphX.BarcodeOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string SaveBmp(BarcodeType type, string content, string path, BarcodeOptions options)",
-      "xmlId": "M:CodeGlyphX.Barcode.SaveBmp(CodeGlyphX.BarcodeType,System.String,System.String,CodeGlyphX.BarcodeOptions)",
-      "anchor": "method-savebmp-static-string-savebmp-barcodetype-type-string-content-string-path-barcodeoptions-options"
+      ]
     },
     {
       "name": "SaveBmp",
-      "kind": "Method",
       "summary": "Renders a barcode as BMP and writes it to a stream.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "type",
-          "type": "BarcodeType",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.BarcodeType",
+          "summary": null
         },
         {
-          "name": "content",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "stream",
-          "type": "Stream",
-          "description": null
+          "name": "arg3",
+          "type": "System.IO.Stream",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "BarcodeOptions",
-          "description": null
+          "name": "arg4",
+          "type": "CodeGlyphX.BarcodeOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static void SaveBmp(BarcodeType type, string content, Stream stream, BarcodeOptions options)",
-      "xmlId": "M:CodeGlyphX.Barcode.SaveBmp(CodeGlyphX.BarcodeType,System.String,System.IO.Stream,CodeGlyphX.BarcodeOptions)",
-      "anchor": "method-savebmp-static-void-savebmp-barcodetype-type-string-content-stream-stream-barcodeoptions-options"
+      ]
     },
     {
       "name": "SavePpm",
-      "kind": "Method",
       "summary": "Renders a barcode as PPM and writes it to a file.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "type",
-          "type": "BarcodeType",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.BarcodeType",
+          "summary": null
         },
         {
-          "name": "content",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "path",
-          "type": "string",
-          "description": null
+          "name": "arg3",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "BarcodeOptions",
-          "description": null
+          "name": "arg4",
+          "type": "CodeGlyphX.BarcodeOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string SavePpm(BarcodeType type, string content, string path, BarcodeOptions options)",
-      "xmlId": "M:CodeGlyphX.Barcode.SavePpm(CodeGlyphX.BarcodeType,System.String,System.String,CodeGlyphX.BarcodeOptions)",
-      "anchor": "method-saveppm-static-string-saveppm-barcodetype-type-string-content-string-path-barcodeoptions-options"
+      ]
     },
     {
       "name": "SavePpm",
-      "kind": "Method",
       "summary": "Renders a barcode as PPM and writes it to a stream.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "type",
-          "type": "BarcodeType",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.BarcodeType",
+          "summary": null
         },
         {
-          "name": "content",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "stream",
-          "type": "Stream",
-          "description": null
+          "name": "arg3",
+          "type": "System.IO.Stream",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "BarcodeOptions",
-          "description": null
+          "name": "arg4",
+          "type": "CodeGlyphX.BarcodeOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static void SavePpm(BarcodeType type, string content, Stream stream, BarcodeOptions options)",
-      "xmlId": "M:CodeGlyphX.Barcode.SavePpm(CodeGlyphX.BarcodeType,System.String,System.IO.Stream,CodeGlyphX.BarcodeOptions)",
-      "anchor": "method-saveppm-static-void-saveppm-barcodetype-type-string-content-stream-stream-barcodeoptions-options"
+      ]
     },
     {
       "name": "SavePbm",
-      "kind": "Method",
       "summary": "Renders a barcode as PBM and writes it to a file.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "type",
-          "type": "BarcodeType",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.BarcodeType",
+          "summary": null
         },
         {
-          "name": "content",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "path",
-          "type": "string",
-          "description": null
+          "name": "arg3",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "BarcodeOptions",
-          "description": null
+          "name": "arg4",
+          "type": "CodeGlyphX.BarcodeOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string SavePbm(BarcodeType type, string content, string path, BarcodeOptions options)",
-      "xmlId": "M:CodeGlyphX.Barcode.SavePbm(CodeGlyphX.BarcodeType,System.String,System.String,CodeGlyphX.BarcodeOptions)",
-      "anchor": "method-savepbm-static-string-savepbm-barcodetype-type-string-content-string-path-barcodeoptions-options"
+      ]
     },
     {
       "name": "SavePbm",
-      "kind": "Method",
       "summary": "Renders a barcode as PBM and writes it to a stream.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "type",
-          "type": "BarcodeType",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.BarcodeType",
+          "summary": null
         },
         {
-          "name": "content",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "stream",
-          "type": "Stream",
-          "description": null
+          "name": "arg3",
+          "type": "System.IO.Stream",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "BarcodeOptions",
-          "description": null
+          "name": "arg4",
+          "type": "CodeGlyphX.BarcodeOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static void SavePbm(BarcodeType type, string content, Stream stream, BarcodeOptions options)",
-      "xmlId": "M:CodeGlyphX.Barcode.SavePbm(CodeGlyphX.BarcodeType,System.String,System.IO.Stream,CodeGlyphX.BarcodeOptions)",
-      "anchor": "method-savepbm-static-void-savepbm-barcodetype-type-string-content-stream-stream-barcodeoptions-options"
+      ]
     },
     {
       "name": "SavePgm",
-      "kind": "Method",
       "summary": "Renders a barcode as PGM and writes it to a file.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "type",
-          "type": "BarcodeType",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.BarcodeType",
+          "summary": null
         },
         {
-          "name": "content",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "path",
-          "type": "string",
-          "description": null
+          "name": "arg3",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "BarcodeOptions",
-          "description": null
+          "name": "arg4",
+          "type": "CodeGlyphX.BarcodeOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string SavePgm(BarcodeType type, string content, string path, BarcodeOptions options)",
-      "xmlId": "M:CodeGlyphX.Barcode.SavePgm(CodeGlyphX.BarcodeType,System.String,System.String,CodeGlyphX.BarcodeOptions)",
-      "anchor": "method-savepgm-static-string-savepgm-barcodetype-type-string-content-string-path-barcodeoptions-options"
+      ]
     },
     {
       "name": "SavePgm",
-      "kind": "Method",
       "summary": "Renders a barcode as PGM and writes it to a stream.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "type",
-          "type": "BarcodeType",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.BarcodeType",
+          "summary": null
         },
         {
-          "name": "content",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "stream",
-          "type": "Stream",
-          "description": null
+          "name": "arg3",
+          "type": "System.IO.Stream",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "BarcodeOptions",
-          "description": null
+          "name": "arg4",
+          "type": "CodeGlyphX.BarcodeOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static void SavePgm(BarcodeType type, string content, Stream stream, BarcodeOptions options)",
-      "xmlId": "M:CodeGlyphX.Barcode.SavePgm(CodeGlyphX.BarcodeType,System.String,System.IO.Stream,CodeGlyphX.BarcodeOptions)",
-      "anchor": "method-savepgm-static-void-savepgm-barcodetype-type-string-content-stream-stream-barcodeoptions-options"
+      ]
     },
     {
       "name": "SavePam",
-      "kind": "Method",
       "summary": "Renders a barcode as PAM and writes it to a file.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "type",
-          "type": "BarcodeType",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.BarcodeType",
+          "summary": null
         },
         {
-          "name": "content",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "path",
-          "type": "string",
-          "description": null
+          "name": "arg3",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "BarcodeOptions",
-          "description": null
+          "name": "arg4",
+          "type": "CodeGlyphX.BarcodeOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string SavePam(BarcodeType type, string content, string path, BarcodeOptions options)",
-      "xmlId": "M:CodeGlyphX.Barcode.SavePam(CodeGlyphX.BarcodeType,System.String,System.String,CodeGlyphX.BarcodeOptions)",
-      "anchor": "method-savepam-static-string-savepam-barcodetype-type-string-content-string-path-barcodeoptions-options"
+      ]
     },
     {
       "name": "SavePam",
-      "kind": "Method",
       "summary": "Renders a barcode as PAM and writes it to a stream.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "type",
-          "type": "BarcodeType",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.BarcodeType",
+          "summary": null
         },
         {
-          "name": "content",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "stream",
-          "type": "Stream",
-          "description": null
+          "name": "arg3",
+          "type": "System.IO.Stream",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "BarcodeOptions",
-          "description": null
+          "name": "arg4",
+          "type": "CodeGlyphX.BarcodeOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static void SavePam(BarcodeType type, string content, Stream stream, BarcodeOptions options)",
-      "xmlId": "M:CodeGlyphX.Barcode.SavePam(CodeGlyphX.BarcodeType,System.String,System.IO.Stream,CodeGlyphX.BarcodeOptions)",
-      "anchor": "method-savepam-static-void-savepam-barcodetype-type-string-content-stream-stream-barcodeoptions-options"
+      ]
     },
     {
       "name": "SaveXbm",
-      "kind": "Method",
       "summary": "Renders a barcode as XBM and writes it to a file.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "type",
-          "type": "BarcodeType",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.BarcodeType",
+          "summary": null
         },
         {
-          "name": "content",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "path",
-          "type": "string",
-          "description": null
+          "name": "arg3",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "BarcodeOptions",
-          "description": null
+          "name": "arg4",
+          "type": "CodeGlyphX.BarcodeOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string SaveXbm(BarcodeType type, string content, string path, BarcodeOptions options)",
-      "xmlId": "M:CodeGlyphX.Barcode.SaveXbm(CodeGlyphX.BarcodeType,System.String,System.String,CodeGlyphX.BarcodeOptions)",
-      "anchor": "method-savexbm-static-string-savexbm-barcodetype-type-string-content-string-path-barcodeoptions-options"
+      ]
     },
     {
       "name": "SaveXbm",
-      "kind": "Method",
       "summary": "Renders a barcode as XBM and writes it to a stream.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "type",
-          "type": "BarcodeType",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.BarcodeType",
+          "summary": null
         },
         {
-          "name": "content",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "stream",
-          "type": "Stream",
-          "description": null
+          "name": "arg3",
+          "type": "System.IO.Stream",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "BarcodeOptions",
-          "description": null
+          "name": "arg4",
+          "type": "CodeGlyphX.BarcodeOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static void SaveXbm(BarcodeType type, string content, Stream stream, BarcodeOptions options)",
-      "xmlId": "M:CodeGlyphX.Barcode.SaveXbm(CodeGlyphX.BarcodeType,System.String,System.IO.Stream,CodeGlyphX.BarcodeOptions)",
-      "anchor": "method-savexbm-static-void-savexbm-barcodetype-type-string-content-stream-stream-barcodeoptions-options"
+      ]
     },
     {
       "name": "SaveXpm",
-      "kind": "Method",
       "summary": "Renders a barcode as XPM and writes it to a file.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "type",
-          "type": "BarcodeType",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.BarcodeType",
+          "summary": null
         },
         {
-          "name": "content",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "path",
-          "type": "string",
-          "description": null
+          "name": "arg3",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "BarcodeOptions",
-          "description": null
+          "name": "arg4",
+          "type": "CodeGlyphX.BarcodeOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string SaveXpm(BarcodeType type, string content, string path, BarcodeOptions options)",
-      "xmlId": "M:CodeGlyphX.Barcode.SaveXpm(CodeGlyphX.BarcodeType,System.String,System.String,CodeGlyphX.BarcodeOptions)",
-      "anchor": "method-savexpm-static-string-savexpm-barcodetype-type-string-content-string-path-barcodeoptions-options"
+      ]
     },
     {
       "name": "SaveXpm",
-      "kind": "Method",
       "summary": "Renders a barcode as XPM and writes it to a stream.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "type",
-          "type": "BarcodeType",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.BarcodeType",
+          "summary": null
         },
         {
-          "name": "content",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "stream",
-          "type": "Stream",
-          "description": null
+          "name": "arg3",
+          "type": "System.IO.Stream",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "BarcodeOptions",
-          "description": null
+          "name": "arg4",
+          "type": "CodeGlyphX.BarcodeOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static void SaveXpm(BarcodeType type, string content, Stream stream, BarcodeOptions options)",
-      "xmlId": "M:CodeGlyphX.Barcode.SaveXpm(CodeGlyphX.BarcodeType,System.String,System.IO.Stream,CodeGlyphX.BarcodeOptions)",
-      "anchor": "method-savexpm-static-void-savexpm-barcodetype-type-string-content-stream-stream-barcodeoptions-options"
+      ]
     },
     {
       "name": "SaveTga",
-      "kind": "Method",
       "summary": "Renders a barcode as TGA and writes it to a file.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "type",
-          "type": "BarcodeType",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.BarcodeType",
+          "summary": null
         },
         {
-          "name": "content",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "path",
-          "type": "string",
-          "description": null
+          "name": "arg3",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "BarcodeOptions",
-          "description": null
+          "name": "arg4",
+          "type": "CodeGlyphX.BarcodeOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string SaveTga(BarcodeType type, string content, string path, BarcodeOptions options)",
-      "xmlId": "M:CodeGlyphX.Barcode.SaveTga(CodeGlyphX.BarcodeType,System.String,System.String,CodeGlyphX.BarcodeOptions)",
-      "anchor": "method-savetga-static-string-savetga-barcodetype-type-string-content-string-path-barcodeoptions-options"
+      ]
     },
     {
       "name": "SaveTga",
-      "kind": "Method",
       "summary": "Renders a barcode as TGA and writes it to a stream.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "type",
-          "type": "BarcodeType",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.BarcodeType",
+          "summary": null
         },
         {
-          "name": "content",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "stream",
-          "type": "Stream",
-          "description": null
+          "name": "arg3",
+          "type": "System.IO.Stream",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "BarcodeOptions",
-          "description": null
+          "name": "arg4",
+          "type": "CodeGlyphX.BarcodeOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static void SaveTga(BarcodeType type, string content, Stream stream, BarcodeOptions options)",
-      "xmlId": "M:CodeGlyphX.Barcode.SaveTga(CodeGlyphX.BarcodeType,System.String,System.IO.Stream,CodeGlyphX.BarcodeOptions)",
-      "anchor": "method-savetga-static-void-savetga-barcodetype-type-string-content-stream-stream-barcodeoptions-options"
+      ]
     },
     {
       "name": "SaveIco",
-      "kind": "Method",
       "summary": "Renders a barcode as ICO and writes it to a file.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "type",
-          "type": "BarcodeType",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.BarcodeType",
+          "summary": null
         },
         {
-          "name": "content",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "path",
-          "type": "string",
-          "description": null
+          "name": "arg3",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "BarcodeOptions",
-          "description": null
+          "name": "arg4",
+          "type": "CodeGlyphX.BarcodeOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string SaveIco(BarcodeType type, string content, string path, BarcodeOptions options)",
-      "xmlId": "M:CodeGlyphX.Barcode.SaveIco(CodeGlyphX.BarcodeType,System.String,System.String,CodeGlyphX.BarcodeOptions)",
-      "anchor": "method-saveico-static-string-saveico-barcodetype-type-string-content-string-path-barcodeoptions-options"
+      ]
     },
     {
       "name": "SaveIco",
-      "kind": "Method",
       "summary": "Renders a barcode as ICO and writes it to a stream.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "type",
-          "type": "BarcodeType",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.BarcodeType",
+          "summary": null
         },
         {
-          "name": "content",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "stream",
-          "type": "Stream",
-          "description": null
+          "name": "arg3",
+          "type": "System.IO.Stream",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "BarcodeOptions",
-          "description": null
+          "name": "arg4",
+          "type": "CodeGlyphX.BarcodeOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static void SaveIco(BarcodeType type, string content, Stream stream, BarcodeOptions options)",
-      "xmlId": "M:CodeGlyphX.Barcode.SaveIco(CodeGlyphX.BarcodeType,System.String,System.IO.Stream,CodeGlyphX.BarcodeOptions)",
-      "anchor": "method-saveico-static-void-saveico-barcodetype-type-string-content-stream-stream-barcodeoptions-options"
+      ]
     },
     {
       "name": "SaveSvgz",
-      "kind": "Method",
       "summary": "Renders a barcode as SVGZ and writes it to a file.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "type",
-          "type": "BarcodeType",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.BarcodeType",
+          "summary": null
         },
         {
-          "name": "content",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "path",
-          "type": "string",
-          "description": null
+          "name": "arg3",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "BarcodeOptions",
-          "description": null
+          "name": "arg4",
+          "type": "CodeGlyphX.BarcodeOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string SaveSvgz(BarcodeType type, string content, string path, BarcodeOptions options)",
-      "xmlId": "M:CodeGlyphX.Barcode.SaveSvgz(CodeGlyphX.BarcodeType,System.String,System.String,CodeGlyphX.BarcodeOptions)",
-      "anchor": "method-savesvgz-static-string-savesvgz-barcodetype-type-string-content-string-path-barcodeoptions-options"
+      ]
     },
     {
       "name": "SaveSvgz",
-      "kind": "Method",
       "summary": "Renders a barcode as SVGZ and writes it to a stream.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "type",
-          "type": "BarcodeType",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.BarcodeType",
+          "summary": null
         },
         {
-          "name": "content",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "stream",
-          "type": "Stream",
-          "description": null
+          "name": "arg3",
+          "type": "System.IO.Stream",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "BarcodeOptions",
-          "description": null
+          "name": "arg4",
+          "type": "CodeGlyphX.BarcodeOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static void SaveSvgz(BarcodeType type, string content, Stream stream, BarcodeOptions options)",
-      "xmlId": "M:CodeGlyphX.Barcode.SaveSvgz(CodeGlyphX.BarcodeType,System.String,System.IO.Stream,CodeGlyphX.BarcodeOptions)",
-      "anchor": "method-savesvgz-static-void-savesvgz-barcodetype-type-string-content-stream-stream-barcodeoptions-options"
+      ]
     },
     {
       "name": "SavePdf",
-      "kind": "Method",
       "summary": "Renders a barcode as PDF and writes it to a file.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "type",
-          "type": "BarcodeType",
-          "description": "The barcode type."
+          "type": "CodeGlyphX.BarcodeType",
+          "summary": "The barcode type."
         },
         {
           "name": "content",
-          "type": "string",
-          "description": "The barcode content."
+          "type": "System.String",
+          "summary": "The barcode content."
         },
         {
           "name": "path",
-          "type": "string",
-          "description": "Output file path."
+          "type": "System.String",
+          "summary": "Output file path."
         },
         {
           "name": "options",
-          "type": "BarcodeOptions",
-          "description": "Optional rendering options."
+          "type": "CodeGlyphX.BarcodeOptions",
+          "summary": "Optional rendering options."
         },
         {
           "name": "mode",
-          "type": "RenderMode",
-          "description": "Vector or raster output."
+          "type": "CodeGlyphX.Rendering.RenderMode",
+          "summary": "Vector or raster output."
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string SavePdf(BarcodeType type, string content, string path, BarcodeOptions options, RenderMode mode)",
-      "xmlId": "M:CodeGlyphX.Barcode.SavePdf(CodeGlyphX.BarcodeType,System.String,System.String,CodeGlyphX.BarcodeOptions,CodeGlyphX.Rendering.RenderMode)",
-      "anchor": "method-savepdf-static-string-savepdf-barcodetype-type-string-content-string-path-barcodeoptions-options-rendermode-mode"
+      ]
     },
     {
       "name": "SavePdf",
-      "kind": "Method",
       "summary": "Renders a barcode as PDF and writes it to a stream.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "type",
-          "type": "BarcodeType",
-          "description": "The barcode type."
+          "type": "CodeGlyphX.BarcodeType",
+          "summary": "The barcode type."
         },
         {
           "name": "content",
-          "type": "string",
-          "description": "The barcode content."
+          "type": "System.String",
+          "summary": "The barcode content."
         },
         {
           "name": "stream",
-          "type": "Stream",
-          "description": "Destination stream."
+          "type": "System.IO.Stream",
+          "summary": "Destination stream."
         },
         {
           "name": "options",
-          "type": "BarcodeOptions",
-          "description": "Optional rendering options."
+          "type": "CodeGlyphX.BarcodeOptions",
+          "summary": "Optional rendering options."
         },
         {
           "name": "mode",
-          "type": "RenderMode",
-          "description": "Vector or raster output."
+          "type": "CodeGlyphX.Rendering.RenderMode",
+          "summary": "Vector or raster output."
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static void SavePdf(BarcodeType type, string content, Stream stream, BarcodeOptions options, RenderMode mode)",
-      "xmlId": "M:CodeGlyphX.Barcode.SavePdf(CodeGlyphX.BarcodeType,System.String,System.IO.Stream,CodeGlyphX.BarcodeOptions,CodeGlyphX.Rendering.RenderMode)",
-      "anchor": "method-savepdf-static-void-savepdf-barcodetype-type-string-content-stream-stream-barcodeoptions-options-rendermode-mode"
+      ]
     },
     {
       "name": "SaveEps",
-      "kind": "Method",
       "summary": "Renders a barcode as EPS and writes it to a file.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "type",
-          "type": "BarcodeType",
-          "description": "The barcode type."
+          "type": "CodeGlyphX.BarcodeType",
+          "summary": "The barcode type."
         },
         {
           "name": "content",
-          "type": "string",
-          "description": "The barcode content."
+          "type": "System.String",
+          "summary": "The barcode content."
         },
         {
           "name": "path",
-          "type": "string",
-          "description": "Output file path."
+          "type": "System.String",
+          "summary": "Output file path."
         },
         {
           "name": "options",
-          "type": "BarcodeOptions",
-          "description": "Optional rendering options."
+          "type": "CodeGlyphX.BarcodeOptions",
+          "summary": "Optional rendering options."
         },
         {
           "name": "mode",
-          "type": "RenderMode",
-          "description": "Vector or raster output."
+          "type": "CodeGlyphX.Rendering.RenderMode",
+          "summary": "Vector or raster output."
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string SaveEps(BarcodeType type, string content, string path, BarcodeOptions options, RenderMode mode)",
-      "xmlId": "M:CodeGlyphX.Barcode.SaveEps(CodeGlyphX.BarcodeType,System.String,System.String,CodeGlyphX.BarcodeOptions,CodeGlyphX.Rendering.RenderMode)",
-      "anchor": "method-saveeps-static-string-saveeps-barcodetype-type-string-content-string-path-barcodeoptions-options-rendermode-mode"
+      ]
     },
     {
       "name": "SaveEps",
-      "kind": "Method",
       "summary": "Renders a barcode as EPS and writes it to a stream.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "type",
-          "type": "BarcodeType",
-          "description": "The barcode type."
+          "type": "CodeGlyphX.BarcodeType",
+          "summary": "The barcode type."
         },
         {
           "name": "content",
-          "type": "string",
-          "description": "The barcode content."
+          "type": "System.String",
+          "summary": "The barcode content."
         },
         {
           "name": "stream",
-          "type": "Stream",
-          "description": "Destination stream."
+          "type": "System.IO.Stream",
+          "summary": "Destination stream."
         },
         {
           "name": "options",
-          "type": "BarcodeOptions",
-          "description": "Optional rendering options."
+          "type": "CodeGlyphX.BarcodeOptions",
+          "summary": "Optional rendering options."
         },
         {
           "name": "mode",
-          "type": "RenderMode",
-          "description": "Vector or raster output."
+          "type": "CodeGlyphX.Rendering.RenderMode",
+          "summary": "Vector or raster output."
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static void SaveEps(BarcodeType type, string content, Stream stream, BarcodeOptions options, RenderMode mode)",
-      "xmlId": "M:CodeGlyphX.Barcode.SaveEps(CodeGlyphX.BarcodeType,System.String,System.IO.Stream,CodeGlyphX.BarcodeOptions,CodeGlyphX.Rendering.RenderMode)",
-      "anchor": "method-saveeps-static-void-saveeps-barcodetype-type-string-content-stream-stream-barcodeoptions-options-rendermode-mode"
+      ]
     },
     {
       "name": "SaveAscii",
-      "kind": "Method",
       "summary": "Renders a barcode as ASCII text and writes it to a file.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "type",
-          "type": "BarcodeType",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.BarcodeType",
+          "summary": null
         },
         {
-          "name": "content",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "path",
-          "type": "string",
-          "description": null
+          "name": "arg3",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "BarcodeAsciiRenderOptions",
-          "description": null
+          "name": "arg4",
+          "type": "CodeGlyphX.Rendering.Ascii.BarcodeAsciiRenderOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string SaveAscii(BarcodeType type, string content, string path, BarcodeAsciiRenderOptions options)",
-      "xmlId": "M:CodeGlyphX.Barcode.SaveAscii(CodeGlyphX.BarcodeType,System.String,System.String,CodeGlyphX.Rendering.Ascii.BarcodeAsciiRenderOptions)",
-      "anchor": "method-saveascii-static-string-saveascii-barcodetype-type-string-content-string-path-barcodeasciirenderoptions-options"
+      ]
     },
     {
       "name": "Save",
-      "kind": "Method",
-      "summary": "Saves a barcode to a file based on the file extension (.png/.svg/.svgz/.html/.jpg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps).\n Defaults to PNG when no extension is provided.",
-      "remarks": null,
+      "summary": "Saves a barcode to a file based on the file extension (.png/.webp/.svg/.svgz/.html/.jpg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps). Defaults to PNG when no extension is provided.",
       "returns": null,
       "parameters": [
         {
-          "name": "type",
-          "type": "BarcodeType",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.BarcodeType",
+          "summary": null
         },
         {
-          "name": "content",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "path",
-          "type": "string",
-          "description": null
+          "name": "arg3",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "BarcodeOptions",
-          "description": null
+          "name": "arg4",
+          "type": "CodeGlyphX.BarcodeOptions",
+          "summary": null
         },
         {
-          "name": "title",
-          "type": "string",
-          "description": null
+          "name": "arg5",
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string Save(BarcodeType type, string content, string path, BarcodeOptions options, string title)",
-      "xmlId": "M:CodeGlyphX.Barcode.Save(CodeGlyphX.BarcodeType,System.String,System.String,CodeGlyphX.BarcodeOptions,System.String)",
-      "anchor": "method-save-static-string-save-barcodetype-type-string-content-string-path-barcodeoptions-options-string-title"
+      ]
     }
-  ]
+  ],
+  "properties": [],
+  "fields": [],
+  "events": []
 }

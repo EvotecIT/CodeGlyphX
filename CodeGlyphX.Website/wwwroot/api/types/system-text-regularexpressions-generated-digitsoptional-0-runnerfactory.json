@@ -1,0 +1,20 @@
+﻿{
+  "name": "RunnerFactory",
+  "fullName": "System.Text.RegularExpressions.Generated.DigitsOptional_0.RunnerFactory",
+  "namespace": "System.Text.RegularExpressions.Generated.DigitsOptional_0",
+  "kind": "Class",
+  "slug": "system-text-regularexpressions-generated-digitsoptional-0-runnerfactory",
+  "summary": "Provides a factory for creating instances to be used by methods on .",
+  "remarks": null,
+  "methods": [
+    {
+      "name": "CreateInstance",
+      "summary": "Creates an instance of a used by methods on .",
+      "returns": null,
+      "parameters": []
+    }
+  ],
+  "properties": [],
+  "fields": [],
+  "events": []
+}

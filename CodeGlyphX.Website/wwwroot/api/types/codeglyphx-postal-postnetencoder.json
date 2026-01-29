@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "PostnetEncoder",
   "fullName": "CodeGlyphX.Postal.PostnetEncoder",
   "namespace": "CodeGlyphX.Postal",
@@ -6,28 +6,21 @@
   "slug": "codeglyphx-postal-postnetencoder",
   "summary": "Encodes POSTNET barcodes.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
       "name": "Encode",
-      "kind": "Method",
-      "summary": "Encodes a POSTNET barcode into a CodeGlyphX.BitMatrix.",
-      "remarks": null,
+      "summary": "Encodes a POSTNET barcode into a .",
       "returns": null,
       "parameters": [
         {
-          "name": "content",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static BitMatrix Encode(string content)",
-      "xmlId": "M:CodeGlyphX.Postal.PostnetEncoder.Encode(System.String)",
-      "anchor": "method-encode-static-bitmatrix-encode-string-content"
+      ]
     }
-  ]
+  ],
+  "properties": [],
+  "fields": [],
+  "events": []
 }

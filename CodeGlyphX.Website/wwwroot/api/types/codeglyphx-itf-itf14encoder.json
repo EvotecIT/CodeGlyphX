@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "Itf14Encoder",
   "fullName": "CodeGlyphX.Itf.Itf14Encoder",
   "namespace": "CodeGlyphX.Itf",
@@ -6,28 +6,21 @@
   "slug": "codeglyphx-itf-itf14encoder",
   "summary": "Encodes ITF-14 (Interleaved 2 of 5) barcodes.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
       "name": "Encode",
-      "kind": "Method",
       "summary": "Encodes an ITF-14 barcode. Accepts 13 digits (checksum calculated) or 14 digits (checksum verified).",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "content",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static Barcode1D Encode(string content)",
-      "xmlId": "M:CodeGlyphX.Itf.Itf14Encoder.Encode(System.String)",
-      "anchor": "method-encode-static-barcode1d-encode-string-content"
+      ]
     }
-  ]
+  ],
+  "properties": [],
+  "fields": [],
+  "events": []
 }

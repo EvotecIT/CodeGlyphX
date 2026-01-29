@@ -1,251 +1,94 @@
-{
+﻿{
   "name": "QrPayloadType",
   "fullName": "CodeGlyphX.Payloads.QrPayloadType",
   "namespace": "CodeGlyphX.Payloads",
-  "kind": "Enum",
+  "kind": "Class",
   "slug": "codeglyphx-payloads-qrpayloadtype",
   "summary": "Known QR payload kinds.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
-    {
-      "name": "value__",
-      "kind": "Field",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int value__",
-      "xmlId": "F:CodeGlyphX.Payloads.QrPayloadType.value__",
-      "anchor": "field-value-int-value"
-    },
+  "methods": [],
+  "properties": [],
+  "fields": [
     {
       "name": "Text",
-      "kind": "Field",
-      "summary": "Unknown or plain text.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrPayloadType Text",
-      "xmlId": "F:CodeGlyphX.Payloads.QrPayloadType.Text",
-      "anchor": "field-text-qrpayloadtype-text"
+      "summary": "Unknown or plain text."
     },
     {
       "name": "Url",
-      "kind": "Field",
-      "summary": "URL payload.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrPayloadType Url",
-      "xmlId": "F:CodeGlyphX.Payloads.QrPayloadType.Url",
-      "anchor": "field-url-qrpayloadtype-url"
+      "summary": "URL payload."
     },
     {
       "name": "Email",
-      "kind": "Field",
-      "summary": "Email payload.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrPayloadType Email",
-      "xmlId": "F:CodeGlyphX.Payloads.QrPayloadType.Email",
-      "anchor": "field-email-qrpayloadtype-email"
+      "summary": "Email payload."
     },
     {
       "name": "Phone",
-      "kind": "Field",
-      "summary": "Phone payload.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrPayloadType Phone",
-      "xmlId": "F:CodeGlyphX.Payloads.QrPayloadType.Phone",
-      "anchor": "field-phone-qrpayloadtype-phone"
+      "summary": "Phone payload."
     },
     {
       "name": "Sms",
-      "kind": "Field",
-      "summary": "SMS payload.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrPayloadType Sms",
-      "xmlId": "F:CodeGlyphX.Payloads.QrPayloadType.Sms",
-      "anchor": "field-sms-qrpayloadtype-sms"
+      "summary": "SMS payload."
     },
     {
       "name": "Wifi",
-      "kind": "Field",
-      "summary": "WiFi payload.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrPayloadType Wifi",
-      "xmlId": "F:CodeGlyphX.Payloads.QrPayloadType.Wifi",
-      "anchor": "field-wifi-qrpayloadtype-wifi"
+      "summary": "WiFi payload."
     },
     {
       "name": "Upi",
-      "kind": "Field",
-      "summary": "UPI payload.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrPayloadType Upi",
-      "xmlId": "F:CodeGlyphX.Payloads.QrPayloadType.Upi",
-      "anchor": "field-upi-qrpayloadtype-upi"
+      "summary": "UPI payload."
     },
     {
       "name": "Geo",
-      "kind": "Field",
-      "summary": "Geo payload.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrPayloadType Geo",
-      "xmlId": "F:CodeGlyphX.Payloads.QrPayloadType.Geo",
-      "anchor": "field-geo-qrpayloadtype-geo"
+      "summary": "Geo payload."
     },
     {
       "name": "MeCard",
-      "kind": "Field",
-      "summary": "MeCard payload.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrPayloadType MeCard",
-      "xmlId": "F:CodeGlyphX.Payloads.QrPayloadType.MeCard",
-      "anchor": "field-mecard-qrpayloadtype-mecard"
+      "summary": "MeCard payload."
     },
     {
       "name": "VCard",
-      "kind": "Field",
-      "summary": "vCard payload.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrPayloadType VCard",
-      "xmlId": "F:CodeGlyphX.Payloads.QrPayloadType.VCard",
-      "anchor": "field-vcard-qrpayloadtype-vcard"
+      "summary": "vCard payload."
     },
     {
       "name": "Calendar",
-      "kind": "Field",
-      "summary": "Calendar payload.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrPayloadType Calendar",
-      "xmlId": "F:CodeGlyphX.Payloads.QrPayloadType.Calendar",
-      "anchor": "field-calendar-qrpayloadtype-calendar"
+      "summary": "Calendar payload."
     },
     {
       "name": "Otp",
-      "kind": "Field",
-      "summary": "OTP payload.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrPayloadType Otp",
-      "xmlId": "F:CodeGlyphX.Payloads.QrPayloadType.Otp",
-      "anchor": "field-otp-qrpayloadtype-otp"
+      "summary": "OTP payload."
     },
     {
       "name": "AppStore",
-      "kind": "Field",
-      "summary": "App Store payload.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrPayloadType AppStore",
-      "xmlId": "F:CodeGlyphX.Payloads.QrPayloadType.AppStore",
-      "anchor": "field-appstore-qrpayloadtype-appstore"
+      "summary": "App Store payload."
     },
     {
       "name": "Social",
-      "kind": "Field",
-      "summary": "Social profile payload.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrPayloadType Social",
-      "xmlId": "F:CodeGlyphX.Payloads.QrPayloadType.Social",
-      "anchor": "field-social-qrpayloadtype-social"
+      "summary": "Social profile payload."
     },
     {
       "name": "Bookmark",
-      "kind": "Field",
-      "summary": "Bookmark payload.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrPayloadType Bookmark",
-      "xmlId": "F:CodeGlyphX.Payloads.QrPayloadType.Bookmark",
-      "anchor": "field-bookmark-qrpayloadtype-bookmark"
+      "summary": "Bookmark payload."
     },
     {
       "name": "PayPal",
-      "kind": "Field",
-      "summary": "PayPal payment payload.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrPayloadType PayPal",
-      "xmlId": "F:CodeGlyphX.Payloads.QrPayloadType.PayPal",
-      "anchor": "field-paypal-qrpayloadtype-paypal"
+      "summary": "PayPal payment payload."
+    },
+    {
+      "name": "Crypto",
+      "summary": "Crypto/payment URI payload."
+    },
+    {
+      "name": "EmvCoMerchant",
+      "summary": "EMVCo merchant-presented payment payload."
+    },
+    {
+      "name": "Lightning",
+      "summary": "Lightning payment invoice (BOLT11/12)."
+    },
+    {
+      "name": "Eip681",
+      "summary": "EIP-681 Ethereum payment request."
     }
-  ]
+  ],
+  "events": []
 }

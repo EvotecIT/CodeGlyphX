@@ -1,0 +1,25 @@
+﻿{
+  "name": "DigitsOptional_0",
+  "fullName": "System.Text.RegularExpressions.Generated.DigitsOptional_0",
+  "namespace": "System.Text.RegularExpressions.Generated",
+  "kind": "Class",
+  "slug": "system-text-regularexpressions-generated-digitsoptional-0",
+  "summary": "Custom -derived type for the DigitsOptional method.",
+  "remarks": null,
+  "methods": [
+    {
+      "name": "#ctor",
+      "summary": "Initializes the instance.",
+      "returns": null,
+      "parameters": []
+    }
+  ],
+  "properties": [],
+  "fields": [
+    {
+      "name": "Instance",
+      "summary": "Cached, thread-safe singleton instance."
+    }
+  ],
+  "events": []
+}

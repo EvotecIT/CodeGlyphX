@@ -1,125 +1,54 @@
-{
+﻿{
   "name": "QrArtWarningKind",
   "fullName": "CodeGlyphX.QrArtWarningKind",
   "namespace": "CodeGlyphX",
-  "kind": "Enum",
+  "kind": "Class",
   "slug": "codeglyphx-qrartwarningkind",
   "summary": "Warning kinds for QR art safety evaluation.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
-    {
-      "name": "value__",
-      "kind": "Field",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int value__",
-      "xmlId": "F:CodeGlyphX.QrArtWarningKind.value__",
-      "anchor": "field-value-int-value"
-    },
+  "methods": [],
+  "properties": [],
+  "fields": [
     {
       "name": "QuietZoneTooSmall",
-      "kind": "Field",
-      "summary": "Quiet zone is below the recommended size (4 modules).",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrArtWarningKind QuietZoneTooSmall",
-      "xmlId": "F:CodeGlyphX.QrArtWarningKind.QuietZoneTooSmall",
-      "anchor": "field-quietzonetoosmall-qrartwarningkind-quietzonetoosmall"
+      "summary": "Quiet zone is below the recommended size (4 modules)."
     },
     {
       "name": "ModuleSizeTooSmall",
-      "kind": "Field",
-      "summary": "Module size is too small for reliable scanning.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrArtWarningKind ModuleSizeTooSmall",
-      "xmlId": "F:CodeGlyphX.QrArtWarningKind.ModuleSizeTooSmall",
-      "anchor": "field-modulesizetoosmall-qrartwarningkind-modulesizetoosmall"
+      "summary": "Module size is too small for reliable scanning."
     },
     {
       "name": "LowContrast",
-      "kind": "Field",
-      "summary": "Contrast between foreground and background is too low.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrArtWarningKind LowContrast",
-      "xmlId": "F:CodeGlyphX.QrArtWarningKind.LowContrast",
-      "anchor": "field-lowcontrast-qrartwarningkind-lowcontrast"
+      "summary": "Contrast between foreground and background is too low."
     },
     {
       "name": "LowContrastGradient",
-      "kind": "Field",
-      "summary": "Gradient includes colors with low contrast against the background.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrArtWarningKind LowContrastGradient",
-      "xmlId": "F:CodeGlyphX.QrArtWarningKind.LowContrastGradient",
-      "anchor": "field-lowcontrastgradient-qrartwarningkind-lowcontrastgradient"
+      "summary": "Gradient includes colors with low contrast against the background."
+    },
+    {
+      "name": "LowContrastPalette",
+      "summary": "Palette includes colors with low contrast against the background."
     },
     {
       "name": "ModuleScaleTooSmall",
-      "kind": "Field",
-      "summary": "Module scale is too small (excessive rounding or shrink).",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrArtWarningKind ModuleScaleTooSmall",
-      "xmlId": "F:CodeGlyphX.QrArtWarningKind.ModuleScaleTooSmall",
-      "anchor": "field-modulescaletoosmall-qrartwarningkind-modulescaletoosmall"
+      "summary": "Module scale is too small (excessive rounding or shrink)."
+    },
+    {
+      "name": "FunctionalPatternsUnprotected",
+      "summary": "Functional patterns are not protected while decorative styling is enabled."
+    },
+    {
+      "name": "QuietZonePatterned",
+      "summary": "Background pattern may be drawn into the quiet zone."
     },
     {
       "name": "LogoTooLarge",
-      "kind": "Field",
-      "summary": "Logo covers too much of the QR area.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrArtWarningKind LogoTooLarge",
-      "xmlId": "F:CodeGlyphX.QrArtWarningKind.LogoTooLarge",
-      "anchor": "field-logotoolarge-qrartwarningkind-logotoolarge"
+      "summary": "Logo covers too much of the QR area."
     },
     {
       "name": "LogoNeedsHighEcc",
-      "kind": "Field",
-      "summary": "Logo is used with low error correction.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrArtWarningKind LogoNeedsHighEcc",
-      "xmlId": "F:CodeGlyphX.QrArtWarningKind.LogoNeedsHighEcc",
-      "anchor": "field-logoneedshighecc-qrartwarningkind-logoneedshighecc"
+      "summary": "Logo is used with low error correction."
     }
-  ]
+  ],
+  "events": []
 }

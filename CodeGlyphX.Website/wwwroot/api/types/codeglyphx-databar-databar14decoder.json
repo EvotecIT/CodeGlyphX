@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "DataBar14Decoder",
   "fullName": "CodeGlyphX.DataBar.DataBar14Decoder",
   "namespace": "CodeGlyphX.DataBar",
@@ -6,108 +6,77 @@
   "slug": "codeglyphx-databar-databar14decoder",
   "summary": "Decodes GS1 DataBar-14 symbols (Truncated / Omni / Stacked).",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
       "name": "TryDecodeTruncated",
-      "kind": "Method",
-      "summary": "Attempts to decode a GS1 DataBar-14 Truncated symbol from a CodeGlyphX.Barcode1D.",
-      "remarks": null,
+      "summary": "Attempts to decode a GS1 DataBar-14 Truncated symbol from a .",
       "returns": null,
       "parameters": [
         {
-          "name": "barcode",
-          "type": "Barcode1D",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.Barcode1D",
+          "summary": null
         },
         {
-          "name": "content",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecodeTruncated(Barcode1D barcode, out string content)",
-      "xmlId": "M:CodeGlyphX.DataBar.DataBar14Decoder.TryDecodeTruncated(CodeGlyphX.Barcode1D,System.String@)",
-      "anchor": "method-trydecodetruncated-static-bool-trydecodetruncated-barcode1d-barcode-out-string-content"
+      ]
     },
     {
       "name": "TryDecodeTruncated",
-      "kind": "Method",
       "summary": "Attempts to decode a GS1 DataBar-14 Truncated symbol from a module array.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "modules",
-          "type": "bool[]",
-          "description": null
+          "name": "arg1",
+          "type": "System.Boolean[]",
+          "summary": null
         },
         {
-          "name": "content",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecodeTruncated(bool[] modules, out string content)",
-      "xmlId": "M:CodeGlyphX.DataBar.DataBar14Decoder.TryDecodeTruncated(System.Boolean[],System.String@)",
-      "anchor": "method-trydecodetruncated-static-bool-trydecodetruncated-bool-modules-out-string-content"
+      ]
     },
     {
       "name": "TryDecodeOmni",
-      "kind": "Method",
-      "summary": "Attempts to decode a GS1 DataBar-14 Omnidirectional symbol from a CodeGlyphX.BitMatrix.",
-      "remarks": null,
+      "summary": "Attempts to decode a GS1 DataBar-14 Omnidirectional symbol from a .",
       "returns": null,
       "parameters": [
         {
-          "name": "modules",
-          "type": "BitMatrix",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.BitMatrix",
+          "summary": null
         },
         {
-          "name": "content",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecodeOmni(BitMatrix modules, out string content)",
-      "xmlId": "M:CodeGlyphX.DataBar.DataBar14Decoder.TryDecodeOmni(CodeGlyphX.BitMatrix,System.String@)",
-      "anchor": "method-trydecodeomni-static-bool-trydecodeomni-bitmatrix-modules-out-string-content"
+      ]
     },
     {
       "name": "TryDecodeStacked",
-      "kind": "Method",
-      "summary": "Attempts to decode a GS1 DataBar-14 Stacked symbol from a CodeGlyphX.BitMatrix.",
-      "remarks": null,
+      "summary": "Attempts to decode a GS1 DataBar-14 Stacked symbol from a .",
       "returns": null,
       "parameters": [
         {
-          "name": "modules",
-          "type": "BitMatrix",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.BitMatrix",
+          "summary": null
         },
         {
-          "name": "content",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecodeStacked(BitMatrix modules, out string content)",
-      "xmlId": "M:CodeGlyphX.DataBar.DataBar14Decoder.TryDecodeStacked(CodeGlyphX.BitMatrix,System.String@)",
-      "anchor": "method-trydecodestacked-static-bool-trydecodestacked-bitmatrix-modules-out-string-content"
+      ]
     }
-  ]
+  ],
+  "properties": [],
+  "fields": [],
+  "events": []
 }

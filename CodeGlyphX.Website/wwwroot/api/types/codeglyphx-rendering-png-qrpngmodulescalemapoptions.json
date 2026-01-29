@@ -1,0 +1,43 @@
+﻿{
+  "name": "QrPngModuleScaleMapOptions",
+  "fullName": "CodeGlyphX.Rendering.Png.QrPngModuleScaleMapOptions",
+  "namespace": "CodeGlyphX.Rendering.Png",
+  "kind": "Class",
+  "slug": "codeglyphx-rendering-png-qrpngmodulescalemapoptions",
+  "summary": "Options for per-module scale mapping.",
+  "remarks": null,
+  "methods": [],
+  "properties": [
+    {
+      "name": "Mode",
+      "summary": "Gets or sets the scale map mode."
+    },
+    {
+      "name": "MinScale",
+      "summary": "Gets or sets the minimum scale factor (0.1..1.0)."
+    },
+    {
+      "name": "MaxScale",
+      "summary": "Gets or sets the maximum scale factor (0.1..1.0)."
+    },
+    {
+      "name": "RingSize",
+      "summary": "Gets or sets the ring size in modules for ."
+    },
+    {
+      "name": "Seed",
+      "summary": "Gets or sets the random seed for ."
+    },
+    {
+      "name": "ApplyToEyes",
+      "summary": "When true, applies scale mapping to finder (eye) modules."
+    }
+  ],
+  "fields": [
+    {
+      "name": "DefaultRingSize",
+      "summary": "Default ring size (in modules) for ."
+    }
+  ],
+  "events": []
+}

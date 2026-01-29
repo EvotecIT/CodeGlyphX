@@ -1,69 +1,26 @@
-{
+﻿{
   "name": "QrFnc1Mode",
   "fullName": "CodeGlyphX.QrFnc1Mode",
   "namespace": "CodeGlyphX",
-  "kind": "Enum",
+  "kind": "Class",
   "slug": "codeglyphx-qrfnc1mode",
   "summary": "Indicates presence of FNC1 mode in a QR payload.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
-    {
-      "name": "value__",
-      "kind": "Field",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int value__",
-      "xmlId": "F:CodeGlyphX.QrFnc1Mode.value__",
-      "anchor": "field-value-int-value"
-    },
+  "methods": [],
+  "properties": [],
+  "fields": [
     {
       "name": "None",
-      "kind": "Field",
-      "summary": "No FNC1 mode present.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrFnc1Mode None",
-      "xmlId": "F:CodeGlyphX.QrFnc1Mode.None",
-      "anchor": "field-none-qrfnc1mode-none"
+      "summary": "No FNC1 mode present."
     },
     {
       "name": "FirstPosition",
-      "kind": "Field",
-      "summary": "FNC1 in first position (GS1).",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrFnc1Mode FirstPosition",
-      "xmlId": "F:CodeGlyphX.QrFnc1Mode.FirstPosition",
-      "anchor": "field-firstposition-qrfnc1mode-firstposition"
+      "summary": "FNC1 in first position (GS1)."
     },
     {
       "name": "SecondPosition",
-      "kind": "Field",
-      "summary": "FNC1 in second position.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrFnc1Mode SecondPosition",
-      "xmlId": "F:CodeGlyphX.QrFnc1Mode.SecondPosition",
-      "anchor": "field-secondposition-qrfnc1mode-secondposition"
+      "summary": "FNC1 in second position."
     }
-  ]
+  ],
+  "events": []
 }

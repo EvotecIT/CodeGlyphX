@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "OtpQrSafety",
   "fullName": "CodeGlyphX.OtpQrSafety",
   "namespace": "CodeGlyphX",
@@ -6,105 +6,61 @@
   "slug": "codeglyphx-otpqrsafety",
   "summary": "Safety checks for OTP QR rendering parameters.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
       "name": "GetContrastRatio",
-      "kind": "Method",
       "summary": "Computes a contrast ratio between two colors (1.0..21.0).",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "foreground",
-          "type": "Rgba32",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.Rendering.Png.Rgba32",
+          "summary": null
         },
         {
-          "name": "background",
-          "type": "Rgba32",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.Rendering.Png.Rgba32",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static double GetContrastRatio(Rgba32 foreground, Rgba32 background)",
-      "xmlId": "M:CodeGlyphX.OtpQrSafety.GetContrastRatio(CodeGlyphX.Rendering.Png.Rgba32,CodeGlyphX.Rendering.Png.Rgba32)",
-      "anchor": "method-getcontrastratio-static-double-getcontrastratio-rgba32-foreground-rgba32-background"
+      ]
     },
     {
       "name": "Evaluate",
-      "kind": "Method",
       "summary": "Evaluates OTP scan safety for a rendered QR code.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "qr",
-          "type": "QrCode",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.QrCode",
+          "summary": null
         },
         {
-          "name": "opts",
-          "type": "QrPngRenderOptions",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.Rendering.Png.QrPngRenderOptions",
+          "summary": null
         },
         {
-          "name": "requireHighEcc",
-          "type": "bool",
-          "description": null
+          "name": "arg3",
+          "type": "System.Boolean",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static OtpQrSafetyReport Evaluate(QrCode qr, QrPngRenderOptions opts, bool requireHighEcc)",
-      "xmlId": "M:CodeGlyphX.OtpQrSafety.Evaluate(CodeGlyphX.QrCode,CodeGlyphX.Rendering.Png.QrPngRenderOptions,System.Boolean)",
-      "anchor": "method-evaluate-static-otpqrsafetyreport-evaluate-qrcode-qr-qrpngrenderoptions-opts-bool-requirehighecc"
-    },
+      ]
+    }
+  ],
+  "properties": [],
+  "fields": [
     {
       "name": "RecommendedQuietZone",
-      "kind": "Field",
-      "summary": "Recommended quiet zone size in modules.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int RecommendedQuietZone",
-      "xmlId": "F:CodeGlyphX.OtpQrSafety.RecommendedQuietZone",
-      "anchor": "field-recommendedquietzone-int-recommendedquietzone"
+      "summary": "Recommended quiet zone size in modules."
     },
     {
       "name": "RecommendedModuleSize",
-      "kind": "Field",
-      "summary": "Recommended module size in pixels.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int RecommendedModuleSize",
-      "xmlId": "F:CodeGlyphX.OtpQrSafety.RecommendedModuleSize",
-      "anchor": "field-recommendedmodulesize-int-recommendedmodulesize"
+      "summary": "Recommended module size in pixels."
     },
     {
       "name": "MinimumContrastRatio",
-      "kind": "Field",
-      "summary": "Minimum recommended contrast ratio between foreground and background.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "double MinimumContrastRatio",
-      "xmlId": "F:CodeGlyphX.OtpQrSafety.MinimumContrastRatio",
-      "anchor": "field-minimumcontrastratio-double-minimumcontrastratio"
+      "summary": "Minimum recommended contrast ratio between foreground and background."
     }
-  ]
+  ],
+  "events": []
 }

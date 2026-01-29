@@ -1,0 +1,46 @@
+﻿{
+  "name": "QrPngEyeFrameStyle",
+  "fullName": "CodeGlyphX.Rendering.Png.QrPngEyeFrameStyle",
+  "namespace": "CodeGlyphX.Rendering.Png",
+  "kind": "Class",
+  "slug": "codeglyphx-rendering-png-qrpngeyeframestyle",
+  "summary": "Eye (finder) frame styles.",
+  "remarks": null,
+  "methods": [],
+  "properties": [],
+  "fields": [
+    {
+      "name": "Single",
+      "summary": "Single outer frame with inner dot."
+    },
+    {
+      "name": "DoubleRing",
+      "summary": "Two concentric rings (no center dot)."
+    },
+    {
+      "name": "Target",
+      "summary": "Two concentric rings with a center dot."
+    },
+    {
+      "name": "Bracket",
+      "summary": "Corner brackets (L-shapes) around the eye."
+    },
+    {
+      "name": "Badge",
+      "summary": "Bold badge frame with thicker border."
+    },
+    {
+      "name": "Glow",
+      "summary": "Single frame with a soft glow halo behind it."
+    },
+    {
+      "name": "InsetRing",
+      "summary": "Outer ring with an inset inner ring and a clear center."
+    },
+    {
+      "name": "CutCorner",
+      "summary": "Square frame with corners cut away for a tech-like look."
+    }
+  ],
+  "events": []
+}

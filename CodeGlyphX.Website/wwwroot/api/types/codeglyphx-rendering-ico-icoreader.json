@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "IcoReader",
   "fullName": "CodeGlyphX.Rendering.Ico.IcoReader",
   "namespace": "CodeGlyphX.Rendering.Ico",
@@ -6,58 +6,43 @@
   "slug": "codeglyphx-rendering-ico-icoreader",
   "summary": "Decodes ICO/CUR images to RGBA buffers (embedded PNG or BMP/DIB).",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
       "name": "IsIco",
-      "kind": "Method",
       "summary": "Returns true if the data looks like an ICO/CUR header.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "data",
-          "type": "ReadOnlySpan\u003Cbyte\u003E",
-          "description": null
+          "name": "arg1",
+          "type": "System.ReadOnlySpan{System.Byte}",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool IsIco(ReadOnlySpan\u003Cbyte\u003E data)",
-      "xmlId": "M:CodeGlyphX.Rendering.Ico.IcoReader.IsIco(System.ReadOnlySpan{System.Byte})",
-      "anchor": "method-isico-static-bool-isico-readonlyspan-byte-data"
+      ]
     },
     {
       "name": "DecodeRgba32",
-      "kind": "Method",
       "summary": "Decodes an ICO/CUR image to an RGBA buffer.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "ico",
-          "type": "ReadOnlySpan\u003Cbyte\u003E",
-          "description": null
+          "name": "arg1",
+          "type": "System.ReadOnlySpan{System.Byte}",
+          "summary": null
         },
         {
-          "name": "width",
-          "type": "int",
-          "description": null
+          "name": "arg2",
+          "type": "System.Int32@",
+          "summary": null
         },
         {
-          "name": "height",
-          "type": "int",
-          "description": null
+          "name": "arg3",
+          "type": "System.Int32@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static byte[] DecodeRgba32(ReadOnlySpan\u003Cbyte\u003E ico, out int width, out int height)",
-      "xmlId": "M:CodeGlyphX.Rendering.Ico.IcoReader.DecodeRgba32(System.ReadOnlySpan{System.Byte},System.Int32@,System.Int32@)",
-      "anchor": "method-decodergba32-static-byte-decodergba32-readonlyspan-byte-ico-out-int-width-out-int-height"
+      ]
     }
-  ]
+  ],
+  "properties": [],
+  "fields": [],
+  "events": []
 }

@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "QrPayloadData",
   "fullName": "CodeGlyphX.Payloads.QrPayloadData",
   "namespace": "CodeGlyphX.Payloads",
@@ -6,137 +6,68 @@
   "slug": "codeglyphx-payloads-qrpayloaddata",
   "summary": "QR payload with optional encoding/version defaults.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
-      "name": "QrPayloadData",
-      "kind": "Constructor",
+      "name": "#ctor",
       "summary": "Creates a payload with optional encoding/version defaults.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "text",
-          "type": "string",
-          "description": "Payload text."
+          "type": "System.String",
+          "summary": "Payload text."
         },
         {
           "name": "errorCorrectionLevel",
-          "type": "Nullable\u003CQrErrorCorrectionLevel\u003E",
-          "description": "Optional error correction level recommendation."
+          "type": "System.Nullable{CodeGlyphX.QrErrorCorrectionLevel}",
+          "summary": "Optional error correction level recommendation."
         },
         {
           "name": "minVersion",
-          "type": "Nullable\u003Cint\u003E",
-          "description": "Optional minimum QR version."
+          "type": "System.Nullable{System.Int32}",
+          "summary": "Optional minimum QR version."
         },
         {
           "name": "maxVersion",
-          "type": "Nullable\u003Cint\u003E",
-          "description": "Optional maximum QR version."
+          "type": "System.Nullable{System.Int32}",
+          "summary": "Optional maximum QR version."
         },
         {
           "name": "textEncoding",
-          "type": "Nullable\u003CQrTextEncoding\u003E",
-          "description": "Optional text encoding recommendation."
+          "type": "System.Nullable{CodeGlyphX.QrTextEncoding}",
+          "summary": "Optional text encoding recommendation."
         }
-      ],
-      "exceptions": [
-        {
-          "type": "System.ArgumentNullException",
-          "description": "Thrown when is null."
-        }
-      ],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrPayloadData(string text, Nullable\u003CQrErrorCorrectionLevel\u003E errorCorrectionLevel, Nullable\u003Cint\u003E minVersion, Nullable\u003Cint\u003E maxVersion, Nullable\u003CQrTextEncoding\u003E textEncoding)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrPayloadData.#ctor(System.String,System.Nullable{CodeGlyphX.QrErrorCorrectionLevel},System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{CodeGlyphX.QrTextEncoding})",
-      "anchor": "constructor-qrpayloaddata-qrpayloaddata-string-text-nullable-qrerrorcorrectionlevel-errorcorrectionlevel-nullable-int-minversion-nullable-int-maxversion-nullable-qrtextencoding-textencoding"
+      ]
     },
     {
       "name": "ToString",
-      "kind": "Method",
       "summary": "Returns the payload text.",
-      "remarks": null,
       "returns": "Payload text.",
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string ToString()",
-      "xmlId": "M:CodeGlyphX.Payloads.QrPayloadData.ToString",
-      "anchor": "method-tostring-string-tostring"
-    },
+      "parameters": []
+    }
+  ],
+  "properties": [
     {
       "name": "Text",
-      "kind": "Property",
-      "summary": "Payload text.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string Text {get; }",
-      "xmlId": "P:CodeGlyphX.Payloads.QrPayloadData.Text",
-      "anchor": "property-text-string-text-get"
+      "summary": "Payload text."
     },
     {
       "name": "ErrorCorrectionLevel",
-      "kind": "Property",
-      "summary": "Optional error correction level recommendation.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "Nullable\u003CQrErrorCorrectionLevel\u003E ErrorCorrectionLevel {get; }",
-      "xmlId": "P:CodeGlyphX.Payloads.QrPayloadData.ErrorCorrectionLevel",
-      "anchor": "property-errorcorrectionlevel-nullable-qrerrorcorrectionlevel-errorcorrectionlevel-get"
+      "summary": "Optional error correction level recommendation."
     },
     {
       "name": "MinVersion",
-      "kind": "Property",
-      "summary": "Optional minimum QR version.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "Nullable\u003Cint\u003E MinVersion {get; }",
-      "xmlId": "P:CodeGlyphX.Payloads.QrPayloadData.MinVersion",
-      "anchor": "property-minversion-nullable-int-minversion-get"
+      "summary": "Optional minimum QR version."
     },
     {
       "name": "MaxVersion",
-      "kind": "Property",
-      "summary": "Optional maximum QR version.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "Nullable\u003Cint\u003E MaxVersion {get; }",
-      "xmlId": "P:CodeGlyphX.Payloads.QrPayloadData.MaxVersion",
-      "anchor": "property-maxversion-nullable-int-maxversion-get"
+      "summary": "Optional maximum QR version."
     },
     {
       "name": "TextEncoding",
-      "kind": "Property",
-      "summary": "Optional text encoding recommendation.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "Nullable\u003CQrTextEncoding\u003E TextEncoding {get; }",
-      "xmlId": "P:CodeGlyphX.Payloads.QrPayloadData.TextEncoding",
-      "anchor": "property-textencoding-nullable-qrtextencoding-textencoding-get"
+      "summary": "Optional text encoding recommendation."
     }
-  ]
+  ],
+  "fields": [],
+  "events": []
 }

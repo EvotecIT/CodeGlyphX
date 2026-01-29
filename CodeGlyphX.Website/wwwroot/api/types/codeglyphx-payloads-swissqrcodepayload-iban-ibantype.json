@@ -1,55 +1,22 @@
-{
+﻿{
   "name": "IbanType",
   "fullName": "CodeGlyphX.Payloads.SwissQrCodePayload.Iban.IbanType",
-  "namespace": "CodeGlyphX.Payloads",
-  "kind": "Enum",
+  "namespace": "CodeGlyphX.Payloads.SwissQrCodePayload.Iban",
+  "kind": "Class",
   "slug": "codeglyphx-payloads-swissqrcodepayload-iban-ibantype",
   "summary": "IBAN type.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
-    {
-      "name": "value__",
-      "kind": "Field",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int value__",
-      "xmlId": "F:CodeGlyphX.Payloads.SwissQrCodePayload.Iban.IbanType.value__",
-      "anchor": "field-value-int-value"
-    },
+  "methods": [],
+  "properties": [],
+  "fields": [
     {
       "name": "Iban",
-      "kind": "Field",
-      "summary": "Standard IBAN.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "SwissQrCodePayload.Iban.IbanType Iban",
-      "xmlId": "F:CodeGlyphX.Payloads.SwissQrCodePayload.Iban.IbanType.Iban",
-      "anchor": "field-iban-swissqrcodepayload-iban-ibantype-iban"
+      "summary": "Standard IBAN."
     },
     {
       "name": "QrIban",
-      "kind": "Field",
-      "summary": "QR-IBAN.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "SwissQrCodePayload.Iban.IbanType QrIban",
-      "xmlId": "F:CodeGlyphX.Payloads.SwissQrCodePayload.Iban.IbanType.QrIban",
-      "anchor": "field-qriban-swissqrcodepayload-iban-ibantype-qriban"
+      "summary": "QR-IBAN."
     }
-  ]
+  ],
+  "events": []
 }

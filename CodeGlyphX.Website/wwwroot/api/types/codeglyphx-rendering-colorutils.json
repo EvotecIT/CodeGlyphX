@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "ColorUtils",
   "fullName": "CodeGlyphX.Rendering.ColorUtils",
   "namespace": "CodeGlyphX.Rendering",
@@ -6,28 +6,21 @@
   "slug": "codeglyphx-rendering-colorutils",
   "summary": "Helpers for converting colors to CSS-friendly strings.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
       "name": "ToCss",
-      "kind": "Method",
       "summary": "Converts an RGBA color to a CSS color string.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "color",
-          "type": "Rgba32",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.Rendering.Png.Rgba32",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string ToCss(Rgba32 color)",
-      "xmlId": "M:CodeGlyphX.Rendering.ColorUtils.ToCss(CodeGlyphX.Rendering.Png.Rgba32)",
-      "anchor": "method-tocss-static-string-tocss-rgba32-color"
+      ]
     }
-  ]
+  ],
+  "properties": [],
+  "fields": [],
+  "events": []
 }

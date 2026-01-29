@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "MatrixOptions",
   "fullName": "CodeGlyphX.MatrixOptions",
   "namespace": "CodeGlyphX",
@@ -6,134 +6,45 @@
   "slug": "codeglyphx-matrixoptions",
   "summary": "Simplified rendering options for 2D matrices (Data Matrix, PDF417).",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
-    {
-      "name": "MatrixOptions",
-      "kind": "Constructor",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "MatrixOptions()",
-      "xmlId": "M:CodeGlyphX.MatrixOptions.#ctor",
-      "anchor": "constructor-matrixoptions-matrixoptions"
-    },
+  "methods": [],
+  "properties": [
     {
       "name": "ModuleSize",
-      "kind": "Property",
-      "summary": "Module size in pixels.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int ModuleSize {get; set; }",
-      "xmlId": "P:CodeGlyphX.MatrixOptions.ModuleSize",
-      "anchor": "property-modulesize-int-modulesize-get-set"
+      "summary": "Module size in pixels."
     },
     {
       "name": "QuietZone",
-      "kind": "Property",
-      "summary": "Quiet zone size in modules.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int QuietZone {get; set; }",
-      "xmlId": "P:CodeGlyphX.MatrixOptions.QuietZone",
-      "anchor": "property-quietzone-int-quietzone-get-set"
+      "summary": "Quiet zone size in modules."
     },
     {
       "name": "Foreground",
-      "kind": "Property",
-      "summary": "Foreground color.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "Rgba32 Foreground {get; set; }",
-      "xmlId": "P:CodeGlyphX.MatrixOptions.Foreground",
-      "anchor": "property-foreground-rgba32-foreground-get-set"
+      "summary": "Foreground color."
     },
     {
       "name": "Background",
-      "kind": "Property",
-      "summary": "Background color.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "Rgba32 Background {get; set; }",
-      "xmlId": "P:CodeGlyphX.MatrixOptions.Background",
-      "anchor": "property-background-rgba32-background-get-set"
+      "summary": "Background color."
     },
     {
       "name": "JpegQuality",
-      "kind": "Property",
-      "summary": "JPEG quality (1..100).",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int JpegQuality {get; set; }",
-      "xmlId": "P:CodeGlyphX.MatrixOptions.JpegQuality",
-      "anchor": "property-jpegquality-int-jpegquality-get-set"
+      "summary": "JPEG quality (1..100)."
+    },
+    {
+      "name": "WebpQuality",
+      "summary": "WebP quality (0..100). A value of 100 uses lossless VP8L."
     },
     {
       "name": "IcoSizes",
-      "kind": "Property",
-      "summary": "ICO output sizes in pixels (1..256). Defaults to common icon sizes.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int[] IcoSizes {get; set; }",
-      "xmlId": "P:CodeGlyphX.MatrixOptions.IcoSizes",
-      "anchor": "property-icosizes-int-icosizes-get-set"
+      "summary": "ICO output sizes in pixels (1..256). Defaults to common icon sizes."
     },
     {
       "name": "IcoPreserveAspectRatio",
-      "kind": "Property",
-      "summary": "When true, preserves aspect ratio and pads to square for ICO.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "bool IcoPreserveAspectRatio {get; set; }",
-      "xmlId": "P:CodeGlyphX.MatrixOptions.IcoPreserveAspectRatio",
-      "anchor": "property-icopreserveaspectratio-bool-icopreserveaspectratio-get-set"
+      "summary": "When true, preserves aspect ratio and pads to square for ICO."
     },
     {
       "name": "HtmlEmailSafeTable",
-      "kind": "Property",
-      "summary": "When true, renders HTML using email-safe tables.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "bool HtmlEmailSafeTable {get; set; }",
-      "xmlId": "P:CodeGlyphX.MatrixOptions.HtmlEmailSafeTable",
-      "anchor": "property-htmlemailsafetable-bool-htmlemailsafetable-get-set"
+      "summary": "When true, renders HTML using email-safe tables."
     }
-  ]
+  ],
+  "fields": [],
+  "events": []
 }

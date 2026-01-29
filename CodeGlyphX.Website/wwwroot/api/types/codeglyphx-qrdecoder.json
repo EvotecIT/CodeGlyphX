@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "QrDecoder",
   "fullName": "CodeGlyphX.QrDecoder",
   "namespace": "CodeGlyphX",
@@ -6,1388 +6,1165 @@
   "slug": "codeglyphx-qrdecoder",
   "summary": "Decodes QR codes from a module grid or from raw pixels (clean images).",
   "remarks": "Current scope: byte \u002B kanji payloads on clean/generated images and clean on-screen QR codes.",
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
       "name": "TryDecode",
-      "kind": "Method",
       "summary": "Attempts to decode a QR code from an exact module grid (no quiet zone).",
-      "remarks": null,
       "returns": "true when decoding succeeded; otherwise false.",
       "parameters": [
         {
           "name": "modules",
-          "type": "BitMatrix",
-          "description": "Square matrix of QR modules (dark = true)."
+          "type": "CodeGlyphX.BitMatrix",
+          "summary": "Square matrix of QR modules (dark = true)."
         },
         {
           "name": "result",
-          "type": "QrDecoded",
-          "description": "Decoded payload."
+          "type": "CodeGlyphX.QrDecoded@",
+          "summary": "Decoded payload."
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecode(BitMatrix modules, out QrDecoded result)",
-      "xmlId": "M:CodeGlyphX.QrDecoder.TryDecode(CodeGlyphX.BitMatrix,CodeGlyphX.QrDecoded@)",
-      "anchor": "method-trydecode-static-bool-trydecode-bitmatrix-modules-out-qrdecoded-result"
+      ]
     },
     {
       "name": "TryDecode",
-      "kind": "Method",
       "summary": "Attempts to decode a QR code from an exact module grid (no quiet zone), with diagnostics.",
-      "remarks": null,
       "returns": "true when decoding succeeded; otherwise false.",
       "parameters": [
         {
           "name": "modules",
-          "type": "BitMatrix",
-          "description": "Square matrix of QR modules (dark = true)."
+          "type": "CodeGlyphX.BitMatrix",
+          "summary": "Square matrix of QR modules (dark = true)."
         },
         {
           "name": "result",
-          "type": "QrDecoded",
-          "description": "Decoded payload."
+          "type": "CodeGlyphX.QrDecoded@",
+          "summary": "Decoded payload."
         },
         {
           "name": "info",
-          "type": "QrDecodeInfo",
-          "description": "Decode diagnostics."
+          "type": "CodeGlyphX.QrDecodeInfo@",
+          "summary": "Decode diagnostics."
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecode(BitMatrix modules, out QrDecoded result, out QrDecodeInfo info)",
-      "xmlId": "M:CodeGlyphX.QrDecoder.TryDecode(CodeGlyphX.BitMatrix,CodeGlyphX.QrDecoded@,CodeGlyphX.QrDecodeInfo@)",
-      "anchor": "method-trydecode-static-bool-trydecode-bitmatrix-modules-out-qrdecoded-result-out-qrdecodeinfo-info"
+      ]
     },
     {
       "name": "TryDecode",
-      "kind": "Method",
       "summary": "Attempts to decode a QR code from an exact module grid, with cancellation.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "modules",
-          "type": "BitMatrix",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.BitMatrix",
+          "summary": null
         },
         {
-          "name": "result",
-          "type": "QrDecoded",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.QrDecoded@",
+          "summary": null
         },
         {
-          "name": "cancellationToken",
-          "type": "CancellationToken",
-          "description": null
+          "name": "arg3",
+          "type": "System.Threading.CancellationToken",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecode(BitMatrix modules, out QrDecoded result, CancellationToken cancellationToken)",
-      "xmlId": "M:CodeGlyphX.QrDecoder.TryDecode(CodeGlyphX.BitMatrix,CodeGlyphX.QrDecoded@,System.Threading.CancellationToken)",
-      "anchor": "method-trydecode-static-bool-trydecode-bitmatrix-modules-out-qrdecoded-result-cancellationtoken-cancellationtoken"
+      ]
     },
     {
       "name": "TryDecode",
-      "kind": "Method",
       "summary": "Attempts to decode a QR code from an exact module grid, with diagnostics and cancellation.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "modules",
-          "type": "BitMatrix",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.BitMatrix",
+          "summary": null
         },
         {
-          "name": "result",
-          "type": "QrDecoded",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.QrDecoded@",
+          "summary": null
         },
         {
-          "name": "info",
-          "type": "QrDecodeInfo",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.QrDecodeInfo@",
+          "summary": null
         },
         {
-          "name": "cancellationToken",
-          "type": "CancellationToken",
-          "description": null
+          "name": "arg4",
+          "type": "System.Threading.CancellationToken",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecode(BitMatrix modules, out QrDecoded result, out QrDecodeInfo info, CancellationToken cancellationToken)",
-      "xmlId": "M:CodeGlyphX.QrDecoder.TryDecode(CodeGlyphX.BitMatrix,CodeGlyphX.QrDecoded@,CodeGlyphX.QrDecodeInfo@,System.Threading.CancellationToken)",
-      "anchor": "method-trydecode-static-bool-trydecode-bitmatrix-modules-out-qrdecoded-result-out-qrdecodeinfo-info-cancellationtoken-cancellationtoken"
+      ]
     },
     {
       "name": "TryDecode",
-      "kind": "Method",
       "summary": "Attempts to decode a QR code from raw pixel data (best-effort, clean inputs).",
-      "remarks": null,
       "returns": "true when decoding succeeded; otherwise false.",
       "parameters": [
         {
           "name": "pixels",
-          "type": "ReadOnlySpan\u003Cbyte\u003E",
-          "description": "Pixel buffer."
+          "type": "System.ReadOnlySpan{System.Byte}",
+          "summary": "Pixel buffer."
         },
         {
           "name": "width",
-          "type": "int",
-          "description": "Image width in pixels."
+          "type": "System.Int32",
+          "summary": "Image width in pixels."
         },
         {
           "name": "height",
-          "type": "int",
-          "description": "Image height in pixels."
+          "type": "System.Int32",
+          "summary": "Image height in pixels."
         },
         {
           "name": "stride",
-          "type": "int",
-          "description": "Bytes per row."
+          "type": "System.Int32",
+          "summary": "Bytes per row."
         },
         {
           "name": "fmt",
-          "type": "PixelFormat",
-          "description": "Pixel format (4 bytes per pixel)."
+          "type": "CodeGlyphX.PixelFormat",
+          "summary": "Pixel format (4 bytes per pixel)."
         },
         {
           "name": "result",
-          "type": "QrDecoded",
-          "description": "Decoded payload."
+          "type": "CodeGlyphX.QrDecoded@",
+          "summary": "Decoded payload."
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecode(ReadOnlySpan\u003Cbyte\u003E pixels, int width, int height, int stride, PixelFormat fmt, out QrDecoded result)",
-      "xmlId": "M:CodeGlyphX.QrDecoder.TryDecode(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded@)",
-      "anchor": "method-trydecode-static-bool-trydecode-readonlyspan-byte-pixels-int-width-int-height-int-stride-pixelformat-fmt-out-qrdecoded-result"
+      ]
     },
     {
       "name": "TryDecode",
-      "kind": "Method",
       "summary": "Attempts to decode a QR code from raw pixel data (best-effort, clean inputs) using the specified profile.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "pixels",
-          "type": "ReadOnlySpan\u003Cbyte\u003E",
-          "description": null
+          "name": "arg1",
+          "type": "System.ReadOnlySpan{System.Byte}",
+          "summary": null
         },
         {
-          "name": "width",
-          "type": "int",
-          "description": null
+          "name": "arg2",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "height",
-          "type": "int",
-          "description": null
+          "name": "arg3",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "stride",
-          "type": "int",
-          "description": null
+          "name": "arg4",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "fmt",
-          "type": "PixelFormat",
-          "description": null
+          "name": "arg5",
+          "type": "CodeGlyphX.PixelFormat",
+          "summary": null
         },
         {
-          "name": "result",
-          "type": "QrDecoded",
-          "description": null
+          "name": "arg6",
+          "type": "CodeGlyphX.QrDecoded@",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrPixelDecodeOptions",
-          "description": null
+          "name": "arg7",
+          "type": "CodeGlyphX.QrPixelDecodeOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecode(ReadOnlySpan\u003Cbyte\u003E pixels, int width, int height, int stride, PixelFormat fmt, out QrDecoded result, QrPixelDecodeOptions options)",
-      "xmlId": "M:CodeGlyphX.QrDecoder.TryDecode(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded@,CodeGlyphX.QrPixelDecodeOptions)",
-      "anchor": "method-trydecode-static-bool-trydecode-readonlyspan-byte-pixels-int-width-int-height-int-stride-pixelformat-fmt-out-qrdecoded-result-qrpixeldecodeoptions-options"
+      ]
     },
     {
       "name": "TryDecode",
-      "kind": "Method",
       "summary": "Attempts to decode a QR code from raw pixel data (best-effort, clean inputs) using the specified profile, with cancellation.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "pixels",
-          "type": "ReadOnlySpan\u003Cbyte\u003E",
-          "description": null
+          "name": "arg1",
+          "type": "System.ReadOnlySpan{System.Byte}",
+          "summary": null
         },
         {
-          "name": "width",
-          "type": "int",
-          "description": null
+          "name": "arg2",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "height",
-          "type": "int",
-          "description": null
+          "name": "arg3",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "stride",
-          "type": "int",
-          "description": null
+          "name": "arg4",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "fmt",
-          "type": "PixelFormat",
-          "description": null
+          "name": "arg5",
+          "type": "CodeGlyphX.PixelFormat",
+          "summary": null
         },
         {
-          "name": "result",
-          "type": "QrDecoded",
-          "description": null
+          "name": "arg6",
+          "type": "CodeGlyphX.QrDecoded@",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrPixelDecodeOptions",
-          "description": null
+          "name": "arg7",
+          "type": "CodeGlyphX.QrPixelDecodeOptions",
+          "summary": null
         },
         {
-          "name": "cancellationToken",
-          "type": "CancellationToken",
-          "description": null
+          "name": "arg8",
+          "type": "System.Threading.CancellationToken",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecode(ReadOnlySpan\u003Cbyte\u003E pixels, int width, int height, int stride, PixelFormat fmt, out QrDecoded result, QrPixelDecodeOptions options, CancellationToken cancellationToken)",
-      "xmlId": "M:CodeGlyphX.QrDecoder.TryDecode(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded@,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken)",
-      "anchor": "method-trydecode-static-bool-trydecode-readonlyspan-byte-pixels-int-width-int-height-int-stride-pixelformat-fmt-out-qrdecoded-result-qrpixeldecodeoptions-options-cancellationtoken-cancellationtoken"
+      ]
     },
     {
       "name": "TryDecode",
-      "kind": "Method",
       "summary": "Attempts to decode a QR code from raw pixel data (best-effort, clean inputs), with diagnostics.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "pixels",
-          "type": "ReadOnlySpan\u003Cbyte\u003E",
-          "description": null
+          "name": "arg1",
+          "type": "System.ReadOnlySpan{System.Byte}",
+          "summary": null
         },
         {
-          "name": "width",
-          "type": "int",
-          "description": null
+          "name": "arg2",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "height",
-          "type": "int",
-          "description": null
+          "name": "arg3",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "stride",
-          "type": "int",
-          "description": null
+          "name": "arg4",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "fmt",
-          "type": "PixelFormat",
-          "description": null
+          "name": "arg5",
+          "type": "CodeGlyphX.PixelFormat",
+          "summary": null
         },
         {
-          "name": "result",
-          "type": "QrDecoded",
-          "description": null
+          "name": "arg6",
+          "type": "CodeGlyphX.QrDecoded@",
+          "summary": null
         },
         {
-          "name": "info",
-          "type": "QrPixelDecodeInfo",
-          "description": null
+          "name": "arg7",
+          "type": "CodeGlyphX.QrPixelDecodeInfo@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecode(ReadOnlySpan\u003Cbyte\u003E pixels, int width, int height, int stride, PixelFormat fmt, out QrDecoded result, out QrPixelDecodeInfo info)",
-      "xmlId": "M:CodeGlyphX.QrDecoder.TryDecode(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded@,CodeGlyphX.QrPixelDecodeInfo@)",
-      "anchor": "method-trydecode-static-bool-trydecode-readonlyspan-byte-pixels-int-width-int-height-int-stride-pixelformat-fmt-out-qrdecoded-result-out-qrpixeldecodeinfo-info"
+      ]
     },
     {
       "name": "TryDecode",
-      "kind": "Method",
       "summary": "Attempts to decode a QR code from raw pixel data (best-effort, clean inputs), with diagnostics and profile options.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "pixels",
-          "type": "ReadOnlySpan\u003Cbyte\u003E",
-          "description": null
+          "name": "arg1",
+          "type": "System.ReadOnlySpan{System.Byte}",
+          "summary": null
         },
         {
-          "name": "width",
-          "type": "int",
-          "description": null
+          "name": "arg2",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "height",
-          "type": "int",
-          "description": null
+          "name": "arg3",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "stride",
-          "type": "int",
-          "description": null
+          "name": "arg4",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "fmt",
-          "type": "PixelFormat",
-          "description": null
+          "name": "arg5",
+          "type": "CodeGlyphX.PixelFormat",
+          "summary": null
         },
         {
-          "name": "result",
-          "type": "QrDecoded",
-          "description": null
+          "name": "arg6",
+          "type": "CodeGlyphX.QrDecoded@",
+          "summary": null
         },
         {
-          "name": "info",
-          "type": "QrPixelDecodeInfo",
-          "description": null
+          "name": "arg7",
+          "type": "CodeGlyphX.QrPixelDecodeInfo@",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrPixelDecodeOptions",
-          "description": null
+          "name": "arg8",
+          "type": "CodeGlyphX.QrPixelDecodeOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecode(ReadOnlySpan\u003Cbyte\u003E pixels, int width, int height, int stride, PixelFormat fmt, out QrDecoded result, out QrPixelDecodeInfo info, QrPixelDecodeOptions options)",
-      "xmlId": "M:CodeGlyphX.QrDecoder.TryDecode(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded@,CodeGlyphX.QrPixelDecodeInfo@,CodeGlyphX.QrPixelDecodeOptions)",
-      "anchor": "method-trydecode-static-bool-trydecode-readonlyspan-byte-pixels-int-width-int-height-int-stride-pixelformat-fmt-out-qrdecoded-result-out-qrpixeldecodeinfo-info-qrpixeldecodeoptions-options"
+      ]
     },
     {
       "name": "TryDecode",
-      "kind": "Method",
       "summary": "Attempts to decode a QR code from raw pixel data (best-effort, clean inputs), with diagnostics, profile options, and cancellation.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "pixels",
-          "type": "ReadOnlySpan\u003Cbyte\u003E",
-          "description": null
+          "name": "arg1",
+          "type": "System.ReadOnlySpan{System.Byte}",
+          "summary": null
         },
         {
-          "name": "width",
-          "type": "int",
-          "description": null
+          "name": "arg2",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "height",
-          "type": "int",
-          "description": null
+          "name": "arg3",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "stride",
-          "type": "int",
-          "description": null
+          "name": "arg4",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "fmt",
-          "type": "PixelFormat",
-          "description": null
+          "name": "arg5",
+          "type": "CodeGlyphX.PixelFormat",
+          "summary": null
         },
         {
-          "name": "result",
-          "type": "QrDecoded",
-          "description": null
+          "name": "arg6",
+          "type": "CodeGlyphX.QrDecoded@",
+          "summary": null
         },
         {
-          "name": "info",
-          "type": "QrPixelDecodeInfo",
-          "description": null
+          "name": "arg7",
+          "type": "CodeGlyphX.QrPixelDecodeInfo@",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrPixelDecodeOptions",
-          "description": null
+          "name": "arg8",
+          "type": "CodeGlyphX.QrPixelDecodeOptions",
+          "summary": null
         },
         {
-          "name": "cancellationToken",
-          "type": "CancellationToken",
-          "description": null
+          "name": "arg9",
+          "type": "System.Threading.CancellationToken",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecode(ReadOnlySpan\u003Cbyte\u003E pixels, int width, int height, int stride, PixelFormat fmt, out QrDecoded result, out QrPixelDecodeInfo info, QrPixelDecodeOptions options, CancellationToken cancellationToken)",
-      "xmlId": "M:CodeGlyphX.QrDecoder.TryDecode(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded@,CodeGlyphX.QrPixelDecodeInfo@,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken)",
-      "anchor": "method-trydecode-static-bool-trydecode-readonlyspan-byte-pixels-int-width-int-height-int-stride-pixelformat-fmt-out-qrdecoded-result-out-qrpixeldecodeinfo-info-qrpixeldecodeoptions-options-cancellationtoken-cancellationtoken"
+      ]
     },
     {
       "name": "TryDecodeAll",
-      "kind": "Method",
       "summary": "Attempts to decode all QR codes from raw pixel data (best-effort, clean inputs).",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "pixels",
-          "type": "ReadOnlySpan\u003Cbyte\u003E",
-          "description": null
+          "name": "arg1",
+          "type": "System.ReadOnlySpan{System.Byte}",
+          "summary": null
         },
         {
-          "name": "width",
-          "type": "int",
-          "description": null
+          "name": "arg2",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "height",
-          "type": "int",
-          "description": null
+          "name": "arg3",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "stride",
-          "type": "int",
-          "description": null
+          "name": "arg4",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "fmt",
-          "type": "PixelFormat",
-          "description": null
+          "name": "arg5",
+          "type": "CodeGlyphX.PixelFormat",
+          "summary": null
         },
         {
-          "name": "results",
-          "type": "QrDecoded[]",
-          "description": null
+          "name": "arg6",
+          "type": "CodeGlyphX.QrDecoded[]@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecodeAll(ReadOnlySpan\u003Cbyte\u003E pixels, int width, int height, int stride, PixelFormat fmt, out QrDecoded[] results)",
-      "xmlId": "M:CodeGlyphX.QrDecoder.TryDecodeAll(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded[]@)",
-      "anchor": "method-trydecodeall-static-bool-trydecodeall-readonlyspan-byte-pixels-int-width-int-height-int-stride-pixelformat-fmt-out-qrdecoded-results"
+      ]
     },
     {
       "name": "TryDecodeAll",
-      "kind": "Method",
       "summary": "Attempts to decode all QR codes from raw pixel data (best-effort, clean inputs) using the specified profile.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "pixels",
-          "type": "ReadOnlySpan\u003Cbyte\u003E",
-          "description": null
+          "name": "arg1",
+          "type": "System.ReadOnlySpan{System.Byte}",
+          "summary": null
         },
         {
-          "name": "width",
-          "type": "int",
-          "description": null
+          "name": "arg2",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "height",
-          "type": "int",
-          "description": null
+          "name": "arg3",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "stride",
-          "type": "int",
-          "description": null
+          "name": "arg4",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "fmt",
-          "type": "PixelFormat",
-          "description": null
+          "name": "arg5",
+          "type": "CodeGlyphX.PixelFormat",
+          "summary": null
         },
         {
-          "name": "results",
-          "type": "QrDecoded[]",
-          "description": null
+          "name": "arg6",
+          "type": "CodeGlyphX.QrDecoded[]@",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrPixelDecodeOptions",
-          "description": null
+          "name": "arg7",
+          "type": "CodeGlyphX.QrPixelDecodeOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecodeAll(ReadOnlySpan\u003Cbyte\u003E pixels, int width, int height, int stride, PixelFormat fmt, out QrDecoded[] results, QrPixelDecodeOptions options)",
-      "xmlId": "M:CodeGlyphX.QrDecoder.TryDecodeAll(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded[]@,CodeGlyphX.QrPixelDecodeOptions)",
-      "anchor": "method-trydecodeall-static-bool-trydecodeall-readonlyspan-byte-pixels-int-width-int-height-int-stride-pixelformat-fmt-out-qrdecoded-results-qrpixeldecodeoptions-options"
+      ]
     },
     {
       "name": "TryDecodeAll",
-      "kind": "Method",
       "summary": "Attempts to decode all QR codes from raw pixel data (best-effort, clean inputs) using the specified profile, with cancellation.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "pixels",
-          "type": "ReadOnlySpan\u003Cbyte\u003E",
-          "description": null
+          "name": "arg1",
+          "type": "System.ReadOnlySpan{System.Byte}",
+          "summary": null
         },
         {
-          "name": "width",
-          "type": "int",
-          "description": null
+          "name": "arg2",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "height",
-          "type": "int",
-          "description": null
+          "name": "arg3",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "stride",
-          "type": "int",
-          "description": null
+          "name": "arg4",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "fmt",
-          "type": "PixelFormat",
-          "description": null
+          "name": "arg5",
+          "type": "CodeGlyphX.PixelFormat",
+          "summary": null
         },
         {
-          "name": "results",
-          "type": "QrDecoded[]",
-          "description": null
+          "name": "arg6",
+          "type": "CodeGlyphX.QrDecoded[]@",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrPixelDecodeOptions",
-          "description": null
+          "name": "arg7",
+          "type": "CodeGlyphX.QrPixelDecodeOptions",
+          "summary": null
         },
         {
-          "name": "cancellationToken",
-          "type": "CancellationToken",
-          "description": null
+          "name": "arg8",
+          "type": "System.Threading.CancellationToken",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecodeAll(ReadOnlySpan\u003Cbyte\u003E pixels, int width, int height, int stride, PixelFormat fmt, out QrDecoded[] results, QrPixelDecodeOptions options, CancellationToken cancellationToken)",
-      "xmlId": "M:CodeGlyphX.QrDecoder.TryDecodeAll(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded[]@,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken)",
-      "anchor": "method-trydecodeall-static-bool-trydecodeall-readonlyspan-byte-pixels-int-width-int-height-int-stride-pixelformat-fmt-out-qrdecoded-results-qrpixeldecodeoptions-options-cancellationtoken-cancellationtoken"
+      ]
     },
     {
       "name": "TryDecodeAll",
-      "kind": "Method",
       "summary": "Attempts to decode all QR codes from raw pixel data (best-effort, clean inputs), with diagnostics.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "pixels",
-          "type": "ReadOnlySpan\u003Cbyte\u003E",
-          "description": null
+          "name": "arg1",
+          "type": "System.ReadOnlySpan{System.Byte}",
+          "summary": null
         },
         {
-          "name": "width",
-          "type": "int",
-          "description": null
+          "name": "arg2",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "height",
-          "type": "int",
-          "description": null
+          "name": "arg3",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "stride",
-          "type": "int",
-          "description": null
+          "name": "arg4",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "fmt",
-          "type": "PixelFormat",
-          "description": null
+          "name": "arg5",
+          "type": "CodeGlyphX.PixelFormat",
+          "summary": null
         },
         {
-          "name": "results",
-          "type": "QrDecoded[]",
-          "description": null
+          "name": "arg6",
+          "type": "CodeGlyphX.QrDecoded[]@",
+          "summary": null
         },
         {
-          "name": "info",
-          "type": "QrPixelDecodeInfo",
-          "description": null
+          "name": "arg7",
+          "type": "CodeGlyphX.QrPixelDecodeInfo@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecodeAll(ReadOnlySpan\u003Cbyte\u003E pixels, int width, int height, int stride, PixelFormat fmt, out QrDecoded[] results, out QrPixelDecodeInfo info)",
-      "xmlId": "M:CodeGlyphX.QrDecoder.TryDecodeAll(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded[]@,CodeGlyphX.QrPixelDecodeInfo@)",
-      "anchor": "method-trydecodeall-static-bool-trydecodeall-readonlyspan-byte-pixels-int-width-int-height-int-stride-pixelformat-fmt-out-qrdecoded-results-out-qrpixeldecodeinfo-info"
+      ]
     },
     {
       "name": "TryDecodeAll",
-      "kind": "Method",
       "summary": "Attempts to decode all QR codes from raw pixel data (best-effort, clean inputs), with diagnostics and profile options.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "pixels",
-          "type": "ReadOnlySpan\u003Cbyte\u003E",
-          "description": null
+          "name": "arg1",
+          "type": "System.ReadOnlySpan{System.Byte}",
+          "summary": null
         },
         {
-          "name": "width",
-          "type": "int",
-          "description": null
+          "name": "arg2",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "height",
-          "type": "int",
-          "description": null
+          "name": "arg3",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "stride",
-          "type": "int",
-          "description": null
+          "name": "arg4",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "fmt",
-          "type": "PixelFormat",
-          "description": null
+          "name": "arg5",
+          "type": "CodeGlyphX.PixelFormat",
+          "summary": null
         },
         {
-          "name": "results",
-          "type": "QrDecoded[]",
-          "description": null
+          "name": "arg6",
+          "type": "CodeGlyphX.QrDecoded[]@",
+          "summary": null
         },
         {
-          "name": "info",
-          "type": "QrPixelDecodeInfo",
-          "description": null
+          "name": "arg7",
+          "type": "CodeGlyphX.QrPixelDecodeInfo@",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrPixelDecodeOptions",
-          "description": null
+          "name": "arg8",
+          "type": "CodeGlyphX.QrPixelDecodeOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecodeAll(ReadOnlySpan\u003Cbyte\u003E pixels, int width, int height, int stride, PixelFormat fmt, out QrDecoded[] results, out QrPixelDecodeInfo info, QrPixelDecodeOptions options)",
-      "xmlId": "M:CodeGlyphX.QrDecoder.TryDecodeAll(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded[]@,CodeGlyphX.QrPixelDecodeInfo@,CodeGlyphX.QrPixelDecodeOptions)",
-      "anchor": "method-trydecodeall-static-bool-trydecodeall-readonlyspan-byte-pixels-int-width-int-height-int-stride-pixelformat-fmt-out-qrdecoded-results-out-qrpixeldecodeinfo-info-qrpixeldecodeoptions-options"
+      ]
     },
     {
       "name": "TryDecodeAll",
-      "kind": "Method",
       "summary": "Attempts to decode all QR codes from raw pixel data (best-effort, clean inputs), with diagnostics, profile options, and cancellation.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "pixels",
-          "type": "ReadOnlySpan\u003Cbyte\u003E",
-          "description": null
+          "name": "arg1",
+          "type": "System.ReadOnlySpan{System.Byte}",
+          "summary": null
         },
         {
-          "name": "width",
-          "type": "int",
-          "description": null
+          "name": "arg2",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "height",
-          "type": "int",
-          "description": null
+          "name": "arg3",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "stride",
-          "type": "int",
-          "description": null
+          "name": "arg4",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "fmt",
-          "type": "PixelFormat",
-          "description": null
+          "name": "arg5",
+          "type": "CodeGlyphX.PixelFormat",
+          "summary": null
         },
         {
-          "name": "results",
-          "type": "QrDecoded[]",
-          "description": null
+          "name": "arg6",
+          "type": "CodeGlyphX.QrDecoded[]@",
+          "summary": null
         },
         {
-          "name": "info",
-          "type": "QrPixelDecodeInfo",
-          "description": null
+          "name": "arg7",
+          "type": "CodeGlyphX.QrPixelDecodeInfo@",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrPixelDecodeOptions",
-          "description": null
+          "name": "arg8",
+          "type": "CodeGlyphX.QrPixelDecodeOptions",
+          "summary": null
         },
         {
-          "name": "cancellationToken",
-          "type": "CancellationToken",
-          "description": null
+          "name": "arg9",
+          "type": "System.Threading.CancellationToken",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecodeAll(ReadOnlySpan\u003Cbyte\u003E pixels, int width, int height, int stride, PixelFormat fmt, out QrDecoded[] results, out QrPixelDecodeInfo info, QrPixelDecodeOptions options, CancellationToken cancellationToken)",
-      "xmlId": "M:CodeGlyphX.QrDecoder.TryDecodeAll(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded[]@,CodeGlyphX.QrPixelDecodeInfo@,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken)",
-      "anchor": "method-trydecodeall-static-bool-trydecodeall-readonlyspan-byte-pixels-int-width-int-height-int-stride-pixelformat-fmt-out-qrdecoded-results-out-qrpixeldecodeinfo-info-qrpixeldecodeoptions-options-cancellationtoken-cancellationtoken"
+      ]
     },
     {
       "name": "TryDecode",
-      "kind": "Method",
       "summary": "Attempts to decode a QR code from raw pixel data (best-effort, clean inputs).",
-      "remarks": null,
       "returns": "true when decoding succeeded; otherwise false.",
       "parameters": [
         {
           "name": "pixels",
-          "type": "byte[]",
-          "description": "Pixel buffer."
+          "type": "System.Byte[]",
+          "summary": "Pixel buffer."
         },
         {
           "name": "width",
-          "type": "int",
-          "description": "Image width in pixels."
+          "type": "System.Int32",
+          "summary": "Image width in pixels."
         },
         {
           "name": "height",
-          "type": "int",
-          "description": "Image height in pixels."
+          "type": "System.Int32",
+          "summary": "Image height in pixels."
         },
         {
           "name": "stride",
-          "type": "int",
-          "description": "Bytes per row."
+          "type": "System.Int32",
+          "summary": "Bytes per row."
         },
         {
           "name": "fmt",
-          "type": "PixelFormat",
-          "description": "Pixel format (4 bytes per pixel)."
+          "type": "CodeGlyphX.PixelFormat",
+          "summary": "Pixel format (4 bytes per pixel)."
         },
         {
           "name": "result",
-          "type": "QrDecoded",
-          "description": "Decoded payload."
+          "type": "CodeGlyphX.QrDecoded@",
+          "summary": "Decoded payload."
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecode(byte[] pixels, int width, int height, int stride, PixelFormat fmt, out QrDecoded result)",
-      "xmlId": "M:CodeGlyphX.QrDecoder.TryDecode(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded@)",
-      "anchor": "method-trydecode-static-bool-trydecode-byte-pixels-int-width-int-height-int-stride-pixelformat-fmt-out-qrdecoded-result"
+      ]
     },
     {
       "name": "TryDecode",
-      "kind": "Method",
       "summary": "Attempts to decode a QR code from raw pixel data (best-effort, clean inputs) using the specified profile.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "pixels",
-          "type": "byte[]",
-          "description": null
+          "name": "arg1",
+          "type": "System.Byte[]",
+          "summary": null
         },
         {
-          "name": "width",
-          "type": "int",
-          "description": null
+          "name": "arg2",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "height",
-          "type": "int",
-          "description": null
+          "name": "arg3",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "stride",
-          "type": "int",
-          "description": null
+          "name": "arg4",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "fmt",
-          "type": "PixelFormat",
-          "description": null
+          "name": "arg5",
+          "type": "CodeGlyphX.PixelFormat",
+          "summary": null
         },
         {
-          "name": "result",
-          "type": "QrDecoded",
-          "description": null
+          "name": "arg6",
+          "type": "CodeGlyphX.QrDecoded@",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrPixelDecodeOptions",
-          "description": null
+          "name": "arg7",
+          "type": "CodeGlyphX.QrPixelDecodeOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecode(byte[] pixels, int width, int height, int stride, PixelFormat fmt, out QrDecoded result, QrPixelDecodeOptions options)",
-      "xmlId": "M:CodeGlyphX.QrDecoder.TryDecode(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded@,CodeGlyphX.QrPixelDecodeOptions)",
-      "anchor": "method-trydecode-static-bool-trydecode-byte-pixels-int-width-int-height-int-stride-pixelformat-fmt-out-qrdecoded-result-qrpixeldecodeoptions-options"
+      ]
     },
     {
       "name": "TryDecode",
-      "kind": "Method",
       "summary": "Attempts to decode a QR code from raw pixel data (best-effort, clean inputs) using the specified profile, with cancellation.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "pixels",
-          "type": "byte[]",
-          "description": null
+          "name": "arg1",
+          "type": "System.Byte[]",
+          "summary": null
         },
         {
-          "name": "width",
-          "type": "int",
-          "description": null
+          "name": "arg2",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "height",
-          "type": "int",
-          "description": null
+          "name": "arg3",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "stride",
-          "type": "int",
-          "description": null
+          "name": "arg4",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "fmt",
-          "type": "PixelFormat",
-          "description": null
+          "name": "arg5",
+          "type": "CodeGlyphX.PixelFormat",
+          "summary": null
         },
         {
-          "name": "result",
-          "type": "QrDecoded",
-          "description": null
+          "name": "arg6",
+          "type": "CodeGlyphX.QrDecoded@",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrPixelDecodeOptions",
-          "description": null
+          "name": "arg7",
+          "type": "CodeGlyphX.QrPixelDecodeOptions",
+          "summary": null
         },
         {
-          "name": "cancellationToken",
-          "type": "CancellationToken",
-          "description": null
+          "name": "arg8",
+          "type": "System.Threading.CancellationToken",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecode(byte[] pixels, int width, int height, int stride, PixelFormat fmt, out QrDecoded result, QrPixelDecodeOptions options, CancellationToken cancellationToken)",
-      "xmlId": "M:CodeGlyphX.QrDecoder.TryDecode(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded@,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken)",
-      "anchor": "method-trydecode-static-bool-trydecode-byte-pixels-int-width-int-height-int-stride-pixelformat-fmt-out-qrdecoded-result-qrpixeldecodeoptions-options-cancellationtoken-cancellationtoken"
+      ]
     },
     {
       "name": "TryDecode",
-      "kind": "Method",
       "summary": "Attempts to decode a QR code from raw pixel data (best-effort, clean inputs), with diagnostics.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "pixels",
-          "type": "byte[]",
-          "description": null
+          "name": "arg1",
+          "type": "System.Byte[]",
+          "summary": null
         },
         {
-          "name": "width",
-          "type": "int",
-          "description": null
+          "name": "arg2",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "height",
-          "type": "int",
-          "description": null
+          "name": "arg3",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "stride",
-          "type": "int",
-          "description": null
+          "name": "arg4",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "fmt",
-          "type": "PixelFormat",
-          "description": null
+          "name": "arg5",
+          "type": "CodeGlyphX.PixelFormat",
+          "summary": null
         },
         {
-          "name": "result",
-          "type": "QrDecoded",
-          "description": null
+          "name": "arg6",
+          "type": "CodeGlyphX.QrDecoded@",
+          "summary": null
         },
         {
-          "name": "info",
-          "type": "QrPixelDecodeInfo",
-          "description": null
+          "name": "arg7",
+          "type": "CodeGlyphX.QrPixelDecodeInfo@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecode(byte[] pixels, int width, int height, int stride, PixelFormat fmt, out QrDecoded result, out QrPixelDecodeInfo info)",
-      "xmlId": "M:CodeGlyphX.QrDecoder.TryDecode(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded@,CodeGlyphX.QrPixelDecodeInfo@)",
-      "anchor": "method-trydecode-static-bool-trydecode-byte-pixels-int-width-int-height-int-stride-pixelformat-fmt-out-qrdecoded-result-out-qrpixeldecodeinfo-info"
+      ]
     },
     {
       "name": "TryDecode",
-      "kind": "Method",
       "summary": "Attempts to decode a QR code from raw pixel data (best-effort, clean inputs), with diagnostics and profile options.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "pixels",
-          "type": "byte[]",
-          "description": null
+          "name": "arg1",
+          "type": "System.Byte[]",
+          "summary": null
         },
         {
-          "name": "width",
-          "type": "int",
-          "description": null
+          "name": "arg2",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "height",
-          "type": "int",
-          "description": null
+          "name": "arg3",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "stride",
-          "type": "int",
-          "description": null
+          "name": "arg4",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "fmt",
-          "type": "PixelFormat",
-          "description": null
+          "name": "arg5",
+          "type": "CodeGlyphX.PixelFormat",
+          "summary": null
         },
         {
-          "name": "result",
-          "type": "QrDecoded",
-          "description": null
+          "name": "arg6",
+          "type": "CodeGlyphX.QrDecoded@",
+          "summary": null
         },
         {
-          "name": "info",
-          "type": "QrPixelDecodeInfo",
-          "description": null
+          "name": "arg7",
+          "type": "CodeGlyphX.QrPixelDecodeInfo@",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrPixelDecodeOptions",
-          "description": null
+          "name": "arg8",
+          "type": "CodeGlyphX.QrPixelDecodeOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecode(byte[] pixels, int width, int height, int stride, PixelFormat fmt, out QrDecoded result, out QrPixelDecodeInfo info, QrPixelDecodeOptions options)",
-      "xmlId": "M:CodeGlyphX.QrDecoder.TryDecode(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded@,CodeGlyphX.QrPixelDecodeInfo@,CodeGlyphX.QrPixelDecodeOptions)",
-      "anchor": "method-trydecode-static-bool-trydecode-byte-pixels-int-width-int-height-int-stride-pixelformat-fmt-out-qrdecoded-result-out-qrpixeldecodeinfo-info-qrpixeldecodeoptions-options"
+      ]
     },
     {
       "name": "TryDecode",
-      "kind": "Method",
       "summary": "Attempts to decode a QR code from raw pixel data (best-effort, clean inputs), with diagnostics, profile options, and cancellation.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "pixels",
-          "type": "byte[]",
-          "description": null
+          "name": "arg1",
+          "type": "System.Byte[]",
+          "summary": null
         },
         {
-          "name": "width",
-          "type": "int",
-          "description": null
+          "name": "arg2",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "height",
-          "type": "int",
-          "description": null
+          "name": "arg3",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "stride",
-          "type": "int",
-          "description": null
+          "name": "arg4",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "fmt",
-          "type": "PixelFormat",
-          "description": null
+          "name": "arg5",
+          "type": "CodeGlyphX.PixelFormat",
+          "summary": null
         },
         {
-          "name": "result",
-          "type": "QrDecoded",
-          "description": null
+          "name": "arg6",
+          "type": "CodeGlyphX.QrDecoded@",
+          "summary": null
         },
         {
-          "name": "info",
-          "type": "QrPixelDecodeInfo",
-          "description": null
+          "name": "arg7",
+          "type": "CodeGlyphX.QrPixelDecodeInfo@",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrPixelDecodeOptions",
-          "description": null
+          "name": "arg8",
+          "type": "CodeGlyphX.QrPixelDecodeOptions",
+          "summary": null
         },
         {
-          "name": "cancellationToken",
-          "type": "CancellationToken",
-          "description": null
+          "name": "arg9",
+          "type": "System.Threading.CancellationToken",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecode(byte[] pixels, int width, int height, int stride, PixelFormat fmt, out QrDecoded result, out QrPixelDecodeInfo info, QrPixelDecodeOptions options, CancellationToken cancellationToken)",
-      "xmlId": "M:CodeGlyphX.QrDecoder.TryDecode(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded@,CodeGlyphX.QrPixelDecodeInfo@,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken)",
-      "anchor": "method-trydecode-static-bool-trydecode-byte-pixels-int-width-int-height-int-stride-pixelformat-fmt-out-qrdecoded-result-out-qrpixeldecodeinfo-info-qrpixeldecodeoptions-options-cancellationtoken-cancellationtoken"
+      ]
     },
     {
       "name": "TryDecodeAll",
-      "kind": "Method",
       "summary": "Attempts to decode all QR codes from raw pixel data (best-effort, clean inputs).",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "pixels",
-          "type": "byte[]",
-          "description": null
+          "name": "arg1",
+          "type": "System.Byte[]",
+          "summary": null
         },
         {
-          "name": "width",
-          "type": "int",
-          "description": null
+          "name": "arg2",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "height",
-          "type": "int",
-          "description": null
+          "name": "arg3",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "stride",
-          "type": "int",
-          "description": null
+          "name": "arg4",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "fmt",
-          "type": "PixelFormat",
-          "description": null
+          "name": "arg5",
+          "type": "CodeGlyphX.PixelFormat",
+          "summary": null
         },
         {
-          "name": "results",
-          "type": "QrDecoded[]",
-          "description": null
+          "name": "arg6",
+          "type": "CodeGlyphX.QrDecoded[]@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecodeAll(byte[] pixels, int width, int height, int stride, PixelFormat fmt, out QrDecoded[] results)",
-      "xmlId": "M:CodeGlyphX.QrDecoder.TryDecodeAll(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded[]@)",
-      "anchor": "method-trydecodeall-static-bool-trydecodeall-byte-pixels-int-width-int-height-int-stride-pixelformat-fmt-out-qrdecoded-results"
+      ]
     },
     {
       "name": "TryDecodeAll",
-      "kind": "Method",
       "summary": "Attempts to decode all QR codes from raw pixel data (best-effort, clean inputs) using the specified profile.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "pixels",
-          "type": "byte[]",
-          "description": null
+          "name": "arg1",
+          "type": "System.Byte[]",
+          "summary": null
         },
         {
-          "name": "width",
-          "type": "int",
-          "description": null
+          "name": "arg2",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "height",
-          "type": "int",
-          "description": null
+          "name": "arg3",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "stride",
-          "type": "int",
-          "description": null
+          "name": "arg4",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "fmt",
-          "type": "PixelFormat",
-          "description": null
+          "name": "arg5",
+          "type": "CodeGlyphX.PixelFormat",
+          "summary": null
         },
         {
-          "name": "results",
-          "type": "QrDecoded[]",
-          "description": null
+          "name": "arg6",
+          "type": "CodeGlyphX.QrDecoded[]@",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrPixelDecodeOptions",
-          "description": null
+          "name": "arg7",
+          "type": "CodeGlyphX.QrPixelDecodeOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecodeAll(byte[] pixels, int width, int height, int stride, PixelFormat fmt, out QrDecoded[] results, QrPixelDecodeOptions options)",
-      "xmlId": "M:CodeGlyphX.QrDecoder.TryDecodeAll(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded[]@,CodeGlyphX.QrPixelDecodeOptions)",
-      "anchor": "method-trydecodeall-static-bool-trydecodeall-byte-pixels-int-width-int-height-int-stride-pixelformat-fmt-out-qrdecoded-results-qrpixeldecodeoptions-options"
+      ]
     },
     {
       "name": "TryDecodeAll",
-      "kind": "Method",
       "summary": "Attempts to decode all QR codes from raw pixel data (best-effort, clean inputs) using the specified profile, with cancellation.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "pixels",
-          "type": "byte[]",
-          "description": null
+          "name": "arg1",
+          "type": "System.Byte[]",
+          "summary": null
         },
         {
-          "name": "width",
-          "type": "int",
-          "description": null
+          "name": "arg2",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "height",
-          "type": "int",
-          "description": null
+          "name": "arg3",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "stride",
-          "type": "int",
-          "description": null
+          "name": "arg4",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "fmt",
-          "type": "PixelFormat",
-          "description": null
+          "name": "arg5",
+          "type": "CodeGlyphX.PixelFormat",
+          "summary": null
         },
         {
-          "name": "results",
-          "type": "QrDecoded[]",
-          "description": null
+          "name": "arg6",
+          "type": "CodeGlyphX.QrDecoded[]@",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrPixelDecodeOptions",
-          "description": null
+          "name": "arg7",
+          "type": "CodeGlyphX.QrPixelDecodeOptions",
+          "summary": null
         },
         {
-          "name": "cancellationToken",
-          "type": "CancellationToken",
-          "description": null
+          "name": "arg8",
+          "type": "System.Threading.CancellationToken",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecodeAll(byte[] pixels, int width, int height, int stride, PixelFormat fmt, out QrDecoded[] results, QrPixelDecodeOptions options, CancellationToken cancellationToken)",
-      "xmlId": "M:CodeGlyphX.QrDecoder.TryDecodeAll(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded[]@,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken)",
-      "anchor": "method-trydecodeall-static-bool-trydecodeall-byte-pixels-int-width-int-height-int-stride-pixelformat-fmt-out-qrdecoded-results-qrpixeldecodeoptions-options-cancellationtoken-cancellationtoken"
+      ]
     },
     {
       "name": "TryDecodeAll",
-      "kind": "Method",
       "summary": "Attempts to decode all QR codes from raw pixel data (best-effort, clean inputs), with diagnostics.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "pixels",
-          "type": "byte[]",
-          "description": null
+          "name": "arg1",
+          "type": "System.Byte[]",
+          "summary": null
         },
         {
-          "name": "width",
-          "type": "int",
-          "description": null
+          "name": "arg2",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "height",
-          "type": "int",
-          "description": null
+          "name": "arg3",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "stride",
-          "type": "int",
-          "description": null
+          "name": "arg4",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "fmt",
-          "type": "PixelFormat",
-          "description": null
+          "name": "arg5",
+          "type": "CodeGlyphX.PixelFormat",
+          "summary": null
         },
         {
-          "name": "results",
-          "type": "QrDecoded[]",
-          "description": null
+          "name": "arg6",
+          "type": "CodeGlyphX.QrDecoded[]@",
+          "summary": null
         },
         {
-          "name": "info",
-          "type": "QrPixelDecodeInfo",
-          "description": null
+          "name": "arg7",
+          "type": "CodeGlyphX.QrPixelDecodeInfo@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecodeAll(byte[] pixels, int width, int height, int stride, PixelFormat fmt, out QrDecoded[] results, out QrPixelDecodeInfo info)",
-      "xmlId": "M:CodeGlyphX.QrDecoder.TryDecodeAll(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded[]@,CodeGlyphX.QrPixelDecodeInfo@)",
-      "anchor": "method-trydecodeall-static-bool-trydecodeall-byte-pixels-int-width-int-height-int-stride-pixelformat-fmt-out-qrdecoded-results-out-qrpixeldecodeinfo-info"
+      ]
     },
     {
       "name": "TryDecodeAll",
-      "kind": "Method",
       "summary": "Attempts to decode all QR codes from raw pixel data (best-effort, clean inputs), with diagnostics and profile options.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "pixels",
-          "type": "byte[]",
-          "description": null
+          "name": "arg1",
+          "type": "System.Byte[]",
+          "summary": null
         },
         {
-          "name": "width",
-          "type": "int",
-          "description": null
+          "name": "arg2",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "height",
-          "type": "int",
-          "description": null
+          "name": "arg3",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "stride",
-          "type": "int",
-          "description": null
+          "name": "arg4",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "fmt",
-          "type": "PixelFormat",
-          "description": null
+          "name": "arg5",
+          "type": "CodeGlyphX.PixelFormat",
+          "summary": null
         },
         {
-          "name": "results",
-          "type": "QrDecoded[]",
-          "description": null
+          "name": "arg6",
+          "type": "CodeGlyphX.QrDecoded[]@",
+          "summary": null
         },
         {
-          "name": "info",
-          "type": "QrPixelDecodeInfo",
-          "description": null
+          "name": "arg7",
+          "type": "CodeGlyphX.QrPixelDecodeInfo@",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrPixelDecodeOptions",
-          "description": null
+          "name": "arg8",
+          "type": "CodeGlyphX.QrPixelDecodeOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecodeAll(byte[] pixels, int width, int height, int stride, PixelFormat fmt, out QrDecoded[] results, out QrPixelDecodeInfo info, QrPixelDecodeOptions options)",
-      "xmlId": "M:CodeGlyphX.QrDecoder.TryDecodeAll(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded[]@,CodeGlyphX.QrPixelDecodeInfo@,CodeGlyphX.QrPixelDecodeOptions)",
-      "anchor": "method-trydecodeall-static-bool-trydecodeall-byte-pixels-int-width-int-height-int-stride-pixelformat-fmt-out-qrdecoded-results-out-qrpixeldecodeinfo-info-qrpixeldecodeoptions-options"
+      ]
     },
     {
       "name": "TryDecodeAll",
-      "kind": "Method",
       "summary": "Attempts to decode all QR codes from raw pixel data (best-effort, clean inputs), with diagnostics, profile options, and cancellation.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "pixels",
-          "type": "byte[]",
-          "description": null
+          "name": "arg1",
+          "type": "System.Byte[]",
+          "summary": null
         },
         {
-          "name": "width",
-          "type": "int",
-          "description": null
+          "name": "arg2",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "height",
-          "type": "int",
-          "description": null
+          "name": "arg3",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "stride",
-          "type": "int",
-          "description": null
+          "name": "arg4",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "fmt",
-          "type": "PixelFormat",
-          "description": null
+          "name": "arg5",
+          "type": "CodeGlyphX.PixelFormat",
+          "summary": null
         },
         {
-          "name": "results",
-          "type": "QrDecoded[]",
-          "description": null
+          "name": "arg6",
+          "type": "CodeGlyphX.QrDecoded[]@",
+          "summary": null
         },
         {
-          "name": "info",
-          "type": "QrPixelDecodeInfo",
-          "description": null
+          "name": "arg7",
+          "type": "CodeGlyphX.QrPixelDecodeInfo@",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrPixelDecodeOptions",
-          "description": null
+          "name": "arg8",
+          "type": "CodeGlyphX.QrPixelDecodeOptions",
+          "summary": null
         },
         {
-          "name": "cancellationToken",
-          "type": "CancellationToken",
-          "description": null
+          "name": "arg9",
+          "type": "System.Threading.CancellationToken",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecodeAll(byte[] pixels, int width, int height, int stride, PixelFormat fmt, out QrDecoded[] results, out QrPixelDecodeInfo info, QrPixelDecodeOptions options, CancellationToken cancellationToken)",
-      "xmlId": "M:CodeGlyphX.QrDecoder.TryDecodeAll(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.QrDecoded[]@,CodeGlyphX.QrPixelDecodeInfo@,CodeGlyphX.QrPixelDecodeOptions,System.Threading.CancellationToken)",
-      "anchor": "method-trydecodeall-static-bool-trydecodeall-byte-pixels-int-width-int-height-int-stride-pixelformat-fmt-out-qrdecoded-results-out-qrpixeldecodeinfo-info-qrpixeldecodeoptions-options-cancellationtoken-cancellationtoken"
+      ]
     }
-  ]
+  ],
+  "properties": [],
+  "fields": [],
+  "events": []
 }

@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "OtpAuthPayload",
   "fullName": "CodeGlyphX.OtpAuthPayload",
   "namespace": "CodeGlyphX",
@@ -6,148 +6,49 @@
   "slug": "codeglyphx-otpauthpayload",
   "summary": "Parsed contents of an otpauth:// URI.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [],
+  "properties": [
     {
       "name": "Type",
-      "kind": "Property",
-      "summary": "Gets the OTP type.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "OtpAuthType Type {get; }",
-      "xmlId": "P:CodeGlyphX.OtpAuthPayload.Type",
-      "anchor": "property-type-otpauthtype-type-get"
+      "summary": "Gets the OTP type."
     },
     {
       "name": "Issuer",
-      "kind": "Property",
-      "summary": "Gets the issuer (may be empty).",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string Issuer {get; }",
-      "xmlId": "P:CodeGlyphX.OtpAuthPayload.Issuer",
-      "anchor": "property-issuer-string-issuer-get"
+      "summary": "Gets the issuer (may be empty)."
     },
     {
       "name": "Account",
-      "kind": "Property",
-      "summary": "Gets the account label.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string Account {get; }",
-      "xmlId": "P:CodeGlyphX.OtpAuthPayload.Account",
-      "anchor": "property-account-string-account-get"
+      "summary": "Gets the account label."
     },
     {
       "name": "Secret",
-      "kind": "Property",
-      "summary": "Gets the decoded secret bytes.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "byte[] Secret {get; }",
-      "xmlId": "P:CodeGlyphX.OtpAuthPayload.Secret",
-      "anchor": "property-secret-byte-secret-get"
+      "summary": "Gets the decoded secret bytes."
     },
     {
       "name": "Algorithm",
-      "kind": "Property",
-      "summary": "Gets the HMAC algorithm.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "OtpAlgorithm Algorithm {get; }",
-      "xmlId": "P:CodeGlyphX.OtpAuthPayload.Algorithm",
-      "anchor": "property-algorithm-otpalgorithm-algorithm-get"
+      "summary": "Gets the HMAC algorithm."
     },
     {
       "name": "Digits",
-      "kind": "Property",
-      "summary": "Gets the number of digits.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int Digits {get; }",
-      "xmlId": "P:CodeGlyphX.OtpAuthPayload.Digits",
-      "anchor": "property-digits-int-digits-get"
+      "summary": "Gets the number of digits."
     },
     {
       "name": "Period",
-      "kind": "Property",
-      "summary": "Gets the TOTP period in seconds (null for HOTP).",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "Nullable\u003Cint\u003E Period {get; }",
-      "xmlId": "P:CodeGlyphX.OtpAuthPayload.Period",
-      "anchor": "property-period-nullable-int-period-get"
+      "summary": "Gets the TOTP period in seconds (null for HOTP)."
     },
     {
       "name": "Counter",
-      "kind": "Property",
-      "summary": "Gets the HOTP counter (null for TOTP).",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "Nullable\u003Clong\u003E Counter {get; }",
-      "xmlId": "P:CodeGlyphX.OtpAuthPayload.Counter",
-      "anchor": "property-counter-nullable-long-counter-get"
+      "summary": "Gets the HOTP counter (null for TOTP)."
     },
     {
       "name": "IsTotp",
-      "kind": "Property",
-      "summary": "Gets whether this payload is TOTP.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "bool IsTotp {get; }",
-      "xmlId": "P:CodeGlyphX.OtpAuthPayload.IsTotp",
-      "anchor": "property-istotp-bool-istotp-get"
+      "summary": "Gets whether this payload is TOTP."
     },
     {
       "name": "IsHotp",
-      "kind": "Property",
-      "summary": "Gets whether this payload is HOTP.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "bool IsHotp {get; }",
-      "xmlId": "P:CodeGlyphX.OtpAuthPayload.IsHotp",
-      "anchor": "property-ishotp-bool-ishotp-get"
+      "summary": "Gets whether this payload is HOTP."
     }
-  ]
+  ],
+  "fields": [],
+  "events": []
 }

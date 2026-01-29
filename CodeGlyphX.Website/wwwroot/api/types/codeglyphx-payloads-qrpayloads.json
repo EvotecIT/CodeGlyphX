@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "QrPayloads",
   "fullName": "CodeGlyphX.Payloads.QrPayloads",
   "namespace": "CodeGlyphX.Payloads",
@@ -6,1754 +6,1373 @@
   "slug": "codeglyphx-payloads-qrpayloads",
   "summary": "Helpers for building common QR payloads with recommended defaults.",
   "remarks": null,
-  "examples": [
-    {
-      "title": "EXAMPLE 1",
-      "code": "\n            using CodeGlyphX;\n            using CodeGlyphX.Payloads;\n            QR.Save(QrPayloads.Wifi(\u0022MyNetwork\u0022, \u0022Password123\u0022), \u0022wifi.png\u0022);",
-      "remarks": null
-    }
-  ],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
       "name": "Text",
-      "kind": "Method",
       "summary": "Builds a plain text payload.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "text",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static QrPayloadData Text(string text)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrPayloads.Text(System.String)",
-      "anchor": "method-text-static-qrpayloaddata-text-string-text"
+      ]
     },
     {
       "name": "Url",
-      "kind": "Method",
       "summary": "Builds a URL payload.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "url",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static QrPayloadData Url(string url)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrPayloads.Url(System.String)",
-      "anchor": "method-url-static-qrpayloaddata-url-string-url"
+      ]
     },
     {
       "name": "Bookmark",
-      "kind": "Method",
       "summary": "Builds a bookmark payload (MEBKM).",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "url",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "title",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static QrPayloadData Bookmark(string url, string title)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrPayloads.Bookmark(System.String,System.String)",
-      "anchor": "method-bookmark-static-qrpayloaddata-bookmark-string-url-string-title"
+      ]
     },
     {
       "name": "WhatsAppMessage",
-      "kind": "Method",
       "summary": "Builds a WhatsApp message payload.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "message",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "number",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static QrPayloadData WhatsAppMessage(string message, string number)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrPayloads.WhatsAppMessage(System.String,System.String)",
-      "anchor": "method-whatsappmessage-static-qrpayloaddata-whatsappmessage-string-message-string-number"
+      ]
     },
     {
       "name": "Wifi",
-      "kind": "Method",
       "summary": "Builds a Wi-Fi payload.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "ssid",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "password",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "authType",
-          "type": "string",
-          "description": null
+          "name": "arg3",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "hidden",
-          "type": "bool",
-          "description": null
+          "name": "arg4",
+          "type": "System.Boolean",
+          "summary": null
         },
         {
-          "name": "escapeHexStrings",
-          "type": "bool",
-          "description": null
+          "name": "arg5",
+          "type": "System.Boolean",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static QrPayloadData Wifi(string ssid, string password, string authType, bool hidden, bool escapeHexStrings)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrPayloads.Wifi(System.String,System.String,System.String,System.Boolean,System.Boolean)",
-      "anchor": "method-wifi-static-qrpayloaddata-wifi-string-ssid-string-password-string-authtype-bool-hidden-bool-escapehexstrings"
+      ]
     },
     {
       "name": "Email",
-      "kind": "Method",
       "summary": "Builds an email payload.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "address",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "subject",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "message",
-          "type": "string",
-          "description": null
+          "name": "arg3",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "encoding",
-          "type": "QrMailEncoding",
-          "description": null
+          "name": "arg4",
+          "type": "CodeGlyphX.Payloads.QrMailEncoding",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static QrPayloadData Email(string address, string subject, string message, QrMailEncoding encoding)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrPayloads.Email(System.String,System.String,System.String,CodeGlyphX.Payloads.QrMailEncoding)",
-      "anchor": "method-email-static-qrpayloaddata-email-string-address-string-subject-string-message-qrmailencoding-encoding"
+      ]
     },
     {
       "name": "Mms",
-      "kind": "Method",
       "summary": "Builds an MMS payload.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "number",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "subject",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "encoding",
-          "type": "QrMmsEncoding",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.Payloads.QrMmsEncoding",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static QrPayloadData Mms(string number, string subject, QrMmsEncoding encoding)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrPayloads.Mms(System.String,System.String,CodeGlyphX.Payloads.QrMmsEncoding)",
-      "anchor": "method-mms-static-qrpayloaddata-mms-string-number-string-subject-qrmmsencoding-encoding"
+      ]
     },
     {
       "name": "Sms",
-      "kind": "Method",
       "summary": "Builds an SMS payload.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "number",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "message",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "encoding",
-          "type": "QrSmsEncoding",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.Payloads.QrSmsEncoding",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static QrPayloadData Sms(string number, string message, QrSmsEncoding encoding)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrPayloads.Sms(System.String,System.String,CodeGlyphX.Payloads.QrSmsEncoding)",
-      "anchor": "method-sms-static-qrpayloaddata-sms-string-number-string-message-qrsmsencoding-encoding"
+      ]
     },
     {
       "name": "Phone",
-      "kind": "Method",
       "summary": "Builds a phone payload (tel:).",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "number",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static QrPayloadData Phone(string number)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrPayloads.Phone(System.String)",
-      "anchor": "method-phone-static-qrpayloaddata-phone-string-number"
+      ]
     },
     {
       "name": "Geo",
-      "kind": "Method",
       "summary": "Builds a geolocation payload.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "latitude",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "longitude",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "encoding",
-          "type": "QrGeolocationEncoding",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.Payloads.QrGeolocationEncoding",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static QrPayloadData Geo(string latitude, string longitude, QrGeolocationEncoding encoding)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrPayloads.Geo(System.String,System.String,CodeGlyphX.Payloads.QrGeolocationEncoding)",
-      "anchor": "method-geo-static-qrpayloaddata-geo-string-latitude-string-longitude-qrgeolocationencoding-encoding"
+      ]
     },
     {
       "name": "CalendarEvent",
-      "kind": "Method",
       "summary": "Builds a calendar event payload.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "subject",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "description",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "location",
-          "type": "string",
-          "description": null
+          "name": "arg3",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "start",
-          "type": "DateTime",
-          "description": null
+          "name": "arg4",
+          "type": "System.DateTime",
+          "summary": null
         },
         {
-          "name": "end",
-          "type": "DateTime",
-          "description": null
+          "name": "arg5",
+          "type": "System.DateTime",
+          "summary": null
         },
         {
-          "name": "allDayEvent",
-          "type": "bool",
-          "description": null
+          "name": "arg6",
+          "type": "System.Boolean",
+          "summary": null
         },
         {
-          "name": "encoding",
-          "type": "QrCalendarEncoding",
-          "description": null
+          "name": "arg7",
+          "type": "CodeGlyphX.Payloads.QrCalendarEncoding",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static QrPayloadData CalendarEvent(string subject, string description, string location, DateTime start, DateTime end, bool allDayEvent, QrCalendarEncoding encoding)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrPayloads.CalendarEvent(System.String,System.String,System.String,System.DateTime,System.DateTime,System.Boolean,CodeGlyphX.Payloads.QrCalendarEncoding)",
-      "anchor": "method-calendarevent-static-qrpayloaddata-calendarevent-string-subject-string-description-string-location-datetime-start-datetime-end-bool-alldayevent-qrcalendarencoding-encoding"
+      ]
     },
     {
       "name": "Contact",
-      "kind": "Method",
       "summary": "Builds a contact payload (MeCard or vCard).",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "outputType",
-          "type": "QrContactOutputType",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.Payloads.QrContactOutputType",
+          "summary": null
         },
         {
-          "name": "firstname",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "lastname",
-          "type": "string",
-          "description": null
+          "name": "arg3",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "nickname",
-          "type": "string",
-          "description": null
+          "name": "arg4",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "phone",
-          "type": "string",
-          "description": null
+          "name": "arg5",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "mobilePhone",
-          "type": "string",
-          "description": null
+          "name": "arg6",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "workPhone",
-          "type": "string",
-          "description": null
+          "name": "arg7",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "email",
-          "type": "string",
-          "description": null
+          "name": "arg8",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "birthday",
-          "type": "Nullable\u003CDateTime\u003E",
-          "description": null
+          "name": "arg9",
+          "type": "System.Nullable{System.DateTime}",
+          "summary": null
         },
         {
-          "name": "website",
-          "type": "string",
-          "description": null
+          "name": "arg10",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "street",
-          "type": "string",
-          "description": null
+          "name": "arg11",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "houseNumber",
-          "type": "string",
-          "description": null
+          "name": "arg12",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "city",
-          "type": "string",
-          "description": null
+          "name": "arg13",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "zipCode",
-          "type": "string",
-          "description": null
+          "name": "arg14",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "country",
-          "type": "string",
-          "description": null
+          "name": "arg15",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "note",
-          "type": "string",
-          "description": null
+          "name": "arg16",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "stateRegion",
-          "type": "string",
-          "description": null
+          "name": "arg17",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "addressOrder",
-          "type": "QrContactAddressOrder",
-          "description": null
+          "name": "arg18",
+          "type": "CodeGlyphX.Payloads.QrContactAddressOrder",
+          "summary": null
         },
         {
-          "name": "org",
-          "type": "string",
-          "description": null
+          "name": "arg19",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "orgTitle",
-          "type": "string",
-          "description": null
+          "name": "arg20",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "addressType",
-          "type": "QrContactAddressType",
-          "description": null
+          "name": "arg21",
+          "type": "CodeGlyphX.Payloads.QrContactAddressType",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static QrPayloadData Contact(QrContactOutputType outputType, string firstname, string lastname, string nickname, string phone, string mobilePhone, string workPhone, string email, Nullable\u003CDateTime\u003E birthday, string website, string street, string houseNumber, string city, string zipCode, string country, string note, string stateRegion, QrContactAddressOrder addressOrder, string org, string orgTitle, QrContactAddressType addressType)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrPayloads.Contact(CodeGlyphX.Payloads.QrContactOutputType,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Nullable{System.DateTime},System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,CodeGlyphX.Payloads.QrContactAddressOrder,System.String,System.String,CodeGlyphX.Payloads.QrContactAddressType)",
-      "anchor": "method-contact-static-qrpayloaddata-contact-qrcontactoutputtype-outputtype-string-firstname-string-lastname-string-nickname-string-phone-string-mobilephone-string-workphone-string-email-nullable-datetime-birthday-string-website-string-street-string-housenumber-string-city-string-zipcode-string-country-string-note-string-stateregion-qrcontactaddressorder-addressorder-string-org-string-orgtitle-qrcontactaddresstype-addresstype"
+      ]
     },
     {
       "name": "SkypeCall",
-      "kind": "Method",
       "summary": "Builds a Skype call payload.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "username",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static QrPayloadData SkypeCall(string username)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrPayloads.SkypeCall(System.String)",
-      "anchor": "method-skypecall-static-qrpayloaddata-skypecall-string-username"
+      ]
     },
     {
       "name": "AppStoreApple",
-      "kind": "Method",
       "summary": "Builds an Apple App Store payload.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "appId",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "countryCode",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static QrPayloadData AppStoreApple(string appId, string countryCode)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrPayloads.AppStoreApple(System.String,System.String)",
-      "anchor": "method-appstoreapple-static-qrpayloaddata-appstoreapple-string-appid-string-countrycode"
+      ]
     },
     {
       "name": "AppStoreGooglePlay",
-      "kind": "Method",
       "summary": "Builds a Google Play payload.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "packageId",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static QrPayloadData AppStoreGooglePlay(string packageId)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrPayloads.AppStoreGooglePlay(System.String)",
-      "anchor": "method-appstoregoogleplay-static-qrpayloaddata-appstoregoogleplay-string-packageid"
+      ]
     },
     {
       "name": "FacebookProfile",
-      "kind": "Method",
       "summary": "Builds a Facebook profile payload.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "handleOrUrl",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static QrPayloadData FacebookProfile(string handleOrUrl)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrPayloads.FacebookProfile(System.String)",
-      "anchor": "method-facebookprofile-static-qrpayloaddata-facebookprofile-string-handleorurl"
+      ]
     },
     {
       "name": "TwitterProfile",
-      "kind": "Method",
       "summary": "Builds a Twitter profile payload.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "handleOrUrl",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static QrPayloadData TwitterProfile(string handleOrUrl)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrPayloads.TwitterProfile(System.String)",
-      "anchor": "method-twitterprofile-static-qrpayloaddata-twitterprofile-string-handleorurl"
+      ]
     },
     {
       "name": "XProfile",
-      "kind": "Method",
       "summary": "Builds an X profile payload.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "handleOrUrl",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static QrPayloadData XProfile(string handleOrUrl)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrPayloads.XProfile(System.String)",
-      "anchor": "method-xprofile-static-qrpayloaddata-xprofile-string-handleorurl"
+      ]
     },
     {
       "name": "TikTokProfile",
-      "kind": "Method",
       "summary": "Builds a TikTok profile payload.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "handleOrUrl",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static QrPayloadData TikTokProfile(string handleOrUrl)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrPayloads.TikTokProfile(System.String)",
-      "anchor": "method-tiktokprofile-static-qrpayloaddata-tiktokprofile-string-handleorurl"
+      ]
     },
     {
       "name": "LinkedInProfile",
-      "kind": "Method",
       "summary": "Builds a LinkedIn profile payload.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "handleOrUrl",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static QrPayloadData LinkedInProfile(string handleOrUrl)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrPayloads.LinkedInProfile(System.String)",
-      "anchor": "method-linkedinprofile-static-qrpayloaddata-linkedinprofile-string-handleorurl"
+      ]
     },
     {
       "name": "LinkedInCompany",
-      "kind": "Method",
       "summary": "Builds a LinkedIn company payload.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "handleOrUrl",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static QrPayloadData LinkedInCompany(string handleOrUrl)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrPayloads.LinkedInCompany(System.String)",
-      "anchor": "method-linkedincompany-static-qrpayloaddata-linkedincompany-string-handleorurl"
+      ]
     },
     {
       "name": "Upi",
-      "kind": "Method",
       "summary": "Builds a UPI payment payload.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "vpa",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "name",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "merchantCode",
-          "type": "string",
-          "description": null
+          "name": "arg3",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "transactionRef",
-          "type": "string",
-          "description": null
+          "name": "arg4",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "transactionNote",
-          "type": "string",
-          "description": null
+          "name": "arg5",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "amount",
-          "type": "Nullable\u003Cdecimal\u003E",
-          "description": null
+          "name": "arg6",
+          "type": "System.Nullable{System.Decimal}",
+          "summary": null
         },
         {
-          "name": "currency",
-          "type": "string",
-          "description": null
+          "name": "arg7",
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static QrPayloadData Upi(string vpa, string name, string merchantCode, string transactionRef, string transactionNote, Nullable\u003Cdecimal\u003E amount, string currency)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrPayloads.Upi(System.String,System.String,System.String,System.String,System.String,System.Nullable{System.Decimal},System.String)",
-      "anchor": "method-upi-static-qrpayloaddata-upi-string-vpa-string-name-string-merchantcode-string-transactionref-string-transactionnote-nullable-decimal-amount-string-currency"
+      ]
     },
     {
       "name": "BitcoinLike",
-      "kind": "Method",
       "summary": "Builds a Bitcoin-like URI payload.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "type",
-          "type": "QrBitcoinLikeType",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.Payloads.QrBitcoinLikeType",
+          "summary": null
         },
         {
-          "name": "address",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "amount",
-          "type": "Nullable\u003Cdouble\u003E",
-          "description": null
+          "name": "arg3",
+          "type": "System.Nullable{System.Double}",
+          "summary": null
         },
         {
-          "name": "label",
-          "type": "string",
-          "description": null
+          "name": "arg4",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "message",
-          "type": "string",
-          "description": null
+          "name": "arg5",
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static QrPayloadData BitcoinLike(QrBitcoinLikeType type, string address, Nullable\u003Cdouble\u003E amount, string label, string message)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrPayloads.BitcoinLike(CodeGlyphX.Payloads.QrBitcoinLikeType,System.String,System.Nullable{System.Double},System.String,System.String)",
-      "anchor": "method-bitcoinlike-static-qrpayloaddata-bitcoinlike-qrbitcoinliketype-type-string-address-nullable-double-amount-string-label-string-message"
+      ]
     },
     {
       "name": "Monero",
-      "kind": "Method",
       "summary": "Builds a Monero URI payload.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "address",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "amount",
-          "type": "Nullable\u003Cfloat\u003E",
-          "description": null
+          "name": "arg2",
+          "type": "System.Nullable{System.Single}",
+          "summary": null
         },
         {
-          "name": "paymentId",
-          "type": "string",
-          "description": null
+          "name": "arg3",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "recipientName",
-          "type": "string",
-          "description": null
+          "name": "arg4",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "description",
-          "type": "string",
-          "description": null
+          "name": "arg5",
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static QrPayloadData Monero(string address, Nullable\u003Cfloat\u003E amount, string paymentId, string recipientName, string description)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrPayloads.Monero(System.String,System.Nullable{System.Single},System.String,System.String,System.String)",
-      "anchor": "method-monero-static-qrpayloaddata-monero-string-address-nullable-float-amount-string-paymentid-string-recipientname-string-description"
+      ]
     },
     {
       "name": "ShadowSocks",
-      "kind": "Method",
       "summary": "Builds a Shadowsocks URI payload.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "hostname",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "port",
-          "type": "int",
-          "description": null
+          "name": "arg2",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "password",
-          "type": "string",
-          "description": null
+          "name": "arg3",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "method",
-          "type": "QrShadowSocksMethod",
-          "description": null
+          "name": "arg4",
+          "type": "CodeGlyphX.Payloads.QrShadowSocksMethod",
+          "summary": null
         },
         {
-          "name": "tag",
-          "type": "string",
-          "description": null
+          "name": "arg5",
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static QrPayloadData ShadowSocks(string hostname, int port, string password, QrShadowSocksMethod method, string tag)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrPayloads.ShadowSocks(System.String,System.Int32,System.String,CodeGlyphX.Payloads.QrShadowSocksMethod,System.String)",
-      "anchor": "method-shadowsocks-static-qrpayloaddata-shadowsocks-string-hostname-int-port-string-password-qrshadowsocksmethod-method-string-tag"
+      ]
     },
     {
       "name": "ShadowSocks",
-      "kind": "Method",
       "summary": "Builds a Shadowsocks URI payload with parameters.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "hostname",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "port",
-          "type": "int",
-          "description": null
+          "name": "arg2",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "password",
-          "type": "string",
-          "description": null
+          "name": "arg3",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "method",
-          "type": "QrShadowSocksMethod",
-          "description": null
+          "name": "arg4",
+          "type": "CodeGlyphX.Payloads.QrShadowSocksMethod",
+          "summary": null
         },
         {
-          "name": "parameters",
-          "type": "Dictionary\u003Cstring, string\u003E",
-          "description": null
+          "name": "arg5",
+          "type": "System.Collections.Generic.Dictionary{System.String,System.String}",
+          "summary": null
         },
         {
-          "name": "tag",
-          "type": "string",
-          "description": null
+          "name": "arg6",
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static QrPayloadData ShadowSocks(string hostname, int port, string password, QrShadowSocksMethod method, Dictionary\u003Cstring, string\u003E parameters, string tag)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrPayloads.ShadowSocks(System.String,System.Int32,System.String,CodeGlyphX.Payloads.QrShadowSocksMethod,System.Collections.Generic.Dictionary{System.String,System.String},System.String)",
-      "anchor": "method-shadowsocks-static-qrpayloaddata-shadowsocks-string-hostname-int-port-string-password-qrshadowsocksmethod-method-dictionary-string-string-parameters-string-tag"
+      ]
     },
     {
       "name": "OneTimePassword",
-      "kind": "Method",
       "summary": "Builds an otpauth URI payload for HOTP/TOTP.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "type",
-          "type": "OtpAuthType",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.OtpAuthType",
+          "summary": null
         },
         {
-          "name": "secretBase32",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "label",
-          "type": "string",
-          "description": null
+          "name": "arg3",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "issuer",
-          "type": "string",
-          "description": null
+          "name": "arg4",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "algorithm",
-          "type": "OtpAlgorithm",
-          "description": null
+          "name": "arg5",
+          "type": "CodeGlyphX.OtpAlgorithm",
+          "summary": null
         },
         {
-          "name": "digits",
-          "type": "int",
-          "description": null
+          "name": "arg6",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "period",
-          "type": "Nullable\u003Cint\u003E",
-          "description": null
+          "name": "arg7",
+          "type": "System.Nullable{System.Int32}",
+          "summary": null
         },
         {
-          "name": "counter",
-          "type": "Nullable\u003Cint\u003E",
-          "description": null
+          "name": "arg8",
+          "type": "System.Nullable{System.Int32}",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static QrPayloadData OneTimePassword(OtpAuthType type, string secretBase32, string label, string issuer, OtpAlgorithm algorithm, int digits, Nullable\u003Cint\u003E period, Nullable\u003Cint\u003E counter)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrPayloads.OneTimePassword(CodeGlyphX.OtpAuthType,System.String,System.String,System.String,CodeGlyphX.OtpAlgorithm,System.Int32,System.Nullable{System.Int32},System.Nullable{System.Int32})",
-      "anchor": "method-onetimepassword-static-qrpayloaddata-onetimepassword-otpauthtype-type-string-secretbase32-string-label-string-issuer-otpalgorithm-algorithm-int-digits-nullable-int-period-nullable-int-counter"
+      ]
     },
     {
       "name": "Detect",
-      "kind": "Method",
       "summary": "Detects the most likely payload type from a raw input string.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "input",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrPayloadDetectOptions",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.Payloads.QrPayloadDetectOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static QrPayloadData Detect(string input, QrPayloadDetectOptions options)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrPayloads.Detect(System.String,CodeGlyphX.Payloads.QrPayloadDetectOptions)",
-      "anchor": "method-detect-static-qrpayloaddata-detect-string-input-qrpayloaddetectoptions-options"
+      ]
     },
     {
       "name": "PayPalMe",
-      "kind": "Method",
       "summary": "Builds a PayPal.Me payment payload.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "handleOrUrl",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "amount",
-          "type": "Nullable\u003Cdecimal\u003E",
-          "description": null
+          "name": "arg2",
+          "type": "System.Nullable{System.Decimal}",
+          "summary": null
         },
         {
-          "name": "currency",
-          "type": "string",
-          "description": null
+          "name": "arg3",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "useHttps",
-          "type": "bool",
-          "description": null
+          "name": "arg4",
+          "type": "System.Boolean",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static QrPayloadData PayPalMe(string handleOrUrl, Nullable\u003Cdecimal\u003E amount, string currency, bool useHttps)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrPayloads.PayPalMe(System.String,System.Nullable{System.Decimal},System.String,System.Boolean)",
-      "anchor": "method-paypalme-static-qrpayloaddata-paypalme-string-handleorurl-nullable-decimal-amount-string-currency-bool-usehttps"
+      ]
     },
     {
       "name": "Girocode",
-      "kind": "Method",
       "summary": "Builds a SEPA Girocode payload.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "iban",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "bic",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "name",
-          "type": "string",
-          "description": null
+          "name": "arg3",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "amount",
-          "type": "decimal",
-          "description": null
+          "name": "arg4",
+          "type": "System.Decimal",
+          "summary": null
         },
         {
-          "name": "remittanceInformation",
-          "type": "string",
-          "description": null
+          "name": "arg5",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "remittanceType",
-          "type": "QrGirocodeRemittanceType",
-          "description": null
+          "name": "arg6",
+          "type": "CodeGlyphX.Payloads.QrGirocodeRemittanceType",
+          "summary": null
         },
         {
-          "name": "purposeOfCreditTransfer",
-          "type": "string",
-          "description": null
+          "name": "arg7",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "messageToGirocodeUser",
-          "type": "string",
-          "description": null
+          "name": "arg8",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "version",
-          "type": "QrGirocodeVersion",
-          "description": null
+          "name": "arg9",
+          "type": "CodeGlyphX.Payloads.QrGirocodeVersion",
+          "summary": null
         },
         {
-          "name": "encoding",
-          "type": "QrGirocodeEncoding",
-          "description": null
+          "name": "arg10",
+          "type": "CodeGlyphX.Payloads.QrGirocodeEncoding",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static QrPayloadData Girocode(string iban, string bic, string name, decimal amount, string remittanceInformation, QrGirocodeRemittanceType remittanceType, string purposeOfCreditTransfer, string messageToGirocodeUser, QrGirocodeVersion version, QrGirocodeEncoding encoding)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrPayloads.Girocode(System.String,System.String,System.String,System.Decimal,System.String,CodeGlyphX.Payloads.QrGirocodeRemittanceType,System.String,System.String,CodeGlyphX.Payloads.QrGirocodeVersion,CodeGlyphX.Payloads.QrGirocodeEncoding)",
-      "anchor": "method-girocode-static-qrpayloaddata-girocode-string-iban-string-bic-string-name-decimal-amount-string-remittanceinformation-qrgirocoderemittancetype-remittancetype-string-purposeofcredittransfer-string-messagetogirocodeuser-qrgirocodeversion-version-qrgirocodeencoding-encoding"
+      ]
     },
     {
       "name": "BezahlCodeContact",
-      "kind": "Method",
       "summary": "Builds a BezahlCode contact payload.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "authority",
-          "type": "QrBezahlAuthorityType",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.Payloads.QrBezahlAuthorityType",
+          "summary": null
         },
         {
-          "name": "name",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "account",
-          "type": "string",
-          "description": null
+          "name": "arg3",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "bnc",
-          "type": "string",
-          "description": null
+          "name": "arg4",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "iban",
-          "type": "string",
-          "description": null
+          "name": "arg5",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "bic",
-          "type": "string",
-          "description": null
+          "name": "arg6",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "reason",
-          "type": "string",
-          "description": null
+          "name": "arg7",
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static QrPayloadData BezahlCodeContact(QrBezahlAuthorityType authority, string name, string account, string bnc, string iban, string bic, string reason)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrPayloads.BezahlCodeContact(CodeGlyphX.Payloads.QrBezahlAuthorityType,System.String,System.String,System.String,System.String,System.String,System.String)",
-      "anchor": "method-bezahlcodecontact-static-qrpayloaddata-bezahlcodecontact-qrbezahlauthoritytype-authority-string-name-string-account-string-bnc-string-iban-string-bic-string-reason"
+      ]
     },
     {
       "name": "BezahlCodeSinglePayment",
-      "kind": "Method",
       "summary": "Builds a BezahlCode single payment payload (non-SEPA).",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "name",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "account",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "bnc",
-          "type": "string",
-          "description": null
+          "name": "arg3",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "amount",
-          "type": "decimal",
-          "description": null
+          "name": "arg4",
+          "type": "System.Decimal",
+          "summary": null
         },
         {
-          "name": "reason",
-          "type": "string",
-          "description": null
+          "name": "arg5",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "currency",
-          "type": "string",
-          "description": null
+          "name": "arg6",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "postingKey",
-          "type": "string",
-          "description": null
+          "name": "arg7",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "executionDate",
-          "type": "Nullable\u003CDateTime\u003E",
-          "description": null
+          "name": "arg8",
+          "type": "System.Nullable{System.DateTime}",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static QrPayloadData BezahlCodeSinglePayment(string name, string account, string bnc, decimal amount, string reason, string currency, string postingKey, Nullable\u003CDateTime\u003E executionDate)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrPayloads.BezahlCodeSinglePayment(System.String,System.String,System.String,System.Decimal,System.String,System.String,System.String,System.Nullable{System.DateTime})",
-      "anchor": "method-bezahlcodesinglepayment-static-qrpayloaddata-bezahlcodesinglepayment-string-name-string-account-string-bnc-decimal-amount-string-reason-string-currency-string-postingkey-nullable-datetime-executiondate"
+      ]
     },
     {
       "name": "BezahlCodeSinglePaymentSepa",
-      "kind": "Method",
       "summary": "Builds a BezahlCode single payment payload (SEPA).",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "name",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "iban",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "bic",
-          "type": "string",
-          "description": null
+          "name": "arg3",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "amount",
-          "type": "decimal",
-          "description": null
+          "name": "arg4",
+          "type": "System.Decimal",
+          "summary": null
         },
         {
-          "name": "reason",
-          "type": "string",
-          "description": null
+          "name": "arg5",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "currency",
-          "type": "string",
-          "description": null
+          "name": "arg6",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "sepaReference",
-          "type": "string",
-          "description": null
+          "name": "arg7",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "executionDate",
-          "type": "Nullable\u003CDateTime\u003E",
-          "description": null
+          "name": "arg8",
+          "type": "System.Nullable{System.DateTime}",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static QrPayloadData BezahlCodeSinglePaymentSepa(string name, string iban, string bic, decimal amount, string reason, string currency, string sepaReference, Nullable\u003CDateTime\u003E executionDate)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrPayloads.BezahlCodeSinglePaymentSepa(System.String,System.String,System.String,System.Decimal,System.String,System.String,System.String,System.Nullable{System.DateTime})",
-      "anchor": "method-bezahlcodesinglepaymentsepa-static-qrpayloaddata-bezahlcodesinglepaymentsepa-string-name-string-iban-string-bic-decimal-amount-string-reason-string-currency-string-separeference-nullable-datetime-executiondate"
+      ]
     },
     {
       "name": "BezahlCodeSingleDirectDebit",
-      "kind": "Method",
       "summary": "Builds a BezahlCode single direct debit payload (non-SEPA).",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "name",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "account",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "bnc",
-          "type": "string",
-          "description": null
+          "name": "arg3",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "amount",
-          "type": "decimal",
-          "description": null
+          "name": "arg4",
+          "type": "System.Decimal",
+          "summary": null
         },
         {
-          "name": "creditorId",
-          "type": "string",
-          "description": null
+          "name": "arg5",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "mandateId",
-          "type": "string",
-          "description": null
+          "name": "arg6",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "dateOfSignature",
-          "type": "DateTime",
-          "description": null
+          "name": "arg7",
+          "type": "System.DateTime",
+          "summary": null
         },
         {
-          "name": "reason",
-          "type": "string",
-          "description": null
+          "name": "arg8",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "currency",
-          "type": "string",
-          "description": null
+          "name": "arg9",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "postingKey",
-          "type": "string",
-          "description": null
+          "name": "arg10",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "executionDate",
-          "type": "Nullable\u003CDateTime\u003E",
-          "description": null
+          "name": "arg11",
+          "type": "System.Nullable{System.DateTime}",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static QrPayloadData BezahlCodeSingleDirectDebit(string name, string account, string bnc, decimal amount, string creditorId, string mandateId, DateTime dateOfSignature, string reason, string currency, string postingKey, Nullable\u003CDateTime\u003E executionDate)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrPayloads.BezahlCodeSingleDirectDebit(System.String,System.String,System.String,System.Decimal,System.String,System.String,System.DateTime,System.String,System.String,System.String,System.Nullable{System.DateTime})",
-      "anchor": "method-bezahlcodesingledirectdebit-static-qrpayloaddata-bezahlcodesingledirectdebit-string-name-string-account-string-bnc-decimal-amount-string-creditorid-string-mandateid-datetime-dateofsignature-string-reason-string-currency-string-postingkey-nullable-datetime-executiondate"
+      ]
     },
     {
       "name": "BezahlCodeSingleDirectDebitSepa",
-      "kind": "Method",
       "summary": "Builds a BezahlCode single direct debit payload (SEPA).",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "name",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "iban",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "bic",
-          "type": "string",
-          "description": null
+          "name": "arg3",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "amount",
-          "type": "decimal",
-          "description": null
+          "name": "arg4",
+          "type": "System.Decimal",
+          "summary": null
         },
         {
-          "name": "creditorId",
-          "type": "string",
-          "description": null
+          "name": "arg5",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "mandateId",
-          "type": "string",
-          "description": null
+          "name": "arg6",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "dateOfSignature",
-          "type": "DateTime",
-          "description": null
+          "name": "arg7",
+          "type": "System.DateTime",
+          "summary": null
         },
         {
-          "name": "reason",
-          "type": "string",
-          "description": null
+          "name": "arg8",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "currency",
-          "type": "string",
-          "description": null
+          "name": "arg9",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "sepaReference",
-          "type": "string",
-          "description": null
+          "name": "arg10",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "executionDate",
-          "type": "Nullable\u003CDateTime\u003E",
-          "description": null
+          "name": "arg11",
+          "type": "System.Nullable{System.DateTime}",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static QrPayloadData BezahlCodeSingleDirectDebitSepa(string name, string iban, string bic, decimal amount, string creditorId, string mandateId, DateTime dateOfSignature, string reason, string currency, string sepaReference, Nullable\u003CDateTime\u003E executionDate)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrPayloads.BezahlCodeSingleDirectDebitSepa(System.String,System.String,System.String,System.Decimal,System.String,System.String,System.DateTime,System.String,System.String,System.String,System.Nullable{System.DateTime})",
-      "anchor": "method-bezahlcodesingledirectdebitsepa-static-qrpayloaddata-bezahlcodesingledirectdebitsepa-string-name-string-iban-string-bic-decimal-amount-string-creditorid-string-mandateid-datetime-dateofsignature-string-reason-string-currency-string-separeference-nullable-datetime-executiondate"
+      ]
     },
     {
       "name": "BezahlCodePeriodicSinglePayment",
-      "kind": "Method",
       "summary": "Builds a BezahlCode periodic single payment payload (non-SEPA).",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "name",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "account",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "bnc",
-          "type": "string",
-          "description": null
+          "name": "arg3",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "amount",
-          "type": "decimal",
-          "description": null
+          "name": "arg4",
+          "type": "System.Decimal",
+          "summary": null
         },
         {
-          "name": "periodicUnit",
-          "type": "QrBezahlPeriodicUnit",
-          "description": null
+          "name": "arg5",
+          "type": "CodeGlyphX.Payloads.QrBezahlPeriodicUnit",
+          "summary": null
         },
         {
-          "name": "periodicUnitRotation",
-          "type": "int",
-          "description": null
+          "name": "arg6",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "periodicFirstExecutionDate",
-          "type": "DateTime",
-          "description": null
+          "name": "arg7",
+          "type": "System.DateTime",
+          "summary": null
         },
         {
-          "name": "periodicLastExecutionDate",
-          "type": "DateTime",
-          "description": null
+          "name": "arg8",
+          "type": "System.DateTime",
+          "summary": null
         },
         {
-          "name": "reason",
-          "type": "string",
-          "description": null
+          "name": "arg9",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "currency",
-          "type": "string",
-          "description": null
+          "name": "arg10",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "postingKey",
-          "type": "string",
-          "description": null
+          "name": "arg11",
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static QrPayloadData BezahlCodePeriodicSinglePayment(string name, string account, string bnc, decimal amount, QrBezahlPeriodicUnit periodicUnit, int periodicUnitRotation, DateTime periodicFirstExecutionDate, DateTime periodicLastExecutionDate, string reason, string currency, string postingKey)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrPayloads.BezahlCodePeriodicSinglePayment(System.String,System.String,System.String,System.Decimal,CodeGlyphX.Payloads.QrBezahlPeriodicUnit,System.Int32,System.DateTime,System.DateTime,System.String,System.String,System.String)",
-      "anchor": "method-bezahlcodeperiodicsinglepayment-static-qrpayloaddata-bezahlcodeperiodicsinglepayment-string-name-string-account-string-bnc-decimal-amount-qrbezahlperiodicunit-periodicunit-int-periodicunitrotation-datetime-periodicfirstexecutiondate-datetime-periodiclastexecutiondate-string-reason-string-currency-string-postingkey"
+      ]
     },
     {
       "name": "BezahlCodePeriodicSinglePaymentSepa",
-      "kind": "Method",
       "summary": "Builds a BezahlCode periodic single payment payload (SEPA).",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "name",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "iban",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "bic",
-          "type": "string",
-          "description": null
+          "name": "arg3",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "amount",
-          "type": "decimal",
-          "description": null
+          "name": "arg4",
+          "type": "System.Decimal",
+          "summary": null
         },
         {
-          "name": "periodicUnit",
-          "type": "QrBezahlPeriodicUnit",
-          "description": null
+          "name": "arg5",
+          "type": "CodeGlyphX.Payloads.QrBezahlPeriodicUnit",
+          "summary": null
         },
         {
-          "name": "periodicUnitRotation",
-          "type": "int",
-          "description": null
+          "name": "arg6",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "periodicFirstExecutionDate",
-          "type": "DateTime",
-          "description": null
+          "name": "arg7",
+          "type": "System.DateTime",
+          "summary": null
         },
         {
-          "name": "periodicLastExecutionDate",
-          "type": "DateTime",
-          "description": null
+          "name": "arg8",
+          "type": "System.DateTime",
+          "summary": null
         },
         {
-          "name": "reason",
-          "type": "string",
-          "description": null
+          "name": "arg9",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "currency",
-          "type": "string",
-          "description": null
+          "name": "arg10",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "sepaReference",
-          "type": "string",
-          "description": null
+          "name": "arg11",
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static QrPayloadData BezahlCodePeriodicSinglePaymentSepa(string name, string iban, string bic, decimal amount, QrBezahlPeriodicUnit periodicUnit, int periodicUnitRotation, DateTime periodicFirstExecutionDate, DateTime periodicLastExecutionDate, string reason, string currency, string sepaReference)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrPayloads.BezahlCodePeriodicSinglePaymentSepa(System.String,System.String,System.String,System.Decimal,CodeGlyphX.Payloads.QrBezahlPeriodicUnit,System.Int32,System.DateTime,System.DateTime,System.String,System.String,System.String)",
-      "anchor": "method-bezahlcodeperiodicsinglepaymentsepa-static-qrpayloaddata-bezahlcodeperiodicsinglepaymentsepa-string-name-string-iban-string-bic-decimal-amount-qrbezahlperiodicunit-periodicunit-int-periodicunitrotation-datetime-periodicfirstexecutiondate-datetime-periodiclastexecutiondate-string-reason-string-currency-string-separeference"
+      ]
     },
     {
       "name": "RussiaPaymentOrder",
-      "kind": "Method",
       "summary": "Builds a Russia payment order payload (ST00012).",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "name",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "personalAcc",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "bankName",
-          "type": "string",
-          "description": null
+          "name": "arg3",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "bic",
-          "type": "string",
-          "description": null
+          "name": "arg4",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "correspAcc",
-          "type": "string",
-          "description": null
+          "name": "arg5",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "payeeInn",
-          "type": "string",
-          "description": null
+          "name": "arg6",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "kpp",
-          "type": "string",
-          "description": null
+          "name": "arg7",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "sum",
-          "type": "decimal",
-          "description": null
+          "name": "arg8",
+          "type": "System.Decimal",
+          "summary": null
         },
         {
-          "name": "purpose",
-          "type": "string",
-          "description": null
+          "name": "arg9",
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static QrPayloadData RussiaPaymentOrder(string name, string personalAcc, string bankName, string bic, string correspAcc, string payeeInn, string kpp, decimal sum, string purpose)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrPayloads.RussiaPaymentOrder(System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Decimal,System.String)",
-      "anchor": "method-russiapaymentorder-static-qrpayloaddata-russiapaymentorder-string-name-string-personalacc-string-bankname-string-bic-string-correspacc-string-payeeinn-string-kpp-decimal-sum-string-purpose"
+      ]
     },
     {
       "name": "AppStore",
-      "kind": "Method",
       "summary": "Builds an App Store payload for the given platform.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "appIdOrUrl",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "platform",
-          "type": "QrAppStorePlatform",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.Payloads.QrAppStorePlatform",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static QrPayloadData AppStore(string appIdOrUrl, QrAppStorePlatform platform)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrPayloads.AppStore(System.String,CodeGlyphX.Payloads.QrAppStorePlatform)",
-      "anchor": "method-appstore-static-qrpayloaddata-appstore-string-appidorurl-qrappstoreplatform-platform"
+      ]
     },
     {
       "name": "Facebook",
-      "kind": "Method",
       "summary": "Builds a Facebook profile payload.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "profileOrUrl",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static QrPayloadData Facebook(string profileOrUrl)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrPayloads.Facebook(System.String)",
-      "anchor": "method-facebook-static-qrpayloaddata-facebook-string-profileorurl"
+      ]
     },
     {
       "name": "Twitter",
-      "kind": "Method",
       "summary": "Builds a Twitter/X profile payload.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "handleOrUrl",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static QrPayloadData Twitter(string handleOrUrl)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrPayloads.Twitter(System.String)",
-      "anchor": "method-twitter-static-qrpayloaddata-twitter-string-handleorurl"
+      ]
     },
     {
       "name": "TikTok",
-      "kind": "Method",
       "summary": "Builds a TikTok profile payload.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "handleOrUrl",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static QrPayloadData TikTok(string handleOrUrl)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrPayloads.TikTok(System.String)",
-      "anchor": "method-tiktok-static-qrpayloaddata-tiktok-string-handleorurl"
+      ]
     },
     {
       "name": "LinkedIn",
-      "kind": "Method",
       "summary": "Builds a LinkedIn profile payload.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "handleOrUrl",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static QrPayloadData LinkedIn(string handleOrUrl)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrPayloads.LinkedIn(System.String)",
-      "anchor": "method-linkedin-static-qrpayloaddata-linkedin-string-handleorurl"
+      ]
     },
     {
       "name": "SlovenianUpn",
-      "kind": "Method",
       "summary": "Builds a Slovenian UPN QR payload.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "SlovenianUpnQrPayload",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.Payloads.SlovenianUpnQrPayload",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static QrPayloadData SlovenianUpn(SlovenianUpnQrPayload payload)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrPayloads.SlovenianUpn(CodeGlyphX.Payloads.SlovenianUpnQrPayload)",
-      "anchor": "method-slovenianupn-static-qrpayloaddata-slovenianupn-slovenianupnqrpayload-payload"
+      ]
     },
     {
       "name": "SwissQrCode",
-      "kind": "Method",
       "summary": "Builds a Swiss QR Code payload.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "SwissQrCodePayload",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.Payloads.SwissQrCodePayload",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static QrPayloadData SwissQrCode(SwissQrCodePayload payload)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrPayloads.SwissQrCode(CodeGlyphX.Payloads.SwissQrCodePayload)",
-      "anchor": "method-swissqrcode-static-qrpayloaddata-swissqrcode-swissqrcodepayload-payload"
+      ]
     },
     {
       "name": "RussiaPaymentOrder",
-      "kind": "Method",
       "summary": "Builds a Russia payment order payload.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "RussiaPaymentOrderPayload",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.Payloads.RussiaPaymentOrderPayload",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static QrPayloadData RussiaPaymentOrder(RussiaPaymentOrderPayload payload)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrPayloads.RussiaPaymentOrder(CodeGlyphX.Payloads.RussiaPaymentOrderPayload)",
-      "anchor": "method-russiapaymentorder-static-qrpayloaddata-russiapaymentorder-russiapaymentorderpayload-payload"
+      ]
     },
     {
       "name": "BezahlCode",
-      "kind": "Method",
       "summary": "Builds a BezahlCode payload (contact).",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "authority",
-          "type": "QrBezahlAuthorityType",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.Payloads.QrBezahlAuthorityType",
+          "summary": null
         },
         {
-          "name": "name",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "account",
-          "type": "string",
-          "description": null
+          "name": "arg3",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "bnc",
-          "type": "string",
-          "description": null
+          "name": "arg4",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "iban",
-          "type": "string",
-          "description": null
+          "name": "arg5",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "bic",
-          "type": "string",
-          "description": null
+          "name": "arg6",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "reason",
-          "type": "string",
-          "description": null
+          "name": "arg7",
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static QrPayloadData BezahlCode(QrBezahlAuthorityType authority, string name, string account, string bnc, string iban, string bic, string reason)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrPayloads.BezahlCode(CodeGlyphX.Payloads.QrBezahlAuthorityType,System.String,System.String,System.String,System.String,System.String,System.String)",
-      "anchor": "method-bezahlcode-static-qrpayloaddata-bezahlcode-qrbezahlauthoritytype-authority-string-name-string-account-string-bnc-string-iban-string-bic-string-reason"
+      ]
     }
-  ]
+  ],
+  "properties": [],
+  "fields": [],
+  "events": []
 }

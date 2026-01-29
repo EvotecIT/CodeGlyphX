@@ -1,0 +1,13 @@
+﻿{
+  "name": "PdfVectorWriter",
+  "fullName": "CodeGlyphX.Rendering.Pdf.PdfVectorWriter",
+  "namespace": "CodeGlyphX.Rendering.Pdf",
+  "kind": "Class",
+  "slug": "codeglyphx-rendering-pdf-pdfvectorwriter",
+  "summary": "Minimal PDF writer for vector content streams.",
+  "remarks": null,
+  "methods": [],
+  "properties": [],
+  "fields": [],
+  "events": []
+}

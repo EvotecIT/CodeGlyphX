@@ -1,0 +1,66 @@
+﻿{
+  "name": "EmvCoMerchant",
+  "fullName": "CodeGlyphX.Payloads.QrParsedData.EmvCoMerchant",
+  "namespace": "CodeGlyphX.Payloads.QrParsedData",
+  "kind": "Class",
+  "slug": "codeglyphx-payloads-qrparseddata-emvcomerchant",
+  "summary": "EMVCo merchant-presented payment payload.",
+  "remarks": null,
+  "methods": [
+    {
+      "name": "#ctor",
+      "summary": "EMVCo merchant-presented payment payload.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
+        },
+        {
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
+        },
+        {
+          "name": "arg3",
+          "type": "System.String",
+          "summary": null
+        },
+        {
+          "name": "arg4",
+          "type": "System.Nullable{System.Decimal}",
+          "summary": null
+        },
+        {
+          "name": "arg5",
+          "type": "System.String",
+          "summary": null
+        },
+        {
+          "name": "arg6",
+          "type": "System.String",
+          "summary": null
+        },
+        {
+          "name": "arg7",
+          "type": "System.String",
+          "summary": null
+        },
+        {
+          "name": "arg8",
+          "type": "System.Collections.Generic.IReadOnlyDictionary{System.String,System.String}",
+          "summary": null
+        },
+        {
+          "name": "arg9",
+          "type": "System.Boolean",
+          "summary": null
+        }
+      ]
+    }
+  ],
+  "properties": [],
+  "fields": [],
+  "events": []
+}

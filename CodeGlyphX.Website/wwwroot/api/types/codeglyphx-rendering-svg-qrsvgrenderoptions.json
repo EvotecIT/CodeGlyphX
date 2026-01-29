@@ -1,367 +1,175 @@
-{
+﻿{
   "name": "QrSvgRenderOptions",
   "fullName": "CodeGlyphX.Rendering.Svg.QrSvgRenderOptions",
   "namespace": "CodeGlyphX.Rendering.Svg",
   "kind": "Class",
   "slug": "codeglyphx-rendering-svg-qrsvgrenderoptions",
-  "summary": "Options for CodeGlyphX.Rendering.Svg.SvgQrRenderer.",
+  "summary": "Options for .",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
-    {
-      "name": "QrSvgRenderOptions",
-      "kind": "Constructor",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrSvgRenderOptions()",
-      "xmlId": "M:CodeGlyphX.Rendering.Svg.QrSvgRenderOptions.#ctor",
-      "anchor": "constructor-qrsvgrenderoptions-qrsvgrenderoptions"
-    },
+  "methods": [
     {
       "name": "WithModuleSize",
-      "kind": "Method",
       "summary": "Sets the module size in pixels.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "size",
-          "type": "int",
-          "description": null
+          "name": "arg1",
+          "type": "System.Int32",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrSvgRenderOptions WithModuleSize(int size)",
-      "xmlId": "M:CodeGlyphX.Rendering.Svg.QrSvgRenderOptions.WithModuleSize(System.Int32)",
-      "anchor": "method-withmodulesize-qrsvgrenderoptions-withmodulesize-int-size"
+      ]
     },
     {
       "name": "WithQuietZone",
-      "kind": "Method",
       "summary": "Sets the quiet zone size in modules.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "quietZone",
-          "type": "int",
-          "description": null
+          "name": "arg1",
+          "type": "System.Int32",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrSvgRenderOptions WithQuietZone(int quietZone)",
-      "xmlId": "M:CodeGlyphX.Rendering.Svg.QrSvgRenderOptions.WithQuietZone(System.Int32)",
-      "anchor": "method-withquietzone-qrsvgrenderoptions-withquietzone-int-quietzone"
+      ]
     },
     {
       "name": "WithDarkColor",
-      "kind": "Method",
       "summary": "Sets the dark color (CSS value).",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "color",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrSvgRenderOptions WithDarkColor(string color)",
-      "xmlId": "M:CodeGlyphX.Rendering.Svg.QrSvgRenderOptions.WithDarkColor(System.String)",
-      "anchor": "method-withdarkcolor-qrsvgrenderoptions-withdarkcolor-string-color"
+      ]
     },
     {
       "name": "WithLightColor",
-      "kind": "Method",
       "summary": "Sets the light color (CSS value).",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "color",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrSvgRenderOptions WithLightColor(string color)",
-      "xmlId": "M:CodeGlyphX.Rendering.Svg.QrSvgRenderOptions.WithLightColor(System.String)",
-      "anchor": "method-withlightcolor-qrsvgrenderoptions-withlightcolor-string-color"
+      ]
     },
     {
       "name": "WithLogo",
-      "kind": "Method",
       "summary": "Sets the logo overlay options.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "logo",
-          "type": "QrLogoOptions",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.Rendering.QrLogoOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrSvgRenderOptions WithLogo(QrLogoOptions logo)",
-      "xmlId": "M:CodeGlyphX.Rendering.Svg.QrSvgRenderOptions.WithLogo(CodeGlyphX.Rendering.QrLogoOptions)",
-      "anchor": "method-withlogo-qrsvgrenderoptions-withlogo-qrlogooptions-logo"
+      ]
     },
     {
       "name": "WithModuleShape",
-      "kind": "Method",
       "summary": "Sets the module shape.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "shape",
-          "type": "QrPngModuleShape",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.Rendering.Png.QrPngModuleShape",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrSvgRenderOptions WithModuleShape(QrPngModuleShape shape)",
-      "xmlId": "M:CodeGlyphX.Rendering.Svg.QrSvgRenderOptions.WithModuleShape(CodeGlyphX.Rendering.Png.QrPngModuleShape)",
-      "anchor": "method-withmoduleshape-qrsvgrenderoptions-withmoduleshape-qrpngmoduleshape-shape"
+      ]
     },
     {
       "name": "WithModuleScale",
-      "kind": "Method",
       "summary": "Sets the module scale.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "scale",
-          "type": "double",
-          "description": null
+          "name": "arg1",
+          "type": "System.Double",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrSvgRenderOptions WithModuleScale(double scale)",
-      "xmlId": "M:CodeGlyphX.Rendering.Svg.QrSvgRenderOptions.WithModuleScale(System.Double)",
-      "anchor": "method-withmodulescale-qrsvgrenderoptions-withmodulescale-double-scale"
+      ]
     },
     {
       "name": "WithModuleCornerRadiusPx",
-      "kind": "Method",
       "summary": "Sets the module corner radius in pixels.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "radiusPx",
-          "type": "int",
-          "description": null
+          "name": "arg1",
+          "type": "System.Int32",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrSvgRenderOptions WithModuleCornerRadiusPx(int radiusPx)",
-      "xmlId": "M:CodeGlyphX.Rendering.Svg.QrSvgRenderOptions.WithModuleCornerRadiusPx(System.Int32)",
-      "anchor": "method-withmodulecornerradiuspx-qrsvgrenderoptions-withmodulecornerradiuspx-int-radiuspx"
+      ]
     },
     {
       "name": "WithForegroundGradient",
-      "kind": "Method",
       "summary": "Sets the foreground gradient.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "gradient",
-          "type": "QrPngGradientOptions",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.Rendering.Png.QrPngGradientOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrSvgRenderOptions WithForegroundGradient(QrPngGradientOptions gradient)",
-      "xmlId": "M:CodeGlyphX.Rendering.Svg.QrSvgRenderOptions.WithForegroundGradient(CodeGlyphX.Rendering.Png.QrPngGradientOptions)",
-      "anchor": "method-withforegroundgradient-qrsvgrenderoptions-withforegroundgradient-qrpnggradientoptions-gradient"
+      ]
     },
     {
       "name": "WithEyes",
-      "kind": "Method",
       "summary": "Sets custom eye (finder) options.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "eyes",
-          "type": "QrPngEyeOptions",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.Rendering.Png.QrPngEyeOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrSvgRenderOptions WithEyes(QrPngEyeOptions eyes)",
-      "xmlId": "M:CodeGlyphX.Rendering.Svg.QrSvgRenderOptions.WithEyes(CodeGlyphX.Rendering.Png.QrPngEyeOptions)",
-      "anchor": "method-witheyes-qrsvgrenderoptions-witheyes-qrpngeyeoptions-eyes"
-    },
+      ]
+    }
+  ],
+  "properties": [
     {
       "name": "ModuleSize",
-      "kind": "Property",
-      "summary": "Gets or sets the size of a single QR module in pixels.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int ModuleSize {get; set; }",
-      "xmlId": "P:CodeGlyphX.Rendering.Svg.QrSvgRenderOptions.ModuleSize",
-      "anchor": "property-modulesize-int-modulesize-get-set"
+      "summary": "Gets or sets the size of a single QR module in pixels."
     },
     {
       "name": "QuietZone",
-      "kind": "Property",
-      "summary": "Gets or sets the quiet zone size in modules.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int QuietZone {get; set; }",
-      "xmlId": "P:CodeGlyphX.Rendering.Svg.QrSvgRenderOptions.QuietZone",
-      "anchor": "property-quietzone-int-quietzone-get-set"
+      "summary": "Gets or sets the quiet zone size in modules."
     },
     {
       "name": "DarkColor",
-      "kind": "Property",
-      "summary": "Gets or sets the dark color (CSS value).",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string DarkColor {get; set; }",
-      "xmlId": "P:CodeGlyphX.Rendering.Svg.QrSvgRenderOptions.DarkColor",
-      "anchor": "property-darkcolor-string-darkcolor-get-set"
+      "summary": "Gets or sets the dark color (CSS value)."
     },
     {
       "name": "LightColor",
-      "kind": "Property",
-      "summary": "Gets or sets the light color (CSS value).",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string LightColor {get; set; }",
-      "xmlId": "P:CodeGlyphX.Rendering.Svg.QrSvgRenderOptions.LightColor",
-      "anchor": "property-lightcolor-string-lightcolor-get-set"
+      "summary": "Gets or sets the light color (CSS value)."
     },
     {
       "name": "Logo",
-      "kind": "Property",
-      "summary": "Optional logo overlay (PNG).",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrLogoOptions Logo {get; set; }",
-      "xmlId": "P:CodeGlyphX.Rendering.Svg.QrSvgRenderOptions.Logo",
-      "anchor": "property-logo-qrlogooptions-logo-get-set"
+      "summary": "Optional logo overlay (PNG)."
     },
     {
       "name": "ModuleShape",
-      "kind": "Property",
-      "summary": "Gets or sets the module shape.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrPngModuleShape ModuleShape {get; set; }",
-      "xmlId": "P:CodeGlyphX.Rendering.Svg.QrSvgRenderOptions.ModuleShape",
-      "anchor": "property-moduleshape-qrpngmoduleshape-moduleshape-get-set"
+      "summary": "Gets or sets the module shape."
     },
     {
       "name": "ModuleScale",
-      "kind": "Property",
-      "summary": "Gets or sets the scale of the module inside its cell (0.1..1.0).",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "double ModuleScale {get; set; }",
-      "xmlId": "P:CodeGlyphX.Rendering.Svg.QrSvgRenderOptions.ModuleScale",
-      "anchor": "property-modulescale-double-modulescale-get-set"
+      "summary": "Gets or sets the scale of the module inside its cell (0.1..1.0)."
     },
     {
       "name": "ModuleCornerRadiusPx",
-      "kind": "Property",
-      "summary": "Gets or sets the corner radius in pixels for rounded modules.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int ModuleCornerRadiusPx {get; set; }",
-      "xmlId": "P:CodeGlyphX.Rendering.Svg.QrSvgRenderOptions.ModuleCornerRadiusPx",
-      "anchor": "property-modulecornerradiuspx-int-modulecornerradiuspx-get-set"
+      "summary": "Gets or sets the corner radius in pixels for rounded modules."
     },
     {
       "name": "ForegroundGradient",
-      "kind": "Property",
-      "summary": "Optional gradient for the foreground (dark) modules.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrPngGradientOptions ForegroundGradient {get; set; }",
-      "xmlId": "P:CodeGlyphX.Rendering.Svg.QrSvgRenderOptions.ForegroundGradient",
-      "anchor": "property-foregroundgradient-qrpnggradientoptions-foregroundgradient-get-set"
+      "summary": "Optional gradient for the foreground (dark) modules."
     },
     {
       "name": "Eyes",
-      "kind": "Property",
-      "summary": "Optional eye (finder) styling overrides.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrPngEyeOptions Eyes {get; set; }",
-      "xmlId": "P:CodeGlyphX.Rendering.Svg.QrSvgRenderOptions.Eyes",
-      "anchor": "property-eyes-qrpngeyeoptions-eyes-get-set"
+      "summary": "Optional eye (finder) styling overrides."
     }
-  ]
+  ],
+  "fields": [],
+  "events": []
 }

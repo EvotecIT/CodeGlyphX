@@ -1,0 +1,49 @@
+﻿{
+  "name": "QrArtPalette",
+  "fullName": "CodeGlyphX.QrArtPalette",
+  "namespace": "CodeGlyphX",
+  "kind": "Class",
+  "slug": "codeglyphx-qrartpalette",
+  "summary": "Palette bundle with a suggested background/foreground and palette.",
+  "remarks": null,
+  "methods": [
+    {
+      "name": "#ctor",
+      "summary": "Create a palette bundle.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "arg1",
+          "type": "CodeGlyphX.Rendering.Png.Rgba32",
+          "summary": null
+        },
+        {
+          "name": "arg2",
+          "type": "CodeGlyphX.Rendering.Png.Rgba32",
+          "summary": null
+        },
+        {
+          "name": "arg3",
+          "type": "CodeGlyphX.Rendering.Png.Rgba32[]",
+          "summary": null
+        }
+      ]
+    }
+  ],
+  "properties": [
+    {
+      "name": "Background",
+      "summary": "Suggested background color."
+    },
+    {
+      "name": "Foreground",
+      "summary": "Suggested foreground color."
+    },
+    {
+      "name": "Palette",
+      "summary": "Palette options for the foreground."
+    }
+  ],
+  "fields": [],
+  "events": []
+}

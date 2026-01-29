@@ -1,15 +1,12 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>MatrixTgaRenderer - CodeGlyphX API Reference</title>
-  <meta name="description" content="Renders generic 2D matrices to TGA." />
-  <link rel="stylesheet" href="../style.css" />
-  <script>(function(){const theme=localStorage.getItem('theme')||'dark';document.documentElement.dataset.theme=theme;})();</script>
+  <title>CodeGlyphX.Rendering.Tga.MatrixTgaRenderer - CodeGlyphX API Reference</title>
+  <link rel="stylesheet" href="/mnt/c/Support/GitHub/CodeMatrix/CodeGlyphX.Website/wwwroot/css/api-docs.css" />
 </head>
 <body>
-  <div class="page">
 <header class="header">
     <div class="header-content">
         <a href="/" class="brand">
@@ -31,19 +28,31 @@
             <div class="nav-links">
                 <a href="/">Home</a>
                 <a href="/playground/">Playground</a>
-                <a href="/docs/">Documentation</a>
+                <a href="/docs/">Docs</a>
+                <a href="/benchmarks/">Benchmarks</a>
                 <a href="/showcase/">Showcase</a>
+                <a href="/pricing/">Pricing</a>
             </div>
             <div class="nav-actions">
-                <button class="theme-toggle" title="Toggle theme" aria-label="Toggle theme">
-                    <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="5"/>
-                        <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
-                    </svg>
-                    <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
-                    </svg>
-                </button>
+                <div class="theme-toggle" role="group" aria-label="Theme selection">
+                    <button data-theme="auto" title="Auto (system)" aria-label="Auto theme">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="2" y="3" width="20" height="14" rx="2"/>
+                            <path d="M8 21h8M12 17v4"/>
+                        </svg>
+                    </button>
+                    <button data-theme="light" title="Light" aria-label="Light theme">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="5"/>
+                            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+                        </svg>
+                    </button>
+                    <button data-theme="dark" title="Dark" aria-label="Dark theme">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
+                        </svg>
+                    </button>
+                </div>
                 <a href="https://github.com/EvotecIT/CodeGlyphX" target="_blank" rel="noopener" class="nav-icon" title="GitHub" aria-label="GitHub">
                     <svg viewBox="0 0 24 24" fill="currentColor">
                         <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
@@ -59,61 +68,57 @@
         </nav>
     </div>
 </header>
+  <main class="pf-api">
+    <a href="../index.html">← API Index</a>
+    <h1>CodeGlyphX.Rendering.Tga.MatrixTgaRenderer</h1>
+    <p>Renders generic 2D matrices to TGA.</p>
 
-<main class="type-detail">
-  <nav class="breadcrumb" aria-label="Breadcrumb">
-    <a href="../index.html">API Reference</a>
-    <span class="sep">/</span><span>CodeGlyphX.Rendering.Tga</span>
-  </nav>
-  <header class="type-header">
-    <h1>MatrixTgaRenderer</h1>
-    <div class="type-meta">Class · CodeGlyphX.Rendering.Tga</div>
-  </header>
-  <p class="type-summary">Renders generic 2D matrices to TGA.</p>
-  <section class="member-section">
-    <h2>Methods</h2>
-    <div class="member" id="method-render-static-byte-render-bitmatrix-modules-matrixpngrenderoptions-opts">
-      <code class="signature">static byte[] Render(BitMatrix modules, MatrixPngRenderOptions opts)</code>
-      <p class="member-summary">Renders the matrix to a TGA byte array.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>modules <span class="param-type">BitMatrix</span></dt>
-        <dt>opts <span class="param-type">MatrixPngRenderOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-rendertostream-static-void-rendertostream-bitmatrix-modules-matrixpngrenderoptions-opts-stream-stream">
-      <code class="signature">static void RenderToStream(BitMatrix modules, MatrixPngRenderOptions opts, Stream stream)</code>
-      <p class="member-summary">Renders the matrix to a TGA stream.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>modules <span class="param-type">BitMatrix</span></dt>
-        <dt>opts <span class="param-type">MatrixPngRenderOptions</span></dt>
-        <dt>stream <span class="param-type">Stream</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-rendertofile-static-string-rendertofile-bitmatrix-modules-matrixpngrenderoptions-opts-string-path">
-      <code class="signature">static string RenderToFile(BitMatrix modules, MatrixPngRenderOptions opts, string path)</code>
-      <p class="member-summary">Renders the matrix to a TGA file.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>modules <span class="param-type">BitMatrix</span></dt>
-        <dt>opts <span class="param-type">MatrixPngRenderOptions</span></dt>
-        <dt>path <span class="param-type">string</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-rendertofile-static-string-rendertofile-bitmatrix-modules-matrixpngrenderoptions-opts-string-directory-string-filename">
-      <code class="signature">static string RenderToFile(BitMatrix modules, MatrixPngRenderOptions opts, string directory, string fileName)</code>
-      <p class="member-summary">Renders the matrix to a TGA file under the specified directory.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>modules <span class="param-type">BitMatrix</span></dt>
-        <dt>opts <span class="param-type">MatrixPngRenderOptions</span></dt>
-        <dt>directory <span class="param-type">string</span></dt>
-        <dt>fileName <span class="param-type">string</span></dt>
-      </dl>
-    </div>
-  </section>
-</main>
+    <section class="pf-api-section">
+      <h2>Methods</h2>
+      <ul>
+        <li>
+          <strong>Render</strong> - Renders the matrix to a TGA byte array.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (CodeGlyphX.BitMatrix)</li>
+              <li><code>arg2</code> (CodeGlyphX.Rendering.Png.MatrixPngRenderOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderToStream</strong> - Renders the matrix to a TGA stream.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (CodeGlyphX.BitMatrix)</li>
+              <li><code>arg2</code> (CodeGlyphX.Rendering.Png.MatrixPngRenderOptions)</li>
+              <li><code>arg3</code> (System.IO.Stream)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderToFile</strong> - Renders the matrix to a TGA file.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (CodeGlyphX.BitMatrix)</li>
+              <li><code>arg2</code> (CodeGlyphX.Rendering.Png.MatrixPngRenderOptions)</li>
+              <li><code>arg3</code> (System.String)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderToFile</strong> - Renders the matrix to a TGA file under the specified directory.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (CodeGlyphX.BitMatrix)</li>
+              <li><code>arg2</code> (CodeGlyphX.Rendering.Png.MatrixPngRenderOptions)</li>
+              <li><code>arg3</code> (System.String)</li>
+              <li><code>arg4</code> (System.String)</li>
+            </ul>
+          </div>
+        </li>
+      </ul>
+    </section>
+  </main>
 <footer class="footer">
     <div class="footer-content">
         <div class="footer-brand">
@@ -128,20 +133,21 @@
                 <h3>Product</h3>
                 <a href="/">Home</a>
                 <a href="/playground/">Playground</a>
-                <a href="/docs/">Documentation</a>
+                <a href="/docs/">Docs</a>
+                <a href="/benchmarks/">Benchmarks</a>
                 <a href="/showcase/">Showcase</a>
             </div>
             <div class="footer-section">
                 <h3>Resources</h3>
                 <a href="/faq/">FAQ</a>
-                <a href="https://www.nuget.org/packages/CodeGlyphX" target="_blank" rel="noopener">NuGet Package</a>
-                <a href="https://github.com/EvotecIT/CodeGlyphX" target="_blank" rel="noopener">GitHub Repository</a>
-                <a href="https://github.com/EvotecIT/CodeGlyphX/issues" target="_blank" rel="noopener">Report Issue</a>
+                <a href="https://www.nuget.org/packages/CodeGlyphX" target="_blank" rel="noopener" aria-label="NuGet Package (opens in new tab)">NuGet Package</a>
+                <a href="https://github.com/EvotecIT/CodeGlyphX" target="_blank" rel="noopener" aria-label="GitHub Repository (opens in new tab)">GitHub Repository</a>
+                <a href="https://github.com/EvotecIT/CodeGlyphX/issues" target="_blank" rel="noopener" aria-label="Report Issue (opens in new tab)">Report Issue</a>
             </div>
             <div class="footer-section">
                 <h3>Company</h3>
-                <a href="https://evotec.xyz" target="_blank" rel="noopener">Evotec Services</a>
-                <a href="https://evotec.xyz/hub" target="_blank" rel="noopener">Blog</a>
+                <a href="https://evotec.xyz" target="_blank" rel="noopener" aria-label="Evotec Services (opens in new tab)">Evotec Services</a>
+                <a href="https://evotec.xyz/hub" target="_blank" rel="noopener" aria-label="Blog (opens in new tab)">Blog</a>
             </div>
         </div>
         <div class="footer-bottom">
@@ -158,7 +164,5 @@
     </div>
 </footer>
 <script src="/js/site.js"></script>
-
-  </div>
 </body>
 </html>

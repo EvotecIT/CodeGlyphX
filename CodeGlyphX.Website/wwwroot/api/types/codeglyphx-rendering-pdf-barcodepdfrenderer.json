@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "BarcodePdfRenderer",
   "fullName": "CodeGlyphX.Rendering.Pdf.BarcodePdfRenderer",
   "namespace": "CodeGlyphX.Rendering.Pdf",
@@ -6,148 +6,117 @@
   "slug": "codeglyphx-rendering-pdf-barcodepdfrenderer",
   "summary": "Renders 1D barcodes to a PDF image.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
       "name": "Render",
-      "kind": "Method",
       "summary": "Renders the barcode to a PDF byte array.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "barcode",
-          "type": "Barcode1D",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.Barcode1D",
+          "summary": null
         },
         {
-          "name": "opts",
-          "type": "BarcodePngRenderOptions",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.Rendering.Png.BarcodePngRenderOptions",
+          "summary": null
         },
         {
-          "name": "mode",
-          "type": "RenderMode",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.Rendering.RenderMode",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static byte[] Render(Barcode1D barcode, BarcodePngRenderOptions opts, RenderMode mode)",
-      "xmlId": "M:CodeGlyphX.Rendering.Pdf.BarcodePdfRenderer.Render(CodeGlyphX.Barcode1D,CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,CodeGlyphX.Rendering.RenderMode)",
-      "anchor": "method-render-static-byte-render-barcode1d-barcode-barcodepngrenderoptions-opts-rendermode-mode"
+      ]
     },
     {
       "name": "RenderToStream",
-      "kind": "Method",
       "summary": "Renders the barcode to a PDF stream.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "barcode",
-          "type": "Barcode1D",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.Barcode1D",
+          "summary": null
         },
         {
-          "name": "opts",
-          "type": "BarcodePngRenderOptions",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.Rendering.Png.BarcodePngRenderOptions",
+          "summary": null
         },
         {
-          "name": "stream",
-          "type": "Stream",
-          "description": null
+          "name": "arg3",
+          "type": "System.IO.Stream",
+          "summary": null
         },
         {
-          "name": "mode",
-          "type": "RenderMode",
-          "description": null
+          "name": "arg4",
+          "type": "CodeGlyphX.Rendering.RenderMode",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static void RenderToStream(Barcode1D barcode, BarcodePngRenderOptions opts, Stream stream, RenderMode mode)",
-      "xmlId": "M:CodeGlyphX.Rendering.Pdf.BarcodePdfRenderer.RenderToStream(CodeGlyphX.Barcode1D,CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,System.IO.Stream,CodeGlyphX.Rendering.RenderMode)",
-      "anchor": "method-rendertostream-static-void-rendertostream-barcode1d-barcode-barcodepngrenderoptions-opts-stream-stream-rendermode-mode"
+      ]
     },
     {
       "name": "RenderToFile",
-      "kind": "Method",
       "summary": "Renders the barcode to a PDF file.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "barcode",
-          "type": "Barcode1D",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.Barcode1D",
+          "summary": null
         },
         {
-          "name": "opts",
-          "type": "BarcodePngRenderOptions",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.Rendering.Png.BarcodePngRenderOptions",
+          "summary": null
         },
         {
-          "name": "path",
-          "type": "string",
-          "description": null
+          "name": "arg3",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "mode",
-          "type": "RenderMode",
-          "description": null
+          "name": "arg4",
+          "type": "CodeGlyphX.Rendering.RenderMode",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string RenderToFile(Barcode1D barcode, BarcodePngRenderOptions opts, string path, RenderMode mode)",
-      "xmlId": "M:CodeGlyphX.Rendering.Pdf.BarcodePdfRenderer.RenderToFile(CodeGlyphX.Barcode1D,CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,System.String,CodeGlyphX.Rendering.RenderMode)",
-      "anchor": "method-rendertofile-static-string-rendertofile-barcode1d-barcode-barcodepngrenderoptions-opts-string-path-rendermode-mode"
+      ]
     },
     {
       "name": "RenderToFile",
-      "kind": "Method",
       "summary": "Renders the barcode to a PDF file under the specified directory.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "barcode",
-          "type": "Barcode1D",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.Barcode1D",
+          "summary": null
         },
         {
-          "name": "opts",
-          "type": "BarcodePngRenderOptions",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.Rendering.Png.BarcodePngRenderOptions",
+          "summary": null
         },
         {
-          "name": "directory",
-          "type": "string",
-          "description": null
+          "name": "arg3",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "fileName",
-          "type": "string",
-          "description": null
+          "name": "arg4",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "mode",
-          "type": "RenderMode",
-          "description": null
+          "name": "arg5",
+          "type": "CodeGlyphX.Rendering.RenderMode",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string RenderToFile(Barcode1D barcode, BarcodePngRenderOptions opts, string directory, string fileName, RenderMode mode)",
-      "xmlId": "M:CodeGlyphX.Rendering.Pdf.BarcodePdfRenderer.RenderToFile(CodeGlyphX.Barcode1D,CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,System.String,System.String,CodeGlyphX.Rendering.RenderMode)",
-      "anchor": "method-rendertofile-static-string-rendertofile-barcode1d-barcode-barcodepngrenderoptions-opts-string-directory-string-filename-rendermode-mode"
+      ]
     }
-  ]
+  ],
+  "properties": [],
+  "fields": [],
+  "events": []
 }

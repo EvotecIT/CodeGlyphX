@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "Pdf417EncodeOptions",
   "fullName": "CodeGlyphX.Pdf417.Pdf417EncodeOptions",
   "namespace": "CodeGlyphX.Pdf417",
@@ -6,148 +6,45 @@
   "slug": "codeglyphx-pdf417-pdf417encodeoptions",
   "summary": "Options for PDF417 encoding.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
-    {
-      "name": "Pdf417EncodeOptions",
-      "kind": "Constructor",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "Pdf417EncodeOptions()",
-      "xmlId": "M:CodeGlyphX.Pdf417.Pdf417EncodeOptions.#ctor",
-      "anchor": "constructor-pdf417encodeoptions-pdf417encodeoptions"
-    },
+  "methods": [],
+  "properties": [
     {
       "name": "MinColumns",
-      "kind": "Property",
-      "summary": "Minimum number of data columns (1..30).",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int MinColumns {get; set; }",
-      "xmlId": "P:CodeGlyphX.Pdf417.Pdf417EncodeOptions.MinColumns",
-      "anchor": "property-mincolumns-int-mincolumns-get-set"
+      "summary": "Minimum number of data columns (1..30)."
     },
     {
       "name": "MaxColumns",
-      "kind": "Property",
-      "summary": "Maximum number of data columns (1..30).",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int MaxColumns {get; set; }",
-      "xmlId": "P:CodeGlyphX.Pdf417.Pdf417EncodeOptions.MaxColumns",
-      "anchor": "property-maxcolumns-int-maxcolumns-get-set"
+      "summary": "Maximum number of data columns (1..30)."
     },
     {
       "name": "MinRows",
-      "kind": "Property",
-      "summary": "Minimum number of rows (3..90).",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int MinRows {get; set; }",
-      "xmlId": "P:CodeGlyphX.Pdf417.Pdf417EncodeOptions.MinRows",
-      "anchor": "property-minrows-int-minrows-get-set"
+      "summary": "Minimum number of rows (3..90)."
     },
     {
       "name": "MaxRows",
-      "kind": "Property",
-      "summary": "Maximum number of rows (3..90).",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int MaxRows {get; set; }",
-      "xmlId": "P:CodeGlyphX.Pdf417.Pdf417EncodeOptions.MaxRows",
-      "anchor": "property-maxrows-int-maxrows-get-set"
+      "summary": "Maximum number of rows (3..90)."
     },
     {
       "name": "ErrorCorrectionLevel",
-      "kind": "Property",
-      "summary": "Error correction level (0..8). Use -1 for auto.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int ErrorCorrectionLevel {get; set; }",
-      "xmlId": "P:CodeGlyphX.Pdf417.Pdf417EncodeOptions.ErrorCorrectionLevel",
-      "anchor": "property-errorcorrectionlevel-int-errorcorrectionlevel-get-set"
+      "summary": "Error correction level (0..8). Use -1 for auto."
     },
     {
       "name": "TargetAspectRatio",
-      "kind": "Property",
-      "summary": "Target aspect ratio (width / height).",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "float TargetAspectRatio {get; set; }",
-      "xmlId": "P:CodeGlyphX.Pdf417.Pdf417EncodeOptions.TargetAspectRatio",
-      "anchor": "property-targetaspectratio-float-targetaspectratio-get-set"
+      "summary": "Target aspect ratio (width / height)."
     },
     {
       "name": "Compact",
-      "kind": "Property",
-      "summary": "Compact PDF417 (not recommended).",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "bool Compact {get; set; }",
-      "xmlId": "P:CodeGlyphX.Pdf417.Pdf417EncodeOptions.Compact",
-      "anchor": "property-compact-bool-compact-get-set"
+      "summary": "Compact PDF417 (not recommended)."
     },
     {
       "name": "Compaction",
-      "kind": "Property",
-      "summary": "High-level compaction mode.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "Pdf417Compaction Compaction {get; set; }",
-      "xmlId": "P:CodeGlyphX.Pdf417.Pdf417EncodeOptions.Compaction",
-      "anchor": "property-compaction-pdf417compaction-compaction-get-set"
+      "summary": "High-level compaction mode."
     },
     {
       "name": "TextEncoding",
-      "kind": "Property",
-      "summary": "Text encoding used for byte compaction.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "Encoding TextEncoding {get; set; }",
-      "xmlId": "P:CodeGlyphX.Pdf417.Pdf417EncodeOptions.TextEncoding",
-      "anchor": "property-textencoding-encoding-textencoding-get-set"
+      "summary": "Text encoding used for byte compaction."
     }
-  ]
+  ],
+  "fields": [],
+  "events": []
 }

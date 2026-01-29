@@ -1,0 +1,59 @@
+﻿{
+  "name": "QrPngModuleShapeMapOptions",
+  "fullName": "CodeGlyphX.Rendering.Png.QrPngModuleShapeMapOptions",
+  "namespace": "CodeGlyphX.Rendering.Png",
+  "kind": "Class",
+  "slug": "codeglyphx-rendering-png-qrpngmoduleshapemapoptions",
+  "summary": "Options for per-module shape mapping.",
+  "remarks": null,
+  "methods": [],
+  "properties": [
+    {
+      "name": "Mode",
+      "summary": "Gets or sets the shape map mode."
+    },
+    {
+      "name": "PrimaryShape",
+      "summary": "Primary shape (used for the center in radial mode)."
+    },
+    {
+      "name": "SecondaryShape",
+      "summary": "Secondary shape (used for the edge in radial mode)."
+    },
+    {
+      "name": "Split",
+      "summary": "Split point (0..1) used by ."
+    },
+    {
+      "name": "RingSize",
+      "summary": "Ring size in modules for ."
+    },
+    {
+      "name": "Seed",
+      "summary": "Random seed used by ."
+    },
+    {
+      "name": "SecondaryChance",
+      "summary": "Probability (0..1) of choosing the secondary shape in random mode."
+    },
+    {
+      "name": "CornerSize",
+      "summary": "Corner zone size in modules for ."
+    },
+    {
+      "name": "ApplyToEyes",
+      "summary": "When true, allows the shape map to affect eye modules."
+    },
+    {
+      "name": "ProtectFunctionalPatterns",
+      "summary": "When true, functional patterns keep the base module shape."
+    }
+  ],
+  "fields": [
+    {
+      "name": "DefaultRingSize",
+      "summary": "Default ring size (in modules) for ."
+    }
+  ],
+  "events": []
+}

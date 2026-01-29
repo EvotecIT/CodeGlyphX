@@ -1,545 +1,162 @@
-{
+﻿{
   "name": "QrShadowSocksMethod",
   "fullName": "CodeGlyphX.Payloads.QrShadowSocksMethod",
   "namespace": "CodeGlyphX.Payloads",
-  "kind": "Enum",
+  "kind": "Class",
   "slug": "codeglyphx-payloads-qrshadowsocksmethod",
   "summary": "Shadowsocks cipher methods.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
-    {
-      "name": "value__",
-      "kind": "Field",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int value__",
-      "xmlId": "F:CodeGlyphX.Payloads.QrShadowSocksMethod.value__",
-      "anchor": "field-value-int-value"
-    },
+  "methods": [],
+  "properties": [],
+  "fields": [
     {
       "name": "Chacha20IetfPoly1305",
-      "kind": "Field",
-      "summary": "chacha20-ietf-poly1305.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrShadowSocksMethod Chacha20IetfPoly1305",
-      "xmlId": "F:CodeGlyphX.Payloads.QrShadowSocksMethod.Chacha20IetfPoly1305",
-      "anchor": "field-chacha20ietfpoly1305-qrshadowsocksmethod-chacha20ietfpoly1305"
+      "summary": "chacha20-ietf-poly1305."
     },
     {
       "name": "Aes128Gcm",
-      "kind": "Field",
-      "summary": "aes-128-gcm.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrShadowSocksMethod Aes128Gcm",
-      "xmlId": "F:CodeGlyphX.Payloads.QrShadowSocksMethod.Aes128Gcm",
-      "anchor": "field-aes128gcm-qrshadowsocksmethod-aes128gcm"
+      "summary": "aes-128-gcm."
     },
     {
       "name": "Aes192Gcm",
-      "kind": "Field",
-      "summary": "aes-192-gcm.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrShadowSocksMethod Aes192Gcm",
-      "xmlId": "F:CodeGlyphX.Payloads.QrShadowSocksMethod.Aes192Gcm",
-      "anchor": "field-aes192gcm-qrshadowsocksmethod-aes192gcm"
+      "summary": "aes-192-gcm."
     },
     {
       "name": "Aes256Gcm",
-      "kind": "Field",
-      "summary": "aes-256-gcm.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrShadowSocksMethod Aes256Gcm",
-      "xmlId": "F:CodeGlyphX.Payloads.QrShadowSocksMethod.Aes256Gcm",
-      "anchor": "field-aes256gcm-qrshadowsocksmethod-aes256gcm"
+      "summary": "aes-256-gcm."
     },
     {
       "name": "XChacha20IetfPoly1305",
-      "kind": "Field",
-      "summary": "xchacha20-ietf-poly1305.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrShadowSocksMethod XChacha20IetfPoly1305",
-      "xmlId": "F:CodeGlyphX.Payloads.QrShadowSocksMethod.XChacha20IetfPoly1305",
-      "anchor": "field-xchacha20ietfpoly1305-qrshadowsocksmethod-xchacha20ietfpoly1305"
+      "summary": "xchacha20-ietf-poly1305."
     },
     {
       "name": "Aes128Cfb",
-      "kind": "Field",
-      "summary": "aes-128-cfb.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrShadowSocksMethod Aes128Cfb",
-      "xmlId": "F:CodeGlyphX.Payloads.QrShadowSocksMethod.Aes128Cfb",
-      "anchor": "field-aes128cfb-qrshadowsocksmethod-aes128cfb"
+      "summary": "aes-128-cfb."
     },
     {
       "name": "Aes192Cfb",
-      "kind": "Field",
-      "summary": "aes-192-cfb.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrShadowSocksMethod Aes192Cfb",
-      "xmlId": "F:CodeGlyphX.Payloads.QrShadowSocksMethod.Aes192Cfb",
-      "anchor": "field-aes192cfb-qrshadowsocksmethod-aes192cfb"
+      "summary": "aes-192-cfb."
     },
     {
       "name": "Aes256Cfb",
-      "kind": "Field",
-      "summary": "aes-256-cfb.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrShadowSocksMethod Aes256Cfb",
-      "xmlId": "F:CodeGlyphX.Payloads.QrShadowSocksMethod.Aes256Cfb",
-      "anchor": "field-aes256cfb-qrshadowsocksmethod-aes256cfb"
+      "summary": "aes-256-cfb."
     },
     {
       "name": "Aes128Ctr",
-      "kind": "Field",
-      "summary": "aes-128-ctr.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrShadowSocksMethod Aes128Ctr",
-      "xmlId": "F:CodeGlyphX.Payloads.QrShadowSocksMethod.Aes128Ctr",
-      "anchor": "field-aes128ctr-qrshadowsocksmethod-aes128ctr"
+      "summary": "aes-128-ctr."
     },
     {
       "name": "Aes192Ctr",
-      "kind": "Field",
-      "summary": "aes-192-ctr.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrShadowSocksMethod Aes192Ctr",
-      "xmlId": "F:CodeGlyphX.Payloads.QrShadowSocksMethod.Aes192Ctr",
-      "anchor": "field-aes192ctr-qrshadowsocksmethod-aes192ctr"
+      "summary": "aes-192-ctr."
     },
     {
       "name": "Aes256Ctr",
-      "kind": "Field",
-      "summary": "aes-256-ctr.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrShadowSocksMethod Aes256Ctr",
-      "xmlId": "F:CodeGlyphX.Payloads.QrShadowSocksMethod.Aes256Ctr",
-      "anchor": "field-aes256ctr-qrshadowsocksmethod-aes256ctr"
+      "summary": "aes-256-ctr."
     },
     {
       "name": "Camellia128Cfb",
-      "kind": "Field",
-      "summary": "camellia-128-cfb.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrShadowSocksMethod Camellia128Cfb",
-      "xmlId": "F:CodeGlyphX.Payloads.QrShadowSocksMethod.Camellia128Cfb",
-      "anchor": "field-camellia128cfb-qrshadowsocksmethod-camellia128cfb"
+      "summary": "camellia-128-cfb."
     },
     {
       "name": "Camellia192Cfb",
-      "kind": "Field",
-      "summary": "camellia-192-cfb.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrShadowSocksMethod Camellia192Cfb",
-      "xmlId": "F:CodeGlyphX.Payloads.QrShadowSocksMethod.Camellia192Cfb",
-      "anchor": "field-camellia192cfb-qrshadowsocksmethod-camellia192cfb"
+      "summary": "camellia-192-cfb."
     },
     {
       "name": "Camellia256Cfb",
-      "kind": "Field",
-      "summary": "camellia-256-cfb.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrShadowSocksMethod Camellia256Cfb",
-      "xmlId": "F:CodeGlyphX.Payloads.QrShadowSocksMethod.Camellia256Cfb",
-      "anchor": "field-camellia256cfb-qrshadowsocksmethod-camellia256cfb"
+      "summary": "camellia-256-cfb."
     },
     {
       "name": "Chacha20Ietf",
-      "kind": "Field",
-      "summary": "chacha20-ietf.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrShadowSocksMethod Chacha20Ietf",
-      "xmlId": "F:CodeGlyphX.Payloads.QrShadowSocksMethod.Chacha20Ietf",
-      "anchor": "field-chacha20ietf-qrshadowsocksmethod-chacha20ietf"
+      "summary": "chacha20-ietf."
     },
     {
       "name": "Aes256Cb",
-      "kind": "Field",
-      "summary": "aes-256-cfb (alias).",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrShadowSocksMethod Aes256Cb",
-      "xmlId": "F:CodeGlyphX.Payloads.QrShadowSocksMethod.Aes256Cb",
-      "anchor": "field-aes256cb-qrshadowsocksmethod-aes256cb"
+      "summary": "aes-256-cfb (alias)."
     },
     {
       "name": "Aes128Ofb",
-      "kind": "Field",
-      "summary": "aes-128-ofb.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrShadowSocksMethod Aes128Ofb",
-      "xmlId": "F:CodeGlyphX.Payloads.QrShadowSocksMethod.Aes128Ofb",
-      "anchor": "field-aes128ofb-qrshadowsocksmethod-aes128ofb"
+      "summary": "aes-128-ofb."
     },
     {
       "name": "Aes192Ofb",
-      "kind": "Field",
-      "summary": "aes-192-ofb.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrShadowSocksMethod Aes192Ofb",
-      "xmlId": "F:CodeGlyphX.Payloads.QrShadowSocksMethod.Aes192Ofb",
-      "anchor": "field-aes192ofb-qrshadowsocksmethod-aes192ofb"
+      "summary": "aes-192-ofb."
     },
     {
       "name": "Aes256Ofb",
-      "kind": "Field",
-      "summary": "aes-256-ofb.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrShadowSocksMethod Aes256Ofb",
-      "xmlId": "F:CodeGlyphX.Payloads.QrShadowSocksMethod.Aes256Ofb",
-      "anchor": "field-aes256ofb-qrshadowsocksmethod-aes256ofb"
+      "summary": "aes-256-ofb."
     },
     {
       "name": "Aes128Cfb1",
-      "kind": "Field",
-      "summary": "aes-128-cfb1.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrShadowSocksMethod Aes128Cfb1",
-      "xmlId": "F:CodeGlyphX.Payloads.QrShadowSocksMethod.Aes128Cfb1",
-      "anchor": "field-aes128cfb1-qrshadowsocksmethod-aes128cfb1"
+      "summary": "aes-128-cfb1."
     },
     {
       "name": "Aes192Cfb1",
-      "kind": "Field",
-      "summary": "aes-192-cfb1.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrShadowSocksMethod Aes192Cfb1",
-      "xmlId": "F:CodeGlyphX.Payloads.QrShadowSocksMethod.Aes192Cfb1",
-      "anchor": "field-aes192cfb1-qrshadowsocksmethod-aes192cfb1"
+      "summary": "aes-192-cfb1."
     },
     {
       "name": "Aes256Cfb1",
-      "kind": "Field",
-      "summary": "aes-256-cfb1.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrShadowSocksMethod Aes256Cfb1",
-      "xmlId": "F:CodeGlyphX.Payloads.QrShadowSocksMethod.Aes256Cfb1",
-      "anchor": "field-aes256cfb1-qrshadowsocksmethod-aes256cfb1"
+      "summary": "aes-256-cfb1."
     },
     {
       "name": "Aes128Cfb8",
-      "kind": "Field",
-      "summary": "aes-128-cfb8.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrShadowSocksMethod Aes128Cfb8",
-      "xmlId": "F:CodeGlyphX.Payloads.QrShadowSocksMethod.Aes128Cfb8",
-      "anchor": "field-aes128cfb8-qrshadowsocksmethod-aes128cfb8"
+      "summary": "aes-128-cfb8."
     },
     {
       "name": "Aes192Cfb8",
-      "kind": "Field",
-      "summary": "aes-192-cfb8.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrShadowSocksMethod Aes192Cfb8",
-      "xmlId": "F:CodeGlyphX.Payloads.QrShadowSocksMethod.Aes192Cfb8",
-      "anchor": "field-aes192cfb8-qrshadowsocksmethod-aes192cfb8"
+      "summary": "aes-192-cfb8."
     },
     {
       "name": "Aes256Cfb8",
-      "kind": "Field",
-      "summary": "aes-256-cfb8.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrShadowSocksMethod Aes256Cfb8",
-      "xmlId": "F:CodeGlyphX.Payloads.QrShadowSocksMethod.Aes256Cfb8",
-      "anchor": "field-aes256cfb8-qrshadowsocksmethod-aes256cfb8"
+      "summary": "aes-256-cfb8."
     },
     {
       "name": "Chacha20",
-      "kind": "Field",
-      "summary": "chacha20.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrShadowSocksMethod Chacha20",
-      "xmlId": "F:CodeGlyphX.Payloads.QrShadowSocksMethod.Chacha20",
-      "anchor": "field-chacha20-qrshadowsocksmethod-chacha20"
+      "summary": "chacha20."
     },
     {
       "name": "BfCfb",
-      "kind": "Field",
-      "summary": "bf-cfb.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrShadowSocksMethod BfCfb",
-      "xmlId": "F:CodeGlyphX.Payloads.QrShadowSocksMethod.BfCfb",
-      "anchor": "field-bfcfb-qrshadowsocksmethod-bfcfb"
+      "summary": "bf-cfb."
     },
     {
       "name": "Rc4Md5",
-      "kind": "Field",
-      "summary": "rc4-md5.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrShadowSocksMethod Rc4Md5",
-      "xmlId": "F:CodeGlyphX.Payloads.QrShadowSocksMethod.Rc4Md5",
-      "anchor": "field-rc4md5-qrshadowsocksmethod-rc4md5"
+      "summary": "rc4-md5."
     },
     {
       "name": "Salsa20",
-      "kind": "Field",
-      "summary": "salsa20.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrShadowSocksMethod Salsa20",
-      "xmlId": "F:CodeGlyphX.Payloads.QrShadowSocksMethod.Salsa20",
-      "anchor": "field-salsa20-qrshadowsocksmethod-salsa20"
+      "summary": "salsa20."
     },
     {
       "name": "DesCfb",
-      "kind": "Field",
-      "summary": "des-cfb.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrShadowSocksMethod DesCfb",
-      "xmlId": "F:CodeGlyphX.Payloads.QrShadowSocksMethod.DesCfb",
-      "anchor": "field-descfb-qrshadowsocksmethod-descfb"
+      "summary": "des-cfb."
     },
     {
       "name": "IdeaCfb",
-      "kind": "Field",
-      "summary": "idea-cfb.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrShadowSocksMethod IdeaCfb",
-      "xmlId": "F:CodeGlyphX.Payloads.QrShadowSocksMethod.IdeaCfb",
-      "anchor": "field-ideacfb-qrshadowsocksmethod-ideacfb"
+      "summary": "idea-cfb."
     },
     {
       "name": "Rc2Cfb",
-      "kind": "Field",
-      "summary": "rc2-cfb.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrShadowSocksMethod Rc2Cfb",
-      "xmlId": "F:CodeGlyphX.Payloads.QrShadowSocksMethod.Rc2Cfb",
-      "anchor": "field-rc2cfb-qrshadowsocksmethod-rc2cfb"
+      "summary": "rc2-cfb."
     },
     {
       "name": "Cast5Cfb",
-      "kind": "Field",
-      "summary": "cast5-cfb.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrShadowSocksMethod Cast5Cfb",
-      "xmlId": "F:CodeGlyphX.Payloads.QrShadowSocksMethod.Cast5Cfb",
-      "anchor": "field-cast5cfb-qrshadowsocksmethod-cast5cfb"
+      "summary": "cast5-cfb."
     },
     {
       "name": "Salsa20Ctr",
-      "kind": "Field",
-      "summary": "salsa20-ctr.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrShadowSocksMethod Salsa20Ctr",
-      "xmlId": "F:CodeGlyphX.Payloads.QrShadowSocksMethod.Salsa20Ctr",
-      "anchor": "field-salsa20ctr-qrshadowsocksmethod-salsa20ctr"
+      "summary": "salsa20-ctr."
     },
     {
       "name": "Rc4",
-      "kind": "Field",
-      "summary": "rc4.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrShadowSocksMethod Rc4",
-      "xmlId": "F:CodeGlyphX.Payloads.QrShadowSocksMethod.Rc4",
-      "anchor": "field-rc4-qrshadowsocksmethod-rc4"
+      "summary": "rc4."
     },
     {
       "name": "SeedCfb",
-      "kind": "Field",
-      "summary": "seed-cfb.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrShadowSocksMethod SeedCfb",
-      "xmlId": "F:CodeGlyphX.Payloads.QrShadowSocksMethod.SeedCfb",
-      "anchor": "field-seedcfb-qrshadowsocksmethod-seedcfb"
+      "summary": "seed-cfb."
     },
     {
       "name": "Table",
-      "kind": "Field",
-      "summary": "table (legacy).",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrShadowSocksMethod Table",
-      "xmlId": "F:CodeGlyphX.Payloads.QrShadowSocksMethod.Table",
-      "anchor": "field-table-qrshadowsocksmethod-table"
+      "summary": "table (legacy)."
     }
-  ]
+  ],
+  "events": []
 }

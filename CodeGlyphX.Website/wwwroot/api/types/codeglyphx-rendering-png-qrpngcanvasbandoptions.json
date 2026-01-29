@@ -1,0 +1,38 @@
+﻿{
+  "name": "QrPngCanvasBandOptions",
+  "fullName": "CodeGlyphX.Rendering.Png.QrPngCanvasBandOptions",
+  "namespace": "CodeGlyphX.Rendering.Png",
+  "kind": "Class",
+  "slug": "codeglyphx-rendering-png-qrpngcanvasbandoptions",
+  "summary": "Decorative band drawn outside the QR bounds (often used as a quiet-zone ring).",
+  "remarks": null,
+  "methods": [],
+  "properties": [
+    {
+      "name": "BandPx",
+      "summary": "Band thickness in pixels."
+    },
+    {
+      "name": "GapPx",
+      "summary": "Gap between the QR bounds (including quiet zone) and the band."
+    },
+    {
+      "name": "RadiusPx",
+      "summary": "Band corner radius in pixels."
+    },
+    {
+      "name": "Color",
+      "summary": "Band color."
+    },
+    {
+      "name": "Gradient",
+      "summary": "Optional band gradient."
+    },
+    {
+      "name": "EdgePattern",
+      "summary": "Optional edge pattern overlay."
+    }
+  ],
+  "fields": [],
+  "events": []
+}

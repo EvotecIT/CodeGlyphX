@@ -1,15 +1,12 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>CodeGlyphX API Reference</title>
-  <meta name="description" content="CodeGlyphX API Reference" />
-  <link rel="stylesheet" href="style.css" />
-  <script>(function(){const theme=localStorage.getItem('theme')||'dark';document.documentElement.dataset.theme=theme;})();</script>
+  <link rel="stylesheet" href="/mnt/c/Support/GitHub/CodeMatrix/CodeGlyphX.Website/wwwroot/css/api-docs.css" />
 </head>
 <body>
-  <div class="page">
 <header class="header">
     <div class="header-content">
         <a href="/" class="brand">
@@ -31,19 +28,31 @@
             <div class="nav-links">
                 <a href="/">Home</a>
                 <a href="/playground/">Playground</a>
-                <a href="/docs/">Documentation</a>
+                <a href="/docs/">Docs</a>
+                <a href="/benchmarks/">Benchmarks</a>
                 <a href="/showcase/">Showcase</a>
+                <a href="/pricing/">Pricing</a>
             </div>
             <div class="nav-actions">
-                <button class="theme-toggle" title="Toggle theme" aria-label="Toggle theme">
-                    <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="5"/>
-                        <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
-                    </svg>
-                    <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
-                    </svg>
-                </button>
+                <div class="theme-toggle" role="group" aria-label="Theme selection">
+                    <button data-theme="auto" title="Auto (system)" aria-label="Auto theme">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="2" y="3" width="20" height="14" rx="2"/>
+                            <path d="M8 21h8M12 17v4"/>
+                        </svg>
+                    </button>
+                    <button data-theme="light" title="Light" aria-label="Light theme">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="5"/>
+                            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+                        </svg>
+                    </button>
+                    <button data-theme="dark" title="Dark" aria-label="Dark theme">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
+                        </svg>
+                    </button>
+                </div>
                 <a href="https://github.com/EvotecIT/CodeGlyphX" target="_blank" rel="noopener" class="nav-icon" title="GitHub" aria-label="GitHub">
                     <svg viewBox="0 0 24 24" fill="currentColor">
                         <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
@@ -59,1774 +68,416 @@
         </nav>
     </div>
 </header>
-
-<main class="api-index">
-  <h1>CodeGlyphX API Reference</h1>
-  <p class="lead">Browse the API surface generated from XML documentation.</p>
-  <section class="namespace-group">
-    <h2>CodeGlyphX</h2>
-    <ul class="type-list">
-      <li>
-        <a href="types/codeglyphx-azteccode.html">AztecCode</a>
-        <span class="kind">Class</span>
-        <span class="summary">Aztec code helpers.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-aztecdecodediagnostics.html">AztecDecodeDiagnostics</a>
-        <span class="kind">Class</span>
-        <span class="summary">Diagnostics for Aztec decoding.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-barcode.html">Barcode</a>
-        <span class="kind">Class</span>
-        <span class="summary">Simple barcode helpers with fluent and static APIs.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-barcode1d.html">Barcode1D</a>
-        <span class="kind">Class</span>
-        <span class="summary">A simple 1D barcode represented as an alternating sequence of bar/space segments.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-barcode-barcodebuilder.html">BarcodeBuilder</a>
-        <span class="kind">Class</span>
-        <span class="summary">Fluent barcode builder.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-barcodedecoded.html">BarcodeDecoded</a>
-        <span class="kind">Class</span>
-        <span class="summary">Result of decoding a 1D barcode payload.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-barcodedecodediagnostics.html">BarcodeDecodeDiagnostics</a>
-        <span class="kind">Class</span>
-        <span class="summary">Diagnostics for 1D barcode decoding.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-barcodedecodeoptions.html">BarcodeDecodeOptions</a>
-        <span class="kind">Class</span>
-        <span class="summary">Options controlling how 1D barcode decoding behaves.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-barcodedecoder.html">BarcodeDecoder</a>
-        <span class="kind">Class</span>
-        <span class="summary">Best-effort 1D barcode decoder (scanline-based).</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-barcodeeasy.html">BarcodeEasy</a>
-        <span class="kind">Class</span>
-        <span class="summary">One-line barcode helpers with sane defaults.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-barcodeencoder.html">BarcodeEncoder</a>
-        <span class="kind">Class</span>
-        <span class="summary">Encodes supported barcode symbologies into a CodeGlyphX.Barcode1D model.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-barcodeoptions.html">BarcodeOptions</a>
-        <span class="kind">Class</span>
-        <span class="summary">Simplified rendering options for 1D barcodes.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-barcodetype.html">BarcodeType</a>
-        <span class="kind">Enum</span>
-        <span class="summary">Barcode symbologies supported by CodeGlyphX.BarcodeEncoder.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-barsegment.html">BarSegment</a>
-        <span class="kind">Struct</span>
-        <span class="summary">Represents a single run in a 1D barcode, expressed in module units.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-bitmatrix.html">BitMatrix</a>
-        <span class="kind">Class</span>
-        <span class="summary">A compact, bit-packed 2D boolean grid.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-code11checksumpolicy.html">Code11ChecksumPolicy</a>
-        <span class="kind">Enum</span>
-        <span class="summary">Policy for handling optional Code 11 checksum characters.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-code39checksumpolicy.html">Code39ChecksumPolicy</a>
-        <span class="kind">Enum</span>
-        <span class="summary">Policy for handling optional Code39 checksum characters.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-codeglyph.html">CodeGlyph</a>
-        <span class="kind">Class</span>
-        <span class="summary">Unified decode helpers (QR + 1D + 2D barcodes).</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-codeglyphbudget.html">CodeGlyphBudget</a>
-        <span class="kind">Class</span>
-        <span class="summary">Provides a temporary decode time budget for operations that honor it.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-codeglyphdecoded.html">CodeGlyphDecoded</a>
-        <span class="kind">Class</span>
-        <span class="summary">Result of decoding a QR or barcode symbol.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-codeglyphdecodediagnostics.html">CodeGlyphDecodeDiagnostics</a>
-        <span class="kind">Class</span>
-        <span class="summary">Diagnostics for unified QR/barcode decoding.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-codeglyphdecodeoptions.html">CodeGlyphDecodeOptions</a>
-        <span class="kind">Class</span>
-        <span class="summary">Options for unified QR/barcode decoding.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-codeglyphkind.html">CodeGlyphKind</a>
-        <span class="kind">Enum</span>
-        <span class="summary">Kind of decoded symbol.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-datamatrixcode-datamatrixbuilder.html">DataMatrixBuilder</a>
-        <span class="kind">Class</span>
-        <span class="summary">Fluent Data Matrix builder.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-datamatrixcode.html">DataMatrixCode</a>
-        <span class="kind">Class</span>
-        <span class="summary">Simple Data Matrix helpers with fluent and static APIs.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-datamatrixdecodediagnostics.html">DataMatrixDecodeDiagnostics</a>
-        <span class="kind">Class</span>
-        <span class="summary">Diagnostics for Data Matrix decoding.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-decodebatchdiagnostics.html">DecodeBatchDiagnostics</a>
-        <span class="kind">Struct</span>
-        <span class="summary">Aggregated diagnostics for a batch decode run.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-decodebatchresult-1.html">DecodeBatchResult</a>
-        <span class="kind">Struct</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-decodefailurereason.html">DecodeFailureReason</a>
-        <span class="kind">Enum</span>
-        <span class="summary">Describes why decoding failed.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-decoderesult-1.html">DecodeResult</a>
-        <span class="kind">Struct</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-gs1.html">Gs1</a>
-        <span class="kind">Class</span>
-        <span class="summary">Helpers for building and encoding GS1 element strings (GS1-128).</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-gs1element.html">Gs1Element</a>
-        <span class="kind">Struct</span>
-        <span class="summary">Represents a GS1 element (AI + data) with explicit length semantics.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-otp-hotpbuilder.html">HotpBuilder</a>
-        <span class="kind">Class</span>
-        <span class="summary">Fluent HOTP builder.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-imagedecodeoptions.html">ImageDecodeOptions</a>
-        <span class="kind">Class</span>
-        <span class="summary">Options for decoding from image sources (non-QR).</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-matrixbarcodedecoder.html">MatrixBarcodeDecoder</a>
-        <span class="kind">Class</span>
-        <span class="summary">Decodes 2D barcode symbologies from a CodeGlyphX.BitMatrix.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-matrixbarcodeencoder.html">MatrixBarcodeEncoder</a>
-        <span class="kind">Class</span>
-        <span class="summary">Encodes 2D barcode symbologies into a CodeGlyphX.BitMatrix.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-matrixoptions.html">MatrixOptions</a>
-        <span class="kind">Class</span>
-        <span class="summary">Simplified rendering options for 2D matrices (Data Matrix, PDF417).</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-microqrcode.html">MicroQrCode</a>
-        <span class="kind">Class</span>
-        <span class="summary">A generated Micro QR code (modules + metadata).</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-microqrcodeencoder.html">MicroQrCodeEncoder</a>
-        <span class="kind">Class</span>
-        <span class="summary">Encodes Micro QR codes (M1..M4).</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-microqrdecoded.html">MicroQrDecoded</a>
-        <span class="kind">Class</span>
-        <span class="summary">Result of decoding a Micro QR code payload.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-microqrdecoder.html">MicroQrDecoder</a>
-        <span class="kind">Class</span>
-        <span class="summary">Decodes Micro QR codes from a module grid.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-msichecksumpolicy.html">MsiChecksumPolicy</a>
-        <span class="kind">Enum</span>
-        <span class="summary">Policy for handling optional MSI checksum digits.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-msichecksumtype.html">MsiChecksumType</a>
-        <span class="kind">Enum</span>
-        <span class="summary">Checksum variants for MSI barcodes.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-otp.html">Otp</a>
-        <span class="kind">Class</span>
-        <span class="summary">Simple OTP helpers with fluent and static APIs.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-otpalgorithm.html">OtpAlgorithm</a>
-        <span class="kind">Enum</span>
-        <span class="summary">Hash algorithm identifiers used in otpauth:// URIs.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-otpauthhotp.html">OtpAuthHotp</a>
-        <span class="kind">Class</span>
-        <span class="summary">Builder for deterministic otpauth://hotp/ URIs.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-otpauthparser.html">OtpAuthParser</a>
-        <span class="kind">Class</span>
-        <span class="summary">Parser for otpauth:// URIs.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-otpauthparseresult.html">OtpAuthParseResult</a>
-        <span class="kind">Class</span>
-        <span class="summary">Parsed otpauth:// payload with warnings.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-otpauthpayload.html">OtpAuthPayload</a>
-        <span class="kind">Class</span>
-        <span class="summary">Parsed contents of an otpauth:// URI.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-otpauthsecret.html">OtpAuthSecret</a>
-        <span class="kind">Class</span>
-        <span class="summary">Base32 helpers for otpauth:// secrets.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-otpauthtotp.html">OtpAuthTotp</a>
-        <span class="kind">Class</span>
-        <span class="summary">Builder for deterministic otpauth://totp/ URIs.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-otpauthtype.html">OtpAuthType</a>
-        <span class="kind">Enum</span>
-        <span class="summary">OTP token type for otpauth:// URIs.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-otpauthvalidationoptions.html">OtpAuthValidationOptions</a>
-        <span class="kind">Class</span>
-        <span class="summary">Validation options for otpauth:// payloads.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-otpauthvalidator.html">OtpAuthValidator</a>
-        <span class="kind">Class</span>
-        <span class="summary">Validation helpers for otpauth:// payloads.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-otpqrdecoder.html">OtpQrDecoder</a>
-        <span class="kind">Class</span>
-        <span class="summary">Convenience decoder for OTP QR payloads.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-otpqrpreset.html">OtpQrPreset</a>
-        <span class="kind">Class</span>
-        <span class="summary">Opinionated QR presets for OTP URIs.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-otpqrsafety.html">OtpQrSafety</a>
-        <span class="kind">Class</span>
-        <span class="summary">Safety checks for OTP QR rendering parameters.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-otpqrsafetyreport.html">OtpQrSafetyReport</a>
-        <span class="kind">Class</span>
-        <span class="summary">Result of OTP QR scan safety evaluation.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-pdf417code-pdf417builder.html">Pdf417Builder</a>
-        <span class="kind">Class</span>
-        <span class="summary">Fluent PDF417 builder.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-pdf417code.html">Pdf417Code</a>
-        <span class="kind">Class</span>
-        <span class="summary">Simple PDF417 helpers with fluent and static APIs.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-pdf417decodediagnostics.html">Pdf417DecodeDiagnostics</a>
-        <span class="kind">Class</span>
-        <span class="summary">Diagnostics for PDF417 decoding.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-pixelformat.html">PixelFormat</a>
-        <span class="kind">Enum</span>
-        <span class="summary">Supported raw pixel formats for QR decoding.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-plesseychecksumpolicy.html">PlesseyChecksumPolicy</a>
-        <span class="kind">Enum</span>
-        <span class="summary">Policy for handling Plessey CRC validation.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-qr.html">QR</a>
-        <span class="kind">Class</span>
-        <span class="summary">Simple QR helpers with fluent and static APIs.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-qrartsafety.html">QrArtSafety</a>
-        <span class="kind">Class</span>
-        <span class="summary">Evaluates QR art/render options for scan safety.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-qrartsafetyreport.html">QrArtSafetyReport</a>
-        <span class="kind">Class</span>
-        <span class="summary">Safety score and warnings for QR art/custom styling.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-qrartwarning.html">QrArtWarning</a>
-        <span class="kind">Struct</span>
-        <span class="summary">QR art warning with a short message.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-qrartwarningkind.html">QrArtWarningKind</a>
-        <span class="kind">Enum</span>
-        <span class="summary">Warning kinds for QR art safety evaluation.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-qr-qrbuilder.html">QrBuilder</a>
-        <span class="kind">Class</span>
-        <span class="summary">Fluent QR builder.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-qrcode.html">QrCode</a>
-        <span class="kind">Class</span>
-        <span class="summary">A generated QR code (modules + metadata).</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-qrcodeencoder.html">QrCodeEncoder</a>
-        <span class="kind">Class</span>
-        <span class="summary">Encodes QR codes (byte mode + optional Kanji mode).</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-qrdecoded.html">QrDecoded</a>
-        <span class="kind">Class</span>
-        <span class="summary">Result of decoding a QR code payload.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-qrdecodefailurereason.html">QrDecodeFailureReason</a>
-        <span class="kind">Enum</span>
-        <span class="summary">High-level failure reasons for QR decoding.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-qrdecodeinfo.html">QrDecodeInfo</a>
-        <span class="kind">Struct</span>
-        <span class="summary">Diagnostics returned by QR decoding attempts.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-qrdecodeprofile.html">QrDecodeProfile</a>
-        <span class="kind">Enum</span>
-        <span class="summary">Speed/accuracy profile for pixel-based QR decoding.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-qrdecoder.html">QrDecoder</a>
-        <span class="kind">Class</span>
-        <span class="summary">Decodes QR codes from a module grid or from raw pixels (clean images).</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-qrdiagnosticsdump.html">QrDiagnosticsDump</a>
-        <span class="kind">Class</span>
-        <span class="summary">Builds and writes diagnostic dumps for QR pixel decoding attempts.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-qreasy.html">QrEasy</a>
-        <span class="kind">Class</span>
-        <span class="summary">One-line QR generation helpers with sane defaults.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-qreasyoptions.html">QrEasyOptions</a>
-        <span class="kind">Class</span>
-        <span class="summary">Simple options for QR rendering.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-qrerrorcorrectionlevel.html">QrErrorCorrectionLevel</a>
-        <span class="kind">Enum</span>
-        <span class="summary">QR Code error correction level.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-qrfnc1mode.html">QrFnc1Mode</a>
-        <span class="kind">Enum</span>
-        <span class="summary">Indicates presence of FNC1 mode in a QR payload.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-qrimagedecoder.html">QrImageDecoder</a>
-        <span class="kind">Class</span>
-        <span class="summary">Decodes QR codes from raw pixel buffers.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-qrpixeldebug.html">QrPixelDebug</a>
-        <span class="kind">Class</span>
-        <span class="summary">Debug visualizations for pixel-based QR decoding.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-qrpixeldebugmode.html">QrPixelDebugMode</a>
-        <span class="kind">Enum</span>
-        <span class="summary">Debug visualization modes for pixel-based QR decoding.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-qrpixeldebugoptions.html">QrPixelDebugOptions</a>
-        <span class="kind">Class</span>
-        <span class="summary">Options for QR pixel debug rendering.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-qrpixeldecodeinfo.html">QrPixelDecodeInfo</a>
-        <span class="kind">Struct</span>
-        <span class="summary">Diagnostics returned by pixel-based QR decoding attempts.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-qrpixeldecodeoptions.html">QrPixelDecodeOptions</a>
-        <span class="kind">Class</span>
-        <span class="summary">Options for pixel-based QR decoding.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-qrpresets.html">QrPresets</a>
-        <span class="kind">Class</span>
-        <span class="summary">Ready-to-use QR presets with safe defaults for common scenarios.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-qrrenderstyle.html">QrRenderStyle</a>
-        <span class="kind">Enum</span>
-        <span class="summary">Style presets for easy QR rendering.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-qrstructuredappend.html">QrStructuredAppend</a>
-        <span class="kind">Struct</span>
-        <span class="summary">Structured append metadata for multi-symbol QR payloads.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-qrtextencoding.html">QrTextEncoding</a>
-        <span class="kind">Enum</span>
-        <span class="summary">QR text encodings supported for payloads and ECI.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-otp-totpbuilder.html">TotpBuilder</a>
-        <span class="kind">Class</span>
-        <span class="summary">Fluent TOTP builder.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-upcenumbersystem.html">UpcENumberSystem</a>
-        <span class="kind">Enum</span>
-        <span class="summary">UPC-E number system (0 or 1).</span>
-      </li>
-    </ul>
-  </section>
-  <section class="namespace-group">
-    <h2>CodeGlyphX.AustraliaPost</h2>
-    <ul class="type-list">
-      <li>
-        <a href="types/codeglyphx-australiapost-australiapostcustomerencodingtable.html">AustraliaPostCustomerEncodingTable</a>
-        <span class="kind">Enum</span>
-        <span class="summary">Customer information encoding tables for Australia Post customer barcodes.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-australiapost-australiapostdecoded.html">AustraliaPostDecoded</a>
-        <span class="kind">Class</span>
-        <span class="summary">Decoded Australia Post customer barcode information.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-australiapost-australiapostdecoder.html">AustraliaPostDecoder</a>
-        <span class="kind">Class</span>
-        <span class="summary">Decodes Australia Post customer barcodes.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-australiapost-australiapostencoder.html">AustraliaPostEncoder</a>
-        <span class="kind">Class</span>
-        <span class="summary">Encodes Australia Post customer barcodes.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-australiapost-australiapostformat.html">AustraliaPostFormat</a>
-        <span class="kind">Enum</span>
-        <span class="summary">Australia Post customer barcode formats.</span>
-      </li>
-    </ul>
-  </section>
-  <section class="namespace-group">
-    <h2>CodeGlyphX.Aztec</h2>
-    <ul class="type-list">
-      <li>
-        <a href="types/codeglyphx-aztec-aztecencodeoptions.html">AztecEncodeOptions</a>
-        <span class="kind">Class</span>
-        <span class="summary">Options for future Aztec encoding support.</span>
-      </li>
-    </ul>
-  </section>
-  <section class="namespace-group">
-    <h2>CodeGlyphX.Codabar</h2>
-    <ul class="type-list">
-      <li>
-        <a href="types/codeglyphx-codabar-codabarencoder.html">CodabarEncoder</a>
-        <span class="kind">Class</span>
-        <span class="summary">Encodes Codabar barcodes.</span>
-      </li>
-    </ul>
-  </section>
-  <section class="namespace-group">
-    <h2>CodeGlyphX.Code11</h2>
-    <ul class="type-list">
-      <li>
-        <a href="types/codeglyphx-code11-code11encoder.html">Code11Encoder</a>
-        <span class="kind">Class</span>
-        <span class="summary">Encodes Code 11 barcodes.</span>
-      </li>
-    </ul>
-  </section>
-  <section class="namespace-group">
-    <h2>CodeGlyphX.Code25</h2>
-    <ul class="type-list">
-      <li>
-        <a href="types/codeglyphx-code25-iata2of5encoder.html">Iata2Of5Encoder</a>
-        <span class="kind">Class</span>
-        <span class="summary">Encodes IATA 2 of 5 barcodes.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-code25-industrial2of5encoder.html">Industrial2Of5Encoder</a>
-        <span class="kind">Class</span>
-        <span class="summary">Encodes Industrial (Discrete) 2 of 5 barcodes.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-code25-matrix2of5encoder.html">Matrix2Of5Encoder</a>
-        <span class="kind">Class</span>
-        <span class="summary">Encodes Matrix (Standard) 2 of 5 barcodes.</span>
-      </li>
-    </ul>
-  </section>
-  <section class="namespace-group">
-    <h2>CodeGlyphX.Code32</h2>
-    <ul class="type-list">
-      <li>
-        <a href="types/codeglyphx-code32-code32encoder.html">Code32Encoder</a>
-        <span class="kind">Class</span>
-        <span class="summary">Encodes Code 32 (Italian Pharmacode) barcodes.</span>
-      </li>
-    </ul>
-  </section>
-  <section class="namespace-group">
-    <h2>CodeGlyphX.Code39</h2>
-    <ul class="type-list">
-      <li>
-        <a href="types/codeglyphx-code39-code39encoder.html">Code39Encoder</a>
-        <span class="kind">Class</span>
-        <span class="summary">Encodes Code 39 barcodes.</span>
-      </li>
-    </ul>
-  </section>
-  <section class="namespace-group">
-    <h2>CodeGlyphX.Code93</h2>
-    <ul class="type-list">
-      <li>
-        <a href="types/codeglyphx-code93-code93encoder.html">Code93Encoder</a>
-        <span class="kind">Class</span>
-        <span class="summary">Encodes Code 93 barcodes.</span>
-      </li>
-    </ul>
-  </section>
-  <section class="namespace-group">
-    <h2>CodeGlyphX.DataBar</h2>
-    <ul class="type-list">
-      <li>
-        <a href="types/codeglyphx-databar-databar14decoder.html">DataBar14Decoder</a>
-        <span class="kind">Class</span>
-        <span class="summary">Decodes GS1 DataBar-14 symbols (Truncated / Omni / Stacked).</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-databar-databar14encoder.html">DataBar14Encoder</a>
-        <span class="kind">Class</span>
-        <span class="summary">Encodes GS1 DataBar-14 symbols (Truncated / Omni / Stacked).</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-databar-databarexpandeddecoder.html">DataBarExpandedDecoder</a>
-        <span class="kind">Class</span>
-        <span class="summary">Decodes GS1 DataBar Expanded symbols (linear and stacked).</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-databar-databarexpandedencoder.html">DataBarExpandedEncoder</a>
-        <span class="kind">Class</span>
-        <span class="summary">Encodes GS1 DataBar Expanded symbols (linear and stacked).</span>
-      </li>
-    </ul>
-  </section>
-  <section class="namespace-group">
-    <h2>CodeGlyphX.DataMatrix</h2>
-    <ul class="type-list">
-      <li>
-        <a href="types/codeglyphx-datamatrix-datamatrixdecoder.html">DataMatrixDecoder</a>
-        <span class="kind">Class</span>
-        <span class="summary">Decodes Data Matrix (ECC200) symbols.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-datamatrix-datamatrixencoder.html">DataMatrixEncoder</a>
-        <span class="kind">Class</span>
-        <span class="summary">Encodes Data Matrix (ECC200) symbols.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-datamatrix-datamatrixencodingmode.html">DataMatrixEncodingMode</a>
-        <span class="kind">Enum</span>
-        <span class="summary">High-level data encoding modes for Data Matrix.</span>
-      </li>
-    </ul>
-  </section>
-  <section class="namespace-group">
-    <h2>CodeGlyphX.Ean</h2>
-    <ul class="type-list">
-      <li>
-        <a href="types/codeglyphx-ean-eanencoder.html">EanEncoder</a>
-        <span class="kind">Class</span>
-        <span class="summary">Encodes EAN-8 and EAN-13 barcodes.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-ean-eantables-encodednumber.html">EncodedNumber</a>
-        <span class="kind">Struct</span>
-      </li>
-    </ul>
-  </section>
-  <section class="namespace-group">
-    <h2>CodeGlyphX.Itf</h2>
-    <ul class="type-list">
-      <li>
-        <a href="types/codeglyphx-itf-itf14encoder.html">Itf14Encoder</a>
-        <span class="kind">Class</span>
-        <span class="summary">Encodes ITF-14 (Interleaved 2 of 5) barcodes.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-itf-itfencoder.html">ItfEncoder</a>
-        <span class="kind">Class</span>
-        <span class="summary">Encodes Interleaved 2 of 5 (ITF) barcodes.</span>
-      </li>
-    </ul>
-  </section>
-  <section class="namespace-group">
-    <h2>CodeGlyphX.JapanPost</h2>
-    <ul class="type-list">
-      <li>
-        <a href="types/codeglyphx-japanpost-japanpostdecoder.html">JapanPostDecoder</a>
-        <span class="kind">Class</span>
-        <span class="summary">Decodes Japan Post barcodes.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-japanpost-japanpostencoder.html">JapanPostEncoder</a>
-        <span class="kind">Class</span>
-        <span class="summary">Encodes Japan Post barcodes.</span>
-      </li>
-    </ul>
-  </section>
-  <section class="namespace-group">
-    <h2>CodeGlyphX.Kix</h2>
-    <ul class="type-list">
-      <li>
-        <a href="types/codeglyphx-kix-kixdecoder.html">KixDecoder</a>
-        <span class="kind">Class</span>
-        <span class="summary">Decodes KIX (Royal Mail 4-state, without headers) barcodes.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-kix-kixencoder.html">KixEncoder</a>
-        <span class="kind">Class</span>
-        <span class="summary">Encodes KIX (Royal Mail 4-state, without headers) barcodes.</span>
-      </li>
-    </ul>
-  </section>
-  <section class="namespace-group">
-    <h2>CodeGlyphX.Msi</h2>
-    <ul class="type-list">
-      <li>
-        <a href="types/codeglyphx-msi-msiencoder.html">MsiEncoder</a>
-        <span class="kind">Class</span>
-        <span class="summary">Encodes MSI (Modified Plessey) barcodes.</span>
-      </li>
-    </ul>
-  </section>
-  <section class="namespace-group">
-    <h2>CodeGlyphX.PatchCode</h2>
-    <ul class="type-list">
-      <li>
-        <a href="types/codeglyphx-patchcode-patchcodeencoder.html">PatchCodeEncoder</a>
-        <span class="kind">Class</span>
-        <span class="summary">Encodes Patch Code symbols.</span>
-      </li>
-    </ul>
-  </section>
-  <section class="namespace-group">
-    <h2>CodeGlyphX.Payloads</h2>
-    <ul class="type-list">
-      <li>
-        <a href="types/codeglyphx-payloads-swissqrcodepayload-additionalinformation.html">AdditionalInformation</a>
-        <span class="kind">Class</span>
-        <span class="summary">Additional information section.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-payloads-swissqrcodepayload-contact-addresstype.html">AddressType</a>
-        <span class="kind">Enum</span>
-        <span class="summary">Contact address type.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-payloads-qrparseddata-appstore.html">AppStore</a>
-        <span class="kind">Class</span>
-        <span class="summary">App Store payload.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-payloads-qrparseddata-bookmark.html">Bookmark</a>
-        <span class="kind">Class</span>
-        <span class="summary">Bookmark payload.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-payloads-qrparseddata-calendar.html">Calendar</a>
-        <span class="kind">Class</span>
-        <span class="summary">Calendar payload (VEVENT/VCALENDAR).</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-payloads-swissqrcodepayload-contact.html">Contact</a>
-        <span class="kind">Class</span>
-        <span class="summary">Contact section.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-payloads-qrparseddata-email.html">Email</a>
-        <span class="kind">Class</span>
-        <span class="summary">Email payload.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-payloads-qrparseddata-geo.html">Geo</a>
-        <span class="kind">Class</span>
-        <span class="summary">Geo payload.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-payloads-swissqrcodepayload-iban.html">Iban</a>
-        <span class="kind">Class</span>
-        <span class="summary">IBAN section.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-payloads-swissqrcodepayload-iban-ibantype.html">IbanType</a>
-        <span class="kind">Enum</span>
-        <span class="summary">IBAN type.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-payloads-qrparseddata-mecard.html">MeCard</a>
-        <span class="kind">Class</span>
-        <span class="summary">MeCard payload.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-payloads-qrparseddata-otp.html">Otp</a>
-        <span class="kind">Class</span>
-        <span class="summary">OTP payload (otpauth://).</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-payloads-qrparseddata-paypal.html">PayPal</a>
-        <span class="kind">Class</span>
-        <span class="summary">PayPal payment payload (PayPal.Me).</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-payloads-qrparseddata-phone.html">Phone</a>
-        <span class="kind">Class</span>
-        <span class="summary">Phone payload.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-payloads-qrappstoreplatform.html">QrAppStorePlatform</a>
-        <span class="kind">Enum</span>
-        <span class="summary">App store target platform.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-payloads-qrbezahlauthoritytype.html">QrBezahlAuthorityType</a>
-        <span class="kind">Enum</span>
-        <span class="summary">BezahlCode authority types.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-payloads-qrbezahlperiodicunit.html">QrBezahlPeriodicUnit</a>
-        <span class="kind">Enum</span>
-        <span class="summary">BezahlCode periodic time unit.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-payloads-qrbitcoinliketype.html">QrBitcoinLikeType</a>
-        <span class="kind">Enum</span>
-        <span class="summary">Bitcoin-like URI schemes.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-payloads-qrcalendarencoding.html">QrCalendarEncoding</a>
-        <span class="kind">Enum</span>
-        <span class="summary">Calendar payload output formats.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-payloads-qrcontactaddressorder.html">QrContactAddressOrder</a>
-        <span class="kind">Enum</span>
-        <span class="summary">Address field ordering in contact payloads.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-payloads-qrcontactaddresstype.html">QrContactAddressType</a>
-        <span class="kind">Enum</span>
-        <span class="summary">Contact address type.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-payloads-qrcontactoutputtype.html">QrContactOutputType</a>
-        <span class="kind">Enum</span>
-        <span class="summary">Contact payload output formats.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-payloads-qrgeolocationencoding.html">QrGeolocationEncoding</a>
-        <span class="kind">Enum</span>
-        <span class="summary">Geolocation payload formats.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-payloads-qrgirocodeencoding.html">QrGirocodeEncoding</a>
-        <span class="kind">Enum</span>
-        <span class="summary">Girocode payload encodings.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-payloads-qrgirocoderemittancetype.html">QrGirocodeRemittanceType</a>
-        <span class="kind">Enum</span>
-        <span class="summary">Girocode remittance types.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-payloads-qrgirocodeversion.html">QrGirocodeVersion</a>
-        <span class="kind">Enum</span>
-        <span class="summary">Girocode versions.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-payloads-qrmailencoding.html">QrMailEncoding</a>
-        <span class="kind">Enum</span>
-        <span class="summary">Email payload formats.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-payloads-qrmmsencoding.html">QrMmsEncoding</a>
-        <span class="kind">Enum</span>
-        <span class="summary">MMS payload formats.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-payloads-qrparseddata.html">QrParsedData</a>
-        <span class="kind">Class</span>
-        <span class="summary">Parsed payload data records.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-payloads-qrparsedpayload.html">QrParsedPayload</a>
-        <span class="kind">Class</span>
-        <span class="summary">Parsed QR payload with detected type and optional raw value.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-payloads-qrpayload.html">QrPayload</a>
-        <span class="kind">Class</span>
-        <span class="summary">Helpers for building common QR payload strings (URLs, Wi‑Fi, vCard, and basic URI schemes).</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-payloads-qrpayloaddata.html">QrPayloadData</a>
-        <span class="kind">Class</span>
-        <span class="summary">QR payload with optional encoding/version defaults.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-payloads-qrpayloaddetectoptions.html">QrPayloadDetectOptions</a>
-        <span class="kind">Class</span>
-        <span class="summary">Options that control payload auto-detection heuristics.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-payloads-qrpayloadparseoptions.html">QrPayloadParseOptions</a>
-        <span class="kind">Class</span>
-        <span class="summary">Options controlling payload parsing and validation.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-payloads-qrpayloadparser.html">QrPayloadParser</a>
-        <span class="kind">Class</span>
-        <span class="summary">Parses QR payload strings into structured data when possible.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-payloads-qrpayloads.html">QrPayloads</a>
-        <span class="kind">Class</span>
-        <span class="summary">Helpers for building common QR payloads with recommended defaults.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-payloads-qrpayloadtype.html">QrPayloadType</a>
-        <span class="kind">Enum</span>
-        <span class="summary">Known QR payload kinds.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-payloads-qrpayloadvalidationresult.html">QrPayloadValidationResult</a>
-        <span class="kind">Class</span>
-        <span class="summary">Validation result for parsed QR payloads.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-payloads-qrrussiapaymentencoding.html">QrRussiaPaymentEncoding</a>
-        <span class="kind">Enum</span>
-        <span class="summary">Encoding marker for Russia payment order payloads.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-payloads-qrshadowsocksmethod.html">QrShadowSocksMethod</a>
-        <span class="kind">Enum</span>
-        <span class="summary">Shadowsocks cipher methods.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-payloads-qrsmsencoding.html">QrSmsEncoding</a>
-        <span class="kind">Enum</span>
-        <span class="summary">SMS payload formats.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-payloads-qrswisscurrency.html">QrSwissCurrency</a>
-        <span class="kind">Enum</span>
-        <span class="summary">Swiss QR currency codes.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-payloads-swissqrcodepayload-reference.html">Reference</a>
-        <span class="kind">Class</span>
-        <span class="summary">Reference section.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-payloads-swissqrcodepayload-reference-referencetexttype.html">ReferenceTextType</a>
-        <span class="kind">Enum</span>
-        <span class="summary">Reference text type.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-payloads-swissqrcodepayload-reference-referencetype.html">ReferenceType</a>
-        <span class="kind">Enum</span>
-        <span class="summary">Reference type.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-payloads-russiapaymentorderpayload.html">RussiaPaymentOrderPayload</a>
-        <span class="kind">Class</span>
-        <span class="summary">Russia payment order payload (ST00012, UTF-8).</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-payloads-slovenianupnqrpayload.html">SlovenianUpnQrPayload</a>
-        <span class="kind">Class</span>
-        <span class="summary">Slovenian UPN QR payment payload.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-payloads-qrparseddata-sms.html">Sms</a>
-        <span class="kind">Class</span>
-        <span class="summary">SMS payload.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-payloads-qrparseddata-social.html">Social</a>
-        <span class="kind">Class</span>
-        <span class="summary">Social profile payload.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-payloads-swissqrcodepayload.html">SwissQrCodePayload</a>
-        <span class="kind">Class</span>
-        <span class="summary">Swiss QR bill payload.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-payloads-qrparseddata-upi.html">Upi</a>
-        <span class="kind">Class</span>
-        <span class="summary">UPI payment payload.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-payloads-qrparseddata-vcard.html">VCard</a>
-        <span class="kind">Class</span>
-        <span class="summary">vCard payload.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-payloads-qrparseddata-wifi.html">Wifi</a>
-        <span class="kind">Class</span>
-        <span class="summary">WiFi payload.</span>
-      </li>
-    </ul>
-  </section>
-  <section class="namespace-group">
-    <h2>CodeGlyphX.Pdf417</h2>
-    <ul class="type-list">
-      <li>
-        <a href="types/codeglyphx-pdf417-micropdf417decoder.html">MicroPdf417Decoder</a>
-        <span class="kind">Class</span>
-        <span class="summary">Decodes MicroPDF417 symbols from a CodeGlyphX.BitMatrix.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-pdf417-micropdf417encodeoptions.html">MicroPdf417EncodeOptions</a>
-        <span class="kind">Class</span>
-        <span class="summary">Options for MicroPDF417 encoding.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-pdf417-micropdf417encoder.html">MicroPdf417Encoder</a>
-        <span class="kind">Class</span>
-        <span class="summary">Encodes MicroPDF417 symbols into a CodeGlyphX.BitMatrix.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-pdf417-pdf417compaction.html">Pdf417Compaction</a>
-        <span class="kind">Enum</span>
-        <span class="summary">High-level compaction mode selection for PDF417.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-pdf417-pdf417decoded.html">Pdf417Decoded</a>
-        <span class="kind">Class</span>
-        <span class="summary">Result of decoding a PDF417 symbol.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-pdf417-pdf417decoder.html">Pdf417Decoder</a>
-        <span class="kind">Class</span>
-        <span class="summary">Decodes PDF417 barcodes.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-pdf417-pdf417encodeoptions.html">Pdf417EncodeOptions</a>
-        <span class="kind">Class</span>
-        <span class="summary">Options for PDF417 encoding.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-pdf417-pdf417encoder.html">Pdf417Encoder</a>
-        <span class="kind">Class</span>
-        <span class="summary">Encodes PDF417 barcodes.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-pdf417-pdf417macroassembler.html">Pdf417MacroAssembler</a>
-        <span class="kind">Class</span>
-        <span class="summary">Collects Macro PDF417 segments and assembles the original payload when complete.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-pdf417-pdf417macrometadata.html">Pdf417MacroMetadata</a>
-        <span class="kind">Class</span>
-        <span class="summary">Macro PDF417 metadata payload.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-pdf417-pdf417macrooptions.html">Pdf417MacroOptions</a>
-        <span class="kind">Class</span>
-        <span class="summary">Options for Macro PDF417 encoding.</span>
-      </li>
-    </ul>
-  </section>
-  <section class="namespace-group">
-    <h2>CodeGlyphX.Pharmacode</h2>
-    <ul class="type-list">
-      <li>
-        <a href="types/codeglyphx-pharmacode-pharmacodeencoder.html">PharmacodeEncoder</a>
-        <span class="kind">Class</span>
-        <span class="summary">Encodes Pharmacode (one-track) barcodes.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-pharmacode-pharmacodetwotrackdecoder.html">PharmacodeTwoTrackDecoder</a>
-        <span class="kind">Class</span>
-        <span class="summary">Decodes Pharmacode (two-track) barcodes.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-pharmacode-pharmacodetwotrackencoder.html">PharmacodeTwoTrackEncoder</a>
-        <span class="kind">Class</span>
-        <span class="summary">Encodes Pharmacode (two-track) barcodes.</span>
-      </li>
-    </ul>
-  </section>
-  <section class="namespace-group">
-    <h2>CodeGlyphX.Plessey</h2>
-    <ul class="type-list">
-      <li>
-        <a href="types/codeglyphx-plessey-plesseyencoder.html">PlesseyEncoder</a>
-        <span class="kind">Class</span>
-        <span class="summary">Encodes Plessey barcodes.</span>
-      </li>
-    </ul>
-  </section>
-  <section class="namespace-group">
-    <h2>CodeGlyphX.Postal</h2>
-    <ul class="type-list">
-      <li>
-        <a href="types/codeglyphx-postal-planetdecoder.html">PlanetDecoder</a>
-        <span class="kind">Class</span>
-        <span class="summary">Decodes PLANET barcodes.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-postal-planetencoder.html">PlanetEncoder</a>
-        <span class="kind">Class</span>
-        <span class="summary">Encodes PLANET barcodes.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-postal-postnetdecoder.html">PostnetDecoder</a>
-        <span class="kind">Class</span>
-        <span class="summary">Decodes POSTNET barcodes.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-postal-postnetencoder.html">PostnetEncoder</a>
-        <span class="kind">Class</span>
-        <span class="summary">Encodes POSTNET barcodes.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-postal-uspsimbdecoder.html">UspsImbDecoder</a>
-        <span class="kind">Class</span>
-        <span class="summary">Decodes USPS Intelligent Mail Barcodes (IMB).</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-postal-uspsimbencoder.html">UspsImbEncoder</a>
-        <span class="kind">Class</span>
-        <span class="summary">Encodes USPS Intelligent Mail Barcodes (IMB).</span>
-      </li>
-    </ul>
-  </section>
-  <section class="namespace-group">
-    <h2>CodeGlyphX.Rendering</h2>
-    <ul class="type-list">
-      <li>
-        <a href="types/codeglyphx-rendering-colorutils.html">ColorUtils</a>
-        <span class="kind">Class</span>
-        <span class="summary">Helpers for converting colors to CSS-friendly strings.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-imageformat.html">ImageFormat</a>
-        <span class="kind">Enum</span>
-        <span class="summary">Known image formats supported by CodeGlyphX.Rendering.ImageReader.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-imageinfo.html">ImageInfo</a>
-        <span class="kind">Struct</span>
-        <span class="summary">Basic image metadata returned by ImageReader.TryReadInfo.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-imagereader.html">ImageReader</a>
-        <span class="kind">Class</span>
-        <span class="summary">Auto-detects common image formats and decodes to RGBA buffers.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-logobuilder.html">LogoBuilder</a>
-        <span class="kind">Class</span>
-        <span class="summary">Helpers for building simple logo pixels.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-qrlogooptions.html">QrLogoOptions</a>
-        <span class="kind">Class</span>
-        <span class="summary">Options for embedding a PNG logo inside a QR render (SVG/HTML).</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-renderdefaults.html">RenderDefaults</a>
-        <span class="kind">Class</span>
-        <span class="summary">Shared rendering defaults across formats.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-renderextensions.html">RenderExtensions</a>
-        <span class="kind">Class</span>
-        <span class="summary">Convenience extension methods for rendered outputs.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-renderio.html">RenderIO</a>
-        <span class="kind">Class</span>
-        <span class="summary">Simple file and stream helpers for rendered assets.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-rendermode.html">RenderMode</a>
-        <span class="kind">Enum</span>
-        <span class="summary">Output mode for vector-capable formats.</span>
-      </li>
-    </ul>
-  </section>
-  <section class="namespace-group">
-    <h2>CodeGlyphX.Rendering.Ascii</h2>
-    <ul class="type-list">
-      <li>
-        <a href="types/codeglyphx-rendering-ascii-barcodeasciirenderer.html">BarcodeAsciiRenderer</a>
-        <span class="kind">Class</span>
-        <span class="summary">Renders 1D barcodes as ASCII text.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-ascii-barcodeasciirenderoptions.html">BarcodeAsciiRenderOptions</a>
-        <span class="kind">Class</span>
-        <span class="summary">Rendering options for ASCII 1D barcodes.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-ascii-matrixasciirenderer.html">MatrixAsciiRenderer</a>
-        <span class="kind">Class</span>
-        <span class="summary">Renders 2D matrices as ASCII text.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-ascii-matrixasciirenderoptions.html">MatrixAsciiRenderOptions</a>
-        <span class="kind">Class</span>
-        <span class="summary">Rendering options for ASCII matrix output.</span>
-      </li>
-    </ul>
-  </section>
-  <section class="namespace-group">
-    <h2>CodeGlyphX.Rendering.Bmp</h2>
-    <ul class="type-list">
-      <li>
-        <a href="types/codeglyphx-rendering-bmp-barcodebmprenderer.html">BarcodeBmpRenderer</a>
-        <span class="kind">Class</span>
-        <span class="summary">Renders 1D barcodes to BMP images (BGRA32).</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-bmp-bmpreader.html">BmpReader</a>
-        <span class="kind">Class</span>
-        <span class="summary">Decodes BMP images to RGBA buffers (uncompressed 24/32/8-bit).</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-bmp-bmpwriter.html">BmpWriter</a>
-        <span class="kind">Class</span>
-        <span class="summary">Writes BMP images from RGBA buffers.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-bmp-matrixbmprenderer.html">MatrixBmpRenderer</a>
-        <span class="kind">Class</span>
-        <span class="summary">Renders generic 2D matrices to BMP images (BGRA32).</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-bmp-qrbmprenderer.html">QrBmpRenderer</a>
-        <span class="kind">Class</span>
-        <span class="summary">Renders QR modules to a BMP image (BGRA32).</span>
-      </li>
-    </ul>
-  </section>
-  <section class="namespace-group">
-    <h2>CodeGlyphX.Rendering.Eps</h2>
-    <ul class="type-list">
-      <li>
-        <a href="types/codeglyphx-rendering-eps-barcodeepsrenderer.html">BarcodeEpsRenderer</a>
-        <span class="kind">Class</span>
-        <span class="summary">Renders 1D barcodes to an EPS image.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-eps-epswriter.html">EpsWriter</a>
-        <span class="kind">Class</span>
-        <span class="summary">Minimal EPS writer for embedding RGB images.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-eps-matrixepsrenderer.html">MatrixEpsRenderer</a>
-        <span class="kind">Class</span>
-        <span class="summary">Renders generic 2D matrices to an EPS image.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-eps-qrepsrenderer.html">QrEpsRenderer</a>
-        <span class="kind">Class</span>
-        <span class="summary">Renders QR modules to an EPS image.</span>
-      </li>
-    </ul>
-  </section>
-  <section class="namespace-group">
-    <h2>CodeGlyphX.Rendering.Gif</h2>
-    <ul class="type-list">
-      <li>
-        <a href="types/codeglyphx-rendering-gif-gifreader.html">GifReader</a>
-        <span class="kind">Class</span>
-        <span class="summary">Decodes GIF images to RGBA buffers (first frame only).</span>
-      </li>
-    </ul>
-  </section>
-  <section class="namespace-group">
-    <h2>CodeGlyphX.Rendering.Html</h2>
-    <ul class="type-list">
-      <li>
-        <a href="types/codeglyphx-rendering-html-barcodehtmlrenderoptions.html">BarcodeHtmlRenderOptions</a>
-        <span class="kind">Class</span>
-        <span class="summary">Options for CodeGlyphX.Rendering.Html.HtmlBarcodeRenderer.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-html-htmlbarcoderenderer.html">HtmlBarcodeRenderer</a>
-        <span class="kind">Class</span>
-        <span class="summary">Renders 1D barcodes to HTML (table-based).</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-html-htmlqrrenderer.html">HtmlQrRenderer</a>
-        <span class="kind">Class</span>
-        <span class="summary">Renders QR modules to HTML (table-based).</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-html-matrixhtmlrenderer.html">MatrixHtmlRenderer</a>
-        <span class="kind">Class</span>
-        <span class="summary">Renders generic 2D matrices to HTML (table-based).</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-html-matrixhtmlrenderoptions.html">MatrixHtmlRenderOptions</a>
-        <span class="kind">Class</span>
-        <span class="summary">Options for rendering generic 2D matrices to HTML.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-html-qrhtmlrenderoptions.html">QrHtmlRenderOptions</a>
-        <span class="kind">Class</span>
-        <span class="summary">Options for CodeGlyphX.Rendering.Html.HtmlQrRenderer.</span>
-      </li>
-    </ul>
-  </section>
-  <section class="namespace-group">
-    <h2>CodeGlyphX.Rendering.Ico</h2>
-    <ul class="type-list">
-      <li>
-        <a href="types/codeglyphx-rendering-ico-barcodeicorenderer.html">BarcodeIcoRenderer</a>
-        <span class="kind">Class</span>
-        <span class="summary">Renders 1D barcodes to ICO (PNG-embedded).</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-ico-icoreader.html">IcoReader</a>
-        <span class="kind">Class</span>
-        <span class="summary">Decodes ICO/CUR images to RGBA buffers (embedded PNG or BMP/DIB).</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-ico-icorenderoptions.html">IcoRenderOptions</a>
-        <span class="kind">Class</span>
-        <span class="summary">Options for ICO rendering (multi-size).</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-ico-icowriter.html">IcoWriter</a>
-        <span class="kind">Class</span>
-        <span class="summary">Writes ICO files embedding PNG images.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-ico-matrixicorenderer.html">MatrixIcoRenderer</a>
-        <span class="kind">Class</span>
-        <span class="summary">Renders generic 2D matrices to ICO (PNG-embedded).</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-ico-qricorenderer.html">QrIcoRenderer</a>
-        <span class="kind">Class</span>
-        <span class="summary">Renders QR modules to ICO (PNG-embedded).</span>
-      </li>
-    </ul>
-  </section>
-  <section class="namespace-group">
-    <h2>CodeGlyphX.Rendering.Jpeg</h2>
-    <ul class="type-list">
-      <li>
-        <a href="types/codeglyphx-rendering-jpeg-barcodejpegrenderer.html">BarcodeJpegRenderer</a>
-        <span class="kind">Class</span>
-        <span class="summary">Renders 1D barcodes to a JPEG image (baseline, 4:4:4).</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-jpeg-jpegreader.html">JpegReader</a>
-        <span class="kind">Class</span>
-        <span class="summary">Decodes baseline and progressive JPEG images to RGBA buffers (SOF0/SOF2, 8-bit, Huffman).</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-jpeg-matrixjpegrenderer.html">MatrixJpegRenderer</a>
-        <span class="kind">Class</span>
-        <span class="summary">Renders generic 2D matrices to a JPEG image (baseline, 4:4:4).</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-jpeg-qrjpegrenderer.html">QrJpegRenderer</a>
-        <span class="kind">Class</span>
-        <span class="summary">Renders QR modules to a JPEG image (baseline, 4:4:4).</span>
-      </li>
-    </ul>
-  </section>
-  <section class="namespace-group">
-    <h2>CodeGlyphX.Rendering.Pam</h2>
-    <ul class="type-list">
-      <li>
-        <a href="types/codeglyphx-rendering-pam-barcodepamrenderer.html">BarcodePamRenderer</a>
-        <span class="kind">Class</span>
-        <span class="summary">Renders barcodes to PAM (P7).</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-pam-matrixpamrenderer.html">MatrixPamRenderer</a>
-        <span class="kind">Class</span>
-        <span class="summary">Renders matrix modules to PAM (P7).</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-pam-pamreader.html">PamReader</a>
-        <span class="kind">Class</span>
-        <span class="summary">Decodes PAM (P7) images to RGBA buffers.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-pam-pamwriter.html">PamWriter</a>
-        <span class="kind">Class</span>
-        <span class="summary">Writes PAM (P7) images from RGBA buffers.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-pam-qrpamrenderer.html">QrPamRenderer</a>
-        <span class="kind">Class</span>
-        <span class="summary">Renders QR modules to PAM (P7).</span>
-      </li>
-    </ul>
-  </section>
-  <section class="namespace-group">
-    <h2>CodeGlyphX.Rendering.Pbm</h2>
-    <ul class="type-list">
-      <li>
-        <a href="types/codeglyphx-rendering-pbm-barcodepbmrenderer.html">BarcodePbmRenderer</a>
-        <span class="kind">Class</span>
-        <span class="summary">Renders 1D barcodes to PBM (P4).</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-pbm-matrixpbmrenderer.html">MatrixPbmRenderer</a>
-        <span class="kind">Class</span>
-        <span class="summary">Renders generic 2D matrices to PBM (P4).</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-pbm-pbmreader.html">PbmReader</a>
-        <span class="kind">Class</span>
-        <span class="summary">Decodes PBM (P4/P1) images to RGBA buffers.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-pbm-pbmwriter.html">PbmWriter</a>
-        <span class="kind">Class</span>
-        <span class="summary">Writes PBM (P4) images from RGBA buffers.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-pbm-qrpbmrenderer.html">QrPbmRenderer</a>
-        <span class="kind">Class</span>
-        <span class="summary">Renders QR modules to PBM (P4).</span>
-      </li>
-    </ul>
-  </section>
-  <section class="namespace-group">
-    <h2>CodeGlyphX.Rendering.Pdf</h2>
-    <ul class="type-list">
-      <li>
-        <a href="types/codeglyphx-rendering-pdf-barcodepdfrenderer.html">BarcodePdfRenderer</a>
-        <span class="kind">Class</span>
-        <span class="summary">Renders 1D barcodes to a PDF image.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-pdf-matrixpdfrenderer.html">MatrixPdfRenderer</a>
-        <span class="kind">Class</span>
-        <span class="summary">Renders generic 2D matrices to a PDF image.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-pdf-pdfwriter.html">PdfWriter</a>
-        <span class="kind">Class</span>
-        <span class="summary">Minimal PDF writer for embedding RGB images.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-pdf-qrpdfrenderer.html">QrPdfRenderer</a>
-        <span class="kind">Class</span>
-        <span class="summary">Renders QR modules to a PDF image.</span>
-      </li>
-    </ul>
-  </section>
-  <section class="namespace-group">
-    <h2>CodeGlyphX.Rendering.Pgm</h2>
-    <ul class="type-list">
-      <li>
-        <a href="types/codeglyphx-rendering-pgm-barcodepgmrenderer.html">BarcodePgmRenderer</a>
-        <span class="kind">Class</span>
-        <span class="summary">Renders barcodes to PGM (P5).</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-pgm-matrixpgmrenderer.html">MatrixPgmRenderer</a>
-        <span class="kind">Class</span>
-        <span class="summary">Renders matrix modules to PGM (P5).</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-pgm-pgmreader.html">PgmReader</a>
-        <span class="kind">Class</span>
-        <span class="summary">Decodes PGM (P5/P2) images to RGBA buffers.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-pgm-pgmwriter.html">PgmWriter</a>
-        <span class="kind">Class</span>
-        <span class="summary">Writes PGM (P5) images from RGBA buffers.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-pgm-qrpgmrenderer.html">QrPgmRenderer</a>
-        <span class="kind">Class</span>
-        <span class="summary">Renders QR modules to PGM (P5).</span>
-      </li>
-    </ul>
-  </section>
-  <section class="namespace-group">
-    <h2>CodeGlyphX.Rendering.Png</h2>
-    <ul class="type-list">
-      <li>
-        <a href="types/codeglyphx-rendering-png-barcodepngrenderer.html">BarcodePngRenderer</a>
-        <span class="kind">Class</span>
-        <span class="summary">Renders 1D barcodes to a PNG image (RGBA8).</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-png-barcodepngrenderoptions.html">BarcodePngRenderOptions</a>
-        <span class="kind">Class</span>
-        <span class="summary">Options for CodeGlyphX.Rendering.Png.BarcodePngRenderer.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-png-matrixpngrenderer.html">MatrixPngRenderer</a>
-        <span class="kind">Class</span>
-        <span class="summary">Renders generic 2D matrices to PNG images (RGBA8).</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-png-matrixpngrenderoptions.html">MatrixPngRenderOptions</a>
-        <span class="kind">Class</span>
-        <span class="summary">Options for rendering generic 2D matrices to PNG.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-png-pngreader.html">PngReader</a>
-        <span class="kind">Class</span>
-        <span class="summary">Decodes PNG images to RGBA buffers.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-png-qrpngeyeoptions.html">QrPngEyeOptions</a>
-        <span class="kind">Class</span>
-        <span class="summary">Styling overrides for QR finder (eye) patterns.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-png-qrpnggradientoptions.html">QrPngGradientOptions</a>
-        <span class="kind">Class</span>
-        <span class="summary">Options for a foreground gradient fill.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-png-qrpnggradienttype.html">QrPngGradientType</a>
-        <span class="kind">Enum</span>
-        <span class="summary">Gradient types for QR PNG rendering.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-png-qrpnglogooptions.html">QrPngLogoOptions</a>
-        <span class="kind">Class</span>
-        <span class="summary">Options and pixel data for a centered logo overlay in a QR PNG.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-png-qrpngmoduleshape.html">QrPngModuleShape</a>
-        <span class="kind">Enum</span>
-        <span class="summary">Module shape used by CodeGlyphX.Rendering.Png.QrPngRenderer.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-png-qrpngrenderer.html">QrPngRenderer</a>
-        <span class="kind">Class</span>
-        <span class="summary">Renders QR modules to a PNG image (RGBA8).</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-png-qrpngrenderoptions.html">QrPngRenderOptions</a>
-        <span class="kind">Class</span>
-        <span class="summary">Options for CodeGlyphX.Rendering.Png.QrPngRenderer.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-png-rgba32.html">Rgba32</a>
-        <span class="kind">Struct</span>
-        <span class="summary">A simple RGBA color value.</span>
-      </li>
-    </ul>
-  </section>
-  <section class="namespace-group">
-    <h2>CodeGlyphX.Rendering.Ppm</h2>
-    <ul class="type-list">
-      <li>
-        <a href="types/codeglyphx-rendering-ppm-barcodeppmrenderer.html">BarcodePpmRenderer</a>
-        <span class="kind">Class</span>
-        <span class="summary">Renders 1D barcodes to PPM (P6).</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-ppm-matrixppmrenderer.html">MatrixPpmRenderer</a>
-        <span class="kind">Class</span>
-        <span class="summary">Renders generic 2D matrices to PPM (P6).</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-ppm-ppmreader.html">PpmReader</a>
-        <span class="kind">Class</span>
-        <span class="summary">Decodes PPM/PGM (P6/P5) images to RGBA buffers.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-ppm-ppmwriter.html">PpmWriter</a>
-        <span class="kind">Class</span>
-        <span class="summary">Writes PPM (P6) images from RGBA buffers.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-ppm-qrppmrenderer.html">QrPpmRenderer</a>
-        <span class="kind">Class</span>
-        <span class="summary">Renders QR modules to PPM (P6).</span>
-      </li>
-    </ul>
-  </section>
-  <section class="namespace-group">
-    <h2>CodeGlyphX.Rendering.Svg</h2>
-    <ul class="type-list">
-      <li>
-        <a href="types/codeglyphx-rendering-svg-barcodesvgrenderoptions.html">BarcodeSvgRenderOptions</a>
-        <span class="kind">Class</span>
-        <span class="summary">Options for CodeGlyphX.Rendering.Svg.SvgBarcodeRenderer.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-svg-matrixsvgrenderer.html">MatrixSvgRenderer</a>
-        <span class="kind">Class</span>
-        <span class="summary">Renders generic 2D matrices to SVG.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-svg-matrixsvgrenderoptions.html">MatrixSvgRenderOptions</a>
-        <span class="kind">Class</span>
-        <span class="summary">Options for rendering generic 2D matrices to SVG.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-svg-qrsvgrenderoptions.html">QrSvgRenderOptions</a>
-        <span class="kind">Class</span>
-        <span class="summary">Options for CodeGlyphX.Rendering.Svg.SvgQrRenderer.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-svg-svgbarcoderenderer.html">SvgBarcodeRenderer</a>
-        <span class="kind">Class</span>
-        <span class="summary">Renders 1D barcodes to SVG.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-svg-svgqrrenderer.html">SvgQrRenderer</a>
-        <span class="kind">Class</span>
-        <span class="summary">Renders QR modules to SVG.</span>
-      </li>
-    </ul>
-  </section>
-  <section class="namespace-group">
-    <h2>CodeGlyphX.Rendering.Svgz</h2>
-    <ul class="type-list">
-      <li>
-        <a href="types/codeglyphx-rendering-svgz-barcodesvgzrenderer.html">BarcodeSvgzRenderer</a>
-        <span class="kind">Class</span>
-        <span class="summary">Renders barcodes to SVGZ.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-svgz-matrixsvgzrenderer.html">MatrixSvgzRenderer</a>
-        <span class="kind">Class</span>
-        <span class="summary">Renders matrix modules to SVGZ.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-svgz-qrsvgzrenderer.html">QrSvgzRenderer</a>
-        <span class="kind">Class</span>
-        <span class="summary">Renders QR modules to SVGZ.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-svgz-svgzwriter.html">SvgzWriter</a>
-        <span class="kind">Class</span>
-        <span class="summary">Writes SVGZ (gzip-compressed SVG).</span>
-      </li>
-    </ul>
-  </section>
-  <section class="namespace-group">
-    <h2>CodeGlyphX.Rendering.Tga</h2>
-    <ul class="type-list">
-      <li>
-        <a href="types/codeglyphx-rendering-tga-barcodetgarenderer.html">BarcodeTgaRenderer</a>
-        <span class="kind">Class</span>
-        <span class="summary">Renders 1D barcodes to TGA.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-tga-matrixtgarenderer.html">MatrixTgaRenderer</a>
-        <span class="kind">Class</span>
-        <span class="summary">Renders generic 2D matrices to TGA.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-tga-qrtgarenderer.html">QrTgaRenderer</a>
-        <span class="kind">Class</span>
-        <span class="summary">Renders QR modules to TGA.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-tga-tgareader.html">TgaReader</a>
-        <span class="kind">Class</span>
-        <span class="summary">Decodes TGA images to RGBA buffers (uncompressed true-color/grayscale).</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-tga-tgawriter.html">TgaWriter</a>
-        <span class="kind">Class</span>
-        <span class="summary">Writes TGA images from RGBA buffers (uncompressed).</span>
-      </li>
-    </ul>
-  </section>
-  <section class="namespace-group">
-    <h2>CodeGlyphX.Rendering.Xbm</h2>
-    <ul class="type-list">
-      <li>
-        <a href="types/codeglyphx-rendering-xbm-barcodexbmrenderer.html">BarcodeXbmRenderer</a>
-        <span class="kind">Class</span>
-        <span class="summary">Renders barcodes to XBM.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-xbm-matrixxbmrenderer.html">MatrixXbmRenderer</a>
-        <span class="kind">Class</span>
-        <span class="summary">Renders matrix modules to XBM.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-xbm-qrxbmrenderer.html">QrXbmRenderer</a>
-        <span class="kind">Class</span>
-        <span class="summary">Renders QR modules to XBM.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-xbm-xbmreader.html">XbmReader</a>
-        <span class="kind">Class</span>
-        <span class="summary">Decodes XBM images to RGBA buffers.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-xbm-xbmwriter.html">XbmWriter</a>
-        <span class="kind">Class</span>
-        <span class="summary">Writes XBM (X Bitmap) images from RGBA buffers.</span>
-      </li>
-    </ul>
-  </section>
-  <section class="namespace-group">
-    <h2>CodeGlyphX.Rendering.Xpm</h2>
-    <ul class="type-list">
-      <li>
-        <a href="types/codeglyphx-rendering-xpm-barcodexpmrenderer.html">BarcodeXpmRenderer</a>
-        <span class="kind">Class</span>
-        <span class="summary">Renders barcodes to XPM.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-xpm-matrixxpmrenderer.html">MatrixXpmRenderer</a>
-        <span class="kind">Class</span>
-        <span class="summary">Renders matrix modules to XPM.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-xpm-qrxpmrenderer.html">QrXpmRenderer</a>
-        <span class="kind">Class</span>
-        <span class="summary">Renders QR modules to XPM.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-xpm-xpmreader.html">XpmReader</a>
-        <span class="kind">Class</span>
-        <span class="summary">Decodes XPM images to RGBA buffers.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-rendering-xpm-xpmwriter.html">XpmWriter</a>
-        <span class="kind">Class</span>
-        <span class="summary">Writes XPM (X Pixmap) images from RGBA buffers.</span>
-      </li>
-    </ul>
-  </section>
-  <section class="namespace-group">
-    <h2>CodeGlyphX.RoyalMail</h2>
-    <ul class="type-list">
-      <li>
-        <a href="types/codeglyphx-royalmail-royalmailfourstatedecoder.html">RoyalMailFourStateDecoder</a>
-        <span class="kind">Class</span>
-        <span class="summary">Decodes Royal Mail 4-State Customer Code (RM4SCC) barcodes.</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-royalmail-royalmailfourstateencoder.html">RoyalMailFourStateEncoder</a>
-        <span class="kind">Class</span>
-        <span class="summary">Encodes Royal Mail 4-State Customer Code (RM4SCC) barcodes.</span>
-      </li>
-    </ul>
-  </section>
-  <section class="namespace-group">
-    <h2>CodeGlyphX.Telepen</h2>
-    <ul class="type-list">
-      <li>
-        <a href="types/codeglyphx-telepen-telepenencoder.html">TelepenEncoder</a>
-        <span class="kind">Class</span>
-        <span class="summary">Encodes Telepen barcodes (ASCII mode).</span>
-      </li>
-    </ul>
-  </section>
-  <section class="namespace-group">
-    <h2>CodeGlyphX.UpcA</h2>
-    <ul class="type-list">
-      <li>
-        <a href="types/codeglyphx-upca-upcatables-encodednumber.html">EncodedNumber</a>
-        <span class="kind">Struct</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-upca-upcaencoder.html">UpcAEncoder</a>
-        <span class="kind">Class</span>
-        <span class="summary">Encodes UPC-A barcodes.</span>
-      </li>
-    </ul>
-  </section>
-  <section class="namespace-group">
-    <h2>CodeGlyphX.UpcE</h2>
-    <ul class="type-list">
-      <li>
-        <a href="types/codeglyphx-upce-upcetables-encodednumber.html">EncodedNumber</a>
-        <span class="kind">Struct</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-upce-upcetables-parity.html">Parity</a>
-        <span class="kind">Enum</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-upce-upcetables-paritypatterns.html">ParityPatterns</a>
-        <span class="kind">Struct</span>
-      </li>
-      <li>
-        <a href="types/codeglyphx-upce-upceencoder.html">UpcEEncoder</a>
-        <span class="kind">Class</span>
-        <span class="summary">Encodes UPC-E barcodes.</span>
-      </li>
-    </ul>
-  </section>
-</main>
+  <main class="pf-api">
+    <h1>CodeGlyphX API Reference</h1>
+    <p>Types: 400</p>
+    <div class="pf-api-search">
+      <input id="api-search" type="search" placeholder="Search API" autocomplete="off" />
+      <div id="api-results" class="pf-api-results"></div>
+    </div>
+    <div class="pf-api-types">
+      <a class="pf-api-type" href="types/codeglyphx-australiapost-australiapostcustomerencodingtable.html">CodeGlyphX.AustraliaPost.AustraliaPostCustomerEncodingTable</a>
+      <a class="pf-api-type" href="types/codeglyphx-australiapost-australiapostdecoded.html">CodeGlyphX.AustraliaPost.AustraliaPostDecoded</a>
+      <a class="pf-api-type" href="types/codeglyphx-australiapost-australiapostdecoder.html">CodeGlyphX.AustraliaPost.AustraliaPostDecoder</a>
+      <a class="pf-api-type" href="types/codeglyphx-australiapost-australiapostencoder.html">CodeGlyphX.AustraliaPost.AustraliaPostEncoder</a>
+      <a class="pf-api-type" href="types/codeglyphx-australiapost-australiapostformat.html">CodeGlyphX.AustraliaPost.AustraliaPostFormat</a>
+      <a class="pf-api-type" href="types/codeglyphx-aztec-aztecencodeoptions.html">CodeGlyphX.Aztec.AztecEncodeOptions</a>
+      <a class="pf-api-type" href="types/codeglyphx-azteccode.html">CodeGlyphX.AztecCode</a>
+      <a class="pf-api-type" href="types/codeglyphx-aztecdecodediagnostics.html">CodeGlyphX.AztecDecodeDiagnostics</a>
+      <a class="pf-api-type" href="types/codeglyphx-barcode.html">CodeGlyphX.Barcode</a>
+      <a class="pf-api-type" href="types/codeglyphx-barcode-barcodebuilder.html">CodeGlyphX.Barcode.BarcodeBuilder</a>
+      <a class="pf-api-type" href="types/codeglyphx-barcode1d.html">CodeGlyphX.Barcode1D</a>
+      <a class="pf-api-type" href="types/codeglyphx-barcodedecoded.html">CodeGlyphX.BarcodeDecoded</a>
+      <a class="pf-api-type" href="types/codeglyphx-barcodedecodediagnostics.html">CodeGlyphX.BarcodeDecodeDiagnostics</a>
+      <a class="pf-api-type" href="types/codeglyphx-barcodedecodeoptions.html">CodeGlyphX.BarcodeDecodeOptions</a>
+      <a class="pf-api-type" href="types/codeglyphx-barcodedecoder.html">CodeGlyphX.BarcodeDecoder</a>
+      <a class="pf-api-type" href="types/codeglyphx-barcodeeasy.html">CodeGlyphX.BarcodeEasy</a>
+      <a class="pf-api-type" href="types/codeglyphx-barcodeencoder.html">CodeGlyphX.BarcodeEncoder</a>
+      <a class="pf-api-type" href="types/codeglyphx-barcodeoptions.html">CodeGlyphX.BarcodeOptions</a>
+      <a class="pf-api-type" href="types/codeglyphx-barcodetype.html">CodeGlyphX.BarcodeType</a>
+      <a class="pf-api-type" href="types/codeglyphx-barsegment.html">CodeGlyphX.BarSegment</a>
+      <a class="pf-api-type" href="types/codeglyphx-bitmatrix.html">CodeGlyphX.BitMatrix</a>
+      <a class="pf-api-type" href="types/codeglyphx-codabar-codabarencoder.html">CodeGlyphX.Codabar.CodabarEncoder</a>
+      <a class="pf-api-type" href="types/codeglyphx-code11-code11encoder.html">CodeGlyphX.Code11.Code11Encoder</a>
+      <a class="pf-api-type" href="types/codeglyphx-code11checksumpolicy.html">CodeGlyphX.Code11ChecksumPolicy</a>
+      <a class="pf-api-type" href="types/codeglyphx-code25-iata2of5encoder.html">CodeGlyphX.Code25.Iata2Of5Encoder</a>
+      <a class="pf-api-type" href="types/codeglyphx-code25-industrial2of5encoder.html">CodeGlyphX.Code25.Industrial2Of5Encoder</a>
+      <a class="pf-api-type" href="types/codeglyphx-code25-matrix2of5encoder.html">CodeGlyphX.Code25.Matrix2Of5Encoder</a>
+      <a class="pf-api-type" href="types/codeglyphx-code32-code32encoder.html">CodeGlyphX.Code32.Code32Encoder</a>
+      <a class="pf-api-type" href="types/codeglyphx-code39-code39encoder.html">CodeGlyphX.Code39.Code39Encoder</a>
+      <a class="pf-api-type" href="types/codeglyphx-code39checksumpolicy.html">CodeGlyphX.Code39ChecksumPolicy</a>
+      <a class="pf-api-type" href="types/codeglyphx-code93-code93encoder.html">CodeGlyphX.Code93.Code93Encoder</a>
+      <a class="pf-api-type" href="types/codeglyphx-codeglyph.html">CodeGlyphX.CodeGlyph</a>
+      <a class="pf-api-type" href="types/codeglyphx-codeglyphbudget.html">CodeGlyphX.CodeGlyphBudget</a>
+      <a class="pf-api-type" href="types/codeglyphx-codeglyphdecoded.html">CodeGlyphX.CodeGlyphDecoded</a>
+      <a class="pf-api-type" href="types/codeglyphx-codeglyphdecodediagnostics.html">CodeGlyphX.CodeGlyphDecodeDiagnostics</a>
+      <a class="pf-api-type" href="types/codeglyphx-codeglyphdecodeoptions.html">CodeGlyphX.CodeGlyphDecodeOptions</a>
+      <a class="pf-api-type" href="types/codeglyphx-codeglyphkind.html">CodeGlyphX.CodeGlyphKind</a>
+      <a class="pf-api-type" href="types/codeglyphx-codeglyphxfeatures.html">CodeGlyphX.CodeGlyphXFeatures</a>
+      <a class="pf-api-type" href="types/codeglyphx-databar-databar14decoder.html">CodeGlyphX.DataBar.DataBar14Decoder</a>
+      <a class="pf-api-type" href="types/codeglyphx-databar-databar14encoder.html">CodeGlyphX.DataBar.DataBar14Encoder</a>
+      <a class="pf-api-type" href="types/codeglyphx-databar-databarexpandeddecoder.html">CodeGlyphX.DataBar.DataBarExpandedDecoder</a>
+      <a class="pf-api-type" href="types/codeglyphx-databar-databarexpandedencoder.html">CodeGlyphX.DataBar.DataBarExpandedEncoder</a>
+      <a class="pf-api-type" href="types/codeglyphx-databar-databarexpandedtables.html">CodeGlyphX.DataBar.DataBarExpandedTables</a>
+      <a class="pf-api-type" href="types/codeglyphx-datamatrix-datamatrixdecoder.html">CodeGlyphX.DataMatrix.DataMatrixDecoder</a>
+      <a class="pf-api-type" href="types/codeglyphx-datamatrix-datamatrixencoder.html">CodeGlyphX.DataMatrix.DataMatrixEncoder</a>
+      <a class="pf-api-type" href="types/codeglyphx-datamatrix-datamatrixencodingmode.html">CodeGlyphX.DataMatrix.DataMatrixEncodingMode</a>
+      <a class="pf-api-type" href="types/codeglyphx-datamatrixcode.html">CodeGlyphX.DataMatrixCode</a>
+      <a class="pf-api-type" href="types/codeglyphx-datamatrixcode-datamatrixbuilder.html">CodeGlyphX.DataMatrixCode.DataMatrixBuilder</a>
+      <a class="pf-api-type" href="types/codeglyphx-datamatrixdecodediagnostics.html">CodeGlyphX.DataMatrixDecodeDiagnostics</a>
+      <a class="pf-api-type" href="types/codeglyphx-decodebatchdiagnostics.html">CodeGlyphX.DecodeBatchDiagnostics</a>
+      <a class="pf-api-type" href="types/codeglyphx-decodebatchresult.html">CodeGlyphX.DecodeBatchResult`1</a>
+      <a class="pf-api-type" href="types/codeglyphx-decodefailurereason.html">CodeGlyphX.DecodeFailureReason</a>
+      <a class="pf-api-type" href="types/codeglyphx-decoderesult.html">CodeGlyphX.DecodeResult`1</a>
+      <a class="pf-api-type" href="types/codeglyphx-ean-eanencoder.html">CodeGlyphX.Ean.EanEncoder</a>
+      <a class="pf-api-type" href="types/codeglyphx-gs1.html">CodeGlyphX.Gs1</a>
+      <a class="pf-api-type" href="types/codeglyphx-gs1element.html">CodeGlyphX.Gs1Element</a>
+      <a class="pf-api-type" href="types/codeglyphx-imagedecodeoptions.html">CodeGlyphX.ImageDecodeOptions</a>
+      <a class="pf-api-type" href="types/codeglyphx-itf-itf14encoder.html">CodeGlyphX.Itf.Itf14Encoder</a>
+      <a class="pf-api-type" href="types/codeglyphx-itf-itfencoder.html">CodeGlyphX.Itf.ItfEncoder</a>
+      <a class="pf-api-type" href="types/codeglyphx-japanpost-japanpostdecoder.html">CodeGlyphX.JapanPost.JapanPostDecoder</a>
+      <a class="pf-api-type" href="types/codeglyphx-japanpost-japanpostencoder.html">CodeGlyphX.JapanPost.JapanPostEncoder</a>
+      <a class="pf-api-type" href="types/codeglyphx-kix-kixdecoder.html">CodeGlyphX.Kix.KixDecoder</a>
+      <a class="pf-api-type" href="types/codeglyphx-kix-kixencoder.html">CodeGlyphX.Kix.KixEncoder</a>
+      <a class="pf-api-type" href="types/codeglyphx-matrixbarcodedecoder.html">CodeGlyphX.MatrixBarcodeDecoder</a>
+      <a class="pf-api-type" href="types/codeglyphx-matrixbarcodeencoder.html">CodeGlyphX.MatrixBarcodeEncoder</a>
+      <a class="pf-api-type" href="types/codeglyphx-matrixoptions.html">CodeGlyphX.MatrixOptions</a>
+      <a class="pf-api-type" href="types/codeglyphx-microqrcode.html">CodeGlyphX.MicroQrCode</a>
+      <a class="pf-api-type" href="types/codeglyphx-microqrcodeencoder.html">CodeGlyphX.MicroQrCodeEncoder</a>
+      <a class="pf-api-type" href="types/codeglyphx-microqrdecoded.html">CodeGlyphX.MicroQrDecoded</a>
+      <a class="pf-api-type" href="types/codeglyphx-microqrdecoder.html">CodeGlyphX.MicroQrDecoder</a>
+      <a class="pf-api-type" href="types/codeglyphx-msi-msiencoder.html">CodeGlyphX.Msi.MsiEncoder</a>
+      <a class="pf-api-type" href="types/codeglyphx-msichecksumpolicy.html">CodeGlyphX.MsiChecksumPolicy</a>
+      <a class="pf-api-type" href="types/codeglyphx-msichecksumtype.html">CodeGlyphX.MsiChecksumType</a>
+      <a class="pf-api-type" href="types/codeglyphx-otp.html">CodeGlyphX.Otp</a>
+      <a class="pf-api-type" href="types/codeglyphx-otp-hotpbuilder.html">CodeGlyphX.Otp.HotpBuilder</a>
+      <a class="pf-api-type" href="types/codeglyphx-otp-totpbuilder.html">CodeGlyphX.Otp.TotpBuilder</a>
+      <a class="pf-api-type" href="types/codeglyphx-otpalgorithm.html">CodeGlyphX.OtpAlgorithm</a>
+      <a class="pf-api-type" href="types/codeglyphx-otpauthhotp.html">CodeGlyphX.OtpAuthHotp</a>
+      <a class="pf-api-type" href="types/codeglyphx-otpauthparser.html">CodeGlyphX.OtpAuthParser</a>
+      <a class="pf-api-type" href="types/codeglyphx-otpauthparseresult.html">CodeGlyphX.OtpAuthParseResult</a>
+      <a class="pf-api-type" href="types/codeglyphx-otpauthpayload.html">CodeGlyphX.OtpAuthPayload</a>
+      <a class="pf-api-type" href="types/codeglyphx-otpauthsecret.html">CodeGlyphX.OtpAuthSecret</a>
+      <a class="pf-api-type" href="types/codeglyphx-otpauthtotp.html">CodeGlyphX.OtpAuthTotp</a>
+      <a class="pf-api-type" href="types/codeglyphx-otpauthtype.html">CodeGlyphX.OtpAuthType</a>
+      <a class="pf-api-type" href="types/codeglyphx-otpauthvalidationoptions.html">CodeGlyphX.OtpAuthValidationOptions</a>
+      <a class="pf-api-type" href="types/codeglyphx-otpauthvalidator.html">CodeGlyphX.OtpAuthValidator</a>
+      <a class="pf-api-type" href="types/codeglyphx-otpqrdecoder.html">CodeGlyphX.OtpQrDecoder</a>
+      <a class="pf-api-type" href="types/codeglyphx-otpqrpreset.html">CodeGlyphX.OtpQrPreset</a>
+      <a class="pf-api-type" href="types/codeglyphx-otpqrsafety.html">CodeGlyphX.OtpQrSafety</a>
+      <a class="pf-api-type" href="types/codeglyphx-otpqrsafetyreport.html">CodeGlyphX.OtpQrSafetyReport</a>
+      <a class="pf-api-type" href="types/codeglyphx-patchcode-patchcodeencoder.html">CodeGlyphX.PatchCode.PatchCodeEncoder</a>
+      <a class="pf-api-type" href="types/codeglyphx-payloads-qrappstoreplatform.html">CodeGlyphX.Payloads.QrAppStorePlatform</a>
+      <a class="pf-api-type" href="types/codeglyphx-payloads-qrbezahlauthoritytype.html">CodeGlyphX.Payloads.QrBezahlAuthorityType</a>
+      <a class="pf-api-type" href="types/codeglyphx-payloads-qrbezahlperiodicunit.html">CodeGlyphX.Payloads.QrBezahlPeriodicUnit</a>
+      <a class="pf-api-type" href="types/codeglyphx-payloads-qrbitcoinliketype.html">CodeGlyphX.Payloads.QrBitcoinLikeType</a>
+      <a class="pf-api-type" href="types/codeglyphx-payloads-qrcalendarencoding.html">CodeGlyphX.Payloads.QrCalendarEncoding</a>
+      <a class="pf-api-type" href="types/codeglyphx-payloads-qrcontactaddressorder.html">CodeGlyphX.Payloads.QrContactAddressOrder</a>
+      <a class="pf-api-type" href="types/codeglyphx-payloads-qrcontactaddresstype.html">CodeGlyphX.Payloads.QrContactAddressType</a>
+      <a class="pf-api-type" href="types/codeglyphx-payloads-qrcontactoutputtype.html">CodeGlyphX.Payloads.QrContactOutputType</a>
+      <a class="pf-api-type" href="types/codeglyphx-payloads-qrgeolocationencoding.html">CodeGlyphX.Payloads.QrGeolocationEncoding</a>
+      <a class="pf-api-type" href="types/codeglyphx-payloads-qrgirocodeencoding.html">CodeGlyphX.Payloads.QrGirocodeEncoding</a>
+      <a class="pf-api-type" href="types/codeglyphx-payloads-qrgirocoderemittancetype.html">CodeGlyphX.Payloads.QrGirocodeRemittanceType</a>
+      <a class="pf-api-type" href="types/codeglyphx-payloads-qrgirocodeversion.html">CodeGlyphX.Payloads.QrGirocodeVersion</a>
+      <a class="pf-api-type" href="types/codeglyphx-payloads-qrmailencoding.html">CodeGlyphX.Payloads.QrMailEncoding</a>
+      <a class="pf-api-type" href="types/codeglyphx-payloads-qrmmsencoding.html">CodeGlyphX.Payloads.QrMmsEncoding</a>
+      <a class="pf-api-type" href="types/codeglyphx-payloads-qrparseddata.html">CodeGlyphX.Payloads.QrParsedData</a>
+      <a class="pf-api-type" href="types/codeglyphx-payloads-qrparseddata-appstore.html">CodeGlyphX.Payloads.QrParsedData.AppStore</a>
+      <a class="pf-api-type" href="types/codeglyphx-payloads-qrparseddata-bookmark.html">CodeGlyphX.Payloads.QrParsedData.Bookmark</a>
+      <a class="pf-api-type" href="types/codeglyphx-payloads-qrparseddata-calendar.html">CodeGlyphX.Payloads.QrParsedData.Calendar</a>
+      <a class="pf-api-type" href="types/codeglyphx-payloads-qrparseddata-crypto.html">CodeGlyphX.Payloads.QrParsedData.Crypto</a>
+      <a class="pf-api-type" href="types/codeglyphx-payloads-qrparseddata-eip681.html">CodeGlyphX.Payloads.QrParsedData.Eip681</a>
+      <a class="pf-api-type" href="types/codeglyphx-payloads-qrparseddata-email.html">CodeGlyphX.Payloads.QrParsedData.Email</a>
+      <a class="pf-api-type" href="types/codeglyphx-payloads-qrparseddata-emvcomerchant.html">CodeGlyphX.Payloads.QrParsedData.EmvCoMerchant</a>
+      <a class="pf-api-type" href="types/codeglyphx-payloads-qrparseddata-geo.html">CodeGlyphX.Payloads.QrParsedData.Geo</a>
+      <a class="pf-api-type" href="types/codeglyphx-payloads-qrparseddata-lightning.html">CodeGlyphX.Payloads.QrParsedData.Lightning</a>
+      <a class="pf-api-type" href="types/codeglyphx-payloads-qrparseddata-mecard.html">CodeGlyphX.Payloads.QrParsedData.MeCard</a>
+      <a class="pf-api-type" href="types/codeglyphx-payloads-qrparseddata-otp.html">CodeGlyphX.Payloads.QrParsedData.Otp</a>
+      <a class="pf-api-type" href="types/codeglyphx-payloads-qrparseddata-paypal.html">CodeGlyphX.Payloads.QrParsedData.PayPal</a>
+      <a class="pf-api-type" href="types/codeglyphx-payloads-qrparseddata-phone.html">CodeGlyphX.Payloads.QrParsedData.Phone</a>
+      <a class="pf-api-type" href="types/codeglyphx-payloads-qrparseddata-sms.html">CodeGlyphX.Payloads.QrParsedData.Sms</a>
+      <a class="pf-api-type" href="types/codeglyphx-payloads-qrparseddata-social.html">CodeGlyphX.Payloads.QrParsedData.Social</a>
+      <a class="pf-api-type" href="types/codeglyphx-payloads-qrparseddata-upi.html">CodeGlyphX.Payloads.QrParsedData.Upi</a>
+      <a class="pf-api-type" href="types/codeglyphx-payloads-qrparseddata-vcard.html">CodeGlyphX.Payloads.QrParsedData.VCard</a>
+      <a class="pf-api-type" href="types/codeglyphx-payloads-qrparseddata-wifi.html">CodeGlyphX.Payloads.QrParsedData.Wifi</a>
+      <a class="pf-api-type" href="types/codeglyphx-payloads-qrparsedpayload.html">CodeGlyphX.Payloads.QrParsedPayload</a>
+      <a class="pf-api-type" href="types/codeglyphx-payloads-qrpayload.html">CodeGlyphX.Payloads.QrPayload</a>
+      <a class="pf-api-type" href="types/codeglyphx-payloads-qrpayloaddata.html">CodeGlyphX.Payloads.QrPayloadData</a>
+      <a class="pf-api-type" href="types/codeglyphx-payloads-qrpayloaddetectoptions.html">CodeGlyphX.Payloads.QrPayloadDetectOptions</a>
+      <a class="pf-api-type" href="types/codeglyphx-payloads-qrpayloadparseoptions.html">CodeGlyphX.Payloads.QrPayloadParseOptions</a>
+      <a class="pf-api-type" href="types/codeglyphx-payloads-qrpayloadparser.html">CodeGlyphX.Payloads.QrPayloadParser</a>
+      <a class="pf-api-type" href="types/codeglyphx-payloads-qrpayloads.html">CodeGlyphX.Payloads.QrPayloads</a>
+      <a class="pf-api-type" href="types/codeglyphx-payloads-qrpayloadtype.html">CodeGlyphX.Payloads.QrPayloadType</a>
+      <a class="pf-api-type" href="types/codeglyphx-payloads-qrpayloadvalidationresult.html">CodeGlyphX.Payloads.QrPayloadValidationResult</a>
+      <a class="pf-api-type" href="types/codeglyphx-payloads-qrrussiapaymentencoding.html">CodeGlyphX.Payloads.QrRussiaPaymentEncoding</a>
+      <a class="pf-api-type" href="types/codeglyphx-payloads-qrshadowsocksmethod.html">CodeGlyphX.Payloads.QrShadowSocksMethod</a>
+      <a class="pf-api-type" href="types/codeglyphx-payloads-qrsmsencoding.html">CodeGlyphX.Payloads.QrSmsEncoding</a>
+      <a class="pf-api-type" href="types/codeglyphx-payloads-qrswisscurrency.html">CodeGlyphX.Payloads.QrSwissCurrency</a>
+      <a class="pf-api-type" href="types/codeglyphx-payloads-russiapaymentorderpayload.html">CodeGlyphX.Payloads.RussiaPaymentOrderPayload</a>
+      <a class="pf-api-type" href="types/codeglyphx-payloads-slovenianupnqrpayload.html">CodeGlyphX.Payloads.SlovenianUpnQrPayload</a>
+      <a class="pf-api-type" href="types/codeglyphx-payloads-swissqrcodepayload.html">CodeGlyphX.Payloads.SwissQrCodePayload</a>
+      <a class="pf-api-type" href="types/codeglyphx-payloads-swissqrcodepayload-additionalinformation.html">CodeGlyphX.Payloads.SwissQrCodePayload.AdditionalInformation</a>
+      <a class="pf-api-type" href="types/codeglyphx-payloads-swissqrcodepayload-contact.html">CodeGlyphX.Payloads.SwissQrCodePayload.Contact</a>
+      <a class="pf-api-type" href="types/codeglyphx-payloads-swissqrcodepayload-contact-addresstype.html">CodeGlyphX.Payloads.SwissQrCodePayload.Contact.AddressType</a>
+      <a class="pf-api-type" href="types/codeglyphx-payloads-swissqrcodepayload-iban.html">CodeGlyphX.Payloads.SwissQrCodePayload.Iban</a>
+      <a class="pf-api-type" href="types/codeglyphx-payloads-swissqrcodepayload-iban-ibantype.html">CodeGlyphX.Payloads.SwissQrCodePayload.Iban.IbanType</a>
+      <a class="pf-api-type" href="types/codeglyphx-payloads-swissqrcodepayload-reference.html">CodeGlyphX.Payloads.SwissQrCodePayload.Reference</a>
+      <a class="pf-api-type" href="types/codeglyphx-payloads-swissqrcodepayload-reference-referencetexttype.html">CodeGlyphX.Payloads.SwissQrCodePayload.Reference.ReferenceTextType</a>
+      <a class="pf-api-type" href="types/codeglyphx-payloads-swissqrcodepayload-reference-referencetype.html">CodeGlyphX.Payloads.SwissQrCodePayload.Reference.ReferenceType</a>
+      <a class="pf-api-type" href="types/codeglyphx-pdf417-micropdf417decoder.html">CodeGlyphX.Pdf417.MicroPdf417Decoder</a>
+      <a class="pf-api-type" href="types/codeglyphx-pdf417-micropdf417encodeoptions.html">CodeGlyphX.Pdf417.MicroPdf417EncodeOptions</a>
+      <a class="pf-api-type" href="types/codeglyphx-pdf417-micropdf417encoder.html">CodeGlyphX.Pdf417.MicroPdf417Encoder</a>
+      <a class="pf-api-type" href="types/codeglyphx-pdf417-pdf417compaction.html">CodeGlyphX.Pdf417.Pdf417Compaction</a>
+      <a class="pf-api-type" href="types/codeglyphx-pdf417-pdf417decoded.html">CodeGlyphX.Pdf417.Pdf417Decoded</a>
+      <a class="pf-api-type" href="types/codeglyphx-pdf417-pdf417decoder.html">CodeGlyphX.Pdf417.Pdf417Decoder</a>
+      <a class="pf-api-type" href="types/codeglyphx-pdf417-pdf417encodeoptions.html">CodeGlyphX.Pdf417.Pdf417EncodeOptions</a>
+      <a class="pf-api-type" href="types/codeglyphx-pdf417-pdf417encoder.html">CodeGlyphX.Pdf417.Pdf417Encoder</a>
+      <a class="pf-api-type" href="types/codeglyphx-pdf417-pdf417macroassembler.html">CodeGlyphX.Pdf417.Pdf417MacroAssembler</a>
+      <a class="pf-api-type" href="types/codeglyphx-pdf417-pdf417macrometadata.html">CodeGlyphX.Pdf417.Pdf417MacroMetadata</a>
+      <a class="pf-api-type" href="types/codeglyphx-pdf417-pdf417macrooptions.html">CodeGlyphX.Pdf417.Pdf417MacroOptions</a>
+      <a class="pf-api-type" href="types/codeglyphx-pdf417code.html">CodeGlyphX.Pdf417Code</a>
+      <a class="pf-api-type" href="types/codeglyphx-pdf417code-pdf417builder.html">CodeGlyphX.Pdf417Code.Pdf417Builder</a>
+      <a class="pf-api-type" href="types/codeglyphx-pdf417decodediagnostics.html">CodeGlyphX.Pdf417DecodeDiagnostics</a>
+      <a class="pf-api-type" href="types/codeglyphx-pharmacode-pharmacodeencoder.html">CodeGlyphX.Pharmacode.PharmacodeEncoder</a>
+      <a class="pf-api-type" href="types/codeglyphx-pharmacode-pharmacodetwotrackdecoder.html">CodeGlyphX.Pharmacode.PharmacodeTwoTrackDecoder</a>
+      <a class="pf-api-type" href="types/codeglyphx-pharmacode-pharmacodetwotrackencoder.html">CodeGlyphX.Pharmacode.PharmacodeTwoTrackEncoder</a>
+      <a class="pf-api-type" href="types/codeglyphx-pixelformat.html">CodeGlyphX.PixelFormat</a>
+      <a class="pf-api-type" href="types/codeglyphx-plessey-plesseyencoder.html">CodeGlyphX.Plessey.PlesseyEncoder</a>
+      <a class="pf-api-type" href="types/codeglyphx-plesseychecksumpolicy.html">CodeGlyphX.PlesseyChecksumPolicy</a>
+      <a class="pf-api-type" href="types/codeglyphx-postal-planetdecoder.html">CodeGlyphX.Postal.PlanetDecoder</a>
+      <a class="pf-api-type" href="types/codeglyphx-postal-planetencoder.html">CodeGlyphX.Postal.PlanetEncoder</a>
+      <a class="pf-api-type" href="types/codeglyphx-postal-postnetdecoder.html">CodeGlyphX.Postal.PostnetDecoder</a>
+      <a class="pf-api-type" href="types/codeglyphx-postal-postnetencoder.html">CodeGlyphX.Postal.PostnetEncoder</a>
+      <a class="pf-api-type" href="types/codeglyphx-postal-uspsimbdecoder.html">CodeGlyphX.Postal.UspsImbDecoder</a>
+      <a class="pf-api-type" href="types/codeglyphx-postal-uspsimbencoder.html">CodeGlyphX.Postal.UspsImbEncoder</a>
+      <a class="pf-api-type" href="types/codeglyphx-qr.html">CodeGlyphX.QR</a>
+      <a class="pf-api-type" href="types/codeglyphx-qr-qrbuilder.html">CodeGlyphX.QR.QrBuilder</a>
+      <a class="pf-api-type" href="types/codeglyphx-qr-qrperspectivetransform.html">CodeGlyphX.Qr.QrPerspectiveTransform</a>
+      <a class="pf-api-type" href="types/codeglyphx-qrart.html">CodeGlyphX.QrArt</a>
+      <a class="pf-api-type" href="types/codeglyphx-qrartoptions.html">CodeGlyphX.QrArtOptions</a>
+      <a class="pf-api-type" href="types/codeglyphx-qrartpalette.html">CodeGlyphX.QrArtPalette</a>
+      <a class="pf-api-type" href="types/codeglyphx-qrartpalettes.html">CodeGlyphX.QrArtPalettes</a>
+      <a class="pf-api-type" href="types/codeglyphx-qrartpresets.html">CodeGlyphX.QrArtPresets</a>
+      <a class="pf-api-type" href="types/codeglyphx-qrartsafety.html">CodeGlyphX.QrArtSafety</a>
+      <a class="pf-api-type" href="types/codeglyphx-qrartsafetymode.html">CodeGlyphX.QrArtSafetyMode</a>
+      <a class="pf-api-type" href="types/codeglyphx-qrartsafetyreport.html">CodeGlyphX.QrArtSafetyReport</a>
+      <a class="pf-api-type" href="types/codeglyphx-qrarttheme.html">CodeGlyphX.QrArtTheme</a>
+      <a class="pf-api-type" href="types/codeglyphx-qrartvariant.html">CodeGlyphX.QrArtVariant</a>
+      <a class="pf-api-type" href="types/codeglyphx-qrartwarning.html">CodeGlyphX.QrArtWarning</a>
+      <a class="pf-api-type" href="types/codeglyphx-qrartwarningkind.html">CodeGlyphX.QrArtWarningKind</a>
+      <a class="pf-api-type" href="types/codeglyphx-qrcode.html">CodeGlyphX.QrCode</a>
+      <a class="pf-api-type" href="types/codeglyphx-qrcodeencoder.html">CodeGlyphX.QrCodeEncoder</a>
+      <a class="pf-api-type" href="types/codeglyphx-qrdecoded.html">CodeGlyphX.QrDecoded</a>
+      <a class="pf-api-type" href="types/codeglyphx-qrdecodefailurereason.html">CodeGlyphX.QrDecodeFailureReason</a>
+      <a class="pf-api-type" href="types/codeglyphx-qrdecodeinfo.html">CodeGlyphX.QrDecodeInfo</a>
+      <a class="pf-api-type" href="types/codeglyphx-qrdecodeprofile.html">CodeGlyphX.QrDecodeProfile</a>
+      <a class="pf-api-type" href="types/codeglyphx-qrdecoder.html">CodeGlyphX.QrDecoder</a>
+      <a class="pf-api-type" href="types/codeglyphx-qrdiagnosticsdump.html">CodeGlyphX.QrDiagnosticsDump</a>
+      <a class="pf-api-type" href="types/codeglyphx-qreasy.html">CodeGlyphX.QrEasy</a>
+      <a class="pf-api-type" href="types/codeglyphx-qreasyoptions.html">CodeGlyphX.QrEasyOptions</a>
+      <a class="pf-api-type" href="types/codeglyphx-qrerrorcorrectionlevel.html">CodeGlyphX.QrErrorCorrectionLevel</a>
+      <a class="pf-api-type" href="types/codeglyphx-qreyepresets.html">CodeGlyphX.QrEyePresets</a>
+      <a class="pf-api-type" href="types/codeglyphx-qrfnc1mode.html">CodeGlyphX.QrFnc1Mode</a>
+      <a class="pf-api-type" href="types/codeglyphx-qrimagedecoder.html">CodeGlyphX.QrImageDecoder</a>
+      <a class="pf-api-type" href="types/codeglyphx-qrpixeldebug.html">CodeGlyphX.QrPixelDebug</a>
+      <a class="pf-api-type" href="types/codeglyphx-qrpixeldebugmode.html">CodeGlyphX.QrPixelDebugMode</a>
+      <a class="pf-api-type" href="types/codeglyphx-qrpixeldebugoptions.html">CodeGlyphX.QrPixelDebugOptions</a>
+      <a class="pf-api-type" href="types/codeglyphx-qrpixeldecodeinfo.html">CodeGlyphX.QrPixelDecodeInfo</a>
+      <a class="pf-api-type" href="types/codeglyphx-qrpixeldecodeoptions.html">CodeGlyphX.QrPixelDecodeOptions</a>
+      <a class="pf-api-type" href="types/codeglyphx-qrpresets.html">CodeGlyphX.QrPresets</a>
+      <a class="pf-api-type" href="types/codeglyphx-qrrenderstyle.html">CodeGlyphX.QrRenderStyle</a>
+      <a class="pf-api-type" href="types/codeglyphx-qrstructuredappend.html">CodeGlyphX.QrStructuredAppend</a>
+      <a class="pf-api-type" href="types/codeglyphx-qrtextencoding.html">CodeGlyphX.QrTextEncoding</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-ascii-asciipresets.html">CodeGlyphX.Rendering.Ascii.AsciiPresets</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-ascii-barcodeasciirenderer.html">CodeGlyphX.Rendering.Ascii.BarcodeAsciiRenderer</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-ascii-barcodeasciirenderoptions.html">CodeGlyphX.Rendering.Ascii.BarcodeAsciiRenderOptions</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-ascii-matrixasciirenderer.html">CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderer</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-ascii-matrixasciirenderoptions.html">CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-bmp-barcodebmprenderer.html">CodeGlyphX.Rendering.Bmp.BarcodeBmpRenderer</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-bmp-bmpreader.html">CodeGlyphX.Rendering.Bmp.BmpReader</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-bmp-bmpwriter.html">CodeGlyphX.Rendering.Bmp.BmpWriter</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-bmp-matrixbmprenderer.html">CodeGlyphX.Rendering.Bmp.MatrixBmpRenderer</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-bmp-qrbmprenderer.html">CodeGlyphX.Rendering.Bmp.QrBmpRenderer</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-colorutils.html">CodeGlyphX.Rendering.ColorUtils</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-eps-barcodeepsrenderer.html">CodeGlyphX.Rendering.Eps.BarcodeEpsRenderer</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-eps-epswriter.html">CodeGlyphX.Rendering.Eps.EpsWriter</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-eps-matrixepsrenderer.html">CodeGlyphX.Rendering.Eps.MatrixEpsRenderer</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-eps-qrepsrenderer.html">CodeGlyphX.Rendering.Eps.QrEpsRenderer</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-gif-gifreader.html">CodeGlyphX.Rendering.Gif.GifReader</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-html-barcodehtmlrenderoptions.html">CodeGlyphX.Rendering.Html.BarcodeHtmlRenderOptions</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-html-htmlbarcoderenderer.html">CodeGlyphX.Rendering.Html.HtmlBarcodeRenderer</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-html-htmlqrrenderer.html">CodeGlyphX.Rendering.Html.HtmlQrRenderer</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-html-matrixhtmlrenderer.html">CodeGlyphX.Rendering.Html.MatrixHtmlRenderer</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-html-matrixhtmlrenderoptions.html">CodeGlyphX.Rendering.Html.MatrixHtmlRenderOptions</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-html-qrhtmlrenderoptions.html">CodeGlyphX.Rendering.Html.QrHtmlRenderOptions</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-ico-barcodeicorenderer.html">CodeGlyphX.Rendering.Ico.BarcodeIcoRenderer</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-ico-icoreader.html">CodeGlyphX.Rendering.Ico.IcoReader</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-ico-icorenderoptions.html">CodeGlyphX.Rendering.Ico.IcoRenderOptions</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-ico-icowriter.html">CodeGlyphX.Rendering.Ico.IcoWriter</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-ico-matrixicorenderer.html">CodeGlyphX.Rendering.Ico.MatrixIcoRenderer</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-ico-qricorenderer.html">CodeGlyphX.Rendering.Ico.QrIcoRenderer</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-imageformat.html">CodeGlyphX.Rendering.ImageFormat</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-imageinfo.html">CodeGlyphX.Rendering.ImageInfo</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-imagereader.html">CodeGlyphX.Rendering.ImageReader</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-jpeg-barcodejpegrenderer.html">CodeGlyphX.Rendering.Jpeg.BarcodeJpegRenderer</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-jpeg-jpegreader.html">CodeGlyphX.Rendering.Jpeg.JpegReader</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-jpeg-matrixjpegrenderer.html">CodeGlyphX.Rendering.Jpeg.MatrixJpegRenderer</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-jpeg-qrjpegrenderer.html">CodeGlyphX.Rendering.Jpeg.QrJpegRenderer</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-logobuilder.html">CodeGlyphX.Rendering.LogoBuilder</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-outputformat.html">CodeGlyphX.Rendering.OutputFormat</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-outputformatinfo.html">CodeGlyphX.Rendering.OutputFormatInfo</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-outputkind.html">CodeGlyphX.Rendering.OutputKind</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-outputwriter.html">CodeGlyphX.Rendering.OutputWriter</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-pam-barcodepamrenderer.html">CodeGlyphX.Rendering.Pam.BarcodePamRenderer</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-pam-matrixpamrenderer.html">CodeGlyphX.Rendering.Pam.MatrixPamRenderer</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-pam-pamreader.html">CodeGlyphX.Rendering.Pam.PamReader</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-pam-pamwriter.html">CodeGlyphX.Rendering.Pam.PamWriter</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-pam-qrpamrenderer.html">CodeGlyphX.Rendering.Pam.QrPamRenderer</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-pbm-barcodepbmrenderer.html">CodeGlyphX.Rendering.Pbm.BarcodePbmRenderer</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-pbm-matrixpbmrenderer.html">CodeGlyphX.Rendering.Pbm.MatrixPbmRenderer</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-pbm-pbmreader.html">CodeGlyphX.Rendering.Pbm.PbmReader</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-pbm-pbmwriter.html">CodeGlyphX.Rendering.Pbm.PbmWriter</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-pbm-qrpbmrenderer.html">CodeGlyphX.Rendering.Pbm.QrPbmRenderer</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-pdf-barcodepdfrenderer.html">CodeGlyphX.Rendering.Pdf.BarcodePdfRenderer</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-pdf-matrixpdfrenderer.html">CodeGlyphX.Rendering.Pdf.MatrixPdfRenderer</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-pdf-pdfvectorwriter.html">CodeGlyphX.Rendering.Pdf.PdfVectorWriter</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-pdf-pdfwriter.html">CodeGlyphX.Rendering.Pdf.PdfWriter</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-pdf-qrpdfrenderer.html">CodeGlyphX.Rendering.Pdf.QrPdfRenderer</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-pgm-barcodepgmrenderer.html">CodeGlyphX.Rendering.Pgm.BarcodePgmRenderer</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-pgm-matrixpgmrenderer.html">CodeGlyphX.Rendering.Pgm.MatrixPgmRenderer</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-pgm-pgmreader.html">CodeGlyphX.Rendering.Pgm.PgmReader</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-pgm-pgmwriter.html">CodeGlyphX.Rendering.Pgm.PgmWriter</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-pgm-qrpgmrenderer.html">CodeGlyphX.Rendering.Pgm.QrPgmRenderer</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-png-barcodepngrenderer.html">CodeGlyphX.Rendering.Png.BarcodePngRenderer</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-png-barcodepngrenderoptions.html">CodeGlyphX.Rendering.Png.BarcodePngRenderOptions</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-png-matrixpngrenderer.html">CodeGlyphX.Rendering.Png.MatrixPngRenderer</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-png-matrixpngrenderoptions.html">CodeGlyphX.Rendering.Png.MatrixPngRenderOptions</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-png-pngreader.html">CodeGlyphX.Rendering.Png.PngReader</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-png-qrpngbackgroundpatternoptions.html">CodeGlyphX.Rendering.Png.QrPngBackgroundPatternOptions</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-png-qrpngbackgroundpatterntype.html">CodeGlyphX.Rendering.Png.QrPngBackgroundPatternType</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-png-qrpngcanvasbadgeoptions.html">CodeGlyphX.Rendering.Png.QrPngCanvasBadgeOptions</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-png-qrpngcanvasbadgeposition.html">CodeGlyphX.Rendering.Png.QrPngCanvasBadgePosition</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-png-qrpngcanvasbadgeshape.html">CodeGlyphX.Rendering.Png.QrPngCanvasBadgeShape</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-png-qrpngcanvasbandoptions.html">CodeGlyphX.Rendering.Png.QrPngCanvasBandOptions</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-png-qrpngcanvasedgepatternoptions.html">CodeGlyphX.Rendering.Png.QrPngCanvasEdgePatternOptions</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-png-qrpngcanvasedgepatterntype.html">CodeGlyphX.Rendering.Png.QrPngCanvasEdgePatternType</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-png-qrpngcanvasframeoptions.html">CodeGlyphX.Rendering.Png.QrPngCanvasFrameOptions</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-png-qrpngcanvasgrainoptions.html">CodeGlyphX.Rendering.Png.QrPngCanvasGrainOptions</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-png-qrpngcanvashalooptions.html">CodeGlyphX.Rendering.Png.QrPngCanvasHaloOptions</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-png-qrpngcanvasoptions.html">CodeGlyphX.Rendering.Png.QrPngCanvasOptions</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-png-qrpngcanvassplashoptions.html">CodeGlyphX.Rendering.Png.QrPngCanvasSplashOptions</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-png-qrpngcanvassplashplacement.html">CodeGlyphX.Rendering.Png.QrPngCanvasSplashPlacement</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-png-qrpngcanvasvignetteoptions.html">CodeGlyphX.Rendering.Png.QrPngCanvasVignetteOptions</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-png-qrpngdebugoptions.html">CodeGlyphX.Rendering.Png.QrPngDebugOptions</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-png-qrpngeyeframestyle.html">CodeGlyphX.Rendering.Png.QrPngEyeFrameStyle</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-png-qrpngeyeoptions.html">CodeGlyphX.Rendering.Png.QrPngEyeOptions</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-png-qrpngforegroundpatternblendmode.html">CodeGlyphX.Rendering.Png.QrPngForegroundPatternBlendMode</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-png-qrpngforegroundpatternoptions.html">CodeGlyphX.Rendering.Png.QrPngForegroundPatternOptions</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-png-qrpngforegroundpatterntype.html">CodeGlyphX.Rendering.Png.QrPngForegroundPatternType</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-png-qrpnggradientoptions.html">CodeGlyphX.Rendering.Png.QrPngGradientOptions</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-png-qrpnggradienttype.html">CodeGlyphX.Rendering.Png.QrPngGradientType</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-png-qrpnglogooptions.html">CodeGlyphX.Rendering.Png.QrPngLogoOptions</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-png-qrpngmodulejitteroptions.html">CodeGlyphX.Rendering.Png.QrPngModuleJitterOptions</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-png-qrpngmodulescalemapoptions.html">CodeGlyphX.Rendering.Png.QrPngModuleScaleMapOptions</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-png-qrpngmodulescalemode.html">CodeGlyphX.Rendering.Png.QrPngModuleScaleMode</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-png-qrpngmoduleshape.html">CodeGlyphX.Rendering.Png.QrPngModuleShape</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-png-qrpngmoduleshapemapmode.html">CodeGlyphX.Rendering.Png.QrPngModuleShapeMapMode</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-png-qrpngmoduleshapemapoptions.html">CodeGlyphX.Rendering.Png.QrPngModuleShapeMapOptions</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-png-qrpngpalettemode.html">CodeGlyphX.Rendering.Png.QrPngPaletteMode</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-png-qrpngpaletteoptions.html">CodeGlyphX.Rendering.Png.QrPngPaletteOptions</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-png-qrpngpalettezoneoptions.html">CodeGlyphX.Rendering.Png.QrPngPaletteZoneOptions</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-png-qrpngrenderer.html">CodeGlyphX.Rendering.Png.QrPngRenderer</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-png-qrpngrenderoptions.html">CodeGlyphX.Rendering.Png.QrPngRenderOptions</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-png-rgba32.html">CodeGlyphX.Rendering.Png.Rgba32</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-ppm-barcodeppmrenderer.html">CodeGlyphX.Rendering.Ppm.BarcodePpmRenderer</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-ppm-matrixppmrenderer.html">CodeGlyphX.Rendering.Ppm.MatrixPpmRenderer</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-ppm-ppmreader.html">CodeGlyphX.Rendering.Ppm.PpmReader</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-ppm-ppmwriter.html">CodeGlyphX.Rendering.Ppm.PpmWriter</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-ppm-qrppmrenderer.html">CodeGlyphX.Rendering.Ppm.QrPpmRenderer</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-qrlogooptions.html">CodeGlyphX.Rendering.QrLogoOptions</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-renderdefaults.html">CodeGlyphX.Rendering.RenderDefaults</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-renderedoutput.html">CodeGlyphX.Rendering.RenderedOutput</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-renderextensions.html">CodeGlyphX.Rendering.RenderExtensions</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-renderextras.html">CodeGlyphX.Rendering.RenderExtras</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-renderio.html">CodeGlyphX.Rendering.RenderIO</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-rendermode.html">CodeGlyphX.Rendering.RenderMode</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-svg-barcodesvgrenderoptions.html">CodeGlyphX.Rendering.Svg.BarcodeSvgRenderOptions</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-svg-matrixsvgrenderer.html">CodeGlyphX.Rendering.Svg.MatrixSvgRenderer</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-svg-matrixsvgrenderoptions.html">CodeGlyphX.Rendering.Svg.MatrixSvgRenderOptions</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-svg-qrsvgrenderoptions.html">CodeGlyphX.Rendering.Svg.QrSvgRenderOptions</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-svg-svgbarcoderenderer.html">CodeGlyphX.Rendering.Svg.SvgBarcodeRenderer</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-svg-svgqrrenderer.html">CodeGlyphX.Rendering.Svg.SvgQrRenderer</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-svgz-barcodesvgzrenderer.html">CodeGlyphX.Rendering.Svgz.BarcodeSvgzRenderer</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-svgz-matrixsvgzrenderer.html">CodeGlyphX.Rendering.Svgz.MatrixSvgzRenderer</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-svgz-qrsvgzrenderer.html">CodeGlyphX.Rendering.Svgz.QrSvgzRenderer</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-svgz-svgzwriter.html">CodeGlyphX.Rendering.Svgz.SvgzWriter</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-tga-barcodetgarenderer.html">CodeGlyphX.Rendering.Tga.BarcodeTgaRenderer</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-tga-matrixtgarenderer.html">CodeGlyphX.Rendering.Tga.MatrixTgaRenderer</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-tga-qrtgarenderer.html">CodeGlyphX.Rendering.Tga.QrTgaRenderer</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-tga-tgareader.html">CodeGlyphX.Rendering.Tga.TgaReader</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-tga-tgawriter.html">CodeGlyphX.Rendering.Tga.TgaWriter</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-tiff-tiffreader.html">CodeGlyphX.Rendering.Tiff.TiffReader</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-webp-barcodewebprenderer.html">CodeGlyphX.Rendering.Webp.BarcodeWebpRenderer</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-webp-matrixwebprenderer.html">CodeGlyphX.Rendering.Webp.MatrixWebpRenderer</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-webp-qrwebprenderer.html">CodeGlyphX.Rendering.Webp.QrWebpRenderer</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-webp-webpanimationframe.html">CodeGlyphX.Rendering.Webp.WebpAnimationFrame</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-webp-webpanimationoptions.html">CodeGlyphX.Rendering.Webp.WebpAnimationOptions</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-webp-webpbitreader.html">CodeGlyphX.Rendering.Webp.WebpBitReader</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-webp-webpbitwriter.html">CodeGlyphX.Rendering.Webp.WebpBitWriter</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-webp-webpmanageddecoder.html">CodeGlyphX.Rendering.Webp.WebpManagedDecoder</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-webp-webpprefixcode.html">CodeGlyphX.Rendering.Webp.WebpPrefixCode</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-webp-webpprefixcodereader.html">CodeGlyphX.Rendering.Webp.WebpPrefixCodeReader</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-webp-webpreader.html">CodeGlyphX.Rendering.Webp.WebpReader</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-webp-webpvp8booldecoder.html">CodeGlyphX.Rendering.Webp.WebpVp8BoolDecoder</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-webp-webpvp8boolencoder.html">CodeGlyphX.Rendering.Webp.WebpVp8BoolEncoder</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-webp-webpvp8decoder.html">CodeGlyphX.Rendering.Webp.WebpVp8Decoder</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-webp-webpvp8encoder.html">CodeGlyphX.Rendering.Webp.WebpVp8Encoder</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-webp-webpvp8ldecoder.html">CodeGlyphX.Rendering.Webp.WebpVp8lDecoder</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-webp-webpvp8lencoder.html">CodeGlyphX.Rendering.Webp.WebpVp8lEncoder</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-webp-webpwriter.html">CodeGlyphX.Rendering.Webp.WebpWriter</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-xbm-barcodexbmrenderer.html">CodeGlyphX.Rendering.Xbm.BarcodeXbmRenderer</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-xbm-matrixxbmrenderer.html">CodeGlyphX.Rendering.Xbm.MatrixXbmRenderer</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-xbm-qrxbmrenderer.html">CodeGlyphX.Rendering.Xbm.QrXbmRenderer</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-xbm-xbmreader.html">CodeGlyphX.Rendering.Xbm.XbmReader</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-xbm-xbmwriter.html">CodeGlyphX.Rendering.Xbm.XbmWriter</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-xpm-barcodexpmrenderer.html">CodeGlyphX.Rendering.Xpm.BarcodeXpmRenderer</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-xpm-matrixxpmrenderer.html">CodeGlyphX.Rendering.Xpm.MatrixXpmRenderer</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-xpm-qrxpmrenderer.html">CodeGlyphX.Rendering.Xpm.QrXpmRenderer</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-xpm-xpmreader.html">CodeGlyphX.Rendering.Xpm.XpmReader</a>
+      <a class="pf-api-type" href="types/codeglyphx-rendering-xpm-xpmwriter.html">CodeGlyphX.Rendering.Xpm.XpmWriter</a>
+      <a class="pf-api-type" href="types/codeglyphx-royalmail-royalmailfourstatedecoder.html">CodeGlyphX.RoyalMail.RoyalMailFourStateDecoder</a>
+      <a class="pf-api-type" href="types/codeglyphx-royalmail-royalmailfourstateencoder.html">CodeGlyphX.RoyalMail.RoyalMailFourStateEncoder</a>
+      <a class="pf-api-type" href="types/codeglyphx-telepen-telepenencoder.html">CodeGlyphX.Telepen.TelepenEncoder</a>
+      <a class="pf-api-type" href="types/codeglyphx-upca-upcaencoder.html">CodeGlyphX.UpcA.UpcAEncoder</a>
+      <a class="pf-api-type" href="types/codeglyphx-upce-upceencoder.html">CodeGlyphX.UpcE.UpcEEncoder</a>
+      <a class="pf-api-type" href="types/codeglyphx-upcenumbersystem.html">CodeGlyphX.UpcENumberSystem</a>
+      <a class="pf-api-type" href="types/system-text-regularexpressions-generated-bic-4.html">System.Text.RegularExpressions.Generated.Bic_4</a>
+      <a class="pf-api-type" href="types/system-text-regularexpressions-generated-bic-4-runnerfactory.html">System.Text.RegularExpressions.Generated.Bic_4.RunnerFactory</a>
+      <a class="pf-api-type" href="types/system-text-regularexpressions-generated-bic-4-runnerfactory-runner.html">System.Text.RegularExpressions.Generated.Bic_4.RunnerFactory.Runner</a>
+      <a class="pf-api-type" href="types/system-text-regularexpressions-generated-countrycode-2.html">System.Text.RegularExpressions.Generated.CountryCode_2</a>
+      <a class="pf-api-type" href="types/system-text-regularexpressions-generated-countrycode-2-runnerfactory.html">System.Text.RegularExpressions.Generated.CountryCode_2.RunnerFactory</a>
+      <a class="pf-api-type" href="types/system-text-regularexpressions-generated-countrycode-2-runnerfactory-runner.html">System.Text.RegularExpressions.Generated.CountryCode_2.RunnerFactory.Runner</a>
+      <a class="pf-api-type" href="types/system-text-regularexpressions-generated-digitsoptional-0.html">System.Text.RegularExpressions.Generated.DigitsOptional_0</a>
+      <a class="pf-api-type" href="types/system-text-regularexpressions-generated-digitsoptional-0-runnerfactory.html">System.Text.RegularExpressions.Generated.DigitsOptional_0.RunnerFactory</a>
+      <a class="pf-api-type" href="types/system-text-regularexpressions-generated-digitsoptional-0-runnerfactory-runner.html">System.Text.RegularExpressions.Generated.DigitsOptional_0.RunnerFactory.Runner</a>
+      <a class="pf-api-type" href="types/system-text-regularexpressions-generated-digitsrequired-1.html">System.Text.RegularExpressions.Generated.DigitsRequired_1</a>
+      <a class="pf-api-type" href="types/system-text-regularexpressions-generated-digitsrequired-1-runnerfactory.html">System.Text.RegularExpressions.Generated.DigitsRequired_1.RunnerFactory</a>
+      <a class="pf-api-type" href="types/system-text-regularexpressions-generated-digitsrequired-1-runnerfactory-runner.html">System.Text.RegularExpressions.Generated.DigitsRequired_1.RunnerFactory.Runner</a>
+      <a class="pf-api-type" href="types/system-text-regularexpressions-generated-hexplain-5.html">System.Text.RegularExpressions.Generated.HexPlain_5</a>
+      <a class="pf-api-type" href="types/system-text-regularexpressions-generated-hexplain-5-runnerfactory.html">System.Text.RegularExpressions.Generated.HexPlain_5.RunnerFactory</a>
+      <a class="pf-api-type" href="types/system-text-regularexpressions-generated-hexplain-5-runnerfactory-runner.html">System.Text.RegularExpressions.Generated.HexPlain_5.RunnerFactory.Runner</a>
+      <a class="pf-api-type" href="types/system-text-regularexpressions-generated-hexwithprefix-6.html">System.Text.RegularExpressions.Generated.HexWithPrefix_6</a>
+      <a class="pf-api-type" href="types/system-text-regularexpressions-generated-hexwithprefix-6-runnerfactory.html">System.Text.RegularExpressions.Generated.HexWithPrefix_6.RunnerFactory</a>
+      <a class="pf-api-type" href="types/system-text-regularexpressions-generated-hexwithprefix-6-runnerfactory-runner.html">System.Text.RegularExpressions.Generated.HexWithPrefix_6.RunnerFactory.Runner</a>
+      <a class="pf-api-type" href="types/system-text-regularexpressions-generated-ibanbasic-3.html">System.Text.RegularExpressions.Generated.IbanBasic_3</a>
+      <a class="pf-api-type" href="types/system-text-regularexpressions-generated-ibanbasic-3-runnerfactory.html">System.Text.RegularExpressions.Generated.IbanBasic_3.RunnerFactory</a>
+      <a class="pf-api-type" href="types/system-text-regularexpressions-generated-ibanbasic-3-runnerfactory-runner.html">System.Text.RegularExpressions.Generated.IbanBasic_3.RunnerFactory.Runner</a>
+      <a class="pf-api-type" href="types/system-text-regularexpressions-generated-utilities.html">System.Text.RegularExpressions.Generated.Utilities</a>
+      <a class="pf-api-type" href="types/system-text-regularexpressions-generated-whatsappsanitize-7.html">System.Text.RegularExpressions.Generated.WhatsappSanitize_7</a>
+      <a class="pf-api-type" href="types/system-text-regularexpressions-generated-whatsappsanitize-7-runnerfactory.html">System.Text.RegularExpressions.Generated.WhatsappSanitize_7.RunnerFactory</a>
+      <a class="pf-api-type" href="types/system-text-regularexpressions-generated-whatsappsanitize-7-runnerfactory-runner.html">System.Text.RegularExpressions.Generated.WhatsappSanitize_7.RunnerFactory.Runner</a>
+    </div>
+  </main>
 <footer class="footer">
     <div class="footer-content">
         <div class="footer-brand">
@@ -1841,20 +492,21 @@
                 <h3>Product</h3>
                 <a href="/">Home</a>
                 <a href="/playground/">Playground</a>
-                <a href="/docs/">Documentation</a>
+                <a href="/docs/">Docs</a>
+                <a href="/benchmarks/">Benchmarks</a>
                 <a href="/showcase/">Showcase</a>
             </div>
             <div class="footer-section">
                 <h3>Resources</h3>
                 <a href="/faq/">FAQ</a>
-                <a href="https://www.nuget.org/packages/CodeGlyphX" target="_blank" rel="noopener">NuGet Package</a>
-                <a href="https://github.com/EvotecIT/CodeGlyphX" target="_blank" rel="noopener">GitHub Repository</a>
-                <a href="https://github.com/EvotecIT/CodeGlyphX/issues" target="_blank" rel="noopener">Report Issue</a>
+                <a href="https://www.nuget.org/packages/CodeGlyphX" target="_blank" rel="noopener" aria-label="NuGet Package (opens in new tab)">NuGet Package</a>
+                <a href="https://github.com/EvotecIT/CodeGlyphX" target="_blank" rel="noopener" aria-label="GitHub Repository (opens in new tab)">GitHub Repository</a>
+                <a href="https://github.com/EvotecIT/CodeGlyphX/issues" target="_blank" rel="noopener" aria-label="Report Issue (opens in new tab)">Report Issue</a>
             </div>
             <div class="footer-section">
                 <h3>Company</h3>
-                <a href="https://evotec.xyz" target="_blank" rel="noopener">Evotec Services</a>
-                <a href="https://evotec.xyz/hub" target="_blank" rel="noopener">Blog</a>
+                <a href="https://evotec.xyz" target="_blank" rel="noopener" aria-label="Evotec Services (opens in new tab)">Evotec Services</a>
+                <a href="https://evotec.xyz/hub" target="_blank" rel="noopener" aria-label="Blog (opens in new tab)">Blog</a>
             </div>
         </div>
         <div class="footer-bottom">
@@ -1871,7 +523,47 @@
     </div>
 </footer>
 <script src="/js/site.js"></script>
+<script>(() => {
+  const input = document.getElementById('api-search');
+  const results = document.getElementById('api-results');
+  if (!input || !results) return;
 
-  </div>
+  let data = [];
+  fetch('search.json')
+    .then((r) => r.json())
+    .then((items) => {
+      data = items || [];
+    });
+
+  const render = (items) => {
+    results.innerHTML = '';
+    if (!items.length) {
+      results.innerHTML = '<div class="pf-api-empty">No results</div>';
+      return;
+    }
+
+    const frag = document.createDocumentFragment();
+    items.slice(0, 24).forEach((item) => {
+      const link = document.createElement('a');
+      link.className = 'pf-api-result';
+      const slug = item.slug || '';
+      link.href = 'types/' + slug + '.html';
+      link.innerHTML = '<strong>' + (item.title || '') + '</strong><span>' + (item.summary || '') + '</span>';
+      frag.appendChild(link);
+    });
+    results.appendChild(frag);
+  };
+
+  input.addEventListener('input', () => {
+    const q = input.value.trim().toLowerCase();
+    if (!q) {
+      results.innerHTML = '';
+      return;
+    }
+    const filtered = data.filter((x) => (x.title || '').toLowerCase().includes(q) || (x.summary || '').toLowerCase().includes(q));
+    render(filtered);
+  });
+})();
+</script>
 </body>
 </html>

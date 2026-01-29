@@ -1,0 +1,34 @@
+﻿{
+  "name": "QrPngModuleJitterOptions",
+  "fullName": "CodeGlyphX.Rendering.Png.QrPngModuleJitterOptions",
+  "namespace": "CodeGlyphX.Rendering.Png",
+  "kind": "Class",
+  "slug": "codeglyphx-rendering-png-qrpngmodulejitteroptions",
+  "summary": "Options for per-module jitter offsets (organic placement).",
+  "remarks": null,
+  "methods": [],
+  "properties": [
+    {
+      "name": "MaxOffsetPx",
+      "summary": "Maximum jitter offset in pixels."
+    },
+    {
+      "name": "Seed",
+      "summary": "Random seed used to offset modules."
+    },
+    {
+      "name": "ApplyToEyes",
+      "summary": "When true, applies jitter to eye modules."
+    },
+    {
+      "name": "ProtectFunctionalPatterns",
+      "summary": "When true, functional patterns keep their original alignment."
+    },
+    {
+      "name": "ClampToShape",
+      "summary": "When true, limits jitter to stay inside the module cell."
+    }
+  ],
+  "fields": [],
+  "events": []
+}

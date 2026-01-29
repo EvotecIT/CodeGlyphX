@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "PdfWriter",
   "fullName": "CodeGlyphX.Rendering.Pdf.PdfWriter",
   "namespace": "CodeGlyphX.Rendering.Pdf",
@@ -6,158 +6,127 @@
   "slug": "codeglyphx-rendering-pdf-pdfwriter",
   "summary": "Minimal PDF writer for embedding RGB images.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
       "name": "WriteRgba32",
-      "kind": "Method",
       "summary": "Writes a single-page PDF containing the supplied RGBA image.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "width",
-          "type": "int",
-          "description": null
+          "name": "arg1",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "height",
-          "type": "int",
-          "description": null
+          "name": "arg2",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "rgba",
-          "type": "ReadOnlySpan\u003Cbyte\u003E",
-          "description": null
+          "name": "arg3",
+          "type": "System.ReadOnlySpan{System.Byte}",
+          "summary": null
         },
         {
-          "name": "stride",
-          "type": "int",
-          "description": null
+          "name": "arg4",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "background",
-          "type": "Nullable\u003CRgba32\u003E",
-          "description": null
+          "name": "arg5",
+          "type": "System.Nullable{CodeGlyphX.Rendering.Png.Rgba32}",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static byte[] WriteRgba32(int width, int height, ReadOnlySpan\u003Cbyte\u003E rgba, int stride, Nullable\u003CRgba32\u003E background)",
-      "xmlId": "M:CodeGlyphX.Rendering.Pdf.PdfWriter.WriteRgba32(System.Int32,System.Int32,System.ReadOnlySpan{System.Byte},System.Int32,System.Nullable{CodeGlyphX.Rendering.Png.Rgba32})",
-      "anchor": "method-writergba32-static-byte-writergba32-int-width-int-height-readonlyspan-byte-rgba-int-stride-nullable-rgba32-background"
+      ]
     },
     {
       "name": "WriteRgba32",
-      "kind": "Method",
       "summary": "Writes a single-page PDF containing the supplied RGBA image.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "stream",
-          "type": "Stream",
-          "description": null
+          "name": "arg1",
+          "type": "System.IO.Stream",
+          "summary": null
         },
         {
-          "name": "width",
-          "type": "int",
-          "description": null
+          "name": "arg2",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "height",
-          "type": "int",
-          "description": null
+          "name": "arg3",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "rgba",
-          "type": "ReadOnlySpan\u003Cbyte\u003E",
-          "description": null
+          "name": "arg4",
+          "type": "System.ReadOnlySpan{System.Byte}",
+          "summary": null
         },
         {
-          "name": "stride",
-          "type": "int",
-          "description": null
+          "name": "arg5",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "background",
-          "type": "Nullable\u003CRgba32\u003E",
-          "description": null
+          "name": "arg6",
+          "type": "System.Nullable{CodeGlyphX.Rendering.Png.Rgba32}",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static void WriteRgba32(Stream stream, int width, int height, ReadOnlySpan\u003Cbyte\u003E rgba, int stride, Nullable\u003CRgba32\u003E background)",
-      "xmlId": "M:CodeGlyphX.Rendering.Pdf.PdfWriter.WriteRgba32(System.IO.Stream,System.Int32,System.Int32,System.ReadOnlySpan{System.Byte},System.Int32,System.Nullable{CodeGlyphX.Rendering.Png.Rgba32})",
-      "anchor": "method-writergba32-static-void-writergba32-stream-stream-int-width-int-height-readonlyspan-byte-rgba-int-stride-nullable-rgba32-background"
+      ]
     },
     {
       "name": "WriteRgb24",
-      "kind": "Method",
       "summary": "Writes a single-page PDF containing the supplied RGB image.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "width",
-          "type": "int",
-          "description": null
+          "name": "arg1",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "height",
-          "type": "int",
-          "description": null
+          "name": "arg2",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "rgb",
-          "type": "byte[]",
-          "description": null
+          "name": "arg3",
+          "type": "System.Byte[]",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static byte[] WriteRgb24(int width, int height, byte[] rgb)",
-      "xmlId": "M:CodeGlyphX.Rendering.Pdf.PdfWriter.WriteRgb24(System.Int32,System.Int32,System.Byte[])",
-      "anchor": "method-writergb24-static-byte-writergb24-int-width-int-height-byte-rgb"
+      ]
     },
     {
       "name": "WriteRgb24",
-      "kind": "Method",
       "summary": "Writes a single-page PDF containing the supplied RGB image.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "stream",
-          "type": "Stream",
-          "description": null
+          "name": "arg1",
+          "type": "System.IO.Stream",
+          "summary": null
         },
         {
-          "name": "width",
-          "type": "int",
-          "description": null
+          "name": "arg2",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "height",
-          "type": "int",
-          "description": null
+          "name": "arg3",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "rgb",
-          "type": "byte[]",
-          "description": null
+          "name": "arg4",
+          "type": "System.Byte[]",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static void WriteRgb24(Stream stream, int width, int height, byte[] rgb)",
-      "xmlId": "M:CodeGlyphX.Rendering.Pdf.PdfWriter.WriteRgb24(System.IO.Stream,System.Int32,System.Int32,System.Byte[])",
-      "anchor": "method-writergb24-static-void-writergb24-stream-stream-int-width-int-height-byte-rgb"
+      ]
     }
-  ]
+  ],
+  "properties": [],
+  "fields": [],
+  "events": []
 }

@@ -1,105 +1,61 @@
-{
+﻿{
   "name": "Gs1Element",
   "fullName": "CodeGlyphX.Gs1Element",
   "namespace": "CodeGlyphX",
-  "kind": "Struct",
+  "kind": "Class",
   "slug": "codeglyphx-gs1element",
   "summary": "Represents a GS1 element (AI \u002B data) with explicit length semantics.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
       "name": "Fixed",
-      "kind": "Method",
       "summary": "Creates a fixed-length GS1 element.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "ai",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "data",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static Gs1Element Fixed(string ai, string data)",
-      "xmlId": "M:CodeGlyphX.Gs1Element.Fixed(System.String,System.String)",
-      "anchor": "method-fixed-static-gs1element-fixed-string-ai-string-data"
+      ]
     },
     {
       "name": "Variable",
-      "kind": "Method",
       "summary": "Creates a variable-length GS1 element.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "ai",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "data",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static Gs1Element Variable(string ai, string data)",
-      "xmlId": "M:CodeGlyphX.Gs1Element.Variable(System.String,System.String)",
-      "anchor": "method-variable-static-gs1element-variable-string-ai-string-data"
-    },
+      ]
+    }
+  ],
+  "properties": [
     {
       "name": "Ai",
-      "kind": "Property",
-      "summary": "Application Identifier.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string Ai {get; }",
-      "xmlId": "P:CodeGlyphX.Gs1Element.Ai",
-      "anchor": "property-ai-string-ai-get"
+      "summary": "Application Identifier."
     },
     {
       "name": "Data",
-      "kind": "Property",
-      "summary": "Data associated with the AI.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string Data {get; }",
-      "xmlId": "P:CodeGlyphX.Gs1Element.Data",
-      "anchor": "property-data-string-data-get"
+      "summary": "Data associated with the AI."
     },
     {
       "name": "IsVariableLength",
-      "kind": "Property",
-      "summary": "Indicates whether the element is variable length.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "bool IsVariableLength {get; }",
-      "xmlId": "P:CodeGlyphX.Gs1Element.IsVariableLength",
-      "anchor": "property-isvariablelength-bool-isvariablelength-get"
+      "summary": "Indicates whether the element is variable length."
     }
-  ]
+  ],
+  "fields": [],
+  "events": []
 }

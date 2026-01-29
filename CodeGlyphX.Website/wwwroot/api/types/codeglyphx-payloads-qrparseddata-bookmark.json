@@ -1,223 +1,31 @@
-{
+﻿{
   "name": "Bookmark",
   "fullName": "CodeGlyphX.Payloads.QrParsedData.Bookmark",
-  "namespace": "CodeGlyphX.Payloads",
+  "namespace": "CodeGlyphX.Payloads.QrParsedData",
   "kind": "Class",
   "slug": "codeglyphx-payloads-qrparseddata-bookmark",
   "summary": "Bookmark payload.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
-      "name": "Bookmark",
-      "kind": "Constructor",
+      "name": "#ctor",
       "summary": "Bookmark payload.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "Url",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "Title",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "Bookmark(string Url, string Title)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.Bookmark.#ctor(System.String,System.String)",
-      "anchor": "constructor-bookmark-bookmark-string-url-string-title"
-    },
-    {
-      "name": "ToString",
-      "kind": "Method",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string ToString()",
-      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.Bookmark.ToString",
-      "anchor": "method-tostring-string-tostring"
-    },
-    {
-      "name": "op_Inequality",
-      "kind": "Method",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [
-        {
-          "name": "left",
-          "type": "QrParsedData.Bookmark",
-          "description": null
-        },
-        {
-          "name": "right",
-          "type": "QrParsedData.Bookmark",
-          "description": null
-        }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool op_Inequality(QrParsedData.Bookmark left, QrParsedData.Bookmark right)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.Bookmark.op_Inequality(CodeGlyphX.Payloads.QrParsedData.Bookmark,CodeGlyphX.Payloads.QrParsedData.Bookmark)",
-      "anchor": "method-op-inequality-static-bool-op-inequality-qrparseddata-bookmark-left-qrparseddata-bookmark-right"
-    },
-    {
-      "name": "op_Equality",
-      "kind": "Method",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [
-        {
-          "name": "left",
-          "type": "QrParsedData.Bookmark",
-          "description": null
-        },
-        {
-          "name": "right",
-          "type": "QrParsedData.Bookmark",
-          "description": null
-        }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool op_Equality(QrParsedData.Bookmark left, QrParsedData.Bookmark right)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.Bookmark.op_Equality(CodeGlyphX.Payloads.QrParsedData.Bookmark,CodeGlyphX.Payloads.QrParsedData.Bookmark)",
-      "anchor": "method-op-equality-static-bool-op-equality-qrparseddata-bookmark-left-qrparseddata-bookmark-right"
-    },
-    {
-      "name": "GetHashCode",
-      "kind": "Method",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int GetHashCode()",
-      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.Bookmark.GetHashCode",
-      "anchor": "method-gethashcode-int-gethashcode"
-    },
-    {
-      "name": "Equals",
-      "kind": "Method",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [
-        {
-          "name": "obj",
-          "type": "object",
-          "description": null
-        }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "bool Equals(object obj)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.Bookmark.Equals(System.Object)",
-      "anchor": "method-equals-bool-equals-object-obj"
-    },
-    {
-      "name": "Equals",
-      "kind": "Method",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [
-        {
-          "name": "other",
-          "type": "QrParsedData.Bookmark",
-          "description": null
-        }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "bool Equals(QrParsedData.Bookmark other)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.Bookmark.Equals(CodeGlyphX.Payloads.QrParsedData.Bookmark)",
-      "anchor": "method-equals-bool-equals-qrparseddata-bookmark-other"
-    },
-    {
-      "name": "\u003CClone\u003E$",
-      "kind": "Method",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrParsedData.Bookmark \u003CClone\u003E$()",
-      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.Bookmark.\u003CClone\u003E$",
-      "anchor": "method-clone-qrparseddata-bookmark-clone"
-    },
-    {
-      "name": "Deconstruct",
-      "kind": "Method",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [
-        {
-          "name": "Url",
-          "type": "string",
-          "description": null
-        },
-        {
-          "name": "Title",
-          "type": "string",
-          "description": null
-        }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "void Deconstruct(out string Url, out string Title)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.Bookmark.Deconstruct(System.String@,System.String@)",
-      "anchor": "method-deconstruct-void-deconstruct-out-string-url-out-string-title"
-    },
-    {
-      "name": "Url",
-      "kind": "Property",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string Url {get; set; }",
-      "xmlId": "P:CodeGlyphX.Payloads.QrParsedData.Bookmark.Url",
-      "anchor": "property-url-string-url-get-set"
-    },
-    {
-      "name": "Title",
-      "kind": "Property",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string Title {get; set; }",
-      "xmlId": "P:CodeGlyphX.Payloads.QrParsedData.Bookmark.Title",
-      "anchor": "property-title-string-title-get-set"
+      ]
     }
-  ]
+  ],
+  "properties": [],
+  "fields": [],
+  "events": []
 }

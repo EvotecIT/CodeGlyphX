@@ -1,0 +1,211 @@
+﻿{
+  "name": "Utilities",
+  "fullName": "System.Text.RegularExpressions.Generated.Utilities",
+  "namespace": "System.Text.RegularExpressions.Generated",
+  "kind": "Class",
+  "slug": "system-text-regularexpressions-generated-utilities",
+  "summary": "Helper methods used by generated -derived implementations.",
+  "remarks": null,
+  "methods": [
+    {
+      "name": "IsBoundary",
+      "summary": "Determines whether the specified index is a boundary.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "arg1",
+          "type": "System.ReadOnlySpan{System.Char}",
+          "summary": null
+        },
+        {
+          "name": "arg2",
+          "type": "System.Int32",
+          "summary": null
+        }
+      ]
+    },
+    {
+      "name": "IsBoundaryWordChar",
+      "summary": "Determines whether the specified index is a boundary word character.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "arg1",
+          "type": "System.Char",
+          "summary": null
+        }
+      ]
+    },
+    {
+      "name": "IsPostWordCharBoundary",
+      "summary": "Determines whether the specified index is a boundary.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "arg1",
+          "type": "System.ReadOnlySpan{System.Char}",
+          "summary": null
+        },
+        {
+          "name": "arg2",
+          "type": "System.Int32",
+          "summary": null
+        }
+      ]
+    },
+    {
+      "name": "IsPreWordCharBoundary",
+      "summary": "Determines whether the specified index is a boundary.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "arg1",
+          "type": "System.ReadOnlySpan{System.Char}",
+          "summary": null
+        },
+        {
+          "name": "arg2",
+          "type": "System.Int32",
+          "summary": null
+        }
+      ]
+    },
+    {
+      "name": "StackPop",
+      "summary": "Pops 2 values from the backtracking stack.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "arg1",
+          "type": "System.Int32[]",
+          "summary": null
+        },
+        {
+          "name": "arg2",
+          "type": "System.Int32@",
+          "summary": null
+        },
+        {
+          "name": "arg3",
+          "type": "System.Int32@",
+          "summary": null
+        },
+        {
+          "name": "arg4",
+          "type": "System.Int32@",
+          "summary": null
+        }
+      ]
+    },
+    {
+      "name": "StackPush",
+      "summary": "Pushes 1 value onto the backtracking stack.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "arg1",
+          "type": "System.Int32[]@",
+          "summary": null
+        },
+        {
+          "name": "arg2",
+          "type": "System.Int32@",
+          "summary": null
+        },
+        {
+          "name": "arg3",
+          "type": "System.Int32",
+          "summary": null
+        }
+      ]
+    },
+    {
+      "name": "StackPush",
+      "summary": "Pushes 2 values onto the backtracking stack.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "arg1",
+          "type": "System.Int32[]@",
+          "summary": null
+        },
+        {
+          "name": "arg2",
+          "type": "System.Int32@",
+          "summary": null
+        },
+        {
+          "name": "arg3",
+          "type": "System.Int32",
+          "summary": null
+        },
+        {
+          "name": "arg4",
+          "type": "System.Int32",
+          "summary": null
+        }
+      ]
+    },
+    {
+      "name": "StackPush",
+      "summary": "Pushes 3 values onto the backtracking stack.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "arg1",
+          "type": "System.Int32[]@",
+          "summary": null
+        },
+        {
+          "name": "arg2",
+          "type": "System.Int32@",
+          "summary": null
+        },
+        {
+          "name": "arg3",
+          "type": "System.Int32",
+          "summary": null
+        },
+        {
+          "name": "arg4",
+          "type": "System.Int32",
+          "summary": null
+        },
+        {
+          "name": "arg5",
+          "type": "System.Int32",
+          "summary": null
+        }
+      ]
+    }
+  ],
+  "properties": [
+    {
+      "name": "WordCharBitmap",
+      "summary": "Gets a bitmap for whether each character 0 through 127 is in [\\w]"
+    }
+  ],
+  "fields": [
+    {
+      "name": "s_defaultTimeout",
+      "summary": "Default timeout value set in , or if none was set."
+    },
+    {
+      "name": "s_hasTimeout",
+      "summary": "Whether is non-infinite."
+    },
+    {
+      "name": "WordCategoriesMask",
+      "summary": "Provides a mask of Unicode categories that combine to form [\\w]."
+    },
+    {
+      "name": "s_asciiHexDigits",
+      "summary": "Supports searching for characters in or not in \u00220123456789ABCDEFabcdef\u0022."
+    },
+    {
+      "name": "s_ascii_12B01000000000000000000",
+      "summary": "Supports searching for characters in or not in \u0022 ()\u002B-0\u0022."
+    }
+  ],
+  "events": []
+}

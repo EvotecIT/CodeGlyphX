@@ -1,69 +1,26 @@
-{
+﻿{
   "name": "MsiChecksumPolicy",
   "fullName": "CodeGlyphX.MsiChecksumPolicy",
   "namespace": "CodeGlyphX",
-  "kind": "Enum",
+  "kind": "Class",
   "slug": "codeglyphx-msichecksumpolicy",
   "summary": "Policy for handling optional MSI checksum digits.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
-    {
-      "name": "value__",
-      "kind": "Field",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int value__",
-      "xmlId": "F:CodeGlyphX.MsiChecksumPolicy.value__",
-      "anchor": "field-value-int-value"
-    },
+  "methods": [],
+  "properties": [],
+  "fields": [
     {
       "name": "None",
-      "kind": "Field",
-      "summary": "Do not strip checksum digits (default, avoids accidental data loss).",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "MsiChecksumPolicy None",
-      "xmlId": "F:CodeGlyphX.MsiChecksumPolicy.None",
-      "anchor": "field-none-msichecksumpolicy-none"
+      "summary": "Do not strip checksum digits (default, avoids accidental data loss)."
     },
     {
       "name": "StripIfValid",
-      "kind": "Field",
-      "summary": "Strip trailing checksum digit(s) when valid.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "MsiChecksumPolicy StripIfValid",
-      "xmlId": "F:CodeGlyphX.MsiChecksumPolicy.StripIfValid",
-      "anchor": "field-stripifvalid-msichecksumpolicy-stripifvalid"
+      "summary": "Strip trailing checksum digit(s) when valid."
     },
     {
       "name": "RequireValid",
-      "kind": "Field",
-      "summary": "Require valid checksum digit(s); otherwise decoding fails.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "MsiChecksumPolicy RequireValid",
-      "xmlId": "F:CodeGlyphX.MsiChecksumPolicy.RequireValid",
-      "anchor": "field-requirevalid-msichecksumpolicy-requirevalid"
+      "summary": "Require valid checksum digit(s); otherwise decoding fails."
     }
-  ]
+  ],
+  "events": []
 }

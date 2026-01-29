@@ -323,6 +323,13 @@ public static partial class BarcodeDecoder {
         return true;
     }
 
+    private static bool TryDecodePlesseyPair(int barRun, int spaceRun, out bool bit) {
+        bit = false;
+        if (barRun == spaceRun) return false;
+        bit = barRun > spaceRun;
+        return true;
+    }
+
     private static bool TryDecodePatchCode(bool[] modules, out string text) {
         text = string.Empty;
         if (modules.Length < 7) return false;
@@ -885,39 +892,6 @@ public static partial class BarcodeDecoder {
         }
         var check = (10 - (sum % 10)) % 10;
         return (char)('0' + check);
-    }
-
-    private static bool TryDecodeEan8(bool[] modules, out string text) {
-        text = string.Empty;
-        var source = modules;
-        if (TryExtractBaseModules(source, 67, GuardStart, out var baseModules)) {
-            modules = baseModules;
-        }
-        if (!TryNormalizeModules(modules, 67, out var normalized)) return false;
-        modules = normalized;
-        if (!MatchPattern(modules, 0, GuardStart) || !MatchPattern(modules, 64, GuardStart)) return false;
-        if (!MatchPattern(modules, 31, GuardCenter)) return false;
-
-        var digits = new char[8];
-        var offset = 3;
-        for (var i = 0; i < 4; i++) {
-            if (!TryMatchEanDigit(modules, offset + i * 7, EanDigitKind.LeftOdd, out var digit)) return false;
-            digits[i] = digit;
-        }
-        offset = 3 + 4 * 7 + 5;
-        for (var i = 0; i < 4; i++) {
-            if (!TryMatchEanDigit(modules, offset + i * 7, EanDigitKind.Right, out var digit)) return false;
-            digits[i + 4] = digit;
-        }
-
-        var raw = new string(digits);
-        if (!IsValidEanChecksum(raw)) return false;
-        if (TryDecodeAddOn(source, 67, GuardStart, out var addOn)) {
-            text = raw + "+" + addOn;
-        } else {
-            text = raw;
-        }
-        return true;
     }
 
     private static bool TryDecodeGs1DataBarTruncated(bool[] modules, out string text) {

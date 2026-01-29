@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "PharmacodeTwoTrackDecoder",
   "fullName": "CodeGlyphX.Pharmacode.PharmacodeTwoTrackDecoder",
   "namespace": "CodeGlyphX.Pharmacode",
@@ -6,33 +6,26 @@
   "slug": "codeglyphx-pharmacode-pharmacodetwotrackdecoder",
   "summary": "Decodes Pharmacode (two-track) barcodes.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
       "name": "TryDecode",
-      "kind": "Method",
-      "summary": "Attempts to decode a Pharmacode (two-track) barcode from a CodeGlyphX.BitMatrix.",
-      "remarks": null,
+      "summary": "Attempts to decode a Pharmacode (two-track) barcode from a .",
       "returns": null,
       "parameters": [
         {
-          "name": "modules",
-          "type": "BitMatrix",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.BitMatrix",
+          "summary": null
         },
         {
-          "name": "text",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecode(BitMatrix modules, out string text)",
-      "xmlId": "M:CodeGlyphX.Pharmacode.PharmacodeTwoTrackDecoder.TryDecode(CodeGlyphX.BitMatrix,System.String@)",
-      "anchor": "method-trydecode-static-bool-trydecode-bitmatrix-modules-out-string-text"
+      ]
     }
-  ]
+  ],
+  "properties": [],
+  "fields": [],
+  "events": []
 }

@@ -1,0 +1,41 @@
+﻿{
+  "name": "WebpVp8lDecoder",
+  "fullName": "CodeGlyphX.Rendering.Webp.WebpVp8lDecoder",
+  "namespace": "CodeGlyphX.Rendering.Webp",
+  "kind": "Class",
+  "slug": "codeglyphx-rendering-webp-webpvp8ldecoder",
+  "summary": "Managed VP8L lossless decoder.",
+  "remarks": null,
+  "methods": [
+    {
+      "name": "TryDecode",
+      "summary": "Attempts to decode a VP8L payload to RGBA32 (lossless).",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "arg1",
+          "type": "System.ReadOnlySpan{System.Byte}",
+          "summary": null
+        },
+        {
+          "name": "arg2",
+          "type": "System.Byte[]@",
+          "summary": null
+        },
+        {
+          "name": "arg3",
+          "type": "System.Int32@",
+          "summary": null
+        },
+        {
+          "name": "arg4",
+          "type": "System.Int32@",
+          "summary": null
+        }
+      ]
+    }
+  ],
+  "properties": [],
+  "fields": [],
+  "events": []
+}

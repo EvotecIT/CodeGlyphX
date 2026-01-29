@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "XpmWriter",
   "fullName": "CodeGlyphX.Rendering.Xpm.XpmWriter",
   "namespace": "CodeGlyphX.Rendering.Xpm",
@@ -6,58 +6,93 @@
   "slug": "codeglyphx-rendering-xpm-xpmwriter",
   "summary": "Writes XPM (X Pixmap) images from RGBA buffers.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
       "name": "WriteRgba32",
-      "kind": "Method",
       "summary": "Writes an XPM string from an RGBA buffer.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "width",
-          "type": "int",
-          "description": null
+          "name": "arg1",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "height",
-          "type": "int",
-          "description": null
+          "name": "arg2",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "rgba",
-          "type": "ReadOnlySpan\u003Cbyte\u003E",
-          "description": null
+          "name": "arg3",
+          "type": "System.ReadOnlySpan{System.Byte}",
+          "summary": null
         },
         {
-          "name": "stride",
-          "type": "int",
-          "description": null
+          "name": "arg4",
+          "type": "System.Int32",
+          "summary": null
         },
         {
-          "name": "name",
-          "type": "string",
-          "description": null
+          "name": "arg5",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "foreground",
-          "type": "Nullable\u003CRgba32\u003E",
-          "description": null
+          "name": "arg6",
+          "type": "System.Nullable{CodeGlyphX.Rendering.Png.Rgba32}",
+          "summary": null
         },
         {
-          "name": "background",
-          "type": "Nullable\u003CRgba32\u003E",
-          "description": null
+          "name": "arg7",
+          "type": "System.Nullable{CodeGlyphX.Rendering.Png.Rgba32}",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string WriteRgba32(int width, int height, ReadOnlySpan\u003Cbyte\u003E rgba, int stride, string name, Nullable\u003CRgba32\u003E foreground, Nullable\u003CRgba32\u003E background)",
-      "xmlId": "M:CodeGlyphX.Rendering.Xpm.XpmWriter.WriteRgba32(System.Int32,System.Int32,System.ReadOnlySpan{System.Byte},System.Int32,System.String,System.Nullable{CodeGlyphX.Rendering.Png.Rgba32},System.Nullable{CodeGlyphX.Rendering.Png.Rgba32})",
-      "anchor": "method-writergba32-static-string-writergba32-int-width-int-height-readonlyspan-byte-rgba-int-stride-string-name-nullable-rgba32-foreground-nullable-rgba32-background"
+      ]
+    },
+    {
+      "name": "WriteRgba32Scanlines",
+      "summary": "Writes an XPM string from a PNG scanline buffer (filter byte per row).",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "arg1",
+          "type": "System.Int32",
+          "summary": null
+        },
+        {
+          "name": "arg2",
+          "type": "System.Int32",
+          "summary": null
+        },
+        {
+          "name": "arg3",
+          "type": "System.ReadOnlySpan{System.Byte}",
+          "summary": null
+        },
+        {
+          "name": "arg4",
+          "type": "System.Int32",
+          "summary": null
+        },
+        {
+          "name": "arg5",
+          "type": "System.String",
+          "summary": null
+        },
+        {
+          "name": "arg6",
+          "type": "System.Nullable{CodeGlyphX.Rendering.Png.Rgba32}",
+          "summary": null
+        },
+        {
+          "name": "arg7",
+          "type": "System.Nullable{CodeGlyphX.Rendering.Png.Rgba32}",
+          "summary": null
+        }
+      ]
     }
-  ]
+  ],
+  "properties": [],
+  "fields": [],
+  "events": []
 }

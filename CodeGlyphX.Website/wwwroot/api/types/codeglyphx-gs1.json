@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "Gs1",
   "fullName": "CodeGlyphX.Gs1",
   "namespace": "CodeGlyphX",
@@ -6,102 +6,62 @@
   "slug": "codeglyphx-gs1",
   "summary": "Helpers for building and encoding GS1 element strings (GS1-128).",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
       "name": "ElementString",
-      "kind": "Method",
-      "summary": "Builds a GS1 element string from an AI string like (01)09506000134352(10)ABC(17)240101.\n Unknown AIs are treated as variable length; use | or GroupSeparator in the input to force a separator.",
-      "remarks": null,
+      "summary": "Builds a GS1 element string from an AI string like (01)09506000134352(10)ABC(17)240101. Unknown AIs are treated as variable length; use | or GroupSeparator in the input to force a separator.",
       "returns": null,
       "parameters": [
         {
-          "name": "aiText",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string ElementString(string aiText)",
-      "xmlId": "M:CodeGlyphX.Gs1.ElementString(System.String)",
-      "anchor": "method-elementstring-static-string-elementstring-string-aitext"
+      ]
     },
     {
       "name": "ElementString",
-      "kind": "Method",
       "summary": "Builds a GS1 element string from explicit elements.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "elements",
-          "type": "Gs1Element[]",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.Gs1Element[]",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string ElementString(Gs1Element[] elements)",
-      "xmlId": "M:CodeGlyphX.Gs1.ElementString(CodeGlyphX.Gs1Element[])",
-      "anchor": "method-elementstring-static-string-elementstring-gs1element-elements"
+      ]
     },
     {
       "name": "Encode128",
-      "kind": "Method",
       "summary": "Encodes a GS1-128 barcode from an AI string (parentheses format or raw element string).",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "aiText",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static Barcode1D Encode128(string aiText)",
-      "xmlId": "M:CodeGlyphX.Gs1.Encode128(System.String)",
-      "anchor": "method-encode128-static-barcode1d-encode128-string-aitext"
+      ]
     },
     {
       "name": "Encode128",
-      "kind": "Method",
       "summary": "Encodes a GS1-128 barcode from explicit elements.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "elements",
-          "type": "Gs1Element[]",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.Gs1Element[]",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static Barcode1D Encode128(Gs1Element[] elements)",
-      "xmlId": "M:CodeGlyphX.Gs1.Encode128(CodeGlyphX.Gs1Element[])",
-      "anchor": "method-encode128-static-barcode1d-encode128-gs1element-elements"
-    },
+      ]
+    }
+  ],
+  "properties": [],
+  "fields": [
     {
       "name": "GroupSeparator",
-      "kind": "Field",
-      "summary": "ASCII Group Separator (FNC1) used between variable-length GS1 elements.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "char GroupSeparator",
-      "xmlId": "F:CodeGlyphX.Gs1.GroupSeparator",
-      "anchor": "field-groupseparator-char-groupseparator"
+      "summary": "ASCII Group Separator (FNC1) used between variable-length GS1 elements."
     }
-  ]
+  ],
+  "events": []
 }

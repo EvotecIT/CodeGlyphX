@@ -1,0 +1,51 @@
+﻿{
+  "name": "Eip681",
+  "fullName": "CodeGlyphX.Payloads.QrParsedData.Eip681",
+  "namespace": "CodeGlyphX.Payloads.QrParsedData",
+  "kind": "Class",
+  "slug": "codeglyphx-payloads-qrparseddata-eip681",
+  "summary": "EIP-681 Ethereum payment request.",
+  "remarks": null,
+  "methods": [
+    {
+      "name": "#ctor",
+      "summary": "EIP-681 Ethereum payment request.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
+        },
+        {
+          "name": "arg2",
+          "type": "System.Nullable{System.Int64}",
+          "summary": null
+        },
+        {
+          "name": "arg3",
+          "type": "System.Nullable{System.Decimal}",
+          "summary": null
+        },
+        {
+          "name": "arg4",
+          "type": "System.Nullable{System.Decimal}",
+          "summary": null
+        },
+        {
+          "name": "arg5",
+          "type": "System.String",
+          "summary": null
+        },
+        {
+          "name": "arg6",
+          "type": "System.Collections.Generic.IReadOnlyDictionary{System.String,System.String}",
+          "summary": null
+        }
+      ]
+    }
+  ],
+  "properties": [],
+  "fields": [],
+  "events": []
+}

@@ -1,0 +1,26 @@
+﻿{
+  "name": "QrPngForegroundPatternBlendMode",
+  "fullName": "CodeGlyphX.Rendering.Png.QrPngForegroundPatternBlendMode",
+  "namespace": "CodeGlyphX.Rendering.Png",
+  "kind": "Class",
+  "slug": "codeglyphx-rendering-png-qrpngforegroundpatternblendmode",
+  "summary": "Blend mode for foreground patterns.",
+  "remarks": null,
+  "methods": [],
+  "properties": [],
+  "fields": [
+    {
+      "name": "Overlay",
+      "summary": "Overlay the pattern color on top of the module color."
+    },
+    {
+      "name": "Mask",
+      "summary": "Mask the module so only pattern pixels are drawn (bead/cluster look)."
+    },
+    {
+      "name": "Replace",
+      "summary": "Replace the module color with the pattern color at pattern pixels."
+    }
+  ],
+  "events": []
+}

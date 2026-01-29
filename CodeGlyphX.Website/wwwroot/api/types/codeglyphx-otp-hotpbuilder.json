@@ -1,393 +1,249 @@
-{
+﻿{
   "name": "HotpBuilder",
   "fullName": "CodeGlyphX.Otp.HotpBuilder",
-  "namespace": "CodeGlyphX",
+  "namespace": "CodeGlyphX.Otp",
   "kind": "Class",
   "slug": "codeglyphx-otp-hotpbuilder",
   "summary": "Fluent HOTP builder.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
       "name": "WithOptions",
-      "kind": "Method",
       "summary": "Updates rendering options.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "configure",
-          "type": "Action\u003CQrEasyOptions\u003E",
-          "description": null
+          "name": "arg1",
+          "type": "System.Action{CodeGlyphX.QrEasyOptions}",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "Otp.HotpBuilder WithOptions(Action\u003CQrEasyOptions\u003E configure)",
-      "xmlId": "M:CodeGlyphX.Otp.HotpBuilder.WithOptions(System.Action{CodeGlyphX.QrEasyOptions})",
-      "anchor": "method-withoptions-otp-hotpbuilder-withoptions-action-qreasyoptions-configure"
+      ]
     },
     {
       "name": "WithParameters",
-      "kind": "Method",
       "summary": "Sets algorithm and digits.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "algorithm",
-          "type": "OtpAlgorithm",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.OtpAlgorithm",
+          "summary": null
         },
         {
-          "name": "digits",
-          "type": "int",
-          "description": null
+          "name": "arg2",
+          "type": "System.Int32",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "Otp.HotpBuilder WithParameters(OtpAlgorithm algorithm, int digits)",
-      "xmlId": "M:CodeGlyphX.Otp.HotpBuilder.WithParameters(CodeGlyphX.OtpAlgorithm,System.Int32)",
-      "anchor": "method-withparameters-otp-hotpbuilder-withparameters-otpalgorithm-algorithm-int-digits"
+      ]
     },
     {
       "name": "Uri",
-      "kind": "Method",
       "summary": "Builds the otpauth URI.",
-      "remarks": null,
       "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string Uri()",
-      "xmlId": "M:CodeGlyphX.Otp.HotpBuilder.Uri",
-      "anchor": "method-uri-string-uri"
+      "parameters": []
     },
     {
       "name": "Encode",
-      "kind": "Method",
       "summary": "Encodes the QR code.",
-      "remarks": null,
       "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrCode Encode()",
-      "xmlId": "M:CodeGlyphX.Otp.HotpBuilder.Encode",
-      "anchor": "method-encode-qrcode-encode"
+      "parameters": []
     },
     {
       "name": "Png",
-      "kind": "Method",
       "summary": "Renders PNG bytes.",
-      "remarks": null,
       "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "byte[] Png()",
-      "xmlId": "M:CodeGlyphX.Otp.HotpBuilder.Png",
-      "anchor": "method-png-byte-png"
+      "parameters": []
     },
     {
       "name": "Svg",
-      "kind": "Method",
       "summary": "Renders SVG text.",
-      "remarks": null,
       "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string Svg()",
-      "xmlId": "M:CodeGlyphX.Otp.HotpBuilder.Svg",
-      "anchor": "method-svg-string-svg"
+      "parameters": []
     },
     {
       "name": "Html",
-      "kind": "Method",
       "summary": "Renders HTML text.",
-      "remarks": null,
       "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string Html()",
-      "xmlId": "M:CodeGlyphX.Otp.HotpBuilder.Html",
-      "anchor": "method-html-string-html"
+      "parameters": []
     },
     {
       "name": "Jpeg",
-      "kind": "Method",
       "summary": "Renders JPEG bytes.",
-      "remarks": null,
       "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "byte[] Jpeg()",
-      "xmlId": "M:CodeGlyphX.Otp.HotpBuilder.Jpeg",
-      "anchor": "method-jpeg-byte-jpeg"
+      "parameters": []
+    },
+    {
+      "name": "Webp",
+      "summary": "Renders WebP bytes.",
+      "returns": null,
+      "parameters": []
     },
     {
       "name": "SavePng",
-      "kind": "Method",
       "summary": "Saves PNG to a file.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "path",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string SavePng(string path)",
-      "xmlId": "M:CodeGlyphX.Otp.HotpBuilder.SavePng(System.String)",
-      "anchor": "method-savepng-string-savepng-string-path"
+      ]
     },
     {
       "name": "SavePng",
-      "kind": "Method",
       "summary": "Saves PNG to a stream.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "stream",
-          "type": "Stream",
-          "description": null
+          "name": "arg1",
+          "type": "System.IO.Stream",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "void SavePng(Stream stream)",
-      "xmlId": "M:CodeGlyphX.Otp.HotpBuilder.SavePng(System.IO.Stream)",
-      "anchor": "method-savepng-void-savepng-stream-stream"
+      ]
     },
     {
       "name": "SaveSvg",
-      "kind": "Method",
       "summary": "Saves SVG to a file.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "path",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string SaveSvg(string path)",
-      "xmlId": "M:CodeGlyphX.Otp.HotpBuilder.SaveSvg(System.String)",
-      "anchor": "method-savesvg-string-savesvg-string-path"
+      ]
     },
     {
       "name": "SaveSvg",
-      "kind": "Method",
       "summary": "Saves SVG to a stream.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "stream",
-          "type": "Stream",
-          "description": null
+          "name": "arg1",
+          "type": "System.IO.Stream",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "void SaveSvg(Stream stream)",
-      "xmlId": "M:CodeGlyphX.Otp.HotpBuilder.SaveSvg(System.IO.Stream)",
-      "anchor": "method-savesvg-void-savesvg-stream-stream"
+      ]
     },
     {
       "name": "SaveHtml",
-      "kind": "Method",
       "summary": "Saves HTML to a file.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "path",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "title",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string SaveHtml(string path, string title)",
-      "xmlId": "M:CodeGlyphX.Otp.HotpBuilder.SaveHtml(System.String,System.String)",
-      "anchor": "method-savehtml-string-savehtml-string-path-string-title"
+      ]
     },
     {
       "name": "SaveHtml",
-      "kind": "Method",
       "summary": "Saves HTML to a stream.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "stream",
-          "type": "Stream",
-          "description": null
+          "name": "arg1",
+          "type": "System.IO.Stream",
+          "summary": null
         },
         {
-          "name": "title",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "void SaveHtml(Stream stream, string title)",
-      "xmlId": "M:CodeGlyphX.Otp.HotpBuilder.SaveHtml(System.IO.Stream,System.String)",
-      "anchor": "method-savehtml-void-savehtml-stream-stream-string-title"
+      ]
     },
     {
       "name": "SaveJpeg",
-      "kind": "Method",
       "summary": "Saves JPEG to a file.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "path",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string SaveJpeg(string path)",
-      "xmlId": "M:CodeGlyphX.Otp.HotpBuilder.SaveJpeg(System.String)",
-      "anchor": "method-savejpeg-string-savejpeg-string-path"
+      ]
     },
     {
       "name": "SaveJpeg",
-      "kind": "Method",
       "summary": "Saves JPEG to a stream.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "stream",
-          "type": "Stream",
-          "description": null
+          "name": "arg1",
+          "type": "System.IO.Stream",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "void SaveJpeg(Stream stream)",
-      "xmlId": "M:CodeGlyphX.Otp.HotpBuilder.SaveJpeg(System.IO.Stream)",
-      "anchor": "method-savejpeg-void-savejpeg-stream-stream"
+      ]
+    },
+    {
+      "name": "SaveWebp",
+      "summary": "Saves WebP to a file.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
+        }
+      ]
+    },
+    {
+      "name": "SaveWebp",
+      "summary": "Saves WebP to a stream.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "arg1",
+          "type": "System.IO.Stream",
+          "summary": null
+        }
+      ]
     },
     {
       "name": "Save",
-      "kind": "Method",
-      "summary": "Saves based on file extension (.png/.svg/.html/.jpg). Defaults to PNG when no extension is provided.",
-      "remarks": null,
+      "summary": "Saves based on file extension (.png/.webp/.svg/.html/.jpg). Defaults to PNG when no extension is provided.",
       "returns": null,
       "parameters": [
         {
-          "name": "path",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "title",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string Save(string path, string title)",
-      "xmlId": "M:CodeGlyphX.Otp.HotpBuilder.Save(System.String,System.String)",
-      "anchor": "method-save-string-save-string-path-string-title"
-    },
+      ]
+    }
+  ],
+  "properties": [
     {
       "name": "Options",
-      "kind": "Property",
-      "summary": "Rendering options used by this builder.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrEasyOptions Options {get; }",
-      "xmlId": "P:CodeGlyphX.Otp.HotpBuilder.Options",
-      "anchor": "property-options-qreasyoptions-options-get"
+      "summary": "Rendering options used by this builder."
     },
     {
       "name": "Algorithm",
-      "kind": "Property",
-      "summary": "OTP algorithm.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "OtpAlgorithm Algorithm {get; set; }",
-      "xmlId": "P:CodeGlyphX.Otp.HotpBuilder.Algorithm",
-      "anchor": "property-algorithm-otpalgorithm-algorithm-get-set"
+      "summary": "OTP algorithm."
     },
     {
       "name": "Digits",
-      "kind": "Property",
-      "summary": "OTP digits.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int Digits {get; set; }",
-      "xmlId": "P:CodeGlyphX.Otp.HotpBuilder.Digits",
-      "anchor": "property-digits-int-digits-get-set"
+      "summary": "OTP digits."
     },
     {
       "name": "Counter",
-      "kind": "Property",
-      "summary": "HOTP counter.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "long Counter {get; set; }",
-      "xmlId": "P:CodeGlyphX.Otp.HotpBuilder.Counter",
-      "anchor": "property-counter-long-counter-get-set"
+      "summary": "HOTP counter."
     }
-  ]
+  ],
+  "fields": [],
+  "events": []
 }

@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "KixEncoder",
   "fullName": "CodeGlyphX.Kix.KixEncoder",
   "namespace": "CodeGlyphX.Kix",
@@ -6,28 +6,21 @@
   "slug": "codeglyphx-kix-kixencoder",
   "summary": "Encodes KIX (Royal Mail 4-state, without headers) barcodes.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
       "name": "Encode",
-      "kind": "Method",
       "summary": "Encodes a KIX barcode into a matrix.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "content",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static BitMatrix Encode(string content)",
-      "xmlId": "M:CodeGlyphX.Kix.KixEncoder.Encode(System.String)",
-      "anchor": "method-encode-static-bitmatrix-encode-string-content"
+      ]
     }
-  ]
+  ],
+  "properties": [],
+  "fields": [],
+  "events": []
 }

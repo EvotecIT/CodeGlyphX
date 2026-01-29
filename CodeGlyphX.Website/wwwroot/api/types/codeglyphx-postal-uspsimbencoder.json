@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "UspsImbEncoder",
   "fullName": "CodeGlyphX.Postal.UspsImbEncoder",
   "namespace": "CodeGlyphX.Postal",
@@ -6,28 +6,21 @@
   "slug": "codeglyphx-postal-uspsimbencoder",
   "summary": "Encodes USPS Intelligent Mail Barcodes (IMB).",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
       "name": "Encode",
-      "kind": "Method",
-      "summary": "Encodes a USPS IMB payload into a CodeGlyphX.BitMatrix.",
-      "remarks": null,
+      "summary": "Encodes a USPS IMB payload into a .",
       "returns": null,
       "parameters": [
         {
           "name": "content",
-          "type": "string",
-          "description": "Tracking code (20 digits) with optional routing code separated by \u0027-\u0027."
+          "type": "System.String",
+          "summary": "Tracking code (20 digits) with optional routing code separated by \u0027-\u0027."
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static BitMatrix Encode(string content)",
-      "xmlId": "M:CodeGlyphX.Postal.UspsImbEncoder.Encode(System.String)",
-      "anchor": "method-encode-static-bitmatrix-encode-string-content"
+      ]
     }
-  ]
+  ],
+  "properties": [],
+  "fields": [],
+  "events": []
 }

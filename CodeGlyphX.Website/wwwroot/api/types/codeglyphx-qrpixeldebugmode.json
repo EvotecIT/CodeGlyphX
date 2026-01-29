@@ -1,83 +1,30 @@
-{
+﻿{
   "name": "QrPixelDebugMode",
   "fullName": "CodeGlyphX.QrPixelDebugMode",
   "namespace": "CodeGlyphX",
-  "kind": "Enum",
+  "kind": "Class",
   "slug": "codeglyphx-qrpixeldebugmode",
   "summary": "Debug visualization modes for pixel-based QR decoding.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
-    {
-      "name": "value__",
-      "kind": "Field",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int value__",
-      "xmlId": "F:CodeGlyphX.QrPixelDebugMode.value__",
-      "anchor": "field-value-int-value"
-    },
+  "methods": [],
+  "properties": [],
+  "fields": [
     {
       "name": "Grayscale",
-      "kind": "Field",
-      "summary": "Raw grayscale image.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrPixelDebugMode Grayscale",
-      "xmlId": "F:CodeGlyphX.QrPixelDebugMode.Grayscale",
-      "anchor": "field-grayscale-qrpixeldebugmode-grayscale"
+      "summary": "Raw grayscale image."
     },
     {
       "name": "Threshold",
-      "kind": "Field",
-      "summary": "Threshold map (constant or adaptive).",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrPixelDebugMode Threshold",
-      "xmlId": "F:CodeGlyphX.QrPixelDebugMode.Threshold",
-      "anchor": "field-threshold-qrpixeldebugmode-threshold"
+      "summary": "Threshold map (constant or adaptive)."
     },
     {
       "name": "Binarized",
-      "kind": "Field",
-      "summary": "Binarized image (black/white).",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrPixelDebugMode Binarized",
-      "xmlId": "F:CodeGlyphX.QrPixelDebugMode.Binarized",
-      "anchor": "field-binarized-qrpixeldebugmode-binarized"
+      "summary": "Binarized image (black/white)."
     },
     {
       "name": "Heatmap",
-      "kind": "Field",
-      "summary": "Heatmap of luminance vs threshold.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrPixelDebugMode Heatmap",
-      "xmlId": "F:CodeGlyphX.QrPixelDebugMode.Heatmap",
-      "anchor": "field-heatmap-qrpixeldebugmode-heatmap"
+      "summary": "Heatmap of luminance vs threshold."
     }
-  ]
+  ],
+  "events": []
 }

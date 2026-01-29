@@ -1,0 +1,13 @@
+﻿{
+  "name": "DataBarExpandedTables",
+  "fullName": "CodeGlyphX.DataBar.DataBarExpandedTables",
+  "namespace": "CodeGlyphX.DataBar",
+  "kind": "Class",
+  "slug": "codeglyphx-databar-databarexpandedtables",
+  "summary": "Lookup tables for GS1 DataBar Expanded encoding/decoding.",
+  "remarks": null,
+  "methods": [],
+  "properties": [],
+  "fields": [],
+  "events": []
+}

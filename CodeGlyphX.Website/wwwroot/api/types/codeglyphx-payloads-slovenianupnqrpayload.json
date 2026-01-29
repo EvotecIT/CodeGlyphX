@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "SlovenianUpnQrPayload",
   "fullName": "CodeGlyphX.Payloads.SlovenianUpnQrPayload",
   "namespace": "CodeGlyphX.Payloads",
@@ -6,116 +6,93 @@
   "slug": "codeglyphx-payloads-slovenianupnqrpayload",
   "summary": "Slovenian UPN QR payment payload.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
-      "name": "SlovenianUpnQrPayload",
-      "kind": "Constructor",
+      "name": "#ctor",
       "summary": "Creates a Slovenian UPN QR payment payload.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payerName",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "payerAddress",
-          "type": "string",
-          "description": null
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "payerPlace",
-          "type": "string",
-          "description": null
+          "name": "arg3",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "recipientName",
-          "type": "string",
-          "description": null
+          "name": "arg4",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "recipientAddress",
-          "type": "string",
-          "description": null
+          "name": "arg5",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "recipientPlace",
-          "type": "string",
-          "description": null
+          "name": "arg6",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "recipientIban",
-          "type": "string",
-          "description": null
+          "name": "arg7",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "description",
-          "type": "string",
-          "description": null
+          "name": "arg8",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "amount",
-          "type": "double",
-          "description": null
+          "name": "arg9",
+          "type": "System.Double",
+          "summary": null
         },
         {
-          "name": "deadline",
-          "type": "Nullable\u003CDateTime\u003E",
-          "description": null
+          "name": "arg10",
+          "type": "System.Nullable{System.DateTime}",
+          "summary": null
         },
         {
-          "name": "recipientSiModel",
-          "type": "string",
-          "description": null
+          "name": "arg11",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "recipientSiReference",
-          "type": "string",
-          "description": null
+          "name": "arg12",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "code",
-          "type": "string",
-          "description": null
+          "name": "arg13",
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "SlovenianUpnQrPayload(string payerName, string payerAddress, string payerPlace, string recipientName, string recipientAddress, string recipientPlace, string recipientIban, string description, double amount, Nullable\u003CDateTime\u003E deadline, string recipientSiModel, string recipientSiReference, string code)",
-      "xmlId": "M:CodeGlyphX.Payloads.SlovenianUpnQrPayload.#ctor(System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Double,System.Nullable{System.DateTime},System.String,System.String,System.String)",
-      "anchor": "constructor-slovenianupnqrpayload-slovenianupnqrpayload-string-payername-string-payeraddress-string-payerplace-string-recipientname-string-recipientaddress-string-recipientplace-string-recipientiban-string-description-double-amount-nullable-datetime-deadline-string-recipientsimodel-string-recipientsireference-string-code"
+      ]
     },
     {
       "name": "ToPayloadData",
-      "kind": "Method",
       "summary": "Converts this payload to a QR payload with recommended settings.",
-      "remarks": null,
       "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrPayloadData ToPayloadData()",
-      "xmlId": "M:CodeGlyphX.Payloads.SlovenianUpnQrPayload.ToPayloadData",
-      "anchor": "method-topayloaddata-qrpayloaddata-topayloaddata"
+      "parameters": []
     },
     {
       "name": "ToString",
-      "kind": "Method",
       "summary": "Returns the Slovenian UPN QR payload string.",
-      "remarks": null,
       "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string ToString()",
-      "xmlId": "M:CodeGlyphX.Payloads.SlovenianUpnQrPayload.ToString",
-      "anchor": "method-tostring-string-tostring"
+      "parameters": []
     }
-  ]
+  ],
+  "properties": [],
+  "fields": [],
+  "events": []
 }

@@ -1,88 +1,65 @@
-{
+﻿{
   "name": "MicroPdf417Encoder",
   "fullName": "CodeGlyphX.Pdf417.MicroPdf417Encoder",
   "namespace": "CodeGlyphX.Pdf417",
   "kind": "Class",
   "slug": "codeglyphx-pdf417-micropdf417encoder",
-  "summary": "Encodes MicroPDF417 symbols into a CodeGlyphX.BitMatrix.",
+  "summary": "Encodes MicroPDF417 symbols into a .",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
       "name": "Encode",
-      "kind": "Method",
       "summary": "Encodes a text payload as MicroPDF417.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "text",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "MicroPdf417EncodeOptions",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.Pdf417.MicroPdf417EncodeOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static BitMatrix Encode(string text, MicroPdf417EncodeOptions options)",
-      "xmlId": "M:CodeGlyphX.Pdf417.MicroPdf417Encoder.Encode(System.String,CodeGlyphX.Pdf417.MicroPdf417EncodeOptions)",
-      "anchor": "method-encode-static-bitmatrix-encode-string-text-micropdf417encodeoptions-options"
+      ]
     },
     {
       "name": "EncodeBytes",
-      "kind": "Method",
       "summary": "Encodes a byte payload as MicroPDF417.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "data",
-          "type": "byte[]",
-          "description": null
+          "name": "arg1",
+          "type": "System.Byte[]",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "MicroPdf417EncodeOptions",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.Pdf417.MicroPdf417EncodeOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static BitMatrix EncodeBytes(byte[] data, MicroPdf417EncodeOptions options)",
-      "xmlId": "M:CodeGlyphX.Pdf417.MicroPdf417Encoder.EncodeBytes(System.Byte[],CodeGlyphX.Pdf417.MicroPdf417EncodeOptions)",
-      "anchor": "method-encodebytes-static-bitmatrix-encodebytes-byte-data-micropdf417encodeoptions-options"
+      ]
     },
     {
       "name": "EncodeBytes",
-      "kind": "Method",
       "summary": "Encodes a byte payload as MicroPDF417.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "data",
-          "type": "ReadOnlySpan\u003Cbyte\u003E",
-          "description": null
+          "name": "arg1",
+          "type": "System.ReadOnlySpan{System.Byte}",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "MicroPdf417EncodeOptions",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.Pdf417.MicroPdf417EncodeOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static BitMatrix EncodeBytes(ReadOnlySpan\u003Cbyte\u003E data, MicroPdf417EncodeOptions options)",
-      "xmlId": "M:CodeGlyphX.Pdf417.MicroPdf417Encoder.EncodeBytes(System.ReadOnlySpan{System.Byte},CodeGlyphX.Pdf417.MicroPdf417EncodeOptions)",
-      "anchor": "method-encodebytes-static-bitmatrix-encodebytes-readonlyspan-byte-data-micropdf417encodeoptions-options"
+      ]
     }
-  ]
+  ],
+  "properties": [],
+  "fields": [],
+  "events": []
 }

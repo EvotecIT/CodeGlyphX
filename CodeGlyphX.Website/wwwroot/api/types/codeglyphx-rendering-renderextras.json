@@ -1,0 +1,30 @@
+﻿{
+  "name": "RenderExtras",
+  "fullName": "CodeGlyphX.Rendering.RenderExtras",
+  "namespace": "CodeGlyphX.Rendering",
+  "kind": "Class",
+  "slug": "codeglyphx-rendering-renderextras",
+  "summary": "Optional render extras for format-specific output.",
+  "remarks": null,
+  "methods": [],
+  "properties": [
+    {
+      "name": "VectorMode",
+      "summary": "Vector or raster output for PDF/EPS."
+    },
+    {
+      "name": "HtmlTitle",
+      "summary": "Optional HTML title (wraps HTML output)."
+    },
+    {
+      "name": "MatrixAscii",
+      "summary": "ASCII render options for matrix codes."
+    },
+    {
+      "name": "BarcodeAscii",
+      "summary": "ASCII render options for barcodes."
+    }
+  ],
+  "fields": [],
+  "events": []
+}

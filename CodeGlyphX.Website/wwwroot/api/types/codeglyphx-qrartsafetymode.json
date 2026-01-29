@@ -1,0 +1,26 @@
+﻿{
+  "name": "QrArtSafetyMode",
+  "fullName": "CodeGlyphX.QrArtSafetyMode",
+  "namespace": "CodeGlyphX",
+  "kind": "Class",
+  "slug": "codeglyphx-qrartsafetymode",
+  "summary": "Safety guardrail strength for QR art styling.",
+  "remarks": null,
+  "methods": [],
+  "properties": [],
+  "fields": [
+    {
+      "name": "Safe",
+      "summary": "Strong guardrails for maximum scan reliability."
+    },
+    {
+      "name": "Balanced",
+      "summary": "Balanced guardrails with moderate artistic freedom."
+    },
+    {
+      "name": "Bold",
+      "summary": "Light guardrails that allow bolder styling."
+    }
+  ],
+  "events": []
+}

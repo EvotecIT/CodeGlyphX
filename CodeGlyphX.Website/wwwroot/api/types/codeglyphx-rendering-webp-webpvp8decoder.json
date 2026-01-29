@@ -1,0 +1,13 @@
+﻿{
+  "name": "WebpVp8Decoder",
+  "fullName": "CodeGlyphX.Rendering.Webp.WebpVp8Decoder",
+  "namespace": "CodeGlyphX.Rendering.Webp",
+  "kind": "Class",
+  "slug": "codeglyphx-rendering-webp-webpvp8decoder",
+  "summary": "Managed VP8 (lossy) decoder scaffold. Currently parses only the keyframe header.",
+  "remarks": null,
+  "methods": [],
+  "properties": [],
+  "fields": [],
+  "events": []
+}

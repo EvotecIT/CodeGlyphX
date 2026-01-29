@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "QrPayloadParser",
   "fullName": "CodeGlyphX.Payloads.QrPayloadParser",
   "namespace": "CodeGlyphX.Payloads",
@@ -6,113 +6,82 @@
   "slug": "codeglyphx-payloads-qrpayloadparser",
   "summary": "Parses QR payload strings into structured data when possible.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
       "name": "TryParse",
-      "kind": "Method",
       "summary": "Attempts to parse the payload into a structured representation.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "parsed",
-          "type": "QrParsedPayload",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.Payloads.QrParsedPayload@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryParse(string payload, out QrParsedPayload parsed)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrPayloadParser.TryParse(System.String,CodeGlyphX.Payloads.QrParsedPayload@)",
-      "anchor": "method-tryparse-static-bool-tryparse-string-payload-out-qrparsedpayload-parsed"
+      ]
     },
     {
       "name": "TryParse",
-      "kind": "Method",
       "summary": "Attempts to parse the payload with optional strict validation.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrPayloadParseOptions",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.Payloads.QrPayloadParseOptions",
+          "summary": null
         },
         {
-          "name": "parsed",
-          "type": "QrParsedPayload",
-          "description": null
+          "name": "arg3",
+          "type": "CodeGlyphX.Payloads.QrParsedPayload@",
+          "summary": null
         },
         {
-          "name": "validation",
-          "type": "QrPayloadValidationResult",
-          "description": null
+          "name": "arg4",
+          "type": "CodeGlyphX.Payloads.QrPayloadValidationResult@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryParse(string payload, QrPayloadParseOptions options, out QrParsedPayload parsed, out QrPayloadValidationResult validation)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrPayloadParser.TryParse(System.String,CodeGlyphX.Payloads.QrPayloadParseOptions,CodeGlyphX.Payloads.QrParsedPayload@,CodeGlyphX.Payloads.QrPayloadValidationResult@)",
-      "anchor": "method-tryparse-static-bool-tryparse-string-payload-qrpayloadparseoptions-options-out-qrparsedpayload-parsed-out-qrpayloadvalidationresult-validation"
+      ]
     },
     {
       "name": "Validate",
-      "kind": "Method",
       "summary": "Validates a parsed payload against strict schema rules.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "parsed",
-          "type": "QrParsedPayload",
-          "description": null
+          "name": "arg1",
+          "type": "CodeGlyphX.Payloads.QrParsedPayload",
+          "summary": null
         },
         {
-          "name": "options",
-          "type": "QrPayloadParseOptions",
-          "description": null
+          "name": "arg2",
+          "type": "CodeGlyphX.Payloads.QrPayloadParseOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static QrPayloadValidationResult Validate(QrParsedPayload parsed, QrPayloadParseOptions options)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrPayloadParser.Validate(CodeGlyphX.Payloads.QrParsedPayload,CodeGlyphX.Payloads.QrPayloadParseOptions)",
-      "anchor": "method-validate-static-qrpayloadvalidationresult-validate-qrparsedpayload-parsed-qrpayloadparseoptions-options"
+      ]
     },
     {
       "name": "Parse",
-      "kind": "Method",
       "summary": "Parses payload, returning raw text when structure is not recognized.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "payload",
-          "type": "string",
-          "description": null
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static QrParsedPayload Parse(string payload)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrPayloadParser.Parse(System.String)",
-      "anchor": "method-parse-static-qrparsedpayload-parse-string-payload"
+      ]
     }
-  ]
+  ],
+  "properties": [],
+  "fields": [],
+  "events": []
 }

@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "JpegReader",
   "fullName": "CodeGlyphX.Rendering.Jpeg.JpegReader",
   "namespace": "CodeGlyphX.Rendering.Jpeg",
@@ -6,58 +6,43 @@
   "slug": "codeglyphx-rendering-jpeg-jpegreader",
   "summary": "Decodes baseline and progressive JPEG images to RGBA buffers (SOF0/SOF2, 8-bit, Huffman).",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
       "name": "IsJpeg",
-      "kind": "Method",
       "summary": "Returns true when the buffer looks like a JPEG.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "data",
-          "type": "ReadOnlySpan\u003Cbyte\u003E",
-          "description": null
+          "name": "arg1",
+          "type": "System.ReadOnlySpan{System.Byte}",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool IsJpeg(ReadOnlySpan\u003Cbyte\u003E data)",
-      "xmlId": "M:CodeGlyphX.Rendering.Jpeg.JpegReader.IsJpeg(System.ReadOnlySpan{System.Byte})",
-      "anchor": "method-isjpeg-static-bool-isjpeg-readonlyspan-byte-data"
+      ]
     },
     {
       "name": "DecodeRgba32",
-      "kind": "Method",
       "summary": "Decodes a JPEG image to an RGBA buffer.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
-          "name": "data",
-          "type": "ReadOnlySpan\u003Cbyte\u003E",
-          "description": null
+          "name": "arg1",
+          "type": "System.ReadOnlySpan{System.Byte}",
+          "summary": null
         },
         {
-          "name": "width",
-          "type": "int",
-          "description": null
+          "name": "arg2",
+          "type": "System.Int32@",
+          "summary": null
         },
         {
-          "name": "height",
-          "type": "int",
-          "description": null
+          "name": "arg3",
+          "type": "System.Int32@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static byte[] DecodeRgba32(ReadOnlySpan\u003Cbyte\u003E data, out int width, out int height)",
-      "xmlId": "M:CodeGlyphX.Rendering.Jpeg.JpegReader.DecodeRgba32(System.ReadOnlySpan{System.Byte},System.Int32@,System.Int32@)",
-      "anchor": "method-decodergba32-static-byte-decodergba32-readonlyspan-byte-data-out-int-width-out-int-height"
+      ]
     }
-  ]
+  ],
+  "properties": [],
+  "fields": [],
+  "events": []
 }
