@@ -26,39 +26,72 @@ namespace CodeGlyphX;
 
 public static partial class DataMatrixCode {
     /// <summary>
-    /// Saves Data Matrix ICO to a file for byte payloads.
+    /// Saves Data Matrix PNG to a stream.
     /// </summary>
-    public static string SaveIco(byte[] data, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
-        var ico = Ico(data, mode, options);
-        return ico.WriteBinary(path);
+    public static void SavePng(string text, Stream stream, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = Encode(text, mode);
+        MatrixPngRenderer.RenderToStream(modules, BuildPngOptions(options), stream);
     }
 
     /// <summary>
-    /// Saves Data Matrix PDF to a file for byte payloads.
+    /// Saves Data Matrix PNG to a stream for byte payloads.
     /// </summary>
-    /// <param name="data">Payload bytes.</param>
-    /// <param name="path">Output file path.</param>
-    /// <param name="mode">Vector or raster output.</param>
-    /// <param name="options">Optional rendering options.</param>
-    /// <param name="renderMode">Vector or raster output.</param>
-    public static string SavePdf(byte[] data, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null, RenderMode renderMode = RenderMode.Vector) {
-        var pdf = Pdf(data, mode, options, renderMode);
-        return pdf.WriteBinary(path);
+    public static void SavePng(byte[] data, Stream stream, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = EncodeBytes(data, mode);
+        MatrixPngRenderer.RenderToStream(modules, BuildPngOptions(options), stream);
+    }
+    /// <summary>
+    /// Saves Data Matrix SVG to a stream.
+    /// </summary>
+    public static void SaveSvg(string text, Stream stream, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var svg = Svg(text, mode, options);
+        svg.WriteText(stream);
     }
 
     /// <summary>
-    /// Saves Data Matrix EPS to a file for byte payloads.
+    /// Saves Data Matrix SVGZ to a stream.
     /// </summary>
-    /// <param name="data">Payload bytes.</param>
-    /// <param name="path">Output file path.</param>
-    /// <param name="mode">Vector or raster output.</param>
-    /// <param name="options">Optional rendering options.</param>
-    /// <param name="renderMode">Vector or raster output.</param>
-    public static string SaveEps(byte[] data, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null, RenderMode renderMode = RenderMode.Vector) {
-        var eps = Eps(data, mode, options, renderMode);
-        return eps.WriteText(path);
+    public static void SaveSvgz(string text, Stream stream, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = Encode(text, mode);
+        MatrixSvgzRenderer.RenderToStream(modules, BuildSvgOptions(options), stream);
     }
 
+    /// <summary>
+    /// Saves Data Matrix SVG to a stream for byte payloads.
+    /// </summary>
+    public static void SaveSvg(byte[] data, Stream stream, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var svg = Svg(data, mode, options);
+        svg.WriteText(stream);
+    }
+
+    /// <summary>
+    /// Saves Data Matrix SVGZ to a stream for byte payloads.
+    /// </summary>
+    public static void SaveSvgz(byte[] data, Stream stream, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
+        var modules = EncodeBytes(data, mode);
+        MatrixSvgzRenderer.RenderToStream(modules, BuildSvgOptions(options), stream);
+    }
+    /// <summary>
+    /// Saves Data Matrix HTML to a stream.
+    /// </summary>
+    public static void SaveHtml(string text, Stream stream, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null, string? title = null) {
+        var html = Html(text, mode, options);
+        if (!string.IsNullOrEmpty(title)) {
+            html = html.WrapHtml(title);
+        }
+        html.WriteText(stream);
+    }
+
+    /// <summary>
+    /// Saves Data Matrix HTML to a stream for byte payloads.
+    /// </summary>
+    public static void SaveHtml(byte[] data, Stream stream, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null, string? title = null) {
+        var html = Html(data, mode, options);
+        if (!string.IsNullOrEmpty(title)) {
+            html = html.WrapHtml(title);
+        }
+        html.WriteText(stream);
+    }
     /// <summary>
     /// Saves Data Matrix JPEG to a stream.
     /// </summary>
@@ -293,118 +326,6 @@ public static partial class DataMatrixCode {
     public static void SaveEps(byte[] data, Stream stream, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null, RenderMode renderMode = RenderMode.Vector) {
         var modules = EncodeBytes(data, mode);
         MatrixEpsRenderer.RenderToStream(modules, BuildPngOptions(options), stream, renderMode);
-    }
-
-    /// <summary>
-    /// Saves Data Matrix to a file based on extension (.png/.webp/.svg/.svgz/.svg.gz/.html/.htm/.jpg/.jpeg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps/.ps).
-    /// Defaults to PNG when no extension is provided.
-    /// </summary>
-    public static string Save(string text, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null, string? title = null) {
-        if (path.EndsWith(".svgz", StringComparison.OrdinalIgnoreCase) ||
-            path.EndsWith(".svg.gz", StringComparison.OrdinalIgnoreCase)) {
-            return SaveSvgz(text, path, mode, options);
-        }
-
-        var ext = Path.GetExtension(path);
-        if (string.IsNullOrWhiteSpace(ext)) return SavePng(text, path, mode, options);
-
-        switch (ext.ToLowerInvariant()) {
-            case ".png":
-                return SavePng(text, path, mode, options);
-            case ".webp":
-                return SaveWebp(text, path, mode, options);
-            case ".svg":
-                return SaveSvg(text, path, mode, options);
-            case ".html":
-            case ".htm":
-                return SaveHtml(text, path, mode, options, title);
-            case ".jpg":
-            case ".jpeg":
-                return SaveJpeg(text, path, mode, options);
-            case ".bmp":
-                return SaveBmp(text, path, mode, options);
-            case ".ppm":
-                return SavePpm(text, path, mode, options);
-            case ".pbm":
-                return SavePbm(text, path, mode, options);
-            case ".pgm":
-                return SavePgm(text, path, mode, options);
-            case ".pam":
-                return SavePam(text, path, mode, options);
-            case ".xbm":
-                return SaveXbm(text, path, mode, options);
-            case ".xpm":
-                return SaveXpm(text, path, mode, options);
-            case ".tga":
-                return SaveTga(text, path, mode, options);
-            case ".ico":
-                return SaveIco(text, path, mode, options);
-            case ".svgz":
-                return SaveSvgz(text, path, mode, options);
-            case ".pdf":
-                return SavePdf(text, path, mode, options);
-            case ".eps":
-            case ".ps":
-                return SaveEps(text, path, mode, options);
-            default:
-                return SavePng(text, path, mode, options);
-        }
-    }
-
-    /// <summary>
-    /// Saves Data Matrix to a file for byte payloads based on extension (.png/.webp/.svg/.svgz/.svg.gz/.html/.htm/.jpg/.jpeg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps/.ps).
-    /// Defaults to PNG when no extension is provided.
-    /// </summary>
-    public static string Save(byte[] data, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null, string? title = null) {
-        if (path.EndsWith(".svgz", StringComparison.OrdinalIgnoreCase) ||
-            path.EndsWith(".svg.gz", StringComparison.OrdinalIgnoreCase)) {
-            return SaveSvgz(data, path, mode, options);
-        }
-
-        var ext = Path.GetExtension(path);
-        if (string.IsNullOrWhiteSpace(ext)) return SavePng(data, path, mode, options);
-
-        switch (ext.ToLowerInvariant()) {
-            case ".png":
-                return SavePng(data, path, mode, options);
-            case ".webp":
-                return SaveWebp(data, path, mode, options);
-            case ".svg":
-                return SaveSvg(data, path, mode, options);
-            case ".html":
-            case ".htm":
-                return SaveHtml(data, path, mode, options, title);
-            case ".jpg":
-            case ".jpeg":
-                return SaveJpeg(data, path, mode, options);
-            case ".bmp":
-                return SaveBmp(data, path, mode, options);
-            case ".ppm":
-                return SavePpm(data, path, mode, options);
-            case ".pbm":
-                return SavePbm(data, path, mode, options);
-            case ".pgm":
-                return SavePgm(data, path, mode, options);
-            case ".pam":
-                return SavePam(data, path, mode, options);
-            case ".xbm":
-                return SaveXbm(data, path, mode, options);
-            case ".xpm":
-                return SaveXpm(data, path, mode, options);
-            case ".tga":
-                return SaveTga(data, path, mode, options);
-            case ".ico":
-                return SaveIco(data, path, mode, options);
-            case ".svgz":
-                return SaveSvgz(data, path, mode, options);
-            case ".pdf":
-                return SavePdf(data, path, mode, options);
-            case ".eps":
-            case ".ps":
-                return SaveEps(data, path, mode, options);
-            default:
-                return SavePng(data, path, mode, options);
-        }
     }
 
 }
