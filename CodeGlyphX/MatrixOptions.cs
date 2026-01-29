@@ -1,5 +1,6 @@
 using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Png;
+using CodeGlyphX.Rendering.Webp;
 
 namespace CodeGlyphX;
 
@@ -37,7 +38,7 @@ public sealed class MatrixOptions {
     /// </summary>
     public int WebpQuality {
         get => _webpQuality;
-        set => _webpQuality = ClampWebpQuality(value);
+        set => _webpQuality = WebpQualityClamp.Clamp(value);
     }
 
     private int _webpQuality = 100;
@@ -57,9 +58,4 @@ public sealed class MatrixOptions {
     /// </summary>
     public bool HtmlEmailSafeTable { get; set; }
 
-    private static int ClampWebpQuality(int value) {
-        if (value < 0) return 0;
-        if (value > 100) return 100;
-        return value;
-    }
 }
