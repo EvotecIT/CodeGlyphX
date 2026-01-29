@@ -449,7 +449,10 @@ public static partial class Barcode {
         /// <summary>
         /// Saves based on file extension (.png/.svg/.html/.jpg/.bmp/.ppm/.pbm/.tga/.ico/.pdf/.eps). Defaults to PNG when no extension is provided.
         /// </summary>
-        public string Save(string path, string? title = null) => Barcode.Save(_type, _content, path, Options, title);
+        public string Save(string path, string? title = null) {
+            var extras = string.IsNullOrEmpty(title) ? null : new RenderExtras { HtmlTitle = title };
+            return Barcode.Save(_type, _content, path, Options, extras);
+        }
     }
 
 }

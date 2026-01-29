@@ -3,7 +3,6 @@ using System.IO;
 using System.Threading;
 using System.Text;
 using CodeGlyphX.Pdf417;
-using CodeGlyphX.Internal;
 using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Ascii;
 using CodeGlyphX.Rendering.Bmp;
@@ -331,30 +330,13 @@ public static partial class Pdf417Code {
     }
 
     /// <summary>
-    /// Saves PDF417 to a file for byte payloads based on extension (.png/.webp/.svg/.svgz/.html/.jpg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps).
+    /// Saves PDF417 to a file for byte payloads based on extension.
     /// Defaults to PNG when no extension is provided.
     /// </summary>
-    public static string Save(ReadOnlySpan<byte> data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, string? title = null) {
-        return SaveByExtensionHelper.Save(data, path, new SaveByExtensionSpanHandlers {
-            Default = d => SavePng(d, path, encodeOptions, renderOptions),
-            Png = d => SavePng(d, path, encodeOptions, renderOptions),
-            Webp = d => SaveWebp(d, path, encodeOptions, renderOptions),
-            Svg = d => SaveSvg(d, path, encodeOptions, renderOptions),
-            Svgz = d => SaveSvgz(d, path, encodeOptions, renderOptions),
-            Html = d => SaveHtml(d, path, encodeOptions, renderOptions, title),
-            Jpeg = d => SaveJpeg(d, path, encodeOptions, renderOptions),
-            Bmp = d => SaveBmp(d, path, encodeOptions, renderOptions),
-            Ppm = d => SavePpm(d, path, encodeOptions, renderOptions),
-            Pbm = d => SavePbm(d, path, encodeOptions, renderOptions),
-            Pgm = d => SavePgm(d, path, encodeOptions, renderOptions),
-            Pam = d => SavePam(d, path, encodeOptions, renderOptions),
-            Xbm = d => SaveXbm(d, path, encodeOptions, renderOptions),
-            Xpm = d => SaveXpm(d, path, encodeOptions, renderOptions),
-            Tga = d => SaveTga(d, path, encodeOptions, renderOptions),
-            Ico = d => SaveIco(d, path, encodeOptions, renderOptions),
-            Pdf = d => SavePdf(d, path, encodeOptions, renderOptions),
-            Eps = d => SaveEps(d, path, encodeOptions, renderOptions)
-        });
+    public static string Save(ReadOnlySpan<byte> data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, RenderExtras? extras = null) {
+        var format = OutputFormatInfo.Resolve(path, OutputFormat.Png);
+        var output = Render(data, format, encodeOptions, renderOptions, extras);
+        return OutputWriter.Write(path, output);
     }
 
 }

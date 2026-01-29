@@ -27,7 +27,7 @@ namespace CodeGlyphX;
 /// Simple barcode helpers with fluent and static APIs.
 /// </summary>
 /// <remarks>
-/// Use <see cref="Save(CodeGlyphX.BarcodeType,string,string,CodeGlyphX.BarcodeOptions,string)"/> to pick the output format by file extension.
+/// Use <see cref="Save(CodeGlyphX.BarcodeType,string,string,CodeGlyphX.BarcodeOptions,CodeGlyphX.Rendering.RenderExtras)"/> to pick the output format by file extension.
 /// </remarks>
 /// <example>
 /// <code>

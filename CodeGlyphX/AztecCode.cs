@@ -2,7 +2,6 @@ using System;
 using System.IO;
 using System.Threading;
 using CodeGlyphX.Aztec;
-using CodeGlyphX.Internal;
 using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Ascii;
 using CodeGlyphX.Rendering.Bmp;
@@ -350,35 +349,13 @@ public static partial class AztecCode {
     }
 
     /// <summary>
-    /// Saves Aztec to a file based on extension (.png/.webp/.svg/.svgz/.svg.gz/.html/.htm/.jpg/.jpeg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps/.ps/.txt).
+    /// Saves Aztec to a file based on extension.
     /// Defaults to PNG when no extension is provided.
     /// </summary>
-    public static string Save(string text, string path, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, string? title = null) {
-        return SaveByExtensionHelper.Save(path, new SaveByExtensionHandlers {
-            Default = () => RenderIO.WriteBinary(path, Png(text, encodeOptions, renderOptions)),
-            Png = () => RenderIO.WriteBinary(path, Png(text, encodeOptions, renderOptions)),
-            Webp = () => RenderIO.WriteBinary(path, Webp(text, encodeOptions, renderOptions)),
-            Svg = () => RenderIO.WriteText(path, Svg(text, encodeOptions, renderOptions)),
-            Svgz = () => RenderIO.WriteBinary(path, Svgz(text, encodeOptions, renderOptions)),
-            Html = () => {
-                var html = Html(text, encodeOptions, renderOptions);
-                if (!string.IsNullOrEmpty(title)) html = html.WrapHtml(title);
-                return RenderIO.WriteText(path, html);
-            },
-            Jpeg = () => RenderIO.WriteBinary(path, Jpeg(text, encodeOptions, renderOptions)),
-            Bmp = () => RenderIO.WriteBinary(path, Bmp(text, encodeOptions, renderOptions)),
-            Ppm = () => RenderIO.WriteBinary(path, Ppm(text, encodeOptions, renderOptions)),
-            Pbm = () => RenderIO.WriteBinary(path, Pbm(text, encodeOptions, renderOptions)),
-            Pgm = () => RenderIO.WriteBinary(path, Pgm(text, encodeOptions, renderOptions)),
-            Pam = () => RenderIO.WriteBinary(path, Pam(text, encodeOptions, renderOptions)),
-            Xbm = () => RenderIO.WriteText(path, Xbm(text, encodeOptions, renderOptions)),
-            Xpm = () => RenderIO.WriteText(path, Xpm(text, encodeOptions, renderOptions)),
-            Tga = () => RenderIO.WriteBinary(path, Tga(text, encodeOptions, renderOptions)),
-            Ico = () => RenderIO.WriteBinary(path, Ico(text, encodeOptions, renderOptions)),
-            Pdf = () => RenderIO.WriteBinary(path, Pdf(text, encodeOptions, renderOptions)),
-            Eps = () => RenderIO.WriteText(path, Eps(text, encodeOptions, renderOptions)),
-            Text = () => RenderIO.WriteText(path, Ascii(text, encodeOptions))
-        });
+    public static string Save(string text, string path, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, RenderExtras? extras = null) {
+        var format = OutputFormatInfo.Resolve(path, OutputFormat.Png);
+        var output = Render(text, format, encodeOptions, renderOptions, extras);
+        return OutputWriter.Write(path, output);
     }
 
     private static MatrixPngRenderOptions ToPngOptions(MatrixOptions? options) {

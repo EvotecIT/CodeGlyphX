@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using System.Threading;
-using CodeGlyphX.Internal;
 using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Ascii;
 using CodeGlyphX.Rendering.Bmp;
@@ -346,30 +345,13 @@ public static partial class Barcode {
     }
 
     /// <summary>
-    /// Saves a barcode to a file based on the file extension (.png/.webp/.svg/.svgz/.svg.gz/.html/.htm/.jpg/.jpeg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps/.ps).
+    /// Saves a barcode to a file based on the file extension.
     /// Defaults to PNG when no extension is provided.
     /// </summary>
-    public static string Save(BarcodeType type, string content, string path, BarcodeOptions? options = null, string? title = null) {
-        return SaveByExtensionHelper.Save(path, new SaveByExtensionHandlers {
-            Default = () => SavePng(type, content, path, options),
-            Png = () => SavePng(type, content, path, options),
-            Webp = () => SaveWebp(type, content, path, options),
-            Svg = () => SaveSvg(type, content, path, options),
-            Svgz = () => SaveSvgz(type, content, path, options),
-            Html = () => SaveHtml(type, content, path, options, title),
-            Jpeg = () => SaveJpeg(type, content, path, options),
-            Bmp = () => SaveBmp(type, content, path, options),
-            Ppm = () => SavePpm(type, content, path, options),
-            Pbm = () => SavePbm(type, content, path, options),
-            Pgm = () => SavePgm(type, content, path, options),
-            Pam = () => SavePam(type, content, path, options),
-            Xbm = () => SaveXbm(type, content, path, options),
-            Xpm = () => SaveXpm(type, content, path, options),
-            Tga = () => SaveTga(type, content, path, options),
-            Ico = () => SaveIco(type, content, path, options),
-            Pdf = () => SavePdf(type, content, path, options),
-            Eps = () => SaveEps(type, content, path, options)
-        });
+    public static string Save(BarcodeType type, string content, string path, BarcodeOptions? options = null, RenderExtras? extras = null) {
+        var format = OutputFormatInfo.Resolve(path, OutputFormat.Png);
+        var output = Render(type, content, format, options, extras);
+        return OutputWriter.Write(path, output);
     }
 
 

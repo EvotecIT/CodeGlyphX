@@ -345,6 +345,8 @@ public static class BarcodeEasy {
     /// <summary>
     /// Saves a barcode to a file based on the output extension.
     /// </summary>
-    public static string RenderToFile(BarcodeType type, string content, string path, BarcodeOptions? options = null, string? title = null) =>
-        Barcode.Save(type, content, path, options, title);
+    public static string RenderToFile(BarcodeType type, string content, string path, BarcodeOptions? options = null, string? title = null) {
+        var extras = string.IsNullOrEmpty(title) ? null : new RenderExtras { HtmlTitle = title };
+        return Barcode.Save(type, content, path, options, extras);
+    }
 }

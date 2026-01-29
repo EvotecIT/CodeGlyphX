@@ -248,8 +248,9 @@ public static partial class Pdf417Code {
         /// Saves output based on file extension.
         /// </summary>
         public string Save(string path, string? title = null) {
-            if (_text is not null) return Pdf417Code.Save(_text, path, _encodeOptions, _renderOptions, title);
-            return Pdf417Code.Save(_bytes!, path, _encodeOptions, _renderOptions, title);
+            var extras = string.IsNullOrEmpty(title) ? null : new RenderExtras { HtmlTitle = title };
+            if (_text is not null) return Pdf417Code.Save(_text, path, _encodeOptions, _renderOptions, extras);
+            return Pdf417Code.Save(_bytes!, path, _encodeOptions, _renderOptions, extras);
         }
 
         /// <summary>

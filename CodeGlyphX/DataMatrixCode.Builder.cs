@@ -188,8 +188,9 @@ public static partial class DataMatrixCode {
         /// Saves output based on file extension.
         /// </summary>
         public string Save(string path, string? title = null) {
-            if (_text is not null) return DataMatrixCode.Save(_text, path, _mode, _options, title);
-            return DataMatrixCode.Save(_bytes!, path, _mode, _options, title);
+            var extras = string.IsNullOrEmpty(title) ? null : new RenderExtras { HtmlTitle = title };
+            if (_text is not null) return DataMatrixCode.Save(_text, path, _mode, _options, extras);
+            return DataMatrixCode.Save(_bytes!, path, _mode, _options, extras);
         }
 
         /// <summary>
