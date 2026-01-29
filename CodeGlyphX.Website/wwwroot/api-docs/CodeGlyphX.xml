@@ -3852,7 +3852,7 @@
         </member>
         <member name="M:CodeGlyphX.DataBar.DataBar14Decoder.TryDecodeTruncated(CodeGlyphX.Barcode1D,System.String@)">
             <summary>
-            Attempts to decode a GS1 DataBar-14 Truncated symbol from a <see cref="T:CodeGlyphX.Barcode1D"/>.
+            Attempts to decode a GS1 DataBar-14 Truncated symbol from a <see cref="T:CodeGlyphX.Barcode1D">Barcode1D</see>.
             </summary>
         </member>
         <member name="M:CodeGlyphX.DataBar.DataBar14Decoder.TryDecodeTruncated(System.Boolean[],System.String@)">
@@ -3862,12 +3862,12 @@
         </member>
         <member name="M:CodeGlyphX.DataBar.DataBar14Decoder.TryDecodeOmni(CodeGlyphX.BitMatrix,System.String@)">
             <summary>
-            Attempts to decode a GS1 DataBar-14 Omnidirectional symbol from a <see cref="T:CodeGlyphX.BitMatrix"/>.
+            Attempts to decode a GS1 DataBar-14 Omnidirectional symbol from a <see cref="T:CodeGlyphX.BitMatrix">BitMatrix</see>.
             </summary>
         </member>
         <member name="M:CodeGlyphX.DataBar.DataBar14Decoder.TryDecodeStacked(CodeGlyphX.BitMatrix,System.String@)">
             <summary>
-            Attempts to decode a GS1 DataBar-14 Stacked symbol from a <see cref="T:CodeGlyphX.BitMatrix"/>.
+            Attempts to decode a GS1 DataBar-14 Stacked symbol from a <see cref="T:CodeGlyphX.BitMatrix">BitMatrix</see>.
             </summary>
         </member>
         <member name="T:CodeGlyphX.DataBar.DataBar14Encoder">
@@ -3877,17 +3877,17 @@
         </member>
         <member name="M:CodeGlyphX.DataBar.DataBar14Encoder.EncodeTruncated(System.String)">
             <summary>
-            Encodes a GS1 DataBar-14 Truncated symbol into a <see cref="T:CodeGlyphX.Barcode1D"/>.
+            Encodes a GS1 DataBar-14 Truncated symbol into a <see cref="T:CodeGlyphX.Barcode1D">Barcode1D</see>.
             </summary>
         </member>
         <member name="M:CodeGlyphX.DataBar.DataBar14Encoder.EncodeOmni(System.String)">
             <summary>
-            Encodes a GS1 DataBar-14 Omnidirectional symbol into a <see cref="T:CodeGlyphX.BitMatrix"/>.
+            Encodes a GS1 DataBar-14 Omnidirectional symbol into a <see cref="T:CodeGlyphX.BitMatrix">BitMatrix</see>.
             </summary>
         </member>
         <member name="M:CodeGlyphX.DataBar.DataBar14Encoder.EncodeStacked(System.String)">
             <summary>
-            Encodes a GS1 DataBar-14 Stacked symbol into a <see cref="T:CodeGlyphX.BitMatrix"/>.
+            Encodes a GS1 DataBar-14 Stacked symbol into a <see cref="T:CodeGlyphX.BitMatrix">BitMatrix</see>.
             </summary>
         </member>
         <member name="T:CodeGlyphX.DataBar.DataBarExpandedDecoder">

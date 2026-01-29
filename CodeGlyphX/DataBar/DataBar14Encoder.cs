@@ -9,7 +9,7 @@ namespace CodeGlyphX.DataBar;
 /// </summary>
 public static class DataBar14Encoder {
     /// <summary>
-    /// Encodes a GS1 DataBar-14 Truncated symbol into a <see cref="Barcode1D"/>.
+    /// Encodes a GS1 DataBar-14 Truncated symbol into a <see cref="Barcode1D">Barcode1D</see>.
     /// </summary>
     public static Barcode1D EncodeTruncated(string content) {
         var widths = BuildTotalWidths(content, out _);
@@ -23,7 +23,7 @@ public static class DataBar14Encoder {
     }
 
     /// <summary>
-    /// Encodes a GS1 DataBar-14 Omnidirectional symbol into a <see cref="BitMatrix"/>.
+    /// Encodes a GS1 DataBar-14 Omnidirectional symbol into a <see cref="BitMatrix">BitMatrix</see>.
     /// </summary>
     public static BitMatrix EncodeOmni(string content) {
         var widths = BuildTotalWidths(content, out _);
@@ -31,7 +31,7 @@ public static class DataBar14Encoder {
     }
 
     /// <summary>
-    /// Encodes a GS1 DataBar-14 Stacked symbol into a <see cref="BitMatrix"/>.
+    /// Encodes a GS1 DataBar-14 Stacked symbol into a <see cref="BitMatrix">BitMatrix</see>.
     /// </summary>
     public static BitMatrix EncodeStacked(string content) {
         var widths = BuildTotalWidths(content, out _);
