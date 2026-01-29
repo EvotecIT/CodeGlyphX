@@ -61,8 +61,13 @@ internal static class QrConnectedExample {
         };
 
         QR.Save(payload, Path.Combine(outputDir, "qr-connected-rounded.png"), options);
-        QR.SavePdf(payload, Path.Combine(outputDir, "qr-connected-rounded.pdf"), options, RenderMode.Raster);
-        QR.SaveEps(payload, Path.Combine(outputDir, "qr-connected-rounded.eps"), options, RenderMode.Raster);
+        OutputWriter.Write(
+            Path.Combine(outputDir, "qr-connected-rounded.pdf"),
+            QrCode.Render(payload, OutputFormat.Pdf, options, new RenderExtras { VectorMode = RenderMode.Raster })
+        );
+        OutputWriter.Write(
+            Path.Combine(outputDir, "qr-connected-rounded.eps"),
+            QrCode.Render(payload, OutputFormat.Eps, options, new RenderExtras { VectorMode = RenderMode.Raster })
+        );
     }
 }
-

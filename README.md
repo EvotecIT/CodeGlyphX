@@ -410,8 +410,24 @@ For other matrix barcodes (e.g., KIX/Royal Mail 4‑State), use the `Matrix*` re
 | HTML | `.html`, `.htm` | Table-based output |
 | PDF | `.pdf` | Vector by default, raster via RenderMode |
 | EPS | `.eps`, `.ps` | Vector by default, raster via RenderMode |
-| ASCII | API only | Use `RenderAscii` methods |
+| ASCII | API only | Use `Render(..., OutputFormat.Ascii)` |
 | Raw RGBA | API only | Use `RenderPixels` methods |
+
+### Render to bytes or text
+
+```csharp
+using CodeGlyphX;
+using CodeGlyphX.Rendering;
+
+var svg = Barcode.Render(BarcodeType.Code128, "CODE128-12345", OutputFormat.Svg).GetText();
+var png = QrCode.Render("https://example.com", OutputFormat.Png).Data;
+
+// HTML title + PDF/EPS vector/raster output
+var extras = new RenderExtras { HtmlTitle = "My Code", VectorMode = RenderMode.Raster };
+Barcode.Save(BarcodeType.Code128, "CODE128-12345", "barcode.html", extras: extras);
+```
+
+Per-format helpers (e.g., `Png`, `Svg`, `SavePng`) remain for convenience, but new code should prefer `Render(..., OutputFormat)` to keep output handling consistent.
 
 ### ICO multi-size
 

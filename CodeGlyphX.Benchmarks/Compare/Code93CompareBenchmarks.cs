@@ -55,7 +55,7 @@ public class Code93CompareBenchmarks
     [Benchmark(Baseline = true, Description = "CodeGlyphX Code93 PNG")]
     public byte[] CodeGlyphX_Code93_Png()
     {
-        return BarcodeEasy.RenderPng(BarcodeType.Code93, Code93Text, _options);
+        return Barcode.Render(BarcodeType.Code93, Code93Text, OutputFormat.Png, _options).Data;
     }
 
 #if COMPARE_ZXING

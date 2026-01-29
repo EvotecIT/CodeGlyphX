@@ -23,49 +23,49 @@ public class QrCodeBenchmarks
     [Benchmark(Description = "QR PNG (short text)")]
     public byte[] QrPng_ShortText()
     {
-        return QrEasy.RenderPng(ShortText);
+        return QrCode.Render(ShortText, OutputFormat.Png).Data;
     }
 
     [Benchmark(Description = "QR PNG (medium text)")]
     public byte[] QrPng_MediumText()
     {
-        return QrEasy.RenderPng(MediumText);
+        return QrCode.Render(MediumText, OutputFormat.Png).Data;
     }
 
     [Benchmark(Description = "QR PNG (long text)")]
     public byte[] QrPng_LongText()
     {
-        return QrEasy.RenderPng(LongText);
+        return QrCode.Render(LongText, OutputFormat.Png).Data;
     }
 
     [Benchmark(Description = "QR SVG (medium text)")]
     public string QrSvg_MediumText()
     {
-        return QrEasy.RenderSvg(MediumText);
+        return QrCode.Render(MediumText, OutputFormat.Svg).GetText();
     }
 
     [Benchmark(Description = "QR PNG High Error Correction")]
     public byte[] QrPng_HighEC()
     {
-        return QrEasy.RenderPng(MediumText, new QrEasyOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });
+        return QrCode.Render(MediumText, OutputFormat.Png, new QrEasyOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H }).Data;
     }
 
     [Benchmark(Description = "QR PNG (medium text, logo)")]
     public byte[] QrPng_MediumText_Logo()
     {
-        return QrEasy.RenderPng(MediumText, LogoOptions);
+        return QrCode.Render(MediumText, OutputFormat.Png, LogoOptions).Data;
     }
 
     [Benchmark(Description = "QR PNG (medium text, fancy)")]
     public byte[] QrPng_MediumText_Fancy()
     {
-        return QrEasy.RenderPng(MediumText, FancyOptions);
+        return QrCode.Render(MediumText, OutputFormat.Png, FancyOptions).Data;
     }
 
     [Benchmark(Description = "QR HTML (medium text)")]
     public string QrHtml_MediumText()
     {
-        return QrEasy.RenderHtml(MediumText);
+        return QrCode.Render(MediumText, OutputFormat.Html).GetText();
     }
 
     private static QrEasyOptions CreateLogoOptions()

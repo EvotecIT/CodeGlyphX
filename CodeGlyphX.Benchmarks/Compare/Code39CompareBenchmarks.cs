@@ -55,7 +55,7 @@ public class Code39CompareBenchmarks
     [Benchmark(Baseline = true, Description = "CodeGlyphX Code39 PNG")]
     public byte[] CodeGlyphX_Code39_Png()
     {
-        return BarcodeEasy.RenderPng(BarcodeType.Code39, Code39Text, _options);
+        return Barcode.Render(BarcodeType.Code39, Code39Text, OutputFormat.Png, _options).Data;
     }
 
 #if COMPARE_ZXING

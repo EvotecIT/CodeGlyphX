@@ -27,7 +27,7 @@ namespace CodeGlyphX;
 /// Simple barcode helpers with fluent and static APIs.
 /// </summary>
 /// <remarks>
-/// Use <see cref="Save(CodeGlyphX.BarcodeType,string,string,CodeGlyphX.BarcodeOptions,string)"/> to pick the output format by file extension.
+/// Use <see cref="Save(CodeGlyphX.BarcodeType,string,string,CodeGlyphX.BarcodeOptions,CodeGlyphX.Rendering.RenderExtras)"/> to pick the output format by file extension.
 /// </remarks>
 /// <example>
 /// <code>
@@ -53,6 +53,7 @@ public static partial class Barcode {
     /// <summary>
     /// Renders a barcode as PNG.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static byte[] Png(BarcodeType type, string content, BarcodeOptions? options = null) {
         var barcode = Encode(type, content);
         var opts = BuildPngOptions(options);
@@ -62,6 +63,7 @@ public static partial class Barcode {
     /// <summary>
     /// Renders a barcode as SVG.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string Svg(BarcodeType type, string content, BarcodeOptions? options = null) {
         var barcode = Encode(type, content);
         var opts = BuildSvgOptions(options);
@@ -71,6 +73,7 @@ public static partial class Barcode {
     /// <summary>
     /// Renders a barcode as HTML.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string Html(BarcodeType type, string content, BarcodeOptions? options = null) {
         var barcode = Encode(type, content);
         var opts = BuildHtmlOptions(options);
@@ -80,6 +83,7 @@ public static partial class Barcode {
     /// <summary>
     /// Renders a barcode as JPEG.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static byte[] Jpeg(BarcodeType type, string content, BarcodeOptions? options = null) {
         var barcode = Encode(type, content);
         var opts = BuildPngOptions(options);
@@ -90,6 +94,7 @@ public static partial class Barcode {
     /// <summary>
     /// Renders a barcode as WebP.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static byte[] Webp(BarcodeType type, string content, BarcodeOptions? options = null) {
         var barcode = Encode(type, content);
         var opts = BuildPngOptions(options);
@@ -100,6 +105,7 @@ public static partial class Barcode {
     /// <summary>
     /// Renders a barcode as BMP.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static byte[] Bmp(BarcodeType type, string content, BarcodeOptions? options = null) {
         var barcode = Encode(type, content);
         var opts = BuildPngOptions(options);
@@ -109,6 +115,7 @@ public static partial class Barcode {
     /// <summary>
     /// Renders a barcode as PPM.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static byte[] Ppm(BarcodeType type, string content, BarcodeOptions? options = null) {
         var barcode = Encode(type, content);
         var opts = BuildPngOptions(options);
@@ -118,6 +125,7 @@ public static partial class Barcode {
     /// <summary>
     /// Renders a barcode as PBM.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static byte[] Pbm(BarcodeType type, string content, BarcodeOptions? options = null) {
         var barcode = Encode(type, content);
         var opts = BuildPngOptions(options);
@@ -127,6 +135,7 @@ public static partial class Barcode {
     /// <summary>
     /// Renders a barcode as PGM.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static byte[] Pgm(BarcodeType type, string content, BarcodeOptions? options = null) {
         var barcode = Encode(type, content);
         var opts = BuildPngOptions(options);
@@ -136,6 +145,7 @@ public static partial class Barcode {
     /// <summary>
     /// Renders a barcode as PAM.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static byte[] Pam(BarcodeType type, string content, BarcodeOptions? options = null) {
         var barcode = Encode(type, content);
         var opts = BuildPngOptions(options);
@@ -145,6 +155,7 @@ public static partial class Barcode {
     /// <summary>
     /// Renders a barcode as XBM.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string Xbm(BarcodeType type, string content, BarcodeOptions? options = null) {
         var barcode = Encode(type, content);
         var opts = BuildPngOptions(options);
@@ -154,6 +165,7 @@ public static partial class Barcode {
     /// <summary>
     /// Renders a barcode as XPM.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string Xpm(BarcodeType type, string content, BarcodeOptions? options = null) {
         var barcode = Encode(type, content);
         var opts = BuildPngOptions(options);
@@ -163,6 +175,7 @@ public static partial class Barcode {
     /// <summary>
     /// Renders a barcode as TGA.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static byte[] Tga(BarcodeType type, string content, BarcodeOptions? options = null) {
         var barcode = Encode(type, content);
         var opts = BuildPngOptions(options);
@@ -172,6 +185,7 @@ public static partial class Barcode {
     /// <summary>
     /// Renders a barcode as ICO.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static byte[] Ico(BarcodeType type, string content, BarcodeOptions? options = null) {
         var barcode = Encode(type, content);
         var opts = BuildPngOptions(options);
@@ -181,6 +195,7 @@ public static partial class Barcode {
     /// <summary>
     /// Renders a barcode as SVGZ.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static byte[] Svgz(BarcodeType type, string content, BarcodeOptions? options = null) {
         var barcode = Encode(type, content);
         var opts = BuildSvgOptions(options);
@@ -194,6 +209,7 @@ public static partial class Barcode {
     /// <param name="content">The barcode content.</param>
     /// <param name="options">Optional rendering options.</param>
     /// <param name="mode">Vector or raster output.</param>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static byte[] Pdf(BarcodeType type, string content, BarcodeOptions? options = null, RenderMode mode = RenderMode.Vector) {
         var barcode = Encode(type, content);
         var opts = BuildPngOptions(options);
@@ -207,6 +223,7 @@ public static partial class Barcode {
     /// <param name="content">The barcode content.</param>
     /// <param name="options">Optional rendering options.</param>
     /// <param name="mode">Vector or raster output.</param>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string Eps(BarcodeType type, string content, BarcodeOptions? options = null, RenderMode mode = RenderMode.Vector) {
         var barcode = Encode(type, content);
         var opts = BuildPngOptions(options);
@@ -216,6 +233,7 @@ public static partial class Barcode {
     /// <summary>
     /// Renders a barcode as ASCII text.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string Ascii(BarcodeType type, string content, BarcodeAsciiRenderOptions? options = null) {
         var barcode = Encode(type, content);
         return BarcodeAsciiRenderer.Render(barcode, options);

@@ -63,7 +63,7 @@ public class DataMatrixCompareBenchmarks
     [Benchmark(Baseline = true, Description = "CodeGlyphX Data Matrix PNG (medium)")]
     public byte[] CodeGlyphX_DataMatrix_Png()
     {
-        return DataMatrixCode.Png(MediumText, options: _options);
+        return DataMatrixCode.Render(MediumText, OutputFormat.Png, options: _options).Data;
     }
 
 #if COMPARE_ZXING

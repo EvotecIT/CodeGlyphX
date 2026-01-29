@@ -74,7 +74,7 @@ public class QrCompareBenchmarks
     [Benchmark(Baseline = true, Description = "CodeGlyphX QR PNG (medium)")]
     public byte[] CodeGlyphX_QrPng()
     {
-        return QrEasy.RenderPng(MediumText, _options);
+        return QrCode.Render(MediumText, OutputFormat.Png, _options).Data;
     }
 
 #if COMPARE_ZXING

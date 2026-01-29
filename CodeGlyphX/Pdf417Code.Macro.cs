@@ -25,6 +25,7 @@ public static partial class Pdf417Code {
     /// <summary>
     /// Renders Macro PDF417 as PNG.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static byte[] PngMacro(string text, Pdf417MacroOptions macro, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         var modules = EncodeMacro(text, macro, encodeOptions);
         return MatrixPngRenderer.Render(modules, BuildPngOptions(renderOptions));
@@ -33,6 +34,7 @@ public static partial class Pdf417Code {
     /// <summary>
     /// Renders Macro PDF417 as SVG.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string SvgMacro(string text, Pdf417MacroOptions macro, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         var modules = EncodeMacro(text, macro, encodeOptions);
         return MatrixSvgRenderer.Render(modules, BuildSvgOptions(renderOptions));
@@ -41,6 +43,7 @@ public static partial class Pdf417Code {
     /// <summary>
     /// Renders Macro PDF417 as SVGZ.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static byte[] SvgzMacro(string text, Pdf417MacroOptions macro, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         var modules = EncodeMacro(text, macro, encodeOptions);
         return MatrixSvgzRenderer.Render(modules, BuildSvgOptions(renderOptions));
@@ -49,6 +52,7 @@ public static partial class Pdf417Code {
     /// <summary>
     /// Renders Macro PDF417 as HTML.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string HtmlMacro(string text, Pdf417MacroOptions macro, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         var modules = EncodeMacro(text, macro, encodeOptions);
         return MatrixHtmlRenderer.Render(modules, BuildHtmlOptions(renderOptions));
@@ -57,6 +61,7 @@ public static partial class Pdf417Code {
     /// <summary>
     /// Renders Macro PDF417 as JPEG.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static byte[] JpegMacro(string text, Pdf417MacroOptions macro, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         var modules = EncodeMacro(text, macro, encodeOptions);
         var opts = BuildPngOptions(renderOptions);
@@ -67,6 +72,7 @@ public static partial class Pdf417Code {
     /// <summary>
     /// Renders Macro PDF417 as BMP.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static byte[] BmpMacro(string text, Pdf417MacroOptions macro, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         var modules = EncodeMacro(text, macro, encodeOptions);
         return MatrixBmpRenderer.Render(modules, BuildPngOptions(renderOptions));
@@ -75,6 +81,7 @@ public static partial class Pdf417Code {
     /// <summary>
     /// Renders Macro PDF417 as PPM.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static byte[] PpmMacro(string text, Pdf417MacroOptions macro, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         var modules = EncodeMacro(text, macro, encodeOptions);
         return MatrixPpmRenderer.Render(modules, BuildPngOptions(renderOptions));
@@ -83,6 +90,7 @@ public static partial class Pdf417Code {
     /// <summary>
     /// Renders Macro PDF417 as PBM.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static byte[] PbmMacro(string text, Pdf417MacroOptions macro, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         var modules = EncodeMacro(text, macro, encodeOptions);
         return MatrixPbmRenderer.Render(modules, BuildPngOptions(renderOptions));
@@ -91,6 +99,7 @@ public static partial class Pdf417Code {
     /// <summary>
     /// Renders Macro PDF417 as PGM.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static byte[] PgmMacro(string text, Pdf417MacroOptions macro, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         var modules = EncodeMacro(text, macro, encodeOptions);
         return MatrixPgmRenderer.Render(modules, BuildPngOptions(renderOptions));
@@ -99,6 +108,7 @@ public static partial class Pdf417Code {
     /// <summary>
     /// Renders Macro PDF417 as PAM.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static byte[] PamMacro(string text, Pdf417MacroOptions macro, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         var modules = EncodeMacro(text, macro, encodeOptions);
         return MatrixPamRenderer.Render(modules, BuildPngOptions(renderOptions));
@@ -107,6 +117,7 @@ public static partial class Pdf417Code {
     /// <summary>
     /// Renders Macro PDF417 as XBM.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string XbmMacro(string text, Pdf417MacroOptions macro, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         var modules = EncodeMacro(text, macro, encodeOptions);
         return MatrixXbmRenderer.Render(modules, BuildPngOptions(renderOptions));
@@ -115,6 +126,7 @@ public static partial class Pdf417Code {
     /// <summary>
     /// Renders Macro PDF417 as XPM.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string XpmMacro(string text, Pdf417MacroOptions macro, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         var modules = EncodeMacro(text, macro, encodeOptions);
         return MatrixXpmRenderer.Render(modules, BuildPngOptions(renderOptions));
@@ -123,6 +135,7 @@ public static partial class Pdf417Code {
     /// <summary>
     /// Renders Macro PDF417 as TGA.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static byte[] TgaMacro(string text, Pdf417MacroOptions macro, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         var modules = EncodeMacro(text, macro, encodeOptions);
         return MatrixTgaRenderer.Render(modules, BuildPngOptions(renderOptions));
@@ -131,6 +144,7 @@ public static partial class Pdf417Code {
     /// <summary>
     /// Renders Macro PDF417 as ICO.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static byte[] IcoMacro(string text, Pdf417MacroOptions macro, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         var modules = EncodeMacro(text, macro, encodeOptions);
         return MatrixIcoRenderer.Render(modules, BuildPngOptions(renderOptions), BuildIcoOptions(renderOptions));
@@ -144,6 +158,7 @@ public static partial class Pdf417Code {
     /// <param name="encodeOptions">Encoding options.</param>
     /// <param name="renderOptions">Rendering options.</param>
     /// <param name="renderMode">Vector or raster output.</param>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static byte[] PdfMacro(string text, Pdf417MacroOptions macro, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, RenderMode renderMode = RenderMode.Vector) {
         var modules = EncodeMacro(text, macro, encodeOptions);
         return MatrixPdfRenderer.Render(modules, BuildPngOptions(renderOptions), renderMode);
@@ -157,6 +172,7 @@ public static partial class Pdf417Code {
     /// <param name="encodeOptions">Encoding options.</param>
     /// <param name="renderOptions">Rendering options.</param>
     /// <param name="renderMode">Vector or raster output.</param>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string EpsMacro(string text, Pdf417MacroOptions macro, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, RenderMode renderMode = RenderMode.Vector) {
         var modules = EncodeMacro(text, macro, encodeOptions);
         return MatrixEpsRenderer.Render(modules, BuildPngOptions(renderOptions), renderMode);
@@ -165,6 +181,7 @@ public static partial class Pdf417Code {
     /// <summary>
     /// Renders Macro PDF417 as ASCII.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string AsciiMacro(string text, Pdf417MacroOptions macro, Pdf417EncodeOptions? encodeOptions = null, MatrixAsciiRenderOptions? options = null) {
         var modules = EncodeMacro(text, macro, encodeOptions);
         return MatrixAsciiRenderer.Render(modules, options);

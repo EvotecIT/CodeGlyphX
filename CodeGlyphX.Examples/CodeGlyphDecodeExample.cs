@@ -6,7 +6,7 @@ namespace CodeGlyphX.Examples;
 
 internal static class CodeGlyphDecodeExample {
     public static void Run(string outputDir) {
-        var qrPng = QR.Png("Auto decode QR");
+        var qrPng = QrCode.Render("Auto decode QR", OutputFormat.Png).Data;
         if (CodeGlyph.TryDecodePng(qrPng, out var qrDecoded)) {
             qrDecoded.Text.WriteText(outputDir, "decode-any-qr.txt");
         }
@@ -26,11 +26,11 @@ internal static class CodeGlyphDecodeExample {
             }
         }
 
-        var barcodePng = Barcode.Png(BarcodeType.Code128, "CODE128-ANY", new BarcodeOptions {
+        var barcodePng = Barcode.Render(BarcodeType.Code128, "CODE128-ANY", OutputFormat.Png, new BarcodeOptions {
             ModuleSize = 3,
             QuietZone = 10,
             HeightModules = 40
-        });
+        }).Data;
         if (CodeGlyph.TryDecodePng(barcodePng, out var barcodeDecoded, expectedBarcode: BarcodeType.Code128, preferBarcode: true)) {
             barcodeDecoded.Text.WriteText(outputDir, "decode-any-barcode.txt");
         }

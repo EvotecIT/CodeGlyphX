@@ -18,6 +18,9 @@ internal static class QrPrintExample {
 
         opts.TargetSizePx = 8000;
         QR.Save(payload, Path.Combine(outputDir, "qr-print-8k.png"), opts);
-        QR.SavePdf(payload, Path.Combine(outputDir, "qr-print-8k.pdf"), opts, mode: RenderMode.Raster);
+        OutputWriter.Write(
+            Path.Combine(outputDir, "qr-print-8k.pdf"),
+            QrCode.Render(payload, OutputFormat.Pdf, opts, new RenderExtras { VectorMode = RenderMode.Raster })
+        );
     }
 }

@@ -208,7 +208,7 @@ internal static class QrDecodeScenarioPacks {
 
     private static QrDecodeScenarioData BuildResampledGenerated() {
         var options = new QrEasyOptions { ModuleSize = 8 };
-        var png = QrEasy.RenderPng(GeneratedPayload, options);
+        var png = QrCode.Render(GeneratedPayload, OutputFormat.Png, options).Data;
         if (!ImageReader.TryDecodeRgba32(png, out var baseRgba, out var baseWidth, out var baseHeight)) {
             throw new InvalidOperationException("Failed to decode generated resample PNG.");
         }
@@ -226,7 +226,7 @@ internal static class QrDecodeScenarioPacks {
 
     private static QrDecodeScenarioData BuildNoQuietGenerated() {
         var options = new QrEasyOptions { QuietZone = 0, ErrorCorrectionLevel = QrErrorCorrectionLevel.H };
-        var png = QrEasy.RenderPng(GeneratedPayload, options);
+        var png = QrCode.Render(GeneratedPayload, OutputFormat.Png, options).Data;
         if (!ImageReader.TryDecodeRgba32(png, out var rgba, out var width, out var height)) {
             throw new InvalidOperationException("Failed to decode generated no-quiet PNG.");
         }
@@ -241,7 +241,7 @@ internal static class QrDecodeScenarioPacks {
             TargetSizeIncludesQuietZone = true,
             QuietZone = 4
         };
-        var png = QrEasy.RenderPng(LongPayload, options);
+        var png = QrCode.Render(LongPayload, OutputFormat.Png, options).Data;
         if (!ImageReader.TryDecodeRgba32(png, out var rgba, out var width, out var height)) {
             throw new InvalidOperationException("Failed to decode generated long-payload PNG.");
         }

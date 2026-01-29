@@ -64,8 +64,13 @@ internal static class QrGlowExample {
         };
 
         QR.Save(payload, Path.Combine(outputDir, "qr-glow.png"), options);
-        QR.SavePdf(payload, Path.Combine(outputDir, "qr-glow.pdf"), options, RenderMode.Raster);
-        QR.SaveEps(payload, Path.Combine(outputDir, "qr-glow.eps"), options, RenderMode.Raster);
+        OutputWriter.Write(
+            Path.Combine(outputDir, "qr-glow.pdf"),
+            QrCode.Render(payload, OutputFormat.Pdf, options, new RenderExtras { VectorMode = RenderMode.Raster })
+        );
+        OutputWriter.Write(
+            Path.Combine(outputDir, "qr-glow.eps"),
+            QrCode.Render(payload, OutputFormat.Eps, options, new RenderExtras { VectorMode = RenderMode.Raster })
+        );
     }
 }
-
