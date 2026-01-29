@@ -176,275 +176,295 @@ public static partial class Barcode {
         /// </summary>
         public Barcode1D Encode() => Barcode.Encode(_type, _content);
 
+        private RenderedOutput Render(OutputFormat format, RenderExtras? extras = null) {
+            return Barcode.Render(_type, _content, format, Options, extras);
+        }
+
         /// <summary>
         /// Renders PNG bytes.
         /// </summary>
-        public byte[] Png() => Barcode.Png(_type, _content, Options);
+        public byte[] Png() => Render(OutputFormat.Png).Data;
 
         /// <summary>
         /// Renders SVG text.
         /// </summary>
-        public string Svg() => Barcode.Svg(_type, _content, Options);
+        public string Svg() => Render(OutputFormat.Svg).GetText();
 
         /// <summary>
         /// Renders HTML text.
         /// </summary>
-        public string Html() => Barcode.Html(_type, _content, Options);
+        public string Html() => Render(OutputFormat.Html).GetText();
 
         /// <summary>
         /// Renders JPEG bytes.
         /// </summary>
-        public byte[] Jpeg() => Barcode.Jpeg(_type, _content, Options);
+        public byte[] Jpeg() => Render(OutputFormat.Jpeg).Data;
 
         /// <summary>
         /// Renders BMP bytes.
         /// </summary>
-        public byte[] Bmp() => Barcode.Bmp(_type, _content, Options);
+        public byte[] Bmp() => Render(OutputFormat.Bmp).Data;
 
         /// <summary>
         /// Renders PPM bytes.
         /// </summary>
-        public byte[] Ppm() => Barcode.Ppm(_type, _content, Options);
+        public byte[] Ppm() => Render(OutputFormat.Ppm).Data;
 
         /// <summary>
         /// Renders PBM bytes.
         /// </summary>
-        public byte[] Pbm() => Barcode.Pbm(_type, _content, Options);
+        public byte[] Pbm() => Render(OutputFormat.Pbm).Data;
 
         /// <summary>
         /// Renders PGM bytes.
         /// </summary>
-        public byte[] Pgm() => Barcode.Pgm(_type, _content, Options);
+        public byte[] Pgm() => Render(OutputFormat.Pgm).Data;
 
         /// <summary>
         /// Renders PAM bytes.
         /// </summary>
-        public byte[] Pam() => Barcode.Pam(_type, _content, Options);
+        public byte[] Pam() => Render(OutputFormat.Pam).Data;
 
         /// <summary>
         /// Renders XBM text.
         /// </summary>
-        public string Xbm() => Barcode.Xbm(_type, _content, Options);
+        public string Xbm() => Render(OutputFormat.Xbm).GetText();
 
         /// <summary>
         /// Renders XPM text.
         /// </summary>
-        public string Xpm() => Barcode.Xpm(_type, _content, Options);
+        public string Xpm() => Render(OutputFormat.Xpm).GetText();
 
         /// <summary>
         /// Renders TGA bytes.
         /// </summary>
-        public byte[] Tga() => Barcode.Tga(_type, _content, Options);
+        public byte[] Tga() => Render(OutputFormat.Tga).Data;
 
         /// <summary>
         /// Renders ICO bytes.
         /// </summary>
-        public byte[] Ico() => Barcode.Ico(_type, _content, Options);
+        public byte[] Ico() => Render(OutputFormat.Ico).Data;
 
         /// <summary>
         /// Renders SVGZ bytes.
         /// </summary>
-        public byte[] Svgz() => Barcode.Svgz(_type, _content, Options);
+        public byte[] Svgz() => Render(OutputFormat.Svgz).Data;
 
         /// <summary>
         /// Renders PDF bytes.
         /// </summary>
         /// <param name="mode">Vector or raster output.</param>
-        public byte[] Pdf(RenderMode mode = RenderMode.Vector) => Barcode.Pdf(_type, _content, Options, mode);
+        public byte[] Pdf(RenderMode mode = RenderMode.Vector) => Render(OutputFormat.Pdf, new RenderExtras { VectorMode = mode }).Data;
 
         /// <summary>
         /// Renders EPS text.
         /// </summary>
         /// <param name="mode">Vector or raster output.</param>
-        public string Eps(RenderMode mode = RenderMode.Vector) => Barcode.Eps(_type, _content, Options, mode);
+        public string Eps(RenderMode mode = RenderMode.Vector) => Render(OutputFormat.Eps, new RenderExtras { VectorMode = mode }).GetText();
 
         /// <summary>
         /// Renders ASCII text.
         /// </summary>
-        public string Ascii(BarcodeAsciiRenderOptions? options = null) => Barcode.Ascii(_type, _content, options);
+        public string Ascii(BarcodeAsciiRenderOptions? options = null) => Render(OutputFormat.Ascii, new RenderExtras { BarcodeAscii = options }).GetText();
 
         /// <summary>
         /// Saves PNG to a file.
         /// </summary>
-        public string SavePng(string path) => Barcode.SavePng(_type, _content, path, Options);
+        public string SavePng(string path) => OutputWriter.Write(path, Render(OutputFormat.Png));
 
         /// <summary>
         /// Saves PNG to a stream.
         /// </summary>
-        public void SavePng(Stream stream) => Barcode.SavePng(_type, _content, stream, Options);
+        public void SavePng(Stream stream) => OutputWriter.Write(stream, Render(OutputFormat.Png));
 
         /// <summary>
         /// Saves SVG to a file.
         /// </summary>
-        public string SaveSvg(string path) => Barcode.SaveSvg(_type, _content, path, Options);
+        public string SaveSvg(string path) => OutputWriter.Write(path, Render(OutputFormat.Svg));
 
         /// <summary>
         /// Saves SVG to a stream.
         /// </summary>
-        public void SaveSvg(Stream stream) => Barcode.SaveSvg(_type, _content, stream, Options);
+        public void SaveSvg(Stream stream) => OutputWriter.Write(stream, Render(OutputFormat.Svg));
 
         /// <summary>
         /// Saves SVGZ to a file.
         /// </summary>
-        public string SaveSvgz(string path) => Barcode.SaveSvgz(_type, _content, path, Options);
+        public string SaveSvgz(string path) => OutputWriter.Write(path, Render(OutputFormat.Svgz));
 
         /// <summary>
         /// Saves SVGZ to a stream.
         /// </summary>
-        public void SaveSvgz(Stream stream) => Barcode.SaveSvgz(_type, _content, stream, Options);
+        public void SaveSvgz(Stream stream) => OutputWriter.Write(stream, Render(OutputFormat.Svgz));
 
         /// <summary>
         /// Saves HTML to a file.
         /// </summary>
-        public string SaveHtml(string path, string? title = null) => Barcode.SaveHtml(_type, _content, path, Options, title);
+        public string SaveHtml(string path, string? title = null) {
+            var extras = string.IsNullOrEmpty(title) ? null : new RenderExtras { HtmlTitle = title };
+            return OutputWriter.Write(path, Render(OutputFormat.Html, extras));
+        }
 
         /// <summary>
         /// Saves HTML to a stream.
         /// </summary>
-        public void SaveHtml(Stream stream, string? title = null) => Barcode.SaveHtml(_type, _content, stream, Options, title);
+        public void SaveHtml(Stream stream, string? title = null) {
+            var extras = string.IsNullOrEmpty(title) ? null : new RenderExtras { HtmlTitle = title };
+            OutputWriter.Write(stream, Render(OutputFormat.Html, extras));
+        }
 
         /// <summary>
         /// Saves JPEG to a file.
         /// </summary>
-        public string SaveJpeg(string path) => Barcode.SaveJpeg(_type, _content, path, Options);
+        public string SaveJpeg(string path) => OutputWriter.Write(path, Render(OutputFormat.Jpeg));
 
         /// <summary>
         /// Saves JPEG to a stream.
         /// </summary>
-        public void SaveJpeg(Stream stream) => Barcode.SaveJpeg(_type, _content, stream, Options);
+        public void SaveJpeg(Stream stream) => OutputWriter.Write(stream, Render(OutputFormat.Jpeg));
 
         /// <summary>
         /// Saves WebP to a file.
         /// </summary>
-        public string SaveWebp(string path) => Barcode.SaveWebp(_type, _content, path, Options);
+        public string SaveWebp(string path) => OutputWriter.Write(path, Render(OutputFormat.Webp));
 
         /// <summary>
         /// Saves WebP to a stream.
         /// </summary>
-        public void SaveWebp(Stream stream) => Barcode.SaveWebp(_type, _content, stream, Options);
+        public void SaveWebp(Stream stream) => OutputWriter.Write(stream, Render(OutputFormat.Webp));
 
         /// <summary>
         /// Saves BMP to a file.
         /// </summary>
-        public string SaveBmp(string path) => Barcode.SaveBmp(_type, _content, path, Options);
+        public string SaveBmp(string path) => OutputWriter.Write(path, Render(OutputFormat.Bmp));
 
         /// <summary>
         /// Saves BMP to a stream.
         /// </summary>
-        public void SaveBmp(Stream stream) => Barcode.SaveBmp(_type, _content, stream, Options);
+        public void SaveBmp(Stream stream) => OutputWriter.Write(stream, Render(OutputFormat.Bmp));
 
         /// <summary>
         /// Saves PGM to a file.
         /// </summary>
-        public string SavePgm(string path) => Barcode.SavePgm(_type, _content, path, Options);
+        public string SavePgm(string path) => OutputWriter.Write(path, Render(OutputFormat.Pgm));
 
         /// <summary>
         /// Saves PGM to a stream.
         /// </summary>
-        public void SavePgm(Stream stream) => Barcode.SavePgm(_type, _content, stream, Options);
+        public void SavePgm(Stream stream) => OutputWriter.Write(stream, Render(OutputFormat.Pgm));
 
         /// <summary>
         /// Saves PAM to a file.
         /// </summary>
-        public string SavePam(string path) => Barcode.SavePam(_type, _content, path, Options);
+        public string SavePam(string path) => OutputWriter.Write(path, Render(OutputFormat.Pam));
 
         /// <summary>
         /// Saves PAM to a stream.
         /// </summary>
-        public void SavePam(Stream stream) => Barcode.SavePam(_type, _content, stream, Options);
+        public void SavePam(Stream stream) => OutputWriter.Write(stream, Render(OutputFormat.Pam));
 
         /// <summary>
         /// Saves XBM to a file.
         /// </summary>
-        public string SaveXbm(string path) => Barcode.SaveXbm(_type, _content, path, Options);
+        public string SaveXbm(string path) => OutputWriter.Write(path, Render(OutputFormat.Xbm));
 
         /// <summary>
         /// Saves XBM to a stream.
         /// </summary>
-        public void SaveXbm(Stream stream) => Barcode.SaveXbm(_type, _content, stream, Options);
+        public void SaveXbm(Stream stream) => OutputWriter.Write(stream, Render(OutputFormat.Xbm));
 
         /// <summary>
         /// Saves XPM to a file.
         /// </summary>
-        public string SaveXpm(string path) => Barcode.SaveXpm(_type, _content, path, Options);
+        public string SaveXpm(string path) => OutputWriter.Write(path, Render(OutputFormat.Xpm));
 
         /// <summary>
         /// Saves XPM to a stream.
         /// </summary>
-        public void SaveXpm(Stream stream) => Barcode.SaveXpm(_type, _content, stream, Options);
+        public void SaveXpm(Stream stream) => OutputWriter.Write(stream, Render(OutputFormat.Xpm));
 
         /// <summary>
         /// Saves PPM to a file.
         /// </summary>
-        public string SavePpm(string path) => Barcode.SavePpm(_type, _content, path, Options);
+        public string SavePpm(string path) => OutputWriter.Write(path, Render(OutputFormat.Ppm));
 
         /// <summary>
         /// Saves PPM to a stream.
         /// </summary>
-        public void SavePpm(Stream stream) => Barcode.SavePpm(_type, _content, stream, Options);
+        public void SavePpm(Stream stream) => OutputWriter.Write(stream, Render(OutputFormat.Ppm));
 
         /// <summary>
         /// Saves PBM to a file.
         /// </summary>
-        public string SavePbm(string path) => Barcode.SavePbm(_type, _content, path, Options);
+        public string SavePbm(string path) => OutputWriter.Write(path, Render(OutputFormat.Pbm));
 
         /// <summary>
         /// Saves PBM to a stream.
         /// </summary>
-        public void SavePbm(Stream stream) => Barcode.SavePbm(_type, _content, stream, Options);
+        public void SavePbm(Stream stream) => OutputWriter.Write(stream, Render(OutputFormat.Pbm));
 
         /// <summary>
         /// Saves TGA to a file.
         /// </summary>
-        public string SaveTga(string path) => Barcode.SaveTga(_type, _content, path, Options);
+        public string SaveTga(string path) => OutputWriter.Write(path, Render(OutputFormat.Tga));
 
         /// <summary>
         /// Saves TGA to a stream.
         /// </summary>
-        public void SaveTga(Stream stream) => Barcode.SaveTga(_type, _content, stream, Options);
+        public void SaveTga(Stream stream) => OutputWriter.Write(stream, Render(OutputFormat.Tga));
 
         /// <summary>
         /// Saves ICO to a file.
         /// </summary>
-        public string SaveIco(string path) => Barcode.SaveIco(_type, _content, path, Options);
+        public string SaveIco(string path) => OutputWriter.Write(path, Render(OutputFormat.Ico));
 
         /// <summary>
         /// Saves ICO to a stream.
         /// </summary>
-        public void SaveIco(Stream stream) => Barcode.SaveIco(_type, _content, stream, Options);
+        public void SaveIco(Stream stream) => OutputWriter.Write(stream, Render(OutputFormat.Ico));
 
         /// <summary>
         /// Saves PDF to a file.
         /// </summary>
         /// <param name="path">Output file path.</param>
         /// <param name="mode">Vector or raster output.</param>
-        public string SavePdf(string path, RenderMode mode = RenderMode.Vector) => Barcode.SavePdf(_type, _content, path, Options, mode);
+        public string SavePdf(string path, RenderMode mode = RenderMode.Vector) {
+            return OutputWriter.Write(path, Render(OutputFormat.Pdf, new RenderExtras { VectorMode = mode }));
+        }
 
         /// <summary>
         /// Saves PDF to a stream.
         /// </summary>
         /// <param name="stream">Destination stream.</param>
         /// <param name="mode">Vector or raster output.</param>
-        public void SavePdf(Stream stream, RenderMode mode = RenderMode.Vector) => Barcode.SavePdf(_type, _content, stream, Options, mode);
+        public void SavePdf(Stream stream, RenderMode mode = RenderMode.Vector) {
+            OutputWriter.Write(stream, Render(OutputFormat.Pdf, new RenderExtras { VectorMode = mode }));
+        }
 
         /// <summary>
         /// Saves EPS to a file.
         /// </summary>
         /// <param name="path">Output file path.</param>
         /// <param name="mode">Vector or raster output.</param>
-        public string SaveEps(string path, RenderMode mode = RenderMode.Vector) => Barcode.SaveEps(_type, _content, path, Options, mode);
+        public string SaveEps(string path, RenderMode mode = RenderMode.Vector) {
+            return OutputWriter.Write(path, Render(OutputFormat.Eps, new RenderExtras { VectorMode = mode }));
+        }
 
         /// <summary>
         /// Saves EPS to a stream.
         /// </summary>
         /// <param name="stream">Destination stream.</param>
         /// <param name="mode">Vector or raster output.</param>
-        public void SaveEps(Stream stream, RenderMode mode = RenderMode.Vector) => Barcode.SaveEps(_type, _content, stream, Options, mode);
+        public void SaveEps(Stream stream, RenderMode mode = RenderMode.Vector) {
+            OutputWriter.Write(stream, Render(OutputFormat.Eps, new RenderExtras { VectorMode = mode }));
+        }
 
         /// <summary>
         /// Saves ASCII to a file.
         /// </summary>
-        public string SaveAscii(string path, BarcodeAsciiRenderOptions? options = null) => Barcode.SaveAscii(_type, _content, path, options);
+        public string SaveAscii(string path, BarcodeAsciiRenderOptions? options = null) {
+            return OutputWriter.Write(path, Render(OutputFormat.Ascii, new RenderExtras { BarcodeAscii = options }));
+        }
 
         /// <summary>
         /// Saves based on file extension (.png/.svg/.html/.jpg/.bmp/.ppm/.pbm/.tga/.ico/.pdf/.eps). Defaults to PNG when no extension is provided.

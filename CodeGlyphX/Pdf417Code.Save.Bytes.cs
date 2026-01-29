@@ -30,6 +30,7 @@ public static partial class Pdf417Code {
     /// <summary>
     /// Saves PDF417 PNG to a file for byte payloads.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string SavePng(ReadOnlySpan<byte> data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         var png = Png(data, encodeOptions, renderOptions);
         return png.WriteBinary(path);
@@ -38,6 +39,7 @@ public static partial class Pdf417Code {
     /// <summary>
     /// Saves PDF417 PNG to a stream for byte payloads.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static void SavePng(ReadOnlySpan<byte> data, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         var modules = EncodeBytes(data, encodeOptions);
         MatrixPngRenderer.RenderToStream(modules, BuildPngOptions(renderOptions), stream);
@@ -46,6 +48,7 @@ public static partial class Pdf417Code {
     /// <summary>
     /// Saves PDF417 SVG to a file for byte payloads.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string SaveSvg(ReadOnlySpan<byte> data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         var svg = Svg(data, encodeOptions, renderOptions);
         return svg.WriteText(path);
@@ -54,6 +57,7 @@ public static partial class Pdf417Code {
     /// <summary>
     /// Saves PDF417 SVGZ to a file for byte payloads.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string SaveSvgz(ReadOnlySpan<byte> data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         var svgz = Svgz(data, encodeOptions, renderOptions);
         return svgz.WriteBinary(path);
@@ -62,6 +66,7 @@ public static partial class Pdf417Code {
     /// <summary>
     /// Saves PDF417 SVG to a stream for byte payloads.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static void SaveSvg(ReadOnlySpan<byte> data, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         var svg = Svg(data, encodeOptions, renderOptions);
         svg.WriteText(stream);
@@ -70,6 +75,7 @@ public static partial class Pdf417Code {
     /// <summary>
     /// Saves PDF417 SVGZ to a stream for byte payloads.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static void SaveSvgz(ReadOnlySpan<byte> data, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         var modules = EncodeBytes(data, encodeOptions);
         MatrixSvgzRenderer.RenderToStream(modules, BuildSvgOptions(renderOptions), stream);
@@ -78,6 +84,7 @@ public static partial class Pdf417Code {
     /// <summary>
     /// Saves PDF417 HTML to a file for byte payloads.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string SaveHtml(ReadOnlySpan<byte> data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, string? title = null) {
         var html = Html(data, encodeOptions, renderOptions);
         if (!string.IsNullOrEmpty(title)) {
@@ -89,6 +96,7 @@ public static partial class Pdf417Code {
     /// <summary>
     /// Saves PDF417 HTML to a stream for byte payloads.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static void SaveHtml(ReadOnlySpan<byte> data, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, string? title = null) {
         var html = Html(data, encodeOptions, renderOptions);
         if (!string.IsNullOrEmpty(title)) {
@@ -100,6 +108,7 @@ public static partial class Pdf417Code {
     /// <summary>
     /// Saves PDF417 JPEG to a file for byte payloads.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string SaveJpeg(ReadOnlySpan<byte> data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         var jpeg = Jpeg(data, encodeOptions, renderOptions);
         return jpeg.WriteBinary(path);
@@ -108,6 +117,7 @@ public static partial class Pdf417Code {
     /// <summary>
     /// Saves PDF417 WebP to a file for byte payloads.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string SaveWebp(ReadOnlySpan<byte> data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         var webp = Webp(data, encodeOptions, renderOptions);
         return webp.WriteBinary(path);
@@ -116,6 +126,7 @@ public static partial class Pdf417Code {
     /// <summary>
     /// Saves PDF417 BMP to a file for byte payloads.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string SaveBmp(ReadOnlySpan<byte> data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         var bmp = Bmp(data, encodeOptions, renderOptions);
         return bmp.WriteBinary(path);
@@ -124,6 +135,7 @@ public static partial class Pdf417Code {
     /// <summary>
     /// Saves PDF417 PPM to a file for byte payloads.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string SavePpm(ReadOnlySpan<byte> data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         var ppm = Ppm(data, encodeOptions, renderOptions);
         return ppm.WriteBinary(path);
@@ -132,6 +144,7 @@ public static partial class Pdf417Code {
     /// <summary>
     /// Saves PDF417 PBM to a file for byte payloads.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string SavePbm(ReadOnlySpan<byte> data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         var pbm = Pbm(data, encodeOptions, renderOptions);
         return pbm.WriteBinary(path);
@@ -140,6 +153,7 @@ public static partial class Pdf417Code {
     /// <summary>
     /// Saves PDF417 PGM to a file for byte payloads.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string SavePgm(ReadOnlySpan<byte> data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         var pgm = Pgm(data, encodeOptions, renderOptions);
         return pgm.WriteBinary(path);
@@ -148,6 +162,7 @@ public static partial class Pdf417Code {
     /// <summary>
     /// Saves PDF417 PAM to a file for byte payloads.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string SavePam(ReadOnlySpan<byte> data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         var pam = Pam(data, encodeOptions, renderOptions);
         return pam.WriteBinary(path);
@@ -156,6 +171,7 @@ public static partial class Pdf417Code {
     /// <summary>
     /// Saves PDF417 XBM to a file for byte payloads.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string SaveXbm(ReadOnlySpan<byte> data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         var xbm = Xbm(data, encodeOptions, renderOptions);
         return xbm.WriteText(path);
@@ -164,6 +180,7 @@ public static partial class Pdf417Code {
     /// <summary>
     /// Saves PDF417 XPM to a file for byte payloads.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string SaveXpm(ReadOnlySpan<byte> data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         var xpm = Xpm(data, encodeOptions, renderOptions);
         return xpm.WriteText(path);
@@ -172,6 +189,7 @@ public static partial class Pdf417Code {
     /// <summary>
     /// Saves PDF417 TGA to a file for byte payloads.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string SaveTga(ReadOnlySpan<byte> data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         var tga = Tga(data, encodeOptions, renderOptions);
         return tga.WriteBinary(path);
@@ -180,6 +198,7 @@ public static partial class Pdf417Code {
     /// <summary>
     /// Saves PDF417 ICO to a file for byte payloads.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string SaveIco(ReadOnlySpan<byte> data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         var ico = Ico(data, encodeOptions, renderOptions);
         return ico.WriteBinary(path);
@@ -193,6 +212,7 @@ public static partial class Pdf417Code {
     /// <param name="encodeOptions">Encoding options.</param>
     /// <param name="renderOptions">Rendering options.</param>
     /// <param name="renderMode">Vector or raster output.</param>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string SavePdf(ReadOnlySpan<byte> data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, RenderMode renderMode = RenderMode.Vector) {
         var pdf = Pdf(data, encodeOptions, renderOptions, renderMode);
         return pdf.WriteBinary(path);
@@ -206,6 +226,7 @@ public static partial class Pdf417Code {
     /// <param name="encodeOptions">Encoding options.</param>
     /// <param name="renderOptions">Rendering options.</param>
     /// <param name="renderMode">Vector or raster output.</param>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string SaveEps(ReadOnlySpan<byte> data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, RenderMode renderMode = RenderMode.Vector) {
         var eps = Eps(data, encodeOptions, renderOptions, renderMode);
         return eps.WriteText(path);
@@ -214,6 +235,7 @@ public static partial class Pdf417Code {
     /// <summary>
     /// Saves PDF417 JPEG to a stream for byte payloads.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static void SaveJpeg(ReadOnlySpan<byte> data, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         var modules = EncodeBytes(data, encodeOptions);
         var opts = BuildPngOptions(renderOptions);
@@ -224,6 +246,7 @@ public static partial class Pdf417Code {
     /// <summary>
     /// Saves PDF417 WebP to a stream for byte payloads.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static void SaveWebp(ReadOnlySpan<byte> data, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         var modules = EncodeBytes(data, encodeOptions);
         var opts = BuildPngOptions(renderOptions);
@@ -234,6 +257,7 @@ public static partial class Pdf417Code {
     /// <summary>
     /// Saves PDF417 BMP to a stream for byte payloads.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static void SaveBmp(ReadOnlySpan<byte> data, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         var modules = EncodeBytes(data, encodeOptions);
         MatrixBmpRenderer.RenderToStream(modules, BuildPngOptions(renderOptions), stream);
@@ -242,6 +266,7 @@ public static partial class Pdf417Code {
     /// <summary>
     /// Saves PDF417 PPM to a stream for byte payloads.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static void SavePpm(ReadOnlySpan<byte> data, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         var modules = EncodeBytes(data, encodeOptions);
         MatrixPpmRenderer.RenderToStream(modules, BuildPngOptions(renderOptions), stream);
@@ -250,6 +275,7 @@ public static partial class Pdf417Code {
     /// <summary>
     /// Saves PDF417 PBM to a stream for byte payloads.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static void SavePbm(ReadOnlySpan<byte> data, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         var modules = EncodeBytes(data, encodeOptions);
         MatrixPbmRenderer.RenderToStream(modules, BuildPngOptions(renderOptions), stream);
@@ -258,6 +284,7 @@ public static partial class Pdf417Code {
     /// <summary>
     /// Saves PDF417 PGM to a stream for byte payloads.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static void SavePgm(ReadOnlySpan<byte> data, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         var modules = EncodeBytes(data, encodeOptions);
         MatrixPgmRenderer.RenderToStream(modules, BuildPngOptions(renderOptions), stream);
@@ -266,6 +293,7 @@ public static partial class Pdf417Code {
     /// <summary>
     /// Saves PDF417 PAM to a stream for byte payloads.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static void SavePam(ReadOnlySpan<byte> data, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         var modules = EncodeBytes(data, encodeOptions);
         MatrixPamRenderer.RenderToStream(modules, BuildPngOptions(renderOptions), stream);
@@ -274,6 +302,7 @@ public static partial class Pdf417Code {
     /// <summary>
     /// Saves PDF417 XBM to a stream for byte payloads.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static void SaveXbm(ReadOnlySpan<byte> data, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         var modules = EncodeBytes(data, encodeOptions);
         MatrixXbmRenderer.RenderToStream(modules, BuildPngOptions(renderOptions), stream);
@@ -282,6 +311,7 @@ public static partial class Pdf417Code {
     /// <summary>
     /// Saves PDF417 XPM to a stream for byte payloads.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static void SaveXpm(ReadOnlySpan<byte> data, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         var modules = EncodeBytes(data, encodeOptions);
         MatrixXpmRenderer.RenderToStream(modules, BuildPngOptions(renderOptions), stream);
@@ -290,6 +320,7 @@ public static partial class Pdf417Code {
     /// <summary>
     /// Saves PDF417 TGA to a stream for byte payloads.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static void SaveTga(ReadOnlySpan<byte> data, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         var modules = EncodeBytes(data, encodeOptions);
         MatrixTgaRenderer.RenderToStream(modules, BuildPngOptions(renderOptions), stream);
@@ -298,6 +329,7 @@ public static partial class Pdf417Code {
     /// <summary>
     /// Saves PDF417 ICO to a stream for byte payloads.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static void SaveIco(ReadOnlySpan<byte> data, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         var modules = EncodeBytes(data, encodeOptions);
         MatrixIcoRenderer.RenderToStream(modules, BuildPngOptions(renderOptions), stream, BuildIcoOptions(renderOptions));
@@ -311,6 +343,7 @@ public static partial class Pdf417Code {
     /// <param name="encodeOptions">Encoding options.</param>
     /// <param name="renderOptions">Rendering options.</param>
     /// <param name="renderMode">Vector or raster output.</param>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static void SavePdf(ReadOnlySpan<byte> data, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, RenderMode renderMode = RenderMode.Vector) {
         var modules = EncodeBytes(data, encodeOptions);
         MatrixPdfRenderer.RenderToStream(modules, BuildPngOptions(renderOptions), stream, renderMode);
@@ -324,6 +357,7 @@ public static partial class Pdf417Code {
     /// <param name="encodeOptions">Encoding options.</param>
     /// <param name="renderOptions">Rendering options.</param>
     /// <param name="renderMode">Vector or raster output.</param>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static void SaveEps(ReadOnlySpan<byte> data, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, RenderMode renderMode = RenderMode.Vector) {
         var modules = EncodeBytes(data, encodeOptions);
         MatrixEpsRenderer.RenderToStream(modules, BuildPngOptions(renderOptions), stream, renderMode);

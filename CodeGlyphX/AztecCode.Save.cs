@@ -27,6 +27,7 @@ public static partial class AztecCode {
     /// <summary>
     /// Saves Aztec PNG to a file.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string SavePng(string text, string path, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         return RenderIO.WriteBinary(path, Png(text, encodeOptions, renderOptions));
     }
@@ -34,6 +35,7 @@ public static partial class AztecCode {
     /// <summary>
     /// Saves Aztec PNG to a stream.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static void SavePng(string text, Stream stream, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         RenderIO.WriteBinary(stream, Png(text, encodeOptions, renderOptions));
     }
@@ -41,6 +43,7 @@ public static partial class AztecCode {
     /// <summary>
     /// Saves Aztec SVG to a file.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string SaveSvg(string text, string path, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         return RenderIO.WriteText(path, Svg(text, encodeOptions, renderOptions));
     }
@@ -48,6 +51,7 @@ public static partial class AztecCode {
     /// <summary>
     /// Saves Aztec SVGZ to a file.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string SaveSvgz(string text, string path, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         return RenderIO.WriteBinary(path, Svgz(text, encodeOptions, renderOptions));
     }
@@ -55,6 +59,7 @@ public static partial class AztecCode {
     /// <summary>
     /// Saves Aztec SVG to a stream.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static void SaveSvg(string text, Stream stream, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         RenderIO.WriteText(stream, Svg(text, encodeOptions, renderOptions));
     }
@@ -62,6 +67,7 @@ public static partial class AztecCode {
     /// <summary>
     /// Saves Aztec SVGZ to a stream.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static void SaveSvgz(string text, Stream stream, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         RenderIO.WriteBinary(stream, Svgz(text, encodeOptions, renderOptions));
     }
@@ -69,6 +75,7 @@ public static partial class AztecCode {
     /// <summary>
     /// Saves Aztec HTML to a file.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string SaveHtml(string text, string path, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, string? title = null) {
         var html = Html(text, encodeOptions, renderOptions);
         if (!string.IsNullOrEmpty(title)) html = html.WrapHtml(title);
@@ -78,6 +85,7 @@ public static partial class AztecCode {
     /// <summary>
     /// Saves Aztec HTML to a stream.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static void SaveHtml(string text, Stream stream, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, string? title = null) {
         var html = Html(text, encodeOptions, renderOptions);
         if (!string.IsNullOrEmpty(title)) html = html.WrapHtml(title);
@@ -87,6 +95,7 @@ public static partial class AztecCode {
     /// <summary>
     /// Saves Aztec JPEG to a file.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string SaveJpeg(string text, string path, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         return RenderIO.WriteBinary(path, Jpeg(text, encodeOptions, renderOptions));
     }
@@ -94,6 +103,7 @@ public static partial class AztecCode {
     /// <summary>
     /// Saves Aztec JPEG to a stream.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static void SaveJpeg(string text, Stream stream, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         RenderIO.WriteBinary(stream, Jpeg(text, encodeOptions, renderOptions));
     }
@@ -101,6 +111,7 @@ public static partial class AztecCode {
     /// <summary>
     /// Saves Aztec WebP to a file.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string SaveWebp(string text, string path, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         return RenderIO.WriteBinary(path, Webp(text, encodeOptions, renderOptions));
     }
@@ -108,6 +119,7 @@ public static partial class AztecCode {
     /// <summary>
     /// Saves Aztec WebP to a stream.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static void SaveWebp(string text, Stream stream, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         RenderIO.WriteBinary(stream, Webp(text, encodeOptions, renderOptions));
     }
@@ -115,6 +127,7 @@ public static partial class AztecCode {
     /// <summary>
     /// Saves Aztec BMP to a file.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string SaveBmp(string text, string path, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         return RenderIO.WriteBinary(path, Bmp(text, encodeOptions, renderOptions));
     }
@@ -122,6 +135,7 @@ public static partial class AztecCode {
     /// <summary>
     /// Saves Aztec BMP to a stream.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static void SaveBmp(string text, Stream stream, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         RenderIO.WriteBinary(stream, Bmp(text, encodeOptions, renderOptions));
     }
@@ -129,6 +143,7 @@ public static partial class AztecCode {
     /// <summary>
     /// Saves Aztec PPM to a file.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string SavePpm(string text, string path, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         return RenderIO.WriteBinary(path, Ppm(text, encodeOptions, renderOptions));
     }
@@ -136,6 +151,7 @@ public static partial class AztecCode {
     /// <summary>
     /// Saves Aztec PPM to a stream.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static void SavePpm(string text, Stream stream, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         RenderIO.WriteBinary(stream, Ppm(text, encodeOptions, renderOptions));
     }
@@ -143,6 +159,7 @@ public static partial class AztecCode {
     /// <summary>
     /// Saves Aztec PBM to a file.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string SavePbm(string text, string path, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         return RenderIO.WriteBinary(path, Pbm(text, encodeOptions, renderOptions));
     }
@@ -150,6 +167,7 @@ public static partial class AztecCode {
     /// <summary>
     /// Saves Aztec PBM to a stream.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static void SavePbm(string text, Stream stream, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         RenderIO.WriteBinary(stream, Pbm(text, encodeOptions, renderOptions));
     }
@@ -157,6 +175,7 @@ public static partial class AztecCode {
     /// <summary>
     /// Saves Aztec PGM to a file.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string SavePgm(string text, string path, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         return RenderIO.WriteBinary(path, Pgm(text, encodeOptions, renderOptions));
     }
@@ -164,6 +183,7 @@ public static partial class AztecCode {
     /// <summary>
     /// Saves Aztec PGM to a stream.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static void SavePgm(string text, Stream stream, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         RenderIO.WriteBinary(stream, Pgm(text, encodeOptions, renderOptions));
     }
@@ -171,6 +191,7 @@ public static partial class AztecCode {
     /// <summary>
     /// Saves Aztec PAM to a file.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string SavePam(string text, string path, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         return RenderIO.WriteBinary(path, Pam(text, encodeOptions, renderOptions));
     }
@@ -178,6 +199,7 @@ public static partial class AztecCode {
     /// <summary>
     /// Saves Aztec PAM to a stream.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static void SavePam(string text, Stream stream, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         RenderIO.WriteBinary(stream, Pam(text, encodeOptions, renderOptions));
     }
@@ -185,6 +207,7 @@ public static partial class AztecCode {
     /// <summary>
     /// Saves Aztec XBM to a file.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string SaveXbm(string text, string path, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         return RenderIO.WriteText(path, Xbm(text, encodeOptions, renderOptions));
     }
@@ -192,6 +215,7 @@ public static partial class AztecCode {
     /// <summary>
     /// Saves Aztec XBM to a stream.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static void SaveXbm(string text, Stream stream, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         RenderIO.WriteText(stream, Xbm(text, encodeOptions, renderOptions));
     }
@@ -199,6 +223,7 @@ public static partial class AztecCode {
     /// <summary>
     /// Saves Aztec XPM to a file.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string SaveXpm(string text, string path, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         return RenderIO.WriteText(path, Xpm(text, encodeOptions, renderOptions));
     }
@@ -206,6 +231,7 @@ public static partial class AztecCode {
     /// <summary>
     /// Saves Aztec XPM to a stream.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static void SaveXpm(string text, Stream stream, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         RenderIO.WriteText(stream, Xpm(text, encodeOptions, renderOptions));
     }
@@ -213,6 +239,7 @@ public static partial class AztecCode {
     /// <summary>
     /// Saves Aztec TGA to a file.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string SaveTga(string text, string path, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         return RenderIO.WriteBinary(path, Tga(text, encodeOptions, renderOptions));
     }
@@ -220,6 +247,7 @@ public static partial class AztecCode {
     /// <summary>
     /// Saves Aztec TGA to a stream.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static void SaveTga(string text, Stream stream, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         RenderIO.WriteBinary(stream, Tga(text, encodeOptions, renderOptions));
     }
@@ -227,6 +255,7 @@ public static partial class AztecCode {
     /// <summary>
     /// Saves Aztec ICO to a file.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string SaveIco(string text, string path, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         return RenderIO.WriteBinary(path, Ico(text, encodeOptions, renderOptions));
     }
@@ -234,6 +263,7 @@ public static partial class AztecCode {
     /// <summary>
     /// Saves Aztec ICO to a stream.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static void SaveIco(string text, Stream stream, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         RenderIO.WriteBinary(stream, Ico(text, encodeOptions, renderOptions));
     }
@@ -241,6 +271,7 @@ public static partial class AztecCode {
     /// <summary>
     /// Saves Aztec PDF to a file.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string SavePdf(string text, string path, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, RenderMode renderMode = RenderMode.Vector) {
         return RenderIO.WriteBinary(path, Pdf(text, encodeOptions, renderOptions, renderMode));
     }
@@ -248,6 +279,7 @@ public static partial class AztecCode {
     /// <summary>
     /// Saves Aztec PDF to a stream.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static void SavePdf(string text, Stream stream, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, RenderMode renderMode = RenderMode.Vector) {
         RenderIO.WriteBinary(stream, Pdf(text, encodeOptions, renderOptions, renderMode));
     }
@@ -255,6 +287,7 @@ public static partial class AztecCode {
     /// <summary>
     /// Saves Aztec EPS to a file.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string SaveEps(string text, string path, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, RenderMode renderMode = RenderMode.Vector) {
         return RenderIO.WriteText(path, Eps(text, encodeOptions, renderOptions, renderMode));
     }
@@ -262,6 +295,7 @@ public static partial class AztecCode {
     /// <summary>
     /// Saves Aztec EPS to a stream.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static void SaveEps(string text, Stream stream, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, RenderMode renderMode = RenderMode.Vector) {
         RenderIO.WriteText(stream, Eps(text, encodeOptions, renderOptions, renderMode));
     }
@@ -269,6 +303,7 @@ public static partial class AztecCode {
     /// <summary>
     /// Saves Aztec PNG to a file.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string SavePng(ReadOnlySpan<byte> data, string path, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         return RenderIO.WriteBinary(path, Png(data, encodeOptions, renderOptions));
     }
@@ -276,6 +311,7 @@ public static partial class AztecCode {
     /// <summary>
     /// Saves Aztec PNG to a stream.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static void SavePng(ReadOnlySpan<byte> data, Stream stream, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         RenderIO.WriteBinary(stream, Png(data, encodeOptions, renderOptions));
     }
@@ -283,6 +319,7 @@ public static partial class AztecCode {
     /// <summary>
     /// Saves Aztec SVG to a file.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string SaveSvg(ReadOnlySpan<byte> data, string path, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         return RenderIO.WriteText(path, Svg(data, encodeOptions, renderOptions));
     }
@@ -290,6 +327,7 @@ public static partial class AztecCode {
     /// <summary>
     /// Saves Aztec SVG to a stream.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static void SaveSvg(ReadOnlySpan<byte> data, Stream stream, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         RenderIO.WriteText(stream, Svg(data, encodeOptions, renderOptions));
     }
@@ -297,6 +335,7 @@ public static partial class AztecCode {
     /// <summary>
     /// Saves Aztec HTML to a file.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string SaveHtml(ReadOnlySpan<byte> data, string path, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, string? title = null) {
         var html = Html(data, encodeOptions, renderOptions);
         if (!string.IsNullOrEmpty(title)) html = html.WrapHtml(title);
@@ -306,6 +345,7 @@ public static partial class AztecCode {
     /// <summary>
     /// Saves Aztec HTML to a stream.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static void SaveHtml(ReadOnlySpan<byte> data, Stream stream, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, string? title = null) {
         var html = Html(data, encodeOptions, renderOptions);
         if (!string.IsNullOrEmpty(title)) html = html.WrapHtml(title);
@@ -315,6 +355,7 @@ public static partial class AztecCode {
     /// <summary>
     /// Saves Aztec JPEG to a file.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string SaveJpeg(ReadOnlySpan<byte> data, string path, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         return RenderIO.WriteBinary(path, Jpeg(data, encodeOptions, renderOptions));
     }
@@ -322,6 +363,7 @@ public static partial class AztecCode {
     /// <summary>
     /// Saves Aztec JPEG to a stream.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static void SaveJpeg(ReadOnlySpan<byte> data, Stream stream, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         RenderIO.WriteBinary(stream, Jpeg(data, encodeOptions, renderOptions));
     }
@@ -329,6 +371,7 @@ public static partial class AztecCode {
     /// <summary>
     /// Saves Aztec WebP to a file.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string SaveWebp(ReadOnlySpan<byte> data, string path, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         return RenderIO.WriteBinary(path, Webp(data, encodeOptions, renderOptions));
     }
@@ -336,6 +379,7 @@ public static partial class AztecCode {
     /// <summary>
     /// Saves Aztec WebP to a stream.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static void SaveWebp(ReadOnlySpan<byte> data, Stream stream, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         RenderIO.WriteBinary(stream, Webp(data, encodeOptions, renderOptions));
     }
@@ -343,6 +387,7 @@ public static partial class AztecCode {
     /// <summary>
     /// Saves Aztec BMP to a file.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string SaveBmp(ReadOnlySpan<byte> data, string path, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         return RenderIO.WriteBinary(path, Bmp(data, encodeOptions, renderOptions));
     }
@@ -350,6 +395,7 @@ public static partial class AztecCode {
     /// <summary>
     /// Saves Aztec BMP to a stream.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static void SaveBmp(ReadOnlySpan<byte> data, Stream stream, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         RenderIO.WriteBinary(stream, Bmp(data, encodeOptions, renderOptions));
     }
@@ -357,6 +403,7 @@ public static partial class AztecCode {
     /// <summary>
     /// Saves Aztec PPM to a file.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string SavePpm(ReadOnlySpan<byte> data, string path, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         return RenderIO.WriteBinary(path, Ppm(data, encodeOptions, renderOptions));
     }
@@ -364,6 +411,7 @@ public static partial class AztecCode {
     /// <summary>
     /// Saves Aztec PPM to a stream.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static void SavePpm(ReadOnlySpan<byte> data, Stream stream, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         RenderIO.WriteBinary(stream, Ppm(data, encodeOptions, renderOptions));
     }
@@ -371,6 +419,7 @@ public static partial class AztecCode {
     /// <summary>
     /// Saves Aztec PBM to a file.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string SavePbm(ReadOnlySpan<byte> data, string path, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         return RenderIO.WriteBinary(path, Pbm(data, encodeOptions, renderOptions));
     }
@@ -378,6 +427,7 @@ public static partial class AztecCode {
     /// <summary>
     /// Saves Aztec PBM to a stream.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static void SavePbm(ReadOnlySpan<byte> data, Stream stream, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         RenderIO.WriteBinary(stream, Pbm(data, encodeOptions, renderOptions));
     }
@@ -385,6 +435,7 @@ public static partial class AztecCode {
     /// <summary>
     /// Saves Aztec PGM to a file.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string SavePgm(ReadOnlySpan<byte> data, string path, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         return RenderIO.WriteBinary(path, Pgm(data, encodeOptions, renderOptions));
     }
@@ -392,6 +443,7 @@ public static partial class AztecCode {
     /// <summary>
     /// Saves Aztec PGM to a stream.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static void SavePgm(ReadOnlySpan<byte> data, Stream stream, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         RenderIO.WriteBinary(stream, Pgm(data, encodeOptions, renderOptions));
     }
@@ -399,6 +451,7 @@ public static partial class AztecCode {
     /// <summary>
     /// Saves Aztec PAM to a file.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string SavePam(ReadOnlySpan<byte> data, string path, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         return RenderIO.WriteBinary(path, Pam(data, encodeOptions, renderOptions));
     }
@@ -406,6 +459,7 @@ public static partial class AztecCode {
     /// <summary>
     /// Saves Aztec PAM to a stream.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static void SavePam(ReadOnlySpan<byte> data, Stream stream, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         RenderIO.WriteBinary(stream, Pam(data, encodeOptions, renderOptions));
     }
@@ -413,6 +467,7 @@ public static partial class AztecCode {
     /// <summary>
     /// Saves Aztec XBM to a file.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string SaveXbm(ReadOnlySpan<byte> data, string path, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         return RenderIO.WriteText(path, Xbm(data, encodeOptions, renderOptions));
     }
@@ -420,6 +475,7 @@ public static partial class AztecCode {
     /// <summary>
     /// Saves Aztec XBM to a stream.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static void SaveXbm(ReadOnlySpan<byte> data, Stream stream, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         RenderIO.WriteText(stream, Xbm(data, encodeOptions, renderOptions));
     }
@@ -427,6 +483,7 @@ public static partial class AztecCode {
     /// <summary>
     /// Saves Aztec XPM to a file.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string SaveXpm(ReadOnlySpan<byte> data, string path, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         return RenderIO.WriteText(path, Xpm(data, encodeOptions, renderOptions));
     }
@@ -434,6 +491,7 @@ public static partial class AztecCode {
     /// <summary>
     /// Saves Aztec XPM to a stream.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static void SaveXpm(ReadOnlySpan<byte> data, Stream stream, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         RenderIO.WriteText(stream, Xpm(data, encodeOptions, renderOptions));
     }
@@ -441,6 +499,7 @@ public static partial class AztecCode {
     /// <summary>
     /// Saves Aztec TGA to a file.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string SaveTga(ReadOnlySpan<byte> data, string path, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         return RenderIO.WriteBinary(path, Tga(data, encodeOptions, renderOptions));
     }
@@ -448,6 +507,7 @@ public static partial class AztecCode {
     /// <summary>
     /// Saves Aztec TGA to a stream.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static void SaveTga(ReadOnlySpan<byte> data, Stream stream, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         RenderIO.WriteBinary(stream, Tga(data, encodeOptions, renderOptions));
     }
@@ -455,6 +515,7 @@ public static partial class AztecCode {
     /// <summary>
     /// Saves Aztec ICO to a file.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string SaveIco(ReadOnlySpan<byte> data, string path, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         return RenderIO.WriteBinary(path, Ico(data, encodeOptions, renderOptions));
     }
@@ -462,6 +523,7 @@ public static partial class AztecCode {
     /// <summary>
     /// Saves Aztec ICO to a stream.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static void SaveIco(ReadOnlySpan<byte> data, Stream stream, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         RenderIO.WriteBinary(stream, Ico(data, encodeOptions, renderOptions));
     }
@@ -469,6 +531,7 @@ public static partial class AztecCode {
     /// <summary>
     /// Saves Aztec SVGZ to a file.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string SaveSvgz(ReadOnlySpan<byte> data, string path, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         return RenderIO.WriteBinary(path, Svgz(data, encodeOptions, renderOptions));
     }
@@ -476,6 +539,7 @@ public static partial class AztecCode {
     /// <summary>
     /// Saves Aztec SVGZ to a stream.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static void SaveSvgz(ReadOnlySpan<byte> data, Stream stream, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         RenderIO.WriteBinary(stream, Svgz(data, encodeOptions, renderOptions));
     }
@@ -483,6 +547,7 @@ public static partial class AztecCode {
     /// <summary>
     /// Saves Aztec PDF to a file.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string SavePdf(ReadOnlySpan<byte> data, string path, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, RenderMode renderMode = RenderMode.Vector) {
         return RenderIO.WriteBinary(path, Pdf(data, encodeOptions, renderOptions, renderMode));
     }
@@ -490,6 +555,7 @@ public static partial class AztecCode {
     /// <summary>
     /// Saves Aztec PDF to a stream.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static void SavePdf(ReadOnlySpan<byte> data, Stream stream, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, RenderMode renderMode = RenderMode.Vector) {
         RenderIO.WriteBinary(stream, Pdf(data, encodeOptions, renderOptions, renderMode));
     }
@@ -497,6 +563,7 @@ public static partial class AztecCode {
     /// <summary>
     /// Saves Aztec EPS to a file.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string SaveEps(ReadOnlySpan<byte> data, string path, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, RenderMode renderMode = RenderMode.Vector) {
         return RenderIO.WriteText(path, Eps(data, encodeOptions, renderOptions, renderMode));
     }
@@ -504,6 +571,7 @@ public static partial class AztecCode {
     /// <summary>
     /// Saves Aztec EPS to a stream.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static void SaveEps(ReadOnlySpan<byte> data, Stream stream, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, RenderMode renderMode = RenderMode.Vector) {
         RenderIO.WriteText(stream, Eps(data, encodeOptions, renderOptions, renderMode));
     }
