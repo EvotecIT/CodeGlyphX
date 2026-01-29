@@ -373,6 +373,8 @@ body:has(.page-playground) {
     width: 14px;
     height: 14px;
     flex-shrink: 0;
+    stroke-linecap: round;
+    stroke-linejoin: round;
 }
 
 .nav-cta:hover {
