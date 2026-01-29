@@ -47,8 +47,9 @@ public static partial class Barcode {
                 return RenderedOutput.FromBinary(format, BarcodeSvgzRenderer.Render(barcode, BuildSvgOptions(options)));
             case OutputFormat.Html: {
                 var html = HtmlBarcodeRenderer.Render(barcode, BuildHtmlOptions(options));
-                if (!string.IsNullOrEmpty(extras?.HtmlTitle)) {
-                    html = html.WrapHtml(extras.HtmlTitle);
+                var title = extras?.HtmlTitle;
+                if (!string.IsNullOrEmpty(title)) {
+                    html = html.WrapHtml(title);
                 }
                 return RenderedOutput.FromText(format, html);
             }

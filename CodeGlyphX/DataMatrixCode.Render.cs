@@ -63,8 +63,9 @@ public static partial class DataMatrixCode {
                 return RenderedOutput.FromBinary(format, MatrixSvgzRenderer.Render(modules, BuildSvgOptions(options)));
             case OutputFormat.Html: {
                 var html = MatrixHtmlRenderer.Render(modules, BuildHtmlOptions(options));
-                if (!string.IsNullOrEmpty(extras?.HtmlTitle)) {
-                    html = html.WrapHtml(extras.HtmlTitle);
+                var title = extras?.HtmlTitle;
+                if (!string.IsNullOrEmpty(title)) {
+                    html = html.WrapHtml(title);
                 }
                 return RenderedOutput.FromText(format, html);
             }

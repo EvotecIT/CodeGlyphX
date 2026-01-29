@@ -9,6 +9,7 @@ using CodeGlyphX.DataMatrix;
 using CodeGlyphX.Pdf417;
 using CodeGlyphX.Payloads;
 using CodeGlyphX.Rendering;
+using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Png;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
@@ -246,8 +247,8 @@ public partial class Playground {
                 }
 
                 SafetyReport = QrEasy.EvaluateSafety(Content, options);
-                pngBytes = QrEasy.RenderPng(Content, options);
-                svg = QrEasy.RenderSvg(Content, options);
+                pngBytes = QrCode.Render(Content, OutputFormat.Png, options).Data;
+                svg = QrCode.Render(Content, OutputFormat.Svg, options).GetText();
             }
             else if (SelectedCategory == "SpecialQR")
             {
@@ -255,8 +256,8 @@ public partial class Playground {
                 if (payloadData == null || string.IsNullOrWhiteSpace(payloadData.Text))
                     return;
 
-                pngBytes = QrEasy.RenderPng(payloadData);
-                svg = QrEasy.RenderSvg(payloadData);
+                pngBytes = QrCode.Render(payloadData, OutputFormat.Png).Data;
+                svg = QrCode.Render(payloadData, OutputFormat.Svg).GetText();
             }
             else if (SelectedCategory == "Barcode")
             {
@@ -342,8 +343,8 @@ public partial class Playground {
                     content = NormalizeDigits(content);
                 }
 
-                pngBytes = BarcodeEasy.RenderPng(barcodeType, content);
-                svg = BarcodeEasy.RenderSvg(barcodeType, content);
+                pngBytes = Barcode.Render(barcodeType, content, OutputFormat.Png).Data;
+                svg = Barcode.Render(barcodeType, content, OutputFormat.Svg).GetText();
             }
             else if (SelectedCategory == "Matrix")
             {
@@ -358,8 +359,8 @@ public partial class Playground {
                             ErrorCorrectionLevel = Pdf417EccLevel,
                             Compact = Pdf417Compact
                         };
-                        pngBytes = Pdf417Code.Png(MatrixContent, pdf417Options);
-                        svg = Pdf417Code.Svg(MatrixContent, pdf417Options);
+                        pngBytes = Pdf417Code.Render(MatrixContent, OutputFormat.Png, pdf417Options).Data;
+                        svg = Pdf417Code.Render(MatrixContent, OutputFormat.Svg, pdf417Options).GetText();
                         break;
                     case "Aztec":
                         var aztecOptions = new AztecEncodeOptions
@@ -367,13 +368,13 @@ public partial class Playground {
                             ErrorCorrectionPercent = AztecAutoEcc ? null : AztecEccPercent,
                             Layers = AztecLayers > 0 ? AztecLayers : null
                         };
-                        pngBytes = AztecCode.Png(MatrixContent, aztecOptions);
-                        svg = AztecCode.Svg(MatrixContent, aztecOptions);
+                        pngBytes = AztecCode.Render(MatrixContent, OutputFormat.Png, aztecOptions).Data;
+                        svg = AztecCode.Render(MatrixContent, OutputFormat.Svg, aztecOptions).GetText();
                         break;
                     default:
                         var dmMode = ParseDataMatrixMode(SelectedDataMatrixMode);
-                        pngBytes = DataMatrixCode.Png(MatrixContent, dmMode);
-                        svg = DataMatrixCode.Svg(MatrixContent, dmMode);
+                        pngBytes = DataMatrixCode.Render(MatrixContent, OutputFormat.Png, dmMode).Data;
+                        svg = DataMatrixCode.Render(MatrixContent, OutputFormat.Svg, dmMode).GetText();
                         break;
                 }
             }

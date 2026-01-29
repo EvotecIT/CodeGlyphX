@@ -64,7 +64,7 @@ public class AztecCompareBenchmarks
     [Benchmark(Baseline = true, Description = "CodeGlyphX Aztec PNG")]
     public byte[] CodeGlyphX_Aztec_Png()
     {
-        return AztecCode.Png(MediumText, renderOptions: _options);
+        return AztecCode.Render(MediumText, OutputFormat.Png, renderOptions: _options).Data;
     }
 
 #if COMPARE_ZXING

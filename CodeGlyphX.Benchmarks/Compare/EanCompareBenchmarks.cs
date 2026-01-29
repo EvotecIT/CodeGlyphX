@@ -55,7 +55,7 @@ public class EanCompareBenchmarks
     [Benchmark(Baseline = true, Description = "CodeGlyphX EAN-13 PNG")]
     public byte[] CodeGlyphX_Ean_Png()
     {
-        return BarcodeEasy.RenderPng(BarcodeType.EAN, EanText, _options);
+        return Barcode.Render(BarcodeType.EAN, EanText, OutputFormat.Png, _options).Data;
     }
 
 #if COMPARE_ZXING

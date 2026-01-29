@@ -1,5 +1,6 @@
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Jobs;
+using CodeGlyphX.Rendering;
 
 namespace CodeGlyphX.Benchmarks;
 
@@ -19,36 +20,36 @@ public class BarcodeBenchmarks
     [Benchmark(Description = "Code 128 PNG")]
     public byte[] Code128_Png()
     {
-        return BarcodeEasy.RenderPng(BarcodeType.Code128, Code128Text);
+        return Barcode.Render(BarcodeType.Code128, Code128Text, OutputFormat.Png).Data;
     }
 
     [Benchmark(Description = "Code 128 SVG")]
     public string Code128_Svg()
     {
-        return BarcodeEasy.RenderSvg(BarcodeType.Code128, Code128Text);
+        return Barcode.Render(BarcodeType.Code128, Code128Text, OutputFormat.Svg).GetText();
     }
 
     [Benchmark(Description = "EAN PNG")]
     public byte[] Ean_Png()
     {
-        return BarcodeEasy.RenderPng(BarcodeType.EAN, EanText);
+        return Barcode.Render(BarcodeType.EAN, EanText, OutputFormat.Png).Data;
     }
 
     [Benchmark(Description = "Code 39 PNG")]
     public byte[] Code39_Png()
     {
-        return BarcodeEasy.RenderPng(BarcodeType.Code39, Code39Text);
+        return Barcode.Render(BarcodeType.Code39, Code39Text, OutputFormat.Png).Data;
     }
 
     [Benchmark(Description = "Code 93 PNG")]
     public byte[] Code93_Png()
     {
-        return BarcodeEasy.RenderPng(BarcodeType.Code93, Code39Text);
+        return Barcode.Render(BarcodeType.Code93, Code39Text, OutputFormat.Png).Data;
     }
 
     [Benchmark(Description = "UPC-A PNG")]
     public byte[] UpcA_Png()
     {
-        return BarcodeEasy.RenderPng(BarcodeType.UPCA, "012345678905");
+        return Barcode.Render(BarcodeType.UPCA, "012345678905", OutputFormat.Png).Data;
     }
 }

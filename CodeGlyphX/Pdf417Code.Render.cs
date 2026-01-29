@@ -71,8 +71,9 @@ public static partial class Pdf417Code {
                 return RenderedOutput.FromBinary(format, MatrixSvgzRenderer.Render(modules, BuildSvgOptions(renderOptions)));
             case OutputFormat.Html: {
                 var html = MatrixHtmlRenderer.Render(modules, BuildHtmlOptions(renderOptions));
-                if (!string.IsNullOrEmpty(extras?.HtmlTitle)) {
-                    html = html.WrapHtml(extras.HtmlTitle);
+                var title = extras?.HtmlTitle;
+                if (!string.IsNullOrEmpty(title)) {
+                    html = html.WrapHtml(title);
                 }
                 return RenderedOutput.FromText(format, html);
             }

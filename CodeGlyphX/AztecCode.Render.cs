@@ -45,8 +45,9 @@ public static partial class AztecCode {
                 return RenderedOutput.FromBinary(format, MatrixSvgzRenderer.Render(modules, ToSvgOptions(renderOptions)));
             case OutputFormat.Html: {
                 var html = MatrixHtmlRenderer.Render(modules, ToHtmlOptions(renderOptions));
-                if (!string.IsNullOrEmpty(extras?.HtmlTitle)) {
-                    html = html.WrapHtml(extras.HtmlTitle);
+                var title = extras?.HtmlTitle;
+                if (!string.IsNullOrEmpty(title)) {
+                    html = html.WrapHtml(title);
                 }
                 return RenderedOutput.FromText(format, html);
             }
