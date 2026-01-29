@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using CodeGlyphX.DataMatrix;
+using CodeGlyphX.Internal;
 
 namespace CodeGlyphX;
 
@@ -10,55 +11,26 @@ public static partial class DataMatrixCode {
     /// Defaults to PNG when no extension is provided.
     /// </summary>
     public static string Save(string text, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null, string? title = null) {
-        if (path.EndsWith(".svgz", StringComparison.OrdinalIgnoreCase) ||
-            path.EndsWith(".svg.gz", StringComparison.OrdinalIgnoreCase)) {
-            return SaveSvgz(text, path, mode, options);
-        }
-
-        var ext = Path.GetExtension(path);
-        if (string.IsNullOrWhiteSpace(ext)) return SavePng(text, path, mode, options);
-
-        switch (ext.ToLowerInvariant()) {
-            case ".png":
-                return SavePng(text, path, mode, options);
-            case ".webp":
-                return SaveWebp(text, path, mode, options);
-            case ".svg":
-                return SaveSvg(text, path, mode, options);
-            case ".html":
-            case ".htm":
-                return SaveHtml(text, path, mode, options, title);
-            case ".jpg":
-            case ".jpeg":
-                return SaveJpeg(text, path, mode, options);
-            case ".bmp":
-                return SaveBmp(text, path, mode, options);
-            case ".ppm":
-                return SavePpm(text, path, mode, options);
-            case ".pbm":
-                return SavePbm(text, path, mode, options);
-            case ".pgm":
-                return SavePgm(text, path, mode, options);
-            case ".pam":
-                return SavePam(text, path, mode, options);
-            case ".xbm":
-                return SaveXbm(text, path, mode, options);
-            case ".xpm":
-                return SaveXpm(text, path, mode, options);
-            case ".tga":
-                return SaveTga(text, path, mode, options);
-            case ".ico":
-                return SaveIco(text, path, mode, options);
-            case ".svgz":
-                return SaveSvgz(text, path, mode, options);
-            case ".pdf":
-                return SavePdf(text, path, mode, options);
-            case ".eps":
-            case ".ps":
-                return SaveEps(text, path, mode, options);
-            default:
-                return SavePng(text, path, mode, options);
-        }
+        return SaveByExtensionHelper.Save(path, new SaveByExtensionHandlers {
+            Default = () => SavePng(text, path, mode, options),
+            Png = () => SavePng(text, path, mode, options),
+            Webp = () => SaveWebp(text, path, mode, options),
+            Svg = () => SaveSvg(text, path, mode, options),
+            Svgz = () => SaveSvgz(text, path, mode, options),
+            Html = () => SaveHtml(text, path, mode, options, title),
+            Jpeg = () => SaveJpeg(text, path, mode, options),
+            Bmp = () => SaveBmp(text, path, mode, options),
+            Ppm = () => SavePpm(text, path, mode, options),
+            Pbm = () => SavePbm(text, path, mode, options),
+            Pgm = () => SavePgm(text, path, mode, options),
+            Pam = () => SavePam(text, path, mode, options),
+            Xbm = () => SaveXbm(text, path, mode, options),
+            Xpm = () => SaveXpm(text, path, mode, options),
+            Tga = () => SaveTga(text, path, mode, options),
+            Ico = () => SaveIco(text, path, mode, options),
+            Pdf = () => SavePdf(text, path, mode, options),
+            Eps = () => SaveEps(text, path, mode, options)
+        });
     }
 
     /// <summary>
@@ -66,55 +38,26 @@ public static partial class DataMatrixCode {
     /// Defaults to PNG when no extension is provided.
     /// </summary>
     public static string Save(byte[] data, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null, string? title = null) {
-        if (path.EndsWith(".svgz", StringComparison.OrdinalIgnoreCase) ||
-            path.EndsWith(".svg.gz", StringComparison.OrdinalIgnoreCase)) {
-            return SaveSvgz(data, path, mode, options);
-        }
-
-        var ext = Path.GetExtension(path);
-        if (string.IsNullOrWhiteSpace(ext)) return SavePng(data, path, mode, options);
-
-        switch (ext.ToLowerInvariant()) {
-            case ".png":
-                return SavePng(data, path, mode, options);
-            case ".webp":
-                return SaveWebp(data, path, mode, options);
-            case ".svg":
-                return SaveSvg(data, path, mode, options);
-            case ".html":
-            case ".htm":
-                return SaveHtml(data, path, mode, options, title);
-            case ".jpg":
-            case ".jpeg":
-                return SaveJpeg(data, path, mode, options);
-            case ".bmp":
-                return SaveBmp(data, path, mode, options);
-            case ".ppm":
-                return SavePpm(data, path, mode, options);
-            case ".pbm":
-                return SavePbm(data, path, mode, options);
-            case ".pgm":
-                return SavePgm(data, path, mode, options);
-            case ".pam":
-                return SavePam(data, path, mode, options);
-            case ".xbm":
-                return SaveXbm(data, path, mode, options);
-            case ".xpm":
-                return SaveXpm(data, path, mode, options);
-            case ".tga":
-                return SaveTga(data, path, mode, options);
-            case ".ico":
-                return SaveIco(data, path, mode, options);
-            case ".svgz":
-                return SaveSvgz(data, path, mode, options);
-            case ".pdf":
-                return SavePdf(data, path, mode, options);
-            case ".eps":
-            case ".ps":
-                return SaveEps(data, path, mode, options);
-            default:
-                return SavePng(data, path, mode, options);
-        }
+        return SaveByExtensionHelper.Save(path, new SaveByExtensionHandlers {
+            Default = () => SavePng(data, path, mode, options),
+            Png = () => SavePng(data, path, mode, options),
+            Webp = () => SaveWebp(data, path, mode, options),
+            Svg = () => SaveSvg(data, path, mode, options),
+            Svgz = () => SaveSvgz(data, path, mode, options),
+            Html = () => SaveHtml(data, path, mode, options, title),
+            Jpeg = () => SaveJpeg(data, path, mode, options),
+            Bmp = () => SaveBmp(data, path, mode, options),
+            Ppm = () => SavePpm(data, path, mode, options),
+            Pbm = () => SavePbm(data, path, mode, options),
+            Pgm = () => SavePgm(data, path, mode, options),
+            Pam = () => SavePam(data, path, mode, options),
+            Xbm = () => SaveXbm(data, path, mode, options),
+            Xpm = () => SaveXpm(data, path, mode, options),
+            Tga = () => SaveTga(data, path, mode, options),
+            Ico = () => SaveIco(data, path, mode, options),
+            Pdf = () => SavePdf(data, path, mode, options),
+            Eps = () => SaveEps(data, path, mode, options)
+        });
     }
 
 }

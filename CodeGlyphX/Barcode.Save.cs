@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Threading;
+using CodeGlyphX.Internal;
 using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Ascii;
 using CodeGlyphX.Rendering.Bmp;
@@ -349,56 +350,26 @@ public static partial class Barcode {
     /// Defaults to PNG when no extension is provided.
     /// </summary>
     public static string Save(BarcodeType type, string content, string path, BarcodeOptions? options = null, string? title = null) {
-        if (path.EndsWith(".svgz", StringComparison.OrdinalIgnoreCase) ||
-            path.EndsWith(".svg.gz", StringComparison.OrdinalIgnoreCase)) {
-            return SaveSvgz(type, content, path, options);
-        }
-
-        var ext = Path.GetExtension(path);
-        if (string.IsNullOrWhiteSpace(ext)) return SavePng(type, content, path, options);
-
-        switch (ext.ToLowerInvariant()) {
-            case ".png":
-                return SavePng(type, content, path, options);
-            case ".webp":
-                return SaveWebp(type, content, path, options);
-            case ".svg":
-                return SaveSvg(type, content, path, options);
-            case ".html":
-            case ".htm":
-                return SaveHtml(type, content, path, options, title);
-            case ".jpg":
-            case ".jpeg":
-                return SaveJpeg(type, content, path, options);
-            case ".bmp":
-                return SaveBmp(type, content, path, options);
-            case ".ppm":
-                return SavePpm(type, content, path, options);
-            case ".pbm":
-                return SavePbm(type, content, path, options);
-            case ".pgm":
-                return SavePgm(type, content, path, options);
-            case ".pam":
-                return SavePam(type, content, path, options);
-            case ".xbm":
-                return SaveXbm(type, content, path, options);
-            case ".xpm":
-                return SaveXpm(type, content, path, options);
-            case ".tga":
-                return SaveTga(type, content, path, options);
-            case ".ico":
-                return SaveIco(type, content, path, options);
-            case ".svgz":
-                return SaveSvgz(type, content, path, options);
-            case ".pdf":
-                return SavePdf(type, content, path, options);
-            case ".eps":
-            case ".ps":
-                return SaveEps(type, content, path, options);
-            default:
-                // Fallback to PNG for unknown extensions to keep the API forgiving.
-                return SavePng(type, content, path, options);
-        }
+        return SaveByExtensionHelper.Save(path, new SaveByExtensionHandlers {
+            Default = () => SavePng(type, content, path, options),
+            Png = () => SavePng(type, content, path, options),
+            Webp = () => SaveWebp(type, content, path, options),
+            Svg = () => SaveSvg(type, content, path, options),
+            Svgz = () => SaveSvgz(type, content, path, options),
+            Html = () => SaveHtml(type, content, path, options, title),
+            Jpeg = () => SaveJpeg(type, content, path, options),
+            Bmp = () => SaveBmp(type, content, path, options),
+            Ppm = () => SavePpm(type, content, path, options),
+            Pbm = () => SavePbm(type, content, path, options),
+            Pgm = () => SavePgm(type, content, path, options),
+            Pam = () => SavePam(type, content, path, options),
+            Xbm = () => SaveXbm(type, content, path, options),
+            Xpm = () => SaveXpm(type, content, path, options),
+            Tga = () => SaveTga(type, content, path, options),
+            Ico = () => SaveIco(type, content, path, options),
+            Pdf = () => SavePdf(type, content, path, options),
+            Eps = () => SaveEps(type, content, path, options)
+        });
     }
 
 
