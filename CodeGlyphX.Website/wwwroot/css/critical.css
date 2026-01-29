@@ -197,11 +197,17 @@ svg {
 .pricing-card-icon {
     width: 48px;
     height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+    color: var(--primary-light);
 }
 
 .pricing-card-icon svg {
     width: 40px;
     height: 40px;
+    display: block;
 }
 
 .pricing-btn svg {
