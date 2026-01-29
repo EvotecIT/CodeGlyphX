@@ -35,6 +35,67 @@
     return data?.[os]?.[mode] ?? null;
   }
 
+  function normalizeOs(value) {
+    if (!value) return null;
+    const key = String(value).toLowerCase();
+    if (key === 'win') return 'windows';
+    if (key === 'mac' || key === 'osx' || key === 'darwin') return 'macos';
+    if (key === 'windows' || key === 'linux' || key === 'macos') return key;
+    return null;
+  }
+
+  function normalizeMode(value) {
+    if (!value) return null;
+    const key = String(value).toLowerCase();
+    return (key === 'quick' || key === 'full') ? key : null;
+  }
+
+  function readUrlSelection() {
+    const params = new URLSearchParams(globalThis.location.search);
+    return {
+      os: normalizeOs(params.get('os')),
+      mode: normalizeMode(params.get('mode'))
+    };
+  }
+
+  function updateUrlSelection() {
+    if (!globalThis.history?.replaceState) return;
+    const params = new URLSearchParams(globalThis.location.search);
+    params.set('os', currentOs);
+    params.set('mode', currentMode);
+    const query = params.toString();
+    const url = query ? (globalThis.location.pathname + '?' + query) : globalThis.location.pathname;
+    globalThis.history.replaceState(null, '', url);
+  }
+
+  function hasEntryData(entry) {
+    return !!(entry && (entry.summary?.length || entry.comparisons?.length));
+  }
+
+  function hasDataFor(os, mode) {
+    return hasEntryData(getEntry(summaryData, os, mode)) || hasEntryData(getEntry(detailData, os, mode));
+  }
+
+  function getAvailableModes(os) {
+    return ['full', 'quick'].filter(function(mode) { return hasDataFor(os, mode); });
+  }
+
+  function applyUrlSelection() {
+    const selection = readUrlSelection();
+    if (!selection.os) return false;
+
+    const availableModes = getAvailableModes(selection.os);
+    if (!availableModes.length) return false;
+
+    currentOs = selection.os;
+    if (selection.mode && availableModes.includes(selection.mode)) {
+      currentMode = selection.mode;
+    } else {
+      currentMode = availableModes[0];
+    }
+    return true;
+  }
+
   function findBestEntry(data) {
     // Priority: windows full > windows quick > linux full > linux quick > macos
     const order = [
@@ -44,7 +105,7 @@
     ];
     for (let i = 0; i < order.length; i++) {
       const entry = getEntry(data, order[i][0], order[i][1]);
-      if (entry && (entry.summary?.length || entry.comparisons?.length)) {
+      if (hasEntryData(entry)) {
         currentOs = order[i][0];
         currentMode = order[i][1];
         return entry;
@@ -68,6 +129,14 @@
     return mode.charAt(0).toUpperCase() + mode.slice(1);
   }
 
+  function formatOs(os) {
+    if (!os) return 'Unknown';
+    if (os === 'macos') return 'macOS';
+    if (os === 'windows') return 'Windows';
+    if (os === 'linux') return 'Linux';
+    return os;
+  }
+
   function renderMeta(entry) {
     const container = document.querySelector('[data-benchmark-meta]');
     if (!container) return;
@@ -87,15 +156,55 @@
     container.innerHTML = html;
   }
 
+  function renderOsSelector(summaryData, detailData) {
+    const buttons = document.querySelectorAll('.benchmark-os-btn');
+    const noteEl = document.querySelector('[data-os-note]');
+    let noteText = '';
+
+    buttons.forEach(function(btn) {
+      const os = btn.dataset.os;
+      const availableModes = getAvailableModes(os);
+      const hasData = availableModes.length > 0;
+
+      btn.disabled = !hasData;
+      btn.classList.toggle('active', os === currentOs);
+
+      if (!hasData) {
+        btn.title = 'No benchmark data available for ' + formatOs(os);
+      } else {
+        btn.title = '';
+      }
+
+      if (os === currentOs) {
+        if (hasData) {
+          noteText = 'Available modes: ' + availableModes.map(formatMode).join(', ');
+        } else {
+          noteText = 'No benchmark data available yet.';
+        }
+      }
+
+      btn.onclick = function() {
+        if (this.disabled) return;
+        currentOs = os;
+        if (!availableModes.includes(currentMode)) {
+          currentMode = availableModes[0];
+        }
+        renderAll();
+      };
+    });
+
+    if (noteEl) {
+      noteEl.textContent = noteText || 'No benchmark data available yet.';
+    }
+  }
+
   function renderModeSelector(summaryData, detailData) {
     const buttons = document.querySelectorAll('.benchmark-mode-btn');
     const noteEl = document.querySelector('[data-mode-note]');
 
     buttons.forEach(function(btn) {
       const mode = btn.dataset.mode;
-      const summaryEntry = getEntry(summaryData, currentOs, mode);
-      const detailEntry = getEntry(detailData, currentOs, mode);
-      const hasData = summaryEntry?.summary?.length || detailEntry?.comparisons?.length;
+      const hasData = hasDataFor(currentOs, mode);
 
       btn.disabled = !hasData;
       btn.classList.toggle('active', mode === currentMode);
@@ -574,6 +683,7 @@
     const entry = summaryEntry || detailEntry;
 
     renderMeta(entry);
+    renderOsSelector(summaryData, detailData);
     renderModeSelector(summaryData, detailData);
     renderSummaryTable(summaryEntry);
     renderCharts(summaryEntry);
@@ -582,6 +692,7 @@
     renderEnvironment(entry);
     renderPackRunner(entry);
     renderNotes(entry);
+    updateUrlSelection();
   }
 
   function init() {
@@ -596,7 +707,9 @@
       detailData = results[1];
 
       // Find best available entry to set initial mode
-      findBestEntry(summaryData) || findBestEntry(detailData);
+      if (!applyUrlSelection()) {
+        findBestEntry(summaryData) || findBestEntry(detailData);
+      }
 
       renderAll();
     });

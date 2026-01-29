@@ -373,6 +373,8 @@ body:has(.page-playground) {
     width: 14px;
     height: 14px;
     flex-shrink: 0;
+    stroke-linecap: round;
+    stroke-linejoin: round;
 }
 
 .nav-cta:hover {
@@ -3506,14 +3508,16 @@ section {
     margin-bottom: 0;
 }
 
-/* Mode selector */
-.benchmark-mode-selector {
+/* Mode / OS selectors */
+.benchmark-mode-selector,
+.benchmark-os-selector {
     display: flex;
     gap: 0.5rem;
     margin-bottom: 1rem;
 }
 
-.benchmark-mode-btn {
+.benchmark-mode-btn,
+.benchmark-os-btn {
     padding: 0.5rem 1.5rem;
     background: var(--bg-card);
     border: 1px solid var(--border);
@@ -3525,23 +3529,27 @@ section {
     transition: all 0.2s;
 }
 
-.benchmark-mode-btn:hover:not(:disabled) {
+.benchmark-mode-btn:hover:not(:disabled),
+.benchmark-os-btn:hover:not(:disabled) {
     border-color: var(--primary);
     color: var(--text);
 }
 
-.benchmark-mode-btn.active {
+.benchmark-mode-btn.active,
+.benchmark-os-btn.active {
     background: var(--primary);
     border-color: var(--primary);
     color: white;
 }
 
-.benchmark-mode-btn:disabled {
+.benchmark-mode-btn:disabled,
+.benchmark-os-btn:disabled {
     opacity: 0.5;
     cursor: not-allowed;
 }
 
-.benchmark-mode-note {
+.benchmark-mode-note,
+.benchmark-os-note {
     color: var(--text-muted);
     font-size: 0.875rem;
     font-style: italic;

@@ -1,24 +1,66 @@
-// Theme toggle (Auto/Light/Dark)
+// Theme toggle (Auto/Light/Dark + cycle)
 (function() {
+  var themeButtons = Array.prototype.slice.call(document.querySelectorAll('.theme-toggle button[data-theme]'));
+  var cycleButton = document.querySelector('.theme-cycle-btn');
+  var themeOrder = ['auto', 'light', 'dark'];
+  var themeIcons = {
+    auto: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>',
+    light: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>',
+    dark: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>'
+  };
+
+  function getTheme() {
+    return document.documentElement.dataset.theme || localStorage.getItem('theme') || 'auto';
+  }
+
+  function setTheme(theme) {
+    document.documentElement.dataset.theme = theme;
+    localStorage.setItem('theme', theme);
+    updateActiveTheme(theme);
+    updateCycleButton(theme);
+  }
+
   function updateActiveTheme(theme) {
-    document.querySelectorAll('.theme-toggle button').forEach(function(btn) {
+    if (!themeButtons.length) return;
+    themeButtons.forEach(function(btn) {
       btn.classList.toggle('active', btn.dataset.theme === theme);
     });
   }
 
-  // Set initial active state
-  var currentTheme = document.documentElement.dataset.theme || 'auto';
-  updateActiveTheme(currentTheme);
+  function getCycleTitle(theme) {
+    if (theme === 'light') return 'Light mode (click to switch to dark)';
+    if (theme === 'dark') return 'Dark mode (click to switch to auto)';
+    return 'Auto mode (click to switch to light)';
+  }
 
-  // Handle theme button clicks
-  document.querySelectorAll('.theme-toggle button[data-theme]').forEach(function(btn) {
+  function updateCycleButton(theme) {
+    if (!cycleButton) return;
+    cycleButton.innerHTML = themeIcons[theme] || themeIcons.auto;
+    var title = getCycleTitle(theme);
+    cycleButton.setAttribute('title', title);
+    cycleButton.setAttribute('aria-label', title);
+  }
+
+  var currentTheme = getTheme();
+  updateActiveTheme(currentTheme);
+  updateCycleButton(currentTheme);
+
+  themeButtons.forEach(function(btn) {
     btn.addEventListener('click', function() {
       var theme = this.dataset.theme;
-      document.documentElement.dataset.theme = theme;
-      localStorage.setItem('theme', theme);
-      updateActiveTheme(theme);
+      if (!theme) return;
+      setTheme(theme);
     });
   });
+
+  if (cycleButton) {
+    cycleButton.addEventListener('click', function() {
+      var theme = getTheme();
+      var index = themeOrder.indexOf(theme);
+      var next = themeOrder[(index + 1) % themeOrder.length];
+      setTheme(next);
+    });
+  }
 })();
 
 // Keyboard focus visibility (show focus ring only for keyboard navigation)
