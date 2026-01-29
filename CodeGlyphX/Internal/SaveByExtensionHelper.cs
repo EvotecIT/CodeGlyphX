@@ -22,6 +22,7 @@ internal readonly struct SaveByExtensionHandlers {
     internal Func<string> Ico { get; init; }
     internal Func<string> Pdf { get; init; }
     internal Func<string> Eps { get; init; }
+    internal Func<string>? Text { get; init; }
 }
 
 internal delegate string SaveByExtensionSpanHandler(ReadOnlySpan<byte> data);
@@ -95,6 +96,8 @@ internal static class SaveByExtensionHelper {
             case ".eps":
             case ".ps":
                 return handlers.Eps();
+            case ".txt":
+                return (handlers.Text ?? handlers.Default)();
             default:
                 return handlers.Default();
         }
