@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RunSettings>
+  <RunConfiguration>
+    <EnvironmentVariables>
+      <CODEGLYPHX_COVERAGE>1</CODEGLYPHX_COVERAGE>
+    </EnvironmentVariables>
+  </RunConfiguration>
   <DataCollectionRunSettings>
     <DataCollectors>
       <DataCollector friendlyName="XPlat Code Coverage">

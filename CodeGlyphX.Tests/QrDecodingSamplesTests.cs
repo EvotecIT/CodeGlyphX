@@ -28,7 +28,7 @@ public sealed class QrDecodingSamplesTests {
         var options = new QrPixelDecodeOptions {
             Profile = QrDecodeProfile.Robust,
             MaxDimension = 2200,
-            BudgetMilliseconds = 2000,
+            BudgetMilliseconds = TestBudget.Adjust(2000),
             AggressiveSampling = true,
             EnableTileScan = true
         };
@@ -63,8 +63,8 @@ public sealed class QrDecodingSamplesTests {
         var options = new QrPixelDecodeOptions {
             Profile = QrDecodeProfile.Robust,
             MaxDimension = 1600,
-            MaxMilliseconds = 800,
-            BudgetMilliseconds = 2000,
+            MaxMilliseconds = TestBudget.Adjust(800),
+            BudgetMilliseconds = TestBudget.Adjust(2000),
             AggressiveSampling = true,
             EnableTileScan = true
         };
@@ -116,7 +116,7 @@ public sealed class QrDecodingSamplesTests {
 
         var decodeOptions = new QrPixelDecodeOptions {
             Profile = QrDecodeProfile.Robust,
-            BudgetMilliseconds = 2000,
+            BudgetMilliseconds = TestBudget.Adjust(2000),
             EnableTileScan = true,
             TileGrid = 2
         };
@@ -183,7 +183,7 @@ public sealed class QrDecodingSamplesTests {
 
         var options = new QrPixelDecodeOptions {
             Profile = QrDecodeProfile.Robust,
-            MaxMilliseconds = 800,
+            MaxMilliseconds = TestBudget.Adjust(800),
             MaxDimension = 1600,
             AggressiveSampling = true
         };
