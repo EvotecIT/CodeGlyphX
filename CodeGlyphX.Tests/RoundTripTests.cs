@@ -185,8 +185,8 @@ public sealed class RoundTripTests {
         var options = new QrPixelDecodeOptions {
             Profile = QrDecodeProfile.Robust,
             AggressiveSampling = true,
-            MaxMilliseconds = 2500,
-            BudgetMilliseconds = 2500,
+            MaxMilliseconds = TestBudget.Adjust(2500),
+            BudgetMilliseconds = TestBudget.Adjust(2500),
             MaxDimension = 1400
         };
         var ok = QrDecoder.TryDecode(rgba, width, height, stride, PixelFormat.Rgba32, out var decoded, out var info, options);
