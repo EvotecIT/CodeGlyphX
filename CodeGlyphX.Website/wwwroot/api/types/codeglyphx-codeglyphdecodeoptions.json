@@ -13,12 +13,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "maxMilliseconds",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "maxDimension",
           "type": "System.Int32",
           "summary": null
         }
@@ -54,7 +54,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "configure",
           "type": "System.Action{CodeGlyphX.BarcodeDecodeOptions}",
           "summary": null
         }
@@ -66,7 +66,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "configure",
           "type": "System.Action{CodeGlyphX.QrPixelDecodeOptions}",
           "summary": null
         }
@@ -78,7 +78,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "configure",
           "type": "System.Action{CodeGlyphX.ImageDecodeOptions}",
           "summary": null
         }
@@ -90,7 +90,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "barcodeType",
           "type": "System.Nullable{CodeGlyphX.BarcodeType}",
           "summary": null
         }
@@ -102,7 +102,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "enabled",
           "type": "System.Boolean",
           "summary": null
         }
@@ -114,7 +114,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "enabled",
           "type": "System.Boolean",
           "summary": null
         }
@@ -126,7 +126,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "token",
           "type": "System.Threading.CancellationToken",
           "summary": null
         }
@@ -138,12 +138,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "maxMilliseconds",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "maxDimension",
           "type": "System.Int32",
           "summary": null
         }
@@ -155,12 +155,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "maxMilliseconds",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "maxDimension",
           "type": "System.Int32",
           "summary": null
         }
@@ -172,7 +172,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "profile",
           "type": "CodeGlyphX.QrDecodeProfile",
           "summary": null
         }
@@ -184,7 +184,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "maxScale",
           "type": "System.Int32",
           "summary": null
         }
@@ -196,7 +196,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "enabled",
           "type": "System.Boolean",
           "summary": null
         }

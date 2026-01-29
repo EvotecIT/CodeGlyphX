@@ -13,32 +13,32 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "name",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "street",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "houseNumber",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "zipCode",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "city",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "country",
           "type": "System.String",
           "summary": null
         }
@@ -50,22 +50,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "name",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "addressLine1",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "addressLine2",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "country",
           "type": "System.String",
           "summary": null
         }

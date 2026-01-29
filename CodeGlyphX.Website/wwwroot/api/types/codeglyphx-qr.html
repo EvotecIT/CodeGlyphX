@@ -34,35 +34,27 @@
                 <a href="/pricing/">Pricing</a>
             </div>
             <div class="nav-actions">
-                <div class="theme-toggle" role="group" aria-label="Theme selection">
-                    <button data-theme="auto" title="Auto (system)" aria-label="Auto theme">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="2" y="3" width="20" height="14" rx="2"/>
-                            <path d="M8 21h8M12 17v4"/>
-                        </svg>
-                    </button>
-                    <button data-theme="light" title="Light" aria-label="Light theme">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="12" cy="12" r="5"/>
-                            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
-                        </svg>
-                    </button>
-                    <button data-theme="dark" title="Dark" aria-label="Dark theme">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
-                        </svg>
-                    </button>
-                </div>
+                <button type="button" class="nav-icon theme-cycle-btn" title="Auto mode (click to switch to light)" aria-label="Auto mode (click to switch to light)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false">
+                        <rect x="2" y="3" width="20" height="14" rx="2"/>
+                        <path d="M8 21h8M12 17v4"/>
+                    </svg>
+                </button>
+                <a href="https://evo.yt/discord" target="_blank" rel="noopener" class="nav-icon" title="Discord" aria-label="Discord">
+                    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
+                        <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
+                    </svg>
+                </a>
                 <a href="https://github.com/EvotecIT/CodeGlyphX" target="_blank" rel="noopener" class="nav-icon" title="GitHub" aria-label="GitHub">
                     <svg viewBox="0 0 24 24" fill="currentColor">
                         <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
                     </svg>
                 </a>
                 <a href="https://www.nuget.org/packages/CodeGlyphX" target="_blank" rel="noopener" class="nav-cta">
-                    <svg viewBox="0 0 24 24" fill="currentColor" class="nav-cta-icon">
-                        <path d="M12 0L1.75 6v12L12 24l10.25-6V6zm-1.775 18a3.11 3.11 0 01-3.111-3.111 3.11 3.11 0 013.111-3.111 3.11 3.11 0 013.111 3.111A3.11 3.11 0 0110.225 18zm4.91-6.944a1.867 1.867 0 01-1.867-1.867 1.867 1.867 0 011.866-1.866 1.867 1.867 0 011.867 1.866 1.867 1.867 0 01-1.867 1.867z"/>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="nav-cta-icon" aria-hidden="true" focusable="false">
+                        <path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
                     </svg>
-                    Get Started
+                    Install
                 </a>
             </div>
         </nav>
@@ -80,8 +72,8 @@
           <strong>Create</strong> - Starts a fluent QR builder for plain text.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (System.String)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -89,8 +81,8 @@
           <strong>Create</strong> - Starts a fluent QR builder for a payload with embedded defaults.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
-              <li><code>arg2</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -98,8 +90,8 @@
           <strong>Encode</strong> - Encodes a payload into a QR code.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (System.String)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -107,9 +99,9 @@
           <strong>EncodeAuto</strong> - Detects a payload type and encodes it into a QR code.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (CodeGlyphX.Payloads.QrPayloadDetectOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (System.String)</li>
+              <li><code>detectOptions</code> (CodeGlyphX.Payloads.QrPayloadDetectOptions)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -117,8 +109,8 @@
           <strong>Encode</strong> - Encodes a payload with embedded defaults into a QR code.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
-              <li><code>arg2</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -126,8 +118,8 @@
           <strong>Png</strong> - Renders a QR code as PNG.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (System.String)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -135,9 +127,9 @@
           <strong>PngAuto</strong> - Detects a payload type and renders a QR code as PNG.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (CodeGlyphX.Payloads.QrPayloadDetectOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (System.String)</li>
+              <li><code>detectOptions</code> (CodeGlyphX.Payloads.QrPayloadDetectOptions)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -145,8 +137,8 @@
           <strong>Png</strong> - Renders a QR code as PNG for a payload with embedded defaults.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
-              <li><code>arg2</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -154,8 +146,8 @@
           <strong>Svg</strong> - Renders a QR code as SVG.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (System.String)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -163,9 +155,9 @@
           <strong>SvgAuto</strong> - Detects a payload type and renders a QR code as SVG.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (CodeGlyphX.Payloads.QrPayloadDetectOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (System.String)</li>
+              <li><code>detectOptions</code> (CodeGlyphX.Payloads.QrPayloadDetectOptions)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -173,8 +165,8 @@
           <strong>Svg</strong> - Renders a QR code as SVG for a payload with embedded defaults.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
-              <li><code>arg2</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -182,8 +174,8 @@
           <strong>Html</strong> - Renders a QR code as HTML.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (System.String)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -191,9 +183,9 @@
           <strong>HtmlAuto</strong> - Detects a payload type and renders a QR code as HTML.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (CodeGlyphX.Payloads.QrPayloadDetectOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (System.String)</li>
+              <li><code>detectOptions</code> (CodeGlyphX.Payloads.QrPayloadDetectOptions)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -201,8 +193,8 @@
           <strong>Html</strong> - Renders a QR code as HTML for a payload with embedded defaults.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
-              <li><code>arg2</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -210,8 +202,8 @@
           <strong>Jpeg</strong> - Renders a QR code as JPEG.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (System.String)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -219,8 +211,8 @@
           <strong>Webp</strong> - Renders a QR code as WebP.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (System.String)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -228,9 +220,9 @@
           <strong>JpegAuto</strong> - Detects a payload type and renders a QR code as JPEG.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (CodeGlyphX.Payloads.QrPayloadDetectOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (System.String)</li>
+              <li><code>detectOptions</code> (CodeGlyphX.Payloads.QrPayloadDetectOptions)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -238,9 +230,9 @@
           <strong>WebpAuto</strong> - Detects a payload type and renders a QR code as WebP.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (CodeGlyphX.Payloads.QrPayloadDetectOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (System.String)</li>
+              <li><code>detectOptions</code> (CodeGlyphX.Payloads.QrPayloadDetectOptions)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -248,8 +240,8 @@
           <strong>Jpeg</strong> - Renders a QR code as JPEG for a payload with embedded defaults.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
-              <li><code>arg2</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -257,8 +249,8 @@
           <strong>Webp</strong> - Renders a QR code as WebP for a payload with embedded defaults.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
-              <li><code>arg2</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -266,8 +258,8 @@
           <strong>Bmp</strong> - Renders a QR code as BMP.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (System.String)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -275,9 +267,9 @@
           <strong>BmpAuto</strong> - Detects a payload type and renders a QR code as BMP.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (CodeGlyphX.Payloads.QrPayloadDetectOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (System.String)</li>
+              <li><code>detectOptions</code> (CodeGlyphX.Payloads.QrPayloadDetectOptions)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -285,8 +277,8 @@
           <strong>Bmp</strong> - Renders a QR code as BMP for a payload with embedded defaults.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
-              <li><code>arg2</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -294,8 +286,8 @@
           <strong>Ppm</strong> - Renders a QR code as PPM.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (System.String)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -303,9 +295,9 @@
           <strong>PpmAuto</strong> - Detects a payload type and renders a QR code as PPM.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (CodeGlyphX.Payloads.QrPayloadDetectOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (System.String)</li>
+              <li><code>detectOptions</code> (CodeGlyphX.Payloads.QrPayloadDetectOptions)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -313,8 +305,8 @@
           <strong>Ppm</strong> - Renders a QR code as PPM for a payload with embedded defaults.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
-              <li><code>arg2</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -322,8 +314,8 @@
           <strong>Pbm</strong> - Renders a QR code as PBM.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (System.String)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -331,9 +323,9 @@
           <strong>PbmAuto</strong> - Detects a payload type and renders a QR code as PBM.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (CodeGlyphX.Payloads.QrPayloadDetectOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (System.String)</li>
+              <li><code>detectOptions</code> (CodeGlyphX.Payloads.QrPayloadDetectOptions)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -341,8 +333,8 @@
           <strong>Pbm</strong> - Renders a QR code as PBM for a payload with embedded defaults.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
-              <li><code>arg2</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -350,8 +342,8 @@
           <strong>Pgm</strong> - Renders a QR code as PGM.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (System.String)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -359,9 +351,9 @@
           <strong>PgmAuto</strong> - Detects a payload type and renders a QR code as PGM.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (CodeGlyphX.Payloads.QrPayloadDetectOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (System.String)</li>
+              <li><code>detectOptions</code> (CodeGlyphX.Payloads.QrPayloadDetectOptions)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -369,8 +361,8 @@
           <strong>Pgm</strong> - Renders a QR code as PGM for a payload with embedded defaults.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
-              <li><code>arg2</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -378,8 +370,8 @@
           <strong>Pam</strong> - Renders a QR code as PAM.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (System.String)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -387,9 +379,9 @@
           <strong>PamAuto</strong> - Detects a payload type and renders a QR code as PAM.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (CodeGlyphX.Payloads.QrPayloadDetectOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (System.String)</li>
+              <li><code>detectOptions</code> (CodeGlyphX.Payloads.QrPayloadDetectOptions)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -397,8 +389,8 @@
           <strong>Pam</strong> - Renders a QR code as PAM for a payload with embedded defaults.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
-              <li><code>arg2</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -406,8 +398,8 @@
           <strong>Xbm</strong> - Renders a QR code as XBM.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (System.String)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -415,9 +407,9 @@
           <strong>XbmAuto</strong> - Detects a payload type and renders a QR code as XBM.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (CodeGlyphX.Payloads.QrPayloadDetectOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (System.String)</li>
+              <li><code>detectOptions</code> (CodeGlyphX.Payloads.QrPayloadDetectOptions)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -425,8 +417,8 @@
           <strong>Xbm</strong> - Renders a QR code as XBM for a payload with embedded defaults.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
-              <li><code>arg2</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -434,8 +426,8 @@
           <strong>Xpm</strong> - Renders a QR code as XPM.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (System.String)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -443,9 +435,9 @@
           <strong>XpmAuto</strong> - Detects a payload type and renders a QR code as XPM.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (CodeGlyphX.Payloads.QrPayloadDetectOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (System.String)</li>
+              <li><code>detectOptions</code> (CodeGlyphX.Payloads.QrPayloadDetectOptions)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -453,8 +445,8 @@
           <strong>Xpm</strong> - Renders a QR code as XPM for a payload with embedded defaults.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
-              <li><code>arg2</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -462,8 +454,8 @@
           <strong>Tga</strong> - Renders a QR code as TGA.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (System.String)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -471,9 +463,9 @@
           <strong>TgaAuto</strong> - Detects a payload type and renders a QR code as TGA.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (CodeGlyphX.Payloads.QrPayloadDetectOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (System.String)</li>
+              <li><code>detectOptions</code> (CodeGlyphX.Payloads.QrPayloadDetectOptions)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -481,8 +473,8 @@
           <strong>Tga</strong> - Renders a QR code as TGA for a payload with embedded defaults.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
-              <li><code>arg2</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -490,8 +482,8 @@
           <strong>Ico</strong> - Renders a QR code as ICO.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (System.String)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -499,9 +491,9 @@
           <strong>IcoAuto</strong> - Detects a payload type and renders a QR code as ICO.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (CodeGlyphX.Payloads.QrPayloadDetectOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (System.String)</li>
+              <li><code>detectOptions</code> (CodeGlyphX.Payloads.QrPayloadDetectOptions)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -509,8 +501,8 @@
           <strong>Ico</strong> - Renders a QR code as ICO for a payload with embedded defaults.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
-              <li><code>arg2</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -518,8 +510,8 @@
           <strong>Svgz</strong> - Renders a QR code as SVGZ.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (System.String)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -527,9 +519,9 @@
           <strong>SvgzAuto</strong> - Detects a payload type and renders a QR code as SVGZ.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (CodeGlyphX.Payloads.QrPayloadDetectOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (System.String)</li>
+              <li><code>detectOptions</code> (CodeGlyphX.Payloads.QrPayloadDetectOptions)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -537,8 +529,8 @@
           <strong>Svgz</strong> - Renders a QR code as SVGZ for a payload with embedded defaults.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
-              <li><code>arg2</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -608,9 +600,9 @@
           <strong>Ascii</strong> - Renders a QR code as ASCII text.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (System.String)</li>
+              <li><code>asciiOptions</code> (CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -618,10 +610,10 @@
           <strong>AsciiAuto</strong> - Detects a payload type and renders a QR code as ASCII text.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (CodeGlyphX.Payloads.QrPayloadDetectOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (System.String)</li>
+              <li><code>detectOptions</code> (CodeGlyphX.Payloads.QrPayloadDetectOptions)</li>
+              <li><code>asciiOptions</code> (CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -629,9 +621,9 @@
           <strong>Ascii</strong> - Renders a QR code as ASCII text for a payload with embedded defaults.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
-              <li><code>arg2</code> (CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>asciiOptions</code> (CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -639,8 +631,8 @@
           <strong>TryDecodePng</strong> - Attempts to decode a QR code from a PNG byte array.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.Byte[])</li>
-              <li><code>arg2</code> (CodeGlyphX.QrDecoded@)</li>
+              <li><code>png</code> (System.Byte[])</li>
+              <li><code>decoded</code> (CodeGlyphX.QrDecoded@)</li>
             </ul>
           </div>
         </li>
@@ -648,9 +640,9 @@
           <strong>TryDecodePng</strong> - Attempts to decode a QR code from a PNG byte array with options.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.Byte[])</li>
-              <li><code>arg2</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrDecoded@)</li>
+              <li><code>png</code> (System.Byte[])</li>
+              <li><code>options</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>decoded</code> (CodeGlyphX.QrDecoded@)</li>
             </ul>
           </div>
         </li>
@@ -658,10 +650,10 @@
           <strong>TryDecodePng</strong> - Attempts to decode a QR code from a PNG byte array with options and cancellation.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.Byte[])</li>
-              <li><code>arg2</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
-              <li><code>arg3</code> (System.Threading.CancellationToken)</li>
-              <li><code>arg4</code> (CodeGlyphX.QrDecoded@)</li>
+              <li><code>png</code> (System.Byte[])</li>
+              <li><code>options</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
+              <li><code>decoded</code> (CodeGlyphX.QrDecoded@)</li>
             </ul>
           </div>
         </li>
@@ -669,10 +661,10 @@
           <strong>TryDecodePng</strong> - Attempts to decode a QR code from a PNG byte array with image decode options.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.Byte[])</li>
-              <li><code>arg2</code> (CodeGlyphX.ImageDecodeOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.QrDecoded@)</li>
+              <li><code>png</code> (System.Byte[])</li>
+              <li><code>imageOptions</code> (CodeGlyphX.ImageDecodeOptions)</li>
+              <li><code>options</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>decoded</code> (CodeGlyphX.QrDecoded@)</li>
             </ul>
           </div>
         </li>
@@ -680,11 +672,11 @@
           <strong>TryDecodePng</strong> - Attempts to decode a QR code from a PNG byte array with image decode options and cancellation.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.Byte[])</li>
-              <li><code>arg2</code> (CodeGlyphX.ImageDecodeOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
-              <li><code>arg4</code> (System.Threading.CancellationToken)</li>
-              <li><code>arg5</code> (CodeGlyphX.QrDecoded@)</li>
+              <li><code>png</code> (System.Byte[])</li>
+              <li><code>imageOptions</code> (CodeGlyphX.ImageDecodeOptions)</li>
+              <li><code>options</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
+              <li><code>decoded</code> (CodeGlyphX.QrDecoded@)</li>
             </ul>
           </div>
         </li>
@@ -692,11 +684,11 @@
           <strong>TryDecodePng</strong> - Attempts to decode a QR code from a PNG byte array with image decode options, diagnostics, and profile options.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.Byte[])</li>
-              <li><code>arg2</code> (CodeGlyphX.ImageDecodeOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrDecoded@)</li>
-              <li><code>arg4</code> (CodeGlyphX.QrPixelDecodeInfo@)</li>
-              <li><code>arg5</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>png</code> (System.Byte[])</li>
+              <li><code>imageOptions</code> (CodeGlyphX.ImageDecodeOptions)</li>
+              <li><code>decoded</code> (CodeGlyphX.QrDecoded@)</li>
+              <li><code>info</code> (CodeGlyphX.QrPixelDecodeInfo@)</li>
+              <li><code>options</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
             </ul>
           </div>
         </li>
@@ -704,12 +696,12 @@
           <strong>TryDecodePng</strong> - Attempts to decode a QR code from a PNG byte array with image decode options, diagnostics, profile options, and cancellation.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.Byte[])</li>
-              <li><code>arg2</code> (CodeGlyphX.ImageDecodeOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrDecoded@)</li>
-              <li><code>arg4</code> (CodeGlyphX.QrPixelDecodeInfo@)</li>
-              <li><code>arg5</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
-              <li><code>arg6</code> (System.Threading.CancellationToken)</li>
+              <li><code>png</code> (System.Byte[])</li>
+              <li><code>imageOptions</code> (CodeGlyphX.ImageDecodeOptions)</li>
+              <li><code>decoded</code> (CodeGlyphX.QrDecoded@)</li>
+              <li><code>info</code> (CodeGlyphX.QrPixelDecodeInfo@)</li>
+              <li><code>options</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
             </ul>
           </div>
         </li>
@@ -717,8 +709,8 @@
           <strong>TryDecodeAllPng</strong> - Attempts to decode all QR codes from a PNG byte array.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.Byte[])</li>
-              <li><code>arg2</code> (CodeGlyphX.QrDecoded[]@)</li>
+              <li><code>png</code> (System.Byte[])</li>
+              <li><code>decoded</code> (CodeGlyphX.QrDecoded[]@)</li>
             </ul>
           </div>
         </li>
@@ -726,9 +718,9 @@
           <strong>TryDecodeAllPng</strong> - Attempts to decode all QR codes from a PNG byte array with options.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.Byte[])</li>
-              <li><code>arg2</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrDecoded[]@)</li>
+              <li><code>png</code> (System.Byte[])</li>
+              <li><code>options</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>decoded</code> (CodeGlyphX.QrDecoded[]@)</li>
             </ul>
           </div>
         </li>
@@ -736,10 +728,10 @@
           <strong>TryDecodeAllPng</strong> - Attempts to decode all QR codes from a PNG byte array with diagnostics and options.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.Byte[])</li>
-              <li><code>arg2</code> (CodeGlyphX.QrDecoded[]@)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrPixelDecodeInfo@)</li>
-              <li><code>arg4</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>png</code> (System.Byte[])</li>
+              <li><code>decoded</code> (CodeGlyphX.QrDecoded[]@)</li>
+              <li><code>info</code> (CodeGlyphX.QrPixelDecodeInfo@)</li>
+              <li><code>options</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
             </ul>
           </div>
         </li>
@@ -747,11 +739,11 @@
           <strong>TryDecodeAllPng</strong> - Attempts to decode all QR codes from a PNG byte array with diagnostics, options, and cancellation.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.Byte[])</li>
-              <li><code>arg2</code> (CodeGlyphX.QrDecoded[]@)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrPixelDecodeInfo@)</li>
-              <li><code>arg4</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
-              <li><code>arg5</code> (System.Threading.CancellationToken)</li>
+              <li><code>png</code> (System.Byte[])</li>
+              <li><code>decoded</code> (CodeGlyphX.QrDecoded[]@)</li>
+              <li><code>info</code> (CodeGlyphX.QrPixelDecodeInfo@)</li>
+              <li><code>options</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
             </ul>
           </div>
         </li>
@@ -759,10 +751,10 @@
           <strong>TryDecodeAllPng</strong> - Attempts to decode all QR codes from a PNG byte array with options and cancellation.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.Byte[])</li>
-              <li><code>arg2</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
-              <li><code>arg3</code> (System.Threading.CancellationToken)</li>
-              <li><code>arg4</code> (CodeGlyphX.QrDecoded[]@)</li>
+              <li><code>png</code> (System.Byte[])</li>
+              <li><code>options</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
+              <li><code>decoded</code> (CodeGlyphX.QrDecoded[]@)</li>
             </ul>
           </div>
         </li>
@@ -770,10 +762,10 @@
           <strong>TryDecodeAllPng</strong> - Attempts to decode all QR codes from a PNG byte array with image decode options.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.Byte[])</li>
-              <li><code>arg2</code> (CodeGlyphX.ImageDecodeOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.QrDecoded[]@)</li>
+              <li><code>png</code> (System.Byte[])</li>
+              <li><code>imageOptions</code> (CodeGlyphX.ImageDecodeOptions)</li>
+              <li><code>options</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>decoded</code> (CodeGlyphX.QrDecoded[]@)</li>
             </ul>
           </div>
         </li>
@@ -781,11 +773,11 @@
           <strong>TryDecodeAllPng</strong> - Attempts to decode all QR codes from a PNG byte array with image decode options and cancellation.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.Byte[])</li>
-              <li><code>arg2</code> (CodeGlyphX.ImageDecodeOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
-              <li><code>arg4</code> (System.Threading.CancellationToken)</li>
-              <li><code>arg5</code> (CodeGlyphX.QrDecoded[]@)</li>
+              <li><code>png</code> (System.Byte[])</li>
+              <li><code>imageOptions</code> (CodeGlyphX.ImageDecodeOptions)</li>
+              <li><code>options</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
+              <li><code>decoded</code> (CodeGlyphX.QrDecoded[]@)</li>
             </ul>
           </div>
         </li>
@@ -793,11 +785,11 @@
           <strong>TryDecodeAllPng</strong> - Attempts to decode all QR codes from a PNG byte array with image decode options, diagnostics, and profile options.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.Byte[])</li>
-              <li><code>arg2</code> (CodeGlyphX.ImageDecodeOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrDecoded[]@)</li>
-              <li><code>arg4</code> (CodeGlyphX.QrPixelDecodeInfo@)</li>
-              <li><code>arg5</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>png</code> (System.Byte[])</li>
+              <li><code>imageOptions</code> (CodeGlyphX.ImageDecodeOptions)</li>
+              <li><code>decoded</code> (CodeGlyphX.QrDecoded[]@)</li>
+              <li><code>info</code> (CodeGlyphX.QrPixelDecodeInfo@)</li>
+              <li><code>options</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
             </ul>
           </div>
         </li>
@@ -805,12 +797,12 @@
           <strong>TryDecodeAllPng</strong> - Attempts to decode all QR codes from a PNG byte array with image decode options, diagnostics, profile options, and cancellation.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.Byte[])</li>
-              <li><code>arg2</code> (CodeGlyphX.ImageDecodeOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrDecoded[]@)</li>
-              <li><code>arg4</code> (CodeGlyphX.QrPixelDecodeInfo@)</li>
-              <li><code>arg5</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
-              <li><code>arg6</code> (System.Threading.CancellationToken)</li>
+              <li><code>png</code> (System.Byte[])</li>
+              <li><code>imageOptions</code> (CodeGlyphX.ImageDecodeOptions)</li>
+              <li><code>decoded</code> (CodeGlyphX.QrDecoded[]@)</li>
+              <li><code>info</code> (CodeGlyphX.QrPixelDecodeInfo@)</li>
+              <li><code>options</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
             </ul>
           </div>
         </li>
@@ -818,8 +810,8 @@
           <strong>TryDecodePngFile</strong> - Attempts to decode a QR code from a PNG file.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (CodeGlyphX.QrDecoded@)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>decoded</code> (CodeGlyphX.QrDecoded@)</li>
             </ul>
           </div>
         </li>
@@ -827,10 +819,10 @@
           <strong>TryDecodePngFile</strong> - Attempts to decode a QR code from a PNG file with options and cancellation.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
-              <li><code>arg3</code> (System.Threading.CancellationToken)</li>
-              <li><code>arg4</code> (CodeGlyphX.QrDecoded@)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>options</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
+              <li><code>decoded</code> (CodeGlyphX.QrDecoded@)</li>
             </ul>
           </div>
         </li>
@@ -838,11 +830,11 @@
           <strong>TryDecodePngFile</strong> - Attempts to decode a QR code from a PNG file with image decode options, diagnostics, and profile options.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (CodeGlyphX.ImageDecodeOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrDecoded@)</li>
-              <li><code>arg4</code> (CodeGlyphX.QrPixelDecodeInfo@)</li>
-              <li><code>arg5</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>imageOptions</code> (CodeGlyphX.ImageDecodeOptions)</li>
+              <li><code>decoded</code> (CodeGlyphX.QrDecoded@)</li>
+              <li><code>info</code> (CodeGlyphX.QrPixelDecodeInfo@)</li>
+              <li><code>options</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
             </ul>
           </div>
         </li>
@@ -850,12 +842,12 @@
           <strong>TryDecodePngFile</strong> - Attempts to decode a QR code from a PNG file with image decode options, diagnostics, profile options, and cancellation.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (CodeGlyphX.ImageDecodeOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrDecoded@)</li>
-              <li><code>arg4</code> (CodeGlyphX.QrPixelDecodeInfo@)</li>
-              <li><code>arg5</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
-              <li><code>arg6</code> (System.Threading.CancellationToken)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>imageOptions</code> (CodeGlyphX.ImageDecodeOptions)</li>
+              <li><code>decoded</code> (CodeGlyphX.QrDecoded@)</li>
+              <li><code>info</code> (CodeGlyphX.QrPixelDecodeInfo@)</li>
+              <li><code>options</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
             </ul>
           </div>
         </li>
@@ -863,10 +855,10 @@
           <strong>TryDecodePngFile</strong> - Attempts to decode a QR code from a PNG file with image decode options.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (CodeGlyphX.ImageDecodeOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.QrDecoded@)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>imageOptions</code> (CodeGlyphX.ImageDecodeOptions)</li>
+              <li><code>options</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>decoded</code> (CodeGlyphX.QrDecoded@)</li>
             </ul>
           </div>
         </li>
@@ -874,11 +866,11 @@
           <strong>TryDecodePngFile</strong> - Attempts to decode a QR code from a PNG file with image decode options and cancellation.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (CodeGlyphX.ImageDecodeOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
-              <li><code>arg4</code> (System.Threading.CancellationToken)</li>
-              <li><code>arg5</code> (CodeGlyphX.QrDecoded@)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>imageOptions</code> (CodeGlyphX.ImageDecodeOptions)</li>
+              <li><code>options</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
+              <li><code>decoded</code> (CodeGlyphX.QrDecoded@)</li>
             </ul>
           </div>
         </li>
@@ -886,8 +878,8 @@
           <strong>TryDecodeAllPngFile</strong> - Attempts to decode all QR codes from a PNG file.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (CodeGlyphX.QrDecoded[]@)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>decoded</code> (CodeGlyphX.QrDecoded[]@)</li>
             </ul>
           </div>
         </li>
@@ -895,10 +887,10 @@
           <strong>TryDecodeAllPngFile</strong> - Attempts to decode all QR codes from a PNG file with options and cancellation.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
-              <li><code>arg3</code> (System.Threading.CancellationToken)</li>
-              <li><code>arg4</code> (CodeGlyphX.QrDecoded[]@)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>options</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
+              <li><code>decoded</code> (CodeGlyphX.QrDecoded[]@)</li>
             </ul>
           </div>
         </li>
@@ -906,10 +898,10 @@
           <strong>TryDecodeAllPngFile</strong> - Attempts to decode all QR codes from a PNG file with diagnostics and options.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (CodeGlyphX.QrDecoded[]@)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrPixelDecodeInfo@)</li>
-              <li><code>arg4</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>decoded</code> (CodeGlyphX.QrDecoded[]@)</li>
+              <li><code>info</code> (CodeGlyphX.QrPixelDecodeInfo@)</li>
+              <li><code>options</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
             </ul>
           </div>
         </li>
@@ -917,11 +909,11 @@
           <strong>TryDecodeAllPngFile</strong> - Attempts to decode all QR codes from a PNG file with diagnostics, options, and cancellation.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (CodeGlyphX.QrDecoded[]@)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrPixelDecodeInfo@)</li>
-              <li><code>arg4</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
-              <li><code>arg5</code> (System.Threading.CancellationToken)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>decoded</code> (CodeGlyphX.QrDecoded[]@)</li>
+              <li><code>info</code> (CodeGlyphX.QrPixelDecodeInfo@)</li>
+              <li><code>options</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
             </ul>
           </div>
         </li>
@@ -929,10 +921,10 @@
           <strong>TryDecodeAllPngFile</strong> - Attempts to decode all QR codes from a PNG file with image decode options.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (CodeGlyphX.ImageDecodeOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.QrDecoded[]@)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>imageOptions</code> (CodeGlyphX.ImageDecodeOptions)</li>
+              <li><code>options</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>decoded</code> (CodeGlyphX.QrDecoded[]@)</li>
             </ul>
           </div>
         </li>
@@ -940,11 +932,11 @@
           <strong>TryDecodeAllPngFile</strong> - Attempts to decode all QR codes from a PNG file with image decode options and cancellation.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (CodeGlyphX.ImageDecodeOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
-              <li><code>arg4</code> (System.Threading.CancellationToken)</li>
-              <li><code>arg5</code> (CodeGlyphX.QrDecoded[]@)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>imageOptions</code> (CodeGlyphX.ImageDecodeOptions)</li>
+              <li><code>options</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
+              <li><code>decoded</code> (CodeGlyphX.QrDecoded[]@)</li>
             </ul>
           </div>
         </li>
@@ -952,11 +944,11 @@
           <strong>TryDecodeAllPngFile</strong> - Attempts to decode all QR codes from a PNG file with image decode options, diagnostics, and profile options.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (CodeGlyphX.ImageDecodeOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrDecoded[]@)</li>
-              <li><code>arg4</code> (CodeGlyphX.QrPixelDecodeInfo@)</li>
-              <li><code>arg5</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>imageOptions</code> (CodeGlyphX.ImageDecodeOptions)</li>
+              <li><code>decoded</code> (CodeGlyphX.QrDecoded[]@)</li>
+              <li><code>info</code> (CodeGlyphX.QrPixelDecodeInfo@)</li>
+              <li><code>options</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
             </ul>
           </div>
         </li>
@@ -964,12 +956,12 @@
           <strong>TryDecodeAllPngFile</strong> - Attempts to decode all QR codes from a PNG file with image decode options, diagnostics, profile options, and cancellation.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (CodeGlyphX.ImageDecodeOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrDecoded[]@)</li>
-              <li><code>arg4</code> (CodeGlyphX.QrPixelDecodeInfo@)</li>
-              <li><code>arg5</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
-              <li><code>arg6</code> (System.Threading.CancellationToken)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>imageOptions</code> (CodeGlyphX.ImageDecodeOptions)</li>
+              <li><code>decoded</code> (CodeGlyphX.QrDecoded[]@)</li>
+              <li><code>info</code> (CodeGlyphX.QrPixelDecodeInfo@)</li>
+              <li><code>options</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
             </ul>
           </div>
         </li>
@@ -977,8 +969,8 @@
           <strong>TryDecodePng</strong> - Attempts to decode a QR code from a PNG stream.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.IO.Stream)</li>
-              <li><code>arg2</code> (CodeGlyphX.QrDecoded@)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>decoded</code> (CodeGlyphX.QrDecoded@)</li>
             </ul>
           </div>
         </li>
@@ -986,10 +978,10 @@
           <strong>TryDecodePng</strong> - Attempts to decode a QR code from a PNG stream with options and cancellation.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.IO.Stream)</li>
-              <li><code>arg2</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
-              <li><code>arg3</code> (System.Threading.CancellationToken)</li>
-              <li><code>arg4</code> (CodeGlyphX.QrDecoded@)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>options</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
+              <li><code>decoded</code> (CodeGlyphX.QrDecoded@)</li>
             </ul>
           </div>
         </li>
@@ -997,11 +989,11 @@
           <strong>TryDecodePng</strong> - Attempts to decode a QR code from a PNG stream with image decode options, diagnostics, and profile options.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.IO.Stream)</li>
-              <li><code>arg2</code> (CodeGlyphX.ImageDecodeOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrDecoded@)</li>
-              <li><code>arg4</code> (CodeGlyphX.QrPixelDecodeInfo@)</li>
-              <li><code>arg5</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>imageOptions</code> (CodeGlyphX.ImageDecodeOptions)</li>
+              <li><code>decoded</code> (CodeGlyphX.QrDecoded@)</li>
+              <li><code>info</code> (CodeGlyphX.QrPixelDecodeInfo@)</li>
+              <li><code>options</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
             </ul>
           </div>
         </li>
@@ -1009,12 +1001,12 @@
           <strong>TryDecodePng</strong> - Attempts to decode a QR code from a PNG stream with image decode options, diagnostics, profile options, and cancellation.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.IO.Stream)</li>
-              <li><code>arg2</code> (CodeGlyphX.ImageDecodeOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrDecoded@)</li>
-              <li><code>arg4</code> (CodeGlyphX.QrPixelDecodeInfo@)</li>
-              <li><code>arg5</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
-              <li><code>arg6</code> (System.Threading.CancellationToken)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>imageOptions</code> (CodeGlyphX.ImageDecodeOptions)</li>
+              <li><code>decoded</code> (CodeGlyphX.QrDecoded@)</li>
+              <li><code>info</code> (CodeGlyphX.QrPixelDecodeInfo@)</li>
+              <li><code>options</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
             </ul>
           </div>
         </li>
@@ -1022,10 +1014,10 @@
           <strong>TryDecodePng</strong> - Attempts to decode a QR code from a PNG stream with image decode options.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.IO.Stream)</li>
-              <li><code>arg2</code> (CodeGlyphX.ImageDecodeOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.QrDecoded@)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>imageOptions</code> (CodeGlyphX.ImageDecodeOptions)</li>
+              <li><code>options</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>decoded</code> (CodeGlyphX.QrDecoded@)</li>
             </ul>
           </div>
         </li>
@@ -1033,11 +1025,11 @@
           <strong>TryDecodePng</strong> - Attempts to decode a QR code from a PNG stream with image decode options and cancellation.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.IO.Stream)</li>
-              <li><code>arg2</code> (CodeGlyphX.ImageDecodeOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
-              <li><code>arg4</code> (System.Threading.CancellationToken)</li>
-              <li><code>arg5</code> (CodeGlyphX.QrDecoded@)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>imageOptions</code> (CodeGlyphX.ImageDecodeOptions)</li>
+              <li><code>options</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
+              <li><code>decoded</code> (CodeGlyphX.QrDecoded@)</li>
             </ul>
           </div>
         </li>
@@ -1045,10 +1037,10 @@
           <strong>TryDecodeAllPng</strong> - Attempts to decode all QR codes from a PNG stream with diagnostics and options.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.IO.Stream)</li>
-              <li><code>arg2</code> (CodeGlyphX.QrDecoded[]@)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrPixelDecodeInfo@)</li>
-              <li><code>arg4</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>decoded</code> (CodeGlyphX.QrDecoded[]@)</li>
+              <li><code>info</code> (CodeGlyphX.QrPixelDecodeInfo@)</li>
+              <li><code>options</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
             </ul>
           </div>
         </li>
@@ -1056,11 +1048,11 @@
           <strong>TryDecodeAllPng</strong> - Attempts to decode all QR codes from a PNG stream with diagnostics, options, and cancellation.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.IO.Stream)</li>
-              <li><code>arg2</code> (CodeGlyphX.QrDecoded[]@)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrPixelDecodeInfo@)</li>
-              <li><code>arg4</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
-              <li><code>arg5</code> (System.Threading.CancellationToken)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>decoded</code> (CodeGlyphX.QrDecoded[]@)</li>
+              <li><code>info</code> (CodeGlyphX.QrPixelDecodeInfo@)</li>
+              <li><code>options</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
             </ul>
           </div>
         </li>
@@ -1068,11 +1060,11 @@
           <strong>TryDecodeAllPng</strong> - Attempts to decode all QR codes from a PNG stream with image decode options, diagnostics, and profile options.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.IO.Stream)</li>
-              <li><code>arg2</code> (CodeGlyphX.ImageDecodeOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrDecoded[]@)</li>
-              <li><code>arg4</code> (CodeGlyphX.QrPixelDecodeInfo@)</li>
-              <li><code>arg5</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>imageOptions</code> (CodeGlyphX.ImageDecodeOptions)</li>
+              <li><code>decoded</code> (CodeGlyphX.QrDecoded[]@)</li>
+              <li><code>info</code> (CodeGlyphX.QrPixelDecodeInfo@)</li>
+              <li><code>options</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
             </ul>
           </div>
         </li>
@@ -1080,12 +1072,12 @@
           <strong>TryDecodeAllPng</strong> - Attempts to decode all QR codes from a PNG stream with image decode options, diagnostics, profile options, and cancellation.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.IO.Stream)</li>
-              <li><code>arg2</code> (CodeGlyphX.ImageDecodeOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrDecoded[]@)</li>
-              <li><code>arg4</code> (CodeGlyphX.QrPixelDecodeInfo@)</li>
-              <li><code>arg5</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
-              <li><code>arg6</code> (System.Threading.CancellationToken)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>imageOptions</code> (CodeGlyphX.ImageDecodeOptions)</li>
+              <li><code>decoded</code> (CodeGlyphX.QrDecoded[]@)</li>
+              <li><code>info</code> (CodeGlyphX.QrPixelDecodeInfo@)</li>
+              <li><code>options</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
             </ul>
           </div>
         </li>
@@ -1093,8 +1085,8 @@
           <strong>TryParsePayload</strong> - Attempts to parse a raw QR payload into a structured representation.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (CodeGlyphX.Payloads.QrParsedPayload@)</li>
+              <li><code>payload</code> (System.String)</li>
+              <li><code>parsed</code> (CodeGlyphX.Payloads.QrParsedPayload@)</li>
             </ul>
           </div>
         </li>
@@ -1102,10 +1094,10 @@
           <strong>TryParsePayload</strong> - Attempts to parse a raw QR payload into a structured representation with optional validation.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (CodeGlyphX.Payloads.QrPayloadParseOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.Payloads.QrParsedPayload@)</li>
-              <li><code>arg4</code> (CodeGlyphX.Payloads.QrPayloadValidationResult@)</li>
+              <li><code>payload</code> (System.String)</li>
+              <li><code>options</code> (CodeGlyphX.Payloads.QrPayloadParseOptions)</li>
+              <li><code>parsed</code> (CodeGlyphX.Payloads.QrParsedPayload@)</li>
+              <li><code>validation</code> (CodeGlyphX.Payloads.QrPayloadValidationResult@)</li>
             </ul>
           </div>
         </li>
@@ -1113,7 +1105,7 @@
           <strong>ParsePayload</strong> - Parses a raw QR payload into a structured representation.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
+              <li><code>payload</code> (System.String)</li>
             </ul>
           </div>
         </li>
@@ -1121,8 +1113,8 @@
           <strong>TryDecodeAllPng</strong> - Attempts to decode all QR codes from a PNG stream.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.IO.Stream)</li>
-              <li><code>arg2</code> (CodeGlyphX.QrDecoded[]@)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>decoded</code> (CodeGlyphX.QrDecoded[]@)</li>
             </ul>
           </div>
         </li>
@@ -1130,10 +1122,10 @@
           <strong>TryDecodeAllPng</strong> - Attempts to decode all QR codes from a PNG stream with options and cancellation.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.IO.Stream)</li>
-              <li><code>arg2</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
-              <li><code>arg3</code> (System.Threading.CancellationToken)</li>
-              <li><code>arg4</code> (CodeGlyphX.QrDecoded[]@)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>options</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
+              <li><code>decoded</code> (CodeGlyphX.QrDecoded[]@)</li>
             </ul>
           </div>
         </li>
@@ -1141,8 +1133,8 @@
           <strong>TryDecodeImage</strong> - Attempts to decode a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.Byte[])</li>
-              <li><code>arg2</code> (CodeGlyphX.QrDecoded@)</li>
+              <li><code>image</code> (System.Byte[])</li>
+              <li><code>decoded</code> (CodeGlyphX.QrDecoded@)</li>
             </ul>
           </div>
         </li>
@@ -1150,9 +1142,9 @@
           <strong>TryDecodeImage</strong> - Attempts to decode a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with options.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.Byte[])</li>
-              <li><code>arg2</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrDecoded@)</li>
+              <li><code>image</code> (System.Byte[])</li>
+              <li><code>options</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>decoded</code> (CodeGlyphX.QrDecoded@)</li>
             </ul>
           </div>
         </li>
@@ -1160,10 +1152,10 @@
           <strong>TryDecodeImage</strong> - Attempts to decode a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with options and cancellation.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.Byte[])</li>
-              <li><code>arg2</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
-              <li><code>arg3</code> (System.Threading.CancellationToken)</li>
-              <li><code>arg4</code> (CodeGlyphX.QrDecoded@)</li>
+              <li><code>image</code> (System.Byte[])</li>
+              <li><code>options</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
+              <li><code>decoded</code> (CodeGlyphX.QrDecoded@)</li>
             </ul>
           </div>
         </li>
@@ -1171,10 +1163,10 @@
           <strong>TryDecodeImage</strong> - Attempts to decode a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.Byte[])</li>
-              <li><code>arg2</code> (CodeGlyphX.ImageDecodeOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.QrDecoded@)</li>
+              <li><code>image</code> (System.Byte[])</li>
+              <li><code>imageOptions</code> (CodeGlyphX.ImageDecodeOptions)</li>
+              <li><code>options</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>decoded</code> (CodeGlyphX.QrDecoded@)</li>
             </ul>
           </div>
         </li>
@@ -1182,11 +1174,11 @@
           <strong>TryDecodeImage</strong> - Attempts to decode a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options and cancellation.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.Byte[])</li>
-              <li><code>arg2</code> (CodeGlyphX.ImageDecodeOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
-              <li><code>arg4</code> (System.Threading.CancellationToken)</li>
-              <li><code>arg5</code> (CodeGlyphX.QrDecoded@)</li>
+              <li><code>image</code> (System.Byte[])</li>
+              <li><code>imageOptions</code> (CodeGlyphX.ImageDecodeOptions)</li>
+              <li><code>options</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
+              <li><code>decoded</code> (CodeGlyphX.QrDecoded@)</li>
             </ul>
           </div>
         </li>
@@ -1194,11 +1186,11 @@
           <strong>TryDecodeImage</strong> - Attempts to decode a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options, diagnostics, and profile options.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.Byte[])</li>
-              <li><code>arg2</code> (CodeGlyphX.ImageDecodeOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrDecoded@)</li>
-              <li><code>arg4</code> (CodeGlyphX.QrPixelDecodeInfo@)</li>
-              <li><code>arg5</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>image</code> (System.Byte[])</li>
+              <li><code>imageOptions</code> (CodeGlyphX.ImageDecodeOptions)</li>
+              <li><code>decoded</code> (CodeGlyphX.QrDecoded@)</li>
+              <li><code>info</code> (CodeGlyphX.QrPixelDecodeInfo@)</li>
+              <li><code>options</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
             </ul>
           </div>
         </li>
@@ -1206,12 +1198,12 @@
           <strong>TryDecodeImage</strong> - Attempts to decode a QR code from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options, diagnostics, profile options, and cancellation.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.Byte[])</li>
-              <li><code>arg2</code> (CodeGlyphX.ImageDecodeOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrDecoded@)</li>
-              <li><code>arg4</code> (CodeGlyphX.QrPixelDecodeInfo@)</li>
-              <li><code>arg5</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
-              <li><code>arg6</code> (System.Threading.CancellationToken)</li>
+              <li><code>image</code> (System.Byte[])</li>
+              <li><code>imageOptions</code> (CodeGlyphX.ImageDecodeOptions)</li>
+              <li><code>decoded</code> (CodeGlyphX.QrDecoded@)</li>
+              <li><code>info</code> (CodeGlyphX.QrPixelDecodeInfo@)</li>
+              <li><code>options</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
             </ul>
           </div>
         </li>
@@ -1219,8 +1211,8 @@
           <strong>TryDecodeAllImage</strong> - Attempts to decode all QR codes from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.Byte[])</li>
-              <li><code>arg2</code> (CodeGlyphX.QrDecoded[]@)</li>
+              <li><code>image</code> (System.Byte[])</li>
+              <li><code>decoded</code> (CodeGlyphX.QrDecoded[]@)</li>
             </ul>
           </div>
         </li>
@@ -1228,9 +1220,9 @@
           <strong>TryDecodeAllImage</strong> - Attempts to decode all QR codes from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with options.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.Byte[])</li>
-              <li><code>arg2</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrDecoded[]@)</li>
+              <li><code>image</code> (System.Byte[])</li>
+              <li><code>options</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>decoded</code> (CodeGlyphX.QrDecoded[]@)</li>
             </ul>
           </div>
         </li>
@@ -1238,10 +1230,10 @@
           <strong>TryDecodeAllImage</strong> - Attempts to decode all QR codes from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with options and cancellation.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.Byte[])</li>
-              <li><code>arg2</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
-              <li><code>arg3</code> (System.Threading.CancellationToken)</li>
-              <li><code>arg4</code> (CodeGlyphX.QrDecoded[]@)</li>
+              <li><code>image</code> (System.Byte[])</li>
+              <li><code>options</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
+              <li><code>decoded</code> (CodeGlyphX.QrDecoded[]@)</li>
             </ul>
           </div>
         </li>
@@ -1249,10 +1241,10 @@
           <strong>TryDecodeAllImage</strong> - Attempts to decode all QR codes from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.Byte[])</li>
-              <li><code>arg2</code> (CodeGlyphX.ImageDecodeOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.QrDecoded[]@)</li>
+              <li><code>image</code> (System.Byte[])</li>
+              <li><code>imageOptions</code> (CodeGlyphX.ImageDecodeOptions)</li>
+              <li><code>options</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>decoded</code> (CodeGlyphX.QrDecoded[]@)</li>
             </ul>
           </div>
         </li>
@@ -1260,11 +1252,11 @@
           <strong>TryDecodeAllImage</strong> - Attempts to decode all QR codes from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options and cancellation.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.Byte[])</li>
-              <li><code>arg2</code> (CodeGlyphX.ImageDecodeOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
-              <li><code>arg4</code> (System.Threading.CancellationToken)</li>
-              <li><code>arg5</code> (CodeGlyphX.QrDecoded[]@)</li>
+              <li><code>image</code> (System.Byte[])</li>
+              <li><code>imageOptions</code> (CodeGlyphX.ImageDecodeOptions)</li>
+              <li><code>options</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
+              <li><code>decoded</code> (CodeGlyphX.QrDecoded[]@)</li>
             </ul>
           </div>
         </li>
@@ -1272,8 +1264,8 @@
           <strong>TryDecodeImage</strong> - Attempts to decode a QR code from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.IO.Stream)</li>
-              <li><code>arg2</code> (CodeGlyphX.QrDecoded@)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>decoded</code> (CodeGlyphX.QrDecoded@)</li>
             </ul>
           </div>
         </li>
@@ -1281,9 +1273,9 @@
           <strong>TryDecodeImage</strong> - Attempts to decode a QR code from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with options.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.IO.Stream)</li>
-              <li><code>arg2</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrDecoded@)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>options</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>decoded</code> (CodeGlyphX.QrDecoded@)</li>
             </ul>
           </div>
         </li>
@@ -1291,10 +1283,10 @@
           <strong>TryDecodeImage</strong> - Attempts to decode a QR code from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with options and cancellation.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.IO.Stream)</li>
-              <li><code>arg2</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
-              <li><code>arg3</code> (System.Threading.CancellationToken)</li>
-              <li><code>arg4</code> (CodeGlyphX.QrDecoded@)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>options</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
+              <li><code>decoded</code> (CodeGlyphX.QrDecoded@)</li>
             </ul>
           </div>
         </li>
@@ -1302,10 +1294,10 @@
           <strong>TryDecodeImage</strong> - Attempts to decode a QR code from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.IO.Stream)</li>
-              <li><code>arg2</code> (CodeGlyphX.ImageDecodeOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.QrDecoded@)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>imageOptions</code> (CodeGlyphX.ImageDecodeOptions)</li>
+              <li><code>options</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>decoded</code> (CodeGlyphX.QrDecoded@)</li>
             </ul>
           </div>
         </li>
@@ -1313,11 +1305,11 @@
           <strong>TryDecodeImage</strong> - Attempts to decode a QR code from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options and cancellation.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.IO.Stream)</li>
-              <li><code>arg2</code> (CodeGlyphX.ImageDecodeOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
-              <li><code>arg4</code> (System.Threading.CancellationToken)</li>
-              <li><code>arg5</code> (CodeGlyphX.QrDecoded@)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>imageOptions</code> (CodeGlyphX.ImageDecodeOptions)</li>
+              <li><code>options</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
+              <li><code>decoded</code> (CodeGlyphX.QrDecoded@)</li>
             </ul>
           </div>
         </li>
@@ -1325,11 +1317,11 @@
           <strong>TryDecodeImage</strong> - Attempts to decode a QR code from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options, diagnostics, and profile options.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.IO.Stream)</li>
-              <li><code>arg2</code> (CodeGlyphX.ImageDecodeOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrDecoded@)</li>
-              <li><code>arg4</code> (CodeGlyphX.QrPixelDecodeInfo@)</li>
-              <li><code>arg5</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>imageOptions</code> (CodeGlyphX.ImageDecodeOptions)</li>
+              <li><code>decoded</code> (CodeGlyphX.QrDecoded@)</li>
+              <li><code>info</code> (CodeGlyphX.QrPixelDecodeInfo@)</li>
+              <li><code>options</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
             </ul>
           </div>
         </li>
@@ -1337,12 +1329,12 @@
           <strong>TryDecodeImage</strong> - Attempts to decode a QR code from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options, diagnostics, profile options, and cancellation.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.IO.Stream)</li>
-              <li><code>arg2</code> (CodeGlyphX.ImageDecodeOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrDecoded@)</li>
-              <li><code>arg4</code> (CodeGlyphX.QrPixelDecodeInfo@)</li>
-              <li><code>arg5</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
-              <li><code>arg6</code> (System.Threading.CancellationToken)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>imageOptions</code> (CodeGlyphX.ImageDecodeOptions)</li>
+              <li><code>decoded</code> (CodeGlyphX.QrDecoded@)</li>
+              <li><code>info</code> (CodeGlyphX.QrPixelDecodeInfo@)</li>
+              <li><code>options</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
             </ul>
           </div>
         </li>
@@ -1350,8 +1342,8 @@
           <strong>TryDecodeAllImage</strong> - Attempts to decode all QR codes from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.IO.Stream)</li>
-              <li><code>arg2</code> (CodeGlyphX.QrDecoded[]@)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>decoded</code> (CodeGlyphX.QrDecoded[]@)</li>
             </ul>
           </div>
         </li>
@@ -1359,9 +1351,9 @@
           <strong>TryDecodeAllImage</strong> - Attempts to decode all QR codes from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with options.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.IO.Stream)</li>
-              <li><code>arg2</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrDecoded[]@)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>options</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>decoded</code> (CodeGlyphX.QrDecoded[]@)</li>
             </ul>
           </div>
         </li>
@@ -1369,10 +1361,10 @@
           <strong>TryDecodeAllImage</strong> - Attempts to decode all QR codes from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with options and cancellation.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.IO.Stream)</li>
-              <li><code>arg2</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
-              <li><code>arg3</code> (System.Threading.CancellationToken)</li>
-              <li><code>arg4</code> (CodeGlyphX.QrDecoded[]@)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>options</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
+              <li><code>decoded</code> (CodeGlyphX.QrDecoded[]@)</li>
             </ul>
           </div>
         </li>
@@ -1380,10 +1372,10 @@
           <strong>TryDecodeAllImage</strong> - Attempts to decode all QR codes from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.IO.Stream)</li>
-              <li><code>arg2</code> (CodeGlyphX.ImageDecodeOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.QrDecoded[]@)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>imageOptions</code> (CodeGlyphX.ImageDecodeOptions)</li>
+              <li><code>options</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>decoded</code> (CodeGlyphX.QrDecoded[]@)</li>
             </ul>
           </div>
         </li>
@@ -1391,11 +1383,11 @@
           <strong>TryDecodeAllImage</strong> - Attempts to decode all QR codes from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options and cancellation.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.IO.Stream)</li>
-              <li><code>arg2</code> (CodeGlyphX.ImageDecodeOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
-              <li><code>arg4</code> (System.Threading.CancellationToken)</li>
-              <li><code>arg5</code> (CodeGlyphX.QrDecoded[]@)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>imageOptions</code> (CodeGlyphX.ImageDecodeOptions)</li>
+              <li><code>options</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
+              <li><code>decoded</code> (CodeGlyphX.QrDecoded[]@)</li>
             </ul>
           </div>
         </li>
@@ -1403,7 +1395,7 @@
           <strong>DecodePng</strong> - Decodes a QR code from a PNG byte array.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.Byte[])</li>
+              <li><code>png</code> (System.Byte[])</li>
             </ul>
           </div>
         </li>
@@ -1411,7 +1403,7 @@
           <strong>DecodePngFile</strong> - Decodes a QR code from a PNG file.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
+              <li><code>path</code> (System.String)</li>
             </ul>
           </div>
         </li>
@@ -1419,7 +1411,7 @@
           <strong>DecodePng</strong> - Decodes a QR code from a PNG stream.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.IO.Stream)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
             </ul>
           </div>
         </li>
@@ -1427,9 +1419,9 @@
           <strong>SavePng</strong> - Saves a PNG QR to a file.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (System.String)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (System.String)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -1437,9 +1429,9 @@
           <strong>SavePng</strong> - Saves a PNG QR to a file for a payload with embedded defaults.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
-              <li><code>arg2</code> (System.String)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -1447,9 +1439,9 @@
           <strong>SavePng</strong> - Saves a PNG QR to a stream.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (System.IO.Stream)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (System.String)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -1457,9 +1449,9 @@
           <strong>SavePng</strong> - Saves a PNG QR to a stream for a payload with embedded defaults.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
-              <li><code>arg2</code> (System.IO.Stream)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -1467,9 +1459,9 @@
           <strong>SaveSvg</strong> - Saves an SVG QR to a file.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (System.String)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (System.String)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -1477,9 +1469,9 @@
           <strong>SaveSvg</strong> - Saves an SVG QR to a file for a payload with embedded defaults.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
-              <li><code>arg2</code> (System.String)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -1487,9 +1479,9 @@
           <strong>SaveSvg</strong> - Saves an SVG QR to a stream.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (System.IO.Stream)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (System.String)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -1497,9 +1489,9 @@
           <strong>SaveSvg</strong> - Saves an SVG QR to a stream for a payload with embedded defaults.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
-              <li><code>arg2</code> (System.IO.Stream)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -1507,10 +1499,10 @@
           <strong>SaveHtml</strong> - Saves an HTML QR to a file.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (System.String)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
-              <li><code>arg4</code> (System.String)</li>
+              <li><code>payload</code> (System.String)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>title</code> (System.String)</li>
             </ul>
           </div>
         </li>
@@ -1518,10 +1510,10 @@
           <strong>SaveHtml</strong> - Saves an HTML QR to a file for a payload with embedded defaults.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
-              <li><code>arg2</code> (System.String)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
-              <li><code>arg4</code> (System.String)</li>
+              <li><code>payload</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>title</code> (System.String)</li>
             </ul>
           </div>
         </li>
@@ -1529,10 +1521,10 @@
           <strong>SaveHtml</strong> - Saves an HTML QR to a stream.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (System.IO.Stream)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
-              <li><code>arg4</code> (System.String)</li>
+              <li><code>payload</code> (System.String)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>title</code> (System.String)</li>
             </ul>
           </div>
         </li>
@@ -1540,10 +1532,10 @@
           <strong>SaveHtml</strong> - Saves an HTML QR to a stream for a payload with embedded defaults.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
-              <li><code>arg2</code> (System.IO.Stream)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
-              <li><code>arg4</code> (System.String)</li>
+              <li><code>payload</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>title</code> (System.String)</li>
             </ul>
           </div>
         </li>
@@ -1551,9 +1543,9 @@
           <strong>SaveJpeg</strong> - Saves a JPEG QR to a file.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (System.String)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (System.String)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -1561,9 +1553,9 @@
           <strong>SaveJpeg</strong> - Saves a JPEG QR to a file for a payload with embedded defaults.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
-              <li><code>arg2</code> (System.String)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -1571,9 +1563,9 @@
           <strong>SaveJpeg</strong> - Saves a JPEG QR to a stream.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (System.IO.Stream)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (System.String)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -1581,9 +1573,9 @@
           <strong>SaveJpeg</strong> - Saves a JPEG QR to a stream for a payload with embedded defaults.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
-              <li><code>arg2</code> (System.IO.Stream)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -1591,9 +1583,9 @@
           <strong>SaveWebp</strong> - Saves a WebP QR to a file.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (System.String)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (System.String)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -1601,9 +1593,9 @@
           <strong>SaveWebp</strong> - Saves a WebP QR to a file for a payload with embedded defaults.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
-              <li><code>arg2</code> (System.String)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -1611,9 +1603,9 @@
           <strong>SaveWebp</strong> - Saves a WebP QR to a stream.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (System.IO.Stream)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (System.String)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -1621,9 +1613,9 @@
           <strong>SaveWebp</strong> - Saves a WebP QR to a stream for a payload with embedded defaults.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
-              <li><code>arg2</code> (System.IO.Stream)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -1631,9 +1623,9 @@
           <strong>SaveBmp</strong> - Saves a BMP QR to a file.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (System.String)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (System.String)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -1641,9 +1633,9 @@
           <strong>SaveBmp</strong> - Saves a BMP QR to a file for a payload with embedded defaults.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
-              <li><code>arg2</code> (System.String)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -1651,9 +1643,9 @@
           <strong>SaveBmp</strong> - Saves a BMP QR to a stream.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (System.IO.Stream)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (System.String)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -1661,9 +1653,9 @@
           <strong>SaveBmp</strong> - Saves a BMP QR to a stream for a payload with embedded defaults.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
-              <li><code>arg2</code> (System.IO.Stream)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -1671,9 +1663,9 @@
           <strong>SavePpm</strong> - Renders a QR code as PPM and writes it to a file.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (System.String)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (System.String)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -1681,9 +1673,9 @@
           <strong>SavePpm</strong> - Renders a QR code as PPM and writes it to a file for a payload with embedded defaults.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
-              <li><code>arg2</code> (System.String)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -1691,9 +1683,9 @@
           <strong>SavePpm</strong> - Renders a QR code as PPM and writes it to a stream.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (System.IO.Stream)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (System.String)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -1701,9 +1693,9 @@
           <strong>SavePpm</strong> - Renders a QR code as PPM and writes it to a stream for a payload with embedded defaults.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
-              <li><code>arg2</code> (System.IO.Stream)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -1711,9 +1703,9 @@
           <strong>SavePbm</strong> - Renders a QR code as PBM and writes it to a file.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (System.String)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (System.String)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -1721,9 +1713,9 @@
           <strong>SavePbm</strong> - Renders a QR code as PBM and writes it to a file for a payload with embedded defaults.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
-              <li><code>arg2</code> (System.String)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -1731,9 +1723,9 @@
           <strong>SavePbm</strong> - Renders a QR code as PBM and writes it to a stream.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (System.IO.Stream)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (System.String)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -1741,9 +1733,9 @@
           <strong>SavePbm</strong> - Renders a QR code as PBM and writes it to a stream for a payload with embedded defaults.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
-              <li><code>arg2</code> (System.IO.Stream)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -1751,9 +1743,9 @@
           <strong>SavePgm</strong> - Renders a QR code as PGM and writes it to a file.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (System.String)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (System.String)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -1761,9 +1753,9 @@
           <strong>SavePgm</strong> - Renders a QR code as PGM and writes it to a file for a payload with embedded defaults.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
-              <li><code>arg2</code> (System.String)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -1771,9 +1763,9 @@
           <strong>SavePgm</strong> - Renders a QR code as PGM and writes it to a stream.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (System.IO.Stream)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (System.String)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -1781,9 +1773,9 @@
           <strong>SavePgm</strong> - Renders a QR code as PGM and writes it to a stream for a payload with embedded defaults.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
-              <li><code>arg2</code> (System.IO.Stream)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -1791,9 +1783,9 @@
           <strong>SavePam</strong> - Renders a QR code as PAM and writes it to a file.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (System.String)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (System.String)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -1801,9 +1793,9 @@
           <strong>SavePam</strong> - Renders a QR code as PAM and writes it to a file for a payload with embedded defaults.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
-              <li><code>arg2</code> (System.String)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -1811,9 +1803,9 @@
           <strong>SavePam</strong> - Renders a QR code as PAM and writes it to a stream.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (System.IO.Stream)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (System.String)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -1821,9 +1813,9 @@
           <strong>SavePam</strong> - Renders a QR code as PAM and writes it to a stream for a payload with embedded defaults.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
-              <li><code>arg2</code> (System.IO.Stream)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -1831,9 +1823,9 @@
           <strong>SaveXbm</strong> - Renders a QR code as XBM and writes it to a file.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (System.String)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (System.String)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -1841,9 +1833,9 @@
           <strong>SaveXbm</strong> - Renders a QR code as XBM and writes it to a file for a payload with embedded defaults.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
-              <li><code>arg2</code> (System.String)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -1851,9 +1843,9 @@
           <strong>SaveXbm</strong> - Renders a QR code as XBM and writes it to a stream.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (System.IO.Stream)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (System.String)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -1861,9 +1853,9 @@
           <strong>SaveXbm</strong> - Renders a QR code as XBM and writes it to a stream for a payload with embedded defaults.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
-              <li><code>arg2</code> (System.IO.Stream)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -1871,9 +1863,9 @@
           <strong>SaveXpm</strong> - Renders a QR code as XPM and writes it to a file.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (System.String)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (System.String)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -1881,9 +1873,9 @@
           <strong>SaveXpm</strong> - Renders a QR code as XPM and writes it to a file for a payload with embedded defaults.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
-              <li><code>arg2</code> (System.String)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -1891,9 +1883,9 @@
           <strong>SaveXpm</strong> - Renders a QR code as XPM and writes it to a stream.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (System.IO.Stream)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (System.String)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -1901,9 +1893,9 @@
           <strong>SaveXpm</strong> - Renders a QR code as XPM and writes it to a stream for a payload with embedded defaults.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
-              <li><code>arg2</code> (System.IO.Stream)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -1911,9 +1903,9 @@
           <strong>SaveTga</strong> - Renders a QR code as TGA and writes it to a file.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (System.String)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (System.String)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -1921,9 +1913,9 @@
           <strong>SaveTga</strong> - Renders a QR code as TGA and writes it to a file for a payload with embedded defaults.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
-              <li><code>arg2</code> (System.String)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -1931,9 +1923,9 @@
           <strong>SaveTga</strong> - Renders a QR code as TGA and writes it to a stream.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (System.IO.Stream)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (System.String)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -1941,9 +1933,9 @@
           <strong>SaveTga</strong> - Renders a QR code as TGA and writes it to a stream for a payload with embedded defaults.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
-              <li><code>arg2</code> (System.IO.Stream)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -1951,9 +1943,9 @@
           <strong>SaveIco</strong> - Renders a QR code as ICO and writes it to a file.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (System.String)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (System.String)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -1961,9 +1953,9 @@
           <strong>SaveIco</strong> - Renders a QR code as ICO and writes it to a file for a payload with embedded defaults.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
-              <li><code>arg2</code> (System.String)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -1971,9 +1963,9 @@
           <strong>SaveIco</strong> - Renders a QR code as ICO and writes it to a stream.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (System.IO.Stream)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (System.String)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -1981,9 +1973,9 @@
           <strong>SaveIco</strong> - Renders a QR code as ICO and writes it to a stream for a payload with embedded defaults.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
-              <li><code>arg2</code> (System.IO.Stream)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -1991,9 +1983,9 @@
           <strong>SaveSvgz</strong> - Renders a QR code as SVGZ and writes it to a file.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (System.String)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (System.String)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -2001,9 +1993,9 @@
           <strong>SaveSvgz</strong> - Renders a QR code as SVGZ and writes it to a file for a payload with embedded defaults.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
-              <li><code>arg2</code> (System.String)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -2011,9 +2003,9 @@
           <strong>SaveSvgz</strong> - Renders a QR code as SVGZ and writes it to a stream.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (System.IO.Stream)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (System.String)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -2021,9 +2013,9 @@
           <strong>SaveSvgz</strong> - Renders a QR code as SVGZ and writes it to a stream for a payload with embedded defaults.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
-              <li><code>arg2</code> (System.IO.Stream)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>payload</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
             </ul>
           </div>
         </li>
@@ -2119,10 +2111,10 @@
           <strong>Save</strong> - Saves a QR code to a file based on the file extension. Defaults to PNG when no extension is provided.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (System.String)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.Rendering.RenderExtras)</li>
+              <li><code>payload</code> (System.String)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>extras</code> (CodeGlyphX.Rendering.RenderExtras)</li>
             </ul>
           </div>
         </li>
@@ -2130,11 +2122,11 @@
           <strong>SaveAuto</strong> - Detects a payload type and saves a QR code to a file based on the file extension. Defaults to PNG when no extension is provided.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (System.String)</li>
-              <li><code>arg3</code> (CodeGlyphX.Payloads.QrPayloadDetectOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.QrEasyOptions)</li>
-              <li><code>arg5</code> (CodeGlyphX.Rendering.RenderExtras)</li>
+              <li><code>payload</code> (System.String)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>detectOptions</code> (CodeGlyphX.Payloads.QrPayloadDetectOptions)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>extras</code> (CodeGlyphX.Rendering.RenderExtras)</li>
             </ul>
           </div>
         </li>
@@ -2142,10 +2134,10 @@
           <strong>Save</strong> - Saves a QR code to a file based on the file extension. Defaults to PNG when no extension is provided.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
-              <li><code>arg2</code> (System.String)</li>
-              <li><code>arg3</code> (CodeGlyphX.QrEasyOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.Rendering.RenderExtras)</li>
+              <li><code>payload</code> (CodeGlyphX.Payloads.QrPayloadData)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>extras</code> (CodeGlyphX.Rendering.RenderExtras)</li>
             </ul>
           </div>
         </li>

@@ -13,12 +13,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "modules",
           "type": "CodeGlyphX.BitMatrix",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "payload",
           "type": "CodeGlyphX.OtpAuthPayload@",
           "summary": null
         }
@@ -30,17 +30,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "modules",
           "type": "CodeGlyphX.BitMatrix",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "result",
           "type": "CodeGlyphX.OtpAuthParseResult@",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "error",
           "type": "System.String@",
           "summary": null
         }
@@ -52,17 +52,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "modules",
           "type": "CodeGlyphX.BitMatrix",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "payload",
           "type": "CodeGlyphX.OtpAuthPayload@",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "error",
           "type": "System.String@",
           "summary": null
         }
@@ -74,22 +74,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "modules",
           "type": "CodeGlyphX.BitMatrix",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "options",
           "type": "CodeGlyphX.OtpAuthValidationOptions",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "payload",
           "type": "CodeGlyphX.OtpAuthPayload@",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "error",
           "type": "System.String@",
           "summary": null
         }
@@ -101,32 +101,32 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "pixels",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "width",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "height",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "stride",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "fmt",
           "type": "CodeGlyphX.PixelFormat",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "payload",
           "type": "CodeGlyphX.OtpAuthPayload@",
           "summary": null
         }
@@ -138,37 +138,37 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "pixels",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "width",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "height",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "stride",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "fmt",
           "type": "CodeGlyphX.PixelFormat",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "result",
           "type": "CodeGlyphX.OtpAuthParseResult@",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "error",
           "type": "System.String@",
           "summary": null
         }
@@ -180,42 +180,42 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "pixels",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "width",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "height",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "stride",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "fmt",
           "type": "CodeGlyphX.PixelFormat",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "result",
           "type": "CodeGlyphX.OtpAuthParseResult@",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "qrDiagnostics",
           "type": "System.String@",
           "summary": null
         },
         {
-          "name": "arg8",
+          "name": "error",
           "type": "System.String@",
           "summary": null
         }
@@ -227,37 +227,37 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "pixels",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "width",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "height",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "stride",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "fmt",
           "type": "CodeGlyphX.PixelFormat",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "payload",
           "type": "CodeGlyphX.OtpAuthPayload@",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "error",
           "type": "System.String@",
           "summary": null
         }
@@ -269,42 +269,42 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "pixels",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "width",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "height",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "stride",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "fmt",
           "type": "CodeGlyphX.PixelFormat",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "options",
           "type": "CodeGlyphX.OtpAuthValidationOptions",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "payload",
           "type": "CodeGlyphX.OtpAuthPayload@",
           "summary": null
         },
         {
-          "name": "arg8",
+          "name": "error",
           "type": "System.String@",
           "summary": null
         }

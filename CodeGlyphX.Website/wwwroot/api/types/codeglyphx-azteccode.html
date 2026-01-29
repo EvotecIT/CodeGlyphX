@@ -34,35 +34,27 @@
                 <a href="/pricing/">Pricing</a>
             </div>
             <div class="nav-actions">
-                <div class="theme-toggle" role="group" aria-label="Theme selection">
-                    <button data-theme="auto" title="Auto (system)" aria-label="Auto theme">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="2" y="3" width="20" height="14" rx="2"/>
-                            <path d="M8 21h8M12 17v4"/>
-                        </svg>
-                    </button>
-                    <button data-theme="light" title="Light" aria-label="Light theme">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="12" cy="12" r="5"/>
-                            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
-                        </svg>
-                    </button>
-                    <button data-theme="dark" title="Dark" aria-label="Dark theme">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
-                        </svg>
-                    </button>
-                </div>
+                <button type="button" class="nav-icon theme-cycle-btn" title="Auto mode (click to switch to light)" aria-label="Auto mode (click to switch to light)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false">
+                        <rect x="2" y="3" width="20" height="14" rx="2"/>
+                        <path d="M8 21h8M12 17v4"/>
+                    </svg>
+                </button>
+                <a href="https://evo.yt/discord" target="_blank" rel="noopener" class="nav-icon" title="Discord" aria-label="Discord">
+                    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
+                        <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
+                    </svg>
+                </a>
                 <a href="https://github.com/EvotecIT/CodeGlyphX" target="_blank" rel="noopener" class="nav-icon" title="GitHub" aria-label="GitHub">
                     <svg viewBox="0 0 24 24" fill="currentColor">
                         <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
                     </svg>
                 </a>
                 <a href="https://www.nuget.org/packages/CodeGlyphX" target="_blank" rel="noopener" class="nav-cta">
-                    <svg viewBox="0 0 24 24" fill="currentColor" class="nav-cta-icon">
-                        <path d="M12 0L1.75 6v12L12 24l10.25-6V6zm-1.775 18a3.11 3.11 0 01-3.111-3.111 3.11 3.11 0 013.111-3.111 3.11 3.11 0 013.111 3.111A3.11 3.11 0 0110.225 18zm4.91-6.944a1.867 1.867 0 01-1.867-1.867 1.867 1.867 0 011.866-1.866 1.867 1.867 0 011.867 1.866 1.867 1.867 0 01-1.867 1.867z"/>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="nav-cta-icon" aria-hidden="true" focusable="false">
+                        <path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
                     </svg>
-                    Get Started
+                    Install
                 </a>
             </div>
         </nav>
@@ -80,8 +72,8 @@
           <strong>Encode</strong> - Encodes a text payload as Aztec.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>text</code> (System.String)</li>
+              <li><code>options</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
             </ul>
           </div>
         </li>
@@ -89,8 +81,8 @@
           <strong>Encode</strong> - Encodes binary payload as Aztec.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.ReadOnlySpan{System.Byte})</li>
-              <li><code>arg2</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>data</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>options</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
             </ul>
           </div>
         </li>
@@ -98,9 +90,9 @@
           <strong>Png</strong> - Renders Aztec to PNG bytes.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>text</code> (System.String)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -108,9 +100,9 @@
           <strong>Png</strong> - Renders Aztec to PNG bytes.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.ReadOnlySpan{System.Byte})</li>
-              <li><code>arg2</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>data</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -118,9 +110,9 @@
           <strong>Svg</strong> - Renders Aztec to SVG markup.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>text</code> (System.String)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -128,9 +120,9 @@
           <strong>Svgz</strong> - Renders Aztec to SVGZ.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>text</code> (System.String)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -138,9 +130,9 @@
           <strong>Svg</strong> - Renders Aztec to SVG markup.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.ReadOnlySpan{System.Byte})</li>
-              <li><code>arg2</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>data</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -148,9 +140,9 @@
           <strong>Svgz</strong> - Renders Aztec to SVGZ.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.ReadOnlySpan{System.Byte})</li>
-              <li><code>arg2</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>data</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -158,9 +150,9 @@
           <strong>Html</strong> - Renders Aztec to HTML markup.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>text</code> (System.String)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -168,9 +160,9 @@
           <strong>Html</strong> - Renders Aztec to HTML markup.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.ReadOnlySpan{System.Byte})</li>
-              <li><code>arg2</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>data</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -178,9 +170,9 @@
           <strong>Jpeg</strong> - Renders Aztec to JPEG bytes.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>text</code> (System.String)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -188,9 +180,9 @@
           <strong>Webp</strong> - Renders Aztec to WebP bytes.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>text</code> (System.String)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -198,9 +190,9 @@
           <strong>Jpeg</strong> - Renders Aztec to JPEG bytes.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.ReadOnlySpan{System.Byte})</li>
-              <li><code>arg2</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>data</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -208,9 +200,9 @@
           <strong>Webp</strong> - Renders Aztec to WebP bytes.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.ReadOnlySpan{System.Byte})</li>
-              <li><code>arg2</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>data</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -218,9 +210,9 @@
           <strong>Bmp</strong> - Renders Aztec to BMP bytes.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>text</code> (System.String)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -228,9 +220,9 @@
           <strong>Bmp</strong> - Renders Aztec to BMP bytes.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.ReadOnlySpan{System.Byte})</li>
-              <li><code>arg2</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>data</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -238,9 +230,9 @@
           <strong>Ppm</strong> - Renders Aztec to PPM bytes.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>text</code> (System.String)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -248,9 +240,9 @@
           <strong>Ppm</strong> - Renders Aztec to PPM bytes.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.ReadOnlySpan{System.Byte})</li>
-              <li><code>arg2</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>data</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -258,9 +250,9 @@
           <strong>Pbm</strong> - Renders Aztec to PBM bytes.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>text</code> (System.String)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -268,9 +260,9 @@
           <strong>Pgm</strong> - Renders Aztec to PGM bytes.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>text</code> (System.String)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -278,9 +270,9 @@
           <strong>Pam</strong> - Renders Aztec to PAM bytes.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>text</code> (System.String)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -288,9 +280,9 @@
           <strong>Xbm</strong> - Renders Aztec to XBM.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>text</code> (System.String)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -298,9 +290,9 @@
           <strong>Xpm</strong> - Renders Aztec to XPM.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>text</code> (System.String)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -308,9 +300,9 @@
           <strong>Pbm</strong> - Renders Aztec to PBM bytes.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.ReadOnlySpan{System.Byte})</li>
-              <li><code>arg2</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>data</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -318,9 +310,9 @@
           <strong>Pgm</strong> - Renders Aztec to PGM bytes.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.ReadOnlySpan{System.Byte})</li>
-              <li><code>arg2</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>data</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -328,9 +320,9 @@
           <strong>Pam</strong> - Renders Aztec to PAM bytes.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.ReadOnlySpan{System.Byte})</li>
-              <li><code>arg2</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>data</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -338,9 +330,9 @@
           <strong>Xbm</strong> - Renders Aztec to XBM.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.ReadOnlySpan{System.Byte})</li>
-              <li><code>arg2</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>data</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -348,9 +340,9 @@
           <strong>Xpm</strong> - Renders Aztec to XPM.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.ReadOnlySpan{System.Byte})</li>
-              <li><code>arg2</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>data</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -358,9 +350,9 @@
           <strong>Tga</strong> - Renders Aztec to TGA bytes.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>text</code> (System.String)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -368,9 +360,9 @@
           <strong>Tga</strong> - Renders Aztec to TGA bytes.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.ReadOnlySpan{System.Byte})</li>
-              <li><code>arg2</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>data</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -378,9 +370,9 @@
           <strong>Ico</strong> - Renders Aztec to ICO bytes.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>text</code> (System.String)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -388,9 +380,9 @@
           <strong>Ico</strong> - Renders Aztec to ICO bytes.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.ReadOnlySpan{System.Byte})</li>
-              <li><code>arg2</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>data</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -398,10 +390,10 @@
           <strong>Pdf</strong> - Renders Aztec to PDF bytes.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.MatrixOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.Rendering.RenderMode)</li>
+              <li><code>text</code> (System.String)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>renderMode</code> (CodeGlyphX.Rendering.RenderMode)</li>
             </ul>
           </div>
         </li>
@@ -409,10 +401,10 @@
           <strong>Pdf</strong> - Renders Aztec to PDF bytes.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.ReadOnlySpan{System.Byte})</li>
-              <li><code>arg2</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.MatrixOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.Rendering.RenderMode)</li>
+              <li><code>data</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>renderMode</code> (CodeGlyphX.Rendering.RenderMode)</li>
             </ul>
           </div>
         </li>
@@ -420,10 +412,10 @@
           <strong>Eps</strong> - Renders Aztec to EPS markup.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.MatrixOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.Rendering.RenderMode)</li>
+              <li><code>text</code> (System.String)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>renderMode</code> (CodeGlyphX.Rendering.RenderMode)</li>
             </ul>
           </div>
         </li>
@@ -431,10 +423,10 @@
           <strong>Eps</strong> - Renders Aztec to EPS markup.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.ReadOnlySpan{System.Byte})</li>
-              <li><code>arg2</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.MatrixOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.Rendering.RenderMode)</li>
+              <li><code>data</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>renderMode</code> (CodeGlyphX.Rendering.RenderMode)</li>
             </ul>
           </div>
         </li>
@@ -442,9 +434,9 @@
           <strong>Ascii</strong> - Renders Aztec to ASCII text.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions)</li>
+              <li><code>text</code> (System.String)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions)</li>
             </ul>
           </div>
         </li>
@@ -452,9 +444,9 @@
           <strong>Ascii</strong> - Renders Aztec to ASCII text.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.ReadOnlySpan{System.Byte})</li>
-              <li><code>arg2</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg3</code> (CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions)</li>
+              <li><code>data</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions)</li>
             </ul>
           </div>
         </li>
@@ -462,11 +454,11 @@
           <strong>Save</strong> - Saves Aztec to a file based on extension. Defaults to PNG when no extension is provided.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (System.String)</li>
-              <li><code>arg3</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
-              <li><code>arg5</code> (System.String)</li>
+              <li><code>text</code> (System.String)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>title</code> (System.String)</li>
             </ul>
           </div>
         </li>
@@ -474,11 +466,11 @@
           <strong>Save</strong> - Saves Aztec to a file based on extension. Defaults to PNG when no extension is provided.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (System.String)</li>
-              <li><code>arg3</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
-              <li><code>arg5</code> (CodeGlyphX.Rendering.RenderExtras)</li>
+              <li><code>text</code> (System.String)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>extras</code> (CodeGlyphX.Rendering.RenderExtras)</li>
             </ul>
           </div>
         </li>
@@ -486,8 +478,8 @@
           <strong>TryDecode</strong> - Attempts to decode an Aztec symbol from a module matrix.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (CodeGlyphX.BitMatrix)</li>
-              <li><code>arg2</code> (System.String@)</li>
+              <li><code>modules</code> (CodeGlyphX.BitMatrix)</li>
+              <li><code>value</code> (System.String@)</li>
             </ul>
           </div>
         </li>
@@ -495,9 +487,9 @@
           <strong>TryDecode</strong> - Attempts to decode an Aztec symbol from a module matrix, with cancellation.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (CodeGlyphX.BitMatrix)</li>
-              <li><code>arg2</code> (System.Threading.CancellationToken)</li>
-              <li><code>arg3</code> (System.String@)</li>
+              <li><code>modules</code> (CodeGlyphX.BitMatrix)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
+              <li><code>value</code> (System.String@)</li>
             </ul>
           </div>
         </li>
@@ -505,9 +497,9 @@
           <strong>TryDecode</strong> - Attempts to decode an Aztec symbol from a module matrix, with diagnostics.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (CodeGlyphX.BitMatrix)</li>
-              <li><code>arg2</code> (System.String@)</li>
-              <li><code>arg3</code> (CodeGlyphX.AztecDecodeDiagnostics@)</li>
+              <li><code>modules</code> (CodeGlyphX.BitMatrix)</li>
+              <li><code>value</code> (System.String@)</li>
+              <li><code>diagnostics</code> (CodeGlyphX.AztecDecodeDiagnostics@)</li>
             </ul>
           </div>
         </li>
@@ -515,10 +507,10 @@
           <strong>TryDecode</strong> - Attempts to decode an Aztec symbol from a module matrix, with cancellation and diagnostics.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (CodeGlyphX.BitMatrix)</li>
-              <li><code>arg2</code> (System.Threading.CancellationToken)</li>
-              <li><code>arg3</code> (System.String@)</li>
-              <li><code>arg4</code> (CodeGlyphX.AztecDecodeDiagnostics@)</li>
+              <li><code>modules</code> (CodeGlyphX.BitMatrix)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
+              <li><code>value</code> (System.String@)</li>
+              <li><code>diagnostics</code> (CodeGlyphX.AztecDecodeDiagnostics@)</li>
             </ul>
           </div>
         </li>
@@ -526,12 +518,12 @@
           <strong>TryDecode</strong> - Attempts to decode an Aztec symbol from raw pixels.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.Byte[])</li>
-              <li><code>arg2</code> (System.Int32)</li>
-              <li><code>arg3</code> (System.Int32)</li>
-              <li><code>arg4</code> (System.Int32)</li>
-              <li><code>arg5</code> (CodeGlyphX.PixelFormat)</li>
-              <li><code>arg6</code> (System.String@)</li>
+              <li><code>pixels</code> (System.Byte[])</li>
+              <li><code>width</code> (System.Int32)</li>
+              <li><code>height</code> (System.Int32)</li>
+              <li><code>stride</code> (System.Int32)</li>
+              <li><code>format</code> (CodeGlyphX.PixelFormat)</li>
+              <li><code>value</code> (System.String@)</li>
             </ul>
           </div>
         </li>
@@ -539,13 +531,13 @@
           <strong>TryDecode</strong> - Attempts to decode an Aztec symbol from raw pixels, with cancellation.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.Byte[])</li>
-              <li><code>arg2</code> (System.Int32)</li>
-              <li><code>arg3</code> (System.Int32)</li>
-              <li><code>arg4</code> (System.Int32)</li>
-              <li><code>arg5</code> (CodeGlyphX.PixelFormat)</li>
-              <li><code>arg6</code> (System.Threading.CancellationToken)</li>
-              <li><code>arg7</code> (System.String@)</li>
+              <li><code>pixels</code> (System.Byte[])</li>
+              <li><code>width</code> (System.Int32)</li>
+              <li><code>height</code> (System.Int32)</li>
+              <li><code>stride</code> (System.Int32)</li>
+              <li><code>format</code> (CodeGlyphX.PixelFormat)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
+              <li><code>value</code> (System.String@)</li>
             </ul>
           </div>
         </li>
@@ -553,13 +545,13 @@
           <strong>TryDecode</strong> - Attempts to decode an Aztec symbol from raw pixels, with diagnostics.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.Byte[])</li>
-              <li><code>arg2</code> (System.Int32)</li>
-              <li><code>arg3</code> (System.Int32)</li>
-              <li><code>arg4</code> (System.Int32)</li>
-              <li><code>arg5</code> (CodeGlyphX.PixelFormat)</li>
-              <li><code>arg6</code> (System.String@)</li>
-              <li><code>arg7</code> (CodeGlyphX.AztecDecodeDiagnostics@)</li>
+              <li><code>pixels</code> (System.Byte[])</li>
+              <li><code>width</code> (System.Int32)</li>
+              <li><code>height</code> (System.Int32)</li>
+              <li><code>stride</code> (System.Int32)</li>
+              <li><code>format</code> (CodeGlyphX.PixelFormat)</li>
+              <li><code>value</code> (System.String@)</li>
+              <li><code>diagnostics</code> (CodeGlyphX.AztecDecodeDiagnostics@)</li>
             </ul>
           </div>
         </li>
@@ -567,14 +559,14 @@
           <strong>TryDecode</strong> - Attempts to decode an Aztec symbol from raw pixels, with cancellation and diagnostics.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.Byte[])</li>
-              <li><code>arg2</code> (System.Int32)</li>
-              <li><code>arg3</code> (System.Int32)</li>
-              <li><code>arg4</code> (System.Int32)</li>
-              <li><code>arg5</code> (CodeGlyphX.PixelFormat)</li>
-              <li><code>arg6</code> (System.Threading.CancellationToken)</li>
-              <li><code>arg7</code> (System.String@)</li>
-              <li><code>arg8</code> (CodeGlyphX.AztecDecodeDiagnostics@)</li>
+              <li><code>pixels</code> (System.Byte[])</li>
+              <li><code>width</code> (System.Int32)</li>
+              <li><code>height</code> (System.Int32)</li>
+              <li><code>stride</code> (System.Int32)</li>
+              <li><code>format</code> (CodeGlyphX.PixelFormat)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
+              <li><code>value</code> (System.String@)</li>
+              <li><code>diagnostics</code> (CodeGlyphX.AztecDecodeDiagnostics@)</li>
             </ul>
           </div>
         </li>
@@ -582,12 +574,12 @@
           <strong>TryDecode</strong> - Attempts to decode an Aztec symbol from raw pixels.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.ReadOnlySpan{System.Byte})</li>
-              <li><code>arg2</code> (System.Int32)</li>
-              <li><code>arg3</code> (System.Int32)</li>
-              <li><code>arg4</code> (System.Int32)</li>
-              <li><code>arg5</code> (CodeGlyphX.PixelFormat)</li>
-              <li><code>arg6</code> (System.String@)</li>
+              <li><code>pixels</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>width</code> (System.Int32)</li>
+              <li><code>height</code> (System.Int32)</li>
+              <li><code>stride</code> (System.Int32)</li>
+              <li><code>format</code> (CodeGlyphX.PixelFormat)</li>
+              <li><code>value</code> (System.String@)</li>
             </ul>
           </div>
         </li>
@@ -595,13 +587,13 @@
           <strong>TryDecode</strong> - Attempts to decode an Aztec symbol from raw pixels, with cancellation.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.ReadOnlySpan{System.Byte})</li>
-              <li><code>arg2</code> (System.Int32)</li>
-              <li><code>arg3</code> (System.Int32)</li>
-              <li><code>arg4</code> (System.Int32)</li>
-              <li><code>arg5</code> (CodeGlyphX.PixelFormat)</li>
-              <li><code>arg6</code> (System.Threading.CancellationToken)</li>
-              <li><code>arg7</code> (System.String@)</li>
+              <li><code>pixels</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>width</code> (System.Int32)</li>
+              <li><code>height</code> (System.Int32)</li>
+              <li><code>stride</code> (System.Int32)</li>
+              <li><code>format</code> (CodeGlyphX.PixelFormat)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
+              <li><code>value</code> (System.String@)</li>
             </ul>
           </div>
         </li>
@@ -609,13 +601,13 @@
           <strong>TryDecode</strong> - Attempts to decode an Aztec symbol from raw pixels, with diagnostics.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.ReadOnlySpan{System.Byte})</li>
-              <li><code>arg2</code> (System.Int32)</li>
-              <li><code>arg3</code> (System.Int32)</li>
-              <li><code>arg4</code> (System.Int32)</li>
-              <li><code>arg5</code> (CodeGlyphX.PixelFormat)</li>
-              <li><code>arg6</code> (System.String@)</li>
-              <li><code>arg7</code> (CodeGlyphX.AztecDecodeDiagnostics@)</li>
+              <li><code>pixels</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>width</code> (System.Int32)</li>
+              <li><code>height</code> (System.Int32)</li>
+              <li><code>stride</code> (System.Int32)</li>
+              <li><code>format</code> (CodeGlyphX.PixelFormat)</li>
+              <li><code>value</code> (System.String@)</li>
+              <li><code>diagnostics</code> (CodeGlyphX.AztecDecodeDiagnostics@)</li>
             </ul>
           </div>
         </li>
@@ -623,14 +615,14 @@
           <strong>TryDecode</strong> - Attempts to decode an Aztec symbol from raw pixels, with cancellation and diagnostics.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.ReadOnlySpan{System.Byte})</li>
-              <li><code>arg2</code> (System.Int32)</li>
-              <li><code>arg3</code> (System.Int32)</li>
-              <li><code>arg4</code> (System.Int32)</li>
-              <li><code>arg5</code> (CodeGlyphX.PixelFormat)</li>
-              <li><code>arg6</code> (System.Threading.CancellationToken)</li>
-              <li><code>arg7</code> (System.String@)</li>
-              <li><code>arg8</code> (CodeGlyphX.AztecDecodeDiagnostics@)</li>
+              <li><code>pixels</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>width</code> (System.Int32)</li>
+              <li><code>height</code> (System.Int32)</li>
+              <li><code>stride</code> (System.Int32)</li>
+              <li><code>format</code> (CodeGlyphX.PixelFormat)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
+              <li><code>value</code> (System.String@)</li>
+              <li><code>diagnostics</code> (CodeGlyphX.AztecDecodeDiagnostics@)</li>
             </ul>
           </div>
         </li>
@@ -638,8 +630,8 @@
           <strong>TryDecodePng</strong> - Attempts to decode an Aztec symbol from PNG bytes.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.Byte[])</li>
-              <li><code>arg2</code> (System.String@)</li>
+              <li><code>png</code> (System.Byte[])</li>
+              <li><code>text</code> (System.String@)</li>
             </ul>
           </div>
         </li>
@@ -647,9 +639,9 @@
           <strong>TryDecodePng</strong> - Attempts to decode an Aztec symbol from PNG bytes, with cancellation.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.Byte[])</li>
-              <li><code>arg2</code> (System.Threading.CancellationToken)</li>
-              <li><code>arg3</code> (System.String@)</li>
+              <li><code>png</code> (System.Byte[])</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
+              <li><code>text</code> (System.String@)</li>
             </ul>
           </div>
         </li>
@@ -657,9 +649,9 @@
           <strong>TryDecodePng</strong> - Attempts to decode an Aztec symbol from PNG bytes with image decode options.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.Byte[])</li>
-              <li><code>arg2</code> (CodeGlyphX.ImageDecodeOptions)</li>
-              <li><code>arg3</code> (System.String@)</li>
+              <li><code>png</code> (System.Byte[])</li>
+              <li><code>options</code> (CodeGlyphX.ImageDecodeOptions)</li>
+              <li><code>text</code> (System.String@)</li>
             </ul>
           </div>
         </li>
@@ -667,10 +659,10 @@
           <strong>TryDecodePng</strong> - Attempts to decode an Aztec symbol from PNG bytes with image decode options, with cancellation.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.Byte[])</li>
-              <li><code>arg2</code> (CodeGlyphX.ImageDecodeOptions)</li>
-              <li><code>arg3</code> (System.Threading.CancellationToken)</li>
-              <li><code>arg4</code> (System.String@)</li>
+              <li><code>png</code> (System.Byte[])</li>
+              <li><code>options</code> (CodeGlyphX.ImageDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
+              <li><code>text</code> (System.String@)</li>
             </ul>
           </div>
         </li>
@@ -678,8 +670,8 @@
           <strong>TryDecodePng</strong> - Attempts to decode an Aztec symbol from PNG bytes in a span.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.ReadOnlySpan{System.Byte})</li>
-              <li><code>arg2</code> (System.String@)</li>
+              <li><code>png</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>text</code> (System.String@)</li>
             </ul>
           </div>
         </li>
@@ -687,9 +679,9 @@
           <strong>TryDecodePng</strong> - Attempts to decode an Aztec symbol from PNG bytes in a span, with cancellation.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.ReadOnlySpan{System.Byte})</li>
-              <li><code>arg2</code> (System.Threading.CancellationToken)</li>
-              <li><code>arg3</code> (System.String@)</li>
+              <li><code>png</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
+              <li><code>text</code> (System.String@)</li>
             </ul>
           </div>
         </li>
@@ -697,9 +689,9 @@
           <strong>TryDecodePng</strong> - Attempts to decode an Aztec symbol from PNG bytes in a span with image decode options.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.ReadOnlySpan{System.Byte})</li>
-              <li><code>arg2</code> (CodeGlyphX.ImageDecodeOptions)</li>
-              <li><code>arg3</code> (System.String@)</li>
+              <li><code>png</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>options</code> (CodeGlyphX.ImageDecodeOptions)</li>
+              <li><code>text</code> (System.String@)</li>
             </ul>
           </div>
         </li>
@@ -707,10 +699,10 @@
           <strong>TryDecodePng</strong> - Attempts to decode an Aztec symbol from PNG bytes in a span with image decode options, with cancellation.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.ReadOnlySpan{System.Byte})</li>
-              <li><code>arg2</code> (CodeGlyphX.ImageDecodeOptions)</li>
-              <li><code>arg3</code> (System.Threading.CancellationToken)</li>
-              <li><code>arg4</code> (System.String@)</li>
+              <li><code>png</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>options</code> (CodeGlyphX.ImageDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
+              <li><code>text</code> (System.String@)</li>
             </ul>
           </div>
         </li>
@@ -718,9 +710,9 @@
           <strong>TryDecodePng</strong> - Attempts to decode an Aztec symbol from PNG bytes, with diagnostics.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.Byte[])</li>
-              <li><code>arg2</code> (System.String@)</li>
-              <li><code>arg3</code> (CodeGlyphX.AztecDecodeDiagnostics@)</li>
+              <li><code>png</code> (System.Byte[])</li>
+              <li><code>text</code> (System.String@)</li>
+              <li><code>diagnostics</code> (CodeGlyphX.AztecDecodeDiagnostics@)</li>
             </ul>
           </div>
         </li>
@@ -728,10 +720,10 @@
           <strong>TryDecodePng</strong> - Attempts to decode an Aztec symbol from PNG bytes with image decode options, with diagnostics.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.Byte[])</li>
-              <li><code>arg2</code> (CodeGlyphX.ImageDecodeOptions)</li>
-              <li><code>arg3</code> (System.String@)</li>
-              <li><code>arg4</code> (CodeGlyphX.AztecDecodeDiagnostics@)</li>
+              <li><code>png</code> (System.Byte[])</li>
+              <li><code>options</code> (CodeGlyphX.ImageDecodeOptions)</li>
+              <li><code>text</code> (System.String@)</li>
+              <li><code>diagnostics</code> (CodeGlyphX.AztecDecodeDiagnostics@)</li>
             </ul>
           </div>
         </li>
@@ -739,11 +731,11 @@
           <strong>TryDecodePng</strong> - Attempts to decode an Aztec symbol from PNG bytes with image decode options, cancellation, and diagnostics.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.Byte[])</li>
-              <li><code>arg2</code> (CodeGlyphX.ImageDecodeOptions)</li>
-              <li><code>arg3</code> (System.Threading.CancellationToken)</li>
-              <li><code>arg4</code> (System.String@)</li>
-              <li><code>arg5</code> (CodeGlyphX.AztecDecodeDiagnostics@)</li>
+              <li><code>png</code> (System.Byte[])</li>
+              <li><code>options</code> (CodeGlyphX.ImageDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
+              <li><code>text</code> (System.String@)</li>
+              <li><code>diagnostics</code> (CodeGlyphX.AztecDecodeDiagnostics@)</li>
             </ul>
           </div>
         </li>
@@ -751,9 +743,9 @@
           <strong>TryDecodePng</strong> - Attempts to decode an Aztec symbol from PNG bytes in a span, with diagnostics.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.ReadOnlySpan{System.Byte})</li>
-              <li><code>arg2</code> (System.String@)</li>
-              <li><code>arg3</code> (CodeGlyphX.AztecDecodeDiagnostics@)</li>
+              <li><code>png</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>text</code> (System.String@)</li>
+              <li><code>diagnostics</code> (CodeGlyphX.AztecDecodeDiagnostics@)</li>
             </ul>
           </div>
         </li>
@@ -761,10 +753,10 @@
           <strong>TryDecodePng</strong> - Attempts to decode an Aztec symbol from PNG bytes in a span with image decode options, with diagnostics.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.ReadOnlySpan{System.Byte})</li>
-              <li><code>arg2</code> (CodeGlyphX.ImageDecodeOptions)</li>
-              <li><code>arg3</code> (System.String@)</li>
-              <li><code>arg4</code> (CodeGlyphX.AztecDecodeDiagnostics@)</li>
+              <li><code>png</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>options</code> (CodeGlyphX.ImageDecodeOptions)</li>
+              <li><code>text</code> (System.String@)</li>
+              <li><code>diagnostics</code> (CodeGlyphX.AztecDecodeDiagnostics@)</li>
             </ul>
           </div>
         </li>
@@ -772,11 +764,11 @@
           <strong>TryDecodePng</strong> - Attempts to decode an Aztec symbol from PNG bytes in a span with image decode options, cancellation, and diagnostics.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.ReadOnlySpan{System.Byte})</li>
-              <li><code>arg2</code> (CodeGlyphX.ImageDecodeOptions)</li>
-              <li><code>arg3</code> (System.Threading.CancellationToken)</li>
-              <li><code>arg4</code> (System.String@)</li>
-              <li><code>arg5</code> (CodeGlyphX.AztecDecodeDiagnostics@)</li>
+              <li><code>png</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>options</code> (CodeGlyphX.ImageDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
+              <li><code>text</code> (System.String@)</li>
+              <li><code>diagnostics</code> (CodeGlyphX.AztecDecodeDiagnostics@)</li>
             </ul>
           </div>
         </li>
@@ -784,8 +776,8 @@
           <strong>TryDecodePngFile</strong> - Attempts to decode an Aztec symbol from a PNG file.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (System.String@)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>text</code> (System.String@)</li>
             </ul>
           </div>
         </li>
@@ -793,9 +785,9 @@
           <strong>TryDecodePngFile</strong> - Attempts to decode an Aztec symbol from a PNG file, with cancellation.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (System.Threading.CancellationToken)</li>
-              <li><code>arg3</code> (System.String@)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
+              <li><code>text</code> (System.String@)</li>
             </ul>
           </div>
         </li>
@@ -803,9 +795,9 @@
           <strong>TryDecodePngFile</strong> - Attempts to decode an Aztec symbol from a PNG file with image decode options.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (CodeGlyphX.ImageDecodeOptions)</li>
-              <li><code>arg3</code> (System.String@)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>options</code> (CodeGlyphX.ImageDecodeOptions)</li>
+              <li><code>text</code> (System.String@)</li>
             </ul>
           </div>
         </li>
@@ -813,10 +805,10 @@
           <strong>TryDecodePngFile</strong> - Attempts to decode an Aztec symbol from a PNG file with image decode options, with cancellation.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (CodeGlyphX.ImageDecodeOptions)</li>
-              <li><code>arg3</code> (System.Threading.CancellationToken)</li>
-              <li><code>arg4</code> (System.String@)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>options</code> (CodeGlyphX.ImageDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
+              <li><code>text</code> (System.String@)</li>
             </ul>
           </div>
         </li>
@@ -824,9 +816,9 @@
           <strong>TryDecodePngFile</strong> - Attempts to decode an Aztec symbol from a PNG file, with diagnostics.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (System.String@)</li>
-              <li><code>arg3</code> (CodeGlyphX.AztecDecodeDiagnostics@)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>text</code> (System.String@)</li>
+              <li><code>diagnostics</code> (CodeGlyphX.AztecDecodeDiagnostics@)</li>
             </ul>
           </div>
         </li>
@@ -834,10 +826,10 @@
           <strong>TryDecodePngFile</strong> - Attempts to decode an Aztec symbol from a PNG file with image decode options, with diagnostics.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (CodeGlyphX.ImageDecodeOptions)</li>
-              <li><code>arg3</code> (System.String@)</li>
-              <li><code>arg4</code> (CodeGlyphX.AztecDecodeDiagnostics@)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>options</code> (CodeGlyphX.ImageDecodeOptions)</li>
+              <li><code>text</code> (System.String@)</li>
+              <li><code>diagnostics</code> (CodeGlyphX.AztecDecodeDiagnostics@)</li>
             </ul>
           </div>
         </li>
@@ -845,11 +837,11 @@
           <strong>TryDecodePngFile</strong> - Attempts to decode an Aztec symbol from a PNG file with image decode options, cancellation, and diagnostics.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (CodeGlyphX.ImageDecodeOptions)</li>
-              <li><code>arg3</code> (System.Threading.CancellationToken)</li>
-              <li><code>arg4</code> (System.String@)</li>
-              <li><code>arg5</code> (CodeGlyphX.AztecDecodeDiagnostics@)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>options</code> (CodeGlyphX.ImageDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
+              <li><code>text</code> (System.String@)</li>
+              <li><code>diagnostics</code> (CodeGlyphX.AztecDecodeDiagnostics@)</li>
             </ul>
           </div>
         </li>
@@ -857,8 +849,8 @@
           <strong>TryDecodePng</strong> - Attempts to decode an Aztec symbol from a PNG stream.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.IO.Stream)</li>
-              <li><code>arg2</code> (System.String@)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>text</code> (System.String@)</li>
             </ul>
           </div>
         </li>
@@ -866,9 +858,9 @@
           <strong>TryDecodePng</strong> - Attempts to decode an Aztec symbol from a PNG stream with image decode options.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.IO.Stream)</li>
-              <li><code>arg2</code> (CodeGlyphX.ImageDecodeOptions)</li>
-              <li><code>arg3</code> (System.String@)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>options</code> (CodeGlyphX.ImageDecodeOptions)</li>
+              <li><code>text</code> (System.String@)</li>
             </ul>
           </div>
         </li>
@@ -876,9 +868,9 @@
           <strong>TryDecodePng</strong> - Attempts to decode an Aztec symbol from a PNG stream, with diagnostics.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.IO.Stream)</li>
-              <li><code>arg2</code> (System.String@)</li>
-              <li><code>arg3</code> (CodeGlyphX.AztecDecodeDiagnostics@)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>text</code> (System.String@)</li>
+              <li><code>diagnostics</code> (CodeGlyphX.AztecDecodeDiagnostics@)</li>
             </ul>
           </div>
         </li>
@@ -886,10 +878,10 @@
           <strong>TryDecodePng</strong> - Attempts to decode an Aztec symbol from a PNG stream with image decode options, with diagnostics.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.IO.Stream)</li>
-              <li><code>arg2</code> (CodeGlyphX.ImageDecodeOptions)</li>
-              <li><code>arg3</code> (System.String@)</li>
-              <li><code>arg4</code> (CodeGlyphX.AztecDecodeDiagnostics@)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>options</code> (CodeGlyphX.ImageDecodeOptions)</li>
+              <li><code>text</code> (System.String@)</li>
+              <li><code>diagnostics</code> (CodeGlyphX.AztecDecodeDiagnostics@)</li>
             </ul>
           </div>
         </li>
@@ -897,8 +889,8 @@
           <strong>TryDecodeImage</strong> - Attempts to decode an Aztec symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.Byte[])</li>
-              <li><code>arg2</code> (System.String@)</li>
+              <li><code>image</code> (System.Byte[])</li>
+              <li><code>text</code> (System.String@)</li>
             </ul>
           </div>
         </li>
@@ -906,9 +898,9 @@
           <strong>TryDecodeImage</strong> - Attempts to decode an Aztec symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA), with cancellation.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.Byte[])</li>
-              <li><code>arg2</code> (System.Threading.CancellationToken)</li>
-              <li><code>arg3</code> (System.String@)</li>
+              <li><code>image</code> (System.Byte[])</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
+              <li><code>text</code> (System.String@)</li>
             </ul>
           </div>
         </li>
@@ -916,9 +908,9 @@
           <strong>TryDecodeImage</strong> - Attempts to decode an Aztec symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.Byte[])</li>
-              <li><code>arg2</code> (CodeGlyphX.ImageDecodeOptions)</li>
-              <li><code>arg3</code> (System.String@)</li>
+              <li><code>image</code> (System.Byte[])</li>
+              <li><code>options</code> (CodeGlyphX.ImageDecodeOptions)</li>
+              <li><code>text</code> (System.String@)</li>
             </ul>
           </div>
         </li>
@@ -926,10 +918,10 @@
           <strong>TryDecodeImage</strong> - Attempts to decode an Aztec symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options, with cancellation.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.Byte[])</li>
-              <li><code>arg2</code> (CodeGlyphX.ImageDecodeOptions)</li>
-              <li><code>arg3</code> (System.Threading.CancellationToken)</li>
-              <li><code>arg4</code> (System.String@)</li>
+              <li><code>image</code> (System.Byte[])</li>
+              <li><code>options</code> (CodeGlyphX.ImageDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
+              <li><code>text</code> (System.String@)</li>
             </ul>
           </div>
         </li>
@@ -937,9 +929,9 @@
           <strong>TryDecodeImage</strong> - Attempts to decode an Aztec symbol from common image formats, with diagnostics.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.Byte[])</li>
-              <li><code>arg2</code> (System.String@)</li>
-              <li><code>arg3</code> (CodeGlyphX.AztecDecodeDiagnostics@)</li>
+              <li><code>image</code> (System.Byte[])</li>
+              <li><code>text</code> (System.String@)</li>
+              <li><code>diagnostics</code> (CodeGlyphX.AztecDecodeDiagnostics@)</li>
             </ul>
           </div>
         </li>
@@ -947,10 +939,10 @@
           <strong>TryDecodeImage</strong> - Attempts to decode an Aztec symbol from common image formats with image decode options, with diagnostics.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.Byte[])</li>
-              <li><code>arg2</code> (CodeGlyphX.ImageDecodeOptions)</li>
-              <li><code>arg3</code> (System.String@)</li>
-              <li><code>arg4</code> (CodeGlyphX.AztecDecodeDiagnostics@)</li>
+              <li><code>image</code> (System.Byte[])</li>
+              <li><code>options</code> (CodeGlyphX.ImageDecodeOptions)</li>
+              <li><code>text</code> (System.String@)</li>
+              <li><code>diagnostics</code> (CodeGlyphX.AztecDecodeDiagnostics@)</li>
             </ul>
           </div>
         </li>
@@ -958,11 +950,11 @@
           <strong>TryDecodeImage</strong> - Attempts to decode an Aztec symbol from common image formats with image decode options, cancellation, and diagnostics.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.Byte[])</li>
-              <li><code>arg2</code> (CodeGlyphX.ImageDecodeOptions)</li>
-              <li><code>arg3</code> (System.Threading.CancellationToken)</li>
-              <li><code>arg4</code> (System.String@)</li>
-              <li><code>arg5</code> (CodeGlyphX.AztecDecodeDiagnostics@)</li>
+              <li><code>image</code> (System.Byte[])</li>
+              <li><code>options</code> (CodeGlyphX.ImageDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
+              <li><code>text</code> (System.String@)</li>
+              <li><code>diagnostics</code> (CodeGlyphX.AztecDecodeDiagnostics@)</li>
             </ul>
           </div>
         </li>
@@ -970,8 +962,8 @@
           <strong>TryDecodeImage</strong> - Attempts to decode an Aztec symbol from common image formats in a span.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.ReadOnlySpan{System.Byte})</li>
-              <li><code>arg2</code> (System.String@)</li>
+              <li><code>image</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>text</code> (System.String@)</li>
             </ul>
           </div>
         </li>
@@ -979,9 +971,9 @@
           <strong>TryDecodeImage</strong> - Attempts to decode an Aztec symbol from common image formats in a span, with cancellation.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.ReadOnlySpan{System.Byte})</li>
-              <li><code>arg2</code> (System.Threading.CancellationToken)</li>
-              <li><code>arg3</code> (System.String@)</li>
+              <li><code>image</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
+              <li><code>text</code> (System.String@)</li>
             </ul>
           </div>
         </li>
@@ -989,9 +981,9 @@
           <strong>TryDecodeImage</strong> - Attempts to decode an Aztec symbol from common image formats in a span with image decode options.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.ReadOnlySpan{System.Byte})</li>
-              <li><code>arg2</code> (CodeGlyphX.ImageDecodeOptions)</li>
-              <li><code>arg3</code> (System.String@)</li>
+              <li><code>image</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>options</code> (CodeGlyphX.ImageDecodeOptions)</li>
+              <li><code>text</code> (System.String@)</li>
             </ul>
           </div>
         </li>
@@ -999,10 +991,10 @@
           <strong>TryDecodeImage</strong> - Attempts to decode an Aztec symbol from common image formats in a span with image decode options, with cancellation.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.ReadOnlySpan{System.Byte})</li>
-              <li><code>arg2</code> (CodeGlyphX.ImageDecodeOptions)</li>
-              <li><code>arg3</code> (System.Threading.CancellationToken)</li>
-              <li><code>arg4</code> (System.String@)</li>
+              <li><code>image</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>options</code> (CodeGlyphX.ImageDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
+              <li><code>text</code> (System.String@)</li>
             </ul>
           </div>
         </li>
@@ -1010,9 +1002,9 @@
           <strong>TryDecodeImage</strong> - Attempts to decode an Aztec symbol from common image formats in a span, with diagnostics.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.ReadOnlySpan{System.Byte})</li>
-              <li><code>arg2</code> (System.String@)</li>
-              <li><code>arg3</code> (CodeGlyphX.AztecDecodeDiagnostics@)</li>
+              <li><code>image</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>text</code> (System.String@)</li>
+              <li><code>diagnostics</code> (CodeGlyphX.AztecDecodeDiagnostics@)</li>
             </ul>
           </div>
         </li>
@@ -1020,10 +1012,10 @@
           <strong>TryDecodeImage</strong> - Attempts to decode an Aztec symbol from common image formats in a span with image decode options, with diagnostics.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.ReadOnlySpan{System.Byte})</li>
-              <li><code>arg2</code> (CodeGlyphX.ImageDecodeOptions)</li>
-              <li><code>arg3</code> (System.String@)</li>
-              <li><code>arg4</code> (CodeGlyphX.AztecDecodeDiagnostics@)</li>
+              <li><code>image</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>options</code> (CodeGlyphX.ImageDecodeOptions)</li>
+              <li><code>text</code> (System.String@)</li>
+              <li><code>diagnostics</code> (CodeGlyphX.AztecDecodeDiagnostics@)</li>
             </ul>
           </div>
         </li>
@@ -1031,11 +1023,11 @@
           <strong>TryDecodeImage</strong> - Attempts to decode an Aztec symbol from common image formats in a span with image decode options, cancellation, and diagnostics.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.ReadOnlySpan{System.Byte})</li>
-              <li><code>arg2</code> (CodeGlyphX.ImageDecodeOptions)</li>
-              <li><code>arg3</code> (System.Threading.CancellationToken)</li>
-              <li><code>arg4</code> (System.String@)</li>
-              <li><code>arg5</code> (CodeGlyphX.AztecDecodeDiagnostics@)</li>
+              <li><code>image</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>options</code> (CodeGlyphX.ImageDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
+              <li><code>text</code> (System.String@)</li>
+              <li><code>diagnostics</code> (CodeGlyphX.AztecDecodeDiagnostics@)</li>
             </ul>
           </div>
         </li>
@@ -1043,8 +1035,8 @@
           <strong>TryDecodeImage</strong> - Attempts to decode an Aztec symbol from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.IO.Stream)</li>
-              <li><code>arg2</code> (System.String@)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>text</code> (System.String@)</li>
             </ul>
           </div>
         </li>
@@ -1052,9 +1044,9 @@
           <strong>TryDecodeImage</strong> - Attempts to decode an Aztec symbol from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA), with cancellation.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.IO.Stream)</li>
-              <li><code>arg2</code> (System.Threading.CancellationToken)</li>
-              <li><code>arg3</code> (System.String@)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
+              <li><code>text</code> (System.String@)</li>
             </ul>
           </div>
         </li>
@@ -1062,9 +1054,9 @@
           <strong>TryDecodeImage</strong> - Attempts to decode an Aztec symbol from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.IO.Stream)</li>
-              <li><code>arg2</code> (CodeGlyphX.ImageDecodeOptions)</li>
-              <li><code>arg3</code> (System.String@)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>options</code> (CodeGlyphX.ImageDecodeOptions)</li>
+              <li><code>text</code> (System.String@)</li>
             </ul>
           </div>
         </li>
@@ -1072,10 +1064,10 @@
           <strong>TryDecodeImage</strong> - Attempts to decode an Aztec symbol from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options, with cancellation.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.IO.Stream)</li>
-              <li><code>arg2</code> (CodeGlyphX.ImageDecodeOptions)</li>
-              <li><code>arg3</code> (System.Threading.CancellationToken)</li>
-              <li><code>arg4</code> (System.String@)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>options</code> (CodeGlyphX.ImageDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
+              <li><code>text</code> (System.String@)</li>
             </ul>
           </div>
         </li>
@@ -1083,9 +1075,9 @@
           <strong>TryDecodeImage</strong> - Attempts to decode an Aztec symbol from an image stream, with diagnostics.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.IO.Stream)</li>
-              <li><code>arg2</code> (System.String@)</li>
-              <li><code>arg3</code> (CodeGlyphX.AztecDecodeDiagnostics@)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>text</code> (System.String@)</li>
+              <li><code>diagnostics</code> (CodeGlyphX.AztecDecodeDiagnostics@)</li>
             </ul>
           </div>
         </li>
@@ -1093,10 +1085,10 @@
           <strong>TryDecodeImage</strong> - Attempts to decode an Aztec symbol from an image stream with image decode options, with diagnostics.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.IO.Stream)</li>
-              <li><code>arg2</code> (CodeGlyphX.ImageDecodeOptions)</li>
-              <li><code>arg3</code> (System.String@)</li>
-              <li><code>arg4</code> (CodeGlyphX.AztecDecodeDiagnostics@)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>options</code> (CodeGlyphX.ImageDecodeOptions)</li>
+              <li><code>text</code> (System.String@)</li>
+              <li><code>diagnostics</code> (CodeGlyphX.AztecDecodeDiagnostics@)</li>
             </ul>
           </div>
         </li>
@@ -1104,11 +1096,11 @@
           <strong>TryDecodeImage</strong> - Attempts to decode an Aztec symbol from an image stream with image decode options, cancellation, and diagnostics.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.IO.Stream)</li>
-              <li><code>arg2</code> (CodeGlyphX.ImageDecodeOptions)</li>
-              <li><code>arg3</code> (System.Threading.CancellationToken)</li>
-              <li><code>arg4</code> (System.String@)</li>
-              <li><code>arg5</code> (CodeGlyphX.AztecDecodeDiagnostics@)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>options</code> (CodeGlyphX.ImageDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
+              <li><code>text</code> (System.String@)</li>
+              <li><code>diagnostics</code> (CodeGlyphX.AztecDecodeDiagnostics@)</li>
             </ul>
           </div>
         </li>
@@ -1116,9 +1108,9 @@
           <strong>DecodeImageResult</strong> - Decodes an Aztec symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) and returns diagnostics.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.Byte[])</li>
-              <li><code>arg2</code> (CodeGlyphX.ImageDecodeOptions)</li>
-              <li><code>arg3</code> (System.Threading.CancellationToken)</li>
+              <li><code>image</code> (System.Byte[])</li>
+              <li><code>options</code> (CodeGlyphX.ImageDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
             </ul>
           </div>
         </li>
@@ -1126,9 +1118,9 @@
           <strong>DecodeImageResult</strong> - Decodes an Aztec symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) in a span and returns diagnostics.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.ReadOnlySpan{System.Byte})</li>
-              <li><code>arg2</code> (CodeGlyphX.ImageDecodeOptions)</li>
-              <li><code>arg3</code> (System.Threading.CancellationToken)</li>
+              <li><code>image</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>options</code> (CodeGlyphX.ImageDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
             </ul>
           </div>
         </li>
@@ -1136,9 +1128,9 @@
           <strong>DecodeImageResult</strong> - Decodes an Aztec symbol from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) and returns diagnostics.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.IO.Stream)</li>
-              <li><code>arg2</code> (CodeGlyphX.ImageDecodeOptions)</li>
-              <li><code>arg3</code> (System.Threading.CancellationToken)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>options</code> (CodeGlyphX.ImageDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
             </ul>
           </div>
         </li>
@@ -1146,9 +1138,9 @@
           <strong>DecodeImageBatch</strong> - Decodes a batch of Aztec images with shared settings and aggregated diagnostics.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.Collections.Generic.IEnumerable{System.Byte[]})</li>
-              <li><code>arg2</code> (CodeGlyphX.ImageDecodeOptions)</li>
-              <li><code>arg3</code> (System.Threading.CancellationToken)</li>
+              <li><code>images</code> (System.Collections.Generic.IEnumerable{System.Byte[]})</li>
+              <li><code>options</code> (CodeGlyphX.ImageDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
             </ul>
           </div>
         </li>
@@ -1156,8 +1148,8 @@
           <strong>TryDecodeAllImage</strong> - Attempts to decode all Aztec symbols from common image formats.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.Byte[])</li>
-              <li><code>arg2</code> (System.String[]@)</li>
+              <li><code>image</code> (System.Byte[])</li>
+              <li><code>texts</code> (System.String[]@)</li>
             </ul>
           </div>
         </li>
@@ -1165,9 +1157,9 @@
           <strong>TryDecodeAllImage</strong> - Attempts to decode all Aztec symbols from common image formats with image decode options.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.Byte[])</li>
-              <li><code>arg2</code> (CodeGlyphX.ImageDecodeOptions)</li>
-              <li><code>arg3</code> (System.String[]@)</li>
+              <li><code>image</code> (System.Byte[])</li>
+              <li><code>options</code> (CodeGlyphX.ImageDecodeOptions)</li>
+              <li><code>texts</code> (System.String[]@)</li>
             </ul>
           </div>
         </li>
@@ -1175,10 +1167,10 @@
           <strong>TryDecodeAllImage</strong> - Attempts to decode all Aztec symbols from common image formats with image decode options, with cancellation.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.Byte[])</li>
-              <li><code>arg2</code> (CodeGlyphX.ImageDecodeOptions)</li>
-              <li><code>arg3</code> (System.Threading.CancellationToken)</li>
-              <li><code>arg4</code> (System.String[]@)</li>
+              <li><code>image</code> (System.Byte[])</li>
+              <li><code>options</code> (CodeGlyphX.ImageDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
+              <li><code>texts</code> (System.String[]@)</li>
             </ul>
           </div>
         </li>
@@ -1186,8 +1178,8 @@
           <strong>TryDecodeAllImage</strong> - Attempts to decode all Aztec symbols from an image stream.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.IO.Stream)</li>
-              <li><code>arg2</code> (System.String[]@)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>texts</code> (System.String[]@)</li>
             </ul>
           </div>
         </li>
@@ -1195,9 +1187,9 @@
           <strong>TryDecodeAllImage</strong> - Attempts to decode all Aztec symbols from an image stream with image decode options.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.IO.Stream)</li>
-              <li><code>arg2</code> (CodeGlyphX.ImageDecodeOptions)</li>
-              <li><code>arg3</code> (System.String[]@)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>options</code> (CodeGlyphX.ImageDecodeOptions)</li>
+              <li><code>texts</code> (System.String[]@)</li>
             </ul>
           </div>
         </li>
@@ -1205,10 +1197,10 @@
           <strong>TryDecodeAllImage</strong> - Attempts to decode all Aztec symbols from an image stream with image decode options, with cancellation.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.IO.Stream)</li>
-              <li><code>arg2</code> (CodeGlyphX.ImageDecodeOptions)</li>
-              <li><code>arg3</code> (System.Threading.CancellationToken)</li>
-              <li><code>arg4</code> (System.String[]@)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>options</code> (CodeGlyphX.ImageDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
+              <li><code>texts</code> (System.String[]@)</li>
             </ul>
           </div>
         </li>
@@ -1216,9 +1208,9 @@
           <strong>TryDecodePng</strong> - Attempts to decode an Aztec symbol from a PNG stream, with cancellation.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.IO.Stream)</li>
-              <li><code>arg2</code> (System.Threading.CancellationToken)</li>
-              <li><code>arg3</code> (System.String@)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
+              <li><code>text</code> (System.String@)</li>
             </ul>
           </div>
         </li>
@@ -1226,10 +1218,10 @@
           <strong>TryDecodePng</strong> - Attempts to decode an Aztec symbol from a PNG stream with image decode options, with cancellation.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.IO.Stream)</li>
-              <li><code>arg2</code> (CodeGlyphX.ImageDecodeOptions)</li>
-              <li><code>arg3</code> (System.Threading.CancellationToken)</li>
-              <li><code>arg4</code> (System.String@)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>options</code> (CodeGlyphX.ImageDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
+              <li><code>text</code> (System.String@)</li>
             </ul>
           </div>
         </li>
@@ -1237,11 +1229,11 @@
           <strong>TryDecodePng</strong> - Attempts to decode an Aztec symbol from a PNG stream with image decode options, cancellation, and diagnostics.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.IO.Stream)</li>
-              <li><code>arg2</code> (CodeGlyphX.ImageDecodeOptions)</li>
-              <li><code>arg3</code> (System.Threading.CancellationToken)</li>
-              <li><code>arg4</code> (System.String@)</li>
-              <li><code>arg5</code> (CodeGlyphX.AztecDecodeDiagnostics@)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>options</code> (CodeGlyphX.ImageDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
+              <li><code>text</code> (System.String@)</li>
+              <li><code>diagnostics</code> (CodeGlyphX.AztecDecodeDiagnostics@)</li>
             </ul>
           </div>
         </li>
@@ -1249,7 +1241,7 @@
           <strong>DecodePng</strong> - Decodes an Aztec symbol from PNG bytes.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.Byte[])</li>
+              <li><code>png</code> (System.Byte[])</li>
             </ul>
           </div>
         </li>
@@ -1257,7 +1249,7 @@
           <strong>DecodePngFile</strong> - Decodes an Aztec symbol from a PNG file.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
+              <li><code>path</code> (System.String)</li>
             </ul>
           </div>
         </li>
@@ -1265,7 +1257,7 @@
           <strong>DecodePng</strong> - Decodes an Aztec symbol from a PNG stream.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.IO.Stream)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
             </ul>
           </div>
         </li>
@@ -1273,11 +1265,11 @@
           <strong>Render</strong> - Renders an Aztec payload to the requested output format.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (CodeGlyphX.Rendering.OutputFormat)</li>
-              <li><code>arg3</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
-              <li><code>arg5</code> (CodeGlyphX.Rendering.RenderExtras)</li>
+              <li><code>text</code> (System.String)</li>
+              <li><code>format</code> (CodeGlyphX.Rendering.OutputFormat)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>extras</code> (CodeGlyphX.Rendering.RenderExtras)</li>
             </ul>
           </div>
         </li>
@@ -1285,10 +1277,10 @@
           <strong>SavePng</strong> - Saves Aztec PNG to a file.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (System.String)</li>
-              <li><code>arg3</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>text</code> (System.String)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -1296,10 +1288,10 @@
           <strong>SavePng</strong> - Saves Aztec PNG to a stream.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (System.IO.Stream)</li>
-              <li><code>arg3</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>text</code> (System.String)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -1307,10 +1299,10 @@
           <strong>SaveSvg</strong> - Saves Aztec SVG to a file.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (System.String)</li>
-              <li><code>arg3</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>text</code> (System.String)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -1318,10 +1310,10 @@
           <strong>SaveSvgz</strong> - Saves Aztec SVGZ to a file.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (System.String)</li>
-              <li><code>arg3</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>text</code> (System.String)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -1329,10 +1321,10 @@
           <strong>SaveSvg</strong> - Saves Aztec SVG to a stream.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (System.IO.Stream)</li>
-              <li><code>arg3</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>text</code> (System.String)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -1340,10 +1332,10 @@
           <strong>SaveSvgz</strong> - Saves Aztec SVGZ to a stream.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (System.IO.Stream)</li>
-              <li><code>arg3</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>text</code> (System.String)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -1351,11 +1343,11 @@
           <strong>SaveHtml</strong> - Saves Aztec HTML to a file.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (System.String)</li>
-              <li><code>arg3</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
-              <li><code>arg5</code> (System.String)</li>
+              <li><code>text</code> (System.String)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>title</code> (System.String)</li>
             </ul>
           </div>
         </li>
@@ -1363,11 +1355,11 @@
           <strong>SaveHtml</strong> - Saves Aztec HTML to a stream.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (System.IO.Stream)</li>
-              <li><code>arg3</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
-              <li><code>arg5</code> (System.String)</li>
+              <li><code>text</code> (System.String)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>title</code> (System.String)</li>
             </ul>
           </div>
         </li>
@@ -1375,10 +1367,10 @@
           <strong>SaveJpeg</strong> - Saves Aztec JPEG to a file.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (System.String)</li>
-              <li><code>arg3</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>text</code> (System.String)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -1386,10 +1378,10 @@
           <strong>SaveJpeg</strong> - Saves Aztec JPEG to a stream.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (System.IO.Stream)</li>
-              <li><code>arg3</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>text</code> (System.String)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -1397,10 +1389,10 @@
           <strong>SaveWebp</strong> - Saves Aztec WebP to a file.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (System.String)</li>
-              <li><code>arg3</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>text</code> (System.String)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -1408,10 +1400,10 @@
           <strong>SaveWebp</strong> - Saves Aztec WebP to a stream.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (System.IO.Stream)</li>
-              <li><code>arg3</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>text</code> (System.String)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -1419,10 +1411,10 @@
           <strong>SaveBmp</strong> - Saves Aztec BMP to a file.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (System.String)</li>
-              <li><code>arg3</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>text</code> (System.String)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -1430,10 +1422,10 @@
           <strong>SaveBmp</strong> - Saves Aztec BMP to a stream.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (System.IO.Stream)</li>
-              <li><code>arg3</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>text</code> (System.String)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -1441,10 +1433,10 @@
           <strong>SavePpm</strong> - Saves Aztec PPM to a file.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (System.String)</li>
-              <li><code>arg3</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>text</code> (System.String)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -1452,10 +1444,10 @@
           <strong>SavePpm</strong> - Saves Aztec PPM to a stream.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (System.IO.Stream)</li>
-              <li><code>arg3</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>text</code> (System.String)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -1463,10 +1455,10 @@
           <strong>SavePbm</strong> - Saves Aztec PBM to a file.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (System.String)</li>
-              <li><code>arg3</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>text</code> (System.String)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -1474,10 +1466,10 @@
           <strong>SavePbm</strong> - Saves Aztec PBM to a stream.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (System.IO.Stream)</li>
-              <li><code>arg3</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>text</code> (System.String)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -1485,10 +1477,10 @@
           <strong>SavePgm</strong> - Saves Aztec PGM to a file.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (System.String)</li>
-              <li><code>arg3</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>text</code> (System.String)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -1496,10 +1488,10 @@
           <strong>SavePgm</strong> - Saves Aztec PGM to a stream.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (System.IO.Stream)</li>
-              <li><code>arg3</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>text</code> (System.String)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -1507,10 +1499,10 @@
           <strong>SavePam</strong> - Saves Aztec PAM to a file.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (System.String)</li>
-              <li><code>arg3</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>text</code> (System.String)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -1518,10 +1510,10 @@
           <strong>SavePam</strong> - Saves Aztec PAM to a stream.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (System.IO.Stream)</li>
-              <li><code>arg3</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>text</code> (System.String)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -1529,10 +1521,10 @@
           <strong>SaveXbm</strong> - Saves Aztec XBM to a file.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (System.String)</li>
-              <li><code>arg3</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>text</code> (System.String)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -1540,10 +1532,10 @@
           <strong>SaveXbm</strong> - Saves Aztec XBM to a stream.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (System.IO.Stream)</li>
-              <li><code>arg3</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>text</code> (System.String)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -1551,10 +1543,10 @@
           <strong>SaveXpm</strong> - Saves Aztec XPM to a file.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (System.String)</li>
-              <li><code>arg3</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>text</code> (System.String)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -1562,10 +1554,10 @@
           <strong>SaveXpm</strong> - Saves Aztec XPM to a stream.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (System.IO.Stream)</li>
-              <li><code>arg3</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>text</code> (System.String)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -1573,10 +1565,10 @@
           <strong>SaveTga</strong> - Saves Aztec TGA to a file.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (System.String)</li>
-              <li><code>arg3</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>text</code> (System.String)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -1584,10 +1576,10 @@
           <strong>SaveTga</strong> - Saves Aztec TGA to a stream.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (System.IO.Stream)</li>
-              <li><code>arg3</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>text</code> (System.String)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -1595,10 +1587,10 @@
           <strong>SaveIco</strong> - Saves Aztec ICO to a file.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (System.String)</li>
-              <li><code>arg3</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>text</code> (System.String)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -1606,10 +1598,10 @@
           <strong>SaveIco</strong> - Saves Aztec ICO to a stream.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (System.IO.Stream)</li>
-              <li><code>arg3</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>text</code> (System.String)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -1617,11 +1609,11 @@
           <strong>SavePdf</strong> - Saves Aztec PDF to a file.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (System.String)</li>
-              <li><code>arg3</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
-              <li><code>arg5</code> (CodeGlyphX.Rendering.RenderMode)</li>
+              <li><code>text</code> (System.String)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>renderMode</code> (CodeGlyphX.Rendering.RenderMode)</li>
             </ul>
           </div>
         </li>
@@ -1629,11 +1621,11 @@
           <strong>SavePdf</strong> - Saves Aztec PDF to a stream.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (System.IO.Stream)</li>
-              <li><code>arg3</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
-              <li><code>arg5</code> (CodeGlyphX.Rendering.RenderMode)</li>
+              <li><code>text</code> (System.String)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>renderMode</code> (CodeGlyphX.Rendering.RenderMode)</li>
             </ul>
           </div>
         </li>
@@ -1641,11 +1633,11 @@
           <strong>SaveEps</strong> - Saves Aztec EPS to a file.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (System.String)</li>
-              <li><code>arg3</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
-              <li><code>arg5</code> (CodeGlyphX.Rendering.RenderMode)</li>
+              <li><code>text</code> (System.String)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>renderMode</code> (CodeGlyphX.Rendering.RenderMode)</li>
             </ul>
           </div>
         </li>
@@ -1653,11 +1645,11 @@
           <strong>SaveEps</strong> - Saves Aztec EPS to a stream.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (System.IO.Stream)</li>
-              <li><code>arg3</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
-              <li><code>arg5</code> (CodeGlyphX.Rendering.RenderMode)</li>
+              <li><code>text</code> (System.String)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>renderMode</code> (CodeGlyphX.Rendering.RenderMode)</li>
             </ul>
           </div>
         </li>
@@ -1665,10 +1657,10 @@
           <strong>SavePng</strong> - Saves Aztec PNG to a file.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.ReadOnlySpan{System.Byte})</li>
-              <li><code>arg2</code> (System.String)</li>
-              <li><code>arg3</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>data</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -1676,10 +1668,10 @@
           <strong>SavePng</strong> - Saves Aztec PNG to a stream.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.ReadOnlySpan{System.Byte})</li>
-              <li><code>arg2</code> (System.IO.Stream)</li>
-              <li><code>arg3</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>data</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -1687,10 +1679,10 @@
           <strong>SaveSvg</strong> - Saves Aztec SVG to a file.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.ReadOnlySpan{System.Byte})</li>
-              <li><code>arg2</code> (System.String)</li>
-              <li><code>arg3</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>data</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -1698,10 +1690,10 @@
           <strong>SaveSvg</strong> - Saves Aztec SVG to a stream.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.ReadOnlySpan{System.Byte})</li>
-              <li><code>arg2</code> (System.IO.Stream)</li>
-              <li><code>arg3</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>data</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -1709,11 +1701,11 @@
           <strong>SaveHtml</strong> - Saves Aztec HTML to a file.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.ReadOnlySpan{System.Byte})</li>
-              <li><code>arg2</code> (System.String)</li>
-              <li><code>arg3</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
-              <li><code>arg5</code> (System.String)</li>
+              <li><code>data</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>title</code> (System.String)</li>
             </ul>
           </div>
         </li>
@@ -1721,11 +1713,11 @@
           <strong>SaveHtml</strong> - Saves Aztec HTML to a stream.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.ReadOnlySpan{System.Byte})</li>
-              <li><code>arg2</code> (System.IO.Stream)</li>
-              <li><code>arg3</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
-              <li><code>arg5</code> (System.String)</li>
+              <li><code>data</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>title</code> (System.String)</li>
             </ul>
           </div>
         </li>
@@ -1733,10 +1725,10 @@
           <strong>SaveJpeg</strong> - Saves Aztec JPEG to a file.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.ReadOnlySpan{System.Byte})</li>
-              <li><code>arg2</code> (System.String)</li>
-              <li><code>arg3</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>data</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -1744,10 +1736,10 @@
           <strong>SaveJpeg</strong> - Saves Aztec JPEG to a stream.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.ReadOnlySpan{System.Byte})</li>
-              <li><code>arg2</code> (System.IO.Stream)</li>
-              <li><code>arg3</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>data</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -1755,10 +1747,10 @@
           <strong>SaveWebp</strong> - Saves Aztec WebP to a file.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.ReadOnlySpan{System.Byte})</li>
-              <li><code>arg2</code> (System.String)</li>
-              <li><code>arg3</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>data</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -1766,10 +1758,10 @@
           <strong>SaveWebp</strong> - Saves Aztec WebP to a stream.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.ReadOnlySpan{System.Byte})</li>
-              <li><code>arg2</code> (System.IO.Stream)</li>
-              <li><code>arg3</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>data</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -1777,10 +1769,10 @@
           <strong>SaveBmp</strong> - Saves Aztec BMP to a file.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.ReadOnlySpan{System.Byte})</li>
-              <li><code>arg2</code> (System.String)</li>
-              <li><code>arg3</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>data</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -1788,10 +1780,10 @@
           <strong>SaveBmp</strong> - Saves Aztec BMP to a stream.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.ReadOnlySpan{System.Byte})</li>
-              <li><code>arg2</code> (System.IO.Stream)</li>
-              <li><code>arg3</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>data</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -1799,10 +1791,10 @@
           <strong>SavePpm</strong> - Saves Aztec PPM to a file.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.ReadOnlySpan{System.Byte})</li>
-              <li><code>arg2</code> (System.String)</li>
-              <li><code>arg3</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>data</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -1810,10 +1802,10 @@
           <strong>SavePpm</strong> - Saves Aztec PPM to a stream.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.ReadOnlySpan{System.Byte})</li>
-              <li><code>arg2</code> (System.IO.Stream)</li>
-              <li><code>arg3</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>data</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -1821,10 +1813,10 @@
           <strong>SavePbm</strong> - Saves Aztec PBM to a file.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.ReadOnlySpan{System.Byte})</li>
-              <li><code>arg2</code> (System.String)</li>
-              <li><code>arg3</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>data</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -1832,10 +1824,10 @@
           <strong>SavePbm</strong> - Saves Aztec PBM to a stream.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.ReadOnlySpan{System.Byte})</li>
-              <li><code>arg2</code> (System.IO.Stream)</li>
-              <li><code>arg3</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>data</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -1843,10 +1835,10 @@
           <strong>SavePgm</strong> - Saves Aztec PGM to a file.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.ReadOnlySpan{System.Byte})</li>
-              <li><code>arg2</code> (System.String)</li>
-              <li><code>arg3</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>data</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -1854,10 +1846,10 @@
           <strong>SavePgm</strong> - Saves Aztec PGM to a stream.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.ReadOnlySpan{System.Byte})</li>
-              <li><code>arg2</code> (System.IO.Stream)</li>
-              <li><code>arg3</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>data</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -1865,10 +1857,10 @@
           <strong>SavePam</strong> - Saves Aztec PAM to a file.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.ReadOnlySpan{System.Byte})</li>
-              <li><code>arg2</code> (System.String)</li>
-              <li><code>arg3</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>data</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -1876,10 +1868,10 @@
           <strong>SavePam</strong> - Saves Aztec PAM to a stream.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.ReadOnlySpan{System.Byte})</li>
-              <li><code>arg2</code> (System.IO.Stream)</li>
-              <li><code>arg3</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>data</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -1887,10 +1879,10 @@
           <strong>SaveXbm</strong> - Saves Aztec XBM to a file.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.ReadOnlySpan{System.Byte})</li>
-              <li><code>arg2</code> (System.String)</li>
-              <li><code>arg3</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>data</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -1898,10 +1890,10 @@
           <strong>SaveXbm</strong> - Saves Aztec XBM to a stream.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.ReadOnlySpan{System.Byte})</li>
-              <li><code>arg2</code> (System.IO.Stream)</li>
-              <li><code>arg3</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>data</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -1909,10 +1901,10 @@
           <strong>SaveXpm</strong> - Saves Aztec XPM to a file.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.ReadOnlySpan{System.Byte})</li>
-              <li><code>arg2</code> (System.String)</li>
-              <li><code>arg3</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>data</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -1920,10 +1912,10 @@
           <strong>SaveXpm</strong> - Saves Aztec XPM to a stream.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.ReadOnlySpan{System.Byte})</li>
-              <li><code>arg2</code> (System.IO.Stream)</li>
-              <li><code>arg3</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>data</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -1931,10 +1923,10 @@
           <strong>SaveTga</strong> - Saves Aztec TGA to a file.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.ReadOnlySpan{System.Byte})</li>
-              <li><code>arg2</code> (System.String)</li>
-              <li><code>arg3</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>data</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -1942,10 +1934,10 @@
           <strong>SaveTga</strong> - Saves Aztec TGA to a stream.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.ReadOnlySpan{System.Byte})</li>
-              <li><code>arg2</code> (System.IO.Stream)</li>
-              <li><code>arg3</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>data</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -1953,10 +1945,10 @@
           <strong>SaveIco</strong> - Saves Aztec ICO to a file.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.ReadOnlySpan{System.Byte})</li>
-              <li><code>arg2</code> (System.String)</li>
-              <li><code>arg3</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>data</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -1964,10 +1956,10 @@
           <strong>SaveIco</strong> - Saves Aztec ICO to a stream.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.ReadOnlySpan{System.Byte})</li>
-              <li><code>arg2</code> (System.IO.Stream)</li>
-              <li><code>arg3</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>data</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -1975,10 +1967,10 @@
           <strong>SaveSvgz</strong> - Saves Aztec SVGZ to a file.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.ReadOnlySpan{System.Byte})</li>
-              <li><code>arg2</code> (System.String)</li>
-              <li><code>arg3</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>data</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -1986,10 +1978,10 @@
           <strong>SaveSvgz</strong> - Saves Aztec SVGZ to a stream.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.ReadOnlySpan{System.Byte})</li>
-              <li><code>arg2</code> (System.IO.Stream)</li>
-              <li><code>arg3</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>data</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
@@ -1997,11 +1989,11 @@
           <strong>SavePdf</strong> - Saves Aztec PDF to a file.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.ReadOnlySpan{System.Byte})</li>
-              <li><code>arg2</code> (System.String)</li>
-              <li><code>arg3</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
-              <li><code>arg5</code> (CodeGlyphX.Rendering.RenderMode)</li>
+              <li><code>data</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>renderMode</code> (CodeGlyphX.Rendering.RenderMode)</li>
             </ul>
           </div>
         </li>
@@ -2009,11 +2001,11 @@
           <strong>SavePdf</strong> - Saves Aztec PDF to a stream.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.ReadOnlySpan{System.Byte})</li>
-              <li><code>arg2</code> (System.IO.Stream)</li>
-              <li><code>arg3</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
-              <li><code>arg5</code> (CodeGlyphX.Rendering.RenderMode)</li>
+              <li><code>data</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>renderMode</code> (CodeGlyphX.Rendering.RenderMode)</li>
             </ul>
           </div>
         </li>
@@ -2021,11 +2013,11 @@
           <strong>SaveEps</strong> - Saves Aztec EPS to a file.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.ReadOnlySpan{System.Byte})</li>
-              <li><code>arg2</code> (System.String)</li>
-              <li><code>arg3</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
-              <li><code>arg5</code> (CodeGlyphX.Rendering.RenderMode)</li>
+              <li><code>data</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>renderMode</code> (CodeGlyphX.Rendering.RenderMode)</li>
             </ul>
           </div>
         </li>
@@ -2033,11 +2025,11 @@
           <strong>SaveEps</strong> - Saves Aztec EPS to a stream.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.ReadOnlySpan{System.Byte})</li>
-              <li><code>arg2</code> (System.IO.Stream)</li>
-              <li><code>arg3</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
-              <li><code>arg5</code> (CodeGlyphX.Rendering.RenderMode)</li>
+              <li><code>data</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>renderMode</code> (CodeGlyphX.Rendering.RenderMode)</li>
             </ul>
           </div>
         </li>

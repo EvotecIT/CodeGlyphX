@@ -13,32 +13,32 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "Address",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "ChainId",
           "type": "System.Nullable{System.Int64}",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "AmountEther",
           "type": "System.Nullable{System.Decimal}",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "ValueWei",
           "type": "System.Nullable{System.Decimal}",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "Function",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "Parameters",
           "type": "System.Collections.Generic.IReadOnlyDictionary{System.String,System.String}",
           "summary": null
         }

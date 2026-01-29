@@ -13,17 +13,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "background",
           "type": "CodeGlyphX.Rendering.Png.Rgba32",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "foreground",
           "type": "CodeGlyphX.Rendering.Png.Rgba32",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "colors",
           "type": "CodeGlyphX.Rendering.Png.Rgba32[]",
           "summary": null
         }

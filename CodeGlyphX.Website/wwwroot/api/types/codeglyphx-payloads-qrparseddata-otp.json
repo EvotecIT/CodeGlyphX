@@ -13,7 +13,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "Payload",
           "type": "CodeGlyphX.OtpAuthPayload",
           "summary": null
         }

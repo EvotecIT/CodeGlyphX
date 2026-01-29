@@ -13,7 +13,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "maxMilliseconds",
           "type": "System.Int32",
           "summary": null
         }

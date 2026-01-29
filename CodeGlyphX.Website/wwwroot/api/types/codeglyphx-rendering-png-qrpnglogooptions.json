@@ -13,17 +13,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "rgba",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "width",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "height",
           "type": "System.Int32",
           "summary": null
         }
@@ -35,27 +35,27 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "pixels",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "width",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "height",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "stride",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "fmt",
           "type": "CodeGlyphX.PixelFormat",
           "summary": null
         }
@@ -67,7 +67,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "png",
           "type": "System.Byte[]",
           "summary": null
         }

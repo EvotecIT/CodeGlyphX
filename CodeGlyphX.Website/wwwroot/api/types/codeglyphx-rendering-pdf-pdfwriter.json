@@ -13,27 +13,27 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "width",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "height",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "rgba",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "stride",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "background",
           "type": "System.Nullable{CodeGlyphX.Rendering.Png.Rgba32}",
           "summary": null
         }
@@ -45,32 +45,32 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "width",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "height",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "rgba",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "stride",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "background",
           "type": "System.Nullable{CodeGlyphX.Rendering.Png.Rgba32}",
           "summary": null
         }
@@ -82,17 +82,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "width",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "height",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "rgb",
           "type": "System.Byte[]",
           "summary": null
         }
@@ -104,22 +104,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "width",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "height",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "rgb",
           "type": "System.Byte[]",
           "summary": null
         }

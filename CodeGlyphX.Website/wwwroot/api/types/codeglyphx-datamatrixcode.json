@@ -13,17 +13,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "text",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -35,17 +35,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -57,12 +57,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "text",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         }
@@ -74,12 +74,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         }
@@ -91,12 +91,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         }
@@ -108,17 +108,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -130,17 +130,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -152,17 +152,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -174,17 +174,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -196,17 +196,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -218,17 +218,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -240,17 +240,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -262,17 +262,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -284,17 +284,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -306,17 +306,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -328,17 +328,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -350,17 +350,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -372,17 +372,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -394,17 +394,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -416,17 +416,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -492,17 +492,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "options",
           "type": "CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions",
           "summary": null
         }
@@ -514,17 +514,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "text",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -536,17 +536,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -558,17 +558,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "text",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -580,17 +580,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "text",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -602,17 +602,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -624,17 +624,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -646,17 +646,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "text",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -668,17 +668,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -690,17 +690,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "text",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -712,17 +712,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "text",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -734,17 +734,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "text",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -756,17 +756,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "text",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -778,17 +778,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "text",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -800,17 +800,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "text",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -822,17 +822,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "text",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -844,17 +844,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "text",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -866,17 +866,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "text",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -888,17 +888,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "text",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -910,17 +910,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "text",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -986,17 +986,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "text",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "options",
           "type": "CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions",
           "summary": null
         }
@@ -1008,17 +1008,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -1030,17 +1030,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -1052,17 +1052,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -1074,17 +1074,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -1096,17 +1096,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -1118,17 +1118,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -1140,17 +1140,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -1162,17 +1162,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -1184,17 +1184,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -1206,17 +1206,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -1228,17 +1228,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -1304,17 +1304,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "options",
           "type": "CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions",
           "summary": null
         }
@@ -1326,12 +1326,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "png",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "text",
           "type": "System.String@",
           "summary": null
         }
@@ -1343,17 +1343,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "png",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "cancellationToken",
           "type": "System.Threading.CancellationToken",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "text",
           "type": "System.String@",
           "summary": null
         }
@@ -1365,17 +1365,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "png",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "options",
           "type": "CodeGlyphX.ImageDecodeOptions",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "text",
           "type": "System.String@",
           "summary": null
         }
@@ -1387,22 +1387,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "png",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "options",
           "type": "CodeGlyphX.ImageDecodeOptions",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "cancellationToken",
           "type": "System.Threading.CancellationToken",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "text",
           "type": "System.String@",
           "summary": null
         }
@@ -1414,12 +1414,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "png",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "text",
           "type": "System.String@",
           "summary": null
         }
@@ -1431,17 +1431,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "png",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "cancellationToken",
           "type": "System.Threading.CancellationToken",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "text",
           "type": "System.String@",
           "summary": null
         }
@@ -1453,17 +1453,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "png",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "options",
           "type": "CodeGlyphX.ImageDecodeOptions",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "text",
           "type": "System.String@",
           "summary": null
         }
@@ -1475,22 +1475,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "png",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "options",
           "type": "CodeGlyphX.ImageDecodeOptions",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "cancellationToken",
           "type": "System.Threading.CancellationToken",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "text",
           "type": "System.String@",
           "summary": null
         }
@@ -1502,17 +1502,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "png",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "text",
           "type": "System.String@",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "diagnostics",
           "type": "CodeGlyphX.DataMatrixDecodeDiagnostics@",
           "summary": null
         }
@@ -1524,22 +1524,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "png",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "options",
           "type": "CodeGlyphX.ImageDecodeOptions",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "text",
           "type": "System.String@",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "diagnostics",
           "type": "CodeGlyphX.DataMatrixDecodeDiagnostics@",
           "summary": null
         }
@@ -1551,27 +1551,27 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "png",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "options",
           "type": "CodeGlyphX.ImageDecodeOptions",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "cancellationToken",
           "type": "System.Threading.CancellationToken",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "text",
           "type": "System.String@",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "diagnostics",
           "type": "CodeGlyphX.DataMatrixDecodeDiagnostics@",
           "summary": null
         }
@@ -1583,17 +1583,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "png",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "text",
           "type": "System.String@",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "diagnostics",
           "type": "CodeGlyphX.DataMatrixDecodeDiagnostics@",
           "summary": null
         }
@@ -1605,22 +1605,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "png",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "options",
           "type": "CodeGlyphX.ImageDecodeOptions",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "text",
           "type": "System.String@",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "diagnostics",
           "type": "CodeGlyphX.DataMatrixDecodeDiagnostics@",
           "summary": null
         }
@@ -1632,27 +1632,27 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "png",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "options",
           "type": "CodeGlyphX.ImageDecodeOptions",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "cancellationToken",
           "type": "System.Threading.CancellationToken",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "text",
           "type": "System.String@",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "diagnostics",
           "type": "CodeGlyphX.DataMatrixDecodeDiagnostics@",
           "summary": null
         }
@@ -1664,12 +1664,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "text",
           "type": "System.String@",
           "summary": null
         }
@@ -1681,17 +1681,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "options",
           "type": "CodeGlyphX.ImageDecodeOptions",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "text",
           "type": "System.String@",
           "summary": null
         }
@@ -1703,22 +1703,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "options",
           "type": "CodeGlyphX.ImageDecodeOptions",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "cancellationToken",
           "type": "System.Threading.CancellationToken",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "text",
           "type": "System.String@",
           "summary": null
         }
@@ -1730,17 +1730,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "text",
           "type": "System.String@",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "diagnostics",
           "type": "CodeGlyphX.DataMatrixDecodeDiagnostics@",
           "summary": null
         }
@@ -1752,22 +1752,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "options",
           "type": "CodeGlyphX.ImageDecodeOptions",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "text",
           "type": "System.String@",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "diagnostics",
           "type": "CodeGlyphX.DataMatrixDecodeDiagnostics@",
           "summary": null
         }
@@ -1779,27 +1779,27 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "options",
           "type": "CodeGlyphX.ImageDecodeOptions",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "cancellationToken",
           "type": "System.Threading.CancellationToken",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "text",
           "type": "System.String@",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "diagnostics",
           "type": "CodeGlyphX.DataMatrixDecodeDiagnostics@",
           "summary": null
         }
@@ -1811,12 +1811,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "text",
           "type": "System.String@",
           "summary": null
         }
@@ -1828,17 +1828,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "options",
           "type": "CodeGlyphX.ImageDecodeOptions",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "text",
           "type": "System.String@",
           "summary": null
         }
@@ -1850,22 +1850,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "options",
           "type": "CodeGlyphX.ImageDecodeOptions",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "cancellationToken",
           "type": "System.Threading.CancellationToken",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "text",
           "type": "System.String@",
           "summary": null
         }
@@ -1877,17 +1877,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "text",
           "type": "System.String@",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "diagnostics",
           "type": "CodeGlyphX.DataMatrixDecodeDiagnostics@",
           "summary": null
         }
@@ -1899,22 +1899,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "options",
           "type": "CodeGlyphX.ImageDecodeOptions",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "text",
           "type": "System.String@",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "diagnostics",
           "type": "CodeGlyphX.DataMatrixDecodeDiagnostics@",
           "summary": null
         }
@@ -1926,27 +1926,27 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "options",
           "type": "CodeGlyphX.ImageDecodeOptions",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "cancellationToken",
           "type": "System.Threading.CancellationToken",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "text",
           "type": "System.String@",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "diagnostics",
           "type": "CodeGlyphX.DataMatrixDecodeDiagnostics@",
           "summary": null
         }
@@ -1958,17 +1958,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "cancellationToken",
           "type": "System.Threading.CancellationToken",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "text",
           "type": "System.String@",
           "summary": null
         }
@@ -1980,12 +1980,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "image",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "text",
           "type": "System.String@",
           "summary": null
         }
@@ -1997,17 +1997,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "image",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "cancellationToken",
           "type": "System.Threading.CancellationToken",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "text",
           "type": "System.String@",
           "summary": null
         }
@@ -2019,17 +2019,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "image",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "options",
           "type": "CodeGlyphX.ImageDecodeOptions",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "text",
           "type": "System.String@",
           "summary": null
         }
@@ -2041,22 +2041,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "image",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "options",
           "type": "CodeGlyphX.ImageDecodeOptions",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "cancellationToken",
           "type": "System.Threading.CancellationToken",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "text",
           "type": "System.String@",
           "summary": null
         }
@@ -2068,17 +2068,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "image",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "text",
           "type": "System.String@",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "diagnostics",
           "type": "CodeGlyphX.DataMatrixDecodeDiagnostics@",
           "summary": null
         }
@@ -2090,22 +2090,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "image",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "options",
           "type": "CodeGlyphX.ImageDecodeOptions",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "text",
           "type": "System.String@",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "diagnostics",
           "type": "CodeGlyphX.DataMatrixDecodeDiagnostics@",
           "summary": null
         }
@@ -2117,27 +2117,27 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "image",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "options",
           "type": "CodeGlyphX.ImageDecodeOptions",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "cancellationToken",
           "type": "System.Threading.CancellationToken",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "text",
           "type": "System.String@",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "diagnostics",
           "type": "CodeGlyphX.DataMatrixDecodeDiagnostics@",
           "summary": null
         }
@@ -2149,17 +2149,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "image",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "text",
           "type": "System.String@",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "diagnostics",
           "type": "CodeGlyphX.DataMatrixDecodeDiagnostics@",
           "summary": null
         }
@@ -2171,22 +2171,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "image",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "options",
           "type": "CodeGlyphX.ImageDecodeOptions",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "text",
           "type": "System.String@",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "diagnostics",
           "type": "CodeGlyphX.DataMatrixDecodeDiagnostics@",
           "summary": null
         }
@@ -2198,27 +2198,27 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "image",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "options",
           "type": "CodeGlyphX.ImageDecodeOptions",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "cancellationToken",
           "type": "System.Threading.CancellationToken",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "text",
           "type": "System.String@",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "diagnostics",
           "type": "CodeGlyphX.DataMatrixDecodeDiagnostics@",
           "summary": null
         }
@@ -2230,12 +2230,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "image",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "text",
           "type": "System.String@",
           "summary": null
         }
@@ -2247,17 +2247,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "image",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "cancellationToken",
           "type": "System.Threading.CancellationToken",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "text",
           "type": "System.String@",
           "summary": null
         }
@@ -2269,17 +2269,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "image",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "options",
           "type": "CodeGlyphX.ImageDecodeOptions",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "text",
           "type": "System.String@",
           "summary": null
         }
@@ -2291,22 +2291,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "image",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "options",
           "type": "CodeGlyphX.ImageDecodeOptions",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "cancellationToken",
           "type": "System.Threading.CancellationToken",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "text",
           "type": "System.String@",
           "summary": null
         }
@@ -2318,12 +2318,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "text",
           "type": "System.String@",
           "summary": null
         }
@@ -2335,17 +2335,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "cancellationToken",
           "type": "System.Threading.CancellationToken",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "text",
           "type": "System.String@",
           "summary": null
         }
@@ -2357,17 +2357,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "options",
           "type": "CodeGlyphX.ImageDecodeOptions",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "text",
           "type": "System.String@",
           "summary": null
         }
@@ -2379,22 +2379,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "options",
           "type": "CodeGlyphX.ImageDecodeOptions",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "cancellationToken",
           "type": "System.Threading.CancellationToken",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "text",
           "type": "System.String@",
           "summary": null
         }
@@ -2406,17 +2406,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "text",
           "type": "System.String@",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "diagnostics",
           "type": "CodeGlyphX.DataMatrixDecodeDiagnostics@",
           "summary": null
         }
@@ -2428,22 +2428,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "options",
           "type": "CodeGlyphX.ImageDecodeOptions",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "text",
           "type": "System.String@",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "diagnostics",
           "type": "CodeGlyphX.DataMatrixDecodeDiagnostics@",
           "summary": null
         }
@@ -2455,27 +2455,27 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "options",
           "type": "CodeGlyphX.ImageDecodeOptions",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "cancellationToken",
           "type": "System.Threading.CancellationToken",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "text",
           "type": "System.String@",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "diagnostics",
           "type": "CodeGlyphX.DataMatrixDecodeDiagnostics@",
           "summary": null
         }
@@ -2487,17 +2487,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "image",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "options",
           "type": "CodeGlyphX.ImageDecodeOptions",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "cancellationToken",
           "type": "System.Threading.CancellationToken",
           "summary": null
         }
@@ -2509,17 +2509,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "image",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "options",
           "type": "CodeGlyphX.ImageDecodeOptions",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "cancellationToken",
           "type": "System.Threading.CancellationToken",
           "summary": null
         }
@@ -2531,17 +2531,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "options",
           "type": "CodeGlyphX.ImageDecodeOptions",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "cancellationToken",
           "type": "System.Threading.CancellationToken",
           "summary": null
         }
@@ -2553,17 +2553,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "images",
           "type": "System.Collections.Generic.IEnumerable{System.Byte[]}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "options",
           "type": "CodeGlyphX.ImageDecodeOptions",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "cancellationToken",
           "type": "System.Threading.CancellationToken",
           "summary": null
         }
@@ -2575,12 +2575,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "image",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "texts",
           "type": "System.String[]@",
           "summary": null
         }
@@ -2592,17 +2592,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "image",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "options",
           "type": "CodeGlyphX.ImageDecodeOptions",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "texts",
           "type": "System.String[]@",
           "summary": null
         }
@@ -2614,22 +2614,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "image",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "options",
           "type": "CodeGlyphX.ImageDecodeOptions",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "cancellationToken",
           "type": "System.Threading.CancellationToken",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "texts",
           "type": "System.String[]@",
           "summary": null
         }
@@ -2641,12 +2641,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "texts",
           "type": "System.String[]@",
           "summary": null
         }
@@ -2658,17 +2658,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "options",
           "type": "CodeGlyphX.ImageDecodeOptions",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "texts",
           "type": "System.String[]@",
           "summary": null
         }
@@ -2680,22 +2680,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "options",
           "type": "CodeGlyphX.ImageDecodeOptions",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "cancellationToken",
           "type": "System.Threading.CancellationToken",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "texts",
           "type": "System.String[]@",
           "summary": null
         }
@@ -2707,7 +2707,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "png",
           "type": "System.Byte[]",
           "summary": null
         }
@@ -2719,7 +2719,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "path",
           "type": "System.String",
           "summary": null
         }
@@ -2731,7 +2731,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         }
@@ -2743,27 +2743,27 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "text",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "format",
           "type": "CodeGlyphX.Rendering.OutputFormat",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "extras",
           "type": "CodeGlyphX.Rendering.RenderExtras",
           "summary": null
         }
@@ -2775,27 +2775,27 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "format",
           "type": "CodeGlyphX.Rendering.OutputFormat",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "extras",
           "type": "CodeGlyphX.Rendering.RenderExtras",
           "summary": null
         }
@@ -2807,27 +2807,27 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "format",
           "type": "CodeGlyphX.Rendering.OutputFormat",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "extras",
           "type": "CodeGlyphX.Rendering.RenderExtras",
           "summary": null
         }
@@ -2839,22 +2839,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -2866,22 +2866,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -2893,22 +2893,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -2920,22 +2920,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -2947,27 +2947,27 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "title",
           "type": "System.String",
           "summary": null
         }
@@ -2979,27 +2979,27 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "title",
           "type": "System.String",
           "summary": null
         }
@@ -3011,22 +3011,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -3038,22 +3038,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -3065,22 +3065,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -3092,22 +3092,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -3119,22 +3119,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -3146,22 +3146,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -3173,22 +3173,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -3200,22 +3200,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -3227,22 +3227,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -3254,22 +3254,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -3281,22 +3281,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -3308,22 +3308,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -3399,22 +3399,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -3426,22 +3426,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -3453,22 +3453,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -3480,22 +3480,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -3507,22 +3507,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -3534,22 +3534,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -3561,22 +3561,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -3588,22 +3588,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -3615,22 +3615,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -3642,22 +3642,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -3669,22 +3669,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -3696,22 +3696,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -3787,27 +3787,27 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "title",
           "type": "System.String",
           "summary": null
         }
@@ -3819,27 +3819,27 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "extras",
           "type": "CodeGlyphX.Rendering.RenderExtras",
           "summary": null
         }
@@ -3851,27 +3851,27 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "text",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "title",
           "type": "System.String",
           "summary": null
         }
@@ -3883,27 +3883,27 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "text",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "extras",
           "type": "CodeGlyphX.Rendering.RenderExtras",
           "summary": null
         }
@@ -3915,27 +3915,27 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "title",
           "type": "System.String",
           "summary": null
         }
@@ -3947,27 +3947,27 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "extras",
           "type": "CodeGlyphX.Rendering.RenderExtras",
           "summary": null
         }
@@ -3979,22 +3979,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "text",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -4006,22 +4006,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -4033,22 +4033,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "text",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -4060,22 +4060,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "text",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -4087,22 +4087,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -4114,22 +4114,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -4141,27 +4141,27 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "text",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "title",
           "type": "System.String",
           "summary": null
         }
@@ -4173,27 +4173,27 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "title",
           "type": "System.String",
           "summary": null
         }
@@ -4205,22 +4205,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "text",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -4232,22 +4232,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "text",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -4259,22 +4259,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "text",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -4286,22 +4286,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "text",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -4313,22 +4313,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "text",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -4340,22 +4340,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "text",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -4367,22 +4367,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "text",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -4394,22 +4394,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "text",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -4421,22 +4421,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "text",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -4448,22 +4448,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "text",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -4475,22 +4475,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "text",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -4566,22 +4566,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -4657,22 +4657,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -4684,22 +4684,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -4711,22 +4711,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -4738,22 +4738,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -4765,22 +4765,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -4792,22 +4792,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -4819,22 +4819,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -4846,22 +4846,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -4873,22 +4873,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -4900,22 +4900,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -4927,22 +4927,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "text",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -4954,22 +4954,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -4981,22 +4981,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "text",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -5008,22 +5008,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "text",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -5035,22 +5035,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -5062,22 +5062,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -5089,27 +5089,27 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "text",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "title",
           "type": "System.String",
           "summary": null
         }
@@ -5121,27 +5121,27 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "title",
           "type": "System.String",
           "summary": null
         }
@@ -5153,22 +5153,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "text",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -5180,22 +5180,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "text",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -5207,22 +5207,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "text",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -5234,22 +5234,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "text",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -5261,22 +5261,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "text",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -5288,22 +5288,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "text",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -5315,22 +5315,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "text",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -5342,22 +5342,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "text",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -5369,22 +5369,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "text",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -5396,22 +5396,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "text",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -5423,22 +5423,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "text",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -5514,22 +5514,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -5541,22 +5541,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -5568,22 +5568,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -5595,22 +5595,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -5622,22 +5622,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -5649,22 +5649,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -5676,22 +5676,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -5703,22 +5703,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -5730,22 +5730,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -5757,22 +5757,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }
@@ -5784,22 +5784,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.MatrixOptions",
           "summary": null
         }

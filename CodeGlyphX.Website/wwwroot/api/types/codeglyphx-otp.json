@@ -13,32 +13,32 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "issuer",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "account",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "secretBase32",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "alg",
           "type": "CodeGlyphX.OtpAlgorithm",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "digits",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "period",
           "type": "System.Int32",
           "summary": null
         }
@@ -50,32 +50,32 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "issuer",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "account",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "secret",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "alg",
           "type": "CodeGlyphX.OtpAlgorithm",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "digits",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "period",
           "type": "System.Int32",
           "summary": null
         }
@@ -87,32 +87,32 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "issuer",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "account",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "secretBase32",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "counter",
           "type": "System.Int64",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "alg",
           "type": "CodeGlyphX.OtpAlgorithm",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "digits",
           "type": "System.Int32",
           "summary": null
         }
@@ -124,32 +124,32 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "issuer",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "account",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "secret",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "counter",
           "type": "System.Int64",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "alg",
           "type": "CodeGlyphX.OtpAlgorithm",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "digits",
           "type": "System.Int32",
           "summary": null
         }
@@ -161,37 +161,37 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "issuer",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "account",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "secretBase32",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.QrEasyOptions",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "alg",
           "type": "CodeGlyphX.OtpAlgorithm",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "digits",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "period",
           "type": "System.Int32",
           "summary": null
         }
@@ -203,37 +203,37 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "issuer",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "account",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "secretBase32",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.QrEasyOptions",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "alg",
           "type": "CodeGlyphX.OtpAlgorithm",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "digits",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "period",
           "type": "System.Int32",
           "summary": null
         }
@@ -245,37 +245,37 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "issuer",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "account",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "secretBase32",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.QrEasyOptions",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "alg",
           "type": "CodeGlyphX.OtpAlgorithm",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "digits",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "period",
           "type": "System.Int32",
           "summary": null
         }
@@ -287,37 +287,37 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "issuer",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "account",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "secretBase32",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.QrEasyOptions",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "alg",
           "type": "CodeGlyphX.OtpAlgorithm",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "digits",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "period",
           "type": "System.Int32",
           "summary": null
         }
@@ -329,37 +329,37 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "issuer",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "account",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "secretBase32",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.QrEasyOptions",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "alg",
           "type": "CodeGlyphX.OtpAlgorithm",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "digits",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "period",
           "type": "System.Int32",
           "summary": null
         }
@@ -371,37 +371,37 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "issuer",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "account",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "secretBase32",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "counter",
           "type": "System.Int64",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "options",
           "type": "CodeGlyphX.QrEasyOptions",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "alg",
           "type": "CodeGlyphX.OtpAlgorithm",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "digits",
           "type": "System.Int32",
           "summary": null
         }
@@ -413,37 +413,37 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "issuer",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "account",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "secretBase32",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "counter",
           "type": "System.Int64",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "options",
           "type": "CodeGlyphX.QrEasyOptions",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "alg",
           "type": "CodeGlyphX.OtpAlgorithm",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "digits",
           "type": "System.Int32",
           "summary": null
         }
@@ -455,37 +455,37 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "issuer",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "account",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "secretBase32",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "counter",
           "type": "System.Int64",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "options",
           "type": "CodeGlyphX.QrEasyOptions",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "alg",
           "type": "CodeGlyphX.OtpAlgorithm",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "digits",
           "type": "System.Int32",
           "summary": null
         }
@@ -497,37 +497,37 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "issuer",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "account",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "secretBase32",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "counter",
           "type": "System.Int64",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "options",
           "type": "CodeGlyphX.QrEasyOptions",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "alg",
           "type": "CodeGlyphX.OtpAlgorithm",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "digits",
           "type": "System.Int32",
           "summary": null
         }
@@ -539,37 +539,37 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "issuer",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "account",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "secretBase32",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "counter",
           "type": "System.Int64",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "options",
           "type": "CodeGlyphX.QrEasyOptions",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "alg",
           "type": "CodeGlyphX.OtpAlgorithm",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "digits",
           "type": "System.Int32",
           "summary": null
         }
@@ -581,42 +581,42 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "issuer",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "account",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "secretBase32",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "options",
           "type": "CodeGlyphX.QrEasyOptions",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "alg",
           "type": "CodeGlyphX.OtpAlgorithm",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "digits",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg8",
+          "name": "period",
           "type": "System.Int32",
           "summary": null
         }
@@ -628,42 +628,42 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "issuer",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "account",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "secretBase32",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "options",
           "type": "CodeGlyphX.QrEasyOptions",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "alg",
           "type": "CodeGlyphX.OtpAlgorithm",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "digits",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg8",
+          "name": "period",
           "type": "System.Int32",
           "summary": null
         }
@@ -675,42 +675,42 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "issuer",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "account",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "secretBase32",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "options",
           "type": "CodeGlyphX.QrEasyOptions",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "alg",
           "type": "CodeGlyphX.OtpAlgorithm",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "digits",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg8",
+          "name": "period",
           "type": "System.Int32",
           "summary": null
         }
@@ -722,42 +722,42 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "issuer",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "account",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "secretBase32",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "options",
           "type": "CodeGlyphX.QrEasyOptions",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "alg",
           "type": "CodeGlyphX.OtpAlgorithm",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "digits",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg8",
+          "name": "period",
           "type": "System.Int32",
           "summary": null
         }
@@ -769,47 +769,47 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "issuer",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "account",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "secretBase32",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "options",
           "type": "CodeGlyphX.QrEasyOptions",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "alg",
           "type": "CodeGlyphX.OtpAlgorithm",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "digits",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg8",
+          "name": "period",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg9",
+          "name": "title",
           "type": "System.String",
           "summary": null
         }
@@ -821,47 +821,47 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "issuer",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "account",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "secretBase32",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "options",
           "type": "CodeGlyphX.QrEasyOptions",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "alg",
           "type": "CodeGlyphX.OtpAlgorithm",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "digits",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg8",
+          "name": "period",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg9",
+          "name": "title",
           "type": "System.String",
           "summary": null
         }
@@ -873,42 +873,42 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "issuer",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "account",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "secretBase32",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "options",
           "type": "CodeGlyphX.QrEasyOptions",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "alg",
           "type": "CodeGlyphX.OtpAlgorithm",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "digits",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg8",
+          "name": "period",
           "type": "System.Int32",
           "summary": null
         }
@@ -920,42 +920,42 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "issuer",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "account",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "secretBase32",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "options",
           "type": "CodeGlyphX.QrEasyOptions",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "alg",
           "type": "CodeGlyphX.OtpAlgorithm",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "digits",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg8",
+          "name": "period",
           "type": "System.Int32",
           "summary": null
         }
@@ -967,42 +967,42 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "issuer",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "account",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "secretBase32",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "options",
           "type": "CodeGlyphX.QrEasyOptions",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "alg",
           "type": "CodeGlyphX.OtpAlgorithm",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "digits",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg8",
+          "name": "period",
           "type": "System.Int32",
           "summary": null
         }
@@ -1014,42 +1014,42 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "issuer",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "account",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "secretBase32",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "options",
           "type": "CodeGlyphX.QrEasyOptions",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "alg",
           "type": "CodeGlyphX.OtpAlgorithm",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "digits",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg8",
+          "name": "period",
           "type": "System.Int32",
           "summary": null
         }
@@ -1061,42 +1061,42 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "issuer",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "account",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "secretBase32",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "counter",
           "type": "System.Int64",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "options",
           "type": "CodeGlyphX.QrEasyOptions",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "alg",
           "type": "CodeGlyphX.OtpAlgorithm",
           "summary": null
         },
         {
-          "name": "arg8",
+          "name": "digits",
           "type": "System.Int32",
           "summary": null
         }
@@ -1108,42 +1108,42 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "issuer",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "account",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "secretBase32",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "counter",
           "type": "System.Int64",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "options",
           "type": "CodeGlyphX.QrEasyOptions",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "alg",
           "type": "CodeGlyphX.OtpAlgorithm",
           "summary": null
         },
         {
-          "name": "arg8",
+          "name": "digits",
           "type": "System.Int32",
           "summary": null
         }
@@ -1155,42 +1155,42 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "issuer",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "account",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "secretBase32",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "counter",
           "type": "System.Int64",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "options",
           "type": "CodeGlyphX.QrEasyOptions",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "alg",
           "type": "CodeGlyphX.OtpAlgorithm",
           "summary": null
         },
         {
-          "name": "arg8",
+          "name": "digits",
           "type": "System.Int32",
           "summary": null
         }
@@ -1202,42 +1202,42 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "issuer",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "account",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "secretBase32",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "counter",
           "type": "System.Int64",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "options",
           "type": "CodeGlyphX.QrEasyOptions",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "alg",
           "type": "CodeGlyphX.OtpAlgorithm",
           "summary": null
         },
         {
-          "name": "arg8",
+          "name": "digits",
           "type": "System.Int32",
           "summary": null
         }
@@ -1249,47 +1249,47 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "issuer",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "account",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "secretBase32",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "counter",
           "type": "System.Int64",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "options",
           "type": "CodeGlyphX.QrEasyOptions",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "alg",
           "type": "CodeGlyphX.OtpAlgorithm",
           "summary": null
         },
         {
-          "name": "arg8",
+          "name": "digits",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg9",
+          "name": "title",
           "type": "System.String",
           "summary": null
         }
@@ -1301,47 +1301,47 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "issuer",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "account",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "secretBase32",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "counter",
           "type": "System.Int64",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "options",
           "type": "CodeGlyphX.QrEasyOptions",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "alg",
           "type": "CodeGlyphX.OtpAlgorithm",
           "summary": null
         },
         {
-          "name": "arg8",
+          "name": "digits",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg9",
+          "name": "title",
           "type": "System.String",
           "summary": null
         }
@@ -1353,42 +1353,42 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "issuer",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "account",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "secretBase32",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "counter",
           "type": "System.Int64",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "options",
           "type": "CodeGlyphX.QrEasyOptions",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "alg",
           "type": "CodeGlyphX.OtpAlgorithm",
           "summary": null
         },
         {
-          "name": "arg8",
+          "name": "digits",
           "type": "System.Int32",
           "summary": null
         }
@@ -1400,42 +1400,42 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "issuer",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "account",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "secretBase32",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "counter",
           "type": "System.Int64",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "options",
           "type": "CodeGlyphX.QrEasyOptions",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "alg",
           "type": "CodeGlyphX.OtpAlgorithm",
           "summary": null
         },
         {
-          "name": "arg8",
+          "name": "digits",
           "type": "System.Int32",
           "summary": null
         }
@@ -1447,42 +1447,42 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "issuer",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "account",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "secretBase32",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "counter",
           "type": "System.Int64",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "options",
           "type": "CodeGlyphX.QrEasyOptions",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "alg",
           "type": "CodeGlyphX.OtpAlgorithm",
           "summary": null
         },
         {
-          "name": "arg8",
+          "name": "digits",
           "type": "System.Int32",
           "summary": null
         }
@@ -1494,42 +1494,42 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "issuer",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "account",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "secretBase32",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "counter",
           "type": "System.Int64",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "options",
           "type": "CodeGlyphX.QrEasyOptions",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "alg",
           "type": "CodeGlyphX.OtpAlgorithm",
           "summary": null
         },
         {
-          "name": "arg8",
+          "name": "digits",
           "type": "System.Int32",
           "summary": null
         }
@@ -1541,47 +1541,47 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "issuer",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "account",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "secretBase32",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "options",
           "type": "CodeGlyphX.QrEasyOptions",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "alg",
           "type": "CodeGlyphX.OtpAlgorithm",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "digits",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg8",
+          "name": "period",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg9",
+          "name": "title",
           "type": "System.String",
           "summary": null
         }
@@ -1593,47 +1593,47 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "issuer",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "account",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "secretBase32",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "counter",
           "type": "System.Int64",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "options",
           "type": "CodeGlyphX.QrEasyOptions",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "alg",
           "type": "CodeGlyphX.OtpAlgorithm",
           "summary": null
         },
         {
-          "name": "arg8",
+          "name": "digits",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg9",
+          "name": "title",
           "type": "System.String",
           "summary": null
         }
@@ -1645,22 +1645,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "issuer",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "account",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "secretBase32",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.QrEasyOptions",
           "summary": null
         }
@@ -1672,27 +1672,27 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "issuer",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "account",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "secretBase32",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "counter",
           "type": "System.Int64",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "options",
           "type": "CodeGlyphX.QrEasyOptions",
           "summary": null
         }

@@ -13,22 +13,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "Ssid",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "Password",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "AuthType",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "Hidden",
           "type": "System.Boolean",
           "summary": null
         }

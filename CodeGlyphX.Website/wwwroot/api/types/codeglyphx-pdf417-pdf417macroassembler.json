@@ -13,7 +13,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "decoded",
           "type": "CodeGlyphX.Pdf417.Pdf417Decoded",
           "summary": null
         }
@@ -25,7 +25,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "decoded",
           "type": "CodeGlyphX.CodeGlyphDecoded",
           "summary": null
         }
@@ -37,12 +37,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "text",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "macro",
           "type": "CodeGlyphX.Pdf417.Pdf417MacroMetadata",
           "summary": null
         }
@@ -54,7 +54,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "decoded",
           "type": "CodeGlyphX.Pdf417.Pdf417Decoded",
           "summary": null
         }
@@ -66,7 +66,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "decoded",
           "type": "CodeGlyphX.CodeGlyphDecoded",
           "summary": null
         }
@@ -78,7 +78,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "text",
           "type": "System.String@",
           "summary": null
         }

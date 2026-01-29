@@ -13,17 +13,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "result",
           "type": "CodeGlyphX.OtpAuthParseResult",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "options",
           "type": "CodeGlyphX.OtpAuthValidationOptions",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "error",
           "type": "System.String@",
           "summary": null
         }
@@ -35,17 +35,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "result",
           "type": "CodeGlyphX.OtpAuthParseResult",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "options",
           "type": "CodeGlyphX.OtpAuthValidationOptions",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "errors",
           "type": "System.String[]@",
           "summary": null
         }

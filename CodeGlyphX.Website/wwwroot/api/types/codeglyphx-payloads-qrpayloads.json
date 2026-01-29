@@ -13,7 +13,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "text",
           "type": "System.String",
           "summary": null
         }
@@ -25,7 +25,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "url",
           "type": "System.String",
           "summary": null
         }
@@ -37,12 +37,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "url",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "title",
           "type": "System.String",
           "summary": null
         }
@@ -54,12 +54,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "message",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "number",
           "type": "System.String",
           "summary": null
         }
@@ -71,27 +71,27 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "ssid",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "password",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "authType",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "hidden",
           "type": "System.Boolean",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "escapeHexStrings",
           "type": "System.Boolean",
           "summary": null
         }
@@ -103,22 +103,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "address",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "subject",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "message",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "encoding",
           "type": "CodeGlyphX.Payloads.QrMailEncoding",
           "summary": null
         }
@@ -130,17 +130,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "number",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "subject",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "encoding",
           "type": "CodeGlyphX.Payloads.QrMmsEncoding",
           "summary": null
         }
@@ -152,17 +152,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "number",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "message",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "encoding",
           "type": "CodeGlyphX.Payloads.QrSmsEncoding",
           "summary": null
         }
@@ -174,7 +174,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "number",
           "type": "System.String",
           "summary": null
         }
@@ -186,17 +186,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "latitude",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "longitude",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "encoding",
           "type": "CodeGlyphX.Payloads.QrGeolocationEncoding",
           "summary": null
         }
@@ -208,37 +208,37 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "subject",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "description",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "location",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "start",
           "type": "System.DateTime",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "end",
           "type": "System.DateTime",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "allDayEvent",
           "type": "System.Boolean",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "encoding",
           "type": "CodeGlyphX.Payloads.QrCalendarEncoding",
           "summary": null
         }
@@ -250,107 +250,107 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "outputType",
           "type": "CodeGlyphX.Payloads.QrContactOutputType",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "firstname",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "lastname",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "nickname",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "phone",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "mobilePhone",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "workPhone",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg8",
+          "name": "email",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg9",
+          "name": "birthday",
           "type": "System.Nullable{System.DateTime}",
           "summary": null
         },
         {
-          "name": "arg10",
+          "name": "website",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg11",
+          "name": "street",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg12",
+          "name": "houseNumber",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg13",
+          "name": "city",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg14",
+          "name": "zipCode",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg15",
+          "name": "country",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg16",
+          "name": "note",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg17",
+          "name": "stateRegion",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg18",
+          "name": "addressOrder",
           "type": "CodeGlyphX.Payloads.QrContactAddressOrder",
           "summary": null
         },
         {
-          "name": "arg19",
+          "name": "org",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg20",
+          "name": "orgTitle",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg21",
+          "name": "addressType",
           "type": "CodeGlyphX.Payloads.QrContactAddressType",
           "summary": null
         }
@@ -362,7 +362,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "username",
           "type": "System.String",
           "summary": null
         }
@@ -374,12 +374,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "appId",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "countryCode",
           "type": "System.String",
           "summary": null
         }
@@ -391,7 +391,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "packageId",
           "type": "System.String",
           "summary": null
         }
@@ -403,7 +403,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "handleOrUrl",
           "type": "System.String",
           "summary": null
         }
@@ -415,7 +415,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "handleOrUrl",
           "type": "System.String",
           "summary": null
         }
@@ -427,7 +427,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "handleOrUrl",
           "type": "System.String",
           "summary": null
         }
@@ -439,7 +439,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "handleOrUrl",
           "type": "System.String",
           "summary": null
         }
@@ -451,7 +451,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "handleOrUrl",
           "type": "System.String",
           "summary": null
         }
@@ -463,7 +463,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "handleOrUrl",
           "type": "System.String",
           "summary": null
         }
@@ -475,37 +475,37 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "vpa",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "name",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "merchantCode",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "transactionRef",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "transactionNote",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "amount",
           "type": "System.Nullable{System.Decimal}",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "currency",
           "type": "System.String",
           "summary": null
         }
@@ -517,27 +517,27 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "type",
           "type": "CodeGlyphX.Payloads.QrBitcoinLikeType",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "address",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "amount",
           "type": "System.Nullable{System.Double}",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "label",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "message",
           "type": "System.String",
           "summary": null
         }
@@ -549,27 +549,27 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "address",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "amount",
           "type": "System.Nullable{System.Single}",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "paymentId",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "recipientName",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "description",
           "type": "System.String",
           "summary": null
         }
@@ -581,27 +581,27 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "hostname",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "port",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "password",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "method",
           "type": "CodeGlyphX.Payloads.QrShadowSocksMethod",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "tag",
           "type": "System.String",
           "summary": null
         }
@@ -613,32 +613,32 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "hostname",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "port",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "password",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "method",
           "type": "CodeGlyphX.Payloads.QrShadowSocksMethod",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "parameters",
           "type": "System.Collections.Generic.Dictionary{System.String,System.String}",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "tag",
           "type": "System.String",
           "summary": null
         }
@@ -650,42 +650,42 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "type",
           "type": "CodeGlyphX.OtpAuthType",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "secretBase32",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "label",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "issuer",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "algorithm",
           "type": "CodeGlyphX.OtpAlgorithm",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "digits",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "period",
           "type": "System.Nullable{System.Int32}",
           "summary": null
         },
         {
-          "name": "arg8",
+          "name": "counter",
           "type": "System.Nullable{System.Int32}",
           "summary": null
         }
@@ -697,12 +697,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "input",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "options",
           "type": "CodeGlyphX.Payloads.QrPayloadDetectOptions",
           "summary": null
         }
@@ -714,22 +714,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "handleOrUrl",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "amount",
           "type": "System.Nullable{System.Decimal}",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "currency",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "useHttps",
           "type": "System.Boolean",
           "summary": null
         }
@@ -741,52 +741,52 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "iban",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "bic",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "name",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "amount",
           "type": "System.Decimal",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "remittanceInformation",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "remittanceType",
           "type": "CodeGlyphX.Payloads.QrGirocodeRemittanceType",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "purposeOfCreditTransfer",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg8",
+          "name": "messageToGirocodeUser",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg9",
+          "name": "version",
           "type": "CodeGlyphX.Payloads.QrGirocodeVersion",
           "summary": null
         },
         {
-          "name": "arg10",
+          "name": "encoding",
           "type": "CodeGlyphX.Payloads.QrGirocodeEncoding",
           "summary": null
         }
@@ -798,37 +798,37 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "authority",
           "type": "CodeGlyphX.Payloads.QrBezahlAuthorityType",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "name",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "account",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "bnc",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "iban",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "bic",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "reason",
           "type": "System.String",
           "summary": null
         }
@@ -840,42 +840,42 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "name",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "account",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "bnc",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "amount",
           "type": "System.Decimal",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "reason",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "currency",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "postingKey",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg8",
+          "name": "executionDate",
           "type": "System.Nullable{System.DateTime}",
           "summary": null
         }
@@ -887,42 +887,42 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "name",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "iban",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "bic",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "amount",
           "type": "System.Decimal",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "reason",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "currency",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "sepaReference",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg8",
+          "name": "executionDate",
           "type": "System.Nullable{System.DateTime}",
           "summary": null
         }
@@ -934,57 +934,57 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "name",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "account",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "bnc",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "amount",
           "type": "System.Decimal",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "creditorId",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "mandateId",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "dateOfSignature",
           "type": "System.DateTime",
           "summary": null
         },
         {
-          "name": "arg8",
+          "name": "reason",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg9",
+          "name": "currency",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg10",
+          "name": "postingKey",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg11",
+          "name": "executionDate",
           "type": "System.Nullable{System.DateTime}",
           "summary": null
         }
@@ -996,57 +996,57 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "name",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "iban",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "bic",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "amount",
           "type": "System.Decimal",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "creditorId",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "mandateId",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "dateOfSignature",
           "type": "System.DateTime",
           "summary": null
         },
         {
-          "name": "arg8",
+          "name": "reason",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg9",
+          "name": "currency",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg10",
+          "name": "sepaReference",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg11",
+          "name": "executionDate",
           "type": "System.Nullable{System.DateTime}",
           "summary": null
         }
@@ -1058,57 +1058,57 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "name",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "account",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "bnc",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "amount",
           "type": "System.Decimal",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "periodicUnit",
           "type": "CodeGlyphX.Payloads.QrBezahlPeriodicUnit",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "periodicUnitRotation",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "periodicFirstExecutionDate",
           "type": "System.DateTime",
           "summary": null
         },
         {
-          "name": "arg8",
+          "name": "periodicLastExecutionDate",
           "type": "System.DateTime",
           "summary": null
         },
         {
-          "name": "arg9",
+          "name": "reason",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg10",
+          "name": "currency",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg11",
+          "name": "postingKey",
           "type": "System.String",
           "summary": null
         }
@@ -1120,57 +1120,57 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "name",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "iban",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "bic",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "amount",
           "type": "System.Decimal",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "periodicUnit",
           "type": "CodeGlyphX.Payloads.QrBezahlPeriodicUnit",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "periodicUnitRotation",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "periodicFirstExecutionDate",
           "type": "System.DateTime",
           "summary": null
         },
         {
-          "name": "arg8",
+          "name": "periodicLastExecutionDate",
           "type": "System.DateTime",
           "summary": null
         },
         {
-          "name": "arg9",
+          "name": "reason",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg10",
+          "name": "currency",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg11",
+          "name": "sepaReference",
           "type": "System.String",
           "summary": null
         }
@@ -1182,47 +1182,47 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "name",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "personalAcc",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "bankName",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "bic",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "correspAcc",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "payeeInn",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "kpp",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg8",
+          "name": "sum",
           "type": "System.Decimal",
           "summary": null
         },
         {
-          "name": "arg9",
+          "name": "purpose",
           "type": "System.String",
           "summary": null
         }
@@ -1234,12 +1234,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "appIdOrUrl",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "platform",
           "type": "CodeGlyphX.Payloads.QrAppStorePlatform",
           "summary": null
         }
@@ -1251,7 +1251,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "profileOrUrl",
           "type": "System.String",
           "summary": null
         }
@@ -1263,7 +1263,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "handleOrUrl",
           "type": "System.String",
           "summary": null
         }
@@ -1275,7 +1275,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "handleOrUrl",
           "type": "System.String",
           "summary": null
         }
@@ -1287,7 +1287,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "handleOrUrl",
           "type": "System.String",
           "summary": null
         }
@@ -1299,7 +1299,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "payload",
           "type": "CodeGlyphX.Payloads.SlovenianUpnQrPayload",
           "summary": null
         }
@@ -1311,7 +1311,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "payload",
           "type": "CodeGlyphX.Payloads.SwissQrCodePayload",
           "summary": null
         }
@@ -1323,7 +1323,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "payload",
           "type": "CodeGlyphX.Payloads.RussiaPaymentOrderPayload",
           "summary": null
         }
@@ -1335,37 +1335,37 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "authority",
           "type": "CodeGlyphX.Payloads.QrBezahlAuthorityType",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "name",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "account",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "bnc",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "iban",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "bic",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "reason",
           "type": "System.String",
           "summary": null
         }

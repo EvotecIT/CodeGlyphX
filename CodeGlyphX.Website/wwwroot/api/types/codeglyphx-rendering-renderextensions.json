@@ -13,12 +13,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "path",
           "type": "System.String",
           "summary": null
         }
@@ -30,17 +30,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "directory",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "fileName",
           "type": "System.String",
           "summary": null
         }
@@ -52,12 +52,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         }
@@ -69,17 +69,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "text",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "encoding",
           "type": "System.Text.Encoding",
           "summary": null
         }
@@ -91,22 +91,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "text",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "directory",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "fileName",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "encoding",
           "type": "System.Text.Encoding",
           "summary": null
         }
@@ -118,17 +118,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "text",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "encoding",
           "type": "System.Text.Encoding",
           "summary": null
         }
@@ -140,7 +140,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "path",
           "type": "System.String",
           "summary": null
         }
@@ -152,12 +152,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "encoding",
           "type": "System.Text.Encoding",
           "summary": null
         }
@@ -169,7 +169,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         }
@@ -181,12 +181,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "encoding",
           "type": "System.Text.Encoding",
           "summary": null
         }
@@ -198,12 +198,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "data",
           "type": "System.Byte[]@",
           "summary": null
         }
@@ -215,17 +215,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "text",
           "type": "System.String@",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "encoding",
           "type": "System.Text.Encoding",
           "summary": null
         }
@@ -237,12 +237,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "innerHtml",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "title",
           "type": "System.String",
           "summary": null
         }
@@ -254,7 +254,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.Byte[]",
           "summary": null
         }
@@ -266,12 +266,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "text",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "encoding",
           "type": "System.Text.Encoding",
           "summary": null
         }
@@ -283,12 +283,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "mimeType",
           "type": "System.String",
           "summary": null
         }
@@ -300,7 +300,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.Byte[]",
           "summary": null
         }
@@ -312,7 +312,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.Byte[]",
           "summary": null
         }
@@ -324,7 +324,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.Byte[]",
           "summary": null
         }
@@ -336,7 +336,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.Byte[]",
           "summary": null
         }
@@ -348,12 +348,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "svg",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "encoding",
           "type": "System.Text.Encoding",
           "summary": null
         }

@@ -13,67 +13,67 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "payerName",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "payerAddress",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "payerPlace",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "recipientName",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "recipientAddress",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "recipientPlace",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "recipientIban",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg8",
+          "name": "description",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg9",
+          "name": "amount",
           "type": "System.Double",
           "summary": null
         },
         {
-          "name": "arg10",
+          "name": "deadline",
           "type": "System.Nullable{System.DateTime}",
           "summary": null
         },
         {
-          "name": "arg11",
+          "name": "recipientSiModel",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg12",
+          "name": "recipientSiReference",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg13",
+          "name": "code",
           "type": "System.String",
           "summary": null
         }

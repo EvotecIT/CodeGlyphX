@@ -13,7 +13,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "content",
           "type": "System.String",
           "summary": null
         }
@@ -25,12 +25,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "content",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "columns",
           "type": "System.Int32",
           "summary": null
         }

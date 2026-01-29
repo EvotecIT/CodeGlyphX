@@ -13,7 +13,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "configure",
           "type": "System.Action{CodeGlyphX.QrEasyOptions}",
           "summary": null
         }
@@ -25,12 +25,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "algorithm",
           "type": "CodeGlyphX.OtpAlgorithm",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "digits",
           "type": "System.Int32",
           "summary": null
         }
@@ -84,7 +84,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "path",
           "type": "System.String",
           "summary": null
         }
@@ -96,7 +96,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         }
@@ -108,7 +108,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "path",
           "type": "System.String",
           "summary": null
         }
@@ -120,7 +120,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         }
@@ -132,12 +132,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "title",
           "type": "System.String",
           "summary": null
         }
@@ -149,12 +149,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "title",
           "type": "System.String",
           "summary": null
         }
@@ -166,7 +166,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "path",
           "type": "System.String",
           "summary": null
         }
@@ -178,7 +178,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         }
@@ -190,7 +190,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "path",
           "type": "System.String",
           "summary": null
         }
@@ -202,7 +202,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         }
@@ -214,12 +214,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "title",
           "type": "System.String",
           "summary": null
         }

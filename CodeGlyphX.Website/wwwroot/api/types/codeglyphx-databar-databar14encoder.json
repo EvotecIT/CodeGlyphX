@@ -13,7 +13,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "content",
           "type": "System.String",
           "summary": null
         }
@@ -25,7 +25,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "content",
           "type": "System.String",
           "summary": null
         }
@@ -37,7 +37,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "content",
           "type": "System.String",
           "summary": null
         }

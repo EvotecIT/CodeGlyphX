@@ -13,47 +13,47 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "rgba",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "width",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "height",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "stride",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "durationMs",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "x",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "y",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg8",
+          "name": "blend",
           "type": "System.Boolean",
           "summary": null
         },
         {
-          "name": "arg9",
+          "name": "disposeToBackground",
           "type": "System.Boolean",
           "summary": null
         }

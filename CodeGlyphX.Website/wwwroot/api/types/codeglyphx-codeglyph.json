@@ -13,32 +13,32 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "expectedBarcode",
           "type": "System.Nullable{CodeGlyphX.BarcodeType}",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "preferBarcode",
           "type": "System.Boolean",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "qrOptions",
           "type": "CodeGlyphX.QrPixelDecodeOptions",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "cancellationToken",
           "type": "System.Threading.CancellationToken",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "barcodeOptions",
           "type": "CodeGlyphX.BarcodeDecodeOptions",
           "summary": null
         }
@@ -50,32 +50,32 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "expectedBarcode",
           "type": "System.Nullable{CodeGlyphX.BarcodeType}",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "preferBarcode",
           "type": "System.Boolean",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "qrOptions",
           "type": "CodeGlyphX.QrPixelDecodeOptions",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "cancellationToken",
           "type": "System.Threading.CancellationToken",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "barcodeOptions",
           "type": "CodeGlyphX.BarcodeDecodeOptions",
           "summary": null
         }
@@ -87,37 +87,37 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "expectedBarcode",
           "type": "System.Nullable{CodeGlyphX.BarcodeType}",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "includeBarcode",
           "type": "System.Boolean",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "preferBarcode",
           "type": "System.Boolean",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "qrOptions",
           "type": "CodeGlyphX.QrPixelDecodeOptions",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "cancellationToken",
           "type": "System.Threading.CancellationToken",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "barcodeOptions",
           "type": "CodeGlyphX.BarcodeDecodeOptions",
           "summary": null
         }
@@ -129,37 +129,37 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "expectedBarcode",
           "type": "System.Nullable{CodeGlyphX.BarcodeType}",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "includeBarcode",
           "type": "System.Boolean",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "preferBarcode",
           "type": "System.Boolean",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "qrOptions",
           "type": "CodeGlyphX.QrPixelDecodeOptions",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "cancellationToken",
           "type": "System.Threading.CancellationToken",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "barcodeOptions",
           "type": "CodeGlyphX.BarcodeDecodeOptions",
           "summary": null
         }
@@ -171,32 +171,32 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "expectedBarcode",
           "type": "System.Nullable{CodeGlyphX.BarcodeType}",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "preferBarcode",
           "type": "System.Boolean",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "qrOptions",
           "type": "CodeGlyphX.QrPixelDecodeOptions",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "cancellationToken",
           "type": "System.Threading.CancellationToken",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "barcodeOptions",
           "type": "CodeGlyphX.BarcodeDecodeOptions",
           "summary": null
         }
@@ -208,32 +208,32 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "expectedBarcode",
           "type": "System.Nullable{CodeGlyphX.BarcodeType}",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "preferBarcode",
           "type": "System.Boolean",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "qrOptions",
           "type": "CodeGlyphX.QrPixelDecodeOptions",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "cancellationToken",
           "type": "System.Threading.CancellationToken",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "barcodeOptions",
           "type": "CodeGlyphX.BarcodeDecodeOptions",
           "summary": null
         }
@@ -245,37 +245,37 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "expectedBarcode",
           "type": "System.Nullable{CodeGlyphX.BarcodeType}",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "includeBarcode",
           "type": "System.Boolean",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "preferBarcode",
           "type": "System.Boolean",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "qrOptions",
           "type": "CodeGlyphX.QrPixelDecodeOptions",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "cancellationToken",
           "type": "System.Threading.CancellationToken",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "barcodeOptions",
           "type": "CodeGlyphX.BarcodeDecodeOptions",
           "summary": null
         }
@@ -287,37 +287,37 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "expectedBarcode",
           "type": "System.Nullable{CodeGlyphX.BarcodeType}",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "includeBarcode",
           "type": "System.Boolean",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "preferBarcode",
           "type": "System.Boolean",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "qrOptions",
           "type": "CodeGlyphX.QrPixelDecodeOptions",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "cancellationToken",
           "type": "System.Threading.CancellationToken",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "barcodeOptions",
           "type": "CodeGlyphX.BarcodeDecodeOptions",
           "summary": null
         }
@@ -329,12 +329,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "options",
           "type": "CodeGlyphX.CodeGlyphDecodeOptions",
           "summary": null
         }
@@ -346,12 +346,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "options",
           "type": "CodeGlyphX.CodeGlyphDecodeOptions",
           "summary": null
         }
@@ -363,32 +363,32 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "expectedBarcode",
           "type": "System.Nullable{CodeGlyphX.BarcodeType}",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "preferBarcode",
           "type": "System.Boolean",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "qrOptions",
           "type": "CodeGlyphX.QrPixelDecodeOptions",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "cancellationToken",
           "type": "System.Threading.CancellationToken",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "barcodeOptions",
           "type": "CodeGlyphX.BarcodeDecodeOptions",
           "summary": null
         }
@@ -400,32 +400,32 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "expectedBarcode",
           "type": "System.Nullable{CodeGlyphX.BarcodeType}",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "preferBarcode",
           "type": "System.Boolean",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "qrOptions",
           "type": "CodeGlyphX.QrPixelDecodeOptions",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "cancellationToken",
           "type": "System.Threading.CancellationToken",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "barcodeOptions",
           "type": "CodeGlyphX.BarcodeDecodeOptions",
           "summary": null
         }
@@ -437,17 +437,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "image",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "decoded",
           "type": "CodeGlyphX.CodeGlyphDecoded@",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "options",
           "type": "CodeGlyphX.CodeGlyphDecodeOptions",
           "summary": null
         }
@@ -459,17 +459,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "image",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "decoded",
           "type": "CodeGlyphX.CodeGlyphDecoded[]@",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "options",
           "type": "CodeGlyphX.CodeGlyphDecodeOptions",
           "summary": null
         }
@@ -481,17 +481,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "decoded",
           "type": "CodeGlyphX.CodeGlyphDecoded@",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "options",
           "type": "CodeGlyphX.CodeGlyphDecodeOptions",
           "summary": null
         }
@@ -503,17 +503,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "decoded",
           "type": "CodeGlyphX.CodeGlyphDecoded[]@",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "options",
           "type": "CodeGlyphX.CodeGlyphDecodeOptions",
           "summary": null
         }
@@ -525,17 +525,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "decoded",
           "type": "CodeGlyphX.CodeGlyphDecoded@",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "options",
           "type": "CodeGlyphX.CodeGlyphDecodeOptions",
           "summary": null
         }
@@ -547,17 +547,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "decoded",
           "type": "CodeGlyphX.CodeGlyphDecoded[]@",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "options",
           "type": "CodeGlyphX.CodeGlyphDecodeOptions",
           "summary": null
         }
@@ -569,12 +569,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "image",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "options",
           "type": "CodeGlyphX.CodeGlyphDecodeOptions",
           "summary": null
         }
@@ -586,12 +586,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "image",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "options",
           "type": "CodeGlyphX.CodeGlyphDecodeOptions",
           "summary": null
         }
@@ -603,57 +603,57 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "pixels",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "width",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "height",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "stride",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "format",
           "type": "CodeGlyphX.PixelFormat",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "decoded",
           "type": "CodeGlyphX.CodeGlyphDecoded@",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "expectedBarcode",
           "type": "System.Nullable{CodeGlyphX.BarcodeType}",
           "summary": null
         },
         {
-          "name": "arg8",
+          "name": "preferBarcode",
           "type": "System.Boolean",
           "summary": null
         },
         {
-          "name": "arg9",
+          "name": "qrOptions",
           "type": "CodeGlyphX.QrPixelDecodeOptions",
           "summary": null
         },
         {
-          "name": "arg10",
+          "name": "cancellationToken",
           "type": "System.Threading.CancellationToken",
           "summary": null
         },
         {
-          "name": "arg11",
+          "name": "barcodeOptions",
           "type": "CodeGlyphX.BarcodeDecodeOptions",
           "summary": null
         }
@@ -665,62 +665,62 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "pixels",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "width",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "height",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "stride",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "format",
           "type": "CodeGlyphX.PixelFormat",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "decoded",
           "type": "CodeGlyphX.CodeGlyphDecoded@",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "diagnostics",
           "type": "CodeGlyphX.CodeGlyphDecodeDiagnostics@",
           "summary": null
         },
         {
-          "name": "arg8",
+          "name": "expectedBarcode",
           "type": "System.Nullable{CodeGlyphX.BarcodeType}",
           "summary": null
         },
         {
-          "name": "arg9",
+          "name": "preferBarcode",
           "type": "System.Boolean",
           "summary": null
         },
         {
-          "name": "arg10",
+          "name": "qrOptions",
           "type": "CodeGlyphX.QrPixelDecodeOptions",
           "summary": null
         },
         {
-          "name": "arg11",
+          "name": "cancellationToken",
           "type": "System.Threading.CancellationToken",
           "summary": null
         },
         {
-          "name": "arg12",
+          "name": "barcodeOptions",
           "type": "CodeGlyphX.BarcodeDecodeOptions",
           "summary": null
         }
@@ -732,62 +732,62 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "pixels",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "width",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "height",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "stride",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "format",
           "type": "CodeGlyphX.PixelFormat",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "decoded",
           "type": "CodeGlyphX.CodeGlyphDecoded[]@",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "expectedBarcode",
           "type": "System.Nullable{CodeGlyphX.BarcodeType}",
           "summary": null
         },
         {
-          "name": "arg8",
+          "name": "includeBarcode",
           "type": "System.Boolean",
           "summary": null
         },
         {
-          "name": "arg9",
+          "name": "preferBarcode",
           "type": "System.Boolean",
           "summary": null
         },
         {
-          "name": "arg10",
+          "name": "qrOptions",
           "type": "CodeGlyphX.QrPixelDecodeOptions",
           "summary": null
         },
         {
-          "name": "arg11",
+          "name": "cancellationToken",
           "type": "System.Threading.CancellationToken",
           "summary": null
         },
         {
-          "name": "arg12",
+          "name": "barcodeOptions",
           "type": "CodeGlyphX.BarcodeDecodeOptions",
           "summary": null
         }
@@ -799,67 +799,67 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "pixels",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "width",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "height",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "stride",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "format",
           "type": "CodeGlyphX.PixelFormat",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "decoded",
           "type": "CodeGlyphX.CodeGlyphDecoded[]@",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "diagnostics",
           "type": "CodeGlyphX.CodeGlyphDecodeDiagnostics@",
           "summary": null
         },
         {
-          "name": "arg8",
+          "name": "expectedBarcode",
           "type": "System.Nullable{CodeGlyphX.BarcodeType}",
           "summary": null
         },
         {
-          "name": "arg9",
+          "name": "includeBarcode",
           "type": "System.Boolean",
           "summary": null
         },
         {
-          "name": "arg10",
+          "name": "preferBarcode",
           "type": "System.Boolean",
           "summary": null
         },
         {
-          "name": "arg11",
+          "name": "qrOptions",
           "type": "CodeGlyphX.QrPixelDecodeOptions",
           "summary": null
         },
         {
-          "name": "arg12",
+          "name": "cancellationToken",
           "type": "System.Threading.CancellationToken",
           "summary": null
         },
         {
-          "name": "arg13",
+          "name": "barcodeOptions",
           "type": "CodeGlyphX.BarcodeDecodeOptions",
           "summary": null
         }
@@ -871,57 +871,57 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "pixels",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "width",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "height",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "stride",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "format",
           "type": "CodeGlyphX.PixelFormat",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "decoded",
           "type": "CodeGlyphX.CodeGlyphDecoded@",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "expectedBarcode",
           "type": "System.Nullable{CodeGlyphX.BarcodeType}",
           "summary": null
         },
         {
-          "name": "arg8",
+          "name": "preferBarcode",
           "type": "System.Boolean",
           "summary": null
         },
         {
-          "name": "arg9",
+          "name": "qrOptions",
           "type": "CodeGlyphX.QrPixelDecodeOptions",
           "summary": null
         },
         {
-          "name": "arg10",
+          "name": "cancellationToken",
           "type": "System.Threading.CancellationToken",
           "summary": null
         },
         {
-          "name": "arg11",
+          "name": "barcodeOptions",
           "type": "CodeGlyphX.BarcodeDecodeOptions",
           "summary": null
         }
@@ -933,62 +933,62 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "pixels",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "width",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "height",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "stride",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "format",
           "type": "CodeGlyphX.PixelFormat",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "decoded",
           "type": "CodeGlyphX.CodeGlyphDecoded@",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "diagnostics",
           "type": "CodeGlyphX.CodeGlyphDecodeDiagnostics@",
           "summary": null
         },
         {
-          "name": "arg8",
+          "name": "expectedBarcode",
           "type": "System.Nullable{CodeGlyphX.BarcodeType}",
           "summary": null
         },
         {
-          "name": "arg9",
+          "name": "preferBarcode",
           "type": "System.Boolean",
           "summary": null
         },
         {
-          "name": "arg10",
+          "name": "qrOptions",
           "type": "CodeGlyphX.QrPixelDecodeOptions",
           "summary": null
         },
         {
-          "name": "arg11",
+          "name": "cancellationToken",
           "type": "System.Threading.CancellationToken",
           "summary": null
         },
         {
-          "name": "arg12",
+          "name": "barcodeOptions",
           "type": "CodeGlyphX.BarcodeDecodeOptions",
           "summary": null
         }
@@ -1000,62 +1000,62 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "pixels",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "width",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "height",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "stride",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "format",
           "type": "CodeGlyphX.PixelFormat",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "decoded",
           "type": "CodeGlyphX.CodeGlyphDecoded[]@",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "expectedBarcode",
           "type": "System.Nullable{CodeGlyphX.BarcodeType}",
           "summary": null
         },
         {
-          "name": "arg8",
+          "name": "includeBarcode",
           "type": "System.Boolean",
           "summary": null
         },
         {
-          "name": "arg9",
+          "name": "preferBarcode",
           "type": "System.Boolean",
           "summary": null
         },
         {
-          "name": "arg10",
+          "name": "qrOptions",
           "type": "CodeGlyphX.QrPixelDecodeOptions",
           "summary": null
         },
         {
-          "name": "arg11",
+          "name": "cancellationToken",
           "type": "System.Threading.CancellationToken",
           "summary": null
         },
         {
-          "name": "arg12",
+          "name": "barcodeOptions",
           "type": "CodeGlyphX.BarcodeDecodeOptions",
           "summary": null
         }
@@ -1067,67 +1067,67 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "pixels",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "width",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "height",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "stride",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "format",
           "type": "CodeGlyphX.PixelFormat",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "decoded",
           "type": "CodeGlyphX.CodeGlyphDecoded[]@",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "diagnostics",
           "type": "CodeGlyphX.CodeGlyphDecodeDiagnostics@",
           "summary": null
         },
         {
-          "name": "arg8",
+          "name": "expectedBarcode",
           "type": "System.Nullable{CodeGlyphX.BarcodeType}",
           "summary": null
         },
         {
-          "name": "arg9",
+          "name": "includeBarcode",
           "type": "System.Boolean",
           "summary": null
         },
         {
-          "name": "arg10",
+          "name": "preferBarcode",
           "type": "System.Boolean",
           "summary": null
         },
         {
-          "name": "arg11",
+          "name": "qrOptions",
           "type": "CodeGlyphX.QrPixelDecodeOptions",
           "summary": null
         },
         {
-          "name": "arg12",
+          "name": "cancellationToken",
           "type": "System.Threading.CancellationToken",
           "summary": null
         },
         {
-          "name": "arg13",
+          "name": "barcodeOptions",
           "type": "CodeGlyphX.BarcodeDecodeOptions",
           "summary": null
         }
@@ -1139,37 +1139,37 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "png",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "decoded",
           "type": "CodeGlyphX.CodeGlyphDecoded@",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "expectedBarcode",
           "type": "System.Nullable{CodeGlyphX.BarcodeType}",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "preferBarcode",
           "type": "System.Boolean",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "qrOptions",
           "type": "CodeGlyphX.QrPixelDecodeOptions",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "cancellationToken",
           "type": "System.Threading.CancellationToken",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "barcodeOptions",
           "type": "CodeGlyphX.BarcodeDecodeOptions",
           "summary": null
         }
@@ -1181,37 +1181,37 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "image",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "decoded",
           "type": "CodeGlyphX.CodeGlyphDecoded@",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "expectedBarcode",
           "type": "System.Nullable{CodeGlyphX.BarcodeType}",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "preferBarcode",
           "type": "System.Boolean",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "qrOptions",
           "type": "CodeGlyphX.QrPixelDecodeOptions",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "cancellationToken",
           "type": "System.Threading.CancellationToken",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "barcodeOptions",
           "type": "CodeGlyphX.BarcodeDecodeOptions",
           "summary": null
         }
@@ -1223,42 +1223,42 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "png",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "decoded",
           "type": "CodeGlyphX.CodeGlyphDecoded[]@",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "expectedBarcode",
           "type": "System.Nullable{CodeGlyphX.BarcodeType}",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "includeBarcode",
           "type": "System.Boolean",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "preferBarcode",
           "type": "System.Boolean",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "qrOptions",
           "type": "CodeGlyphX.QrPixelDecodeOptions",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "cancellationToken",
           "type": "System.Threading.CancellationToken",
           "summary": null
         },
         {
-          "name": "arg8",
+          "name": "barcodeOptions",
           "type": "CodeGlyphX.BarcodeDecodeOptions",
           "summary": null
         }
@@ -1270,42 +1270,42 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "image",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "decoded",
           "type": "CodeGlyphX.CodeGlyphDecoded[]@",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "expectedBarcode",
           "type": "System.Nullable{CodeGlyphX.BarcodeType}",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "includeBarcode",
           "type": "System.Boolean",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "preferBarcode",
           "type": "System.Boolean",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "qrOptions",
           "type": "CodeGlyphX.QrPixelDecodeOptions",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "cancellationToken",
           "type": "System.Threading.CancellationToken",
           "summary": null
         },
         {
-          "name": "arg8",
+          "name": "barcodeOptions",
           "type": "CodeGlyphX.BarcodeDecodeOptions",
           "summary": null
         }
@@ -1317,37 +1317,37 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "decoded",
           "type": "CodeGlyphX.CodeGlyphDecoded@",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "expectedBarcode",
           "type": "System.Nullable{CodeGlyphX.BarcodeType}",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "preferBarcode",
           "type": "System.Boolean",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "qrOptions",
           "type": "CodeGlyphX.QrPixelDecodeOptions",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "cancellationToken",
           "type": "System.Threading.CancellationToken",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "barcodeOptions",
           "type": "CodeGlyphX.BarcodeDecodeOptions",
           "summary": null
         }
@@ -1359,42 +1359,42 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "decoded",
           "type": "CodeGlyphX.CodeGlyphDecoded[]@",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "expectedBarcode",
           "type": "System.Nullable{CodeGlyphX.BarcodeType}",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "includeBarcode",
           "type": "System.Boolean",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "preferBarcode",
           "type": "System.Boolean",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "qrOptions",
           "type": "CodeGlyphX.QrPixelDecodeOptions",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "cancellationToken",
           "type": "System.Threading.CancellationToken",
           "summary": null
         },
         {
-          "name": "arg8",
+          "name": "barcodeOptions",
           "type": "CodeGlyphX.BarcodeDecodeOptions",
           "summary": null
         }
@@ -1406,37 +1406,37 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "decoded",
           "type": "CodeGlyphX.CodeGlyphDecoded@",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "expectedBarcode",
           "type": "System.Nullable{CodeGlyphX.BarcodeType}",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "preferBarcode",
           "type": "System.Boolean",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "qrOptions",
           "type": "CodeGlyphX.QrPixelDecodeOptions",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "cancellationToken",
           "type": "System.Threading.CancellationToken",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "barcodeOptions",
           "type": "CodeGlyphX.BarcodeDecodeOptions",
           "summary": null
         }
@@ -1448,42 +1448,42 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "decoded",
           "type": "CodeGlyphX.CodeGlyphDecoded[]@",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "expectedBarcode",
           "type": "System.Nullable{CodeGlyphX.BarcodeType}",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "includeBarcode",
           "type": "System.Boolean",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "preferBarcode",
           "type": "System.Boolean",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "qrOptions",
           "type": "CodeGlyphX.QrPixelDecodeOptions",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "cancellationToken",
           "type": "System.Threading.CancellationToken",
           "summary": null
         },
         {
-          "name": "arg8",
+          "name": "barcodeOptions",
           "type": "CodeGlyphX.BarcodeDecodeOptions",
           "summary": null
         }
@@ -1495,37 +1495,37 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "decoded",
           "type": "CodeGlyphX.CodeGlyphDecoded@",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "expectedBarcode",
           "type": "System.Nullable{CodeGlyphX.BarcodeType}",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "preferBarcode",
           "type": "System.Boolean",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "qrOptions",
           "type": "CodeGlyphX.QrPixelDecodeOptions",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "cancellationToken",
           "type": "System.Threading.CancellationToken",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "barcodeOptions",
           "type": "CodeGlyphX.BarcodeDecodeOptions",
           "summary": null
         }
@@ -1537,42 +1537,42 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "decoded",
           "type": "CodeGlyphX.CodeGlyphDecoded[]@",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "expectedBarcode",
           "type": "System.Nullable{CodeGlyphX.BarcodeType}",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "includeBarcode",
           "type": "System.Boolean",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "preferBarcode",
           "type": "System.Boolean",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "qrOptions",
           "type": "CodeGlyphX.QrPixelDecodeOptions",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "cancellationToken",
           "type": "System.Threading.CancellationToken",
           "summary": null
         },
         {
-          "name": "arg8",
+          "name": "barcodeOptions",
           "type": "CodeGlyphX.BarcodeDecodeOptions",
           "summary": null
         }
@@ -1584,17 +1584,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "png",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "expectedBarcode",
           "type": "System.Nullable{CodeGlyphX.BarcodeType}",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "preferBarcode",
           "type": "System.Boolean",
           "summary": null
         }
@@ -1606,17 +1606,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "expectedBarcode",
           "type": "System.Nullable{CodeGlyphX.BarcodeType}",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "preferBarcode",
           "type": "System.Boolean",
           "summary": null
         }
@@ -1628,17 +1628,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "expectedBarcode",
           "type": "System.Nullable{CodeGlyphX.BarcodeType}",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "preferBarcode",
           "type": "System.Boolean",
           "summary": null
         }
@@ -1650,37 +1650,37 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "pixels",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "width",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "height",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "stride",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "format",
           "type": "CodeGlyphX.PixelFormat",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "decoded",
           "type": "CodeGlyphX.CodeGlyphDecoded@",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "options",
           "type": "CodeGlyphX.CodeGlyphDecodeOptions",
           "summary": null
         }
@@ -1692,42 +1692,42 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "pixels",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "width",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "height",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "stride",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "format",
           "type": "CodeGlyphX.PixelFormat",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "decoded",
           "type": "CodeGlyphX.CodeGlyphDecoded@",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "diagnostics",
           "type": "CodeGlyphX.CodeGlyphDecodeDiagnostics@",
           "summary": null
         },
         {
-          "name": "arg8",
+          "name": "options",
           "type": "CodeGlyphX.CodeGlyphDecodeOptions",
           "summary": null
         }
@@ -1739,37 +1739,37 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "pixels",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "width",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "height",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "stride",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "format",
           "type": "CodeGlyphX.PixelFormat",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "decoded",
           "type": "CodeGlyphX.CodeGlyphDecoded[]@",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "options",
           "type": "CodeGlyphX.CodeGlyphDecodeOptions",
           "summary": null
         }
@@ -1781,42 +1781,42 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "pixels",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "width",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "height",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "stride",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "format",
           "type": "CodeGlyphX.PixelFormat",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "decoded",
           "type": "CodeGlyphX.CodeGlyphDecoded[]@",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "diagnostics",
           "type": "CodeGlyphX.CodeGlyphDecodeDiagnostics@",
           "summary": null
         },
         {
-          "name": "arg8",
+          "name": "options",
           "type": "CodeGlyphX.CodeGlyphDecodeOptions",
           "summary": null
         }
@@ -1828,37 +1828,37 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "pixels",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "width",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "height",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "stride",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "format",
           "type": "CodeGlyphX.PixelFormat",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "decoded",
           "type": "CodeGlyphX.CodeGlyphDecoded@",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "options",
           "type": "CodeGlyphX.CodeGlyphDecodeOptions",
           "summary": null
         }
@@ -1870,37 +1870,37 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "pixels",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "width",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "height",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "stride",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "format",
           "type": "CodeGlyphX.PixelFormat",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "decoded",
           "type": "CodeGlyphX.CodeGlyphDecoded[]@",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "options",
           "type": "CodeGlyphX.CodeGlyphDecodeOptions",
           "summary": null
         }
@@ -1912,42 +1912,42 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "pixels",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "width",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "height",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "stride",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "format",
           "type": "CodeGlyphX.PixelFormat",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "decoded",
           "type": "CodeGlyphX.CodeGlyphDecoded[]@",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "diagnostics",
           "type": "CodeGlyphX.CodeGlyphDecodeDiagnostics@",
           "summary": null
         },
         {
-          "name": "arg8",
+          "name": "options",
           "type": "CodeGlyphX.CodeGlyphDecodeOptions",
           "summary": null
         }
@@ -1959,42 +1959,42 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "pixels",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "width",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "height",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "stride",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "format",
           "type": "CodeGlyphX.PixelFormat",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "decoded",
           "type": "CodeGlyphX.CodeGlyphDecoded@",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "diagnostics",
           "type": "CodeGlyphX.CodeGlyphDecodeDiagnostics@",
           "summary": null
         },
         {
-          "name": "arg8",
+          "name": "options",
           "type": "CodeGlyphX.CodeGlyphDecodeOptions",
           "summary": null
         }
@@ -2006,17 +2006,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "png",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "decoded",
           "type": "CodeGlyphX.CodeGlyphDecoded@",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "options",
           "type": "CodeGlyphX.CodeGlyphDecodeOptions",
           "summary": null
         }
@@ -2028,22 +2028,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "png",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "decoded",
           "type": "CodeGlyphX.CodeGlyphDecoded@",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "diagnostics",
           "type": "CodeGlyphX.CodeGlyphDecodeDiagnostics@",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.CodeGlyphDecodeOptions",
           "summary": null
         }
@@ -2055,17 +2055,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "image",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "decoded",
           "type": "CodeGlyphX.CodeGlyphDecoded@",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "options",
           "type": "CodeGlyphX.CodeGlyphDecodeOptions",
           "summary": null
         }
@@ -2077,22 +2077,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "image",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "decoded",
           "type": "CodeGlyphX.CodeGlyphDecoded@",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "diagnostics",
           "type": "CodeGlyphX.CodeGlyphDecodeDiagnostics@",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "options",
           "type": "CodeGlyphX.CodeGlyphDecodeOptions",
           "summary": null
         }
@@ -2104,12 +2104,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "image",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "options",
           "type": "CodeGlyphX.CodeGlyphDecodeOptions",
           "summary": null
         }
@@ -2121,12 +2121,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "options",
           "type": "CodeGlyphX.CodeGlyphDecodeOptions",
           "summary": null
         }
@@ -2138,12 +2138,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "images",
           "type": "System.Collections.Generic.IEnumerable{System.Byte[]}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "options",
           "type": "CodeGlyphX.CodeGlyphDecodeOptions",
           "summary": null
         }
@@ -2155,17 +2155,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "png",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "decoded",
           "type": "CodeGlyphX.CodeGlyphDecoded[]@",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "options",
           "type": "CodeGlyphX.CodeGlyphDecodeOptions",
           "summary": null
         }
@@ -2177,17 +2177,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "image",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "decoded",
           "type": "CodeGlyphX.CodeGlyphDecoded[]@",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "options",
           "type": "CodeGlyphX.CodeGlyphDecodeOptions",
           "summary": null
         }
@@ -2199,17 +2199,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "decoded",
           "type": "CodeGlyphX.CodeGlyphDecoded@",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "options",
           "type": "CodeGlyphX.CodeGlyphDecodeOptions",
           "summary": null
         }
@@ -2221,17 +2221,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "decoded",
           "type": "CodeGlyphX.CodeGlyphDecoded[]@",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "options",
           "type": "CodeGlyphX.CodeGlyphDecodeOptions",
           "summary": null
         }
@@ -2243,17 +2243,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "decoded",
           "type": "CodeGlyphX.CodeGlyphDecoded@",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "options",
           "type": "CodeGlyphX.CodeGlyphDecodeOptions",
           "summary": null
         }
@@ -2265,17 +2265,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "decoded",
           "type": "CodeGlyphX.CodeGlyphDecoded[]@",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "options",
           "type": "CodeGlyphX.CodeGlyphDecodeOptions",
           "summary": null
         }
@@ -2287,17 +2287,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "decoded",
           "type": "CodeGlyphX.CodeGlyphDecoded@",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "options",
           "type": "CodeGlyphX.CodeGlyphDecodeOptions",
           "summary": null
         }
@@ -2309,17 +2309,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "decoded",
           "type": "CodeGlyphX.CodeGlyphDecoded[]@",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "options",
           "type": "CodeGlyphX.CodeGlyphDecodeOptions",
           "summary": null
         }
@@ -2331,22 +2331,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "modules",
           "type": "CodeGlyphX.BitMatrix",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "decoded",
           "type": "CodeGlyphX.CodeGlyphDecoded@",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "expectedBarcode",
           "type": "System.Nullable{CodeGlyphX.BarcodeType}",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "preferBarcode",
           "type": "System.Boolean",
           "summary": null
         }

@@ -13,17 +13,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "referenceType",
           "type": "CodeGlyphX.Payloads.SwissQrCodePayload.Reference.ReferenceType",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "reference",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "referenceTextType",
           "type": "System.Nullable{CodeGlyphX.Payloads.SwissQrCodePayload.Reference.ReferenceTextType}",
           "summary": null
         }

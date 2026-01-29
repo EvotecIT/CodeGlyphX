@@ -13,17 +13,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "output",
           "type": "CodeGlyphX.Rendering.RenderedOutput",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "encoding",
           "type": "System.Text.Encoding",
           "summary": null
         }
@@ -35,17 +35,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "output",
           "type": "CodeGlyphX.Rendering.RenderedOutput",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "encoding",
           "type": "System.Text.Encoding",
           "summary": null
         }

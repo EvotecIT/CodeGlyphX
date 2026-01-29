@@ -13,17 +13,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "modules",
           "type": "CodeGlyphX.BitMatrix",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "opts",
           "type": "CodeGlyphX.Rendering.Png.QrPngRenderOptions",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "mode",
           "type": "CodeGlyphX.Rendering.RenderMode",
           "summary": null
         }
@@ -35,22 +35,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "modules",
           "type": "CodeGlyphX.BitMatrix",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "opts",
           "type": "CodeGlyphX.Rendering.Png.QrPngRenderOptions",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "mode",
           "type": "CodeGlyphX.Rendering.RenderMode",
           "summary": null
         }
@@ -62,22 +62,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "modules",
           "type": "CodeGlyphX.BitMatrix",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "opts",
           "type": "CodeGlyphX.Rendering.Png.QrPngRenderOptions",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "mode",
           "type": "CodeGlyphX.Rendering.RenderMode",
           "summary": null
         }
@@ -89,27 +89,27 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "modules",
           "type": "CodeGlyphX.BitMatrix",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "opts",
           "type": "CodeGlyphX.Rendering.Png.QrPngRenderOptions",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "directory",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "fileName",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "mode",
           "type": "CodeGlyphX.Rendering.RenderMode",
           "summary": null
         }

@@ -13,12 +13,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "text",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "options",
           "type": "CodeGlyphX.Pdf417.Pdf417EncodeOptions",
           "summary": null
         }
@@ -30,17 +30,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "text",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "macro",
           "type": "CodeGlyphX.Pdf417.Pdf417MacroOptions",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "options",
           "type": "CodeGlyphX.Pdf417.Pdf417EncodeOptions",
           "summary": null
         }
@@ -52,12 +52,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "options",
           "type": "CodeGlyphX.Pdf417.Pdf417EncodeOptions",
           "summary": null
         }
@@ -69,12 +69,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "options",
           "type": "CodeGlyphX.Pdf417.Pdf417EncodeOptions",
           "summary": null
         }

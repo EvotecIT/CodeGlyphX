@@ -13,12 +13,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "type",
           "type": "CodeGlyphX.BarcodeType",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "value",
           "type": "System.String",
           "summary": null
         }
@@ -30,17 +30,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "value",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "includeChecksum",
           "type": "System.Boolean",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "fullAsciiMode",
           "type": "System.Boolean",
           "summary": null
         }
@@ -52,17 +52,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "value",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "includeChecksum",
           "type": "System.Boolean",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "fullAsciiMode",
           "type": "System.Boolean",
           "summary": null
         }
@@ -74,7 +74,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "value",
           "type": "System.String",
           "summary": null
         }
@@ -86,7 +86,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "value",
           "type": "System.String",
           "summary": null
         }
@@ -98,12 +98,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "value",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "numberSystem",
           "type": "CodeGlyphX.UpcENumberSystem",
           "summary": null
         }
@@ -115,7 +115,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "value",
           "type": "System.String",
           "summary": null
         }
@@ -127,12 +127,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "value",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "includeChecksum",
           "type": "System.Boolean",
           "summary": null
         }
@@ -144,12 +144,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "value",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "includeChecksum",
           "type": "System.Boolean",
           "summary": null
         }
@@ -161,12 +161,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "value",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "includeChecksum",
           "type": "System.Boolean",
           "summary": null
         }
@@ -178,12 +178,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "value",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "includeChecksum",
           "type": "System.Boolean",
           "summary": null
         }
@@ -195,7 +195,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "value",
           "type": "System.String",
           "summary": null
         }
@@ -207,17 +207,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "value",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "start",
           "type": "System.Char",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "stop",
           "type": "System.Char",
           "summary": null
         }
@@ -229,12 +229,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "value",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "checksum",
           "type": "CodeGlyphX.MsiChecksumType",
           "summary": null
         }
@@ -246,12 +246,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "value",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "includeChecksum",
           "type": "System.Boolean",
           "summary": null
         }
@@ -263,7 +263,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "value",
           "type": "System.String",
           "summary": null
         }
@@ -275,7 +275,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "value",
           "type": "System.String",
           "summary": null
         }
@@ -287,7 +287,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "value",
           "type": "System.String",
           "summary": null
         }
@@ -299,7 +299,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "value",
           "type": "System.String",
           "summary": null
         }

@@ -13,37 +13,37 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "Vpa",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "Name",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "MerchantCode",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "TransactionRef",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "TransactionNote",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "Amount",
           "type": "System.Nullable{System.Decimal}",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "Currency",
           "type": "System.String",
           "summary": null
         }

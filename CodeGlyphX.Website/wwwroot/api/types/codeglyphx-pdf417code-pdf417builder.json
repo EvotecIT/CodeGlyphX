@@ -13,7 +13,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "configure",
           "type": "System.Action{CodeGlyphX.Pdf417.Pdf417EncodeOptions}",
           "summary": null
         }
@@ -25,7 +25,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "configure",
           "type": "System.Action{CodeGlyphX.MatrixOptions}",
           "summary": null
         }
@@ -37,7 +37,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "moduleSize",
           "type": "System.Int32",
           "summary": null
         }
@@ -49,7 +49,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "quietZone",
           "type": "System.Int32",
           "summary": null
         }
@@ -61,12 +61,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "foreground",
           "type": "CodeGlyphX.Rendering.Png.Rgba32",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "background",
           "type": "CodeGlyphX.Rendering.Png.Rgba32",
           "summary": null
         }
@@ -78,7 +78,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "quality",
           "type": "System.Int32",
           "summary": null
         }
@@ -90,7 +90,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "enabled",
           "type": "System.Boolean",
           "summary": null
         }
@@ -102,7 +102,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "sizes",
           "type": "System.Int32[]",
           "summary": null
         }
@@ -114,7 +114,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "enabled",
           "type": "System.Boolean",
           "summary": null
         }
@@ -126,7 +126,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "compaction",
           "type": "CodeGlyphX.Pdf417.Pdf417Compaction",
           "summary": null
         }
@@ -138,7 +138,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "level",
           "type": "System.Int32",
           "summary": null
         }
@@ -150,7 +150,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "encoding",
           "type": "System.Text.Encoding",
           "summary": null
         }
@@ -162,7 +162,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "ratio",
           "type": "System.Single",
           "summary": null
         }
@@ -174,12 +174,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "minColumns",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "maxColumns",
           "type": "System.Int32",
           "summary": null
         }
@@ -191,12 +191,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "minRows",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "maxRows",
           "type": "System.Int32",
           "summary": null
         }
@@ -208,7 +208,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "compact",
           "type": "System.Boolean",
           "summary": null
         }
@@ -280,7 +280,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "options",
           "type": "CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions",
           "summary": null
         }
@@ -292,12 +292,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "title",
           "type": "System.String",
           "summary": null
         }
@@ -309,7 +309,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "path",
           "type": "System.String",
           "summary": null
         }
@@ -321,7 +321,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "path",
           "type": "System.String",
           "summary": null
         }
@@ -333,12 +333,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "title",
           "type": "System.String",
           "summary": null
         }
@@ -350,7 +350,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "path",
           "type": "System.String",
           "summary": null
         }
@@ -362,7 +362,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "path",
           "type": "System.String",
           "summary": null
         }
@@ -374,7 +374,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "path",
           "type": "System.String",
           "summary": null
         }

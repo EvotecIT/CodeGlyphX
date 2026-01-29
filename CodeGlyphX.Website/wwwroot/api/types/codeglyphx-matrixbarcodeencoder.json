@@ -13,12 +13,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "type",
           "type": "CodeGlyphX.BarcodeType",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "value",
           "type": "System.String",
           "summary": null
         }
@@ -30,7 +30,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "value",
           "type": "System.String",
           "summary": null
         }
@@ -42,7 +42,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "value",
           "type": "System.String",
           "summary": null
         }
@@ -54,7 +54,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "value",
           "type": "System.String",
           "summary": null
         }
@@ -66,7 +66,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "value",
           "type": "System.String",
           "summary": null
         }
@@ -78,7 +78,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "value",
           "type": "System.String",
           "summary": null
         }
@@ -90,7 +90,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "value",
           "type": "System.String",
           "summary": null
         }
@@ -102,7 +102,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "value",
           "type": "System.String",
           "summary": null
         }
@@ -114,7 +114,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "value",
           "type": "System.String",
           "summary": null
         }
@@ -126,7 +126,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "value",
           "type": "System.String",
           "summary": null
         }
@@ -138,7 +138,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "value",
           "type": "System.String",
           "summary": null
         }
@@ -150,7 +150,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "value",
           "type": "System.String",
           "summary": null
         }
@@ -162,7 +162,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "value",
           "type": "System.String",
           "summary": null
         }
@@ -174,7 +174,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "value",
           "type": "System.String",
           "summary": null
         }
@@ -186,7 +186,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "value",
           "type": "System.String",
           "summary": null
         }

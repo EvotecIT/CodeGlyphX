@@ -13,12 +13,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "width",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "height",
           "type": "System.Int32",
           "summary": null
         }
@@ -30,12 +30,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "x",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "y",
           "type": "System.Int32",
           "summary": null
         }
@@ -47,17 +47,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "x",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "y",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "value",
           "type": "System.Boolean",
           "summary": null
         }

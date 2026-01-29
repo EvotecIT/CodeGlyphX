@@ -13,12 +13,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "barcode",
           "type": "CodeGlyphX.Barcode1D",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "content",
           "type": "System.String@",
           "summary": null
         }
@@ -30,12 +30,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "modules",
           "type": "System.Boolean[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "content",
           "type": "System.String@",
           "summary": null
         }
@@ -47,12 +47,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "modules",
           "type": "CodeGlyphX.BitMatrix",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "content",
           "type": "System.String@",
           "summary": null
         }
@@ -64,12 +64,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "modules",
           "type": "CodeGlyphX.BitMatrix",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "content",
           "type": "System.String@",
           "summary": null
         }

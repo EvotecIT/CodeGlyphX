@@ -31,12 +31,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "logoPng",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "logoScale",
           "type": "System.Nullable{System.Double}",
           "summary": null
         }

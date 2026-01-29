@@ -13,22 +13,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "r",
           "type": "System.Byte",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "g",
           "type": "System.Byte",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "b",
           "type": "System.Byte",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "a",
           "type": "System.Byte",
           "summary": null
         }

@@ -13,17 +13,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "codeLengths",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "maxBits",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "code",
           "type": "CodeGlyphX.Rendering.Webp.WebpPrefixCode@",
           "summary": null
         }
@@ -35,7 +35,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "reader",
           "type": "CodeGlyphX.Rendering.Webp.WebpBitReader@",
           "summary": null
         }

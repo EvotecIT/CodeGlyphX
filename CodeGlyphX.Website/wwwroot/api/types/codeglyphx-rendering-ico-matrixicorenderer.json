@@ -13,12 +13,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "modules",
           "type": "CodeGlyphX.BitMatrix",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "opts",
           "type": "CodeGlyphX.Rendering.Png.MatrixPngRenderOptions",
           "summary": null
         }
@@ -30,17 +30,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "modules",
           "type": "CodeGlyphX.BitMatrix",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "opts",
           "type": "CodeGlyphX.Rendering.Png.MatrixPngRenderOptions",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "icoOptions",
           "type": "CodeGlyphX.Rendering.Ico.IcoRenderOptions",
           "summary": null
         }
@@ -52,17 +52,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "modules",
           "type": "CodeGlyphX.BitMatrix",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "opts",
           "type": "CodeGlyphX.Rendering.Png.MatrixPngRenderOptions",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         }
@@ -74,22 +74,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "modules",
           "type": "CodeGlyphX.BitMatrix",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "opts",
           "type": "CodeGlyphX.Rendering.Png.MatrixPngRenderOptions",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "icoOptions",
           "type": "CodeGlyphX.Rendering.Ico.IcoRenderOptions",
           "summary": null
         }
@@ -101,17 +101,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "modules",
           "type": "CodeGlyphX.BitMatrix",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "opts",
           "type": "CodeGlyphX.Rendering.Png.MatrixPngRenderOptions",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "path",
           "type": "System.String",
           "summary": null
         }
@@ -123,22 +123,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "modules",
           "type": "CodeGlyphX.BitMatrix",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "opts",
           "type": "CodeGlyphX.Rendering.Png.MatrixPngRenderOptions",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "directory",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "fileName",
           "type": "System.String",
           "summary": null
         }

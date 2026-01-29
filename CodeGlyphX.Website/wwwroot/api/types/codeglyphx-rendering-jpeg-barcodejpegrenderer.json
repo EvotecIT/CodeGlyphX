@@ -13,17 +13,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "barcode",
           "type": "CodeGlyphX.Barcode1D",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "opts",
           "type": "CodeGlyphX.Rendering.Png.BarcodePngRenderOptions",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "quality",
           "type": "System.Int32",
           "summary": null
         }

@@ -13,17 +13,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "width",
           "type": "System.Int32@",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "height",
           "type": "System.Int32@",
           "summary": null
         }
@@ -35,17 +35,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "width",
           "type": "System.Int32@",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "height",
           "type": "System.Int32@",
           "summary": null
         }
@@ -57,17 +57,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "width",
           "type": "System.Int32@",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "height",
           "type": "System.Int32@",
           "summary": null
         }
@@ -79,22 +79,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "rgba",
           "type": "System.Byte[]@",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "width",
           "type": "System.Int32@",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "height",
           "type": "System.Int32@",
           "summary": null
         }
@@ -106,7 +106,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         }
@@ -118,12 +118,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "format",
           "type": "CodeGlyphX.Rendering.ImageFormat@",
           "summary": null
         }
@@ -135,12 +135,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "info",
           "type": "CodeGlyphX.Rendering.ImageInfo@",
           "summary": null
         }
@@ -152,12 +152,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.ReadOnlySpan{System.Byte}",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "info",
           "type": "CodeGlyphX.Rendering.ImageInfo@",
           "summary": null
         }
@@ -169,12 +169,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "info",
           "type": "CodeGlyphX.Rendering.ImageInfo@",
           "summary": null
         }

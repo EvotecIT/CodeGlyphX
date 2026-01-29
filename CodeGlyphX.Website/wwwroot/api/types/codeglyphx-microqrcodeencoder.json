@@ -13,27 +13,27 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "data",
           "type": "System.Byte[]",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "ecc",
           "type": "CodeGlyphX.QrErrorCorrectionLevel",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "minVersion",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "maxVersion",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "forceMask",
           "type": "System.Nullable{System.Int32}",
           "summary": null
         }
@@ -45,32 +45,32 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "text",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "encoding",
           "type": "CodeGlyphX.QrTextEncoding",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "ecc",
           "type": "CodeGlyphX.QrErrorCorrectionLevel",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "minVersion",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "maxVersion",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "forceMask",
           "type": "System.Nullable{System.Int32}",
           "summary": null
         }
@@ -82,27 +82,27 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "digits",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "ecc",
           "type": "CodeGlyphX.QrErrorCorrectionLevel",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "minVersion",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "maxVersion",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "forceMask",
           "type": "System.Nullable{System.Int32}",
           "summary": null
         }
@@ -114,27 +114,27 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "text",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "ecc",
           "type": "CodeGlyphX.QrErrorCorrectionLevel",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "minVersion",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "maxVersion",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "forceMask",
           "type": "System.Nullable{System.Int32}",
           "summary": null
         }
@@ -146,27 +146,27 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "text",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "ecc",
           "type": "CodeGlyphX.QrErrorCorrectionLevel",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "minVersion",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "maxVersion",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "forceMask",
           "type": "System.Nullable{System.Int32}",
           "summary": null
         }

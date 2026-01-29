@@ -13,22 +13,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "Handle",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "Amount",
           "type": "System.Nullable{System.Decimal}",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "Currency",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "Url",
           "type": "System.String",
           "summary": null
         }

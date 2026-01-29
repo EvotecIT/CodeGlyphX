@@ -13,7 +13,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "sizes",
           "type": "System.Int32[]",
           "summary": null
         }
@@ -25,7 +25,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "preserveAspectRatio",
           "type": "System.Boolean",
           "summary": null
         }

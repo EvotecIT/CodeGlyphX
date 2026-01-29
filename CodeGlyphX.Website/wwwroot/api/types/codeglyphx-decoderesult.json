@@ -13,17 +13,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "value",
           "type": "\u00600",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "image",
           "type": "CodeGlyphX.Rendering.ImageInfo",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "elapsed",
           "type": "System.TimeSpan",
           "summary": null
         }
@@ -35,22 +35,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "failure",
           "type": "CodeGlyphX.DecodeFailureReason",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "image",
           "type": "CodeGlyphX.Rendering.ImageInfo",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "elapsed",
           "type": "System.TimeSpan",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "message",
           "type": "System.String",
           "summary": null
         }

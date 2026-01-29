@@ -13,17 +13,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "Address",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "Subject",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "Body",
           "type": "System.String",
           "summary": null
         }

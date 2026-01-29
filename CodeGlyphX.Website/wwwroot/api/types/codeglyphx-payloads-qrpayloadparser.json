@@ -13,12 +13,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "payload",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "parsed",
           "type": "CodeGlyphX.Payloads.QrParsedPayload@",
           "summary": null
         }
@@ -30,22 +30,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "payload",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "options",
           "type": "CodeGlyphX.Payloads.QrPayloadParseOptions",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "parsed",
           "type": "CodeGlyphX.Payloads.QrParsedPayload@",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "validation",
           "type": "CodeGlyphX.Payloads.QrPayloadValidationResult@",
           "summary": null
         }
@@ -57,12 +57,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "parsed",
           "type": "CodeGlyphX.Payloads.QrParsedPayload",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "options",
           "type": "CodeGlyphX.Payloads.QrPayloadParseOptions",
           "summary": null
         }
@@ -74,7 +74,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "payload",
           "type": "System.String",
           "summary": null
         }

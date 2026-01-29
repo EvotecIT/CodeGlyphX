@@ -13,52 +13,52 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "name",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "personalAcc",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "bankName",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "bic",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "correspAcc",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "payeeInn",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "kpp",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg8",
+          "name": "sum",
           "type": "System.Decimal",
           "summary": null
         },
         {
-          "name": "arg9",
+          "name": "purpose",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg10",
+          "name": "encoding",
           "type": "CodeGlyphX.Payloads.QrRussiaPaymentEncoding",
           "summary": null
         }

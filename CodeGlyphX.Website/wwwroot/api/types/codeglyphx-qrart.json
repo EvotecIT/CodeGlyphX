@@ -13,22 +13,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "theme",
           "type": "CodeGlyphX.QrArtTheme",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "variant",
           "type": "CodeGlyphX.QrArtVariant",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "intensity",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "safetyMode",
           "type": "CodeGlyphX.QrArtSafetyMode",
           "summary": null
         }

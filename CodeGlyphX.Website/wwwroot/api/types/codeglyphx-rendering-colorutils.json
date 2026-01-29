@@ -13,7 +13,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "color",
           "type": "CodeGlyphX.Rendering.Png.Rgba32",
           "summary": null
         }

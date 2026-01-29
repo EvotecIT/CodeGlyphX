@@ -13,7 +13,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "configure",
           "type": "System.Action{CodeGlyphX.QrEasyOptions}",
           "summary": null
         }
@@ -25,7 +25,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "moduleSize",
           "type": "System.Int32",
           "summary": null
         }
@@ -37,7 +37,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "quietZone",
           "type": "System.Int32",
           "summary": null
         }
@@ -49,12 +49,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "foreground",
           "type": "CodeGlyphX.Rendering.Png.Rgba32",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "background",
           "type": "CodeGlyphX.Rendering.Png.Rgba32",
           "summary": null
         }
@@ -66,7 +66,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "color",
           "type": "CodeGlyphX.Rendering.Png.Rgba32",
           "summary": null
         }
@@ -78,7 +78,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "color",
           "type": "CodeGlyphX.Rendering.Png.Rgba32",
           "summary": null
         }
@@ -96,7 +96,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "style",
           "type": "CodeGlyphX.QrRenderStyle",
           "summary": null
         }
@@ -108,7 +108,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "shape",
           "type": "CodeGlyphX.Rendering.Png.QrPngModuleShape",
           "summary": null
         }
@@ -120,7 +120,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "scale",
           "type": "System.Double",
           "summary": null
         }
@@ -132,7 +132,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "map",
           "type": "CodeGlyphX.Rendering.Png.QrPngModuleScaleMapOptions",
           "summary": null
         }
@@ -144,7 +144,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "map",
           "type": "CodeGlyphX.Rendering.Png.QrPngModuleShapeMapOptions",
           "summary": null
         }
@@ -156,7 +156,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "jitter",
           "type": "CodeGlyphX.Rendering.Png.QrPngModuleJitterOptions",
           "summary": null
         }
@@ -168,7 +168,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "radiusPx",
           "type": "System.Int32",
           "summary": null
         }
@@ -180,7 +180,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "gradient",
           "type": "CodeGlyphX.Rendering.Png.QrPngGradientOptions",
           "summary": null
         }
@@ -192,7 +192,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "gradient",
           "type": "CodeGlyphX.Rendering.Png.QrPngGradientOptions",
           "summary": null
         }
@@ -204,7 +204,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "palette",
           "type": "CodeGlyphX.Rendering.Png.QrPngPaletteOptions",
           "summary": null
         }
@@ -216,7 +216,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "canvas",
           "type": "CodeGlyphX.Rendering.Png.QrPngCanvasOptions",
           "summary": null
         }
@@ -228,7 +228,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "zones",
           "type": "CodeGlyphX.Rendering.Png.QrPngPaletteZoneOptions",
           "summary": null
         }
@@ -240,7 +240,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "eyes",
           "type": "CodeGlyphX.Rendering.Png.QrPngEyeOptions",
           "summary": null
         }
@@ -252,12 +252,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "sizePx",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "includeQuietZone",
           "type": "System.Boolean",
           "summary": null
         }
@@ -269,12 +269,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "sizePx",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "includeQuietZone",
           "type": "System.Boolean",
           "summary": null
         }
@@ -286,7 +286,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "png",
           "type": "System.Byte[]",
           "summary": null
         }
@@ -298,7 +298,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "scale",
           "type": "System.Double",
           "summary": null
         }
@@ -310,7 +310,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "paddingPx",
           "type": "System.Int32",
           "summary": null
         }
@@ -322,7 +322,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "enabled",
           "type": "System.Boolean",
           "summary": null
         }
@@ -334,7 +334,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "enabled",
           "type": "System.Boolean",
           "summary": null
         }
@@ -346,7 +346,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "minVersion",
           "type": "System.Int32",
           "summary": null
         }
@@ -358,7 +358,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "color",
           "type": "System.Nullable{CodeGlyphX.Rendering.Png.Rgba32}",
           "summary": null
         }
@@ -370,7 +370,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "radiusPx",
           "type": "System.Int32",
           "summary": null
         }
@@ -382,7 +382,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "path",
           "type": "System.String",
           "summary": null
         }
@@ -394,7 +394,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "ecc",
           "type": "CodeGlyphX.QrErrorCorrectionLevel",
           "summary": null
         }
@@ -406,7 +406,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "sizes",
           "type": "System.Int32[]",
           "summary": null
         }
@@ -418,7 +418,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "enabled",
           "type": "System.Boolean",
           "summary": null
         }
@@ -538,7 +538,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "path",
           "type": "System.String",
           "summary": null
         }
@@ -550,7 +550,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         }
@@ -562,7 +562,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "path",
           "type": "System.String",
           "summary": null
         }
@@ -574,7 +574,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         }
@@ -586,12 +586,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "title",
           "type": "System.String",
           "summary": null
         }
@@ -603,12 +603,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "title",
           "type": "System.String",
           "summary": null
         }
@@ -620,7 +620,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "path",
           "type": "System.String",
           "summary": null
         }
@@ -632,7 +632,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         }
@@ -644,7 +644,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "path",
           "type": "System.String",
           "summary": null
         }
@@ -656,7 +656,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         }
@@ -668,7 +668,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "path",
           "type": "System.String",
           "summary": null
         }
@@ -680,7 +680,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         }
@@ -692,7 +692,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "path",
           "type": "System.String",
           "summary": null
         }
@@ -704,7 +704,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         }
@@ -716,7 +716,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "path",
           "type": "System.String",
           "summary": null
         }
@@ -728,7 +728,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         }
@@ -740,7 +740,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "path",
           "type": "System.String",
           "summary": null
         }
@@ -752,7 +752,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         }
@@ -764,7 +764,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "path",
           "type": "System.String",
           "summary": null
         }
@@ -776,7 +776,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         }
@@ -788,7 +788,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "path",
           "type": "System.String",
           "summary": null
         }
@@ -800,7 +800,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         }
@@ -812,7 +812,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "path",
           "type": "System.String",
           "summary": null
         }
@@ -824,7 +824,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         }
@@ -836,7 +836,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "path",
           "type": "System.String",
           "summary": null
         }
@@ -848,7 +848,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         }
@@ -860,7 +860,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "path",
           "type": "System.String",
           "summary": null
         }
@@ -872,7 +872,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         }
@@ -884,7 +884,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "path",
           "type": "System.String",
           "summary": null
         }
@@ -896,7 +896,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         }
@@ -976,7 +976,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "asciiOptions",
           "type": "CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions",
           "summary": null
         }
@@ -988,12 +988,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "asciiOptions",
           "type": "CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions",
           "summary": null
         }
@@ -1005,12 +1005,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "title",
           "type": "System.String",
           "summary": null
         }

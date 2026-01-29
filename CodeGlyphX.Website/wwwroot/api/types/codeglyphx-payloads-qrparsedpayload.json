@@ -13,7 +13,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "value",
           "type": "\u0060\u00600@",
           "summary": null
         }

@@ -13,17 +13,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "info",
           "type": "CodeGlyphX.QrPixelDecodeInfo",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "label",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "source",
           "type": "System.String",
           "summary": null
         }
@@ -35,22 +35,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "info",
           "type": "CodeGlyphX.QrPixelDecodeInfo",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "label",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "source",
           "type": "System.String",
           "summary": null
         }
@@ -62,27 +62,27 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "directory",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "fileName",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "info",
           "type": "CodeGlyphX.QrPixelDecodeInfo",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "label",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "source",
           "type": "System.String",
           "summary": null
         }
@@ -94,22 +94,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "stream",
           "type": "System.IO.Stream",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "info",
           "type": "CodeGlyphX.QrPixelDecodeInfo",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "label",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "source",
           "type": "System.String",
           "summary": null
         }

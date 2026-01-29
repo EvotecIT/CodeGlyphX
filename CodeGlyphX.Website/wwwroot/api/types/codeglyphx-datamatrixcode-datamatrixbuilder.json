@@ -13,7 +13,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "configure",
           "type": "System.Action{CodeGlyphX.MatrixOptions}",
           "summary": null
         }
@@ -25,7 +25,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "mode",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
           "summary": null
         }
@@ -37,7 +37,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "moduleSize",
           "type": "System.Int32",
           "summary": null
         }
@@ -49,7 +49,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "quietZone",
           "type": "System.Int32",
           "summary": null
         }
@@ -61,12 +61,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "foreground",
           "type": "CodeGlyphX.Rendering.Png.Rgba32",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "background",
           "type": "CodeGlyphX.Rendering.Png.Rgba32",
           "summary": null
         }
@@ -78,7 +78,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "quality",
           "type": "System.Int32",
           "summary": null
         }
@@ -90,7 +90,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "enabled",
           "type": "System.Boolean",
           "summary": null
         }
@@ -102,7 +102,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "sizes",
           "type": "System.Int32[]",
           "summary": null
         }
@@ -114,7 +114,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "enabled",
           "type": "System.Boolean",
           "summary": null
         }
@@ -186,7 +186,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "options",
           "type": "CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions",
           "summary": null
         }
@@ -198,12 +198,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "title",
           "type": "System.String",
           "summary": null
         }
@@ -215,7 +215,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "path",
           "type": "System.String",
           "summary": null
         }
@@ -227,7 +227,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "path",
           "type": "System.String",
           "summary": null
         }
@@ -239,12 +239,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "path",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "title",
           "type": "System.String",
           "summary": null
         }
@@ -256,7 +256,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "path",
           "type": "System.String",
           "summary": null
         }
@@ -268,7 +268,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "path",
           "type": "System.String",
           "summary": null
         }
@@ -280,7 +280,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "path",
           "type": "System.String",
           "summary": null
         }

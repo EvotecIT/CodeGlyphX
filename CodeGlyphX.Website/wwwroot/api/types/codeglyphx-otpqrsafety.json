@@ -13,12 +13,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "foreground",
           "type": "CodeGlyphX.Rendering.Png.Rgba32",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "background",
           "type": "CodeGlyphX.Rendering.Png.Rgba32",
           "summary": null
         }
@@ -30,17 +30,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "qr",
           "type": "CodeGlyphX.QrCode",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "opts",
           "type": "CodeGlyphX.Rendering.Png.QrPngRenderOptions",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "requireHighEcc",
           "type": "System.Boolean",
           "summary": null
         }

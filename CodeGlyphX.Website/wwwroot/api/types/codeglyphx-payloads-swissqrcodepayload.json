@@ -13,52 +13,52 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "iban",
           "type": "CodeGlyphX.Payloads.SwissQrCodePayload.Iban",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "currency",
           "type": "CodeGlyphX.Payloads.QrSwissCurrency",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "creditor",
           "type": "CodeGlyphX.Payloads.SwissQrCodePayload.Contact",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "reference",
           "type": "CodeGlyphX.Payloads.SwissQrCodePayload.Reference",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "additionalInformation",
           "type": "CodeGlyphX.Payloads.SwissQrCodePayload.AdditionalInformation",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "debitor",
           "type": "CodeGlyphX.Payloads.SwissQrCodePayload.Contact",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "amount",
           "type": "System.Nullable{System.Decimal}",
           "summary": null
         },
         {
-          "name": "arg8",
+          "name": "ultimateCreditor",
           "type": "CodeGlyphX.Payloads.SwissQrCodePayload.Contact",
           "summary": null
         },
         {
-          "name": "arg9",
+          "name": "alternativeProcedure1",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg10",
+          "name": "alternativeProcedure2",
           "type": "System.String",
           "summary": null
         }

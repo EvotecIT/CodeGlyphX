@@ -13,47 +13,47 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "PayloadFormatIndicator",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "MerchantCategoryCode",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "TransactionCurrency",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "TransactionAmount",
           "type": "System.Nullable{System.Decimal}",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "CountryCode",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "MerchantName",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "MerchantCity",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg8",
+          "name": "Fields",
           "type": "System.Collections.Generic.IReadOnlyDictionary{System.String,System.String}",
           "summary": null
         },
         {
-          "name": "arg9",
+          "name": "CrcValid",
           "type": "System.Boolean",
           "summary": null
         }

@@ -37,12 +37,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "maxMilliseconds",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "maxDimension",
           "type": "System.Int32",
           "summary": null
         }
@@ -54,7 +54,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "profile",
           "type": "CodeGlyphX.QrDecodeProfile",
           "summary": null
         }
@@ -66,7 +66,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "maxDimension",
           "type": "System.Int32",
           "summary": null
         }
@@ -78,7 +78,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "maxScale",
           "type": "System.Int32",
           "summary": null
         }
@@ -90,7 +90,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "maxMilliseconds",
           "type": "System.Int32",
           "summary": null
         }
@@ -102,7 +102,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "maxMilliseconds",
           "type": "System.Int32",
           "summary": null
         }
@@ -114,7 +114,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "enabled",
           "type": "System.Boolean",
           "summary": null
         }
@@ -126,12 +126,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "maxMilliseconds",
           "type": "System.Int32",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "maxDimension",
           "type": "System.Int32",
           "summary": null
         }
@@ -149,7 +149,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "enabled",
           "type": "System.Boolean",
           "summary": null
         }
@@ -161,7 +161,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "enabled",
           "type": "System.Boolean",
           "summary": null
         }
@@ -173,12 +173,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "enabled",
           "type": "System.Boolean",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "tileGrid",
           "type": "System.Int32",
           "summary": null
         }

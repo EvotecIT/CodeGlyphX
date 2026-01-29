@@ -13,7 +13,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "text",
           "type": "System.String",
           "summary": null
         }
@@ -25,7 +25,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "url",
           "type": "System.String",
           "summary": null
         }
@@ -37,17 +37,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "address",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "subject",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "body",
           "type": "System.String",
           "summary": null
         }
@@ -59,7 +59,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "number",
           "type": "System.String",
           "summary": null
         }
@@ -71,12 +71,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "number",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "body",
           "type": "System.String",
           "summary": null
         }
@@ -88,37 +88,37 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "vpa",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "name",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "merchantCode",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "transactionRef",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "transactionNote",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "amount",
           "type": "System.Nullable{System.Decimal}",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "currency",
           "type": "System.String",
           "summary": null
         }
@@ -130,22 +130,22 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "ssid",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "password",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "authType",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "hidden",
           "type": "System.Boolean",
           "summary": null
         }
@@ -157,12 +157,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "appId",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "countryCode",
           "type": "System.String",
           "summary": null
         }
@@ -174,12 +174,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "appId",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "countryCode",
           "type": "System.String",
           "summary": null
         }
@@ -191,7 +191,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "packageId",
           "type": "System.String",
           "summary": null
         }
@@ -203,7 +203,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "handleOrUrl",
           "type": "System.String",
           "summary": null
         }
@@ -215,7 +215,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "handleOrUrl",
           "type": "System.String",
           "summary": null
         }
@@ -227,7 +227,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "handleOrUrl",
           "type": "System.String",
           "summary": null
         }
@@ -239,7 +239,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "handleOrUrl",
           "type": "System.String",
           "summary": null
         }
@@ -251,7 +251,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "handleOrUrl",
           "type": "System.String",
           "summary": null
         }
@@ -263,7 +263,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "handleOrUrl",
           "type": "System.String",
           "summary": null
         }
@@ -275,17 +275,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "latitude",
           "type": "System.Double",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "longitude",
           "type": "System.Double",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "altitude",
           "type": "System.Nullable{System.Double}",
           "summary": null
         }
@@ -297,17 +297,17 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "latitude",
           "type": "System.Double",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "longitude",
           "type": "System.Double",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "altitude",
           "type": "System.Nullable{System.Double}",
           "summary": null
         }
@@ -319,42 +319,42 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "firstName",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "lastName",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "phone",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "email",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "url",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "address",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "note",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg8",
+          "name": "organization",
           "type": "System.String",
           "summary": null
         }
@@ -366,57 +366,57 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "summary",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "start",
           "type": "System.DateTime",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "end",
           "type": "System.Nullable{System.DateTime}",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "location",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "description",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "organizer",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "uid",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg8",
+          "name": "allDay",
           "type": "System.Boolean",
           "summary": null
         },
         {
-          "name": "arg9",
+          "name": "timeZoneId",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg10",
+          "name": "alarmMinutesBefore",
           "type": "System.Nullable{System.Int32}",
           "summary": null
         },
         {
-          "name": "arg11",
+          "name": "alarmDescription",
           "type": "System.String",
           "summary": null
         }
@@ -428,27 +428,27 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "firstName",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "lastName",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "phone",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "email",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "organization",
           "type": "System.String",
           "summary": null
         }
@@ -460,62 +460,62 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "firstName",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "lastName",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "phones",
           "type": "System.Collections.Generic.IEnumerable{System.String}",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "emails",
           "type": "System.Collections.Generic.IEnumerable{System.String}",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "organization",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "title",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg7",
+          "name": "url",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg8",
+          "name": "address",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg9",
+          "name": "note",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg10",
+          "name": "birthday",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg11",
+          "name": "photoUri",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg12",
+          "name": "logoUri",
           "type": "System.String",
           "summary": null
         }

@@ -13,32 +13,32 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "Scheme",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "Address",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "Amount",
           "type": "System.Nullable{System.Decimal}",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "Label",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "Message",
           "type": "System.String",
           "summary": null
         },
         {
-          "name": "arg6",
+          "name": "Parameters",
           "type": "System.Collections.Generic.IReadOnlyDictionary{System.String,System.String}",
           "summary": null
         }

@@ -61,6 +61,11 @@ if (-not (Test-Path $apiFooter)) { throw "Missing API docs footer at $apiFooter"
 $navScript = Join-Path $PSScriptRoot "Update-NavFragments.ps1"
 Invoke-Step "Updating navigation fragments..." @("pwsh",$navScript)
 
+$verifyDataScript = Join-Path $PSScriptRoot "Verify-ApiDataSources.ps1"
+if (Test-Path $verifyDataScript) {
+    Invoke-Step "Verifying API data sources..." @("pwsh",$verifyDataScript)
+}
+
 Invoke-Step "Building CodeGlyphX..." @("dotnet","build",$codeGlyphProject,"-c",$Configuration,"-f",$Framework)
 
 if (-not $SkipStyleBoard) {
@@ -82,6 +87,20 @@ if (-not $SkipApiDocs) {
         "--footer-html",$apiFooter,
         "--include-namespace","CodeGlyphX"
     )
+}
+
+# Ensure app JSON data lives alongside API docs for SPA fetches.
+$apiDataSource = [IO.Path]::Combine($repoRoot, "Assets", "Data")
+if (Test-Path $apiDataSource) {
+    if (-not (Test-Path $apiOutput)) {
+        New-Item -ItemType Directory -Path $apiOutput -Force | Out-Null
+    }
+    foreach ($file in @("faq.json", "showcase.json")) {
+        $sourcePath = Join-Path $apiDataSource $file
+        if (Test-Path $sourcePath) {
+            Copy-Item -Path $sourcePath -Destination (Join-Path $apiOutput $file) -Force
+        }
+    }
 }
 
 if (-not $SkipLlms) {

@@ -13,7 +13,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "policy",
           "type": "CodeGlyphX.Code39ChecksumPolicy",
           "summary": null
         }
@@ -25,7 +25,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "policy",
           "type": "CodeGlyphX.MsiChecksumPolicy",
           "summary": null
         }
@@ -37,7 +37,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "policy",
           "type": "CodeGlyphX.Code11ChecksumPolicy",
           "summary": null
         }
@@ -49,7 +49,7 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "policy",
           "type": "CodeGlyphX.PlesseyChecksumPolicy",
           "summary": null
         }
@@ -61,12 +61,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "enabled",
           "type": "System.Boolean",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "tileGrid",
           "type": "System.Int32",
           "summary": null
         }

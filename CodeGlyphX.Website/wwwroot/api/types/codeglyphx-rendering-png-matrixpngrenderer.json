@@ -13,12 +13,12 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "modules",
           "type": "CodeGlyphX.BitMatrix",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "opts",
           "type": "CodeGlyphX.Rendering.Png.MatrixPngRenderOptions",
           "summary": null
         }
@@ -101,27 +101,27 @@
       "returns": null,
       "parameters": [
         {
-          "name": "arg1",
+          "name": "modules",
           "type": "CodeGlyphX.BitMatrix",
           "summary": null
         },
         {
-          "name": "arg2",
+          "name": "opts",
           "type": "CodeGlyphX.Rendering.Png.MatrixPngRenderOptions",
           "summary": null
         },
         {
-          "name": "arg3",
+          "name": "widthPx",
           "type": "System.Int32@",
           "summary": null
         },
         {
-          "name": "arg4",
+          "name": "heightPx",
           "type": "System.Int32@",
           "summary": null
         },
         {
-          "name": "arg5",
+          "name": "stride",
           "type": "System.Int32@",
           "summary": null
         }
