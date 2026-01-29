@@ -13,7 +13,7 @@ namespace CodeGlyphX;
 /// Simple QR helpers with fluent and static APIs.
 /// </summary>
 /// <remarks>
-/// Use <see cref="Save(string,string,CodeGlyphX.QrEasyOptions,string)"/> to pick the output format by file extension.
+/// Use <see cref="Save(string,string,CodeGlyphX.QrEasyOptions,CodeGlyphX.Rendering.RenderExtras)"/> to pick the output format by file extension.
 /// </remarks>
 /// <example>
 /// <code>

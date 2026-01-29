@@ -272,7 +272,8 @@ public static class Otp {
     /// </summary>
     public static string SaveTotp(string issuer, string account, string secretBase32, string path, QrEasyOptions? options = null, OtpAlgorithm alg = OtpAlgorithm.Sha1, int digits = 6, int period = 30, string? title = null) {
         var uri = TotpUri(issuer, account, secretBase32, alg, digits, period);
-        return QR.Save(uri, path, options, title);
+        var extras = string.IsNullOrEmpty(title) ? null : new RenderExtras { HtmlTitle = title };
+        return QR.Save(uri, path, options, extras);
     }
 
     /// <summary>
@@ -281,7 +282,8 @@ public static class Otp {
     /// </summary>
     public static string SaveHotp(string issuer, string account, string secretBase32, long counter, string path, QrEasyOptions? options = null, OtpAlgorithm alg = OtpAlgorithm.Sha1, int digits = 6, string? title = null) {
         var uri = HotpUri(issuer, account, secretBase32, counter, alg, digits);
-        return QR.Save(uri, path, options, title);
+        var extras = string.IsNullOrEmpty(title) ? null : new RenderExtras { HtmlTitle = title };
+        return QR.Save(uri, path, options, extras);
     }
 
     /// <summary>
@@ -448,7 +450,10 @@ public static class Otp {
         /// <summary>
         /// Saves based on file extension (.png/.webp/.svg/.html/.jpg). Defaults to PNG when no extension is provided.
         /// </summary>
-        public string Save(string path, string? title = null) => QR.Save(Uri(), path, Options, title);
+        public string Save(string path, string? title = null) {
+            var extras = string.IsNullOrEmpty(title) ? null : new RenderExtras { HtmlTitle = title };
+            return QR.Save(Uri(), path, Options, extras);
+        }
     }
 
     /// <summary>
@@ -601,6 +606,9 @@ public static class Otp {
         /// <summary>
         /// Saves based on file extension (.png/.webp/.svg/.html/.jpg). Defaults to PNG when no extension is provided.
         /// </summary>
-        public string Save(string path, string? title = null) => QR.Save(Uri(), path, Options, title);
+        public string Save(string path, string? title = null) {
+            var extras = string.IsNullOrEmpty(title) ? null : new RenderExtras { HtmlTitle = title };
+            return QR.Save(Uri(), path, Options, extras);
+        }
     }
 }

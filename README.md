@@ -427,6 +427,8 @@ var extras = new RenderExtras { HtmlTitle = "My Code", VectorMode = RenderMode.R
 Barcode.Save(BarcodeType.Code128, "CODE128-12345", "barcode.html", extras: extras);
 ```
 
+Per-format helpers (e.g., `Png`, `Svg`, `SavePng`) remain for convenience, but new code should prefer `Render(..., OutputFormat)` to keep output handling consistent.
+
 ### ICO multi-size
 
 ```csharp

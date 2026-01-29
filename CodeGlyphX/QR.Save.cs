@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using System.Threading;
-using CodeGlyphX.Internal;
 using CodeGlyphX.Payloads;
 using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Ascii;
@@ -546,51 +545,33 @@ public static partial class QR {
     }
 
     /// <summary>
-    /// Saves a QR code to a file based on the file extension (.png/.webp/.svg/.svgz/.svg.gz/.html/.htm/.jpg/.jpeg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps/.ps).
+    /// Saves a QR code to a file based on the file extension.
     /// Defaults to PNG when no extension is provided.
     /// </summary>
-    public static string Save(string payload, string path, QrEasyOptions? options = null, string? title = null) {
-        return SaveByExtension(path, payload, null, options, title);
+    public static string Save(string payload, string path, QrEasyOptions? options = null, RenderExtras? extras = null) {
+        var format = OutputFormatInfo.Resolve(path, OutputFormat.Png);
+        var output = QrCode.Render(payload, format, options, extras);
+        return OutputWriter.Write(path, output);
     }
 
     /// <summary>
-    /// Detects a payload type and saves a QR code to a file based on the file extension (.png/.webp/.svg/.svgz/.svg.gz/.html/.htm/.jpg/.jpeg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps/.ps).
+    /// Detects a payload type and saves a QR code to a file based on the file extension.
     /// Defaults to PNG when no extension is provided.
     /// </summary>
-    public static string SaveAuto(string payload, string path, QrPayloadDetectOptions? detectOptions = null, QrEasyOptions? options = null, string? title = null) {
-        var detected = QrPayloads.Detect(payload, detectOptions);
-        return SaveByExtension(path, detected.Text, detected, options, title);
+    public static string SaveAuto(string payload, string path, QrPayloadDetectOptions? detectOptions = null, QrEasyOptions? options = null, RenderExtras? extras = null) {
+        var format = OutputFormatInfo.Resolve(path, OutputFormat.Png);
+        var output = QrCode.RenderAuto(payload, format, detectOptions, options, extras);
+        return OutputWriter.Write(path, output);
     }
 
     /// <summary>
-    /// Saves a QR code to a file based on the file extension (.png/.webp/.svg/.svgz/.svg.gz/.html/.htm/.jpg/.jpeg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps/.ps).
+    /// Saves a QR code to a file based on the file extension.
     /// Defaults to PNG when no extension is provided.
     /// </summary>
-    public static string Save(QrPayloadData payload, string path, QrEasyOptions? options = null, string? title = null) {
+    public static string Save(QrPayloadData payload, string path, QrEasyOptions? options = null, RenderExtras? extras = null) {
         if (payload is null) throw new ArgumentNullException(nameof(payload));
-        return SaveByExtension(path, payload.Text, payload, options, title);
-    }
-
-    private static string SaveByExtension(string path, string payload, QrPayloadData? payloadData, QrEasyOptions? options, string? title) {
-        return SaveByExtensionHelper.Save(path, new SaveByExtensionHandlers {
-            Default = () => payloadData is null ? SavePng(payload, path, options) : SavePng(payloadData, path, options),
-            Png = () => payloadData is null ? SavePng(payload, path, options) : SavePng(payloadData, path, options),
-            Webp = () => payloadData is null ? SaveWebp(payload, path, options) : SaveWebp(payloadData, path, options),
-            Svg = () => payloadData is null ? SaveSvg(payload, path, options) : SaveSvg(payloadData, path, options),
-            Svgz = () => payloadData is null ? SaveSvgz(payload, path, options) : SaveSvgz(payloadData, path, options),
-            Html = () => payloadData is null ? SaveHtml(payload, path, options, title) : SaveHtml(payloadData, path, options, title),
-            Jpeg = () => payloadData is null ? SaveJpeg(payload, path, options) : SaveJpeg(payloadData, path, options),
-            Bmp = () => payloadData is null ? SaveBmp(payload, path, options) : SaveBmp(payloadData, path, options),
-            Ppm = () => payloadData is null ? SavePpm(payload, path, options) : SavePpm(payloadData, path, options),
-            Pbm = () => payloadData is null ? SavePbm(payload, path, options) : SavePbm(payloadData, path, options),
-            Pgm = () => payloadData is null ? SavePgm(payload, path, options) : SavePgm(payloadData, path, options),
-            Pam = () => payloadData is null ? SavePam(payload, path, options) : SavePam(payloadData, path, options),
-            Xbm = () => payloadData is null ? SaveXbm(payload, path, options) : SaveXbm(payloadData, path, options),
-            Xpm = () => payloadData is null ? SaveXpm(payload, path, options) : SaveXpm(payloadData, path, options),
-            Tga = () => payloadData is null ? SaveTga(payload, path, options) : SaveTga(payloadData, path, options),
-            Ico = () => payloadData is null ? SaveIco(payload, path, options) : SaveIco(payloadData, path, options),
-            Pdf = () => payloadData is null ? SavePdf(payload, path, options) : SavePdf(payloadData, path, options),
-            Eps = () => payloadData is null ? SaveEps(payload, path, options) : SaveEps(payloadData, path, options)
-        });
+        var format = OutputFormatInfo.Resolve(path, OutputFormat.Png);
+        var output = QrCode.Render(payload, format, options, extras);
+        return OutputWriter.Write(path, output);
     }
 }

@@ -682,8 +682,11 @@ public static partial class QR {
         /// <summary>
         /// Saves based on file extension (.png/.svg/.svgz/.html/.jpg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps). Defaults to PNG when no extension is provided.
         /// </summary>
-        public string Save(string path, string? title = null) => _payloadData is null
-            ? QR.Save(_payload, path, Options, title)
-            : QR.Save(_payloadData, path, Options, title);
+        public string Save(string path, string? title = null) {
+            var extras = string.IsNullOrEmpty(title) ? null : new RenderExtras { HtmlTitle = title };
+            return _payloadData is null
+                ? QR.Save(_payload, path, Options, extras)
+                : QR.Save(_payloadData, path, Options, extras);
+        }
     }
 }
