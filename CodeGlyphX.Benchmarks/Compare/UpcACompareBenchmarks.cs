@@ -55,7 +55,7 @@ public class UpcACompareBenchmarks
     [Benchmark(Baseline = true, Description = "CodeGlyphX UPC-A PNG")]
     public byte[] CodeGlyphX_UpcA_Png()
     {
-        return BarcodeEasy.RenderPng(BarcodeType.UPCA, UpcAText, _options);
+        return Barcode.Render(BarcodeType.UPCA, UpcAText, OutputFormat.Png, _options).Data;
     }
 
 #if COMPARE_ZXING

@@ -310,329 +310,251 @@ public static partial class QR {
         /// </summary>
         public QrCode Encode() => _payloadData is null ? QrEasy.Encode(_payload, Options) : QrEasy.Encode(_payloadData, Options);
 
+        private RenderedOutput Render(OutputFormat format, RenderExtras? extras = null) {
+            return QrEasy.Render(Encode(), format, Options, extras);
+        }
+
         /// <summary>
         /// Renders PNG bytes.
         /// </summary>
-        public byte[] Png() => _payloadData is null ? QrEasy.RenderPng(_payload, Options) : QrEasy.RenderPng(_payloadData, Options);
+        public byte[] Png() => Render(OutputFormat.Png).Data;
 
         /// <summary>
         /// Renders SVG text.
         /// </summary>
-        public string Svg() => _payloadData is null ? QrEasy.RenderSvg(_payload, Options) : QrEasy.RenderSvg(_payloadData, Options);
+        public string Svg() => Render(OutputFormat.Svg).GetText();
 
         /// <summary>
         /// Renders HTML text.
         /// </summary>
-        public string Html() => _payloadData is null ? QrEasy.RenderHtml(_payload, Options) : QrEasy.RenderHtml(_payloadData, Options);
+        public string Html() => Render(OutputFormat.Html).GetText();
 
         /// <summary>
         /// Renders JPEG bytes.
         /// </summary>
-        public byte[] Jpeg() => _payloadData is null ? QrEasy.RenderJpeg(_payload, Options) : QrEasy.RenderJpeg(_payloadData, Options);
+        public byte[] Jpeg() => Render(OutputFormat.Jpeg).Data;
 
         /// <summary>
         /// Renders PPM bytes.
         /// </summary>
-        public byte[] Ppm() => _payloadData is null ? QrEasy.RenderPpm(_payload, Options) : QrEasy.RenderPpm(_payloadData, Options);
+        public byte[] Ppm() => Render(OutputFormat.Ppm).Data;
 
         /// <summary>
         /// Renders PBM bytes.
         /// </summary>
-        public byte[] Pbm() => _payloadData is null ? QrEasy.RenderPbm(_payload, Options) : QrEasy.RenderPbm(_payloadData, Options);
+        public byte[] Pbm() => Render(OutputFormat.Pbm).Data;
 
         /// <summary>
         /// Renders PGM bytes.
         /// </summary>
-        public byte[] Pgm() => _payloadData is null ? QrEasy.RenderPgm(_payload, Options) : QrEasy.RenderPgm(_payloadData, Options);
+        public byte[] Pgm() => Render(OutputFormat.Pgm).Data;
 
         /// <summary>
         /// Renders PAM bytes.
         /// </summary>
-        public byte[] Pam() => _payloadData is null ? QrEasy.RenderPam(_payload, Options) : QrEasy.RenderPam(_payloadData, Options);
+        public byte[] Pam() => Render(OutputFormat.Pam).Data;
 
         /// <summary>
         /// Renders XBM text.
         /// </summary>
-        public string Xbm() => _payloadData is null ? QrEasy.RenderXbm(_payload, Options) : QrEasy.RenderXbm(_payloadData, Options);
+        public string Xbm() => Render(OutputFormat.Xbm).GetText();
 
         /// <summary>
         /// Renders XPM text.
         /// </summary>
-        public string Xpm() => _payloadData is null ? QrEasy.RenderXpm(_payload, Options) : QrEasy.RenderXpm(_payloadData, Options);
+        public string Xpm() => Render(OutputFormat.Xpm).GetText();
 
         /// <summary>
         /// Renders TGA bytes.
         /// </summary>
-        public byte[] Tga() => _payloadData is null ? QrEasy.RenderTga(_payload, Options) : QrEasy.RenderTga(_payloadData, Options);
+        public byte[] Tga() => Render(OutputFormat.Tga).Data;
 
         /// <summary>
         /// Renders ICO bytes.
         /// </summary>
-        public byte[] Ico() => _payloadData is null ? QrEasy.RenderIco(_payload, Options) : QrEasy.RenderIco(_payloadData, Options);
+        public byte[] Ico() => Render(OutputFormat.Ico).Data;
 
         /// <summary>
         /// Renders SVGZ bytes.
         /// </summary>
-        public byte[] Svgz() => _payloadData is null ? QrEasy.RenderSvgz(_payload, Options) : QrEasy.RenderSvgz(_payloadData, Options);
+        public byte[] Svgz() => Render(OutputFormat.Svgz).Data;
 
         /// <summary>
         /// Renders PDF bytes.
         /// </summary>
         /// <param name="mode">Vector or raster output.</param>
-        public byte[] Pdf(RenderMode mode = RenderMode.Vector) => _payloadData is null ? QrEasy.RenderPdf(_payload, Options, mode) : QrEasy.RenderPdf(_payloadData, Options, mode);
+        public byte[] Pdf(RenderMode mode = RenderMode.Vector) => Render(OutputFormat.Pdf, new RenderExtras { VectorMode = mode }).Data;
 
         /// <summary>
         /// Renders EPS text.
         /// </summary>
         /// <param name="mode">Vector or raster output.</param>
-        public string Eps(RenderMode mode = RenderMode.Vector) => _payloadData is null ? QrEasy.RenderEps(_payload, Options, mode) : QrEasy.RenderEps(_payloadData, Options, mode);
+        public string Eps(RenderMode mode = RenderMode.Vector) => Render(OutputFormat.Eps, new RenderExtras { VectorMode = mode }).GetText();
 
         /// <summary>
         /// Saves PNG to a file.
         /// </summary>
-        public string SavePng(string path) => _payloadData is null ? QR.SavePng(_payload, path, Options) : QR.SavePng(_payloadData, path, Options);
+        public string SavePng(string path) => OutputWriter.Write(path, Render(OutputFormat.Png));
 
         /// <summary>
         /// Saves PNG to a stream.
         /// </summary>
-        public void SavePng(Stream stream) {
-            if (_payloadData is null) {
-                QR.SavePng(_payload, stream, Options);
-            } else {
-                QR.SavePng(_payloadData, stream, Options);
-            }
-        }
+        public void SavePng(Stream stream) => OutputWriter.Write(stream, Render(OutputFormat.Png));
 
         /// <summary>
         /// Saves SVG to a file.
         /// </summary>
-        public string SaveSvg(string path) => _payloadData is null ? QR.SaveSvg(_payload, path, Options) : QR.SaveSvg(_payloadData, path, Options);
+        public string SaveSvg(string path) => OutputWriter.Write(path, Render(OutputFormat.Svg));
 
         /// <summary>
         /// Saves SVG to a stream.
         /// </summary>
-        public void SaveSvg(Stream stream) {
-            if (_payloadData is null) {
-                QR.SaveSvg(_payload, stream, Options);
-            } else {
-                QR.SaveSvg(_payloadData, stream, Options);
-            }
-        }
+        public void SaveSvg(Stream stream) => OutputWriter.Write(stream, Render(OutputFormat.Svg));
 
         /// <summary>
         /// Saves HTML to a file.
         /// </summary>
-        public string SaveHtml(string path, string? title = null) => _payloadData is null ? QR.SaveHtml(_payload, path, Options, title) : QR.SaveHtml(_payloadData, path, Options, title);
+        public string SaveHtml(string path, string? title = null) {
+            var extras = string.IsNullOrEmpty(title) ? null : new RenderExtras { HtmlTitle = title };
+            return OutputWriter.Write(path, Render(OutputFormat.Html, extras));
+        }
 
         /// <summary>
         /// Saves HTML to a stream.
         /// </summary>
         public void SaveHtml(Stream stream, string? title = null) {
-            if (_payloadData is null) {
-                QR.SaveHtml(_payload, stream, Options, title);
-            } else {
-                QR.SaveHtml(_payloadData, stream, Options, title);
-            }
+            var extras = string.IsNullOrEmpty(title) ? null : new RenderExtras { HtmlTitle = title };
+            OutputWriter.Write(stream, Render(OutputFormat.Html, extras));
         }
 
         /// <summary>
         /// Saves JPEG to a file.
         /// </summary>
-        public string SaveJpeg(string path) => _payloadData is null ? QR.SaveJpeg(_payload, path, Options) : QR.SaveJpeg(_payloadData, path, Options);
+        public string SaveJpeg(string path) => OutputWriter.Write(path, Render(OutputFormat.Jpeg));
 
         /// <summary>
         /// Saves JPEG to a stream.
         /// </summary>
-        public void SaveJpeg(Stream stream) {
-            if (_payloadData is null) {
-                QR.SaveJpeg(_payload, stream, Options);
-            } else {
-                QR.SaveJpeg(_payloadData, stream, Options);
-            }
-        }
+        public void SaveJpeg(Stream stream) => OutputWriter.Write(stream, Render(OutputFormat.Jpeg));
 
         /// <summary>
         /// Saves WebP to a file.
         /// </summary>
-        public string SaveWebp(string path) => _payloadData is null ? QR.SaveWebp(_payload, path, Options) : QR.SaveWebp(_payloadData, path, Options);
+        public string SaveWebp(string path) => OutputWriter.Write(path, Render(OutputFormat.Webp));
 
         /// <summary>
         /// Saves WebP to a stream.
         /// </summary>
-        public void SaveWebp(Stream stream) {
-            if (_payloadData is null) {
-                QR.SaveWebp(_payload, stream, Options);
-            } else {
-                QR.SaveWebp(_payloadData, stream, Options);
-            }
-        }
+        public void SaveWebp(Stream stream) => OutputWriter.Write(stream, Render(OutputFormat.Webp));
 
         /// <summary>
         /// Saves BMP to a file.
         /// </summary>
-        public string SaveBmp(string path) => _payloadData is null ? QR.SaveBmp(_payload, path, Options) : QR.SaveBmp(_payloadData, path, Options);
+        public string SaveBmp(string path) => OutputWriter.Write(path, Render(OutputFormat.Bmp));
 
         /// <summary>
         /// Saves BMP to a stream.
         /// </summary>
-        public void SaveBmp(Stream stream) {
-            if (_payloadData is null) {
-                QR.SaveBmp(_payload, stream, Options);
-            } else {
-                QR.SaveBmp(_payloadData, stream, Options);
-            }
-        }
+        public void SaveBmp(Stream stream) => OutputWriter.Write(stream, Render(OutputFormat.Bmp));
 
         /// <summary>
         /// Saves PPM to a file.
         /// </summary>
-        public string SavePpm(string path) => _payloadData is null ? QR.SavePpm(_payload, path, Options) : QR.SavePpm(_payloadData, path, Options);
+        public string SavePpm(string path) => OutputWriter.Write(path, Render(OutputFormat.Ppm));
 
         /// <summary>
         /// Saves PPM to a stream.
         /// </summary>
-        public void SavePpm(Stream stream) {
-            if (_payloadData is null) {
-                QR.SavePpm(_payload, stream, Options);
-            } else {
-                QR.SavePpm(_payloadData, stream, Options);
-            }
-        }
+        public void SavePpm(Stream stream) => OutputWriter.Write(stream, Render(OutputFormat.Ppm));
 
         /// <summary>
         /// Saves PBM to a file.
         /// </summary>
-        public string SavePbm(string path) => _payloadData is null ? QR.SavePbm(_payload, path, Options) : QR.SavePbm(_payloadData, path, Options);
+        public string SavePbm(string path) => OutputWriter.Write(path, Render(OutputFormat.Pbm));
 
         /// <summary>
         /// Saves PBM to a stream.
         /// </summary>
-        public void SavePbm(Stream stream) {
-            if (_payloadData is null) {
-                QR.SavePbm(_payload, stream, Options);
-            } else {
-                QR.SavePbm(_payloadData, stream, Options);
-            }
-        }
+        public void SavePbm(Stream stream) => OutputWriter.Write(stream, Render(OutputFormat.Pbm));
 
         /// <summary>
         /// Saves PGM to a file.
         /// </summary>
-        public string SavePgm(string path) => _payloadData is null ? QR.SavePgm(_payload, path, Options) : QR.SavePgm(_payloadData, path, Options);
+        public string SavePgm(string path) => OutputWriter.Write(path, Render(OutputFormat.Pgm));
 
         /// <summary>
         /// Saves PGM to a stream.
         /// </summary>
-        public void SavePgm(Stream stream) {
-            if (_payloadData is null) {
-                QR.SavePgm(_payload, stream, Options);
-            } else {
-                QR.SavePgm(_payloadData, stream, Options);
-            }
-        }
+        public void SavePgm(Stream stream) => OutputWriter.Write(stream, Render(OutputFormat.Pgm));
 
         /// <summary>
         /// Saves PAM to a file.
         /// </summary>
-        public string SavePam(string path) => _payloadData is null ? QR.SavePam(_payload, path, Options) : QR.SavePam(_payloadData, path, Options);
+        public string SavePam(string path) => OutputWriter.Write(path, Render(OutputFormat.Pam));
 
         /// <summary>
         /// Saves PAM to a stream.
         /// </summary>
-        public void SavePam(Stream stream) {
-            if (_payloadData is null) {
-                QR.SavePam(_payload, stream, Options);
-            } else {
-                QR.SavePam(_payloadData, stream, Options);
-            }
-        }
+        public void SavePam(Stream stream) => OutputWriter.Write(stream, Render(OutputFormat.Pam));
 
         /// <summary>
         /// Saves XBM to a file.
         /// </summary>
-        public string SaveXbm(string path) => _payloadData is null ? QR.SaveXbm(_payload, path, Options) : QR.SaveXbm(_payloadData, path, Options);
+        public string SaveXbm(string path) => OutputWriter.Write(path, Render(OutputFormat.Xbm));
 
         /// <summary>
         /// Saves XBM to a stream.
         /// </summary>
-        public void SaveXbm(Stream stream) {
-            if (_payloadData is null) {
-                QR.SaveXbm(_payload, stream, Options);
-            } else {
-                QR.SaveXbm(_payloadData, stream, Options);
-            }
-        }
+        public void SaveXbm(Stream stream) => OutputWriter.Write(stream, Render(OutputFormat.Xbm));
 
         /// <summary>
         /// Saves XPM to a file.
         /// </summary>
-        public string SaveXpm(string path) => _payloadData is null ? QR.SaveXpm(_payload, path, Options) : QR.SaveXpm(_payloadData, path, Options);
+        public string SaveXpm(string path) => OutputWriter.Write(path, Render(OutputFormat.Xpm));
 
         /// <summary>
         /// Saves XPM to a stream.
         /// </summary>
-        public void SaveXpm(Stream stream) {
-            if (_payloadData is null) {
-                QR.SaveXpm(_payload, stream, Options);
-            } else {
-                QR.SaveXpm(_payloadData, stream, Options);
-            }
-        }
+        public void SaveXpm(Stream stream) => OutputWriter.Write(stream, Render(OutputFormat.Xpm));
 
         /// <summary>
         /// Saves TGA to a file.
         /// </summary>
-        public string SaveTga(string path) => _payloadData is null ? QR.SaveTga(_payload, path, Options) : QR.SaveTga(_payloadData, path, Options);
+        public string SaveTga(string path) => OutputWriter.Write(path, Render(OutputFormat.Tga));
 
         /// <summary>
         /// Saves TGA to a stream.
         /// </summary>
-        public void SaveTga(Stream stream) {
-            if (_payloadData is null) {
-                QR.SaveTga(_payload, stream, Options);
-            } else {
-                QR.SaveTga(_payloadData, stream, Options);
-            }
-        }
+        public void SaveTga(Stream stream) => OutputWriter.Write(stream, Render(OutputFormat.Tga));
 
         /// <summary>
         /// Saves ICO to a file.
         /// </summary>
-        public string SaveIco(string path) => _payloadData is null ? QR.SaveIco(_payload, path, Options) : QR.SaveIco(_payloadData, path, Options);
+        public string SaveIco(string path) => OutputWriter.Write(path, Render(OutputFormat.Ico));
 
         /// <summary>
         /// Saves ICO to a stream.
         /// </summary>
-        public void SaveIco(Stream stream) {
-            if (_payloadData is null) {
-                QR.SaveIco(_payload, stream, Options);
-            } else {
-                QR.SaveIco(_payloadData, stream, Options);
-            }
-        }
+        public void SaveIco(Stream stream) => OutputWriter.Write(stream, Render(OutputFormat.Ico));
 
         /// <summary>
         /// Saves SVGZ to a file.
         /// </summary>
-        public string SaveSvgz(string path) => _payloadData is null ? QR.SaveSvgz(_payload, path, Options) : QR.SaveSvgz(_payloadData, path, Options);
+        public string SaveSvgz(string path) => OutputWriter.Write(path, Render(OutputFormat.Svgz));
 
         /// <summary>
         /// Saves SVGZ to a stream.
         /// </summary>
-        public void SaveSvgz(Stream stream) {
-            if (_payloadData is null) {
-                QR.SaveSvgz(_payload, stream, Options);
-            } else {
-                QR.SaveSvgz(_payloadData, stream, Options);
-            }
-        }
+        public void SaveSvgz(Stream stream) => OutputWriter.Write(stream, Render(OutputFormat.Svgz));
 
         /// <summary>
         /// Saves PDF to a file.
         /// </summary>
     /// <param name="path">Output file path.</param>
         /// <param name="mode">Vector or raster output.</param>
-        public string SavePdf(string path, RenderMode mode = RenderMode.Vector) => _payloadData is null ? QR.SavePdf(_payload, path, Options, mode) : QR.SavePdf(_payloadData, path, Options, mode);
+        public string SavePdf(string path, RenderMode mode = RenderMode.Vector) {
+            return OutputWriter.Write(path, Render(OutputFormat.Pdf, new RenderExtras { VectorMode = mode }));
+        }
 
         /// <summary>
         /// Saves PDF to a stream.
@@ -640,11 +562,7 @@ public static partial class QR {
     /// <param name="stream">Destination stream.</param>
         /// <param name="mode">Vector or raster output.</param>
         public void SavePdf(Stream stream, RenderMode mode = RenderMode.Vector) {
-            if (_payloadData is null) {
-                QR.SavePdf(_payload, stream, Options, mode);
-            } else {
-                QR.SavePdf(_payloadData, stream, Options, mode);
-            }
+            OutputWriter.Write(stream, Render(OutputFormat.Pdf, new RenderExtras { VectorMode = mode }));
         }
 
         /// <summary>
@@ -652,7 +570,9 @@ public static partial class QR {
         /// </summary>
     /// <param name="path">Output file path.</param>
         /// <param name="mode">Vector or raster output.</param>
-        public string SaveEps(string path, RenderMode mode = RenderMode.Vector) => _payloadData is null ? QR.SaveEps(_payload, path, Options, mode) : QR.SaveEps(_payloadData, path, Options, mode);
+        public string SaveEps(string path, RenderMode mode = RenderMode.Vector) {
+            return OutputWriter.Write(path, Render(OutputFormat.Eps, new RenderExtras { VectorMode = mode }));
+        }
 
         /// <summary>
         /// Saves EPS to a stream.
@@ -660,30 +580,31 @@ public static partial class QR {
     /// <param name="stream">Destination stream.</param>
         /// <param name="mode">Vector or raster output.</param>
         public void SaveEps(Stream stream, RenderMode mode = RenderMode.Vector) {
-            if (_payloadData is null) {
-                QR.SaveEps(_payload, stream, Options, mode);
-            } else {
-                QR.SaveEps(_payloadData, stream, Options, mode);
-            }
+            OutputWriter.Write(stream, Render(OutputFormat.Eps, new RenderExtras { VectorMode = mode }));
         }
 
         /// <summary>
         /// Renders ASCII text.
         /// </summary>
-        public string Ascii(MatrixAsciiRenderOptions? asciiOptions = null) => _payloadData is null
-            ? QR.Ascii(_payload, asciiOptions, Options)
-            : QR.Ascii(_payloadData, asciiOptions, Options);
+        public string Ascii(MatrixAsciiRenderOptions? asciiOptions = null) {
+            return Render(OutputFormat.Ascii, new RenderExtras { MatrixAscii = asciiOptions }).GetText();
+        }
 
         /// <summary>
         /// Saves ASCII to a file.
         /// </summary>
-        public string SaveAscii(string path, MatrixAsciiRenderOptions? asciiOptions = null) => Ascii(asciiOptions).WriteText(path);
+        public string SaveAscii(string path, MatrixAsciiRenderOptions? asciiOptions = null) {
+            return OutputWriter.Write(path, Render(OutputFormat.Ascii, new RenderExtras { MatrixAscii = asciiOptions }));
+        }
 
         /// <summary>
         /// Saves based on file extension (.png/.svg/.svgz/.html/.jpg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps). Defaults to PNG when no extension is provided.
         /// </summary>
-        public string Save(string path, string? title = null) => _payloadData is null
-            ? QR.Save(_payload, path, Options, title)
-            : QR.Save(_payloadData, path, Options, title);
+        public string Save(string path, string? title = null) {
+            var extras = string.IsNullOrEmpty(title) ? null : new RenderExtras { HtmlTitle = title };
+            return _payloadData is null
+                ? QR.Save(_payload, path, Options, extras)
+                : QR.Save(_payloadData, path, Options, extras);
+        }
     }
 }

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Png;
 using Xunit;
 
@@ -53,11 +54,11 @@ public sealed class BarcodeDecoderTests {
 
     [Fact]
     public void Decode_Code128_FromPng() {
-        var png = Barcode.Png(BarcodeType.Code128, "CODEMATRIX-123", new BarcodeOptions {
+        var png = Barcode.Render(BarcodeType.Code128, "CODEMATRIX-123", OutputFormat.Png, new BarcodeOptions {
             ModuleSize = 3,
             QuietZone = 10,
             HeightModules = 40
-        });
+        }).Data;
 
         Assert.True(Barcode.TryDecodePng(png, out var decoded));
         Assert.Equal(BarcodeType.Code128, decoded.Type);
@@ -66,11 +67,11 @@ public sealed class BarcodeDecoderTests {
 
     [Fact]
     public void Decode_Code128_FromPng_Cancelled_ReturnsFalse() {
-        var png = Barcode.Png(BarcodeType.Code128, "CANCEL-PNG", new BarcodeOptions {
+        var png = Barcode.Render(BarcodeType.Code128, "CANCEL-PNG", OutputFormat.Png, new BarcodeOptions {
             ModuleSize = 3,
             QuietZone = 10,
             HeightModules = 40
-        });
+        }).Data;
 
         using var cts = new CancellationTokenSource();
         cts.Cancel();

@@ -221,6 +221,17 @@ QR.Save("Hello, World!", "hello.png");
 QR.Save("Hello, World!", "hello.svg");  // Vector SVG
 QR.Save("Hello, World!", "hello.pdf");  // PDF document</pre>
 
+            <h3>Render In-Memory</h3>
+            <pre class="code-block">using CodeGlyphX;
+using CodeGlyphX.Rendering;
+
+var svg = Barcode.Render(BarcodeType.Code128, "PRODUCT-12345", OutputFormat.Svg).GetText();
+var png = QrCode.Render("Hello, World!", OutputFormat.Png).Data;
+
+// HTML title + raster PDF/EPS
+var extras = new RenderExtras { HtmlTitle = "My Code", VectorMode = RenderMode.Raster };
+QR.Save("Hello, World!", "hello.html", extras: extras);</pre>
+
             <h2>3. Generate Barcodes</h2>
             <pre class="code-block">using CodeGlyphX;
 

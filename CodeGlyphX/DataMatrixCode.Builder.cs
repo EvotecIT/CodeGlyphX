@@ -126,39 +126,45 @@ public static partial class DataMatrixCode {
             return _text is not null ? DataMatrixCode.Encode(_text, _mode) : DataMatrixCode.EncodeBytes(_bytes!, _mode);
         }
 
+        private RenderedOutput Render(OutputFormat format, RenderExtras? extras = null) {
+            return _text is not null
+                ? DataMatrixCode.Render(_text, format, _mode, _options, extras)
+                : DataMatrixCode.Render(_bytes!, format, _mode, _options, extras);
+        }
+
         /// <summary>
         /// Renders PNG bytes.
         /// </summary>
         public byte[] Png() {
-            return _text is not null ? DataMatrixCode.Png(_text, _mode, _options) : DataMatrixCode.Png(_bytes!, _mode, _options);
+            return Render(OutputFormat.Png).Data;
         }
 
         /// <summary>
         /// Renders SVG markup.
         /// </summary>
         public string Svg() {
-            return _text is not null ? DataMatrixCode.Svg(_text, _mode, _options) : DataMatrixCode.Svg(_bytes!, _mode, _options);
+            return Render(OutputFormat.Svg).GetText();
         }
 
         /// <summary>
         /// Renders HTML markup.
         /// </summary>
         public string Html() {
-            return _text is not null ? DataMatrixCode.Html(_text, _mode, _options) : DataMatrixCode.Html(_bytes!, _mode, _options);
+            return Render(OutputFormat.Html).GetText();
         }
 
         /// <summary>
         /// Renders JPEG bytes.
         /// </summary>
         public byte[] Jpeg() {
-            return _text is not null ? DataMatrixCode.Jpeg(_text, _mode, _options) : DataMatrixCode.Jpeg(_bytes!, _mode, _options);
+            return Render(OutputFormat.Jpeg).Data;
         }
 
         /// <summary>
         /// Renders BMP bytes.
         /// </summary>
         public byte[] Bmp() {
-            return _text is not null ? DataMatrixCode.Bmp(_text, _mode, _options) : DataMatrixCode.Bmp(_bytes!, _mode, _options);
+            return Render(OutputFormat.Bmp).Data;
         }
 
         /// <summary>
@@ -166,7 +172,7 @@ public static partial class DataMatrixCode {
         /// </summary>
         /// <param name="renderMode">Vector or raster output.</param>
         public byte[] Pdf(RenderMode renderMode = RenderMode.Vector) {
-            return _text is not null ? DataMatrixCode.Pdf(_text, _mode, _options, renderMode) : DataMatrixCode.Pdf(_bytes!, _mode, _options, renderMode);
+            return Render(OutputFormat.Pdf, new RenderExtras { VectorMode = renderMode }).Data;
         }
 
         /// <summary>
@@ -174,64 +180,66 @@ public static partial class DataMatrixCode {
         /// </summary>
         /// <param name="renderMode">Vector or raster output.</param>
         public string Eps(RenderMode renderMode = RenderMode.Vector) {
-            return _text is not null ? DataMatrixCode.Eps(_text, _mode, _options, renderMode) : DataMatrixCode.Eps(_bytes!, _mode, _options, renderMode);
+            return Render(OutputFormat.Eps, new RenderExtras { VectorMode = renderMode }).GetText();
         }
 
         /// <summary>
         /// Renders ASCII text.
         /// </summary>
         public string Ascii(MatrixAsciiRenderOptions? options = null) {
-            return _text is not null ? DataMatrixCode.Ascii(_text, _mode, options) : DataMatrixCode.Ascii(_bytes!, _mode, options);
+            return Render(OutputFormat.Ascii, new RenderExtras { MatrixAscii = options }).GetText();
         }
 
         /// <summary>
         /// Saves output based on file extension.
         /// </summary>
         public string Save(string path, string? title = null) {
-            if (_text is not null) return DataMatrixCode.Save(_text, path, _mode, _options, title);
-            return DataMatrixCode.Save(_bytes!, path, _mode, _options, title);
+            var extras = string.IsNullOrEmpty(title) ? null : new RenderExtras { HtmlTitle = title };
+            if (_text is not null) return DataMatrixCode.Save(_text, path, _mode, _options, extras);
+            return DataMatrixCode.Save(_bytes!, path, _mode, _options, extras);
         }
 
         /// <summary>
         /// Saves PNG to a file.
         /// </summary>
         public string SavePng(string path) {
-            return _text is not null ? DataMatrixCode.SavePng(_text, path, _mode, _options) : DataMatrixCode.SavePng(_bytes!, path, _mode, _options);
+            return OutputWriter.Write(path, Render(OutputFormat.Png));
         }
 
         /// <summary>
         /// Saves SVG to a file.
         /// </summary>
         public string SaveSvg(string path) {
-            return _text is not null ? DataMatrixCode.SaveSvg(_text, path, _mode, _options) : DataMatrixCode.SaveSvg(_bytes!, path, _mode, _options);
+            return OutputWriter.Write(path, Render(OutputFormat.Svg));
         }
 
         /// <summary>
         /// Saves HTML to a file.
         /// </summary>
         public string SaveHtml(string path, string? title = null) {
-            return _text is not null ? DataMatrixCode.SaveHtml(_text, path, _mode, _options, title) : DataMatrixCode.SaveHtml(_bytes!, path, _mode, _options, title);
+            var extras = string.IsNullOrEmpty(title) ? null : new RenderExtras { HtmlTitle = title };
+            return OutputWriter.Write(path, Render(OutputFormat.Html, extras));
         }
 
         /// <summary>
         /// Saves JPEG to a file.
         /// </summary>
         public string SaveJpeg(string path) {
-            return _text is not null ? DataMatrixCode.SaveJpeg(_text, path, _mode, _options) : DataMatrixCode.SaveJpeg(_bytes!, path, _mode, _options);
+            return OutputWriter.Write(path, Render(OutputFormat.Jpeg));
         }
 
         /// <summary>
         /// Saves WebP to a file.
         /// </summary>
         public string SaveWebp(string path) {
-            return _text is not null ? DataMatrixCode.SaveWebp(_text, path, _mode, _options) : DataMatrixCode.SaveWebp(_bytes!, path, _mode, _options);
+            return OutputWriter.Write(path, Render(OutputFormat.Webp));
         }
 
         /// <summary>
         /// Saves BMP to a file.
         /// </summary>
         public string SaveBmp(string path) {
-            return _text is not null ? DataMatrixCode.SaveBmp(_text, path, _mode, _options) : DataMatrixCode.SaveBmp(_bytes!, path, _mode, _options);
+            return OutputWriter.Write(path, Render(OutputFormat.Bmp));
         }
 
         /// <summary>
@@ -240,7 +248,7 @@ public static partial class DataMatrixCode {
     /// <param name="path">Output file path.</param>
         /// <param name="renderMode">Vector or raster output.</param>
         public string SavePdf(string path, RenderMode renderMode = RenderMode.Vector) {
-            return _text is not null ? DataMatrixCode.SavePdf(_text, path, _mode, _options, renderMode) : DataMatrixCode.SavePdf(_bytes!, path, _mode, _options, renderMode);
+            return OutputWriter.Write(path, Render(OutputFormat.Pdf, new RenderExtras { VectorMode = renderMode }));
         }
 
         /// <summary>
@@ -249,7 +257,7 @@ public static partial class DataMatrixCode {
     /// <param name="path">Output file path.</param>
         /// <param name="renderMode">Vector or raster output.</param>
         public string SaveEps(string path, RenderMode renderMode = RenderMode.Vector) {
-            return _text is not null ? DataMatrixCode.SaveEps(_text, path, _mode, _options, renderMode) : DataMatrixCode.SaveEps(_bytes!, path, _mode, _options, renderMode);
+            return OutputWriter.Write(path, Render(OutputFormat.Eps, new RenderExtras { VectorMode = renderMode }));
         }
     }
 

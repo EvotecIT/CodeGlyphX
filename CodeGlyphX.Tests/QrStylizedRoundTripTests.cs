@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using System.Threading;
 using CodeGlyphX;
 using CodeGlyphX.Rendering;
@@ -84,9 +83,7 @@ public sealed class QrStylizedRoundTripTests {
     }
 
     private static byte[] RenderPng(string payload, QrEasyOptions options) {
-        using var stream = new MemoryStream();
-        QR.SavePng(payload, stream, options);
-        return stream.ToArray();
+        return QrCode.Render(payload, OutputFormat.Png, options).Data;
     }
 
     private static QrEasyOptions CreateNeonDotOptions(int targetSizePx) {

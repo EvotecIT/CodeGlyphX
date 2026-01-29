@@ -55,7 +55,7 @@ public class Code128CompareBenchmarks
     [Benchmark(Baseline = true, Description = "CodeGlyphX Code128 PNG")]
     public byte[] CodeGlyphX_Code128_Png()
     {
-        return BarcodeEasy.RenderPng(BarcodeType.Code128, Code128Text, _options);
+        return Barcode.Render(BarcodeType.Code128, Code128Text, OutputFormat.Png, _options).Data;
     }
 
 #if COMPARE_ZXING

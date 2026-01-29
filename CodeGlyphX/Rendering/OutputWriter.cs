@@ -14,6 +14,9 @@ public static class OutputWriter {
     public static string Write(string path, RenderedOutput output, Encoding? encoding = null) {
         if (output is null) throw new ArgumentNullException(nameof(output));
         if (output.IsText) {
+            if (encoding is null) {
+                return RenderIO.WriteBinary(path, output.Data);
+            }
             return RenderIO.WriteText(path, output.GetText(encoding), encoding);
         }
         return RenderIO.WriteBinary(path, output.Data);
@@ -25,6 +28,10 @@ public static class OutputWriter {
     public static void Write(Stream stream, RenderedOutput output, Encoding? encoding = null) {
         if (output is null) throw new ArgumentNullException(nameof(output));
         if (output.IsText) {
+            if (encoding is null) {
+                RenderIO.WriteBinary(stream, output.Data);
+                return;
+            }
             RenderIO.WriteText(stream, output.GetText(encoding), encoding);
             return;
         }

@@ -1,6 +1,7 @@
 using System.Text;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Jobs;
+using CodeGlyphX.Rendering;
 
 namespace CodeGlyphX.Benchmarks;
 
@@ -28,19 +29,19 @@ public class MatrixCodeBenchmarks
     [Benchmark(Description = "Data Matrix PNG (medium)")]
     public byte[] DataMatrix_Png_Medium()
     {
-        return DataMatrixCode.Png(_mediumBytes);
+        return DataMatrixCode.Render(_mediumBytes, OutputFormat.Png).Data;
     }
 
     [Benchmark(Description = "Data Matrix PNG (long)")]
     public byte[] DataMatrix_Png_Long()
     {
-        return DataMatrixCode.Png(_longBytes);
+        return DataMatrixCode.Render(_longBytes, OutputFormat.Png).Data;
     }
 
     [Benchmark(Description = "Data Matrix SVG")]
     public string DataMatrix_Svg()
     {
-        return DataMatrixCode.Svg(_mediumBytes);
+        return DataMatrixCode.Render(_mediumBytes, OutputFormat.Svg).GetText();
     }
 
     [Benchmark(Description = "PDF417 PNG")]
@@ -58,12 +59,12 @@ public class MatrixCodeBenchmarks
     [Benchmark(Description = "Aztec PNG")]
     public byte[] Aztec_Png()
     {
-        return AztecCode.Png(MediumText);
+        return AztecCode.Render(MediumText, OutputFormat.Png).Data;
     }
 
     [Benchmark(Description = "Aztec SVG")]
     public string Aztec_Svg()
     {
-        return AztecCode.Svg(MediumText);
+        return AztecCode.Render(MediumText, OutputFormat.Svg).GetText();
     }
 }

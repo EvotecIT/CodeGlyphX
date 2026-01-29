@@ -57,8 +57,9 @@ public static partial class QrEasy {
                     Eyes = baseRender.Eyes,
                 };
                 var html = HtmlQrRenderer.Render(qr.Modules, render);
-                if (!string.IsNullOrEmpty(extras?.HtmlTitle)) {
-                    html = html.WrapHtml(extras.HtmlTitle);
+                var title = extras?.HtmlTitle;
+                if (!string.IsNullOrEmpty(title)) {
+                    html = html.WrapHtml(title);
                 }
                 return RenderedOutput.FromText(format, html);
             }

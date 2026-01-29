@@ -63,7 +63,7 @@ public class Pdf417CompareBenchmarks
     [Benchmark(Baseline = true, Description = "CodeGlyphX PDF417 PNG")]
     public byte[] CodeGlyphX_Pdf417_Png()
     {
-        return Pdf417Code.Png(LongText, renderOptions: _options);
+        return Pdf417Code.Render(LongText, OutputFormat.Png, renderOptions: _options).Data;
     }
 
 #if COMPARE_ZXING

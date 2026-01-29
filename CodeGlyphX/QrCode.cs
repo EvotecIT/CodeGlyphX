@@ -119,7 +119,27 @@ public sealed class QrCode {
     /// <summary>
     /// Saves a payload to a file, choosing the output format based on file extension.
     /// </summary>
+    [Obsolete("Use the overload with RenderExtras and set HtmlTitle instead.")]
+    public static string Save(string payload, string path, QrEasyOptions? options, string? title) {
+        var extras = string.IsNullOrEmpty(title) ? null : new RenderExtras { HtmlTitle = title };
+        var output = Render(payload, OutputFormatInfo.Resolve(path, OutputFormat.Png), options, extras);
+        return OutputWriter.Write(path, output);
+    }
+
+    /// <summary>
+    /// Saves a payload to a file, choosing the output format based on file extension.
+    /// </summary>
     public static string Save(string payload, string path, QrEasyOptions? options = null, RenderExtras? extras = null) {
+        var output = Render(payload, OutputFormatInfo.Resolve(path, OutputFormat.Png), options, extras);
+        return OutputWriter.Write(path, output);
+    }
+
+    /// <summary>
+    /// Saves a payload with embedded defaults to a file, choosing the output format based on file extension.
+    /// </summary>
+    [Obsolete("Use the overload with RenderExtras and set HtmlTitle instead.")]
+    public static string Save(QrPayloadData payload, string path, QrEasyOptions? options, string? title) {
+        var extras = string.IsNullOrEmpty(title) ? null : new RenderExtras { HtmlTitle = title };
         var output = Render(payload, OutputFormatInfo.Resolve(path, OutputFormat.Png), options, extras);
         return OutputWriter.Write(path, output);
     }

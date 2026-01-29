@@ -27,6 +27,7 @@ public static partial class QrEasy {
     /// <summary>
     /// Detects a payload type and renders a QR code as PAM.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static byte[] RenderPamAuto(string payload, QrPayloadDetectOptions? detectOptions = null, QrEasyOptions? options = null) {
         if (payload is null) throw new ArgumentNullException(nameof(payload));
         var detected = QrPayloads.Detect(payload, detectOptions);
@@ -36,6 +37,7 @@ public static partial class QrEasy {
     /// <summary>
     /// Renders a QR code as PAM to a stream.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static void RenderPamToStream(string payload, Stream stream, QrEasyOptions? options = null) {
         var opts = options is null ? new QrEasyOptions() : CloneOptions(options);
         var qr = Encode(payload, opts);
@@ -46,6 +48,7 @@ public static partial class QrEasy {
     /// <summary>
     /// Renders a QR code as PAM and writes it to a file.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string RenderPamToFile(string payload, string path, QrEasyOptions? options = null) {
         var pam = RenderPam(payload, options);
         return RenderIO.WriteBinary(path, pam);
@@ -54,6 +57,7 @@ public static partial class QrEasy {
     /// <summary>
     /// Renders a QR code as PAM and writes it to a file for a payload with embedded defaults.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string RenderPamToFile(QrPayloadData payload, string path, QrEasyOptions? options = null) {
         var pam = RenderPam(payload, options);
         return RenderIO.WriteBinary(path, pam);
@@ -62,6 +66,7 @@ public static partial class QrEasy {
     /// <summary>
     /// Renders a QR code as PAM for a payload with embedded defaults.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static byte[] RenderPam(QrPayloadData payload, QrEasyOptions? options = null) {
         if (payload is null) throw new ArgumentNullException(nameof(payload));
         var opts = MergeOptions(payload, options);
@@ -73,6 +78,7 @@ public static partial class QrEasy {
     /// <summary>
     /// Renders a QR code as PAM to a stream for a payload with embedded defaults.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static void RenderPamToStream(QrPayloadData payload, Stream stream, QrEasyOptions? options = null) {
         if (payload is null) throw new ArgumentNullException(nameof(payload));
         var opts = MergeOptions(payload, options);
@@ -84,6 +90,7 @@ public static partial class QrEasy {
     /// <summary>
     /// Renders a QR code as XBM.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string RenderXbm(string payload, QrEasyOptions? options = null) {
         var opts = options is null ? new QrEasyOptions() : CloneOptions(options);
         var qr = Encode(payload, opts);
@@ -94,6 +101,7 @@ public static partial class QrEasy {
     /// <summary>
     /// Detects a payload type and renders a QR code as XBM.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string RenderXbmAuto(string payload, QrPayloadDetectOptions? detectOptions = null, QrEasyOptions? options = null) {
         if (payload is null) throw new ArgumentNullException(nameof(payload));
         var detected = QrPayloads.Detect(payload, detectOptions);
@@ -103,6 +111,7 @@ public static partial class QrEasy {
     /// <summary>
     /// Renders a QR code as XBM to a stream.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static void RenderXbmToStream(string payload, Stream stream, QrEasyOptions? options = null) {
         var xbm = RenderXbm(payload, options);
         xbm.WriteText(stream);
@@ -111,6 +120,7 @@ public static partial class QrEasy {
     /// <summary>
     /// Renders a QR code as XBM and writes it to a file.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string RenderXbmToFile(string payload, string path, QrEasyOptions? options = null) {
         var xbm = RenderXbm(payload, options);
         return xbm.WriteText(path);
@@ -119,6 +129,7 @@ public static partial class QrEasy {
     /// <summary>
     /// Renders a QR code as XBM and writes it to a file for a payload with embedded defaults.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string RenderXbmToFile(QrPayloadData payload, string path, QrEasyOptions? options = null) {
         var xbm = RenderXbm(payload, options);
         return xbm.WriteText(path);
@@ -127,6 +138,7 @@ public static partial class QrEasy {
     /// <summary>
     /// Renders a QR code as XBM for a payload with embedded defaults.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string RenderXbm(QrPayloadData payload, QrEasyOptions? options = null) {
         if (payload is null) throw new ArgumentNullException(nameof(payload));
         var opts = MergeOptions(payload, options);
@@ -138,6 +150,7 @@ public static partial class QrEasy {
     /// <summary>
     /// Renders a QR code as XBM to a stream for a payload with embedded defaults.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static void RenderXbmToStream(QrPayloadData payload, Stream stream, QrEasyOptions? options = null) {
         if (payload is null) throw new ArgumentNullException(nameof(payload));
         var xbm = RenderXbm(payload, options);
@@ -147,6 +160,7 @@ public static partial class QrEasy {
     /// <summary>
     /// Renders a QR code as XPM.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string RenderXpm(string payload, QrEasyOptions? options = null) {
         var opts = options is null ? new QrEasyOptions() : CloneOptions(options);
         var qr = Encode(payload, opts);
@@ -157,6 +171,7 @@ public static partial class QrEasy {
     /// <summary>
     /// Detects a payload type and renders a QR code as XPM.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string RenderXpmAuto(string payload, QrPayloadDetectOptions? detectOptions = null, QrEasyOptions? options = null) {
         if (payload is null) throw new ArgumentNullException(nameof(payload));
         var detected = QrPayloads.Detect(payload, detectOptions);
@@ -166,6 +181,7 @@ public static partial class QrEasy {
     /// <summary>
     /// Renders a QR code as XPM to a stream.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static void RenderXpmToStream(string payload, Stream stream, QrEasyOptions? options = null) {
         var xpm = RenderXpm(payload, options);
         xpm.WriteText(stream);
@@ -174,6 +190,7 @@ public static partial class QrEasy {
     /// <summary>
     /// Renders a QR code as XPM and writes it to a file.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string RenderXpmToFile(string payload, string path, QrEasyOptions? options = null) {
         var xpm = RenderXpm(payload, options);
         return xpm.WriteText(path);
@@ -182,6 +199,7 @@ public static partial class QrEasy {
     /// <summary>
     /// Renders a QR code as XPM and writes it to a file for a payload with embedded defaults.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string RenderXpmToFile(QrPayloadData payload, string path, QrEasyOptions? options = null) {
         var xpm = RenderXpm(payload, options);
         return xpm.WriteText(path);
@@ -190,6 +208,7 @@ public static partial class QrEasy {
     /// <summary>
     /// Renders a QR code as XPM for a payload with embedded defaults.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string RenderXpm(QrPayloadData payload, QrEasyOptions? options = null) {
         if (payload is null) throw new ArgumentNullException(nameof(payload));
         var opts = MergeOptions(payload, options);
@@ -201,6 +220,7 @@ public static partial class QrEasy {
     /// <summary>
     /// Renders a QR code as XPM to a stream for a payload with embedded defaults.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static void RenderXpmToStream(QrPayloadData payload, Stream stream, QrEasyOptions? options = null) {
         if (payload is null) throw new ArgumentNullException(nameof(payload));
         var xpm = RenderXpm(payload, options);
@@ -210,6 +230,7 @@ public static partial class QrEasy {
     /// <summary>
     /// Renders a QR code as TGA.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static byte[] RenderTga(string payload, QrEasyOptions? options = null) {
         var opts = options is null ? new QrEasyOptions() : CloneOptions(options);
         var qr = Encode(payload, opts);
@@ -220,6 +241,7 @@ public static partial class QrEasy {
     /// <summary>
     /// Detects a payload type and renders a QR code as TGA.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static byte[] RenderTgaAuto(string payload, QrPayloadDetectOptions? detectOptions = null, QrEasyOptions? options = null) {
         if (payload is null) throw new ArgumentNullException(nameof(payload));
         var detected = QrPayloads.Detect(payload, detectOptions);
@@ -229,6 +251,7 @@ public static partial class QrEasy {
     /// <summary>
     /// Renders a QR code as TGA to a stream.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static void RenderTgaToStream(string payload, Stream stream, QrEasyOptions? options = null) {
         var opts = options is null ? new QrEasyOptions() : CloneOptions(options);
         var qr = Encode(payload, opts);
@@ -239,6 +262,7 @@ public static partial class QrEasy {
     /// <summary>
     /// Renders a QR code as TGA and writes it to a file.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string RenderTgaToFile(string payload, string path, QrEasyOptions? options = null) {
         var tga = RenderTga(payload, options);
         return RenderIO.WriteBinary(path, tga);
@@ -247,6 +271,7 @@ public static partial class QrEasy {
     /// <summary>
     /// Renders a QR code as TGA and writes it to a file for a payload with embedded defaults.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string RenderTgaToFile(QrPayloadData payload, string path, QrEasyOptions? options = null) {
         var tga = RenderTga(payload, options);
         return RenderIO.WriteBinary(path, tga);
@@ -255,6 +280,7 @@ public static partial class QrEasy {
     /// <summary>
     /// Renders a QR code as TGA for a payload with embedded defaults.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static byte[] RenderTga(QrPayloadData payload, QrEasyOptions? options = null) {
         if (payload is null) throw new ArgumentNullException(nameof(payload));
         var opts = MergeOptions(payload, options);
@@ -266,6 +292,7 @@ public static partial class QrEasy {
     /// <summary>
     /// Renders a QR code as TGA to a stream for a payload with embedded defaults.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static void RenderTgaToStream(QrPayloadData payload, Stream stream, QrEasyOptions? options = null) {
         if (payload is null) throw new ArgumentNullException(nameof(payload));
         var opts = MergeOptions(payload, options);
@@ -277,6 +304,7 @@ public static partial class QrEasy {
     /// <summary>
     /// Renders a QR code as ICO.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static byte[] RenderIco(string payload, QrEasyOptions? options = null) {
         var opts = options is null ? new QrEasyOptions() : CloneOptions(options);
         var qr = Encode(payload, opts);
@@ -287,6 +315,7 @@ public static partial class QrEasy {
     /// <summary>
     /// Detects a payload type and renders a QR code as ICO.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static byte[] RenderIcoAuto(string payload, QrPayloadDetectOptions? detectOptions = null, QrEasyOptions? options = null) {
         if (payload is null) throw new ArgumentNullException(nameof(payload));
         var detected = QrPayloads.Detect(payload, detectOptions);
@@ -296,6 +325,7 @@ public static partial class QrEasy {
     /// <summary>
     /// Renders a QR code as ICO to a stream.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static void RenderIcoToStream(string payload, Stream stream, QrEasyOptions? options = null) {
         var opts = options is null ? new QrEasyOptions() : CloneOptions(options);
         var qr = Encode(payload, opts);
@@ -306,6 +336,7 @@ public static partial class QrEasy {
     /// <summary>
     /// Renders a QR code as ICO and writes it to a file.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string RenderIcoToFile(string payload, string path, QrEasyOptions? options = null) {
         var ico = RenderIco(payload, options);
         return RenderIO.WriteBinary(path, ico);
@@ -314,6 +345,7 @@ public static partial class QrEasy {
     /// <summary>
     /// Renders a QR code as ICO and writes it to a file for a payload with embedded defaults.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string RenderIcoToFile(QrPayloadData payload, string path, QrEasyOptions? options = null) {
         var ico = RenderIco(payload, options);
         return RenderIO.WriteBinary(path, ico);
@@ -322,6 +354,7 @@ public static partial class QrEasy {
     /// <summary>
     /// Renders a QR code as ICO for a payload with embedded defaults.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static byte[] RenderIco(QrPayloadData payload, QrEasyOptions? options = null) {
         if (payload is null) throw new ArgumentNullException(nameof(payload));
         var opts = MergeOptions(payload, options);
@@ -333,6 +366,7 @@ public static partial class QrEasy {
     /// <summary>
     /// Renders a QR code as ICO to a stream for a payload with embedded defaults.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static void RenderIcoToStream(QrPayloadData payload, Stream stream, QrEasyOptions? options = null) {
         if (payload is null) throw new ArgumentNullException(nameof(payload));
         var opts = MergeOptions(payload, options);
@@ -344,6 +378,7 @@ public static partial class QrEasy {
     /// <summary>
     /// Renders a QR code as SVGZ.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static byte[] RenderSvgz(string payload, QrEasyOptions? options = null) {
         var opts = options is null ? new QrEasyOptions() : CloneOptions(options);
         var qr = Encode(payload, opts);
@@ -354,6 +389,7 @@ public static partial class QrEasy {
     /// <summary>
     /// Detects a payload type and renders a QR code as SVGZ.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static byte[] RenderSvgzAuto(string payload, QrPayloadDetectOptions? detectOptions = null, QrEasyOptions? options = null) {
         if (payload is null) throw new ArgumentNullException(nameof(payload));
         var detected = QrPayloads.Detect(payload, detectOptions);
@@ -363,6 +399,7 @@ public static partial class QrEasy {
     /// <summary>
     /// Renders a QR code as SVGZ to a stream.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static void RenderSvgzToStream(string payload, Stream stream, QrEasyOptions? options = null) {
         var opts = options is null ? new QrEasyOptions() : CloneOptions(options);
         var qr = Encode(payload, opts);
@@ -373,6 +410,7 @@ public static partial class QrEasy {
     /// <summary>
     /// Renders a QR code as SVGZ and writes it to a file.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string RenderSvgzToFile(string payload, string path, QrEasyOptions? options = null) {
         var svgz = RenderSvgz(payload, options);
         return RenderIO.WriteBinary(path, svgz);
@@ -381,6 +419,7 @@ public static partial class QrEasy {
     /// <summary>
     /// Renders a QR code as SVGZ and writes it to a file for a payload with embedded defaults.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string RenderSvgzToFile(QrPayloadData payload, string path, QrEasyOptions? options = null) {
         var svgz = RenderSvgz(payload, options);
         return RenderIO.WriteBinary(path, svgz);
@@ -389,6 +428,7 @@ public static partial class QrEasy {
     /// <summary>
     /// Renders a QR code as SVGZ for a payload with embedded defaults.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static byte[] RenderSvgz(QrPayloadData payload, QrEasyOptions? options = null) {
         if (payload is null) throw new ArgumentNullException(nameof(payload));
         var opts = MergeOptions(payload, options);
@@ -400,6 +440,7 @@ public static partial class QrEasy {
     /// <summary>
     /// Renders a QR code as SVGZ to a stream for a payload with embedded defaults.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static void RenderSvgzToStream(QrPayloadData payload, Stream stream, QrEasyOptions? options = null) {
         if (payload is null) throw new ArgumentNullException(nameof(payload));
         var opts = MergeOptions(payload, options);
@@ -414,6 +455,7 @@ public static partial class QrEasy {
     /// <param name="payload">The payload text.</param>
     /// <param name="options">Optional rendering options.</param>
     /// <param name="mode">Vector or raster output.</param>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static byte[] RenderPdf(string payload, QrEasyOptions? options = null, RenderMode mode = RenderMode.Vector) {
         var opts = options is null ? new QrEasyOptions() : CloneOptions(options);
         var qr = Encode(payload, opts);
@@ -428,6 +470,7 @@ public static partial class QrEasy {
     /// <param name="detectOptions">Payload detection options.</param>
     /// <param name="options">Optional rendering options.</param>
     /// <param name="mode">Vector or raster output.</param>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static byte[] RenderPdfAuto(string payload, QrPayloadDetectOptions? detectOptions = null, QrEasyOptions? options = null, RenderMode mode = RenderMode.Vector) {
         if (payload is null) throw new ArgumentNullException(nameof(payload));
         var detected = QrPayloads.Detect(payload, detectOptions);
@@ -441,6 +484,7 @@ public static partial class QrEasy {
     /// <param name="stream">Destination stream.</param>
     /// <param name="options">Optional rendering options.</param>
     /// <param name="mode">Vector or raster output.</param>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static void RenderPdfToStream(string payload, Stream stream, QrEasyOptions? options = null, RenderMode mode = RenderMode.Vector) {
         var opts = options is null ? new QrEasyOptions() : CloneOptions(options);
         var qr = Encode(payload, opts);
@@ -455,6 +499,7 @@ public static partial class QrEasy {
     /// <param name="path">Output file path.</param>
     /// <param name="options">Optional rendering options.</param>
     /// <param name="mode">Vector or raster output.</param>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string RenderPdfToFile(string payload, string path, QrEasyOptions? options = null, RenderMode mode = RenderMode.Vector) {
         var pdf = RenderPdf(payload, options, mode);
         return RenderIO.WriteBinary(path, pdf);
@@ -467,6 +512,7 @@ public static partial class QrEasy {
     /// <param name="path">Output file path.</param>
     /// <param name="options">Optional rendering options.</param>
     /// <param name="mode">Vector or raster output.</param>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string RenderPdfToFile(QrPayloadData payload, string path, QrEasyOptions? options = null, RenderMode mode = RenderMode.Vector) {
         var pdf = RenderPdf(payload, options, mode);
         return RenderIO.WriteBinary(path, pdf);
@@ -478,6 +524,7 @@ public static partial class QrEasy {
     /// <param name="payload">The payload text.</param>
     /// <param name="options">Optional rendering options.</param>
     /// <param name="mode">Vector or raster output.</param>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static byte[] RenderPdf(QrPayloadData payload, QrEasyOptions? options = null, RenderMode mode = RenderMode.Vector) {
         if (payload is null) throw new ArgumentNullException(nameof(payload));
         var opts = MergeOptions(payload, options);
@@ -493,6 +540,7 @@ public static partial class QrEasy {
     /// <param name="stream">Destination stream.</param>
     /// <param name="options">Optional rendering options.</param>
     /// <param name="mode">Vector or raster output.</param>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static void RenderPdfToStream(QrPayloadData payload, Stream stream, QrEasyOptions? options = null, RenderMode mode = RenderMode.Vector) {
         if (payload is null) throw new ArgumentNullException(nameof(payload));
         var opts = MergeOptions(payload, options);
@@ -507,6 +555,7 @@ public static partial class QrEasy {
     /// <param name="payload">The payload text.</param>
     /// <param name="options">Optional rendering options.</param>
     /// <param name="mode">Vector or raster output.</param>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string RenderEps(string payload, QrEasyOptions? options = null, RenderMode mode = RenderMode.Vector) {
         var opts = options is null ? new QrEasyOptions() : CloneOptions(options);
         var qr = Encode(payload, opts);
@@ -521,6 +570,7 @@ public static partial class QrEasy {
     /// <param name="detectOptions">Payload detection options.</param>
     /// <param name="options">Optional rendering options.</param>
     /// <param name="mode">Vector or raster output.</param>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string RenderEpsAuto(string payload, QrPayloadDetectOptions? detectOptions = null, QrEasyOptions? options = null, RenderMode mode = RenderMode.Vector) {
         if (payload is null) throw new ArgumentNullException(nameof(payload));
         var detected = QrPayloads.Detect(payload, detectOptions);
@@ -534,6 +584,7 @@ public static partial class QrEasy {
     /// <param name="stream">Destination stream.</param>
     /// <param name="options">Optional rendering options.</param>
     /// <param name="mode">Vector or raster output.</param>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static void RenderEpsToStream(string payload, Stream stream, QrEasyOptions? options = null, RenderMode mode = RenderMode.Vector) {
         var opts = options is null ? new QrEasyOptions() : CloneOptions(options);
         var qr = Encode(payload, opts);
@@ -548,6 +599,7 @@ public static partial class QrEasy {
     /// <param name="path">Output file path.</param>
     /// <param name="options">Optional rendering options.</param>
     /// <param name="mode">Vector or raster output.</param>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string RenderEpsToFile(string payload, string path, QrEasyOptions? options = null, RenderMode mode = RenderMode.Vector) {
         var eps = RenderEps(payload, options, mode);
         return RenderIO.WriteText(path, eps);
@@ -560,6 +612,7 @@ public static partial class QrEasy {
     /// <param name="path">Output file path.</param>
     /// <param name="options">Optional rendering options.</param>
     /// <param name="mode">Vector or raster output.</param>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string RenderEpsToFile(QrPayloadData payload, string path, QrEasyOptions? options = null, RenderMode mode = RenderMode.Vector) {
         var eps = RenderEps(payload, options, mode);
         return RenderIO.WriteText(path, eps);
@@ -571,6 +624,7 @@ public static partial class QrEasy {
     /// <param name="payload">The payload text.</param>
     /// <param name="options">Optional rendering options.</param>
     /// <param name="mode">Vector or raster output.</param>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string RenderEps(QrPayloadData payload, QrEasyOptions? options = null, RenderMode mode = RenderMode.Vector) {
         if (payload is null) throw new ArgumentNullException(nameof(payload));
         var opts = MergeOptions(payload, options);
@@ -586,6 +640,7 @@ public static partial class QrEasy {
     /// <param name="stream">Destination stream.</param>
     /// <param name="options">Optional rendering options.</param>
     /// <param name="mode">Vector or raster output.</param>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static void RenderEpsToStream(QrPayloadData payload, Stream stream, QrEasyOptions? options = null, RenderMode mode = RenderMode.Vector) {
         if (payload is null) throw new ArgumentNullException(nameof(payload));
         var opts = MergeOptions(payload, options);
@@ -597,6 +652,7 @@ public static partial class QrEasy {
     /// <summary>
     /// Renders a QR code as ASCII text.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string RenderAscii(string payload, MatrixAsciiRenderOptions? asciiOptions = null, QrEasyOptions? options = null) {
         var opts = options is null ? new QrEasyOptions() : CloneOptions(options);
         var qr = Encode(payload, opts);
@@ -607,6 +663,7 @@ public static partial class QrEasy {
     /// <summary>
     /// Detects a payload type and renders a QR code as ASCII text.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string RenderAsciiAuto(string payload, QrPayloadDetectOptions? detectOptions = null, MatrixAsciiRenderOptions? asciiOptions = null, QrEasyOptions? options = null) {
         if (payload is null) throw new ArgumentNullException(nameof(payload));
         var detected = QrPayloads.Detect(payload, detectOptions);
@@ -616,6 +673,7 @@ public static partial class QrEasy {
     /// <summary>
     /// Renders a QR code as ASCII text for a payload with embedded defaults.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string RenderAscii(QrPayloadData payload, MatrixAsciiRenderOptions? asciiOptions = null, QrEasyOptions? options = null) {
         if (payload is null) throw new ArgumentNullException(nameof(payload));
         var opts = MergeOptions(payload, options);
@@ -627,6 +685,7 @@ public static partial class QrEasy {
     /// <summary>
     /// Renders a QR code as console-friendly ASCII using scan-oriented defaults.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string RenderAsciiConsole(
         string payload,
         int scale = 4,
@@ -641,6 +700,7 @@ public static partial class QrEasy {
     /// <summary>
     /// Renders a QR code as console-friendly ASCII using scan-oriented defaults for a payload with embedded defaults.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string RenderAsciiConsole(
         QrPayloadData payload,
         int scale = 4,

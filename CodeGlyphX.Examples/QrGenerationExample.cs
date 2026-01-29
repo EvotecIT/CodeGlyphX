@@ -9,10 +9,19 @@ internal static class QrGenerationExample {
         var payload = "https://example.com/codeglyphx?from=examples";
         QR.Save(payload, Path.Combine(outputDir, "qr-basic.png"));
         QR.Save(payload, Path.Combine(outputDir, "qr-basic.svg"));
-        QR.Save(payload, Path.Combine(outputDir, "qr-basic.html"), title: "CodeGlyphX QR");
+        QR.Save(payload, Path.Combine(outputDir, "qr-basic.html"), null, new RenderExtras { HtmlTitle = "CodeGlyphX QR" });
         QR.Save(payload, Path.Combine(outputDir, "qr-basic.jpg"));
-        QR.SavePdf(payload, Path.Combine(outputDir, "qr-basic.pdf"));
-        QR.SaveEps(payload, Path.Combine(outputDir, "qr-basic.eps"));
-        QR.SavePdf(payload, Path.Combine(outputDir, "qr-basic-raster.pdf"), mode: RenderMode.Raster);
+        OutputWriter.Write(
+            Path.Combine(outputDir, "qr-basic.pdf"),
+            QrCode.Render(payload, OutputFormat.Pdf)
+        );
+        OutputWriter.Write(
+            Path.Combine(outputDir, "qr-basic.eps"),
+            QrCode.Render(payload, OutputFormat.Eps)
+        );
+        OutputWriter.Write(
+            Path.Combine(outputDir, "qr-basic-raster.pdf"),
+            QrCode.Render(payload, OutputFormat.Pdf, null, new RenderExtras { VectorMode = RenderMode.Raster })
+        );
     }
 }
