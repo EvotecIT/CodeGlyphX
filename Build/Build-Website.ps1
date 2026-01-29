@@ -36,7 +36,9 @@ if ($IsLinux -or $IsMacOS) {
 
 $repoRoot = Resolve-Path (Join-Path $PSScriptRoot "..")
 if (-not $PowerForgeCliProject) {
-    $PowerForgeCliProject = [IO.Path]::Combine($repoRoot, "..", "PSPublishModule", "PowerForge.Cli", "PowerForge.Cli.csproj")
+    $webCli = [IO.Path]::Combine($repoRoot, "..", "PSPublishModule", "PowerForge.Web.Cli", "PowerForge.Web.Cli.csproj")
+    $legacyCli = [IO.Path]::Combine($repoRoot, "..", "PSPublishModule", "PowerForge.Cli", "PowerForge.Cli.csproj")
+    $PowerForgeCliProject = if (Test-Path $webCli) { $webCli } else { $legacyCli }
 }
 
 $codeGlyphProject = [IO.Path]::Combine($repoRoot, "CodeGlyphX", "CodeGlyphX.csproj")
