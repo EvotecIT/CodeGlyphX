@@ -30,7 +30,7 @@
     },
     {
       "name": "Seed",
-      "summary": "Random seed used by jittered pattern variants such as ."
+      "summary": "Random seed used by jittered pattern variants such as CodeGlyphX.Rendering.Png.QrPngForegroundPatternType.SpeckleDots."
     },
     {
       "name": "Variation",
@@ -46,7 +46,7 @@
     },
     {
       "name": "ModuleStep",
-      "summary": "Module size multiplier when is enabled."
+      "summary": "Module size multiplier when CodeGlyphX.Rendering.Png.QrPngForegroundPatternOptions.SnapToModuleSize is enabled."
     },
     {
       "name": "ApplyToModules",

@@ -9,7 +9,7 @@
   "methods": [
     {
       "name": "TryDecode",
-      "summary": "Attempts to decode a Japan Post barcode from a .",
+      "summary": "Attempts to decode a Japan Post barcode from a CodeGlyphX.BitMatrix.",
       "returns": null,
       "parameters": [
         {

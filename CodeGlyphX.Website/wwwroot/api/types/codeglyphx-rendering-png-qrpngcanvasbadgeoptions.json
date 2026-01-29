@@ -42,7 +42,7 @@
     },
     {
       "name": "Gradient",
-      "summary": "Optional badge gradient (overrides when set)."
+      "summary": "Optional badge gradient (overrides CodeGlyphX.Rendering.Png.QrPngCanvasBadgeOptions.Color when set)."
     },
     {
       "name": "EdgePattern",
@@ -50,7 +50,7 @@
     },
     {
       "name": "TailPx",
-      "summary": "Ribbon tail length in pixels (applies to )."
+      "summary": "Ribbon tail length in pixels (applies to CodeGlyphX.Rendering.Png.QrPngCanvasBadgeShape.Ribbon)."
     }
   ],
   "fields": [],

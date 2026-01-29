@@ -30,7 +30,7 @@
     },
     {
       "name": "ModuleStep",
-      "summary": "Module size multiplier when is enabled."
+      "summary": "Module size multiplier when CodeGlyphX.Rendering.Png.QrPngBackgroundPatternOptions.SnapToModuleSize is enabled."
     }
   ],
   "fields": [],

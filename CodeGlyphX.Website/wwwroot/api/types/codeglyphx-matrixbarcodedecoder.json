@@ -4,12 +4,12 @@
   "namespace": "CodeGlyphX",
   "kind": "Class",
   "slug": "codeglyphx-matrixbarcodedecoder",
-  "summary": "Decodes 2D barcode symbologies from a .",
+  "summary": "Decodes 2D barcode symbologies from a CodeGlyphX.BitMatrix.",
   "remarks": null,
   "methods": [
     {
       "name": "TryDecodeAny",
-      "summary": "Attempts to decode any supported matrix barcode from a .",
+      "summary": "Attempts to decode any supported matrix barcode from a CodeGlyphX.BitMatrix.",
       "returns": "true when decoding succeeds.",
       "parameters": [
         {
@@ -31,7 +31,7 @@
     },
     {
       "name": "TryDecode",
-      "summary": "Attempts to decode a 2D barcode using the specified .",
+      "summary": "Attempts to decode a 2D barcode using the specified CodeGlyphX.BarcodeType.",
       "returns": null,
       "parameters": [
         {
@@ -53,7 +53,7 @@
     },
     {
       "name": "TryDecodeGs1DataBarOmni",
-      "summary": "Attempts to decode a GS1 DataBar-14 Omnidirectional symbol from a .",
+      "summary": "Attempts to decode a GS1 DataBar-14 Omnidirectional symbol from a CodeGlyphX.BitMatrix.",
       "returns": null,
       "parameters": [
         {
@@ -70,7 +70,7 @@
     },
     {
       "name": "TryDecodeGs1DataBarStacked",
-      "summary": "Attempts to decode a GS1 DataBar-14 Stacked symbol from a .",
+      "summary": "Attempts to decode a GS1 DataBar-14 Stacked symbol from a CodeGlyphX.BitMatrix.",
       "returns": null,
       "parameters": [
         {
@@ -87,7 +87,7 @@
     },
     {
       "name": "TryDecodeGs1DataBarExpandedStacked",
-      "summary": "Attempts to decode a GS1 DataBar Expanded Stacked symbol from a .",
+      "summary": "Attempts to decode a GS1 DataBar Expanded Stacked symbol from a CodeGlyphX.BitMatrix.",
       "returns": null,
       "parameters": [
         {
@@ -104,7 +104,7 @@
     },
     {
       "name": "TryDecodeDataMatrix",
-      "summary": "Attempts to decode a Data Matrix symbol from a .",
+      "summary": "Attempts to decode a Data Matrix symbol from a CodeGlyphX.BitMatrix.",
       "returns": null,
       "parameters": [
         {
@@ -121,7 +121,7 @@
     },
     {
       "name": "TryDecodePdf417",
-      "summary": "Attempts to decode a PDF417 symbol from a .",
+      "summary": "Attempts to decode a PDF417 symbol from a CodeGlyphX.BitMatrix.",
       "returns": null,
       "parameters": [
         {
@@ -138,7 +138,7 @@
     },
     {
       "name": "TryDecodeMicroPdf417",
-      "summary": "Attempts to decode a MicroPDF417 symbol from a .",
+      "summary": "Attempts to decode a MicroPDF417 symbol from a CodeGlyphX.BitMatrix.",
       "returns": null,
       "parameters": [
         {

@@ -14,7 +14,7 @@
     },
     {
       "name": "FrameStyle",
-      "summary": "Gets or sets the eye frame style when is enabled."
+      "summary": "Gets or sets the eye frame style when CodeGlyphX.Rendering.Png.QrPngEyeOptions.UseFrame is enabled."
     },
     {
       "name": "OuterShape",
@@ -74,7 +74,7 @@
     },
     {
       "name": "GlowRadiusPx",
-      "summary": "Optional glow radius in pixels when is . A value of 0 uses a reasonable default based on module size."
+      "summary": "Optional glow radius in pixels when CodeGlyphX.Rendering.Png.QrPngEyeOptions.FrameStyle is CodeGlyphX.Rendering.Png.QrPngEyeFrameStyle.Glow. A value of 0 uses a reasonable default based on module size."
     },
     {
       "name": "GlowColor",
@@ -82,7 +82,7 @@
     },
     {
       "name": "GlowAlpha",
-      "summary": "Maximum glow alpha (0..255) when is ."
+      "summary": "Maximum glow alpha (0..255) when CodeGlyphX.Rendering.Png.QrPngEyeOptions.FrameStyle is CodeGlyphX.Rendering.Png.QrPngEyeFrameStyle.Glow."
     },
     {
       "name": "SparkleCount",

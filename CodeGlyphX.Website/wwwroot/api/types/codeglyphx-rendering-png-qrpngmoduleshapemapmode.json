@@ -11,7 +11,7 @@
   "fields": [
     {
       "name": "Radial",
-      "summary": "Radial blend from center to edge using ."
+      "summary": "Radial blend from center to edge using CodeGlyphX.Rendering.Png.QrPngModuleShapeMapOptions.Split."
     },
     {
       "name": "Rings",

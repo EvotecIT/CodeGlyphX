@@ -9,7 +9,7 @@
   "methods": [
     {
       "name": "EncodeTruncated",
-      "summary": "Encodes a GS1 DataBar-14 Truncated symbol into a Barcode1D.",
+      "summary": "Encodes a GS1 DataBar-14 Truncated symbol into a CodeGlyphX.Barcode1D.",
       "returns": null,
       "parameters": [
         {
@@ -21,7 +21,7 @@
     },
     {
       "name": "EncodeOmni",
-      "summary": "Encodes a GS1 DataBar-14 Omnidirectional symbol into a BitMatrix.",
+      "summary": "Encodes a GS1 DataBar-14 Omnidirectional symbol into a CodeGlyphX.BitMatrix.",
       "returns": null,
       "parameters": [
         {
@@ -33,7 +33,7 @@
     },
     {
       "name": "EncodeStacked",
-      "summary": "Encodes a GS1 DataBar-14 Stacked symbol into a BitMatrix.",
+      "summary": "Encodes a GS1 DataBar-14 Stacked symbol into a CodeGlyphX.BitMatrix.",
       "returns": null,
       "parameters": [
         {

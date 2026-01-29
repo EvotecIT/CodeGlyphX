@@ -105,7 +105,7 @@
     },
     {
       "name": "PaddingPx",
-      "summary": "Padding in pixels around the logo (filled with when is true)."
+      "summary": "Padding in pixels around the logo (filled with CodeGlyphX.Rendering.Png.QrPngLogoOptions.Background when CodeGlyphX.Rendering.Png.QrPngLogoOptions.DrawBackground is true)."
     },
     {
       "name": "DrawBackground",

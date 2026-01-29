@@ -4,12 +4,12 @@
   "namespace": "CodeGlyphX.Pdf417",
   "kind": "Class",
   "slug": "codeglyphx-pdf417-micropdf417decoder",
-  "summary": "Decodes MicroPDF417 symbols from a .",
+  "summary": "Decodes MicroPDF417 symbols from a CodeGlyphX.BitMatrix.",
   "remarks": null,
   "methods": [
     {
       "name": "TryDecode",
-      "summary": "Attempts to decode a MicroPDF417 symbol from a .",
+      "summary": "Attempts to decode a MicroPDF417 symbol from a CodeGlyphX.BitMatrix.",
       "returns": null,
       "parameters": [
         {

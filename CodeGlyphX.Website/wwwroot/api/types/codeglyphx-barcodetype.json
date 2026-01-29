@@ -4,7 +4,7 @@
   "namespace": "CodeGlyphX",
   "kind": "Class",
   "slug": "codeglyphx-barcodetype",
-  "summary": "Barcode symbologies supported by .",
+  "summary": "Barcode symbologies supported by CodeGlyphX.BarcodeEncoder.",
   "remarks": null,
   "methods": [],
   "properties": [],

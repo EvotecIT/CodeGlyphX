@@ -4,7 +4,7 @@
   "namespace": "CodeGlyphX.Rendering.Svg",
   "kind": "Class",
   "slug": "codeglyphx-rendering-svg-barcodesvgrenderoptions",
-  "summary": "Options for .",
+  "summary": "Options for CodeGlyphX.Rendering.Svg.SvgBarcodeRenderer.",
   "remarks": null,
   "methods": [
     {

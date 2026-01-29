@@ -22,7 +22,7 @@
     },
     {
       "name": "TargetSizeIncludesQuietZone",
-      "summary": "When true, includes the quiet zone."
+      "summary": "When true, CodeGlyphX.QrEasyOptions.TargetSizePx includes the quiet zone."
     },
     {
       "name": "ErrorCorrectionLevel",
@@ -166,7 +166,7 @@
     },
     {
       "name": "AutoBumpVersionForLogoBackground",
-      "summary": "When true, bumps to a safer minimum for logo background plates."
+      "summary": "When true, bumps CodeGlyphX.QrEasyOptions.MinVersion to a safer minimum for logo background plates."
     },
     {
       "name": "LogoBackgroundMinVersion",

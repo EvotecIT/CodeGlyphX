@@ -129,7 +129,7 @@
   },
   {
     "title": "CodeGlyphX.BarcodeEncoder",
-    "summary": "Encodes supported barcode symbologies into a model.",
+    "summary": "Encodes supported barcode symbologies into a CodeGlyphX.Barcode1D model.",
     "kind": "Class",
     "namespace": "CodeGlyphX",
     "slug": "codeglyphx-barcodeencoder",
@@ -145,7 +145,7 @@
   },
   {
     "title": "CodeGlyphX.BarcodeType",
-    "summary": "Barcode symbologies supported by .",
+    "summary": "Barcode symbologies supported by CodeGlyphX.BarcodeEncoder.",
     "kind": "Class",
     "namespace": "CodeGlyphX",
     "slug": "codeglyphx-barcodetype",
@@ -505,7 +505,7 @@
   },
   {
     "title": "CodeGlyphX.MatrixBarcodeDecoder",
-    "summary": "Decodes 2D barcode symbologies from a .",
+    "summary": "Decodes 2D barcode symbologies from a CodeGlyphX.BitMatrix.",
     "kind": "Class",
     "namespace": "CodeGlyphX",
     "slug": "codeglyphx-matrixbarcodedecoder",
@@ -513,7 +513,7 @@
   },
   {
     "title": "CodeGlyphX.MatrixBarcodeEncoder",
-    "summary": "Encodes 2D barcode symbologies into a .",
+    "summary": "Encodes 2D barcode symbologies into a CodeGlyphX.BitMatrix.",
     "kind": "Class",
     "namespace": "CodeGlyphX",
     "slug": "codeglyphx-matrixbarcodeencoder",
@@ -1185,7 +1185,7 @@
   },
   {
     "title": "CodeGlyphX.Pdf417.MicroPdf417Decoder",
-    "summary": "Decodes MicroPDF417 symbols from a .",
+    "summary": "Decodes MicroPDF417 symbols from a CodeGlyphX.BitMatrix.",
     "kind": "Class",
     "namespace": "CodeGlyphX.Pdf417",
     "slug": "codeglyphx-pdf417-micropdf417decoder",
@@ -1201,7 +1201,7 @@
   },
   {
     "title": "CodeGlyphX.Pdf417.MicroPdf417Encoder",
-    "summary": "Encodes MicroPDF417 symbols into a .",
+    "summary": "Encodes MicroPDF417 symbols into a CodeGlyphX.BitMatrix.",
     "kind": "Class",
     "namespace": "CodeGlyphX.Pdf417",
     "slug": "codeglyphx-pdf417-micropdf417encoder",
@@ -1825,7 +1825,7 @@
   },
   {
     "title": "CodeGlyphX.Rendering.Html.BarcodeHtmlRenderOptions",
-    "summary": "Options for .",
+    "summary": "Options for CodeGlyphX.Rendering.Html.HtmlBarcodeRenderer.",
     "kind": "Class",
     "namespace": "CodeGlyphX.Rendering.Html",
     "slug": "codeglyphx-rendering-html-barcodehtmlrenderoptions",
@@ -1865,7 +1865,7 @@
   },
   {
     "title": "CodeGlyphX.Rendering.Html.QrHtmlRenderOptions",
-    "summary": "Options for .",
+    "summary": "Options for CodeGlyphX.Rendering.Html.HtmlQrRenderer.",
     "kind": "Class",
     "namespace": "CodeGlyphX.Rendering.Html",
     "slug": "codeglyphx-rendering-html-qrhtmlrenderoptions",
@@ -1921,7 +1921,7 @@
   },
   {
     "title": "CodeGlyphX.Rendering.ImageFormat",
-    "summary": "Known image formats supported by .",
+    "summary": "Known image formats supported by CodeGlyphX.Rendering.ImageReader.",
     "kind": "Class",
     "namespace": "CodeGlyphX.Rendering",
     "slug": "codeglyphx-rendering-imageformat",
@@ -2185,7 +2185,7 @@
   },
   {
     "title": "CodeGlyphX.Rendering.Png.BarcodePngRenderOptions",
-    "summary": "Options for .",
+    "summary": "Options for CodeGlyphX.Rendering.Png.BarcodePngRenderer.",
     "kind": "Class",
     "namespace": "CodeGlyphX.Rendering.Png",
     "slug": "codeglyphx-rendering-png-barcodepngrenderoptions",
@@ -2433,7 +2433,7 @@
   },
   {
     "title": "CodeGlyphX.Rendering.Png.QrPngModuleShape",
-    "summary": "Module shape used by .",
+    "summary": "Module shape used by CodeGlyphX.Rendering.Png.QrPngRenderer.",
     "kind": "Class",
     "namespace": "CodeGlyphX.Rendering.Png",
     "slug": "codeglyphx-rendering-png-qrpngmoduleshape",
@@ -2489,7 +2489,7 @@
   },
   {
     "title": "CodeGlyphX.Rendering.Png.QrPngRenderOptions",
-    "summary": "Options for .",
+    "summary": "Options for CodeGlyphX.Rendering.Png.QrPngRenderer.",
     "kind": "Class",
     "namespace": "CodeGlyphX.Rendering.Png",
     "slug": "codeglyphx-rendering-png-qrpngrenderoptions",
@@ -2601,7 +2601,7 @@
   },
   {
     "title": "CodeGlyphX.Rendering.Svg.BarcodeSvgRenderOptions",
-    "summary": "Options for .",
+    "summary": "Options for CodeGlyphX.Rendering.Svg.SvgBarcodeRenderer.",
     "kind": "Class",
     "namespace": "CodeGlyphX.Rendering.Svg",
     "slug": "codeglyphx-rendering-svg-barcodesvgrenderoptions",
@@ -2625,7 +2625,7 @@
   },
   {
     "title": "CodeGlyphX.Rendering.Svg.QrSvgRenderOptions",
-    "summary": "Options for .",
+    "summary": "Options for CodeGlyphX.Rendering.Svg.SvgQrRenderer.",
     "kind": "Class",
     "namespace": "CodeGlyphX.Rendering.Svg",
     "slug": "codeglyphx-rendering-svg-qrsvgrenderoptions",

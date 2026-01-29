@@ -9,7 +9,7 @@
   "methods": [
     {
       "name": "#ctor",
-      "summary": "Creates a new .",
+      "summary": "Creates a new CodeGlyphX.BitMatrix.",
       "returns": null,
       "parameters": [
         {
@@ -26,7 +26,7 @@
     },
     {
       "name": "Get",
-      "summary": "Gets the value at (, ).",
+      "summary": "Gets the value at (x, y).",
       "returns": null,
       "parameters": [
         {
@@ -43,7 +43,7 @@
     },
     {
       "name": "Set",
-      "summary": "Sets the value at (, ).",
+      "summary": "Sets the value at (x, y).",
       "returns": null,
       "parameters": [
         {
@@ -93,7 +93,7 @@
     },
     {
       "name": "Item",
-      "summary": "Gets or sets the value at (, )."
+      "summary": "Gets or sets the value at (x, y)."
     }
   ],
   "fields": [],

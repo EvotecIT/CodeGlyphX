@@ -4,12 +4,12 @@
   "namespace": "CodeGlyphX",
   "kind": "Class",
   "slug": "codeglyphx-barcodeencoder",
-  "summary": "Encodes supported barcode symbologies into a model.",
+  "summary": "Encodes supported barcode symbologies into a CodeGlyphX.Barcode1D model.",
   "remarks": null,
   "methods": [
     {
       "name": "Encode",
-      "summary": "Encodes a barcode value using the specified .",
+      "summary": "Encodes a barcode value using the specified CodeGlyphX.BarcodeType.",
       "returns": null,
       "parameters": [
         {

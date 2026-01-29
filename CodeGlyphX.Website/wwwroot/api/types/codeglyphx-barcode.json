@@ -5,7 +5,7 @@
   "kind": "Class",
   "slug": "codeglyphx-barcode",
   "summary": "Simple barcode helpers with fluent and static APIs.",
-  "remarks": "Use to pick the output format by file extension.",
+  "remarks": "Use CodeGlyphX.Barcode.Save(CodeGlyphX.BarcodeType,System.String,System.String,CodeGlyphX.BarcodeOptions,CodeGlyphX.Rendering.RenderExtras) to pick the output format by file extension.",
   "methods": [
     {
       "name": "Create",

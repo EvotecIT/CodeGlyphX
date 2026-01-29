@@ -9,7 +9,7 @@
   "methods": [
     {
       "name": "#ctor",
-      "summary": "Creates a new .",
+      "summary": "Creates a new CodeGlyphX.MicroQrCode.",
       "returns": null,
       "parameters": [
         {

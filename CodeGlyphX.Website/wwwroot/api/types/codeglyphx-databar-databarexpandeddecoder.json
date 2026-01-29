@@ -9,7 +9,7 @@
   "methods": [
     {
       "name": "TryDecodeExpanded",
-      "summary": "Attempts to decode a GS1 DataBar Expanded symbol from a .",
+      "summary": "Attempts to decode a GS1 DataBar Expanded symbol from a CodeGlyphX.Barcode1D.",
       "returns": null,
       "parameters": [
         {
@@ -43,7 +43,7 @@
     },
     {
       "name": "TryDecodeExpandedStacked",
-      "summary": "Attempts to decode a GS1 DataBar Expanded Stacked symbol from a .",
+      "summary": "Attempts to decode a GS1 DataBar Expanded Stacked symbol from a CodeGlyphX.BitMatrix.",
       "returns": null,
       "parameters": [
         {

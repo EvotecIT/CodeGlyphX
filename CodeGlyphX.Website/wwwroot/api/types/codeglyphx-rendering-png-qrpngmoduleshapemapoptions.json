@@ -22,15 +22,15 @@
     },
     {
       "name": "Split",
-      "summary": "Split point (0..1) used by ."
+      "summary": "Split point (0..1) used by CodeGlyphX.Rendering.Png.QrPngModuleShapeMapMode.Radial."
     },
     {
       "name": "RingSize",
-      "summary": "Ring size in modules for ."
+      "summary": "Ring size in modules for CodeGlyphX.Rendering.Png.QrPngModuleShapeMapMode.Rings."
     },
     {
       "name": "Seed",
-      "summary": "Random seed used by ."
+      "summary": "Random seed used by CodeGlyphX.Rendering.Png.QrPngModuleShapeMapMode.Random."
     },
     {
       "name": "SecondaryChance",
@@ -38,7 +38,7 @@
     },
     {
       "name": "CornerSize",
-      "summary": "Corner zone size in modules for ."
+      "summary": "Corner zone size in modules for CodeGlyphX.Rendering.Png.QrPngModuleShapeMapMode.Corners."
     },
     {
       "name": "ApplyToEyes",
@@ -52,7 +52,7 @@
   "fields": [
     {
       "name": "DefaultRingSize",
-      "summary": "Default ring size (in modules) for ."
+      "summary": "Default ring size (in modules) for CodeGlyphX.Rendering.Png.QrPngModuleShapeMapMode.Rings."
     }
   ],
   "events": []

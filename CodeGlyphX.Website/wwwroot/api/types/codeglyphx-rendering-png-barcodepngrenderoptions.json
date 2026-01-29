@@ -4,7 +4,7 @@
   "namespace": "CodeGlyphX.Rendering.Png",
   "kind": "Class",
   "slug": "codeglyphx-rendering-png-barcodepngrenderoptions",
-  "summary": "Options for .",
+  "summary": "Options for CodeGlyphX.Rendering.Png.BarcodePngRenderer.",
   "remarks": null,
   "methods": [
     {

@@ -9,7 +9,7 @@
   "methods": [
     {
       "name": "Encode",
-      "summary": "Encodes a Matrix 2 of 5 barcode. When is true, a Mod-10 check digit is appended.",
+      "summary": "Encodes a Matrix 2 of 5 barcode. When includeChecksum is true, a Mod-10 check digit is appended.",
       "returns": null,
       "parameters": [
         {

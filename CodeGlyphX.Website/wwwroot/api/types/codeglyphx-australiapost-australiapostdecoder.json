@@ -9,7 +9,7 @@
   "methods": [
     {
       "name": "TryDecode",
-      "summary": "Attempts to decode an Australia Post customer barcode from a .",
+      "summary": "Attempts to decode an Australia Post customer barcode from a CodeGlyphX.BitMatrix.",
       "returns": null,
       "parameters": [
         {
@@ -26,7 +26,7 @@
     },
     {
       "name": "TryDecode",
-      "summary": "Attempts to decode an Australia Post customer barcode from a .",
+      "summary": "Attempts to decode an Australia Post customer barcode from a CodeGlyphX.BitMatrix.",
       "returns": null,
       "parameters": [
         {

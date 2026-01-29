@@ -57,97 +57,97 @@
     },
     {
       "name": "NeonGlowSafe",
-      "summary": "Explicit scan-safe variant of .",
+      "summary": "Explicit scan-safe variant of CodeGlyphX.QrArtPresets.NeonGlow.",
       "returns": null,
       "parameters": []
     },
     {
       "name": "NeonGlowBold",
-      "summary": "Bolder variant of with stronger effects.",
+      "summary": "Bolder variant of CodeGlyphX.QrArtPresets.NeonGlow with stronger effects.",
       "returns": null,
       "parameters": []
     },
     {
       "name": "LiquidGlassSafe",
-      "summary": "Explicit scan-safe variant of .",
+      "summary": "Explicit scan-safe variant of CodeGlyphX.QrArtPresets.LiquidGlass.",
       "returns": null,
       "parameters": []
     },
     {
       "name": "LiquidGlassBold",
-      "summary": "Bolder variant of with punchier gradients.",
+      "summary": "Bolder variant of CodeGlyphX.QrArtPresets.LiquidGlass with punchier gradients.",
       "returns": null,
       "parameters": []
     },
     {
       "name": "ConnectedSquircleGlowSafe",
-      "summary": "Explicit scan-safe variant of .",
+      "summary": "Explicit scan-safe variant of CodeGlyphX.QrArtPresets.ConnectedSquircleGlow.",
       "returns": null,
       "parameters": []
     },
     {
       "name": "ConnectedSquircleGlowBold",
-      "summary": "Bolder variant of with denser rings.",
+      "summary": "Bolder variant of CodeGlyphX.QrArtPresets.ConnectedSquircleGlow with denser rings.",
       "returns": null,
       "parameters": []
     },
     {
       "name": "CutCornerTechSafe",
-      "summary": "Explicit scan-safe variant of .",
+      "summary": "Explicit scan-safe variant of CodeGlyphX.QrArtPresets.CutCornerTech.",
       "returns": null,
       "parameters": []
     },
     {
       "name": "CutCornerTechBold",
-      "summary": "Bolder variant of with tighter modules.",
+      "summary": "Bolder variant of CodeGlyphX.QrArtPresets.CutCornerTech with tighter modules.",
       "returns": null,
       "parameters": []
     },
     {
       "name": "InsetRingsSafe",
-      "summary": "Explicit scan-safe variant of .",
+      "summary": "Explicit scan-safe variant of CodeGlyphX.QrArtPresets.InsetRings.",
       "returns": null,
       "parameters": []
     },
     {
       "name": "InsetRingsBold",
-      "summary": "Bolder variant of with stronger ring contrast.",
+      "summary": "Bolder variant of CodeGlyphX.QrArtPresets.InsetRings with stronger ring contrast.",
       "returns": null,
       "parameters": []
     },
     {
       "name": "StripeEyesSafe",
-      "summary": "Explicit scan-safe variant of .",
+      "summary": "Explicit scan-safe variant of CodeGlyphX.QrArtPresets.StripeEyes.",
       "returns": null,
       "parameters": []
     },
     {
       "name": "StripeEyesBold",
-      "summary": "Bolder variant of that also textures modules.",
+      "summary": "Bolder variant of CodeGlyphX.QrArtPresets.StripeEyes that also textures modules.",
       "returns": null,
       "parameters": []
     },
     {
       "name": "PaintSplashSafe",
-      "summary": "Explicit scan-safe variant of .",
+      "summary": "Explicit scan-safe variant of CodeGlyphX.QrArtPresets.PaintSplash.",
       "returns": null,
       "parameters": []
     },
     {
       "name": "PaintSplashBold",
-      "summary": "Bolder variant of with denser splashes.",
+      "summary": "Bolder variant of CodeGlyphX.QrArtPresets.PaintSplash with denser splashes.",
       "returns": null,
       "parameters": []
     },
     {
       "name": "PaintSplashPastelSafe",
-      "summary": "Explicit scan-safe variant of .",
+      "summary": "Explicit scan-safe variant of CodeGlyphX.QrArtPresets.PaintSplashPastel.",
       "returns": null,
       "parameters": []
     },
     {
       "name": "PaintSplashPastelBold",
-      "summary": "Bolder variant of with denser splashes.",
+      "summary": "Bolder variant of CodeGlyphX.QrArtPresets.PaintSplashPastel with denser splashes.",
       "returns": null,
       "parameters": []
     }

@@ -4,7 +4,7 @@
   "namespace": "CodeGlyphX.Rendering.Svg",
   "kind": "Class",
   "slug": "codeglyphx-rendering-svg-qrsvgrenderoptions",
-  "summary": "Options for .",
+  "summary": "Options for CodeGlyphX.Rendering.Svg.SvgQrRenderer.",
   "remarks": null,
   "methods": [
     {

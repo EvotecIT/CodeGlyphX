@@ -4,7 +4,7 @@
   "namespace": "CodeGlyphX.Rendering.Png",
   "kind": "Class",
   "slug": "codeglyphx-rendering-png-qrpngmoduleshape",
-  "summary": "Module shape used by .",
+  "summary": "Module shape used by CodeGlyphX.Rendering.Png.QrPngRenderer.",
   "remarks": null,
   "methods": [],
   "properties": [],

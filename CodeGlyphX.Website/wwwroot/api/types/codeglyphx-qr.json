@@ -5,7 +5,7 @@
   "kind": "Class",
   "slug": "codeglyphx-qr",
   "summary": "Simple QR helpers with fluent and static APIs.",
-  "remarks": "Use to pick the output format by file extension.",
+  "remarks": "Use CodeGlyphX.QR.Save(System.String,System.String,CodeGlyphX.QrEasyOptions,CodeGlyphX.Rendering.RenderExtras) to pick the output format by file extension.",
   "methods": [
     {
       "name": "Create",

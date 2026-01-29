@@ -14,23 +14,23 @@
     },
     {
       "name": "Qr",
-      "summary": "Gets the decoded QR result when is ."
+      "summary": "Gets the decoded QR result when CodeGlyphX.CodeGlyphDecoded.Kind is CodeGlyphX.CodeGlyphKind.Qr."
     },
     {
       "name": "Barcode",
-      "summary": "Gets the decoded barcode result when is ."
+      "summary": "Gets the decoded barcode result when CodeGlyphX.CodeGlyphDecoded.Kind is CodeGlyphX.CodeGlyphKind.Barcode1D."
     },
     {
       "name": "DataMatrixText",
-      "summary": "Gets the decoded Data Matrix text when is ."
+      "summary": "Gets the decoded Data Matrix text when CodeGlyphX.CodeGlyphDecoded.Kind is CodeGlyphX.CodeGlyphKind.DataMatrix."
     },
     {
       "name": "Pdf417Text",
-      "summary": "Gets the decoded PDF417 text when is ."
+      "summary": "Gets the decoded PDF417 text when CodeGlyphX.CodeGlyphDecoded.Kind is CodeGlyphX.CodeGlyphKind.Pdf417."
     },
     {
       "name": "Pdf417",
-      "summary": "Gets the decoded PDF417 payload when is ."
+      "summary": "Gets the decoded PDF417 payload when CodeGlyphX.CodeGlyphDecoded.Kind is CodeGlyphX.CodeGlyphKind.Pdf417."
     },
     {
       "name": "Pdf417Macro",
@@ -38,7 +38,7 @@
     },
     {
       "name": "AztecText",
-      "summary": "Gets the decoded Aztec text when is ."
+      "summary": "Gets the decoded Aztec text when CodeGlyphX.CodeGlyphDecoded.Kind is CodeGlyphX.CodeGlyphKind.Aztec."
     },
     {
       "name": "Text",

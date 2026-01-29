@@ -9,7 +9,7 @@
   "methods": [
     {
       "name": "Encode",
-      "summary": "Encodes a POSTNET barcode into a .",
+      "summary": "Encodes a POSTNET barcode into a CodeGlyphX.BitMatrix.",
       "returns": null,
       "parameters": [
         {

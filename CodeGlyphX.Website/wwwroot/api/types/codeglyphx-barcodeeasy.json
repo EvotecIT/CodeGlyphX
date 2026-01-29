@@ -9,7 +9,7 @@
   "methods": [
     {
       "name": "Encode",
-      "summary": "Encodes a barcode value using the specified .",
+      "summary": "Encodes a barcode value using the specified CodeGlyphX.BarcodeType.",
       "returns": null,
       "parameters": [
         {

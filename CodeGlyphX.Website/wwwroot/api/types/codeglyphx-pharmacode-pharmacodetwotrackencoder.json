@@ -9,7 +9,7 @@
   "methods": [
     {
       "name": "Encode",
-      "summary": "Encodes a Pharmacode (two-track) barcode value into a .",
+      "summary": "Encodes a Pharmacode (two-track) barcode value into a CodeGlyphX.BitMatrix.",
       "returns": null,
       "parameters": [
         {
@@ -21,7 +21,7 @@
     },
     {
       "name": "Encode",
-      "summary": "Encodes a Pharmacode (two-track) barcode value into a .",
+      "summary": "Encodes a Pharmacode (two-track) barcode value into a CodeGlyphX.BitMatrix.",
       "returns": null,
       "parameters": [
         {

@@ -9,7 +9,7 @@
   "methods": [
     {
       "name": "#ctor",
-      "summary": "Creates a new from the provided segments.",
+      "summary": "Creates a new CodeGlyphX.Barcode1D from the provided segments.",
       "returns": null,
       "parameters": [
         {
@@ -27,7 +27,7 @@
     },
     {
       "name": "TotalModules",
-      "summary": "Gets the total barcode width in modules (sum of for all segments)."
+      "summary": "Gets the total barcode width in modules (sum of CodeGlyphX.BarSegment.Modules for all segments)."
     }
   ],
   "fields": [],

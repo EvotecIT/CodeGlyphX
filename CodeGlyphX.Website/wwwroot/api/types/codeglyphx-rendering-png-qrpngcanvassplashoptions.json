@@ -34,11 +34,11 @@
     },
     {
       "name": "Placement",
-      "summary": "Where splashes are placed. Defaults to ."
+      "summary": "Where splashes are placed. Defaults to CodeGlyphX.Rendering.Png.QrPngCanvasSplashPlacement.AroundQr."
     },
     {
       "name": "EdgeBandPx",
-      "summary": "Optional edge band width (in pixels) when is . When 0, a sensible band is derived from splash size and spread."
+      "summary": "Optional edge band width (in pixels) when CodeGlyphX.Rendering.Png.QrPngCanvasSplashOptions.Placement is CodeGlyphX.Rendering.Png.QrPngCanvasSplashPlacement.CanvasEdges. When 0, a sensible band is derived from splash size and spread."
     },
     {
       "name": "Seed",
@@ -62,7 +62,7 @@
     },
     {
       "name": "QrAreaAlphaMax",
-      "summary": "Maximum alpha allowed inside the QR area when is false. Set to 0 to apply no alpha limit."
+      "summary": "Maximum alpha allowed inside the QR area when CodeGlyphX.Rendering.Png.QrPngCanvasSplashOptions.ProtectQrArea is false. Set to 0 to apply no alpha limit."
     }
   ],
   "fields": [],

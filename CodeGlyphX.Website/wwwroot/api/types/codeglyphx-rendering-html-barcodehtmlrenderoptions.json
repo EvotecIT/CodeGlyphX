@@ -4,7 +4,7 @@
   "namespace": "CodeGlyphX.Rendering.Html",
   "kind": "Class",
   "slug": "codeglyphx-rendering-html-barcodehtmlrenderoptions",
-  "summary": "Options for .",
+  "summary": "Options for CodeGlyphX.Rendering.Html.HtmlBarcodeRenderer.",
   "remarks": null,
   "methods": [
     {

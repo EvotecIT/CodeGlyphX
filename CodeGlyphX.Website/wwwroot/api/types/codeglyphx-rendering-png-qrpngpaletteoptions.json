@@ -18,11 +18,11 @@
     },
     {
       "name": "Seed",
-      "summary": "Gets or sets the random seed used by ."
+      "summary": "Gets or sets the random seed used by CodeGlyphX.Rendering.Png.QrPngPaletteMode.Random."
     },
     {
       "name": "RingSize",
-      "summary": "Gets or sets the ring thickness in modules for ."
+      "summary": "Gets or sets the ring thickness in modules for CodeGlyphX.Rendering.Png.QrPngPaletteMode.Rings."
     },
     {
       "name": "ApplyToEyes",
@@ -32,7 +32,7 @@
   "fields": [
     {
       "name": "DefaultRingSize",
-      "summary": "Default ring size (in modules) for ."
+      "summary": "Default ring size (in modules) for CodeGlyphX.Rendering.Png.QrPngPaletteMode.Rings."
     }
   ],
   "events": []

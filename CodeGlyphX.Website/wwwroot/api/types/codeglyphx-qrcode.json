@@ -9,7 +9,7 @@
   "methods": [
     {
       "name": "#ctor",
-      "summary": "Creates a new .",
+      "summary": "Creates a new CodeGlyphX.QrCode.",
       "returns": null,
       "parameters": [
         {
@@ -36,7 +36,7 @@
     },
     {
       "name": "Encode",
-      "summary": "Encodes a payload into a .",
+      "summary": "Encodes a payload into a CodeGlyphX.QrCode.",
       "returns": null,
       "parameters": [
         {
@@ -53,7 +53,7 @@
     },
     {
       "name": "EncodeAuto",
-      "summary": "Detects a payload type and encodes it into a .",
+      "summary": "Detects a payload type and encodes it into a CodeGlyphX.QrCode.",
       "returns": null,
       "parameters": [
         {
@@ -75,7 +75,7 @@
     },
     {
       "name": "Encode",
-      "summary": "Encodes a payload with embedded defaults into a .",
+      "summary": "Encodes a payload with embedded defaults into a CodeGlyphX.QrCode.",
       "returns": null,
       "parameters": [
         {

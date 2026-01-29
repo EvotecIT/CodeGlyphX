@@ -4,7 +4,7 @@
   "namespace": "CodeGlyphX.Pdf417",
   "kind": "Class",
   "slug": "codeglyphx-pdf417-micropdf417encoder",
-  "summary": "Encodes MicroPDF417 symbols into a .",
+  "summary": "Encodes MicroPDF417 symbols into a CodeGlyphX.BitMatrix.",
   "remarks": null,
   "methods": [
     {

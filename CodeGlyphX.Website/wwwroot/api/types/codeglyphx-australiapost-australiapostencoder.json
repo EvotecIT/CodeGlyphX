@@ -9,7 +9,7 @@
   "methods": [
     {
       "name": "Encode",
-      "summary": "Encodes an Australia Post customer barcode into a .",
+      "summary": "Encodes an Australia Post customer barcode into a CodeGlyphX.BitMatrix.",
       "returns": null,
       "parameters": [
         {

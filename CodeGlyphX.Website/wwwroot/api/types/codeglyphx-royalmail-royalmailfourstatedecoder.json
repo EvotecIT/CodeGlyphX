@@ -9,7 +9,7 @@
   "methods": [
     {
       "name": "TryDecode",
-      "summary": "Attempts to decode a Royal Mail 4-State barcode from a .",
+      "summary": "Attempts to decode a Royal Mail 4-State barcode from a CodeGlyphX.BitMatrix.",
       "returns": null,
       "parameters": [
         {

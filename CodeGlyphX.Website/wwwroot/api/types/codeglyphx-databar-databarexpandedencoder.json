@@ -9,7 +9,7 @@
   "methods": [
     {
       "name": "EncodeExpanded",
-      "summary": "Encodes a GS1 DataBar Expanded symbol into a .",
+      "summary": "Encodes a GS1 DataBar Expanded symbol into a CodeGlyphX.Barcode1D.",
       "returns": null,
       "parameters": [
         {
@@ -21,7 +21,7 @@
     },
     {
       "name": "EncodeExpandedStacked",
-      "summary": "Encodes a GS1 DataBar Expanded Stacked symbol into a .",
+      "summary": "Encodes a GS1 DataBar Expanded Stacked symbol into a CodeGlyphX.BitMatrix.",
       "returns": null,
       "parameters": [
         {

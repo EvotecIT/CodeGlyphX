@@ -9,7 +9,7 @@
   "methods": [
     {
       "name": "WriteBits",
-      "summary": "Writes bits from LSB-first.",
+      "summary": "Writes count bits from value LSB-first.",
       "returns": null,
       "parameters": [
         {

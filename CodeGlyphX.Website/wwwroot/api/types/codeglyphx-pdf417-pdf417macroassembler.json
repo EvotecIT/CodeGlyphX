@@ -21,7 +21,7 @@
     },
     {
       "name": "TryAdd",
-      "summary": "Attempts to add a decoded Macro PDF417 segment from a wrapper.",
+      "summary": "Attempts to add a decoded Macro PDF417 segment from a CodeGlyphX.CodeGlyphDecoded wrapper.",
       "returns": null,
       "parameters": [
         {
@@ -62,7 +62,7 @@
     },
     {
       "name": "Add",
-      "summary": "Adds a decoded Macro PDF417 segment from a wrapper.",
+      "summary": "Adds a decoded Macro PDF417 segment from a CodeGlyphX.CodeGlyphDecoded wrapper.",
       "returns": null,
       "parameters": [
         {

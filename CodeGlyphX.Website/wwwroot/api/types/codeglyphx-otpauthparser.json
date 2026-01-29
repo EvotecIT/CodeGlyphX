@@ -9,7 +9,7 @@
   "methods": [
     {
       "name": "Parse",
-      "summary": "Parses an otpauth:// URI or throws .",
+      "summary": "Parses an otpauth:// URI or throws System.FormatException.",
       "returns": null,
       "parameters": [
         {

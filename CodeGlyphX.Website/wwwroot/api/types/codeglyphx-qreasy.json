@@ -9,7 +9,7 @@
   "methods": [
     {
       "name": "Encode",
-      "summary": "Encodes a payload into a with defaults.",
+      "summary": "Encodes a payload into a CodeGlyphX.QrCode with defaults.",
       "returns": null,
       "parameters": [
         {
@@ -26,7 +26,7 @@
     },
     {
       "name": "EncodeAuto",
-      "summary": "Detects a payload type and encodes it into a .",
+      "summary": "Detects a payload type and encodes it into a CodeGlyphX.QrCode.",
       "returns": null,
       "parameters": [
         {

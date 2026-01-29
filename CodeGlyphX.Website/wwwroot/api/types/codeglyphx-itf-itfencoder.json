@@ -9,7 +9,7 @@
   "methods": [
     {
       "name": "Encode",
-      "summary": "Encodes an ITF barcode. The input length must be even. If is true, odd-length inputs get a checksum appended and even-length inputs are validated.",
+      "summary": "Encodes an ITF barcode. The input length must be even. If includeChecksum is true, odd-length inputs get a checksum appended and even-length inputs are validated.",
       "returns": null,
       "parameters": [
         {

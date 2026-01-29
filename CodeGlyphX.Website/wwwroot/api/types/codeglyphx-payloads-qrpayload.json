@@ -5,7 +5,7 @@
   "kind": "Class",
   "slug": "codeglyphx-payloads-qrpayload",
   "summary": "Helpers for building common QR payload strings (URLs, Wi\u2011Fi, vCard, and basic URI schemes).",
-  "remarks": "The returned strings can be passed directly to .",
+  "remarks": "The returned strings can be passed directly to CodeGlyphX.QrCodeEncoder.EncodeText(System.String,CodeGlyphX.QrErrorCorrectionLevel,System.Int32,System.Int32,System.Nullable{System.Int32}).",
   "methods": [
     {
       "name": "Text",
@@ -293,7 +293,7 @@
     },
     {
       "name": "Location",
-      "summary": "Alias for .",
+      "summary": "Alias for CodeGlyphX.Payloads.QrPayload.Geo(System.Double,System.Double,System.Nullable{System.Double}).",
       "returns": null,
       "parameters": [
         {

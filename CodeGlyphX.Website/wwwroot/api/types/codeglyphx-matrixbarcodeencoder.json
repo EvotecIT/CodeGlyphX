@@ -4,12 +4,12 @@
   "namespace": "CodeGlyphX",
   "kind": "Class",
   "slug": "codeglyphx-matrixbarcodeencoder",
-  "summary": "Encodes 2D barcode symbologies into a .",
+  "summary": "Encodes 2D barcode symbologies into a CodeGlyphX.BitMatrix.",
   "remarks": null,
   "methods": [
     {
       "name": "Encode",
-      "summary": "Encodes a 2D barcode using the specified .",
+      "summary": "Encodes a 2D barcode using the specified CodeGlyphX.BarcodeType.",
       "returns": null,
       "parameters": [
         {
@@ -26,7 +26,7 @@
     },
     {
       "name": "EncodeKix",
-      "summary": "Encodes a KIX code into a .",
+      "summary": "Encodes a KIX code into a CodeGlyphX.BitMatrix.",
       "returns": null,
       "parameters": [
         {
@@ -38,7 +38,7 @@
     },
     {
       "name": "EncodePharmacodeTwoTrack",
-      "summary": "Encodes a Pharmacode (two-track) barcode into a .",
+      "summary": "Encodes a Pharmacode (two-track) barcode into a CodeGlyphX.BitMatrix.",
       "returns": null,
       "parameters": [
         {
@@ -50,7 +50,7 @@
     },
     {
       "name": "EncodePostnet",
-      "summary": "Encodes a POSTNET symbol into a .",
+      "summary": "Encodes a POSTNET symbol into a CodeGlyphX.BitMatrix.",
       "returns": null,
       "parameters": [
         {
@@ -62,7 +62,7 @@
     },
     {
       "name": "EncodePlanet",
-      "summary": "Encodes a PLANET symbol into a .",
+      "summary": "Encodes a PLANET symbol into a CodeGlyphX.BitMatrix.",
       "returns": null,
       "parameters": [
         {
@@ -74,7 +74,7 @@
     },
     {
       "name": "EncodeRoyalMail4State",
-      "summary": "Encodes a Royal Mail 4-State Customer Code (RM4SCC) symbol into a .",
+      "summary": "Encodes a Royal Mail 4-State Customer Code (RM4SCC) symbol into a CodeGlyphX.BitMatrix.",
       "returns": null,
       "parameters": [
         {
@@ -86,7 +86,7 @@
     },
     {
       "name": "EncodeAustraliaPost",
-      "summary": "Encodes an Australia Post customer barcode into a .",
+      "summary": "Encodes an Australia Post customer barcode into a CodeGlyphX.BitMatrix.",
       "returns": null,
       "parameters": [
         {
@@ -98,7 +98,7 @@
     },
     {
       "name": "EncodeJapanPost",
-      "summary": "Encodes a Japan Post barcode into a .",
+      "summary": "Encodes a Japan Post barcode into a CodeGlyphX.BitMatrix.",
       "returns": null,
       "parameters": [
         {
@@ -110,7 +110,7 @@
     },
     {
       "name": "EncodeUspsImb",
-      "summary": "Encodes a USPS Intelligent Mail Barcode (IMB) into a .",
+      "summary": "Encodes a USPS Intelligent Mail Barcode (IMB) into a CodeGlyphX.BitMatrix.",
       "returns": null,
       "parameters": [
         {
@@ -122,7 +122,7 @@
     },
     {
       "name": "EncodeGs1DataBarOmni",
-      "summary": "Encodes a GS1 DataBar-14 Omnidirectional symbol into a .",
+      "summary": "Encodes a GS1 DataBar-14 Omnidirectional symbol into a CodeGlyphX.BitMatrix.",
       "returns": null,
       "parameters": [
         {
@@ -134,7 +134,7 @@
     },
     {
       "name": "EncodeGs1DataBarStacked",
-      "summary": "Encodes a GS1 DataBar-14 Stacked symbol into a .",
+      "summary": "Encodes a GS1 DataBar-14 Stacked symbol into a CodeGlyphX.BitMatrix.",
       "returns": null,
       "parameters": [
         {
@@ -146,7 +146,7 @@
     },
     {
       "name": "EncodeGs1DataBarExpandedStacked",
-      "summary": "Encodes a GS1 DataBar Expanded Stacked symbol into a .",
+      "summary": "Encodes a GS1 DataBar Expanded Stacked symbol into a CodeGlyphX.BitMatrix.",
       "returns": null,
       "parameters": [
         {
@@ -158,7 +158,7 @@
     },
     {
       "name": "EncodeDataMatrix",
-      "summary": "Encodes a Data Matrix symbol into a .",
+      "summary": "Encodes a Data Matrix symbol into a CodeGlyphX.BitMatrix.",
       "returns": null,
       "parameters": [
         {
@@ -170,7 +170,7 @@
     },
     {
       "name": "EncodePdf417",
-      "summary": "Encodes a PDF417 symbol into a .",
+      "summary": "Encodes a PDF417 symbol into a CodeGlyphX.BitMatrix.",
       "returns": null,
       "parameters": [
         {
@@ -182,7 +182,7 @@
     },
     {
       "name": "EncodeMicroPdf417",
-      "summary": "Encodes a MicroPDF417 symbol into a .",
+      "summary": "Encodes a MicroPDF417 symbol into a CodeGlyphX.BitMatrix.",
       "returns": null,
       "parameters": [
         {

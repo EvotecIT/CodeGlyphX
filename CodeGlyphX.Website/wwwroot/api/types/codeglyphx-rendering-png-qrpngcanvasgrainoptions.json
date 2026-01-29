@@ -38,7 +38,7 @@
     },
     {
       "name": "QrAreaAlphaMax",
-      "summary": "Maximum alpha allowed inside the QR area when is false. Set to 0 to apply no alpha limit."
+      "summary": "Maximum alpha allowed inside the QR area when CodeGlyphX.Rendering.Png.QrPngCanvasGrainOptions.ProtectQrArea is false. Set to 0 to apply no alpha limit."
     }
   ],
   "fields": [],

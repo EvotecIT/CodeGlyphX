@@ -1,6 +1,6 @@
 ﻿{
   "title": "CodeGlyphX API Reference",
-  "generatedAtUtc": "2026-01-29T17:38:41.6108028Z",
+  "generatedAtUtc": "2026-01-29T19:22:03.8082060Z",
   "assembly": {
     "assemblyName": "CodeGlyphX",
     "assemblyVersion": "1.1.0.0"
@@ -141,7 +141,7 @@
       "namespace": "CodeGlyphX",
       "kind": "Class",
       "slug": "codeglyphx-barcodeencoder",
-      "summary": "Encodes supported barcode symbologies into a model."
+      "summary": "Encodes supported barcode symbologies into a CodeGlyphX.Barcode1D model."
     },
     {
       "name": "BarcodeOptions",
@@ -157,7 +157,7 @@
       "namespace": "CodeGlyphX",
       "kind": "Class",
       "slug": "codeglyphx-barcodetype",
-      "summary": "Barcode symbologies supported by ."
+      "summary": "Barcode symbologies supported by CodeGlyphX.BarcodeEncoder."
     },
     {
       "name": "BarSegment",
@@ -517,7 +517,7 @@
       "namespace": "CodeGlyphX",
       "kind": "Class",
       "slug": "codeglyphx-matrixbarcodedecoder",
-      "summary": "Decodes 2D barcode symbologies from a ."
+      "summary": "Decodes 2D barcode symbologies from a CodeGlyphX.BitMatrix."
     },
     {
       "name": "MatrixBarcodeEncoder",
@@ -525,7 +525,7 @@
       "namespace": "CodeGlyphX",
       "kind": "Class",
       "slug": "codeglyphx-matrixbarcodeencoder",
-      "summary": "Encodes 2D barcode symbologies into a ."
+      "summary": "Encodes 2D barcode symbologies into a CodeGlyphX.BitMatrix."
     },
     {
       "name": "MatrixOptions",
@@ -1197,7 +1197,7 @@
       "namespace": "CodeGlyphX.Pdf417",
       "kind": "Class",
       "slug": "codeglyphx-pdf417-micropdf417decoder",
-      "summary": "Decodes MicroPDF417 symbols from a ."
+      "summary": "Decodes MicroPDF417 symbols from a CodeGlyphX.BitMatrix."
     },
     {
       "name": "MicroPdf417EncodeOptions",
@@ -1213,7 +1213,7 @@
       "namespace": "CodeGlyphX.Pdf417",
       "kind": "Class",
       "slug": "codeglyphx-pdf417-micropdf417encoder",
-      "summary": "Encodes MicroPDF417 symbols into a ."
+      "summary": "Encodes MicroPDF417 symbols into a CodeGlyphX.BitMatrix."
     },
     {
       "name": "Pdf417Compaction",
@@ -1837,7 +1837,7 @@
       "namespace": "CodeGlyphX.Rendering.Html",
       "kind": "Class",
       "slug": "codeglyphx-rendering-html-barcodehtmlrenderoptions",
-      "summary": "Options for ."
+      "summary": "Options for CodeGlyphX.Rendering.Html.HtmlBarcodeRenderer."
     },
     {
       "name": "HtmlBarcodeRenderer",
@@ -1877,7 +1877,7 @@
       "namespace": "CodeGlyphX.Rendering.Html",
       "kind": "Class",
       "slug": "codeglyphx-rendering-html-qrhtmlrenderoptions",
-      "summary": "Options for ."
+      "summary": "Options for CodeGlyphX.Rendering.Html.HtmlQrRenderer."
     },
     {
       "name": "BarcodeIcoRenderer",
@@ -1933,7 +1933,7 @@
       "namespace": "CodeGlyphX.Rendering",
       "kind": "Class",
       "slug": "codeglyphx-rendering-imageformat",
-      "summary": "Known image formats supported by ."
+      "summary": "Known image formats supported by CodeGlyphX.Rendering.ImageReader."
     },
     {
       "name": "ImageInfo",
@@ -2197,7 +2197,7 @@
       "namespace": "CodeGlyphX.Rendering.Png",
       "kind": "Class",
       "slug": "codeglyphx-rendering-png-barcodepngrenderoptions",
-      "summary": "Options for ."
+      "summary": "Options for CodeGlyphX.Rendering.Png.BarcodePngRenderer."
     },
     {
       "name": "MatrixPngRenderer",
@@ -2445,7 +2445,7 @@
       "namespace": "CodeGlyphX.Rendering.Png",
       "kind": "Class",
       "slug": "codeglyphx-rendering-png-qrpngmoduleshape",
-      "summary": "Module shape used by ."
+      "summary": "Module shape used by CodeGlyphX.Rendering.Png.QrPngRenderer."
     },
     {
       "name": "QrPngModuleShapeMapMode",
@@ -2501,7 +2501,7 @@
       "namespace": "CodeGlyphX.Rendering.Png",
       "kind": "Class",
       "slug": "codeglyphx-rendering-png-qrpngrenderoptions",
-      "summary": "Options for ."
+      "summary": "Options for CodeGlyphX.Rendering.Png.QrPngRenderer."
     },
     {
       "name": "Rgba32",
@@ -2613,7 +2613,7 @@
       "namespace": "CodeGlyphX.Rendering.Svg",
       "kind": "Class",
       "slug": "codeglyphx-rendering-svg-barcodesvgrenderoptions",
-      "summary": "Options for ."
+      "summary": "Options for CodeGlyphX.Rendering.Svg.SvgBarcodeRenderer."
     },
     {
       "name": "MatrixSvgRenderer",
@@ -2637,7 +2637,7 @@
       "namespace": "CodeGlyphX.Rendering.Svg",
       "kind": "Class",
       "slug": "codeglyphx-rendering-svg-qrsvgrenderoptions",
-      "summary": "Options for ."
+      "summary": "Options for CodeGlyphX.Rendering.Svg.SvgQrRenderer."
     },
     {
       "name": "SvgBarcodeRenderer",
