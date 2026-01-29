@@ -130,7 +130,7 @@ public sealed class QrArtAutoTuneTests {
         var originalAccentRayCount = options.Eyes.AccentRayCount;
         var originalAccentStripeCount = options.Eyes.AccentStripeCount;
 
-        _ = QR.Png(payload, options);
+        _ = QrCode.Render(payload, OutputFormat.Png, options).Data;
 
         Assert.Equal(originalMinScale, options.ModuleScaleMap.MinScale);
         Assert.Equal(originalMaxScale, options.ModuleScaleMap.MaxScale);

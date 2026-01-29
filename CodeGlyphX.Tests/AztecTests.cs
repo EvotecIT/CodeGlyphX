@@ -3,6 +3,7 @@ using System.IO;
 using System.Threading;
 using CodeGlyphX;
 using CodeGlyphX.Aztec;
+using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Png;
 using CodeGlyphX.Rendering.Webp;
 using Xunit;
@@ -35,7 +36,7 @@ public sealed class AztecTests {
 
     [Fact]
     public void Aztec_Image_RoundTrip() {
-        var png = AztecCode.Png("AZTEC-IMG");
+        var png = AztecCode.Render("AZTEC-IMG", OutputFormat.Png).Data;
         Assert.True(AztecCode.TryDecodeImage(png, out var text));
         Assert.Equal("AZTEC-IMG", text);
     }

@@ -383,6 +383,16 @@ public static partial class Barcode {
     /// Saves a barcode to a file based on the file extension.
     /// Defaults to PNG when no extension is provided.
     /// </summary>
+    [Obsolete("Use the overload with RenderExtras and set HtmlTitle instead.")]
+    public static string Save(BarcodeType type, string content, string path, BarcodeOptions? options, string? title) {
+        var extras = string.IsNullOrEmpty(title) ? null : new RenderExtras { HtmlTitle = title };
+        return Save(type, content, path, options, extras);
+    }
+
+    /// <summary>
+    /// Saves a barcode to a file based on the file extension.
+    /// Defaults to PNG when no extension is provided.
+    /// </summary>
     public static string Save(BarcodeType type, string content, string path, BarcodeOptions? options = null, RenderExtras? extras = null) {
         var format = OutputFormatInfo.Resolve(path, OutputFormat.Png);
         var output = Render(type, content, format, options, extras);

@@ -115,6 +115,7 @@ public static class OutputFormatInfo {
             case ".svg":
                 return OutputFormat.Svg;
             case ".svgz":
+            case ".svg.gz":
                 return OutputFormat.Svgz;
             case ".html":
             case ".htm":
