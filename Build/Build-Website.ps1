@@ -77,7 +77,8 @@ if (-not $SkipApiDocs) {
         "--base-url",$BaseUrl,
         "--css",$apiCssUrl,
         "--header-html",$apiHeader,
-        "--footer-html",$apiFooter
+        "--footer-html",$apiFooter,
+        "--include-namespace","CodeGlyphX"
     )
 }
 
