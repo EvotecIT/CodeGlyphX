@@ -9,7 +9,6 @@ using CodeGlyphX.DataMatrix;
 using CodeGlyphX.Pdf417;
 using CodeGlyphX.Payloads;
 using CodeGlyphX.Rendering;
-using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Png;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
