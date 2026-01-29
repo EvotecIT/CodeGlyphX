@@ -23,6 +23,8 @@ $pages = @(
     @{ url = "/docs/"; priority = "0.9"; changefreq = "weekly" }
     @{ url = "/faq/"; priority = "0.8"; changefreq = "monthly" }
     @{ url = "/showcase/"; priority = "0.7"; changefreq = "monthly" }
+    @{ url = "/benchmarks/"; priority = "0.8"; changefreq = "monthly" }
+    @{ url = "/pricing/"; priority = "0.7"; changefreq = "monthly" }
     @{ url = "/api/"; priority = "0.8"; changefreq = "weekly" }
     @{ url = "/llms.txt"; priority = "0.3"; changefreq = "monthly" }
     @{ url = "/llms.json"; priority = "0.3"; changefreq = "monthly" }

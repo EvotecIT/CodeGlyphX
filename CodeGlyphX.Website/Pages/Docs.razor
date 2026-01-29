@@ -1,5 +1,6 @@
 @page "/docs"
 @page "/docs/{Section}"
+@inject NavigationManager Nav
 @inject IJSRuntime JS
 
 <PageTitle>Documentation - CodeGlyphX</PageTitle>
@@ -44,7 +45,7 @@
                 <a href="/docs/decoding" class="@(Section == "decoding" ? "active" : "")">Image Decoding</a>
                 <a href="/docs/renderers" class="@(Section == "renderers" ? "active" : "")">Output Formats</a>
                 <a href="/docs/qr#styling-options" class="@(Section == "qr" ? "active" : "")">Styling Options</a>
-                <a href="/docs/benchmarks" class="@(Section == "benchmarks" ? "active" : "")">Benchmarks</a>
+                <a href="/benchmarks/" class="@(Section == "benchmarks" ? "active" : "")">Benchmarks</a>
             </div>
 
             <div class="docs-nav-section">
@@ -1129,5 +1130,13 @@ QR.Save("ABC123", "microqr.png", microQr: true);</pre>
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         await JS.InvokeVoidAsync("CodeGlyphX.initCodeBlocks");
+    }
+
+    protected override void OnParametersSet()
+    {
+        if (Section == "benchmarks")
+        {
+            Nav.NavigateTo("/benchmarks/", forceLoad: true);
+        }
     }
 }
