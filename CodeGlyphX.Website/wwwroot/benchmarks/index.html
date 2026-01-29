@@ -565,6 +565,39 @@ if (navToggle) {
     return data?.[os]?.[mode] ?? null;
   }
 
+  function normalizeOs(value) {
+    if (!value) return null;
+    const key = String(value).toLowerCase();
+    if (key === 'win') return 'windows';
+    if (key === 'mac' || key === 'osx' || key === 'darwin') return 'macos';
+    if (key === 'windows' || key === 'linux' || key === 'macos') return key;
+    return null;
+  }
+
+  function normalizeMode(value) {
+    if (!value) return null;
+    const key = String(value).toLowerCase();
+    return (key === 'quick' || key === 'full') ? key : null;
+  }
+
+  function readUrlSelection() {
+    const params = new URLSearchParams(globalThis.location.search);
+    return {
+      os: normalizeOs(params.get('os')),
+      mode: normalizeMode(params.get('mode'))
+    };
+  }
+
+  function updateUrlSelection() {
+    if (!globalThis.history?.replaceState) return;
+    const params = new URLSearchParams(globalThis.location.search);
+    params.set('os', currentOs);
+    params.set('mode', currentMode);
+    const query = params.toString();
+    const url = query ? (globalThis.location.pathname + '?' + query) : globalThis.location.pathname;
+    globalThis.history.replaceState(null, '', url);
+  }
+
   function hasEntryData(entry) {
     return !!(entry && (entry.summary?.length || entry.comparisons?.length));
   }
@@ -575,6 +608,22 @@ if (navToggle) {
 
   function getAvailableModes(os) {
     return ['full', 'quick'].filter(function(mode) { return hasDataFor(os, mode); });
+  }
+
+  function applyUrlSelection() {
+    const selection = readUrlSelection();
+    if (!selection.os) return false;
+
+    const availableModes = getAvailableModes(selection.os);
+    if (!availableModes.length) return false;
+
+    currentOs = selection.os;
+    if (selection.mode && availableModes.includes(selection.mode)) {
+      currentMode = selection.mode;
+    } else {
+      currentMode = availableModes[0];
+    }
+    return true;
   }
 
   function findBestEntry(data) {
@@ -1173,6 +1222,7 @@ if (navToggle) {
     renderEnvironment(entry);
     renderPackRunner(entry);
     renderNotes(entry);
+    updateUrlSelection();
   }
 
   function init() {
@@ -1187,7 +1237,9 @@ if (navToggle) {
       detailData = results[1];
 
       // Find best available entry to set initial mode
-      findBestEntry(summaryData) || findBestEntry(detailData);
+      if (!applyUrlSelection()) {
+        findBestEntry(summaryData) || findBestEntry(detailData);
+      }
 
       renderAll();
     });
