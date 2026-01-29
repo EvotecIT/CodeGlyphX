@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Threading;
+using CodeGlyphX.Internal;
 using CodeGlyphX.Payloads;
 using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Ascii;
@@ -571,57 +572,25 @@ public static partial class QR {
     }
 
     private static string SaveByExtension(string path, string payload, QrPayloadData? payloadData, QrEasyOptions? options, string? title) {
-        if (path.EndsWith(".svgz", StringComparison.OrdinalIgnoreCase) ||
-            path.EndsWith(".svg.gz", StringComparison.OrdinalIgnoreCase)) {
-            return payloadData is null ? SaveSvgz(payload, path, options) : SaveSvgz(payloadData, path, options);
-        }
-
-        var ext = Path.GetExtension(path);
-        if (string.IsNullOrWhiteSpace(ext)) {
-            return payloadData is null ? SavePng(payload, path, options) : SavePng(payloadData, path, options);
-        }
-
-        switch (ext.ToLowerInvariant()) {
-            case ".png":
-                return payloadData is null ? SavePng(payload, path, options) : SavePng(payloadData, path, options);
-            case ".webp":
-                return payloadData is null ? SaveWebp(payload, path, options) : SaveWebp(payloadData, path, options);
-            case ".svg":
-                return payloadData is null ? SaveSvg(payload, path, options) : SaveSvg(payloadData, path, options);
-            case ".html":
-            case ".htm":
-                return payloadData is null ? SaveHtml(payload, path, options, title) : SaveHtml(payloadData, path, options, title);
-            case ".jpg":
-            case ".jpeg":
-                return payloadData is null ? SaveJpeg(payload, path, options) : SaveJpeg(payloadData, path, options);
-            case ".bmp":
-                return payloadData is null ? SaveBmp(payload, path, options) : SaveBmp(payloadData, path, options);
-            case ".ppm":
-                return payloadData is null ? SavePpm(payload, path, options) : SavePpm(payloadData, path, options);
-            case ".pbm":
-                return payloadData is null ? SavePbm(payload, path, options) : SavePbm(payloadData, path, options);
-            case ".pgm":
-                return payloadData is null ? SavePgm(payload, path, options) : SavePgm(payloadData, path, options);
-            case ".pam":
-                return payloadData is null ? SavePam(payload, path, options) : SavePam(payloadData, path, options);
-            case ".xbm":
-                return payloadData is null ? SaveXbm(payload, path, options) : SaveXbm(payloadData, path, options);
-            case ".xpm":
-                return payloadData is null ? SaveXpm(payload, path, options) : SaveXpm(payloadData, path, options);
-            case ".tga":
-                return payloadData is null ? SaveTga(payload, path, options) : SaveTga(payloadData, path, options);
-            case ".ico":
-                return payloadData is null ? SaveIco(payload, path, options) : SaveIco(payloadData, path, options);
-            case ".svgz":
-                return payloadData is null ? SaveSvgz(payload, path, options) : SaveSvgz(payloadData, path, options);
-            case ".pdf":
-                return payloadData is null ? SavePdf(payload, path, options) : SavePdf(payloadData, path, options);
-            case ".eps":
-            case ".ps":
-                return payloadData is null ? SaveEps(payload, path, options) : SaveEps(payloadData, path, options);
-            default:
-                // Fallback to PNG for unknown extensions to keep the API forgiving.
-                return payloadData is null ? SavePng(payload, path, options) : SavePng(payloadData, path, options);
-        }
+        return SaveByExtensionHelper.Save(path, new SaveByExtensionHandlers {
+            Default = () => payloadData is null ? SavePng(payload, path, options) : SavePng(payloadData, path, options),
+            Png = () => payloadData is null ? SavePng(payload, path, options) : SavePng(payloadData, path, options),
+            Webp = () => payloadData is null ? SaveWebp(payload, path, options) : SaveWebp(payloadData, path, options),
+            Svg = () => payloadData is null ? SaveSvg(payload, path, options) : SaveSvg(payloadData, path, options),
+            Svgz = () => payloadData is null ? SaveSvgz(payload, path, options) : SaveSvgz(payloadData, path, options),
+            Html = () => payloadData is null ? SaveHtml(payload, path, options, title) : SaveHtml(payloadData, path, options, title),
+            Jpeg = () => payloadData is null ? SaveJpeg(payload, path, options) : SaveJpeg(payloadData, path, options),
+            Bmp = () => payloadData is null ? SaveBmp(payload, path, options) : SaveBmp(payloadData, path, options),
+            Ppm = () => payloadData is null ? SavePpm(payload, path, options) : SavePpm(payloadData, path, options),
+            Pbm = () => payloadData is null ? SavePbm(payload, path, options) : SavePbm(payloadData, path, options),
+            Pgm = () => payloadData is null ? SavePgm(payload, path, options) : SavePgm(payloadData, path, options),
+            Pam = () => payloadData is null ? SavePam(payload, path, options) : SavePam(payloadData, path, options),
+            Xbm = () => payloadData is null ? SaveXbm(payload, path, options) : SaveXbm(payloadData, path, options),
+            Xpm = () => payloadData is null ? SaveXpm(payload, path, options) : SaveXpm(payloadData, path, options),
+            Tga = () => payloadData is null ? SaveTga(payload, path, options) : SaveTga(payloadData, path, options),
+            Ico = () => payloadData is null ? SaveIco(payload, path, options) : SaveIco(payloadData, path, options),
+            Pdf = () => payloadData is null ? SavePdf(payload, path, options) : SavePdf(payloadData, path, options),
+            Eps = () => payloadData is null ? SaveEps(payload, path, options) : SaveEps(payloadData, path, options)
+        });
     }
 }

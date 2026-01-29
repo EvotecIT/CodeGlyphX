@@ -3,6 +3,7 @@ using System.IO;
 using System.Threading;
 using System.Text;
 using CodeGlyphX.Pdf417;
+using CodeGlyphX.Internal;
 using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Ascii;
 using CodeGlyphX.Rendering.Bmp;
@@ -334,55 +335,26 @@ public static partial class Pdf417Code {
     /// Defaults to PNG when no extension is provided.
     /// </summary>
     public static string Save(ReadOnlySpan<byte> data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, string? title = null) {
-        if (path.EndsWith(".svgz", StringComparison.OrdinalIgnoreCase) ||
-            path.EndsWith(".svg.gz", StringComparison.OrdinalIgnoreCase)) {
-            return SaveSvgz(data, path, encodeOptions, renderOptions);
-        }
-
-        var ext = Path.GetExtension(path);
-        if (string.IsNullOrWhiteSpace(ext)) return SavePng(data, path, encodeOptions, renderOptions);
-
-        switch (ext.ToLowerInvariant()) {
-            case ".png":
-                return SavePng(data, path, encodeOptions, renderOptions);
-            case ".webp":
-                return SaveWebp(data, path, encodeOptions, renderOptions);
-            case ".svg":
-                return SaveSvg(data, path, encodeOptions, renderOptions);
-            case ".html":
-            case ".htm":
-                return SaveHtml(data, path, encodeOptions, renderOptions, title);
-            case ".jpg":
-            case ".jpeg":
-                return SaveJpeg(data, path, encodeOptions, renderOptions);
-            case ".bmp":
-                return SaveBmp(data, path, encodeOptions, renderOptions);
-            case ".ppm":
-                return SavePpm(data, path, encodeOptions, renderOptions);
-            case ".pbm":
-                return SavePbm(data, path, encodeOptions, renderOptions);
-            case ".pgm":
-                return SavePgm(data, path, encodeOptions, renderOptions);
-            case ".pam":
-                return SavePam(data, path, encodeOptions, renderOptions);
-            case ".xbm":
-                return SaveXbm(data, path, encodeOptions, renderOptions);
-            case ".xpm":
-                return SaveXpm(data, path, encodeOptions, renderOptions);
-            case ".tga":
-                return SaveTga(data, path, encodeOptions, renderOptions);
-            case ".ico":
-                return SaveIco(data, path, encodeOptions, renderOptions);
-            case ".svgz":
-                return SaveSvgz(data, path, encodeOptions, renderOptions);
-            case ".pdf":
-                return SavePdf(data, path, encodeOptions, renderOptions);
-            case ".eps":
-            case ".ps":
-                return SaveEps(data, path, encodeOptions, renderOptions);
-            default:
-                return SavePng(data, path, encodeOptions, renderOptions);
-        }
+        return SaveByExtensionHelper.Save(data, path, new SaveByExtensionSpanHandlers {
+            Default = d => SavePng(d, path, encodeOptions, renderOptions),
+            Png = d => SavePng(d, path, encodeOptions, renderOptions),
+            Webp = d => SaveWebp(d, path, encodeOptions, renderOptions),
+            Svg = d => SaveSvg(d, path, encodeOptions, renderOptions),
+            Svgz = d => SaveSvgz(d, path, encodeOptions, renderOptions),
+            Html = d => SaveHtml(d, path, encodeOptions, renderOptions, title),
+            Jpeg = d => SaveJpeg(d, path, encodeOptions, renderOptions),
+            Bmp = d => SaveBmp(d, path, encodeOptions, renderOptions),
+            Ppm = d => SavePpm(d, path, encodeOptions, renderOptions),
+            Pbm = d => SavePbm(d, path, encodeOptions, renderOptions),
+            Pgm = d => SavePgm(d, path, encodeOptions, renderOptions),
+            Pam = d => SavePam(d, path, encodeOptions, renderOptions),
+            Xbm = d => SaveXbm(d, path, encodeOptions, renderOptions),
+            Xpm = d => SaveXpm(d, path, encodeOptions, renderOptions),
+            Tga = d => SaveTga(d, path, encodeOptions, renderOptions),
+            Ico = d => SaveIco(d, path, encodeOptions, renderOptions),
+            Pdf = d => SavePdf(d, path, encodeOptions, renderOptions),
+            Eps = d => SaveEps(d, path, encodeOptions, renderOptions)
+        });
     }
 
 }
