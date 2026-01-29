@@ -10,30 +10,9 @@ public sealed class WebpQualityClampTests {
     [InlineData(25, 25)]
     [InlineData(100, 100)]
     [InlineData(150, 100)]
-    public void QrEasyOptions_WebpQuality_Clamps(int input, int expected) {
-        var options = new QrEasyOptions { WebpQuality = input };
-        Assert.Equal(expected, options.WebpQuality);
-    }
-
-    [Theory]
-    [InlineData(-5, 0)]
-    [InlineData(0, 0)]
-    [InlineData(25, 25)]
-    [InlineData(100, 100)]
-    [InlineData(150, 100)]
-    public void MatrixOptions_WebpQuality_Clamps(int input, int expected) {
-        var options = new MatrixOptions { WebpQuality = input };
-        Assert.Equal(expected, options.WebpQuality);
-    }
-
-    [Theory]
-    [InlineData(-5, 0)]
-    [InlineData(0, 0)]
-    [InlineData(25, 25)]
-    [InlineData(100, 100)]
-    [InlineData(150, 100)]
-    public void BarcodeOptions_WebpQuality_Clamps(int input, int expected) {
-        var options = new BarcodeOptions { WebpQuality = input };
-        Assert.Equal(expected, options.WebpQuality);
+    public void WebpQuality_Clamps_For_All_Options(int input, int expected) {
+        Assert.Equal(expected, new QrEasyOptions { WebpQuality = input }.WebpQuality);
+        Assert.Equal(expected, new MatrixOptions { WebpQuality = input }.WebpQuality);
+        Assert.Equal(expected, new BarcodeOptions { WebpQuality = input }.WebpQuality);
     }
 }
