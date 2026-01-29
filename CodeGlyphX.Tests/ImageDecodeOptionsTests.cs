@@ -1,5 +1,6 @@
 using CodeGlyphX;
 using CodeGlyphX.DataMatrix;
+using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Png;
 using Xunit;
 
@@ -42,7 +43,7 @@ public sealed class ImageDecodeOptionsTests {
 
     [Fact]
     public void Qr_Downscales_WithImageOptions() {
-        var png = QR.Png("HELLO-WORLD", new QrEasyOptions { ModuleSize = 18, QuietZone = 4 });
+        var png = QrCode.Render("HELLO-WORLD", OutputFormat.Png, new QrEasyOptions { ModuleSize = 18, QuietZone = 4 }).Data;
         var imageOptions = new ImageDecodeOptions { MaxDimension = 200 };
 
         Assert.True(QR.TryDecodePng(png, imageOptions, options: null, out var decoded));

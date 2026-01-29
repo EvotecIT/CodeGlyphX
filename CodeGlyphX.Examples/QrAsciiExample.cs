@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using CodeGlyphX;
+using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Ascii;
 using CodeGlyphX.Rendering.Png;
 
@@ -26,7 +27,11 @@ internal static class QrAsciiExample {
         if (scaleFit < 1) scaleFit = 1;
         if (scaleFit > 3) scaleFit = 3;
 
-        var ascii = QR.Ascii(payload, AsciiPresets.Console(scale: scaleFit, darkColor: new Rgba32(12, 12, 12)));
+        var ascii = QrCode.Render(
+            payload,
+            OutputFormat.Ascii,
+            extras: new RenderExtras { MatrixAscii = AsciiPresets.Console(scale: scaleFit, darkColor: new Rgba32(12, 12, 12)) }
+        ).GetText();
 
         var pngPath = Path.Combine(outputDir, "qr-ascii-console.png");
         var png = QrPngRenderer.Render(qr.Modules, new QrPngRenderOptions {

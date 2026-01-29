@@ -1,5 +1,6 @@
 using CodeGlyphX.DataMatrix;
 using CodeGlyphX.Pdf417;
+using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Png;
 using Xunit;
 
@@ -8,7 +9,7 @@ namespace CodeGlyphX.Tests;
 public sealed class CodeGlyphDecodeTests {
     [Fact]
     public void Decode_Qr_FromPng() {
-        var png = QR.Png("HELLO");
+        var png = QrCode.Render("HELLO", OutputFormat.Png).Data;
 
         Assert.True(CodeGlyph.TryDecodePng(png, out var decoded));
         Assert.Equal(CodeGlyphKind.Qr, decoded.Kind);
@@ -17,11 +18,11 @@ public sealed class CodeGlyphDecodeTests {
 
     [Fact]
     public void Decode_Barcode_FromPng() {
-        var png = Barcode.Png(BarcodeType.Code128, "CODE128-12345", new BarcodeOptions {
+        var png = Barcode.Render(BarcodeType.Code128, "CODE128-12345", OutputFormat.Png, new BarcodeOptions {
             ModuleSize = 3,
             QuietZone = 10,
             HeightModules = 40
-        });
+        }).Data;
 
         Assert.True(CodeGlyph.TryDecodePng(png, out var decoded));
         Assert.Equal(CodeGlyphKind.Barcode1D, decoded.Kind);
@@ -69,7 +70,7 @@ public sealed class CodeGlyphDecodeTests {
 
     [Fact]
     public void DecodeAll_Qr_FromPng() {
-        var png = QR.Png("HELLO-ALL");
+        var png = QrCode.Render("HELLO-ALL", OutputFormat.Png).Data;
 
         Assert.True(CodeGlyph.TryDecodeAllPng(png, out var decoded, includeBarcode: false));
         Assert.Single(decoded);
@@ -79,11 +80,11 @@ public sealed class CodeGlyphDecodeTests {
 
     [Fact]
     public void DecodeAll_Barcode_FromPng() {
-        var png = Barcode.Png(BarcodeType.Code128, "CODE128-ALL", new BarcodeOptions {
+        var png = Barcode.Render(BarcodeType.Code128, "CODE128-ALL", OutputFormat.Png, new BarcodeOptions {
             ModuleSize = 3,
             QuietZone = 10,
             HeightModules = 40
-        });
+        }).Data;
 
         Assert.True(CodeGlyph.TryDecodeAllPng(png, out var decoded, expectedBarcode: BarcodeType.Code128, includeBarcode: true, preferBarcode: true));
         Assert.Single(decoded);

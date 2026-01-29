@@ -135,7 +135,7 @@ public class QrDecodeStressCompareBenchmarks
             out _,
             out _);
         var options = QrPresets.Logo(logo);
-        var png = QrEasy.RenderPng(SampleText, options);
+        var png = QrCode.Render(SampleText, OutputFormat.Png, options).Data;
         DecodePng(png, out rgba, out width, out height);
     }
 #endif
@@ -143,14 +143,14 @@ public class QrDecodeStressCompareBenchmarks
     private static void BuildFancySample(out byte[] rgba, out int width, out int height)
     {
         var options = new QrEasyOptions { Style = QrRenderStyle.Fancy };
-        var png = QrEasy.RenderPng(SampleText, options);
+        var png = QrCode.Render(SampleText, OutputFormat.Png, options).Data;
         DecodePng(png, out rgba, out width, out height);
     }
 
     private static void BuildResampledSample(out byte[] rgba, out int width, out int height)
     {
         var options = new QrEasyOptions { ModuleSize = 8 };
-        var png = QrEasy.RenderPng(SampleText, options);
+        var png = QrCode.Render(SampleText, OutputFormat.Png, options).Data;
         DecodePng(png, out var baseRgba, out var baseWidth, out var baseHeight);
 
         var downW = Math.Max(1, (int)Math.Round(baseWidth * 0.62));
@@ -169,7 +169,7 @@ public class QrDecodeStressCompareBenchmarks
     private static void BuildNoQuietSample(out byte[] rgba, out int width, out int height)
     {
         var options = new QrEasyOptions { QuietZone = 0, ErrorCorrectionLevel = QrErrorCorrectionLevel.H };
-        var png = QrEasy.RenderPng(SampleText, options);
+        var png = QrCode.Render(SampleText, OutputFormat.Png, options).Data;
         DecodePng(png, out rgba, out width, out height);
     }
 

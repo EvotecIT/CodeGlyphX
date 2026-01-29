@@ -1,5 +1,6 @@
 using System.IO;
 using CodeGlyphX;
+using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Png;
 
 namespace CodeGlyphX.Examples;
@@ -16,7 +17,7 @@ internal static class BarcodeExample {
 
         Barcode.Save(BarcodeType.Code128, "CODEGLYPHX-123456", Path.Combine(outputDir, "barcode-code128.png"), options);
         Barcode.Save(BarcodeType.Code128, "CODEGLYPHX-123456", Path.Combine(outputDir, "barcode-code128.svg"), options);
-        Barcode.Save(BarcodeType.Code128, "CODEGLYPHX-123456", Path.Combine(outputDir, "barcode-code128.html"), options, title: "Code128");
+        Barcode.Save(BarcodeType.Code128, "CODEGLYPHX-123456", Path.Combine(outputDir, "barcode-code128.html"), options, new RenderExtras { HtmlTitle = "Code128" });
         Barcode.Save(BarcodeType.Code128, "CODEGLYPHX-123456", Path.Combine(outputDir, "barcode-code128.jpg"), options);
         Barcode.Save(BarcodeType.Code128, "CODEGLYPHX-123456", Path.Combine(outputDir, "barcode-code128.pdf"), options);
         Barcode.Save(BarcodeType.Code128, "CODEGLYPHX-123456", Path.Combine(outputDir, "barcode-code128.eps"), options);

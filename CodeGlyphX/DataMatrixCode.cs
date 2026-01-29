@@ -73,6 +73,7 @@ public static partial class DataMatrixCode {
     /// <summary>
     /// Renders Data Matrix as PNG from bytes.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static byte[] Png(ReadOnlySpan<byte> data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
         var modules = EncodeBytes(data, mode);
         return MatrixPngRenderer.Render(modules, BuildPngOptions(options));
@@ -81,6 +82,7 @@ public static partial class DataMatrixCode {
     /// <summary>
     /// Renders Data Matrix as SVG from bytes.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string Svg(ReadOnlySpan<byte> data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
         var modules = EncodeBytes(data, mode);
         return MatrixSvgRenderer.Render(modules, BuildSvgOptions(options));
@@ -89,6 +91,7 @@ public static partial class DataMatrixCode {
     /// <summary>
     /// Renders Data Matrix as SVGZ from bytes.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static byte[] Svgz(ReadOnlySpan<byte> data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
         var modules = EncodeBytes(data, mode);
         return MatrixSvgzRenderer.Render(modules, BuildSvgOptions(options));
@@ -97,6 +100,7 @@ public static partial class DataMatrixCode {
     /// <summary>
     /// Renders Data Matrix as HTML from bytes.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string Html(ReadOnlySpan<byte> data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
         var modules = EncodeBytes(data, mode);
         return MatrixHtmlRenderer.Render(modules, BuildHtmlOptions(options));
@@ -105,6 +109,7 @@ public static partial class DataMatrixCode {
     /// <summary>
     /// Renders Data Matrix as JPEG from bytes.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static byte[] Jpeg(ReadOnlySpan<byte> data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
         var modules = EncodeBytes(data, mode);
         var opts = BuildPngOptions(options);
@@ -115,6 +120,7 @@ public static partial class DataMatrixCode {
     /// <summary>
     /// Renders Data Matrix as WebP from bytes.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static byte[] Webp(ReadOnlySpan<byte> data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
         var modules = EncodeBytes(data, mode);
         var opts = BuildPngOptions(options);
@@ -125,6 +131,7 @@ public static partial class DataMatrixCode {
     /// <summary>
     /// Renders Data Matrix as BMP from bytes.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static byte[] Bmp(ReadOnlySpan<byte> data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
         var modules = EncodeBytes(data, mode);
         return MatrixBmpRenderer.Render(modules, BuildPngOptions(options));
@@ -133,6 +140,7 @@ public static partial class DataMatrixCode {
     /// <summary>
     /// Renders Data Matrix as PPM from bytes.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static byte[] Ppm(ReadOnlySpan<byte> data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
         var modules = EncodeBytes(data, mode);
         return MatrixPpmRenderer.Render(modules, BuildPngOptions(options));
@@ -141,6 +149,7 @@ public static partial class DataMatrixCode {
     /// <summary>
     /// Renders Data Matrix as PBM from bytes.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static byte[] Pbm(ReadOnlySpan<byte> data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
         var modules = EncodeBytes(data, mode);
         return MatrixPbmRenderer.Render(modules, BuildPngOptions(options));
@@ -149,6 +158,7 @@ public static partial class DataMatrixCode {
     /// <summary>
     /// Renders Data Matrix as PGM from bytes.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static byte[] Pgm(ReadOnlySpan<byte> data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
         var modules = EncodeBytes(data, mode);
         return MatrixPgmRenderer.Render(modules, BuildPngOptions(options));
@@ -157,6 +167,7 @@ public static partial class DataMatrixCode {
     /// <summary>
     /// Renders Data Matrix as PAM from bytes.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static byte[] Pam(ReadOnlySpan<byte> data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
         var modules = EncodeBytes(data, mode);
         return MatrixPamRenderer.Render(modules, BuildPngOptions(options));
@@ -165,6 +176,7 @@ public static partial class DataMatrixCode {
     /// <summary>
     /// Renders Data Matrix as XBM from bytes.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string Xbm(ReadOnlySpan<byte> data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
         var modules = EncodeBytes(data, mode);
         return MatrixXbmRenderer.Render(modules, BuildPngOptions(options));
@@ -173,6 +185,7 @@ public static partial class DataMatrixCode {
     /// <summary>
     /// Renders Data Matrix as XPM from bytes.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string Xpm(ReadOnlySpan<byte> data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
         var modules = EncodeBytes(data, mode);
         return MatrixXpmRenderer.Render(modules, BuildPngOptions(options));
@@ -181,6 +194,7 @@ public static partial class DataMatrixCode {
     /// <summary>
     /// Renders Data Matrix as TGA from bytes.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static byte[] Tga(ReadOnlySpan<byte> data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
         var modules = EncodeBytes(data, mode);
         return MatrixTgaRenderer.Render(modules, BuildPngOptions(options));
@@ -189,6 +203,7 @@ public static partial class DataMatrixCode {
     /// <summary>
     /// Renders Data Matrix as ICO from bytes.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static byte[] Ico(ReadOnlySpan<byte> data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
         var modules = EncodeBytes(data, mode);
         return MatrixIcoRenderer.Render(modules, BuildPngOptions(options), BuildIcoOptions(options));
@@ -201,6 +216,7 @@ public static partial class DataMatrixCode {
     /// <param name="mode">Vector or raster output.</param>
     /// <param name="options">Optional rendering options.</param>
     /// <param name="renderMode">Vector or raster output.</param>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static byte[] Pdf(ReadOnlySpan<byte> data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null, RenderMode renderMode = RenderMode.Vector) {
         var modules = EncodeBytes(data, mode);
         return MatrixPdfRenderer.Render(modules, BuildPngOptions(options), renderMode);
@@ -213,6 +229,7 @@ public static partial class DataMatrixCode {
     /// <param name="mode">Vector or raster output.</param>
     /// <param name="options">Optional rendering options.</param>
     /// <param name="renderMode">Vector or raster output.</param>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string Eps(ReadOnlySpan<byte> data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null, RenderMode renderMode = RenderMode.Vector) {
         var modules = EncodeBytes(data, mode);
         return MatrixEpsRenderer.Render(modules, BuildPngOptions(options), renderMode);
@@ -221,6 +238,7 @@ public static partial class DataMatrixCode {
     /// <summary>
     /// Renders Data Matrix as ASCII from bytes.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string Ascii(ReadOnlySpan<byte> data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixAsciiRenderOptions? options = null) {
         var modules = EncodeBytes(data, mode);
         return MatrixAsciiRenderer.Render(modules, options);
@@ -231,6 +249,7 @@ public static partial class DataMatrixCode {
     /// <summary>
     /// Renders Data Matrix as PNG.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static byte[] Png(string text, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
         var modules = Encode(text, mode);
         return MatrixPngRenderer.Render(modules, BuildPngOptions(options));
@@ -239,6 +258,7 @@ public static partial class DataMatrixCode {
     /// <summary>
     /// Renders Data Matrix as PNG from bytes.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static byte[] Png(byte[] data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
         var modules = EncodeBytes(data, mode);
         return MatrixPngRenderer.Render(modules, BuildPngOptions(options));
@@ -247,6 +267,7 @@ public static partial class DataMatrixCode {
     /// <summary>
     /// Renders Data Matrix as SVG.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string Svg(string text, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
         var modules = Encode(text, mode);
         return MatrixSvgRenderer.Render(modules, BuildSvgOptions(options));
@@ -255,6 +276,7 @@ public static partial class DataMatrixCode {
     /// <summary>
     /// Renders Data Matrix as SVGZ.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static byte[] Svgz(string text, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
         var modules = Encode(text, mode);
         return MatrixSvgzRenderer.Render(modules, BuildSvgOptions(options));
@@ -263,6 +285,7 @@ public static partial class DataMatrixCode {
     /// <summary>
     /// Renders Data Matrix as SVG from bytes.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string Svg(byte[] data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
         var modules = EncodeBytes(data, mode);
         return MatrixSvgRenderer.Render(modules, BuildSvgOptions(options));
@@ -271,6 +294,7 @@ public static partial class DataMatrixCode {
     /// <summary>
     /// Renders Data Matrix as SVGZ from bytes.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static byte[] Svgz(byte[] data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
         var modules = EncodeBytes(data, mode);
         return MatrixSvgzRenderer.Render(modules, BuildSvgOptions(options));
@@ -279,6 +303,7 @@ public static partial class DataMatrixCode {
     /// <summary>
     /// Renders Data Matrix as HTML.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string Html(string text, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
         var modules = Encode(text, mode);
         return MatrixHtmlRenderer.Render(modules, BuildHtmlOptions(options));
@@ -287,6 +312,7 @@ public static partial class DataMatrixCode {
     /// <summary>
     /// Renders Data Matrix as HTML from bytes.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string Html(byte[] data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
         var modules = EncodeBytes(data, mode);
         return MatrixHtmlRenderer.Render(modules, BuildHtmlOptions(options));
@@ -295,6 +321,7 @@ public static partial class DataMatrixCode {
     /// <summary>
     /// Renders Data Matrix as JPEG.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static byte[] Jpeg(string text, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
         var modules = Encode(text, mode);
         var opts = BuildPngOptions(options);
@@ -305,6 +332,7 @@ public static partial class DataMatrixCode {
     /// <summary>
     /// Renders Data Matrix as WebP.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static byte[] Webp(string text, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
         var modules = Encode(text, mode);
         var opts = BuildPngOptions(options);
@@ -315,6 +343,7 @@ public static partial class DataMatrixCode {
     /// <summary>
     /// Renders Data Matrix as BMP.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static byte[] Bmp(string text, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
         var modules = Encode(text, mode);
         return MatrixBmpRenderer.Render(modules, BuildPngOptions(options));
@@ -323,6 +352,7 @@ public static partial class DataMatrixCode {
     /// <summary>
     /// Renders Data Matrix as PPM.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static byte[] Ppm(string text, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
         var modules = Encode(text, mode);
         return MatrixPpmRenderer.Render(modules, BuildPngOptions(options));
@@ -331,6 +361,7 @@ public static partial class DataMatrixCode {
     /// <summary>
     /// Renders Data Matrix as PBM.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static byte[] Pbm(string text, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
         var modules = Encode(text, mode);
         return MatrixPbmRenderer.Render(modules, BuildPngOptions(options));
@@ -339,6 +370,7 @@ public static partial class DataMatrixCode {
     /// <summary>
     /// Renders Data Matrix as PGM.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static byte[] Pgm(string text, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
         var modules = Encode(text, mode);
         return MatrixPgmRenderer.Render(modules, BuildPngOptions(options));
@@ -347,6 +379,7 @@ public static partial class DataMatrixCode {
     /// <summary>
     /// Renders Data Matrix as PAM.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static byte[] Pam(string text, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
         var modules = Encode(text, mode);
         return MatrixPamRenderer.Render(modules, BuildPngOptions(options));
@@ -355,6 +388,7 @@ public static partial class DataMatrixCode {
     /// <summary>
     /// Renders Data Matrix as XBM.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string Xbm(string text, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
         var modules = Encode(text, mode);
         return MatrixXbmRenderer.Render(modules, BuildPngOptions(options));
@@ -363,6 +397,7 @@ public static partial class DataMatrixCode {
     /// <summary>
     /// Renders Data Matrix as XPM.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string Xpm(string text, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
         var modules = Encode(text, mode);
         return MatrixXpmRenderer.Render(modules, BuildPngOptions(options));
@@ -371,6 +406,7 @@ public static partial class DataMatrixCode {
     /// <summary>
     /// Renders Data Matrix as TGA.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static byte[] Tga(string text, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
         var modules = Encode(text, mode);
         return MatrixTgaRenderer.Render(modules, BuildPngOptions(options));
@@ -379,6 +415,7 @@ public static partial class DataMatrixCode {
     /// <summary>
     /// Renders Data Matrix as ICO.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static byte[] Ico(string text, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
         var modules = Encode(text, mode);
         return MatrixIcoRenderer.Render(modules, BuildPngOptions(options), BuildIcoOptions(options));
@@ -391,6 +428,7 @@ public static partial class DataMatrixCode {
     /// <param name="mode">Vector or raster output.</param>
     /// <param name="options">Optional rendering options.</param>
     /// <param name="renderMode">Vector or raster output.</param>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static byte[] Pdf(string text, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null, RenderMode renderMode = RenderMode.Vector) {
         var modules = Encode(text, mode);
         return MatrixPdfRenderer.Render(modules, BuildPngOptions(options), renderMode);
@@ -403,6 +441,7 @@ public static partial class DataMatrixCode {
     /// <param name="mode">Vector or raster output.</param>
     /// <param name="options">Optional rendering options.</param>
     /// <param name="renderMode">Vector or raster output.</param>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string Eps(string text, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null, RenderMode renderMode = RenderMode.Vector) {
         var modules = Encode(text, mode);
         return MatrixEpsRenderer.Render(modules, BuildPngOptions(options), renderMode);
@@ -411,6 +450,7 @@ public static partial class DataMatrixCode {
     /// <summary>
     /// Renders Data Matrix as ASCII.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string Ascii(string text, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixAsciiRenderOptions? options = null) {
         var modules = Encode(text, mode);
         return MatrixAsciiRenderer.Render(modules, options);
@@ -419,6 +459,7 @@ public static partial class DataMatrixCode {
     /// <summary>
     /// Renders Data Matrix as JPEG from bytes.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static byte[] Jpeg(byte[] data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
         var modules = EncodeBytes(data, mode);
         var opts = BuildPngOptions(options);
@@ -429,6 +470,7 @@ public static partial class DataMatrixCode {
     /// <summary>
     /// Renders Data Matrix as WebP from bytes.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static byte[] Webp(byte[] data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
         var modules = EncodeBytes(data, mode);
         var opts = BuildPngOptions(options);
@@ -439,6 +481,7 @@ public static partial class DataMatrixCode {
     /// <summary>
     /// Renders Data Matrix as BMP from bytes.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static byte[] Bmp(byte[] data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
         var modules = EncodeBytes(data, mode);
         return MatrixBmpRenderer.Render(modules, BuildPngOptions(options));
@@ -447,6 +490,7 @@ public static partial class DataMatrixCode {
     /// <summary>
     /// Renders Data Matrix as PPM.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static byte[] Ppm(byte[] data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
         var modules = EncodeBytes(data, mode);
         return MatrixPpmRenderer.Render(modules, BuildPngOptions(options));
@@ -455,6 +499,7 @@ public static partial class DataMatrixCode {
     /// <summary>
     /// Renders Data Matrix as PBM.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static byte[] Pbm(byte[] data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
         var modules = EncodeBytes(data, mode);
         return MatrixPbmRenderer.Render(modules, BuildPngOptions(options));
@@ -463,6 +508,7 @@ public static partial class DataMatrixCode {
     /// <summary>
     /// Renders Data Matrix as PGM.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static byte[] Pgm(byte[] data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
         var modules = EncodeBytes(data, mode);
         return MatrixPgmRenderer.Render(modules, BuildPngOptions(options));
@@ -471,6 +517,7 @@ public static partial class DataMatrixCode {
     /// <summary>
     /// Renders Data Matrix as PAM.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static byte[] Pam(byte[] data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
         var modules = EncodeBytes(data, mode);
         return MatrixPamRenderer.Render(modules, BuildPngOptions(options));
@@ -479,6 +526,7 @@ public static partial class DataMatrixCode {
     /// <summary>
     /// Renders Data Matrix as XBM.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string Xbm(byte[] data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
         var modules = EncodeBytes(data, mode);
         return MatrixXbmRenderer.Render(modules, BuildPngOptions(options));
@@ -487,6 +535,7 @@ public static partial class DataMatrixCode {
     /// <summary>
     /// Renders Data Matrix as XPM.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string Xpm(byte[] data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
         var modules = EncodeBytes(data, mode);
         return MatrixXpmRenderer.Render(modules, BuildPngOptions(options));
@@ -495,6 +544,7 @@ public static partial class DataMatrixCode {
     /// <summary>
     /// Renders Data Matrix as TGA.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static byte[] Tga(byte[] data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
         var modules = EncodeBytes(data, mode);
         return MatrixTgaRenderer.Render(modules, BuildPngOptions(options));
@@ -503,6 +553,7 @@ public static partial class DataMatrixCode {
     /// <summary>
     /// Renders Data Matrix as ICO.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static byte[] Ico(byte[] data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
         var modules = EncodeBytes(data, mode);
         return MatrixIcoRenderer.Render(modules, BuildPngOptions(options), BuildIcoOptions(options));
@@ -515,6 +566,7 @@ public static partial class DataMatrixCode {
     /// <param name="mode">Vector or raster output.</param>
     /// <param name="options">Optional rendering options.</param>
     /// <param name="renderMode">Vector or raster output.</param>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static byte[] Pdf(byte[] data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null, RenderMode renderMode = RenderMode.Vector) {
         var modules = EncodeBytes(data, mode);
         return MatrixPdfRenderer.Render(modules, BuildPngOptions(options), renderMode);
@@ -527,6 +579,7 @@ public static partial class DataMatrixCode {
     /// <param name="mode">Vector or raster output.</param>
     /// <param name="options">Optional rendering options.</param>
     /// <param name="renderMode">Vector or raster output.</param>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string Eps(byte[] data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null, RenderMode renderMode = RenderMode.Vector) {
         var modules = EncodeBytes(data, mode);
         return MatrixEpsRenderer.Render(modules, BuildPngOptions(options), renderMode);
@@ -535,6 +588,7 @@ public static partial class DataMatrixCode {
     /// <summary>
     /// Renders Data Matrix as ASCII from bytes.
     /// </summary>
+    [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string Ascii(byte[] data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixAsciiRenderOptions? options = null) {
         var modules = EncodeBytes(data, mode);
         return MatrixAsciiRenderer.Render(modules, options);

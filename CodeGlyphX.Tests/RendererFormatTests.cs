@@ -23,58 +23,60 @@ public sealed class RendererFormatTests {
     [Fact]
     public void Qr_Renderers_Produce_Expected_Formats() {
         var payload = "https://example.com";
-        var png = QrEasy.RenderPng(payload);
+        var png = QrCode.Render(payload, OutputFormat.Png).Data;
         Assert.True(IsPng(png));
 
-        var svg = QrEasy.RenderSvg(payload);
+        var svg = QrCode.Render(payload, OutputFormat.Svg).GetText();
         Assert.Contains("<svg", svg, StringComparison.OrdinalIgnoreCase);
 
-        var html = QrEasy.RenderHtml(payload);
+        var html = QrCode.Render(payload, OutputFormat.Html).GetText();
         Assert.Contains("<table", html, StringComparison.OrdinalIgnoreCase);
 
-        var bmp = QrEasy.RenderBmp(payload);
+        var bmp = QrCode.Render(payload, OutputFormat.Bmp).Data;
         Assert.True(IsBmp(bmp));
 
-        var ppm = QrEasy.RenderPpm(payload);
+        var ppm = QrCode.Render(payload, OutputFormat.Ppm).Data;
         Assert.True(IsPpm(ppm));
 
-        var pbm = QrEasy.RenderPbm(payload);
+        var pbm = QrCode.Render(payload, OutputFormat.Pbm).Data;
         Assert.True(IsPbm(pbm));
 
-        var pgm = QrEasy.RenderPgm(payload);
+        var pgm = QrCode.Render(payload, OutputFormat.Pgm).Data;
         Assert.True(IsPgm(pgm));
 
-        var pam = QrEasy.RenderPam(payload);
+        var pam = QrCode.Render(payload, OutputFormat.Pam).Data;
         Assert.True(IsPam(pam));
 
-        var xbm = QrEasy.RenderXbm(payload);
+        var xbm = QrCode.Render(payload, OutputFormat.Xbm).GetText();
         Assert.StartsWith("#define", xbm, StringComparison.Ordinal);
 
-        var xpm = QrEasy.RenderXpm(payload);
+        var xpm = QrCode.Render(payload, OutputFormat.Xpm).GetText();
         Assert.Contains("XPM", xpm, StringComparison.Ordinal);
 
-        var tga = QrEasy.RenderTga(payload);
+        var tga = QrCode.Render(payload, OutputFormat.Tga).Data;
         Assert.True(IsTga(tga));
 
-        var ico = QrEasy.RenderIco(payload);
+        var ico = QrCode.Render(payload, OutputFormat.Ico).Data;
         Assert.True(IsIco(ico));
 
-        var svgz = QrEasy.RenderSvgz(payload);
+        var svgz = QrCode.Render(payload, OutputFormat.Svgz).Data;
         Assert.True(IsGzip(svgz));
 
-        var pdf = QrEasy.RenderPdf(payload);
+        var pdf = QrCode.Render(payload, OutputFormat.Pdf).Data;
         Assert.True(IsPdf(pdf));
 
-        var eps = QrEasy.RenderEps(payload);
+        var eps = QrCode.Render(payload, OutputFormat.Eps).GetText();
         Assert.True(IsEps(eps));
 
-        var pdfRaster = QrEasy.RenderPdf(payload, mode: RenderMode.Raster);
+        var pdfRaster = QrCode.Render(payload, OutputFormat.Pdf, extras: new RenderExtras { VectorMode = RenderMode.Raster }).Data;
         Assert.True(IsPdf(pdfRaster));
 
-        var epsRaster = QrEasy.RenderEps(payload, mode: RenderMode.Raster);
+        var epsRaster = QrCode.Render(payload, OutputFormat.Eps, extras: new RenderExtras { VectorMode = RenderMode.Raster }).GetText();
         Assert.True(IsEps(epsRaster));
 
-        var ascii = QrEasy.RenderAscii(payload, new MatrixAsciiRenderOptions { QuietZone = 1 });
+        var ascii = QrCode.Render(payload, OutputFormat.Ascii, extras: new RenderExtras {
+            MatrixAscii = new MatrixAsciiRenderOptions { QuietZone = 1 }
+        }).GetText();
         Assert.Contains("#", ascii, StringComparison.Ordinal);
     }
 
@@ -95,7 +97,7 @@ public sealed class RendererFormatTests {
 #pragma warning restore CS0618
 
         foreach (var preset in presets) {
-            var png = QrEasy.RenderPng(payload, preset);
+            var png = QrCode.Render(payload, OutputFormat.Png, preset).Data;
             Assert.True(ImageReader.TryDetectFormat(png, out var format));
             Assert.Equal(ImageFormat.Png, format);
         }
@@ -111,7 +113,7 @@ public sealed class RendererFormatTests {
         };
 
         foreach (var art in arts) {
-            var png = QrEasy.RenderPng(payload, new QrEasyOptions { Art = art });
+            var png = QrCode.Render(payload, OutputFormat.Png, new QrEasyOptions { Art = art }).Data;
             Assert.True(ImageReader.TryDetectFormat(png, out var format));
             Assert.Equal(ImageFormat.Png, format);
         }
@@ -120,10 +122,12 @@ public sealed class RendererFormatTests {
     [Fact]
     public void Qr_Ascii_UnicodeBlocks_Uses_Block_Glyphs() {
         var payload = "https://example.com";
-        var ascii = QrEasy.RenderAscii(payload, new MatrixAsciiRenderOptions {
-            QuietZone = 1,
-            UseUnicodeBlocks = true
-        });
+        var ascii = QrCode.Render(payload, OutputFormat.Ascii, extras: new RenderExtras {
+            MatrixAscii = new MatrixAsciiRenderOptions {
+                QuietZone = 1,
+                UseUnicodeBlocks = true
+            }
+        }).GetText();
 
         Assert.Contains("█", ascii, StringComparison.Ordinal);
     }
@@ -131,12 +135,14 @@ public sealed class RendererFormatTests {
     [Fact]
     public void Qr_Ascii_AnsiColors_Emits_Escape_Codes() {
         var payload = "https://example.com";
-        var ascii = QrEasy.RenderAscii(payload, new MatrixAsciiRenderOptions {
-            QuietZone = 1,
-            UseUnicodeBlocks = true,
-            UseAnsiColors = true,
-            UseAnsiTrueColor = false
-        });
+        var ascii = QrCode.Render(payload, OutputFormat.Ascii, extras: new RenderExtras {
+            MatrixAscii = new MatrixAsciiRenderOptions {
+                QuietZone = 1,
+                UseUnicodeBlocks = true,
+                UseAnsiColors = true,
+                UseAnsiTrueColor = false
+            }
+        }).GetText();
 
         Assert.Contains("\u001b[", ascii, StringComparison.Ordinal);
     }
@@ -144,7 +150,9 @@ public sealed class RendererFormatTests {
     [Fact]
     public void Qr_Ascii_ConsolePreset_Is_Scan_Friendly() {
         var payload = "https://example.com";
-        var ascii = QrEasy.RenderAscii(payload, AsciiPresets.Console(scale: 3));
+        var ascii = QrCode.Render(payload, OutputFormat.Ascii, extras: new RenderExtras {
+            MatrixAscii = AsciiPresets.Console(scale: 3)
+        }).GetText();
 
         Assert.Contains("█", ascii, StringComparison.Ordinal);
         Assert.Contains("\u001b[", ascii, StringComparison.Ordinal);
@@ -153,7 +161,9 @@ public sealed class RendererFormatTests {
     [Fact]
     public void Qr_Ascii_ConsoleWrapper_Uses_Preset() {
         var payload = "https://example.com";
-        var ascii = QrEasy.RenderAsciiConsole(payload, scale: 3);
+        var ascii = QrCode.Render(payload, OutputFormat.Ascii, extras: new RenderExtras {
+            MatrixAscii = AsciiPresets.Console(scale: 3)
+        }).GetText();
 
         Assert.Contains("█", ascii, StringComparison.Ordinal);
         Assert.Contains("\u001b[", ascii, StringComparison.Ordinal);
@@ -162,18 +172,22 @@ public sealed class RendererFormatTests {
     [Fact]
     public void Qr_Ascii_Scale_Increases_Output_Size() {
         var payload = "https://example.com";
-        var baseAscii = QrEasy.RenderAscii(payload, new MatrixAsciiRenderOptions {
-            QuietZone = 1,
-            ModuleWidth = 1,
-            ModuleHeight = 1,
-            Scale = 1
-        });
-        var scaledAscii = QrEasy.RenderAscii(payload, new MatrixAsciiRenderOptions {
-            QuietZone = 1,
-            ModuleWidth = 1,
-            ModuleHeight = 1,
-            Scale = 2
-        });
+        var baseAscii = QrCode.Render(payload, OutputFormat.Ascii, extras: new RenderExtras {
+            MatrixAscii = new MatrixAsciiRenderOptions {
+                QuietZone = 1,
+                ModuleWidth = 1,
+                ModuleHeight = 1,
+                Scale = 1
+            }
+        }).GetText();
+        var scaledAscii = QrCode.Render(payload, OutputFormat.Ascii, extras: new RenderExtras {
+            MatrixAscii = new MatrixAsciiRenderOptions {
+                QuietZone = 1,
+                ModuleWidth = 1,
+                ModuleHeight = 1,
+                Scale = 2
+            }
+        }).GetText();
 
         Assert.True(scaledAscii.Length > baseAscii.Length);
     }
@@ -185,7 +199,7 @@ public sealed class RendererFormatTests {
             IcoSizes = new[] { 32, 64, 128 }
         };
 
-        var ico = QrEasy.RenderIco(payload, opts);
+        var ico = QrCode.Render(payload, OutputFormat.Ico, opts).Data;
         Assert.True(IsIco(ico));
         Assert.Equal(3, GetIcoCount(ico));
     }
@@ -232,16 +246,16 @@ public sealed class RendererFormatTests {
         var svgz = BarcodeSvgzRenderer.Render(barcode, new BarcodeSvgRenderOptions());
         Assert.True(IsGzip(svgz));
 
-        var pdf = Barcode.Pdf(BarcodeType.Code128, "CODEGLYPH-123");
+        var pdf = Barcode.Render(BarcodeType.Code128, "CODEGLYPH-123", OutputFormat.Pdf).Data;
         Assert.True(IsPdf(pdf));
 
-        var eps = Barcode.Eps(BarcodeType.Code128, "CODEGLYPH-123");
+        var eps = Barcode.Render(BarcodeType.Code128, "CODEGLYPH-123", OutputFormat.Eps).GetText();
         Assert.True(IsEps(eps));
 
-        var pdfRaster = Barcode.Pdf(BarcodeType.Code128, "CODEGLYPH-123", mode: RenderMode.Raster);
+        var pdfRaster = Barcode.Render(BarcodeType.Code128, "CODEGLYPH-123", OutputFormat.Pdf, extras: new RenderExtras { VectorMode = RenderMode.Raster }).Data;
         Assert.True(IsPdf(pdfRaster));
 
-        var epsRaster = Barcode.Eps(BarcodeType.Code128, "CODEGLYPH-123", mode: RenderMode.Raster);
+        var epsRaster = Barcode.Render(BarcodeType.Code128, "CODEGLYPH-123", OutputFormat.Eps, extras: new RenderExtras { VectorMode = RenderMode.Raster }).GetText();
         Assert.True(IsEps(epsRaster));
 
         var ascii = BarcodeAsciiRenderer.Render(barcode, new BarcodeAsciiRenderOptions { QuietZone = 1, Height = 2 });
@@ -255,12 +269,12 @@ public sealed class RendererFormatTests {
             ModuleCornerRadiusPx = 2,
         };
 
-        var pdf = QrEasy.RenderPdf("https://example.com", opts, RenderMode.Vector);
+        var pdf = QrCode.Render("https://example.com", OutputFormat.Pdf, opts, new RenderExtras { VectorMode = RenderMode.Vector }).Data;
         var pdfText = Encoding.ASCII.GetString(pdf);
         Assert.Contains(" c\n", pdfText, StringComparison.Ordinal);
         Assert.DoesNotContain("/Subtype /Image", pdfText, StringComparison.Ordinal);
 
-        var eps = QrEasy.RenderEps("https://example.com", opts, RenderMode.Vector);
+        var eps = QrCode.Render("https://example.com", OutputFormat.Eps, opts, new RenderExtras { VectorMode = RenderMode.Vector }).GetText();
         Assert.Contains("curveto", eps, StringComparison.Ordinal);
         Assert.DoesNotContain("colorimage", eps, StringComparison.OrdinalIgnoreCase);
     }
@@ -275,11 +289,11 @@ public sealed class RendererFormatTests {
             },
         };
 
-        var pdf = QrEasy.RenderPdf("https://example.com", opts, RenderMode.Vector);
+        var pdf = QrCode.Render("https://example.com", OutputFormat.Pdf, opts, new RenderExtras { VectorMode = RenderMode.Vector }).Data;
         var pdfText = Encoding.ASCII.GetString(pdf);
         Assert.Contains("/Subtype /Image", pdfText, StringComparison.Ordinal);
 
-        var eps = QrEasy.RenderEps("https://example.com", opts, RenderMode.Vector);
+        var eps = QrCode.Render("https://example.com", OutputFormat.Eps, opts, new RenderExtras { VectorMode = RenderMode.Vector }).GetText();
         Assert.Contains("colorimage", eps, StringComparison.Ordinal);
     }
 
@@ -299,11 +313,11 @@ public sealed class RendererFormatTests {
             LogoPng = logoPng,
         };
 
-        var pdf = QrEasy.RenderPdf("https://example.com", opts, RenderMode.Vector);
+        var pdf = QrCode.Render("https://example.com", OutputFormat.Pdf, opts, new RenderExtras { VectorMode = RenderMode.Vector }).Data;
         var pdfText = Encoding.ASCII.GetString(pdf);
         Assert.Contains("/Subtype /Image", pdfText, StringComparison.Ordinal);
 
-        var eps = QrEasy.RenderEps("https://example.com", opts, RenderMode.Vector);
+        var eps = QrCode.Render("https://example.com", OutputFormat.Eps, opts, new RenderExtras { VectorMode = RenderMode.Vector }).GetText();
         Assert.Contains("colorimage", eps, StringComparison.Ordinal);
     }
 
