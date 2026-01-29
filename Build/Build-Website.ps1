@@ -44,14 +44,15 @@ $websiteProjectPath = Join-Path $repoRoot $WebsiteProject
 $assemblyPath = [IO.Path]::Combine($repoRoot, "CodeGlyphX", "bin", $Configuration, $Framework, "CodeGlyphX.dll")
 $xmlPath = [IO.Path]::Combine($repoRoot, "CodeGlyphX", "bin", $Configuration, $Framework, "CodeGlyphX.xml")
 $apiOutput = [IO.Path]::Combine($repoRoot, "CodeGlyphX.Website", "wwwroot", "api")
-$apiCss = [IO.Path]::Combine($repoRoot, "CodeGlyphX.Website", "wwwroot", "css", "api-docs.css")
+$apiCssPath = [IO.Path]::Combine($repoRoot, "CodeGlyphX.Website", "wwwroot", "css", "api-docs.css")
+$apiCssUrl = "/css/api-docs.css"
 $apiHeader = [IO.Path]::Combine($repoRoot, "CodeGlyphX.Website", "wwwroot", "api-fragments", "header.html")
 $apiFooter = [IO.Path]::Combine($repoRoot, "CodeGlyphX.Website", "wwwroot", "api-fragments", "footer.html")
 
 if (-not (Test-Path $codeGlyphProject)) { throw "Missing CodeGlyphX.csproj at $codeGlyphProject" }
 if (-not (Test-Path $websiteProjectPath)) { throw "Missing website project at $websiteProjectPath" }
 if (-not (Test-Path $PowerForgeCliProject -PathType Leaf)) { throw "Missing PowerForge.Cli project at $PowerForgeCliProject" }
-if (-not (Test-Path $apiCss)) { throw "Missing API docs CSS at $apiCss" }
+if (-not (Test-Path $apiCssPath)) { throw "Missing API docs CSS at $apiCssPath" }
 if (-not (Test-Path $apiHeader)) { throw "Missing API docs header at $apiHeader" }
 if (-not (Test-Path $apiFooter)) { throw "Missing API docs footer at $apiFooter" }
 
@@ -74,7 +75,7 @@ if (-not $SkipApiDocs) {
         "--format","hybrid",
         "--title",$SiteTitle,
         "--base-url",$BaseUrl,
-        "--css",$apiCss,
+        "--css",$apiCssUrl,
         "--header-html",$apiHeader,
         "--footer-html",$apiFooter
     )

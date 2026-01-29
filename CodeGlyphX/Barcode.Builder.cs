@@ -267,10 +267,6 @@ public static partial class Barcode {
         /// </summary>
         public string Ascii(BarcodeAsciiRenderOptions? options = null) => Render(OutputFormat.Ascii, new RenderExtras { BarcodeAscii = options }).GetText();
 
-        private RenderedOutput Render(OutputFormat format, RenderExtras? extras = null) {
-            return Barcode.Render(_type, _content, format, Options, extras);
-        }
-
         /// <summary>
         /// Saves PNG to a file.
         /// </summary>

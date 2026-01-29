@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>CodeGlyphX.AztecCode - CodeGlyphX API Reference</title>
-  <link rel="stylesheet" href="/mnt/c/Support/GitHub/CodeMatrix/CodeGlyphX.Website/wwwroot/css/api-docs.css" />
+  <link rel="stylesheet" href="/css/api-docs.css" />
 </head>
 <body>
 <header class="header">
@@ -459,7 +459,7 @@
           </div>
         </li>
         <li>
-          <strong>Save</strong> - Saves Aztec to a file based on extension (.png/.webp/.svg/.svgz/.svg.gz/.html/.htm/.jpg/.jpeg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps/.ps/.txt). Defaults to PNG when no extension is provided.
+          <strong>Save</strong> - Saves Aztec to a file based on extension. Defaults to PNG when no extension is provided.
           <div class="pf-api-params">
             <ul>
               <li><code>arg1</code> (System.String)</li>
@@ -467,6 +467,18 @@
               <li><code>arg3</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
               <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
               <li><code>arg5</code> (System.String)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>Save</strong> - Saves Aztec to a file based on extension. Defaults to PNG when no extension is provided.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (System.String)</li>
+              <li><code>arg3</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>arg5</code> (CodeGlyphX.Rendering.RenderExtras)</li>
             </ul>
           </div>
         </li>
@@ -1254,6 +1266,18 @@
           <div class="pf-api-params">
             <ul>
               <li><code>arg1</code> (System.IO.Stream)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>Render</strong> - Renders an Aztec payload to the requested output format.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (CodeGlyphX.Rendering.OutputFormat)</li>
+              <li><code>arg3</code> (CodeGlyphX.Aztec.AztecEncodeOptions)</li>
+              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>arg5</code> (CodeGlyphX.Rendering.RenderExtras)</li>
             </ul>
           </div>
         </li>

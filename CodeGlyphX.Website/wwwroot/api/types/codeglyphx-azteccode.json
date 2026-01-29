@@ -855,7 +855,7 @@
     },
     {
       "name": "Save",
-      "summary": "Saves Aztec to a file based on extension (.png/.webp/.svg/.svgz/.svg.gz/.html/.htm/.jpg/.jpeg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps/.ps/.txt). Defaults to PNG when no extension is provided.",
+      "summary": "Saves Aztec to a file based on extension. Defaults to PNG when no extension is provided.",
       "returns": null,
       "parameters": [
         {
@@ -881,6 +881,38 @@
         {
           "name": "arg5",
           "type": "System.String",
+          "summary": null
+        }
+      ]
+    },
+    {
+      "name": "Save",
+      "summary": "Saves Aztec to a file based on extension. Defaults to PNG when no extension is provided.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
+        },
+        {
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
+        },
+        {
+          "name": "arg3",
+          "type": "CodeGlyphX.Aztec.AztecEncodeOptions",
+          "summary": null
+        },
+        {
+          "name": "arg4",
+          "type": "CodeGlyphX.MatrixOptions",
+          "summary": null
+        },
+        {
+          "name": "arg5",
+          "type": "CodeGlyphX.Rendering.RenderExtras",
           "summary": null
         }
       ]
@@ -2744,6 +2776,38 @@
         {
           "name": "arg1",
           "type": "System.IO.Stream",
+          "summary": null
+        }
+      ]
+    },
+    {
+      "name": "Render",
+      "summary": "Renders an Aztec payload to the requested output format.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
+        },
+        {
+          "name": "arg2",
+          "type": "CodeGlyphX.Rendering.OutputFormat",
+          "summary": null
+        },
+        {
+          "name": "arg3",
+          "type": "CodeGlyphX.Aztec.AztecEncodeOptions",
+          "summary": null
+        },
+        {
+          "name": "arg4",
+          "type": "CodeGlyphX.MatrixOptions",
+          "summary": null
+        },
+        {
+          "name": "arg5",
+          "type": "CodeGlyphX.Rendering.RenderExtras",
           "summary": null
         }
       ]

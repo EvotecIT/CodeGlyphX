@@ -2738,6 +2738,102 @@
       ]
     },
     {
+      "name": "Render",
+      "summary": "Renders a Data Matrix payload to the requested output format.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
+        },
+        {
+          "name": "arg2",
+          "type": "CodeGlyphX.Rendering.OutputFormat",
+          "summary": null
+        },
+        {
+          "name": "arg3",
+          "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
+          "summary": null
+        },
+        {
+          "name": "arg4",
+          "type": "CodeGlyphX.MatrixOptions",
+          "summary": null
+        },
+        {
+          "name": "arg5",
+          "type": "CodeGlyphX.Rendering.RenderExtras",
+          "summary": null
+        }
+      ]
+    },
+    {
+      "name": "Render",
+      "summary": "Renders a Data Matrix byte payload to the requested output format.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "arg1",
+          "type": "System.Byte[]",
+          "summary": null
+        },
+        {
+          "name": "arg2",
+          "type": "CodeGlyphX.Rendering.OutputFormat",
+          "summary": null
+        },
+        {
+          "name": "arg3",
+          "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
+          "summary": null
+        },
+        {
+          "name": "arg4",
+          "type": "CodeGlyphX.MatrixOptions",
+          "summary": null
+        },
+        {
+          "name": "arg5",
+          "type": "CodeGlyphX.Rendering.RenderExtras",
+          "summary": null
+        }
+      ]
+    },
+    {
+      "name": "Render",
+      "summary": "Renders a Data Matrix byte payload to the requested output format.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "arg1",
+          "type": "System.ReadOnlySpan{System.Byte}",
+          "summary": null
+        },
+        {
+          "name": "arg2",
+          "type": "CodeGlyphX.Rendering.OutputFormat",
+          "summary": null
+        },
+        {
+          "name": "arg3",
+          "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
+          "summary": null
+        },
+        {
+          "name": "arg4",
+          "type": "CodeGlyphX.MatrixOptions",
+          "summary": null
+        },
+        {
+          "name": "arg5",
+          "type": "CodeGlyphX.Rendering.RenderExtras",
+          "summary": null
+        }
+      ]
+    },
+    {
       "name": "SavePng",
       "summary": "Saves Data Matrix PNG to a file for byte payloads.",
       "returns": null,
@@ -3687,7 +3783,7 @@
     },
     {
       "name": "Save",
-      "summary": "Saves Data Matrix to a file for byte payloads based on extension (.png/.webp/.svg/.svgz/.html/.jpg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps). Defaults to PNG when no extension is provided.",
+      "summary": "Saves Data Matrix to a file for byte payloads based on extension. Defaults to PNG when no extension is provided.",
       "returns": null,
       "parameters": [
         {
@@ -3713,6 +3809,166 @@
         {
           "name": "arg5",
           "type": "System.String",
+          "summary": null
+        }
+      ]
+    },
+    {
+      "name": "Save",
+      "summary": "Saves Data Matrix to a file for byte payloads based on extension. Defaults to PNG when no extension is provided.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "arg1",
+          "type": "System.ReadOnlySpan{System.Byte}",
+          "summary": null
+        },
+        {
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
+        },
+        {
+          "name": "arg3",
+          "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
+          "summary": null
+        },
+        {
+          "name": "arg4",
+          "type": "CodeGlyphX.MatrixOptions",
+          "summary": null
+        },
+        {
+          "name": "arg5",
+          "type": "CodeGlyphX.Rendering.RenderExtras",
+          "summary": null
+        }
+      ]
+    },
+    {
+      "name": "Save",
+      "summary": "Saves Data Matrix to a file based on extension. Defaults to PNG when no extension is provided.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
+        },
+        {
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
+        },
+        {
+          "name": "arg3",
+          "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
+          "summary": null
+        },
+        {
+          "name": "arg4",
+          "type": "CodeGlyphX.MatrixOptions",
+          "summary": null
+        },
+        {
+          "name": "arg5",
+          "type": "System.String",
+          "summary": null
+        }
+      ]
+    },
+    {
+      "name": "Save",
+      "summary": "Saves Data Matrix to a file based on extension. Defaults to PNG when no extension is provided.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
+        },
+        {
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
+        },
+        {
+          "name": "arg3",
+          "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
+          "summary": null
+        },
+        {
+          "name": "arg4",
+          "type": "CodeGlyphX.MatrixOptions",
+          "summary": null
+        },
+        {
+          "name": "arg5",
+          "type": "CodeGlyphX.Rendering.RenderExtras",
+          "summary": null
+        }
+      ]
+    },
+    {
+      "name": "Save",
+      "summary": "Saves Data Matrix to a file for byte payloads based on extension. Defaults to PNG when no extension is provided.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "arg1",
+          "type": "System.Byte[]",
+          "summary": null
+        },
+        {
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
+        },
+        {
+          "name": "arg3",
+          "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
+          "summary": null
+        },
+        {
+          "name": "arg4",
+          "type": "CodeGlyphX.MatrixOptions",
+          "summary": null
+        },
+        {
+          "name": "arg5",
+          "type": "System.String",
+          "summary": null
+        }
+      ]
+    },
+    {
+      "name": "Save",
+      "summary": "Saves Data Matrix to a file for byte payloads based on extension. Defaults to PNG when no extension is provided.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "arg1",
+          "type": "System.Byte[]",
+          "summary": null
+        },
+        {
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
+        },
+        {
+          "name": "arg3",
+          "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
+          "summary": null
+        },
+        {
+          "name": "arg4",
+          "type": "CodeGlyphX.MatrixOptions",
+          "summary": null
+        },
+        {
+          "name": "arg5",
+          "type": "CodeGlyphX.Rendering.RenderExtras",
           "summary": null
         }
       ]
@@ -3757,60 +4013,6 @@
         {
           "name": "arg2",
           "type": "System.String",
-          "summary": null
-        },
-        {
-          "name": "arg3",
-          "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
-          "summary": null
-        },
-        {
-          "name": "arg4",
-          "type": "CodeGlyphX.MatrixOptions",
-          "summary": null
-        }
-      ]
-    },
-    {
-      "name": "SavePng",
-      "summary": "Saves Data Matrix PNG to a stream.",
-      "returns": null,
-      "parameters": [
-        {
-          "name": "arg1",
-          "type": "System.String",
-          "summary": null
-        },
-        {
-          "name": "arg2",
-          "type": "System.IO.Stream",
-          "summary": null
-        },
-        {
-          "name": "arg3",
-          "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
-          "summary": null
-        },
-        {
-          "name": "arg4",
-          "type": "CodeGlyphX.MatrixOptions",
-          "summary": null
-        }
-      ]
-    },
-    {
-      "name": "SavePng",
-      "summary": "Saves Data Matrix PNG to a stream for byte payloads.",
-      "returns": null,
-      "parameters": [
-        {
-          "name": "arg1",
-          "type": "System.Byte[]",
-          "summary": null
-        },
-        {
-          "name": "arg2",
-          "type": "System.IO.Stream",
           "summary": null
         },
         {
@@ -3934,114 +4136,6 @@
       ]
     },
     {
-      "name": "SaveSvg",
-      "summary": "Saves Data Matrix SVG to a stream.",
-      "returns": null,
-      "parameters": [
-        {
-          "name": "arg1",
-          "type": "System.String",
-          "summary": null
-        },
-        {
-          "name": "arg2",
-          "type": "System.IO.Stream",
-          "summary": null
-        },
-        {
-          "name": "arg3",
-          "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
-          "summary": null
-        },
-        {
-          "name": "arg4",
-          "type": "CodeGlyphX.MatrixOptions",
-          "summary": null
-        }
-      ]
-    },
-    {
-      "name": "SaveSvgz",
-      "summary": "Saves Data Matrix SVGZ to a stream.",
-      "returns": null,
-      "parameters": [
-        {
-          "name": "arg1",
-          "type": "System.String",
-          "summary": null
-        },
-        {
-          "name": "arg2",
-          "type": "System.IO.Stream",
-          "summary": null
-        },
-        {
-          "name": "arg3",
-          "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
-          "summary": null
-        },
-        {
-          "name": "arg4",
-          "type": "CodeGlyphX.MatrixOptions",
-          "summary": null
-        }
-      ]
-    },
-    {
-      "name": "SaveSvg",
-      "summary": "Saves Data Matrix SVG to a stream for byte payloads.",
-      "returns": null,
-      "parameters": [
-        {
-          "name": "arg1",
-          "type": "System.Byte[]",
-          "summary": null
-        },
-        {
-          "name": "arg2",
-          "type": "System.IO.Stream",
-          "summary": null
-        },
-        {
-          "name": "arg3",
-          "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
-          "summary": null
-        },
-        {
-          "name": "arg4",
-          "type": "CodeGlyphX.MatrixOptions",
-          "summary": null
-        }
-      ]
-    },
-    {
-      "name": "SaveSvgz",
-      "summary": "Saves Data Matrix SVGZ to a stream for byte payloads.",
-      "returns": null,
-      "parameters": [
-        {
-          "name": "arg1",
-          "type": "System.Byte[]",
-          "summary": null
-        },
-        {
-          "name": "arg2",
-          "type": "System.IO.Stream",
-          "summary": null
-        },
-        {
-          "name": "arg3",
-          "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
-          "summary": null
-        },
-        {
-          "name": "arg4",
-          "type": "CodeGlyphX.MatrixOptions",
-          "summary": null
-        }
-      ]
-    },
-    {
       "name": "SaveHtml",
       "summary": "Saves Data Matrix HTML to a file.",
       "returns": null,
@@ -4086,70 +4180,6 @@
         {
           "name": "arg2",
           "type": "System.String",
-          "summary": null
-        },
-        {
-          "name": "arg3",
-          "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
-          "summary": null
-        },
-        {
-          "name": "arg4",
-          "type": "CodeGlyphX.MatrixOptions",
-          "summary": null
-        },
-        {
-          "name": "arg5",
-          "type": "System.String",
-          "summary": null
-        }
-      ]
-    },
-    {
-      "name": "SaveHtml",
-      "summary": "Saves Data Matrix HTML to a stream.",
-      "returns": null,
-      "parameters": [
-        {
-          "name": "arg1",
-          "type": "System.String",
-          "summary": null
-        },
-        {
-          "name": "arg2",
-          "type": "System.IO.Stream",
-          "summary": null
-        },
-        {
-          "name": "arg3",
-          "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
-          "summary": null
-        },
-        {
-          "name": "arg4",
-          "type": "CodeGlyphX.MatrixOptions",
-          "summary": null
-        },
-        {
-          "name": "arg5",
-          "type": "System.String",
-          "summary": null
-        }
-      ]
-    },
-    {
-      "name": "SaveHtml",
-      "summary": "Saves Data Matrix HTML to a stream for byte payloads.",
-      "returns": null,
-      "parameters": [
-        {
-          "name": "arg1",
-          "type": "System.Byte[]",
-          "summary": null
-        },
-        {
-          "name": "arg2",
-          "type": "System.IO.Stream",
           "summary": null
         },
         {
@@ -4531,6 +4561,97 @@
       ]
     },
     {
+      "name": "SaveIco",
+      "summary": "Saves Data Matrix ICO to a file for byte payloads.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "arg1",
+          "type": "System.Byte[]",
+          "summary": null
+        },
+        {
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
+        },
+        {
+          "name": "arg3",
+          "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
+          "summary": null
+        },
+        {
+          "name": "arg4",
+          "type": "CodeGlyphX.MatrixOptions",
+          "summary": null
+        }
+      ]
+    },
+    {
+      "name": "SavePdf",
+      "summary": "Saves Data Matrix PDF to a file for byte payloads.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "data",
+          "type": "System.Byte[]",
+          "summary": "Payload bytes."
+        },
+        {
+          "name": "path",
+          "type": "System.String",
+          "summary": "Output file path."
+        },
+        {
+          "name": "mode",
+          "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
+          "summary": "Vector or raster output."
+        },
+        {
+          "name": "options",
+          "type": "CodeGlyphX.MatrixOptions",
+          "summary": "Optional rendering options."
+        },
+        {
+          "name": "renderMode",
+          "type": "CodeGlyphX.Rendering.RenderMode",
+          "summary": "Vector or raster output."
+        }
+      ]
+    },
+    {
+      "name": "SaveEps",
+      "summary": "Saves Data Matrix EPS to a file for byte payloads.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "data",
+          "type": "System.Byte[]",
+          "summary": "Payload bytes."
+        },
+        {
+          "name": "path",
+          "type": "System.String",
+          "summary": "Output file path."
+        },
+        {
+          "name": "mode",
+          "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
+          "summary": "Vector or raster output."
+        },
+        {
+          "name": "options",
+          "type": "CodeGlyphX.MatrixOptions",
+          "summary": "Optional rendering options."
+        },
+        {
+          "name": "renderMode",
+          "type": "CodeGlyphX.Rendering.RenderMode",
+          "summary": "Vector or raster output."
+        }
+      ]
+    },
+    {
       "name": "SaveJpeg",
       "summary": "Saves Data Matrix JPEG to a file for byte payloads.",
       "returns": null,
@@ -4801,18 +4922,18 @@
       ]
     },
     {
-      "name": "SaveIco",
-      "summary": "Saves Data Matrix ICO to a file for byte payloads.",
+      "name": "SavePng",
+      "summary": "Saves Data Matrix PNG to a stream.",
       "returns": null,
       "parameters": [
         {
           "name": "arg1",
-          "type": "System.Byte[]",
+          "type": "System.String",
           "summary": null
         },
         {
           "name": "arg2",
-          "type": "System.String",
+          "type": "System.IO.Stream",
           "summary": null
         },
         {
@@ -4828,66 +4949,201 @@
       ]
     },
     {
-      "name": "SavePdf",
-      "summary": "Saves Data Matrix PDF to a file for byte payloads.",
+      "name": "SavePng",
+      "summary": "Saves Data Matrix PNG to a stream for byte payloads.",
       "returns": null,
       "parameters": [
         {
-          "name": "data",
+          "name": "arg1",
           "type": "System.Byte[]",
-          "summary": "Payload bytes."
+          "summary": null
         },
         {
-          "name": "path",
-          "type": "System.String",
-          "summary": "Output file path."
+          "name": "arg2",
+          "type": "System.IO.Stream",
+          "summary": null
         },
         {
-          "name": "mode",
+          "name": "arg3",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
-          "summary": "Vector or raster output."
+          "summary": null
         },
         {
-          "name": "options",
+          "name": "arg4",
           "type": "CodeGlyphX.MatrixOptions",
-          "summary": "Optional rendering options."
-        },
-        {
-          "name": "renderMode",
-          "type": "CodeGlyphX.Rendering.RenderMode",
-          "summary": "Vector or raster output."
+          "summary": null
         }
       ]
     },
     {
-      "name": "SaveEps",
-      "summary": "Saves Data Matrix EPS to a file for byte payloads.",
+      "name": "SaveSvg",
+      "summary": "Saves Data Matrix SVG to a stream.",
       "returns": null,
       "parameters": [
         {
-          "name": "data",
-          "type": "System.Byte[]",
-          "summary": "Payload bytes."
-        },
-        {
-          "name": "path",
+          "name": "arg1",
           "type": "System.String",
-          "summary": "Output file path."
+          "summary": null
         },
         {
-          "name": "mode",
+          "name": "arg2",
+          "type": "System.IO.Stream",
+          "summary": null
+        },
+        {
+          "name": "arg3",
           "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
-          "summary": "Vector or raster output."
+          "summary": null
         },
         {
-          "name": "options",
+          "name": "arg4",
           "type": "CodeGlyphX.MatrixOptions",
-          "summary": "Optional rendering options."
+          "summary": null
+        }
+      ]
+    },
+    {
+      "name": "SaveSvgz",
+      "summary": "Saves Data Matrix SVGZ to a stream.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
         },
         {
-          "name": "renderMode",
-          "type": "CodeGlyphX.Rendering.RenderMode",
-          "summary": "Vector or raster output."
+          "name": "arg2",
+          "type": "System.IO.Stream",
+          "summary": null
+        },
+        {
+          "name": "arg3",
+          "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
+          "summary": null
+        },
+        {
+          "name": "arg4",
+          "type": "CodeGlyphX.MatrixOptions",
+          "summary": null
+        }
+      ]
+    },
+    {
+      "name": "SaveSvg",
+      "summary": "Saves Data Matrix SVG to a stream for byte payloads.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "arg1",
+          "type": "System.Byte[]",
+          "summary": null
+        },
+        {
+          "name": "arg2",
+          "type": "System.IO.Stream",
+          "summary": null
+        },
+        {
+          "name": "arg3",
+          "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
+          "summary": null
+        },
+        {
+          "name": "arg4",
+          "type": "CodeGlyphX.MatrixOptions",
+          "summary": null
+        }
+      ]
+    },
+    {
+      "name": "SaveSvgz",
+      "summary": "Saves Data Matrix SVGZ to a stream for byte payloads.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "arg1",
+          "type": "System.Byte[]",
+          "summary": null
+        },
+        {
+          "name": "arg2",
+          "type": "System.IO.Stream",
+          "summary": null
+        },
+        {
+          "name": "arg3",
+          "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
+          "summary": null
+        },
+        {
+          "name": "arg4",
+          "type": "CodeGlyphX.MatrixOptions",
+          "summary": null
+        }
+      ]
+    },
+    {
+      "name": "SaveHtml",
+      "summary": "Saves Data Matrix HTML to a stream.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
+        },
+        {
+          "name": "arg2",
+          "type": "System.IO.Stream",
+          "summary": null
+        },
+        {
+          "name": "arg3",
+          "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
+          "summary": null
+        },
+        {
+          "name": "arg4",
+          "type": "CodeGlyphX.MatrixOptions",
+          "summary": null
+        },
+        {
+          "name": "arg5",
+          "type": "System.String",
+          "summary": null
+        }
+      ]
+    },
+    {
+      "name": "SaveHtml",
+      "summary": "Saves Data Matrix HTML to a stream for byte payloads.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "arg1",
+          "type": "System.Byte[]",
+          "summary": null
+        },
+        {
+          "name": "arg2",
+          "type": "System.IO.Stream",
+          "summary": null
+        },
+        {
+          "name": "arg3",
+          "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
+          "summary": null
+        },
+        {
+          "name": "arg4",
+          "type": "CodeGlyphX.MatrixOptions",
+          "summary": null
+        },
+        {
+          "name": "arg5",
+          "type": "System.String",
+          "summary": null
         }
       ]
     },
@@ -5610,70 +5866,6 @@
           "name": "renderMode",
           "type": "CodeGlyphX.Rendering.RenderMode",
           "summary": "Vector or raster output."
-        }
-      ]
-    },
-    {
-      "name": "Save",
-      "summary": "Saves Data Matrix to a file based on extension (.png/.webp/.svg/.svgz/.html/.jpg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps). Defaults to PNG when no extension is provided.",
-      "returns": null,
-      "parameters": [
-        {
-          "name": "arg1",
-          "type": "System.String",
-          "summary": null
-        },
-        {
-          "name": "arg2",
-          "type": "System.String",
-          "summary": null
-        },
-        {
-          "name": "arg3",
-          "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
-          "summary": null
-        },
-        {
-          "name": "arg4",
-          "type": "CodeGlyphX.MatrixOptions",
-          "summary": null
-        },
-        {
-          "name": "arg5",
-          "type": "System.String",
-          "summary": null
-        }
-      ]
-    },
-    {
-      "name": "Save",
-      "summary": "Saves Data Matrix to a file for byte payloads based on extension (.png/.webp/.svg/.svgz/.html/.jpg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps). Defaults to PNG when no extension is provided.",
-      "returns": null,
-      "parameters": [
-        {
-          "name": "arg1",
-          "type": "System.Byte[]",
-          "summary": null
-        },
-        {
-          "name": "arg2",
-          "type": "System.String",
-          "summary": null
-        },
-        {
-          "name": "arg3",
-          "type": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
-          "summary": null
-        },
-        {
-          "name": "arg4",
-          "type": "CodeGlyphX.MatrixOptions",
-          "summary": null
-        },
-        {
-          "name": "arg5",
-          "type": "System.String",
-          "summary": null
         }
       ]
     }

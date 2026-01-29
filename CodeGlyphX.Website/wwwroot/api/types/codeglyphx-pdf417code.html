@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>CodeGlyphX.Pdf417Code - CodeGlyphX API Reference</title>
-  <link rel="stylesheet" href="/mnt/c/Support/GitHub/CodeMatrix/CodeGlyphX.Website/wwwroot/css/api-docs.css" />
+  <link rel="stylesheet" href="/css/api-docs.css" />
 </head>
 <body>
 <header class="header">
@@ -1734,7 +1734,7 @@
           </div>
         </li>
         <li>
-          <strong>SaveMacro</strong> - Saves Macro PDF417 to a file based on extension (.png/.svg/.svgz/.html/.jpg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps). Defaults to PNG when no extension is provided.
+          <strong>SaveMacro</strong> - Saves Macro PDF417 to a file based on extension. Defaults to PNG when no extension is provided.
           <div class="pf-api-params">
             <ul>
               <li><code>arg1</code> (System.String)</li>
@@ -1742,8 +1742,56 @@
               <li><code>arg3</code> (System.String)</li>
               <li><code>arg4</code> (CodeGlyphX.Pdf417.Pdf417EncodeOptions)</li>
               <li><code>arg5</code> (CodeGlyphX.MatrixOptions)</li>
-              <li><code>arg6</code> (System.String)</li>
-              <li><code>arg7</code> (CodeGlyphX.Rendering.RenderMode)</li>
+              <li><code>arg6</code> (CodeGlyphX.Rendering.RenderExtras)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>Render</strong> - Renders a PDF417 payload to the requested output format.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (CodeGlyphX.Rendering.OutputFormat)</li>
+              <li><code>arg3</code> (CodeGlyphX.Pdf417.Pdf417EncodeOptions)</li>
+              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>arg5</code> (CodeGlyphX.Rendering.RenderExtras)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>RenderMacro</strong> - Renders a Macro PDF417 payload to the requested output format.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (CodeGlyphX.Pdf417.Pdf417MacroOptions)</li>
+              <li><code>arg3</code> (CodeGlyphX.Rendering.OutputFormat)</li>
+              <li><code>arg4</code> (CodeGlyphX.Pdf417.Pdf417EncodeOptions)</li>
+              <li><code>arg5</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>arg6</code> (CodeGlyphX.Rendering.RenderExtras)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>Render</strong> - Renders a PDF417 byte payload to the requested output format.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.Byte[])</li>
+              <li><code>arg2</code> (CodeGlyphX.Rendering.OutputFormat)</li>
+              <li><code>arg3</code> (CodeGlyphX.Pdf417.Pdf417EncodeOptions)</li>
+              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>arg5</code> (CodeGlyphX.Rendering.RenderExtras)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>Render</strong> - Renders a PDF417 byte payload to the requested output format.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>arg2</code> (CodeGlyphX.Rendering.OutputFormat)</li>
+              <li><code>arg3</code> (CodeGlyphX.Pdf417.Pdf417EncodeOptions)</li>
+              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>arg5</code> (CodeGlyphX.Rendering.RenderExtras)</li>
             </ul>
           </div>
         </li>
@@ -2128,7 +2176,7 @@
           </div>
         </li>
         <li>
-          <strong>Save</strong> - Saves PDF417 to a file for byte payloads based on extension (.png/.webp/.svg/.svgz/.html/.jpg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps). Defaults to PNG when no extension is provided.
+          <strong>Save</strong> - Saves PDF417 to a file for byte payloads based on extension. Defaults to PNG when no extension is provided.
           <div class="pf-api-params">
             <ul>
               <li><code>arg1</code> (System.ReadOnlySpan{System.Byte})</li>
@@ -2136,6 +2184,66 @@
               <li><code>arg3</code> (CodeGlyphX.Pdf417.Pdf417EncodeOptions)</li>
               <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
               <li><code>arg5</code> (System.String)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>Save</strong> - Saves PDF417 to a file for byte payloads based on extension. Defaults to PNG when no extension is provided.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>arg2</code> (System.String)</li>
+              <li><code>arg3</code> (CodeGlyphX.Pdf417.Pdf417EncodeOptions)</li>
+              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>arg5</code> (CodeGlyphX.Rendering.RenderExtras)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>Save</strong> - Saves PDF417 to a file based on extension. Defaults to PNG when no extension is provided.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (System.String)</li>
+              <li><code>arg3</code> (CodeGlyphX.Pdf417.Pdf417EncodeOptions)</li>
+              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>arg5</code> (System.String)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>Save</strong> - Saves PDF417 to a file based on extension. Defaults to PNG when no extension is provided.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (System.String)</li>
+              <li><code>arg3</code> (CodeGlyphX.Pdf417.Pdf417EncodeOptions)</li>
+              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>arg5</code> (CodeGlyphX.Rendering.RenderExtras)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>Save</strong> - Saves PDF417 to a file for byte payloads based on extension. Defaults to PNG when no extension is provided.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.Byte[])</li>
+              <li><code>arg2</code> (System.String)</li>
+              <li><code>arg3</code> (CodeGlyphX.Pdf417.Pdf417EncodeOptions)</li>
+              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>arg5</code> (System.String)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>Save</strong> - Saves PDF417 to a file for byte payloads based on extension. Defaults to PNG when no extension is provided.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.Byte[])</li>
+              <li><code>arg2</code> (System.String)</li>
+              <li><code>arg3</code> (CodeGlyphX.Pdf417.Pdf417EncodeOptions)</li>
+              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>arg5</code> (CodeGlyphX.Rendering.RenderExtras)</li>
             </ul>
           </div>
         </li>
@@ -2156,28 +2264,6 @@
             <ul>
               <li><code>arg1</code> (System.Byte[])</li>
               <li><code>arg2</code> (System.String)</li>
-              <li><code>arg3</code> (CodeGlyphX.Pdf417.Pdf417EncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
-            </ul>
-          </div>
-        </li>
-        <li>
-          <strong>SavePng</strong> - Saves PDF417 PNG to a stream.
-          <div class="pf-api-params">
-            <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (System.IO.Stream)</li>
-              <li><code>arg3</code> (CodeGlyphX.Pdf417.Pdf417EncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
-            </ul>
-          </div>
-        </li>
-        <li>
-          <strong>SavePng</strong> - Saves PDF417 PNG to a stream for byte payloads.
-          <div class="pf-api-params">
-            <ul>
-              <li><code>arg1</code> (System.Byte[])</li>
-              <li><code>arg2</code> (System.IO.Stream)</li>
               <li><code>arg3</code> (CodeGlyphX.Pdf417.Pdf417EncodeOptions)</li>
               <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
@@ -2228,50 +2314,6 @@
           </div>
         </li>
         <li>
-          <strong>SaveSvg</strong> - Saves PDF417 SVG to a stream.
-          <div class="pf-api-params">
-            <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (System.IO.Stream)</li>
-              <li><code>arg3</code> (CodeGlyphX.Pdf417.Pdf417EncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
-            </ul>
-          </div>
-        </li>
-        <li>
-          <strong>SaveSvgz</strong> - Saves PDF417 SVGZ to a stream for text payloads.
-          <div class="pf-api-params">
-            <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (System.IO.Stream)</li>
-              <li><code>arg3</code> (CodeGlyphX.Pdf417.Pdf417EncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
-            </ul>
-          </div>
-        </li>
-        <li>
-          <strong>SaveSvg</strong> - Saves PDF417 SVG to a stream for byte payloads.
-          <div class="pf-api-params">
-            <ul>
-              <li><code>arg1</code> (System.Byte[])</li>
-              <li><code>arg2</code> (System.IO.Stream)</li>
-              <li><code>arg3</code> (CodeGlyphX.Pdf417.Pdf417EncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
-            </ul>
-          </div>
-        </li>
-        <li>
-          <strong>SaveSvgz</strong> - Saves PDF417 SVGZ to a stream for byte payloads.
-          <div class="pf-api-params">
-            <ul>
-              <li><code>arg1</code> (System.Byte[])</li>
-              <li><code>arg2</code> (System.IO.Stream)</li>
-              <li><code>arg3</code> (CodeGlyphX.Pdf417.Pdf417EncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
-            </ul>
-          </div>
-        </li>
-        <li>
           <strong>SaveHtml</strong> - Saves PDF417 HTML to a file.
           <div class="pf-api-params">
             <ul>
@@ -2289,30 +2331,6 @@
             <ul>
               <li><code>arg1</code> (System.Byte[])</li>
               <li><code>arg2</code> (System.String)</li>
-              <li><code>arg3</code> (CodeGlyphX.Pdf417.Pdf417EncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
-              <li><code>arg5</code> (System.String)</li>
-            </ul>
-          </div>
-        </li>
-        <li>
-          <strong>SaveHtml</strong> - Saves PDF417 HTML to a stream.
-          <div class="pf-api-params">
-            <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (System.IO.Stream)</li>
-              <li><code>arg3</code> (CodeGlyphX.Pdf417.Pdf417EncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
-              <li><code>arg5</code> (System.String)</li>
-            </ul>
-          </div>
-        </li>
-        <li>
-          <strong>SaveHtml</strong> - Saves PDF417 HTML to a stream for byte payloads.
-          <div class="pf-api-params">
-            <ul>
-              <li><code>arg1</code> (System.Byte[])</li>
-              <li><code>arg2</code> (System.IO.Stream)</li>
               <li><code>arg3</code> (CodeGlyphX.Pdf417.Pdf417EncodeOptions)</li>
               <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
               <li><code>arg5</code> (System.String)</li>
@@ -2465,6 +2483,41 @@
           </div>
         </li>
         <li>
+          <strong>SaveIco</strong> - Saves PDF417 ICO to a file for byte payloads.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.Byte[])</li>
+              <li><code>arg2</code> (System.String)</li>
+              <li><code>arg3</code> (CodeGlyphX.Pdf417.Pdf417EncodeOptions)</li>
+              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>SavePdf</strong> - Saves PDF417 PDF to a file for byte payloads.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>data</code> (System.Byte[]): Payload bytes.</li>
+              <li><code>path</code> (System.String): Output file path.</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Pdf417.Pdf417EncodeOptions): Encoding options.</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions): Rendering options.</li>
+              <li><code>renderMode</code> (CodeGlyphX.Rendering.RenderMode): Vector or raster output.</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>SaveEps</strong> - Saves PDF417 EPS to a file for byte payloads.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>data</code> (System.Byte[]): Payload bytes.</li>
+              <li><code>path</code> (System.String): Output file path.</li>
+              <li><code>encodeOptions</code> (CodeGlyphX.Pdf417.Pdf417EncodeOptions): Encoding options.</li>
+              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions): Rendering options.</li>
+              <li><code>renderMode</code> (CodeGlyphX.Rendering.RenderMode): Vector or raster output.</li>
+            </ul>
+          </div>
+        </li>
+        <li>
           <strong>SaveJpeg</strong> - Saves PDF417 JPEG to a file for byte payloads.
           <div class="pf-api-params">
             <ul>
@@ -2575,37 +2628,92 @@
           </div>
         </li>
         <li>
-          <strong>SaveIco</strong> - Saves PDF417 ICO to a file for byte payloads.
+          <strong>SavePng</strong> - Saves PDF417 PNG to a stream.
           <div class="pf-api-params">
             <ul>
-              <li><code>arg1</code> (System.Byte[])</li>
-              <li><code>arg2</code> (System.String)</li>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (System.IO.Stream)</li>
               <li><code>arg3</code> (CodeGlyphX.Pdf417.Pdf417EncodeOptions)</li>
               <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
         <li>
-          <strong>SavePdf</strong> - Saves PDF417 PDF to a file for byte payloads.
+          <strong>SavePng</strong> - Saves PDF417 PNG to a stream for byte payloads.
           <div class="pf-api-params">
             <ul>
-              <li><code>data</code> (System.Byte[]): Payload bytes.</li>
-              <li><code>path</code> (System.String): Output file path.</li>
-              <li><code>encodeOptions</code> (CodeGlyphX.Pdf417.Pdf417EncodeOptions): Encoding options.</li>
-              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions): Rendering options.</li>
-              <li><code>renderMode</code> (CodeGlyphX.Rendering.RenderMode): Vector or raster output.</li>
+              <li><code>arg1</code> (System.Byte[])</li>
+              <li><code>arg2</code> (System.IO.Stream)</li>
+              <li><code>arg3</code> (CodeGlyphX.Pdf417.Pdf417EncodeOptions)</li>
+              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
             </ul>
           </div>
         </li>
         <li>
-          <strong>SaveEps</strong> - Saves PDF417 EPS to a file for byte payloads.
+          <strong>SaveSvg</strong> - Saves PDF417 SVG to a stream.
           <div class="pf-api-params">
             <ul>
-              <li><code>data</code> (System.Byte[]): Payload bytes.</li>
-              <li><code>path</code> (System.String): Output file path.</li>
-              <li><code>encodeOptions</code> (CodeGlyphX.Pdf417.Pdf417EncodeOptions): Encoding options.</li>
-              <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions): Rendering options.</li>
-              <li><code>renderMode</code> (CodeGlyphX.Rendering.RenderMode): Vector or raster output.</li>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (System.IO.Stream)</li>
+              <li><code>arg3</code> (CodeGlyphX.Pdf417.Pdf417EncodeOptions)</li>
+              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>SaveSvgz</strong> - Saves PDF417 SVGZ to a stream for text payloads.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (System.IO.Stream)</li>
+              <li><code>arg3</code> (CodeGlyphX.Pdf417.Pdf417EncodeOptions)</li>
+              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>SaveSvg</strong> - Saves PDF417 SVG to a stream for byte payloads.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.Byte[])</li>
+              <li><code>arg2</code> (System.IO.Stream)</li>
+              <li><code>arg3</code> (CodeGlyphX.Pdf417.Pdf417EncodeOptions)</li>
+              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>SaveSvgz</strong> - Saves PDF417 SVGZ to a stream for byte payloads.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.Byte[])</li>
+              <li><code>arg2</code> (System.IO.Stream)</li>
+              <li><code>arg3</code> (CodeGlyphX.Pdf417.Pdf417EncodeOptions)</li>
+              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>SaveHtml</strong> - Saves PDF417 HTML to a stream.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.String)</li>
+              <li><code>arg2</code> (System.IO.Stream)</li>
+              <li><code>arg3</code> (CodeGlyphX.Pdf417.Pdf417EncodeOptions)</li>
+              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>arg5</code> (System.String)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>SaveHtml</strong> - Saves PDF417 HTML to a stream for byte payloads.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (System.Byte[])</li>
+              <li><code>arg2</code> (System.IO.Stream)</li>
+              <li><code>arg3</code> (CodeGlyphX.Pdf417.Pdf417EncodeOptions)</li>
+              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
+              <li><code>arg5</code> (System.String)</li>
             </ul>
           </div>
         </li>
@@ -2896,30 +3004,6 @@
               <li><code>encodeOptions</code> (CodeGlyphX.Pdf417.Pdf417EncodeOptions): Encoding options.</li>
               <li><code>renderOptions</code> (CodeGlyphX.MatrixOptions): Rendering options.</li>
               <li><code>renderMode</code> (CodeGlyphX.Rendering.RenderMode): Vector or raster output.</li>
-            </ul>
-          </div>
-        </li>
-        <li>
-          <strong>Save</strong> - Saves PDF417 to a file based on extension (.png/.webp/.svg/.svgz/.html/.jpg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps). Defaults to PNG when no extension is provided.
-          <div class="pf-api-params">
-            <ul>
-              <li><code>arg1</code> (System.String)</li>
-              <li><code>arg2</code> (System.String)</li>
-              <li><code>arg3</code> (CodeGlyphX.Pdf417.Pdf417EncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
-              <li><code>arg5</code> (System.String)</li>
-            </ul>
-          </div>
-        </li>
-        <li>
-          <strong>Save</strong> - Saves PDF417 to a file for byte payloads based on extension (.png/.webp/.svg/.svgz/.html/.jpg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps). Defaults to PNG when no extension is provided.
-          <div class="pf-api-params">
-            <ul>
-              <li><code>arg1</code> (System.Byte[])</li>
-              <li><code>arg2</code> (System.String)</li>
-              <li><code>arg3</code> (CodeGlyphX.Pdf417.Pdf417EncodeOptions)</li>
-              <li><code>arg4</code> (CodeGlyphX.MatrixOptions)</li>
-              <li><code>arg5</code> (System.String)</li>
             </ul>
           </div>
         </li>

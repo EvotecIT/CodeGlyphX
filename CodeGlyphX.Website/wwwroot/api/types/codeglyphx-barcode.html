@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>CodeGlyphX.Barcode - CodeGlyphX API Reference</title>
-  <link rel="stylesheet" href="/mnt/c/Support/GitHub/CodeMatrix/CodeGlyphX.Website/wwwroot/css/api-docs.css" />
+  <link rel="stylesheet" href="/css/api-docs.css" />
 </head>
 <body>
 <header class="header">
@@ -1208,7 +1208,7 @@
           </div>
         </li>
         <li>
-          <strong>Save</strong> - Saves a barcode to a file based on the file extension (.png/.webp/.svg/.svgz/.html/.jpg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps). Defaults to PNG when no extension is provided.
+          <strong>Save</strong> - Saves a barcode to a file based on the file extension. Defaults to PNG when no extension is provided.
           <div class="pf-api-params">
             <ul>
               <li><code>arg1</code> (CodeGlyphX.BarcodeType)</li>
@@ -1216,6 +1216,18 @@
               <li><code>arg3</code> (System.String)</li>
               <li><code>arg4</code> (CodeGlyphX.BarcodeOptions)</li>
               <li><code>arg5</code> (System.String)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>Save</strong> - Saves a barcode to a file based on the file extension. Defaults to PNG when no extension is provided.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>arg1</code> (CodeGlyphX.BarcodeType)</li>
+              <li><code>arg2</code> (System.String)</li>
+              <li><code>arg3</code> (System.String)</li>
+              <li><code>arg4</code> (CodeGlyphX.BarcodeOptions)</li>
+              <li><code>arg5</code> (CodeGlyphX.Rendering.RenderExtras)</li>
             </ul>
           </div>
         </li>

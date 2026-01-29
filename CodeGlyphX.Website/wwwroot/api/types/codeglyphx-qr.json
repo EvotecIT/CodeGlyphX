@@ -4632,7 +4632,7 @@
     },
     {
       "name": "Save",
-      "summary": "Saves a QR code to a file based on the file extension (.png/.webp/.svg/.svgz/.html/.jpg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps). Defaults to PNG when no extension is provided.",
+      "summary": "Saves a QR code to a file based on the file extension. Defaults to PNG when no extension is provided.",
       "returns": null,
       "parameters": [
         {
@@ -4652,14 +4652,14 @@
         },
         {
           "name": "arg4",
-          "type": "System.String",
+          "type": "CodeGlyphX.Rendering.RenderExtras",
           "summary": null
         }
       ]
     },
     {
       "name": "SaveAuto",
-      "summary": "Detects a payload type and saves a QR code to a file based on the file extension (.png/.webp/.svg/.svgz/.html/.jpg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps). Defaults to PNG when no extension is provided.",
+      "summary": "Detects a payload type and saves a QR code to a file based on the file extension. Defaults to PNG when no extension is provided.",
       "returns": null,
       "parameters": [
         {
@@ -4684,14 +4684,14 @@
         },
         {
           "name": "arg5",
-          "type": "System.String",
+          "type": "CodeGlyphX.Rendering.RenderExtras",
           "summary": null
         }
       ]
     },
     {
       "name": "Save",
-      "summary": "Saves a QR code to a file based on the file extension (.png/.webp/.svg/.svgz/.html/.jpg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps). Defaults to PNG when no extension is provided.",
+      "summary": "Saves a QR code to a file based on the file extension. Defaults to PNG when no extension is provided.",
       "returns": null,
       "parameters": [
         {
@@ -4711,7 +4711,7 @@
         },
         {
           "name": "arg4",
-          "type": "System.String",
+          "type": "CodeGlyphX.Rendering.RenderExtras",
           "summary": null
         }
       ]

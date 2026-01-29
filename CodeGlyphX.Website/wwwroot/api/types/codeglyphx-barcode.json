@@ -2724,7 +2724,7 @@
     },
     {
       "name": "Save",
-      "summary": "Saves a barcode to a file based on the file extension (.png/.webp/.svg/.svgz/.html/.jpg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps). Defaults to PNG when no extension is provided.",
+      "summary": "Saves a barcode to a file based on the file extension. Defaults to PNG when no extension is provided.",
       "returns": null,
       "parameters": [
         {
@@ -2750,6 +2750,38 @@
         {
           "name": "arg5",
           "type": "System.String",
+          "summary": null
+        }
+      ]
+    },
+    {
+      "name": "Save",
+      "summary": "Saves a barcode to a file based on the file extension. Defaults to PNG when no extension is provided.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "arg1",
+          "type": "CodeGlyphX.BarcodeType",
+          "summary": null
+        },
+        {
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
+        },
+        {
+          "name": "arg3",
+          "type": "System.String",
+          "summary": null
+        },
+        {
+          "name": "arg4",
+          "type": "CodeGlyphX.BarcodeOptions",
+          "summary": null
+        },
+        {
+          "name": "arg5",
+          "type": "CodeGlyphX.Rendering.RenderExtras",
           "summary": null
         }
       ]

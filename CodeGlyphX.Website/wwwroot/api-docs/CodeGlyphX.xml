@@ -336,7 +336,13 @@
         </member>
         <member name="M:CodeGlyphX.AztecCode.Save(System.String,System.String,CodeGlyphX.Aztec.AztecEncodeOptions,CodeGlyphX.MatrixOptions,System.String)">
             <summary>
-            Saves Aztec to a file based on extension (.png/.webp/.svg/.svgz/.svg.gz/.html/.htm/.jpg/.jpeg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps/.ps/.txt).
+            Saves Aztec to a file based on extension.
+            Defaults to PNG when no extension is provided.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.AztecCode.Save(System.String,System.String,CodeGlyphX.Aztec.AztecEncodeOptions,CodeGlyphX.MatrixOptions,CodeGlyphX.Rendering.RenderExtras)">
+            <summary>
+            Saves Aztec to a file based on extension.
             Defaults to PNG when no extension is provided.
             </summary>
         </member>
@@ -708,6 +714,11 @@
         <member name="M:CodeGlyphX.AztecCode.DecodePng(System.IO.Stream)">
             <summary>
             Decodes an Aztec symbol from a PNG stream.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.AztecCode.Render(System.String,CodeGlyphX.Rendering.OutputFormat,CodeGlyphX.Aztec.AztecEncodeOptions,CodeGlyphX.MatrixOptions,CodeGlyphX.Rendering.RenderExtras)">
+            <summary>
+            Renders an Aztec payload to the requested output format.
             </summary>
         </member>
         <member name="M:CodeGlyphX.AztecCode.SavePng(System.String,System.String,CodeGlyphX.Aztec.AztecEncodeOptions,CodeGlyphX.MatrixOptions)">
@@ -1085,7 +1096,7 @@
             Simple barcode helpers with fluent and static APIs.
             </summary>
             <remarks>
-            Use <see cref="M:CodeGlyphX.Barcode.Save(CodeGlyphX.BarcodeType,System.String,System.String,CodeGlyphX.BarcodeOptions,System.String)"/> to pick the output format by file extension.
+            Use <see cref="M:CodeGlyphX.Barcode.Save(CodeGlyphX.BarcodeType,System.String,System.String,CodeGlyphX.BarcodeOptions,CodeGlyphX.Rendering.RenderExtras)"/> to pick the output format by file extension.
             </remarks>
             <example>
             <code>
@@ -2019,7 +2030,13 @@
         </member>
         <member name="M:CodeGlyphX.Barcode.Save(CodeGlyphX.BarcodeType,System.String,System.String,CodeGlyphX.BarcodeOptions,System.String)">
             <summary>
-            Saves a barcode to a file based on the file extension (.png/.webp/.svg/.svgz/.html/.jpg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps).
+            Saves a barcode to a file based on the file extension.
+            Defaults to PNG when no extension is provided.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Barcode.Save(CodeGlyphX.BarcodeType,System.String,System.String,CodeGlyphX.BarcodeOptions,CodeGlyphX.Rendering.RenderExtras)">
+            <summary>
+            Saves a barcode to a file based on the file extension.
             Defaults to PNG when no extension is provided.
             </summary>
         </member>
@@ -4805,6 +4822,21 @@
             Decodes a Data Matrix symbol from a PNG stream.
             </summary>
         </member>
+        <member name="M:CodeGlyphX.DataMatrixCode.Render(System.String,CodeGlyphX.Rendering.OutputFormat,CodeGlyphX.DataMatrix.DataMatrixEncodingMode,CodeGlyphX.MatrixOptions,CodeGlyphX.Rendering.RenderExtras)">
+            <summary>
+            Renders a Data Matrix payload to the requested output format.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataMatrixCode.Render(System.Byte[],CodeGlyphX.Rendering.OutputFormat,CodeGlyphX.DataMatrix.DataMatrixEncodingMode,CodeGlyphX.MatrixOptions,CodeGlyphX.Rendering.RenderExtras)">
+            <summary>
+            Renders a Data Matrix byte payload to the requested output format.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataMatrixCode.Render(System.ReadOnlySpan{System.Byte},CodeGlyphX.Rendering.OutputFormat,CodeGlyphX.DataMatrix.DataMatrixEncodingMode,CodeGlyphX.MatrixOptions,CodeGlyphX.Rendering.RenderExtras)">
+            <summary>
+            Renders a Data Matrix byte payload to the requested output format.
+            </summary>
+        </member>
         <member name="M:CodeGlyphX.DataMatrixCode.SavePng(System.ReadOnlySpan{System.Byte},System.String,CodeGlyphX.DataMatrix.DataMatrixEncodingMode,CodeGlyphX.MatrixOptions)">
             <summary>
             Saves Data Matrix PNG to a file for byte payloads.
@@ -4997,7 +5029,37 @@
         </member>
         <member name="M:CodeGlyphX.DataMatrixCode.Save(System.ReadOnlySpan{System.Byte},System.String,CodeGlyphX.DataMatrix.DataMatrixEncodingMode,CodeGlyphX.MatrixOptions,System.String)">
             <summary>
-            Saves Data Matrix to a file for byte payloads based on extension (.png/.webp/.svg/.svgz/.html/.jpg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps).
+            Saves Data Matrix to a file for byte payloads based on extension.
+            Defaults to PNG when no extension is provided.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataMatrixCode.Save(System.ReadOnlySpan{System.Byte},System.String,CodeGlyphX.DataMatrix.DataMatrixEncodingMode,CodeGlyphX.MatrixOptions,CodeGlyphX.Rendering.RenderExtras)">
+            <summary>
+            Saves Data Matrix to a file for byte payloads based on extension.
+            Defaults to PNG when no extension is provided.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataMatrixCode.Save(System.String,System.String,CodeGlyphX.DataMatrix.DataMatrixEncodingMode,CodeGlyphX.MatrixOptions,System.String)">
+            <summary>
+            Saves Data Matrix to a file based on extension.
+            Defaults to PNG when no extension is provided.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataMatrixCode.Save(System.String,System.String,CodeGlyphX.DataMatrix.DataMatrixEncodingMode,CodeGlyphX.MatrixOptions,CodeGlyphX.Rendering.RenderExtras)">
+            <summary>
+            Saves Data Matrix to a file based on extension.
+            Defaults to PNG when no extension is provided.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataMatrixCode.Save(System.Byte[],System.String,CodeGlyphX.DataMatrix.DataMatrixEncodingMode,CodeGlyphX.MatrixOptions,System.String)">
+            <summary>
+            Saves Data Matrix to a file for byte payloads based on extension.
+            Defaults to PNG when no extension is provided.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataMatrixCode.Save(System.Byte[],System.String,CodeGlyphX.DataMatrix.DataMatrixEncodingMode,CodeGlyphX.MatrixOptions,CodeGlyphX.Rendering.RenderExtras)">
+            <summary>
+            Saves Data Matrix to a file for byte payloads based on extension.
             Defaults to PNG when no extension is provided.
             </summary>
         </member>
@@ -5009,16 +5071,6 @@
         <member name="M:CodeGlyphX.DataMatrixCode.SavePng(System.Byte[],System.String,CodeGlyphX.DataMatrix.DataMatrixEncodingMode,CodeGlyphX.MatrixOptions)">
             <summary>
             Saves Data Matrix PNG to a file for byte payloads.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.DataMatrixCode.SavePng(System.String,System.IO.Stream,CodeGlyphX.DataMatrix.DataMatrixEncodingMode,CodeGlyphX.MatrixOptions)">
-            <summary>
-            Saves Data Matrix PNG to a stream.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.DataMatrixCode.SavePng(System.Byte[],System.IO.Stream,CodeGlyphX.DataMatrix.DataMatrixEncodingMode,CodeGlyphX.MatrixOptions)">
-            <summary>
-            Saves Data Matrix PNG to a stream for byte payloads.
             </summary>
         </member>
         <member name="M:CodeGlyphX.DataMatrixCode.SaveSvg(System.String,System.String,CodeGlyphX.DataMatrix.DataMatrixEncodingMode,CodeGlyphX.MatrixOptions)">
@@ -5041,26 +5093,6 @@
             Saves Data Matrix SVGZ to a file for byte payloads.
             </summary>
         </member>
-        <member name="M:CodeGlyphX.DataMatrixCode.SaveSvg(System.String,System.IO.Stream,CodeGlyphX.DataMatrix.DataMatrixEncodingMode,CodeGlyphX.MatrixOptions)">
-            <summary>
-            Saves Data Matrix SVG to a stream.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.DataMatrixCode.SaveSvgz(System.String,System.IO.Stream,CodeGlyphX.DataMatrix.DataMatrixEncodingMode,CodeGlyphX.MatrixOptions)">
-            <summary>
-            Saves Data Matrix SVGZ to a stream.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.DataMatrixCode.SaveSvg(System.Byte[],System.IO.Stream,CodeGlyphX.DataMatrix.DataMatrixEncodingMode,CodeGlyphX.MatrixOptions)">
-            <summary>
-            Saves Data Matrix SVG to a stream for byte payloads.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.DataMatrixCode.SaveSvgz(System.Byte[],System.IO.Stream,CodeGlyphX.DataMatrix.DataMatrixEncodingMode,CodeGlyphX.MatrixOptions)">
-            <summary>
-            Saves Data Matrix SVGZ to a stream for byte payloads.
-            </summary>
-        </member>
         <member name="M:CodeGlyphX.DataMatrixCode.SaveHtml(System.String,System.String,CodeGlyphX.DataMatrix.DataMatrixEncodingMode,CodeGlyphX.MatrixOptions,System.String)">
             <summary>
             Saves Data Matrix HTML to a file.
@@ -5069,16 +5101,6 @@
         <member name="M:CodeGlyphX.DataMatrixCode.SaveHtml(System.Byte[],System.String,CodeGlyphX.DataMatrix.DataMatrixEncodingMode,CodeGlyphX.MatrixOptions,System.String)">
             <summary>
             Saves Data Matrix HTML to a file for byte payloads.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.DataMatrixCode.SaveHtml(System.String,System.IO.Stream,CodeGlyphX.DataMatrix.DataMatrixEncodingMode,CodeGlyphX.MatrixOptions,System.String)">
-            <summary>
-            Saves Data Matrix HTML to a stream.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.DataMatrixCode.SaveHtml(System.Byte[],System.IO.Stream,CodeGlyphX.DataMatrix.DataMatrixEncodingMode,CodeGlyphX.MatrixOptions,System.String)">
-            <summary>
-            Saves Data Matrix HTML to a stream for byte payloads.
             </summary>
         </member>
         <member name="M:CodeGlyphX.DataMatrixCode.SaveJpeg(System.String,System.String,CodeGlyphX.DataMatrix.DataMatrixEncodingMode,CodeGlyphX.MatrixOptions)">
@@ -5156,6 +5178,31 @@
             <param name="options">Optional rendering options.</param>
             <param name="renderMode">Vector or raster output.</param>
         </member>
+        <member name="M:CodeGlyphX.DataMatrixCode.SaveIco(System.Byte[],System.String,CodeGlyphX.DataMatrix.DataMatrixEncodingMode,CodeGlyphX.MatrixOptions)">
+            <summary>
+            Saves Data Matrix ICO to a file for byte payloads.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataMatrixCode.SavePdf(System.Byte[],System.String,CodeGlyphX.DataMatrix.DataMatrixEncodingMode,CodeGlyphX.MatrixOptions,CodeGlyphX.Rendering.RenderMode)">
+            <summary>
+            Saves Data Matrix PDF to a file for byte payloads.
+            </summary>
+            <param name="data">Payload bytes.</param>
+            <param name="path">Output file path.</param>
+            <param name="mode">Vector or raster output.</param>
+            <param name="options">Optional rendering options.</param>
+            <param name="renderMode">Vector or raster output.</param>
+        </member>
+        <member name="M:CodeGlyphX.DataMatrixCode.SaveEps(System.Byte[],System.String,CodeGlyphX.DataMatrix.DataMatrixEncodingMode,CodeGlyphX.MatrixOptions,CodeGlyphX.Rendering.RenderMode)">
+            <summary>
+            Saves Data Matrix EPS to a file for byte payloads.
+            </summary>
+            <param name="data">Payload bytes.</param>
+            <param name="path">Output file path.</param>
+            <param name="mode">Vector or raster output.</param>
+            <param name="options">Optional rendering options.</param>
+            <param name="renderMode">Vector or raster output.</param>
+        </member>
         <member name="M:CodeGlyphX.DataMatrixCode.SaveJpeg(System.Byte[],System.String,CodeGlyphX.DataMatrix.DataMatrixEncodingMode,CodeGlyphX.MatrixOptions)">
             <summary>
             Saves Data Matrix JPEG to a file for byte payloads.
@@ -5206,30 +5253,45 @@
             Saves Data Matrix TGA to a file for byte payloads.
             </summary>
         </member>
-        <member name="M:CodeGlyphX.DataMatrixCode.SaveIco(System.Byte[],System.String,CodeGlyphX.DataMatrix.DataMatrixEncodingMode,CodeGlyphX.MatrixOptions)">
+        <member name="M:CodeGlyphX.DataMatrixCode.SavePng(System.String,System.IO.Stream,CodeGlyphX.DataMatrix.DataMatrixEncodingMode,CodeGlyphX.MatrixOptions)">
             <summary>
-            Saves Data Matrix ICO to a file for byte payloads.
+            Saves Data Matrix PNG to a stream.
             </summary>
         </member>
-        <member name="M:CodeGlyphX.DataMatrixCode.SavePdf(System.Byte[],System.String,CodeGlyphX.DataMatrix.DataMatrixEncodingMode,CodeGlyphX.MatrixOptions,CodeGlyphX.Rendering.RenderMode)">
+        <member name="M:CodeGlyphX.DataMatrixCode.SavePng(System.Byte[],System.IO.Stream,CodeGlyphX.DataMatrix.DataMatrixEncodingMode,CodeGlyphX.MatrixOptions)">
             <summary>
-            Saves Data Matrix PDF to a file for byte payloads.
+            Saves Data Matrix PNG to a stream for byte payloads.
             </summary>
-            <param name="data">Payload bytes.</param>
-            <param name="path">Output file path.</param>
-            <param name="mode">Vector or raster output.</param>
-            <param name="options">Optional rendering options.</param>
-            <param name="renderMode">Vector or raster output.</param>
         </member>
-        <member name="M:CodeGlyphX.DataMatrixCode.SaveEps(System.Byte[],System.String,CodeGlyphX.DataMatrix.DataMatrixEncodingMode,CodeGlyphX.MatrixOptions,CodeGlyphX.Rendering.RenderMode)">
+        <member name="M:CodeGlyphX.DataMatrixCode.SaveSvg(System.String,System.IO.Stream,CodeGlyphX.DataMatrix.DataMatrixEncodingMode,CodeGlyphX.MatrixOptions)">
             <summary>
-            Saves Data Matrix EPS to a file for byte payloads.
+            Saves Data Matrix SVG to a stream.
             </summary>
-            <param name="data">Payload bytes.</param>
-            <param name="path">Output file path.</param>
-            <param name="mode">Vector or raster output.</param>
-            <param name="options">Optional rendering options.</param>
-            <param name="renderMode">Vector or raster output.</param>
+        </member>
+        <member name="M:CodeGlyphX.DataMatrixCode.SaveSvgz(System.String,System.IO.Stream,CodeGlyphX.DataMatrix.DataMatrixEncodingMode,CodeGlyphX.MatrixOptions)">
+            <summary>
+            Saves Data Matrix SVGZ to a stream.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataMatrixCode.SaveSvg(System.Byte[],System.IO.Stream,CodeGlyphX.DataMatrix.DataMatrixEncodingMode,CodeGlyphX.MatrixOptions)">
+            <summary>
+            Saves Data Matrix SVG to a stream for byte payloads.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataMatrixCode.SaveSvgz(System.Byte[],System.IO.Stream,CodeGlyphX.DataMatrix.DataMatrixEncodingMode,CodeGlyphX.MatrixOptions)">
+            <summary>
+            Saves Data Matrix SVGZ to a stream for byte payloads.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataMatrixCode.SaveHtml(System.String,System.IO.Stream,CodeGlyphX.DataMatrix.DataMatrixEncodingMode,CodeGlyphX.MatrixOptions,System.String)">
+            <summary>
+            Saves Data Matrix HTML to a stream.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataMatrixCode.SaveHtml(System.Byte[],System.IO.Stream,CodeGlyphX.DataMatrix.DataMatrixEncodingMode,CodeGlyphX.MatrixOptions,System.String)">
+            <summary>
+            Saves Data Matrix HTML to a stream for byte payloads.
+            </summary>
         </member>
         <member name="M:CodeGlyphX.DataMatrixCode.SaveJpeg(System.String,System.IO.Stream,CodeGlyphX.DataMatrix.DataMatrixEncodingMode,CodeGlyphX.MatrixOptions)">
             <summary>
@@ -5380,18 +5442,6 @@
             <param name="mode">Vector or raster output.</param>
             <param name="options">Optional rendering options.</param>
             <param name="renderMode">Vector or raster output.</param>
-        </member>
-        <member name="M:CodeGlyphX.DataMatrixCode.Save(System.String,System.String,CodeGlyphX.DataMatrix.DataMatrixEncodingMode,CodeGlyphX.MatrixOptions,System.String)">
-            <summary>
-            Saves Data Matrix to a file based on extension (.png/.webp/.svg/.svgz/.html/.jpg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps).
-            Defaults to PNG when no extension is provided.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.DataMatrixCode.Save(System.Byte[],System.String,CodeGlyphX.DataMatrix.DataMatrixEncodingMode,CodeGlyphX.MatrixOptions,System.String)">
-            <summary>
-            Saves Data Matrix to a file for byte payloads based on extension (.png/.webp/.svg/.svgz/.html/.jpg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps).
-            Defaults to PNG when no extension is provided.
-            </summary>
         </member>
         <member name="T:CodeGlyphX.DataMatrixDecodeDiagnostics">
             <summary>
@@ -10087,10 +10137,30 @@
             Attempts to decode a Macro PDF417 symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) in a span with image decode options, with cancellation.
             </summary>
         </member>
-        <member name="M:CodeGlyphX.Pdf417Code.SaveMacro(System.String,CodeGlyphX.Pdf417.Pdf417MacroOptions,System.String,CodeGlyphX.Pdf417.Pdf417EncodeOptions,CodeGlyphX.MatrixOptions,System.String,CodeGlyphX.Rendering.RenderMode)">
+        <member name="M:CodeGlyphX.Pdf417Code.SaveMacro(System.String,CodeGlyphX.Pdf417.Pdf417MacroOptions,System.String,CodeGlyphX.Pdf417.Pdf417EncodeOptions,CodeGlyphX.MatrixOptions,CodeGlyphX.Rendering.RenderExtras)">
             <summary>
-            Saves Macro PDF417 to a file based on extension (.png/.svg/.svgz/.html/.jpg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps).
+            Saves Macro PDF417 to a file based on extension.
             Defaults to PNG when no extension is provided.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pdf417Code.Render(System.String,CodeGlyphX.Rendering.OutputFormat,CodeGlyphX.Pdf417.Pdf417EncodeOptions,CodeGlyphX.MatrixOptions,CodeGlyphX.Rendering.RenderExtras)">
+            <summary>
+            Renders a PDF417 payload to the requested output format.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pdf417Code.RenderMacro(System.String,CodeGlyphX.Pdf417.Pdf417MacroOptions,CodeGlyphX.Rendering.OutputFormat,CodeGlyphX.Pdf417.Pdf417EncodeOptions,CodeGlyphX.MatrixOptions,CodeGlyphX.Rendering.RenderExtras)">
+            <summary>
+            Renders a Macro PDF417 payload to the requested output format.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pdf417Code.Render(System.Byte[],CodeGlyphX.Rendering.OutputFormat,CodeGlyphX.Pdf417.Pdf417EncodeOptions,CodeGlyphX.MatrixOptions,CodeGlyphX.Rendering.RenderExtras)">
+            <summary>
+            Renders a PDF417 byte payload to the requested output format.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pdf417Code.Render(System.ReadOnlySpan{System.Byte},CodeGlyphX.Rendering.OutputFormat,CodeGlyphX.Pdf417.Pdf417EncodeOptions,CodeGlyphX.MatrixOptions,CodeGlyphX.Rendering.RenderExtras)">
+            <summary>
+            Renders a PDF417 byte payload to the requested output format.
             </summary>
         </member>
         <member name="M:CodeGlyphX.Pdf417Code.SavePng(System.ReadOnlySpan{System.Byte},System.String,CodeGlyphX.Pdf417.Pdf417EncodeOptions,CodeGlyphX.MatrixOptions)">
@@ -10285,7 +10355,37 @@
         </member>
         <member name="M:CodeGlyphX.Pdf417Code.Save(System.ReadOnlySpan{System.Byte},System.String,CodeGlyphX.Pdf417.Pdf417EncodeOptions,CodeGlyphX.MatrixOptions,System.String)">
             <summary>
-            Saves PDF417 to a file for byte payloads based on extension (.png/.webp/.svg/.svgz/.html/.jpg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps).
+            Saves PDF417 to a file for byte payloads based on extension.
+            Defaults to PNG when no extension is provided.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pdf417Code.Save(System.ReadOnlySpan{System.Byte},System.String,CodeGlyphX.Pdf417.Pdf417EncodeOptions,CodeGlyphX.MatrixOptions,CodeGlyphX.Rendering.RenderExtras)">
+            <summary>
+            Saves PDF417 to a file for byte payloads based on extension.
+            Defaults to PNG when no extension is provided.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pdf417Code.Save(System.String,System.String,CodeGlyphX.Pdf417.Pdf417EncodeOptions,CodeGlyphX.MatrixOptions,System.String)">
+            <summary>
+            Saves PDF417 to a file based on extension.
+            Defaults to PNG when no extension is provided.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pdf417Code.Save(System.String,System.String,CodeGlyphX.Pdf417.Pdf417EncodeOptions,CodeGlyphX.MatrixOptions,CodeGlyphX.Rendering.RenderExtras)">
+            <summary>
+            Saves PDF417 to a file based on extension.
+            Defaults to PNG when no extension is provided.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pdf417Code.Save(System.Byte[],System.String,CodeGlyphX.Pdf417.Pdf417EncodeOptions,CodeGlyphX.MatrixOptions,System.String)">
+            <summary>
+            Saves PDF417 to a file for byte payloads based on extension.
+            Defaults to PNG when no extension is provided.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pdf417Code.Save(System.Byte[],System.String,CodeGlyphX.Pdf417.Pdf417EncodeOptions,CodeGlyphX.MatrixOptions,CodeGlyphX.Rendering.RenderExtras)">
+            <summary>
+            Saves PDF417 to a file for byte payloads based on extension.
             Defaults to PNG when no extension is provided.
             </summary>
         </member>
@@ -10297,16 +10397,6 @@
         <member name="M:CodeGlyphX.Pdf417Code.SavePng(System.Byte[],System.String,CodeGlyphX.Pdf417.Pdf417EncodeOptions,CodeGlyphX.MatrixOptions)">
             <summary>
             Saves PDF417 PNG to a file for byte payloads.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.Pdf417Code.SavePng(System.String,System.IO.Stream,CodeGlyphX.Pdf417.Pdf417EncodeOptions,CodeGlyphX.MatrixOptions)">
-            <summary>
-            Saves PDF417 PNG to a stream.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.Pdf417Code.SavePng(System.Byte[],System.IO.Stream,CodeGlyphX.Pdf417.Pdf417EncodeOptions,CodeGlyphX.MatrixOptions)">
-            <summary>
-            Saves PDF417 PNG to a stream for byte payloads.
             </summary>
         </member>
         <member name="M:CodeGlyphX.Pdf417Code.SaveSvg(System.String,System.String,CodeGlyphX.Pdf417.Pdf417EncodeOptions,CodeGlyphX.MatrixOptions)">
@@ -10329,26 +10419,6 @@
             Saves PDF417 SVGZ to a file for byte payloads.
             </summary>
         </member>
-        <member name="M:CodeGlyphX.Pdf417Code.SaveSvg(System.String,System.IO.Stream,CodeGlyphX.Pdf417.Pdf417EncodeOptions,CodeGlyphX.MatrixOptions)">
-            <summary>
-            Saves PDF417 SVG to a stream.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.Pdf417Code.SaveSvgz(System.String,System.IO.Stream,CodeGlyphX.Pdf417.Pdf417EncodeOptions,CodeGlyphX.MatrixOptions)">
-            <summary>
-            Saves PDF417 SVGZ to a stream for text payloads.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.Pdf417Code.SaveSvg(System.Byte[],System.IO.Stream,CodeGlyphX.Pdf417.Pdf417EncodeOptions,CodeGlyphX.MatrixOptions)">
-            <summary>
-            Saves PDF417 SVG to a stream for byte payloads.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.Pdf417Code.SaveSvgz(System.Byte[],System.IO.Stream,CodeGlyphX.Pdf417.Pdf417EncodeOptions,CodeGlyphX.MatrixOptions)">
-            <summary>
-            Saves PDF417 SVGZ to a stream for byte payloads.
-            </summary>
-        </member>
         <member name="M:CodeGlyphX.Pdf417Code.SaveHtml(System.String,System.String,CodeGlyphX.Pdf417.Pdf417EncodeOptions,CodeGlyphX.MatrixOptions,System.String)">
             <summary>
             Saves PDF417 HTML to a file.
@@ -10357,16 +10427,6 @@
         <member name="M:CodeGlyphX.Pdf417Code.SaveHtml(System.Byte[],System.String,CodeGlyphX.Pdf417.Pdf417EncodeOptions,CodeGlyphX.MatrixOptions,System.String)">
             <summary>
             Saves PDF417 HTML to a file for byte payloads.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.Pdf417Code.SaveHtml(System.String,System.IO.Stream,CodeGlyphX.Pdf417.Pdf417EncodeOptions,CodeGlyphX.MatrixOptions,System.String)">
-            <summary>
-            Saves PDF417 HTML to a stream.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.Pdf417Code.SaveHtml(System.Byte[],System.IO.Stream,CodeGlyphX.Pdf417.Pdf417EncodeOptions,CodeGlyphX.MatrixOptions,System.String)">
-            <summary>
-            Saves PDF417 HTML to a stream for byte payloads.
             </summary>
         </member>
         <member name="M:CodeGlyphX.Pdf417Code.SaveJpeg(System.String,System.String,CodeGlyphX.Pdf417.Pdf417EncodeOptions,CodeGlyphX.MatrixOptions)">
@@ -10444,6 +10504,31 @@
             <param name="renderOptions">Rendering options.</param>
             <param name="renderMode">Vector or raster output.</param>
         </member>
+        <member name="M:CodeGlyphX.Pdf417Code.SaveIco(System.Byte[],System.String,CodeGlyphX.Pdf417.Pdf417EncodeOptions,CodeGlyphX.MatrixOptions)">
+            <summary>
+            Saves PDF417 ICO to a file for byte payloads.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pdf417Code.SavePdf(System.Byte[],System.String,CodeGlyphX.Pdf417.Pdf417EncodeOptions,CodeGlyphX.MatrixOptions,CodeGlyphX.Rendering.RenderMode)">
+            <summary>
+            Saves PDF417 PDF to a file for byte payloads.
+            </summary>
+            <param name="data">Payload bytes.</param>
+            <param name="path">Output file path.</param>
+            <param name="encodeOptions">Encoding options.</param>
+            <param name="renderOptions">Rendering options.</param>
+            <param name="renderMode">Vector or raster output.</param>
+        </member>
+        <member name="M:CodeGlyphX.Pdf417Code.SaveEps(System.Byte[],System.String,CodeGlyphX.Pdf417.Pdf417EncodeOptions,CodeGlyphX.MatrixOptions,CodeGlyphX.Rendering.RenderMode)">
+            <summary>
+            Saves PDF417 EPS to a file for byte payloads.
+            </summary>
+            <param name="data">Payload bytes.</param>
+            <param name="path">Output file path.</param>
+            <param name="encodeOptions">Encoding options.</param>
+            <param name="renderOptions">Rendering options.</param>
+            <param name="renderMode">Vector or raster output.</param>
+        </member>
         <member name="M:CodeGlyphX.Pdf417Code.SaveJpeg(System.Byte[],System.String,CodeGlyphX.Pdf417.Pdf417EncodeOptions,CodeGlyphX.MatrixOptions)">
             <summary>
             Saves PDF417 JPEG to a file for byte payloads.
@@ -10494,30 +10579,45 @@
             Saves PDF417 TGA to a file for byte payloads.
             </summary>
         </member>
-        <member name="M:CodeGlyphX.Pdf417Code.SaveIco(System.Byte[],System.String,CodeGlyphX.Pdf417.Pdf417EncodeOptions,CodeGlyphX.MatrixOptions)">
+        <member name="M:CodeGlyphX.Pdf417Code.SavePng(System.String,System.IO.Stream,CodeGlyphX.Pdf417.Pdf417EncodeOptions,CodeGlyphX.MatrixOptions)">
             <summary>
-            Saves PDF417 ICO to a file for byte payloads.
+            Saves PDF417 PNG to a stream.
             </summary>
         </member>
-        <member name="M:CodeGlyphX.Pdf417Code.SavePdf(System.Byte[],System.String,CodeGlyphX.Pdf417.Pdf417EncodeOptions,CodeGlyphX.MatrixOptions,CodeGlyphX.Rendering.RenderMode)">
+        <member name="M:CodeGlyphX.Pdf417Code.SavePng(System.Byte[],System.IO.Stream,CodeGlyphX.Pdf417.Pdf417EncodeOptions,CodeGlyphX.MatrixOptions)">
             <summary>
-            Saves PDF417 PDF to a file for byte payloads.
+            Saves PDF417 PNG to a stream for byte payloads.
             </summary>
-            <param name="data">Payload bytes.</param>
-            <param name="path">Output file path.</param>
-            <param name="encodeOptions">Encoding options.</param>
-            <param name="renderOptions">Rendering options.</param>
-            <param name="renderMode">Vector or raster output.</param>
         </member>
-        <member name="M:CodeGlyphX.Pdf417Code.SaveEps(System.Byte[],System.String,CodeGlyphX.Pdf417.Pdf417EncodeOptions,CodeGlyphX.MatrixOptions,CodeGlyphX.Rendering.RenderMode)">
+        <member name="M:CodeGlyphX.Pdf417Code.SaveSvg(System.String,System.IO.Stream,CodeGlyphX.Pdf417.Pdf417EncodeOptions,CodeGlyphX.MatrixOptions)">
             <summary>
-            Saves PDF417 EPS to a file for byte payloads.
+            Saves PDF417 SVG to a stream.
             </summary>
-            <param name="data">Payload bytes.</param>
-            <param name="path">Output file path.</param>
-            <param name="encodeOptions">Encoding options.</param>
-            <param name="renderOptions">Rendering options.</param>
-            <param name="renderMode">Vector or raster output.</param>
+        </member>
+        <member name="M:CodeGlyphX.Pdf417Code.SaveSvgz(System.String,System.IO.Stream,CodeGlyphX.Pdf417.Pdf417EncodeOptions,CodeGlyphX.MatrixOptions)">
+            <summary>
+            Saves PDF417 SVGZ to a stream for text payloads.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pdf417Code.SaveSvg(System.Byte[],System.IO.Stream,CodeGlyphX.Pdf417.Pdf417EncodeOptions,CodeGlyphX.MatrixOptions)">
+            <summary>
+            Saves PDF417 SVG to a stream for byte payloads.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pdf417Code.SaveSvgz(System.Byte[],System.IO.Stream,CodeGlyphX.Pdf417.Pdf417EncodeOptions,CodeGlyphX.MatrixOptions)">
+            <summary>
+            Saves PDF417 SVGZ to a stream for byte payloads.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pdf417Code.SaveHtml(System.String,System.IO.Stream,CodeGlyphX.Pdf417.Pdf417EncodeOptions,CodeGlyphX.MatrixOptions,System.String)">
+            <summary>
+            Saves PDF417 HTML to a stream.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Pdf417Code.SaveHtml(System.Byte[],System.IO.Stream,CodeGlyphX.Pdf417.Pdf417EncodeOptions,CodeGlyphX.MatrixOptions,System.String)">
+            <summary>
+            Saves PDF417 HTML to a stream for byte payloads.
+            </summary>
         </member>
         <member name="M:CodeGlyphX.Pdf417Code.SaveJpeg(System.String,System.IO.Stream,CodeGlyphX.Pdf417.Pdf417EncodeOptions,CodeGlyphX.MatrixOptions)">
             <summary>
@@ -10668,18 +10768,6 @@
             <param name="encodeOptions">Encoding options.</param>
             <param name="renderOptions">Rendering options.</param>
             <param name="renderMode">Vector or raster output.</param>
-        </member>
-        <member name="M:CodeGlyphX.Pdf417Code.Save(System.String,System.String,CodeGlyphX.Pdf417.Pdf417EncodeOptions,CodeGlyphX.MatrixOptions,System.String)">
-            <summary>
-            Saves PDF417 to a file based on extension (.png/.webp/.svg/.svgz/.html/.jpg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps).
-            Defaults to PNG when no extension is provided.
-            </summary>
-        </member>
-        <member name="M:CodeGlyphX.Pdf417Code.Save(System.Byte[],System.String,CodeGlyphX.Pdf417.Pdf417EncodeOptions,CodeGlyphX.MatrixOptions,System.String)">
-            <summary>
-            Saves PDF417 to a file for byte payloads based on extension (.png/.webp/.svg/.svgz/.html/.jpg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps).
-            Defaults to PNG when no extension is provided.
-            </summary>
         </member>
         <member name="T:CodeGlyphX.Pdf417DecodeDiagnostics">
             <summary>
@@ -10847,7 +10935,7 @@
             Simple QR helpers with fluent and static APIs.
             </summary>
             <remarks>
-            Use <see cref="M:CodeGlyphX.QR.Save(System.String,System.String,CodeGlyphX.QrEasyOptions,System.String)"/> to pick the output format by file extension.
+            Use <see cref="M:CodeGlyphX.QR.Save(System.String,System.String,CodeGlyphX.QrEasyOptions,CodeGlyphX.Rendering.RenderExtras)"/> to pick the output format by file extension.
             </remarks>
             <example>
             <code>
@@ -12358,21 +12446,21 @@
             <param name="options">Optional rendering options.</param>
             <param name="mode">Vector or raster output.</param>
         </member>
-        <member name="M:CodeGlyphX.QR.Save(System.String,System.String,CodeGlyphX.QrEasyOptions,System.String)">
+        <member name="M:CodeGlyphX.QR.Save(System.String,System.String,CodeGlyphX.QrEasyOptions,CodeGlyphX.Rendering.RenderExtras)">
             <summary>
-            Saves a QR code to a file based on the file extension (.png/.webp/.svg/.svgz/.html/.jpg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps).
+            Saves a QR code to a file based on the file extension.
             Defaults to PNG when no extension is provided.
             </summary>
         </member>
-        <member name="M:CodeGlyphX.QR.SaveAuto(System.String,System.String,CodeGlyphX.Payloads.QrPayloadDetectOptions,CodeGlyphX.QrEasyOptions,System.String)">
+        <member name="M:CodeGlyphX.QR.SaveAuto(System.String,System.String,CodeGlyphX.Payloads.QrPayloadDetectOptions,CodeGlyphX.QrEasyOptions,CodeGlyphX.Rendering.RenderExtras)">
             <summary>
-            Detects a payload type and saves a QR code to a file based on the file extension (.png/.webp/.svg/.svgz/.html/.jpg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps).
+            Detects a payload type and saves a QR code to a file based on the file extension.
             Defaults to PNG when no extension is provided.
             </summary>
         </member>
-        <member name="M:CodeGlyphX.QR.Save(CodeGlyphX.Payloads.QrPayloadData,System.String,CodeGlyphX.QrEasyOptions,System.String)">
+        <member name="M:CodeGlyphX.QR.Save(CodeGlyphX.Payloads.QrPayloadData,System.String,CodeGlyphX.QrEasyOptions,CodeGlyphX.Rendering.RenderExtras)">
             <summary>
-            Saves a QR code to a file based on the file extension (.png/.webp/.svg/.svgz/.html/.jpg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps).
+            Saves a QR code to a file based on the file extension.
             Defaults to PNG when no extension is provided.
             </summary>
         </member>
@@ -13136,9 +13224,19 @@
             Saves this QR code to a stream in the specified format.
             </summary>
         </member>
+        <member name="M:CodeGlyphX.QrCode.Save(System.String,System.String,CodeGlyphX.QrEasyOptions,System.String)">
+            <summary>
+            Saves a payload to a file, choosing the output format based on file extension.
+            </summary>
+        </member>
         <member name="M:CodeGlyphX.QrCode.Save(System.String,System.String,CodeGlyphX.QrEasyOptions,CodeGlyphX.Rendering.RenderExtras)">
             <summary>
             Saves a payload to a file, choosing the output format based on file extension.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrCode.Save(CodeGlyphX.Payloads.QrPayloadData,System.String,CodeGlyphX.QrEasyOptions,System.String)">
+            <summary>
+            Saves a payload with embedded defaults to a file, choosing the output format based on file extension.
             </summary>
         </member>
         <member name="M:CodeGlyphX.QrCode.Save(CodeGlyphX.Payloads.QrPayloadData,System.String,CodeGlyphX.QrEasyOptions,CodeGlyphX.Rendering.RenderExtras)">

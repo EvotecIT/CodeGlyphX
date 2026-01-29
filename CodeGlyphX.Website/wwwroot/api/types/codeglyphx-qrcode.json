@@ -269,7 +269,61 @@
         },
         {
           "name": "arg4",
+          "type": "System.String",
+          "summary": null
+        }
+      ]
+    },
+    {
+      "name": "Save",
+      "summary": "Saves a payload to a file, choosing the output format based on file extension.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "arg1",
+          "type": "System.String",
+          "summary": null
+        },
+        {
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
+        },
+        {
+          "name": "arg3",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
+        },
+        {
+          "name": "arg4",
           "type": "CodeGlyphX.Rendering.RenderExtras",
+          "summary": null
+        }
+      ]
+    },
+    {
+      "name": "Save",
+      "summary": "Saves a payload with embedded defaults to a file, choosing the output format based on file extension.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "arg1",
+          "type": "CodeGlyphX.Payloads.QrPayloadData",
+          "summary": null
+        },
+        {
+          "name": "arg2",
+          "type": "System.String",
+          "summary": null
+        },
+        {
+          "name": "arg3",
+          "type": "CodeGlyphX.QrEasyOptions",
+          "summary": null
+        },
+        {
+          "name": "arg4",
+          "type": "System.String",
           "summary": null
         }
       ]
